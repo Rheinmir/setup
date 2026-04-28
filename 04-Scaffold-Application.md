@@ -6,7 +6,23 @@ The architecture is set, the wiki is ready, and the database is configured. It's
 2. Generate the foundational folder structure for the chosen framework (e.g., MVC structure, React components folder, API routes, etc.).
 3. Write a `health` check endpoint or a basic landing page to verify the app runs.
 4. Create a `README.md` containing commands on how to run the project locally.
-5. Create a `wiki/concepts/Architecture.md` document explaining the scaffolded architecture and link it in `wiki/index.md`.
+5. Create `wiki/concepts/Architecture.md` following the standard wiki format:
+   ```
+   # Architecture
+   **Type:** concept
+   **Tags:** architecture, scaffold
+
+   <1-3 sentence description of the scaffolded structure and why it was chosen.>
+
+   ## Notes
+   - [[link to related entities if any]]
+
+   ## Origin
+   - **Source:** `AGENT-code.md`
+   - **Commit:** <hash of the scaffold commit>
+   - **Date:** <today>
+   ```
+   Add a row for this file in `wiki/index.md`.
 6. Add an entry to `wiki/log.md` detailing the components scaffolded today.
 
 # ACTION
