@@ -20,7 +20,8 @@ Synchronize structural and template improvements between the current project and
      - `[CONFLICT]` -> Both have changed (manual review required).
    - **STOP**. Ask the user which direction to sync (e.g., "Pull all", "Push all", or specific files).
 4. **Stage 2: Execution**:
-   - Perform the file copy in the requested direction.
+   - Copy each file in the requested direction one by one (not bulk `cp -R`).
+   - **Downstream (Master → Local)**: Before copying any file, always run `mkdir -p` on the target directory — the local project may not yet have the folder structure from Master.
    - If Upstreaming: Commit and Push to Master.
    - If Downstreaming: Update local files and log the update in `wiki/log.md`.
    - Cleanup temporary directory.
@@ -29,4 +30,5 @@ Synchronize structural and template improvements between the current project and
 - NEVER sync sensitive data (`.env`, credentials).
 - NEVER sync business-specific documentation.
 - ALWAYS show the `diff` for any file marked as `[CONFLICT]` and wait for user instruction on which version to keep.
+- NEVER use bulk recursive copy (e.g., `cp -R folder/*`). Copy file by file based on the inclusion list.
 - Use `impact-check` if the template change affects shared logic in `skills/`.
