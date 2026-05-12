@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - Rheinmir Infrastructure</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/style.css">
+    
+    <!-- Plugins -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    
+    <style>
+        /* Specific Styles for Document Layout */
+        body { display: flex; }
+        
+        #toc {
+            width: 280px;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            background: var(--bg-surface);
+            border-right: 1px solid var(--border-glass);
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        main {
+            flex: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        @media (max-width: 1100px) {
+            #toc { display: none; }
+            main { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <nav id="toc">
+        <h3 style="margin-top:0">Contents</h3>
+        <ul id="toc-list" style="list-style:none; padding:0; font-size:0.9rem; color:var(--text-secondary)">
+            <!-- TOC_GENERATED_BY_JS -->
+        </ul>
+    </nav>
+
+    <main>
+        <div class="badge badge-purple">{{ type | default('Documentation') }}</div>
+        <h1 class="gradient-text">{{ title }}</h1>
+        
+        <div class="content card" style="background: transparent; border: none; padding: 0;">
+            {{ content }}
+        </div>
+
+        <footer style="margin-top: 5rem; color: var(--text-secondary); font-size: 0.8rem; border-top: 1px solid var(--border-glass); padding-top: 2rem;">
+            Generated from <code>{{ source_file }}</code> on {{ date }}
+        </footer>
+    </main>
+
+    <script>
+        mermaid.initialize({ theme: 'dark' });
+        hljs.highlightAll();
+
+        // Simple TOC Generator
+        const tocList = document.getElementById('toc-list');
+        document.querySelectorAll('h2, h3').forEach((heading, index) => {
+            if (!heading.id) heading.id = 'heading-' + index;
+            const li = document.createElement('li');
+            li.style.marginBottom = '0.5rem';
+            const a = document.createElement('a');
+            a.textContent = heading.textContent;
+            a.href = '#' + heading.id;
+            a.style.color = 'inherit';
+            a.style.textDecoration = 'none';
+            li.appendChild(a);
+            tocList.appendChild(li);
+        });
+    </script>
+</body>
+</html>

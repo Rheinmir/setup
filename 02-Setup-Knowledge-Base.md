@@ -15,6 +15,7 @@ You must execute the following file system operations:
 1. Create the following folders directly in the project root (note: `.agent` already exists as a config file — do not create a `.agent/` folder):
    - `skills/` — multi-step reusable workflows the agent invokes autonomously (e.g. `propose`, `safe-change`).
    - `commands/` — single-shot, parameterized instructions triggered explicitly by the user (e.g. `scaffold-feature`, `add-env-var`).
+   - `html/` — visual documentation layer (dashboard and rendered reports).
 
 2. Create a `raw/` folder in the root. This is the **immutable source-of-truth layer**:
    - Humans drop original documents here: articles, specs, meeting notes, vendor docs, papers, images, data files.
