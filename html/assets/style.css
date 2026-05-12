@@ -1,0 +1,116 @@
+/* Rheinmir Infrastructure Design System */
+:root {
+    /* Colors */
+    --bg-main: #0d1117;
+    --bg-surface: #161b22;
+    --accent-blue: #58a6ff;
+    --accent-purple: #6e40c9;
+    --accent-gradient: linear-gradient(135deg, #6e40c9, #2188ff);
+    
+    --text-primary: #c9d1d9;
+    --text-secondary: #8b949e;
+    --text-white: #ffffff;
+    
+    --border-glass: rgba(255, 255, 255, 0.08);
+    --shadow-premium: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Base Styles */
+body {
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Layout Utilities */
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Component: Card */
+.card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-glass);
+    border-radius: 16px;
+    padding: 1.5rem;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent-blue);
+    box-shadow: var(--shadow-premium);
+}
+
+/* Component: Badge */
+.badge {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    background: rgba(88, 166, 255, 0.1);
+    border: 1px solid var(--accent-blue);
+    border-radius: 100px;
+    color: var(--accent-blue);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.badge-purple {
+    background: rgba(110, 64, 201, 0.1);
+    border-color: var(--accent-purple);
+    color: var(--accent-purple);
+}
+
+/* Typography */
+h1, h2, h3 {
+    margin-top: 0;
+    color: var(--text-white);
+}
+
+.gradient-text {
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+
+.text-muted {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Markdown Specifics */
+.content h2 { border-bottom: 1px solid var(--border-glass); padding-bottom: 0.5rem; margin-top: 2rem; }
+.content pre { border-radius: 12px; overflow: hidden; border: 1px solid var(--border-glass); }
+.content table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+.content th { text-align: left; color: var(--text-secondary); font-size: 0.8rem; padding: 0.75rem; border-bottom: 1px solid var(--border-glass); }
+.content td { padding: 0.75rem; border-bottom: 1px solid var(--border-glass); }
+
+/* Visualization Utilities */
+.viz-container {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    border: 1px solid var(--border-glass);
+}
+
+.chart-wrapper {
+    position: relative;
+    height: 300px;
+    width: 100%;
+}

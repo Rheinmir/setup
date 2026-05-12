@@ -37,6 +37,9 @@ project-root/
 ├── AGENT.md           # Ground rules + danh sách skills cho AI Agent
 ├── AGENT-business.md  # Mô tả nghiệp vụ dự án (do Agent tạo ở bước 1)
 ├── AGENT-code.md      # Tech stack & kiến trúc (do Agent tạo ở bước 1)
+├── html/              # Thư viện tài liệu kỹ thuật đã render (Visual Layer)
+│   ├── index.html     # Dashboard quản lý tài liệu
+│   └── README.md      # Hướng dẫn sử dụng thư viện
 ├── .env.cognee        # Credentials — KHÔNG commit file này
 └── README.md          # Hướng dẫn chạy local (do Agent tạo ở bước 4)
 ```
