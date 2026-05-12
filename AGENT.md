@@ -81,6 +81,7 @@ These guidelines are working if: fewer unnecessary changes in diffs, fewer rewri
 | `verify-before-commit` | Before every commit | `skills/verify-before-commit.md` |
 | `md-to-html` | User wants to render a professional HTML report | `skills/md-to-html.md` |
 | `sync-template` | Upstreaming template improvements to master repo | `skills/sync-template.md` |
+| `onboard-codebase` | Deep analysis of legacy code to populate Wiki | `skills/onboard-codebase.md` |
 
 ## Invocation rules
 - New file in `raw/` → invoke `ingest` immediately
