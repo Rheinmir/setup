@@ -1,0 +1,34 @@
+{
+  "name": "Rheinmir Agentic Workflow Template",
+  "version": "1.1.0",
+  "includes": [
+    "01-Project-Kickoff.md",
+    "02-Setup-Knowledge-Base.md",
+    "03-Cognee-MCP-Setup-Check.md",
+    "04-Scaffold-Application.md",
+    "README.md",
+    "AGENT.md",
+    "CLAUDE.md",
+    "skills/*.md",
+    "commands/*",
+    "html/templates/*.html",
+    "html/assets/*.css",
+    "html/README.md"
+  ],
+  "excludes": [
+    "AGENT-business.md",
+    "AGENT-code.md",
+    "wiki/**",
+    "raw/**",
+    "html/*.html",
+    ".env*",
+    ".DS_Store",
+    "*.png",
+    "*.jpg",
+    "*.html"
+  ],
+  "rules": {
+    "preserve_placeholders": true,
+    "require_clean_git": true
+  }
+}

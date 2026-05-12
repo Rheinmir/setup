@@ -79,6 +79,8 @@ These guidelines are working if: fewer unnecessary changes in diffs, fewer rewri
 | `impact-check` | Before modifying any shared symbol | `skills/impact-check.md` |
 | `safe-change` | Editing code called from more than one place | `skills/safe-change.md` |
 | `verify-before-commit` | Before every commit | `skills/verify-before-commit.md` |
+| `md-to-html` | User wants to render a professional HTML report | `skills/md-to-html.md` |
+| `sync-template` | Upstreaming template improvements to master repo | `skills/sync-template.md` |
 
 ## Invocation rules
 - New file in `raw/` → invoke `ingest` immediately

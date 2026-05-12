@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title | default('HTML Library Manager') }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <div class="container" style="text-align: center; padding-top: 5rem;">
+        <header>
+            <div class="badge">{{ category | default('Archive & Library') }}</div>
+            <h1 class="gradient-text" style="font-size: 3rem;">{{ heading | default('Document Manager') }}</h1>
+            <p class="text-muted">{{ description | default('Duyệt nhanh các báo cáo và tài liệu kỹ thuật đã render.') }}</p>
+        </header>
+        
+        <div class="grid" id="library-grid" style="margin-top: 4rem; text-align: left;">
+            <!-- CARDS_START -->
+            {% for item in items %}
+            <a href="{{ item.url }}" class="card">
+                <div class="badge">{{ item.type }}</div>
+                <h2>{{ item.title }}</h2>
+                <p class="text-muted">{{ item.summary }}</p>
+            </a>
+            {% endfor %}
+            <!-- CARDS_END -->
+        </div>
+    </div>
+</body>
+</html>
