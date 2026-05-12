@@ -1,18 +1,18 @@
 /* Rheinmir Infrastructure Design System */
 :root {
     /* Colors */
-    --bg-main: #0d1117;
-    --bg-surface: #161b22;
-    --accent-blue: #58a6ff;
-    --accent-purple: #6e40c9;
-    --accent-gradient: linear-gradient(135deg, #6e40c9, #2188ff);
+    --bg-main: #020617; /* Deep Slate from infra_pain_report */
+    --bg-surface: rgba(15, 23, 42, 0.6);
+    --accent-blue: #0ea5e9; /* Professional Cyan */
+    --accent-purple: #10b981; /* Professional Emerald */
+    --accent-gradient: linear-gradient(135deg, #0ea5e9, #10b981);
     
-    --text-primary: #c9d1d9;
-    --text-secondary: #8b949e;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
     --text-white: #ffffff;
     
     --border-glass: rgba(255, 255, 255, 0.08);
-    --shadow-premium: 0 10px 30px rgba(0, 0, 0, 0.3);
+    --shadow-premium: 0 10px 30px rgba(14, 165, 233, 0.15);
 }
 
 /* Base Styles */
@@ -47,6 +47,7 @@ body {
     text-decoration: none;
     color: inherit;
     display: block;
+    backdrop-filter: blur(20px);
 }
 
 .card:hover {
