@@ -12,7 +12,7 @@ Biến file Markdown thành trang HTML đẹp, tự-chứa, kèm biểu đồ (M
 `/md-to-html`, `md2html`, `biến md thành html`, `render md`, `xuất html từ md`, `visualize doc`
 
 ## Đầu ra
-File `.html` cùng thư mục với file `.md` nguồn, cùng tên file.
+Tất cả file `.html` được xuất ra PHẢI lưu vào thư mục `html/` của project (ví dụ: `/Users/giatran/infras/html/tên-file.html`), KHÔNG lưu cùng thư mục với file `.md` nguồn.
 
 ## Xem full instructions tại
 `~/.gemini/antigravity/skills/md-to-html/SKILL.md`
