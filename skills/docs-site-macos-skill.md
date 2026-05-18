@@ -8,6 +8,8 @@ description: >
   wanting it to look "clean", "modern", "Apple-like", "macOS style", "glass", "frosted",
   "animated diagrams", or "single HTML file". Also use when the user has multiple markdown
   files and wants them rendered into a cohesive visual HTML page with sections.
+  If the user says "6 file" or wants separate pages per topic, generate one HTML file per
+  wiki file (index.html as overview + N topic files), NOT a single combined page.
 ---
 
 # macOS Docs Site Builder
@@ -232,6 +234,29 @@ Use Inter from Google Fonts:
 ```
 Font stack: `'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif`
 
+## Auto-Host
+
+After creating the HTML file(s), ALWAYS start a local HTTP server for preview:
+
+```bash
+cd <project-root>
+kill -9 $(lsof -ti :8765) 2>/dev/null
+nohup npx serve -p 8765 > /tmp/serve.log 2>&1 &
+```
+
+Notify user: open `http://localhost:8765/index.html` (or directly `http://localhost:8765/<file>.html`).
+
+If port 8765 is already in use, skip (server already running).
+
+## Multi-File Mode
+
+When generating separate pages per wiki file:
+- Create an `index.html` overview page (card grid linking to all N pages)
+- Create `{slug}.html` for each wiki file (slug derived from filename)
+- Each page shares the same CSS design system but uses its section accent color
+- Each page has a nav bar linking to all other pages (highlight current page)
+- Each page has its own animated SVG diagram based on the topic content
+
 ## Best Practices
 
 - ALWAYS inline SVG directly in the HTML (not external files)
@@ -242,3 +267,4 @@ Font stack: `'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helveti
 - The hero heading gradient should use 3 stops: `linear-gradient(135deg, #6366f1, #a855f7, #ec4899)`
 - Nav logo gradient: `linear-gradient(135deg, #6366f1, #a855f7)`
 - Number of sections is variable — cycle through the 6-color palette with modulo (`i % 6`)
+- ALWAYS start an auto-host server after writing the HTML file (see Auto-Host section above)
