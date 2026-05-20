@@ -1,6 +1,9 @@
 # Restructure LLM Wiki — agent-executable plan
 
-> Một file duy nhất. Agent đọc và tự làm hết.
+> Một file duy nhất. Agent đọc và tự làm hết, không hỏi lại.
+
+**Template repo gốc:** `https://github.com/Rheinmir/setup.git` (nhánh `master`)
+**Dùng làm chuẩn để so sánh cấu trúc đích.** Nếu đang ở dự án downstream, clone repo này về temp để diff.
 
 ---
 
@@ -186,14 +189,35 @@ git commit -m "restructure: gom setup vào llmwiki/ + tổ chức skills theo lo
 git push origin restructure
 ```
 
-## 9. Dự án cũ cập nhật
+## 9. Dự án cũ cập nhật (downstream)
 
-Chạy `sync-template` downstream — tự động pull cấu trúc `llmwiki/` mới về. Sau đó dọn root:
+Sau khi template repo đã có cấu trúc mới, chạy ở mỗi dự án cũ:
 
 ```bash
+# Xác định remote
+REMOTE="https://github.com/Rheinmir/setup.git"
+
+# Clone template về temp để diff
+TMPDIR=$(mktemp -d)
+git clone "$REMOTE" "$TMPDIR" --depth 1
+
+# So sánh cấu trúc thư mục giữa local và template
+# Nếu template có llmwiki/ mà local chưa có → pull về
+diff -r "$TMPDIR/llmwiki" llmwiki 2>/dev/null || {
+  echo "Template có cấu trúc mới. Chạy sync-template hoặc copy thủ công."
+}
+
+# Dọn root: xoá thư mục cũ đã được gom vào llmwiki/
 rm -rf skills wiki commands html raw 2>/dev/null
 rm AGENT.md 2>/dev/null
-git add -A && git commit -m "sync: cập nhật cấu trúc llmwiki/"
-```
 
-sync-template hoạt động bình thường — manifest path mới, diff giữa local vs master khớp 1-1.
+# Đảm bảo root pointers
+echo 'Đọc toàn bộ hướng dẫn tại llmwiki/.agent, llmwiki/AGENT.md và llmwiki/CLAUDE.md trước khi làm việc.' > .agent
+echo 'Xem hướng dẫn đầy đủ tại `llmwiki/`. Ưu tiên đọc `llmwiki/AGENT.md` và `llmwiki/CLAUDE.md`.' > CLAUDE.md
+
+# Commit
+git add -A && git commit -m "sync: cập nhật cấu trúc llmwiki/"
+
+# Dọn temp
+rm -rf "$TMPDIR"
+```
