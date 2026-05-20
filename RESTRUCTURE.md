@@ -92,16 +92,6 @@ cat > CLAUDE.md << 'EOF'
 Xem hướng dẫn đầy đủ tại `llmwiki/`. Ưu tiên đọc `llmwiki/AGENT.md` và `llmwiki/CLAUDE.md`.
 EOF
 
-# Migration script
-mkdir -p scripts
-cat > scripts/migrate-to-llmwiki.sh << 'SCRIPT'
-#!/usr/bin/env bash
-set -euo pipefail
-echo "=== Migrate to llmwiki/ ==="
-# usage: chạy ở root dự án cũ, migrate file-by-file
-SCRIPT
-chmod +x scripts/migrate-to-llmwiki.sh
-
 # Xoá thư mục rỗng
 rmdir skills wiki commands html raw 2>/dev/null || true
 ```
@@ -150,7 +140,7 @@ Sửa path `wiki/` → `llmwiki/wiki/`, `skills/` → `llmwiki/skills/<loop>/` t
     "CLAUDE.md", ".agent", ".template-manifest.json",
     "01-Project-Kickoff.md", "02-Setup-Knowledge-Base.md",
     "03-Cognee-MCP-Setup-Check.md", "04-Scaffold-Application.md",
-    "scripts/migrate-to-llmwiki.sh",
+    "RESTRUCTURE.md",
     "llmwiki/.agent", "llmwiki/AGENT.md", "llmwiki/CLAUDE.md",
     "llmwiki/commands/serve",
     "llmwiki/html/README.md", "llmwiki/html/assets/style.css",
@@ -188,22 +178,7 @@ Sửa path `wiki/` → `llmwiki/wiki/`, `skills/` → `llmwiki/skills/<loop>/` t
 
 Phân loại skill theo loop.
 
-## 8. Tạo SKILL.md cho npx skills
-
-```bash
-cat > SKILL.md << 'EOF'
----
-name: llmwiki
-description: LLM Wiki pattern — agentic knowledge base with skills for ingest, query, lint, propose, impact-check, safe-change, verify-before-commit
----
-
-# llmwiki
-
-[...full instructions...]
-EOF
-```
-
-## 9. Commit
+## 8. Commit
 
 ```bash
 git add -A
@@ -211,12 +186,14 @@ git commit -m "restructure: gom setup vào llmwiki/ + tổ chức skills theo lo
 git push origin restructure
 ```
 
-## 10. Dự án cũ migrate
+## 9. Dự án cũ cập nhật
+
+Chạy `sync-template` downstream — tự động pull cấu trúc `llmwiki/` mới về. Sau đó dọn root:
 
 ```bash
-curl -O https://raw.githubusercontent.com/Rheinmir/setup/restructure/scripts/migrate-to-llmwiki.sh
-bash migrate-to-llmwiki.sh
-git add -A && git commit -m "migrate: gom setup vào llmwiki/"
+rm -rf skills wiki commands html raw 2>/dev/null
+rm AGENT.md 2>/dev/null
+git add -A && git commit -m "sync: cập nhật cấu trúc llmwiki/"
 ```
 
-Sau đó sync-template hoạt động bình thường — manifest path mới, diff giữa local vs master khớp 1-1.
+sync-template hoạt động bình thường — manifest path mới, diff giữa local vs master khớp 1-1.
