@@ -1,7 +1,7 @@
 # Skill: sync-template
 
 ## Purpose
-Synchronize structural and template improvements between the current project and the master template repository defined in `.template-manifest.json`.
+Synchronize structural and template improvements between the current project and the master template repository `https://github.com/Rheinmir/setup.git`.
 
 ## When to use
 - **Upstream**: After improving a template file localy and wanting to save it to Master.
