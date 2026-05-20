@@ -1,6 +1,7 @@
 {
   "remote": "https://github.com/Rheinmir/setup.git",
   "includes": [
+    "SKILL.md",
     "CLAUDE.md",
     ".agent",
     ".template-manifest.json",
