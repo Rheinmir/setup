@@ -8,6 +8,7 @@
     "02-Setup-Knowledge-Base.md",
     "03-Cognee-MCP-Setup-Check.md",
     "04-Scaffold-Application.md",
+    "NOTE-migration.md",
     "scripts/migrate-to-llmwiki.sh",
     "llmwiki/.agent",
     "llmwiki/AGENT.md",
