@@ -79,13 +79,13 @@ You must execute the following file system operations:
 
    | Operation | When to invoke | Skill file |
    |-----------|---------------|------------|
-   | `ingest` | A new file appears in `raw/` | `skills/ingest.md` |
-   | `query` | User asks a question that requires synthesizing wiki knowledge | `skills/query.md` |
-   | `lint` | Periodically or when wiki feels stale | `skills/lint.md` |
-   | `propose` | Any new feature or change is requested | `skills/propose.md` |
-   | `impact-check` | Before modifying any shared symbol | `skills/impact-check.md` |
-   | `safe-change` | Editing code called from more than one place | `skills/safe-change.md` |
-   | `verify-before-commit` | Before every commit | `skills/verify-before-commit.md` |
+   | `ingest` | A new file appears in `raw/` | `llmwiki/skills/wiki-loop/ingest.md` |
+   | `query` | User asks a question that requires synthesizing wiki knowledge | `llmwiki/skills/wiki-loop/query.md` |
+   | `lint` | Periodically or when wiki feels stale | `llmwiki/skills/wiki-loop/lint.md` |
+   | `propose` | Any new feature or change is requested | `llmwiki/skills/dev-loop/propose.md` |
+   | `impact-check` | Before modifying any shared symbol | `llmwiki/skills/dev-loop/impact-check.md` |
+   | `safe-change` | Editing code called from more than one place | `llmwiki/skills/dev-loop/safe-change.md` |
+   | `verify-before-commit` | Before every commit | `llmwiki/skills/dev-loop/verify-before-commit.md` |
 
    **Invocation rules:**
    - New file in `raw/` → invoke `ingest` immediately

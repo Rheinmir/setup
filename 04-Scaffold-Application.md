@@ -6,7 +6,7 @@ The architecture is set, the wiki is ready, and the database is configured. It's
 2. Generate the foundational folder structure for the chosen framework (e.g., MVC structure, React components folder, API routes, etc.).
 3. Write a `health` check endpoint or a basic landing page to verify the app runs.
 4. Create a `README.md` containing commands on how to run the project locally.
-5. Create `wiki/concepts/Architecture.md` following the standard wiki format:
+5. Create `llmwiki/wiki/concepts/Architecture.md` following the standard wiki format:
    ```
    # Architecture
    **Type:** concept
@@ -22,8 +22,8 @@ The architecture is set, the wiki is ready, and the database is configured. It's
    - **Commit:** <hash of the scaffold commit>
    - **Date:** <today>
    ```
-   Add a row for this file in `wiki/index.md`.
-6. Add an entry to `wiki/log.md` detailing the components scaffolded today.
+    Add a row for this file in `llmwiki/wiki/index.md`.
+6. Add an entry to `llmwiki/wiki/log.md` detailing the components scaffolded today.
 
 # ACTION
 Scaffold the codebase, update the wiki, and present a summary of what was built. Ask the user what feature they want to build first.
