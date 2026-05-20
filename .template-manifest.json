@@ -24,8 +24,6 @@
     "llmwiki/skills/dev-loop/safe-change.md",
     "llmwiki/skills/dev-loop/verify-before-commit.md",
     "llmwiki/skills/dev-loop/onboard-codebase.md",
-    "llmwiki/skills/orchestrate/orca-workflow.md",
-    "llmwiki/skills/orchestrate/orca-onboard.md",
     "llmwiki/skills/utils/sync-template.md",
     "llmwiki/skills/utils/md-to-html.md",
     "llmwiki/skills/utils/docs-site-macos-skill.md",
