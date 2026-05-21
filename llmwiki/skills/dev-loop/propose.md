@@ -14,7 +14,7 @@ Plan a new feature or change before writing any code. Surfaces impact on existin
 3. List every existing feature or behaviour that could break as a side effect.
 4. Propose the minimal implementation plan as numbered steps.
 5. State what success looks like (verifiable criteria).
-6. Create a draft file at `wiki/sources/draft/DDMMYY-feature-name-module.md` (e.g. `260425-new-approval-button-fe.md`) containing the proposal output from steps 1–5. Add a row to `wiki/index.md` and append to `wiki/log.md`.
+6. Create a draft file at `llmwiki/wiki/sources/draft/DDMMYY-feature-name-module.md` (e.g. `260425-new-approval-button-fe.md`) containing the proposal output from steps 1–5. Add a row to `llmwiki/wiki/index.md` and append to `llmwiki/wiki/log.md`.
 7. STOP. Do not write any code. Wait for the user to approve or redirect.
 
 ## Rules
