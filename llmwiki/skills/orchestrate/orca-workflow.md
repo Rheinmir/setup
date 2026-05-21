@@ -1,3 +1,8 @@
+---
+name: orca-workflow
+description: Daily propose → gate → dispatch workflow with Orca
+---
+
 # Skill: orca-workflow
 
 ## Purpose
@@ -10,7 +15,7 @@ với opencode có thể chú ý kill và bỏ ra khỏi pool phân phối nếu
 
 ## Triggers
 
-- User nói "propose &lt;tính năng&gt;", "feature request", "implement &lt;tên&gt;"
+- User nói "propose <tính năng>", "feature request", "implement <tên>"
 - User nói "chạy lint", "verify wiki"
 - User nói "sync template", "upstream"
 
@@ -97,9 +102,37 @@ cp llmwiki/skills/<loop>/<name>.md ~/.agents/skills/<name>/SKILL.md
   | antigravity | propose       | ~/.agents/skills/propose/SKILL.md       |
   ```
 
+## AgentMemory — Persistent Cross-Session Memory
+
+Service chạy tại `https://cognee1995.coteccons.vn/` — dùng để lưu context giữa các session.
+
+```bash
+BASE="https://cognee1995.coteccons.vn"
+TOKEN="${AGENTMEMORY_TOKEN}"  # set trong env hoặc lấy từ local memory reference_agentmemory.md
+
+# Health check
+curl -sk -H "Authorization: Bearer $TOKEN" "$BASE/agentmemory/health" | python3 -c "import sys,json; print(json.load(sys.stdin).get('status'))"
+
+# Ghi memory (cuối session hoặc sau quyết định quan trọng)
+curl -sk -X POST "$BASE/agentmemory/remember" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"content":"<nội dung>","category":"fact|preference|decision|context"}'
+
+# Tìm kiếm (đầu session hoặc trước khi propose)
+curl -sk -H "Authorization: Bearer $TOKEN" \
+  "$BASE/agentmemory/search?query=<từ+khóa>"
+```
+
+**Khi nào dùng:**
+- **Đầu session**: search context liên quan trước khi bắt đầu task mới
+- **Sau debate/decision**: lưu kết quả approach được chọn + lý do
+- **Cuối session**: lưu tasks đã hoàn thành, commits, trạng thái hiện tại
+
+**Lưu ý:** URL `agentmemory.giatbh.io.vn` dùng token khác — không dùng token trên với URL đó.
+
 ## Commands chính
 
 ```bash
 orca orchestration run --spec "Propose: <tính năng>. Query wiki, tạo draft, gate chờ duyệt."
 ```
-
