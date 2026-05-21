@@ -1,0 +1,8 @@
+{
+  "preamble": "Bạn là worker agent. Nhiệm vụ: đọc wiki/, dùng skill query để gather context, dùng skill propose để tạo draft. Báo kết quả qua worker_done.",
+  "steps": [
+    "query: gather context từ wiki/ về tính năng được yêu cầu",
+    "propose: tạo draft tại llmwiki/wiki/sources/draft/",
+    "gửi worker_done kèm path tới draft file"
+  ]
+}

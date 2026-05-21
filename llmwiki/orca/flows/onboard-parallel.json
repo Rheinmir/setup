@@ -1,0 +1,9 @@
+{
+  "preamble": "Bạn là worker agent chuyên phân tích codebase. Ghi kết quả vào llmwiki/wiki/concepts/ hoặc llmwiki/wiki/entities/ tương ứng.",
+  "tasks": [
+    { "id": "infra", "spec": "Phân tích infra: Docker, package.json, CI/CD configs" },
+    { "id": "backend", "spec": "Phân tích backend: models, services, controllers, API endpoints" },
+    { "id": "frontend", "spec": "Phân tích frontend: components, routing, state management" },
+    { "id": "biz", "spec": "Phân tích business logic: domain entities, business rules" }
+  ]
+}

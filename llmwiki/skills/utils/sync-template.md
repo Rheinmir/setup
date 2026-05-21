@@ -12,6 +12,8 @@ Synchronize structural and template improvements between the current project and
  2. **Clone Master Repo**:
    - Get the target repository URL from `.template-manifest.json`.
    - Clone the target repository to a temporary directory.
+   - **Branch Audit (CRITICAL)**: Always list all remote branches (`git branch -a`). Check if there is an active branch containing newer or more complete template improvements (e.g., `orca`, `orchestrate`, or active development branches). Do not blindly assume the default branch (`master` / `main`) is the only or most up-to-date one.
+   - **Checkout Target Branch**: If a newer branch exists or if requested by the user, checkout that branch (`git checkout <branch-name>`) in the cloned repository before proceeding.
    - **Delete `.opencode/` from the cloned copy** to avoid conflicts (`Remove-Item -Recurse -Force "$tmpDir\.opencode"`).
  3. **Compare Manifest Files with Master**:
     - Run `diff` between local template files and Master files listed in the manifest.
@@ -38,6 +40,97 @@ Synchronize structural and template improvements between the current project and
     - If Upstreaming: Commit and push to Master.
     - If Downstreaming: Update local files and log the update in `wiki/log.md`.
     - Cleanup temporary directory.
+ 7. **Stage 3: Install as Slash Skills** *(chạy lại mỗi lần sync — không phải một lần)*:
+    - Sau mỗi downstream sync, thu thập tất cả skill files đã được copy (files dưới `llmwiki/skills/` hoặc `skills/` trong manifest).
+    - Với mỗi skill file, derive tên slash-skill: bỏ directory prefix và `.md` extension (vd. `skills/utils/sync-template.md` → `sync-template`).
+    - **Skip** các file không phải skill definition: `README.md`, `index.md`, `log.md`, và bất kỳ file nào không có `## Purpose` hoặc `## Steps`.
+    - Hỏi user scope để install (default: project-level). Áp dụng cho **tất cả agent CLI** trong pool:
+
+    **Claude Code CLI**
+    ```bash
+    # Project-level (default):
+    mkdir -p .claude/commands/
+    cp <skill-file> .claude/commands/<name>.md
+
+    # User-level (cần user approval):
+    mkdir -p ~/.claude/commands/
+    cp <skill-file> ~/.claude/commands/<name>.md
+    ```
+    Skill available ngay dưới dạng `/<name>` — không cần restart.
+
+    **OpenCode CLI**
+    ```bash
+    # Skills phải là thư mục chứa SKILL.md — không phải flat file:
+    mkdir -p ~/.agents/skills/<name>/
+    cp <skill-file> ~/.agents/skills/<name>/SKILL.md
+    # Restart OpenCode để discover.
+    ```
+
+    **Antigravity CLI**
+    ```bash
+    # Dùng chung pool với OpenCode:
+    mkdir -p ~/.agents/skills/<name>/
+    cp <skill-file> ~/.agents/skills/<name>/SKILL.md
+    ```
+
+    - Copy từng file một — không dùng `cp -R`.
+    - Sau khi xong, report bảng install:
+      ```
+      | Agent       | Skill         | Installed at                            |
+      |-------------|---------------|-----------------------------------------|
+      | claude-cli  | sync-template | .claude/commands/sync-template.md       |
+      | opencode    | sync-template | ~/.agents/skills/sync-template/SKILL.md |
+      | antigravity | sync-template | ~/.agents/skills/sync-template/SKILL.md |
+      ```
+
+ 8. **Stage 4: Restart & Verify**:
+    - **Verify disk first** — chạy check này trước khi restart bất cứ thứ gì:
+      ```bash
+      # Claude Code
+      for name in <skill-list>; do
+        [ -f ~/.claude/commands/$name.md ] && echo "✓ $name" || echo "✗ $name MISSING"
+      done
+
+      # OpenCode / Antigravity
+      for name in <skill-list>; do
+        [ -f ~/.agents/skills/$name/SKILL.md ] && echo "✓ $name" || echo "✗ $name MISSING"
+      done
+      ```
+      Nếu có `✗` → fix copy trước, không restart.
+
+    - **Claude Code**: không cần restart — skills ở `~/.claude/commands/` available ngay.
+
+    - **OpenCode** (terminal CLI):
+      - **KHÔNG kill** các session đang chạy — sẽ mất context.
+      - Disk đã đúng là đủ. Hướng dẫn user: *"New opencode sessions sẽ tự pick up skills. Restart terminal session cũ nếu muốn dùng ngay."*
+      - Không attempt restart từ background shell.
+
+    - **Antigravity** (GUI app):
+      - **KHÔNG launch từ background shell** — app sẽ không start được qua terminal (`open -a` và exec trực tiếp đều fail khi không có user session context).
+      - Dùng `osascript` để quit gracefully: `osascript -e 'tell application "Antigravity" to quit'`
+      - Sau đó hướng dẫn user: *"Mở lại Antigravity thủ công từ /Applications hoặc Dock."*
+      - Verify bằng: `osascript -e 'tell application "System Events" to (name of processes) contains "Antigravity"'`
+
+    - **Thứ tự thực hiện**:
+      1. Verify disk (tất cả `✓`) → nếu không, fix trước
+      2. Quit Antigravity qua osascript
+      3. Hướng dẫn user mở lại Antigravity thủ công
+      4. Hướng dẫn user restart OpenCode terminal sessions nếu muốn dùng ngay
+      5. Claude Code — không cần làm gì thêm
+
+## Agent Compatibility (tested 2026-05-21)
+
+| Agent | Có thể chạy sync-template? | Lý do |
+|-------|--------------------------|-------|
+| **Claude Code CLI** | Có | Full tool access |
+| **OpenCode** | Có | Full tool access |
+| **Antigravity CLI** | **Không** | Sandbox chặn `view_file`, `run_command`, `ask_permission` — không thể đọc file, clone repo, hay gửi `worker_done` |
+
+**Khi được dispatch từ Orca đến Antigravity:**
+- Antigravity hiểu task nhưng không thể thực thi bất kỳ bước nào.
+- `worker_done` sẽ không bao giờ đến inbox — `orca orchestration send` cũng bị block.
+- Coordinator phải fallback: `terminal wait --for tui-idle` → `terminal read` để đọc output text.
+- **Giải pháp**: dispatch `sync-template` sang claude-cli hoặc opencode, không phải antigravity.
 
 ## Rules
 - NEVER sync sensitive data (`.env`, credentials).
@@ -47,3 +140,16 @@ Synchronize structural and template improvements between the current project and
 - Use `impact-check` if the template change affects shared logic in `skills/`.
 - `[NEW]` files MUST be added to `.template-manifest.json` `includes` before upstream commit so the manifest stays in sync.
 - `[MISSING]` files MUST be added to `.template-manifest.json` `includes` after downstream copy so the manifest stays in sync.
+- **ALWAYS audit remote branches** (`git branch -a`) when cloning the template repository. Template improvements may live on custom branches (like `orca`, `orchestrate`, or development branches) containing critical new skills or structural components not yet merged into the default branch.
+- **Stage 3 runs every downstream sync** — không phải chỉ lần đầu. Mỗi lần sync là mỗi lần install để đảm bảo tất cả agent CLI đều có bản mới nhất.
+- **NEVER restart Antigravity from a shell** — `open -a` và exec trực tiếp đều không work từ background process. Luôn quit bằng osascript rồi hướng dẫn user mở thủ công.
+- **NEVER kill OpenCode terminal sessions** — sẽ mất context. Disk install là đủ; new sessions tự pick up.
+- **Verify disk trước khi restart bất cứ thứ gì** — `[ -f <path> ]` check cho từng skill. Fix missing files trước.
+- Source of truth cho install là disk, không phải process state.
+- Install cho **tất cả agent CLI trong pool** (claude-cli, opencode, antigravity) — không chỉ agent đang chạy skill này.
+- User-level install (`~/.claude/commands/`, `~/.agents/skills/`) phải được user approve trước.
+- OpenCode và Antigravity dùng format **thư mục + SKILL.md** (`~/.agents/skills/<name>/SKILL.md`) — không phải flat `.md` file.
+- Claude Code dùng format **flat `.md` file** (`.claude/commands/<name>.md` hoặc `~/.claude/commands/<name>.md`).
+- Copy từng file một — không dùng `cp -R`.
+- Chỉ copy file có `## Purpose` hoặc `## Steps` — skip `README.md`, `index.md`, `log.md`.
+

@@ -80,6 +80,8 @@ These guidelines are working if: fewer unnecessary changes in diffs, fewer rewri
 | `safe-change` | Editing code called from more than one place | `skills/dev-loop/safe-change.md` | dev-loop |
 | `verify-before-commit` | Before every commit | `skills/dev-loop/verify-before-commit.md` | dev-loop |
 | `onboard-codebase` | Deep analysis of legacy code to populate Wiki | `skills/dev-loop/onboard-codebase.md` | dev-loop |
+| `orca-workflow` | Daily propose → gate → dispatch with Orca | `skills/orchestrate/orca-workflow.md` | orchestrate |
+| `orca-onboard` | Parallel codebase onboarding with Orca | `skills/orchestrate/orca-onboard.md` | orchestrate |
 | `sync-template` | Upstreaming template improvements to master repo | `skills/utils/sync-template.md` | utils |
 | `md-to-html` | User wants to render a professional HTML report | `skills/utils/md-to-html.md` | utils |
 | `docs-site-macos` | User wants macOS-style documentation site | `skills/utils/docs-site-macos-skill.md` | utils |
@@ -88,3 +90,5 @@ These guidelines are working if: fewer unnecessary changes in diffs, fewer rewri
 - New file in `raw/` → invoke `ingest` immediately
 - New feature request → invoke `propose` first, stop, wait for approval
 - Edit to shared code → invoke `impact-check` then `safe-change`
+- Orca available → invoke `orca-workflow` cho feature (propose → gate → dispatch)
+- Nhiều codebase cần onboard → invoke `orca-onboard` (parallel analysis)

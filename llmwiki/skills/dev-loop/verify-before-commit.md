@@ -16,13 +16,15 @@ Gate every commit with a checklist that catches regressions, broken types, and m
 5. Only after all steps above pass: commit with a message describing *why*, not *what*.
 6. **Promote draft** — after commit succeeds, find the corresponding draft file in `wiki/sources/draft/`. Move it to the correct permanent folder (`wiki/concepts/`, `wiki/entities/`, or `wiki/sources/`) and:
    - Fill in any entries left as TBD during proposal.
-   - Add a `## Origin` section to the promoted file:
+   - **Update status banner in body** — find the `> **Trạng thái:**` line and replace it with `IMPLEMENTED — commit <hash>`.
+   - **Tick success criteria** — find every `- [ ]` in the "Tiêu chí thành công" section and replace with `- [x]` plus the commit hash that delivered it. Leave `- [ ]` only for items explicitly deferred.
+   - Add a `## Implementation` section (or update the existing one):
      ```
-     ## Origin
-     - **Draft:** `wiki/sources/draft/DDMMYY-feature-name-module.md`
-     - **Commit:** `<commit hash> — <commit message>`
+     ## Implementation
+     - **Commit:** `<hash> — <message>`
      - **Date promoted:** YYYY-MM-DD
      ```
+   - Add/update `## Origin` section with the draft path, commit, and date.
 7. **Index + log** — update `wiki/index.md` with the promoted file's final location, and append to `wiki/log.md` with the draft filename, commit hash, and destination page.
 
 ## Rules

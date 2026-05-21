@@ -18,6 +18,12 @@ Multi-step reusable workflows the agent invokes autonomously based on context. E
 | `verify-before-commit` | `dev-loop/verify-before-commit.md` | Gate every commit; promote draft to wiki after success |
 | `onboard-codebase` | `dev-loop/onboard-codebase.md` | Deep analysis of legacy code to populate Wiki |
 
+## orchestrate — Orca coordination
+| Skill | File | Purpose |
+|-------|------|---------|
+| `orca-workflow` | `orchestrate/orca-workflow.md` | Daily propose → gate → dispatch với Orca |
+| `orca-onboard` | `orchestrate/orca-onboard.md` | Parallel codebase onboarding với Orca |
+
 ## utils — Công cụ phụ trợ
 | Skill | File | Purpose |
 |-------|------|---------|

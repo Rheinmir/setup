@@ -24,12 +24,15 @@
     "llmwiki/skills/dev-loop/safe-change.md",
     "llmwiki/skills/dev-loop/verify-before-commit.md",
     "llmwiki/skills/dev-loop/onboard-codebase.md",
+    "llmwiki/skills/orchestrate/orca-workflow.md",
+    "llmwiki/skills/orchestrate/orca-onboard.md",
     "llmwiki/skills/utils/sync-template.md",
     "llmwiki/skills/utils/md-to-html.md",
     "llmwiki/skills/utils/docs-site-macos-skill.md",
     "llmwiki/wiki/README.md",
     "llmwiki/wiki/index.md",
     "llmwiki/wiki/log.md",
+    "llmwiki/wiki/active-context.md",
     "llmwiki/wiki/decisions.md",
     "llmwiki/wiki/concepts/README.md",
     "llmwiki/wiki/concepts/_template.md",
@@ -39,7 +42,9 @@
     "llmwiki/wiki/sources/_template.md",
     "llmwiki/wiki/sources/adr/README.md",
     "llmwiki/wiki/sources/draft/README.md",
-    "llmwiki/wiki/sources/draft/_template.md"
+    "llmwiki/wiki/sources/draft/_template.md",
+    "llmwiki/orca/flows/daily-propose.json",
+    "llmwiki/orca/flows/onboard-parallel.json"
   ],
   "excludes": [
     ".env",
