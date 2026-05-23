@@ -11,11 +11,11 @@ Analyze an existing, unmapped codebase to extract deep technical and business co
 1. **Infrastructure Audit**:
    - Map the directory structure.
    - Identify the tech stack, entry points, and build/deploy scripts.
-   - Store findings in `wiki/entities/project-structure.md`.
+   - Store findings in `llmwiki/wiki/entities/project-structure.md`.
 2. **Deep Code Analysis**:
    - Scan for core domain logic (Services, Models, Controllers).
    - Identify patterns (e.g., Repository pattern, Event-driven, etc.).
-   - Extract "Concepts" for `wiki/concepts/`.
+   - Extract "Concepts" for `llmwiki/wiki/concepts/`.
 3. **Frontend & Style Audit** *(skip if no frontend)*:
    - Identify UI framework (Next.js, React, Vue, etc.) and CSS approach (Tailwind, CSS Modules, styled-components, SCSS).
    - Extract design tokens: color palette, typography scale, spacing system, breakpoints — from `tailwind.config.*`, CSS variables, or theme files.
@@ -24,16 +24,16 @@ Analyze an existing, unmapped codebase to extract deep technical and business co
    - Document naming conventions for components (PascalCase, feature-folder, colocated stories, etc.).
    - Note state management for UI (Zustand, Jotai, Context, Redux, etc.) and data-fetching pattern (React Query, SWR, server actions, etc.).
    - Capture routing conventions (file-based, nested layouts, auth guards).
-   - Store all findings in `wiki/concepts/fe-style.md`.
+   - Store all findings in `llmwiki/wiki/concepts/fe-style.md`.
 4. **Business Logic Extraction**:
    - Reverse-engineer user stories and business rules from the code.
    - Generate/Update `AGENT-business.md`.
 5. **Entity Cataloging**:
    - List all internal services, external APIs, and database tables.
-   - Create detailed entries in `wiki/entities/`.
+   - Create detailed entries in `llmwiki/wiki/entities/`.
 6. **Knowledge Injection**:
    - Synthesize all data into the Wiki structure.
-   - Update `wiki/index.md` and `wiki/log.md`.
+   - Update `llmwiki/wiki/index.md` and `llmwiki/wiki/log.md`.
 7. **Final Verification**:
    - Run a `lint` on the generated wiki to ensure no contradictions.
 
