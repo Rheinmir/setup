@@ -14,16 +14,16 @@ Gate every commit with a checklist that catches regressions, broken types, and m
 3. **Tests** — run the full test suite. If any test fails, fix the failure before committing.
 4. **Smoke check** — manually verify the golden path of the feature just built works end-to-end.
 5. Only after all steps above pass: commit with a message describing *why*, not *what*.
-6. **Promote draft** — after commit succeeds, find the corresponding draft file in `wiki/sources/draft/`. Move it to the correct permanent folder (`wiki/concepts/`, `wiki/entities/`, or `wiki/sources/`) and:
+6. **Promote draft** — after commit succeeds, find the corresponding draft file in `llmwiki/wiki/sources/draft/`. Move it to the correct permanent folder (`llmwiki/wiki/concepts/`, `llmwiki/wiki/entities/`, or `llmwiki/wiki/sources/`) and:
    - Fill in any entries left as TBD during proposal.
    - Add a `## Origin` section to the promoted file:
      ```
      ## Origin
-     - **Draft:** `wiki/sources/draft/DDMMYY-feature-name-module.md`
+     - **Draft:** `llmwiki/wiki/sources/draft/DDMMYY-feature-name-module.md`
      - **Commit:** `<commit hash> — <commit message>`
      - **Date promoted:** YYYY-MM-DD
      ```
-7. **Index + log** — update `wiki/index.md` with the promoted file's final location, and append to `wiki/log.md` with the draft filename, commit hash, and destination page.
+7. **Index + log** — update `llmwiki/wiki/index.md` with the promoted file's final location, and append to `llmwiki/wiki/log.md` with the draft filename, commit hash, and destination page.
 
 ## Rules
 - Never skip steps 1–3 even if "nothing changed in types/tests."
