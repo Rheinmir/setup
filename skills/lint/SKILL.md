@@ -1,28 +1,31 @@
 ---
 name: lint
-description: >-
-  Health-check the wiki for orphans, contradictions, and stale content
+description: Periodic wiki health check — orphans, missing links, contradictions, stale, index gaps
 ---
 
 # Skill: lint
 
-## Purpose
-Periodic health check of the wiki. Finds contradictions, stale claims, orphaned pages, missing cross-references, and knowledge gaps.
-
 ## When to invoke
-- Periodically (after every 10 ingests or on user request)
-- When the wiki feels stale or inconsistent
+After every 10 ingests, or when wiki feels stale/inconsistent.
 
 ## Steps
-1. **Orphans** — find wiki pages not linked from any other page or `wiki/index.md`. Flag each one.
-2. **Missing links** — find mentions of entity or concept names that exist as wiki pages but are not written as `[[wikilinks]]`. Fix them in place.
-3. **Contradictions** — find claims across pages that directly contradict each other. List each pair with file paths and line numbers. Do not silently pick a winner — flag for human review.
-4. **Stale claims** — find pages that reference `raw/` sources. Check if a newer version of that source exists in `raw/`. Flag if so.
-5. **Index gaps** — find wiki files not listed in `wiki/index.md`. Add missing rows.
-6. **Empty pages** — find pages with no content beyond the header. Flag for deletion or population.
-7. **Missing Origin** — find wiki files without an `## Origin` section. Flag each one as incomplete — do not guess the source.
-8. Append to `wiki/log.md`: `## YYYY-MM-DD — lint` with a summary of issues found and fixed vs flagged.
+
+1. **Orphans** — `RUN: grep -rL "wiki/" --include="*.md" llmwiki/wiki/concepts/ llmwiki/wiki/entities/` → files not referenced anywhere. Flag each.
+
+2. **Missing links** — scan pages for entity/concept names that exist as wiki files but aren't written as `[[wikilinks]]`. Fix in place.
+
+3. **Contradictions** — compare claims about the same entity across ≤2 pages at a time. Flag pairs (file:line vs file:line). Do NOT pick a winner — flag for human review.
+
+4. **Stale claims** — `RUN: grep -rl "raw/" --include="*.md" llmwiki/wiki/` → pages referencing raw/. Flag each.
+
+5. **Index gaps** — `RUN: comm -23 <(find llmwiki/wiki -name "*.md" | sort) <(grep -o "llmwiki/wiki/[^)]*" llmwiki/wiki/index.md | sort)` → files missing from index. Add rows.
+
+6. **Empty pages** — `RUN: for f in llmwiki/wiki/**/*.md; do [ $(wc -l < "$f") -lt 5 ] && echo "$f"; done` → flag for deletion or content.
+
+7. **Missing Origin** — `RUN: grep -rL "## Origin" llmwiki/wiki/concepts/ llmwiki/wiki/entities/` → flag each as incomplete.
+
+8. Append to `llmwiki/wiki/log.md`: `## YYYY-MM-DD — lint` with issues found/fixed vs flagged.
 
 ## Rules
-- Fix what can be fixed automatically (missing links, index gaps).
-- Flag but do not resolve contradictions or delete pages — those need human decision.
+- Fix automatically: missing links (step 2), index gaps (step 5).
+- Flag, do not resolve: contradictions, orphans, empty pages — need human decision.
