@@ -1,6 +1,6 @@
 ---
 name: orca-dispatch-reference
-description: Reference for Antigravity/OpenCode dispatch, skill installation, AgentMemory — NOT a loop skill
+description: Reference for Antigravity/OpenCode dispatch, skill installation, AgentMemory, RTK token proxy — NOT a loop skill
 ---
 
 # Orca Dispatch Reference
@@ -77,3 +77,22 @@ curl -sk -H "Authorization: Bearer $TOKEN" "$BASE/agentmemory/search?query=<keyw
 ```
 
 > Token tại `agentmemory.giatbh.io.vn` KHÁC — đừng dùng lẫn.
+
+## RTK — Token Proxy
+
+RTK (Rust Token Killer) tự động filter CLI output trước khi vào context — 60-90% token reduction.
+
+```bash
+# CHECK đã cài chưa:
+rtk --version
+
+# Cài hook cho agent (chạy 1 lần):
+rtk hooks install --agent claude
+rtk hooks install --agent opencode
+# Sau khi cài: mọi command agent chạy tự qua RTK, không cần thay đổi gì.
+
+# Xem savings:
+rtk stats --today
+```
+
+> Xem [[concepts/RTK]] để biết chi tiết.
