@@ -13,6 +13,9 @@ claude sẽ chủ yếu phân tích, các model còn lại đảm nhiệm việc
   
 với opencode có thể chú ý kill và bỏ ra khỏi pool phân phối nếu chờ quá lâu.
 
+**Caveman Mode**: Hầu hết tình huống giao tiếp của agent cần dùng `caveman` để tiết kiệm ~75% token. Chỉ tắt/không dùng khi viết proposal, viết tài liệu, hoặc xuất HTML.
+
+
 ## Triggers
 
 - User nói "propose <tính năng>", "feature request", "implement <tên>"

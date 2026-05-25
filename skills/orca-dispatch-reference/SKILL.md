@@ -115,3 +115,25 @@ rtk stats --today
 ```
 
 > Xem [[concepts/RTK]] để biết chi tiết.
+
+## Caveman — Prose Compression
+
+Caveman tự động nén ngôn ngữ hội thoại của agent để tiết kiệm ~75% hội thoại (output tokens) mà vẫn giữ nguyên độ chính xác kỹ thuật.
+
+```bash
+# Cài đặt cho mọi agent (chạy 1 lần):
+# Windows:
+irm https://raw.githubusercontent.com/JuliusBrussee/caveman/main/install.ps1 | iex
+# macOS/Linux/WSL:
+curl -fsSL https://raw.githubusercontent.com/JuliusBrussee/caveman/main/install.sh | bash
+
+# Kích hoạt thủ công trong phiên chat (nếu không tự bật):
+/caveman
+# Hoặc nói: "talk like caveman" / "caveman mode"
+
+# Xem thống kê tiết kiệm:
+/caveman-stats
+```
+
+> Hầu hết tình huống giao tiếp thông thường cần dùng caveman để tiết kiệm token. Chỉ bỏ nén khi viết proposal, tài liệu chính thức, hoặc xuất HTML.
+

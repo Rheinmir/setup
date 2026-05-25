@@ -49,4 +49,8 @@ orca terminal wait --for tui-idle && orca terminal read --title "Antigravity"
 | Kiro | `kiro-cli` | `kiro-cli --version` |
 | Orca | GUI only — dùng qua `orca terminal *` commands | `orca terminal list` |
 
+## Caveman Mode
+
+Dùng `caveman` (plugin `/caveman`) cho hầu hết tình huống để tiết kiệm ~75% token. Không dùng khi viết proposal, tài liệu, hoặc xuất HTML.
+
 > Để biết dispatch, skill install, AgentMemory — xem `llmwiki/skills/setup/orca-dispatch-reference.md`
