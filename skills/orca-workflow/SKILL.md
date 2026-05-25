@@ -46,6 +46,7 @@ orca terminal wait --for tui-idle && orca terminal read --title "Antigravity"
 |-------|--------|-------|
 | Antigravity | `agy` | `agy --version` |
 | OpenCode | `opencode` | `opencode --version` |
+| Kiro | `kiro-cli` | `kiro-cli --version` |
 | Orca | GUI only — dùng qua `orca terminal *` commands | `orca terminal list` |
 
 > Để biết dispatch, skill install, AgentMemory — xem `llmwiki/skills/setup/orca-dispatch-reference.md`

@@ -34,6 +34,15 @@ orca terminal wait --for tui-idle
 orca terminal read --title "Antigravity"
 ```
 
+## Kiro CLI (kiro-cli)
+
+**Binary**: `kiro-cli` — `%LOCALAPPDATA%\Kiro-Cli\kiro-cli.exe` (Windows).
+
+```bash
+# CHECK trước khi dùng:
+kiro-cli --version
+```
+
 ## Skill Installation per Agent CLI
 
 Skills nằm tại `llmwiki/skills/<category>/<name>.md`.
@@ -56,6 +65,16 @@ ls ~/.agents/skills/
 mkdir -p ~/.agents/skills/propose/
 cp llmwiki/skills/wiki/propose.md ~/.agents/skills/propose/SKILL.md
 # Restart OpenCode sau khi install.
+```
+
+### Kiro CLI
+```bash
+# CHECK:
+ls ~/.kiro/skills/
+
+# Install (skill phải là thư mục chứa SKILL.md):
+mkdir -p ~/.kiro/skills/propose/
+cp llmwiki/skills/wiki/propose.md ~/.kiro/skills/propose/SKILL.md
 ```
 
 ## AgentMemory

@@ -121,6 +121,7 @@ Fix any `✗` before declaring done. Claude Code picks up skills immediately —
 |-------|-------------|-------|
 | Claude Code CLI | Có | Full tool access |
 | OpenCode | Có | Full tool access |
+| Kiro CLI | Có | Full tool access |
 | Antigravity CLI | Không | Sandbox chặn file/command tools |
 
 ## Rules

@@ -1,6 +1,6 @@
 # Setup AI Agent Project Workflow
 
-Quy trình tự động setup dự án mới qua 4 bước prompt. Thay vì code tay, bạn chỉ cần feed lần lượt các file prompt cho AI Agent (Claude Code, OpenCode, Antigravity — đều có config sẵn trong thư mục này).
+Quy trình tự động setup dự án mới qua 4 bước prompt. Thay vì code tay, bạn chỉ cần feed lần lượt các file prompt cho AI Agent (Claude Code, OpenCode, Antigravity, Kiro CLI — đều có config sẵn trong thư mục này).
 
 ## Prerequisites
 

@@ -7,7 +7,7 @@ description: Daily propose → gate → dispatch workflow with Orca
 
 ## Purpose
 
-Điều phối luồng làm việc hàng ngày qua Orca orchestration — propose → gate → dispatch → verify. khi chia agent làm việc chia các agent của từng engine 1:1 (claude cli , antigravity cli, opencode,...)  
+Điều phối luồng làm việc hàng ngày qua Orca orchestration — propose → gate → dispatch → verify. khi chia agent làm việc chia các agent của từng engine 1:1 (claude cli, antigravity cli, opencode, kiro-cli...)  
   
 claude sẽ chủ yếu phân tích, các model còn lại đảm nhiệm việc thực thi.  
   
@@ -87,10 +87,17 @@ mkdir -p ~/.agents/skills/<name>/
 cp llmwiki/skills/<loop>/<name>.md ~/.agents/skills/<name>/SKILL.md
 ```
 
+### Kiro CLI
+```bash
+# Skills là thư mục chứa SKILL.md trong thư mục ~/.kiro/skills/ (user-level):
+mkdir -p ~/.kiro/skills/<name>/
+cp llmwiki/skills/<loop>/<name>.md ~/.kiro/skills/<name>/SKILL.md
+```
+
 ### Rules cho tất cả agent
 - Chỉ copy file skill (không copy `README.md`, `index.md`, `log.md`).
 - Copy từng file một — không dùng `cp -R`.
-- Scope mặc định là **project-level** cho Claude Code; với OpenCode/Antigravity luôn là `~/.agents/skills/`.
+- Scope mặc định là **project-level** cho Claude Code; với OpenCode/Antigravity luôn là `~/.agents/skills/`, Kiro luôn là `~/.kiro/skills/`.
 - Sau khi cài, report lại coordinator bằng một bảng:
   ```
   | Agent       | Skill         | Installed at                            |
@@ -98,6 +105,7 @@ cp llmwiki/skills/<loop>/<name>.md ~/.agents/skills/<name>/SKILL.md
   | claude-cli  | propose       | .claude/commands/propose.md             |
   | opencode    | propose       | ~/.agents/skills/propose/SKILL.md       |
   | antigravity | propose       | ~/.agents/skills/propose/SKILL.md       |
+  | kiro        | propose       | ~/.kiro/skills/propose/SKILL.md         |
   ```
 
 ## AgentMemory — Persistent Cross-Session Memory
