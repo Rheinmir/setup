@@ -1,29 +1,27 @@
 ---
 name: new-project-setup
-description: Deploy llmwiki từ đầu vào project mới — template pull, skill install, RTK, Caveman, wiki seed, onboard
+description: Deploy llmwiki từ đầu vào project mới — template pull, skill install, RTK, wiki seed, onboard
 ---
 
 # Skill: new-project-setup
 
 ## When to use
-Project mới hoàn toàn chưa có `llmwiki/`, hoặc cần reset lại từ đầu.
+Project chưa có `llmwiki/`. Hoặc reset từ đầu.
 
 ## Steps
 
-**1. CHECK — llmwiki đã tồn tại chưa?**
+**1. CHECK llmwiki tồn tại:**
 ```bash
 test -d llmwiki && echo exists || echo missing
 ```
-Nếu `exists`: hỏi user có muốn reset không.
-Reset = xóa `llmwiki/wiki/concepts/` và `llmwiki/wiki/entities/` — **GIỮ** `log.md` và `sources/`.
+`exists` → hỏi user reset không. Reset = xóa `concepts/` + `entities/`, **GIỮ** `log.md` + `sources/`.
 
 **2. Pull template + install skills:**
 ```bash
 # INVOKE: sync-template
 # sync-template tự pull từ rheinmir/setup@orca và install skills vào:
-#   .claude/commands/           ← Claude Code
-#   ~/.agents/skills/*/SKILL.md ← OpenCode / Antigravity
-#   ~/.kiro/skills/*/SKILL.md   ← Kiro CLI
+#   .claude/commands/           → Claude Code
+#   ~/.agents/skills/*/SKILL.md → OpenCode / Antigravity
 ```
 
 **3. Init wiki folder structure:**
@@ -50,27 +48,17 @@ rtk init -g
 grep -q "rtk hook claude" ~/.claude/settings.json && echo "RTK hooked" || echo "MANUAL: add rtk hook to settings.json"
 ```
 
-**4.b Caveman Setup:**
+**5. Seed wiki:**
 ```bash
-# Cài đặt caveman cho mọi agent phát hiện trên máy:
-# Windows (PowerShell):
-irm https://raw.githubusercontent.com/JuliusBrussee/caveman/main/install.ps1 | iex
-# macOS / Linux / WSL (Bash):
-curl -fsSL https://raw.githubusercontent.com/JuliusBrussee/caveman/main/install.sh | bash
+# Đọc README.md, package.json hoặc go.mod → project name + stack
 ```
+- Tạo `llmwiki/wiki/sources/project-requirements.md` — frontmatter + `## Origin`
+- Append `llmwiki/wiki/log.md`: `## YYYY-MM-DD — init — <project-name>`
+- Tạo `llmwiki/wiki/index.md` — header + empty table
 
-**5. Seed wiki với project info:**
-```bash
-# Đọc README.md, package.json hoặc go.mod để lấy project name + stack
-```
-- Tạo `llmwiki/wiki/sources/project-requirements.md` với frontmatter + `## Origin`
-- Append vào `llmwiki/wiki/log.md`: `## YYYY-MM-DD — init — <project-name>`
-- Tạo `llmwiki/wiki/index.md` với header + empty table
-
-**6. INVOKE: onboard-codebase**
-Phân tích sâu codebase → populate `concepts/` + `entities/` + chạy lint.
+**6. INVOKE: onboard-codebase** → populate `concepts/` + `entities/` + lint.
 
 ## Rules
-- Không duplicate skill install — sync-template step 7 xử lý toàn bộ
-- onboard-codebase đã bao gồm lint — không gọi lint thêm sau step 6
-- RTK guard `uname -r | grep -qi microsoft` là bắt buộc trước khi curl
+- Skill install: sync-template step 7 xử lý — không duplicate
+- onboard-codebase includes lint — không gọi lint thêm
+- RTK guard `uname -r | grep -qi microsoft` bắt buộc trước curl
