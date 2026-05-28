@@ -11,6 +11,24 @@ description: Daily propose → gate → dispatch workflow with Orca
 - User nói "chạy lint", "verify wiki"
 - User nói "sync template", "upstream"
 
+## ⚠️ QUY TẮC BẤT BIẾN — KHÔNG ĐƯỢC BỎ QUA
+
+### Trước khi đụng container (docker compose / docker run)
+
+```bash
+# BẮT BUỘC chạy trước bất kỳ --force-recreate, down, recreate nào:
+docker inspect <container_name> --format '{{json .Mounts}}' | python3 -m json.tool
+```
+
+So sánh `Source` path với volume trong compose file sắp dùng. Nếu khác → DỪNG, hỏi user.
+
+**Production DB của Cozyroom:** `/mnt/c/Users/olive/orca/workspaces/home-spotify/m/data/metadata.db`
+Không bao giờ đổi volume mount mà không backup + xác nhận user.
+
+> Bài học 2026-05-29: recreate container với compose sai path → mất toàn bộ DB người dùng.
+
+---
+
 ## Workflow: propose
 
 1. **query**: Gather context từ wiki/ về tính năng được yêu cầu
