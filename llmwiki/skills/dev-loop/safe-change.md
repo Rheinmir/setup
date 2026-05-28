@@ -1,22 +1,23 @@
+---
+name: safe-change
+description: Modify shared code without breaking existing callers
+---
+
 # Skill: safe-change
 
-## Purpose
-Make a code change while guaranteeing no existing functionality regresses.
-
 ## When to use
-- Modifying any function, class, or module that is called from more than one place
-- Adding behaviour to an existing flow (not a greenfield file)
-- Any change where "it worked before" is a hard requirement
+Modifying any function, class, or module called from more than one place.
 
 ## Steps
-1. Run `impact-check` skill first — identify all callers and dependents of the target code.
-2. Before touching anything, note the current observable behaviour (return values, side effects, output).
-3. Make the minimal change required. Do not clean up adjacent code.
-4. For each caller identified in step 1, verify the change is backward-compatible or explicitly update the caller.
-5. Re-run tests (or describe the manual check if no tests exist) covering the affected paths.
-6. Confirm: "Changed X. Verified Y still works. No unintended side effects found." Then run `verify-before-commit` skill.
+
+1. Run `impact-check` skill — get list of all callers and dependents.
+2. Note current observable behaviour (return values, side effects).
+3. Make minimal change. Don't touch adjacent code.
+4. For each caller from step 1: verify backward-compatible or explicitly update caller.
+5. `CHECK: ls <test-dir>/*<module>* 2>/dev/null | head -3` — if tests exist, `RUN: <test-cmd>`. If none, note explicitly in commit message.
+6. Confirm: "Changed X. Verified Y still works." Then invoke `verify-before-commit`.
 
 ## Rules
-- If tests do not exist for the affected code, write them before making the change.
-- If backward compatibility is impossible, surface this to the user before proceeding.
-- Touch only what the task requires — no opportunistic refactoring.
+- Backward compatibility impossible → surface to user before proceeding.
+- Touch only what task requires — no opportunistic refactoring.
+- No tests exist → acceptable to note — don't add tests outside task scope.
