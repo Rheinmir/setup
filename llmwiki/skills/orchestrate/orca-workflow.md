@@ -7,20 +7,18 @@ description: Daily propose → gate → dispatch workflow with Orca
 
 ## Purpose
 
-Điều phối luồng làm việc hàng ngày qua Orca orchestration — propose → gate → dispatch → verify. khi chia agent làm việc chia các agent của từng engine 1:1 (claude cli, antigravity cli, opencode, kiro-cli...)  
-  
-claude sẽ chủ yếu phân tích, các model còn lại đảm nhiệm việc thực thi.  
-  
-với opencode có thể chú ý kill và bỏ ra khỏi pool phân phối nếu chờ quá lâu.
+Propose → gate → dispatch → verify qua Orca. Agent pool 1:1 per engine (claude, agy, opencode, kiro, copilot).
 
-**Caveman Mode**: Hầu hết tình huống giao tiếp của agent cần dùng `caveman` để tiết kiệm ~75% token. Chỉ tắt/không dùng khi viết proposal, viết tài liệu, hoặc xuất HTML.
+Claude: analyze. Others: execute. Kill opencode nếu chờ quá lâu.
+
+**Caveman Mode**: Agent comms dùng `caveman` (~75% token save). Tắt khi: viết proposal, tài liệu, HTML.
 
 
 ## Triggers
 
-- User nói "propose <tính năng>", "feature request", "implement <tên>"
-- User nói "chạy lint", "verify wiki"
-- User nói "sync template", "upstream"
+- "propose <feature>", "feature request", "implement <name>"
+- "chạy lint", "verify wiki"
+- "sync template", "upstream"
 
 ## Workflow: propose
 
@@ -32,52 +30,90 @@ với opencode có thể chú ý kill và bỏ ra khỏi pool phân phối nếu
 6. **Chờ**: `orca orchestration check --wait --types worker_done --timeout-ms 300000`
 7. **Kiểm tra**: `verify-before-commit` tự động chạy trước mỗi commit
 
+## Dispatch nhanh
+
+```bash
+# OpenCode non-interactive (DEFAULT — dùng big-pickle miễn phí):
+opencode run -m opencode/big-pickle --dir "<project>" --dangerously-skip-permissions "<task>"
+
+# Antigravity non-interactive:
+agy -p "<task>" --dangerously-skip-permissions
+
+# Kiro non-interactive:
+kiro run --dir "<project>" --dangerously-skip-permissions "<task>"
+
+# GitHub Copilot Coding Agent (async — via GitHub issue):
+gh issue create --title "<task>" --body "<task details>" --assignee "@me"
+# Then: gh copilot suggest "<task>" or trigger via VS Code Copilot Chat
+
+# Nếu dùng Orca terminal (interactive):
+orca terminal list
+orca terminal create --worktree active --title "OpenCode" --command "opencode"
+orca terminal send --title "OpenCode" --text "<task>"
+orca terminal wait --for tui-idle && orca terminal read --title "OpenCode"
+```
+
+## Phân công task theo chi phí
+
+| Task | Agent | Model |
+|------|-------|-------|
+| Search, grep, list, read | OpenCode | `opencode/big-pickle` ($0) |
+| Viết boilerplate, CRUD | OpenCode | `opencode/big-pickle` ($0) |
+| Wiki ingest/lint | OpenCode | `opencode/big-pickle` ($0) |
+| Review diff, explain | agy | default |
+| Architectural decisions | Claude Code | sonnet-4-6 |
+| Debug lỗi khó | Claude Code | sonnet-4-6 |
+| Frontend UI boilerplate | Kiro | default |
+| Cross-file refactor | Kiro | default |
+| PR review + suggest fixes | Copilot | gpt-4o (GitHub) |
+
+## Agent binaries
+
+| Agent | Binary | CHECK |
+|-------|--------|-------|
+| Antigravity | `agy` | `agy --version` |
+| OpenCode | `opencode run -m opencode/big-pickle` | `opencode --version` |
+| Kiro | `kiro run` | `kiro --version` |
+| GitHub Copilot | `gh copilot suggest` | `gh copilot --version` |
+| Orca | GUI only — dùng qua `orca terminal *` commands | `orca terminal list` |
+
 ## Antigravity Dispatch Reality (tested 2026-05-21, updated 2026-05-23)
 
-**Binary**: `agy` — trong PATH tại `%LOCALAPPDATA%\agy\bin\agy.exe` (Windows). KHÔNG phải `antigravity` (not found). KHÔNG phải `~/.local/bin/agy` (Linux path — sai trên Windows).
+**Binary**: `agy` — `%LOCALAPPDATA%\agy\bin\agy.exe`. NOT `antigravity`, NOT `~/.local/bin/agy` (Linux).
 
 **Tạo terminal**:
 ```bash
 orca terminal create --worktree active --title "Antigravity" --command "agy"
 ```
 
-**Hook**: Orca v1.4.21 đã fix "Antigravity Windows hook quoting" — KHÔNG cần sửa tay `antigravity-hook.cmd`. Hook hoạt động đúng out-of-the-box từ v1.4.21.
+**Hook**: Orca v1.4.21 fix Windows hook quoting — `antigravity-hook.cmd` no manual edit needed.
 
-**OpenCode**: lệnh là `opencode` (npm global tại `%APPDATA%\npm\opencode.cmd`).
+**OpenCode**: `opencode` — npm global at `%APPDATA%\npm\opencode.cmd`.
 
-Kết quả thực tế khi dispatch task qua Orca đến Antigravity CLI:
+Dispatch status:
 
-| Bước | Trạng thái (sau v1.4.21) |
-|------|--------------------------|
-| `dispatch --inject` | **Cần retest** — trước v1.4.21 fail |
+| Bước | Trạng thái |
+|------|-----------|
+| `dispatch --inject` | Thử sau v1.4.21 — nếu fail, dùng `terminal send` |
 | `terminal send` thủ công | **OK** |
-| Antigravity đọc file/chạy lệnh | **OK** — tool calls pass |
-| `worker_done` về inbox | **Cần retest** |
-| Gemini hiểu task | **OK** |
-
-**Hệ quả cho dispatch workflow:**
-- Thử `--inject` sau v1.4.21 — nếu vẫn fail, fallback dùng `terminal send` thủ công.
-- Sau send: dùng `terminal wait --for tui-idle` rồi `terminal read` để lấy kết quả.
+| Antigravity đọc file/chạy lệnh | **OK** |
+| `worker_done` về inbox | Cần retest |
 
 ## Slash Skill Installation per Agent CLI
 
-Mỗi agent khi nhận dispatch **phải tự cài slash skill** từ `llmwiki/skills/` vào CLI của nó trước khi bắt đầu task. Mỗi engine có path và format khác nhau:
+Agent nhận dispatch: **tự cài skill** từ `llmwiki/skills/` trước khi bắt đầu.
 
 ### Claude Code CLI
 ```bash
-# Project-level (mặc định — chỉ repo này):
 mkdir -p .claude/commands/
 cp llmwiki/skills/<loop>/<name>.md .claude/commands/<name>.md
-
-# User-level (tất cả project, cần user approval):
+# User-level:
 mkdir -p ~/.claude/commands/
 cp llmwiki/skills/<loop>/<name>.md ~/.claude/commands/<name>.md
 ```
-Skill ngay lập tức available dưới dạng `/<name>` trong Claude Code, không cần restart.
 
 ### OpenCode CLI
 ```bash
-# Skills là thư mục chứa SKILL.md — KHÔNG phải flat file:
 mkdir -p ~/.agents/skills/<name>/
 cp llmwiki/skills/<loop>/<name>.md ~/.agents/skills/<name>/SKILL.md
 # Restart OpenCode để discover skill mới.
@@ -85,42 +121,52 @@ cp llmwiki/skills/<loop>/<name>.md ~/.agents/skills/<name>/SKILL.md
 
 ### Antigravity CLI
 ```bash
-# Dùng cùng shared skill pool với OpenCode:
 mkdir -p ~/.agents/skills/<name>/
 cp llmwiki/skills/<loop>/<name>.md ~/.agents/skills/<name>/SKILL.md
 ```
 
 ### Kiro CLI
 ```bash
-# Skills là thư mục chứa SKILL.md trong thư mục ~/.kiro/skills/ (user-level):
 mkdir -p ~/.kiro/skills/<name>/
 cp llmwiki/skills/<loop>/<name>.md ~/.kiro/skills/<name>/SKILL.md
 ```
 
+### GitHub Copilot
+```bash
+# Workspace-level steering via .github/copilot-instructions.md
+# Skills injected as context file:
+mkdir -p .github/
+cat llmwiki/skills/<loop>/<name>.md >> .github/copilot-instructions.md
+# Or per-skill steering file (Copilot Workspace):
+mkdir -p .github/skills/
+cp llmwiki/skills/<loop>/<name>.md .github/skills/<name>.md
+```
+
 ### Rules cho tất cả agent
-- Chỉ copy file skill (không copy `README.md`, `index.md`, `log.md`).
-- Copy từng file một — không dùng `cp -R`.
-- Scope mặc định là **project-level** cho Claude Code; với OpenCode/Antigravity luôn là `~/.agents/skills/`, Kiro luôn là `~/.kiro/skills/`.
-- Sau khi cài, report lại coordinator bằng một bảng:
+- Copy skill files only — skip `README.md`, `index.md`, `log.md`.
+- File by file — no `cp -R`.
+- Scope: `.claude/commands/` (Claude Code); `~/.agents/skills/` (OpenCode/agy); `~/.kiro/skills/` (Kiro); `.github/` (Copilot).
+- Sau khi cài, report:
   ```
-  | Agent       | Skill         | Installed at                            |
-  |-------------|---------------|-----------------------------------------|
-  | claude-cli  | propose       | .claude/commands/propose.md             |
-  | opencode    | propose       | ~/.agents/skills/propose/SKILL.md       |
-  | antigravity | propose       | ~/.agents/skills/propose/SKILL.md       |
-  | kiro        | propose       | ~/.kiro/skills/propose/SKILL.md         |
+  | Agent       | Skill   | Installed at                            |
+  |-------------|---------|------------------------------------------|
+  | claude-cli  | propose | .claude/commands/propose.md              |
+  | opencode    | propose | ~/.agents/skills/propose/SKILL.md        |
+  | antigravity | propose | ~/.agents/skills/propose/SKILL.md        |
+  | kiro        | propose | ~/.kiro/skills/propose/SKILL.md          |
+  | copilot     | propose | .github/skills/propose.md                |
   ```
 
 ## AgentMemory — Persistent Cross-Session Memory
 
-Service chạy tại `https://cognee1995.coteccons.vn/` — dùng để lưu context giữa các session.
+Service tại `https://cognee1995.coteccons.vn/` — lưu context giữa các session.
 
 ```bash
 BASE="https://cognee1995.coteccons.vn"
-TOKEN="${AGENTMEMORY_TOKEN}"  # set trong env hoặc lấy từ local memory reference_agentmemory.md
+TOKEN="${AGENTMEMORY_TOKEN}"
 
 # Health check
-curl -sk -H "Authorization: Bearer $TOKEN" "$BASE/agentmemory/health" | python3 -c "import sys,json; print(json.load(sys.stdin).get('status'))"
+curl -sk -H "Authorization: Bearer $TOKEN" "$BASE/agentmemory/health"
 
 # Ghi memory (cuối session hoặc sau quyết định quan trọng)
 curl -sk -X POST "$BASE/agentmemory/remember" \
@@ -133,15 +179,15 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
   "$BASE/agentmemory/search?query=<từ+khóa>"
 ```
 
-**Khi nào dùng:**
-- **Đầu session**: search context liên quan trước khi bắt đầu task mới
-- **Sau debate/decision**: lưu kết quả approach được chọn + lý do
-- **Cuối session**: lưu tasks đã hoàn thành, commits, trạng thái hiện tại
-
-**Lưu ý:** URL `agentmemory.giatbh.io.vn` dùng token khác — không dùng token trên với URL đó.
+**Khi dùng:**
+- **Đầu session**: search context trước khi bắt đầu
+- **Sau decision**: lưu approach + lý do
+- **Cuối session**: lưu tasks xong, commits, trạng thái
 
 ## Commands chính
 
 ```bash
 orca orchestration run --spec "Propose: <tính năng>. Query wiki, tạo draft, gate chờ duyệt."
 ```
+
+> Dispatch chi tiết: `llmwiki/skills/setup/orca-dispatch-reference.md`
