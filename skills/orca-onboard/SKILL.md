@@ -31,6 +31,21 @@ Onboard codebase mới. Phân tích song song, tạo knowledge graph, layers, to
 
 ---
 
+## ⚠️ HARD RULE — ĐỌC TRƯỚC KHI LÀM BẤT KỲ THỨ GÌ
+
+⛔ **KHÔNG được chạy Phase 0.5 Gate hay bất kỳ Phase nào (1–7) nếu Phase 0 chưa hoàn thành.**
+
+**Thứ tự bắt buộc — không được đảo:**
+1. **Phase 0 (Pre-flight)** → chạy xong, kiểm tra `llmwiki/` tồn tại → ✅
+2. **Phase 0.5 (Gate)** → hỏi user xác nhận
+3. **Phases 1–7** → execute
+
+**Nếu `llmwiki/` chưa tồn tại:** bootstrap NGAY tại Phase 0. KHÔNG defer, KHÔNG skip.
+**Nếu bootstrap fail:** DỪNG HOÀN TOÀN, báo lỗi. Không hiện Gate, không tiếp tục.
+**Nếu agent bỏ qua Phase 0 hay chạy Phase 0.5 trước Phase 0:** đó là bug — quay lại Phase 0 ngay.
+
+---
+
 ## Phase 0 — Pre-flight
 
 ```bash
