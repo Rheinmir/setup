@@ -38,9 +38,18 @@ Onboard codebase mới. Phân tích song song, tạo knowledge graph, layers, to
 PROJECT_ROOT=${1:-.}
 test -d "$PROJECT_ROOT" || exit 1
 
+# Bootstrap llmwiki nếu chưa có
+if [ ! -d "$PROJECT_ROOT/llmwiki" ]; then
+  echo "[orca-onboard] llmwiki chưa có — kéo template từ rheinmir/setup..."
+  git clone https://github.com/rheinmir/setup.git /tmp/orca-llmwiki-bootstrap --depth 1 -q
+  cp -r /tmp/orca-llmwiki-bootstrap/llmwiki "$PROJECT_ROOT/llmwiki"
+  rm -rf /tmp/orca-llmwiki-bootstrap
+  echo "[orca-onboard] llmwiki bootstrapped OK"
+fi
+
 # Create dirs
 mkdir -p $PROJECT_ROOT/.orca-onboard/{intermediate,tmp}
-mkdir -p $PROJECT_ROOT/llmwiki/wiki/{concepts,entities,architecture,tours}
+mkdir -p $PROJECT_ROOT/llmwiki/wiki/draft/{cave,uiux,orca}
 
 # Get git info
 git rev-parse HEAD 2>/dev/null > $PROJECT_ROOT/.orca-onboard/tmp/commit.txt
