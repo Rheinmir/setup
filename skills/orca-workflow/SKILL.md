@@ -31,13 +31,46 @@ Không bao giờ đổi volume mount mà không backup + xác nhận user.
 
 ## Workflow: propose
 
-1. **query**: Gather context từ wiki/ về tính năng được yêu cầu
-2. **propose**: Tạo draft tại `llmwiki/wiki/draft/orca/DDMMYY-tên.md`
-3. **gate**: `orca orchestration gate-create --question "Duyệt proposal này?"` → chờ user
-4. **Sau duyệt**: Phân rã tasks từ proposal → `orca orchestration task-create` mỗi task
-5. **dispatch**: thử `orca orchestration dispatch --task <id> --to <agent> --inject`; nếu fail → `orca terminal send`
-6. **Chờ**: `orca terminal wait --for tui-idle` → `orca terminal read`
-7. **Verify**: invoke `verify-before-commit` trước mỗi commit
+> ⛔ **HARD RULE — ĐỌC TRƯỚC KHI LÀM BẤT KỲ THỨ GÌ:**
+> Không được tạo file, chạy lệnh, hay thay đổi code **trước khi có file propose được USER XÁC NHẬN**.
+> Propose phải mô tả **KẾ HOẠCH** (sẽ làm gì), KHÔNG phải kết quả (đã làm gì).
+> Sau khi tạo propose → **DỪNG NGAY, hiển thị nội dung propose, hỏi user "Duyệt không?"**
+
+### Bước 1 — query (read-only)
+Đọc wiki, đọc code liên quan. **KHÔNG tạo file, KHÔNG sửa gì.**
+
+### Bước 2 — propose (**TẠO FILE + DỪNG**)
+Tạo `llmwiki/wiki/draft/orca/DDMMYY-tên.md` với nội dung:
+```
+## Plan
+- [ ] Task 1: mô tả cụ thể
+- [ ] Task 2: ...
+
+## Files sẽ tạo/sửa
+| File | Action | Lý do |
+|------|--------|-------|
+
+## Risks
+- ...
+```
+Sau khi tạo file → **⛔ DỪNG LẠI.**
+In nội dung propose ra màn hình. Hỏi user: **"Duyệt proposal này không?"**
+**KHÔNG làm gì thêm** cho đến khi user nói OK / duyệt / yes / proceed.
+
+### Bước 3 — gate (**CHỜ USER**)
+Chờ user approve. Nếu user yêu cầu thay đổi → sửa propose, hỏi lại.
+**Chỉ tiếp tục khi user nói OK rõ ràng.**
+
+### Bước 4 — implement (**CHỈ SAU KHI ĐƯỢC DUYỆT**)
+Thực hiện theo đúng plan trong propose. Không làm ngoài scope đã duyệt.
+Phân rã tasks → `orca orchestration task-create` mỗi task (nếu cần dispatch).
+
+### Bước 5 — dispatch (nếu cần agent khác)
+`orca orchestration dispatch --task <id> --to <agent> --inject`; nếu fail → `orca terminal send`
+Chờ: `orca terminal wait --for tui-idle` → `orca terminal read`
+
+### Bước 6 — verify
+Invoke `verify-before-commit` trước mỗi commit.
 
 ## Dispatch nhanh
 
@@ -76,9 +109,12 @@ Dùng `caveman` (plugin `/caveman`) cho hầu hết tình huống để tiết k
 
 ---
 
-## Output Report
+## Output Report (sau khi implement xong)
 
-After all main skill tasks complete, write a propose draft to the wiki.
+> Đây là **báo cáo kết quả** sau khi implement, KHÔNG phải propose plan.
+> Propose plan phải được tạo ở Bước 2 TRƯỚC khi làm bất kỳ thứ gì.
+
+After all implementation tasks complete, write an output report to the wiki.
 
 ### Steps
 
