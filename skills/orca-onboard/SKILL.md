@@ -60,7 +60,7 @@ git ls-files > $PROJECT_ROOT/.orca-onboard/tmp/files.txt 2>/dev/null || find $PR
 
 ## Phase 1 — Scan Project
 
-1 agent scan toàn bộ project.
+1 agent scan toàn bộ project(scan ưu tiên: AGY CLI, KIRO, OPENCODE).
 
 **Làm gì:**
 - Đọc manifest: `package.json`, `pyproject.toml`, `Cargo.toml`, `go.mod`, `README.md`
@@ -78,7 +78,7 @@ orca orchestration task-create --spec "Scan $PROJECT_ROOT: enumerate files, dete
 
 ## Phase 2 — Analyze Files (Parallel)
 
-Chia files thành batches (10-20 files/batch). Mỗi batch 1 agent chạy song song.
+Chia files thành batches (10-20 files/batch). Mỗi batch 1 agent chạy song song(ưu tiên CLAUDE).
 
 **Mỗi file extract:**
 - Functions, classes, exports
