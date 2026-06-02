@@ -58,9 +58,38 @@ git ls-files > $PROJECT_ROOT/.orca-onboard/tmp/files.txt 2>/dev/null || find $PR
 
 ---
 
+## Agent Binaries
+
+| Agent | Binary | Kiểm tra |
+|-------|--------|----------|
+| Antigravity | `agy` | `agy --version` |
+| OpenCode | `opencode` | `opencode --version` |
+| Kiro | `kiro-cli` | `kiro-cli --version` |
+| Orca | GUI — dùng qua `orca terminal *` | `orca terminal list` |
+
+> Dispatch pattern chuẩn cho mỗi phase:
+> ```bash
+> TASK_ID=$(orca orchestration task-create --spec "<spec>")
+> orca orchestration dispatch --task $TASK_ID --to <agent> --inject \
+>   || orca terminal send --title "<Agent>" --text "<spec>"
+> orca terminal wait --for tui-idle && orca terminal read --title "<Agent>"
+> ```
+
+---
+
+## Phase 0.5 — Gate
+
+Trước khi bắt đầu, tạo gate chờ user xác nhận:
+
+```bash
+orca orchestration gate-create --question "Bắt đầu onboard $PROJECT_ROOT? (7 phases, có thể mất vài phút)"
+```
+
+---
+
 ## Phase 1 — Scan Project
 
-1 agent scan toàn bộ project(scan ưu tiên: AGY CLI, KIRO, OPENCODE).
+**Agent:** Antigravity (`agy`)
 
 **Làm gì:**
 - Đọc manifest: `package.json`, `pyproject.toml`, `Cargo.toml`, `go.mod`, `README.md`
@@ -71,109 +100,132 @@ git ls-files > $PROJECT_ROOT/.orca-onboard/tmp/files.txt 2>/dev/null || find $PR
 **Output:** `.orca-onboard/intermediate/scan-result.json`
 
 ```bash
-orca orchestration task-create --spec "Scan $PROJECT_ROOT: enumerate files, detect languages, build import map. Write to .orca-onboard/intermediate/scan-result.json"
+SPEC="Scan $PROJECT_ROOT: enumerate files, detect languages, build import map. Write JSON to .orca-onboard/intermediate/scan-result.json"
+TASK_ID=$(orca orchestration task-create --spec "$SPEC")
+orca orchestration dispatch --task $TASK_ID --to agy --inject \
+  || orca terminal send --title "Antigravity" --text "$SPEC"
+orca terminal wait --for tui-idle && orca terminal read --title "Antigravity"
 ```
 
 ---
 
 ## Phase 2 — Analyze Files (Parallel)
 
-Chia files thành batches (10-20 files/batch). Mỗi batch 1 agent chạy song song(ưu tiên CLAUDE).
+**Agent:** Antigravity + OpenCode song song — mỗi batch 1 agent.
 
-**Mỗi file extract:**
-- Functions, classes, exports
-- Call graph
-- Tags: "api-handler", "data-model", "utility", ...
+Chia files thành batches (10-20 files/batch).
+
+**Mỗi file extract:** functions, classes, exports, call graph, tags.
 
 **Output:** `.orca-onboard/tmp/batch-{N}.json`
 
 ```bash
 for batch in $(seq 1 $NUM_BATCHES); do
-  orca orchestration task-create --spec "Analyze batch $batch: extract functions, classes, exports. Write to .orca-onboard/tmp/batch-$batch.json"
+  AGENT=$( [ $((batch % 2)) -eq 0 ] && echo "opencode" || echo "agy" )
+  TITLE=$( [ $((batch % 2)) -eq 0 ] && echo "OpenCode" || echo "Antigravity" )
+  SPEC="Analyze batch $batch: extract functions, classes, exports. Write to .orca-onboard/tmp/batch-$batch.json"
+  TASK_ID=$(orca orchestration task-create --spec "$SPEC")
+  orca orchestration dispatch --task $TASK_ID --to $AGENT --inject \
+    || orca terminal send --title "$TITLE" --text "$SPEC"
 done
+# Chờ tất cả batches xong
+orca terminal wait --for tui-idle && orca terminal read --title "Antigravity"
+orca terminal wait --for tui-idle && orca terminal read --title "OpenCode"
 ```
 
 ---
 
 ## Phase 3 — Architecture Layers
 
-1 agent phân tích architecture.(ưu tiên CLAUDE)
+**Agent:** OpenCode
 
 **Làm gì:**
 - Group files theo directory
-- Match pattern: routes/api → API layer, services/core → Service layer, models/db → Data layer, ...
+- Match pattern: routes/api → API layer, services/core → Service layer, models/db → Data layer
 - Phân tích dependency direction
 - Tạo 3-10 layers
 
 **Output:** `.orca-onboard/intermediate/layers.json`
 
 ```bash
-orca orchestration task-create --spec "Analyze architecture: group files into layers. Write to .orca-onboard/intermediate/layers.json"
+SPEC="Analyze architecture from .orca-onboard/intermediate/scan-result.json: group files into layers. Write to .orca-onboard/intermediate/layers.json"
+TASK_ID=$(orca orchestration task-create --spec "$SPEC")
+orca orchestration dispatch --task $TASK_ID --to opencode --inject \
+  || orca terminal send --title "OpenCode" --text "$SPEC"
+orca terminal wait --for tui-idle && orca terminal read --title "OpenCode"
 ```
 
 ---
 
 ## Phase 4 — Knowledge Graph
 
-1 agent gộp tất cả thành knowledge graph.(ưu tiên CLAUDE)
+**Agent:** Antigravity
 
 **Làm gì:**
 - Merge nodes từ tất cả batches
-- Merge edges
-- Thêm layer membership edges
-- Thêm import edges
-- Validate node IDs unique
-- Mỗi file node chỉ xuất hiện trong 1 layer
+- Merge edges, thêm layer + import edges
+- Validate node IDs unique, mỗi file node đúng 1 layer
 
 **Output:** `.orca-onboard/intermediate/knowledge-graph.json`
 
 ```bash
-orca orchestration task-create --spec "Assemble knowledge graph from scan, batches, layers. Write to .orca-onboard/intermediate/knowledge-graph.json"
+SPEC="Assemble knowledge graph from scan-result.json, batch-*.json, layers.json. Write to .orca-onboard/intermediate/knowledge-graph.json"
+TASK_ID=$(orca orchestration task-create --spec "$SPEC")
+orca orchestration dispatch --task $TASK_ID --to agy --inject \
+  || orca terminal send --title "Antigravity" --text "$SPEC"
+orca terminal wait --for tui-idle && orca terminal read --title "Antigravity"
 ```
 
 ---
 
 ## Phase 5 — Guided Tour
 
-1 agent tạo tour onboarding.(ưu tiên CLAUDE)
+**Agent:** OpenCode
 
 **Làm gì:**
 - Tìm entry points: README.md → index.ts/main.py/app.go
-- BFS traversal từ entry points
-- Identify clusters (2-5 files liên kết chặt)
+- BFS traversal, identify clusters (2-5 files liên kết chặt)
 - Thêm non-code stops: README, Dockerfile, schema, CI/CD
 - Viết 5-15 steps
 
 **Output:** `.orca-onboard/intermediate/tour.json`
 
 ```bash
-orca orchestration task-create --spec "Build 5-15 step tour from entry points. Write to .orca-onboard/intermediate/tour.json"
+SPEC="Build 5-15 step onboarding tour from knowledge-graph.json entry points. Write to .orca-onboard/intermediate/tour.json"
+TASK_ID=$(orca orchestration task-create --spec "$SPEC")
+orca orchestration dispatch --task $TASK_ID --to opencode --inject \
+  || orca terminal send --title "OpenCode" --text "$SPEC"
+orca terminal wait --for tui-idle && orca terminal read --title "OpenCode"
 ```
 
 ---
 
 ## Phase 6 — Validate
 
-1 agent validate graph.(ưu tiên AGY CLI)
+**Agent:** Antigravity
 
 **Check:**
 - Schema: nodes có đủ fields (id, type, name, summary, tags, complexity)
-- Referential integrity: edges reference node có tồn tại
-- Layer coverage: mỗi file node có trong đúng 1 layer
-- Tour: sequential 5-15 steps
-- Quality: no empty summaries, no self-refs, no orphans
+- Referential integrity: edges reference node tồn tại
+- Layer coverage: mỗi file node trong đúng 1 layer
+- Tour: sequential 5-15 steps, no empty summaries
 
 **Output:** `.orca-onboard/intermediate/validation.json`
 
 ```bash
-orca orchestration task-create --spec "Validate knowledge graph. Write to .orca-onboard/intermediate/validation.json"
+SPEC="Validate knowledge-graph.json and tour.json. Write validation report to .orca-onboard/intermediate/validation.json"
+TASK_ID=$(orca orchestration task-create --spec "$SPEC")
+orca orchestration dispatch --task $TASK_ID --to agy --inject \
+  || orca terminal send --title "Antigravity" --text "$SPEC"
+orca terminal wait --for tui-idle && orca terminal read --title "Antigravity"
+# Nếu validation fail → list issues, offer fix trước khi tiếp tục Phase 7
 ```
 
 ---
 
 ## Phase 7 — Wiki Generation
 
-1 agent convert knowledge graph thành wiki.(ưu tiên CLAUDE)
+**Agent:** OpenCode
 
 **Tạo:**
 - `llmwiki/wiki/concepts/` — mỗi layer 1 file
@@ -193,7 +245,11 @@ llmwiki/wiki/
 ```
 
 ```bash
-orca orchestration task-create --spec "Generate wiki from knowledge graph. Write to llmwiki/wiki/"
+SPEC="Generate wiki from knowledge-graph.json and tour.json. Write to llmwiki/wiki/ with index.md, concepts/, entities/, architecture/, tours/"
+TASK_ID=$(orca orchestration task-create --spec "$SPEC")
+orca orchestration dispatch --task $TASK_ID --to opencode --inject \
+  || orca terminal send --title "OpenCode" --text "$SPEC"
+orca terminal wait --for tui-idle && orca terminal read --title "OpenCode"
 ```
 
 ---
