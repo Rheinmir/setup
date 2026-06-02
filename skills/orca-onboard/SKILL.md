@@ -97,7 +97,7 @@ done
 
 ## Phase 3 — Architecture Layers
 
-1 agent phân tích architecture.
+1 agent phân tích architecture.(ưu tiên CLAUDE)
 
 **Làm gì:**
 - Group files theo directory
@@ -115,7 +115,7 @@ orca orchestration task-create --spec "Analyze architecture: group files into la
 
 ## Phase 4 — Knowledge Graph
 
-1 agent gộp tất cả thành knowledge graph.
+1 agent gộp tất cả thành knowledge graph.(ưu tiên CLAUDE)
 
 **Làm gì:**
 - Merge nodes từ tất cả batches
@@ -135,7 +135,7 @@ orca orchestration task-create --spec "Assemble knowledge graph from scan, batch
 
 ## Phase 5 — Guided Tour
 
-1 agent tạo tour onboarding.
+1 agent tạo tour onboarding.(ưu tiên CLAUDE)
 
 **Làm gì:**
 - Tìm entry points: README.md → index.ts/main.py/app.go
@@ -154,7 +154,7 @@ orca orchestration task-create --spec "Build 5-15 step tour from entry points. W
 
 ## Phase 6 — Validate
 
-1 agent validate graph.
+1 agent validate graph.(ưu tiên AGY CLI)
 
 **Check:**
 - Schema: nodes có đủ fields (id, type, name, summary, tags, complexity)
@@ -173,7 +173,7 @@ orca orchestration task-create --spec "Validate knowledge graph. Write to .orca-
 
 ## Phase 7 — Wiki Generation
 
-1 agent convert knowledge graph thành wiki.
+1 agent convert knowledge graph thành wiki.(ưu tiên CLAUDE)
 
 **Tạo:**
 - `llmwiki/wiki/concepts/` — mỗi layer 1 file
