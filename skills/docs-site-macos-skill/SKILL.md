@@ -172,6 +172,81 @@ Apply to SVG elements: `.flow` (dashed arrows), `.pulse` (nodes), `.float` (outp
 - Use `font-family` from the page (`Inter, -apple-system, ...`)
 - Always include `xmlns="http://www.w3.org/2000/svg"` on `<svg>`
 
+### Draggable / Pannable Diagrams (REQUIRED for every `.diagram-box`)
+
+Every `.diagram-box` MUST be interactive: drag to pan, wheel to zoom toward the cursor, double-click or a reset button to restore, and the box itself vertically resizable so the container expands smoothly. This prevents SVG content from ever being clipped — the user can always pan/zoom/grow to reveal anything that overflows the default view.
+
+CSS — replace the old static `.diagram-box` rule with:
+
+```css
+.diagram-box{background:rgba(255,255,255,.7);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.6);border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,.06);
+  padding:24px;margin:24px 0;
+  position:relative;overflow:hidden;display:flex;flex-direction:column;
+  resize:vertical;min-height:160px;transition:box-shadow .2s ease}
+.diagram-box:hover{box-shadow:0 6px 28px rgba(0,0,0,.1)}
+.diagram-viewport{position:relative;flex:1 1 auto;width:100%;overflow:hidden;cursor:grab;touch-action:none}
+.diagram-viewport.grabbing{cursor:grabbing}
+.diagram-viewport svg{width:100%;height:auto;display:block;transform-origin:0 0;
+  will-change:transform;user-select:none;-webkit-user-select:none}
+.diagram-hint{position:absolute;top:8px;right:12px;z-index:5;font-size:10px;color:#4a4a55;
+  background:rgba(255,255,255,.75);border:1px solid rgba(0,0,0,.05);border-radius:20px;
+  padding:3px 10px;opacity:0;transition:opacity .2s;pointer-events:none}
+.diagram-box:hover .diagram-hint{opacity:.9}
+.diagram-reset{position:absolute;bottom:8px;right:10px;z-index:5;font-size:11px;
+  background:rgba(255,255,255,.85);border:1px solid rgba(0,0,0,.08);border-radius:8px;
+  padding:3px 9px;cursor:pointer;color:#4a4a55;opacity:0;transition:opacity .2s}
+.diagram-box:hover .diagram-reset{opacity:1}
+.diagram-reset:hover{background:#fff;color:#0f0f12}
+.diagram-box::after{content:'';position:absolute;right:3px;bottom:3px;width:10px;height:10px;
+  border-right:2px solid rgba(0,0,0,.18);border-bottom:2px solid rgba(0,0,0,.18);
+  border-bottom-right-radius:3px;pointer-events:none}
+```
+
+JS — add once, call after DOM is parsed (script at end of `<body>`). It wraps each diagram's `<svg>` in a `.diagram-viewport`, injects the hint + reset, and wires pointer-drag pan, wheel zoom, and reset:
+
+```js
+function initDraggableDiagrams() {
+  document.querySelectorAll('.diagram-box').forEach(box => {
+    const svg = box.querySelector('svg');
+    if (!svg || box.dataset.draggable) return;
+    box.dataset.draggable = '1';
+    const vp = document.createElement('div');
+    vp.className = 'diagram-viewport';
+    box.insertBefore(vp, svg); vp.appendChild(svg);
+    const hint = document.createElement('div');
+    hint.className = 'diagram-hint';
+    hint.textContent = '✥ kéo để di chuyển · cuộn để zoom · kéo mép dưới để mở rộng';
+    box.appendChild(hint);
+    const reset = document.createElement('button');
+    reset.className = 'diagram-reset'; reset.textContent = '⟲ reset';
+    box.appendChild(reset);
+    let tx=0, ty=0, scale=1, sx=0, sy=0, dragging=false;
+    const apply = () => { svg.style.transform = `translate(${tx}px,${ty}px) scale(${scale})`; };
+    const doReset = () => { tx=0;ty=0;scale=1; svg.style.transition='transform .3s cubic-bezier(.4,0,.2,1)';
+      apply(); setTimeout(()=>{svg.style.transition='';},320); };
+    reset.addEventListener('click', doReset);
+    vp.addEventListener('pointerdown', e => { dragging=true; vp.classList.add('grabbing');
+      vp.setPointerCapture(e.pointerId); sx=e.clientX-tx; sy=e.clientY-ty; });
+    vp.addEventListener('pointermove', e => { if(!dragging) return; tx=e.clientX-sx; ty=e.clientY-sy; apply(); });
+    const end = () => { dragging=false; vp.classList.remove('grabbing'); };
+    vp.addEventListener('pointerup', end); vp.addEventListener('pointercancel', end);
+    vp.addEventListener('dblclick', doReset);
+    vp.addEventListener('wheel', e => { e.preventDefault();
+      const r=vp.getBoundingClientRect(), mx=e.clientX-r.left, my=e.clientY-r.top;
+      const ns=Math.min(4,Math.max(0.5, scale*(e.deltaY<0?1.1:0.9)));
+      tx=mx-(mx-tx)*(ns/scale); ty=my-(my-ty)*(ns/scale); scale=ns; apply();
+    }, {passive:false});
+  });
+}
+initDraggableDiagrams();
+```
+
+Notes:
+- Keep authoring SVGs with a fixed `viewBox` (width 900) as before — the JS layers pan/zoom on top, no SVG changes needed.
+- `resize:vertical` on `.diagram-box` lets the user drag the bottom edge to grow the container; the flex `.diagram-viewport` fills the new height smoothly.
+- The wrapper is idempotent (`dataset.draggable` guard) — safe to call once on load.
+
 ## Collapse / Xem thêm
 
 Animated expand/collapse section:
