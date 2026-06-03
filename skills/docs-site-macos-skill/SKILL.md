@@ -194,7 +194,7 @@ CSS — replace the old static `.diagram-box` rule with:
 .diagram-box:hover{box-shadow:0 6px 28px rgba(0,0,0,.1)}
 .diagram-viewport{position:relative;flex:1 1 auto;width:100%;overflow:hidden;cursor:grab;touch-action:none}
 .diagram-viewport.grabbing{cursor:grabbing}
-.diagram-viewport svg{width:100%;height:auto;display:block;transform-origin:0 0;
+.diagram-viewport svg{width:100%;height:auto;display:block;overflow:visible;transform-origin:0 0;
   will-change:transform;user-select:none;-webkit-user-select:none}
 .dnode{cursor:move}
 .dnode>rect{transition:filter .15s ease}
@@ -263,6 +263,16 @@ function initDraggableDiagrams() {
       if (l._n1) { l.setAttribute('x1', l._x1+l._n1.tx); l.setAttribute('y1', l._y1+l._n1.ty); }
       if (l._n2) { l.setAttribute('x2', l._x2+l._n2.tx); l.setAttribute('y2', l._y2+l._n2.ty); } });
 
+    // auto-fit: viewBox (→ svg height → box) grows to contain dragged nodes ("sizing cùng")
+    const vbBase = (svg.getAttribute('viewBox') || '0 0 900 200').split(/\s+/).map(Number);
+    const fitViewBox = () => {
+      const pad = 16;
+      let minX = vbBase[0], minY = vbBase[1], maxX = vbBase[0]+vbBase[2], maxY = vbBase[1]+vbBase[3];
+      nodes.forEach(n => { minX = Math.min(minX, n.x+n.tx-pad); minY = Math.min(minY, n.y+n.ty-pad);
+        maxX = Math.max(maxX, n.x+n.w+n.tx+pad); maxY = Math.max(maxY, n.y+n.h+n.ty+pad); });
+      svg.setAttribute('viewBox', `${minX} ${minY} ${maxX-minX} ${maxY-minY}`);
+    };
+
     // pan + zoom + per-node drag
     let ptx=0, pty=0, scale=1;
     const applyCanvas = () => { svg.style.transform = `translate(${ptx}px,${pty}px) scale(${scale})`; };
@@ -276,7 +286,7 @@ function initDraggableDiagrams() {
       if (mode==='node') { const c = toSvg(e.clientX, e.clientY); node.tx = t0.x+(c.x-start.x); node.ty = t0.y+(c.y-start.y);
         node.g.setAttribute('transform', `translate(${node.tx},${node.ty})`); reroute(); }
       else if (mode==='pan') { ptx = e.clientX-p0.x; pty = e.clientY-p0.y; applyCanvas(); } });
-    const end = () => { mode=null; node=null; vp.classList.remove('grabbing'); };
+    const end = () => { if (mode==='node') fitViewBox(); mode=null; node=null; vp.classList.remove('grabbing'); };
     vp.addEventListener('pointerup', end); vp.addEventListener('pointercancel', end);
     vp.addEventListener('wheel', e => { e.preventDefault();
       const r = vp.getBoundingClientRect(), mx = e.clientX-r.left, my = e.clientY-r.top;
@@ -284,7 +294,7 @@ function initDraggableDiagrams() {
       ptx = mx-(mx-ptx)*(ns/scale); pty = my-(my-pty)*(ns/scale); scale = ns; applyCanvas(); }, { passive:false });
     const doReset = () => { ptx=0; pty=0; scale=1; svg.style.transition='transform .3s cubic-bezier(.4,0,.2,1)'; applyCanvas();
       setTimeout(() => { svg.style.transition=''; }, 320);
-      nodes.forEach(n => { n.tx=0; n.ty=0; n.g.setAttribute('transform', 'translate(0,0)'); }); reroute(); };
+      nodes.forEach(n => { n.tx=0; n.ty=0; n.g.setAttribute('transform', 'translate(0,0)'); }); reroute(); fitViewBox(); };
     reset.addEventListener('click', doReset); vp.addEventListener('dblclick', doReset);
   });
 }
@@ -294,7 +304,43 @@ initDraggableDiagrams();
 Notes:
 - Author SVGs exactly as before (fixed `viewBox`, flat `<rect>`/`<text>`/`<line>`). Node grouping + line binding are inferred at runtime — keep node labels' `x`/`y` INSIDE their rect bounds so they get adopted correctly.
 - Connectors must be `<line>` (with `x1/y1/x2/y2`) to auto-track. `<path>` connectors stay static — use `<line>` for anything that should follow a node.
+- **Auto-fit**: on drag release the SVG `viewBox` grows to contain dragged nodes, so the svg height (and the box) sizes WITH the content — nodes never get clipped after release. `svg{overflow:visible}` keeps a node visible mid-drag too. `fitViewBox()` runs on pointerup + reset.
 - Idempotent (`dataset.draggable` guard); `resize:vertical` lets the user grow the container; flex viewport fills new height.
+
+### Copy Button on Code Panels (REQUIRED for every `pre.code-block`)
+
+Every code panel MUST have a hover-revealed Copy button. Capture `textContent` BEFORE injecting the button (so the button label isn't copied), wrap the `<pre>` in a relative `.code-wrap`, and copy via the Clipboard API with an `execCommand` fallback.
+
+```css
+.code-wrap{position:relative}
+.code-copy{position:absolute;top:8px;right:8px;z-index:2;font-size:11px;font-family:inherit;font-weight:500;
+  background:rgba(255,255,255,.1);color:#cbd5e1;border:1px solid rgba(255,255,255,.15);
+  border-radius:6px;padding:3px 10px;cursor:pointer;opacity:0;transition:opacity .15s,background .15s,color .15s}
+.code-wrap:hover .code-copy{opacity:1}
+.code-copy:hover{background:rgba(255,255,255,.2);color:#fff}
+.code-copy.copied{background:rgba(16,185,129,.25);color:#6ee7b7;border-color:rgba(16,185,129,.45);opacity:1}
+```
+
+```js
+function initCodeCopy() {
+  document.querySelectorAll('pre.code-block').forEach(pre => {
+    if (pre.dataset.copy) return; pre.dataset.copy = '1';
+    const code = pre.textContent;
+    const wrap = document.createElement('div'); wrap.className = 'code-wrap';
+    pre.parentNode.insertBefore(wrap, pre); wrap.appendChild(pre);
+    const btn = document.createElement('button'); btn.className = 'code-copy'; btn.textContent = 'Copy';
+    wrap.appendChild(btn);
+    btn.addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText(code); }
+      catch { const ta = document.createElement('textarea'); ta.value = code;
+        document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+      btn.textContent = '✓ Copied'; btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1500);
+    });
+  });
+}
+initCodeCopy();
+```
 
 ## Collapse / Xem thêm
 
