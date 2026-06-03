@@ -1,6 +1,10 @@
 ---
 name: orca-onboard
 description: "Parallel codebase onboarding with Orca agents — multi-agent pipeline inspired by Understand-Anything. Generates knowledge graph, architecture layers, guided tour, and llmwiki entries."
+requires:
+  - orchestration
+  - orca-cli
+  - docs-site-macos
 ---
 
 # orca-onboard
@@ -40,6 +44,8 @@ Onboard codebase mới. Phân tích song song, tạo knowledge graph, layers, to
 1. **Phase 0 (Pre-flight)** → chạy xong, kiểm tra `llmwiki/` tồn tại → ✅
 2. **Phase 0.5 (Gate)** → tạo draft file + hỏi user xác nhận
 3. **Phases 1–8** → execute, cập nhật status sau MỖI phase
+
+**Skills phụ thuộc bắt buộc:** `orchestration` (task-create, dispatch, gate-create), `orca-cli` (terminal send/wait/read), `docs-site-macos` (Phase 8). Phase 0 kiểm tra và DỪNG nếu thiếu.
 
 **Nếu `llmwiki/` chưa tồn tại:** bootstrap NGAY tại Phase 0. KHÔNG defer, KHÔNG skip.
 **Nếu bootstrap fail:** DỪNG HOÀN TOÀN, báo lỗi. Không hiện Gate, không tiếp tục.
@@ -124,7 +130,23 @@ update_phase_status() {
 ## Phase 0 — Pre-flight
 
 ```bash
-# Resolve project root
+# --- Dependency check (STOP if missing) ---
+MISSING_SKILLS=()
+# Check orchestration skill loaded (needed for task-create, dispatch, gate-create)
+orca orchestration --help >/dev/null 2>&1 || MISSING_SKILLS+=("orchestration")
+# Check orca-cli skill loaded (needed for terminal send/wait/read)
+orca terminal list >/dev/null 2>&1 || MISSING_SKILLS+=("orca-cli")
+# Check docs-site-macos skill present in agent skills dir
+ls ~/.agents/skills/docs-site-macos/SKILL.md >/dev/null 2>&1 || MISSING_SKILLS+=("docs-site-macos")
+
+if [ ${#MISSING_SKILLS[@]} -gt 0 ]; then
+  echo "❌ orca-onboard: missing required skills: ${MISSING_SKILLS[*]}"
+  echo "   Install with: npx skills add rheinmir/setup@orca --skill ${MISSING_SKILLS[*]} --global -y"
+  exit 1
+fi
+echo "✅ Dependencies OK: orchestration, orca-cli, docs-site-macos"
+
+# --- Resolve project root ---
 PROJECT_ROOT=${1:-.}
 test -d "$PROJECT_ROOT" || exit 1
 
