@@ -1,13 +1,7 @@
 ---
 name: orca-onboard
-description: "Parallel codebase onboarding with Orca agents — multi-agent pipeline inspired by Understand-Anything. Generates knowledge graph, architecture layers, guided tour, and llmwiki entries."
+description: "Parallel codebase onboarding — wraps understand-anything for graph quality, then domain enrichment (Claude), wiki + HTML via opencode+DeepSeek Flash v4."
 requires:
-  - name: orchestration
-    source: stablyai/orca
-    install: "npx skills add stablyai/orca --skill orchestration --global -y"
-  - name: orca-cli
-    source: stablyai/orca
-    install: "npx skills add stablyai/orca --skill orca-cli --global -y"
   - name: docs-site-macos
     source: rheinmir/setup@orca
     install: "npx skills add rheinmir/setup@orca --skill docs-site-macos --global -y"
@@ -15,62 +9,137 @@ requires:
 
 # orca-onboard
 
-Onboard codebase mới. Phân tích song song, tạo knowledge graph, layers, tour, wiki.
+Onboard codebase via understand-anything graph, then domain enrichment + wiki + HTML.
 
-## Khi nào dùng
-- "onboard codebase", "phân tích codebase"
-- "tạo knowledge graph", "guided tour"
+## Triggers
+- "onboard codebase", "analyze codebase", "knowledge graph", "guided tour"
 
 ## Options
-- `--full` — Rebuild hết
-- `--language <lang>` — Ngôn ngữ output (vi, en, zh, ...)
-- `--skip-tour` — Bỏ tour
-- `--skip-wiki` — Bỏ wiki
-- `<path>` — Phân tích thư mục khác
+- `--full` — Delete `.understand-anything/` and rebuild
+- `--update` — Incremental: re-analyze only changed files since last run
+- `--language <lang>` — Output language (vi, en, zh, ...)
+- `--skip-wiki` — Skip wiki generation
+- `<path>` — Target directory (default: `.`)
 
 ## Progress
 ```
-[Phase 1/8] Scan project...
-[Phase 2/8] Analyze files...
-[Phase 3/8] Architecture layers...
-[Phase 4/8] Knowledge graph...
-[Phase 5/8] Guided tour...
-[Phase 6/8] Validate graph...
-[Phase 7/8] Generate wiki...
-[Phase 8/8] Generate HTML docs...
+[Phase 1/4] Graph generation (agy → /understand)...
+[Phase 2/4] Domain enrichment (Claude)...
+[Phase 3/4] Wiki generation (opencode + DeepSeek Flash v4)...
+[Phase 4/4] HTML docs (opencode + DeepSeek Flash v4)...
 ```
 
 ---
 
-## ⚠️ HARD RULE — ĐỌC TRƯỚC KHI LÀM BẤT KỲ THỨ GÌ
+## ⚠️ HARD RULES
 
-⛔ **KHÔNG được chạy Phase 0.5 Gate hay bất kỳ Phase nào (1–8) nếu Phase 0 chưa hoàn thành.**
+⛔ **DO NOT run Phase 0.5 or Phases 1–4 until Phase 0 completes.**
 
-**Thứ tự bắt buộc — không được đảo:**
-1. **Phase 0 (Pre-flight)** → chạy xong, kiểm tra `llmwiki/` tồn tại → ✅
-2. **Phase 0.5 (Gate)** → tạo draft file + hỏi user xác nhận
-3. **Phases 1–8** → execute, cập nhật status sau MỖI phase
+**Strict order — no reversal:**
+1. **Phase 0** → complete, verify `llmwiki/` exists ✅
+2. **Phase 0.5 (Gate)** → create draft file FIRST, then ask user
+3. **Phases 1–4** → execute, update status after EACH phase immediately
 
-**Skills phụ thuộc bắt buộc:** `orchestration` (task-create, dispatch, gate-create), `orca-cli` (terminal send/wait/read), `docs-site-macos` (Phase 8). Phase 0 kiểm tra và DỪNG nếu thiếu.
+- `llmwiki/` missing → bootstrap in Phase 0, NEVER defer
+- Bootstrap fail → STOP completely, report error
+- After EACH phase → update draft status NOW, never at end
 
-**Nếu `llmwiki/` chưa tồn tại:** bootstrap NGAY tại Phase 0. KHÔNG defer, KHÔNG skip.
-**Nếu bootstrap fail:** DỪNG HOÀN TOÀN, báo lỗi. Không hiện Gate, không tiếp tục.
-**Nếu agent bỏ qua Phase 0 hay chạy Phase 0.5 trước Phase 0:** đó là bug — quay lại Phase 0 ngay.
+---
 
-**Sau MỖI phase hoàn thành:** cập nhật status trong draft file NGAY — không defer đến cuối.
+## Dispatch Rules
+
+```
+TASK TYPE        → AGENT               → MODEL
+────────────────────────────────────────────────────
+Graph building   → agy (/understand)   → Claude inside agy (tree-sitter + Louvain)
+Domain reasoning → Claude main thread  → Sonnet (never dispatch out)
+Architecture     → Claude main thread  → Sonnet (never dispatch out)
+Mechanical       → opencode            → deepseek/deepseek-flash-v4
+Scripts          → bash/python direct  → (no LLM)
+```
+
+**Reasoning tasks MUST stay in Claude main thread. NO reasoning to opencode/agy.**
+**opencode + DeepSeek: template fill, wiki render, HTML only.**
+
+---
+
+## Agent Binaries
+
+| Agent | Binary | Default model | Check |
+|-------|--------|--------------|-------|
+| Antigravity | `agy` | Claude (Sonnet/Opus) | `agy --version` |
+| OpenCode | `opencode` | Configurable | `opencode --version` |
+| Kiro | `kiro-cli` | — | `kiro-cli --version` |
+
+**OpenCode with DeepSeek Flash v4:**
+```bash
+opencode --model deepseek/deepseek-flash-v4 --print "$SPEC"
+# Fallback if flag unsupported:
+echo "$SPEC" | opencode --model deepseek/deepseek-flash-v4
+# Last resort: Claude main thread
+```
+
+---
+
+## Update Mode — `--update`
+
+Use after code changes. understand-anything incremental — re-analyzes affected files only.
+
+```
+.understand-anything/meta.json stores file hashes
+agy "/understand" (no --full) → diff hashes vs git → re-run affected batches only
+→ merge new nodes into existing knowledge-graph.json + update ONBOARDING.md
+```
+
+**Prerequisites for `--update`:**
+```bash
+UPDATE_MODE=false
+for arg in "$@"; do
+  [ "$arg" = "--update" ] && UPDATE_MODE=true
+done
+
+if [ "$UPDATE_MODE" = "true" ]; then
+  [ ! -f "$PROJECT_ROOT/.understand-anything/knowledge-graph.json" ] \
+    && echo "❌ --update requires existing graph. Run without --update first." && exit 1
+  [ ! -f "$PROJECT_ROOT/.understand-anything/meta.json" ] \
+    && echo "❌ --update requires meta.json. Run without --update first." && exit 1
+  echo "[update] Incremental mode — reading changed files from meta.json"
+fi
+```
+
+**Per-phase update behavior:**
+- Phase 1: run `/understand` without `--full` → understand-anything detects changed batches
+- Phase 2: read `changedFiles[]` from meta.json → update only domain steps referencing changed files
+- Phase 3: grep wiki for refs to changed files → regenerate stale pages only
+- Phase 4: always rebuild HTML (fast — small wiki input)
+
+**Read changed files from meta.json:**
+```bash
+CHANGED_FILES=$(python3 -c "
+import json, sys
+meta = json.load(open('$PROJECT_ROOT/.understand-anything/meta.json'))
+changed = meta.get('changedFiles', meta.get('changed', []))
+print('\n'.join(changed))
+" 2>/dev/null || echo "")
+
+if [ -z "$CHANGED_FILES" ]; then
+  echo "[update] no changedFiles in meta.json — falling back to full rebuild"
+  UPDATE_MODE=false
+else
+  echo "[update] Changed files:"; echo "$CHANGED_FILES"
+fi
+```
 
 ---
 
 ## Resume Mode — `/orca-onboard @DDMMYY-onboard-<slug>.md`
 
-Khi invoked với argument bắt đầu bằng `@`, đây là resume mode. KHÔNG chạy Phase 0 hay Phase 0.5.
-
-**Bước 1 — Detect và load:**
+Argument starts with `@` → resume mode. Skip Phase 0 and Phase 0.5.
 
 ```bash
 if [[ "$1" == @* ]]; then
-  DRAFT_FILE="${1#@}"        # strip leading @
-  DRAFT_FILE=$(echo "$DRAFT_FILE" | tr '\\' '/')  # normalize Windows paths
+  DRAFT_FILE="${1#@}"
+  DRAFT_FILE=$(echo "$DRAFT_FILE" | tr '\\' '/')
   RESUME_MODE=true
   PROJECT_ROOT=$(grep "Project root:" "$DRAFT_FILE" | grep -oP '(?<=`)[^`]+(?=`)' | head -1)
   PROJECT_ROOT=$(echo "$PROJECT_ROOT" | tr '\\' '/')
@@ -79,12 +148,10 @@ else
 fi
 ```
 
-**Bước 2 — Parse statuses (chỉ từ bảng Agent Task Assignment):**
-
+**Parse statuses:**
 ```bash
 parse_status() {
   local keyword="$1"
-  # Scope awk to lines between "## Agent Task Assignment" and next "## " heading
   awk '/## Agent Task Assignment/{p=1} p && /^## [^A]/{p=0} p' "$DRAFT_FILE" \
     | grep "$keyword" | grep -oE 'pending|in-progress|done' | head -1
 }
@@ -94,37 +161,24 @@ if [ "$RESUME_MODE" = true ]; then
   PHASE2_STATUS=$(parse_status "Phase 2 —")
   PHASE3_STATUS=$(parse_status "Phase 3 —")
   PHASE4_STATUS=$(parse_status "Phase 4 —")
-  PHASE5_STATUS=$(parse_status "Phase 5 —")
-  PHASE6_STATUS=$(parse_status "Phase 6 —")
-  PHASE7_STATUS=$(parse_status "Phase 7 —")
-  PHASE8_STATUS=$(parse_status "Phase 8 —")
-  echo "[Resume] Draft: $DRAFT_FILE"
-  echo "[Resume] Statuses: P1=$PHASE1_STATUS P2=$PHASE2_STATUS P3=$PHASE3_STATUS P4=$PHASE4_STATUS P5=$PHASE5_STATUS P6=$PHASE6_STATUS P7=$PHASE7_STATUS P8=$PHASE8_STATUS"
+  echo "[Resume] P1=$PHASE1_STATUS P2=$PHASE2_STATUS P3=$PHASE3_STATUS P4=$PHASE4_STATUS"
 fi
 ```
 
-**Bước 3 — Hiển thị bảng status cho user, confirm, rồi continue từ phase chưa done.**
-
-**Skip rule (áp dụng cho TỪNG phase):**
-> Nếu `RESUME_MODE=true` VÀ phase status = `done` → bỏ qua phase đó, chuyển sang phase tiếp theo.
-> Nếu `RESUME_MODE=true` VÀ phase status = `in-progress` → coi như interrupted, chạy lại từ đầu.
-> KHÔNG dùng `exit` để skip — chỉ skip logic của phase đó rồi tiếp tục.
+**Skip rule:** `RESUME_MODE=true` + status `done` → skip phase, continue next.
+**Retry rule:** `RESUME_MODE=true` + status `in-progress` → treat as interrupted, re-run.
 
 ---
 
 ## Status Update Helper
 
-Gọi NGAY khi phase bắt đầu (`in-progress`) và khi xong (`done`). KHÔNG defer đến cuối.
-
 ```bash
 update_phase_status() {
-  local keyword="$1"    # phải khớp chính xác với text trong bảng, ví dụ: "Phase 1 —"
-  local status="$2"     # "in-progress" | "done"
+  local keyword="$1"
+  local status="$2"
   [ -z "$DRAFT_FILE" ] && echo "[WARN] DRAFT_FILE unset" && return 0
   local f=$(echo "$DRAFT_FILE" | tr '\\' '/')
   [ ! -f "$f" ] && echo "[WARN] DRAFT_FILE not found: $f" && return 0
-  # Replace status token on the specific row matching keyword
-  # Uses perl for reliable cross-platform in-place edit
   perl -i -pe "s/(\Q$keyword\E.*?)\| (?:pending|in-progress|done)/\$1| $status/g if /\Q$keyword\E/" "$f" \
     || sed -i "s/\(.*$(echo "$keyword" | sed 's/[^^]/[&]/g').*\)| [a-z-]*/\1| $status/" "$f" \
     || echo "[WARN] status update failed for: $keyword"
@@ -136,131 +190,74 @@ update_phase_status() {
 ## Phase 0 — Pre-flight
 
 ```bash
-# --- Dependency check (STOP if missing) ---
-# Maps: skill name → install command
-declare -A SKILL_INSTALL=(
-  [orchestration]="npx skills add stablyai/orca --skill orchestration --global -y"
-  [orca-cli]="npx skills add stablyai/orca --skill orca-cli --global -y"
-  [docs-site-macos]="npx skills add rheinmir/setup@orca --skill docs-site-macos --global -y"
-)
+# --- Dependency check ---
+MISSING=()
+agy --version >/dev/null 2>&1       || MISSING+=("agy (Antigravity)")
+opencode --version >/dev/null 2>&1  || MISSING+=("opencode")
+ls ~/.agents/skills/docs-site-macos/SKILL.md >/dev/null 2>&1 || MISSING+=("docs-site-macos skill")
 
-MISSING_SKILLS=()
-orca orchestration --help >/dev/null 2>&1 || MISSING_SKILLS+=("orchestration")
-orca terminal list >/dev/null 2>&1      || MISSING_SKILLS+=("orca-cli")
-ls ~/.agents/skills/docs-site-macos/SKILL.md >/dev/null 2>&1 || MISSING_SKILLS+=("docs-site-macos")
-
-if [ ${#MISSING_SKILLS[@]} -gt 0 ]; then
-  echo "❌ orca-onboard: missing required skills — install each then retry:"
-  for skill in "${MISSING_SKILLS[@]}"; do
-    echo "   [$skill]  ${SKILL_INSTALL[$skill]}"
-  done
+if [ ${#MISSING[@]} -gt 0 ]; then
+  echo "❌ Missing dependencies:"
+  for dep in "${MISSING[@]}"; do echo "   - $dep"; done
   echo ""
-  echo "   Or install all at once:"
-  echo "   npx skills add stablyai/orca --skill orchestration orca-cli --global -y"
-  echo "   npx skills add rheinmir/setup@orca --skill docs-site-macos --global -y"
+  echo "docs-site-macos: npx skills add rheinmir/setup@orca --skill docs-site-macos --global -y"
   exit 1
 fi
-echo "✅ Dependencies OK: orchestration, orca-cli, docs-site-macos"
 
 # --- Resolve project root ---
 PROJECT_ROOT=${1:-.}
 test -d "$PROJECT_ROOT" || exit 1
 
-# Bootstrap llmwiki nếu chưa có
+# --- Bootstrap llmwiki if missing ---
 if [ ! -d "$PROJECT_ROOT/llmwiki" ]; then
-  echo "[orca-onboard] llmwiki chưa có — kéo template từ rheinmir/setup..."
+  echo "[orca-onboard] bootstrapping llmwiki..."
   git clone https://github.com/rheinmir/setup.git /tmp/orca-llmwiki-bootstrap --depth 1 -b orca -q
   cp -r /tmp/orca-llmwiki-bootstrap/llmwiki "$PROJECT_ROOT/llmwiki"
   rm -rf /tmp/orca-llmwiki-bootstrap
   echo "[orca-onboard] llmwiki bootstrapped OK"
 fi
 
-# Create dirs
+# --- Create dirs ---
 mkdir -p $PROJECT_ROOT/.orca-onboard/{intermediate,tmp}
 mkdir -p $PROJECT_ROOT/llmwiki/wiki/draft/{cave,uiux,orca}
 
-# Get git info
+# --- File count (display only — understand-anything handles batching) ---
 git rev-parse HEAD 2>/dev/null > $PROJECT_ROOT/.orca-onboard/tmp/commit.txt
-# Exclude .orca-onboard/ and llmwiki/ from file list to avoid inflated counts
 git ls-files > $PROJECT_ROOT/.orca-onboard/tmp/files.txt 2>/dev/null \
   || find $PROJECT_ROOT -type f \
-       ! -path "*/.orca-onboard/*" \
-       ! -path "*/llmwiki/*" \
-       ! -path "*/.git/*" \
+       ! -path "*/.orca-onboard/*" ! -path "*/llmwiki/*" ! -path "*/.git/*" \
      > $PROJECT_ROOT/.orca-onboard/tmp/files.txt
 FILE_COUNT=$(wc -l < $PROJECT_ROOT/.orca-onboard/tmp/files.txt | tr -d ' ')
-# Compute batch count: 1 batch per 15 files, minimum 1
-NUM_BATCHES=$(( (FILE_COUNT + 14) / 15 ))
-[ $NUM_BATCHES -lt 1 ] && NUM_BATCHES=1
-echo "[pre-flight] $FILE_COUNT files → $NUM_BATCHES batches"
+
+# --- Probe agent availability ---
+AGY_OK=$(agy --version 2>/dev/null && echo "✅ usable" || echo "❌ not found")
+OC_OK=$(opencode --version 2>/dev/null && echo "✅ usable" || echo "❌ not found")
+KIRO_OK=$(kiro-cli --version 2>/dev/null && echo "✅ usable" || echo "❌ not found")
+
+echo "[pre-flight] $FILE_COUNT files | agy=$AGY_OK | opencode=$OC_OK"
 ```
-
----
-
-## Agent Binaries
-
-| Agent | Binary | Kiểm tra |
-|-------|--------|----------|
-| Antigravity | `agy` | `agy --version` |
-| OpenCode | `opencode` | `opencode --version` |
-| Kiro | `kiro-cli` | `kiro-cli --version` |
-| Orca | GUI — dùng qua `orca terminal *` | `orca terminal list` |
-
-> Dispatch pattern chuẩn cho mỗi phase:
-> ```bash
-> TASK_ID=$(orca orchestration task-create --spec "<spec>")
-> orca orchestration dispatch --task $TASK_ID --to <agent> --inject \
->   || orca terminal send --title "<Agent>" --text "<spec>"
-> orca terminal wait --for tui-idle && orca terminal read --title "<Agent>"
-> ```
 
 ---
 
 ## Phase 0.5 — Gate
 
-**Bắt buộc:** Tạo draft file TRƯỚC, rồi mới hỏi user. Không được đảo thứ tự.
-
-**Bước 1 — Probe agent CLI availability:**
-
-```bash
-# Kiểm tra từng agent binary có usable không
-AGY_OK=$(agy --version 2>/dev/null && echo "✅ usable" || echo "❌ not found")
-OC_OK=$(opencode --version 2>/dev/null && echo "✅ usable" || echo "❌ not found")
-KIRO_OK=$(kiro-cli --version 2>/dev/null && echo "✅ usable" || echo "❌ not found")
-ORCA_OK=$(orca terminal list 2>/dev/null && echo "✅ usable" || echo "❌ not found")
-
-# Fallback assignment nếu agent không available:
-# - agy unavailable → dùng opencode hoặc Claude
-# - opencode unavailable → dùng agy hoặc Claude
-# - cả hai đều unavailable → Claude đảm nhận hết
-```
-
-**Bước 2 — Tạo draft file (với agent availability thực tế):**
+**Required: create draft file FIRST, then ask user. Never reverse this order.**
 
 ```bash
 DATE=$(date +%d%m%y)
 PROJECT_SLUG=$(basename "$PROJECT_ROOT" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
 DRAFT_FILE="$PROJECT_ROOT/llmwiki/wiki/draft/orca/${DATE}-onboard-${PROJECT_SLUG}.md"
-FILE_COUNT=$(wc -l < "$PROJECT_ROOT/.orca-onboard/tmp/files.txt")
 
-# Resolve agent cho từng phase dựa vào availability
-AGENT_SCAN=$( agy --version 2>/dev/null && echo "Antigravity (agy)" || echo "Claude (fallback)" )
+# Determine graph agent (prefer agy, fallback opencode, fallback Claude)
 AGY_AVAIL=$(agy --version 2>/dev/null && echo "yes" || echo "no")
 OC_AVAIL=$(opencode --version 2>/dev/null && echo "yes" || echo "no")
-if [ "$AGY_AVAIL" = "yes" ] && [ "$OC_AVAIL" = "yes" ]; then
-  AGENT_ANALYZE="Antigravity + OpenCode (parallel)"
-elif [ "$AGY_AVAIL" = "yes" ]; then
-  AGENT_ANALYZE="Antigravity (sequential, OpenCode unavailable)"
+if [ "$AGY_AVAIL" = "yes" ]; then
+  AGENT_GRAPH="agy → /understand (tree-sitter + Louvain + Claude)"
 elif [ "$OC_AVAIL" = "yes" ]; then
-  AGENT_ANALYZE="OpenCode (sequential, agy unavailable)"
+  AGENT_GRAPH="opencode → /understand (fallback, agy unavailable)"
 else
-  AGENT_ANALYZE="Claude (fallback — both agents unavailable, sequential)"
+  AGENT_GRAPH="Claude main thread (fallback — both agents unavailable)"
 fi
-AGENT_LAYERS=$( opencode --version 2>/dev/null && echo "OpenCode" || echo "Claude (fallback)" )
-AGENT_GRAPH=$( agy --version 2>/dev/null && echo "Antigravity (agy)" || echo "Claude (fallback)" )
-AGENT_TOUR=$( opencode --version 2>/dev/null && echo "OpenCode" || echo "Claude (fallback)" )
-AGENT_VALIDATE=$( agy --version 2>/dev/null && echo "Antigravity (agy)" || echo "Claude (fallback)" )
-AGENT_WIKI=$( opencode --version 2>/dev/null && echo "OpenCode" || echo "Claude (fallback)" )
 
 cat > "$DRAFT_FILE" << EOF
 # ${DATE}-onboard-${PROJECT_SLUG}
@@ -275,35 +272,31 @@ cat > "$DRAFT_FILE" << EOF
 | Antigravity | \`agy\` | $AGY_OK |
 | OpenCode | \`opencode\` | $OC_OK |
 | Kiro | \`kiro-cli\` | $KIRO_OK |
-| Orca Terminal | \`orca terminal\` | $ORCA_OK |
 
 ## Agent Task Assignment
-| Task | Agent | Status |
-|------|-------|--------|
-| Phase 1 — Scan project ($FILE_COUNT files) | $AGENT_SCAN | pending |
-| Phase 2 — Analyze files (parallel batches) | $AGENT_ANALYZE | pending |
-| Phase 3 — Architecture layers | $AGENT_LAYERS | pending |
-| Phase 4 — Knowledge graph assembly | $AGENT_GRAPH | pending |
-| Phase 5 — Guided tour (5-15 steps) | $AGENT_TOUR | pending |
-| Phase 6 — Validate graph + tour | $AGENT_VALIDATE | pending |
-| Phase 7 — Wiki generation | $AGENT_WIKI | pending |
-| Phase 8 — HTML docs (docs-site-macos) | Claude | pending |
+| Task | Agent | Model | Status |
+|------|-------|-------|--------|
+| Phase 1 — Graph generation ($FILE_COUNT files) | $AGENT_GRAPH | Claude (inside agy) | pending |
+| Phase 2 — Domain enrichment | Claude main thread | Sonnet | pending |
+| Phase 3 — Wiki generation | opencode | DeepSeek Flash v4 | pending |
+| Phase 4 — HTML docs | opencode | DeepSeek Flash v4 | pending |
 
 ## What
-Onboard codebase \`$PROJECT_ROOT\` — knowledge graph, architecture layers, guided tour, wiki, HTML docs.
+Onboard \`$PROJECT_ROOT\` — understand-anything graph, domain enrichment, wiki, HTML.
 
 ## Output
-- \`.orca-onboard/intermediate/scan-result.json\`
-- \`.orca-onboard/intermediate/layers.json\`
-- \`.orca-onboard/intermediate/knowledge-graph.json\`
-- \`.orca-onboard/intermediate/tour.json\`
-- \`.orca-onboard/intermediate/validation.json\`
+- \`.understand-anything/knowledge-graph.json\` (tree-sitter + Louvain)
+- \`.understand-anything/ONBOARDING.md\` (~20k tokens distilled)
+- \`.orca-onboard/intermediate/domain-graph.json\`
 - \`llmwiki/wiki/\` (index, concepts, entities, architecture, tours)
 - \`llmwiki/html/onboarding-${PROJECT_SLUG}.html\`
 
 ## Files
 | File | Action |
 |------|--------|
+| \`.understand-anything/knowledge-graph.json\` | created by agy |
+| \`.understand-anything/ONBOARDING.md\` | created by agy |
+| \`.orca-onboard/intermediate/domain-graph.json\` | created by Claude |
 | \`llmwiki/wiki/index.md\` | created/modified |
 | \`llmwiki/wiki/architecture/*.md\` | created |
 | \`llmwiki/wiki/concepts/*.md\` | created |
@@ -315,334 +308,301 @@ Onboard codebase \`$PROJECT_ROOT\` — knowledge graph, architecture layers, gui
 - Invoked via: \`/orca-onboard\` skill
 - Project root: \`$PROJECT_ROOT\`
 - Files tracked: $FILE_COUNT
+- Reasoning phases in Claude main thread — NOT dispatched to cheap models
+- Mechanical phases: opencode + DeepSeek Flash v4
+
+## Cost Estimate
+| Phase | Agent | Est. tokens | Est. cost |
+|-------|-------|-------------|-----------|
+| Phase 1 (graph) | agy internal | ~1.5M | ~\$2-5 (agy's cost) |
+| Phase 2 (domain) | Claude Sonnet | ~50k | ~\$0.50 |
+| Phase 3 (wiki) | DeepSeek Flash | ~100k | ~\$0.02 |
+| Phase 4 (HTML) | DeepSeek Flash | ~50k | ~\$0.01 |
 
 ## Origin
 - **Draft:** \`wiki/draft/orca/${DATE}-onboard-${PROJECT_SLUG}.md\`
 - **Commit:** _(filled by verify-before-commit)_
 - **Date promoted:** _(filled by verify-before-commit)_
 EOF
+
+# Update wiki index + log
+echo "| [${DATE}-onboard-${PROJECT_SLUG}](draft/orca/${DATE}-onboard-${PROJECT_SLUG}.md) | draft | $(date +%Y-%m-%d) |" >> "$PROJECT_ROOT/llmwiki/wiki/index.md"
+echo "## $(date +%Y-%m-%d) — orca-onboard — onboard-${PROJECT_SLUG}" >> "$PROJECT_ROOT/llmwiki/wiki/log.md"
+
 echo "DRAFT_FILE=$DRAFT_FILE"
 ```
 
-Cập nhật wiki index và log:
-```bash
-echo "| [${DATE}-onboard-${PROJECT_SLUG}](draft/orca/${DATE}-onboard-${PROJECT_SLUG}.md) | draft | $(date +%Y-%m-%d) |" >> "$PROJECT_ROOT/llmwiki/wiki/index.md"
-echo "## $(date +%Y-%m-%d) — orca-onboard — onboard-${PROJECT_SLUG}" >> "$PROJECT_ROOT/llmwiki/wiki/log.md"
-```
-
-**Bước 2 — Trình bày cho user review:**
-
-Hiển thị cho user:
-- Path của draft file vừa tạo
-- Bảng Agent Task Assignment (8 phases, tất cả `pending`)
-- Số files sẽ phân tích
-
-**Bước 3 — Hỏi xác nhận:**
-
-```bash
-orca orchestration gate-create --question "Draft plan tại $DRAFT_FILE. Bắt đầu onboard $PROJECT_ROOT? (8 phases)"
-```
+Show user: draft path, Agent Task Assignment table (4 phases + model), file count, cost estimate.
+Ask for confirmation before continuing.
 
 ---
 
-## Phase 1 — Scan Project
+## Phase 1 — Graph Generation
 
-**Agent:** Antigravity (`agy`)
+**Agent:** agy → `/understand` | **Model:** Claude (inside agy)
 
-**Làm gì:**
-- Đọc manifest: `package.json`, `pyproject.toml`, `Cargo.toml`, `go.mod`, `README.md`
-- Phân loại files: code, config, docs, infra, data, script, markup
-- Đếm dòng code
-- Build import map
+> **READ FIRST** (before dispatch):
+> - Check `.understand-anything/knowledge-graph.json` exists → decide skip/rebuild/incremental
+> - Check `.understand-anything/meta.json` exists → decide if UPDATE_MODE is viable
 
-**Output:** `.orca-onboard/intermediate/scan-result.json`
+**DO:** Dispatch `agy "/understand $PROJECT_ROOT"` — understand-anything handles everything internally: scan → Louvain batch → file analysis → architecture → tour → validation. DO NOT do batch analysis yourself.
 
-**Skip check:** Nếu `RESUME_MODE=true` và `PHASE1_STATUS=done` → bỏ qua Phase 1, sang Phase 2 ngay.
+**Required output:**
+- `.understand-anything/knowledge-graph.json`
+- `.understand-anything/ONBOARDING.md`
+- `.understand-anything/meta.json`
+
+**Skip check:** `RESUME_MODE=true` + `PHASE1_STATUS=done` → skip to Phase 2.
+
+**Decision table (read file state first, then decide):**
+
+| Graph exists | Flag | Action |
+|-------------|------|--------|
+| No | (none) | run `/understand` full |
+| Yes | (none) | skip Phase 1, use existing graph |
+| Yes | `--update` | run `/understand` incremental |
+| Yes | `--full` | delete graph, run `/understand` full |
 
 ```bash
-# Only run if not already done
 if [ "$RESUME_MODE" != "true" ] || [ "$PHASE1_STATUS" != "done" ]; then
   update_phase_status "Phase 1 —" "in-progress"
-  SPEC="Scan $PROJECT_ROOT: enumerate files, detect languages, build import map. Write JSON to .orca-onboard/intermediate/scan-result.json"
-  TASK_ID=$(orca orchestration task-create --spec "$SPEC")
-  orca orchestration dispatch --task $TASK_ID --to agy --inject \
-    || orca terminal send --title "Antigravity" --text "$SPEC"
-  orca terminal wait --for tui-idle && orca terminal read --title "Antigravity"
+
+  if [ "$1" = "--full" ]; then
+    rm -rf "$PROJECT_ROOT/.understand-anything"
+    echo "[Phase 1] --full: cleared existing graph"
+  fi
+
+  if [ "$UPDATE_MODE" = "true" ]; then
+    SPEC="/understand $PROJECT_ROOT"
+    echo "[Phase 1] Incremental update — understand-anything re-analyzes changed batches only"
+  elif [ -f "$PROJECT_ROOT/.understand-anything/knowledge-graph.json" ]; then
+    echo "[Phase 1] Graph exists — skipping. Pass --full to rebuild or --update for incremental."
+    update_phase_status "Phase 1 —" "done"
+    continue 2>/dev/null || true
+    SPEC=""
+  else
+    SPEC="/understand $PROJECT_ROOT"
+  fi
+
+  if [ -n "$SPEC" ]; then
+    if agy --version >/dev/null 2>&1; then
+      agy "$SPEC"
+    elif opencode --version >/dev/null 2>&1; then
+      opencode --print "$SPEC"
+    else
+      echo "[Phase 1] FALLBACK: Claude main thread runs understand-anything phases"
+      # See onboard-codebase skill for fallback phases
+    fi
+  fi
+
+  [ ! -f "$PROJECT_ROOT/.understand-anything/knowledge-graph.json" ] \
+    && echo "❌ Phase 1 FAIL: knowledge-graph.json missing" && exit 1
+  [ ! -f "$PROJECT_ROOT/.understand-anything/ONBOARDING.md" ] \
+    && echo "❌ Phase 1 FAIL: ONBOARDING.md missing" && exit 1
+
+  echo "✅ Phase 1 done"
   update_phase_status "Phase 1 —" "done"
 fi
 ```
 
 ---
 
-## Phase 2 — Analyze Files (Parallel)
+## Phase 2 — Domain Enrichment
 
-**Agent:** Antigravity + OpenCode song song — mỗi batch 1 agent.
+**Agent:** Claude main thread (no dispatch) | **Model:** Sonnet
 
-Chia files thành batches (10-20 files/batch).
+> **READ FIRST** (in order, before writing anything):
+> 1. `.understand-anything/ONBOARDING.md` — full read (~20k tokens)
+> 2. `.understand-anything/knowledge-graph.json` — read `layers` array + `entry-point` tagged nodes ONLY (⛔ NOT full file — context overflow)
+> 3. If `UPDATE_MODE=true`: read existing `.orca-onboard/intermediate/domain-graph.json` (merge, don't overwrite)
 
-**Mỗi file extract:** functions, classes, exports, call graph, tags.
+**DO:**
+1. From entry points → identify HTTP endpoints / CLI commands / events / cron jobs
+2. Reverse-engineer: entry point → flow (process) → steps (actions @ file:line)
+3. Build `domain → flow → step` hierarchy
+4. Write `.orca-onboard/intermediate/domain-graph.json`
 
-**Output:** `.orca-onboard/tmp/batch-{N}.json`
+**Domain graph schema:**
+```json
+{
+  "domains": [
+    {
+      "id": "domain:order-management",
+      "name": "Order Management",
+      "flows": [
+        {
+          "id": "flow:create-order",
+          "name": "Create Order",
+          "steps": [
+            { "order": 0.1, "id": "step:validate-input", "file": "src/orders/validator.ts", "line": 42 },
+            { "order": 0.2, "id": "step:check-inventory", "file": "src/inventory/checker.ts", "line": 15 }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
 
-**Skip check:** Nếu `RESUME_MODE=true` và `PHASE2_STATUS=done` → bỏ qua Phase 2, sang Phase 3 ngay.
+**Output:** `.orca-onboard/intermediate/domain-graph.json`
+
+**Skip check:** `RESUME_MODE=true` + `PHASE2_STATUS=done` → skip to Phase 3.
 
 ```bash
 if [ "$RESUME_MODE" != "true" ] || [ "$PHASE2_STATUS" != "done" ]; then
   update_phase_status "Phase 2 —" "in-progress"
-  # NUM_BATCHES set in Phase 0 pre-flight; re-compute if resuming
-  [ -z "$NUM_BATCHES" ] && FILE_COUNT=$(wc -l < $PROJECT_ROOT/.orca-onboard/tmp/files.txt | tr -d ' ') && NUM_BATCHES=$(( (FILE_COUNT + 14) / 15 ))
-  [ $NUM_BATCHES -lt 1 ] && NUM_BATCHES=1
-  for batch in $(seq 1 $NUM_BATCHES); do
-    # Alternate agents: odd batches → agy, even → opencode (fallback to whichever available)
-    if [ $((batch % 2)) -eq 1 ] && agy --version 2>/dev/null; then
-      AGENT="agy"; TITLE="Antigravity"
-    elif opencode --version 2>/dev/null; then
-      AGENT="opencode"; TITLE="OpenCode"
-    else
-      AGENT="claude"; TITLE="Claude"
-    fi
-    SPEC="Analyze batch $batch of $NUM_BATCHES: extract functions, classes, exports from files listed in .orca-onboard/tmp/files.txt lines $(( (batch-1)*15 + 1 ))-$(( batch*15 )). Write to .orca-onboard/tmp/batch-$batch.json"
-    TASK_ID=$(orca orchestration task-create --spec "$SPEC")
-    orca orchestration dispatch --task $TASK_ID --to $AGENT --inject \
-      || orca terminal send --title "$TITLE" --text "$SPEC"
-  done
-  # Wait for all agents
-  orca terminal wait --for tui-idle && orca terminal read --title "Antigravity" 2>/dev/null
-  orca terminal wait --for tui-idle && orca terminal read --title "OpenCode" 2>/dev/null
+  # Claude main thread — no dispatch
+  if [ "$UPDATE_MODE" = "true" ] && [ -n "$CHANGED_FILES" ]; then
+    echo "[Phase 2] Update mode: re-enrich domain steps for changed files only"
+    # Read existing domain-graph.json
+    # Filter steps with filePath in CHANGED_FILES
+    # Re-analyze those steps from ONBOARDING.md
+    # Merge back into domain-graph.json (keep unchanged steps)
+  else
+    echo "[Phase 2] Full domain enrichment from ONBOARDING.md"
+    # Read ONBOARDING.md + layers from knowledge-graph.json, write new domain-graph.json
+  fi
   update_phase_status "Phase 2 —" "done"
 fi
 ```
 
 ---
 
-## Phase 3 — Architecture Layers
+## Phase 3 — Wiki Generation
 
-**Agent:** OpenCode
+**Agent:** opencode | **Model:** `deepseek/deepseek-flash-v4`
 
-**Làm gì:**
-- Group files theo directory
-- Match pattern: routes/api → API layer, services/core → Service layer, models/db → Data layer
-- Phân tích dependency direction
-- Tạo 3-10 layers
+> **READ FIRST** (inject into SPEC before dispatch — DeepSeek won't read files unless injected):
+> 1. `.understand-anything/ONBOARDING.md` — full read
+> 2. `.orca-onboard/intermediate/domain-graph.json` — full read
+> 3. If `UPDATE_MODE=true`: grep `llmwiki/wiki/` for refs to `CHANGED_FILES` → identify stale pages
+> - ⛔ DO NOT read `.understand-anything/knowledge-graph.json` — too large, context overflow
 
-**Output:** `.orca-onboard/intermediate/layers.json`
+**DO:** Fill wiki templates from distilled content. No reasoning — mechanical template fill.
 
-**Skip check:** Nếu `RESUME_MODE=true` và `PHASE3_STATUS=done` → bỏ qua Phase 3, sang Phase 4 ngay.
+**Output structure:**
+```
+llmwiki/wiki/
+├── index.md
+├── concepts/          ← one file per architecture layer
+├── entities/          ← domain entities + project-structure.md
+├── architecture/      ← index, layers, dependencies, entry-points
+└── tours/
+    └── onboarding-tour.md
+```
+
+**Skip check:** `RESUME_MODE=true` + `PHASE3_STATUS=done` → skip to Phase 4.
 
 ```bash
 if [ "$RESUME_MODE" != "true" ] || [ "$PHASE3_STATUS" != "done" ]; then
   update_phase_status "Phase 3 —" "in-progress"
-  SPEC="Analyze architecture from .orca-onboard/intermediate/scan-result.json: group files into layers. Write to .orca-onboard/intermediate/layers.json"
-  TASK_ID=$(orca orchestration task-create --spec "$SPEC")
-  orca orchestration dispatch --task $TASK_ID --to opencode --inject \
-    || orca terminal send --title "OpenCode" --text "$SPEC"
-  orca terminal wait --for tui-idle && orca terminal read --title "OpenCode"
+
+  if [ "$UPDATE_MODE" = "true" ] && [ -n "$CHANGED_FILES" ]; then
+    STALE_PAGES=$(grep -rl "$CHANGED_FILES" "$PROJECT_ROOT/llmwiki/wiki/" 2>/dev/null | tr '\n' ' ')
+    if [ -n "$STALE_PAGES" ]; then
+      echo "[Phase 3] Stale wiki pages: $STALE_PAGES"
+      SPEC="Update these wiki pages based on changes in ONBOARDING.md: $STALE_PAGES
+Changed source files: $CHANGED_FILES
+Do NOT regenerate unchanged pages. Preserve existing content in unchanged pages."
+    else
+      echo "[Phase 3] No stale wiki pages — skipping"
+      update_phase_status "Phase 3 —" "done"
+    fi
+  else
+    SPEC="Generate wiki pages from .understand-anything/ONBOARDING.md and .orca-onboard/intermediate/domain-graph.json.
+Create: llmwiki/wiki/index.md, llmwiki/wiki/concepts/*.md (one per architecture layer),
+llmwiki/wiki/entities/*.md (domain entities), llmwiki/wiki/architecture/*.md,
+llmwiki/wiki/tours/onboarding-tour.md.
+Use wikilink format [[page-name]]. Do NOT read knowledge-graph.json directly."
+  fi
+
+  opencode --model deepseek/deepseek-flash-v4 --print "$SPEC" \
+    || opencode --print "$SPEC" \
+    || echo "[WARN] opencode unavailable — Claude main thread fallback for wiki"
+
   update_phase_status "Phase 3 —" "done"
 fi
 ```
 
 ---
 
-## Phase 4 — Knowledge Graph
+## Phase 4 — HTML Docs
 
-**Agent:** Antigravity
+**Agent:** opencode | **Model:** `deepseek/deepseek-flash-v4`
 
-**Làm gì:**
-- Merge nodes từ tất cả batches
-- Merge edges, thêm layer + import edges
-- Validate node IDs unique, mỗi file node đúng 1 layer
+> **READ FIRST** (inject into SPEC before dispatch — DeepSeek won't read files unless injected):
+> 1. `llmwiki/wiki/index.md` — list all wiki pages
+> 2. `llmwiki/wiki/architecture/index.md` — architecture overview
+> 3. `llmwiki/wiki/tours/onboarding-tour.md` — tour steps
+> 4. `llmwiki/wiki/concepts/*.md` — layer descriptions
 
-**Output:** `.orca-onboard/intermediate/knowledge-graph.json`
+**Required output rules:**
+- Output to `llmwiki/html/onboarding-<project-slug>.html` — NEVER project root
+- Cover: architecture overview, graph summary (from ONBOARDING.md), layer diagram, tour steps
+- Animated SVG for architecture diagram
+- Checkboxes: `<input type="checkbox">` — NO `☐` Unicode
+- Apply `docs-site-macos` style (glassmorphism, macOS chrome)
 
-**Skip check:** Nếu `RESUME_MODE=true` và `PHASE4_STATUS=done` → bỏ qua Phase 4, sang Phase 5 ngay.
+**Skip check:** `RESUME_MODE=true` + `PHASE4_STATUS=done` → skip.
 
 ```bash
 if [ "$RESUME_MODE" != "true" ] || [ "$PHASE4_STATUS" != "done" ]; then
   update_phase_status "Phase 4 —" "in-progress"
-  SPEC="Assemble knowledge graph from scan-result.json, batch-*.json, layers.json. Write to .orca-onboard/intermediate/knowledge-graph.json"
-  TASK_ID=$(orca orchestration task-create --spec "$SPEC")
-  orca orchestration dispatch --task $TASK_ID --to agy --inject \
-    || orca terminal send --title "Antigravity" --text "$SPEC"
-  orca terminal wait --for tui-idle && orca terminal read --title "Antigravity"
+
+  SPEC="Generate onboarding HTML doc from wiki files at llmwiki/wiki/.
+Cover: project overview, architecture layers, domain flows, guided tour.
+Apply docs-site-macos style (glassmorphism, macOS window chrome, animated SVG diagrams).
+Output: llmwiki/html/onboarding-${PROJECT_SLUG}.html
+Use real <input type='checkbox'> not Unicode checkboxes."
+
+  opencode --model deepseek/deepseek-flash-v4 --print "$SPEC" \
+    || opencode --print "$SPEC" \
+    || {
+      echo "[Phase 4] opencode unavailable — falling back to docs-site-macos skill (Claude)"
+      # Invoke docs-site-macos skill in Claude main thread as fallback
+    }
+
+  ls "$PROJECT_ROOT/llmwiki/html/onboarding-${PROJECT_SLUG}.html" \
+    && echo "✅ Phase 4 done" \
+    || echo "❌ Phase 4 FAIL: HTML not found"
+
   update_phase_status "Phase 4 —" "done"
 fi
 ```
 
----
-
-## Phase 5 — Guided Tour
-
-**Agent:** OpenCode
-
-**Làm gì:**
-- Tìm entry points: README.md → index.ts/main.py/app.go
-- BFS traversal, identify clusters (2-5 files liên kết chặt)
-- Thêm non-code stops: README, Dockerfile, schema, CI/CD
-- Viết 5-15 steps
-
-**Output:** `.orca-onboard/intermediate/tour.json`
-
-**Skip check:** Nếu `RESUME_MODE=true` và `PHASE5_STATUS=done` → bỏ qua Phase 5, sang Phase 6 ngay.
-
+**After completion:**
 ```bash
-if [ "$RESUME_MODE" != "true" ] || [ "$PHASE5_STATUS" != "done" ]; then
-  update_phase_status "Phase 5 —" "in-progress"
-  SPEC="Build 5-15 step onboarding tour from knowledge-graph.json entry points. Write to .orca-onboard/intermediate/tour.json"
-  TASK_ID=$(orca orchestration task-create --spec "$SPEC")
-  orca orchestration dispatch --task $TASK_ID --to opencode --inject \
-    || orca terminal send --title "OpenCode" --text "$SPEC"
-  orca terminal wait --for tui-idle && orca terminal read --title "OpenCode"
-  update_phase_status "Phase 5 —" "done"
-fi
-```
-
----
-
-## Phase 6 — Validate
-
-**Agent:** Antigravity
-
-**Check:**
-- Schema: nodes có đủ fields (id, type, name, summary, tags, complexity)
-- Referential integrity: edges reference node tồn tại
-- Layer coverage: mỗi file node trong đúng 1 layer
-- Tour: sequential 5-15 steps, no empty summaries
-
-**Output:** `.orca-onboard/intermediate/validation.json`
-
-**Skip check:** Nếu `RESUME_MODE=true` và `PHASE6_STATUS=done` → bỏ qua Phase 6, sang Phase 7 ngay.
-
-```bash
-if [ "$RESUME_MODE" != "true" ] || [ "$PHASE6_STATUS" != "done" ]; then
-  update_phase_status "Phase 6 —" "in-progress"
-  SPEC="Validate knowledge-graph.json and tour.json. Write validation report to .orca-onboard/intermediate/validation.json"
-  TASK_ID=$(orca orchestration task-create --spec "$SPEC")
-  orca orchestration dispatch --task $TASK_ID --to agy --inject \
-    || orca terminal send --title "Antigravity" --text "$SPEC"
-  orca terminal wait --for tui-idle && orca terminal read --title "Antigravity"
-  # Nếu validation fail → list issues, offer fix trước khi tiếp tục Phase 7
-  update_phase_status "Phase 6 —" "done"
-fi
-```
-
----
-
-## Phase 7 — Wiki Generation
-
-**Agent:** OpenCode
-
-**Tạo:**
-- `llmwiki/wiki/concepts/` — mỗi layer 1 file
-- `llmwiki/wiki/entities/` — mỗi domain entity 1 file
-- `llmwiki/wiki/architecture/` — index, layers, dependencies, entry-points
-- `llmwiki/wiki/tours/onboarding-tour.md`
-- `llmwiki/wiki/index.md` — master index
-
-**Output structure:**
-```
-llmwiki/wiki/
-├── index.md
-├── concepts/*.md
-├── entities/*.md
-├── architecture/*.md
-└── tours/onboarding-tour.md
-```
-
-**Skip check:** Nếu `RESUME_MODE=true` và `PHASE7_STATUS=done` → bỏ qua Phase 7, sang Phase 8 ngay.
-
-```bash
-if [ "$RESUME_MODE" != "true" ] || [ "$PHASE7_STATUS" != "done" ]; then
-  update_phase_status "Phase 7 —" "in-progress"
-  SPEC="Generate wiki from knowledge-graph.json and tour.json. Write to llmwiki/wiki/ with index.md, concepts/, entities/, architecture/, tours/"
-  TASK_ID=$(orca orchestration task-create --spec "$SPEC")
-  orca orchestration dispatch --task $TASK_ID --to opencode --inject \
-    || orca terminal send --title "OpenCode" --text "$SPEC"
-  orca terminal wait --for tui-idle && orca terminal read --title "OpenCode"
-  update_phase_status "Phase 7 —" "done"
-fi
+lsof -ti :8765 >/dev/null 2>&1 || nohup npx serve -p 8765 > /tmp/serve.log 2>&1 &
+echo "→ http://localhost:8765/llmwiki/html/onboarding-${PROJECT_SLUG}.html"
 ```
 
 ---
 
 ## Rules
 
-- KHÔNG bịa file paths. Chỉ dùng file thật.
-- KHÔNG include file không tồn tại.
-- Validate node IDs unique.
-- Mỗi file node đúng 1 layer.
-- Tour 5-15 steps, bắt đầu bằng project overview.
-- Wiki dùng wikilink format.
+- **READ BEFORE ACT** — each phase reads all inputs in `READ FIRST` block before any action. Never ask user about something already in a file.
+- **NO full `knowledge-graph.json` reads after Phase 1** — use `ONBOARDING.md` instead
+- Real file paths only — never fabricate
+- Domain graph: only reference real file:line, verify against code
+- Wiki: wikilink format `[[page-name]]`
+- Tour: 5-15 steps, start with project overview
+- Reasoning tasks (domain, architecture): Claude main thread only
 
-## Error
+## Errors
 
-- Phase 1 fail → check permissions
-- Phase 2 batch fail → skip batch đó
-- Phase 3 < 3 layers → merge groups nhỏ
-- Phase 6 fail → list issues, offer fix
-
-
----
-
-## Phase 8 — HTML Docs (docs-site-macos)
-
-**Agent:** Claude (main thread — không dispatch ra ngoài)
-
-**Làm gì:**
-- Đọc các wiki MD files vừa tạo ở Phase 7: `llmwiki/wiki/architecture/`, `llmwiki/wiki/concepts/`, `llmwiki/wiki/tours/onboarding-tour.md`
-- Invoke skill `docs-site-macos` để render thành HTML đẹp
-- Output file: `llmwiki/html/onboarding-<project-slug>.html`
-- Cập nhật `llmwiki/html/README.md` nếu có
-
-**Quy tắc bắt buộc:**
-- Output LUÔN vào `llmwiki/html/` — KHÔNG được tạo ở project root hay nơi khác
-- Tên file: `onboarding-<project-slug>.html` (slug = tên thư mục project, lowercase, dấu cách → gạch ngang)
-- Nội dung HTML phải cover: architecture overview, knowledge graph summary, layer diagram, guided tour steps
-- Dùng animated SVG cho architecture diagram
-- Checklist trong HTML phải dùng `<input type="checkbox">` thật — KHÔNG dùng `☐` Unicode
-
-**Skip check:** Nếu `RESUME_MODE=true` và `PHASE8_STATUS=done` → bỏ qua Phase 8.
-
-**Invoke (chỉ chạy nếu không skip):**
-
-```bash
-if [ "$RESUME_MODE" != "true" ] || [ "$PHASE8_STATUS" != "done" ]; then
-  update_phase_status "Phase 8 —" "in-progress"
-  # Invoke docs-site-macos skill (main thread — không dispatch)
-```
-```
-Skill: docs-site-macos
-Args: Synthesize onboarding HTML from wiki files at llmwiki/wiki/. 
-      Cover: project overview, architecture layers, knowledge graph, guided tour.
-      Output: llmwiki/html/onboarding-<slug>.html
-```
-```bash
-  update_phase_status "Phase 8 —" "done"
-fi
-```
-
-**Sau khi tạo xong:**
-```bash
-# Kiểm tra file tồn tại
-ls llmwiki/html/onboarding-*.html
-
-# Nếu port 8765 chưa chạy
-lsof -ti :8765 || nohup npx serve -p 8765 > /tmp/serve.log 2>&1 &
-```
-
-Thông báo user: `http://localhost:8765/llmwiki/html/onboarding-<slug>.html`
+- Phase 1 fail (agy) → check `/understand` skill installed in agy; fallback to opencode
+- Phase 1 fail (no graph) → check permissions; manual: `agy "/understand $PROJECT_ROOT"`
+- Phase 2 domain empty → no HTTP/CLI/event entry points found; write empty domains array
+- Phase 3 fail → check opencode model config; fallback Claude main thread
+- Phase 4 fail → fallback: invoke docs-site-macos skill directly in Claude
 
 ---
 
 ## Output Report
 
-After all main skill tasks complete, write a propose draft to the wiki.
+After all phases complete, write propose draft to wiki.
 
-### Steps
-
-**1. Build the filename:**
-- Format: `DDMMYY-<ten>.md`
-- `DDMMYY` = today (e.g., `020626` for 2 June 2026)
-- `<ten>` = 2–4 kebab-case words summarising what was done (e.g., `landing-page-coteccons`, `brand-kit-fintech`, `ingest-auth-spec`)
+**1. Filename:** `DDMMYY-<ten>.md` — today's date + 2-4 kebab-case summary words
 
 **2. Write** `llmwiki/wiki/draft/orca/DDMMYY-<ten>.md`:
 
@@ -650,28 +610,32 @@ After all main skill tasks complete, write a propose draft to the wiki.
 # DDMMYY-<ten>
 **Type:** draft
 **Status:** proposed
-**Tags:** <skill-name>, output-report
+**Tags:** orca-onboard, output-report
 **Proposed:** YYYY-MM-DD
 
 ## Agent Task Assignment
-| Task | Agent | Status |
-|------|-------|--------|
-| <mô tả task 1> | <tên agent> | pending / in-progress / done |
-| <mô tả task 2> | <tên agent> | pending / in-progress / done |
+| Task | Agent | Model | Status |
+|------|-------|-------|--------|
+| Phase 1 — Graph generation | agy /understand | Claude (agy) | done |
+| Phase 2 — Domain enrichment | Claude main | Sonnet | done |
+| Phase 3 — Wiki generation | opencode | DeepSeek Flash v4 | done |
+| Phase 4 — HTML docs | opencode | DeepSeek Flash v4 | done |
 
 ## What
-<One sentence — what this skill invocation produced or decided>
+<One sentence>
 
 ## Output
-<Key artefacts, files created/modified, or decisions made>
+<Key artefacts>
 
 ## Files
 | File | Action |
 |------|--------|
-| `path/to/file` | created / modified |
+| `.understand-anything/knowledge-graph.json` | created |
+| `llmwiki/wiki/index.md` | created/modified |
+| `llmwiki/html/onboarding-<slug>.html` | created |
 
 ## Notes
-- Invoked via: `/<skill-name>` skill
+- Invoked via: `/orca-onboard` skill
 
 ## Origin
 - **Draft:** `wiki/draft/orca/DDMMYY-<ten>.md`
@@ -680,21 +644,20 @@ After all main skill tasks complete, write a propose draft to the wiki.
 ```
 
 **3. Update wiki index & log:**
-- `llmwiki/wiki/index.md` — append one row: `| [DDMMYY-<ten>](draft/orca/DDMMYY-<ten>.md) | draft | YYYY-MM-DD |`
-- `llmwiki/wiki/log.md` — append: `## YYYY-MM-DD — <skill-name> — <ten>`
+- `llmwiki/wiki/index.md` — append: `| [DDMMYY-<ten>](draft/orca/DDMMYY-<ten>.md) | draft | YYYY-MM-DD |`
+- `llmwiki/wiki/log.md` — append: `## YYYY-MM-DD — orca-onboard — <ten>`
 
-**4. Update agent statuses & sync push — BẮT BUỘC, không bỏ qua:**
-- Mở lại file `llmwiki/wiki/draft/orca/DDMMYY-<ten>.md`
-- Cập nhật cột **Status** trong bảng `## Agent Task Assignment` theo trạng thái thực tế của từng agent (pending → in-progress → done)
-- Clone `rheinmir/setup` nhánh `orca`, copy các skill file đã sửa, rồi push ngược lên:
+**4. Update statuses & sync push — REQUIRED:**
+- Update Status column in draft file to reflect actual run
+- Clone `rheinmir/setup` branch `orca`, copy updated SKILL.md, push:
   ```bash
   git clone git@github.com:rheinmir/setup.git /tmp/rheinmir-setup-sync -b orca --depth 1
-  cp /path/to/skill.md /tmp/rheinmir-setup-sync/skills/<skill-name>/SKILL.md
+  cp ~/.agents/skills/orca-onboard/SKILL.md /tmp/rheinmir-setup-sync/skills/orca-onboard/SKILL.md
   cd /tmp/rheinmir-setup-sync
   git add .
-  git commit -m "skill: sync update — DDMMYY-<ten>"
+  git commit -m "skill: orca-onboard — wrap understand-anything, DeepSeek mechanical dispatch"
   git push origin orca
   rm -rf /tmp/rheinmir-setup-sync
   ```
 
-> Skip chỉ khi skill không tạo ra artifact hoặc quyết định nào.
+> Skip Output Report only if skill produced zero artefacts and zero decisions.
