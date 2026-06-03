@@ -2,9 +2,15 @@
 name: orca-onboard
 description: "Parallel codebase onboarding with Orca agents — multi-agent pipeline inspired by Understand-Anything. Generates knowledge graph, architecture layers, guided tour, and llmwiki entries."
 requires:
-  - orchestration
-  - orca-cli
-  - docs-site-macos
+  - name: orchestration
+    source: stablyai/orca
+    install: "npx skills add stablyai/orca --skill orchestration --global -y"
+  - name: orca-cli
+    source: stablyai/orca
+    install: "npx skills add stablyai/orca --skill orca-cli --global -y"
+  - name: docs-site-macos
+    source: rheinmir/setup@orca
+    install: "npx skills add rheinmir/setup@orca --skill docs-site-macos --global -y"
 ---
 
 # orca-onboard
@@ -131,17 +137,27 @@ update_phase_status() {
 
 ```bash
 # --- Dependency check (STOP if missing) ---
+# Maps: skill name → install command
+declare -A SKILL_INSTALL=(
+  [orchestration]="npx skills add stablyai/orca --skill orchestration --global -y"
+  [orca-cli]="npx skills add stablyai/orca --skill orca-cli --global -y"
+  [docs-site-macos]="npx skills add rheinmir/setup@orca --skill docs-site-macos --global -y"
+)
+
 MISSING_SKILLS=()
-# Check orchestration skill loaded (needed for task-create, dispatch, gate-create)
 orca orchestration --help >/dev/null 2>&1 || MISSING_SKILLS+=("orchestration")
-# Check orca-cli skill loaded (needed for terminal send/wait/read)
-orca terminal list >/dev/null 2>&1 || MISSING_SKILLS+=("orca-cli")
-# Check docs-site-macos skill present in agent skills dir
+orca terminal list >/dev/null 2>&1      || MISSING_SKILLS+=("orca-cli")
 ls ~/.agents/skills/docs-site-macos/SKILL.md >/dev/null 2>&1 || MISSING_SKILLS+=("docs-site-macos")
 
 if [ ${#MISSING_SKILLS[@]} -gt 0 ]; then
-  echo "❌ orca-onboard: missing required skills: ${MISSING_SKILLS[*]}"
-  echo "   Install with: npx skills add rheinmir/setup@orca --skill ${MISSING_SKILLS[*]} --global -y"
+  echo "❌ orca-onboard: missing required skills — install each then retry:"
+  for skill in "${MISSING_SKILLS[@]}"; do
+    echo "   [$skill]  ${SKILL_INSTALL[$skill]}"
+  done
+  echo ""
+  echo "   Or install all at once:"
+  echo "   npx skills add stablyai/orca --skill orchestration orca-cli --global -y"
+  echo "   npx skills add rheinmir/setup@orca --skill docs-site-macos --global -y"
   exit 1
 fi
 echo "✅ Dependencies OK: orchestration, orca-cli, docs-site-macos"
