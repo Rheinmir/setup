@@ -172,9 +172,16 @@ Apply to SVG elements: `.flow` (dashed arrows), `.pulse` (nodes), `.float` (outp
 - Use `font-family` from the page (`Inter, -apple-system, ...`)
 - Always include `xmlns="http://www.w3.org/2000/svg"` on `<svg>`
 
-### Draggable / Pannable Diagrams (REQUIRED for every `.diagram-box`)
+### Node-Draggable Diagrams (REQUIRED for every `.diagram-box`)
 
-Every `.diagram-box` MUST be interactive: drag to pan, wheel to zoom toward the cursor, double-click or a reset button to restore, and the box itself vertically resizable so the container expands smoothly. This prevents SVG content from ever being clipped — the user can always pan/zoom/grow to reveal anything that overflows the default view.
+Every `.diagram-box` MUST be an interactive node graph, NOT a static or merely-pannable picture:
+
+- **Drag each box (node) individually** — moving one table/step does NOT move the others. Connector lines re-route to follow the node automatically.
+- **Drag empty background** = pan the whole canvas.
+- **Wheel** = zoom toward the cursor. **Double-click / ⟲ reset** = restore node positions + canvas.
+- **`.diagram-box` is vertically resizable** (CSS `resize`) so the container expands smoothly.
+
+This is auto-detected from the authored SVG — **no SVG markup changes needed**. The JS treats every `<rect>` ≥ 70×30 as a node, adopts the `<text>`/small-`<rect>` children whose coords fall inside that rect, wraps them in a `<g class="dnode">`, and binds each `<line>` endpoint to the nearest node so connectors track movement. Coordinate conversion uses `getScreenCTM().inverse()` so dragging stays accurate under zoom/pan.
 
 CSS — replace the old static `.diagram-box` rule with:
 
@@ -189,9 +196,12 @@ CSS — replace the old static `.diagram-box` rule with:
 .diagram-viewport.grabbing{cursor:grabbing}
 .diagram-viewport svg{width:100%;height:auto;display:block;transform-origin:0 0;
   will-change:transform;user-select:none;-webkit-user-select:none}
+.dnode{cursor:move}
+.dnode>rect{transition:filter .15s ease}
+.dnode:hover>rect:first-of-type{filter:drop-shadow(0 3px 8px rgba(0,0,0,.18))}
 .diagram-hint{position:absolute;top:8px;right:12px;z-index:5;font-size:10px;color:#4a4a55;
   background:rgba(255,255,255,.75);border:1px solid rgba(0,0,0,.05);border-radius:20px;
-  padding:3px 10px;opacity:0;transition:opacity .2s;pointer-events:none}
+  padding:3px 10px;white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none}
 .diagram-box:hover .diagram-hint{opacity:.9}
 .diagram-reset{position:absolute;bottom:8px;right:10px;z-index:5;font-size:11px;
   background:rgba(255,255,255,.85);border:1px solid rgba(0,0,0,.08);border-radius:8px;
@@ -203,49 +213,88 @@ CSS — replace the old static `.diagram-box` rule with:
   border-bottom-right-radius:3px;pointer-events:none}
 ```
 
-JS — add once, call after DOM is parsed (script at end of `<body>`). It wraps each diagram's `<svg>` in a `.diagram-viewport`, injects the hint + reset, and wires pointer-drag pan, wheel zoom, and reset:
+JS — add once, call after DOM is parsed (script at end of `<body>`):
 
 ```js
 function initDraggableDiagrams() {
+  const NS = 'http://www.w3.org/2000/svg';
+  const nearest = (nodes, x, y) => {
+    let best = null, bd = 1e9;
+    nodes.forEach(n => {
+      const cx = Math.max(n.x, Math.min(x, n.x + n.w)), cy = Math.max(n.y, Math.min(y, n.y + n.h));
+      const d = Math.hypot(x - cx, y - cy);
+      if (d < bd) { bd = d; best = n; }
+    });
+    return bd <= 42 ? best : null;
+  };
   document.querySelectorAll('.diagram-box').forEach(box => {
     const svg = box.querySelector('svg');
     if (!svg || box.dataset.draggable) return;
     box.dataset.draggable = '1';
-    const vp = document.createElement('div');
-    vp.className = 'diagram-viewport';
+    const vp = document.createElement('div'); vp.className = 'diagram-viewport';
     box.insertBefore(vp, svg); vp.appendChild(svg);
-    const hint = document.createElement('div');
-    hint.className = 'diagram-hint';
-    hint.textContent = '✥ kéo để di chuyển · cuộn để zoom · kéo mép dưới để mở rộng';
+    const hint = document.createElement('div'); hint.className = 'diagram-hint';
+    hint.textContent = '✥ kéo từng ô · kéo nền để pan · cuộn để zoom · kéo mép dưới để mở rộng';
     box.appendChild(hint);
-    const reset = document.createElement('button');
-    reset.className = 'diagram-reset'; reset.textContent = '⟲ reset';
+    const reset = document.createElement('button'); reset.className = 'diagram-reset'; reset.textContent = '⟲ reset';
     box.appendChild(reset);
-    let tx=0, ty=0, scale=1, sx=0, sy=0, dragging=false;
-    const apply = () => { svg.style.transform = `translate(${tx}px,${ty}px) scale(${scale})`; };
-    const doReset = () => { tx=0;ty=0;scale=1; svg.style.transition='transform .3s cubic-bezier(.4,0,.2,1)';
-      apply(); setTimeout(()=>{svg.style.transition='';},320); };
-    reset.addEventListener('click', doReset);
-    vp.addEventListener('pointerdown', e => { dragging=true; vp.classList.add('grabbing');
-      vp.setPointerCapture(e.pointerId); sx=e.clientX-tx; sy=e.clientY-ty; });
-    vp.addEventListener('pointermove', e => { if(!dragging) return; tx=e.clientX-sx; ty=e.clientY-sy; apply(); });
-    const end = () => { dragging=false; vp.classList.remove('grabbing'); };
+
+    // detect node rects + adopt children
+    const allRects = [...svg.querySelectorAll('rect')];
+    const nodes = allRects.filter(r => (+r.getAttribute('width')) >= 70 && (+r.getAttribute('height')) >= 30)
+      .map(r => ({ rect: r, x: +r.getAttribute('x'), y: +r.getAttribute('y'),
+        w: +r.getAttribute('width'), h: +r.getAttribute('height'), els: [r], tx: 0, ty: 0 }));
+    const inNode = (px, py) => nodes.find(n => px >= n.x-1 && px <= n.x+n.w+1 && py >= n.y-1 && py <= n.y+n.h+1);
+    [...svg.querySelectorAll('text')].forEach(t => {
+      const x = parseFloat(t.getAttribute('x')), y = parseFloat(t.getAttribute('y'));
+      if (isNaN(x) || isNaN(y)) return; const n = inNode(x, y); if (n) n.els.push(t);
+    });
+    allRects.forEach(r => { if (nodes.some(n => n.rect === r)) return;
+      const x = +r.getAttribute('x'), y = +r.getAttribute('y'), w = +r.getAttribute('width')||0, h = +r.getAttribute('height')||0;
+      const n = inNode(x+w/2, y+h/2); if (n) n.els.push(r); });
+    nodes.forEach(n => { const g = document.createElementNS(NS, 'g'); g.setAttribute('class', 'dnode');
+      n.rect.parentNode.insertBefore(g, n.rect); n.els.forEach(el => g.appendChild(el)); n.g = g; });
+
+    // bind connector lines
+    const links = [...svg.querySelectorAll('line')].filter(l => l.hasAttribute('x1') && l.hasAttribute('x2'));
+    links.forEach(l => { l._x1=+l.getAttribute('x1'); l._y1=+l.getAttribute('y1'); l._x2=+l.getAttribute('x2'); l._y2=+l.getAttribute('y2');
+      l._n1 = nearest(nodes, l._x1, l._y1); l._n2 = nearest(nodes, l._x2, l._y2); });
+    const reroute = () => links.forEach(l => {
+      if (l._n1) { l.setAttribute('x1', l._x1+l._n1.tx); l.setAttribute('y1', l._y1+l._n1.ty); }
+      if (l._n2) { l.setAttribute('x2', l._x2+l._n2.tx); l.setAttribute('y2', l._y2+l._n2.ty); } });
+
+    // pan + zoom + per-node drag
+    let ptx=0, pty=0, scale=1;
+    const applyCanvas = () => { svg.style.transform = `translate(${ptx}px,${pty}px) scale(${scale})`; };
+    const toSvg = (cx, cy) => { const p = svg.createSVGPoint(); p.x=cx; p.y=cy; return p.matrixTransform(svg.getScreenCTM().inverse()); };
+    let mode=null, node=null, start=null, t0=null, p0=null;
+    vp.addEventListener('pointerdown', e => { vp.setPointerCapture(e.pointerId);
+      const g = e.target.closest && e.target.closest('g.dnode');
+      if (g) { mode='node'; node = nodes.find(n => n.g === g); start = toSvg(e.clientX, e.clientY); t0 = { x: node.tx, y: node.ty }; }
+      else { mode='pan'; p0 = { x: e.clientX-ptx, y: e.clientY-pty }; vp.classList.add('grabbing'); } });
+    vp.addEventListener('pointermove', e => {
+      if (mode==='node') { const c = toSvg(e.clientX, e.clientY); node.tx = t0.x+(c.x-start.x); node.ty = t0.y+(c.y-start.y);
+        node.g.setAttribute('transform', `translate(${node.tx},${node.ty})`); reroute(); }
+      else if (mode==='pan') { ptx = e.clientX-p0.x; pty = e.clientY-p0.y; applyCanvas(); } });
+    const end = () => { mode=null; node=null; vp.classList.remove('grabbing'); };
     vp.addEventListener('pointerup', end); vp.addEventListener('pointercancel', end);
-    vp.addEventListener('dblclick', doReset);
     vp.addEventListener('wheel', e => { e.preventDefault();
-      const r=vp.getBoundingClientRect(), mx=e.clientX-r.left, my=e.clientY-r.top;
-      const ns=Math.min(4,Math.max(0.5, scale*(e.deltaY<0?1.1:0.9)));
-      tx=mx-(mx-tx)*(ns/scale); ty=my-(my-ty)*(ns/scale); scale=ns; apply();
-    }, {passive:false});
+      const r = vp.getBoundingClientRect(), mx = e.clientX-r.left, my = e.clientY-r.top;
+      const ns = Math.min(4, Math.max(0.5, scale*(e.deltaY<0?1.1:0.9)));
+      ptx = mx-(mx-ptx)*(ns/scale); pty = my-(my-pty)*(ns/scale); scale = ns; applyCanvas(); }, { passive:false });
+    const doReset = () => { ptx=0; pty=0; scale=1; svg.style.transition='transform .3s cubic-bezier(.4,0,.2,1)'; applyCanvas();
+      setTimeout(() => { svg.style.transition=''; }, 320);
+      nodes.forEach(n => { n.tx=0; n.ty=0; n.g.setAttribute('transform', 'translate(0,0)'); }); reroute(); };
+    reset.addEventListener('click', doReset); vp.addEventListener('dblclick', doReset);
   });
 }
 initDraggableDiagrams();
 ```
 
 Notes:
-- Keep authoring SVGs with a fixed `viewBox` (width 900) as before — the JS layers pan/zoom on top, no SVG changes needed.
-- `resize:vertical` on `.diagram-box` lets the user drag the bottom edge to grow the container; the flex `.diagram-viewport` fills the new height smoothly.
-- The wrapper is idempotent (`dataset.draggable` guard) — safe to call once on load.
+- Author SVGs exactly as before (fixed `viewBox`, flat `<rect>`/`<text>`/`<line>`). Node grouping + line binding are inferred at runtime — keep node labels' `x`/`y` INSIDE their rect bounds so they get adopted correctly.
+- Connectors must be `<line>` (with `x1/y1/x2/y2`) to auto-track. `<path>` connectors stay static — use `<line>` for anything that should follow a node.
+- Idempotent (`dataset.draggable` guard); `resize:vertical` lets the user grow the container; flex viewport fills new height.
 
 ## Collapse / Xem thêm
 
