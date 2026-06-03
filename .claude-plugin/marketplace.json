@@ -1,0 +1,61 @@
+{
+  "name": "rheinmir-setup-skills",
+  "owner": {
+    "name": "rheinmir",
+    "email": "giatbh@coteccons.vn"
+  },
+  "metadata": {
+    "description": "Orca project template skills",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "caveman",
+      "description": "Caveman mode and crew skills for token-efficient communication",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/cavecrew",
+        "./skills/caveman",
+        "./skills/caveman-commit",
+        "./skills/caveman-compress",
+        "./skills/caveman-help",
+        "./skills/caveman-review",
+        "./skills/caveman-stats"
+      ]
+    },
+    {
+      "name": "orca",
+      "description": "Orca workflow and onboarding skills",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/orca-dispatch-reference",
+        "./skills/orca-onboard",
+        "./skills/orca-workflow"
+      ]
+    },
+    {
+      "name": "project",
+      "description": "Project lifecycle and knowledge management skills",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/docs-site-macos-skill",
+        "./skills/extract-site",
+        "./skills/impact-check",
+        "./skills/ingest",
+        "./skills/join-project",
+        "./skills/lint",
+        "./skills/md-to-html",
+        "./skills/new-project-setup",
+        "./skills/onboard-codebase",
+        "./skills/propose",
+        "./skills/query",
+        "./skills/safe-change",
+        "./skills/sync-template",
+        "./skills/verify-before-commit"
+      ]
+    }
+  ]
+}
