@@ -234,6 +234,15 @@ Use Inter from Google Fonts:
 ```
 Font stack: `'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif`
 
+## Output Path — CRITICAL
+
+**ALWAYS write HTML files to `llmwiki/html/` inside the current project root.**
+
+- Single file: `llmwiki/html/<slug>.html`
+- Multi-file: `llmwiki/html/index.html` + `llmwiki/html/<slug>.html`
+- NEVER write to the project root or any other directory.
+- If `llmwiki/html/` does not exist, create it first.
+
 ## Auto-Host
 
 After creating the HTML file(s), ALWAYS start a local HTTP server for preview:
@@ -244,7 +253,7 @@ kill -9 $(lsof -ti :8765) 2>/dev/null
 nohup npx serve -p 8765 > /tmp/serve.log 2>&1 &
 ```
 
-Notify user: open `http://localhost:8765/index.html` (or directly `http://localhost:8765/<file>.html`).
+Notify user: open `http://localhost:8765/llmwiki/html/<file>.html`
 
 If port 8765 is already in use, skip (server already running).
 
