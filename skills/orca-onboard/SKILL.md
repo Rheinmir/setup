@@ -34,16 +34,83 @@ Onboard codebase mới. Phân tích song song, tạo knowledge graph, layers, to
 
 ## ⚠️ HARD RULE — ĐỌC TRƯỚC KHI LÀM BẤT KỲ THỨ GÌ
 
-⛔ **KHÔNG được chạy Phase 0.5 Gate hay bất kỳ Phase nào (1–7) nếu Phase 0 chưa hoàn thành.**
+⛔ **KHÔNG được chạy Phase 0.5 Gate hay bất kỳ Phase nào (1–8) nếu Phase 0 chưa hoàn thành.**
 
 **Thứ tự bắt buộc — không được đảo:**
 1. **Phase 0 (Pre-flight)** → chạy xong, kiểm tra `llmwiki/` tồn tại → ✅
-2. **Phase 0.5 (Gate)** → hỏi user xác nhận
-3. **Phases 1–7** → execute
+2. **Phase 0.5 (Gate)** → tạo draft file + hỏi user xác nhận
+3. **Phases 1–8** → execute, cập nhật status sau MỖI phase
 
 **Nếu `llmwiki/` chưa tồn tại:** bootstrap NGAY tại Phase 0. KHÔNG defer, KHÔNG skip.
 **Nếu bootstrap fail:** DỪNG HOÀN TOÀN, báo lỗi. Không hiện Gate, không tiếp tục.
 **Nếu agent bỏ qua Phase 0 hay chạy Phase 0.5 trước Phase 0:** đó là bug — quay lại Phase 0 ngay.
+
+**Sau MỖI phase hoàn thành:** cập nhật status trong draft file NGAY — không defer đến cuối.
+
+---
+
+## Resume Mode — `/orca-onboard @DDMMYY-onboard-<slug>.md`
+
+Khi invoked với argument là path đến draft file (bắt đầu bằng `@`):
+
+```bash
+# Detect resume mode
+if [[ "$1" == @* ]]; then
+  DRAFT_FILE="${1#@}"           # strip leading @
+  RESUME_MODE=true
+else
+  RESUME_MODE=false
+fi
+```
+
+**Nếu `RESUME_MODE=true`:**
+
+1. **Đọc draft file** — parse bảng `## Agent Task Assignment`, lấy status từng phase
+2. **Skip phases có status `done`** — không chạy lại
+3. **Tiếp tục từ phase đầu tiên có status `pending` hoặc `in-progress`**
+4. **Phase `in-progress`** → coi như chưa xong, chạy lại từ đầu phase đó
+5. **Không chạy Phase 0 (pre-flight) hay Phase 0.5 (gate)** trong resume mode — chỉ parse draft rồi execute phases còn lại
+
+```bash
+# Parse phase statuses từ draft file
+parse_status() {
+  local phase_keyword="$1"
+  grep "$phase_keyword" "$DRAFT_FILE" | grep -oE 'pending|in-progress|done' | head -1
+}
+
+PHASE1_STATUS=$(parse_status "Phase 1")
+PHASE2_STATUS=$(parse_status "Phase 2")
+PHASE3_STATUS=$(parse_status "Phase 3")
+PHASE4_STATUS=$(parse_status "Phase 4")
+PHASE5_STATUS=$(parse_status "Phase 5")
+PHASE6_STATUS=$(parse_status "Phase 6")
+PHASE7_STATUS=$(parse_status "Phase 7")
+PHASE8_STATUS=$(parse_status "Phase 8")
+
+echo "Resume from draft: $DRAFT_FILE"
+echo "Phase statuses: 1=$PHASE1_STATUS 2=$PHASE2_STATUS 3=$PHASE3_STATUS 4=$PHASE4_STATUS 5=$PHASE5_STATUS 6=$PHASE6_STATUS 7=$PHASE7_STATUS 8=$PHASE8_STATUS"
+```
+
+Hiển thị cho user bảng status hiện tại trước khi resume, confirm rồi tiếp tục.
+
+---
+
+## Status Update Helper
+
+Dùng sau MỖI phase để cập nhật draft file. Gọi ngay khi phase bắt đầu (→ `in-progress`) và khi xong (→ `done`):
+
+```bash
+update_phase_status() {
+  local phase_keyword="$1"   # e.g. "Phase 1", "Phase 2"
+  local new_status="$2"      # "in-progress" hoặc "done"
+  # Thay status cũ (pending/in-progress/done) → new_status cho dòng chứa phase_keyword
+  sed -i "/$phase_keyword/s/| pending\|| in-progress\|| done/| $new_status/" "$DRAFT_FILE"
+}
+
+# Ví dụ dùng:
+# update_phase_status "Phase 1" "in-progress"   # khi bắt đầu phase
+# update_phase_status "Phase 1" "done"           # khi phase xong
+```
 
 ---
 
@@ -225,11 +292,14 @@ orca orchestration gate-create --question "Draft plan tại $DRAFT_FILE. Bắt �
 **Output:** `.orca-onboard/intermediate/scan-result.json`
 
 ```bash
+[ "$RESUME_MODE" = true ] && [ "$PHASE1_STATUS" = "done" ] && echo "[Phase 1] skip (done)" && exit 0
+update_phase_status "Phase 1" "in-progress"
 SPEC="Scan $PROJECT_ROOT: enumerate files, detect languages, build import map. Write JSON to .orca-onboard/intermediate/scan-result.json"
 TASK_ID=$(orca orchestration task-create --spec "$SPEC")
 orca orchestration dispatch --task $TASK_ID --to agy --inject \
   || orca terminal send --title "Antigravity" --text "$SPEC"
 orca terminal wait --for tui-idle && orca terminal read --title "Antigravity"
+update_phase_status "Phase 1" "done"
 ```
 
 ---
@@ -245,6 +315,8 @@ Chia files thành batches (10-20 files/batch).
 **Output:** `.orca-onboard/tmp/batch-{N}.json`
 
 ```bash
+[ "$RESUME_MODE" = true ] && [ "$PHASE2_STATUS" = "done" ] && echo "[Phase 2] skip (done)" && exit 0
+update_phase_status "Phase 2" "in-progress"
 for batch in $(seq 1 $NUM_BATCHES); do
   AGENT=$( [ $((batch % 2)) -eq 0 ] && echo "opencode" || echo "agy" )
   TITLE=$( [ $((batch % 2)) -eq 0 ] && echo "OpenCode" || echo "Antigravity" )
@@ -256,6 +328,7 @@ done
 # Chờ tất cả batches xong
 orca terminal wait --for tui-idle && orca terminal read --title "Antigravity"
 orca terminal wait --for tui-idle && orca terminal read --title "OpenCode"
+update_phase_status "Phase 2" "done"
 ```
 
 ---
@@ -273,11 +346,14 @@ orca terminal wait --for tui-idle && orca terminal read --title "OpenCode"
 **Output:** `.orca-onboard/intermediate/layers.json`
 
 ```bash
+[ "$RESUME_MODE" = true ] && [ "$PHASE3_STATUS" = "done" ] && echo "[Phase 3] skip (done)" && exit 0
+update_phase_status "Phase 3" "in-progress"
 SPEC="Analyze architecture from .orca-onboard/intermediate/scan-result.json: group files into layers. Write to .orca-onboard/intermediate/layers.json"
 TASK_ID=$(orca orchestration task-create --spec "$SPEC")
 orca orchestration dispatch --task $TASK_ID --to opencode --inject \
   || orca terminal send --title "OpenCode" --text "$SPEC"
 orca terminal wait --for tui-idle && orca terminal read --title "OpenCode"
+update_phase_status "Phase 3" "done"
 ```
 
 ---
@@ -294,11 +370,14 @@ orca terminal wait --for tui-idle && orca terminal read --title "OpenCode"
 **Output:** `.orca-onboard/intermediate/knowledge-graph.json`
 
 ```bash
+[ "$RESUME_MODE" = true ] && [ "$PHASE4_STATUS" = "done" ] && echo "[Phase 4] skip (done)" && exit 0
+update_phase_status "Phase 4" "in-progress"
 SPEC="Assemble knowledge graph from scan-result.json, batch-*.json, layers.json. Write to .orca-onboard/intermediate/knowledge-graph.json"
 TASK_ID=$(orca orchestration task-create --spec "$SPEC")
 orca orchestration dispatch --task $TASK_ID --to agy --inject \
   || orca terminal send --title "Antigravity" --text "$SPEC"
 orca terminal wait --for tui-idle && orca terminal read --title "Antigravity"
+update_phase_status "Phase 4" "done"
 ```
 
 ---
@@ -316,11 +395,14 @@ orca terminal wait --for tui-idle && orca terminal read --title "Antigravity"
 **Output:** `.orca-onboard/intermediate/tour.json`
 
 ```bash
+[ "$RESUME_MODE" = true ] && [ "$PHASE5_STATUS" = "done" ] && echo "[Phase 5] skip (done)" && exit 0
+update_phase_status "Phase 5" "in-progress"
 SPEC="Build 5-15 step onboarding tour from knowledge-graph.json entry points. Write to .orca-onboard/intermediate/tour.json"
 TASK_ID=$(orca orchestration task-create --spec "$SPEC")
 orca orchestration dispatch --task $TASK_ID --to opencode --inject \
   || orca terminal send --title "OpenCode" --text "$SPEC"
 orca terminal wait --for tui-idle && orca terminal read --title "OpenCode"
+update_phase_status "Phase 5" "done"
 ```
 
 ---
@@ -338,12 +420,15 @@ orca terminal wait --for tui-idle && orca terminal read --title "OpenCode"
 **Output:** `.orca-onboard/intermediate/validation.json`
 
 ```bash
+[ "$RESUME_MODE" = true ] && [ "$PHASE6_STATUS" = "done" ] && echo "[Phase 6] skip (done)" && exit 0
+update_phase_status "Phase 6" "in-progress"
 SPEC="Validate knowledge-graph.json and tour.json. Write validation report to .orca-onboard/intermediate/validation.json"
 TASK_ID=$(orca orchestration task-create --spec "$SPEC")
 orca orchestration dispatch --task $TASK_ID --to agy --inject \
   || orca terminal send --title "Antigravity" --text "$SPEC"
 orca terminal wait --for tui-idle && orca terminal read --title "Antigravity"
 # Nếu validation fail → list issues, offer fix trước khi tiếp tục Phase 7
+update_phase_status "Phase 6" "done"
 ```
 
 ---
@@ -370,11 +455,14 @@ llmwiki/wiki/
 ```
 
 ```bash
+[ "$RESUME_MODE" = true ] && [ "$PHASE7_STATUS" = "done" ] && echo "[Phase 7] skip (done)" && exit 0
+update_phase_status "Phase 7" "in-progress"
 SPEC="Generate wiki from knowledge-graph.json and tour.json. Write to llmwiki/wiki/ with index.md, concepts/, entities/, architecture/, tours/"
 TASK_ID=$(orca orchestration task-create --spec "$SPEC")
 orca orchestration dispatch --task $TASK_ID --to opencode --inject \
   || orca terminal send --title "OpenCode" --text "$SPEC"
 orca terminal wait --for tui-idle && orca terminal read --title "OpenCode"
+update_phase_status "Phase 7" "done"
 ```
 
 ---
@@ -416,11 +504,18 @@ orca terminal wait --for tui-idle && orca terminal read --title "OpenCode"
 - Checklist trong HTML phải dùng `<input type="checkbox">` thật — KHÔNG dùng `☐` Unicode
 
 **Invoke:**
+```bash
+[ "$RESUME_MODE" = true ] && [ "$PHASE8_STATUS" = "done" ] && echo "[Phase 8] skip (done)" && exit 0
+update_phase_status "Phase 8" "in-progress"
+```
 ```
 Skill: docs-site-macos
 Args: Synthesize onboarding HTML from wiki files at llmwiki/wiki/. 
       Cover: project overview, architecture layers, knowledge graph, guided tour.
       Output: llmwiki/html/onboarding-<slug>.html
+```
+```bash
+update_phase_status "Phase 8" "done"
 ```
 
 **Sau khi tạo xong:**
