@@ -270,6 +270,33 @@ When generating separate pages per wiki file:
 
 - ALWAYS inline SVG directly in the HTML (not external files)
 - ALWAYS use `clamp()` for hero heading size: `font-size: clamp(32px,5vw,56px)`
+- NEVER use `☐` Unicode for checklists — ALWAYS use real `<input type="checkbox">` with `<label for="...">` so items are clickable. Add this CSS for every checklist:
+
+```css
+.checklist { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.checklist li { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--text-2); cursor: pointer; }
+.checklist li::before { display: none; }
+.checklist input[type="checkbox"] {
+  width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid #cbd5e1;
+  appearance: none; -webkit-appearance: none; cursor: pointer; flex-shrink: 0;
+  background: rgba(255,255,255,.8); margin-top: 2px; transition: all .15s;
+}
+.checklist input[type="checkbox"]:checked {
+  background: #6366f1; border-color: #6366f1;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M13 4L6.5 11 3 7.5' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");
+  background-size: contain;
+}
+.checklist label { cursor: pointer; line-height: 1.5; }
+.checklist input[type="checkbox"]:checked + label { text-decoration: line-through; color: #94a3b8; }
+```
+
+```html
+<!-- Correct checklist markup -->
+<ul class="checklist">
+  <li><input type="checkbox" id="c1"><label for="c1">Item text</label></li>
+  <li><input type="checkbox" id="c2"><label for="c2">Item text</label></li>
+</ul>
+```
 - ALWAYS make each `<section>` self-contained with accent colors from the cycle by its index (use `#sec-{i}` CSS rules)
 - Keep SVG viewBox widths consistent (900) across diagrams for visual harmony
 - Use relative `../file.md` links for "Chi tiết" footers pointing to companion markdown files
