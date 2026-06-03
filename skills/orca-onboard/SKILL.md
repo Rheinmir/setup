@@ -95,10 +95,119 @@ git ls-files > $PROJECT_ROOT/.orca-onboard/tmp/files.txt 2>/dev/null || find $PR
 
 ## Phase 0.5 — Gate
 
-Trước khi bắt đầu, tạo gate chờ user xác nhận:
+**Bắt buộc:** Tạo draft file TRƯỚC, rồi mới hỏi user. Không được đảo thứ tự.
+
+**Bước 1 — Probe agent CLI availability:**
 
 ```bash
-orca orchestration gate-create --question "Bắt đầu onboard $PROJECT_ROOT? (7 phases, có thể mất vài phút)"
+# Kiểm tra từng agent binary có usable không
+AGY_OK=$(agy --version 2>/dev/null && echo "✅ usable" || echo "❌ not found")
+OC_OK=$(opencode --version 2>/dev/null && echo "✅ usable" || echo "❌ not found")
+KIRO_OK=$(kiro-cli --version 2>/dev/null && echo "✅ usable" || echo "❌ not found")
+ORCA_OK=$(orca terminal list 2>/dev/null && echo "✅ usable" || echo "❌ not found")
+
+# Fallback assignment nếu agent không available:
+# - agy unavailable → dùng opencode hoặc Claude
+# - opencode unavailable → dùng agy hoặc Claude
+# - cả hai đều unavailable → Claude đảm nhận hết
+```
+
+**Bước 2 — Tạo draft file (với agent availability thực tế):**
+
+```bash
+DATE=$(date +%d%m%y)
+PROJECT_SLUG=$(basename "$PROJECT_ROOT" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
+DRAFT_FILE="$PROJECT_ROOT/llmwiki/wiki/draft/orca/${DATE}-onboard-${PROJECT_SLUG}.md"
+FILE_COUNT=$(wc -l < "$PROJECT_ROOT/.orca-onboard/tmp/files.txt")
+
+# Resolve agent cho từng phase dựa vào availability
+AGENT_SCAN=$( agy --version 2>/dev/null && echo "Antigravity (agy)" || echo "Claude (fallback)" )
+AGENT_ANALYZE=$( (agy --version 2>/dev/null || opencode --version 2>/dev/null) && echo "Antigravity + OpenCode (parallel)" || echo "Claude (fallback, sequential)" )
+AGENT_LAYERS=$( opencode --version 2>/dev/null && echo "OpenCode" || echo "Claude (fallback)" )
+AGENT_GRAPH=$( agy --version 2>/dev/null && echo "Antigravity (agy)" || echo "Claude (fallback)" )
+AGENT_TOUR=$( opencode --version 2>/dev/null && echo "OpenCode" || echo "Claude (fallback)" )
+AGENT_VALIDATE=$( agy --version 2>/dev/null && echo "Antigravity (agy)" || echo "Claude (fallback)" )
+AGENT_WIKI=$( opencode --version 2>/dev/null && echo "OpenCode" || echo "Claude (fallback)" )
+
+cat > "$DRAFT_FILE" << EOF
+# ${DATE}-onboard-${PROJECT_SLUG}
+**Type:** draft
+**Status:** proposed
+**Tags:** orca-onboard, output-report
+**Proposed:** $(date +%Y-%m-%d)
+
+## Agent CLI Availability
+| Agent | Binary | Status |
+|-------|--------|--------|
+| Antigravity | \`agy\` | $AGY_OK |
+| OpenCode | \`opencode\` | $OC_OK |
+| Kiro | \`kiro-cli\` | $KIRO_OK |
+| Orca Terminal | \`orca terminal\` | $ORCA_OK |
+
+## Agent Task Assignment
+| Task | Agent | Status |
+|------|-------|--------|
+| Phase 1 — Scan project ($FILE_COUNT files) | $AGENT_SCAN | pending |
+| Phase 2 — Analyze files (parallel batches) | $AGENT_ANALYZE | pending |
+| Phase 3 — Architecture layers | $AGENT_LAYERS | pending |
+| Phase 4 — Knowledge graph assembly | $AGENT_GRAPH | pending |
+| Phase 5 — Guided tour (5-15 steps) | $AGENT_TOUR | pending |
+| Phase 6 — Validate graph + tour | $AGENT_VALIDATE | pending |
+| Phase 7 — Wiki generation | $AGENT_WIKI | pending |
+| Phase 8 — HTML docs (docs-site-macos) | Claude | pending |
+
+## What
+Onboard codebase \`$PROJECT_ROOT\` — knowledge graph, architecture layers, guided tour, wiki, HTML docs.
+
+## Output
+- \`.orca-onboard/intermediate/scan-result.json\`
+- \`.orca-onboard/intermediate/layers.json\`
+- \`.orca-onboard/intermediate/knowledge-graph.json\`
+- \`.orca-onboard/intermediate/tour.json\`
+- \`.orca-onboard/intermediate/validation.json\`
+- \`llmwiki/wiki/\` (index, concepts, entities, architecture, tours)
+- \`llmwiki/html/onboarding-${PROJECT_SLUG}.html\`
+
+## Files
+| File | Action |
+|------|--------|
+| \`llmwiki/wiki/index.md\` | created/modified |
+| \`llmwiki/wiki/architecture/*.md\` | created |
+| \`llmwiki/wiki/concepts/*.md\` | created |
+| \`llmwiki/wiki/entities/*.md\` | created |
+| \`llmwiki/wiki/tours/onboarding-tour.md\` | created |
+| \`llmwiki/html/onboarding-${PROJECT_SLUG}.html\` | created |
+
+## Notes
+- Invoked via: \`/orca-onboard\` skill
+- Project root: \`$PROJECT_ROOT\`
+- Files tracked: $FILE_COUNT
+
+## Origin
+- **Draft:** \`wiki/draft/orca/${DATE}-onboard-${PROJECT_SLUG}.md\`
+- **Commit:** _(filled by verify-before-commit)_
+- **Date promoted:** _(filled by verify-before-commit)_
+EOF
+echo "DRAFT_FILE=$DRAFT_FILE"
+```
+
+Cập nhật wiki index và log:
+```bash
+echo "| [${DATE}-onboard-${PROJECT_SLUG}](draft/orca/${DATE}-onboard-${PROJECT_SLUG}.md) | draft | $(date +%Y-%m-%d) |" >> "$PROJECT_ROOT/llmwiki/wiki/index.md"
+echo "## $(date +%Y-%m-%d) — orca-onboard — onboard-${PROJECT_SLUG}" >> "$PROJECT_ROOT/llmwiki/wiki/log.md"
+```
+
+**Bước 2 — Trình bày cho user review:**
+
+Hiển thị cho user:
+- Path của draft file vừa tạo
+- Bảng Agent Task Assignment (8 phases, tất cả `pending`)
+- Số files sẽ phân tích
+
+**Bước 3 — Hỏi xác nhận:**
+
+```bash
+orca orchestration gate-create --question "Draft plan tại $DRAFT_FILE. Bắt đầu onboard $PROJECT_ROOT? (8 phases)"
 ```
 
 ---
