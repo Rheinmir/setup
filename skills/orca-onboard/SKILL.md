@@ -20,13 +20,14 @@ Onboard codebase mới. Phân tích song song, tạo knowledge graph, layers, to
 
 ## Progress
 ```
-[Phase 1/7] Scan project...
-[Phase 2/7] Analyze files...
-[Phase 3/7] Architecture layers...
-[Phase 4/7] Knowledge graph...
-[Phase 5/7] Guided tour...
-[Phase 6/7] Validate graph...
-[Phase 7/7] Generate wiki...
+[Phase 1/8] Scan project...
+[Phase 2/8] Analyze files...
+[Phase 3/8] Architecture layers...
+[Phase 4/8] Knowledge graph...
+[Phase 5/8] Guided tour...
+[Phase 6/8] Validate graph...
+[Phase 7/8] Generate wiki...
+[Phase 8/8] Generate HTML docs...
 ```
 
 ---
@@ -285,6 +286,44 @@ orca terminal wait --for tui-idle && orca terminal read --title "OpenCode"
 - Phase 3 < 3 layers → merge groups nhỏ
 - Phase 6 fail → list issues, offer fix
 
+
+---
+
+## Phase 8 — HTML Docs (docs-site-macos)
+
+**Agent:** Claude (main thread — không dispatch ra ngoài)
+
+**Làm gì:**
+- Đọc các wiki MD files vừa tạo ở Phase 7: `llmwiki/wiki/architecture/`, `llmwiki/wiki/concepts/`, `llmwiki/wiki/tours/onboarding-tour.md`
+- Invoke skill `docs-site-macos` để render thành HTML đẹp
+- Output file: `llmwiki/html/onboarding-<project-slug>.html`
+- Cập nhật `llmwiki/html/README.md` nếu có
+
+**Quy tắc bắt buộc:**
+- Output LUÔN vào `llmwiki/html/` — KHÔNG được tạo ở project root hay nơi khác
+- Tên file: `onboarding-<project-slug>.html` (slug = tên thư mục project, lowercase, dấu cách → gạch ngang)
+- Nội dung HTML phải cover: architecture overview, knowledge graph summary, layer diagram, guided tour steps
+- Dùng animated SVG cho architecture diagram
+- Checklist trong HTML phải dùng `<input type="checkbox">` thật — KHÔNG dùng `☐` Unicode
+
+**Invoke:**
+```
+Skill: docs-site-macos
+Args: Synthesize onboarding HTML from wiki files at llmwiki/wiki/. 
+      Cover: project overview, architecture layers, knowledge graph, guided tour.
+      Output: llmwiki/html/onboarding-<slug>.html
+```
+
+**Sau khi tạo xong:**
+```bash
+# Kiểm tra file tồn tại
+ls llmwiki/html/onboarding-*.html
+
+# Nếu port 8765 chưa chạy
+lsof -ti :8765 || nohup npx serve -p 8765 > /tmp/serve.log 2>&1 &
+```
+
+Thông báo user: `http://localhost:8765/llmwiki/html/onboarding-<slug>.html`
 
 ---
 
