@@ -439,6 +439,19 @@ When generating separate pages per wiki file (all files share the same `DDMMYY-`
 - Each page has a nav bar linking to all other pages (highlight current page)
 - Each page has its own animated SVG diagram based on the topic content
 
+## Interactive Prototype / Editable Data-Grid (optional)
+
+When the user asks to "see how the UI will look", "tạo bảng tương tác thử", or wants a clickable demo of an editable grid/spreadsheet feature, build a **standalone interactive prototype** (same `DDMMYY-<slug>.html`, Tailwind CDN + vanilla JS, no build). These reusable patterns make override/cascade UIs consistent and self-explanatory:
+
+- **Locale-aware number input** — `parseUserNumber(raw, locale)`: strip the locale's thousand sep, swap decimal to `.`, `Number()`. Display via `Intl.NumberFormat(locale)`. Offer a VN ↔ US/Đài toggle.
+- **Override vs Affected, persistent coloring** — compute each row TWICE: with overrides (`v`) and without (`base`). A cell is: **override** (in the override map) → amber `bg-amber-50 ring-amber-300` + `✦`; **affected/cascade** (`base[code] !== v[code]`) → emerald `bg-emerald-50 ring-emerald-200` + `↻`. Both persist (not just a flash) until the override is removed. Add a transient `flash` (~1.4s) on the cells that changed this commit.
+- **Attribution (which override caused which cell)** — perturbation: for each override in the row, recompute with that one removed; cells whose value differs are caused by it. Build `causes: affected→[ov]` and `affects: ov→[affected]`. Surface via: (a) hover a cell → add a highlight class to linked cells IN THE SAME ROW (`data-affects` / `data-srcs`), (b) `title` tooltip listing names, (c) a toast after save listing recomputed cells.
+- **Frictionless editing** — double-click ANY editable column → inline input immediately. Do NOT gate edits behind a blocking `confirm()`. Surface "sensitive" columns passively (kind-tag in header, tooltip, a flag), never a modal that blocks every edit.
+- **Proper modal, not `confirm()`** — reserve a styled modal ONLY for destructive actions (e.g. "clear all overrides"); parametrize title/okText/danger.
+- **Focus after async UI** — when an edit starts right after closing a modal/dialog, focus the input on a tick (`setTimeout(...,0)`), or it won't take focus.
+
+Keep the chrome (traffic-light header), Inter font, and slate/amber palette consistent with the doc sites.
+
 ## Best Practices
 
 - ALWAYS inline SVG directly in the HTML (not external files)
