@@ -408,8 +408,11 @@ Font stack: `'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helveti
 
 **ALWAYS write HTML files to `llmwiki/html/` inside the current project root.**
 
-- Single file: `llmwiki/html/<slug>.html`
-- Multi-file: `llmwiki/html/index.html` + `llmwiki/html/<slug>.html`
+**Filename MUST be prefixed with today's date `DDMMYY-`** (same `DDMMYY` as the output-report draft, so HTML and wiki draft stay paired). E.g. on 4 Jun 2026 → `040626-cell-formula-override.html`.
+
+- Single file: `llmwiki/html/DDMMYY-<slug>.html`
+- Multi-file: `llmwiki/html/DDMMYY-index.html` + `llmwiki/html/DDMMYY-<slug>.html`
+- `<slug>` = 2–4 kebab-case words; `DDMMYY` = today (e.g. `040626`).
 - NEVER write to the project root or any other directory.
 - If `llmwiki/html/` does not exist, create it first.
 
@@ -423,15 +426,15 @@ kill -9 $(lsof -ti :8765) 2>/dev/null
 nohup npx serve -p 8765 > /tmp/serve.log 2>&1 &
 ```
 
-Notify user: open `http://localhost:8765/llmwiki/html/<file>.html`
+Notify user: open `http://localhost:8765/llmwiki/html/DDMMYY-<file>.html`
 
 If port 8765 is already in use, skip (server already running).
 
 ## Multi-File Mode
 
-When generating separate pages per wiki file:
-- Create an `index.html` overview page (card grid linking to all N pages)
-- Create `{slug}.html` for each wiki file (slug derived from filename)
+When generating separate pages per wiki file (all files share the same `DDMMYY-` date prefix):
+- Create an `DDMMYY-index.html` overview page (card grid linking to all N pages)
+- Create `DDMMYY-{slug}.html` for each wiki file (slug derived from filename)
 - Each page shares the same CSS design system but uses its section accent color
 - Each page has a nav bar linking to all other pages (highlight current page)
 - Each page has its own animated SVG diagram based on the topic content
