@@ -54,7 +54,7 @@ TASK TYPE        → AGENT               → MODEL
 Graph building   → agy (/understand)   → Claude inside agy (tree-sitter + Louvain)
 Domain reasoning → Claude main thread  → Sonnet (never dispatch out)
 Architecture     → Claude main thread  → Sonnet (never dispatch out)
-Mechanical       → opencode            → deepseek/deepseek-flash-v4
+Mechanical       → opencode            → opencode/deepseek-v4-flash-free
 Scripts          → bash/python direct  → (no LLM)
 ```
 
@@ -91,9 +91,9 @@ Scripts          → bash/python direct  → (no LLM)
 
 **OpenCode with DeepSeek Flash v4:**
 ```bash
-opencode --model deepseek/deepseek-flash-v4 --print "$SPEC"
+opencode run "$SPEC" --model opencode/deepseek-v4-flash-free --dangerously-skip-permissions < /dev/null \
 # Fallback if flag unsupported:
-echo "$SPEC" | opencode --model deepseek/deepseek-flash-v4
+echo "$SPEC" | opencode --model opencode/deepseek-v4-flash-free
 # Last resort: Claude main thread
 ```
 
@@ -369,9 +369,14 @@ if [ "$RESUME_MODE" != "true" ] || [ "$PHASE1_STATUS" != "done" ]; then
 
   if [ -n "$SPEC" ]; then
     if agy --version >/dev/null 2>&1; then
-      agy "$SPEC"
+      if [ "$FILE_COUNT" -gt 100 ]; then
+        echo "[Phase 1] Large project ($FILE_COUNT files) detected. Using opencode with deepseek-v4-flash-free to avoid rate limit / out-of-token."
+        opencode run "$SPEC" --model opencode/deepseek-v4-flash-free --dangerously-skip-permissions < /dev/null
+      else
+        agy "$SPEC"
+      fi
     elif opencode --version >/dev/null 2>&1; then
-      opencode --print "$SPEC"
+      opencode run "$SPEC" --model opencode/deepseek-v4-flash-free --dangerously-skip-permissions < /dev/null
     else
       echo "[Phase 1] FALLBACK: Claude main thread runs understand-anything phases"
       # See onboard-codebase skill for fallback phases
@@ -453,7 +458,7 @@ fi
 
 ## Phase 3 — Wiki Generation
 
-**Agent:** opencode | **Model:** `deepseek/deepseek-flash-v4`
+**Agent:** opencode | **Model:** `opencode/deepseek-v4-flash-free`
 
 > **READ FIRST** (inject into SPEC before dispatch — DeepSeek won't read files unless injected):
 > 1. `.understand-anything/ONBOARDING.md` — full read
@@ -499,8 +504,7 @@ llmwiki/wiki/tours/onboarding-tour.md.
 Use wikilink format [[page-name]]. Do NOT read knowledge-graph.json directly."
   fi
 
-  opencode --model deepseek/deepseek-flash-v4 --print "$SPEC" \
-    || opencode --print "$SPEC" \
+  opencode run "$SPEC" --model opencode/deepseek-v4-flash-free --dangerously-skip-permissions < /dev/null \
     || echo "[WARN] opencode unavailable — Claude main thread fallback for wiki"
 
   update_phase_status "Phase 3 —" "done"
@@ -511,7 +515,7 @@ fi
 
 ## Phase 4 — HTML Docs
 
-**Agent:** opencode | **Model:** `deepseek/deepseek-flash-v4`
+**Agent:** opencode | **Model:** `opencode/deepseek-v4-flash-free`
 
 > **READ FIRST** (inject into SPEC before dispatch — DeepSeek won't read files unless injected):
 > 1. `llmwiki/wiki/index.md` — list all wiki pages
@@ -538,8 +542,7 @@ Apply docs-site-macos style (glassmorphism, macOS window chrome, animated SVG di
 Output: llmwiki/html/onboarding-${PROJECT_SLUG}.html
 Use real <input type='checkbox'> not Unicode checkboxes."
 
-  opencode --model deepseek/deepseek-flash-v4 --print "$SPEC" \
-    || opencode --print "$SPEC" \
+  opencode run "$SPEC" --model opencode/deepseek-v4-flash-free --dangerously-skip-permissions < /dev/null \
     || {
       echo "[Phase 4] opencode unavailable — falling back to docs-site-macos skill (Claude)"
       # Invoke docs-site-macos skill in Claude main thread as fallback
