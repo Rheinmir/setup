@@ -71,6 +71,24 @@ Scripts          → bash/python direct  → (no LLM)
 | OpenCode | `opencode` | Configurable | `opencode --version` |
 | Kiro | `kiro-cli` | — | `kiro-cli --version` |
 
+### Cài đặt Understand-Anything cho Agent
+
+Để các agent có đầy đủ các skill phân tích của `Understand-Anything`, cần cài đặt plugin này trước trên môi trường chạy của agent:
+
+- **macOS / Linux:**
+  ```bash
+  # Cho Antigravity
+  curl -fsSL https://raw.githubusercontent.com/Lum1104/Understand-Anything/main/install.sh | bash -s antigravity
+
+  # Cho OpenCode
+  curl -fsSL https://raw.githubusercontent.com/Lum1104/Understand-Anything/main/install.sh | bash -s opencode
+  ```
+- **Windows (PowerShell):**
+  ```powershell
+  # Chạy và chọn 'antigravity' hoặc 'opencode' khi được nhắc
+  iwr -useb https://raw.githubusercontent.com/Lum1104/Understand-Anything/main/install.ps1 | iex
+  ```
+
 **OpenCode with DeepSeek Flash v4:**
 ```bash
 opencode --model deepseek/deepseek-flash-v4 --print "$SPEC"
@@ -78,95 +96,6 @@ opencode --model deepseek/deepseek-flash-v4 --print "$SPEC"
 echo "$SPEC" | opencode --model deepseek/deepseek-flash-v4
 # Last resort: Claude main thread
 ```
-
----
-
-## Update Mode — `--update`
-
-Use after code changes. understand-anything incremental — re-analyzes affected files only.
-
-```
-.understand-anything/meta.json stores file hashes
-agy "/understand" (no --full) → diff hashes vs git → re-run affected batches only
-→ merge new nodes into existing knowledge-graph.json + update ONBOARDING.md
-```
-
-**Prerequisites for `--update`:**
-```bash
-UPDATE_MODE=false
-for arg in "$@"; do
-  [ "$arg" = "--update" ] && UPDATE_MODE=true
-done
-
-if [ "$UPDATE_MODE" = "true" ]; then
-  [ ! -f "$PROJECT_ROOT/.understand-anything/knowledge-graph.json" ] \
-    && echo "❌ --update requires existing graph. Run without --update first." && exit 1
-  [ ! -f "$PROJECT_ROOT/.understand-anything/meta.json" ] \
-    && echo "❌ --update requires meta.json. Run without --update first." && exit 1
-  echo "[update] Incremental mode — reading changed files from meta.json"
-fi
-```
-
-**Per-phase update behavior:**
-- Phase 1: run `/understand` without `--full` → understand-anything detects changed batches
-- Phase 2: read `changedFiles[]` from meta.json → update only domain steps referencing changed files
-- Phase 3: grep wiki for refs to changed files → regenerate stale pages only
-- Phase 4: always rebuild HTML (fast — small wiki input)
-
-**Read changed files from meta.json:**
-```bash
-CHANGED_FILES=$(python3 -c "
-import json, sys
-meta = json.load(open('$PROJECT_ROOT/.understand-anything/meta.json'))
-changed = meta.get('changedFiles', meta.get('changed', []))
-print('\n'.join(changed))
-" 2>/dev/null || echo "")
-
-if [ -z "$CHANGED_FILES" ]; then
-  echo "[update] no changedFiles in meta.json — falling back to full rebuild"
-  UPDATE_MODE=false
-else
-  echo "[update] Changed files:"; echo "$CHANGED_FILES"
-fi
-```
-
----
-
-## Resume Mode — `/orca-onboard @DDMMYY-onboard-<slug>.md`
-
-Argument starts with `@` → resume mode. Skip Phase 0 and Phase 0.5.
-
-```bash
-if [[ "$1" == @* ]]; then
-  DRAFT_FILE="${1#@}"
-  DRAFT_FILE=$(echo "$DRAFT_FILE" | tr '\\' '/')
-  RESUME_MODE=true
-  PROJECT_ROOT=$(grep "Project root:" "$DRAFT_FILE" | grep -oP '(?<=`)[^`]+(?=`)' | head -1)
-  PROJECT_ROOT=$(echo "$PROJECT_ROOT" | tr '\\' '/')
-else
-  RESUME_MODE=false
-fi
-```
-
-**Parse statuses:**
-```bash
-parse_status() {
-  local keyword="$1"
-  awk '/## Agent Task Assignment/{p=1} p && /^## [^A]/{p=0} p' "$DRAFT_FILE" \
-    | grep "$keyword" | grep -oE 'pending|in-progress|done' | head -1
-}
-
-if [ "$RESUME_MODE" = true ]; then
-  PHASE1_STATUS=$(parse_status "Phase 1 —")
-  PHASE2_STATUS=$(parse_status "Phase 2 —")
-  PHASE3_STATUS=$(parse_status "Phase 3 —")
-  PHASE4_STATUS=$(parse_status "Phase 4 —")
-  echo "[Resume] P1=$PHASE1_STATUS P2=$PHASE2_STATUS P3=$PHASE3_STATUS P4=$PHASE4_STATUS"
-fi
-```
-
-**Skip rule:** `RESUME_MODE=true` + status `done` → skip phase, continue next.
-**Retry rule:** `RESUME_MODE=true` + status `in-progress` → treat as interrupted, re-run.
 
 ---
 
@@ -187,10 +116,10 @@ update_phase_status() {
 
 ---
 
-## Phase 0 — Pre-flight
+## Phase 0 — Pre-flight & Setup
 
 ```bash
-# --- Dependency check ---
+# --- 1. Dependency check ---
 MISSING=()
 agy --version >/dev/null 2>&1       || MISSING+=("agy (Antigravity)")
 opencode --version >/dev/null 2>&1  || MISSING+=("opencode")
@@ -204,11 +133,50 @@ if [ ${#MISSING[@]} -gt 0 ]; then
   exit 1
 fi
 
-# --- Resolve project root ---
-PROJECT_ROOT=${1:-.}
-test -d "$PROJECT_ROOT" || exit 1
+# --- 2. Resume Mode check & Project Root resolution ---
+if [[ "$1" == @* ]]; then
+  DRAFT_FILE="${1#@}"
+  DRAFT_FILE=$(echo "$DRAFT_FILE" | tr '\\' '/')
+  RESUME_MODE=true
+  PROJECT_ROOT=$(grep "Project root:" "$DRAFT_FILE" | grep -oP '(?<=`)[^`]+(?=`)' | head -1)
+  PROJECT_ROOT=$(echo "$PROJECT_ROOT" | tr '\\' '/')
+else
+  RESUME_MODE=false
+  PROJECT_ROOT=${1:-.}
+  PROJECT_ROOT=$(echo "$PROJECT_ROOT" | tr '\\' '/')
+fi
 
-# --- Bootstrap llmwiki if missing ---
+test -d "$PROJECT_ROOT" || { echo "❌ Project root directory not found: $PROJECT_ROOT"; exit 1; }
+
+# --- 3. Update Mode check ---
+UPDATE_MODE=false
+for arg in "$@"; do
+  [ "$arg" = "--update" ] && UPDATE_MODE=true
+done
+
+if [ "$UPDATE_MODE" = "true" ]; then
+  [ ! -f "$PROJECT_ROOT/.understand-anything/knowledge-graph.json" ] \
+    && echo "❌ --update requires existing graph. Run without --update first." && exit 1
+  [ ! -f "$PROJECT_ROOT/.understand-anything/meta.json" ] \
+    && echo "❌ --update requires meta.json. Run without --update first." && exit 1
+  echo "[update] Incremental mode — reading changed files from meta.json"
+  
+  CHANGED_FILES=$(python3 -c "
+import json, sys
+meta = json.load(open('$PROJECT_ROOT/.understand-anything/meta.json'))
+changed = meta.get('changedFiles', meta.get('changed', []))
+print('\n'.join(changed))
+" 2>/dev/null || echo "")
+
+  if [ -z "$CHANGED_FILES" ]; then
+    echo "[update] no changedFiles in meta.json — falling back to full rebuild"
+    UPDATE_MODE=false
+  else
+    echo "[update] Changed files:"; echo "$CHANGED_FILES"
+  fi
+fi
+
+# --- 4. Bootstrap llmwiki if missing ---
 if [ ! -d "$PROJECT_ROOT/llmwiki" ]; then
   echo "[orca-onboard] bootstrapping llmwiki..."
   git clone https://github.com/rheinmir/setup.git /tmp/orca-llmwiki-bootstrap --depth 1 -b orca -q
@@ -217,11 +185,11 @@ if [ ! -d "$PROJECT_ROOT/llmwiki" ]; then
   echo "[orca-onboard] llmwiki bootstrapped OK"
 fi
 
-# --- Create dirs ---
+# --- 5. Create dirs ---
 mkdir -p $PROJECT_ROOT/.orca-onboard/{intermediate,tmp}
 mkdir -p $PROJECT_ROOT/llmwiki/wiki/draft/{cave,uiux,orca}
 
-# --- File count (display only — understand-anything handles batching) ---
+# --- 6. File count & availability check ---
 git rev-parse HEAD 2>/dev/null > $PROJECT_ROOT/.orca-onboard/tmp/commit.txt
 git ls-files > $PROJECT_ROOT/.orca-onboard/tmp/files.txt 2>/dev/null \
   || find $PROJECT_ROOT -type f \
@@ -229,12 +197,27 @@ git ls-files > $PROJECT_ROOT/.orca-onboard/tmp/files.txt 2>/dev/null \
      > $PROJECT_ROOT/.orca-onboard/tmp/files.txt
 FILE_COUNT=$(wc -l < $PROJECT_ROOT/.orca-onboard/tmp/files.txt | tr -d ' ')
 
-# --- Probe agent availability ---
+# Probe agent availability
 AGY_OK=$(agy --version 2>/dev/null && echo "✅ usable" || echo "❌ not found")
 OC_OK=$(opencode --version 2>/dev/null && echo "✅ usable" || echo "❌ not found")
 KIRO_OK=$(kiro-cli --version 2>/dev/null && echo "✅ usable" || echo "❌ not found")
 
 echo "[pre-flight] $FILE_COUNT files | agy=$AGY_OK | opencode=$OC_OK"
+
+# Parse statuses if in resume mode
+parse_status() {
+  local keyword="$1"
+  awk '/## Agent Task Assignment/{p=1} p && /^## [^A]/{p=0} p' "$DRAFT_FILE" \
+    | grep "$keyword" | grep -oE 'pending|in-progress|done' | head -1
+}
+
+if [ "$RESUME_MODE" = true ]; then
+  PHASE1_STATUS=$(parse_status "Phase 1 —")
+  PHASE2_STATUS=$(parse_status "Phase 2 —")
+  PHASE3_STATUS=$(parse_status "Phase 3 —")
+  PHASE4_STATUS=$(parse_status "Phase 4 —")
+  echo "[Resume] P1=$PHASE1_STATUS P2=$PHASE2_STATUS P3=$PHASE3_STATUS P4=$PHASE4_STATUS"
+fi
 ```
 
 ---
