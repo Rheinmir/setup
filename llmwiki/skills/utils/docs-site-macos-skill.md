@@ -370,7 +370,19 @@ body.erd-full-on::before{content:'';position:fixed;inset:0;z-index:9998;backgrou
 .erd-note{padding:5px 11px;border-top:1px dashed var(--border);font-size:10px;color:var(--text-2);font-style:italic}
 svg.erd-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;overflow:visible}
 svg.erd-lines path{fill:none}
+/* comment / note nodes (double-click vùng trống để tạo) */
+.erd-cmt{position:absolute;width:208px;background:#fff8c5;border:1px solid #ecd34a;border-radius:10px;box-shadow:0 3px 14px rgba(0,0,0,.13);z-index:5;font-size:11.5px}
+.erd-cmt-h{background:#f6e05e;padding:3px 8px;border-radius:9px 9px 0 0;cursor:grab;display:flex;justify-content:space-between;font-size:10px;font-weight:800;color:#713f12;user-select:none}
+.erd-cmt-body{padding:6px 8px;outline:none;min-height:26px;color:#5b4708}.erd-cmt-body:empty::before{content:'note…';opacity:.4}
+.erd-cmt-fr{padding:0 8px 6px;display:flex;flex-direction:column;gap:3px}.erd-cmt-fr .erd-cmt-row{display:flex;gap:3px;align-items:center}
+.erd-cmt-fr label{font-size:9px;font-weight:700;color:#8a6d1a}.erd-cmt-fr input{flex:1;min-width:0;font-size:10px;border:1px solid #e3cf6a;border-radius:4px;padding:1px 4px;background:#fffdf0}
+.erd-cmt-fr button{font-size:9px;border:1px solid #e3cf6a;background:#fff;border-radius:4px;cursor:pointer;padding:1px 5px}
+.erd-cmt-link{padding:0 8px 7px;font-size:9.5px;color:#8a6d1a}
+.erd-canvas.linking{cursor:crosshair}.erd-canvas.linking .erd-ent,.erd-canvas.linking .erd-cmt{outline:2px dashed rgba(245,158,11,.5)}
+svg.erd-lines path.rel-hit{pointer-events:stroke;cursor:pointer}
 ```
+
+**Interactions (persist + comment notes + arrows):** the whole board state — entity positions, comment notes, and arrows — persists to `localStorage`. Double-click empty canvas → a sticky **note** with an editable body + **Find/Replace** inputs each with a copy button (paste into editor Ctrl+H). Click a note's **↗** handle → linking mode → click an entity (or a relationship line `path.rel-hit`) to draw an orange arrow that follows on drag. `Reset` clears localStorage + notes. The JS below is the full reference (one IIFE):
 
 Markup (toolbar + board > canvas; each entity carries `data-x/data-y` + `left/top`; headers/cols carry `data-ent`/`data-rel`):
 ```html
@@ -389,49 +401,127 @@ Markup (toolbar + board > canvas; each entity carries `data-x/data-y` + `left/to
 
 JS — connector lines (canvas-relative) + drag (left/top, clamped) + reset + fullscreen:
 ```javascript
-function drawERDLines() {
-  const canvas = document.getElementById('erd-canvas'); if (!canvas) return;
-  const NS = 'http://www.w3.org/2000/svg';
-  let svg = canvas.querySelector('svg.erd-lines');
-  if (!svg) { svg = document.createElementNS(NS,'svg'); svg.setAttribute('class','erd-lines');
-    const d = document.createElementNS(NS,'defs');
-    d.innerHTML = '<marker id="erd-arrow" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#3b82f6"/></marker><marker id="erd-arrow-g" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#94a3b8"/></marker>';
-    svg.appendChild(d); canvas.prepend(svg); }
-  [...svg.querySelectorAll('path,circle')].forEach(n => n.remove());
-  const W = canvas.getBoundingClientRect(), ents = {};
-  canvas.querySelectorAll('[data-ent]').forEach(e => ents[e.getAttribute('data-ent')] = e.closest('.erd-ent'));
-  canvas.querySelectorAll('[data-rel]').forEach(src => {
-    const tgt = ents[src.getAttribute('data-rel')]; if (!tgt) return;
-    const fk = (src.getAttribute('data-rel-kind')||'fk') === 'fk';
-    const s = src.getBoundingClientRect(), t = tgt.getBoundingClientRect();
-    const L = (t.left+t.width/2) < (s.left+s.width/2);
-    const sx=(L?s.left:s.right)-W.left, sy=s.top+s.height/2-W.top, tx=(L?t.right:t.left)-W.left, ty=t.top+t.height/2-W.top;
-    const dx=Math.max(30,Math.abs(tx-sx)*0.45), c1=sx+(L?-dx:dx), c2=tx+(L?dx:-dx), col=fk?'#3b82f6':'#94a3b8';
-    const p=document.createElementNS(NS,'path'); p.setAttribute('d',`M ${sx} ${sy} C ${c1} ${sy} ${c2} ${ty} ${tx} ${ty}`);
-    p.setAttribute('stroke',col); p.setAttribute('stroke-width','1.6'); p.setAttribute('stroke-opacity','0.6');
-    if(!fk) p.setAttribute('stroke-dasharray','5 4'); p.setAttribute('marker-end',fk?'url(#erd-arrow)':'url(#erd-arrow-g)'); svg.appendChild(p);
-    const c=document.createElementNS(NS,'circle'); c.setAttribute('cx',sx); c.setAttribute('cy',sy); c.setAttribute('r','2.5'); c.setAttribute('fill',col); svg.appendChild(c);
-  });
-}
-function initERDBoard() {
-  const canvas = document.getElementById('erd-canvas'); if (!canvas) return;
-  canvas.querySelectorAll('.erd-ent').forEach(ent => {
-    const h = ent.querySelector('.erd-th'); if (!h || h.dataset.drag) return; h.dataset.drag='1';
-    let sx,sy,ox,oy,drag=false;
-    h.addEventListener('pointerdown', e => { drag=true; ox=parseFloat(ent.style.left)||0; oy=parseFloat(ent.style.top)||0; sx=e.clientX; sy=e.clientY; ent.style.zIndex='30'; h.setPointerCapture(e.pointerId); e.preventDefault(); });
-    h.addEventListener('pointermove', e => { if(!drag) return;
-      ent.style.left = Math.max(0,Math.min(canvas.clientWidth-ent.offsetWidth, ox+e.clientX-sx))+'px';
-      ent.style.top  = Math.max(0,Math.min(canvas.clientHeight-ent.offsetHeight, oy+e.clientY-sy))+'px'; drawERDLines(); });
-    const end = () => { if(!drag) return; drag=false; ent.style.zIndex='1'; drawERDLines(); };
-    h.addEventListener('pointerup', end); h.addEventListener('pointercancel', end);
-  });
-  document.getElementById('erd-reset')?.addEventListener('click', () => { canvas.querySelectorAll('.erd-ent').forEach(e => { e.style.left=e.dataset.x+'px'; e.style.top=e.dataset.y+'px'; }); drawERDLines(); });
-  document.getElementById('erd-full')?.addEventListener('click', e => { const on=document.getElementById('erd-board').classList.toggle('full'); document.body.classList.toggle('erd-full-on',on); e.target.textContent=on?'✕ Thoát toàn màn hình':'⤢ Toàn màn hình'; setTimeout(drawERDLines,60); });
-}
-window.addEventListener('load', () => { initERDBoard(); drawERDLines(); });
-let __erdT; window.addEventListener('resize', () => { clearTimeout(__erdT); __erdT=setTimeout(drawERDLines,150); });
-document.getElementById('erd-board')?.addEventListener('scroll', () => { clearTimeout(__erdT); __erdT=setTimeout(drawERDLines,40); });
-setTimeout(() => { initERDBoard(); drawERDLines(); }, 320);
+/* ─── ERD whiteboard: lines + drag + comments(find/replace) + arrows + persist + fullscreen ─── */
+(function(){
+  const NS='http://www.w3.org/2000/svg';
+  const LS='erd-board-030626';
+  const canvas=document.getElementById('erd-canvas');
+  const board=document.getElementById('erd-board');
+  if(!canvas) return;
+
+  let BOARD; try{ BOARD=JSON.parse(localStorage.getItem(LS))||{}; }catch(e){ BOARD={}; }
+  BOARD.ents=BOARD.ents||{}; BOARD.comments=BOARD.comments||[]; BOARD.seq=BOARD.seq||1;
+  const save=()=>{ try{ localStorage.setItem(LS,JSON.stringify(BOARD)); }catch(e){} };
+  function nameOf(ent){ const h=ent.querySelector('.erd-th'); return ((h.childNodes[0]&&h.childNodes[0].textContent)||'').trim(); }
+  function copyText(t,btn){ const done=()=>{ const o=btn.textContent; btn.textContent='✓'; setTimeout(()=>btn.textContent=o,900); };
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(t||'').then(done).catch(fb); } else fb();
+    function fb(){ const ta=document.createElement('textarea'); ta.value=t||''; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch(e){} ta.remove(); done(); } }
+
+  let linking=null;
+
+  function ensureSVG(){
+    let svg=canvas.querySelector('svg.erd-lines');
+    if(!svg){ svg=document.createElementNS(NS,'svg'); svg.setAttribute('class','erd-lines');
+      const d=document.createElementNS(NS,'defs');
+      d.innerHTML='<marker id="erd-arrow" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#3b82f6"/></marker>'
+        +'<marker id="erd-arrow-g" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#94a3b8"/></marker>'
+        +'<marker id="erd-arrow-c" markerWidth="8" markerHeight="8" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#ea580c"/></marker>';
+      svg.appendChild(d); canvas.prepend(svg); }
+    return svg;
+  }
+  function bez(sx,sy,tx,ty){ const L=tx<sx; const dx=Math.max(30,Math.abs(tx-sx)*0.45); const c1=sx+(L?-dx:dx),c2=tx+(L?dx:-dx); return 'M '+sx+' '+sy+' C '+c1+' '+sy+' '+c2+' '+ty+' '+tx+' '+ty; }
+
+  function draw(){
+    const svg=ensureSVG();
+    [...svg.querySelectorAll('path,circle')].forEach(n=>n.remove());
+    const W=canvas.getBoundingClientRect();
+    const ents={}; canvas.querySelectorAll('[data-ent]').forEach(e=>ents[e.getAttribute('data-ent')]=e.closest('.erd-ent'));
+    canvas.querySelectorAll('[data-rel]').forEach(src=>{
+      const tgt=ents[src.getAttribute('data-rel')]; if(!tgt) return;
+      const fk=(src.getAttribute('data-rel-kind')||'fk')==='fk';
+      const s=src.getBoundingClientRect(),t=tgt.getBoundingClientRect();
+      const L=(t.left+t.width/2)<(s.left+s.width/2);
+      const sx=(L?s.left:s.right)-W.left, sy=s.top+s.height/2-W.top, tx=(L?t.right:t.left)-W.left, ty=t.top+t.height/2-W.top;
+      const col=fk?'#3b82f6':'#94a3b8';
+      const p=document.createElementNS(NS,'path'); p.setAttribute('d',bez(sx,sy,tx,ty)); p.setAttribute('stroke',col); p.setAttribute('stroke-width','1.6'); p.setAttribute('stroke-opacity','0.6');
+      if(!fk) p.setAttribute('stroke-dasharray','5 4');
+      p.setAttribute('marker-end',fk?'url(#erd-arrow)':'url(#erd-arrow-g)');
+      const se=src.closest('.erd-ent'); p.dataset.relkey=(se?nameOf(se):'')+'|'+src.getAttribute('data-rel');
+      if(linking){ p.classList.add('rel-hit'); p.addEventListener('click',ev=>{ ev.stopPropagation(); setLink(linking,{type:'rel',key:p.dataset.relkey}); }); }
+      svg.appendChild(p);
+      const c=document.createElementNS(NS,'circle'); c.setAttribute('cx',sx); c.setAttribute('cy',sy); c.setAttribute('r','2.5'); c.setAttribute('fill',col); svg.appendChild(c);
+    });
+    BOARD.comments.forEach(cm=>{
+      if(!cm.link) return; const el=document.getElementById('cmt-'+cm.id); if(!el) return;
+      const r=el.getBoundingClientRect(); const sx=r.left+r.width/2-W.left, sy=r.top+r.height/2-W.top; let tx,ty;
+      if(cm.link.type==='ent'){ const te=ents[cm.link.name]||[...canvas.querySelectorAll('.erd-ent')].find(e=>nameOf(e)===cm.link.name); if(!te) return; const t=te.getBoundingClientRect(); const L=(t.left+t.width/2)<r.left+r.width/2; tx=(L?t.right:t.left)-W.left; ty=t.top+t.height/2-W.top; }
+      else { const pp=svg.querySelector('path[data-relkey="'+cm.link.key+'"]'); if(!pp) return; const m=pp.getPointAtLength(pp.getTotalLength()/2); tx=m.x; ty=m.y; }
+      const p=document.createElementNS(NS,'path'); p.setAttribute('d',bez(sx,sy,tx,ty)); p.setAttribute('stroke','#ea580c'); p.setAttribute('stroke-width','1.8'); p.setAttribute('stroke-dasharray','2 3'); p.setAttribute('marker-end','url(#erd-arrow-c)'); svg.appendChild(p);
+    });
+  }
+
+  function makeDraggable(el,handle,onEnd){
+    handle.style.cursor='grab'; handle.style.userSelect='none';
+    let sx,sy,ox,oy,dr=false;
+    handle.addEventListener('pointerdown',e=>{ if(e.target.closest('button,input,.erd-cmt-x,.erd-cmt-link-btn')) return; dr=true; ox=parseFloat(el.style.left)||0; oy=parseFloat(el.style.top)||0; sx=e.clientX; sy=e.clientY; el.style.zIndex='40'; handle.style.cursor='grabbing'; handle.setPointerCapture(e.pointerId); e.preventDefault(); });
+    handle.addEventListener('pointermove',e=>{ if(!dr) return; const nx=Math.max(0,Math.min(canvas.clientWidth-el.offsetWidth,ox+e.clientX-sx)); const ny=Math.max(0,Math.min(canvas.clientHeight-el.offsetHeight,oy+e.clientY-sy)); el.style.left=nx+'px'; el.style.top=ny+'px'; draw(); });
+    const end=()=>{ if(!dr) return; dr=false; el.style.zIndex=el.classList.contains('erd-cmt')?'5':'1'; handle.style.cursor='grab'; onEnd(parseFloat(el.style.left)||0,parseFloat(el.style.top)||0); draw(); };
+    handle.addEventListener('pointerup',end); handle.addEventListener('pointercancel',end);
+  }
+
+  function startLinking(id){ linking=id; canvas.classList.add('linking'); ensureSVG().classList.add('linking'); draw(); }
+  function stopLinking(){ if(!linking) return; linking=null; canvas.classList.remove('linking'); const s=canvas.querySelector('svg.erd-lines'); if(s) s.classList.remove('linking'); draw(); }
+  function setLink(id,link){ const cm=BOARD.comments.find(c=>c.id===id); if(cm){ cm.link=link; save(); const el=document.getElementById('cmt-'+id); const lt=el&&el.querySelector('.erd-cmt-lt'); if(lt) lt.textContent='→ '+(link.type==='ent'?link.name:link.key); } stopLinking(); }
+
+  function addCommentNode(cm){
+    if(document.getElementById('cmt-'+cm.id)) return;
+    const el=document.createElement('div'); el.className='erd-cmt'; el.id='cmt-'+cm.id; el.style.left=cm.x+'px'; el.style.top=cm.y+'px';
+    el.innerHTML='<div class="erd-cmt-h"><span>💬 note</span><span><span class="erd-cmt-link-btn" title="nối mũi tên tới bảng / đường quan hệ" style="cursor:pointer;margin-right:7px">↗</span><span class="erd-cmt-x" title="xóa">✕</span></span></div>'
+      +'<div class="erd-cmt-body" contenteditable="true"></div>'
+      +'<div class="erd-cmt-fr"><div class="erd-cmt-row"><label>F</label><input class="cf" placeholder="find…"><button class="bf">copy</button></div>'
+      +'<div class="erd-cmt-row"><label>R</label><input class="cr" placeholder="replace…"><button class="br">copy</button></div></div>'
+      +'<div class="erd-cmt-link"><span class="erd-cmt-lt"></span></div>';
+    canvas.appendChild(el);
+    const body=el.querySelector('.erd-cmt-body'); body.textContent=cm.text||'';
+    const cf=el.querySelector('.cf'); cf.value=cm.find||''; const cr=el.querySelector('.cr'); cr.value=cm.replace||'';
+    const lt=el.querySelector('.erd-cmt-lt'); if(cm.link) lt.textContent='→ '+(cm.link.type==='ent'?cm.link.name:cm.link.key);
+    body.addEventListener('input',()=>{ cm.text=body.textContent; save(); });
+    cf.addEventListener('input',()=>{ cm.find=cf.value; save(); });
+    cr.addEventListener('input',()=>{ cm.replace=cr.value; save(); });
+    el.querySelector('.bf').addEventListener('click',e=>copyText(cf.value,e.target));
+    el.querySelector('.br').addEventListener('click',e=>copyText(cr.value,e.target));
+    el.querySelector('.erd-cmt-x').addEventListener('click',()=>{ BOARD.comments=BOARD.comments.filter(c=>c.id!==cm.id); save(); el.remove(); draw(); });
+    el.querySelector('.erd-cmt-link-btn').addEventListener('click',()=>startLinking(cm.id));
+    makeDraggable(el,el.querySelector('.erd-cmt-h'),(x,y)=>{ cm.x=x; cm.y=y; save(); });
+  }
+
+  function initEnts(){
+    canvas.querySelectorAll('.erd-ent').forEach(ent=>{
+      const nm=nameOf(ent); ent.dataset.name=nm;
+      if(BOARD.ents[nm]){ ent.style.left=BOARD.ents[nm].x+'px'; ent.style.top=BOARD.ents[nm].y+'px'; }
+      const h=ent.querySelector('.erd-th'); if(h.dataset.drag) return; h.dataset.drag='1';
+      ent.addEventListener('click',e=>{ if(linking){ e.stopPropagation(); setLink(linking,{type:'ent',name:nm}); } });
+      makeDraggable(ent,h,(x,y)=>{ BOARD.ents[nm]={x:x,y:y}; save(); });
+    });
+  }
+
+  canvas.addEventListener('dblclick',e=>{ if(e.target.closest('.erd-ent')||e.target.closest('.erd-cmt')) return;
+    const W=canvas.getBoundingClientRect(); const cm={id:BOARD.seq++,x:Math.round(e.clientX-W.left),y:Math.round(e.clientY-W.top),text:'',find:'',replace:'',link:null};
+    BOARD.comments.push(cm); save(); addCommentNode(cm); const b=document.getElementById('cmt-'+cm.id).querySelector('.erd-cmt-body'); b&&b.focus(); draw(); });
+  canvas.addEventListener('click',e=>{ if(linking && !e.target.closest('.erd-ent') && !e.target.closest('path.rel-hit') && !e.target.closest('.erd-cmt')) stopLinking(); });
+
+  document.getElementById('erd-reset')?.addEventListener('click',()=>{ if(!confirm('Reset vị trí + xóa hết note/mũi tên?')) return;
+    BOARD={ents:{},comments:[],seq:1}; save(); canvas.querySelectorAll('.erd-cmt').forEach(n=>n.remove());
+    canvas.querySelectorAll('.erd-ent').forEach(e=>{ e.style.left=e.dataset.x+'px'; e.style.top=e.dataset.y+'px'; }); draw(); });
+  document.getElementById('erd-full')?.addEventListener('click',e=>{ const on=board.classList.toggle('full'); document.body.classList.toggle('erd-full-on',on); e.target.textContent=on?'✕ Thoát toàn màn hình':'⤢ Toàn màn hình'; setTimeout(draw,60); });
+
+  function boot(){ initEnts(); BOARD.comments.forEach(addCommentNode); draw(); }
+  window.addEventListener('load',boot);
+  let T; window.addEventListener('resize',()=>{ clearTimeout(T); T=setTimeout(draw,150); });
+  board.addEventListener('scroll',()=>{ clearTimeout(T); T=setTimeout(draw,40); });
+  setTimeout(boot,320);
+  window.drawERDLines=draw;
+})();
 ```
 
 ## Collapse / Xem thêm
