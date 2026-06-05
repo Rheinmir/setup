@@ -342,107 +342,95 @@ function initCodeCopy() {
 initCodeCopy();
 ```
 
-## ERD Component (entity-card + connector lines)
+## ERD Component (draggable whiteboard)
 
-For database / schema docs, render an ERD as **styled entity cards** (dbdiagram-style), NOT ASCII art. Group entities into clusters (Dimension / Fact / Snapshot / Input), color the header bar per cluster, badge columns with PK/FK/UQ, annotate FK targets as `table.attribute`, and draw **SVG connector lines** from FK columns to their target table.
+For DB/schema docs, render an ERD as a **whiteboard**: styled entity cards absolutely positioned on a bounded, scrollable canvas — draggable, with SVG connector lines that follow, plus resize + fullscreen. NOT ASCII, NOT a static flex grid.
 
 **Rules:**
-- Verify every FK against the real DB (`pg_constraint`) — never invent relationships. Distinguish HARD FK (`──FK──▶`, solid blue line) from LOGIC relations (join/derive, dashed gray line).
-- Each FK-target entity header gets `data-ent="<table>"`. Each relationship column gets `data-rel="<target-table>" data-rel-kind="fk|logic"`.
-- Connector lines are drawn by JS into an SVG overlay (`svg.erd-lines`) and **redrawn on resize** (flex-wrap reflows).
+- Verify every FK against the real DB (`pg_constraint`) — never invent. HARD FK = solid blue line (`──FK──▶`); LOGIC relation (join/derive) = dashed gray.
+- FK-target headers get `data-ent="<table>"`. Relationship columns get `data-rel="<target>" data-rel-kind="fk|logic"`.
+- Entities are `position:absolute` inside `.erd-canvas` (large, e.g. 1480×1100) with initial `data-x/data-y` + inline `left/top`. The canvas sits in `.erd-board` (viewport: `overflow:auto; resize:vertical; height:560px`), so the user scrolls to pan and drags the corner to grow. A `⤢` button toggles `.erd-board.full` (fixed inset overlay).
+- Drag updates `left/top` (clamped to canvas), `drawERDLines()` on every move + on board scroll + window resize.
 
 ```css
-.erd-wrap{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0;position:relative}
-.erd-cluster{flex:1;min-width:270px;display:flex;flex-direction:column;gap:12px;position:relative;z-index:1}
-.erd-clabel{font-size:10.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--text-2);opacity:.75}
-.erd-ent{background:var(--glass);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.05);position:relative;z-index:1}
-.erd-ent.star{box-shadow:0 0 0 2px #f59e0b66,0 4px 16px rgba(245,158,11,.18)}  /* highlight bảng trung tâm */
-.erd-th{padding:7px 11px;font-family:ui-monospace,monospace;font-size:12px;font-weight:700;color:#fff;display:flex;justify-content:space-between;align-items:center}
+.erd-board{position:relative;border:1px solid var(--border);border-radius:14px;background:var(--glass);background-image:radial-gradient(rgba(99,102,150,.13) 1px,transparent 1px);background-size:22px 22px;overflow:auto;height:560px;resize:vertical}
+.erd-board.full{position:fixed;inset:18px;height:auto!important;width:auto;z-index:9999;box-shadow:0 24px 90px rgba(0,0,0,.45);resize:none}
+.erd-canvas{position:relative;width:1480px;height:1100px}
+.erd-board .erd-ent{position:absolute;width:300px;z-index:1}
+.erd-board .erd-ent.star{width:344px;box-shadow:0 0 0 2px #f59e0b66,0 4px 16px rgba(245,158,11,.18)}
+.erd-clabel{position:absolute;z-index:0;pointer-events:none;font-size:10.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--text-2);opacity:.7}
+.erd-ent{background:var(--glass);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.erd-th{padding:7px 11px;font-family:ui-monospace,monospace;font-size:12px;font-weight:700;color:#fff;display:flex;justify-content:space-between;cursor:grab;user-select:none}
 .erd-th .erd-tag{font-size:9px;font-weight:700;background:rgba(255,255,255,.25);padding:1px 5px;border-radius:4px}
-.erd-col{padding:4px 11px;border-top:1px solid var(--border);font-family:ui-monospace,monospace;font-size:11.5px;display:flex;flex-wrap:wrap;gap:5px;align-items:baseline;line-height:1.5}
+.erd-col{padding:4px 11px;border-top:1px solid var(--border);font-family:ui-monospace,monospace;font-size:11.5px;display:flex;flex-wrap:wrap;gap:5px;align-items:baseline}
 .erd-b{font-size:8.5px;font-weight:800;padding:1px 4px;border-radius:3px}
-.erd-pk{background:#fbbf24;color:#713f12} .erd-fk{background:#3b82f6;color:#fff} .erd-uq{background:#a78bfa;color:#fff}
-.erd-ref{color:#2563eb;font-size:10.5px} .erd-ref.logic{color:#94a3b8;font-style:italic}
+.erd-pk{background:#fbbf24;color:#713f12}.erd-fk{background:#3b82f6;color:#fff}.erd-uq{background:#a78bfa;color:#fff}
+.erd-ref{color:#2563eb;font-size:10.5px}.erd-ref.logic{color:#94a3b8;font-style:italic}
 .erd-note{padding:5px 11px;border-top:1px dashed var(--border);font-size:10px;color:var(--text-2);font-style:italic}
 svg.erd-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;overflow:visible}
 svg.erd-lines path{fill:none}
 ```
 
-Entity markup (header colored per cluster; `.star` for the central table):
+Markup (toolbar + board > canvas; each entity carries `data-x/data-y` + `left/top`; headers/cols carry `data-ent`/`data-rel`):
 ```html
-<div class="erd-wrap">
-  <div class="erd-cluster"><div class="erd-clabel">◆ Dimension</div>
-    <div class="erd-ent"><div class="erd-th" data-ent="employees" style="background:#4f46e5">employees</div>
-      <div class="erd-col"><span class="erd-b erd-pk">PK</span> id</div>
-      <div class="erd-col"><span class="erd-b erd-uq">UQ</span> employee_code</div></div>
-  </div>
-  <div class="erd-cluster"><div class="erd-clabel">▣ Fact</div>
-    <div class="erd-ent"><div class="erd-th" style="background:#059669">payroll_records</div>
-      <div class="erd-col" data-rel="employees" data-rel-kind="fk"><span class="erd-b erd-fk">FK</span> employee_id <span class="erd-ref">→ employees.id</span></div>
-      <div class="erd-col" data-rel="employees" data-rel-kind="logic">emp_code <span class="erd-ref logic">┄ employees.employee_code</span></div></div>
-  </div>
-</div>
+<div class="erd-toolbar"><span>✋ Kéo header · cuộn để pan · kéo mép dưới khung</span>
+  <span style="margin-left:auto"><button id="erd-reset">↺ Reset</button> <button id="erd-full">⤢ Toàn màn hình</button></span></div>
+<div class="erd-board" id="erd-board"><div class="erd-canvas" id="erd-canvas">
+  <div class="erd-clabel" style="left:16px;top:16px">◆ DIMENSION</div>
+  <div class="erd-ent" data-x="16" data-y="44" style="left:16px;top:44px">
+    <div class="erd-th" data-ent="employees" style="background:#4f46e5">employees</div>
+    <div class="erd-col"><span class="erd-b erd-pk">PK</span> id</div></div>
+  <div class="erd-ent" data-x="1060" data-y="52" style="left:1060px;top:52px">
+    <div class="erd-th" style="background:#059669">payroll_records</div>
+    <div class="erd-col" data-rel="employees" data-rel-kind="fk"><span class="erd-b erd-fk">FK</span> employee_id <span class="erd-ref">→ employees.id</span></div></div>
+</div></div>
 ```
 
-Connector-line JS (curved bezier, arrowhead, source dot; auto left/right; redraw on resize):
+JS — connector lines (canvas-relative) + drag (left/top, clamped) + reset + fullscreen:
 ```javascript
 function drawERDLines() {
-  const wrap = document.querySelector('.erd-wrap'); if (!wrap) return;
+  const canvas = document.getElementById('erd-canvas'); if (!canvas) return;
   const NS = 'http://www.w3.org/2000/svg';
-  let svg = wrap.querySelector('svg.erd-lines');
-  if (!svg) {
-    svg = document.createElementNS(NS, 'svg'); svg.setAttribute('class', 'erd-lines');
-    const defs = document.createElementNS(NS, 'defs');
-    defs.innerHTML = '<marker id="erd-arrow" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#3b82f6"/></marker>'
-                   + '<marker id="erd-arrow-g" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#94a3b8"/></marker>';
-    svg.appendChild(defs); wrap.prepend(svg);
-  }
+  let svg = canvas.querySelector('svg.erd-lines');
+  if (!svg) { svg = document.createElementNS(NS,'svg'); svg.setAttribute('class','erd-lines');
+    const d = document.createElementNS(NS,'defs');
+    d.innerHTML = '<marker id="erd-arrow" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#3b82f6"/></marker><marker id="erd-arrow-g" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#94a3b8"/></marker>';
+    svg.appendChild(d); canvas.prepend(svg); }
   [...svg.querySelectorAll('path,circle')].forEach(n => n.remove());
-  const W = wrap.getBoundingClientRect(), ents = {};
-  wrap.querySelectorAll('[data-ent]').forEach(e => ents[e.getAttribute('data-ent')] = e);
-  wrap.querySelectorAll('[data-rel]').forEach(src => {
+  const W = canvas.getBoundingClientRect(), ents = {};
+  canvas.querySelectorAll('[data-ent]').forEach(e => ents[e.getAttribute('data-ent')] = e.closest('.erd-ent'));
+  canvas.querySelectorAll('[data-rel]').forEach(src => {
     const tgt = ents[src.getAttribute('data-rel')]; if (!tgt) return;
-    const fk = (src.getAttribute('data-rel-kind') || 'fk') === 'fk';
+    const fk = (src.getAttribute('data-rel-kind')||'fk') === 'fk';
     const s = src.getBoundingClientRect(), t = tgt.getBoundingClientRect();
-    const toLeft = (t.left + t.width/2) < (s.left + s.width/2);
-    const sx = (toLeft ? s.left : s.right) - W.left, sy = s.top + s.height/2 - W.top;
-    const tx = (toLeft ? t.right : t.left) - W.left, ty = t.top + t.height/2 - W.top;
-    const dx = Math.max(28, Math.abs(tx - sx) * 0.45), c1 = sx + (toLeft?-dx:dx), c2 = tx + (toLeft?dx:-dx);
-    const col = fk ? '#3b82f6' : '#94a3b8';
-    const p = document.createElementNS(NS, 'path');
-    p.setAttribute('d', `M ${sx} ${sy} C ${c1} ${sy} ${c2} ${ty} ${tx} ${ty}`);
-    p.setAttribute('stroke', col); p.setAttribute('stroke-width', '1.6'); p.setAttribute('stroke-opacity', '0.55');
-    if (!fk) p.setAttribute('stroke-dasharray', '5 4');
-    p.setAttribute('marker-end', fk ? 'url(#erd-arrow)' : 'url(#erd-arrow-g)');
-    svg.appendChild(p);
-    const dot = document.createElementNS(NS, 'circle');
-    dot.setAttribute('cx', sx); dot.setAttribute('cy', sy); dot.setAttribute('r', '2.5'); dot.setAttribute('fill', col);
-    svg.appendChild(dot);
+    const L = (t.left+t.width/2) < (s.left+s.width/2);
+    const sx=(L?s.left:s.right)-W.left, sy=s.top+s.height/2-W.top, tx=(L?t.right:t.left)-W.left, ty=t.top+t.height/2-W.top;
+    const dx=Math.max(30,Math.abs(tx-sx)*0.45), c1=sx+(L?-dx:dx), c2=tx+(L?dx:-dx), col=fk?'#3b82f6':'#94a3b8';
+    const p=document.createElementNS(NS,'path'); p.setAttribute('d',`M ${sx} ${sy} C ${c1} ${sy} ${c2} ${ty} ${tx} ${ty}`);
+    p.setAttribute('stroke',col); p.setAttribute('stroke-width','1.6'); p.setAttribute('stroke-opacity','0.6');
+    if(!fk) p.setAttribute('stroke-dasharray','5 4'); p.setAttribute('marker-end',fk?'url(#erd-arrow)':'url(#erd-arrow-g)'); svg.appendChild(p);
+    const c=document.createElementNS(NS,'circle'); c.setAttribute('cx',sx); c.setAttribute('cy',sy); c.setAttribute('r','2.5'); c.setAttribute('fill',col); svg.appendChild(c);
   });
 }
-window.addEventListener('load', drawERDLines);
-let __erdT; window.addEventListener('resize', () => { clearTimeout(__erdT); __erdT = setTimeout(drawERDLines, 150); });
-setTimeout(drawERDLines, 300);
-```
-
-**Draggable entities (connector lines follow):** make each `.erd-ent` a free-drag node by its header — apply `transform: translate()` (keeps flex slot, only the dragged card moves) and call `drawERDLines()` on every move so connectors track. Add a `#erd-reset` button to clear transforms.
-```javascript
-function initDraggableERD() {
-  const offOf = el => { const m = /translate\(([-\d.]+)px,\s*([-\d.]+)px\)/.exec(el.style.transform || ''); return m ? [+m[1], +m[2]] : [0, 0]; };
-  document.querySelectorAll('.erd-ent').forEach(ent => {
-    const h = ent.querySelector('.erd-th'); if (!h || h.dataset.drag) return;
-    h.dataset.drag = '1'; h.style.cursor = 'grab'; h.style.userSelect = 'none';
-    let sx, sy, ox, oy, drag = false;
-    h.addEventListener('pointerdown', e => { drag = true; [ox, oy] = offOf(ent); sx = e.clientX; sy = e.clientY; ent.style.zIndex = '20'; h.style.cursor = 'grabbing'; h.setPointerCapture(e.pointerId); e.preventDefault(); });
-    h.addEventListener('pointermove', e => { if (!drag) return; ent.style.transform = `translate(${ox + e.clientX - sx}px, ${oy + e.clientY - sy}px)`; drawERDLines(); });
-    const end = () => { if (!drag) return; drag = false; ent.style.zIndex = '2'; h.style.cursor = 'grab'; drawERDLines(); };
+function initERDBoard() {
+  const canvas = document.getElementById('erd-canvas'); if (!canvas) return;
+  canvas.querySelectorAll('.erd-ent').forEach(ent => {
+    const h = ent.querySelector('.erd-th'); if (!h || h.dataset.drag) return; h.dataset.drag='1';
+    let sx,sy,ox,oy,drag=false;
+    h.addEventListener('pointerdown', e => { drag=true; ox=parseFloat(ent.style.left)||0; oy=parseFloat(ent.style.top)||0; sx=e.clientX; sy=e.clientY; ent.style.zIndex='30'; h.setPointerCapture(e.pointerId); e.preventDefault(); });
+    h.addEventListener('pointermove', e => { if(!drag) return;
+      ent.style.left = Math.max(0,Math.min(canvas.clientWidth-ent.offsetWidth, ox+e.clientX-sx))+'px';
+      ent.style.top  = Math.max(0,Math.min(canvas.clientHeight-ent.offsetHeight, oy+e.clientY-sy))+'px'; drawERDLines(); });
+    const end = () => { if(!drag) return; drag=false; ent.style.zIndex='1'; drawERDLines(); };
     h.addEventListener('pointerup', end); h.addEventListener('pointercancel', end);
   });
-  const rst = document.getElementById('erd-reset');
-  if (rst && !rst.dataset.b) { rst.dataset.b = '1'; rst.addEventListener('click', () => { document.querySelectorAll('.erd-ent').forEach(e => e.style.transform = ''); drawERDLines(); }); }
+  document.getElementById('erd-reset')?.addEventListener('click', () => { canvas.querySelectorAll('.erd-ent').forEach(e => { e.style.left=e.dataset.x+'px'; e.style.top=e.dataset.y+'px'; }); drawERDLines(); });
+  document.getElementById('erd-full')?.addEventListener('click', e => { const on=document.getElementById('erd-board').classList.toggle('full'); e.target.textContent=on?'✕ Thoát toàn màn hình':'⤢ Toàn màn hình'; setTimeout(drawERDLines,60); });
 }
-window.addEventListener('load', initDraggableERD);
-setTimeout(initDraggableERD, 320);
+window.addEventListener('load', () => { initERDBoard(); drawERDLines(); });
+let __erdT; window.addEventListener('resize', () => { clearTimeout(__erdT); __erdT=setTimeout(drawERDLines,150); });
+document.getElementById('erd-board')?.addEventListener('scroll', () => { clearTimeout(__erdT); __erdT=setTimeout(drawERDLines,40); });
+setTimeout(() => { initERDBoard(); drawERDLines(); }, 320);
 ```
 
 ## Collapse / Xem thêm
