@@ -354,7 +354,8 @@ For DB/schema docs, render an ERD as a **whiteboard**: styled entity cards absol
 
 ```css
 .erd-board{position:relative;border:1px solid var(--border);border-radius:14px;background:var(--glass);background-image:radial-gradient(rgba(99,102,150,.13) 1px,transparent 1px);background-size:22px 22px;overflow:auto;height:560px;resize:vertical}
-.erd-board.full{position:fixed;inset:18px;height:auto!important;width:auto;z-index:9999;box-shadow:0 24px 90px rgba(0,0,0,.45);resize:none}
+.erd-board.full{position:fixed;inset:18px;height:auto!important;width:auto;z-index:9999;box-shadow:0 24px 90px rgba(0,0,0,.45);resize:none;background-color:rgba(248,247,252,.9);backdrop-filter:blur(32px) saturate(1.4);-webkit-backdrop-filter:blur(32px) saturate(1.4)}  /* fullscreen = frosted MẠNH, nền đặc (đừng để trong suốt) */
+body.erd-full-on::before{content:'';position:fixed;inset:0;z-index:9998;background:rgba(20,18,30,.38);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}  /* dim + blur trang phía sau */
 .erd-canvas{position:relative;width:1480px;height:1100px}
 .erd-board .erd-ent{position:absolute;width:300px;z-index:1}
 .erd-board .erd-ent.star{width:344px;box-shadow:0 0 0 2px #f59e0b66,0 4px 16px rgba(245,158,11,.18)}
@@ -425,7 +426,7 @@ function initERDBoard() {
     h.addEventListener('pointerup', end); h.addEventListener('pointercancel', end);
   });
   document.getElementById('erd-reset')?.addEventListener('click', () => { canvas.querySelectorAll('.erd-ent').forEach(e => { e.style.left=e.dataset.x+'px'; e.style.top=e.dataset.y+'px'; }); drawERDLines(); });
-  document.getElementById('erd-full')?.addEventListener('click', e => { const on=document.getElementById('erd-board').classList.toggle('full'); e.target.textContent=on?'✕ Thoát toàn màn hình':'⤢ Toàn màn hình'; setTimeout(drawERDLines,60); });
+  document.getElementById('erd-full')?.addEventListener('click', e => { const on=document.getElementById('erd-board').classList.toggle('full'); document.body.classList.toggle('erd-full-on',on); e.target.textContent=on?'✕ Thoát toàn màn hình':'⤢ Toàn màn hình'; setTimeout(drawERDLines,60); });
 }
 window.addEventListener('load', () => { initERDBoard(); drawERDLines(); });
 let __erdT; window.addEventListener('resize', () => { clearTimeout(__erdT); __erdT=setTimeout(drawERDLines,150); });
