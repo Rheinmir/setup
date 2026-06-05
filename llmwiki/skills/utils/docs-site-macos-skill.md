@@ -388,9 +388,18 @@ svg.erd-lines path{fill:none}
 .erd-canvas.linking{cursor:crosshair}
 .erd-canvas.linking .erd-ent,.erd-canvas.linking .erd-cmt{outline:2px dashed rgba(245,158,11,.5)}
 svg.erd-lines path.rel-hit{pointer-events:stroke;cursor:pointer}
+/* global sync panel (ghi layout vào file qua Ctrl+H) */
+.erd-syncbox{border:1px solid var(--border);background:var(--glass);border-radius:12px;padding:10px 12px;margin:0 0 8px;font-size:11.5px}
+.erd-syncrow{display:flex;align-items:center;gap:8px;margin:6px 0 3px}
+.erd-syncrow label{font-weight:700;color:var(--text-2)}
+.erd-syncrow .erd-copy{margin-left:auto;font:inherit;font-size:11px;font-weight:700;border:1px solid var(--border);background:#fff;border-radius:6px;cursor:pointer;padding:2px 9px}
+.erd-syncrow .erd-copy:hover{background:#f0f0f6}
+.erd-syncbox textarea{width:100%;box-sizing:border-box;font-family:ui-monospace,'SF Mono',monospace;font-size:10.5px;line-height:1.4;border:1px solid var(--border);border-radius:6px;padding:6px 8px;background:#fbfbfe;resize:vertical;min-height:54px;white-space:pre;overflow:auto}
 ```
 
-**Interactions (persist + comment notes + arrows):** the whole board state — entity positions, comment notes, and arrows — persists to `localStorage`. Double-click empty canvas → a sticky **note** with an editable body + **Find/Replace** inputs each with a copy button (paste into editor Ctrl+H). Click a note's **↗** handle → linking mode → click an entity (or a relationship line `path.rel-hit`) to draw an orange arrow that follows on drag. `Reset` clears localStorage + notes. The JS below is the full reference (one IIFE):
+**Interactions (persist + notes + arrows + sync-to-file):** board state (entity positions, notes, arrows) auto-saves to `localStorage` (live working copy), restored on load from `localStorage` → else from a `<script id="erd-layout-data" type="application/json">{}</script>` marker baked in the file. Double-click empty canvas → a sticky **note** (editable body only — NO per-note code fields). Click a note's **↗** → linking mode → click an entity or a relationship line (`path.rel-hit`) → orange arrow that follows on drag.
+
+**Sync layout back to file (key pattern):** Find/Replace is NOT typed per-note — it's a single **global** toolbar panel (`💾 Đồng bộ → file`) that AUTO-GENERATES for editor Ctrl+H: **Copy Find** = the marker exactly as it sits in the file now (`<script id="erd-layout-data" ...>{...}</script>`), **Copy Replace** = same marker regenerated with current dragged positions + notes. Paste into editor find-replace → Replace-All → layout is written into the source HTML (persists + shareable, not just browser). `Reset` clears localStorage + notes. Markup needs toolbar button `#erd-sync`, panel `#erd-syncbox` (readonly textareas `#erd-find`/`#erd-replace` + copy buttons), and the `<script id="erd-layout-data">{}</script>` marker. The JS below is the full reference (one IIFE):
 
 Markup (toolbar + board > canvas; each entity carries `data-x/data-y` + `left/top`; headers/cols carry `data-ent`/`data-rel`):
 ```html
@@ -417,9 +426,18 @@ JS — connector lines (canvas-relative) + drag (left/top, clamped) + reset + fu
   const board=document.getElementById('erd-board');
   if(!canvas) return;
 
-  let BOARD; try{ BOARD=JSON.parse(localStorage.getItem(LS))||{}; }catch(e){ BOARD={}; }
+  // baseline = state ĐANG GHI trong file (script#erd-layout-data); localStorage = bản làm việc trực tiếp
+  const dataEl=document.getElementById('erd-layout-data');
+  const fileRaw=(dataEl&&dataEl.textContent.trim())||'{}';
+  let fileState={}; try{ fileState=JSON.parse(fileRaw)||{}; }catch(e){ fileState={}; }
+  let BOARD; try{ BOARD=JSON.parse(localStorage.getItem(LS))||null; }catch(e){ BOARD=null; }
+  if(!BOARD) BOARD=JSON.parse(JSON.stringify(fileState));   // chưa có bản làm việc → dùng file
   BOARD.ents=BOARD.ents||{}; BOARD.comments=BOARD.comments||[]; BOARD.seq=BOARD.seq||1;
   const save=()=>{ try{ localStorage.setItem(LS,JSON.stringify(BOARD)); }catch(e){} };
+  // Find = đoạn script hiện có trong file (1 dòng); Replace = đoạn mới theo BOARD
+  const wrapData=j=>'<script id="erd-layout-data" type="application/json">'+j+'<\/script>';
+  const findText=()=>wrapData(fileRaw);
+  const replaceText=()=>wrapData(JSON.stringify({ents:BOARD.ents,comments:BOARD.comments,seq:BOARD.seq}));
   function nameOf(ent){ const h=ent.querySelector('.erd-th'); return ((h.childNodes[0]&&h.childNodes[0].textContent)||'').trim(); }
   function copyText(t,btn){ const done=()=>{ const o=btn.textContent; btn.textContent='✓'; setTimeout(()=>btn.textContent=o,900); };
     if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(t||'').then(done).catch(fb); } else fb();
@@ -483,30 +501,19 @@ JS — connector lines (canvas-relative) + drag (left/top, clamped) + reset + fu
 
   function addCommentNode(cm){
     if(document.getElementById('cmt-'+cm.id)) return;
-    const el=document.createElement('div'); el.className='erd-cmt'+(cm.big?' big':''); el.id='cmt-'+cm.id; el.style.left=cm.x+'px'; el.style.top=cm.y+'px';
+    const el=document.createElement('div'); el.className='erd-cmt'; el.id='cmt-'+cm.id; el.style.left=cm.x+'px'; el.style.top=cm.y+'px';
     el.innerHTML='<div class="erd-cmt-h"><span>💬 note</span><span class="erd-cmt-tools">'
       +'<span class="erd-cmt-link-btn" title="nối mũi tên tới bảng / đường quan hệ">↗</span>'
-      +'<span class="erd-cmt-big" title="mở rộng để soạn khối code">⤢</span>'
       +'<span class="erd-cmt-x" title="xóa">✕</span></span></div>'
       +'<div class="erd-cmt-body" contenteditable="true"></div>'
-      +'<div class="erd-cmt-fr">'
-      +'<div class="erd-cmt-grp"><label>① Mã GỐC → paste vào ô <b>Find</b> <button class="bf">⧉ Copy Find</button></label><textarea class="cf" placeholder="dán/nhập đoạn code gốc — đủ context để định vị duy nhất trong file"></textarea></div>'
-      +'<div class="erd-cmt-grp"><label>② Mã MỚI → paste vào ô <b>Replace</b> <button class="br">⧉ Copy Replace</button></label><textarea class="cr" placeholder="đoạn code sau khi sửa"></textarea></div>'
-      +'</div>'
       +'<div class="erd-cmt-link"><span class="erd-cmt-lt"></span></div>';
     canvas.appendChild(el);
     const body=el.querySelector('.erd-cmt-body'); body.textContent=cm.text||'';
-    const cf=el.querySelector('.cf'); cf.value=cm.find||''; const cr=el.querySelector('.cr'); cr.value=cm.replace||'';
     const lt=el.querySelector('.erd-cmt-lt'); if(cm.link) lt.textContent='→ '+(cm.link.type==='ent'?cm.link.name:cm.link.key);
     body.addEventListener('input',()=>{ cm.text=body.textContent; save(); });
-    cf.addEventListener('input',()=>{ cm.find=cf.value; save(); });
-    cr.addEventListener('input',()=>{ cm.replace=cr.value; save(); });
-    el.querySelector('.bf').addEventListener('click',e=>copyText(cf.value,e.target));
-    el.querySelector('.br').addEventListener('click',e=>copyText(cr.value,e.target));
     el.querySelector('.erd-cmt-x').addEventListener('click',()=>{ BOARD.comments=BOARD.comments.filter(c=>c.id!==cm.id); save(); el.remove(); draw(); });
     el.querySelector('.erd-cmt-link-btn').addEventListener('click',()=>startLinking(cm.id));
-    el.querySelector('.erd-cmt-big').addEventListener('click',()=>{ el.classList.toggle('big'); cm.big=el.classList.contains('big'); save(); draw(); });
-    makeDraggable(el,el.querySelector('.erd-cmt-h'),(x,y)=>{ cm.x=x; cm.y=y; save(); });
+    makeDraggable(el,el.querySelector('.erd-cmt-h'),(x,y)=>{ cm.x=Math.round(x); cm.y=Math.round(y); save(); });
   }
 
   function initEnts(){
@@ -515,7 +522,7 @@ JS — connector lines (canvas-relative) + drag (left/top, clamped) + reset + fu
       if(BOARD.ents[nm]){ ent.style.left=BOARD.ents[nm].x+'px'; ent.style.top=BOARD.ents[nm].y+'px'; }
       const h=ent.querySelector('.erd-th'); if(h.dataset.drag) return; h.dataset.drag='1';
       ent.addEventListener('click',e=>{ if(linking){ e.stopPropagation(); setLink(linking,{type:'ent',name:nm}); } });
-      makeDraggable(ent,h,(x,y)=>{ BOARD.ents[nm]={x:x,y:y}; save(); });
+      makeDraggable(ent,h,(x,y)=>{ BOARD.ents[nm]={x:Math.round(x),y:Math.round(y)}; save(); });
     });
   }
 
@@ -528,6 +535,12 @@ JS — connector lines (canvas-relative) + drag (left/top, clamped) + reset + fu
     BOARD={ents:{},comments:[],seq:1}; save(); canvas.querySelectorAll('.erd-cmt').forEach(n=>n.remove());
     canvas.querySelectorAll('.erd-ent').forEach(e=>{ e.style.left=e.dataset.x+'px'; e.style.top=e.dataset.y+'px'; }); draw(); });
   document.getElementById('erd-full')?.addEventListener('click',e=>{ const on=board.classList.toggle('full'); document.body.classList.toggle('erd-full-on',on); e.target.textContent=on?'✕ Thoát toàn màn hình':'⤢ Toàn màn hình'; setTimeout(draw,60); });
+
+  // global sync → file (tự sinh Find/Replace cho Ctrl+H)
+  const syncBox=document.getElementById('erd-syncbox');
+  function fillSync(){ const f=document.getElementById('erd-find'),r=document.getElementById('erd-replace'); if(f) f.value=findText(); if(r) r.value=replaceText(); }
+  document.getElementById('erd-sync')?.addEventListener('click',()=>{ const on=syncBox.hidden; syncBox.hidden=!on; if(on) fillSync(); });
+  syncBox?.querySelectorAll('.erd-copy').forEach(b=>b.addEventListener('click',e=>{ fillSync(); copyText(e.target.dataset.t==='find'?findText():replaceText(),e.target); }));
 
   function boot(){ initEnts(); BOARD.comments.forEach(addCommentNode); draw(); }
   window.addEventListener('load',boot);
