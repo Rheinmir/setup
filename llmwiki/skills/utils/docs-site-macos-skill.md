@@ -347,7 +347,8 @@ initCodeCopy();
 For DB/schema docs, render an ERD as a **whiteboard**: styled entity cards absolutely positioned on a bounded, scrollable canvas — draggable, with SVG connector lines that follow, plus resize + fullscreen. NOT ASCII, NOT a static flex grid.
 
 **Rules:**
-- Verify every FK against the real DB (`pg_constraint`) — never invent. HARD FK = solid blue line (`──FK──▶`); LOGIC relation (join/derive) = dashed gray.
+- Verify every FK against the real DB (`pg_constraint`) — never invent.
+- **Phân biệt NGUỒN GỐC bảng** bằng badge ở góc phải header (`.erd-org` + `margin-left:auto`): 🆕 MỚI từ feature (`erd-org-new`), cột mới trong bảng cũ (`erd-org-col`), ♻ tái dùng/mở rộng (`erd-org-reuse`), legacy có sẵn (`erd-org-legacy`). Kèm 1 legend màu. HARD FK = solid blue line (`──FK──▶`); LOGIC relation (join/derive) = dashed gray.
 - FK-target headers get `data-ent="<table>"`. Relationship columns get `data-rel="<target>" data-rel-kind="fk|logic"`.
 - Entities are `position:absolute` inside `.erd-canvas` (large, e.g. 1480×1100) with initial `data-x/data-y` + inline `left/top`. The canvas sits in `.erd-board` (viewport: `overflow:auto; resize:vertical; height:560px`), so the user scrolls to pan and drags the corner to grow. A `⤢` button toggles `.erd-board.full` (fixed inset overlay).
 - Drag updates `left/top` (clamped to canvas), `drawERDLines()` on every move + on board scroll + window resize.
@@ -361,8 +362,10 @@ body.erd-full-on::before{content:'';position:fixed;inset:0;z-index:9998;backgrou
 .erd-board .erd-ent.star{width:344px;box-shadow:0 0 0 2px #f59e0b66,0 4px 16px rgba(245,158,11,.18)}
 .erd-clabel{position:absolute;z-index:0;pointer-events:none;font-size:10.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--text-2);opacity:.7}
 .erd-ent{background:var(--glass);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.05)}
-.erd-th{padding:7px 11px;font-family:ui-monospace,monospace;font-size:12px;font-weight:700;color:#fff;display:flex;justify-content:space-between;cursor:grab;user-select:none}
+.erd-th{padding:7px 11px;font-family:ui-monospace,monospace;font-size:12px;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px;cursor:grab;user-select:none}
 .erd-th .erd-tag{font-size:9px;font-weight:700;background:rgba(255,255,255,.25);padding:1px 5px;border-radius:4px}
+.erd-th .erd-org{margin-left:auto;font-size:8px;font-weight:800;padding:1px 6px;border-radius:4px;white-space:nowrap}
+.erd-org-new{background:#16a34a;color:#fff}.erd-org-col{background:#0ea5e9;color:#fff}.erd-org-reuse{background:#fff;color:#b45309}.erd-org-legacy{background:rgba(255,255,255,.28);color:#fff}
 .erd-col{padding:4px 11px;border-top:1px solid var(--border);font-family:ui-monospace,monospace;font-size:11.5px;display:flex;flex-wrap:wrap;gap:5px;align-items:baseline}
 .erd-b{font-size:8.5px;font-weight:800;padding:1px 4px;border-radius:3px}
 .erd-pk{background:#fbbf24;color:#713f12}.erd-fk{background:#3b82f6;color:#fff}.erd-uq{background:#a78bfa;color:#fff}
