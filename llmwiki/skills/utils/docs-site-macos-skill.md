@@ -370,15 +370,23 @@ body.erd-full-on::before{content:'';position:fixed;inset:0;z-index:9998;backgrou
 .erd-note{padding:5px 11px;border-top:1px dashed var(--border);font-size:10px;color:var(--text-2);font-style:italic}
 svg.erd-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;overflow:visible}
 svg.erd-lines path{fill:none}
-/* comment / note nodes (double-click vùng trống để tạo) */
-.erd-cmt{position:absolute;width:208px;background:#fff8c5;border:1px solid #ecd34a;border-radius:10px;box-shadow:0 3px 14px rgba(0,0,0,.13);z-index:5;font-size:11.5px}
-.erd-cmt-h{background:#f6e05e;padding:3px 8px;border-radius:9px 9px 0 0;cursor:grab;display:flex;justify-content:space-between;font-size:10px;font-weight:800;color:#713f12;user-select:none}
-.erd-cmt-body{padding:6px 8px;outline:none;min-height:26px;color:#5b4708}.erd-cmt-body:empty::before{content:'note…';opacity:.4}
-.erd-cmt-fr{padding:0 8px 6px;display:flex;flex-direction:column;gap:3px}.erd-cmt-fr .erd-cmt-row{display:flex;gap:3px;align-items:center}
-.erd-cmt-fr label{font-size:9px;font-weight:700;color:#8a6d1a}.erd-cmt-fr input{flex:1;min-width:0;font-size:10px;border:1px solid #e3cf6a;border-radius:4px;padding:1px 4px;background:#fffdf0}
-.erd-cmt-fr button{font-size:9px;border:1px solid #e3cf6a;background:#fff;border-radius:4px;cursor:pointer;padding:1px 5px}
-.erd-cmt-link{padding:0 8px 7px;font-size:9.5px;color:#8a6d1a}
-.erd-canvas.linking{cursor:crosshair}.erd-canvas.linking .erd-ent,.erd-canvas.linking .erd-cmt{outline:2px dashed rgba(245,158,11,.5)}
+/* comment / note nodes — panel to, Find/Replace = textarea code */
+.erd-cmt{position:absolute;width:340px;background:#fff8c5;border:1px solid #ecd34a;border-radius:11px;box-shadow:0 4px 18px rgba(0,0,0,.15);z-index:5;font-size:12px}
+.erd-cmt.big{width:600px}
+.erd-cmt-h{background:#f6e05e;padding:5px 10px;border-radius:10px 10px 0 0;cursor:grab;display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:800;color:#713f12;user-select:none}
+.erd-cmt-h .erd-cmt-tools span{cursor:pointer;opacity:.6;font-weight:700;padding:0 3px}
+.erd-cmt-h .erd-cmt-tools span:hover{opacity:1}
+.erd-cmt-body{padding:7px 10px;outline:none;min-height:30px;color:#5b4708;line-height:1.45;font-weight:600}
+.erd-cmt-body:empty::before{content:'tiêu đề / ghi chú…';opacity:.4;font-weight:400}
+.erd-cmt-fr{padding:2px 10px 8px;display:flex;flex-direction:column;gap:7px}
+.erd-cmt-grp label{display:flex;justify-content:space-between;align-items:center;font-size:10px;font-weight:700;color:#8a6d1a;margin-bottom:2px}
+.erd-cmt-grp label button{font:inherit;font-size:10px;font-weight:700;border:1px solid #d9b94a;background:#fff;border-radius:5px;cursor:pointer;padding:2px 8px}
+.erd-cmt-grp label button:hover{background:#fffbe6}
+.erd-cmt-grp textarea{width:100%;box-sizing:border-box;font-family:ui-monospace,'SF Mono',monospace;font-size:11px;line-height:1.45;border:1px solid #e3cf6a;border-radius:6px;padding:5px 7px;background:#fffdf0;resize:vertical;min-height:46px;white-space:pre;overflow:auto}
+.erd-cmt.big .erd-cmt-grp textarea{min-height:150px}
+.erd-cmt-link{padding:0 10px 8px;display:flex;gap:6px;align-items:center;font-size:10px;color:#8a6d1a}
+.erd-canvas.linking{cursor:crosshair}
+.erd-canvas.linking .erd-ent,.erd-canvas.linking .erd-cmt{outline:2px dashed rgba(245,158,11,.5)}
 svg.erd-lines path.rel-hit{pointer-events:stroke;cursor:pointer}
 ```
 
@@ -475,11 +483,16 @@ JS — connector lines (canvas-relative) + drag (left/top, clamped) + reset + fu
 
   function addCommentNode(cm){
     if(document.getElementById('cmt-'+cm.id)) return;
-    const el=document.createElement('div'); el.className='erd-cmt'; el.id='cmt-'+cm.id; el.style.left=cm.x+'px'; el.style.top=cm.y+'px';
-    el.innerHTML='<div class="erd-cmt-h"><span>💬 note</span><span><span class="erd-cmt-link-btn" title="nối mũi tên tới bảng / đường quan hệ" style="cursor:pointer;margin-right:7px">↗</span><span class="erd-cmt-x" title="xóa">✕</span></span></div>'
+    const el=document.createElement('div'); el.className='erd-cmt'+(cm.big?' big':''); el.id='cmt-'+cm.id; el.style.left=cm.x+'px'; el.style.top=cm.y+'px';
+    el.innerHTML='<div class="erd-cmt-h"><span>💬 note</span><span class="erd-cmt-tools">'
+      +'<span class="erd-cmt-link-btn" title="nối mũi tên tới bảng / đường quan hệ">↗</span>'
+      +'<span class="erd-cmt-big" title="mở rộng để soạn khối code">⤢</span>'
+      +'<span class="erd-cmt-x" title="xóa">✕</span></span></div>'
       +'<div class="erd-cmt-body" contenteditable="true"></div>'
-      +'<div class="erd-cmt-fr"><div class="erd-cmt-row"><label>F</label><input class="cf" placeholder="find…"><button class="bf">copy</button></div>'
-      +'<div class="erd-cmt-row"><label>R</label><input class="cr" placeholder="replace…"><button class="br">copy</button></div></div>'
+      +'<div class="erd-cmt-fr">'
+      +'<div class="erd-cmt-grp"><label>① Mã GỐC → paste vào ô <b>Find</b> <button class="bf">⧉ Copy Find</button></label><textarea class="cf" placeholder="dán/nhập đoạn code gốc — đủ context để định vị duy nhất trong file"></textarea></div>'
+      +'<div class="erd-cmt-grp"><label>② Mã MỚI → paste vào ô <b>Replace</b> <button class="br">⧉ Copy Replace</button></label><textarea class="cr" placeholder="đoạn code sau khi sửa"></textarea></div>'
+      +'</div>'
       +'<div class="erd-cmt-link"><span class="erd-cmt-lt"></span></div>';
     canvas.appendChild(el);
     const body=el.querySelector('.erd-cmt-body'); body.textContent=cm.text||'';
@@ -492,6 +505,7 @@ JS — connector lines (canvas-relative) + drag (left/top, clamped) + reset + fu
     el.querySelector('.br').addEventListener('click',e=>copyText(cr.value,e.target));
     el.querySelector('.erd-cmt-x').addEventListener('click',()=>{ BOARD.comments=BOARD.comments.filter(c=>c.id!==cm.id); save(); el.remove(); draw(); });
     el.querySelector('.erd-cmt-link-btn').addEventListener('click',()=>startLinking(cm.id));
+    el.querySelector('.erd-cmt-big').addEventListener('click',()=>{ el.classList.toggle('big'); cm.big=el.classList.contains('big'); save(); draw(); });
     makeDraggable(el,el.querySelector('.erd-cmt-h'),(x,y)=>{ cm.x=x; cm.y=y; save(); });
   }
 
