@@ -425,6 +425,26 @@ let __erdT; window.addEventListener('resize', () => { clearTimeout(__erdT); __er
 setTimeout(drawERDLines, 300);
 ```
 
+**Draggable entities (connector lines follow):** make each `.erd-ent` a free-drag node by its header — apply `transform: translate()` (keeps flex slot, only the dragged card moves) and call `drawERDLines()` on every move so connectors track. Add a `#erd-reset` button to clear transforms.
+```javascript
+function initDraggableERD() {
+  const offOf = el => { const m = /translate\(([-\d.]+)px,\s*([-\d.]+)px\)/.exec(el.style.transform || ''); return m ? [+m[1], +m[2]] : [0, 0]; };
+  document.querySelectorAll('.erd-ent').forEach(ent => {
+    const h = ent.querySelector('.erd-th'); if (!h || h.dataset.drag) return;
+    h.dataset.drag = '1'; h.style.cursor = 'grab'; h.style.userSelect = 'none';
+    let sx, sy, ox, oy, drag = false;
+    h.addEventListener('pointerdown', e => { drag = true; [ox, oy] = offOf(ent); sx = e.clientX; sy = e.clientY; ent.style.zIndex = '20'; h.style.cursor = 'grabbing'; h.setPointerCapture(e.pointerId); e.preventDefault(); });
+    h.addEventListener('pointermove', e => { if (!drag) return; ent.style.transform = `translate(${ox + e.clientX - sx}px, ${oy + e.clientY - sy}px)`; drawERDLines(); });
+    const end = () => { if (!drag) return; drag = false; ent.style.zIndex = '2'; h.style.cursor = 'grab'; drawERDLines(); };
+    h.addEventListener('pointerup', end); h.addEventListener('pointercancel', end);
+  });
+  const rst = document.getElementById('erd-reset');
+  if (rst && !rst.dataset.b) { rst.dataset.b = '1'; rst.addEventListener('click', () => { document.querySelectorAll('.erd-ent').forEach(e => e.style.transform = ''); drawERDLines(); }); }
+}
+window.addEventListener('load', initDraggableERD);
+setTimeout(initDraggableERD, 320);
+```
+
 ## Collapse / Xem thêm
 
 Animated expand/collapse section:
