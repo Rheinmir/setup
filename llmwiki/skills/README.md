@@ -23,6 +23,7 @@ Multi-step reusable workflows the agent invokes autonomously based on context. E
 |-------|------|---------|
 | `orca-workflow` | `orchestrate/orca-workflow.md` | Daily propose → gate → dispatch với Orca |
 | `orca-onboard` | `orchestrate/orca-onboard.md` | Parallel codebase onboarding với Orca |
+| `orca-sec-scans` | `orchestrate/orca-sec-scans.md` | Quét bảo mật bằng Trivy: check/install → scan vuln+misconfig+secret → report → fix |
 
 ## utils — Công cụ phụ trợ
 | Skill | File | Purpose |
