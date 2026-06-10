@@ -42,6 +42,7 @@ pipx install pre-commit 2>/dev/null; pre-commit install
 # Smoke check (phải bị chặn):
 echo '{"action":"write","file_path":"llmwiki/raw/x.md"}' | python3 harness/validators/no_write_raw.py
 ```
+> Xem harness làm gì (trực quan, 3 phút): gọi `/harness-tour` trong phiên — hoặc máy tự diễn: `bash harness/scripts/tour.sh`
 
 **4. RTK token proxy (WSL only):**
 ```bash

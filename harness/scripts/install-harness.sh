@@ -134,5 +134,26 @@ if [ "$DEBT" = "1" ]; then
   warn "Hooks đã cài nhưng phiên đụng wiki sẽ bị Stop hook nhắc cho tới khi index/Origin sạch."
   exit 3
 fi
-log "HOÀN TẤT — harness sạch, enforcement hoạt động đầy đủ. Smoke thử:"
-log '  echo '"'"'{"action":"write","file_path":"llmwiki/raw/x.md"}'"'"' | python3 harness/validators/no_write_raw.py  # phải exit 2'
+log "HOÀN TẤT — harness sạch. Tự kiểm hàng rào:"
+
+# ---------- 8. Auto-smoke: 3 rule phải CHẶN được (exit 2 = PASS) ----------
+V="$ROOT/harness/validators"
+smoke() { # smoke <label> <validator> <json> — exit 2 là KỲ VỌNG, không để errexit giết
+  local out rc=0
+  out=$(printf '%s' "$3" | python3 "$V/$2" 2>&1) || rc=$?
+  if [ "$rc" = "2" ]; then printf '  ⛔ %-38s → BỊ CHẶN ✓\n' "$1"
+  else printf '  ✗ %-38s → KHÔNG CHẶN (rc=%s) — KIỂM TRA LẠI!\n' "$1" "$rc"; SMOKE_FAIL=1; fi
+}
+SMOKE_FAIL=0
+echo "── Harness tự kiểm ─────────────────────────────────────"
+smoke "Thử ghi llmwiki/raw/x.md (R1)"        no_write_raw.py     '{"action":"write","file_path":"llmwiki/raw/x.md"}'
+smoke "Thử wiki file thiếu ## Origin (R2)"   origin_required.py  '{"action":"write","file_path":"llmwiki/wiki/concepts/x.md","content":"# x"}'
+smoke "Thử file lạc wiki/ root (R5)"         folder_structure.py '{"action":"write","file_path":"llmwiki/wiki/rogue.md"}'
+echo "────────────────────────────────────────────────────────"
+if [ "$SMOKE_FAIL" = "0" ]; then
+  log "Hệ thống đang cắn. Xem nó cắn trong PHIÊN THẬT: gọi skill /harness-tour (3 phút)"
+  log "Hoặc xem máy diễn đủ 5 cảnh: bash harness/scripts/tour.sh"
+else
+  warn "Có rule không chặn được — kiểm tra python3 + harness/validators/"
+  exit 4
+fi
