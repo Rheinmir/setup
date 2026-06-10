@@ -15,7 +15,7 @@ Agent hoặc dev mới vào giữa dự án đã có `llmwiki/` — cần hiểu
 test -f llmwiki/wiki/index.md && echo ok || echo "llmwiki missing — run new-project-setup instead"
 # Harness enforcement (hooks chặn raw/, Origin, index-sync) có chưa:
 test -f llmwiki/.claude/hooks/pre_tool_use.py && echo "harness: ON" \
-  || echo "harness: MISSING — đề xuất user chạy: bash harness/scripts/install-harness.sh ."
+  || echo "harness: MISSING — đề xuất user gọi /harness-update (skill tự cài + backfill nợ)"
 ```
 Nếu llmwiki missing: dừng, gợi ý chạy `new-project-setup`.
 Nếu harness MISSING: chỉ BÁO (skill này read-only) — việc cài là quyết định của user.
