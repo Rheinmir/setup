@@ -1,0 +1,41 @@
+# L2 REPO BACKSTOP — vendor-neutral: agent/CLI nào commit cũng bị gate.
+# Cài: pipx install pre-commit && pre-commit install
+# Lưu ý: file này nằm ở repo root (pre-commit yêu cầu). Khi deploy llmwiki vào
+# project khác, copy sang root của project đó và sửa prefix đường dẫn (xem harness/recipe.md).
+repos:
+  - repo: local
+    hooks:
+      - id: wiki-origin-required
+        name: "R2: wiki file phai co '## Origin'"
+        entry: python3 harness/validators/origin_required.py
+        language: system
+        files: ^llmwiki/wiki/(concepts|entities|sources|draft)/.*\.md$
+
+      - id: wiki-folder-structure
+        name: "R5: file wiki dung subfolder"
+        entry: python3 harness/validators/folder_structure.py
+        language: system
+        files: ^llmwiki/wiki/.*\.md$
+
+      - id: wiki-index-sync
+        name: "R3: index.md khop tap file wiki"
+        entry: python3 harness/validators/index_sync.py --wiki-dir llmwiki/wiki
+        language: system
+        always_run: true
+        pass_filenames: false
+
+      - id: wiki-health
+        name: "L4: wiki health (broken wikilink = fail)"
+        entry: python3 harness/scripts/wiki-health.py --wiki-dir llmwiki/wiki --fail-on broken
+        language: system
+        always_run: true
+        pass_filenames: false
+
+  # Tùy chọn — bật khi đã cài binary (brew install lychee):
+  # - repo: local
+  #   hooks:
+  #     - id: lychee-offline
+  #       name: "link check offline"
+  #       entry: lychee --offline --no-progress llmwiki/wiki
+  #       language: system
+  #       pass_filenames: false

@@ -26,10 +26,21 @@ Reset = xóa `llmwiki/wiki/concepts/` và `llmwiki/wiki/entities/` — **GIỮ**
 #   ~/.kiro/skills/*/SKILL.md   ← Kiro CLI
 ```
 
-**3. Init wiki folder structure:**
+**3. Init wiki structure + cài harness L0–L4 (enforcement, audit, evals):**
 ```bash
-mkdir -p llmwiki/wiki/{concepts,entities,sources/draft} llmwiki/{skills,raw}
-touch llmwiki/wiki/index.md llmwiki/wiki/log.md llmwiki/raw/.gitkeep
+# 1 lệnh — tự dựng khung llmwiki (mode new) hoặc giữ wiki cũ (mode migrate),
+# copy validators + hooks + pre-commit config, merge settings.json, baseline audit:
+bash harness/scripts/install-harness.sh .
+# Nếu repo chưa có harness/ (template chưa pull): script tự clone rheinmir/setup@orca
+
+# Exit code: 0 = sạch, bật chặn đủ · 3 = MIGRATE CÓ NỢ (thiếu ## Origin / index lệch)
+#   → backfill nợ theo danh sách in ra, chạy lại tới khi rc=0
+
+# Kích hoạt L2 (một lần mỗi máy):
+pipx install pre-commit 2>/dev/null; pre-commit install
+
+# Smoke check (phải bị chặn):
+echo '{"action":"write","file_path":"llmwiki/raw/x.md"}' | python3 harness/validators/no_write_raw.py
 ```
 
 **4. RTK token proxy (WSL only):**

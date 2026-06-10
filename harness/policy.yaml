@@ -1,0 +1,47 @@
+# L0 POLICY — bất biến của llmwiki, thuần khai báo, không dính vendor.
+# Mỗi rule có validator tương ứng trong harness/validators/ (cùng id).
+# Enforcement point: session = L1 adapter (hook theo vendor), repo = L2 (pre-commit).
+
+rules:
+  - id: R1
+    name: no-write-raw
+    validator: no_write_raw.py
+    statement: "Agent không bao giờ ghi vào raw/ — raw/ là inbox của con người."
+    enforce_at: [session]        # KHÔNG enforce ở repo: con người commit file raw/ là hợp lệ
+    applies_to: [write, bash]
+
+  - id: R2
+    name: origin-required
+    validator: origin_required.py
+    statement: "Mọi wiki file phải có section '## Origin' — luôn truy được nguồn gốc."
+    enforce_at: [session, repo]
+    applies_to: [write]
+    scope: "wiki/(concepts|entities|sources|draft)/**/*.md trừ README.md, _template.md"
+
+  - id: R3
+    name: index-sync
+    validator: index_sync.py
+    statement: "wiki/index.md phải liệt kê đúng tập file wiki đang tồn tại."
+    enforce_at: [session-stop, repo]
+    applies_to: [stop]
+
+  - id: R4
+    name: log-append
+    validator: null              # thỏa mãn bằng tự động hóa L3 (audit hook tự sinh log)
+    statement: "Mọi thao tác đều được ghi log — bằng máy, không nhờ model nhớ."
+    enforce_at: [session]
+    note: "Hook PostToolUse/Stop/SessionEnd append .claude/audit/*.jsonl; log.md sinh từ đó."
+
+  - id: R5
+    name: folder-structure
+    validator: folder_structure.py
+    statement: "File wiki chỉ nằm trong concepts/, entities/, sources/, draft/ — không ở wiki/ root."
+    enforce_at: [session, repo]
+    applies_to: [write]
+    allow_root_files: [index.md, log.md, README.md, active-context.md, decisions.md]
+
+  - id: R6
+    name: verify-before-commit
+    validator: null              # enforce bằng chính pre-commit framework (L2)
+    statement: "Mọi commit phải qua gate: validators + lint. Fail = không commit được."
+    enforce_at: [repo]
