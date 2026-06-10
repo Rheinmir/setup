@@ -92,6 +92,48 @@ else
   log "settings.json: cài mới"
 fi
 
+# ---------- 4b. Settings ở ROOT — session mở tại root mới load hooks ----------
+# (llmwiki/.claude/settings.json chỉ tác dụng khi session mở ngay tại llmwiki/)
+ROOT_SETTINGS="$ROOT/.claude/settings.json"
+mkdir -p "$ROOT/.claude"
+[ -f "$ROOT_SETTINGS" ] && cp "$ROOT_SETTINGS" "$ROOT_SETTINGS.bak.$(date +%s)"
+python3 - "$ROOT_SETTINGS" <<'PY'
+import json, os, sys
+path = sys.argv[1]
+prefix = "llmwiki/"
+hooks_dir = '$CLAUDE_PROJECT_DIR/llmwiki/.claude/hooks'
+deny = [f"Write(./{prefix}raw/**)", f"Edit(./{prefix}raw/**)", f"MultiEdit(./{prefix}raw/**)"]
+def h(script, matcher=None):
+    d = {"hooks": [{"type": "command", "command": f'python3 "{hooks_dir}/{script}"'}]}
+    if matcher: d["matcher"] = matcher
+    return d
+tpl = {"permissions": {"deny": deny}, "hooks": {
+    "PreToolUse":  [h("pre_tool_use.py",  "Write|Edit|MultiEdit|NotebookEdit|Bash")],
+    "PostToolUse": [h("post_tool_use.py", "Write|Edit|MultiEdit")],
+    "Stop":        [h("stop.py")],
+    "SessionEnd":  [h("session_end.py")],
+}}
+cur = {}
+if os.path.exists(path):
+    try: cur = json.load(open(path))
+    except Exception: cur = {}
+cur.setdefault("permissions", {}).setdefault("deny", [])
+for d in tpl["permissions"]["deny"]:
+    if d not in cur["permissions"]["deny"]:
+        cur["permissions"]["deny"].append(d)
+cur.setdefault("hooks", {})
+for event, defs in tpl["hooks"].items():
+    cur_defs = cur["hooks"].setdefault(event, [])
+    existing = json.dumps(cur_defs)
+    for d in defs:
+        cmd = d["hooks"][0]["command"]
+        if cmd not in existing:
+            cur_defs.append(d)
+json.dump(cur, open(path, "w"), indent=2, ensure_ascii=False)
+PY
+grep -q "audit/" "$ROOT/.claude/.gitignore" 2>/dev/null || printf 'audit/\nsettings.json.bak.*\n' >> "$ROOT/.claude/.gitignore"
+log "settings.json ở ROOT: OK (session mở tại root sẽ load hooks)"
+
 # ---------- 5. L2 pre-commit ----------
 if [ ! -f "$ROOT/.pre-commit-config.yaml" ]; then
   cp "$SRC/.pre-commit-config.yaml" "$ROOT/.pre-commit-config.yaml"
