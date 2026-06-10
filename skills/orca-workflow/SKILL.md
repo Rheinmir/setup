@@ -53,8 +53,10 @@ Tạo `llmwiki/wiki/draft/orca/DDMMYY-tên.md` với nội dung:
 ## Risks
 - ...
 ```
-Sau khi tạo file → **⛔ DỪNG LẠI.**
-In nội dung propose ra màn hình. Hỏi user: **"Duyệt proposal này không?"**
+Tạo kèm **sequence diagram hoạt họa** `llmwiki/html/DDMMYY-tên-seq.html` — luồng code đi qua các component của plan (mỗi flow một diagram: happy path, fail/block path). Quy ước: lifeline indigo = component có sẵn, emerald = component proposal thêm/sửa; message hiện từng bước, auto-loop, click để pause. Link 2 chiều md ↔ html. **Propose = CẶP md + html — thiếu một là chưa hoàn chỉnh.**
+
+Sau khi tạo cặp file → **⛔ DỪNG LẠI.**
+In nội dung propose + preview URL của html ra màn hình. Hỏi user: **"Duyệt proposal này không?"**
 **KHÔNG làm gì thêm** cho đến khi user nói OK / duyệt / yes / proceed.
 
 ### Bước 3 — gate (**CHỜ USER**)

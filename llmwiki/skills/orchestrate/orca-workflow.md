@@ -23,8 +23,8 @@ Claude: analyze. Others: execute. Kill opencode nếu chờ quá lâu.
 ## Workflow: propose
 
 1. **query**: Gather context từ wiki/ về tính năng được yêu cầu
-2. **propose**: Tạo draft tại `llmwiki/wiki/sources/draft/DDMMYY-tên.md`
-3. **gate**: `orca orchestration gate-create --question "Duyệt proposal này?"` → chờ user
+2. **propose**: Tạo CẶP file — draft `llmwiki/wiki/sources/draft/DDMMYY-tên.md` + sequence diagram hoạt họa `llmwiki/html/DDMMYY-tên-seq.html` (luồng code đi qua các component; indigo = legacy, emerald = thêm/sửa; message hiện từng bước, auto-loop). Link 2 chiều giữa md ↔ html
+3. **gate**: `orca orchestration gate-create --question "Duyệt proposal này?"` → chờ user (gửi kèm preview URL của html)
 4. **Sau duyệt**: Phân rã tasks từ proposal → `orca orchestration task-create` mỗi task
 5. **dispatch**: `orca orchestration dispatch --task <id> --to <agent> --inject`
 6. **Chờ**: `orca orchestration check --wait --types worker_done --timeout-ms 300000`
