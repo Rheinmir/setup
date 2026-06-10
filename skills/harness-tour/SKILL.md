@@ -1,6 +1,6 @@
 ---
 name: harness-tour
-description: Tour 3 phút — Claude tự diễn cho user xem harness chặn mình thế nào trên project thật (bị deny ghi raw/, bị ép thêm Origin, bị Stop hook giữ). Tự dọn sạch demo. Trigger: "harness tour", "xem harness làm gì", "/harness-tour".
+description: 'Tour 3 phút — Claude tự diễn cho user xem harness chặn mình thế nào trên project thật (bị deny ghi raw/, bị ép thêm Origin, bị Stop hook giữ). Tự dọn sạch demo. Trigger: "harness tour", "xem harness làm gì", "/harness-tour".'
 ---
 
 # Skill: harness-tour
