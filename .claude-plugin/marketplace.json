@@ -32,6 +32,7 @@
       "skills": [
         "./skills/orca-dispatch-reference",
         "./skills/orca-onboard",
+        "./skills/orca-sec-scans",
         "./skills/orca-workflow"
       ]
     },
@@ -43,6 +44,8 @@
       "skills": [
         "./skills/docs-site-macos-skill",
         "./skills/extract-site",
+        "./skills/harness-tour",
+        "./skills/harness-update",
         "./skills/impact-check",
         "./skills/ingest",
         "./skills/join-project",
@@ -54,6 +57,7 @@
         "./skills/query",
         "./skills/safe-change",
         "./skills/sync-template",
+        "./skills/tour-guide",
         "./skills/verify-before-commit"
       ]
     }
