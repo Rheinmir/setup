@@ -145,7 +145,8 @@ if [ ! -f "$ROOT/.pre-commit-config.yaml" ]; then
 else
   warn "L2 .pre-commit-config.yaml đã tồn tại — không đè; merge tay nếu cần (mẫu: $SRC/.pre-commit-config.yaml)"
 fi
-if command -v pre-commit >/dev/null 2>&1 && [ -d "$ROOT/.git" ]; then
+# [ -e ] chứ không phải [ -d ]: trong git worktree, .git là FILE trỏ về gitdir chính
+if command -v pre-commit >/dev/null 2>&1 && [ -e "$ROOT/.git" ]; then
   (cd "$ROOT" && pre-commit install >/dev/null) && log "pre-commit install: OK"
 else
   warn "pre-commit chưa cài hoặc không phải git repo → chạy sau: pipx install pre-commit && pre-commit install"
