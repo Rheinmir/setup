@@ -176,13 +176,20 @@ print('\n'.join(changed))
   fi
 fi
 
-# --- 4. Bootstrap llmwiki if missing ---
-if [ ! -d "$PROJECT_ROOT/llmwiki" ]; then
-  echo "[orca-onboard] bootstrapping llmwiki..."
+# --- 4. Bootstrap llmwiki + harness if missing ---
+if [ ! -d "$PROJECT_ROOT/llmwiki" ] || [ ! -d "$PROJECT_ROOT/harness" ]; then
+  echo "[orca-onboard] bootstrapping llmwiki + harness..."
   git clone https://github.com/rheinmir/setup.git /tmp/orca-llmwiki-bootstrap --depth 1 -b orca -q
-  cp -r /tmp/orca-llmwiki-bootstrap/llmwiki "$PROJECT_ROOT/llmwiki"
+  [ ! -d "$PROJECT_ROOT/llmwiki" ] && cp -r /tmp/orca-llmwiki-bootstrap/llmwiki "$PROJECT_ROOT/llmwiki"
+  # Harness = enforcement hooks L0-L4 — same installer new-project-setup/harness-update use.
+  # Copying llmwiki/ alone is NOT enough; without install-harness.sh the wiki has no enforcement.
+  if [ ! -d "$PROJECT_ROOT/harness" ]; then
+    bash /tmp/orca-llmwiki-bootstrap/harness/scripts/install-harness.sh "$PROJECT_ROOT" \
+      && echo "[orca-onboard] harness installed OK" \
+      || echo "[WARN] harness install failed/denied — ask user to run: bash harness/scripts/install-harness.sh . (rc=3 = wiki debt, see harness-update skill)"
+  fi
   rm -rf /tmp/orca-llmwiki-bootstrap
-  echo "[orca-onboard] llmwiki bootstrapped OK"
+  echo "[orca-onboard] bootstrap done"
 fi
 
 # --- 5. Create dirs ---
@@ -313,9 +320,33 @@ echo "| [${DATE}-onboard-${PROJECT_SLUG}](draft/orca/${DATE}-onboard-${PROJECT_S
 echo "## $(date +%Y-%m-%d) — orca-onboard — onboard-${PROJECT_SLUG}" >> "$PROJECT_ROOT/llmwiki/wiki/log.md"
 
 echo "DRAFT_FILE=$DRAFT_FILE"
+
+# --- Terminal dispatch board (REQUIRED — must print in terminal BEFORE the gate question) ---
+P1_AGENT="agy /understand"
+P1_MODEL="Claude (inside agy)"
+if [ "$FILE_COUNT" -gt 100 ]; then
+  P1_AGENT="opencode /understand"
+  P1_MODEL="DeepSeek Flash v4"
+  P1_NOTE="(routed: $FILE_COUNT files > 100 — avoid agy rate limit)"
+fi
+
+echo ""
+echo "==================== ORCA-ONBOARD DISPATCH BOARD ===================="
+echo " Project : $PROJECT_SLUG"
+echo " Files   : $FILE_COUNT"
+echo " Draft   : $DRAFT_FILE"
+echo "----------------------------------------------------------------------"
+printf " %-7s %-22s %-24s %-20s %s\n" "PHASE" "TASK" "AGENT" "MODEL" "EST.COST"
+printf " %-7s %-22s %-24s %-20s %s\n" "1" "Graph generation" "$P1_AGENT" "$P1_MODEL" "~\$2-5"
+printf " %-7s %-22s %-24s %-20s %s\n" "2" "Domain enrichment" "Claude main thread" "Sonnet" "~\$0.50"
+printf " %-7s %-22s %-24s %-20s %s\n" "3" "Wiki generation" "opencode" "DeepSeek Flash v4" "~\$0.02"
+printf " %-7s %-22s %-24s %-20s %s\n" "4" "HTML docs" "opencode" "DeepSeek Flash v4" "~\$0.01"
+[ -n "$P1_NOTE" ] && echo " Phase 1 $P1_NOTE"
+echo "======================================================================"
 ```
 
-Show user: draft path, Agent Task Assignment table (4 phases + model), file count, cost estimate.
+⛔ The dispatch board above MUST be printed via bash (visible in terminal) — restating the table only in chat or only in the draft file is NOT sufficient. The user gates orchestration based on this board.
+
 Ask for confirmation before continuing.
 
 ---
