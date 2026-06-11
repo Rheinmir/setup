@@ -1,6 +1,6 @@
 ---
 name: orca-onboard
-description: "Parallel codebase onboarding — wraps understand-anything for graph quality, then domain enrichment (Claude), wiki + HTML via opencode+DeepSeek Flash v4."
+description: "Parallel codebase onboarding — distilled understand-anything pipeline (scan + git history + batch analyze + layers/tour, no plugin), then domain enrichment (Claude), wiki + HTML via opencode+DeepSeek Flash v4."
 requires:
   - name: docs-site-macos
     source: rheinmir/setup@orca
@@ -9,7 +9,7 @@ requires:
 
 # orca-onboard
 
-Onboard codebase via understand-anything graph, then domain enrichment + wiki + HTML.
+Onboard codebase via distilled understand-anything pipeline (graph + git history, no plugin), then domain enrichment + wiki + HTML.
 
 ## Triggers
 - "onboard codebase", "analyze codebase", "knowledge graph", "guided tour"
@@ -23,7 +23,7 @@ Onboard codebase via understand-anything graph, then domain enrichment + wiki + 
 
 ## Progress
 ```
-[Phase 1/4] Graph generation (agy → /understand)...
+[Phase 1/4] Graph generation (scan + git history + batch analyze + layers/tour)...
 [Phase 2/4] Domain enrichment (Claude)...
 [Phase 3/4] Wiki generation (opencode + DeepSeek Flash v4)...
 [Phase 4/4] HTML docs (opencode + DeepSeek Flash v4)...
@@ -49,13 +49,14 @@ Onboard codebase via understand-anything graph, then domain enrichment + wiki + 
 ## Dispatch Rules
 
 ```
-TASK TYPE        → AGENT               → MODEL
-────────────────────────────────────────────────────
-Graph building   → agy (/understand)   → Claude inside agy (tree-sitter + Louvain)
-Domain reasoning → Claude main thread  → Sonnet (never dispatch out)
-Architecture     → Claude main thread  → Sonnet (never dispatch out)
-Mechanical       → opencode            → opencode/deepseek-v4-flash-free
-Scripts          → bash/python direct  → (no LLM)
+TASK TYPE          → AGENT               → MODEL
+──────────────────────────────────────────────────────
+Scan + git history → bash/python direct  → (no LLM)
+Batch file analyze → opencode            → opencode/deepseek-v4-flash-free
+Merge + validate   → python inline       → (no LLM)
+Layers / tour      → Claude main thread  → Sonnet (never dispatch out)
+Domain reasoning   → Claude main thread  → Sonnet (never dispatch out)
+Wiki / HTML render → opencode            → opencode/deepseek-v4-flash-free
 ```
 
 **Reasoning tasks MUST stay in Claude main thread. NO reasoning to opencode/agy.**
@@ -71,23 +72,7 @@ Scripts          → bash/python direct  → (no LLM)
 | OpenCode | `opencode` | Configurable | `opencode --version` |
 | Kiro | `kiro-cli` | — | `kiro-cli --version` |
 
-### Cài đặt Understand-Anything cho Agent
-
-Để các agent có đầy đủ các skill phân tích của `Understand-Anything`, cần cài đặt plugin này trước trên môi trường chạy của agent:
-
-- **macOS / Linux:**
-  ```bash
-  # Cho Antigravity
-  curl -fsSL https://raw.githubusercontent.com/Lum1104/Understand-Anything/main/install.sh | bash -s antigravity
-
-  # Cho OpenCode
-  curl -fsSL https://raw.githubusercontent.com/Lum1104/Understand-Anything/main/install.sh | bash -s opencode
-  ```
-- **Windows (PowerShell):**
-  ```powershell
-  # Chạy và chọn 'antigravity' hoặc 'opencode' khi được nhắc
-  iwr -useb https://raw.githubusercontent.com/Lum1104/Understand-Anything/main/install.ps1 | iex
-  ```
+> **Không cần plugin Understand-Anything.** Phase 1 dùng phương pháp đã distill từ Understand-Anything (scan → batch analyze → merge → layers → tour → validate) viết thẳng trong skill này — chạy bằng bash/python + opencode prompt thuần + Claude main thread. Không cài thêm gì vào agy/opencode.
 
 **OpenCode with DeepSeek Flash v4:**
 ```bash
@@ -119,9 +104,8 @@ update_phase_status() {
 ## Phase 0 — Pre-flight & Setup
 
 ```bash
-# --- 1. Dependency check ---
+# --- 1. Dependency check (agy optional — Phase 1 dùng distilled pipeline, không cần agy) ---
 MISSING=()
-agy --version >/dev/null 2>&1       || MISSING+=("agy (Antigravity)")
 opencode --version >/dev/null 2>&1  || MISSING+=("opencode")
 ls ~/.agents/skills/docs-site-macos/SKILL.md >/dev/null 2>&1 || MISSING+=("docs-site-macos skill")
 
@@ -238,15 +222,12 @@ DATE=$(date +%d%m%y)
 PROJECT_SLUG=$(basename "$PROJECT_ROOT" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
 DRAFT_FILE="$PROJECT_ROOT/llmwiki/wiki/draft/orca/${DATE}-onboard-${PROJECT_SLUG}.md"
 
-# Determine graph agent (prefer agy, fallback opencode, fallback Claude)
-AGY_AVAIL=$(agy --version 2>/dev/null && echo "yes" || echo "no")
+# Graph = distilled pipeline (no plugin): scan/history bash → batch opencode → layers/tour Claude
 OC_AVAIL=$(opencode --version 2>/dev/null && echo "yes" || echo "no")
-if [ "$AGY_AVAIL" = "yes" ]; then
-  AGENT_GRAPH="agy → /understand (tree-sitter + Louvain + Claude)"
-elif [ "$OC_AVAIL" = "yes" ]; then
-  AGENT_GRAPH="opencode → /understand (fallback, agy unavailable)"
+if [ "$OC_AVAIL" = "yes" ]; then
+  AGENT_GRAPH="distilled pipeline: bash + opencode (batch) + Claude (layers/tour)"
 else
-  AGENT_GRAPH="Claude main thread (fallback — both agents unavailable)"
+  AGENT_GRAPH="distilled pipeline: bash + Claude main thread (opencode unavailable)"
 fi
 
 cat > "$DRAFT_FILE" << EOF
@@ -266,7 +247,7 @@ cat > "$DRAFT_FILE" << EOF
 ## Agent Task Assignment
 | Task | Agent | Model | Status |
 |------|-------|-------|--------|
-| Phase 1 — Graph generation ($FILE_COUNT files) | $AGENT_GRAPH | Claude (inside agy) | pending |
+| Phase 1 — Graph generation ($FILE_COUNT files) | $AGENT_GRAPH | DeepSeek Flash v4 + Sonnet | pending |
 | Phase 2 — Domain enrichment | Claude main thread | Sonnet | pending |
 | Phase 3 — Wiki generation | opencode | DeepSeek Flash v4 | pending |
 | Phase 4 — HTML docs | opencode | DeepSeek Flash v4 | pending |
@@ -284,8 +265,8 @@ Onboard \`$PROJECT_ROOT\` — understand-anything graph, domain enrichment, wiki
 ## Files
 | File | Action |
 |------|--------|
-| \`.understand-anything/knowledge-graph.json\` | created by agy |
-| \`.understand-anything/ONBOARDING.md\` | created by agy |
+| \`.understand-anything/knowledge-graph.json\` | created by Phase 1 pipeline |
+| \`.understand-anything/ONBOARDING.md\` | created by Phase 1 pipeline |
 | \`.orca-onboard/intermediate/domain-graph.json\` | created by Claude |
 | \`llmwiki/wiki/index.md\` | created/modified |
 | \`llmwiki/wiki/architecture/*.md\` | created |
@@ -304,7 +285,7 @@ Onboard \`$PROJECT_ROOT\` — understand-anything graph, domain enrichment, wiki
 ## Cost Estimate
 | Phase | Agent | Est. tokens | Est. cost |
 |-------|-------|-------------|-----------|
-| Phase 1 (graph) | agy internal | ~1.5M | ~\$2-5 (agy's cost) |
+| Phase 1 (graph) | bash + opencode batches + Claude layers/tour | ~1.5M (DeepSeek) + ~50k (Sonnet) | ~\$0.50 |
 | Phase 2 (domain) | Claude Sonnet | ~50k | ~\$0.50 |
 | Phase 3 (wiki) | DeepSeek Flash | ~100k | ~\$0.02 |
 | Phase 4 (HTML) | DeepSeek Flash | ~50k | ~\$0.01 |
@@ -322,13 +303,7 @@ echo "## $(date +%Y-%m-%d) — orca-onboard — onboard-${PROJECT_SLUG}" >> "$PR
 echo "DRAFT_FILE=$DRAFT_FILE"
 
 # --- Terminal dispatch board (REQUIRED — must print in terminal BEFORE the gate question) ---
-P1_AGENT="agy /understand"
-P1_MODEL="Claude (inside agy)"
-if [ "$FILE_COUNT" -gt 100 ]; then
-  P1_AGENT="opencode /understand"
-  P1_MODEL="DeepSeek Flash v4"
-  P1_NOTE="(routed: $FILE_COUNT files > 100 — avoid agy rate limit)"
-fi
+P1_NOTE="(distilled pipeline: 1.1-1.2 bash, 1.3 opencode batches, 1.4/1.6 python, 1.5 Claude)"
 
 echo ""
 echo "==================== ORCA-ONBOARD DISPATCH BOARD ===================="
@@ -337,91 +312,124 @@ echo " Files   : $FILE_COUNT"
 echo " Draft   : $DRAFT_FILE"
 echo "----------------------------------------------------------------------"
 printf " %-7s %-22s %-24s %-20s %s\n" "PHASE" "TASK" "AGENT" "MODEL" "EST.COST"
-printf " %-7s %-22s %-24s %-20s %s\n" "1" "Graph generation" "$P1_AGENT" "$P1_MODEL" "~\$2-5"
+printf " %-7s %-22s %-24s %-20s %s\n" "1" "Graph generation" "bash+opencode+Claude" "DeepSeek+Sonnet" "~\$0.50"
 printf " %-7s %-22s %-24s %-20s %s\n" "2" "Domain enrichment" "Claude main thread" "Sonnet" "~\$0.50"
 printf " %-7s %-22s %-24s %-20s %s\n" "3" "Wiki generation" "opencode" "DeepSeek Flash v4" "~\$0.02"
 printf " %-7s %-22s %-24s %-20s %s\n" "4" "HTML docs" "opencode" "DeepSeek Flash v4" "~\$0.01"
 [ -n "$P1_NOTE" ] && echo " Phase 1 $P1_NOTE"
 echo "======================================================================"
+
+# --- Print propose file path + content (REQUIRED — user reviews this before approving) ---
+echo ""
+echo "PROPOSE FILE: $DRAFT_FILE"
+echo "----------------------------------------------------------------------"
+cat "$DRAFT_FILE"
 ```
 
-⛔ The dispatch board above MUST be printed via bash (visible in terminal) — restating the table only in chat or only in the draft file is NOT sufficient. The user gates orchestration based on this board.
+⛔ The dispatch board AND the propose file content above MUST be printed via bash (visible in terminal) — restating them only in chat or only in the draft file is NOT sufficient. The user gates orchestration based on this board + propose. The draft's Agent Task Assignment rows must match the board (e.g. if Phase 1 is rerouted to opencode for >100 files, the draft must say opencode, not agy).
 
 Ask for confirmation before continuing.
 
 ---
 
-## Phase 1 — Graph Generation
+## Phase 1 — Graph Generation (distilled understand-anything — KHÔNG cần plugin)
 
-**Agent:** agy → `/understand` | **Model:** Claude (inside agy)
-
-> **READ FIRST** (before dispatch):
-> - Check `.understand-anything/knowledge-graph.json` exists → decide skip/rebuild/incremental
-> - Check `.understand-anything/meta.json` exists → decide if UPDATE_MODE is viable
-
-**DO:** Dispatch `agy "/understand $PROJECT_ROOT"` — understand-anything handles everything internally: scan → Louvain batch → file analysis → architecture → tour → validation. DO NOT do batch analysis yourself.
+**Pipeline:** scan (bash) → git history (bash) → batch analyze (opencode + DeepSeek) → merge (python) → layers + tour (Claude main thread) → validate + save (python + Claude). Phương pháp distill từ Understand-Anything; mọi prompt/schema nằm ngay dưới đây — không dispatch `/understand`, không cài plugin.
 
 **Required output:**
-- `.understand-anything/knowledge-graph.json`
-- `.understand-anything/ONBOARDING.md`
+- `.understand-anything/knowledge-graph.json` (nodes, edges, layers, tour)
+- `.understand-anything/ONBOARDING.md` (~20k tokens distilled)
 - `.understand-anything/meta.json`
 
 **Skip check:** `RESUME_MODE=true` + `PHASE1_STATUS=done` → skip to Phase 2.
 
-**Decision table (read file state first, then decide):**
+**Decision table:**
 
 | Graph exists | Flag | Action |
 |-------------|------|--------|
-| No | (none) | run `/understand` full |
+| No | (none) | full pipeline |
 | Yes | (none) | skip Phase 1, use existing graph |
-| Yes | `--update` | run `/understand` incremental |
-| Yes | `--full` | delete graph, run `/understand` full |
+| Yes | `--update` | re-analyze only `git diff <meta.gitCommitHash>..HEAD --name-only` files, merge into existing graph |
+| Yes | `--full` | delete `.understand-anything/`, full pipeline |
+
+### 1.1 SCAN (bash — no LLM)
 
 ```bash
-if [ "$RESUME_MODE" != "true" ] || [ "$PHASE1_STATUS" != "done" ]; then
-  update_phase_status "Phase 1 —" "in-progress"
+mkdir -p "$PROJECT_ROOT/.understand-anything" "$PROJECT_ROOT/.orca-onboard/tmp"
+git -C "$PROJECT_ROOT" ls-files > "$PROJECT_ROOT/.orca-onboard/tmp/files.txt"
+# Loại file nhị phân/lock/vendor; phân loại theo extension: code/config/docs/infra/data/script
+# Đọc context: README (3000 chars đầu), manifest (package.json/pyproject.toml/Cargo.toml/go.mod), dir tree 2 cấp
+# Detect entry point: src/index.ts, main.py, app.py, main.go, src/main.rs, cmd/*/main.go, manage.py, __main__.py...
+```
 
-  if [ "$1" = "--full" ]; then
-    rm -rf "$PROJECT_ROOT/.understand-anything"
-    echo "[Phase 1] --full: cleared existing graph"
-  fi
+### 1.2 GIT HISTORY (bash — no LLM)
 
-  if [ "$UPDATE_MODE" = "true" ]; then
-    SPEC="/understand $PROJECT_ROOT"
-    echo "[Phase 1] Incremental update — understand-anything re-analyzes changed batches only"
-  elif [ -f "$PROJECT_ROOT/.understand-anything/knowledge-graph.json" ]; then
-    echo "[Phase 1] Graph exists — skipping. Pass --full to rebuild or --update for incremental."
-    update_phase_status "Phase 1 —" "done"
-    continue 2>/dev/null || true
-    SPEC=""
-  else
-    SPEC="/understand $PROJECT_ROOT"
-  fi
+Tín hiệu lịch sử git làm giàu graph — thứ phân tích tĩnh không có:
 
-  if [ -n "$SPEC" ]; then
-    if agy --version >/dev/null 2>&1; then
-      if [ "$FILE_COUNT" -gt 100 ]; then
-        echo "[Phase 1] Large project ($FILE_COUNT files) detected. Using opencode with deepseek-v4-flash-free to avoid rate limit / out-of-token."
-        opencode run "$SPEC" --model opencode/deepseek-v4-flash-free --dangerously-skip-permissions < /dev/null
-      else
-        agy "$SPEC"
-      fi
-    elif opencode --version >/dev/null 2>&1; then
-      opencode run "$SPEC" --model opencode/deepseek-v4-flash-free --dangerously-skip-permissions < /dev/null
-    else
-      echo "[Phase 1] FALLBACK: Claude main thread runs understand-anything phases"
-      # See onboard-codebase skill for fallback phases
-    fi
-  fi
+```bash
+# Churn — file nóng (hay sửa nhất, 365 ngày)
+git -C "$PROJECT_ROOT" log --since="365 days ago" --name-only --pretty=format: \
+  | grep -v '^$' | sort | uniq -c | sort -rn | head -40 > "$PROJECT_ROOT/.orca-onboard/tmp/churn.txt"
+# Recent — file vừa đổi (30 ngày)
+git -C "$PROJECT_ROOT" log --since="30 days ago" --name-only --pretty=format: | grep -v '^$' | sort -u \
+  > "$PROJECT_ROOT/.orca-onboard/tmp/recent.txt"
+# Commit subjects gần nhất — chủ đề đang phát triển
+git -C "$PROJECT_ROOT" log --since="90 days ago" --pretty=format:'%s' | head -50 \
+  > "$PROJECT_ROOT/.orca-onboard/tmp/recent-subjects.txt"
+# Co-change — python đọc `git log --name-only` theo commit, đếm cặp file đổi cùng nhau, ngưỡng ≥3
+```
 
-  [ ! -f "$PROJECT_ROOT/.understand-anything/knowledge-graph.json" ] \
-    && echo "❌ Phase 1 FAIL: knowledge-graph.json missing" && exit 1
-  [ ! -f "$PROJECT_ROOT/.understand-anything/ONBOARDING.md" ] \
-    && echo "❌ Phase 1 FAIL: ONBOARDING.md missing" && exit 1
+Áp dụng: top churn → tag node `hot`; trong recent.txt → tag `recent`; cặp co-change ≥3 → edge `related` (weight 0.5); tour + ONBOARDING ưu tiên file `hot`; recent-subjects cho mục "What's being worked on".
 
-  echo "✅ Phase 1 done"
-  update_phase_status "Phase 1 —" "done"
-fi
+### 1.3 ANALYZE — batch (opencode + DeepSeek, mechanical)
+
+Chia file list thành batch ~25 file (file liên quan cùng batch: Dockerfile+compose, migrations, CI configs, docs). Mỗi batch dispatch:
+
+```bash
+opencode run "$BATCH_SPEC" --model opencode/deepseek-v4-flash-free --dangerously-skip-permissions < /dev/null
+```
+
+`BATCH_SPEC` (inject đủ context — DeepSeek không tự đọc gì ngoài danh sách được giao):
+
+> Analyze these files in project <name> (<description>, languages: <langs>). For EACH file produce GraphNode `{id, type, name, filePath, summary (1-2 câu), tags[]}` and GraphEdges `{source, target, type, weight}` for imports/calls/configures/documents visible in file content. Read each listed file. Write ONLY valid JSON `{"nodes":[...], "edges":[...]}` to `.orca-onboard/tmp/batch-<i>.json`. ID convention: `file:<relpath>`, `config:<relpath>`, `document:<relpath>`. Files: <list kèm line counts>
+
+Tối đa 5 batch song song. Batch fail → retry 1 lần → fail nữa thì bỏ qua, ghi PHASE_WARNINGS (partial graph > no graph). opencode unavailable → Claude main thread tự analyze batch.
+
+### 1.4 MERGE + NORMALIZE (python inline — no LLM)
+
+Claude viết script `.orca-onboard/tmp/merge.py` (logic distill từ merge-batch-graphs.py của Understand-Anything): đọc mọi `batch-*.json` → gộp nodes/edges → chuẩn hoá ID prefix (bỏ double-prefix, thêm prefix thiếu) → dedupe node theo id (giữ bản cuối), edge theo (source,target,type) → drop edge dangling (log stderr) → thêm edges `related` từ co-change (1.2) → ghi `assembled-graph.json`.
+
+### 1.5 LAYERS + TOUR (Claude main thread — REASONING, không dispatch)
+
+Từ assembled-graph + dir tree + README:
+- **Layers:** `[{id: "layer:<kebab>", name, description, nodeIds[]}]` — mỗi file-level node thuộc ĐÚNG MỘT layer; cấu trúc thư mục là bằng chứng mạnh nhất.
+- **Tour:** 5-15 bước `[{order, title, description, nodeIds[]}]` — bước 1 luôn là project overview (README), theo entry point, ưu tiên file `hot`; kể cùng câu chuyện README kể nhưng qua code thật.
+
+### 1.6 VALIDATE + SAVE (python + Claude)
+
+Validate deterministic (script): không duplicate node ID, không dangling edge, mọi file node trong đúng 1 layer, tour nodeIds tồn tại, đếm orphan. Sửa tự động được thì sửa (drop dangling, fill default), còn lại ghi warning — partial graph vẫn save.
+
+Ghi:
+- `knowledge-graph.json`: `{version, project: {name, languages, frameworks, description, analyzedAt, gitCommitHash}, nodes, edges, layers, tour}`
+- `meta.json`: `{lastAnalyzedAt, gitCommitHash, analyzedFiles}`
+- `ONBOARDING.md` (Claude distill, ~20k tokens): overview, layers + mô tả, key flows, hot files + lý do (churn), "What's being worked on" (recent-subjects), tour narrative, stats.
+
+Cuối: xoá `batch-*.json`, báo summary (files analyzed, nodes/edges by type, layers, tour steps, warnings).
+
+### Schema (distill từ Understand-Anything)
+
+- **Node types:** `file, function, class, module, concept, config, document, service, table, endpoint, pipeline, schema, resource` — ID: `<type>:<relpath>[:<name>]`
+- **Edge types chính:** imports, exports, contains, inherits, implements, calls, reads_from, writes_to, depends_on, tested_by, configures, related, documents, deploys, triggers, routes, defines_schema
+- **Weights:** contains 1.0 · inherits/implements 0.9 · calls/exports 0.8 · imports 0.7 · depends_on/configures 0.6 · còn lại 0.5
+
+```bash
+# Gate cuối Phase 1
+[ ! -f "$PROJECT_ROOT/.understand-anything/knowledge-graph.json" ] \
+  && echo "❌ Phase 1 FAIL: knowledge-graph.json missing" && exit 1
+[ ! -f "$PROJECT_ROOT/.understand-anything/ONBOARDING.md" ] \
+  && echo "❌ Phase 1 FAIL: ONBOARDING.md missing" && exit 1
+echo "✅ Phase 1 done"
+# update_phase_status "Phase 1 —" "done"
 ```
 
 ---
@@ -607,8 +615,8 @@ echo "→ http://localhost:8765/llmwiki/html/onboarding-${PROJECT_SLUG}.html"
 
 ## Errors
 
-- Phase 1 fail (agy) → check `/understand` skill installed in agy; fallback to opencode
-- Phase 1 fail (no graph) → check permissions; manual: `agy "/understand $PROJECT_ROOT"`
+- Phase 1 batch fail (opencode) → retry 1 lần, fail nữa → Claude main thread tự analyze batch đó; ghi PHASE_WARNINGS
+- Phase 1 fail (no graph) → kiểm tra batch-*.json có tồn tại không; merge script lỗi → đọc stderr, sửa, chạy lại
 - Phase 2 domain empty → no HTTP/CLI/event entry points found; write empty domains array
 - Phase 3 fail → check opencode model config; fallback Claude main thread
 - Phase 4 fail → fallback: invoke docs-site-macos skill directly in Claude
