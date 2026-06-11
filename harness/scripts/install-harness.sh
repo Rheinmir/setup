@@ -36,7 +36,8 @@ fi
 
 # ---------- 1. Detect mode ----------
 if [ -d "$ROOT/llmwiki" ]; then MODE="migrate"; else MODE="new"; fi
-log "Project: $ROOT — mode: $MODE"
+SAME_BUNDLE=0; [ "$SRC" = "$ROOT" ] && SAME_BUNDLE=1
+log "Project: $ROOT — mode: $MODE$([ $SAME_BUNDLE = 1 ] && echo ' (project chính là bundle — bỏ qua copy core)')"
 
 # ---------- 2. Khung llmwiki (mode new) ----------
 if [ "$MODE" = "new" ]; then
@@ -48,19 +49,21 @@ if [ "$MODE" = "new" ]; then
 fi
 
 # ---------- 3. L0 + validators + scripts + evals (vendor-neutral core) ----------
-mkdir -p "$ROOT/harness"
-cp -R "$SRC/harness/validators" "$ROOT/harness/" 2>/dev/null || true
-mkdir -p "$ROOT/harness/scripts" "$ROOT/harness/evals"
-cp "$SRC/harness/policy.yaml"               "$ROOT/harness/policy.yaml"
-cp "$SRC/harness/recipe.md"                 "$ROOT/harness/recipe.md"
-cp "$SRC/harness/scripts/wiki-health.py"    "$ROOT/harness/scripts/wiki-health.py"
-cp "$SRC/harness/scripts/install-harness.sh" "$ROOT/harness/scripts/install-harness.sh" 2>/dev/null || true
-[ -f "$ROOT/harness/evals/promptfooconfig.yaml" ] || cp "$SRC/harness/evals/promptfooconfig.yaml" "$ROOT/harness/evals/promptfooconfig.yaml"
+if [ "$SAME_BUNDLE" = "0" ]; then
+  mkdir -p "$ROOT/harness"
+  cp -R "$SRC/harness/validators" "$ROOT/harness/" 2>/dev/null || true
+  mkdir -p "$ROOT/harness/scripts" "$ROOT/harness/evals"
+  cp "$SRC/harness/policy.yaml"               "$ROOT/harness/policy.yaml"
+  cp "$SRC/harness/recipe.md"                 "$ROOT/harness/recipe.md"
+  cp "$SRC/harness/scripts/wiki-health.py"    "$ROOT/harness/scripts/wiki-health.py"
+  cp "$SRC/harness/scripts/install-harness.sh" "$ROOT/harness/scripts/install-harness.sh" 2>/dev/null || true
+  [ -f "$ROOT/harness/evals/promptfooconfig.yaml" ] || cp "$SRC/harness/evals/promptfooconfig.yaml" "$ROOT/harness/evals/promptfooconfig.yaml"
+fi
 log "L0 policy + validators + wiki-health + evals: OK"
 
 # ---------- 4. L1 adapter Claude Code ----------
 mkdir -p "$ROOT/llmwiki/.claude/hooks/validators"
-cp "$SRC/llmwiki/.claude/hooks/"*.py "$ROOT/llmwiki/.claude/hooks/"
+[ "$SAME_BUNDLE" = "0" ] && cp "$SRC/llmwiki/.claude/hooks/"*.py "$ROOT/llmwiki/.claude/hooks/"
 # copy validators vào cạnh hooks để llmwiki deploy standalone vẫn chạy (resolution tier 2)
 cp "$SRC/harness/validators/"*.py "$ROOT/llmwiki/.claude/hooks/validators/"
 printf '# runtime data — khong commit\naudit/\n' > "$ROOT/llmwiki/.claude/.gitignore"
@@ -79,10 +82,11 @@ for d in tpl.get("permissions", {}).get("deny", []):
 cur.setdefault("hooks", {})
 for event, defs in tpl.get("hooks", {}).items():
     cur_defs = cur["hooks"].setdefault(event, [])
-    existing = json.dumps(cur_defs)
+    # so sánh trên command THÔ — json.dumps escape quote nên substring-check sẽ luôn miss
+    existing_cmds = {h.get("command") for d in cur_defs for h in (d.get("hooks") or [])}
     for d in defs:  # append hook harness nếu event đã có hook user — không đè
         cmd = (d.get("hooks") or [{}])[0].get("command", "")
-        if cmd and cmd not in existing:
+        if cmd and cmd not in existing_cmds:
             cur_defs.append(d)
 json.dump(cur, open(sys.argv[1], "w"), indent=2, ensure_ascii=False)
 PY
@@ -124,10 +128,10 @@ for d in tpl["permissions"]["deny"]:
 cur.setdefault("hooks", {})
 for event, defs in tpl["hooks"].items():
     cur_defs = cur["hooks"].setdefault(event, [])
-    existing = json.dumps(cur_defs)
+    existing_cmds = {h.get("command") for d in cur_defs for h in (d.get("hooks") or [])}
     for d in defs:
         cmd = d["hooks"][0]["command"]
-        if cmd not in existing:
+        if cmd not in existing_cmds:
             cur_defs.append(d)
 json.dump(cur, open(path, "w"), indent=2, ensure_ascii=False)
 PY
