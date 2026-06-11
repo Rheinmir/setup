@@ -40,13 +40,16 @@ Không bao giờ đổi volume mount mà không backup + xác nhận user.
 Đọc wiki, đọc code liên quan. **KHÔNG tạo file, KHÔNG sửa gì.**
 
 ### Bước 2 — propose (**TẠO FILE + DỪNG**)
-Tạo `llmwiki/wiki/draft/orca/DDMMYY-tên.md` với nội dung:
+Tạo `llmwiki/wiki/draft/orca/DDMMYY-tên.md` với nội dung (validator **R7** chặn ngay lúc ghi + lúc commit nếu thiếu):
 ```
+**Status:** proposed
+**Sequence diagram (hoạt họa):** [html/DDMMYY-tên-seq.html](../../../html/DDMMYY-tên-seq.html)
+
 ## Plan
 - [ ] Task 1: mô tả cụ thể
 - [ ] Task 2: ...
 
-## Agent Task Assignment (KẾ HOẠCH dispatch — bắt buộc nếu có dùng agent khác)
+## Agent Task Assignment (BẮT BUỘC với MỌI proposal — R7 chặn nếu thiếu/ô Agent trống; tất cả một agent thì ghi lý do)
 | Task | Agent | Model | Status |
 |------|-------|-------|--------|
 | <task 1> | Claude main / agy / opencode / kiro | <model> | pending |
@@ -58,7 +61,7 @@ Tạo `llmwiki/wiki/draft/orca/DDMMYY-tên.md` với nội dung:
 ## Risks
 - ...
 ```
-Tạo kèm **sequence diagram hoạt họa** `llmwiki/html/DDMMYY-tên-seq.html` — luồng code đi qua các component của plan (mỗi flow một diagram: happy path, fail/block path). Quy ước: lifeline indigo = component có sẵn, emerald = component proposal thêm/sửa; message hiện từng bước, auto-loop, click để pause. Link 2 chiều md ↔ html. **Propose = CẶP md + html — thiếu một là chưa hoàn chỉnh.**
+Tạo kèm **sequence diagram hoạt họa** `llmwiki/html/DDMMYY-tên-seq.html` — **MỖI task trong Plan một diagram riêng** (R7 đếm: số `diagram-box` ≥ số task `- [ ]`), mỗi diagram gắn badge agent phụ trách. Quy ước: lifeline indigo = component có sẵn, emerald = thêm/sửa, cam = nhánh bị chặn/fail; message hiện từng bước, auto-loop, click để pause. Link 2 chiều md ↔ html. **Propose = CẶP md + html đủ chuẩn R7 — máy chặn, không phải lời dặn.**
 
 Sau khi tạo cặp file → **⛔ DỪNG LẠI.**
 

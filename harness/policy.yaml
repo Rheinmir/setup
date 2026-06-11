@@ -45,3 +45,15 @@ rules:
     validator: null              # enforce bằng chính pre-commit framework (L2)
     statement: "Mọi commit phải qua gate: validators + lint. Fail = không commit được."
     enforce_at: [repo]
+
+  - id: R7
+    name: proposal-complete
+    validator: proposal_complete.py
+    statement: "Proposal chờ duyệt phải khai đủ: ai/CLI làm task nào + sequence diagram cho TỪNG task."
+    enforce_at: [session, repo]
+    applies_to: [write]
+    scope: "wiki draft .md CÓ '## Plan' và Status còn 'proposed' (output-report và draft đã implemented tự miễn)"
+    conditions:
+      - "Bảng '## Agent Task Assignment' ≥1 row, không ô Agent nào trống"
+      - "Link '**Sequence diagram**' trỏ file .html tồn tại trên disk"
+      - "Số <div class=\"diagram-box\"> trong html ≥ số task '- [ ]' trong Plan"

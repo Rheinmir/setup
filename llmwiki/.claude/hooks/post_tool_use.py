@@ -21,10 +21,11 @@ def main() -> None:
         sys.exit(0)
 
     # không truyền content → validator đọc file đã ghi trên disk (trạng thái cuối)
-    rc, err = run_validator("origin_required.py", {"action": "write", "file_path": fp}, vdir)
-    if rc == 2:
-        print(err, file=sys.stderr)
-        sys.exit(2)
+    for name in ("origin_required.py", "proposal_complete.py"):
+        rc, err = run_validator(name, {"action": "write", "file_path": fp}, vdir)
+        if rc == 2:
+            print(err, file=sys.stderr)
+            sys.exit(2)
     sys.exit(0)
 
 

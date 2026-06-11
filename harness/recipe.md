@@ -43,7 +43,8 @@ Normalized event JSON (L1 adapter của vendor nào cũng phải quy về dạng
 ```
 
 Validators hiện có: `no_write_raw.py` (R1) · `origin_required.py` (R2) · `index_sync.py` (R3) ·
-`folder_structure.py` (R5). R4 = tự động hóa L3, R6 = chính pre-commit (xem policy.yaml).
+`folder_structure.py` (R5) · `proposal_complete.py` (R7 — proposal chờ duyệt phải có bảng Agent
+Task Assignment + seq diagram per-task). R4 = tự động hóa L3, R6 = chính pre-commit (xem policy.yaml).
 
 ## 3. Bản tham chiếu: Claude Code (vendor đầu tiên)
 
