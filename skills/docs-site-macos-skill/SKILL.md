@@ -369,9 +369,15 @@ CSS — replace the old static `.diagram-box` rule with:
   padding:3px 9px;cursor:pointer;color:#4a4a55;opacity:0;transition:opacity .2s}
 .diagram-box:hover .diagram-reset{opacity:1}
 .diagram-reset:hover{background:#fff;color:#0f0f12}
-.diagram-box::after{content:'';position:absolute;right:3px;bottom:3px;width:10px;height:10px;
-  border-right:2px solid rgba(0,0,0,.18);border-bottom:2px solid rgba(0,0,0,.18);
-  border-bottom-right-radius:3px;pointer-events:none}
+/* resize grip kiểu macOS: 3 vạch chéo trong tam giác góc — ẨN mặc định, hover mới hiện.
+   ⛔ KHÔNG dùng góc L 2 cạnh đậm luôn-hiện (bài học 12/06/2026 — user chê "luôn hiện mà còn xấu").
+   Kèm ::-webkit-resizer{display:none} để giấu grip mặc định của browser. */
+.diagram-box::after{content:'';position:absolute;right:5px;bottom:5px;width:16px;height:16px;
+  pointer-events:none;opacity:0;transition:opacity .25s ease;
+  clip-path:polygon(100% 0,100% 100%,0 100%);
+  background:repeating-linear-gradient(135deg,transparent 0 3.5px,rgba(10,132,255,.45) 3.5px 5px)}
+.diagram-box:hover::after{opacity:.85}
+.diagram-box::-webkit-resizer{display:none}
 ```
 
 JS — add once, call after DOM is parsed (script at end of `<body>`):
