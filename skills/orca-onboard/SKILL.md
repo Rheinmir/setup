@@ -582,6 +582,13 @@ fi
 - Checkboxes: `<input type="checkbox">` — NO `☐` Unicode
 - Apply `docs-site-macos` style (glassmorphism, macOS chrome)
 
+**Style contract (BẮT BUỘC — inject nguyên văn vào SPEC, verify sau khi sinh):**
+- LIGHT THEME ONLY: nền trắng (`--bg: #f5f5f7` hoặc `#ffffff`), chữ đen (`--text: #1d1d1f`), secondary `#6e6e73`
+- Glassmorphism: card `rgba(255,255,255,0.7-0.85)` + `backdrop-filter: blur(...)` + border `rgba(255,255,255,0.5)` + shadow mềm
+- macOS chrome: thanh cửa sổ với 3 chấm traffic-light (#ff5f57/#ffbd2e/#28c840), font stack `-apple-system`
+- Accent colors per section: tự do
+- ⛔ TUYỆT ĐỐI KHÔNG có `@media (prefers-color-scheme: dark)` — máy user dark mode sẽ lật trắng thành đen, mất toàn bộ phong cách. Verify: `grep -c 'prefers-color-scheme' file.html` phải = 0, nếu ≠ 0 → strip block đó trước khi báo done.
+
 **Skip check:** `RESUME_MODE=true` + `PHASE4_STATUS=done` → skip.
 
 ```bash
@@ -590,7 +597,10 @@ if [ "$RESUME_MODE" != "true" ] || [ "$PHASE4_STATUS" != "done" ]; then
 
   SPEC="Generate onboarding HTML doc from wiki files at llmwiki/wiki/.
 Cover: project overview, architecture layers, domain flows, guided tour.
-Apply docs-site-macos style (glassmorphism, macOS window chrome, animated SVG diagrams).
+Apply docs-site-macos style: LIGHT THEME ONLY — white background (--bg: #f5f5f7), black text (--text: #1d1d1f),
+glassmorphism cards rgba(255,255,255,0.7-0.85) with backdrop-filter blur, macOS window chrome bar with
+traffic-light dots, -apple-system font stack, animated SVG diagrams, per-section accent colors (free choice).
+STRICTLY FORBIDDEN: any '@media (prefers-color-scheme: dark)' block — light theme must hold on dark-mode machines.
 Output: llmwiki/html/onboarding-${PROJECT_SLUG}.html
 Use real <input type='checkbox'> not Unicode checkboxes."
 
@@ -600,9 +610,12 @@ Use real <input type='checkbox'> not Unicode checkboxes."
       # Invoke docs-site-macos skill in Claude main thread as fallback
     }
 
-  ls "$PROJECT_ROOT/llmwiki/html/onboarding-${PROJECT_SLUG}.html" \
-    && echo "✅ Phase 4 done" \
-    || echo "❌ Phase 4 FAIL: HTML not found"
+  HTML_OUT="$PROJECT_ROOT/llmwiki/html/onboarding-${PROJECT_SLUG}.html"
+  ls "$HTML_OUT" && echo "✅ Phase 4 done" || echo "❌ Phase 4 FAIL: HTML not found"
+  # Style verify: dark-mode block lọt vào → strip ngay (Claude làm bằng python, match ngoặc cân bằng)
+  if [ -f "$HTML_OUT" ] && grep -q 'prefers-color-scheme' "$HTML_OUT"; then
+    echo "[Phase 4] WARN: dark-mode block detected — strip it before reporting done"
+  fi
 
   update_phase_status "Phase 4 —" "done"
 fi
