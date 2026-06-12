@@ -260,6 +260,28 @@ nav a,.nav-toggle,.nav-close{overflow:hidden} /* KHÔNG ép position — .nav-to
 /* ═══ full-bleed section tint — dải màu nền tràn viền, hết cảm giác panel đóng khung ═══ */
 .section-bg{overflow:visible}
 .section-bg::before{inset:auto;top:0;bottom:0;left:50%;width:100vw;transform:translateX(-50%)}
+
+/* ═══ base plane — lớp ĐÁY cho glass có cái để khúc xạ (gương phải thấy gì bên dưới) ═══ */
+/* orbs màu lớn trôi chậm — nguồn "vật thể" cho blur nghiền */
+body::before{content:'';position:fixed;inset:-10%;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(640px 440px at 10% 14%,rgba(10,132,255,.17),transparent 65%),
+    radial-gradient(540px 400px at 88% 10%,rgba(88,86,214,.13),transparent 60%),
+    radial-gradient(720px 500px at 74% 76%,rgba(48,176,199,.13),transparent 65%),
+    radial-gradient(480px 380px at 16% 86%,rgba(255,149,0,.08),transparent 60%),
+    radial-gradient(420px 320px at 50% 45%,rgba(52,199,89,.06),transparent 60%);
+  animation:orbDrift 46s ease-in-out infinite alternate}
+@keyframes orbDrift{
+  0%{transform:translate(0,0) scale(1)}
+  100%{transform:translate(2.2%,1.6%) scale(1.045)}
+}
+/* dot-grid mảnh — chi tiết tần số cao, qua blur thành texture kính mờ */
+body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:radial-gradient(rgba(30,90,170,.11) 1px,transparent 1.3px);
+  background-size:22px 22px;
+  -webkit-mask-image:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.22));
+  mask-image:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.22))}
+@media (prefers-reduced-motion:reduce){body::before{animation:none}}
 </style>
 </head>
 <body>

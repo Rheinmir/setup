@@ -45,6 +45,23 @@ body{
 
 Keep it this quiet — blue-family tints only, no loud glow layers ("light pollution"). The per-section `.s-bgN::before` overlays add the rest of the local variation.
 
+**Base refraction plane (BẮT BUỘC — gương phải thấy gì bên dưới):** gradient phẳng không đủ cho blur "nghiền" — thêm 2 lớp fixed `z-index:-1` dưới mọi content: (1) ORBS — 4-5 radial blobs lớn (blue chủ đạo + 1-2 tint Apple secondary, alpha .06-.17) trôi rất chậm (~46s ease alternate, translate ≤2.5% + scale ≤1.05); (2) DOT-GRID mảnh 1px/22px alpha ~.11 có mask fade dọc — chi tiết tần số cao để backdrop-filter biến thành texture kính thật. Kèm `@media (prefers-reduced-motion:reduce){animation:none}`:
+
+```css
+body::before{content:'';position:fixed;inset:-10%;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(640px 440px at 10% 14%,rgba(10,132,255,.17),transparent 65%),
+    radial-gradient(540px 400px at 88% 10%,rgba(88,86,214,.13),transparent 60%),
+    radial-gradient(720px 500px at 74% 76%,rgba(48,176,199,.13),transparent 65%),
+    radial-gradient(480px 380px at 16% 86%,rgba(255,149,0,.08),transparent 60%);
+  animation:orbDrift 46s ease-in-out infinite alternate}
+@keyframes orbDrift{100%{transform:translate(2.2%,1.6%) scale(1.045)}}
+body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:radial-gradient(rgba(30,90,170,.11) 1px,transparent 1.3px);
+  background-size:22px 22px;
+  mask-image:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.22))}
+```
+
 ### Liquid-Glass Surface System (opacity ladder + blur scale)
 
 Glass is a **depth system, not a single class**. Three surface tiers, each with its own alpha + blur — never repeat one alpha everywhere:
