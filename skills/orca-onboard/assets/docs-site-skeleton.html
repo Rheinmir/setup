@@ -17,7 +17,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{PROJECT_NAME}} — Onboarding</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#ffffff; --text:#0f0f12; --text-2:#4a4a55;
@@ -177,6 +176,52 @@ footer code{background:rgba(0,0,0,.05);border-radius:5px;padding:1px 6px;font-si
   .content-grid,.tour-grid{grid-template-columns:1fr}
   nav .logo{display:none}
 }
+
+/* ═══ skill update 120626: sidebar nav + apple-secondary content cycle ═══
+   Triết lý: XANH là màu của PATTERN (nav/hero/link/chrome) — hiện đại, tông iOS #0a84ff.
+   CONTENT cycle qua màu thứ cấp Apple (teal/indigo/green/orange/pink) — nhiều màu nhưng không rối.
+   Heading h2 = chữ tối #1d1d1f (saturated blue heading nhìn quê). */
+nav{top:0;left:0;bottom:0;right:auto;width:220px;height:auto;flex-direction:column;align-items:stretch;gap:2px;padding:18px 12px;border-bottom:none;border-right:1px solid var(--glass-border)}
+nav .logo{margin:0 0 12px;padding:6px 10px;white-space:normal;background:linear-gradient(135deg,#0a84ff,#64b5f7);-webkit-background-clip:text;background-clip:text}
+.nav-scroll{flex-direction:column;overflow-x:visible;overflow-y:auto}
+nav a{padding:8px 12px;border-radius:10px;font-size:13px}
+nav a.active{color:#0a84ff;background:rgba(10,132,255,.08);font-weight:600}
+body{padding-left:220px}
+.hero{padding-top:72px}
+@media(max-width:900px){
+  nav{top:0;left:0;right:0;bottom:auto;width:auto;height:48px;flex-direction:row;align-items:center;padding:0 20px;border-right:none;border-bottom:1px solid var(--glass-border)}
+  nav .logo{margin:0 14px 0 0;padding:0}
+  .nav-scroll{flex-direction:row;overflow-x:auto;overflow-y:visible}
+  body{padding-left:0}
+  .hero{padding-top:110px}
+}
+.hero h1{background:linear-gradient(135deg,#0a84ff,#5aa2e8,#cfe3fb);-webkit-background-clip:text;background-clip:text;color:transparent}
+.section-header h2{color:#1d1d1f !important}
+/* content accent cycle — Apple secondary */
+#sec-0 .tag,#sec-6 .tag{background:rgba(10,132,255,.10) !important;color:#0a84ff !important}
+#sec-0 .card h4,#sec-6 .card h4{color:#0a84ff !important}
+#sec-0 .card li::before,#sec-6 .card li::before{color:#0a84ff !important}
+.s-bg0::before{background:linear-gradient(180deg,rgba(10,132,255,.05) 0%,transparent 60%) !important}
+#sec-1 .tag,#sec-7 .tag{background:rgba(48,176,199,.12) !important;color:#30b0c7 !important}
+#sec-1 .card h4,#sec-7 .card h4{color:#30b0c7 !important}
+#sec-1 .card li::before,#sec-7 .card li::before{color:#30b0c7 !important}
+.s-bg1::before{background:linear-gradient(180deg,rgba(48,176,199,.05) 0%,transparent 60%) !important}
+#sec-2 .tag,#sec-8 .tag{background:rgba(88,86,214,.10) !important;color:#5856d6 !important}
+#sec-2 .card h4,#sec-8 .card h4{color:#5856d6 !important}
+#sec-2 .card li::before,#sec-8 .card li::before{color:#5856d6 !important}
+.s-bg2::before{background:linear-gradient(180deg,rgba(88,86,214,.05) 0%,transparent 60%) !important}
+#sec-3 .tag,#sec-9 .tag{background:rgba(52,199,89,.12) !important;color:#34c759 !important}
+#sec-3 .card h4,#sec-9 .card h4{color:#28a745 !important}
+#sec-3 .card li::before,#sec-9 .card li::before{color:#34c759 !important}
+.s-bg3::before{background:linear-gradient(180deg,rgba(52,199,89,.05) 0%,transparent 60%) !important}
+#sec-4 .tag,#sec-10 .tag{background:rgba(255,149,0,.12) !important;color:#f08c00 !important}
+#sec-4 .card h4,#sec-10 .card h4{color:#f08c00 !important}
+#sec-4 .card li::before,#sec-10 .card li::before{color:#ff9500 !important}
+.s-bg4::before{background:linear-gradient(180deg,rgba(255,149,0,.06) 0%,transparent 60%) !important}
+#sec-5 .tag,#sec-11 .tag{background:rgba(255,45,85,.10) !important;color:#ff2d55 !important}
+#sec-5 .card h4,#sec-11 .card h4{color:#e0264b !important}
+#sec-5 .card li::before,#sec-11 .card li::before{color:#ff2d55 !important}
+.s-bg5::before{background:linear-gradient(180deg,rgba(255,45,85,.05) 0%,transparent 60%) !important}
 </style>
 </head>
 <body>

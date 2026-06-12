@@ -1,8 +1,11 @@
 ---
 name: docs-site-macos
 description: >
-  Build a beautiful macOS-inspired documentation site (single HTML file) with glassmorphism cards,
-  animated SVG diagrams, traffic-light window chrome, and per-section color theming.
+  Build a beautiful macOS-inspired documentation site (single HTML file) with a liquid-glass
+  surface system (tiered glassmorphism: opacity ladder, blur scale, edge highlights), animated
+  SVG diagrams, traffic-light window chrome, and a light-blue + white liquid-glass palette
+  (white glass surfaces over a soft blue gradient field, per-section blue-tone theming).
+  Also trigger on "liquid glass", "frosted glass", or "translucent UI" requests for docs/showcase pages.
   Trigger when the user wants to create a docs site, landing page, showcase, portfolio, guide,
   tutorial site, feature overview, or product documentation — especially when they mention
   wanting it to look "clean", "modern", "Apple-like", "macOS style", "glass", "frosted",
@@ -21,62 +24,98 @@ Output is a self-contained `.html` file (no JS libraries, no build step).
 
 ### Color Palette
 
-Base: `#f2f0f7` (purple-ish light gray)
+Base: white glass surfaces over a soft light-blue gradient field (see Background Plane below)
 Text: `#0f0f12` / `#4a4a55`
-Glass: `rgba(255,255,255,.7)` with `backdrop-filter: blur(8px)`
-Border: `rgba(255,255,255,.6)` or `rgba(0,0,0,.06)`
+Border: `rgba(30,90,170,.14)` (cool blue-gray — never white-on-white)
 
-### Section Color Cycle
+Palette is LIQUID-GLASS LIGHT-BLUE + WHITE for the PATTERN (surfaces, background field, nav, hero, links). CONTENT section accents cycle Apple's secondary palette (see Palette Philosophy below) — confined to tags/h4/bullets so nhiều màu vẫn không rối. No flat-black accents, no saturated-color headings.
 
-Sections cycle through this accent palette in order. Pick the Nth accent for the Nth section,
-wrapping around if there are more sections than accents:
+### Background Plane (glass needs something to sample)
+
+Honest naming: this design system is **pragmatic CSS glass** (transparency + backdrop blur), not true refraction. For the blur to read as material at all, the body background must NOT be a flat fill — give it a restrained monochrome gradient field:
 
 ```css
-/* Cycle (6 accents, repeat as needed) */
-#sec-0 .tag { background: rgba(99,102,241,.12); color: #6366f1; }
-#sec-0 .card h4 { color: #6366f1; } #sec-0 .section-header h2 { color: #4338ca; }
-#sec-0 .card li::before { color: #6366f1; }
-#sec-0 .section-bg::before { background: linear-gradient(180deg, rgba(99,102,241,.04) 0%, transparent 60%); }
+body{
+  background:
+    radial-gradient(900px 500px at 12% -10%, rgba(10,132,255,.10), transparent 60%),
+    radial-gradient(700px 420px at 95% 15%, rgba(90,162,232,.08), transparent 55%),
+    linear-gradient(180deg, #f7fbff 0%, #eaf2fd 100%);
+}
+```
 
-#sec-1 { accent: #059669 emerald; dark: #047857; }
-#sec-2 { accent: #d97706 amber; dark: #b45309; }
-#sec-3 { accent: #db2777 pink; dark: #be185d; }
-#sec-4 { accent: #0891b2 cyan; dark: #0e7490; }
-#sec-5 { accent: #9333ea purple; dark: #7e22ce; }
-/* then repeat #sec-6 = #sec-0, #sec-7 = #sec-1, ... */
+Keep it this quiet — blue-family tints only, no loud glow layers ("light pollution"). The per-section `.s-bgN::before` overlays add the rest of the local variation.
+
+### Liquid-Glass Surface System (opacity ladder + blur scale)
+
+Glass is a **depth system, not a single class**. Three surface tiers, each with its own alpha + blur — never repeat one alpha everywhere:
+
+```css
+:root{
+  --glass-1: rgba(255,255,255,.55);  /* tier 1 — chrome: nav, floating panels */
+  --glass-2: rgba(255,255,255,.7);   /* tier 2 — cards, diagram-box, repo-card */
+  --glass-3: rgba(255,255,255,.88);  /* tier 3 — data: tables, long text (calmer, near-solid) */
+  --blur-1: 24px; --blur-2: 8px; --blur-3: 4px;
+  --edge-hi: inset 0 1px 0 rgba(255,255,255,.85);  /* top inner highlight — REQUIRED on every glass surface */
+  --border: rgba(30,90,170,.14);
+}
+```
+
+Tier assignment: `nav` = tier 1 · `.card` / `.diagram-box` / `.repo-card` = tier 2 · `table` / dense data zones = tier 3. Reserve the strongest glass for chrome; content density rises as material strength drops.
+
+### Palette Philosophy: blue = PATTERN, Apple secondary = CONTENT
+
+**Blue is the chrome/pattern color ONLY** — sidebar nav, hero gradient, links, structural accents. Modern iOS tone `#0a84ff`, never dark/navy starts. **Content sections cycle through Apple's secondary palette** (teal/indigo/green/orange/pink) — nhiều màu được, miễn không rối: accents stay confined to `.tag`, `.card h4`, and `li::before` bullets.
+
+**Headings are DARK, never saturated color**: `.section-header h2 { color: #1d1d1f }` for every section. A saturated blue heading reads dated ("nhà quê") — Apple uses near-black headlines with a colored eyebrow tag above.
+
+### Section Color Cycle (Apple secondary)
+
+```css
+#sec-0 .tag { background: rgba(10,132,255,.10); color: #0a84ff; }   /* blue */
+#sec-0 .card h4 { color: #0a84ff; } #sec-0 .card li::before { color: #0a84ff; }
+#sec-0 .section-header h2 { color: #1d1d1f; }  /* h2 luôn tối, mọi section */
+.s-bg0::before { background: linear-gradient(180deg, rgba(10,132,255,.05) 0%, transparent 60%); }
+/* then sec-1..5 per the table; repeat #sec-6 = #sec-0, ... */
 ```
 
 **Full accent table:**
 
-| Index | Accent | Dark (h2) | Gradient overlay |
-|-------|--------|-----------|------------------|
-| 0     | `#6366f1` indigo | `#4338ca` | `rgba(99,102,241,.04)` |
-| 1     | `#059669` emerald | `#047857` | `rgba(16,185,129,.04)` |
-| 2     | `#d97706` amber | `#b45309` | `rgba(245,158,11,.04)` |
-| 3     | `#db2777` pink | `#be185d` | `rgba(236,72,153,.04)` |
-| 4     | `#0891b2` cyan | `#0e7490` | `rgba(6,182,212,.04)` |
-| 5     | `#9333ea` purple | `#7e22ce` | `rgba(168,85,247,.04)` |
+| Index | Accent | h4 tone | Gradient overlay |
+|-------|--------|---------|------------------|
+| 0     | `#0a84ff` blue   | `#0a84ff` | `rgba(10,132,255,.05)` |
+| 1     | `#30b0c7` teal   | `#30b0c7` | `rgba(48,176,199,.05)` |
+| 2     | `#5856d6` indigo | `#5856d6` | `rgba(88,86,214,.05)` |
+| 3     | `#34c759` green  | `#28a745` | `rgba(52,199,89,.05)` |
+| 4     | `#ff9500` orange | `#f08c00` | `rgba(255,149,0,.06)` |
+| 5     | `#ff2d55` pink   | `#e0264b` | `rgba(255,45,85,.05)` |
 
 For each section, use the accent for:
-- `.tag` background (at 12% opacity)
-- `.card h4` color
+- `.tag` background (at 10-12% opacity) + text
+- `.card h4` color (use the darker h4 tone for orange/green/pink so text stays readable)
 - `.card li::before` color (the `›` bullet)
-- `.section-header h2` color (dark shade)
+- ⛔ NOT for `.section-header h2` — h2 is always `#1d1d1f`
 
 ### Glassmorphism Cards
 
 ```css
 .card {
-  background: rgba(255,255,255,.7);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,255,255,.6);
+  background: var(--glass-2);
+  backdrop-filter: blur(var(--blur-2)) saturate(1.1);
+  border: 1px solid var(--border);
   border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0,0,0,.06);
+  box-shadow: var(--edge-hi), 0 4px 20px rgba(0,0,0,.06);  /* top highlight + lower shadow = directional light */
   padding: 20px;
 }
 ```
 
-Apply this same glass style to: `.diagram-box`, `table`, `.repo-card`, and the converter mockup.
+`.diagram-box` and `.repo-card` share this tier-2 recipe. `table` (and any dense data region) drops to tier 3: `background: var(--glass-3); backdrop-filter: blur(var(--blur-3))` — same border + edge highlight, calmer material so rows stay legible.
+
+**Liquid-glass rules (distilled from the liquid-glass-design skill):**
+- Edge highlight is mandatory — glass without `--edge-hi` reads as a washed card.
+- Directional light: faint top inner highlight + soft lower outer shadow on every pane.
+- Text never sits on heavy blur alone; tier 3 (near-solid) backs all long-form reading and tables.
+- Stacked glass must differ by at least one tier (alpha AND blur step) or the layers collapse into mud.
+- Glow stays faint and blue-family only — depth comes from the ladder, edges, and shadow, not atmosphere.
 
 ### macOS Chrome Elements
 
@@ -90,13 +129,30 @@ The **repo card** and **converter mockup** use a macOS window header:
 </div>
 ```
 
-### Navigation
+### Navigation — SIDEBAR (desktop) / top bar (mobile)
 
-Fixed top nav with:
-- `background: rgba(242,240,247,.82)` + `backdrop-filter: blur(24px) saturate(1.4)`
-- Height 48px
-- Active link: accent color + `rgba(99,102,241,.1)` background
-- Scroll spy via IntersectionObserver watching `section[id]`
+Desktop ≥900px: fixed LEFT SIDEBAR, không phải top bar:
+
+```css
+nav{position:fixed;top:0;left:0;bottom:0;width:220px;z-index:100;
+  display:flex;flex-direction:column;align-items:stretch;gap:2px;padding:18px 12px;
+  background:var(--glass-1);backdrop-filter:blur(var(--blur-1)) saturate(1.1);
+  border-right:1px solid var(--border)}
+nav .logo{margin:0 0 12px;padding:6px 10px;
+  background:linear-gradient(135deg,#0a84ff,#64b5f7);-webkit-background-clip:text;background-clip:text;color:transparent}
+nav a{padding:8px 12px;border-radius:10px;font-size:13px}
+nav a.active{color:#0a84ff;background:rgba(10,132,255,.08);font-weight:600}
+body{padding-left:220px}
+@media(max-width:900px){
+  nav{top:0;left:0;right:0;bottom:auto;width:auto;height:48px;flex-direction:row;align-items:center;
+    padding:0 20px;border-right:none;border-bottom:1px solid var(--border)}
+  nav .logo{margin:0 14px 0 0;padding:0}
+  body{padding-left:0}
+}
+```
+
+- Tier-1 glass cho cả hai dạng
+- Scroll spy via IntersectionObserver watching `section[id]` (selector `nav a` không đổi)
 
 ## Page Architecture
 
@@ -186,8 +242,8 @@ This is auto-detected from the authored SVG — **no SVG markup changes needed**
 CSS — replace the old static `.diagram-box` rule with:
 
 ```css
-.diagram-box{background:rgba(255,255,255,.7);backdrop-filter:blur(8px);
-  border:1px solid rgba(255,255,255,.6);border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,.06);
+.diagram-box{background:var(--glass-2);backdrop-filter:blur(var(--blur-2)) saturate(1.1);
+  border:1px solid var(--border);border-radius:16px;box-shadow:var(--edge-hi),0 4px 20px rgba(0,0,0,.06);
   padding:24px;margin:24px 0;
   position:relative;overflow:hidden;display:flex;flex-direction:column;
   resize:vertical;min-height:160px;transition:box-shadow .2s ease}
@@ -342,6 +398,43 @@ function initCodeCopy() {
 initCodeCopy();
 ```
 
+### Water-Ripple Click Effect (REQUIRED on every interactive control)
+
+Every clickable control (any `<button>`, `.nav-link`, `.collapse-toggle`, `.code-copy`, `.diagram-reset`, checklist labels) gets a liquid-glass water ripple on pointer-down: a soft white splash with a faint blue tint that expands from the click point like a water ring and fades. One global listener — no per-button wiring.
+
+```css
+.ripple{position:absolute;border-radius:50%;pointer-events:none;transform:scale(0);opacity:.9;
+  background:radial-gradient(circle, rgba(255,255,255,.6) 0%, rgba(10,132,255,.22) 35%, transparent 70%);
+  box-shadow:0 0 0 1px rgba(255,255,255,.45);
+  animation:rippleWave .65s cubic-bezier(.2,.6,.3,1) forwards}
+@keyframes rippleWave{to{transform:scale(2.8);opacity:0}}
+```
+
+```js
+function initRipple() {
+  document.addEventListener('pointerdown', e => {
+    const el = e.target.closest('button, .nav-link, .collapse-toggle, .checklist label');
+    if (!el || el.dataset.noRipple) return;
+    const r = el.getBoundingClientRect();
+    const d = Math.max(r.width, r.height) * 1.2;
+    const s = document.createElement('span');
+    s.className = 'ripple';
+    s.style.cssText = `width:${d}px;height:${d}px;left:${e.clientX - r.left - d/2}px;top:${e.clientY - r.top - d/2}px`;
+    if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+    el.style.overflow = 'hidden';
+    el.appendChild(s);
+    s.addEventListener('animationend', () => s.remove());
+  });
+}
+initRipple();
+```
+
+Notes:
+- The ripple origin is the actual click point (`clientX/Y` relative to the control), not the center — that is what makes it read as water, not a flash.
+- `overflow:hidden` is forced on the host so the ring clips to the control's rounded shape.
+- Opt out with `data-no-ripple` on controls where clipping would break layout (e.g. the diagram viewport itself — pan/drag should not splash).
+- Keep the tint blue-family (`rgba(10,132,255,…)`) per the palette; on dark surfaces (code panels) the white core carries the effect.
+
 ## Collapse / Xem thêm
 
 Animated expand/collapse section:
@@ -398,11 +491,13 @@ sections.forEach(s => observer.observe(s));
 
 ## Font
 
-Use Inter from Google Fonts:
-```html
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-```
-Font stack: `'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif`
+System fonts ONLY — NO Google Fonts `<link>`, no `@import`, no webfont download:
+
+Font stack: `-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'Helvetica Neue', sans-serif`
+
+## Self-Contained — CRITICAL
+
+The user opens these files directly (`file://`, offline, double-click). The output HTML must make ZERO external requests: no font/CSS/JS CDN links, no remote images, no `@import`, no `<script src>`. Everything (CSS, JS, SVG, icons) lives inline in the one file. `<a href>` hyperlinks to external sites are fine — they are navigation, not resource loads.
 
 ## Output Path — CRITICAL
 
@@ -450,7 +545,7 @@ When the user asks to "see how the UI will look", "tạo bảng tương tác th�
 - **Proper modal, not `confirm()`** — reserve a styled modal ONLY for destructive actions (e.g. "clear all overrides"); parametrize title/okText/danger.
 - **Focus after async UI** — when an edit starts right after closing a modal/dialog, focus the input on a tick (`setTimeout(...,0)`), or it won't take focus.
 
-Keep the chrome (traffic-light header), Inter font, and slate/amber palette consistent with the doc sites.
+Keep the chrome (traffic-light header), Inter font, and monochrome slate palette consistent with the doc sites (amber/emerald override-state colors in the data-grid pattern above are the one allowed exception — they encode editing state, not theme).
 
 ## Best Practices
 
@@ -468,7 +563,7 @@ Keep the chrome (traffic-light header), Inter font, and slate/amber palette cons
   background: rgba(255,255,255,.8); margin-top: 2px; transition: all .15s;
 }
 .checklist input[type="checkbox"]:checked {
-  background: #6366f1; border-color: #6366f1;
+  background: #0a84ff; border-color: #0a84ff;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M13 4L6.5 11 3 7.5' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");
   background-size: contain;
 }
@@ -486,9 +581,9 @@ Keep the chrome (traffic-light header), Inter font, and slate/amber palette cons
 - ALWAYS make each `<section>` self-contained with accent colors from the cycle by its index (use `#sec-{i}` CSS rules)
 - Keep SVG viewBox widths consistent (900) across diagrams for visual harmony
 - Use relative `../file.md` links for "Chi tiết" footers pointing to companion markdown files
-- The hero heading gradient should use 3 stops: `linear-gradient(135deg, #6366f1, #a855f7, #ec4899)`
-- Nav logo gradient: `linear-gradient(135deg, #6366f1, #a855f7)`
-- Number of sections is variable — cycle through the 6-color palette with modulo (`i % 6`)
+- The hero heading gradient should use 3 stops, blue → light blue (KHÔNG bắt đầu bằng navy đậm): `linear-gradient(135deg, #0a84ff, #5aa2e8, #cfe3fb)`
+- Nav logo gradient: `linear-gradient(135deg, #0a84ff, #64b5f7)`
+- Number of sections is variable — cycle through the 6-blue palette with modulo (`i % 6`)
 - ALWAYS start an auto-host server after writing the HTML file (see Auto-Host section above)
 
 
