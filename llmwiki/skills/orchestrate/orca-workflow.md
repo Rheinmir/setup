@@ -34,13 +34,14 @@ Claude: analyze. Others: execute. Kill opencode nếu chờ quá lâu.
 
 ```bash
 # OpenCode non-interactive (DEFAULT — dùng big-pickle miễn phí):
-opencode run -m opencode/big-pickle --dir "<project>" --dangerously-skip-permissions "<task>"
+# ⚠ KHÔNG dùng --dangerously-skip-permissions khi dispatch từ Claude Code — auto-mode classifier sẽ DENY (bài học 120626)
+opencode run -m opencode/big-pickle --dir "<project>" "<task>"
 
 # Antigravity non-interactive:
-agy -p "<task>" --dangerously-skip-permissions
+agy -p "<task>"
 
 # Kiro non-interactive:
-kiro run --dir "<project>" --dangerously-skip-permissions "<task>"
+kiro run --dir "<project>" "<task>"
 
 # GitHub Copilot Coding Agent (async — via GitHub issue):
 gh issue create --title "<task>" --body "<task details>" --assignee "@me"

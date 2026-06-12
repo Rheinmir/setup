@@ -13,10 +13,11 @@ description: Reference for Antigravity/OpenCode dispatch, skill installation, Ag
 
 ```bash
 # Non-interactive task dispatch (default pattern):
-opencode run -m opencode/big-pickle --dir "<project-path>" --dangerously-skip-permissions "<task>"
+# ⚠ KHÔNG dùng --dangerously-skip-permissions khi dispatch từ Claude Code — auto-mode classifier sẽ DENY (bài học 120626)
+opencode run -m opencode/big-pickle --dir "<project-path>" "<task>"
 
 # Example:
-opencode run -m opencode/big-pickle --dir "C:\Users\olive\orca\workspaces\home-spotify\m" --dangerously-skip-permissions "List all TODO comments in backend/"
+opencode run -m opencode/big-pickle --dir "C:\Users\olive\orca\workspaces\home-spotify\m" "List all TODO comments in backend/"
 ```
 
 **Model tiers** (fallback if big-pickle fails):
@@ -65,7 +66,7 @@ Skills: `llmwiki/skills/<category>/<name>.md`.
 ls .claude/commands/
 
 # Install:
-cp llmwiki/skills/wiki/propose.md .claude/commands/propose.md
+cp llmwiki/skills/dev-loop/propose.md .claude/commands/propose.md
 ```
 
 ### OpenCode / Antigravity
@@ -75,7 +76,7 @@ ls ~/.agents/skills/
 
 # Install (skill = folder with SKILL.md):
 mkdir -p ~/.agents/skills/propose/
-cp llmwiki/skills/wiki/propose.md ~/.agents/skills/propose/SKILL.md
+cp llmwiki/skills/dev-loop/propose.md ~/.agents/skills/propose/SKILL.md
 # Restart OpenCode after install.
 ```
 

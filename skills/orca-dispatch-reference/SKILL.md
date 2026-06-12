@@ -53,7 +53,7 @@ Skills nằm tại `llmwiki/skills/<category>/<name>.md`.
 ls .claude/commands/
 
 # Install:
-cp llmwiki/skills/wiki/propose.md .claude/commands/propose.md
+cp llmwiki/skills/dev-loop/propose.md .claude/commands/propose.md
 ```
 
 ### OpenCode / Antigravity
@@ -63,7 +63,7 @@ ls ~/.agents/skills/
 
 # Install (skill phải là thư mục chứa SKILL.md):
 mkdir -p ~/.agents/skills/propose/
-cp llmwiki/skills/wiki/propose.md ~/.agents/skills/propose/SKILL.md
+cp llmwiki/skills/dev-loop/propose.md ~/.agents/skills/propose/SKILL.md
 # Restart OpenCode sau khi install.
 ```
 
@@ -74,7 +74,7 @@ ls ~/.kiro/skills/
 
 # Install (skill phải là thư mục chứa SKILL.md):
 mkdir -p ~/.kiro/skills/propose/
-cp llmwiki/skills/wiki/propose.md ~/.kiro/skills/propose/SKILL.md
+cp llmwiki/skills/dev-loop/propose.md ~/.kiro/skills/propose/SKILL.md
 ```
 
 ## AgentMemory
