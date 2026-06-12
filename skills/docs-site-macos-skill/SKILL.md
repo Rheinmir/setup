@@ -244,8 +244,11 @@ Each `<section>` gets two classes: `section-bg s-bgN` (N = section index mod 6).
 The gradient overlay is a `::before` pseudo-element:
 
 ```css
-.section-bg { position: relative; overflow: hidden; }
-.section-bg::before { content: ''; position: absolute; inset: 0; pointer-events: none; }
+.section-bg { position: relative; overflow: visible; }
+/* FULL-BLEED: dải màu tràn hết viewport (100vw), content vẫn max-width — KHÔNG đóng khung
+   dải tint trong box section, nhìn như panel rời, mất liền mạch */
+.section-bg::before { content: ''; position: absolute; top: 0; bottom: 0; left: 50%;
+  width: 100vw; transform: translateX(-50%); pointer-events: none; }
 /* Generate one .s-bgN::before per section index, cycling through 6 colors */
 ```
 

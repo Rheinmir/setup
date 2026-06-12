@@ -255,6 +255,10 @@ nav a,.nav-toggle,.nav-close{position:relative;overflow:hidden}
   55%{transform:scale(1);opacity:.75}
   100%{transform:scale(1.04);opacity:0}
 }
+
+/* ═══ full-bleed section tint — dải màu nền tràn viền, hết cảm giác panel đóng khung ═══ */
+.section-bg{overflow:visible}
+.section-bg::before{inset:auto;top:0;bottom:0;left:50%;width:100vw;transform:translateX(-50%)}
 </style>
 </head>
 <body>
