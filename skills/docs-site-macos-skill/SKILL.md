@@ -149,7 +149,7 @@ body{padding-left:200px}
 }
 ```
 
-**Ripple effect (BẮT BUỘC trên nút sidebar + toggle):** click vào đâu, một hình tròn lan ra TỪ ĐÚNG TOẠ ĐỘ đó và phủ từ từ kín nút (bán kính = khoảng cách xa nhất tới 4 góc), rồi fade. Phần tử cha cần `position:relative;overflow:hidden`:
+**Ripple effect (BẮT BUỘC trên nút sidebar + toggle):** click vào đâu, một hình tròn lan ra TỪ ĐÚNG TOẠ ĐỘ đó và phủ từ từ kín nút (bán kính = khoảng cách xa nhất tới 4 góc), rồi fade. Phần tử cha cần CÓ position (relative/fixed/absolute đều chứa được ink) + `overflow:hidden`. ⚠️ KHÔNG viết rule chung ép `position:relative` lên `.nav-toggle` — nó sẽ đè `position:fixed` (cùng specificity, rule sau thắng) làm nút rơi xuống cuối trang:
 
 Ripple ink là LIQUID GLASS, không phải vệt màu phẳng: specular highlight lệch góc (circle at 35% 30%), thân trắng mờ, viền xanh nhạt, `backdrop-filter:blur(2px)` để giọt nước tự khúc xạ content bên dưới, edge highlight inset:
 
@@ -217,7 +217,7 @@ body.nav-collapsed{padding-left:0}
 body:not(.nav-collapsed) .nav-toggle{opacity:0;pointer-events:none;transform:translateX(-6px)}
 .nav-close{position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:8px;
   display:flex;align-items:center;justify-content:center;font-size:12px;color:#4a4a55;cursor:pointer;
-  background:rgba(0,0,0,.04);border:none;overflow:hidden;position:relative}
+  background:rgba(0,0,0,.04);border:none;overflow:hidden}
 .nav-close:hover{color:#0a84ff;background:rgba(10,132,255,.10)}
 /* .nav-toggle hiện ở mọi cỡ màn */
 ```
