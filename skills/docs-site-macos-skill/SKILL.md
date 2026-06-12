@@ -131,10 +131,10 @@ The **repo card** and **converter mockup** use a macOS window header:
 
 ### Navigation — SIDEBAR (desktop) / top bar (mobile)
 
-Desktop ≥900px: fixed LEFT SIDEBAR, không phải top bar:
+Desktop ≥640px: fixed LEFT SIDEBAR, không phải top bar:
 
 ```css
-nav{position:fixed;top:0;left:0;bottom:0;width:220px;z-index:100;
+nav{position:fixed;top:0;left:0;bottom:0;width:200px;z-index:100;
   display:flex;flex-direction:column;align-items:stretch;gap:2px;padding:18px 12px;
   background:var(--glass-1);backdrop-filter:blur(var(--blur-1)) saturate(1.1);
   border-right:1px solid var(--border)}
@@ -142,8 +142,8 @@ nav .logo{margin:0 0 12px;padding:6px 10px;
   background:linear-gradient(135deg,#0a84ff,#64b5f7);-webkit-background-clip:text;background-clip:text;color:transparent}
 nav a{padding:8px 12px;border-radius:10px;font-size:13px}
 nav a.active{color:#0a84ff;background:rgba(10,132,255,.08);font-weight:600}
-body{padding-left:220px}
-@media(max-width:900px){
+body{padding-left:200px}
+@media(max-width:640px){
   nav{top:0;left:0;right:0;bottom:auto;width:auto;height:48px;flex-direction:row;align-items:center;
     padding:0 20px;border-right:none;border-bottom:1px solid var(--border)}
   nav .logo{margin:0 14px 0 0;padding:0}

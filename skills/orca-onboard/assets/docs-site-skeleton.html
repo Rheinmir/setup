@@ -181,15 +181,15 @@ footer code{background:rgba(0,0,0,.05);border-radius:5px;padding:1px 6px;font-si
    Triết lý: XANH là màu của PATTERN (nav/hero/link/chrome) — hiện đại, tông iOS #0a84ff.
    CONTENT cycle qua màu thứ cấp Apple (teal/indigo/green/orange/pink) — nhiều màu nhưng không rối.
    Heading h2 = chữ tối #1d1d1f (saturated blue heading nhìn quê). */
-nav{top:0;left:0;bottom:0;right:auto;width:220px;height:auto;flex-direction:column;align-items:stretch;gap:2px;padding:18px 12px;border-bottom:none;border-right:1px solid var(--glass-border)}
+nav{top:0;left:0;bottom:0;right:auto;width:200px;height:auto;flex-direction:column;align-items:stretch;gap:2px;padding:18px 10px;border-bottom:none;border-right:1px solid var(--glass-border,var(--border))}
 nav .logo{margin:0 0 12px;padding:6px 10px;white-space:normal;background:linear-gradient(135deg,#0a84ff,#64b5f7);-webkit-background-clip:text;background-clip:text}
 .nav-scroll{flex-direction:column;overflow-x:visible;overflow-y:auto}
 nav a{padding:8px 12px;border-radius:10px;font-size:13px}
 nav a.active{color:#0a84ff;background:rgba(10,132,255,.08);font-weight:600}
-body{padding-left:220px}
+body{padding-left:200px}
 .hero{padding-top:72px}
-@media(max-width:900px){
-  nav{top:0;left:0;right:0;bottom:auto;width:auto;height:48px;flex-direction:row;align-items:center;padding:0 20px;border-right:none;border-bottom:1px solid var(--glass-border)}
+@media(max-width:640px){
+  nav{top:0;left:0;right:0;bottom:auto;width:auto;height:48px;flex-direction:row;align-items:center;padding:0 20px;border-right:none;border-bottom:1px solid var(--glass-border,var(--border))}
   nav .logo{margin:0 14px 0 0;padding:0}
   .nav-scroll{flex-direction:row;overflow-x:auto;overflow-y:visible}
   body{padding-left:0}
