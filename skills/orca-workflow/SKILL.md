@@ -128,7 +128,7 @@ orca terminal wait --for tui-idle && orca terminal read --title "Antigravity"
 
 Dùng `caveman` (plugin `/caveman`) cho hầu hết tình huống để tiết kiệm ~75% token. Không dùng khi viết proposal, tài liệu, hoặc xuất HTML.
 
-> Để biết dispatch, skill install, AgentMemory — xem `llmwiki/skills/setup/orca-dispatch-reference.md`
+> Để biết dispatch, skill install, AgentMemory — xem `llmwiki/skills/orchestrate/orca-dispatch-reference.md`
 
 
 ---

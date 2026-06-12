@@ -132,8 +132,8 @@ Task agent-2: Analyze batch 2 (files 16-30)
 **Tạo:**
 - `llmwiki/wiki/concepts/` — mỗi layer 1 file
 - `llmwiki/wiki/entities/` — domain entities + `project-structure.md` + `fe-style.md`
-- `llmwiki/wiki/architecture/` — index, layers, dependencies, entry-points
-- `llmwiki/wiki/tours/onboarding-tour.md`
+- `llmwiki/wiki/concepts/` — index, layers, dependencies, entry-points
+- `llmwiki/wiki/concepts/onboarding-tour.md`
 - `llmwiki/wiki/index.md` — master index
 - `AGENT-business.md` — business rules
 

@@ -191,4 +191,4 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
 orca orchestration run --spec "Propose: <tính năng>. Query wiki, tạo draft, gate chờ duyệt."
 ```
 
-> Dispatch chi tiết: `llmwiki/skills/setup/orca-dispatch-reference.md`
+> Dispatch chi tiết: `llmwiki/skills/orchestrate/orca-dispatch-reference.md`
