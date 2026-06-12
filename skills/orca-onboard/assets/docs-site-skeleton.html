@@ -189,12 +189,12 @@ nav a.active{color:#0a84ff;background:rgba(10,132,255,.08);font-weight:600}
 body{padding-left:200px}
 .hero{padding-top:72px}
 @media(max-width:640px){
-  nav{top:0;left:0;right:0;bottom:auto;width:auto;height:48px;flex-direction:row;align-items:center;padding:0 20px;border-right:none;border-bottom:1px solid var(--glass-border,var(--border))}
-  nav .logo{margin:0 14px 0 0;padding:0}
-  .nav-scroll{flex-direction:row;overflow-x:auto;overflow-y:visible}
+  /* KHÔNG top bar — màn hẹp: sidebar overlay đè content, mặc định thu gọn (JS), chỉ còn nút toggle */
   body{padding-left:0}
-  .hero{padding-top:110px}
+  nav{box-shadow:0 8px 30px rgba(0,0,0,.14)}
+  .hero{padding-top:64px}
 }
+@media(max-width:700px){nav .logo{display:block}}
 .hero h1{background:linear-gradient(135deg,#0a84ff,#5aa2e8,#cfe3fb);-webkit-background-clip:text;background-clip:text;color:transparent}
 .section-header h2{color:#1d1d1f !important}
 /* content accent cycle — Apple secondary */
@@ -235,7 +235,7 @@ body.nav-collapsed{padding-left:0 !important}
   transition:left .28s cubic-bezier(.4,0,.2,1),background .15s,color .15s}
 .nav-toggle:hover{color:#0a84ff;background:rgba(255,255,255,.9)}
 body.nav-collapsed .nav-toggle{left:12px}
-@media(max-width:640px){.nav-toggle{display:none}}
+/* toggle hiện ở mọi cỡ màn — mobile dùng nó thay top bar */
 </style>
 </head>
 <body>
@@ -428,7 +428,9 @@ initDraggableDiagrams();
   const apply = c => { document.body.classList.toggle('nav-collapsed', c); btn.textContent = c ? '☰' : '⟨';
     try { localStorage.setItem('navCollapsed', c ? '1' : '0'); } catch(e){} };
   btn.addEventListener('click', () => apply(!document.body.classList.contains('nav-collapsed')));
-  try { if (localStorage.getItem('navCollapsed') === '1') apply(true); } catch(e){}
+  try { const s = localStorage.getItem('navCollapsed');
+    if (s === '1' || (s !== '0' && matchMedia('(max-width:640px)').matches)) apply(true);
+  } catch(e){}
 })();
 </script>
 </body>

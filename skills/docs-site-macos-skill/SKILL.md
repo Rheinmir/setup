@@ -129,9 +129,9 @@ The **repo card** and **converter mockup** use a macOS window header:
 </div>
 ```
 
-### Navigation — SIDEBAR (desktop) / top bar (mobile)
+### Navigation — SIDEBAR ONLY (không bao giờ dùng top bar)
 
-Desktop ≥640px: fixed LEFT SIDEBAR, không phải top bar:
+Mọi cỡ màn hình đều dùng LEFT SIDEBAR + nút collapse. ⛔ KHÔNG có chế độ top bar — top bar nhồi link wrap chữ rất xấu trên màn hẹp. Màn hẹp (<640px): sidebar OVERLAY đè content (body giữ padding-left:0), mặc định THU GỌN, user mở bằng nút toggle:
 
 ```css
 nav{position:fixed;top:0;left:0;bottom:0;width:200px;z-index:100;
@@ -144,17 +144,15 @@ nav a{padding:8px 12px;border-radius:10px;font-size:13px}
 nav a.active{color:#0a84ff;background:rgba(10,132,255,.08);font-weight:600}
 body{padding-left:200px}
 @media(max-width:640px){
-  nav{top:0;left:0;right:0;bottom:auto;width:auto;height:48px;flex-direction:row;align-items:center;
-    padding:0 20px;border-right:none;border-bottom:1px solid var(--border)}
-  nav .logo{margin:0 14px 0 0;padding:0}
-  body{padding-left:0}
+  body{padding-left:0}                       /* sidebar overlay, không chiếm column */
+  nav{box-shadow:0 8px 30px rgba(0,0,0,.14)} /* nổi trên content khi mở */
 }
 ```
 
 - Tier-1 glass cho cả hai dạng
 - Scroll spy via IntersectionObserver watching `section[id]` (selector `nav a` không đổi)
 
-**Collapse toggle (BẮT BUỘC với sidebar):** nút glass 30×30 lơ lửng ở mép phải sidebar (`left:208px`); bấm → sidebar `translateX(-100%)`, `body{padding-left:0}` (trả lại nguyên column, KHÔNG chừa cột trống), nút trượt về `left:12px` thành nút mở. Icon `⟨` (mở) / `☰` (đóng). Trạng thái nhớ qua `localStorage('navCollapsed')`. Ẩn nút ở <640px (top bar không cần). JS tự tạo button — không cần sửa markup:
+**Collapse toggle (BẮT BUỘC với sidebar):** nút glass 30×30 lơ lửng ở mép phải sidebar (`left:208px`); bấm → sidebar `translateX(-100%)`, `body{padding-left:0}` (trả lại nguyên column, KHÔNG chừa cột trống), nút trượt về `left:12px` thành nút mở. Icon `⟨` (mở) / `☰` (đóng). Trạng thái nhớ qua `localStorage('navCollapsed')`. Nút hiện ở MỌI cỡ màn; màn hẹp mặc định collapsed (localStorage chưa có thì matchMedia 640px quyết). JS tự tạo button — không cần sửa markup:
 
 ```js
 (function(){
@@ -164,7 +162,9 @@ body{padding-left:200px}
   const apply = c => { document.body.classList.toggle('nav-collapsed', c); btn.textContent = c ? '☰' : '⟨';
     try { localStorage.setItem('navCollapsed', c ? '1' : '0'); } catch(e){} };
   btn.addEventListener('click', () => apply(!document.body.classList.contains('nav-collapsed')));
-  try { if (localStorage.getItem('navCollapsed') === '1') apply(true); } catch(e){}
+  try { const s = localStorage.getItem('navCollapsed');
+    if (s === '1' || (s !== '0' && matchMedia('(max-width:640px)').matches)) apply(true);
+  } catch(e){}
 })();
 ```
 
@@ -180,7 +180,7 @@ body.nav-collapsed{padding-left:0}
   transition:left .28s cubic-bezier(.4,0,.2,1)}
 .nav-toggle:hover{color:#0a84ff}
 body.nav-collapsed .nav-toggle{left:12px}
-@media(max-width:640px){.nav-toggle{display:none}}
+/* .nav-toggle hiện ở mọi cỡ màn */
 ```
 
 ## Page Architecture
