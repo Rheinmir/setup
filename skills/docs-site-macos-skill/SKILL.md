@@ -330,7 +330,7 @@ Apply to SVG elements: `.flow` (dashed arrows), `.pulse` (nodes), `.float` (outp
 - **Nodes**: `rx="6"` or `rx="8"` rounded rects with `fill="rgba(255,255,255,.7)"` and colored stroke
 - **Arrows**: `<line>` with `marker-end="url(#arrowN)"` using `<marker>` def, `stroke-width="2"`, and `.flow` class
 - **Text**: `text-anchor="middle"`, `font-size="9-11"`, `font-weight="600"` for labels
-- Use `font-family` from the page (`Inter, -apple-system, ...`)
+- Use `font-family` from the page (`var(--font-text)` — macOS-first stack, see Font section)
 - Always include `xmlns="http://www.w3.org/2000/svg"` on `<svg>`
 
 ### Node-Draggable Diagrams (REQUIRED for every `.diagram-box`)
@@ -596,9 +596,22 @@ sections.forEach(s => observer.observe(s));
 
 ## Font
 
-System fonts ONLY — NO Google Fonts `<link>`, no `@import`, no webfont download:
+System fonts ONLY — NO Google Fonts `<link>`, no `@import`, no webfont download. Ưu tiên bộ font macOS (San Francisco); máy không có SF thì rơi xuống Roboto / Segoe UI — các fallback đều phải thanh lịch, không để rơi về Arial/Times:
 
-Font stack: `-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'Helvetica Neue', sans-serif`
+```css
+:root{
+  --font-text: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', 'Roboto', 'Segoe UI', sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', 'Roboto', 'Segoe UI', sans-serif;
+  --font-mono: 'SF Mono', ui-monospace, 'SFMono-Regular', Menlo, 'Roboto Mono', Consolas, monospace;
+}
+body{font-family:var(--font-text)}
+h1,h2,h3,.logo{font-family:var(--font-display);letter-spacing:-.02em}  /* SF Pro Display cho cỡ ≥20px */
+pre.code-block,.foot-tree{font-family:var(--font-mono)}
+```
+
+- `-apple-system`/`BlinkMacSystemFont` đã resolve ra San Francisco trên macOS — 'SF Pro Text/Display' chỉ là tên tường minh cho máy cài rời.
+- Roboto/Segoe UI là fallback hệ (Android/Linux/Windows có sẵn) — KHÔNG tải webfont để giữ self-contained.
+- Mono luôn đi qua `ui-monospace` trước Menlo để bắt SF Mono trên macOS mới.
 
 ## Self-Contained — CRITICAL
 
