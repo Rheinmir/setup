@@ -236,6 +236,16 @@ body.nav-collapsed{padding-left:0 !important}
 .nav-toggle:hover{color:#0a84ff;background:rgba(255,255,255,.9)}
 body.nav-collapsed .nav-toggle{left:12px}
 /* toggle hiện ở mọi cỡ màn — mobile dùng nó thay top bar */
+
+/* ═══ ripple effect cho nút sidebar — lan tròn từ đúng điểm chạm ═══ */
+nav a,.nav-toggle{position:relative;overflow:hidden}
+.ripple-ink{position:absolute;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(10,132,255,.28) 0%,rgba(10,132,255,.16) 60%,transparent 100%);
+  transform:scale(0);opacity:1;animation:rippleGrow .55s cubic-bezier(.25,.46,.45,.94) forwards}
+@keyframes rippleGrow{
+  60%{transform:scale(1);opacity:.6}
+  100%{transform:scale(1);opacity:0}
+}
 </style>
 </head>
 <body>
@@ -431,6 +441,28 @@ initDraggableDiagrams();
   try { const s = localStorage.getItem('navCollapsed');
     if (s === '1' || (s !== '0' && matchMedia('(max-width:640px)').matches)) apply(true);
   } catch(e){}
+})();
+</script>
+
+<script>
+/* ripple — vòng tròn lan ra từ đúng toạ độ click, phủ hết div của nút */
+(function(){
+  function attach(el){
+    el.addEventListener('pointerdown', function(e){
+      const r = el.getBoundingClientRect();
+      const x = e.clientX - r.left, y = e.clientY - r.top;
+      // bán kính = khoảng cách xa nhất tới 4 góc -> scale(1) là phủ kín nút
+      const rad = Math.hypot(Math.max(x, r.width - x), Math.max(y, r.height - y));
+      const ink = document.createElement('span');
+      ink.className = 'ripple-ink';
+      ink.style.width = ink.style.height = rad * 2 + 'px';
+      ink.style.left = (x - rad) + 'px';
+      ink.style.top  = (y - rad) + 'px';
+      el.appendChild(ink);
+      ink.addEventListener('animationend', () => ink.remove());
+    });
+  }
+  document.querySelectorAll('nav a, .nav-toggle').forEach(attach);
 })();
 </script>
 </body>

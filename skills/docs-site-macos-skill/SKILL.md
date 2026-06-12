@@ -140,7 +140,7 @@ nav{position:fixed;top:0;left:0;bottom:0;width:200px;z-index:100;
   border-right:1px solid var(--border)}
 nav .logo{margin:0 0 12px;padding:6px 10px;
   background:linear-gradient(135deg,#0a84ff,#64b5f7);-webkit-background-clip:text;background-clip:text;color:transparent}
-nav a{padding:8px 12px;border-radius:10px;font-size:13px}
+nav a{padding:8px 12px;border-radius:10px;font-size:13px;position:relative;overflow:hidden}
 nav a.active{color:#0a84ff;background:rgba(10,132,255,.08);font-weight:600}
 body{padding-left:200px}
 @media(max-width:640px){
@@ -148,6 +148,34 @@ body{padding-left:200px}
   nav{box-shadow:0 8px 30px rgba(0,0,0,.14)} /* nổi trên content khi mở */
 }
 ```
+
+**Ripple effect (BẮT BUỘC trên nút sidebar + toggle):** click vào đâu, một hình tròn lan ra TỪ ĐÚNG TOẠ ĐỘ đó và phủ từ từ kín nút (bán kính = khoảng cách xa nhất tới 4 góc), rồi fade. Phần tử cha cần `position:relative;overflow:hidden`:
+
+```css
+.ripple-ink{position:absolute;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(10,132,255,.28) 0%,rgba(10,132,255,.16) 60%,transparent 100%);
+  transform:scale(0);opacity:1;animation:rippleGrow .55s cubic-bezier(.25,.46,.45,.94) forwards}
+@keyframes rippleGrow{60%{transform:scale(1);opacity:.6}100%{transform:scale(1);opacity:0}}
+```
+
+```js
+(function(){
+  function attach(el){
+    el.addEventListener('pointerdown', function(e){
+      const r = el.getBoundingClientRect();
+      const x = e.clientX - r.left, y = e.clientY - r.top;
+      const rad = Math.hypot(Math.max(x, r.width - x), Math.max(y, r.height - y));
+      const ink = document.createElement('span'); ink.className = 'ripple-ink';
+      ink.style.width = ink.style.height = rad * 2 + 'px';
+      ink.style.left = (x - rad) + 'px'; ink.style.top = (y - rad) + 'px';
+      el.appendChild(ink);
+      ink.addEventListener('animationend', () => ink.remove());
+    });
+  }
+  document.querySelectorAll('nav a, .nav-toggle').forEach(attach);
+})();
+```
+Chạy SAU script tạo .nav-toggle để nút toggle cũng có ripple.
 
 - Tier-1 glass cho cả hai dạng
 - Scroll spy via IntersectionObserver watching `section[id]` (selector `nav a` không đổi)
