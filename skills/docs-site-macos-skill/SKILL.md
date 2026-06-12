@@ -45,15 +45,16 @@ body{
 
 Keep it this quiet — blue-family tints only, no loud glow layers ("light pollution"). The per-section `.s-bgN::before` overlays add the rest of the local variation.
 
-**Base refraction plane (BẮT BUỘC — gương phải thấy gì bên dưới):** gradient phẳng không đủ cho blur "nghiền" — thêm 2 lớp fixed `z-index:-1` dưới mọi content: (1) ORBS — 4-5 radial blobs lớn (blue chủ đạo + 1-2 tint Apple secondary, alpha .06-.17) trôi rất chậm (~46s ease alternate, translate ≤2.5% + scale ≤1.05); (2) DOT-GRID mảnh 1px/22px alpha ~.11 có mask fade dọc — chi tiết tần số cao để backdrop-filter biến thành texture kính thật. Kèm `@media (prefers-reduced-motion:reduce){animation:none}`:
+**Base refraction plane (BẮT BUỘC — gương phải thấy gì bên dưới):** gradient phẳng không đủ cho blur "nghiền" — thêm 2 lớp fixed `z-index:-1` dưới mọi content: (1) ORBS — 5-6 radial blobs lớn (blue chủ đạo + 1-2 tint Apple secondary, alpha .06-.22) trôi rất chậm (~46s ease alternate, translate ≤2.5% + scale ≤1.05); (2) DOT-GRID mảnh 1px/22px alpha ~.11 có mask fade dọc — chi tiết tần số cao để backdrop-filter biến thành texture kính thật. **Đặt ít nhất 1-2 orb dọc mép TRÁI viewport (sau lưng sidebar)** — sidebar là pane kính lớn nhất trang, không có màu sau lưng thì blur cỡ nào cũng ra tấm trắng. Kèm `@media (prefers-reduced-motion:reduce){animation:none}`:
 
 ```css
 body::before{content:'';position:fixed;inset:-10%;z-index:-1;pointer-events:none;
   background:
-    radial-gradient(640px 440px at 10% 14%,rgba(10,132,255,.17),transparent 65%),
+    radial-gradient(640px 440px at 10% 14%,rgba(10,132,255,.22),transparent 65%),
+    radial-gradient(380px 460px at 4% 52%,rgba(48,176,199,.18),transparent 65%),
     radial-gradient(540px 400px at 88% 10%,rgba(88,86,214,.13),transparent 60%),
     radial-gradient(720px 500px at 74% 76%,rgba(48,176,199,.13),transparent 65%),
-    radial-gradient(480px 380px at 16% 86%,rgba(255,149,0,.08),transparent 60%);
+    radial-gradient(480px 380px at 16% 86%,rgba(255,149,0,.12),transparent 60%);
   animation:orbDrift 46s ease-in-out infinite alternate}
 @keyframes orbDrift{100%{transform:translate(2.2%,1.6%) scale(1.045)}}
 body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
@@ -133,6 +134,7 @@ For each section, use the accent for:
 - Text never sits on heavy blur alone; tier 3 (near-solid) backs all long-form reading and tables.
 - Stacked glass must differ by at least one tier (alpha AND blur step) or the layers collapse into mud.
 - Glow stays faint and blue-family only — depth comes from the ladder, edges, and shadow, not atmosphere.
+- **Large chrome panes (sidebar, full-height panels) NEVER use one flat alpha** — flat white fill reads as a milky wall ("màu trơn trông chắn"). They need gradient-alpha glass + a specular sheen `::before` + a color orb directly behind them. See the Navigation section for the canonical recipe.
 
 ### macOS Chrome Elements
 
@@ -150,11 +152,23 @@ The **repo card** and **converter mockup** use a macOS window header:
 
 Mọi cỡ màn hình đều dùng LEFT SIDEBAR + nút collapse. ⛔ KHÔNG có chế độ top bar — top bar nhồi link wrap chữ rất xấu trên màn hẹp. Màn hẹp (<640px): sidebar OVERLAY đè content (body giữ padding-left:0), mặc định THU GỌN, user mở bằng nút toggle:
 
+⚠️ **Sidebar PHẢI là kính thật, không phải tấm trắng sữa** (bài học 12/06/2026 — user chê "màu trơn trông hơi chắn"): fill phẳng `--glass-1` alpha .55 trên nền sáng ra "sữa" đục, không ra gương. Pane chrome LỚN (sidebar, panel cao full màn) bắt buộc 3 thứ: (1) **gradient-alpha glass** — alpha biến thiên dọc mặt kính thay vì một hằng số; (2) **specular sheen** `::before` — vùng sáng radial góc trên + dải sheen chéo; (3) **orb màu ngay sau lưng pane** (xem Background Plane) — blur 24px phải có màu thật để nghiền. `--glass-1` chỉ còn dùng cho floating panel nhỏ:
+
 ```css
 nav{position:fixed;top:0;left:0;bottom:0;width:200px;z-index:100;
   display:flex;flex-direction:column;align-items:stretch;gap:2px;padding:18px 12px;
-  background:var(--glass-1);backdrop-filter:blur(var(--blur-1)) saturate(1.1);
-  border-right:1px solid var(--border)}
+  background:linear-gradient(165deg,rgba(255,255,255,.46) 0%,rgba(255,255,255,.22) 48%,rgba(240,248,255,.34) 100%);
+  backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
+  -webkit-backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
+  border-right:1px solid rgba(255,255,255,.55);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 1px 0 0 rgba(255,255,255,.5),
+    inset -1px 0 0 rgba(30,90,170,.10),4px 0 24px rgba(30,90,170,.08)}
+/* specular sheen — vệt sáng chéo trên mặt kính; con của nav cần position:relative để nổi trên sheen */
+nav::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(220px 160px at 18% 4%,rgba(255,255,255,.55),transparent 70%),
+    linear-gradient(115deg,rgba(255,255,255,.28) 0%,transparent 28%,transparent 72%,rgba(255,255,255,.14) 100%)}
+nav>*{position:relative}
 nav .logo{margin:0 0 12px;padding:6px 10px;
   background:linear-gradient(135deg,#0a84ff,#64b5f7);-webkit-background-clip:text;background-clip:text;color:transparent}
 nav a{padding:8px 12px;border-radius:10px;font-size:13px;position:relative;overflow:hidden}
@@ -227,8 +241,11 @@ body.nav-collapsed nav{transform:translateX(-100%)}
 body.nav-collapsed{padding-left:0}
 .nav-toggle{position:fixed;top:12px;left:12px;z-index:120;width:32px;height:32px;border-radius:10px;
   display:flex;align-items:center;justify-content:center;font-size:14px;color:#4a4a55;cursor:pointer;
-  background:var(--glass-1);backdrop-filter:blur(var(--blur-1)) saturate(1.1);
-  border:1px solid var(--border);box-shadow:var(--edge-hi),0 2px 10px rgba(0,0,0,.08);
+  background:linear-gradient(165deg,rgba(255,255,255,.5),rgba(255,255,255,.24));
+  backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
+  -webkit-backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
+  border:1px solid rgba(255,255,255,.55);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 2px 10px rgba(30,90,170,.10);
   transition:opacity .2s,transform .28s cubic-bezier(.4,0,.2,1)}
 .nav-toggle:hover{color:#0a84ff}
 body:not(.nav-collapsed) .nav-toggle{opacity:0;pointer-events:none;transform:translateX(-6px)}
