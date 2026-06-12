@@ -154,6 +154,35 @@ body{padding-left:200px}
 - Tier-1 glass cho cả hai dạng
 - Scroll spy via IntersectionObserver watching `section[id]` (selector `nav a` không đổi)
 
+**Collapse toggle (BẮT BUỘC với sidebar):** nút glass 30×30 lơ lửng ở mép phải sidebar (`left:208px`); bấm → sidebar `translateX(-100%)`, `body{padding-left:0}` (trả lại nguyên column, KHÔNG chừa cột trống), nút trượt về `left:12px` thành nút mở. Icon `⟨` (mở) / `☰` (đóng). Trạng thái nhớ qua `localStorage('navCollapsed')`. Ẩn nút ở <640px (top bar không cần). JS tự tạo button — không cần sửa markup:
+
+```js
+(function(){
+  const nav = document.querySelector('nav'); if (!nav) return;
+  const btn = document.createElement('button'); btn.className = 'nav-toggle'; btn.textContent = '⟨';
+  document.body.appendChild(btn);
+  const apply = c => { document.body.classList.toggle('nav-collapsed', c); btn.textContent = c ? '☰' : '⟨';
+    try { localStorage.setItem('navCollapsed', c ? '1' : '0'); } catch(e){} };
+  btn.addEventListener('click', () => apply(!document.body.classList.contains('nav-collapsed')));
+  try { if (localStorage.getItem('navCollapsed') === '1') apply(true); } catch(e){}
+})();
+```
+
+```css
+nav{transition:transform .28s cubic-bezier(.4,0,.2,1)}
+body{transition:padding-left .28s cubic-bezier(.4,0,.2,1)}
+body.nav-collapsed nav{transform:translateX(-100%)}
+body.nav-collapsed{padding-left:0}
+.nav-toggle{position:fixed;top:12px;left:208px;z-index:120;width:30px;height:30px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-size:13px;color:#4a4a55;cursor:pointer;
+  background:var(--glass-1);backdrop-filter:blur(var(--blur-1)) saturate(1.1);
+  border:1px solid var(--border);box-shadow:var(--edge-hi),0 2px 10px rgba(0,0,0,.08);
+  transition:left .28s cubic-bezier(.4,0,.2,1)}
+.nav-toggle:hover{color:#0a84ff}
+body.nav-collapsed .nav-toggle{left:12px}
+@media(max-width:640px){.nav-toggle{display:none}}
+```
+
 ## Page Architecture
 
 ```
