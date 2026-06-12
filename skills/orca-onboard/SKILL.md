@@ -582,12 +582,16 @@ fi
 - Checkboxes: `<input type="checkbox">` — NO `☐` Unicode
 - Apply `docs-site-macos` style (glassmorphism, macOS chrome)
 
-**Style contract (BẮT BUỘC — inject nguyên văn vào SPEC, verify sau khi sinh):**
-- LIGHT THEME ONLY: nền trắng (`--bg: #f5f5f7` hoặc `#ffffff`), chữ đen (`--text: #1d1d1f`), secondary `#6e6e73`
-- Glassmorphism: card `rgba(255,255,255,0.7-0.85)` + `backdrop-filter: blur(...)` + border `rgba(255,255,255,0.5)` + shadow mềm
-- macOS chrome: thanh cửa sổ với 3 chấm traffic-light (#ff5f57/#ffbd2e/#28c840), font stack `-apple-system`
-- Accent colors per section: tự do
-- ⛔ TUYỆT ĐỐI KHÔNG có `@media (prefers-color-scheme: dark)` — máy user dark mode sẽ lật trắng thành đen, mất toàn bộ phong cách. Verify: `grep -c 'prefers-color-scheme' file.html` phải = 0, nếu ≠ 0 → strip block đó trước khi báo done.
+**Style = SKELETON TĨNH, không phải prompt (bài học 2026-06-12):**
+Mô tả style bằng tính từ ("glassmorphism, macOS chrome") cho model là vô vọng — recipe thật của docs-site-macos gồm token màu chính xác + ~100 dòng JS draggable-whiteboard mà không model nào tự phát minh lại được, và opencode không đọc được skill của Claude host. CSS/JS giống nhau 100% mọi lần chạy → là template tĩnh, không phải output của LLM.
+
+→ Dùng skeleton đóng băng tại `assets/docs-site-skeleton.html` (cạnh SKILL.md này): toàn bộ CSS docs-site-macos (glass, accent cycle 6 màu, checklist, code-copy) + JS (scroll spy, copy button, draggable node-graph whiteboard: kéo từng node, pan, zoom, reset, auto-fit viewBox) đã đóng băng. Model CHỈ điền `{{PLACEHOLDER}}` + vùng `<!--SECTIONS:START/END-->` theo SECTION TEMPLATE chú thích sẵn trong file.
+
+**Verify sau khi fill (grep, không tin lời model):**
+- `grep -c 'prefers-color-scheme'` = 0
+- `grep -c 'initDraggableDiagrams'` ≥ 2 (định nghĩa + gọi)
+- `grep -c '{{'` = 0 (không placeholder sót)
+- `grep -c 'backdrop-filter'` ≥ 5
 
 **Skip check:** `RESUME_MODE=true` + `PHASE4_STATUS=done` → skip.
 
@@ -595,27 +599,32 @@ fi
 if [ "$RESUME_MODE" != "true" ] || [ "$PHASE4_STATUS" != "done" ]; then
   update_phase_status "Phase 4 —" "in-progress"
 
-  SPEC="Generate onboarding HTML doc from wiki files at llmwiki/wiki/.
-Cover: project overview, architecture layers, domain flows, guided tour.
-Apply docs-site-macos style: LIGHT THEME ONLY — white background (--bg: #f5f5f7), black text (--text: #1d1d1f),
-glassmorphism cards rgba(255,255,255,0.7-0.85) with backdrop-filter blur, macOS window chrome bar with
-traffic-light dots, -apple-system font stack, animated SVG diagrams, per-section accent colors (free choice).
-STRICTLY FORBIDDEN: any '@media (prefers-color-scheme: dark)' block — light theme must hold on dark-mode machines.
-Output: llmwiki/html/onboarding-${PROJECT_SLUG}.html
-Use real <input type='checkbox'> not Unicode checkboxes."
-
-  opencode run "$SPEC" --model opencode/deepseek-v4-flash-free < /dev/null \
-    || {
-      echo "[Phase 4] opencode unavailable — falling back to docs-site-macos skill (Claude)"
-      # Invoke docs-site-macos skill in Claude main thread as fallback
-    }
-
   HTML_OUT="$PROJECT_ROOT/llmwiki/html/onboarding-${PROJECT_SLUG}.html"
-  ls "$HTML_OUT" && echo "✅ Phase 4 done" || echo "❌ Phase 4 FAIL: HTML not found"
-  # Style verify: dark-mode block lọt vào → strip ngay (Claude làm bằng python, match ngoặc cân bằng)
-  if [ -f "$HTML_OUT" ] && grep -q 'prefers-color-scheme' "$HTML_OUT"; then
-    echo "[Phase 4] WARN: dark-mode block detected — strip it before reporting done"
-  fi
+  # 1. Copy skeleton (CSS/JS đóng băng — resolve cạnh SKILL.md đã cài)
+  SKEL=""
+  for c in ~/.agents/skills/orca-onboard/assets/docs-site-skeleton.html \
+           ~/.claude/skills/orca-onboard/assets/docs-site-skeleton.html; do
+    [ -f "$c" ] && SKEL="$c" && break
+  done
+  [ -z "$SKEL" ] && echo "❌ Phase 4 FAIL: skeleton missing — re-install skill" && exit 1
+  cp "$SKEL" "$HTML_OUT"
+
+  # 2. Model chỉ FILL placeholder — không sinh CSS/JS
+  SPEC="Edit the file $HTML_OUT IN PLACE. It is a frozen HTML skeleton: do NOT modify anything inside <style> or <script>.
+Replace ONLY: {{PROJECT_NAME}}, {{HERO_SUBTITLE}}, {{STATS}}, {{NAV_LINKS}}, {{REPO_URL}}, {{REPO_BLURB}}, {{FOOTER_NOTE}},
+and write the sections between <!--SECTIONS:START--> and <!--SECTIONS:END--> following the SECTION TEMPLATE comment in the file.
+Content source (read these): .understand-anything/ONBOARDING.md and llmwiki/wiki/ pages (architecture/, concepts/, entities/, tours/).
+Sections to build: architecture+key-flow (with draggable SVG diagram per template rules), layers table, domain flows (SVG), hot files & git history, guided tour (checklist with real checkboxes), tests & release (code block).
+SVG rules are in the template comment: nodes = rect >=70x30 with text inside bounds, connectors = <line> only."
+  opencode run "$SPEC" --model opencode/deepseek-v4-flash-free < /dev/null \
+    || echo "[Phase 4] opencode unavailable — Claude main thread fills the slots itself"
+
+  # 3. Verify bằng grep — fail tiêu chí nào thì Claude tự sửa file tiêu chí đó
+  ls "$HTML_OUT" || { echo "❌ Phase 4 FAIL: HTML not found"; exit 1; }
+  [ "$(grep -c 'prefers-color-scheme' "$HTML_OUT")" = "0" ] || echo "[Phase 4] FIX NEEDED: dark-mode block lọt vào — strip"
+  grep -q 'initDraggableDiagrams' "$HTML_OUT" || echo "[Phase 4] FIX NEEDED: script draggable bị model xoá — restore từ skeleton"
+  grep -q '{{' "$HTML_OUT" && echo "[Phase 4] FIX NEEDED: placeholder chưa điền hết" || true
+  echo "✅ Phase 4 done"
 
   update_phase_status "Phase 4 —" "done"
 fi

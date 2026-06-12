@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<!--
+  docs-site-skeleton.html — orca-onboard Phase 4 template (style: docs-site-macos, LIGHT ONLY)
+  ════════════════════════════════════════════════════════════════════════════
+  CONTRACT cho model điền (DeepSeek/bất kỳ):
+  1. CHỈ thay các token {{...}} và vùng giữa <!--SECTIONS:START--> ... <!--SECTIONS:END-->.
+  2. TUYỆT ĐỐI KHÔNG sửa/xoá <style> và <script> — draggable whiteboard + glass đã đóng băng.
+  3. Mỗi section theo đúng pattern trong SECTION TEMPLATE bên dưới; id="sec-0..N", class="section-bg s-bg{i%6}".
+  4. SVG diagram: node = <rect> ≥70×30 (fill rgba(255,255,255,.7), stroke màu accent, rx=8)
+     + <text> có x/y NẰM TRONG rect; connector = <line x1 y1 x2 y2> (KHÔNG dùng <path>)
+     với marker-end + class="flow". JS tự biến mọi rect đủ lớn thành node kéo-thả.
+  5. KHÔNG thêm @media (prefers-color-scheme: dark).
+  6. Checkbox dùng <input type="checkbox"> + <label for> trong <ul class="checklist">.
+-->
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{PROJECT_NAME}} — Onboarding</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f0f7; --text:#0f0f12; --text-2:#4a4a55;
+  --glass:rgba(255,255,255,.7); --glass-border:rgba(255,255,255,.6);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.6}
+nav{position:fixed;top:0;left:0;right:0;height:48px;z-index:100;display:flex;align-items:center;gap:4px;
+  padding:0 20px;background:rgba(242,240,247,.82);backdrop-filter:blur(24px) saturate(1.4);
+  -webkit-backdrop-filter:blur(24px) saturate(1.4);border-bottom:1px solid rgba(0,0,0,.05)}
+nav .logo{font-weight:800;font-size:14px;background:linear-gradient(135deg,#6366f1,#a855f7);
+  -webkit-background-clip:text;background-clip:text;color:transparent;margin-right:14px;white-space:nowrap}
+nav a{font-size:12.5px;font-weight:500;color:var(--text-2);text-decoration:none;padding:5px 10px;border-radius:8px;
+  transition:all .15s;white-space:nowrap}
+nav a:hover{color:var(--text)}
+nav a.active{color:#6366f1;background:rgba(99,102,241,.1)}
+.nav-scroll{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.nav-scroll::-webkit-scrollbar{display:none}
+.hero{padding:120px 24px 56px;max-width:1100px;margin:0 auto;text-align:center}
+.hero h1{font-size:clamp(32px,5vw,56px);font-weight:800;letter-spacing:-.03em;line-height:1.1;
+  background:linear-gradient(135deg,#6366f1,#a855f7,#ec4899);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{margin-top:14px;font-size:16px;color:var(--text-2);max-width:640px;margin-left:auto;margin-right:auto}
+.stats{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:26px}
+.stat{background:var(--glass);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  border:1px solid var(--glass-border);border-radius:12px;padding:10px 18px;box-shadow:0 4px 20px rgba(0,0,0,.06)}
+.stat b{display:block;font-size:20px;font-weight:800;color:#6366f1}
+.stat span{font-size:11px;color:var(--text-2);font-weight:500}
+.repo-card{max-width:760px;margin:8px auto 0;background:var(--glass);backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);border:1px solid var(--glass-border);border-radius:16px;
+  box-shadow:0 4px 20px rgba(0,0,0,.06);overflow:hidden;text-align:left}
+.chrome{display:flex;align-items:center;gap:7px;padding:10px 14px;border-bottom:1px solid rgba(0,0,0,.05)}
+.url-bar{flex:1;background:rgba(0,0,0,.04);border-radius:7px;font-size:11.5px;color:var(--text-2);
+  padding:4px 12px;text-align:center;font-weight:500}
+.repo-body{padding:14px 18px;font-size:13px;color:var(--text-2)}
+.repo-body a{color:#6366f1;font-weight:600;text-decoration:none}
+section{padding:64px 24px 72px;max-width:1100px;margin:0 auto}
+.section-bg{position:relative;overflow:hidden}
+.section-bg::before{content:'';position:absolute;inset:0;pointer-events:none}
+.s-bg0::before{background:linear-gradient(180deg,rgba(99,102,241,.04) 0%,transparent 60%)}
+.s-bg1::before{background:linear-gradient(180deg,rgba(16,185,129,.04) 0%,transparent 60%)}
+.s-bg2::before{background:linear-gradient(180deg,rgba(245,158,11,.04) 0%,transparent 60%)}
+.s-bg3::before{background:linear-gradient(180deg,rgba(236,72,153,.04) 0%,transparent 60%)}
+.s-bg4::before{background:linear-gradient(180deg,rgba(6,182,212,.04) 0%,transparent 60%)}
+.s-bg5::before{background:linear-gradient(180deg,rgba(168,85,247,.04) 0%,transparent 60%)}
+.section-header{margin-bottom:28px;position:relative}
+.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  border-radius:20px;padding:4px 12px;margin-bottom:12px}
+.section-header h2{font-size:clamp(24px,3.4vw,34px);font-weight:800;letter-spacing:-.02em}
+.section-header p{margin-top:8px;font-size:14.5px;color:var(--text-2);max-width:720px}
+#sec-0 .tag,#sec-6 .tag{background:rgba(99,102,241,.12);color:#6366f1}
+#sec-0 .section-header h2,#sec-6 .section-header h2{color:#4338ca}
+#sec-0 .card h4,#sec-6 .card h4{color:#6366f1}
+#sec-0 .card li::before,#sec-6 .card li::before{color:#6366f1}
+#sec-1 .tag,#sec-7 .tag{background:rgba(5,150,105,.12);color:#059669}
+#sec-1 .section-header h2,#sec-7 .section-header h2{color:#047857}
+#sec-1 .card h4,#sec-7 .card h4{color:#059669}
+#sec-1 .card li::before,#sec-7 .card li::before{color:#059669}
+#sec-2 .tag,#sec-8 .tag{background:rgba(217,119,6,.12);color:#d97706}
+#sec-2 .section-header h2,#sec-8 .section-header h2{color:#b45309}
+#sec-2 .card h4,#sec-8 .card h4{color:#d97706}
+#sec-2 .card li::before,#sec-8 .card li::before{color:#d97706}
+#sec-3 .tag,#sec-9 .tag{background:rgba(219,39,119,.12);color:#db2777}
+#sec-3 .section-header h2,#sec-9 .section-header h2{color:#be185d}
+#sec-3 .card h4,#sec-9 .card h4{color:#db2777}
+#sec-3 .card li::before,#sec-9 .card li::before{color:#db2777}
+#sec-4 .tag,#sec-10 .tag{background:rgba(8,145,178,.12);color:#0891b2}
+#sec-4 .section-header h2,#sec-10 .section-header h2{color:#0e7490}
+#sec-4 .card h4,#sec-10 .card h4{color:#0891b2}
+#sec-4 .card li::before,#sec-10 .card li::before{color:#0891b2}
+#sec-5 .tag,#sec-11 .tag{background:rgba(147,51,234,.12);color:#9333ea}
+#sec-5 .section-header h2,#sec-11 .section-header h2{color:#7e22ce}
+#sec-5 .card h4,#sec-11 .card h4{color:#9333ea}
+#sec-5 .card li::before,#sec-11 .card li::before{color:#9333ea}
+.content-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:24px}
+.card{background:var(--glass);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  border:1px solid var(--glass-border);border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,.06);padding:20px}
+.card h4{font-size:14px;font-weight:700;margin-bottom:10px}
+.card ul{list-style:none}
+.card li{font-size:13px;color:var(--text-2);padding:4px 0 4px 18px;position:relative}
+.card li::before{content:'›';position:absolute;left:2px;font-weight:800}
+.card code{font-size:12px;background:rgba(0,0,0,.05);border-radius:5px;padding:1px 6px;font-family:'SF Mono',ui-monospace,Menlo,monospace}
+.table-wrap{margin-top:24px;background:var(--glass);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  border:1px solid var(--glass-border);border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,.06);overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-2);
+  padding:12px 16px;border-bottom:1px solid rgba(0,0,0,.07)}
+td{padding:10px 16px;border-bottom:1px solid rgba(0,0,0,.04);color:var(--text-2)}
+tr:last-child td{border-bottom:none}
+td b{color:var(--text)}
+td code{font-size:11.5px;background:rgba(0,0,0,.05);border-radius:5px;padding:1px 6px;font-family:'SF Mono',ui-monospace,Menlo,monospace}
+.diagram-box{background:rgba(255,255,255,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.6);border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,.06);
+  padding:24px;margin:24px 0;
+  position:relative;overflow:hidden;display:flex;flex-direction:column;
+  resize:vertical;min-height:160px;transition:box-shadow .2s ease}
+.diagram-box:hover{box-shadow:0 6px 28px rgba(0,0,0,.1)}
+.diagram-viewport{position:relative;flex:1 1 auto;width:100%;overflow:hidden;cursor:grab;touch-action:none}
+.diagram-viewport.grabbing{cursor:grabbing}
+.diagram-viewport svg{width:100%;height:auto;display:block;overflow:visible;transform-origin:0 0;
+  will-change:transform;user-select:none;-webkit-user-select:none}
+.dnode{cursor:move}
+.dnode>rect{transition:filter .15s ease}
+.dnode:hover>rect:first-of-type{filter:drop-shadow(0 3px 8px rgba(0,0,0,.18))}
+.diagram-hint{position:absolute;top:8px;right:12px;z-index:5;font-size:10px;color:#4a4a55;
+  background:rgba(255,255,255,.75);border:1px solid rgba(0,0,0,.05);border-radius:20px;
+  padding:3px 10px;white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none}
+.diagram-box:hover .diagram-hint{opacity:.9}
+.diagram-reset{position:absolute;bottom:8px;right:10px;z-index:5;font-size:11px;
+  background:rgba(255,255,255,.85);border:1px solid rgba(0,0,0,.08);border-radius:8px;
+  padding:3px 9px;cursor:pointer;color:#4a4a55;opacity:0;transition:opacity .2s}
+.diagram-box:hover .diagram-reset{opacity:1}
+.diagram-reset:hover{background:#fff;color:#0f0f12}
+.diagram-box::after{content:'';position:absolute;right:3px;bottom:3px;width:10px;height:10px;
+  border-right:2px solid rgba(0,0,0,.18);border-bottom:2px solid rgba(0,0,0,.18);
+  border-bottom-right-radius:3px;pointer-events:none}
+pre.code-block{background:#1e1e28;color:#cbd5e1;border-radius:14px;padding:18px 20px;font-size:12.5px;
+  font-family:'SF Mono',ui-monospace,Menlo,monospace;line-height:1.7;overflow-x:auto;margin-top:18px;
+  box-shadow:0 4px 20px rgba(0,0,0,.12)}
+pre.code-block .cm{color:#6b7280}
+.code-wrap{position:relative}
+.code-copy{position:absolute;top:8px;right:8px;z-index:2;font-size:11px;font-family:inherit;font-weight:500;
+  background:rgba(255,255,255,.1);color:#cbd5e1;border:1px solid rgba(255,255,255,.15);
+  border-radius:6px;padding:3px 10px;cursor:pointer;opacity:0;transition:opacity .15s,background .15s,color .15s}
+.code-wrap:hover .code-copy{opacity:1}
+.code-copy:hover{background:rgba(255,255,255,.2);color:#fff}
+.code-copy.copied{background:rgba(16,185,129,.25);color:#6ee7b7;border-color:rgba(16,185,129,.45);opacity:1}
+.checklist{list-style:none;display:flex;flex-direction:column;gap:8px}
+.checklist li{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text-2);cursor:pointer;padding:0}
+.checklist li::before{display:none}
+.checklist input[type="checkbox"]{width:16px;height:16px;border-radius:4px;border:1.5px solid #cbd5e1;
+  appearance:none;-webkit-appearance:none;cursor:pointer;flex-shrink:0;
+  background:rgba(255,255,255,.8);margin-top:2px;transition:all .15s}
+.checklist input[type="checkbox"]:checked{background:#6366f1;border-color:#6366f1;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M13 4L6.5 11 3 7.5' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");
+  background-size:contain}
+.checklist label{cursor:pointer;line-height:1.5}
+.checklist label b{color:var(--text)}
+.checklist input[type="checkbox"]:checked+label{text-decoration:line-through;color:#94a3b8}
+.tour-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:24px}
+.collapse-toggle{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#6366f1;
+  background:none;border:none;cursor:pointer;font-family:inherit;margin-top:14px;padding:6px 2px}
+.collapse-toggle .arrow{display:inline-block;transition:transform .25s cubic-bezier(.4,0,.2,1);font-size:10px}
+.collapse-toggle .arrow.open{transform:rotate(90deg)}
+.collapse-body{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1),opacity .25s ease;opacity:0}
+.collapse-body.open{max-height:800px;opacity:1}
+.collapse-body-inner{padding:12px 2px}
+footer{padding:40px 24px 60px;text-align:center;font-size:12.5px;color:var(--text-2)}
+footer code{background:rgba(0,0,0,.05);border-radius:5px;padding:1px 6px;font-size:11.5px}
+.src-note{margin-top:18px;font-size:12px;color:var(--text-2)}
+.src-note a{color:#6366f1;text-decoration:none;font-weight:600}
+@media (max-width:700px){
+  .content-grid,.tour-grid{grid-template-columns:1fr}
+  nav .logo{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="logo">{{PROJECT_NAME}} · onboarding</span>
+  <div class="nav-scroll">
+    {{NAV_LINKS}}<!-- mỗi section: <a href="#sec-i">Tên</a> -->
+  </div>
+</nav>
+
+<div class="hero">
+  <h1>{{PROJECT_NAME}}</h1>
+  <p>{{HERO_SUBTITLE}}</p>
+  <div class="stats">
+    {{STATS}}<!-- mỗi stat: <div class="stat"><b>217</b><span>nodes</span></div> -->
+  </div>
+  <div class="repo-card" style="margin-top:28px">
+    <div class="chrome">
+      <span style="width:12px;height:12px;border-radius:50%;background:#ff5f57"></span>
+      <span style="width:12px;height:12px;border-radius:50%;background:#ffbd2e"></span>
+      <span style="width:12px;height:12px;border-radius:50%;background:#28c840"></span>
+      <div class="url-bar">{{REPO_URL}}</div>
+    </div>
+    <div class="repo-body">{{REPO_BLURB}}</div>
+  </div>
+</div>
+
+<!--SECTIONS:START-->
+<!-- ════════ SECTION TEMPLATE (lặp cho mỗi section, i = 0..N-1) ════════
+<section id="sec-{i}" class="section-bg s-bg{i%6}">
+  <div class="section-header">
+    <span class="tag">0{i+1} · Nhãn</span>
+    <h2>Tiêu đề</h2>
+    <p>Mô tả ngắn.</p>
+  </div>
+  [tuỳ chọn] <div class="diagram-box">
+    <svg viewBox="0 0 900 220" xmlns="http://www.w3.org/2000/svg" font-family="Inter,-apple-system,sans-serif">
+      <defs>
+        <marker id="arrow{i}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#6366f1"/>
+        </marker>
+        <style>@keyframes flowArrow{0%{stroke-dashoffset:20}100%{stroke-dashoffset:0}}.flow{stroke-dasharray:6 4;animation:flowArrow 1.2s linear infinite}</style>
+      </defs>
+      <rect x="20" y="30" width="130" height="46" rx="8" fill="rgba(255,255,255,.7)" stroke="#6366f1" stroke-width="2"/>
+      <text x="85" y="49" text-anchor="middle" font-size="10" font-weight="700" fill="#4338ca">Node label</text>
+      <text x="85" y="63" text-anchor="middle" font-size="8.5" fill="#4a4a55">chi tiết file:line</text>
+      <line x1="150" y1="53" x2="196" y2="53" stroke="#6366f1" stroke-width="2" class="flow" marker-end="url(#arrow{i})"/>
+    </svg>
+  </div>
+  [tuỳ chọn] <div class="content-grid"> <div class="card"><h4>...</h4><ul><li>...</li></ul></div> ... </div>
+  [tuỳ chọn] <div class="table-wrap"><table>...</table></div>
+  [tuỳ chọn] <div class="code-wrap"><pre class="code-block">...</pre></div>
+  [tuỳ chọn checklist] <ul class="checklist"><li><input type="checkbox" id="cX"><label for="cX">...</label></li></ul>
+  <div class="src-note">Chi tiết: <a href="../wiki/...md">trang wiki</a></div>
+</section>
+════════ HẾT TEMPLATE ════════ -->
+{{SECTIONS}}
+<!--SECTIONS:END-->
+
+<footer>{{FOOTER_NOTE}}</footer>
+
+<script>
+/* scroll spy */
+const links = [...document.querySelectorAll('nav a')];
+const sections = [...document.querySelectorAll('section[id]')];
+const observer = new IntersectionObserver(entries => {
+  let active = '';
+  for (const entry of entries) if (entry.isIntersecting) active = entry.target.id;
+  if (active) links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + active));
+}, { rootMargin: '-40% 0px -55% 0px' });
+sections.forEach(s => observer.observe(s));
+
+/* collapse helper — dùng: onclick="toggleCollapse('idBody','idArrow')" */
+function toggleCollapse(bodyId, arrowId){
+  document.getElementById(bodyId).classList.toggle('open');
+  document.getElementById(arrowId).classList.toggle('open');
+}
+
+/* copy button trên mọi pre.code-block */
+function initCodeCopy() {
+  document.querySelectorAll('pre.code-block').forEach(pre => {
+    if (pre.dataset.copy) return; pre.dataset.copy = '1';
+    const code = pre.textContent;
+    const wrap = pre.closest('.code-wrap') || (() => {
+      const w = document.createElement('div'); w.className = 'code-wrap';
+      pre.parentNode.insertBefore(w, pre); w.appendChild(pre); return w; })();
+    const btn = document.createElement('button'); btn.className = 'code-copy'; btn.textContent = 'Copy';
+    wrap.appendChild(btn);
+    btn.addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText(code); }
+      catch { const ta = document.createElement('textarea'); ta.value = code;
+        document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+      btn.textContent = '✓ Copied'; btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1500);
+    });
+  });
+}
+initCodeCopy();
+
+/* draggable node-graph whiteboard cho mọi .diagram-box */
+function initDraggableDiagrams() {
+  const NS = 'http://www.w3.org/2000/svg';
+  const nearest = (nodes, x, y) => {
+    let best = null, bd = 1e9;
+    nodes.forEach(n => {
+      const cx = Math.max(n.x, Math.min(x, n.x + n.w)), cy = Math.max(n.y, Math.min(y, n.y + n.h));
+      const d = Math.hypot(x - cx, y - cy);
+      if (d < bd) { bd = d; best = n; }
+    });
+    return bd <= 42 ? best : null;
+  };
+  document.querySelectorAll('.diagram-box').forEach(box => {
+    const svg = box.querySelector('svg');
+    if (!svg || box.dataset.draggable) return;
+    box.dataset.draggable = '1';
+    const vp = document.createElement('div'); vp.className = 'diagram-viewport';
+    box.insertBefore(vp, svg); vp.appendChild(svg);
+    const hint = document.createElement('div'); hint.className = 'diagram-hint';
+    hint.textContent = '✥ kéo từng ô · kéo nền để pan · cuộn để zoom · kéo mép dưới để mở rộng';
+    box.appendChild(hint);
+    const reset = document.createElement('button'); reset.className = 'diagram-reset'; reset.textContent = '⟲ reset';
+    box.appendChild(reset);
+
+    const allRects = [...svg.querySelectorAll('rect')];
+    const nodes = allRects.filter(r => (+r.getAttribute('width')) >= 70 && (+r.getAttribute('height')) >= 30)
+      .map(r => ({ rect: r, x: +r.getAttribute('x'), y: +r.getAttribute('y'),
+        w: +r.getAttribute('width'), h: +r.getAttribute('height'), els: [r], tx: 0, ty: 0 }));
+    const inNode = (px, py) => nodes.find(n => px >= n.x-1 && px <= n.x+n.w+1 && py >= n.y-1 && py <= n.y+n.h+1);
+    [...svg.querySelectorAll('text')].forEach(t => {
+      const x = parseFloat(t.getAttribute('x')), y = parseFloat(t.getAttribute('y'));
+      if (isNaN(x) || isNaN(y)) return; const n = inNode(x, y); if (n) n.els.push(t);
+    });
+    allRects.forEach(r => { if (nodes.some(n => n.rect === r)) return;
+      const x = +r.getAttribute('x'), y = +r.getAttribute('y'), w = +r.getAttribute('width')||0, h = +r.getAttribute('height')||0;
+      const n = inNode(x+w/2, y+h/2); if (n) n.els.push(r); });
+    nodes.forEach(n => { const g = document.createElementNS(NS, 'g'); g.setAttribute('class', 'dnode');
+      n.rect.parentNode.insertBefore(g, n.rect); n.els.forEach(el => g.appendChild(el)); n.g = g; });
+
+    const lineEls = [...svg.querySelectorAll('line')].filter(l => l.hasAttribute('x1') && l.hasAttribute('x2'));
+    lineEls.forEach(l => { l._x1=+l.getAttribute('x1'); l._y1=+l.getAttribute('y1'); l._x2=+l.getAttribute('x2'); l._y2=+l.getAttribute('y2');
+      l._n1 = nearest(nodes, l._x1, l._y1); l._n2 = nearest(nodes, l._x2, l._y2); });
+    const reroute = () => lineEls.forEach(l => {
+      if (l._n1) { l.setAttribute('x1', l._x1+l._n1.tx); l.setAttribute('y1', l._y1+l._n1.ty); }
+      if (l._n2) { l.setAttribute('x2', l._x2+l._n2.tx); l.setAttribute('y2', l._y2+l._n2.ty); } });
+
+    const vbBase = (svg.getAttribute('viewBox') || '0 0 900 200').split(/\s+/).map(Number);
+    const fitViewBox = () => {
+      const pad = 16;
+      let minX = vbBase[0], minY = vbBase[1], maxX = vbBase[0]+vbBase[2], maxY = vbBase[1]+vbBase[3];
+      nodes.forEach(n => { minX = Math.min(minX, n.x+n.tx-pad); minY = Math.min(minY, n.y+n.ty-pad);
+        maxX = Math.max(maxX, n.x+n.w+n.tx+pad); maxY = Math.max(maxY, n.y+n.h+n.ty+pad); });
+      svg.setAttribute('viewBox', `${minX} ${minY} ${maxX-minX} ${maxY-minY}`);
+    };
+
+    let ptx=0, pty=0, scale=1;
+    const applyCanvas = () => { svg.style.transform = `translate(${ptx}px,${pty}px) scale(${scale})`; };
+    const toSvg = (cx, cy) => { const p = svg.createSVGPoint(); p.x=cx; p.y=cy; return p.matrixTransform(svg.getScreenCTM().inverse()); };
+    let mode=null, node=null, start=null, t0=null, p0=null;
+    vp.addEventListener('pointerdown', e => { vp.setPointerCapture(e.pointerId);
+      const g = e.target.closest && e.target.closest('g.dnode');
+      if (g) { mode='node'; node = nodes.find(n => n.g === g); start = toSvg(e.clientX, e.clientY); t0 = { x: node.tx, y: node.ty }; }
+      else { mode='pan'; p0 = { x: e.clientX-ptx, y: e.clientY-pty }; vp.classList.add('grabbing'); } });
+    vp.addEventListener('pointermove', e => {
+      if (mode==='node') { const c = toSvg(e.clientX, e.clientY); node.tx = t0.x+(c.x-start.x); node.ty = t0.y+(c.y-start.y);
+        node.g.setAttribute('transform', `translate(${node.tx},${node.ty})`); reroute(); }
+      else if (mode==='pan') { ptx = e.clientX-p0.x; pty = e.clientY-p0.y; applyCanvas(); } });
+    const end = () => { if (mode==='node') fitViewBox(); mode=null; node=null; vp.classList.remove('grabbing'); };
+    vp.addEventListener('pointerup', end); vp.addEventListener('pointercancel', end);
+    vp.addEventListener('wheel', e => { e.preventDefault();
+      const r = vp.getBoundingClientRect(), mx = e.clientX-r.left, my = e.clientY-r.top;
+      const ns = Math.min(4, Math.max(0.5, scale*(e.deltaY<0?1.1:0.9)));
+      ptx = mx-(mx-ptx)*(ns/scale); pty = my-(my-pty)*(ns/scale); scale = ns; applyCanvas(); }, { passive:false });
+    const doReset = () => { ptx=0; pty=0; scale=1; svg.style.transition='transform .3s cubic-bezier(.4,0,.2,1)'; applyCanvas();
+      setTimeout(() => { svg.style.transition=''; }, 320);
+      nodes.forEach(n => { n.tx=0; n.ty=0; n.g.setAttribute('transform', 'translate(0,0)'); }); reroute(); fitViewBox(); };
+    reset.addEventListener('click', doReset); vp.addEventListener('dblclick', doReset);
+  });
+}
+initDraggableDiagrams();
+</script>
+</body>
+</html>
