@@ -5,13 +5,21 @@
 #   MIGRATE : đã có llmwiki/    → cài + baseline audit, chỉ bật chặn khi hết nợ
 #
 # Usage:
-#   bash harness/scripts/install-harness.sh [project_root]
-#   (chạy từ bất kỳ đâu; mặc định project_root = thư mục hiện tại)
+#   bash harness/scripts/install-harness.sh [project_root]   # per-project (mặc định)
+#   bash harness/scripts/install-harness.sh --global         # global: hooks vào ~/.claude (mọi project llmwiki trên máy)
+#
+# GLOBAL mode: copy hooks+validators vào ~/.claude/harness/hooks/, đăng ký 4 hooks
+# vào ~/.claude/settings.json với shell guard `[ -d "$CLAUDE_PROJECT_DIR/llmwiki" ]`
+# — project không có llmwiki chỉ tốn ~1ms/tool-call, không python, không audit,
+# không false-positive (raw/ của data project, wiki/ của project ngoài).
+# Global KHÔNG thay thế per-project cho team: teammate clone repo chỉ được bảo vệ
+# khi harness/ + .claude/settings.json được commit vào repo (mode per-project).
+# Global cũng KHÔNG cài pre-commit (L2) và không chạy baseline audit.
 #
 # Nguồn file: ưu tiên bundle cạnh script; thiếu thì clone rheinmir/setup@orca.
 set -euo pipefail
 
-ROOT="$(cd "${1:-.}" && pwd)"
+if [ "${1:-}" = "--global" ]; then ROOT="$HOME"; else ROOT="$(cd "${1:-.}" && pwd)"; fi
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BUNDLE="$(cd "$SCRIPT_DIR/../.." && pwd)"   # repo chứa harness/ + llmwiki/
 TMP_CLONE=""
@@ -32,6 +40,56 @@ if ! src_ok "$SRC"; then
     || git clone --depth 1 -b orca https://github.com/rheinmir/setup.git "$TMP_CLONE" >/dev/null 2>&1
   SRC="$TMP_CLONE"
   src_ok "$SRC" || { warn "Template repo chưa có harness/ — sync template trước"; exit 1; }
+fi
+
+# ---------- 0.5. GLOBAL mode ----------
+if [ "${1:-}" = "--global" ]; then
+  GH="$HOME/.claude/harness"
+  mkdir -p "$GH/hooks/validators"
+  cp "$SRC/llmwiki/.claude/hooks/"*.py "$GH/hooks/"
+  cp "$SRC/harness/validators/"*.py "$GH/hooks/validators/"
+  log "GLOBAL: hooks + validators → $GH/hooks/"
+
+  SETTINGS="$HOME/.claude/settings.json"
+  [ -f "$SETTINGS" ] && cp "$SETTINGS" "$SETTINGS.bak.$(date +%s)" || echo '{}' > "$SETTINGS"
+  python3 - << 'PYEOF'
+import json, os
+path = os.path.expanduser("~/.claude/settings.json")
+cur = json.load(open(path))
+HOOKS_DIR = '$HOME/.claude/harness/hooks'
+def cmd(script):
+    # if-guard (KHÔNG dùng `&& ... || true` — nó nuốt exit 2, mất khả năng chặn)
+    return f'if [ -d "${{CLAUDE_PROJECT_DIR:-.}}/llmwiki" ]; then python3 "{HOOKS_DIR}/{script}"; fi'
+tpl = {
+    "PreToolUse":  {"matcher": "Write|Edit|MultiEdit|NotebookEdit|Bash", "script": "pre_tool_use.py"},
+    "PostToolUse": {"matcher": "Write|Edit|MultiEdit", "script": "post_tool_use.py"},
+    "Stop":        {"matcher": None, "script": "stop.py"},
+    "SessionEnd":  {"matcher": None, "script": "session_end.py"},
+}
+cur.setdefault("permissions", {}).setdefault("deny", [])
+for d in ["Write(./llmwiki/raw/**)", "Edit(./llmwiki/raw/**)", "MultiEdit(./llmwiki/raw/**)"]:
+    if d not in cur["permissions"]["deny"]:
+        cur["permissions"]["deny"].append(d)
+cur.setdefault("hooks", {})
+for event, spec in tpl.items():
+    defs = cur["hooks"].setdefault(event, [])
+    existing = {h.get("command") for d in defs for h in (d.get("hooks") or [])}
+    c = cmd(spec["script"])
+    if c not in existing:
+        entry = {"hooks": [{"type": "command", "command": c, "timeout": 30}]}
+        if spec["matcher"]:
+            entry["matcher"] = spec["matcher"]
+        defs.append(entry)
+json.dump(cur, open(path, "w"), indent=2, ensure_ascii=False)
+print("[harness] GLOBAL: settings.json merged (backup .bak.*)")
+PYEOF
+
+  python3 -c "import json; json.load(open(\"$SETTINGS\"))" || { warn "settings.json hỏng — khôi phục từ backup!"; exit 1; }
+  # Smoke: validator phải chặn được
+  RC=0; echo '{"action":"write","file_path":"llmwiki/raw/x.md"}' | python3 "$GH/hooks/validators/no_write_raw.py" 2>/dev/null || RC=$?
+  [ "$RC" = "2" ] && log "GLOBAL smoke OK: no_write_raw chặn đúng (rc=2)" || { warn "GLOBAL smoke FAIL (rc=$RC)"; exit 4; }
+  log "GLOBAL HOÀN TẤT — restart session hoặc mở /hooks để reload. Per-project vẫn cần cho team (commit harness/ vào repo)."
+  exit 0
 fi
 
 # ---------- 1. Detect mode ----------

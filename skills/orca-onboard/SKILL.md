@@ -161,16 +161,23 @@ print('\n'.join(changed))
 fi
 
 # --- 4. Bootstrap llmwiki + harness if missing ---
-if [ ! -d "$PROJECT_ROOT/llmwiki" ] || [ ! -d "$PROJECT_ROOT/harness" ]; then
+# Harness có 2 mode: GLOBAL (~/.claude/harness + hooks trong ~/.claude/settings.json,
+# bảo vệ mọi project llmwiki trên máy này) và PER-PROJECT (harness/ commit vào repo,
+# bảo vệ teammate). Global đủ cho máy dev cá nhân — chỉ WARN per-project khi cả 2 thiếu.
+GLOBAL_HARNESS=false
+[ -f "$HOME/.claude/harness/hooks/pre_tool_use.py" ] \
+  && grep -q 'harness/hooks/pre_tool_use.py' "$HOME/.claude/settings.json" 2>/dev/null \
+  && GLOBAL_HARNESS=true
+echo "[harness] global=$GLOBAL_HARNESS project=$([ -d "$PROJECT_ROOT/harness" ] && echo yes || echo no)"
+
+if [ ! -d "$PROJECT_ROOT/llmwiki" ] || { [ "$GLOBAL_HARNESS" = "false" ] && [ ! -d "$PROJECT_ROOT/harness" ]; }; then
   echo "[orca-onboard] bootstrapping llmwiki + harness..."
   git clone https://github.com/rheinmir/setup.git /tmp/orca-llmwiki-bootstrap --depth 1 -b orca -q
   [ ! -d "$PROJECT_ROOT/llmwiki" ] && cp -r /tmp/orca-llmwiki-bootstrap/llmwiki "$PROJECT_ROOT/llmwiki"
-  # Harness = enforcement hooks L0-L4 — same installer new-project-setup/harness-update use.
-  # Copying llmwiki/ alone is NOT enough; without install-harness.sh the wiki has no enforcement.
-  if [ ! -d "$PROJECT_ROOT/harness" ]; then
+  if [ "$GLOBAL_HARNESS" = "false" ] && [ ! -d "$PROJECT_ROOT/harness" ]; then
     bash /tmp/orca-llmwiki-bootstrap/harness/scripts/install-harness.sh "$PROJECT_ROOT" \
       && echo "[orca-onboard] harness installed OK" \
-      || echo "[WARN] harness install failed/denied — ask user to run: bash harness/scripts/install-harness.sh . (rc=3 = wiki debt, see harness-update skill)"
+      || echo "[WARN] harness install failed/denied — user chạy 1 trong 2: 'install-harness.sh .' (per-project, cho team) hoặc 'install-harness.sh --global' (cả máy, khuyên dùng cho máy dev)"
   fi
   rm -rf /tmp/orca-llmwiki-bootstrap
   echo "[orca-onboard] bootstrap done"

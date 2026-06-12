@@ -62,6 +62,11 @@ def audit(payload: dict, event: str) -> None:
         root = pathlib.Path(project_dir(payload))
         d = root / ".claude" / "audit"
         d.mkdir(parents=True, exist_ok=True)
+        # audit log chứa command snippets — bảo đảm không bao giờ bị commit
+        gi = root / ".claude" / ".gitignore"
+        if not gi.exists() or "audit/" not in gi.read_text(encoding="utf-8", errors="ignore"):
+            with open(gi, "a", encoding="utf-8") as f:
+                f.write("audit/\n")
         ti = payload.get("tool_input") or {}
         rec = {
             "ts": datetime.datetime.now().isoformat(timespec="seconds"),
