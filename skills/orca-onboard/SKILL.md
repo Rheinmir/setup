@@ -52,7 +52,7 @@ Onboard codebase via distilled understand-anything pipeline (graph + git history
 TASK TYPE          → AGENT               → MODEL
 ──────────────────────────────────────────────────────
 Scan + git history → bash/python direct  → (no LLM)
-Batch file analyze → opencode            → opencode/deepseek-v4-flash-free
+Batch file analyze → python static parse → (no LLM — PRIMARY; opencode chỉ enrich)
 Merge + validate   → python inline       → (no LLM)
 Layers / tour      → Claude main thread  → Sonnet (never dispatch out)
 Domain reasoning   → Claude main thread  → Sonnet (never dispatch out)
@@ -76,7 +76,7 @@ Wiki / HTML render → opencode            → opencode/deepseek-v4-flash-free
 
 **OpenCode with DeepSeek Flash v4:**
 ```bash
-opencode run "$SPEC" --model opencode/deepseek-v4-flash-free --dangerously-skip-permissions < /dev/null \
+opencode run "$SPEC" --model opencode/deepseek-v4-flash-free < /dev/null \
 # Fallback if flag unsupported:
 echo "$SPEC" | opencode --model opencode/deepseek-v4-flash-free
 # Last resort: Claude main thread
@@ -269,10 +269,10 @@ Onboard \`$PROJECT_ROOT\` — understand-anything graph, domain enrichment, wiki
 | \`.understand-anything/ONBOARDING.md\` | created by Phase 1 pipeline |
 | \`.orca-onboard/intermediate/domain-graph.json\` | created by Claude |
 | \`llmwiki/wiki/index.md\` | created/modified |
-| \`llmwiki/wiki/architecture/*.md\` | created |
+| \`llmwiki/wiki/concepts/architecture.md\` | created |
 | \`llmwiki/wiki/concepts/*.md\` | created |
 | \`llmwiki/wiki/entities/*.md\` | created |
-| \`llmwiki/wiki/tours/onboarding-tour.md\` | created |
+| \`llmwiki/wiki/concepts/onboarding-tour.md\` | created |
 | \`llmwiki/html/onboarding-${PROJECT_SLUG}.html\` | created |
 
 ## Notes
@@ -381,12 +381,20 @@ git -C "$PROJECT_ROOT" log --since="90 days ago" --pretty=format:'%s' | head -50
 
 Áp dụng: top churn → tag node `hot`; trong recent.txt → tag `recent`; cặp co-change ≥3 → edge `related` (weight 0.5); tour + ONBOARDING ưu tiên file `hot`; recent-subjects cho mục "What's being worked on".
 
-### 1.3 ANALYZE — batch (opencode + DeepSeek, mechanical)
+### 1.3 ANALYZE — PRIMARY: static parse (0 token) · opencode chỉ để enrich
+
+**Mặc định dùng python static parse** (bài học run 120626-zca-bridge — vừa rẻ vừa deterministic):
+regex `import/export ... from` + `require()` → resolve relative path → edges `imports`;
+`test/**.test.ts` → `tested_by`; summary = comment đầu file / danh sách exports / heading md;
+type theo extension (file/config/document). Imports là việc mechanical — LLM không chính xác hơn regex.
+Chỉ dispatch opencode khi cần summary giàu ngữ nghĩa hơn cho file phức tạp (optional enrichment):
 
 Chia file list thành batch ~25 file (file liên quan cùng batch: Dockerfile+compose, migrations, CI configs, docs). Mỗi batch dispatch:
 
 ```bash
-opencode run "$BATCH_SPEC" --model opencode/deepseek-v4-flash-free --dangerously-skip-permissions < /dev/null
+opencode run "$BATCH_SPEC" --model opencode/deepseek-v4-flash-free < /dev/null
+# ⚠ KHÔNG thêm --dangerously-skip-permissions: Claude Code auto-mode classifier sẽ DENY lệnh dispatch.
+# opencode treo chờ permission / bị chặn → dùng STATIC PARSE fallback bên dưới (ưu tiên mặc định).
 ```
 
 `BATCH_SPEC` (inject đủ context — DeepSeek không tự đọc gì ngoài danh sách được giao):
@@ -511,11 +519,9 @@ fi
 ```
 llmwiki/wiki/
 ├── index.md
-├── concepts/          ← one file per architecture layer
-├── entities/          ← domain entities + project-structure.md
-├── architecture/      ← index, layers, dependencies, entry-points
-└── tours/
-    └── onboarding-tour.md
+├── concepts/          ← architecture.md, message-sync/flows, onboarding-tour.md (R5: KHÔNG tạo folder architecture/ hay tours/ — validator folder_structure chặn)
+└── entities/          ← domain entities + project-structure.md
+# Mọi trang PHẢI có '## Origin' (R2) và row trong index.md (R3)
 ```
 
 **Skip check:** `RESUME_MODE=true` + `PHASE3_STATUS=done` → skip to Phase 4.
@@ -537,13 +543,13 @@ Do NOT regenerate unchanged pages. Preserve existing content in unchanged pages.
     fi
   else
     SPEC="Generate wiki pages from .understand-anything/ONBOARDING.md and .orca-onboard/intermediate/domain-graph.json.
-Create: llmwiki/wiki/index.md, llmwiki/wiki/concepts/*.md (one per architecture layer),
-llmwiki/wiki/entities/*.md (domain entities), llmwiki/wiki/architecture/*.md,
-llmwiki/wiki/tours/onboarding-tour.md.
+Create: llmwiki/wiki/index.md, llmwiki/wiki/concepts/*.md (architecture.md + flow pages + onboarding-tour.md),
+llmwiki/wiki/entities/*.md (domain entities + project-structure.md).
+R5: chỉ được ghi vào concepts/ hoặc entities/. R2: mọi trang có '## Origin'. R3: cập nhật index.md.
 Use wikilink format [[page-name]]. Do NOT read knowledge-graph.json directly."
   fi
 
-  opencode run "$SPEC" --model opencode/deepseek-v4-flash-free --dangerously-skip-permissions < /dev/null \
+  opencode run "$SPEC" --model opencode/deepseek-v4-flash-free < /dev/null \
     || echo "[WARN] opencode unavailable — Claude main thread fallback for wiki"
 
   update_phase_status "Phase 3 —" "done"
@@ -558,8 +564,8 @@ fi
 
 > **READ FIRST** (inject into SPEC before dispatch — DeepSeek won't read files unless injected):
 > 1. `llmwiki/wiki/index.md` — list all wiki pages
-> 2. `llmwiki/wiki/architecture/index.md` — architecture overview
-> 3. `llmwiki/wiki/tours/onboarding-tour.md` — tour steps
+> 2. `llmwiki/wiki/concepts/architecture.md` — architecture overview
+> 3. `llmwiki/wiki/concepts/onboarding-tour.md` — tour steps
 > 4. `llmwiki/wiki/concepts/*.md` — layer descriptions
 
 **Required output rules:**
@@ -581,7 +587,7 @@ Apply docs-site-macos style (glassmorphism, macOS window chrome, animated SVG di
 Output: llmwiki/html/onboarding-${PROJECT_SLUG}.html
 Use real <input type='checkbox'> not Unicode checkboxes."
 
-  opencode run "$SPEC" --model opencode/deepseek-v4-flash-free --dangerously-skip-permissions < /dev/null \
+  opencode run "$SPEC" --model opencode/deepseek-v4-flash-free < /dev/null \
     || {
       echo "[Phase 4] opencode unavailable — falling back to docs-site-macos skill (Claude)"
       # Invoke docs-site-macos skill in Claude main thread as fallback
