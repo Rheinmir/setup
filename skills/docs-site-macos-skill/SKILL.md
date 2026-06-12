@@ -176,7 +176,7 @@ Ripple ink là LIQUID GLASS, không phải vệt màu phẳng: specular highligh
       ink.addEventListener('animationend', () => ink.remove());
     });
   }
-  document.querySelectorAll('nav a, .nav-toggle').forEach(attach);
+  document.querySelectorAll('nav a, .nav-toggle, .nav-close').forEach(attach);
 })();
 ```
 Chạy SAU script tạo .nav-toggle để nút toggle cũng có ripple.
@@ -184,16 +184,19 @@ Chạy SAU script tạo .nav-toggle để nút toggle cũng có ripple.
 - Tier-1 glass cho cả hai dạng
 - Scroll spy via IntersectionObserver watching `section[id]` (selector `nav a` không đổi)
 
-**Collapse toggle (BẮT BUỘC với sidebar):** nút glass 30×30 lơ lửng ở mép phải sidebar (`left:208px`); bấm → sidebar `translateX(-100%)`, `body{padding-left:0}` (trả lại nguyên column, KHÔNG chừa cột trống), nút trượt về `left:12px` thành nút mở. Icon `⟨` (mở) / `☰` (đóng). Trạng thái nhớ qua `localStorage('navCollapsed')`. Nút hiện ở MỌI cỡ màn; màn hẹp mặc định collapsed (localStorage chưa có thì matchMedia 640px quyết). JS tự tạo button — không cần sửa markup:
+**Collapse (BẮT BUỘC với sidebar) — 2 nút riêng biệt:** nút ĐÓNG `✕` nằm TRONG sidebar (góc trên phải, 26×26, bg mờ nhẹ) — bấm → sidebar `translateX(-100%)`, `body{padding-left:0}` (trả lại nguyên column). Nút MỞ `☰` glass 32×32 lơ lửng góc trên trái, CHỈ hiện khi sidebar đang đóng (`body:not(.nav-collapsed) .nav-toggle{opacity:0;pointer-events:none}`). Cả 2 nút đều có ripple liquid-glass. Trạng thái nhớ `localStorage('navCollapsed')`; màn hẹp mặc định collapsed (matchMedia 640px). JS tự tạo cả 2 button — không cần sửa markup:
 
 ```js
 (function(){
   const nav = document.querySelector('nav'); if (!nav) return;
-  const btn = document.createElement('button'); btn.className = 'nav-toggle'; btn.textContent = '⟨';
+  const btn = document.createElement('button'); btn.className = 'nav-toggle'; btn.textContent = '☰';
   document.body.appendChild(btn);
-  const apply = c => { document.body.classList.toggle('nav-collapsed', c); btn.textContent = c ? '☰' : '⟨';
+  const close = document.createElement('button'); close.className = 'nav-close'; close.textContent = '✕';
+  nav.appendChild(close);
+  const apply = c => { document.body.classList.toggle('nav-collapsed', c);
     try { localStorage.setItem('navCollapsed', c ? '1' : '0'); } catch(e){} };
-  btn.addEventListener('click', () => apply(!document.body.classList.contains('nav-collapsed')));
+  btn.addEventListener('click', () => apply(false));
+  close.addEventListener('click', () => apply(true));
   try { const s = localStorage.getItem('navCollapsed');
     if (s === '1' || (s !== '0' && matchMedia('(max-width:640px)').matches)) apply(true);
   } catch(e){}
@@ -205,13 +208,17 @@ nav{transition:transform .28s cubic-bezier(.4,0,.2,1)}
 body{transition:padding-left .28s cubic-bezier(.4,0,.2,1)}
 body.nav-collapsed nav{transform:translateX(-100%)}
 body.nav-collapsed{padding-left:0}
-.nav-toggle{position:fixed;top:12px;left:208px;z-index:120;width:30px;height:30px;border-radius:10px;
-  display:flex;align-items:center;justify-content:center;font-size:13px;color:#4a4a55;cursor:pointer;
+.nav-toggle{position:fixed;top:12px;left:12px;z-index:120;width:32px;height:32px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-size:14px;color:#4a4a55;cursor:pointer;
   background:var(--glass-1);backdrop-filter:blur(var(--blur-1)) saturate(1.1);
   border:1px solid var(--border);box-shadow:var(--edge-hi),0 2px 10px rgba(0,0,0,.08);
-  transition:left .28s cubic-bezier(.4,0,.2,1)}
+  transition:opacity .2s,transform .28s cubic-bezier(.4,0,.2,1)}
 .nav-toggle:hover{color:#0a84ff}
-body.nav-collapsed .nav-toggle{left:12px}
+body:not(.nav-collapsed) .nav-toggle{opacity:0;pointer-events:none;transform:translateX(-6px)}
+.nav-close{position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-size:12px;color:#4a4a55;cursor:pointer;
+  background:rgba(0,0,0,.04);border:none;overflow:hidden;position:relative}
+.nav-close:hover{color:#0a84ff;background:rgba(10,132,255,.10)}
 /* .nav-toggle hiện ở mọi cỡ màn */
 ```
 

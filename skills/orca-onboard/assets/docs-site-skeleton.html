@@ -228,17 +228,23 @@ nav{transition:transform .28s cubic-bezier(.4,0,.2,1)}
 body{transition:padding-left .28s cubic-bezier(.4,0,.2,1)}
 body.nav-collapsed nav{transform:translateX(-100%)}
 body.nav-collapsed{padding-left:0 !important}
-.nav-toggle{position:fixed;top:12px;left:208px;z-index:120;width:30px;height:30px;border-radius:10px;
-  display:flex;align-items:center;justify-content:center;font-size:13px;color:#4a4a55;cursor:pointer;
+.nav-toggle{position:fixed;top:12px;left:12px;z-index:120;width:32px;height:32px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-size:14px;color:#4a4a55;cursor:pointer;
   background:var(--glass-1,rgba(255,255,255,.55));backdrop-filter:blur(24px) saturate(1.1);-webkit-backdrop-filter:blur(24px) saturate(1.1);
   border:1px solid var(--glass-border,var(--border,rgba(30,90,170,.14)));box-shadow:var(--edge-hi,inset 0 1px 0 rgba(255,255,255,.85)),0 2px 10px rgba(0,0,0,.08);
-  transition:left .28s cubic-bezier(.4,0,.2,1),background .15s,color .15s}
+  transition:opacity .2s,transform .28s cubic-bezier(.4,0,.2,1),background .15s,color .15s}
 .nav-toggle:hover{color:#0a84ff;background:rgba(255,255,255,.9)}
-body.nav-collapsed .nav-toggle{left:12px}
+/* nút mở ☰ chỉ hiện khi sidebar đang đóng */
+body:not(.nav-collapsed) .nav-toggle{opacity:0;pointer-events:none;transform:translateX(-6px)}
+/* nút đóng ✕ nằm trong sidebar, góc trên phải */
+.nav-close{position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-size:12px;color:#4a4a55;cursor:pointer;
+  background:rgba(0,0,0,.04);border:none;transition:background .15s,color .15s;overflow:hidden}
+.nav-close:hover{color:#0a84ff;background:rgba(10,132,255,.10)}
 /* toggle hiện ở mọi cỡ màn — mobile dùng nó thay top bar */
 
 /* ═══ ripple effect cho nút sidebar — lan tròn từ đúng điểm chạm ═══ */
-nav a,.nav-toggle{position:relative;overflow:hidden}
+nav a,.nav-toggle,.nav-close{position:relative;overflow:hidden}
 .ripple-ink{position:absolute;border-radius:50%;pointer-events:none;
   /* liquid glass: specular highlight lệch góc + thân trắng mờ + viền xanh + refract nền */
   background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.70) 0%,rgba(255,255,255,.28) 38%,rgba(10,132,255,.20) 72%,transparent 100%);
@@ -436,11 +442,16 @@ initDraggableDiagrams();
 (function(){
   const nav = document.querySelector('nav'); if (!nav) return;
   const btn = document.createElement('button'); btn.className = 'nav-toggle';
-  btn.setAttribute('aria-label', 'Thu gọn sidebar'); btn.textContent = '⟨';
+  btn.setAttribute('aria-label', 'Mở sidebar'); btn.textContent = '☰';
   document.body.appendChild(btn);
-  const apply = c => { document.body.classList.toggle('nav-collapsed', c); btn.textContent = c ? '☰' : '⟨';
+  // nút đóng ✕ NẰM TRONG sidebar, góc trên phải
+  const close = document.createElement('button'); close.className = 'nav-close';
+  close.setAttribute('aria-label', 'Đóng sidebar'); close.textContent = '✕';
+  nav.appendChild(close);
+  const apply = c => { document.body.classList.toggle('nav-collapsed', c);
     try { localStorage.setItem('navCollapsed', c ? '1' : '0'); } catch(e){} };
-  btn.addEventListener('click', () => apply(!document.body.classList.contains('nav-collapsed')));
+  btn.addEventListener('click', () => apply(false));
+  close.addEventListener('click', () => apply(true));
   try { const s = localStorage.getItem('navCollapsed');
     if (s === '1' || (s !== '0' && matchMedia('(max-width:640px)').matches)) apply(true);
   } catch(e){}
@@ -465,7 +476,7 @@ initDraggableDiagrams();
       ink.addEventListener('animationend', () => ink.remove());
     });
   }
-  document.querySelectorAll('nav a, .nav-toggle').forEach(attach);
+  document.querySelectorAll('nav a, .nav-toggle, .nav-close').forEach(attach);
 })();
 </script>
 </body>
