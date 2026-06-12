@@ -151,11 +151,15 @@ body{padding-left:200px}
 
 **Ripple effect (BẮT BUỘC trên nút sidebar + toggle):** click vào đâu, một hình tròn lan ra TỪ ĐÚNG TOẠ ĐỘ đó và phủ từ từ kín nút (bán kính = khoảng cách xa nhất tới 4 góc), rồi fade. Phần tử cha cần `position:relative;overflow:hidden`:
 
+Ripple ink là LIQUID GLASS, không phải vệt màu phẳng: specular highlight lệch góc (circle at 35% 30%), thân trắng mờ, viền xanh nhạt, `backdrop-filter:blur(2px)` để giọt nước tự khúc xạ content bên dưới, edge highlight inset:
+
 ```css
 .ripple-ink{position:absolute;border-radius:50%;pointer-events:none;
-  background:radial-gradient(circle,rgba(10,132,255,.28) 0%,rgba(10,132,255,.16) 60%,transparent 100%);
-  transform:scale(0);opacity:1;animation:rippleGrow .55s cubic-bezier(.25,.46,.45,.94) forwards}
-@keyframes rippleGrow{60%{transform:scale(1);opacity:.6}100%{transform:scale(1);opacity:0}}
+  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.70) 0%,rgba(255,255,255,.28) 38%,rgba(10,132,255,.20) 72%,transparent 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 0 -10px 20px rgba(10,132,255,.12),0 0 14px rgba(10,132,255,.10);
+  backdrop-filter:blur(2px) saturate(1.25);-webkit-backdrop-filter:blur(2px) saturate(1.25);
+  transform:scale(0);opacity:1;animation:rippleGrow .6s cubic-bezier(.25,.46,.45,.94) forwards}
+@keyframes rippleGrow{55%{transform:scale(1);opacity:.75}100%{transform:scale(1.04);opacity:0}}
 ```
 
 ```js
