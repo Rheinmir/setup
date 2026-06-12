@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 
 SKIP_BASENAMES = {"README.md", "_template.md"}
-CONTENT_DIRS = ("concepts", "entities", "sources", "draft")
+CONTENT_DIRS = ("concepts", "entities", "sources", "draft", "architecture", "tours")
 LINK_RE = re.compile(r"\]\(([^)#\s]+\.md)\)")
 WIKILINK_RE = re.compile(r"\[\[([^\]|#]+)")
 

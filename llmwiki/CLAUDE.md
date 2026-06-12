@@ -63,7 +63,7 @@ These guidelines are working if: fewer unnecessary changes in diffs, fewer rewri
 - ALWAYS update `wiki/index.md` when adding or removing a wiki file
 - ALWAYS append to `wiki/log.md` after every operation
 - Use `[[wikilinks]]` to cross-reference entries in `wiki/`
-- Wiki files live in `concepts/`, `entities/`, `sources/`, or `draft/` — never in `wiki/` root (enforced by R5 validator)
+- Wiki files live in `concepts/`, `entities/`, `sources/`, `draft/`, `architecture/`, or `tours/` — never in `wiki/` root (enforced by R5 validator)
 - Wiki entries are only created AFTER code is committed — never during proposal or planning
 
 ## Skills

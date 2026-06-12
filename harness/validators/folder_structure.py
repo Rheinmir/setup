@@ -8,7 +8,7 @@ import re
 import sys
 
 ALLOWED_ROOT_FILES = {"index.md", "log.md", "README.md", "active-context.md", "decisions.md"}
-ALLOWED_SUBDIRS = {"concepts", "entities", "sources", "draft"}
+ALLOWED_SUBDIRS = {"concepts", "entities", "sources", "draft", "architecture", "tours"}
 # boundary (^|/) để không dính nhầm "llmwiki/" hay "mywiki/"
 WIKI_REL_RE = re.compile(r"(?:^|/)wiki/(.+)$")
 

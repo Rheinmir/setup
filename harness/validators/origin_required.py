@@ -12,7 +12,7 @@ from pathlib import Path
 
 ORIGIN_RE = re.compile(r"^##\s+Origin\b", re.MULTILINE)
 SKIP_BASENAMES = {"README.md", "_template.md", "index.md", "log.md"}
-CONTENT_DIRS = ("concepts/", "entities/", "sources/", "draft/")
+CONTENT_DIRS = ("concepts/", "entities/", "sources/", "draft/", "architecture/", "tours/")
 # boundary (^|/) để không dính nhầm "llmwiki/" hay "mywiki/"
 WIKI_REL_RE = re.compile(r"(?:^|/)wiki/(.+)$")
 
