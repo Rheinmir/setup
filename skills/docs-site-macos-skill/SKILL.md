@@ -39,13 +39,15 @@ body{
   background:
     radial-gradient(900px 500px at 12% -10%, rgba(10,132,255,.10), transparent 60%),
     radial-gradient(700px 420px at 95% 15%, rgba(90,162,232,.08), transparent 55%),
-    linear-gradient(180deg, #f7fbff 0%, #eaf2fd 100%);
+    linear-gradient(180deg, #eef4fd 0%, #e6eefb 100%);  /* hơi xanh — tránh #f7fbff gần trắng (lộ vệt) */
 }
 ```
 
 Keep it this quiet — blue-family tints only, no loud glow layers ("light pollution"). The per-section `.s-bgN::before` overlays add the rest of the local variation.
 
 **Base refraction plane (BẮT BUỘC — gương phải thấy gì bên dưới):** gradient phẳng không đủ cho blur "nghiền" — thêm 2 lớp fixed `z-index:-1` dưới mọi content: (1) ORBS — 5-6 radial blobs lớn (blue chủ đạo + 1-2 tint Apple secondary, alpha .06-.22) trôi rất chậm (~46s ease alternate, translate ≤2.5% + scale ≤1.05); (2) DOT-GRID mảnh 1px/22px alpha ~.11 có mask fade dọc — chi tiết tần số cao để backdrop-filter biến thành texture kính thật. **Đặt ít nhất 1-2 orb dọc mép TRÁI viewport (sau lưng sidebar)** — sidebar là pane kính lớn nhất trang, không có màu sau lưng thì blur cỡ nào cũng ra tấm trắng. Kèm `@media (prefers-reduced-motion:reduce){animation:none}`:
+
+⚠️ **KHÔNG để DẢI NGANG TRỐNG giữa viewport (bài học 13/06/2026 — user: "sao nó vẫn hiển thị vệt trắng này"):** orb layer là `position:fixed` nên gap trong nó **dính cố định giữa màn** và cắt ngang mọi content cuộn qua. Nếu orbs chỉ tụ ở TRÊN (vertical ~10–15%) và DƯỚI (~75–90%) mà bỏ trống dải GIỮA (~40–65%), vùng giữa lộ base gradient nhạt → đọc thành **vệt trắng ngang full-width**. Bắt buộc rải orb phủ liên tục theo CẢ trục dọc — ít nhất 1 orb ở dải giữa (vd `at 44% 55%`, `at 80% 48%`). Và để base gradient hơi xanh (`#eef4fd→#e6eefb`), tránh `#f7fbff` gần trắng ở đỉnh để gap (nếu còn) không gắt.
 
 ```css
 body::before{content:'';position:fixed;inset:-10%;z-index:-1;pointer-events:none;
