@@ -23,7 +23,9 @@ STATUS_RE = re.compile(r"^\*\*Status:\*\*(.*)$", re.MULTILINE | re.IGNORECASE)
 SEQ_LINK_RE = re.compile(r"\*\*Sequence diagram[^*]*\*\*:?\s*\[[^\]]*\]\(([^)]+\.html)\)", re.IGNORECASE)
 TASK_RE = re.compile(r"^\s*-\s*\[[ xX]\]", re.MULTILINE)
 DIAGRAM_RE = re.compile(r'<div\s+class="diagram-box"')
-HIDDEN_MSG_RE = re.compile(r"opacity:\s*0\s*[;}]")  # nhãn bị ẩn cứng — chỉ hiện qua JS (bài học 130626)
+# nhãn message bị ẩn cứng: rule CSS .msg{...opacity:0...} — chỉ hiện qua JS (bài học 130626).
+# Scope vào selector .msg để không bắt nhầm opacity:0 của ripple/animation khác.
+HIDDEN_MSG_RE = re.compile(r"\.msg\b[^{}]*\{[^}]*opacity:\s*0\s*[;}]")
 DESC_STATIC_RE = re.compile(r'class="desc"')          # prose tĩnh <p class="desc">
 DESC_DATA_RE = re.compile(r"\bdesc\s*:\s*['\"`]")     # prose trong data JS: desc:'...'
 
