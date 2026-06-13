@@ -148,6 +148,16 @@ The **repo card** and **converter mockup** use a macOS window header:
 </div>
 ```
 
+⚠️ **Boxed full-width elements (repo-card, converter mockup, bất kỳ panel có viền) PHẢI có gutter ngang giống hero/section** (bài học 13/06/2026 — user chê repo-card "chạm sát mép màn hình, nên có padding trái phải"): hero/section ăn gutter qua `padding:…24px` BÊN TRONG container `max-width:1100px`, nhưng một boxed element chỉ đặt `max-width:1100px;margin:auto` sẽ **chạm sát 2 mép viewport** khi màn hẹp hơn 1100px (vì nó không có padding trong, mà chính cái box là content). Fix: cho box cùng lề NỘI DUNG với hero bằng `max-width:1052px` (= 1100 − 48 gutter) **và** `width:calc(100% - 48px)`:
+
+```css
+.repo-card{ max-width:1052px; width:calc(100% - 48px); margin:8px auto 0; /* …glass tier-2… */ }
+```
+
+Rộng → cap 1052 căn giữa, thẳng hàng với chữ trong hero (1100−24−24); hẹp → luôn chừa 24px mỗi bên. Áp dụng cho MỌI boxed element đặt trực tiếp dưới `<body>` (ngoài luồng `section`): repo-card, converter mockup, banner/callout full-width.
+
+⚠️ **Body cuối của boxed element cần padding-bottom rộng hơn padding-top** (bài học 13/06/2026 — user chê "chỗ chuyển tiếp bị cắt đứt không mượt"): khối nội dung cuối (vd `.rc-body`) nối thẳng xuống section kế tiếp; nếu padding dưới = padding trên (16px) thì chữ áp sát mép box, đọc như bị cụt. Cho đáy thở thêm: `padding:16px 18px 22px` (đáy ≥ trên + 6px). Quy tắc: pane kết thúc bằng text → bottom-pad ≥ top-pad.
+
 ### Navigation — SIDEBAR ONLY (không bao giờ dùng top bar)
 
 Mọi cỡ màn hình đều dùng LEFT SIDEBAR + nút collapse. ⛔ KHÔNG có chế độ top bar — top bar nhồi link wrap chữ rất xấu trên màn hẹp. Màn hẹp (<640px): sidebar OVERLAY đè content (body giữ padding-left:0), mặc định THU GỌN, user mở bằng nút toggle:
@@ -244,8 +254,8 @@ body.nav-collapsed{padding-left:0}
   background:linear-gradient(165deg,rgba(255,255,255,.5),rgba(255,255,255,.24));
   backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
   -webkit-backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
-  border:1px solid rgba(255,255,255,.55);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 2px 10px rgba(30,90,170,.10);
+  border:1px solid transparent;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 0 0 1px rgba(30,90,170,.08),0 2px 10px rgba(30,90,170,.12);
   transition:opacity .2s,transform .28s cubic-bezier(.4,0,.2,1)}
 .nav-toggle:hover{color:#0a84ff}
 body:not(.nav-collapsed) .nav-toggle{opacity:0;pointer-events:none;transform:translateX(-6px)}
@@ -255,6 +265,46 @@ body:not(.nav-collapsed) .nav-toggle{opacity:0;pointer-events:none;transform:tra
 .nav-close:hover{color:#0a84ff;background:rgba(10,132,255,.10)}
 /* .nav-toggle hiện ở mọi cỡ màn */
 ```
+
+⚠️ **Chip kính NỔI trên nền sáng KHÔNG được dùng viền trắng đặc** (bài học 13/06/2026 — user chê viền `.nav-toggle` "trông kỳ"): nút toggle (và mọi floating glass chip góc trên-trái) nằm trên vùng nền trang gần trắng-xanh phẳng → `backdrop-filter:blur` không có gì tối phía sau để nghiền thành kính, nên thứ rõ nhất lại là cái viền `rgba(255,255,255,.55)` — một vòng 1px nét căng, đọc thành "viền sticker dán lên", không ra mép kính. Fix: `border:1px solid transparent`, để mép sinh ra từ inset top-highlight + ring lạnh cực mảnh + drop-shadow lạnh:
+```css
+border:1px solid transparent;
+box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 0 0 1px rgba(30,90,170,.08),0 2px 10px rgba(30,90,170,.12);
+```
+Quy tắc: viền trắng đặc CHỈ hợp khi pane có content tối/đa sắc phía sau để blur sample (vd sidebar đè lên section). Chip nổi trên nền sáng → mép bằng shadow lạnh, không bằng stroke trắng.
+
+## Scrollbar — overlay tự ẩn (theme thay scrollbar mặc định)
+
+Thay scrollbar mặc định của trình duyệt bằng thanh mảnh tint xanh theme, **ẩn mặc định — chỉ hiện khi đang cuộn hoặc hover lên thanh** (kiểu macOS overlay). Áp dụng cho cả viewport lẫn sidebar (`nav` có `overflow-y:auto`). Thumb dùng `background-clip:content-box` + `border:3px solid transparent` để tạo padding quanh thumb (mảnh, bo tròn, nổi). JS thêm class `.scrolling` khi cuộn rồi gỡ sau ~900ms idle:
+
+```css
+/* Chromium / Safari */
+::-webkit-scrollbar{width:11px;height:11px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:transparent;border-radius:8px;
+  border:3px solid transparent;background-clip:content-box;transition:background .25s ease}
+html.scrolling ::-webkit-scrollbar-thumb,
+nav.scrolling::-webkit-scrollbar-thumb{background:rgba(10,132,255,.32);background-clip:content-box}
+::-webkit-scrollbar-thumb:hover{background:rgba(10,132,255,.55)!important;background-clip:content-box}
+::-webkit-scrollbar-thumb:active{background:rgba(10,132,255,.7)!important;background-clip:content-box}
+/* Firefox: không ẩn overlay được → để mảnh + tint xanh khi cuộn/hover */
+html{scrollbar-width:thin;scrollbar-color:transparent transparent}
+html.scrolling,html:hover{scrollbar-color:rgba(10,132,255,.32) transparent}
+```
+
+```js
+/* hiện khi cuộn, ẩn sau ~900ms idle — gắn cho cả trang lẫn sidebar */
+(function(){
+  const flash = (el) => { let t; return () => { el.classList.add('scrolling'); clearTimeout(t);
+    t = setTimeout(() => el.classList.remove('scrolling'), 900); }; };
+  const root = document.documentElement;
+  window.addEventListener('scroll', flash(root), { passive:true });
+  const nav = document.querySelector('nav');
+  if (nav) nav.addEventListener('scroll', flash(nav), { passive:true });
+})();
+```
+
+Lưu ý: tint xanh `#0a84ff` để khớp pattern; thumb đậm dần theo hover→active. Firefox không ẩn hẳn được (reserve width), nên fallback là thanh `thin` đổi màu — chấp nhận được.
 
 ## Page Architecture
 
