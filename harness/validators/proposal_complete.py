@@ -8,6 +8,8 @@ Output-report (không có Plan) và draft đã implemented/done tự miễn.
   (a) Bảng '## Agent Task Assignment' ≥1 data row, không ô Agent nào trống
   (b) Link '**Sequence diagram**' trỏ tới file .html TỒN TẠI
   (c) Số '<div class="diagram-box"' trong html ≥ số task '- [ ]' trong '## Plan'
+  (d) html KHÔNG ẩn nhãn message bằng 'opacity:0' (.msg phải hiện sẵn — bài học 130626)
+  (e) html có ≥1 prose 'class="desc"' mỗi diagram (đọc hiểu không cần animation)
 
 Contract chung: stdin JSON {"action":"write","file_path":...} hoặc argv files. Exit 0/2.
 """
@@ -21,6 +23,9 @@ STATUS_RE = re.compile(r"^\*\*Status:\*\*(.*)$", re.MULTILINE | re.IGNORECASE)
 SEQ_LINK_RE = re.compile(r"\*\*Sequence diagram[^*]*\*\*:?\s*\[[^\]]*\]\(([^)]+\.html)\)", re.IGNORECASE)
 TASK_RE = re.compile(r"^\s*-\s*\[[ xX]\]", re.MULTILINE)
 DIAGRAM_RE = re.compile(r'<div\s+class="diagram-box"')
+HIDDEN_MSG_RE = re.compile(r"opacity:\s*0\s*[;}]")  # nhãn bị ẩn cứng — chỉ hiện qua JS (bài học 130626)
+DESC_STATIC_RE = re.compile(r'class="desc"')          # prose tĩnh <p class="desc">
+DESC_DATA_RE = re.compile(r"\bdesc\s*:\s*['\"`]")     # prose trong data JS: desc:'...'
 
 
 def section(text, title):
@@ -77,11 +82,26 @@ def check(path):
         if not html_path.is_file():
             problems.append(f"(b) seq html khong ton tai: {mlink.group(1)}")
         else:
-            n_diagrams = len(DIAGRAM_RE.findall(html_path.read_text(encoding="utf-8", errors="replace")))
+            html_text = html_path.read_text(encoding="utf-8", errors="replace")
+            n_diagrams = len(DIAGRAM_RE.findall(html_text))
             if n_tasks and n_diagrams < n_tasks:
                 problems.append(
                     f"(c) Plan co {n_tasks} task nhung seq html chi co {n_diagrams} diagram-box — "
                     f"MOI task phai co sequence diagram rieng"
+                )
+            # (d) khong duoc an nhan message — doc ra phai thay chu ngay, khong cho animation reveal
+            if HIDDEN_MSG_RE.search(html_text):
+                problems.append(
+                    "(d) seq html an nhan bang 'opacity:0' — nhan message PHAI hien san "
+                    "(.msg opacity >=.82), animation chi lam noi buoc dang chay. Bai hoc 130626."
+                )
+            # (e) moi diagram phai co 1 doan prose doc hieu khong can xem animation —
+            #     dem ca prose tinh (<p class="desc">) lan prose render tu data JS (desc:'...')
+            n_desc = max(len(DESC_STATIC_RE.findall(html_text)), len(DESC_DATA_RE.findall(html_text)))
+            if n_diagrams and n_desc < n_diagrams:
+                problems.append(
+                    f"(e) seq html co {n_diagrams} diagram nhung chi {n_desc} doan prose 'class=\"desc\"' — "
+                    f"MOI task can 1 doan mo ta text (ai lam gi, du lieu chay, nhanh an toan)"
                 )
 
     if problems:
