@@ -1,8 +1,11 @@
 ---
 name: docs-site-macos
 description: >
-  Build a beautiful macOS-inspired documentation site (single HTML file) with glassmorphism cards,
-  animated SVG diagrams, traffic-light window chrome, and per-section color theming.
+  Build a beautiful macOS-inspired documentation site (single HTML file) with a liquid-glass
+  surface system (tiered glassmorphism: opacity ladder, blur scale, edge highlights), animated
+  SVG diagrams, traffic-light window chrome, and a light-blue + white liquid-glass palette
+  (white glass surfaces over a soft blue gradient field, per-section blue-tone theming).
+  Also trigger on "liquid glass", "frosted glass", or "translucent UI" requests for docs/showcase pages.
   Trigger when the user wants to create a docs site, landing page, showcase, portfolio, guide,
   tutorial site, feature overview, or product documentation — especially when they mention
   wanting it to look "clean", "modern", "Apple-like", "macOS style", "glass", "frosted",
@@ -21,62 +24,117 @@ Output is a self-contained `.html` file (no JS libraries, no build step).
 
 ### Color Palette
 
-Base: `#f2f0f7` (purple-ish light gray)
+Base: white glass surfaces over a soft light-blue gradient field (see Background Plane below)
 Text: `#0f0f12` / `#4a4a55`
-Glass: `rgba(255,255,255,.7)` with `backdrop-filter: blur(8px)`
-Border: `rgba(255,255,255,.6)` or `rgba(0,0,0,.06)`
+Border: `rgba(30,90,170,.14)` (cool blue-gray — never white-on-white)
 
-### Section Color Cycle
+Palette is LIQUID-GLASS LIGHT-BLUE + WHITE for the PATTERN (surfaces, background field, nav, hero, links). CONTENT section accents cycle Apple's secondary palette (see Palette Philosophy below) — confined to tags/h4/bullets so nhiều màu vẫn không rối. No flat-black accents, no saturated-color headings.
 
-Sections cycle through this accent palette in order. Pick the Nth accent for the Nth section,
-wrapping around if there are more sections than accents:
+### Background Plane (glass needs something to sample)
+
+Honest naming: this design system is **pragmatic CSS glass** (transparency + backdrop blur), not true refraction. For the blur to read as material at all, the body background must NOT be a flat fill — give it a restrained monochrome gradient field:
 
 ```css
-/* Cycle (6 accents, repeat as needed) */
-#sec-0 .tag { background: rgba(99,102,241,.12); color: #6366f1; }
-#sec-0 .card h4 { color: #6366f1; } #sec-0 .section-header h2 { color: #4338ca; }
-#sec-0 .card li::before { color: #6366f1; }
-#sec-0 .section-bg::before { background: linear-gradient(180deg, rgba(99,102,241,.04) 0%, transparent 60%); }
+body{
+  background:
+    radial-gradient(900px 500px at 12% -10%, rgba(10,132,255,.10), transparent 60%),
+    radial-gradient(700px 420px at 95% 15%, rgba(90,162,232,.08), transparent 55%),
+    linear-gradient(180deg, #f7fbff 0%, #eaf2fd 100%);
+}
+```
 
-#sec-1 { accent: #059669 emerald; dark: #047857; }
-#sec-2 { accent: #d97706 amber; dark: #b45309; }
-#sec-3 { accent: #db2777 pink; dark: #be185d; }
-#sec-4 { accent: #0891b2 cyan; dark: #0e7490; }
-#sec-5 { accent: #9333ea purple; dark: #7e22ce; }
-/* then repeat #sec-6 = #sec-0, #sec-7 = #sec-1, ... */
+Keep it this quiet — blue-family tints only, no loud glow layers ("light pollution"). The per-section `.s-bgN::before` overlays add the rest of the local variation.
+
+**Base refraction plane (BẮT BUỘC — gương phải thấy gì bên dưới):** gradient phẳng không đủ cho blur "nghiền" — thêm 2 lớp fixed `z-index:-1` dưới mọi content: (1) ORBS — 5-6 radial blobs lớn (blue chủ đạo + 1-2 tint Apple secondary, alpha .06-.22) trôi rất chậm (~46s ease alternate, translate ≤2.5% + scale ≤1.05); (2) DOT-GRID mảnh 1px/22px alpha ~.11 có mask fade dọc — chi tiết tần số cao để backdrop-filter biến thành texture kính thật. **Đặt ít nhất 1-2 orb dọc mép TRÁI viewport (sau lưng sidebar)** — sidebar là pane kính lớn nhất trang, không có màu sau lưng thì blur cỡ nào cũng ra tấm trắng. Kèm `@media (prefers-reduced-motion:reduce){animation:none}`:
+
+```css
+body::before{content:'';position:fixed;inset:-10%;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(640px 440px at 10% 14%,rgba(10,132,255,.22),transparent 65%),
+    radial-gradient(380px 460px at 4% 52%,rgba(48,176,199,.18),transparent 65%),
+    radial-gradient(540px 400px at 88% 10%,rgba(88,86,214,.13),transparent 60%),
+    radial-gradient(720px 500px at 74% 76%,rgba(48,176,199,.13),transparent 65%),
+    radial-gradient(480px 380px at 16% 86%,rgba(255,149,0,.12),transparent 60%);
+  animation:orbDrift 46s ease-in-out infinite alternate}
+@keyframes orbDrift{100%{transform:translate(2.2%,1.6%) scale(1.045)}}
+body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:radial-gradient(rgba(30,90,170,.11) 1px,transparent 1.3px);
+  background-size:22px 22px;
+  mask-image:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.22))}
+```
+
+### Liquid-Glass Surface System (opacity ladder + blur scale)
+
+Glass is a **depth system, not a single class**. Three surface tiers, each with its own alpha + blur — never repeat one alpha everywhere:
+
+```css
+:root{
+  --glass-1: rgba(255,255,255,.55);  /* tier 1 — chrome: nav, floating panels */
+  --glass-2: rgba(255,255,255,.7);   /* tier 2 — cards, diagram-box, repo-card */
+  --glass-3: rgba(255,255,255,.88);  /* tier 3 — data: tables, long text (calmer, near-solid) */
+  --blur-1: 24px; --blur-2: 8px; --blur-3: 4px;
+  --edge-hi: inset 0 1px 0 rgba(255,255,255,.85);  /* top inner highlight — REQUIRED on every glass surface */
+  --border: rgba(30,90,170,.14);
+}
+```
+
+Tier assignment: `nav` = tier 1 · `.card` / `.diagram-box` / `.repo-card` = tier 2 · `table` / dense data zones = tier 3. Reserve the strongest glass for chrome; content density rises as material strength drops.
+
+### Palette Philosophy: blue = PATTERN, Apple secondary = CONTENT
+
+**Blue is the chrome/pattern color ONLY** — sidebar nav, hero gradient, links, structural accents. Modern iOS tone `#0a84ff`, never dark/navy starts. **Content sections cycle through Apple's secondary palette** (teal/indigo/green/orange/pink) — nhiều màu được, miễn không rối: accents stay confined to `.tag`, `.card h4`, and `li::before` bullets.
+
+**Headings are DARK, never saturated color**: `.section-header h2 { color: #1d1d1f }` for every section. A saturated blue heading reads dated ("nhà quê") — Apple uses near-black headlines with a colored eyebrow tag above.
+
+### Section Color Cycle (Apple secondary)
+
+```css
+#sec-0 .tag { background: rgba(10,132,255,.10); color: #0a84ff; }   /* blue */
+#sec-0 .card h4 { color: #0a84ff; } #sec-0 .card li::before { color: #0a84ff; }
+#sec-0 .section-header h2 { color: #1d1d1f; }  /* h2 luôn tối, mọi section */
+.s-bg0::before { background: linear-gradient(180deg, rgba(10,132,255,.05) 0%, transparent 60%); }
+/* then sec-1..5 per the table; repeat #sec-6 = #sec-0, ... */
 ```
 
 **Full accent table:**
 
-| Index | Accent | Dark (h2) | Gradient overlay |
-|-------|--------|-----------|------------------|
-| 0     | `#6366f1` indigo | `#4338ca` | `rgba(99,102,241,.04)` |
-| 1     | `#059669` emerald | `#047857` | `rgba(16,185,129,.04)` |
-| 2     | `#d97706` amber | `#b45309` | `rgba(245,158,11,.04)` |
-| 3     | `#db2777` pink | `#be185d` | `rgba(236,72,153,.04)` |
-| 4     | `#0891b2` cyan | `#0e7490` | `rgba(6,182,212,.04)` |
-| 5     | `#9333ea` purple | `#7e22ce` | `rgba(168,85,247,.04)` |
+| Index | Accent | h4 tone | Gradient overlay |
+|-------|--------|---------|------------------|
+| 0     | `#0a84ff` blue   | `#0a84ff` | `rgba(10,132,255,.05)` |
+| 1     | `#30b0c7` teal   | `#30b0c7` | `rgba(48,176,199,.05)` |
+| 2     | `#5856d6` indigo | `#5856d6` | `rgba(88,86,214,.05)` |
+| 3     | `#34c759` green  | `#28a745` | `rgba(52,199,89,.05)` |
+| 4     | `#ff9500` orange | `#f08c00` | `rgba(255,149,0,.06)` |
+| 5     | `#ff2d55` pink   | `#e0264b` | `rgba(255,45,85,.05)` |
 
 For each section, use the accent for:
-- `.tag` background (at 12% opacity)
-- `.card h4` color
+- `.tag` background (at 10-12% opacity) + text
+- `.card h4` color (use the darker h4 tone for orange/green/pink so text stays readable)
 - `.card li::before` color (the `›` bullet)
-- `.section-header h2` color (dark shade)
+- ⛔ NOT for `.section-header h2` — h2 is always `#1d1d1f`
 
 ### Glassmorphism Cards
 
 ```css
 .card {
-  background: rgba(255,255,255,.7);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,255,255,.6);
+  background: var(--glass-2);
+  backdrop-filter: blur(var(--blur-2)) saturate(1.1);
+  border: 1px solid var(--border);
   border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0,0,0,.06);
+  box-shadow: var(--edge-hi), 0 4px 20px rgba(0,0,0,.06);  /* top highlight + lower shadow = directional light */
   padding: 20px;
 }
 ```
 
-Apply this same glass style to: `.diagram-box`, `table`, `.repo-card`, and the converter mockup.
+`.diagram-box` and `.repo-card` share this tier-2 recipe. `table` (and any dense data region) drops to tier 3: `background: var(--glass-3); backdrop-filter: blur(var(--blur-3))` — same border + edge highlight, calmer material so rows stay legible.
+
+**Liquid-glass rules (distilled from the liquid-glass-design skill):**
+- Edge highlight is mandatory — glass without `--edge-hi` reads as a washed card.
+- Directional light: faint top inner highlight + soft lower outer shadow on every pane.
+- Text never sits on heavy blur alone; tier 3 (near-solid) backs all long-form reading and tables.
+- Stacked glass must differ by at least one tier (alpha AND blur step) or the layers collapse into mud.
+- Glow stays faint and blue-family only — depth comes from the ladder, edges, and shadow, not atmosphere.
+- **Large chrome panes (sidebar, full-height panels) NEVER use one flat alpha** — flat white fill reads as a milky wall ("màu trơn trông chắn"). They need gradient-alpha glass + a specular sheen `::before` + a color orb directly behind them. See the Navigation section for the canonical recipe.
 
 ### macOS Chrome Elements
 
@@ -90,13 +148,163 @@ The **repo card** and **converter mockup** use a macOS window header:
 </div>
 ```
 
-### Navigation
+⚠️ **Boxed full-width elements (repo-card, converter mockup, bất kỳ panel có viền) PHẢI có gutter ngang giống hero/section** (bài học 13/06/2026 — user chê repo-card "chạm sát mép màn hình, nên có padding trái phải"): hero/section ăn gutter qua `padding:…24px` BÊN TRONG container `max-width:1100px`, nhưng một boxed element chỉ đặt `max-width:1100px;margin:auto` sẽ **chạm sát 2 mép viewport** khi màn hẹp hơn 1100px (vì nó không có padding trong, mà chính cái box là content). Fix: cho box cùng lề NỘI DUNG với hero bằng `max-width:1052px` (= 1100 − 48 gutter) **và** `width:calc(100% - 48px)`:
 
-Fixed top nav with:
-- `background: rgba(242,240,247,.82)` + `backdrop-filter: blur(24px) saturate(1.4)`
-- Height 48px
-- Active link: accent color + `rgba(99,102,241,.1)` background
-- Scroll spy via IntersectionObserver watching `section[id]`
+```css
+.repo-card{ max-width:1052px; width:calc(100% - 48px); margin:8px auto 0; /* …glass tier-2… */ }
+```
+
+Rộng → cap 1052 căn giữa, thẳng hàng với chữ trong hero (1100−24−24); hẹp → luôn chừa 24px mỗi bên. Áp dụng cho MỌI boxed element đặt trực tiếp dưới `<body>` (ngoài luồng `section`): repo-card, converter mockup, banner/callout full-width.
+
+⚠️ **Body cuối của boxed element cần padding-bottom rộng hơn padding-top** (bài học 13/06/2026 — user chê "chỗ chuyển tiếp bị cắt đứt không mượt"): khối nội dung cuối (vd `.rc-body`) nối thẳng xuống section kế tiếp; nếu padding dưới = padding trên (16px) thì chữ áp sát mép box, đọc như bị cụt. Cho đáy thở thêm: `padding:16px 18px 22px` (đáy ≥ trên + 6px). Quy tắc: pane kết thúc bằng text → bottom-pad ≥ top-pad.
+
+### Navigation — SIDEBAR ONLY (không bao giờ dùng top bar)
+
+Mọi cỡ màn hình đều dùng LEFT SIDEBAR + nút collapse. ⛔ KHÔNG có chế độ top bar — top bar nhồi link wrap chữ rất xấu trên màn hẹp. Màn hẹp (<640px): sidebar OVERLAY đè content (body giữ padding-left:0), mặc định THU GỌN, user mở bằng nút toggle:
+
+⚠️ **Sidebar PHẢI là kính thật, không phải tấm trắng sữa** (bài học 12/06/2026 — user chê "màu trơn trông hơi chắn"): fill phẳng `--glass-1` alpha .55 trên nền sáng ra "sữa" đục, không ra gương. Pane chrome LỚN (sidebar, panel cao full màn) bắt buộc 3 thứ: (1) **gradient-alpha glass** — alpha biến thiên dọc mặt kính thay vì một hằng số; (2) **specular sheen** `::before` — vùng sáng radial góc trên + dải sheen chéo; (3) **orb màu ngay sau lưng pane** (xem Background Plane) — blur 24px phải có màu thật để nghiền. `--glass-1` chỉ còn dùng cho floating panel nhỏ:
+
+```css
+nav{position:fixed;top:0;left:0;bottom:0;width:200px;z-index:100;
+  display:flex;flex-direction:column;align-items:stretch;gap:2px;padding:18px 12px;
+  background:linear-gradient(165deg,rgba(255,255,255,.46) 0%,rgba(255,255,255,.22) 48%,rgba(240,248,255,.34) 100%);
+  backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
+  -webkit-backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
+  border-right:1px solid rgba(255,255,255,.55);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 1px 0 0 rgba(255,255,255,.5),
+    inset -1px 0 0 rgba(30,90,170,.10),4px 0 24px rgba(30,90,170,.08)}
+/* specular sheen — vệt sáng chéo trên mặt kính; con của nav cần position:relative để nổi trên sheen */
+nav::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(220px 160px at 18% 4%,rgba(255,255,255,.55),transparent 70%),
+    linear-gradient(115deg,rgba(255,255,255,.28) 0%,transparent 28%,transparent 72%,rgba(255,255,255,.14) 100%)}
+nav>*{position:relative}
+nav .logo{margin:0 0 12px;padding:6px 10px;
+  background:linear-gradient(135deg,#0a84ff,#64b5f7);-webkit-background-clip:text;background-clip:text;color:transparent}
+nav a{padding:8px 12px;border-radius:10px;font-size:13px;position:relative;overflow:hidden}
+nav a.active{color:#0a84ff;background:rgba(10,132,255,.08);font-weight:600}
+body{padding-left:200px}
+@media(max-width:640px){
+  body{padding-left:0}                       /* sidebar overlay, không chiếm column */
+  nav{box-shadow:0 8px 30px rgba(0,0,0,.14)} /* nổi trên content khi mở */
+}
+```
+
+**Ripple effect (BẮT BUỘC trên nút sidebar + toggle):** click vào đâu, một hình tròn lan ra TỪ ĐÚNG TOẠ ĐỘ đó và phủ từ từ kín nút (bán kính = khoảng cách xa nhất tới 4 góc), rồi fade. Phần tử cha cần CÓ position (relative/fixed/absolute đều chứa được ink) + `overflow:hidden`. ⚠️ KHÔNG viết rule chung ép `position:relative` lên `.nav-toggle` — nó sẽ đè `position:fixed` (cùng specificity, rule sau thắng) làm nút rơi xuống cuối trang:
+
+Ripple ink là LIQUID GLASS, không phải vệt màu phẳng: specular highlight lệch góc (circle at 35% 30%), thân trắng mờ, viền xanh nhạt, `backdrop-filter:blur(2px)` để giọt nước tự khúc xạ content bên dưới, edge highlight inset:
+
+```css
+.ripple-ink{position:absolute;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.70) 0%,rgba(255,255,255,.28) 38%,rgba(10,132,255,.20) 72%,transparent 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 0 -10px 20px rgba(10,132,255,.12),0 0 14px rgba(10,132,255,.10);
+  backdrop-filter:blur(2px) saturate(1.25);-webkit-backdrop-filter:blur(2px) saturate(1.25);
+  transform:scale(0);opacity:1;animation:rippleGrow .6s cubic-bezier(.25,.46,.45,.94) forwards}
+@keyframes rippleGrow{55%{transform:scale(1);opacity:.75}100%{transform:scale(1.04);opacity:0}}
+```
+
+```js
+(function(){
+  function attach(el){
+    el.addEventListener('pointerdown', function(e){
+      const r = el.getBoundingClientRect();
+      const x = e.clientX - r.left, y = e.clientY - r.top;
+      const rad = Math.hypot(Math.max(x, r.width - x), Math.max(y, r.height - y));
+      const ink = document.createElement('span'); ink.className = 'ripple-ink';
+      ink.style.width = ink.style.height = rad * 2 + 'px';
+      ink.style.left = (x - rad) + 'px'; ink.style.top = (y - rad) + 'px';
+      el.appendChild(ink);
+      ink.addEventListener('animationend', () => ink.remove());
+    });
+  }
+  document.querySelectorAll('nav a, .nav-toggle, .nav-close').forEach(attach);
+})();
+```
+Chạy SAU script tạo .nav-toggle để nút toggle cũng có ripple.
+
+- Tier-1 glass cho cả hai dạng
+- Scroll spy via IntersectionObserver watching `section[id]` (selector `nav a` không đổi)
+
+**Collapse (BẮT BUỘC với sidebar) — 2 nút riêng biệt:** nút ĐÓNG `✕` nằm TRONG sidebar (góc trên phải, 26×26, bg mờ nhẹ) — bấm → sidebar `translateX(-100%)`, `body{padding-left:0}` (trả lại nguyên column). Nút MỞ `☰` glass 32×32 lơ lửng góc trên trái, CHỈ hiện khi sidebar đang đóng (`body:not(.nav-collapsed) .nav-toggle{opacity:0;pointer-events:none}`). Cả 2 nút đều có ripple liquid-glass. Trạng thái nhớ `localStorage('navCollapsed')`; màn hẹp mặc định collapsed (matchMedia 640px). JS tự tạo cả 2 button — không cần sửa markup:
+
+```js
+(function(){
+  const nav = document.querySelector('nav'); if (!nav) return;
+  const btn = document.createElement('button'); btn.className = 'nav-toggle'; btn.textContent = '☰';
+  document.body.appendChild(btn);
+  const close = document.createElement('button'); close.className = 'nav-close'; close.textContent = '✕';
+  nav.appendChild(close);
+  const apply = c => { document.body.classList.toggle('nav-collapsed', c);
+    try { localStorage.setItem('navCollapsed', c ? '1' : '0'); } catch(e){} };
+  btn.addEventListener('click', () => apply(false));
+  close.addEventListener('click', () => apply(true));
+  try { const s = localStorage.getItem('navCollapsed');
+    if (s === '1' || (s !== '0' && matchMedia('(max-width:640px)').matches)) apply(true);
+  } catch(e){}
+})();
+```
+
+```css
+nav{transition:transform .28s cubic-bezier(.4,0,.2,1)}
+body{transition:padding-left .28s cubic-bezier(.4,0,.2,1)}
+body.nav-collapsed nav{transform:translateX(-100%)}
+body.nav-collapsed{padding-left:0}
+.nav-toggle{position:fixed;top:12px;left:12px;z-index:120;width:32px;height:32px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-size:14px;color:#4a4a55;cursor:pointer;
+  background:linear-gradient(165deg,rgba(255,255,255,.5),rgba(255,255,255,.24));
+  backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
+  -webkit-backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
+  border:1px solid transparent;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 0 0 1px rgba(30,90,170,.08),0 2px 10px rgba(30,90,170,.12);
+  transition:opacity .2s,transform .28s cubic-bezier(.4,0,.2,1)}
+.nav-toggle:hover{color:#0a84ff}
+body:not(.nav-collapsed) .nav-toggle{opacity:0;pointer-events:none;transform:translateX(-6px)}
+.nav-close{position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-size:12px;color:#4a4a55;cursor:pointer;
+  background:rgba(0,0,0,.04);border:none;overflow:hidden}
+.nav-close:hover{color:#0a84ff;background:rgba(10,132,255,.10)}
+/* .nav-toggle hiện ở mọi cỡ màn */
+```
+
+⚠️ **Chip kính NỔI trên nền sáng KHÔNG được dùng viền trắng đặc** (bài học 13/06/2026 — user chê viền `.nav-toggle` "trông kỳ"): nút toggle (và mọi floating glass chip góc trên-trái) nằm trên vùng nền trang gần trắng-xanh phẳng → `backdrop-filter:blur` không có gì tối phía sau để nghiền thành kính, nên thứ rõ nhất lại là cái viền `rgba(255,255,255,.55)` — một vòng 1px nét căng, đọc thành "viền sticker dán lên", không ra mép kính. Fix: `border:1px solid transparent`, để mép sinh ra từ inset top-highlight + ring lạnh cực mảnh + drop-shadow lạnh:
+```css
+border:1px solid transparent;
+box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 0 0 1px rgba(30,90,170,.08),0 2px 10px rgba(30,90,170,.12);
+```
+Quy tắc: viền trắng đặc CHỈ hợp khi pane có content tối/đa sắc phía sau để blur sample (vd sidebar đè lên section). Chip nổi trên nền sáng → mép bằng shadow lạnh, không bằng stroke trắng.
+
+## Scrollbar — overlay tự ẩn (theme thay scrollbar mặc định)
+
+Thay scrollbar mặc định của trình duyệt bằng thanh mảnh tint xanh theme, **ẩn mặc định — chỉ hiện khi đang cuộn hoặc hover lên thanh** (kiểu macOS overlay). Áp dụng cho cả viewport lẫn sidebar (`nav` có `overflow-y:auto`). Thumb dùng `background-clip:content-box` + `border:3px solid transparent` để tạo padding quanh thumb (mảnh, bo tròn, nổi). JS thêm class `.scrolling` khi cuộn rồi gỡ sau ~900ms idle:
+
+```css
+/* Chromium / Safari */
+::-webkit-scrollbar{width:11px;height:11px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:transparent;border-radius:8px;
+  border:3px solid transparent;background-clip:content-box;transition:background .25s ease}
+html.scrolling ::-webkit-scrollbar-thumb,
+nav.scrolling::-webkit-scrollbar-thumb{background:rgba(10,132,255,.32);background-clip:content-box}
+::-webkit-scrollbar-thumb:hover{background:rgba(10,132,255,.55)!important;background-clip:content-box}
+::-webkit-scrollbar-thumb:active{background:rgba(10,132,255,.7)!important;background-clip:content-box}
+/* Firefox: không ẩn overlay được → để mảnh + tint xanh khi cuộn/hover */
+html{scrollbar-width:thin;scrollbar-color:transparent transparent}
+html.scrolling,html:hover{scrollbar-color:rgba(10,132,255,.32) transparent}
+```
+
+```js
+/* hiện khi cuộn, ẩn sau ~900ms idle — gắn cho cả trang lẫn sidebar */
+(function(){
+  const flash = (el) => { let t; return () => { el.classList.add('scrolling'); clearTimeout(t);
+    t = setTimeout(() => el.classList.remove('scrolling'), 900); }; };
+  const root = document.documentElement;
+  window.addEventListener('scroll', flash(root), { passive:true });
+  const nav = document.querySelector('nav');
+  if (nav) nav.addEventListener('scroll', flash(nav), { passive:true });
+})();
+```
+
+Lưu ý: tint xanh `#0a84ff` để khớp pattern; thumb đậm dần theo hover→active. Firefox không ẩn hẳn được (reserve width), nên fallback là thanh `thin` đổi màu — chấp nhận được.
 
 ## Page Architecture
 
@@ -120,8 +328,11 @@ Each `<section>` gets two classes: `section-bg s-bgN` (N = section index mod 6).
 The gradient overlay is a `::before` pseudo-element:
 
 ```css
-.section-bg { position: relative; overflow: hidden; }
-.section-bg::before { content: ''; position: absolute; inset: 0; pointer-events: none; }
+.section-bg { position: relative; overflow: visible; }
+/* FULL-BLEED: dải màu tràn hết viewport (100vw), content vẫn max-width — KHÔNG đóng khung
+   dải tint trong box section, nhìn như panel rời, mất liền mạch */
+.section-bg::before { content: ''; position: absolute; top: 0; bottom: 0; left: 50%;
+  width: 100vw; transform: translateX(-50%); pointer-events: none; }
 /* Generate one .s-bgN::before per section index, cycling through 6 colors */
 ```
 
@@ -169,7 +380,7 @@ Apply to SVG elements: `.flow` (dashed arrows), `.pulse` (nodes), `.float` (outp
 - **Nodes**: `rx="6"` or `rx="8"` rounded rects with `fill="rgba(255,255,255,.7)"` and colored stroke
 - **Arrows**: `<line>` with `marker-end="url(#arrowN)"` using `<marker>` def, `stroke-width="2"`, and `.flow` class
 - **Text**: `text-anchor="middle"`, `font-size="9-11"`, `font-weight="600"` for labels
-- Use `font-family` from the page (`Inter, -apple-system, ...`)
+- Use `font-family` from the page (`var(--font-text)` — macOS-first stack, see Font section)
 - Always include `xmlns="http://www.w3.org/2000/svg"` on `<svg>`
 
 ### Node-Draggable Diagrams (REQUIRED for every `.diagram-box`)
@@ -186,8 +397,8 @@ This is auto-detected from the authored SVG — **no SVG markup changes needed**
 CSS — replace the old static `.diagram-box` rule with:
 
 ```css
-.diagram-box{background:rgba(255,255,255,.7);backdrop-filter:blur(8px);
-  border:1px solid rgba(255,255,255,.6);border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,.06);
+.diagram-box{background:var(--glass-2);backdrop-filter:blur(var(--blur-2)) saturate(1.1);
+  border:1px solid var(--border);border-radius:16px;box-shadow:var(--edge-hi),0 4px 20px rgba(0,0,0,.06);
   padding:24px;margin:24px 0;
   position:relative;overflow:hidden;display:flex;flex-direction:column;
   resize:vertical;min-height:160px;transition:box-shadow .2s ease}
@@ -208,9 +419,15 @@ CSS — replace the old static `.diagram-box` rule with:
   padding:3px 9px;cursor:pointer;color:#4a4a55;opacity:0;transition:opacity .2s}
 .diagram-box:hover .diagram-reset{opacity:1}
 .diagram-reset:hover{background:#fff;color:#0f0f12}
-.diagram-box::after{content:'';position:absolute;right:3px;bottom:3px;width:10px;height:10px;
-  border-right:2px solid rgba(0,0,0,.18);border-bottom:2px solid rgba(0,0,0,.18);
-  border-bottom-right-radius:3px;pointer-events:none}
+/* resize grip kiểu macOS: 3 vạch chéo trong tam giác góc — ẨN mặc định, hover mới hiện.
+   ⛔ KHÔNG dùng góc L 2 cạnh đậm luôn-hiện (bài học 12/06/2026 — user chê "luôn hiện mà còn xấu").
+   Kèm ::-webkit-resizer{display:none} để giấu grip mặc định của browser. */
+.diagram-box::after{content:'';position:absolute;right:5px;bottom:5px;width:16px;height:16px;
+  pointer-events:none;opacity:0;transition:opacity .25s ease;
+  clip-path:polygon(100% 0,100% 100%,0 100%);
+  background:repeating-linear-gradient(135deg,transparent 0 3.5px,rgba(10,132,255,.45) 3.5px 5px)}
+.diagram-box:hover::after{opacity:.85}
+.diagram-box::-webkit-resizer{display:none}
 ```
 
 JS — add once, call after DOM is parsed (script at end of `<body>`):
@@ -342,217 +559,42 @@ function initCodeCopy() {
 initCodeCopy();
 ```
 
-## ERD Component (draggable whiteboard)
+### Water-Ripple Click Effect (REQUIRED on every interactive control)
 
-For DB/schema docs, render an ERD as a **whiteboard**: styled entity cards absolutely positioned on a bounded, scrollable canvas — draggable, with SVG connector lines that follow, plus resize + fullscreen. NOT ASCII, NOT a static flex grid.
-
-**Rules:**
-- Verify every FK against the real DB (`pg_constraint`) — never invent.
-- **Phân biệt NGUỒN GỐC bảng** bằng badge ở góc phải header (`.erd-org` + `margin-left:auto`): 🆕 MỚI từ feature (`erd-org-new`), cột mới trong bảng cũ (`erd-org-col`), ♻ tái dùng/mở rộng (`erd-org-reuse`), legacy có sẵn (`erd-org-legacy`). Kèm 1 legend màu. HARD FK = solid blue line (`──FK──▶`); LOGIC relation (join/derive) = dashed gray.
-- FK-target headers get `data-ent="<table>"`. Relationship columns get `data-rel="<target>" data-rel-kind="fk|logic"`.
-- Entities are `position:absolute` inside `.erd-canvas` (large, e.g. 1480×1100) with initial `data-x/data-y` + inline `left/top`. The canvas sits in `.erd-board` (viewport: `overflow:auto; resize:vertical; height:560px`), so the user scrolls to pan and drags the corner to grow. A `⤢` button toggles `.erd-board.full` (fixed inset overlay).
-- Drag updates `left/top` (clamped to canvas), `drawERDLines()` on every move + on board scroll + window resize.
+Every clickable control (any `<button>`, `.nav-link`, `.collapse-toggle`, `.code-copy`, `.diagram-reset`, checklist labels) gets a liquid-glass water ripple on pointer-down: a soft white splash with a faint blue tint that expands from the click point like a water ring and fades. One global listener — no per-button wiring.
 
 ```css
-.erd-board{position:relative;border:1px solid var(--border);border-radius:14px;background:var(--glass);background-image:radial-gradient(rgba(99,102,150,.13) 1px,transparent 1px);background-size:22px 22px;overflow:auto;height:560px;resize:vertical}
-.erd-board.full{position:fixed;inset:18px;height:auto!important;width:auto;z-index:9999;box-shadow:0 24px 90px rgba(0,0,0,.45);resize:none;background-color:rgba(248,247,252,.9);backdrop-filter:blur(32px) saturate(1.4);-webkit-backdrop-filter:blur(32px) saturate(1.4)}  /* fullscreen = frosted MẠNH, nền đặc (đừng để trong suốt) */
-body.erd-full-on::before{content:'';position:fixed;inset:0;z-index:9998;background:rgba(20,18,30,.38);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}  /* dim + blur trang phía sau */
-.erd-canvas{position:relative;width:1480px;height:1100px}
-.erd-board .erd-ent{position:absolute;width:300px;z-index:1}
-.erd-board .erd-ent.star{width:344px;box-shadow:0 0 0 2px #f59e0b66,0 4px 16px rgba(245,158,11,.18)}
-.erd-clabel{position:absolute;z-index:0;pointer-events:none;font-size:10.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--text-2);opacity:.7}
-.erd-ent{background:var(--glass);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.05)}
-.erd-th{padding:7px 11px;font-family:ui-monospace,monospace;font-size:12px;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px;cursor:grab;user-select:none}
-.erd-th .erd-tag{font-size:9px;font-weight:700;background:rgba(255,255,255,.25);padding:1px 5px;border-radius:4px}
-.erd-th .erd-org{margin-left:auto;font-size:8px;font-weight:800;padding:1px 6px;border-radius:4px;white-space:nowrap}
-.erd-org-new{background:#16a34a;color:#fff}.erd-org-col{background:#0ea5e9;color:#fff}.erd-org-reuse{background:#fff;color:#b45309}.erd-org-legacy{background:rgba(255,255,255,.28);color:#fff}
-.erd-col{padding:4px 11px;border-top:1px solid var(--border);font-family:ui-monospace,monospace;font-size:11.5px;display:flex;flex-wrap:wrap;gap:5px;align-items:baseline}
-.erd-b{font-size:8.5px;font-weight:800;padding:1px 4px;border-radius:3px}
-.erd-pk{background:#fbbf24;color:#713f12}.erd-fk{background:#3b82f6;color:#fff}.erd-uq{background:#a78bfa;color:#fff}
-.erd-ref{color:#2563eb;font-size:10.5px}.erd-ref.logic{color:#94a3b8;font-style:italic}
-.erd-note{padding:5px 11px;border-top:1px dashed var(--border);font-size:10px;color:var(--text-2);font-style:italic}
-svg.erd-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;overflow:visible}
-svg.erd-lines path{fill:none}
-/* comment / note nodes — panel to, Find/Replace = textarea code */
-.erd-cmt{position:absolute;width:340px;background:#fff8c5;border:1px solid #ecd34a;border-radius:11px;box-shadow:0 4px 18px rgba(0,0,0,.15);z-index:5;font-size:12px}
-.erd-cmt.big{width:600px}
-.erd-cmt-h{background:#f6e05e;padding:5px 10px;border-radius:10px 10px 0 0;cursor:grab;display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:800;color:#713f12;user-select:none}
-.erd-cmt-h .erd-cmt-tools span{cursor:pointer;opacity:.6;font-weight:700;padding:0 3px}
-.erd-cmt-h .erd-cmt-tools span:hover{opacity:1}
-.erd-cmt-body{padding:7px 10px;outline:none;min-height:30px;color:#5b4708;line-height:1.45;font-weight:600}
-.erd-cmt-body:empty::before{content:'tiêu đề / ghi chú…';opacity:.4;font-weight:400}
-.erd-cmt-fr{padding:2px 10px 8px;display:flex;flex-direction:column;gap:7px}
-.erd-cmt-grp label{display:flex;justify-content:space-between;align-items:center;font-size:10px;font-weight:700;color:#8a6d1a;margin-bottom:2px}
-.erd-cmt-grp label button{font:inherit;font-size:10px;font-weight:700;border:1px solid #d9b94a;background:#fff;border-radius:5px;cursor:pointer;padding:2px 8px}
-.erd-cmt-grp label button:hover{background:#fffbe6}
-.erd-cmt-grp textarea{width:100%;box-sizing:border-box;font-family:ui-monospace,'SF Mono',monospace;font-size:11px;line-height:1.45;border:1px solid #e3cf6a;border-radius:6px;padding:5px 7px;background:#fffdf0;resize:vertical;min-height:46px;white-space:pre;overflow:auto}
-.erd-cmt.big .erd-cmt-grp textarea{min-height:150px}
-.erd-cmt-link{padding:0 10px 8px;display:flex;gap:6px;align-items:center;font-size:10px;color:#8a6d1a}
-.erd-canvas.linking{cursor:crosshair}
-.erd-canvas.linking .erd-ent,.erd-canvas.linking .erd-cmt{outline:2px dashed rgba(245,158,11,.5)}
-svg.erd-lines path.rel-hit{pointer-events:stroke;cursor:pointer}
-/* global sync panel (ghi layout vào file qua Ctrl+H) */
-.erd-syncbox{border:1px solid var(--border);background:var(--glass);border-radius:12px;padding:10px 12px;margin:0 0 8px;font-size:11.5px}
-.erd-syncrow{display:flex;align-items:center;gap:8px;margin:6px 0 3px}
-.erd-syncrow label{font-weight:700;color:var(--text-2)}
-.erd-syncrow .erd-copy{margin-left:auto;font:inherit;font-size:11px;font-weight:700;border:1px solid var(--border);background:#fff;border-radius:6px;cursor:pointer;padding:2px 9px}
-.erd-syncrow .erd-copy:hover{background:#f0f0f6}
-.erd-syncbox textarea{width:100%;box-sizing:border-box;font-family:ui-monospace,'SF Mono',monospace;font-size:10.5px;line-height:1.4;border:1px solid var(--border);border-radius:6px;padding:6px 8px;background:#fbfbfe;resize:vertical;min-height:54px;white-space:pre;overflow:auto}
+.ripple{position:absolute;border-radius:50%;pointer-events:none;transform:scale(0);opacity:.9;
+  background:radial-gradient(circle, rgba(255,255,255,.6) 0%, rgba(10,132,255,.22) 35%, transparent 70%);
+  box-shadow:0 0 0 1px rgba(255,255,255,.45);
+  animation:rippleWave .65s cubic-bezier(.2,.6,.3,1) forwards}
+@keyframes rippleWave{to{transform:scale(2.8);opacity:0}}
 ```
 
-**Interactions (persist + notes + arrows + sync-to-file):** board state (entity positions, notes, arrows) auto-saves to `localStorage` (live working copy), restored on load from `localStorage` → else from a `<script id="erd-layout-data" type="application/json">{}</script>` marker baked in the file. Double-click empty canvas → a sticky **note** (editable body only — NO per-note code fields). Click a note's **↗** → linking mode → click an entity or a relationship line (`path.rel-hit`) → orange arrow that follows on drag.
-
-**Sync layout back to file (key pattern):** Find/Replace is NOT typed per-note — it's a single **global** toolbar panel (`💾 Đồng bộ → file`) that AUTO-GENERATES for editor Ctrl+H: **Copy Find** = the marker exactly as it sits in the file now (`<script id="erd-layout-data" ...>{...}</script>`), **Copy Replace** = same marker regenerated with current dragged positions + notes. Paste into editor find-replace → Replace-All → layout is written into the source HTML (persists + shareable, not just browser). `Reset` clears localStorage + notes. Markup needs toolbar button `#erd-sync`, panel `#erd-syncbox` (readonly textareas `#erd-find`/`#erd-replace` + copy buttons), and the `<script id="erd-layout-data">{}</script>` marker. The JS below is the full reference (one IIFE):
-
-Markup (toolbar + board > canvas; each entity carries `data-x/data-y` + `left/top`; headers/cols carry `data-ent`/`data-rel`):
-```html
-<div class="erd-toolbar"><span>✋ Kéo header · cuộn để pan · kéo mép dưới khung</span>
-  <span style="margin-left:auto"><button id="erd-reset">↺ Reset</button> <button id="erd-full">⤢ Toàn màn hình</button></span></div>
-<div class="erd-board" id="erd-board"><div class="erd-canvas" id="erd-canvas">
-  <div class="erd-clabel" style="left:16px;top:16px">◆ DIMENSION</div>
-  <div class="erd-ent" data-x="16" data-y="44" style="left:16px;top:44px">
-    <div class="erd-th" data-ent="employees" style="background:#4f46e5">employees</div>
-    <div class="erd-col"><span class="erd-b erd-pk">PK</span> id</div></div>
-  <div class="erd-ent" data-x="1060" data-y="52" style="left:1060px;top:52px">
-    <div class="erd-th" style="background:#059669">payroll_records</div>
-    <div class="erd-col" data-rel="employees" data-rel-kind="fk"><span class="erd-b erd-fk">FK</span> employee_id <span class="erd-ref">→ employees.id</span></div></div>
-</div></div>
+```js
+function initRipple() {
+  document.addEventListener('pointerdown', e => {
+    const el = e.target.closest('button, .nav-link, .collapse-toggle, .checklist label');
+    if (!el || el.dataset.noRipple) return;
+    const r = el.getBoundingClientRect();
+    const d = Math.max(r.width, r.height) * 1.2;
+    const s = document.createElement('span');
+    s.className = 'ripple';
+    s.style.cssText = `width:${d}px;height:${d}px;left:${e.clientX - r.left - d/2}px;top:${e.clientY - r.top - d/2}px`;
+    if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+    el.style.overflow = 'hidden';
+    el.appendChild(s);
+    s.addEventListener('animationend', () => s.remove());
+  });
+}
+initRipple();
 ```
 
-JS — connector lines (canvas-relative) + drag (left/top, clamped) + reset + fullscreen:
-```javascript
-/* ─── ERD whiteboard: lines + drag + comments(find/replace) + arrows + persist + fullscreen ─── */
-(function(){
-  const NS='http://www.w3.org/2000/svg';
-  const LS='erd-board-030626';
-  const canvas=document.getElementById('erd-canvas');
-  const board=document.getElementById('erd-board');
-  if(!canvas) return;
-
-  // baseline = state ĐANG GHI trong file (script#erd-layout-data); localStorage = bản làm việc trực tiếp
-  const dataEl=document.getElementById('erd-layout-data');
-  const fileRaw=(dataEl&&dataEl.textContent.trim())||'{}';
-  let fileState={}; try{ fileState=JSON.parse(fileRaw)||{}; }catch(e){ fileState={}; }
-  let BOARD; try{ BOARD=JSON.parse(localStorage.getItem(LS))||null; }catch(e){ BOARD=null; }
-  if(!BOARD) BOARD=JSON.parse(JSON.stringify(fileState));   // chưa có bản làm việc → dùng file
-  BOARD.ents=BOARD.ents||{}; BOARD.comments=BOARD.comments||[]; BOARD.seq=BOARD.seq||1;
-  const save=()=>{ try{ localStorage.setItem(LS,JSON.stringify(BOARD)); }catch(e){} };
-  // Find = đoạn script hiện có trong file (1 dòng); Replace = đoạn mới theo BOARD
-  const wrapData=j=>'<script id="erd-layout-data" type="application/json">'+j+'<\/script>';
-  const findText=()=>wrapData(fileRaw);
-  const replaceText=()=>wrapData(JSON.stringify({ents:BOARD.ents,comments:BOARD.comments,seq:BOARD.seq}));
-  function nameOf(ent){ const h=ent.querySelector('.erd-th'); return ((h.childNodes[0]&&h.childNodes[0].textContent)||'').trim(); }
-  function copyText(t,btn){ const done=()=>{ const o=btn.textContent; btn.textContent='✓'; setTimeout(()=>btn.textContent=o,900); };
-    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(t||'').then(done).catch(fb); } else fb();
-    function fb(){ const ta=document.createElement('textarea'); ta.value=t||''; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch(e){} ta.remove(); done(); } }
-
-  let linking=null;
-
-  function ensureSVG(){
-    let svg=canvas.querySelector('svg.erd-lines');
-    if(!svg){ svg=document.createElementNS(NS,'svg'); svg.setAttribute('class','erd-lines');
-      const d=document.createElementNS(NS,'defs');
-      d.innerHTML='<marker id="erd-arrow" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#3b82f6"/></marker>'
-        +'<marker id="erd-arrow-g" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#94a3b8"/></marker>'
-        +'<marker id="erd-arrow-c" markerWidth="8" markerHeight="8" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#ea580c"/></marker>';
-      svg.appendChild(d); canvas.prepend(svg); }
-    return svg;
-  }
-  function bez(sx,sy,tx,ty){ const L=tx<sx; const dx=Math.max(30,Math.abs(tx-sx)*0.45); const c1=sx+(L?-dx:dx),c2=tx+(L?dx:-dx); return 'M '+sx+' '+sy+' C '+c1+' '+sy+' '+c2+' '+ty+' '+tx+' '+ty; }
-
-  function draw(){
-    const svg=ensureSVG();
-    [...svg.querySelectorAll('path,circle')].forEach(n=>n.remove());
-    const W=canvas.getBoundingClientRect();
-    const ents={}; canvas.querySelectorAll('[data-ent]').forEach(e=>ents[e.getAttribute('data-ent')]=e.closest('.erd-ent'));
-    canvas.querySelectorAll('[data-rel]').forEach(src=>{
-      const tgt=ents[src.getAttribute('data-rel')]; if(!tgt) return;
-      const fk=(src.getAttribute('data-rel-kind')||'fk')==='fk';
-      const s=src.getBoundingClientRect(),t=tgt.getBoundingClientRect();
-      const L=(t.left+t.width/2)<(s.left+s.width/2);
-      const sx=(L?s.left:s.right)-W.left, sy=s.top+s.height/2-W.top, tx=(L?t.right:t.left)-W.left, ty=t.top+t.height/2-W.top;
-      const col=fk?'#3b82f6':'#94a3b8';
-      const p=document.createElementNS(NS,'path'); p.setAttribute('d',bez(sx,sy,tx,ty)); p.setAttribute('stroke',col); p.setAttribute('stroke-width','1.6'); p.setAttribute('stroke-opacity','0.6');
-      if(!fk) p.setAttribute('stroke-dasharray','5 4');
-      p.setAttribute('marker-end',fk?'url(#erd-arrow)':'url(#erd-arrow-g)');
-      const se=src.closest('.erd-ent'); p.dataset.relkey=(se?nameOf(se):'')+'|'+src.getAttribute('data-rel');
-      if(linking){ p.classList.add('rel-hit'); p.addEventListener('click',ev=>{ ev.stopPropagation(); setLink(linking,{type:'rel',key:p.dataset.relkey}); }); }
-      svg.appendChild(p);
-      const c=document.createElementNS(NS,'circle'); c.setAttribute('cx',sx); c.setAttribute('cy',sy); c.setAttribute('r','2.5'); c.setAttribute('fill',col); svg.appendChild(c);
-    });
-    BOARD.comments.forEach(cm=>{
-      if(!cm.link) return; const el=document.getElementById('cmt-'+cm.id); if(!el) return;
-      const r=el.getBoundingClientRect(); const sx=r.left+r.width/2-W.left, sy=r.top+r.height/2-W.top; let tx,ty;
-      if(cm.link.type==='ent'){ const te=ents[cm.link.name]||[...canvas.querySelectorAll('.erd-ent')].find(e=>nameOf(e)===cm.link.name); if(!te) return; const t=te.getBoundingClientRect(); const L=(t.left+t.width/2)<r.left+r.width/2; tx=(L?t.right:t.left)-W.left; ty=t.top+t.height/2-W.top; }
-      else { const pp=svg.querySelector('path[data-relkey="'+cm.link.key+'"]'); if(!pp) return; const m=pp.getPointAtLength(pp.getTotalLength()/2); tx=m.x; ty=m.y; }
-      const p=document.createElementNS(NS,'path'); p.setAttribute('d',bez(sx,sy,tx,ty)); p.setAttribute('stroke','#ea580c'); p.setAttribute('stroke-width','1.8'); p.setAttribute('stroke-dasharray','2 3'); p.setAttribute('marker-end','url(#erd-arrow-c)'); svg.appendChild(p);
-    });
-  }
-
-  function makeDraggable(el,handle,onEnd){
-    handle.style.cursor='grab'; handle.style.userSelect='none';
-    let sx,sy,ox,oy,dr=false;
-    handle.addEventListener('pointerdown',e=>{ if(e.target.closest('button,input,.erd-cmt-x,.erd-cmt-link-btn')) return; dr=true; ox=parseFloat(el.style.left)||0; oy=parseFloat(el.style.top)||0; sx=e.clientX; sy=e.clientY; el.style.zIndex='40'; handle.style.cursor='grabbing'; handle.setPointerCapture(e.pointerId); e.preventDefault(); });
-    handle.addEventListener('pointermove',e=>{ if(!dr) return; const nx=Math.max(0,Math.min(canvas.clientWidth-el.offsetWidth,ox+e.clientX-sx)); const ny=Math.max(0,Math.min(canvas.clientHeight-el.offsetHeight,oy+e.clientY-sy)); el.style.left=nx+'px'; el.style.top=ny+'px'; draw(); });
-    const end=()=>{ if(!dr) return; dr=false; el.style.zIndex=el.classList.contains('erd-cmt')?'5':'1'; handle.style.cursor='grab'; onEnd(parseFloat(el.style.left)||0,parseFloat(el.style.top)||0); draw(); };
-    handle.addEventListener('pointerup',end); handle.addEventListener('pointercancel',end);
-  }
-
-  function startLinking(id){ linking=id; canvas.classList.add('linking'); ensureSVG().classList.add('linking'); draw(); }
-  function stopLinking(){ if(!linking) return; linking=null; canvas.classList.remove('linking'); const s=canvas.querySelector('svg.erd-lines'); if(s) s.classList.remove('linking'); draw(); }
-  function setLink(id,link){ const cm=BOARD.comments.find(c=>c.id===id); if(cm){ cm.link=link; save(); const el=document.getElementById('cmt-'+id); const lt=el&&el.querySelector('.erd-cmt-lt'); if(lt) lt.textContent='→ '+(link.type==='ent'?link.name:link.key); } stopLinking(); }
-
-  function addCommentNode(cm){
-    if(document.getElementById('cmt-'+cm.id)) return;
-    const el=document.createElement('div'); el.className='erd-cmt'; el.id='cmt-'+cm.id; el.style.left=cm.x+'px'; el.style.top=cm.y+'px';
-    el.innerHTML='<div class="erd-cmt-h"><span>💬 note</span><span class="erd-cmt-tools">'
-      +'<span class="erd-cmt-link-btn" title="nối mũi tên tới bảng / đường quan hệ">↗</span>'
-      +'<span class="erd-cmt-x" title="xóa">✕</span></span></div>'
-      +'<div class="erd-cmt-body" contenteditable="true"></div>'
-      +'<div class="erd-cmt-link"><span class="erd-cmt-lt"></span></div>';
-    canvas.appendChild(el);
-    const body=el.querySelector('.erd-cmt-body'); body.textContent=cm.text||'';
-    const lt=el.querySelector('.erd-cmt-lt'); if(cm.link) lt.textContent='→ '+(cm.link.type==='ent'?cm.link.name:cm.link.key);
-    body.addEventListener('input',()=>{ cm.text=body.textContent; save(); });
-    el.querySelector('.erd-cmt-x').addEventListener('click',()=>{ BOARD.comments=BOARD.comments.filter(c=>c.id!==cm.id); save(); el.remove(); draw(); });
-    el.querySelector('.erd-cmt-link-btn').addEventListener('click',()=>startLinking(cm.id));
-    makeDraggable(el,el.querySelector('.erd-cmt-h'),(x,y)=>{ cm.x=Math.round(x); cm.y=Math.round(y); save(); });
-  }
-
-  function initEnts(){
-    canvas.querySelectorAll('.erd-ent').forEach(ent=>{
-      const nm=nameOf(ent); ent.dataset.name=nm;
-      if(BOARD.ents[nm]){ ent.style.left=BOARD.ents[nm].x+'px'; ent.style.top=BOARD.ents[nm].y+'px'; }
-      const h=ent.querySelector('.erd-th'); if(h.dataset.drag) return; h.dataset.drag='1';
-      ent.addEventListener('click',e=>{ if(linking){ e.stopPropagation(); setLink(linking,{type:'ent',name:nm}); } });
-      makeDraggable(ent,h,(x,y)=>{ BOARD.ents[nm]={x:Math.round(x),y:Math.round(y)}; save(); });
-    });
-  }
-
-  canvas.addEventListener('dblclick',e=>{ if(e.target.closest('.erd-ent')||e.target.closest('.erd-cmt')) return;
-    const W=canvas.getBoundingClientRect(); const cm={id:BOARD.seq++,x:Math.round(e.clientX-W.left),y:Math.round(e.clientY-W.top),text:'',find:'',replace:'',link:null};
-    BOARD.comments.push(cm); save(); addCommentNode(cm); const b=document.getElementById('cmt-'+cm.id).querySelector('.erd-cmt-body'); b&&b.focus(); draw(); });
-  canvas.addEventListener('click',e=>{ if(linking && !e.target.closest('.erd-ent') && !e.target.closest('path.rel-hit') && !e.target.closest('.erd-cmt')) stopLinking(); });
-
-  document.getElementById('erd-reset')?.addEventListener('click',()=>{ if(!confirm('Reset vị trí + xóa hết note/mũi tên?')) return;
-    BOARD={ents:{},comments:[],seq:1}; save(); canvas.querySelectorAll('.erd-cmt').forEach(n=>n.remove());
-    canvas.querySelectorAll('.erd-ent').forEach(e=>{ e.style.left=e.dataset.x+'px'; e.style.top=e.dataset.y+'px'; }); draw(); });
-  document.getElementById('erd-full')?.addEventListener('click',e=>{ const on=board.classList.toggle('full'); document.body.classList.toggle('erd-full-on',on); e.target.textContent=on?'✕ Thoát toàn màn hình':'⤢ Toàn màn hình'; setTimeout(draw,60); });
-
-  // global sync → file (tự sinh Find/Replace cho Ctrl+H)
-  const syncBox=document.getElementById('erd-syncbox');
-  function fillSync(){ const f=document.getElementById('erd-find'),r=document.getElementById('erd-replace'); if(f) f.value=findText(); if(r) r.value=replaceText(); }
-  document.getElementById('erd-sync')?.addEventListener('click',()=>{ const on=syncBox.hidden; syncBox.hidden=!on; if(on) fillSync(); });
-  syncBox?.querySelectorAll('.erd-copy').forEach(b=>b.addEventListener('click',e=>{ fillSync(); copyText(e.target.dataset.t==='find'?findText():replaceText(),e.target); }));
-
-  function boot(){ initEnts(); BOARD.comments.forEach(addCommentNode); draw(); }
-  window.addEventListener('load',boot);
-  let T; window.addEventListener('resize',()=>{ clearTimeout(T); T=setTimeout(draw,150); });
-  board.addEventListener('scroll',()=>{ clearTimeout(T); T=setTimeout(draw,40); });
-  setTimeout(boot,320);
-  window.drawERDLines=draw;
-})();
-```
+Notes:
+- The ripple origin is the actual click point (`clientX/Y` relative to the control), not the center — that is what makes it read as water, not a flash.
+- `overflow:hidden` is forced on the host so the ring clips to the control's rounded shape.
+- Opt out with `data-no-ripple` on controls where clipping would break layout (e.g. the diagram viewport itself — pan/drag should not splash).
+- Keep the tint blue-family (`rgba(10,132,255,…)`) per the palette; on dark surfaces (code panels) the white core carries the effect.
 
 ## Collapse / Xem thêm
 
@@ -610,11 +652,26 @@ sections.forEach(s => observer.observe(s));
 
 ## Font
 
-Use Inter from Google Fonts:
-```html
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+System fonts ONLY — NO Google Fonts `<link>`, no `@import`, no webfont download. Ưu tiên bộ font macOS (San Francisco); máy không có SF thì rơi xuống Roboto / Segoe UI — các fallback đều phải thanh lịch, không để rơi về Arial/Times:
+
+```css
+:root{
+  --font-text: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', 'Roboto', 'Segoe UI', sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', 'Roboto', 'Segoe UI', sans-serif;
+  --font-mono: 'SF Mono', ui-monospace, 'SFMono-Regular', Menlo, 'Roboto Mono', Consolas, monospace;
+}
+body{font-family:var(--font-text)}
+h1,h2,h3,.logo{font-family:var(--font-display);letter-spacing:-.02em}  /* SF Pro Display cho cỡ ≥20px */
+pre.code-block,.foot-tree{font-family:var(--font-mono)}
 ```
-Font stack: `'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif`
+
+- `-apple-system`/`BlinkMacSystemFont` đã resolve ra San Francisco trên macOS — 'SF Pro Text/Display' chỉ là tên tường minh cho máy cài rời.
+- Roboto/Segoe UI là fallback hệ (Android/Linux/Windows có sẵn) — KHÔNG tải webfont để giữ self-contained.
+- Mono luôn đi qua `ui-monospace` trước Menlo để bắt SF Mono trên macOS mới.
+
+## Self-Contained — CRITICAL
+
+The user opens these files directly (`file://`, offline, double-click). The output HTML must make ZERO external requests: no font/CSS/JS CDN links, no remote images, no `@import`, no `<script src>`. Everything (CSS, JS, SVG, icons) lives inline in the one file. `<a href>` hyperlinks to external sites are fine — they are navigation, not resource loads.
 
 ## Output Path — CRITICAL
 
@@ -662,7 +719,7 @@ When the user asks to "see how the UI will look", "tạo bảng tương tác th�
 - **Proper modal, not `confirm()`** — reserve a styled modal ONLY for destructive actions (e.g. "clear all overrides"); parametrize title/okText/danger.
 - **Focus after async UI** — when an edit starts right after closing a modal/dialog, focus the input on a tick (`setTimeout(...,0)`), or it won't take focus.
 
-Keep the chrome (traffic-light header), Inter font, and slate/amber palette consistent with the doc sites.
+Keep the chrome (traffic-light header), Inter font, and monochrome slate palette consistent with the doc sites (amber/emerald override-state colors in the data-grid pattern above are the one allowed exception — they encode editing state, not theme).
 
 ## Best Practices
 
@@ -680,7 +737,7 @@ Keep the chrome (traffic-light header), Inter font, and slate/amber palette cons
   background: rgba(255,255,255,.8); margin-top: 2px; transition: all .15s;
 }
 .checklist input[type="checkbox"]:checked {
-  background: #6366f1; border-color: #6366f1;
+  background: #0a84ff; border-color: #0a84ff;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M13 4L6.5 11 3 7.5' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");
   background-size: contain;
 }
@@ -698,9 +755,9 @@ Keep the chrome (traffic-light header), Inter font, and slate/amber palette cons
 - ALWAYS make each `<section>` self-contained with accent colors from the cycle by its index (use `#sec-{i}` CSS rules)
 - Keep SVG viewBox widths consistent (900) across diagrams for visual harmony
 - Use relative `../file.md` links for "Chi tiết" footers pointing to companion markdown files
-- The hero heading gradient should use 3 stops: `linear-gradient(135deg, #6366f1, #a855f7, #ec4899)`
-- Nav logo gradient: `linear-gradient(135deg, #6366f1, #a855f7)`
-- Number of sections is variable — cycle through the 6-color palette with modulo (`i % 6`)
+- The hero heading gradient should use 3 stops, blue → light blue (KHÔNG bắt đầu bằng navy đậm): `linear-gradient(135deg, #0a84ff, #5aa2e8, #cfe3fb)`
+- Nav logo gradient: `linear-gradient(135deg, #0a84ff, #64b5f7)`
+- Number of sections is variable — cycle through the 6-blue palette with modulo (`i % 6`)
 - ALWAYS start an auto-host server after writing the HTML file (see Auto-Host section above)
 
 
