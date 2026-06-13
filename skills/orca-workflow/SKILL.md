@@ -66,7 +66,7 @@ Tạo kèm **sequence diagram hoạt họa** `llmwiki/html/DDMMYY-tên-seq.html`
 > **⚠️ BÀI HỌC 130626 — doc KHÔNG được "toàn chart không có chữ":** lỗi cũ là nhãn message để `opacity:0` rồi mới hiện dần qua JS → mở ra thấy trống trơn; và không có đoạn văn nào ngoài diagram. BẮT BUỘC mọi seq html mới:
 > 1. **Nhãn message LUÔN HIỆN** ngay khi load (`.msg{opacity:.82}` trở lên — KHÔNG `opacity:0`). Animation **chỉ làm NỔI bước đang chạy** (`.msg.active{opacity:1}` + glow), auto-loop, click để pause — KHÔNG ẩn rồi reveal.
 > 2. **Mỗi task có 1 đoạn prose `<p class="desc">`** (1–3 câu): ai làm gì, dữ liệu chảy thế nào, nhánh an toàn/fail — đọc hiểu được mà KHÔNG cần xem animation.
-> 3. **Theme = docs-site-macos (LIGHT glass):** nền gradient xanh nhạt + glass trắng `backdrop-filter:blur` + traffic-light chrome. KHÔNG dùng nền tối `#0b0e14`. Chữ tối trên nền sáng.
+> 3. **Theme = docs-site-macos (LIGHT glass) ĐẦY ĐỦ, không phải chỉ đổi màu:** áp dụng recipe của skill `docs-site-macos` — BẮT BUỘC có **LEFT SIDEBAR cố định** (`nav{position:fixed;left:0;width:200px}`, mỗi task 1 link, scroll-spy `IntersectionObserver` + `nav a.active`), nút collapse `☰`/`✕` + ripple, sidebar là kính thật (gradient-alpha + `nav::before` sheen + **orb màu dọc mép trái sau lưng sidebar**), nền gradient xanh + dot-grid. KHÔNG nền tối `#0b0e14`, KHÔNG top-bar. Mỗi diagram bọc trong `<section id="tN">` để scroll-spy bắt. Đọc `~/.agents/skills/docs-site-macos/SKILL.md` mục Navigation để copy CSS/JS chính xác.
 > 4. SVG: text label phải nằm trong viewBox, `esc()` nội dung trước khi nhúng để không vỡ HTML.
 > Mẫu chuẩn đã làm: `SeetaFaceEngine/llmwiki/html/130626-fr-greet-lite3-seq.html`.
 
