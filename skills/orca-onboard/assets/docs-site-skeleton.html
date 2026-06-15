@@ -26,7 +26,13 @@
   --glass:var(--glass-2); --glass-border:rgba(30,90,170,.14);
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;background:#e9f0fb;scrollbar-width:thin;scrollbar-color:transparent transparent}
+html.scrolling{scrollbar-color:rgba(10,132,255,.32) transparent}
+::-webkit-scrollbar{width:11px;height:11px;background:transparent}
+::-webkit-scrollbar-track,::-webkit-scrollbar-track-piece,::-webkit-scrollbar-corner,::-webkit-scrollbar-button{background:transparent;border:0;box-shadow:none}
+::-webkit-scrollbar-thumb{background:transparent;border-radius:8px;border:3px solid transparent;background-clip:content-box;transition:background-color .25s ease}
+html.scrolling::-webkit-scrollbar-thumb,nav.scrolling::-webkit-scrollbar-thumb,::-webkit-scrollbar-thumb:hover{background-color:rgba(10,132,255,.32)}
+::-webkit-scrollbar-thumb:active{background-color:rgba(10,132,255,.6)}
 body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif;
   background:radial-gradient(900px 500px at 12% -10%,rgba(10,132,255,.10),transparent 60%),radial-gradient(700px 420px at 95% 15%,rgba(90,162,232,.08),transparent 55%),linear-gradient(180deg,#f7fbff 0%,#eaf2fd 100%);background-attachment:fixed;color:var(--text);line-height:1.6}
 nav{position:fixed;top:0;left:0;right:0;height:48px;z-index:100;display:flex;align-items:center;gap:4px;
@@ -504,6 +510,15 @@ initDraggableDiagrams();
     });
   }
   document.querySelectorAll('nav a, .nav-toggle, .nav-close').forEach(attach);
+})();
+</script>
+
+<script>
+/* scrollbar overlay — fade pill in khi đang cuộn rồi tự ẩn (~900ms idle) */
+(function(){
+  const flash = (el) => { let t; return () => { el.classList.add('scrolling'); clearTimeout(t); t = setTimeout(() => el.classList.remove('scrolling'), 900); }; };
+  window.addEventListener('scroll', flash(document.documentElement), { passive:true });
+  const nav = document.querySelector('nav'); if (nav) nav.addEventListener('scroll', flash(nav), { passive:true });
 })();
 </script>
 </body>

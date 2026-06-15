@@ -275,21 +275,29 @@ Quy tắc: viền trắng đặc CHỈ hợp khi pane có content tối/đa sắ
 
 ## Scrollbar — overlay tự ẩn (theme thay scrollbar mặc định)
 
-Thay scrollbar mặc định của trình duyệt bằng thanh mảnh tint xanh theme, **ẩn mặc định — chỉ hiện khi đang cuộn hoặc hover lên thanh** (kiểu macOS overlay). Áp dụng cho cả viewport lẫn sidebar (`nav` có `overflow-y:auto`). Thumb dùng `background-clip:content-box` + `border:3px solid transparent` để tạo padding quanh thumb (mảnh, bo tròn, nổi). JS thêm class `.scrolling` khi cuộn rồi gỡ sau ~900ms idle:
+Thay scrollbar mặc định của trình duyệt bằng overlay **ẩn HOÀN TOÀN — track/nền/corner/button đều trong suốt, KHÔNG còn dải gutter**. Chỉ **viên pill (thumb)** fade-in (alpha 0 → tint xanh) và trượt theo nội dung khi **đang cuộn** hoặc khi **rê chuột vào dải scrollbar** (hover thumb). Áp dụng cho cả viewport lẫn sidebar (`nav` có `overflow-y:auto`). Thumb dùng `background-clip:content-box` + `border:3px solid transparent` để pill mảnh, bo tròn, nổi giữa gutter. JS thêm class `.scrolling` khi cuộn rồi gỡ sau ~900ms idle:
+
+⚠️ **Bài học 13/06/2026 (user: "ẩn đi hoàn toàn luôn kể cả thanh nền"):** chỉ set `track{background:transparent}` là CHƯA đủ — `track-piece`, `corner`, `button` vẫn có thể vẽ nền/viền mặc định thành một dải xám mờ. Phải ép TẤT CẢ phần không phải thumb về `background:transparent;border:0;box-shadow:none`. Default thumb cũng alpha 0 (vô hình); chỉ fade qua `background-color` (transition mượt như opacity) khi `.scrolling` / `:hover`. KHÔNG `opacity` trực tiếp lên pseudo scrollbar (webkit không hỗ trợ ổn định) — dùng alpha của `background-color`.
+
+⚠️ **Khi scrollbar trong suốt → dải gutter lộ CANVAS, phải set nền cho `html`:** gutter `width:11px` vẫn chiếm chỗ; track + thumb transparent nên nó lộ canvas phía sau. Nền gradient thường đặt trên `body` (đã trừ scrollbar) → KHÔNG phủ dải gutter → canvas `html` mặc định **trắng** → thành **vệt trắng dọc mép phải full-height**. Fix: cho `html` một nền tông xanh khớp field (`html{background:#e9f0fb}`).
 
 ```css
 /* Chromium / Safari */
-::-webkit-scrollbar{width:11px;height:11px}
-::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar{width:11px;height:11px;background:transparent}
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-track-piece,
+::-webkit-scrollbar-corner,
+::-webkit-scrollbar-button{background:transparent;border:0;box-shadow:none}
 ::-webkit-scrollbar-thumb{background:transparent;border-radius:8px;
-  border:3px solid transparent;background-clip:content-box;transition:background .25s ease}
-html.scrolling ::-webkit-scrollbar-thumb,
-nav.scrolling::-webkit-scrollbar-thumb{background:rgba(10,132,255,.32);background-clip:content-box}
-::-webkit-scrollbar-thumb:hover{background:rgba(10,132,255,.55)!important;background-clip:content-box}
-::-webkit-scrollbar-thumb:active{background:rgba(10,132,255,.7)!important;background-clip:content-box}
-/* Firefox: không ẩn overlay được → để mảnh + tint xanh khi cuộn/hover */
-html{scrollbar-width:thin;scrollbar-color:transparent transparent}
-html.scrolling,html:hover{scrollbar-color:rgba(10,132,255,.32) transparent}
+  border:3px solid transparent;background-clip:content-box;transition:background-color .25s ease}
+/* hiện pill khi đang cuộn (JS toggle .scrolling) HOẶC khi trỏ vào dải scrollbar (hover thumb) */
+html.scrolling::-webkit-scrollbar-thumb,
+nav.scrolling::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-thumb:hover{background-color:rgba(10,132,255,.32)}
+::-webkit-scrollbar-thumb:active{background-color:rgba(10,132,255,.6)}
+/* set nền html để gutter trong suốt không lộ canvas trắng */
+html{background:#e9f0fb;scrollbar-width:thin;scrollbar-color:transparent transparent}
+html.scrolling{scrollbar-color:rgba(10,132,255,.32) transparent}
 ```
 
 ```js
