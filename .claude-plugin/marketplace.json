@@ -48,7 +48,6 @@
         "./skills/harness-update",
         "./skills/impact-check",
         "./skills/ingest",
-        "./skills/join-project",
         "./skills/lint",
         "./skills/md-to-html",
         "./skills/new-project-setup",
