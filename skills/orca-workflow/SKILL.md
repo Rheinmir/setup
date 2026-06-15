@@ -96,8 +96,8 @@ Phân rã tasks → `orca orchestration task-create` mỗi task (nếu cần dis
 
 ### Bước 5 — dispatch (nếu cần agent khác)
 Chỉ dispatch đúng theo **Agent Task Assignment** đã duyệt ở gate. Muốn đổi agent/model → cập nhật board, in lại, hỏi lại user.
-`orca orchestration dispatch --task <id> --to <agent> --inject`; nếu fail → `orca terminal send`
-Chờ: `orca terminal wait --for tui-idle` → `orca terminal read`
+`orca orchestration dispatch --task <id> --to <agent> --inject`; nếu fail → `orca terminal send --terminal <handle>`
+Chờ: `orca terminal wait --for tui-idle --terminal <handle>` → `orca terminal read --terminal <handle>`
 Sau mỗi task xong → cập nhật cột Status trong file propose NGAY (pending → in-progress → done), không dồn về cuối.
 
 ### Bước 6 — verify
@@ -105,22 +105,25 @@ Invoke `verify-before-commit` trước mỗi commit.
 
 ## Dispatch nhanh
 
+> ⚠️ **Flag bí danh**: chỉ `terminal create` nhận `--title`. `send`/`wait`/`read` nhận `--terminal <handle>`, KHÔNG có `--title`. Handle (`term_xxx`) lấy từ output của `create` hoặc cột đầu của `terminal list`.
+
 ```bash
-# Check terminals
+# Check terminals — cột đầu mỗi dòng là handle term_xxx
 orca terminal list
 
-# Tạo Antigravity terminal (nếu chưa có)
-orca terminal create --worktree active --title "Antigravity" --command "agy"
-
-# Tạo OpenCode terminal
+# Tạo terminal (create dùng --title) — output in ra: Created terminal term_xxx (title: "...")
 orca terminal create --worktree active --title "OpenCode" --command "opencode"
+HANDLE=term_xxx   # copy từ output create, hoặc lấy từ `orca terminal list`
 
-# Gửi task
-orca terminal send --title "Antigravity" --text "<task description>"
+# Gửi task — dùng --terminal <handle> (KHÔNG --title); --enter để submit
+orca terminal send --terminal "$HANDLE" --enter --text "<task description>"
 
-# Đọc kết quả
-orca terminal wait --for tui-idle && orca terminal read --title "Antigravity"
+# Chờ idle rồi đọc — wait/read đều dùng --terminal <handle>
+orca terminal wait --for tui-idle --terminal "$HANDLE" --timeout-ms 300000
+orca terminal read --terminal "$HANDLE"
 ```
+
+> ⚠️ **tui-idle ≠ task xong**: `wait --for tui-idle` trả `satisfied: true` ngay cả khi agent mới chạy nửa task. Sau khi wait, PHẢI poll một artifact cụ thể (file mong đợi đã tồn tại, hoặc chuỗi "DONE" trong `terminal read`) trước khi coi task hoàn thành; loop tối đa N lần, mỗi lần sleep ngắn. Đừng tin mỗi tui-idle.
 
 ## Agent binaries
 
