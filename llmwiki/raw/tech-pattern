@@ -1,0 +1,15 @@
+| Tên thường gọi   | Thực chất là pattern/ý tưởng      |
+| ---------------- | --------------------------------- |
+| Kafka            | Event Streaming / Distributed Log |
+| Redis            | In-memory Cache                   |
+| Elasticsearch    | Full-text Search Engine           |
+| Kubernetes (K8s) | Container Orchestration           |
+| Docker           | Containerization                  |
+| Git              | Distributed Version Control       |
+| Terraform        | Infrastructure as Code (IaC)      |
+| Jenkins          | CI/CD Pipeline                    |
+| Hadoop           | Distributed Data Processing       |
+| Spark            | Distributed Data Analytics        |
+| Prometheus       | Metrics Collection & Monitoring   |
+| Grafana          | Metrics Visualization             |
+| Vault            | Secrets Management                |
