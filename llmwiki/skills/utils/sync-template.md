@@ -14,6 +14,12 @@ Sync structural/template improvements between project and `https://github.com/Rh
 
 ## Steps
 
+### Step 0: Pre-flight — health-check (chẩn đoán trước khi sync)
+Chạy `/health-check` (`python3 harness/scripts/health-check.py --root .`) để biết NÊN sync hướng nào:
+- `NEEDS-SYNC` (behind/missing) → downstream (kéo về).
+- `DRIFT` (đã sửa local) → upstream (đẩy lên) hoặc revert.
+- `OK` → không cần sync, dừng.
+
 ### Step 1: Load Manifest
 Read `.template-manifest.json` — inclusion list + remote URL.
 
@@ -68,6 +74,14 @@ Show table. **STOP** → ask user: pull all / push all / specific files / direct
 - **Downstream**: `mkdir -p` → `curl -sfL <url> -o <local_path>` → update `wiki/log.md`
 - **Upstream**: commit + push via `gh`/`git`
 - File by file — no `cp -R`
+
+### Step 6b: Refresh version fingerprint *(sau MỌI downstream sync)*
+Nội dung pattern vừa đổi → cập nhật lại `harness/version.json` để health-check khỏi báo DRIFT giả:
+```bash
+python3 harness/scripts/health-check.py --update   # KHÔNG --bump ở project con
+```
+- `--bump major|minor|patch` CHỈ chạy ở repo template `Rheinmir/setup` khi PHÁT HÀNH version pattern mới.
+- Upstream sync ở repo template: sau khi push, chạy `--update --bump <part>` rồi commit `harness/version.json`.
 
 ### Step 7: Install as Native Skills *(runs every downstream sync)*
 

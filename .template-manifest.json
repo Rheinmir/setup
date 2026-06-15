@@ -28,6 +28,7 @@
     "llmwiki/skills/orchestrate/orca-workflow.md",
     "llmwiki/skills/orchestrate/orca-onboard.md",
     "llmwiki/skills/utils/sync-template.md",
+    "llmwiki/skills/utils/health-check.md",
     "llmwiki/skills/utils/md-to-html.md",
     "llmwiki/skills/utils/docs-site-macos-skill.md",
     "llmwiki/skills/utils/cavecrew.md",

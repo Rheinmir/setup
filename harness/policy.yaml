@@ -57,3 +57,10 @@ rules:
       - "Bảng '## Agent Task Assignment' ≥1 row, không ô Agent nào trống"
       - "Link '**Sequence diagram**' trỏ file .html tồn tại trên disk"
       - "Số <div class=\"diagram-box\"> trong html ≥ số task '- [ ]' trong Plan"
+
+  - id: R8
+    name: pattern-sync-health
+    validator: null              # L4 eval (harness/scripts/health-check.py), KHÔNG chặn — chỉ báo cáo
+    statement: "Bộ pattern chuẩn (.template-manifest.json) phải đủ file, không drift, không tụt hậu remote."
+    enforce_at: [session-start]  # SessionStart hook chạy health-check, in cảnh báo nếu lệch
+    note: "version.json = fingerprint (version + hash từng pattern). Báo cáo, không gate; sync bằng /sync-template."

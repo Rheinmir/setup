@@ -48,7 +48,8 @@ if [ "${1:-}" = "--global" ]; then
   mkdir -p "$GH/hooks/validators"
   cp "$SRC/llmwiki/.claude/hooks/"*.py "$GH/hooks/"
   cp "$SRC/harness/validators/"*.py "$GH/hooks/validators/"
-  log "GLOBAL: hooks + validators → $GH/hooks/"
+  cp "$SRC/harness/scripts/health-check.py" "$GH/hooks/health-check.py"   # session_start.py tìm cạnh hooks
+  log "GLOBAL: hooks + validators + health-check → $GH/hooks/"
 
   SETTINGS="$HOME/.claude/settings.json"
   [ -f "$SETTINGS" ] && cp "$SETTINGS" "$SETTINGS.bak.$(date +%s)" || echo '{}' > "$SETTINGS"
@@ -65,6 +66,7 @@ tpl = {
     "PostToolUse": {"matcher": "Write|Edit|MultiEdit", "script": "post_tool_use.py"},
     "Stop":        {"matcher": None, "script": "stop.py"},
     "SessionEnd":  {"matcher": None, "script": "session_end.py"},
+    "SessionStart": {"matcher": None, "script": "session_start.py"},
 }
 cur.setdefault("permissions", {}).setdefault("deny", [])
 for d in ["Write(./llmwiki/raw/**)", "Edit(./llmwiki/raw/**)", "MultiEdit(./llmwiki/raw/**)"]:
@@ -114,6 +116,8 @@ if [ "$SAME_BUNDLE" = "0" ]; then
   cp "$SRC/harness/policy.yaml"               "$ROOT/harness/policy.yaml"
   cp "$SRC/harness/recipe.md"                 "$ROOT/harness/recipe.md"
   cp "$SRC/harness/scripts/wiki-health.py"    "$ROOT/harness/scripts/wiki-health.py"
+  cp "$SRC/harness/scripts/health-check.py"   "$ROOT/harness/scripts/health-check.py"
+  [ -f "$ROOT/harness/version.json" ] || cp "$SRC/harness/version.json" "$ROOT/harness/version.json" 2>/dev/null || true
   cp "$SRC/harness/scripts/install-harness.sh" "$ROOT/harness/scripts/install-harness.sh" 2>/dev/null || true
   [ -f "$ROOT/harness/evals/promptfooconfig.yaml" ] || cp "$SRC/harness/evals/promptfooconfig.yaml" "$ROOT/harness/evals/promptfooconfig.yaml"
 fi
@@ -174,6 +178,7 @@ tpl = {"permissions": {"deny": deny}, "hooks": {
     "PostToolUse": [h("post_tool_use.py", "Write|Edit|MultiEdit")],
     "Stop":        [h("stop.py")],
     "SessionEnd":  [h("session_end.py")],
+    "SessionStart":[h("session_start.py")],
 }}
 cur = {}
 if os.path.exists(path):
@@ -226,10 +231,17 @@ python3 "$ROOT/harness/scripts/wiki-health.py" --wiki-dir "$WIKI" \
   --csv "$ROOT/harness/metrics/wiki-health.csv" > "$ROOT/harness/metrics/baseline-$(date +%F).json" || true
 log "Báo cáo baseline: harness/metrics/baseline-$(date +%F).json"
 
+# 6b. Pattern-sync health: sinh version.json nếu thiếu, rồi báo cáo (không chặn)
+if [ -f "$ROOT/.template-manifest.json" ] && [ -f "$ROOT/harness/scripts/health-check.py" ]; then
+  [ -f "$ROOT/harness/version.json" ] \
+    || python3 "$ROOT/harness/scripts/health-check.py" --root "$ROOT" --update >/dev/null 2>&1 || true
+  python3 "$ROOT/harness/scripts/health-check.py" --root "$ROOT" --branch orca || true
+fi
+
 # ---------- 7. Kết luận ----------
 {
   printf '\n## %s — install-harness — mode=%s\n' "$(date +%F)" "$MODE"
-  printf -- '- Cài harness L0–L4 (validators, hooks, pre-commit, wiki-health, evals)\n'
+  printf -- '- Cài harness L0–L4 (validators, hooks, pre-commit, wiki-health, health-check, evals)\n'
   [ "$DEBT" = "1" ] && printf -- '- ⚠ CÓ NỢ wiki (thiếu Origin / index lệch) — backfill trước khi tin Stop hook\n'
 } >> "$WIKI/log.md" 2>/dev/null || true
 
