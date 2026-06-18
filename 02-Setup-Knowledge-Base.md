@@ -27,8 +27,8 @@ You must execute the following file system operations:
    | Subfolder | Put here when... | Example |
    |-----------|-----------------|---------|
    | `concepts/` | Abstract idea, pattern, or domain term — explained to a new team member, not pointed to in the codebase | `rag.md`, `graph-memory.md` |
-   | `entities/` | Concrete named thing in the system — service, model, API, tool, component, config | `cognee.md`, `neo4j.md` |
-   | `sources/` | Distilled reference or decision record from `raw/` — URL summary, ADR, paper takeaway | `why-neo4j.md`, `cognee-docs.md` |
+   | `entities/` | Concrete named thing in the system — service, model, API, tool, component, config | `auth-service.md`, `postgres.md` |
+   | `sources/` | Distilled reference or decision record from `raw/` — URL summary, ADR, paper takeaway | `why-postgres.md`, `api-docs.md` |
    | `sources/draft/` | Proposal not yet implemented (created by the `propose` skill) | `260425-new-approval-button-fe.md` |
 
    Each wiki file must follow this format:

@@ -80,7 +80,7 @@ cp llmwiki/skills/dev-loop/propose.md ~/.kiro/skills/propose/SKILL.md
 ## AgentMemory
 
 ```bash
-BASE="https://cognee1995.coteccons.vn"
+BASE="https://agentmemory.giatbh.io.vn"
 TOKEN="${AGENTMEMORY_TOKEN}"
 
 # CHECK health:
@@ -94,8 +94,6 @@ curl -sk -X POST "$BASE/agentmemory/remember" \
 # Tìm:
 curl -sk -H "Authorization: Bearer $TOKEN" "$BASE/agentmemory/search?query=<keyword>"
 ```
-
-> Token tại `agentmemory.giatbh.io.vn` KHÁC — đừng dùng lẫn.
 
 ## RTK — Token Proxy
 

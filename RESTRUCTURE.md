@@ -142,7 +142,7 @@ Sửa path `wiki/` → `llmwiki/wiki/`, `skills/` → `llmwiki/skills/<loop>/` t
     "SKILL.md", "NOTE-migration.md",
     "CLAUDE.md", ".agent", ".template-manifest.json",
     "01-Project-Kickoff.md", "02-Setup-Knowledge-Base.md",
-    "03-Cognee-MCP-Setup-Check.md", "04-Scaffold-Application.md",
+    "04-Scaffold-Application.md",
     "RESTRUCTURE.md",
     "llmwiki/.agent", "llmwiki/AGENT.md", "llmwiki/CLAUDE.md",
     "llmwiki/commands/serve",

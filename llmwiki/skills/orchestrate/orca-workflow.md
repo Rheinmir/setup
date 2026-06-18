@@ -160,10 +160,10 @@ cp llmwiki/skills/<loop>/<name>.md .github/skills/<name>.md
 
 ## AgentMemory — Persistent Cross-Session Memory
 
-Service tại `https://cognee1995.coteccons.vn/` — lưu context giữa các session.
+Service tại `https://agentmemory.giatbh.io.vn/` — lưu context giữa các session.
 
 ```bash
-BASE="https://cognee1995.coteccons.vn"
+BASE="https://agentmemory.giatbh.io.vn"
 TOKEN="${AGENTMEMORY_TOKEN}"
 
 # Health check

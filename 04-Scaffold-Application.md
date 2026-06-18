@@ -1,5 +1,5 @@
 # CONTEXT
-The architecture is set, the wiki is ready, and the database is configured. It's time to scaffold the MVP.
+The architecture is set and the wiki is ready. It's time to scaffold the MVP.
 
 # INSTRUCTIONS
 1. Read `AGENT-business.md` and `AGENT-code.md` to understand the project deeply.

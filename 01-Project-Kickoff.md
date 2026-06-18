@@ -10,11 +10,6 @@ Your goal is to understand the business requirements and create the base definit
 2. PAUSE and WAIT for the user to answer. DO NOT generate any code or files yet.
 3. Once the user answers, create a file named `AGENT-business.md` summarizing the project goals, user workflows, and core constraints.
 4. Create a file named `AGENT-code.md` summarizing the chosen tech stack and architectural patterns.
-5. Create a blank configuration file named `.env.cognee` with the following template (do not fill in real values):
-   LLM_API_KEY=
-   EMBEDDING_API_KEY=
-   GRAPH_DATABASE_PASSWORD=
-   VECTOR_DB_PASSWORD=
 
 # ACTION
 Acknowledge these instructions, ask the 3 questions, and await my reply.
