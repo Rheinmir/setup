@@ -1,8 +1,14 @@
+---
+type: draft
+title: 150626-health-check-pattern-sync
+status: implemented
+tags: [health-check, harness, sync-template, pattern-version, output-report]
+timestamp: 2026-06-15
+---
+
 # 150626-health-check-pattern-sync
-**Type:** draft
+
 **Status:** implemented
-**Tags:** health-check, harness, sync-template, pattern-version, output-report
-**Proposed:** 2026-06-15
 
 ## What
 Thêm skill `/health-check` + cơ chế version cho bộ "pattern chuẩn" của template: 1 file cấu hình `harness/version.json` (version + hash từng pattern), L4 eval `health-check.py`, và hook SessionStart báo cáo không chặn.

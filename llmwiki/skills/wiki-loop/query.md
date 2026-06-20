@@ -22,5 +22,6 @@ When user asks question requiring synthesis across multiple wiki pages or raw so
 6. Append to `wiki/log.md`: `## YYYY-MM-DD — query — <question summary>` with note on whether new page created.
 
 ## Rules
+- **OKF v0.1 (R9):** any new wiki page starts with a YAML frontmatter block (`---`) with a non-empty `type`; copy the matching `_template.md` and keep the `## Origin` section.
 - Never invent facts. Synthesize from wiki and `raw/` only.
 - Query revealing gap (missing entity, missing concept) should trigger `ingest` of relevant `raw/` source if one exists.

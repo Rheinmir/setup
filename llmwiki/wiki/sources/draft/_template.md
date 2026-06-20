@@ -1,8 +1,14 @@
+---
+type: draft
+title: <feature-name-module>
+status: proposed
+tags: [tag1, tag2]
+timestamp: YYYY-MM-DD
+---
+
 # <DDMMYY-feature-name-module>
-**Type:** draft
+
 **Status:** proposed
-**Tags:** tag1, tag2
-**Proposed:** YYYY-MM-DD
 
 ## What
 <One sentence restatement of the request.>

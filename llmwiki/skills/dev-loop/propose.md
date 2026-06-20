@@ -32,6 +32,7 @@ Plan feature/change before writing code. Surfaces impact on existing functionali
 8. STOP. No code. Show the draft content + the HTML preview URL. Wait for user to approve or redirect.
 
 ## Rules
+- **OKF v0.1 (R9):** the draft starts with a YAML frontmatter block (`---`) with `type: draft` (+ optional `title`/`status`/`tags`/`timestamp`); copy `sources/draft/_template.md`. Keep `**Status:** proposed` in the body so R7 can gate it.
 - Never begin implementation during this skill.
 - The proposal is a PAIR: `.md` + `.html` (one diagram per task). Validator R7 blocks incomplete proposals at write and commit — fix before asking for approval.
 - If impact list empty, state explicitly "No existing code affected."

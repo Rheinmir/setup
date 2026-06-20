@@ -115,8 +115,7 @@ if [ "$SAME_BUNDLE" = "0" ]; then
   mkdir -p "$ROOT/harness/scripts" "$ROOT/harness/evals"
   cp "$SRC/harness/policy.yaml"               "$ROOT/harness/policy.yaml"
   cp "$SRC/harness/recipe.md"                 "$ROOT/harness/recipe.md"
-  cp "$SRC/harness/scripts/wiki-health.py"    "$ROOT/harness/scripts/wiki-health.py"
-  cp "$SRC/harness/scripts/health-check.py"   "$ROOT/harness/scripts/health-check.py"
+  cp "$SRC/harness/scripts/"*.py              "$ROOT/harness/scripts/" 2>/dev/null || true
   [ -f "$ROOT/harness/version.json" ] || cp "$SRC/harness/version.json" "$ROOT/harness/version.json" 2>/dev/null || true
   cp "$SRC/harness/scripts/install-harness.sh" "$ROOT/harness/scripts/install-harness.sh" 2>/dev/null || true
   [ -f "$ROOT/harness/evals/promptfooconfig.yaml" ] || cp "$SRC/harness/evals/promptfooconfig.yaml" "$ROOT/harness/evals/promptfooconfig.yaml"

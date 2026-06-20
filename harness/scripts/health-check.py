@@ -118,6 +118,43 @@ def cmp_semver(a: str, b: str) -> int:
     return (ta > tb) - (ta < tb)
 
 
+def okf_summary(root: Path):
+    """(total, compliant) file content wiki đạt OKF v0.1, hoặc None nếu không soi được. Fail-open."""
+    try:
+        import re
+        try:
+            import yaml
+        except ImportError:
+            yaml = None
+        wiki = root / "llmwiki" / "wiki"
+        if not wiki.is_dir():
+            return None
+        skip = {"README.md", "_template.md", "index.md", "log.md", "decisions.md", "active-context.md"}
+        dirs = ("concepts", "entities", "sources", "draft", "architecture", "tours")
+        fm = re.compile(r"^---[ \t]*\n(.*?)\n---", re.DOTALL)
+        total = ok = 0
+        for p in wiki.rglob("*.md"):
+            rel = p.relative_to(wiki).parts
+            if p.name in skip or not rel or rel[0] not in dirs:
+                continue
+            total += 1
+            m = fm.match(p.read_text(encoding="utf-8", errors="replace"))
+            if not m:
+                continue
+            if yaml is not None:
+                try:
+                    d = yaml.safe_load(m.group(1))
+                except yaml.YAMLError:
+                    continue
+                if isinstance(d, dict) and str(d.get("type", "")).strip():
+                    ok += 1
+            elif re.search(r"^type[ \t]*:[ \t]*\S", m.group(1), re.MULTILINE):
+                ok += 1
+        return (total, ok)
+    except Exception:
+        return None
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", default=".")
@@ -240,6 +277,16 @@ def main() -> None:
             print(f"  ℹ remote không tới được ({remote_err}) — chỉ kiểm tra local.")
         if status == "ok":
             print("  pattern đã đủ và khớp remote — không cần sync.")
+        okf = okf_summary(root)
+        if okf is not None:
+            total, ok = okf
+            if total == 0:
+                pass
+            elif ok == total:
+                print(f"  ✓ OKF v0.1: {ok}/{total} concept đạt chuẩn (YAML frontmatter + type).")
+            else:
+                print(f"  ⟳ OKF v0.1: {ok}/{total} concept đạt chuẩn — {total - ok} file cần migrate: "
+                      f"python3 harness/scripts/okf-check.py --migrate")
 
     groups = {g.strip() for g in args.fail_on.split(",") if g.strip()}
     failed = (("behind" in groups and (behind or version_behind))

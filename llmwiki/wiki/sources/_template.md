@@ -1,7 +1,12 @@
+---
+type: source
+title: <Source Title>
+resource: raw/filename.ext | https://...
+tags: [tag1, tag2]
+timestamp: YYYY-MM-DD
+---
+
 # <Source Title>
-**Type:** source
-**Tags:** tag1, tag2
-**Origin:** `raw/filename.ext` | https://...
 
 <1-3 sentence summary of what this source is and what was learned from it.>
 

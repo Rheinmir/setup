@@ -33,12 +33,21 @@ test -f harness/scripts/install-harness.sh \
 - Index lệch: thêm row cho file THIẾU vào `llmwiki/wiki/index.md` (summary lấy từ heading đầu của file); xóa row trỏ tới file không còn tồn tại.
 - Chạy lại bước 1. Nếu sau 3 vòng vẫn rc=3 → DỪNG, đưa danh sách còn lại cho user quyết.
 
+**3b. BACKFILL OKF v0.1 (convert content cũ sang YAML frontmatter):**
+Dự án cũ viết metadata kiểu bold `**Type:**` — không đạt chuẩn OKF v0.1 (R9). Convert tự động:
+```bash
+python3 harness/scripts/okf-check.py --check      # exit 3 = còn file chưa đạt OKF
+python3 harness/scripts/okf-check.py --migrate     # bold **Type:** → khối YAML ---; CHỈ thêm frontmatter, giữ body + ## Origin
+```
+- Chỉ THÊM frontmatter, không sửa nội dung khác (giống quy tắc backfill Origin). Idempotent; reserved tự miễn.
+- Chạy lại `--check` tới khi `DAT CHUAN OKF v0.1`. Đếm số file đã convert để báo cáo ở bước 5.
+
 **4. Kích hoạt + nghiệm thu:**
 ```bash
 command -v pre-commit >/dev/null && pre-commit install || echo "TODO user: pipx install pre-commit && pre-commit install"
 ```
 - Xác nhận bảng "Harness tự kiểm" có ⛔×3 BỊ CHẶN ✓ trong output bước 1.
-- Append vào `llmwiki/wiki/log.md`: `## YYYY-MM-DD — harness-update — migrate/update xong, nợ đã backfill: <n> file`
+- Append vào `llmwiki/wiki/log.md`: `## YYYY-MM-DD — harness-update — migrate/update xong, nợ đã backfill: <n> file (Origin: <a>, OKF: <b>)`
 
 **5. Báo cáo cho user (bắt buộc đủ 4 ý):**
 - Mode đã chạy (migrate hay update) + số nợ đã backfill (liệt kê file)

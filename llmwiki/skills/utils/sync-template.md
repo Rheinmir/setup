@@ -75,6 +75,15 @@ Show table. **STOP** → ask user: pull all / push all / specific files / direct
 - **Upstream**: commit + push via `gh`/`git`
 - File by file — no `cp -R`
 
+### Step 6a: OKF backfill *(sau MỌI downstream sync kéo template/skill mới)*
+Template/skill mới có thể nâng định dạng wiki (vd chuẩn OKF v0.1). Sau khi pull, convert mọi file content cũ còn dùng pseudo-frontmatter dạng bold `**Type:**` sang YAML frontmatter để khỏi vướng R9:
+```bash
+python3 harness/scripts/okf-check.py --check      # exit 3 = có file chưa đạt OKF
+python3 harness/scripts/okf-check.py --migrate    # convert bold → YAML (chỉ THÊM frontmatter, giữ body/## Origin)
+```
+- Idempotent — file đã có `---` frontmatter được bỏ qua. Reserved (index/log/README/decisions/_template…) tự miễn.
+- Sau migrate: chạy lại `--check` đến khi `DAT CHUAN OKF v0.1`, rồi cập nhật index/log như mọi thay đổi wiki.
+
 ### Step 6b: Refresh version fingerprint *(sau MỌI downstream sync)*
 Nội dung pattern vừa đổi → cập nhật lại `harness/version.json` để health-check khỏi báo DRIFT giả:
 ```bash

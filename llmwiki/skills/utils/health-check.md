@@ -35,6 +35,8 @@ python3 harness/scripts/health-check.py --root . --branch orca
 | `DRIFT` | pattern bị sửa local | cân nhắc **upstream** (`/sync-template` push) hoặc revert |
 | `NEEDS-SYNC` | thiếu file hoặc remote mới hơn | chạy **downstream** `/sync-template` |
 
+Báo cáo còn kèm 1 dòng **OKF v0.1**: `✓ OKF v0.1: N/N concept đạt chuẩn` (mọi concept có YAML frontmatter + `type`) hoặc `⟳ OKF v0.1: x/N … cần migrate`. Đây là câu trả lời nhanh "project đã đạt chuẩn OKF chưa?". Chưa đạt → `python3 harness/scripts/okf-check.py --migrate`.
+
 ### 3. Hành động theo khuyến nghị
 - **BEHIND / MISSING** → gọi `/sync-template` (downstream): kéo pattern mới/thiếu về.
 - **DRIFT** → nếu cải tiến muốn giữ: `/sync-template` upstream; nếu lỡ sửa: `git checkout -- <file>`.

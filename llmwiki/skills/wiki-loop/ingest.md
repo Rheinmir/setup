@@ -23,6 +23,7 @@ Automatically when new file appears in `raw/`.
 7. Append to `wiki/log.md`: `## YYYY-MM-DD — ingest — <filename>` with bullet list of all pages touched.
 
 ## Rules
+- **OKF v0.1 (R9):** every wiki page starts with a YAML frontmatter block (`---`) carrying a non-empty `type` (e.g. `concept`, `entity`, `source`) plus optional `title`/`tags`/`timestamp`/`resource`. Copy the matching `_template.md`. Keep the `## Origin` body section (R2).
 - Never modify file in `raw/`. Read only.
 - No wiki page unless source actually introduces that entity or concept.
 - Prefer updating existing page over creating duplicate.

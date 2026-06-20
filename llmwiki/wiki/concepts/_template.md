@@ -1,6 +1,11 @@
+---
+type: concept
+title: <Concept Title>
+tags: [tag1, tag2]
+timestamp: YYYY-MM-DD
+---
+
 # <Concept Title>
-**Type:** concept
-**Tags:** tag1, tag2
 
 <1-3 sentence explanation — what this is, why it matters in this project.>
 

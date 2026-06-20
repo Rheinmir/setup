@@ -1,8 +1,14 @@
+---
+type: draft
+title: 180626-orca-framework-overview
+status: proposed
+tags: [docs-site-macos, output-report]
+timestamp: 2026-06-18
+---
+
 # 180626-orca-framework-overview
-**Type:** draft
+
 **Status:** proposed
-**Tags:** docs-site-macos, output-report
-**Proposed:** 2026-06-18
 
 ## What
 Trang HTML single-file giới thiệu toàn bộ repo `rheinmir/setup#orca` (đặt tên là **llmwiki** — framework vận hành AI-agent, phân phối dạng template) với grid 24 skill phân nhóm theo màu + legend giải thích màu.

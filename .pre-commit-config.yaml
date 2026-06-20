@@ -11,6 +11,12 @@ repos:
         language: system
         files: ^llmwiki/wiki/(concepts|entities|sources|draft)/.*\.md$
 
+      - id: wiki-okf-frontmatter
+        name: "R9: wiki concept co YAML frontmatter + type (OKF v0.1)"
+        entry: python3 harness/validators/okf_frontmatter.py
+        language: system
+        files: ^llmwiki/wiki/(concepts|entities|sources|draft|architecture|tours)/.*\.md$
+
       - id: wiki-folder-structure
         name: "R5: file wiki dung subfolder"
         entry: python3 harness/validators/folder_structure.py
