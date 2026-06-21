@@ -1,6 +1,11 @@
+---
+type: entity
+title: <Entity Name>
+tags: [tag1, tag2]
+timestamp: YYYY-MM-DD
+---
+
 # <Entity Name>
-**Type:** entity
-**Tags:** tag1, tag2
 
 <1-3 sentence description — what this thing is, its role in the system.>
 

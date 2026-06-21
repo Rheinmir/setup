@@ -17,5 +17,6 @@ When the user asks a question that requires synthesizing information across mult
 6. Append to `wiki/log.md`: `## YYYY-MM-DD — query — <question summary>` with a note on whether a new page was created.
 
 ## Rules
+- **OKF v0.1 (R9):** any new wiki page starts with a YAML frontmatter block (`---`) with a non-empty `type`; copy the matching `_template.md` and keep the `## Origin` section.
 - Never invent facts. Only synthesize from wiki and `raw/` content.
 - A query that reveals a gap (missing entity, missing concept) should trigger an `ingest` of the relevant `raw/` source if one exists.

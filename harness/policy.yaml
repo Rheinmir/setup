@@ -1,0 +1,75 @@
+# L0 POLICY — bất biến của llmwiki, thuần khai báo, không dính vendor.
+# Mỗi rule có validator tương ứng trong harness/validators/ (cùng id).
+# Enforcement point: session = L1 adapter (hook theo vendor), repo = L2 (pre-commit).
+
+rules:
+  - id: R1
+    name: no-write-raw
+    validator: no_write_raw.py
+    statement: "Agent không bao giờ ghi vào raw/ — raw/ là inbox của con người."
+    enforce_at: [session]        # KHÔNG enforce ở repo: con người commit file raw/ là hợp lệ
+    applies_to: [write, bash]
+
+  - id: R2
+    name: origin-required
+    validator: origin_required.py
+    statement: "Mọi wiki file phải có section '## Origin' — luôn truy được nguồn gốc."
+    enforce_at: [session, repo]
+    applies_to: [write]
+    scope: "wiki/(concepts|entities|sources|draft)/**/*.md trừ README.md, _template.md"
+
+  - id: R3
+    name: index-sync
+    validator: index_sync.py
+    statement: "wiki/index.md phải liệt kê đúng tập file wiki đang tồn tại."
+    enforce_at: [session-stop, repo]
+    applies_to: [stop]
+
+  - id: R4
+    name: log-append
+    validator: null              # thỏa mãn bằng tự động hóa L3 (audit hook tự sinh log)
+    statement: "Mọi thao tác đều được ghi log — bằng máy, không nhờ model nhớ."
+    enforce_at: [session]
+    note: "Hook PostToolUse/Stop/SessionEnd append .claude/audit/*.jsonl; log.md sinh từ đó."
+
+  - id: R5
+    name: folder-structure
+    validator: folder_structure.py
+    statement: "File wiki chỉ nằm trong concepts/, entities/, sources/, draft/ — không ở wiki/ root."
+    enforce_at: [session, repo]
+    applies_to: [write]
+    allow_root_files: [index.md, log.md, README.md, active-context.md, decisions.md]
+
+  - id: R6
+    name: verify-before-commit
+    validator: null              # enforce bằng chính pre-commit framework (L2)
+    statement: "Mọi commit phải qua gate: validators + lint. Fail = không commit được."
+    enforce_at: [repo]
+
+  - id: R7
+    name: proposal-complete
+    validator: proposal_complete.py
+    statement: "Proposal chờ duyệt phải khai đủ: ai/CLI làm task nào + sequence diagram cho TỪNG task."
+    enforce_at: [session, repo]
+    applies_to: [write]
+    scope: "wiki draft .md CÓ '## Plan' và Status còn 'proposed' (output-report và draft đã implemented tự miễn)"
+    conditions:
+      - "Bảng '## Agent Task Assignment' ≥1 row, không ô Agent nào trống"
+      - "Link '**Sequence diagram**' trỏ file .html tồn tại trên disk"
+      - "Số <div class=\"diagram-box\"> trong html ≥ số task '- [ ]' trong Plan"
+
+  - id: R8
+    name: pattern-sync-health
+    validator: null              # L4 eval (harness/scripts/health-check.py), KHÔNG chặn — chỉ báo cáo
+    statement: "Bộ pattern chuẩn (.template-manifest.json) phải đủ file, không drift, không tụt hậu remote."
+    enforce_at: [session-start]  # SessionStart hook chạy health-check, in cảnh báo nếu lệch
+    note: "version.json = fingerprint (version + hash từng pattern). Báo cáo, không gate; sync bằng /sync-template."
+
+  - id: R9
+    name: okf-frontmatter
+    validator: okf_frontmatter.py
+    statement: "Mọi wiki concept phải có YAML frontmatter parse được + trường 'type' không rỗng (chuẩn OKF v0.1)."
+    enforce_at: [session, repo]
+    applies_to: [write]
+    scope: "wiki/(concepts|entities|sources|draft|architecture|tours)/**/*.md trừ README.md, _template.md, index.md, log.md, decisions.md, active-context.md"
+    note: "OKF v0.1 — Google Cloud 2026-06-12. Dung thứ khóa lạ (tolerate unknown keys); chỉ gate khi thiếu frontmatter/type."

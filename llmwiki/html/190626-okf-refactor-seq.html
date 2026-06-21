@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OKF Refactor — Sequence Diagrams (190626)</title>
+<style>
+:root{
+  --bg:#eef4fd; --card:#ffffff; --ink:#0f1115; --ink2:#4a4a55;
+  --line:rgba(30,90,170,.16); --accent:#0a84ff; --ok:#1f9d55; --warn:#c2710c;
+  --mono:'SF Mono',ui-monospace,Menlo,Consolas,monospace;
+  --font:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#eef4fd,#e6eefb);color:var(--ink);
+  font-family:var(--font);font-size:15px;line-height:1.6;padding:40px 20px}
+.wrap{max-width:920px;margin:0 auto}
+h1{font-size:26px;margin:0 0 4px}
+.sub{color:var(--ink2);margin:0 0 28px}
+.diagram-box{background:var(--card);border:1px solid var(--line);border-radius:16px;
+  padding:22px 24px;margin:0 0 22px;box-shadow:0 1px 0 rgba(255,255,255,.8) inset,0 8px 24px rgba(20,60,120,.06)}
+.diagram-box h2{font-size:17px;margin:0 0 2px}
+.tag{display:inline-block;font:600 11px/1 var(--mono);color:var(--accent);
+  background:rgba(10,132,255,.1);border-radius:6px;padding:5px 8px;margin:0 0 14px}
+.seq{display:flex;flex-direction:column;gap:8px;margin:6px 0 14px;
+  border-left:2px dashed var(--line);padding-left:16px}
+.msg{opacity:1;font:13px/1.5 var(--mono);color:var(--ink);
+  background:rgba(10,132,255,.05);border-radius:8px;padding:7px 10px}
+.msg b{color:var(--accent)}
+.msg.ret{color:var(--ok);background:rgba(31,157,85,.06)}
+.msg.guard{color:var(--warn);background:rgba(194,113,12,.07)}
+.desc{margin:0;color:var(--ink2);font-size:13.5px;border-top:1px solid var(--line);padding-top:12px}
+.desc b{color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>OKF Refactor — Sequence Diagrams</h1>
+<p class="sub">Proposal <code>190626-okf-refactor-llmwiki</code> · mỗi task = 1 sequence · nhãn hiện sẵn, không cần animation (bài học 130626).</p>
+
+<!-- T1 -->
+<div class="diagram-box">
+  <h2>T1 — Convert content files → YAML frontmatter</h2>
+  <span class="tag">agent: opencode · engine: deepseek</span>
+  <div class="seq">
+    <div class="msg"><b>opencode</b> → fs: đọc mỗi file trong concepts/ entities/ sources/ (trừ reserved)</div>
+    <div class="msg"><b>opencode</b> → parser: trích <code>**Type:**/**Tags:**/**Status:**</code> ở body</div>
+    <div class="msg"><b>opencode</b> → writer: chèn block <code>---\ntype: …\ntitle: …\ntags: […]\ntimestamp: …\n---</code> lên đầu file</div>
+    <div class="msg guard">guard: GIỮ nguyên H1, body, và section <code>## Origin</code> (R2 vẫn pass)</div>
+    <div class="msg ret">fs → opencode: N file đã có frontmatter parseable</div>
+  </div>
+  <p class="desc"><b>Ai làm gì:</b> opencode quét toàn bộ file nội dung, chuyển pseudo-frontmatter dạng bold <code>**Type:**</code> thành YAML frontmatter thật bao bởi <code>---</code>. <b>Dữ liệu chạy:</b> body cũ → frontmatter + body giữ nguyên. <b>Nhánh an toàn:</b> không đụng <code>## Origin</code> nên R2 không gãy; chạy file-by-file, diff trước khi ghi.</p>
+</div>
+
+<!-- T2 -->
+<div class="diagram-box">
+  <h2>T2 — Update templates để sinh file OKF-compliant</h2>
+  <span class="tag">agent: opencode · engine: deepseek</span>
+  <div class="seq">
+    <div class="msg"><b>opencode</b> → templates: mở 4 file <code>_template.md</code> (concepts/entities/sources/draft)</div>
+    <div class="msg"><b>opencode</b> → templates: thay header bold bằng khối YAML frontmatter mẫu</div>
+    <div class="msg guard">guard: giữ placeholder <code>&lt;…&gt;</code> + section <code>## Origin</code></div>
+    <div class="msg ret">templates → opencode: file mới tạo từ template = born-OKF</div>
+  </div>
+  <p class="desc"><b>Ai làm gì:</b> opencode sửa 4 template gốc để mọi file sinh ra sau này đã có frontmatter chuẩn. <b>Dữ liệu chạy:</b> template cũ → template YAML. <b>Nhánh an toàn:</b> chỉ đổi phần header, giữ cấu trúc <code>## What/## Plan/## Origin</code> để không phá R7/R2.</p>
+</div>
+
+<!-- T3 -->
+<div class="diagram-box">
+  <h2>T3 — Update skill ingest / propose / query</h2>
+  <span class="tag">agent: claude · engine: opus</span>
+  <div class="seq">
+    <div class="msg"><b>claude</b> → skills: đọc ingest.md, propose.md, query.md</div>
+    <div class="msg"><b>claude</b> → skills: đổi hướng dẫn "viết <code>**Type:**</code>" → "viết YAML frontmatter có <code>type</code>"</div>
+    <div class="msg guard">guard: giữ ràng buộc tạo <code>## Origin</code>, update index.md, append log.md</div>
+    <div class="msg ret">skills → claude: pipeline tạo wiki từ nay sinh ra OKF-valid</div>
+  </div>
+  <p class="desc"><b>Ai làm gì:</b> claude (cần hiểu ngữ nghĩa skill) sửa 3 skill ghi wiki để output đúng frontmatter. <b>Dữ liệu chạy:</b> chỉ dẫn skill cũ → mới. <b>Nhánh an toàn:</b> không bỏ bước Origin/index/log; chỉ đổi định dạng frontmatter.</p>
+</div>
+
+<!-- T4 -->
+<div class="diagram-box">
+  <h2>T4 — Thêm validator harness R9 okf-frontmatter</h2>
+  <span class="tag">agent: claude · engine: opus</span>
+  <div class="seq">
+    <div class="msg"><b>claude</b> → validators: tạo <code>harness/validators/okf_frontmatter.py</code></div>
+    <div class="msg"><b>validator</b> → file: parse YAML frontmatter, kiểm <code>type</code> không rỗng (bỏ reserved)</div>
+    <div class="msg"><b>claude</b> → policy.yaml + .pre-commit + hooks: wire R9 vào pre/post-tool + Stop + CI</div>
+    <div class="msg guard">guard: tolerate-unknown-keys (OKF) — KHÔNG fail vì khóa lạ</div>
+    <div class="msg ret">harness → claude: ghi file thiếu <code>type</code> = BỊ CHẶN; bump version.json</div>
+  </div>
+  <p class="desc"><b>Ai làm gì:</b> claude viết validator mới biến OKF từ "khuyến nghị" thành "hàng rào". <b>Dữ liệu chạy:</b> {file_path,content} → exit 0/2. <b>Nhánh an toàn:</b> theo đúng contract validator hiện có; chỉ chặn thiếu <code>type</code>, dung thứ khóa lạ đúng tinh thần OKF.</p>
+</div>
+
+<!-- T5 -->
+<div class="diagram-box">
+  <h2>T5 — Reserved-filename map + SPEC conformance note</h2>
+  <span class="tag">agent: claude · engine: opus</span>
+  <div class="seq">
+    <div class="msg"><b>claude</b> → R5 list: liệt kê reserved = index/log/README/decisions/active-context/_template</div>
+    <div class="msg"><b>claude</b> → wiki: tạo concept <code>okf-conformance</code> mô tả ánh xạ llmwiki ↔ OKF SPEC</div>
+    <div class="msg"><b>claude</b> → checker: chạy tiêu chí hợp lệ OKF v0.1 trên cây wiki</div>
+    <div class="msg ret">checker → claude: 3/3 tiêu chí pass → bộ wiki = OKF bundle hợp lệ</div>
+  </div>
+  <p class="desc"><b>Ai làm gì:</b> claude chốt danh sách file dành riêng và viết tài liệu chứng minh conformance. <b>Dữ liệu chạy:</b> cây wiki → báo cáo 3 tiêu chí (frontmatter parse được · type không rỗng · reserved đúng cấu trúc). <b>Nhánh an toàn:</b> chỉ đọc + tạo 1 concept mới có <code>## Origin</code>, không sửa nội dung cũ.</p>
+</div>
+
+</div>
+</body>
+</html>

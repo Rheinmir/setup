@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Báo cáo: Harness migrate + OKF v0.1 refactor</title>
+<style>
+:root{
+  --glass-1:rgba(255,255,255,.55); --glass-2:rgba(255,255,255,.7); --glass-3:rgba(255,255,255,.88);
+  --blur-1:24px; --blur-2:8px; --blur-3:4px;
+  --edge-hi:inset 0 1px 0 rgba(255,255,255,.85);
+  --border:rgba(30,90,170,.14);
+  --t1:#0f0f12; --t2:#4a4a55;
+  --font-text:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue','Roboto','Segoe UI',sans-serif;
+  --font-display:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue','Roboto','Segoe UI',sans-serif;
+  --font-mono:'SF Mono',ui-monospace,'SFMono-Regular',Menlo,'Roboto Mono',Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{background:#e9f0fb;scrollbar-width:thin;scrollbar-color:transparent transparent}
+html.scrolling{scrollbar-color:rgba(10,132,255,.32) transparent}
+body{margin:0;padding-left:200px;color:var(--t1);font-family:var(--font-text);font-size:15px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;transition:padding-left .28s cubic-bezier(.4,0,.2,1);
+  background:
+    radial-gradient(900px 500px at 12% -10%,rgba(10,132,255,.10),transparent 60%),
+    radial-gradient(700px 420px at 95% 15%,rgba(90,162,232,.08),transparent 55%),
+    linear-gradient(180deg,#eef4fd 0%,#e6eefb 100%);}
+body::before{content:'';position:fixed;inset:-10%;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(640px 440px at 10% 14%,rgba(10,132,255,.22),transparent 65%),
+    radial-gradient(380px 460px at 4% 52%,rgba(48,176,199,.18),transparent 65%),
+    radial-gradient(540px 400px at 88% 10%,rgba(88,86,214,.13),transparent 60%),
+    radial-gradient(720px 500px at 74% 76%,rgba(48,176,199,.13),transparent 65%),
+    radial-gradient(480px 380px at 16% 86%,rgba(255,149,0,.12),transparent 60%);
+  animation:orbDrift 46s ease-in-out infinite alternate}
+@keyframes orbDrift{100%{transform:translate(2.2%,1.6%) scale(1.045)}}
+body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:radial-gradient(rgba(30,90,170,.11) 1px,transparent 1.3px);background-size:22px 22px;
+  mask-image:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.22))}
+@media(prefers-reduced-motion:reduce){body::before{animation:none}}
+
+/* scrollbar overlay */
+::-webkit-scrollbar{width:11px;height:11px;background:transparent}
+::-webkit-scrollbar-track,::-webkit-scrollbar-track-piece,::-webkit-scrollbar-corner,::-webkit-scrollbar-button{background:transparent;border:0;box-shadow:none}
+::-webkit-scrollbar-thumb{background:transparent;border-radius:8px;border:3px solid transparent;background-clip:content-box;transition:background-color .25s ease}
+html.scrolling::-webkit-scrollbar-thumb,nav.scrolling::-webkit-scrollbar-thumb,::-webkit-scrollbar-thumb:hover{background-color:rgba(10,132,255,.32)}
+::-webkit-scrollbar-thumb:active{background-color:rgba(10,132,255,.6)}
+
+/* nav */
+nav{position:fixed;top:0;left:0;bottom:0;width:200px;z-index:100;overflow-y:auto;
+  display:flex;flex-direction:column;align-items:stretch;gap:2px;padding:18px 12px;
+  background:linear-gradient(165deg,rgba(255,255,255,.46) 0%,rgba(255,255,255,.22) 48%,rgba(240,248,255,.34) 100%);
+  backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);-webkit-backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
+  border-right:1px solid rgba(255,255,255,.55);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 1px 0 0 rgba(255,255,255,.5),inset -1px 0 0 rgba(30,90,170,.10),4px 0 24px rgba(30,90,170,.08);
+  transition:transform .28s cubic-bezier(.4,0,.2,1)}
+nav::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(220px 160px at 18% 4%,rgba(255,255,255,.55),transparent 70%),
+    linear-gradient(115deg,rgba(255,255,255,.28) 0%,transparent 28%,transparent 72%,rgba(255,255,255,.14) 100%)}
+nav>*{position:relative}
+nav .logo{margin:0 0 8px;padding:6px 10px;font-family:var(--font-display);font-weight:700;font-size:16px;letter-spacing:-.02em;
+  background:linear-gradient(135deg,#0a84ff,#64b5f7);-webkit-background-clip:text;background-clip:text;color:transparent}
+nav .logo small{display:block;font-size:10px;font-weight:500;color:var(--t2);-webkit-text-fill-color:var(--t2);letter-spacing:0;margin-top:2px}
+nav a{padding:8px 12px;border-radius:10px;font-size:13px;color:var(--t2);text-decoration:none;position:relative;overflow:hidden;transition:background .15s,color .15s}
+nav a:hover{background:rgba(10,132,255,.06);color:var(--t1)}
+nav a.active{color:#0a84ff;background:rgba(10,132,255,.08);font-weight:600}
+.nav-close{position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-size:12px;color:var(--t2);cursor:pointer;background:rgba(0,0,0,.04);border:none;overflow:hidden}
+.nav-close:hover{color:#0a84ff;background:rgba(10,132,255,.10)}
+body.nav-collapsed nav{transform:translateX(-100%)}
+body.nav-collapsed{padding-left:0}
+.nav-toggle{position:fixed;top:12px;left:12px;z-index:120;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-size:14px;color:var(--t2);cursor:pointer;border:1px solid transparent;
+  background:linear-gradient(165deg,rgba(255,255,255,.5),rgba(255,255,255,.24));
+  backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);-webkit-backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 0 0 1px rgba(30,90,170,.08),0 2px 10px rgba(30,90,170,.12);
+  transition:opacity .2s,transform .28s cubic-bezier(.4,0,.2,1)}
+.nav-toggle:hover{color:#0a84ff}
+body:not(.nav-collapsed) .nav-toggle{opacity:0;pointer-events:none;transform:translateX(-6px)}
+@media(max-width:640px){body{padding-left:0}nav{box-shadow:0 8px 30px rgba(0,0,0,.14)}}
+
+/* ripple */
+.ripple-ink{position:absolute;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.70) 0%,rgba(255,255,255,.28) 38%,rgba(10,132,255,.20) 72%,transparent 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 0 -10px 20px rgba(10,132,255,.12),0 0 14px rgba(10,132,255,.10);
+  backdrop-filter:blur(2px) saturate(1.25);-webkit-backdrop-filter:blur(2px) saturate(1.25);
+  transform:scale(0);opacity:1;animation:rippleGrow .6s cubic-bezier(.25,.46,.45,.94) forwards}
+@keyframes rippleGrow{55%{transform:scale(1);opacity:.75}100%{transform:scale(1.04);opacity:0}}
+
+/* hero */
+.hero{max-width:1100px;margin:0 auto;padding:78px 24px 26px}
+.hero .eyebrow{display:inline-block;font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:.04em;
+  color:#0a84ff;background:rgba(10,132,255,.10);border-radius:20px;padding:5px 12px;margin-bottom:18px}
+.hero h1{font-family:var(--font-display);font-size:clamp(32px,5vw,54px);line-height:1.05;letter-spacing:-.02em;margin:0 0 14px;
+  background:linear-gradient(135deg,#0a84ff,#5aa2e8,#cfe3fb);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{font-size:17px;color:var(--t2);max-width:680px;margin:0}
+.hero .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.hero .pill{font-size:12px;color:var(--t2);background:var(--glass-2);border:1px solid var(--border);border-radius:20px;padding:6px 13px;
+  backdrop-filter:blur(var(--blur-2));box-shadow:var(--edge-hi)}
+.hero .pill b{color:var(--t1)}
+.hero .pill.ok{color:#1f9e44}.hero .pill.ok b{color:#1f9e44}
+
+/* repo-card */
+.repo-card{max-width:1052px;width:calc(100% - 48px);margin:14px auto 0;border-radius:16px;overflow:hidden;
+  background:var(--glass-2);backdrop-filter:blur(var(--blur-2)) saturate(1.1);border:1px solid var(--border);box-shadow:var(--edge-hi),0 4px 20px rgba(0,0,0,.06)}
+.chrome{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.4)}
+.chrome .dot{width:12px;height:12px;border-radius:50%}
+.url-bar{flex:1;margin-left:8px;font-family:var(--font-mono);font-size:11px;color:var(--t2);background:rgba(255,255,255,.6);border:1px solid var(--border);border-radius:7px;padding:4px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rc-body{display:flex;flex-wrap:wrap;gap:18px;padding:16px 18px 22px}
+.rc-stat{display:flex;flex-direction:column}
+.rc-stat .n{font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--t1)}
+.rc-stat .l{font-size:11px;color:var(--t2)}
+
+/* sections */
+.section-bg{position:relative;overflow:visible}
+.section-bg::before{content:'';position:absolute;top:0;bottom:0;left:50%;width:100vw;transform:translateX(-50%);pointer-events:none}
+section{max-width:1100px;margin:0 auto;padding:60px 24px 64px;position:relative}
+.section-header .tag{display:inline-block;font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:.03em;border-radius:20px;padding:5px 11px;margin-bottom:12px}
+.section-header h2{font-family:var(--font-display);font-size:clamp(23px,3.2vw,32px);letter-spacing:-.02em;margin:0 0 8px;color:#1d1d1f}
+.section-header p{font-size:15.5px;color:var(--t2);max-width:720px;margin:0}
+
+/* diagram */
+.diagram-box{background:var(--glass-2);backdrop-filter:blur(var(--blur-2)) saturate(1.1);border:1px solid var(--border);border-radius:16px;
+  box-shadow:var(--edge-hi),0 4px 20px rgba(0,0,0,.06);padding:24px;margin:24px 0;position:relative;overflow:hidden;display:flex;flex-direction:column;
+  resize:vertical;min-height:170px;transition:box-shadow .2s ease}
+.diagram-box:hover{box-shadow:0 6px 28px rgba(0,0,0,.1)}
+.diagram-viewport{position:relative;flex:1 1 auto;width:100%;overflow:hidden;cursor:grab;touch-action:none}
+.diagram-viewport.grabbing{cursor:grabbing}
+.diagram-viewport svg{width:100%;height:auto;display:block;overflow:visible;transform-origin:0 0;will-change:transform;user-select:none;-webkit-user-select:none}
+.dnode{cursor:move}.dnode>rect{transition:filter .15s ease}.dnode:hover>rect:first-of-type{filter:drop-shadow(0 3px 8px rgba(0,0,0,.18))}
+.diagram-hint{position:absolute;top:8px;right:12px;z-index:5;font-size:10px;color:var(--t2);background:rgba(255,255,255,.75);border:1px solid rgba(0,0,0,.05);border-radius:20px;padding:3px 10px;white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none}
+.diagram-box:hover .diagram-hint{opacity:.9}
+.diagram-reset{position:absolute;bottom:8px;right:10px;z-index:5;font-size:11px;background:rgba(255,255,255,.85);border:1px solid rgba(0,0,0,.08);border-radius:8px;padding:3px 9px;cursor:pointer;color:var(--t2);opacity:0;transition:opacity .2s}
+.diagram-box:hover .diagram-reset{opacity:1}.diagram-reset:hover{background:#fff;color:#0f0f12}
+.diagram-box::after{content:'';position:absolute;right:5px;bottom:5px;width:16px;height:16px;pointer-events:none;opacity:0;transition:opacity .25s ease;clip-path:polygon(100% 0,100% 100%,0 100%);background:repeating-linear-gradient(135deg,transparent 0 3.5px,rgba(10,132,255,.45) 3.5px 5px)}
+.diagram-box:hover::after{opacity:.85}
+.diagram-box::-webkit-resizer{display:none}
+
+/* grids + cards */
+.content-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:22px}
+.card{background:var(--glass-2);backdrop-filter:blur(var(--blur-2)) saturate(1.1);border:1px solid var(--border);border-radius:16px;box-shadow:var(--edge-hi),0 4px 20px rgba(0,0,0,.06);padding:20px}
+.card h4{margin:0 0 10px;font-size:14px;font-family:var(--font-display)}
+.card ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+.card li{font-size:13px;color:var(--t2);line-height:1.5;padding-left:18px;position:relative}
+.card li::before{content:'›';position:absolute;left:0;font-weight:700}
+.card li b{color:var(--t1)}
+.card code,p code,td code,li code{font-family:var(--font-mono);font-size:.88em;background:rgba(10,132,255,.07);border-radius:5px;padding:1px 5px}
+
+/* table */
+.table-wrap{margin-top:22px;border-radius:14px;overflow:hidden;border:1px solid var(--border);box-shadow:var(--edge-hi)}
+table{width:100%;border-collapse:collapse;background:var(--glass-3);backdrop-filter:blur(var(--blur-3));font-size:13px}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--border);vertical-align:top}
+th{font-size:11px;letter-spacing:.03em;text-transform:uppercase;color:var(--t2);font-weight:600;background:rgba(255,255,255,.45)}
+tr:last-child td{border-bottom:none}
+td b{color:var(--t1)}
+.ok{color:#1f9e44;font-weight:600}.no{color:#e0264b;font-weight:600}.warn{color:#cf7600;font-weight:600}
+
+/* code */
+pre.code-block{background:#0f1623;color:#cbd5e1;border-radius:12px;padding:16px 18px;overflow-x:auto;font-family:var(--font-mono);font-size:12.5px;line-height:1.65;margin:22px 0 0;box-shadow:0 6px 22px rgba(15,22,35,.2)}
+pre.code-block .c{color:#5b7089}pre.code-block .g{color:#6ee7b7}pre.code-block .a{color:#f0b86e}
+.code-wrap{position:relative}
+.code-copy{position:absolute;top:8px;right:8px;z-index:2;font-size:11px;font-family:inherit;font-weight:500;background:rgba(255,255,255,.1);color:#cbd5e1;border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:3px 10px;cursor:pointer;opacity:0;transition:opacity .15s,background .15s,color .15s}
+.code-wrap:hover .code-copy{opacity:1}
+.code-copy:hover{background:rgba(255,255,255,.2);color:#fff}
+.code-copy.copied{background:rgba(16,185,129,.25);color:#6ee7b7;border-color:rgba(16,185,129,.45);opacity:1}
+
+.foot-link{margin-top:20px;font-size:12.5px;color:var(--t2);font-family:var(--font-mono)}
+.foot-link a{color:#0a84ff;text-decoration:none}.foot-link a:hover{text-decoration:underline}
+footer{max-width:1100px;margin:0 auto;padding:40px 24px 70px;color:var(--t2);font-size:12.5px;border-top:1px solid var(--border)}
+footer b{color:var(--t1)}
+
+/* accent cycle */
+#sec-0 .tag{background:rgba(10,132,255,.10);color:#0a84ff}#sec-0 .card h4{color:#0a84ff}#sec-0 .card li::before{color:#0a84ff}.s-bg0::before{background:linear-gradient(180deg,rgba(10,132,255,.05) 0%,transparent 60%)}
+#sec-1 .tag{background:rgba(48,176,199,.12);color:#1c8aa0}#sec-1 .card h4{color:#1c8aa0}#sec-1 .card li::before{color:#30b0c7}.s-bg1::before{background:linear-gradient(180deg,rgba(48,176,199,.05) 0%,transparent 60%)}
+#sec-2 .tag{background:rgba(88,86,214,.12);color:#5856d6}#sec-2 .card h4{color:#5856d6}#sec-2 .card li::before{color:#5856d6}.s-bg2::before{background:linear-gradient(180deg,rgba(88,86,214,.05) 0%,transparent 60%)}
+#sec-3 .tag{background:rgba(52,199,89,.14);color:#1f9e44}#sec-3 .card h4{color:#28a745}#sec-3 .card li::before{color:#34c759}.s-bg3::before{background:linear-gradient(180deg,rgba(52,199,89,.05) 0%,transparent 60%)}
+#sec-4 .tag{background:rgba(255,149,0,.15);color:#cf7600}#sec-4 .card h4{color:#f08c00}#sec-4 .card li::before{color:#ff9500}.s-bg4::before{background:linear-gradient(180deg,rgba(255,149,0,.06) 0%,transparent 60%)}
+#sec-5 .tag{background:rgba(255,45,85,.10);color:#e0264b}#sec-5 .card h4{color:#e0264b}#sec-5 .card li::before{color:#ff2d55}.s-bg5::before{background:linear-gradient(180deg,rgba(255,45,85,.05) 0%,transparent 60%)}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">OKF Report<small>20/06/2026 · llmwiki</small></div>
+  <a href="#sec-0">Tổng quan</a>
+  <a href="#sec-1">Audit &amp; quyết định</a>
+  <a href="#sec-2">Harness migrate</a>
+  <a href="#sec-3">OKF v0.1 refactor</a>
+  <a href="#sec-4">Hàng rào R9</a>
+  <a href="#sec-5">Nghiệm thu</a>
+</nav>
+
+<div class="hero">
+  <span class="eyebrow">BÁO CÁO KẾT QUẢ · 20/06/2026</span>
+  <h1>Harness migrate + chuẩn hoá llmwiki theo OKF v0.1</h1>
+  <p>Một chuỗi lệnh: <code>/sync-template</code> phát hiện cần migrate → <code>/harness-update</code> cài harness L0–L4 → <code>/orca-workflow</code> chạy ra &amp; thực thi kế hoạch refactor toàn bộ knowledge base sang <b>Open Knowledge Format v0.1</b>, đóng đinh bằng validator <code>R9</code>.</p>
+  <div class="meta">
+    <span class="pill">Branch nguồn: <b>orca</b> (mới nhất 18/06)</span>
+    <span class="pill">Harness: <b>migrate</b> · 0 nợ</span>
+    <span class="pill">Refactor: <b>5/5 task</b></span>
+    <span class="pill ok">OKF: <b>3/3 tiêu chí ✓</b></span>
+    <span class="pill ok">pre-commit: <b>ALL GREEN ✓</b></span>
+  </div>
+</div>
+
+<div class="repo-card">
+  <div class="chrome">
+    <span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#28c840"></span>
+    <div class="url-bar">github.com/Rheinmir/setup · branch orca · harness v1.0.0</div>
+  </div>
+  <div class="rc-body">
+    <div class="rc-stat"><span class="n">134</span><span class="l">commit orca ahead master</span></div>
+    <div class="rc-stat"><span class="n">L0–L4</span><span class="l">tầng harness đã cài</span></div>
+    <div class="rc-stat"><span class="n">5</span><span class="l">validator + R9 mới</span></div>
+    <div class="rc-stat"><span class="n">3</span><span class="l">hàng rào tự kiểm BỊ CHẶN ✓</span></div>
+    <div class="rc-stat"><span class="n">7/7</span><span class="l">hook pre-commit Passed</span></div>
+  </div>
+</div>
+
+<!-- ===== SEC 0 ===== -->
+<div class="section-bg s-bg0"><section id="sec-0">
+  <div class="section-header">
+    <span class="tag">00 · TỔNG QUAN</span>
+    <h2>Một chuỗi lệnh, ba giai đoạn</h2>
+    <p>Yêu cầu ban đầu: chạy <code>/sync-template</code>, rồi <code>/orca-workflow</code> ra kế hoạch refactor theo chuẩn OKF từ tài liệu HTML. Health-check phát hiện dự án còn ở cấu trúc cũ (chưa có <code>harness/</code>) nên sync thực chất là một cuộc migrate.</p>
+  </div>
+  <div class="diagram-box">
+    <svg viewBox="0 0 900 200" xmlns="http://www.w3.org/2000/svg" font-family="var(--font-text)">
+      <defs>
+        <style>.flow{stroke-dasharray:6 5;animation:flowArrow 1s linear infinite}@keyframes flowArrow{to{stroke-dashoffset:-22}}.pulse{animation:pulse 2.4s ease-in-out infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}</style>
+        <marker id="ar0" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#0a84ff"/></marker>
+      </defs>
+      <rect x="20" y="78" width="150" height="46" rx="9" fill="rgba(255,255,255,.75)" stroke="#0a84ff" stroke-width="1.5"/>
+      <text x="95" y="98" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f12">/sync-template</text>
+      <text x="95" y="113" text-anchor="middle" font-size="9.5" fill="#4a4a55">health-check</text>
+      <line class="flow" x1="170" y1="101" x2="232" y2="101" stroke="#0a84ff" stroke-width="2" marker-end="url(#ar0)"/>
+      <rect x="234" y="78" width="158" height="46" rx="9" fill="rgba(255,255,255,.75)" stroke="#5856d6" stroke-width="1.5"/>
+      <text x="313" y="98" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f12">/harness-update</text>
+      <text x="313" y="113" text-anchor="middle" font-size="9.5" fill="#4a4a55">migrate L0–L4</text>
+      <line class="flow" x1="392" y1="101" x2="454" y2="101" stroke="#0a84ff" stroke-width="2" marker-end="url(#ar0)"/>
+      <rect x="456" y="78" width="158" height="46" rx="9" fill="rgba(255,255,255,.75)" stroke="#1f9e44" stroke-width="1.5"/>
+      <text x="535" y="98" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f12">/orca-workflow</text>
+      <text x="535" y="113" text-anchor="middle" font-size="9.5" fill="#4a4a55">propose → execute</text>
+      <line class="flow" x1="614" y1="101" x2="676" y2="101" stroke="#0a84ff" stroke-width="2" marker-end="url(#ar0)"/>
+      <rect x="678" y="74" width="170" height="54" rx="9" fill="rgba(31,158,68,.10)" stroke="#1f9e44" stroke-width="1.6" class="pulse"/>
+      <text x="763" y="96" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1f9e44">OKF v0.1 bundle</text>
+      <text x="763" y="112" text-anchor="middle" font-size="9.5" fill="#4a4a55">agent nào cũng đọc được</text>
+    </svg>
+    <div class="diagram-hint">✥ kéo từng ô · cuộn để zoom</div>
+  </div>
+  <div class="content-grid">
+    <div class="card"><h4>Vấn đề phát hiện</h4><ul>
+      <li>Dự án còn cấu trúc <b>tiền-harness</b>: không có <code>harness/</code>, không hook, không validator.</li>
+      <li>Wiki dùng pseudo-frontmatter dạng bold <code>**Type:**</code> — <b>không phải</b> YAML, không đạt chuẩn OKF.</li>
+      <li>Nhánh <code>orca</code> (18/06) mới hơn <code>master</code> (23/05) — không được mặc định master là mới nhất.</li>
+    </ul></div>
+    <div class="card"><h4>Kết quả cuối</h4><ul>
+      <li>Harness L0–L4 đã cài, <b>3 hàng rào</b> tự kiểm đều cắn.</li>
+      <li>Toàn bộ wiki đạt <b>3/3 tiêu chí OKF v0.1</b>.</li>
+      <li>Validator <code>R9 okf-frontmatter</code> biến OKF thành <b>hàng rào bắt buộc</b>.</li>
+      <li><code>pre-commit run --all-files</code> → <b>ALL GREEN</b>.</li>
+    </ul></div>
+  </div>
+</section></div>
+
+<!-- ===== SEC 1 ===== -->
+<div class="section-bg s-bg1"><section id="sec-1">
+  <div class="section-header">
+    <span class="tag">01 · AUDIT &amp; QUYẾT ĐỊNH</span>
+    <h2>Branch audit: không tin master là mới nhất</h2>
+    <p>Quy tắc bắt buộc của sync-template là liệt kê mọi nhánh remote và so ngày commit. Audit cho thấy <code>orca</code> mới hơn hẳn — đó mới là nguồn sync đúng.</p>
+  </div>
+  <div class="diagram-box">
+    <svg viewBox="0 0 900 220" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="ar1" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#30b0c7"/></marker></defs>
+      <rect x="30" y="20" width="150" height="40" rx="8" fill="rgba(255,255,255,.7)" stroke="#9aa3b2" stroke-width="1.4"/>
+      <text x="105" y="38" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0f0f12">master</text>
+      <text x="105" y="52" text-anchor="middle" font-size="9" fill="#4a4a55">23/05 · base local</text>
+      <rect x="30" y="70" width="150" height="40" rx="8" fill="rgba(255,255,255,.7)" stroke="#9aa3b2" stroke-width="1.4"/>
+      <text x="105" y="88" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0f0f12">main</text>
+      <text x="105" y="102" text-anchor="middle" font-size="9" fill="#4a4a55">21/05 · cũ hơn</text>
+      <rect x="30" y="120" width="150" height="40" rx="8" fill="rgba(255,255,255,.7)" stroke="#9aa3b2" stroke-width="1.4"/>
+      <text x="105" y="138" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0f0f12">restructure</text>
+      <text x="105" y="152" text-anchor="middle" font-size="9" fill="#4a4a55">20/05 · stale</text>
+      <rect x="30" y="170" width="150" height="44" rx="8" fill="rgba(48,176,199,.12)" stroke="#30b0c7" stroke-width="1.8"/>
+      <text x="105" y="190" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1c8aa0">orca ★</text>
+      <text x="105" y="204" text-anchor="middle" font-size="9" fill="#4a4a55">18/06 · MỚI NHẤT</text>
+      <line class="flow" x1="180" y1="192" x2="320" y2="120" stroke="#30b0c7" stroke-width="2" marker-end="url(#ar1)" stroke-dasharray="6 5"/>
+      <rect x="322" y="92" width="200" height="56" rx="9" fill="rgba(255,255,255,.78)" stroke="#30b0c7" stroke-width="1.5"/>
+      <text x="422" y="114" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0f0f12">compare master…orca</text>
+      <text x="422" y="132" text-anchor="middle" font-size="9.5" fill="#4a4a55">+134 ahead · harness/ mới</text>
+      <line class="flow" x1="522" y1="120" x2="620" y2="120" stroke="#30b0c7" stroke-width="2" marker-end="url(#ar1)" stroke-dasharray="6 5"/>
+      <rect x="622" y="92" width="240" height="56" rx="9" fill="rgba(88,86,214,.10)" stroke="#5856d6" stroke-width="1.6"/>
+      <text x="742" y="114" text-anchor="middle" font-size="11.5" font-weight="700" fill="#5856d6">Quyết định: case B</text>
+      <text x="742" y="132" text-anchor="middle" font-size="9.5" fill="#4a4a55">migrate harness, không curl từng file</text>
+    </svg>
+    <div class="diagram-hint">✥ kéo từng ô · cuộn để zoom</div>
+  </div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Nhánh</th><th>Commit cuối</th><th>Đánh giá</th></tr></thead>
+    <tbody>
+      <tr><td><b>master</b></td><td>2026-05-23</td><td>base của local (local HEAD == master)</td></tr>
+      <tr><td>main</td><td>2026-05-21</td><td>cũ hơn</td></tr>
+      <tr><td>restructure</td><td>2026-05-20</td><td>cũ nhất, stale</td></tr>
+      <tr><td><b>orca</b></td><td><b>2026-06-18</b></td><td class="ok">MỚI NHẤT — +134 / −13 vs master → nguồn sync</td></tr>
+    </tbody>
+  </table></div>
+  <p class="foot-link">Quyết định gate: <a href="#">Run /harness-update now</a> + OKF plan-only → sau đó approve để thực thi.</p>
+</section></div>
+
+<!-- ===== SEC 2 ===== -->
+<div class="section-bg s-bg2"><section id="sec-2">
+  <div class="section-header">
+    <span class="tag">02 · HARNESS MIGRATE</span>
+    <h2>Cài harness L0–L4 (case B), 0 nợ wiki</h2>
+    <p><code>install-harness.sh</code> chạy ở chế độ <b>migrate</b>, exit code 0 — wiki sạch, không phải backfill <code>## Origin</code> hay index. Ba hàng rào tự kiểm đều chặn đúng.</p>
+  </div>
+  <div class="diagram-box">
+    <svg viewBox="0 0 900 210" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="ar2" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#5856d6"/></marker></defs>
+      <rect x="24" y="80" width="150" height="50" rx="9" fill="rgba(255,255,255,.75)" stroke="#5856d6" stroke-width="1.5"/>
+      <text x="99" y="100" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0f0f12">install-harness.sh</text>
+      <text x="99" y="116" text-anchor="middle" font-size="9.5" fill="#4a4a55">mode = migrate · rc=0</text>
+      <line class="flow" x1="174" y1="105" x2="232" y2="105" stroke="#5856d6" stroke-width="2" marker-end="url(#ar2)" stroke-dasharray="6 5"/>
+      <rect x="234" y="26" width="150" height="36" rx="8" fill="rgba(255,255,255,.72)" stroke="#5856d6" stroke-width="1.3"/>
+      <text x="309" y="48" text-anchor="middle" font-size="10.5" font-weight="600" fill="#0f0f12">L0 policy + validators</text>
+      <rect x="234" y="68" width="150" height="36" rx="8" fill="rgba(255,255,255,.72)" stroke="#5856d6" stroke-width="1.3"/>
+      <text x="309" y="90" text-anchor="middle" font-size="10.5" font-weight="600" fill="#0f0f12">L1 hooks (.claude)</text>
+      <rect x="234" y="110" width="150" height="36" rx="8" fill="rgba(255,255,255,.72)" stroke="#5856d6" stroke-width="1.3"/>
+      <text x="309" y="132" text-anchor="middle" font-size="10.5" font-weight="600" fill="#0f0f12">L2 pre-commit</text>
+      <rect x="234" y="152" width="150" height="36" rx="8" fill="rgba(255,255,255,.72)" stroke="#5856d6" stroke-width="1.3"/>
+      <text x="309" y="174" text-anchor="middle" font-size="10.5" font-weight="600" fill="#0f0f12">L4 health/evals</text>
+      <line class="flow" x1="384" y1="105" x2="448" y2="105" stroke="#5856d6" stroke-width="2" marker-end="url(#ar2)" stroke-dasharray="6 5"/>
+      <rect x="450" y="40" width="170" height="44" rx="9" fill="rgba(224,38,75,.08)" stroke="#e0264b" stroke-width="1.5"/>
+      <text x="535" y="60" text-anchor="middle" font-size="10.5" font-weight="700" fill="#e0264b">R1 ghi raw/</text>
+      <text x="535" y="75" text-anchor="middle" font-size="9.5" fill="#1f9e44">BỊ CHẶN ✓</text>
+      <rect x="450" y="92" width="170" height="44" rx="9" fill="rgba(224,38,75,.08)" stroke="#e0264b" stroke-width="1.5"/>
+      <text x="535" y="112" text-anchor="middle" font-size="10.5" font-weight="700" fill="#e0264b">R2 thiếu Origin</text>
+      <text x="535" y="127" text-anchor="middle" font-size="9.5" fill="#1f9e44">BỊ CHẶN ✓</text>
+      <rect x="450" y="144" width="170" height="44" rx="9" fill="rgba(224,38,75,.08)" stroke="#e0264b" stroke-width="1.5"/>
+      <text x="535" y="164" text-anchor="middle" font-size="10.5" font-weight="700" fill="#e0264b">R5 lạc wiki/ root</text>
+      <text x="535" y="179" text-anchor="middle" font-size="9.5" fill="#1f9e44">BỊ CHẶN ✓</text>
+      <line class="flow" x1="620" y1="113" x2="684" y2="113" stroke="#5856d6" stroke-width="2" marker-end="url(#ar2)" stroke-dasharray="6 5"/>
+      <rect x="686" y="86" width="180" height="54" rx="9" fill="rgba(31,158,68,.10)" stroke="#1f9e44" stroke-width="1.6"/>
+      <text x="776" y="108" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1f9e44">Harness sạch</text>
+      <text x="776" y="124" text-anchor="middle" font-size="9.5" fill="#4a4a55">0 nợ backfill · pre-commit installed</text>
+    </svg>
+    <div class="diagram-hint">✥ kéo từng ô · cuộn để zoom</div>
+  </div>
+  <div class="content-grid">
+    <div class="card"><h4>Đã cài</h4><ul>
+      <li><code>harness/</code> — validators, <code>policy.yaml</code>, scripts, evals</li>
+      <li><code>llmwiki/.claude/hooks/</code> — pre/post tool, stop, session</li>
+      <li><code>.pre-commit-config.yaml</code> + <code>pre-commit install</code></li>
+      <li>Vá thêm: <code>arch-scan.py</code> mà installer bỏ sót</li>
+    </ul></div>
+    <div class="card"><h4>Lưu ý vận hành</h4><ul>
+      <li>Hook chỉ nạp ở <b>session mới</b> — phải mở lại phiên để R9 cắn live.</li>
+      <li>Chưa commit — khi commit, <code>verify-before-commit</code> sẽ promote draft.</li>
+      <li>R9 + policy entry sẵn sàng <b>upstream</b> về repo <code>setup</code>.</li>
+    </ul></div>
+  </div>
+</section></div>
+
+<!-- ===== SEC 3 ===== -->
+<div class="section-bg s-bg3"><section id="sec-3">
+  <div class="section-header">
+    <span class="tag">03 · OKF v0.1 REFACTOR</span>
+    <h2>5 task: đưa llmwiki về Open Knowledge Format</h2>
+    <p>OKF v0.1 (Google Cloud, 12/06/2026): mỗi concept là một file Markdown có YAML frontmatter parse được, bắt buộc đúng một trường <code>type</code> không rỗng; bên đọc dung thứ khóa lạ. Plan được duyệt rồi thực thi inline.</p>
+  </div>
+  <div class="diagram-box">
+    <svg viewBox="0 0 900 200" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="ar3" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#1f9e44"/></marker></defs>
+      <rect x="14" y="80" width="120" height="46" rx="9" fill="rgba(255,255,255,.74)" stroke="#34c759" stroke-width="1.5"/>
+      <text x="74" y="100" text-anchor="middle" font-size="11" font-weight="700" fill="#0f0f12">T1 files</text>
+      <text x="74" y="115" text-anchor="middle" font-size="9" fill="#4a4a55">→ YAML fm</text>
+      <line class="flow" x1="134" y1="103" x2="178" y2="103" stroke="#1f9e44" stroke-width="2" marker-end="url(#ar3)" stroke-dasharray="6 5"/>
+      <rect x="180" y="80" width="120" height="46" rx="9" fill="rgba(255,255,255,.74)" stroke="#34c759" stroke-width="1.5"/>
+      <text x="240" y="100" text-anchor="middle" font-size="11" font-weight="700" fill="#0f0f12">T2 templates</text>
+      <text x="240" y="115" text-anchor="middle" font-size="9" fill="#4a4a55">born-OKF</text>
+      <line class="flow" x1="300" y1="103" x2="344" y2="103" stroke="#1f9e44" stroke-width="2" marker-end="url(#ar3)" stroke-dasharray="6 5"/>
+      <rect x="346" y="80" width="120" height="46" rx="9" fill="rgba(255,255,255,.74)" stroke="#34c759" stroke-width="1.5"/>
+      <text x="406" y="100" text-anchor="middle" font-size="11" font-weight="700" fill="#0f0f12">T3 skills</text>
+      <text x="406" y="115" text-anchor="middle" font-size="9" fill="#4a4a55">ingest/propose/query</text>
+      <line class="flow" x1="466" y1="103" x2="510" y2="103" stroke="#1f9e44" stroke-width="2" marker-end="url(#ar3)" stroke-dasharray="6 5"/>
+      <rect x="512" y="80" width="120" height="46" rx="9" fill="rgba(255,149,0,.12)" stroke="#ff9500" stroke-width="1.6"/>
+      <text x="572" y="100" text-anchor="middle" font-size="11" font-weight="700" fill="#cf7600">T4 R9</text>
+      <text x="572" y="115" text-anchor="middle" font-size="9" fill="#4a4a55">validator</text>
+      <line class="flow" x1="632" y1="103" x2="676" y2="103" stroke="#1f9e44" stroke-width="2" marker-end="url(#ar3)" stroke-dasharray="6 5"/>
+      <rect x="678" y="80" width="120" height="46" rx="9" fill="rgba(255,255,255,.74)" stroke="#34c759" stroke-width="1.5"/>
+      <text x="738" y="100" text-anchor="middle" font-size="11" font-weight="700" fill="#0f0f12">T5 conform</text>
+      <text x="738" y="115" text-anchor="middle" font-size="9" fill="#4a4a55">3 tiêu chí</text>
+      <line class="flow" x1="738" y1="80" x2="738" y2="54" stroke="#1f9e44" stroke-width="2" marker-end="url(#ar3)" stroke-dasharray="6 5"/>
+      <rect x="638" y="14" width="200" height="40" rx="9" fill="rgba(31,158,68,.10)" stroke="#1f9e44" stroke-width="1.6"/>
+      <text x="738" y="38" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1f9e44">OKF bundle hợp lệ ✓</text>
+    </svg>
+    <div class="diagram-hint">✥ kéo từng ô · cuộn để zoom</div>
+  </div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Task</th><th>Việc</th><th>Kết quả</th></tr></thead>
+    <tbody>
+      <tr><td><b>T1</b></td><td>Convert file nội dung: bold <code>**Type:**</code> → YAML frontmatter (giữ H1 + <code>## Origin</code>)</td><td class="ok">✓</td></tr>
+      <tr><td><b>T2</b></td><td>4× <code>_template.md</code> → frontmatter; file mới born-OKF</td><td class="ok">✓</td></tr>
+      <tr><td><b>T3</b></td><td>Skill <code>ingest</code>/<code>propose</code>/<code>query</code> thêm rule OKF (R9)</td><td class="ok">✓</td></tr>
+      <tr><td><b>T4</b></td><td>Validator <code>okf_frontmatter.py</code> + wire policy/hook/pre-commit</td><td class="ok">✓</td></tr>
+      <tr><td><b>T5</b></td><td>Concept <code>okf-conformance.md</code> + chạy 3 tiêu chí OKF</td><td class="ok">✓</td></tr>
+    </tbody>
+  </table></div>
+  <div class="card" style="margin-top:18px"><h4>Frontmatter chuẩn OKF (ví dụ draft)</h4>
+  <pre class="code-block"><span class="c">---</span>
+type: draft              <span class="c"># trường DUY NHẤT bắt buộc</span>
+title: <span class="g">Refactor llmwiki sang chuẩn OKF v0.1</span>
+status: proposed         <span class="c"># khóa lạ → R9 vẫn dung thứ</span>
+tags: <span class="a">[okf, refactor, harness]</span>
+timestamp: 2026-06-19
+<span class="c">---</span></pre>
+  </div>
+  <p class="foot-link">Chi tiết: <a href="../wiki/sources/draft/190626-okf-refactor-llmwiki.md">190626-okf-refactor-llmwiki.md</a> · seq: <a href="190626-okf-refactor-seq.html">190626-okf-refactor-seq.html</a></p>
+</section></div>
+
+<!-- ===== SEC 4 ===== -->
+<div class="section-bg s-bg4"><section id="sec-4">
+  <div class="section-header">
+    <span class="tag">04 · HÀNG RÀO R9</span>
+    <h2>okf-frontmatter: biến OKF thành luật cứng</h2>
+    <p>Trước đó harness <b>chưa</b> có validator frontmatter (chỉ R1/R2/R3/R5/R7). R8 đã dùng cho pattern-sync, nên validator mới mang số <code>R9</code>. Nó chặn khi thiếu frontmatter/<code>type</code>, nhưng <b>không</b> fail vì khóa lạ — đúng tinh thần OKF.</p>
+  </div>
+  <div class="diagram-box">
+    <svg viewBox="0 0 900 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="ar4" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#ff9500"/></marker>
+        <marker id="ar4r" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#e0264b"/></marker>
+        <marker id="ar4g" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#1f9e44"/></marker>
+      </defs>
+      <rect x="24" y="78" width="150" height="46" rx="9" fill="rgba(255,255,255,.75)" stroke="#ff9500" stroke-width="1.5"/>
+      <text x="99" y="98" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0f0f12">Ghi wiki .md</text>
+      <text x="99" y="113" text-anchor="middle" font-size="9.5" fill="#4a4a55">Write / Edit</text>
+      <line class="flow" x1="174" y1="101" x2="236" y2="101" stroke="#ff9500" stroke-width="2" marker-end="url(#ar4)" stroke-dasharray="6 5"/>
+      <rect x="238" y="74" width="180" height="54" rx="9" fill="rgba(255,255,255,.78)" stroke="#ff9500" stroke-width="1.6"/>
+      <text x="328" y="96" text-anchor="middle" font-size="11.5" font-weight="700" fill="#cf7600">R9 okf_frontmatter</text>
+      <text x="328" y="112" text-anchor="middle" font-size="9.5" fill="#4a4a55">parse YAML · type ≠ rỗng?</text>
+      <line class="flow" x1="418" y1="90" x2="500" y2="58" stroke="#e0264b" stroke-width="2" marker-end="url(#ar4r)" stroke-dasharray="6 5"/>
+      <rect x="502" y="34" width="200" height="44" rx="9" fill="rgba(224,38,75,.08)" stroke="#e0264b" stroke-width="1.5"/>
+      <text x="602" y="54" text-anchor="middle" font-size="11" font-weight="700" fill="#e0264b">thiếu fm / type → exit 2</text>
+      <text x="602" y="69" text-anchor="middle" font-size="9.5" fill="#4a4a55">BỊ CHẶN, trả lý do cho agent</text>
+      <line class="flow" x1="418" y1="112" x2="500" y2="140" stroke="#1f9e44" stroke-width="2" marker-end="url(#ar4g)" stroke-dasharray="6 5"/>
+      <rect x="502" y="120" width="200" height="44" rx="9" fill="rgba(31,158,68,.10)" stroke="#1f9e44" stroke-width="1.5"/>
+      <text x="602" y="140" text-anchor="middle" font-size="11" font-weight="700" fill="#1f9e44">hợp lệ → exit 0</text>
+      <text x="602" y="155" text-anchor="middle" font-size="9.5" fill="#4a4a55">khóa lạ vẫn pass</text>
+      <rect x="734" y="74" width="150" height="54" rx="9" fill="rgba(255,255,255,.75)" stroke="#9aa3b2" stroke-width="1.3"/>
+      <text x="809" y="96" text-anchor="middle" font-size="10" font-weight="600" fill="#0f0f12">enforce điểm</text>
+      <text x="809" y="111" text-anchor="middle" font-size="9" fill="#4a4a55">post-tool · pre-commit</text>
+    </svg>
+    <div class="diagram-hint">✥ kéo từng ô · cuộn để zoom</div>
+  </div>
+  <div class="content-grid">
+    <div class="card"><h4>Nơi cắm dây</h4><ul>
+      <li><code>harness/validators/okf_frontmatter.py</code> (+ bản copy cạnh hooks)</li>
+      <li><code>harness/policy.yaml</code> — rule <b>R9 okf-frontmatter</b></li>
+      <li><code>post_tool_use.py</code> — chạy sau khi file đã ghi (đọc full disk)</li>
+      <li><code>.pre-commit-config.yaml</code> — gate ở repo</li>
+    </ul></div>
+    <div class="card"><h4>Reserved (miễn R9)</h4><ul>
+      <li><code>index.md</code>, <code>log.md</code>, <code>README.md</code></li>
+      <li><code>decisions.md</code>, <code>active-context.md</code></li>
+      <li><code>_template.md</code></li>
+      <li>Khớp <code>R5 allow_root_files</code> + <code>SKIP_BASENAMES</code></li>
+    </ul></div>
+  </div>
+</section></div>
+
+<!-- ===== SEC 5 ===== -->
+<div class="section-bg s-bg5"><section id="sec-5">
+  <div class="section-header">
+    <span class="tag">05 · NGHIỆM THU</span>
+    <h2>Tất cả gate đều xanh</h2>
+    <p>3 tiêu chí OKF v0.1 pass 3/3; test ngược chặn đúng; khóa lạ được dung thứ; toàn bộ pre-commit Passed.</p>
+  </div>
+  <div class="diagram-box">
+    <svg viewBox="0 0 900 170" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="ar5" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#e0264b"/></marker></defs>
+      <rect x="20" y="20" width="150" height="36" rx="8" fill="rgba(255,255,255,.74)" stroke="#1f9e44" stroke-width="1.4"/><text x="95" y="42" text-anchor="middle" font-size="10.5" font-weight="600" fill="#0f0f12">R2 origin ✓</text>
+      <rect x="20" y="64" width="150" height="36" rx="8" fill="rgba(255,255,255,.74)" stroke="#1f9e44" stroke-width="1.4"/><text x="95" y="86" text-anchor="middle" font-size="10.5" font-weight="600" fill="#0f0f12">R3 index ✓</text>
+      <rect x="20" y="108" width="150" height="36" rx="8" fill="rgba(255,255,255,.74)" stroke="#1f9e44" stroke-width="1.4"/><text x="95" y="130" text-anchor="middle" font-size="10.5" font-weight="600" fill="#0f0f12">R5 folder ✓</text>
+      <rect x="184" y="42" width="150" height="36" rx="8" fill="rgba(255,255,255,.74)" stroke="#1f9e44" stroke-width="1.4"/><text x="259" y="64" text-anchor="middle" font-size="10.5" font-weight="600" fill="#0f0f12">R7 proposal ✓</text>
+      <rect x="184" y="86" width="150" height="36" rx="8" fill="rgba(255,149,0,.12)" stroke="#ff9500" stroke-width="1.6"/><text x="259" y="108" text-anchor="middle" font-size="10.5" font-weight="700" fill="#cf7600">R9 okf ✓</text>
+      <line class="flow" x1="334" y1="80" x2="404" y2="80" stroke="#e0264b" stroke-width="2" marker-end="url(#ar5)" stroke-dasharray="6 5"/>
+      <rect x="406" y="40" width="170" height="40" rx="8" fill="rgba(255,255,255,.74)" stroke="#1f9e44" stroke-width="1.4"/><text x="491" y="64" text-anchor="middle" font-size="10.5" font-weight="600" fill="#0f0f12">arch-scan ✓</text>
+      <rect x="406" y="86" width="170" height="40" rx="8" fill="rgba(255,255,255,.74)" stroke="#1f9e44" stroke-width="1.4"/><text x="491" y="110" text-anchor="middle" font-size="10.5" font-weight="600" fill="#0f0f12">wiki-health ✓</text>
+      <line class="flow" x1="576" y1="83" x2="648" y2="83" stroke="#e0264b" stroke-width="2" marker-end="url(#ar5)" stroke-dasharray="6 5"/>
+      <rect x="650" y="56" width="210" height="56" rx="10" fill="rgba(31,158,68,.12)" stroke="#1f9e44" stroke-width="1.8"/>
+      <text x="755" y="80" text-anchor="middle" font-size="13" font-weight="700" fill="#1f9e44">ALL GREEN ✓</text>
+      <text x="755" y="98" text-anchor="middle" font-size="9.5" fill="#4a4a55">pre-commit run --all-files</text>
+    </svg>
+    <div class="diagram-hint">✥ kéo từng ô · cuộn để zoom</div>
+  </div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Kiểm tra</th><th>Kỳ vọng</th><th>Kết quả</th></tr></thead>
+    <tbody>
+      <tr><td>3 tiêu chí OKF v0.1 trên cây wiki</td><td>3/3 pass</td><td class="ok">3/3 ✓</td></tr>
+      <tr><td>File không frontmatter</td><td>BỊ CHẶN</td><td class="ok">rc=2 ✓</td></tr>
+      <tr><td>Frontmatter thiếu <code>type</code></td><td>BỊ CHẶN</td><td class="ok">rc=2 ✓</td></tr>
+      <tr><td>Frontmatter có khóa lạ (<code>status</code>)</td><td>PASS (dung thứ)</td><td class="ok">rc=0 ✓</td></tr>
+      <tr><td><code>pre-commit run --all-files</code></td><td>7/7 hook Passed</td><td class="ok">ALL GREEN ✓</td></tr>
+    </tbody>
+  </table></div>
+  <div class="content-grid">
+    <div class="card"><h4>Bước tiếp theo</h4><ul>
+      <li><b>Mở session mới</b> để hook (kể cả R9) nạp live.</li>
+      <li>Commit khi sẵn sàng → <code>verify-before-commit</code> promote draft.</li>
+      <li>Upstream R9 + policy về repo <code>setup</code> (nơi bump <code>version.json</code>).</li>
+    </ul></div>
+    <div class="card"><h4>Artefact tạo ra</h4><ul>
+      <li><code>harness/validators/okf_frontmatter.py</code></li>
+      <li><code>wiki/concepts/okf-conformance.md</code></li>
+      <li><code>wiki/sources/draft/190626-okf-refactor-llmwiki.md</code> + seq HTML</li>
+      <li>Báo cáo này: <code>html/200626-okf-refactor-report.html</code></li>
+    </ul></div>
+  </div>
+</section></div>
+
+<footer>
+  <b>Báo cáo OKF refactor</b> — tạo bởi <code>/docs-site-macos</code> · 20/06/2026 · self-contained, mở offline được.<br>
+  Nguồn chuẩn OKF: <code>html/150626-open-knowledge-format-vi.html</code> · OKF v0.1 © Google Cloud (12/06/2026).
+</footer>
+
+<script>
+/* ripple on nav buttons */
+(function(){
+  function attach(el){
+    el.addEventListener('pointerdown',function(e){
+      const r=el.getBoundingClientRect();const x=e.clientX-r.left,y=e.clientY-r.top;
+      const rad=Math.hypot(Math.max(x,r.width-x),Math.max(y,r.height-y));
+      const ink=document.createElement('span');ink.className='ripple-ink';
+      ink.style.width=ink.style.height=rad*2+'px';ink.style.left=(x-rad)+'px';ink.style.top=(y-rad)+'px';
+      el.appendChild(ink);ink.addEventListener('animationend',()=>ink.remove());
+    });
+  }
+  document.querySelectorAll('nav a,.nav-toggle,.nav-close').forEach(attach);
+})();
+
+/* sidebar collapse — 2 buttons */
+(function(){
+  const nav=document.querySelector('nav');if(!nav)return;
+  const btn=document.createElement('button');btn.className='nav-toggle';btn.textContent='☰';document.body.appendChild(btn);
+  const close=document.createElement('button');close.className='nav-close';close.textContent='✕';nav.appendChild(close);
+  const apply=c=>{document.body.classList.toggle('nav-collapsed',c);try{localStorage.setItem('navCollapsed',c?'1':'0');}catch(e){}};
+  btn.addEventListener('click',()=>apply(false));close.addEventListener('click',()=>apply(true));
+  // attach ripple to the just-created toggle
+  [btn,close].forEach(el=>el.addEventListener('pointerdown',function(e){
+    const r=el.getBoundingClientRect();const x=e.clientX-r.left,y=e.clientY-r.top;
+    const rad=Math.hypot(Math.max(x,r.width-x),Math.max(y,r.height-y));
+    const ink=document.createElement('span');ink.className='ripple-ink';
+    ink.style.width=ink.style.height=rad*2+'px';ink.style.left=(x-rad)+'px';ink.style.top=(y-rad)+'px';
+    el.appendChild(ink);ink.addEventListener('animationend',()=>ink.remove());}));
+  try{const s=localStorage.getItem('navCollapsed');
+    if(s==='1'||(s!=='0'&&matchMedia('(max-width:640px)').matches))apply(true);}catch(e){}
+})();
+
+/* scrollbar flash */
+(function(){
+  const flash=el=>{let t;return()=>{el.classList.add('scrolling');clearTimeout(t);t=setTimeout(()=>el.classList.remove('scrolling'),900);};};
+  const root=document.documentElement;window.addEventListener('scroll',flash(root),{passive:true});
+  const nav=document.querySelector('nav');if(nav)nav.addEventListener('scroll',flash(nav),{passive:true});
+})();
+
+/* scroll spy */
+(function(){
+  const links=[...document.querySelectorAll('nav a')];const sections=[...document.querySelectorAll('section[id]')];
+  const obs=new IntersectionObserver(entries=>{let active='';for(const e of entries){if(e.isIntersecting)active=e.target.id;}
+    if(active)links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+active));},{rootMargin:'-40% 0px -55% 0px'});
+  sections.forEach(s=>obs.observe(s));
+})();
+
+/* code copy */
+function initCodeCopy(){
+  document.querySelectorAll('pre.code-block').forEach(pre=>{
+    if(pre.dataset.copy)return;pre.dataset.copy='1';const code=pre.textContent;
+    const wrap=document.createElement('div');wrap.className='code-wrap';pre.parentNode.insertBefore(wrap,pre);wrap.appendChild(pre);
+    const btn=document.createElement('button');btn.className='code-copy';btn.textContent='Copy';wrap.appendChild(btn);
+    btn.addEventListener('click',async()=>{
+      try{await navigator.clipboard.writeText(code);}catch{const ta=document.createElement('textarea');ta.value=code;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}
+      btn.textContent='✓ Copied';btn.classList.add('copied');setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('copied');},1500);
+    });
+  });
+}
+initCodeCopy();
+
+/* draggable diagrams */
+function initDraggableDiagrams(){
+  const NS='http://www.w3.org/2000/svg';
+  const nearest=(nodes,x,y)=>{let best=null,bd=1e9;nodes.forEach(n=>{const cx=Math.max(n.x,Math.min(x,n.x+n.w)),cy=Math.max(n.y,Math.min(y,n.y+n.h));const d=Math.hypot(x-cx,y-cy);if(d<bd){bd=d;best=n;}});return bd<=42?best:null;};
+  document.querySelectorAll('.diagram-box').forEach(box=>{
+    const svg=box.querySelector('svg');if(!svg||box.dataset.draggable)return;box.dataset.draggable='1';
+    const vp=document.createElement('div');vp.className='diagram-viewport';box.insertBefore(vp,svg);vp.appendChild(svg);
+    const reset=document.createElement('button');reset.className='diagram-reset';reset.textContent='⟲ reset';box.appendChild(reset);
+    const allRects=[...svg.querySelectorAll('rect')];
+    const nodes=allRects.filter(r=>(+r.getAttribute('width'))>=70&&(+r.getAttribute('height'))>=30).map(r=>({rect:r,x:+r.getAttribute('x'),y:+r.getAttribute('y'),w:+r.getAttribute('width'),h:+r.getAttribute('height'),els:[r],tx:0,ty:0}));
+    const inNode=(px,py)=>nodes.find(n=>px>=n.x-1&&px<=n.x+n.w+1&&py>=n.y-1&&py<=n.y+n.h+1);
+    [...svg.querySelectorAll('text')].forEach(t=>{const x=parseFloat(t.getAttribute('x')),y=parseFloat(t.getAttribute('y'));if(isNaN(x)||isNaN(y))return;const n=inNode(x,y);if(n)n.els.push(t);});
+    allRects.forEach(r=>{if(nodes.some(n=>n.rect===r))return;const x=+r.getAttribute('x'),y=+r.getAttribute('y'),w=+r.getAttribute('width')||0,h=+r.getAttribute('height')||0;const n=inNode(x+w/2,y+h/2);if(n)n.els.push(r);});
+    nodes.forEach(n=>{const g=document.createElementNS(NS,'g');g.setAttribute('class','dnode');n.rect.parentNode.insertBefore(g,n.rect);n.els.forEach(el=>g.appendChild(el));n.g=g;});
+    const links=[...svg.querySelectorAll('line')].filter(l=>l.hasAttribute('x1')&&l.hasAttribute('x2'));
+    links.forEach(l=>{l._x1=+l.getAttribute('x1');l._y1=+l.getAttribute('y1');l._x2=+l.getAttribute('x2');l._y2=+l.getAttribute('y2');l._n1=nearest(nodes,l._x1,l._y1);l._n2=nearest(nodes,l._x2,l._y2);});
+    const reroute=()=>links.forEach(l=>{if(l._n1){l.setAttribute('x1',l._x1+l._n1.tx);l.setAttribute('y1',l._y1+l._n1.ty);}if(l._n2){l.setAttribute('x2',l._x2+l._n2.tx);l.setAttribute('y2',l._y2+l._n2.ty);}});
+    const vbBase=(svg.getAttribute('viewBox')||'0 0 900 200').split(/\s+/).map(Number);
+    const fitViewBox=()=>{const pad=16;let minX=vbBase[0],minY=vbBase[1],maxX=vbBase[0]+vbBase[2],maxY=vbBase[1]+vbBase[3];nodes.forEach(n=>{minX=Math.min(minX,n.x+n.tx-pad);minY=Math.min(minY,n.y+n.ty-pad);maxX=Math.max(maxX,n.x+n.w+n.tx+pad);maxY=Math.max(maxY,n.y+n.h+n.ty+pad);});svg.setAttribute('viewBox',`${minX} ${minY} ${maxX-minX} ${maxY-minY}`);};
+    let ptx=0,pty=0,scale=1;
+    const applyCanvas=()=>{svg.style.transform=`translate(${ptx}px,${pty}px) scale(${scale})`;};
+    const toSvg=(cx,cy)=>{const p=svg.createSVGPoint();p.x=cx;p.y=cy;return p.matrixTransform(svg.getScreenCTM().inverse());};
+    let mode=null,node=null,start=null,t0=null,p0=null;
+    vp.addEventListener('pointerdown',e=>{vp.setPointerCapture(e.pointerId);const g=e.target.closest&&e.target.closest('g.dnode');
+      if(g){mode='node';node=nodes.find(n=>n.g===g);start=toSvg(e.clientX,e.clientY);t0={x:node.tx,y:node.ty};}
+      else{mode='pan';p0={x:e.clientX-ptx,y:e.clientY-pty};vp.classList.add('grabbing');}});
+    vp.addEventListener('pointermove',e=>{if(mode==='node'){const c=toSvg(e.clientX,e.clientY);node.tx=t0.x+(c.x-start.x);node.ty=t0.y+(c.y-start.y);node.g.setAttribute('transform',`translate(${node.tx},${node.ty})`);reroute();}
+      else if(mode==='pan'){ptx=e.clientX-p0.x;pty=e.clientY-p0.y;applyCanvas();}});
+    const end=()=>{if(mode==='node')fitViewBox();mode=null;node=null;vp.classList.remove('grabbing');};
+    vp.addEventListener('pointerup',end);vp.addEventListener('pointercancel',end);
+    vp.addEventListener('wheel',e=>{e.preventDefault();const r=vp.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;const ns=Math.min(4,Math.max(0.5,scale*(e.deltaY<0?1.1:0.9)));ptx=mx-(mx-ptx)*(ns/scale);pty=my-(my-pty)*(ns/scale);scale=ns;applyCanvas();},{passive:false});
+    const doReset=()=>{ptx=0;pty=0;scale=1;svg.style.transition='transform .3s cubic-bezier(.4,0,.2,1)';applyCanvas();setTimeout(()=>{svg.style.transition='';},320);nodes.forEach(n=>{n.tx=0;n.ty=0;n.g.setAttribute('transform','translate(0,0)');});reroute();fitViewBox();};
+    reset.addEventListener('click',doReset);vp.addEventListener('dblclick',doReset);
+  });
+}
+initDraggableDiagrams();
+</script>
+</body>
+</html>

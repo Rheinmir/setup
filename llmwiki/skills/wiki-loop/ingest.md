@@ -21,3 +21,4 @@ Automatically when a new file appears in `raw/`.
 - Never modify the file in `raw/`. Read only.
 - Do not create a wiki page unless the source actually introduces that entity or concept.
 - Prefer updating an existing page over creating a duplicate.
+- **OKF v0.1 (R9):** every wiki page starts with a YAML frontmatter block (`---`) carrying a non-empty `type` (e.g. `concept`, `entity`, `source`) plus optional `title`/`tags`/`timestamp`/`resource`. Copy the matching `_template.md`. Keep the `## Origin` body section (R2).

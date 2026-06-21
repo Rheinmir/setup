@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Open Knowledge Format (OKF) v0.1 — Tài liệu tiếng Việt</title>
+<style>
+:root{
+  --glass-1: rgba(255,255,255,.55);
+  --glass-2: rgba(255,255,255,.7);
+  --glass-3: rgba(255,255,255,.88);
+  --blur-1: 24px; --blur-2: 8px; --blur-3: 4px;
+  --edge-hi: inset 0 1px 0 rgba(255,255,255,.85);
+  --border: rgba(30,90,170,.14);
+  --text-1:#0f0f12; --text-2:#4a4a55;
+  --font-text: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', 'Roboto', 'Segoe UI', sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', 'Roboto', 'Segoe UI', sans-serif;
+  --font-mono: 'SF Mono', ui-monospace, 'SFMono-Regular', Menlo, 'Roboto Mono', Consolas, monospace;
+}
+*{box-sizing:border-box}
+html{background:#e9f0fb;scrollbar-width:thin;scrollbar-color:transparent transparent}
+html.scrolling{scrollbar-color:rgba(10,132,255,.32) transparent}
+body{
+  margin:0;padding-left:200px;color:var(--text-1);font-family:var(--font-text);
+  font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;
+  transition:padding-left .28s cubic-bezier(.4,0,.2,1);
+  background:
+    radial-gradient(900px 500px at 12% -10%, rgba(10,132,255,.10), transparent 60%),
+    radial-gradient(700px 420px at 95% 15%, rgba(90,162,232,.08), transparent 55%),
+    linear-gradient(180deg, #eef4fd 0%, #e6eefb 100%);
+}
+body::before{content:'';position:fixed;inset:-10%;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(640px 440px at 10% 14%,rgba(10,132,255,.22),transparent 65%),
+    radial-gradient(380px 460px at 4% 52%,rgba(48,176,199,.18),transparent 65%),
+    radial-gradient(540px 400px at 88% 10%,rgba(88,86,214,.13),transparent 60%),
+    radial-gradient(720px 500px at 74% 76%,rgba(48,176,199,.13),transparent 65%),
+    radial-gradient(480px 380px at 16% 86%,rgba(255,149,0,.12),transparent 60%);
+  animation:orbDrift 46s ease-in-out infinite alternate}
+@keyframes orbDrift{100%{transform:translate(2.2%,1.6%) scale(1.045)}}
+body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:radial-gradient(rgba(30,90,170,.11) 1px,transparent 1.3px);
+  background-size:22px 22px;
+  mask-image:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.22))}
+@media(prefers-reduced-motion:reduce){body::before{animation:none}}
+
+/* ---------- scrollbar ---------- */
+::-webkit-scrollbar{width:11px;height:11px;background:transparent}
+::-webkit-scrollbar-track,::-webkit-scrollbar-track-piece,
+::-webkit-scrollbar-corner,::-webkit-scrollbar-button{background:transparent;border:0;box-shadow:none}
+::-webkit-scrollbar-thumb{background:transparent;border-radius:8px;border:3px solid transparent;
+  background-clip:content-box;transition:background-color .25s ease}
+html.scrolling::-webkit-scrollbar-thumb,nav.scrolling::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-thumb:hover{background-color:rgba(10,132,255,.32)}
+::-webkit-scrollbar-thumb:active{background-color:rgba(10,132,255,.6)}
+
+/* ---------- nav ---------- */
+nav{position:fixed;top:0;left:0;bottom:0;width:200px;z-index:100;overflow-y:auto;
+  display:flex;flex-direction:column;align-items:stretch;gap:2px;padding:18px 12px;
+  background:linear-gradient(165deg,rgba(255,255,255,.46) 0%,rgba(255,255,255,.22) 48%,rgba(240,248,255,.34) 100%);
+  backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
+  -webkit-backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
+  border-right:1px solid rgba(255,255,255,.55);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 1px 0 0 rgba(255,255,255,.5),
+    inset -1px 0 0 rgba(30,90,170,.10),4px 0 24px rgba(30,90,170,.08);
+  transition:transform .28s cubic-bezier(.4,0,.2,1)}
+nav::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(220px 160px at 18% 4%,rgba(255,255,255,.55),transparent 70%),
+    linear-gradient(115deg,rgba(255,255,255,.28) 0%,transparent 28%,transparent 72%,rgba(255,255,255,.14) 100%)}
+nav>*{position:relative}
+nav .logo{margin:0 0 6px;padding:6px 10px;font-family:var(--font-display);font-weight:700;font-size:18px;
+  letter-spacing:-.02em;background:linear-gradient(135deg,#0a84ff,#64b5f7);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+nav .logo small{display:block;font-size:10px;font-weight:600;color:var(--text-2);
+  -webkit-text-fill-color:var(--text-2);letter-spacing:.02em;margin-top:2px}
+nav a{padding:8px 12px;border-radius:10px;font-size:13px;color:var(--text-2);text-decoration:none;
+  position:relative;overflow:hidden;transition:background .15s,color .15s}
+nav a:hover{color:var(--text-1);background:rgba(10,132,255,.06)}
+nav a.active{color:#0a84ff;background:rgba(10,132,255,.08);font-weight:600}
+nav .nav-sep{height:1px;margin:8px 10px;background:rgba(30,90,170,.1)}
+.nav-close{position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-size:12px;color:#4a4a55;cursor:pointer;
+  background:rgba(0,0,0,.04);border:none;overflow:hidden;z-index:2}
+.nav-close:hover{color:#0a84ff;background:rgba(10,132,255,.10)}
+body.nav-collapsed nav{transform:translateX(-100%)}
+body.nav-collapsed{padding-left:0}
+.nav-toggle{position:fixed;top:12px;left:12px;z-index:120;width:32px;height:32px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-size:14px;color:#4a4a55;cursor:pointer;
+  background:linear-gradient(165deg,rgba(255,255,255,.5),rgba(255,255,255,.24));
+  backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
+  -webkit-backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
+  border:1px solid transparent;overflow:hidden;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 0 0 1px rgba(30,90,170,.08),0 2px 10px rgba(30,90,170,.12);
+  transition:opacity .2s,transform .28s cubic-bezier(.4,0,.2,1),color .15s}
+.nav-toggle:hover{color:#0a84ff}
+body:not(.nav-collapsed) .nav-toggle{opacity:0;pointer-events:none;transform:translateX(-6px)}
+@media(max-width:640px){
+  body{padding-left:0}
+  nav{box-shadow:0 8px 30px rgba(0,0,0,.14)}
+}
+
+/* ---------- ripple ---------- */
+.ripple{position:absolute;border-radius:50%;pointer-events:none;transform:scale(0);opacity:.9;
+  background:radial-gradient(circle, rgba(255,255,255,.6) 0%, rgba(10,132,255,.22) 35%, transparent 70%);
+  box-shadow:0 0 0 1px rgba(255,255,255,.45);animation:rippleWave .65s cubic-bezier(.2,.6,.3,1) forwards}
+@keyframes rippleWave{to{transform:scale(2.8);opacity:0}}
+.ripple-ink{position:absolute;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.70) 0%,rgba(255,255,255,.28) 38%,rgba(10,132,255,.20) 72%,transparent 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 0 -10px 20px rgba(10,132,255,.12),0 0 14px rgba(10,132,255,.10);
+  backdrop-filter:blur(2px) saturate(1.25);-webkit-backdrop-filter:blur(2px) saturate(1.25);
+  transform:scale(0);opacity:1;animation:rippleGrow .6s cubic-bezier(.25,.46,.45,.94) forwards}
+@keyframes rippleGrow{55%{transform:scale(1);opacity:.75}100%{transform:scale(1.04);opacity:0}}
+
+/* ---------- hero ---------- */
+.hero{max-width:1100px;margin:0 auto;padding:88px 24px 40px}
+.hero .eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;
+  color:#0a84ff;background:rgba(10,132,255,.10);border:1px solid rgba(10,132,255,.18);
+  padding:5px 12px;border-radius:20px;margin-bottom:20px}
+.hero .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:#34c759;
+  box-shadow:0 0 0 0 rgba(52,199,89,.5);animation:livedot 2s ease-out infinite}
+@keyframes livedot{0%{box-shadow:0 0 0 0 rgba(52,199,89,.5)}100%{box-shadow:0 0 0 8px rgba(52,199,89,0)}}
+.hero h1{font-family:var(--font-display);font-size:clamp(34px,5.4vw,60px);line-height:1.04;
+  letter-spacing:-.03em;margin:0 0 18px;
+  background:linear-gradient(135deg,#0a84ff,#5aa2e8,#cfe3fb);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lede{font-size:19px;line-height:1.55;color:var(--text-2);max-width:680px;margin:0 0 22px}
+.hero .meta{display:flex;flex-wrap:wrap;gap:10px}
+.hero .meta span{font-size:12.5px;color:var(--text-2);background:var(--glass-2);
+  backdrop-filter:blur(var(--blur-2));border:1px solid var(--border);border-radius:10px;
+  padding:6px 12px;box-shadow:var(--edge-hi)}
+.hero .meta b{color:var(--text-1);font-weight:600}
+
+/* ---------- repo card ---------- */
+.repo-card{max-width:1052px;width:calc(100% - 48px);margin:8px auto 0;
+  background:var(--glass-2);backdrop-filter:blur(var(--blur-2)) saturate(1.1);
+  border:1px solid var(--border);border-radius:14px;overflow:hidden;
+  box-shadow:var(--edge-hi),0 4px 20px rgba(0,0,0,.06)}
+.chrome{display:flex;align-items:center;gap:8px;padding:10px 14px;
+  background:rgba(255,255,255,.4);border-bottom:1px solid var(--border)}
+.chrome .dot{width:12px;height:12px;border-radius:50%;display:inline-block}
+.chrome .url-bar{flex:1;margin-left:8px;font-size:12px;color:var(--text-2);font-family:var(--font-mono);
+  background:rgba(255,255,255,.6);border:1px solid var(--border);border-radius:7px;padding:4px 12px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rc-body{display:flex;flex-wrap:wrap;align-items:center;gap:14px 24px;padding:16px 18px 22px}
+.rc-body .rc-main{flex:1;min-width:240px}
+.rc-body h3{margin:0 0 4px;font-size:15px;font-family:var(--font-mono);color:var(--text-1)}
+.rc-body p{margin:0;font-size:13px;color:var(--text-2)}
+.rc-stats{display:flex;gap:18px}
+.rc-stats div{text-align:center}
+.rc-stats b{display:block;font-size:18px;font-family:var(--font-display);color:#0a84ff}
+.rc-stats small{font-size:11px;color:var(--text-2)}
+.rc-cta{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#fff;
+  text-decoration:none;background:linear-gradient(135deg,#0a84ff,#64b5f7);padding:9px 16px;
+  border-radius:10px;box-shadow:0 3px 12px rgba(10,132,255,.3)}
+.rc-cta:hover{filter:brightness(1.05)}
+
+/* ---------- sections ---------- */
+.section-bg{position:relative;overflow:visible}
+.section-bg::before{content:'';position:absolute;top:0;bottom:0;left:50%;width:100vw;
+  transform:translateX(-50%);pointer-events:none}
+section{padding:64px 24px 72px;max-width:1100px;margin:0 auto;position:relative}
+.section-header{margin-bottom:8px}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;margin-bottom:14px}
+.section-header h2{font-family:var(--font-display);font-size:clamp(26px,3.4vw,38px);
+  letter-spacing:-.02em;margin:0 0 12px;color:#1d1d1f}
+.section-header p{font-size:16.5px;color:var(--text-2);max-width:720px;margin:0}
+
+/* ---------- cards ---------- */
+.card{background:var(--glass-2);backdrop-filter:blur(var(--blur-2)) saturate(1.1);
+  border:1px solid var(--border);border-radius:16px;box-shadow:var(--edge-hi),0 4px 20px rgba(0,0,0,.06);padding:22px}
+.card h4{margin:0 0 10px;font-size:15px;font-family:var(--font-display);letter-spacing:-.01em}
+.card p{margin:0 0 10px;font-size:14px;color:var(--text-2)}
+.card ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.card li{position:relative;padding-left:20px;font-size:13.5px;color:var(--text-2);line-height:1.5}
+.card li::before{content:'›';position:absolute;left:4px;top:-1px;font-weight:700;font-size:15px}
+.card li b{color:var(--text-1);font-weight:600}
+.content-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:24px}
+.content-grid.three{grid-template-columns:1fr 1fr 1fr}
+.card code,p code,li code{font-family:var(--font-mono);font-size:.86em;background:rgba(10,132,255,.08);
+  color:#0a5dc2;padding:1.5px 6px;border-radius:5px;border:1px solid rgba(10,132,255,.12)}
+
+/* ---------- diagram ---------- */
+.diagram-box{background:var(--glass-2);backdrop-filter:blur(var(--blur-2)) saturate(1.1);
+  border:1px solid var(--border);border-radius:16px;box-shadow:var(--edge-hi),0 4px 20px rgba(0,0,0,.06);
+  padding:24px;margin:24px 0;position:relative;overflow:hidden;display:flex;flex-direction:column;
+  resize:vertical;min-height:200px;transition:box-shadow .2s ease}
+.diagram-box:hover{box-shadow:0 6px 28px rgba(0,0,0,.1)}
+.diagram-viewport{position:relative;flex:1 1 auto;width:100%;overflow:hidden;cursor:grab;touch-action:none}
+.diagram-viewport.grabbing{cursor:grabbing}
+.diagram-viewport svg{width:100%;height:auto;display:block;overflow:visible;transform-origin:0 0;
+  will-change:transform;user-select:none;-webkit-user-select:none}
+.dnode{cursor:move}
+.dnode>rect{transition:filter .15s ease}
+.dnode:hover>rect:first-of-type{filter:drop-shadow(0 3px 8px rgba(0,0,0,.18))}
+.diagram-hint{position:absolute;top:8px;right:12px;z-index:5;font-size:10px;color:#4a4a55;
+  background:rgba(255,255,255,.75);border:1px solid rgba(0,0,0,.05);border-radius:20px;
+  padding:3px 10px;white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none}
+.diagram-box:hover .diagram-hint{opacity:.9}
+.diagram-reset{position:absolute;bottom:8px;right:10px;z-index:5;font-size:11px;
+  background:rgba(255,255,255,.85);border:1px solid rgba(0,0,0,.08);border-radius:8px;
+  padding:3px 9px;cursor:pointer;color:#4a4a55;opacity:0;transition:opacity .2s}
+.diagram-box:hover .diagram-reset{opacity:1}
+.diagram-reset:hover{background:#fff;color:#0f0f12}
+.diagram-box::after{content:'';position:absolute;right:5px;bottom:5px;width:16px;height:16px;
+  pointer-events:none;opacity:0;transition:opacity .25s ease;clip-path:polygon(100% 0,100% 100%,0 100%);
+  background:repeating-linear-gradient(135deg,transparent 0 3.5px,rgba(10,132,255,.45) 3.5px 5px)}
+.diagram-box:hover::after{opacity:.85}
+.diagram-box::-webkit-resizer{display:none}
+.diagram-cap{font-size:12px;color:var(--text-2);margin:0 0 4px;text-align:center}
+
+/* SVG animations */
+.flow{stroke-dasharray:6 4;animation:flowArrow 1s linear infinite}
+@keyframes flowArrow{0%{stroke-dashoffset:20}100%{stroke-dashoffset:0}}
+.pulse{animation:pulse 2.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+.floaty{animation:floaty 3s ease-in-out infinite}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.stackAnim{animation:stack 3s ease-in-out infinite}
+@keyframes stack{0%,100%{opacity:.2}50%{opacity:.7}}
+@media(prefers-reduced-motion:reduce){.flow,.pulse,.floaty,.stackAnim{animation:none}}
+
+/* ---------- code ---------- */
+.code-wrap{position:relative;margin:18px 0}
+pre.code-block{margin:0;background:#0f1729;color:#cbd5e1;border-radius:12px;padding:18px 18px;
+  font-family:var(--font-mono);font-size:12.5px;line-height:1.6;overflow-x:auto;
+  border:1px solid rgba(255,255,255,.06);box-shadow:0 6px 24px rgba(15,23,41,.28)}
+pre.code-block .k{color:#7dd3fc}
+pre.code-block .s{color:#86efac}
+pre.code-block .c{color:#64748b;font-style:italic}
+pre.code-block .d{color:#f0abfc}
+.code-copy{position:absolute;top:8px;right:8px;z-index:2;font-size:11px;font-family:inherit;font-weight:500;
+  background:rgba(255,255,255,.1);color:#cbd5e1;border:1px solid rgba(255,255,255,.15);
+  border-radius:6px;padding:3px 10px;cursor:pointer;opacity:0;transition:opacity .15s,background .15s,color .15s}
+.code-wrap:hover .code-copy{opacity:1}
+.code-copy:hover{background:rgba(255,255,255,.2);color:#fff}
+.code-copy.copied{background:rgba(16,185,129,.25);color:#6ee7b7;border-color:rgba(16,185,129,.45);opacity:1}
+
+/* ---------- table ---------- */
+.table-wrap{margin-top:24px;overflow-x:auto;border-radius:14px;border:1px solid var(--border);
+  background:var(--glass-3);backdrop-filter:blur(var(--blur-3));box-shadow:var(--edge-hi),0 4px 20px rgba(0,0,0,.05)}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:560px}
+th,td{text-align:left;padding:13px 16px;border-bottom:1px solid rgba(30,90,170,.09);vertical-align:top}
+th{font-weight:600;color:var(--text-1);font-size:12px;text-transform:uppercase;letter-spacing:.03em;
+  background:rgba(255,255,255,.4)}
+tbody tr:last-child td{border-bottom:none}
+td b{color:var(--text-1)}
+td .pill{display:inline-block;font-size:11px;font-weight:600;padding:2px 9px;border-radius:12px}
+
+/* ---------- callout / quote ---------- */
+.callout{margin-top:24px;display:flex;gap:14px;align-items:flex-start;
+  background:var(--glass-2);backdrop-filter:blur(var(--blur-2));border:1px solid var(--border);
+  border-left:3px solid #0a84ff;border-radius:12px;padding:16px 18px;box-shadow:var(--edge-hi)}
+.callout .ico{font-size:20px;line-height:1}
+.callout p{margin:0;font-size:14px;color:var(--text-2)}
+.callout p b{color:var(--text-1)}
+.quote{font-style:italic;color:var(--text-1)}
+
+.foot-link{margin-top:26px;font-size:13px}
+.foot-link a{color:#0a84ff;text-decoration:none;font-weight:600}
+.foot-link a:hover{text-decoration:underline}
+
+/* ---------- footer ---------- */
+footer{max-width:1100px;margin:20px auto 0;padding:30px 24px 60px;color:var(--text-2);font-size:13px}
+.foot-tree{font-family:var(--font-mono);font-size:12px;line-height:1.8;color:var(--text-2);
+  background:var(--glass-3);backdrop-filter:blur(var(--blur-3));border:1px solid var(--border);
+  border-radius:12px;padding:16px 18px;box-shadow:var(--edge-hi);white-space:pre-wrap;margin-bottom:18px}
+footer a{color:#0a84ff;text-decoration:none}
+footer a:hover{text-decoration:underline}
+
+/* ---------- per-section accents ---------- */
+#sec-0 .tag{background:rgba(10,132,255,.10);color:#0a84ff} #sec-0 .card h4{color:#0a84ff} #sec-0 .card li::before{color:#0a84ff}
+.s-bg0::before{background:linear-gradient(180deg,rgba(10,132,255,.05) 0%,transparent 60%)}
+#sec-1 .tag{background:rgba(48,176,199,.12);color:#30b0c7} #sec-1 .card h4{color:#30b0c7} #sec-1 .card li::before{color:#30b0c7}
+.s-bg1::before{background:linear-gradient(180deg,rgba(48,176,199,.05) 0%,transparent 60%)}
+#sec-2 .tag{background:rgba(88,86,214,.12);color:#5856d6} #sec-2 .card h4{color:#5856d6} #sec-2 .card li::before{color:#5856d6}
+.s-bg2::before{background:linear-gradient(180deg,rgba(88,86,214,.05) 0%,transparent 60%)}
+#sec-3 .tag{background:rgba(52,199,89,.12);color:#28a745} #sec-3 .card h4{color:#28a745} #sec-3 .card li::before{color:#28a745}
+.s-bg3::before{background:linear-gradient(180deg,rgba(52,199,89,.05) 0%,transparent 60%)}
+#sec-4 .tag{background:rgba(255,149,0,.12);color:#f08c00} #sec-4 .card h4{color:#f08c00} #sec-4 .card li::before{color:#f08c00}
+.s-bg4::before{background:linear-gradient(180deg,rgba(255,149,0,.06) 0%,transparent 60%)}
+#sec-5 .tag{background:rgba(255,45,85,.12);color:#e0264b} #sec-5 .card h4{color:#e0264b} #sec-5 .card li::before{color:#e0264b}
+.s-bg5::before{background:linear-gradient(180deg,rgba(255,45,85,.05) 0%,transparent 60%)}
+
+@media(max-width:700px){.content-grid,.content-grid.three{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">OKF<small>v0.1 · Tài liệu</small></div>
+  <a href="#sec-0">Tổng quan</a>
+  <a href="#sec-1">Đặc tả</a>
+  <a href="#sec-2">Cách hoạt động</a>
+  <a href="#sec-3">Bản tham chiếu</a>
+  <a href="#sec-4">Vị trí hệ sinh thái</a>
+  <a href="#sec-5">Cộng đồng</a>
+  <div class="nav-sep"></div>
+  <a href="https://github.com/GoogleCloudPlatform/knowledge-catalog" target="_blank" rel="noopener">↗ Kho GitHub</a>
+  <a href="https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing/" target="_blank" rel="noopener">↗ Bài công bố</a>
+  <div class="nav-sep"></div>
+  <a href="150626-open-knowledge-format.html">🌐 English</a>
+</nav>
+
+<header class="hero">
+  <span class="eyebrow"><span class="dot"></span> Công bố ngày 12/06/2026 · Google Cloud</span>
+  <h1>Open Knowledge Format</h1>
+  <p class="lede">Một đặc tả mở, trung lập về nhà cung cấp, biến mẫu hình <b>"LLM wiki"</b> đang nổi lên thành một chuẩn khả chuyển — tri thức được lưu dưới dạng một thư mục các file Markdown thuần kèm YAML frontmatter, để bất kỳ AI agent nào cũng đọc được.</p>
+  <div class="meta">
+    <span><b>Tác giả:</b> Sam McVeety · Amir Hormati</span>
+    <span><b>Phiên bản:</b> v0.1</span>
+    <span><b>Trường bắt buộc:</b> một (<code>type</code>)</span>
+    <span><b>Không</b> SDK · <b>Không</b> runtime · <b>Không</b> nén</span>
+  </div>
+</header>
+
+<div class="repo-card">
+  <div class="chrome">
+    <span class="dot" style="background:#ff5f57"></span>
+    <span class="dot" style="background:#ffbd2e"></span>
+    <span class="dot" style="background:#28c840"></span>
+    <div class="url-bar">github.com/GoogleCloudPlatform/knowledge-catalog · okf/SPEC.md</div>
+  </div>
+  <div class="rc-body">
+    <div class="rc-main">
+      <h3>GoogleCloudPlatform/knowledge-catalog</h3>
+      <p>Đặc tả, hai bản triển khai tham chiếu và ba bộ mẫu. Python · Apache-2.0.</p>
+    </div>
+    <div class="rc-stats">
+      <div><b>~1.3K</b><small>sao</small></div>
+      <div><b>27</b><small>issue mở</small></div>
+      <div><b>3</b><small>bộ mẫu</small></div>
+    </div>
+    <a class="rc-cta" href="https://github.com/GoogleCloudPlatform/knowledge-catalog" target="_blank" rel="noopener">Xem trên GitHub →</a>
+  </div>
+</div>
+
+<!-- ============ SECTION 0 · TỔNG QUAN ============ -->
+<div class="section-bg s-bg0">
+<section id="sec-0">
+  <div class="section-header">
+    <span class="tag">01 · Tổng quan</span>
+    <h2>OKF là gì?</h2>
+    <p>Ngày 12/06/2026, Google Cloud công bố Open Knowledge Format (OKF) v0.1 — một đặc tả mở, trung lập về nhà cung cấp, mô tả tri thức của tổ chức dưới dạng một thư mục file Markdown kèm YAML frontmatter, để wiki do một bên tạo ra có thể được một agent khác đọc mà không cần chuyển đổi.</p>
+  </div>
+
+  <div class="diagram-box">
+    <p class="diagram-cap">Từ tài liệu rời rạc đến một bộ tri thức agent đọc được</p>
+    <svg viewBox="0 0 900 220" xmlns="http://www.w3.org/2000/svg" font-family="var(--font-text)">
+      <defs>
+        <marker id="ar0" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
+          <path d="M0,0 L7,3.5 L0,7 Z" fill="#0a84ff"/>
+        </marker>
+      </defs>
+      <rect x="20" y="70" width="150" height="80" rx="10" fill="rgba(255,255,255,.7)" stroke="#9aa6b6" stroke-width="1.5"/>
+      <text x="95" y="100" text-anchor="middle" font-size="12" font-weight="700" fill="#4a4a55">Tài liệu rời rạc</text>
+      <text x="95" y="120" text-anchor="middle" font-size="9.5" fill="#7a8090">wiki · schema · PDF</text>
+      <line x1="170" y1="110" x2="262" y2="110" stroke="#0a84ff" stroke-width="2" class="flow" marker-end="url(#ar0)"/>
+      <rect x="270" y="62" width="170" height="96" rx="10" fill="rgba(10,132,255,.1)" stroke="#0a84ff" stroke-width="1.8" class="pulse"/>
+      <text x="355" y="92" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5dc2">Bộ OKF</text>
+      <text x="355" y="112" text-anchor="middle" font-size="9.5" fill="#4a4a55">*.md + YAML frontmatter</text>
+      <text x="355" y="130" text-anchor="middle" font-size="9.5" fill="#4a4a55">một thư mục · concept có type</text>
+      <line x1="440" y1="110" x2="532" y2="110" stroke="#0a84ff" stroke-width="2" class="flow" marker-end="url(#ar0)"/>
+      <rect x="540" y="40" width="150" height="60" rx="10" fill="rgba(255,255,255,.7)" stroke="#5856d6" stroke-width="1.5" class="floaty"/>
+      <text x="615" y="66" text-anchor="middle" font-size="11" font-weight="700" fill="#5856d6">Agent A</text>
+      <text x="615" y="84" text-anchor="middle" font-size="9" fill="#7a8090">đọc trực tiếp</text>
+      <rect x="540" y="120" width="150" height="60" rx="10" fill="rgba(255,255,255,.7)" stroke="#30b0c7" stroke-width="1.5" class="floaty"/>
+      <text x="615" y="146" text-anchor="middle" font-size="11" font-weight="700" fill="#30b0c7">Agent B</text>
+      <text x="615" y="164" text-anchor="middle" font-size="9" fill="#7a8090">không cần dịch</text>
+      <line x1="440" y1="95" x2="532" y2="70" stroke="#5856d6" stroke-width="1.6" class="flow" marker-end="url(#ar0)"/>
+      <line x1="440" y1="125" x2="532" y2="150" stroke="#30b0c7" stroke-width="1.6" class="flow" marker-end="url(#ar0)"/>
+      <rect x="730" y="70" width="150" height="80" rx="10" fill="rgba(52,199,89,.08)" stroke="#34c759" stroke-width="1.5"/>
+      <text x="805" y="100" text-anchor="middle" font-size="11" font-weight="700" fill="#28a745">Tương thích</text>
+      <text x="805" y="120" text-anchor="middle" font-size="9" fill="#7a8090">viết một lần,</text>
+      <text x="805" y="134" text-anchor="middle" font-size="9" fill="#7a8090">mọi agent dùng được</text>
+      <line x1="690" y1="110" x2="722" y2="110" stroke="#34c759" stroke-width="2" class="flow" marker-end="url(#ar0)"/>
+    </svg>
+  </div>
+
+  <div class="content-grid three">
+    <div class="card">
+      <h4>Vấn đề nó giải quyết</h4>
+      <p>Đội nào cũng tự chế "thư mục ngữ cảnh" riêng cho agent — chỗ này CLAUDE.md, chỗ kia wiki. Chẳng cái nào dùng chung được.</p>
+      <ul>
+        <li>Tri thức bị <b>khóa vào định dạng của một nhà cung cấp</b></li>
+        <li>Phải viết lại cho từng công cụ, tốn công</li>
+        <li>Không có ngữ pháp chung cho "concept này thuộc loại gì?"</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Triết lý thiết kế</h4>
+      <p>Tối giản có chủ đích. OKF chuẩn hóa một mẫu hình người ta đã dùng, thay vì phát minh runtime mới.</p>
+      <ul>
+        <li><b>Không</b> sơ đồ nén phức tạp</li>
+        <li><b>Không</b> runtime mới phải cài</li>
+        <li><b>Không</b> bắt buộc SDK — chỉ là file thôi</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Ai & khi nào</h4>
+      <p>Do hai tech lead của Google Cloud chấp bút, kèm code chạy được ngay từ ngày đầu.</p>
+      <ul>
+        <li><b>Sam McVeety</b> — TL, Data Analytics</li>
+        <li><b>Amir Hormati</b> — TL, BigQuery</li>
+        <li>Công bố <b>12/06/2026</b> trên Google Cloud Blog</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout">
+    <span class="ico">🗣️</span>
+    <p><span class="quote">"Đây thực sự là tin lớn... một cách chuẩn hóa để lưu thông tin trong một thư mục file markdown. Nó giúp tạo một 'bộ não số' mà agent dùng được, cực kỳ dễ."</span> — <a href="https://x.com/Marie_Haynes/status/2065531158356717721" target="_blank" rel="noopener">Marie Haynes trên X</a></p>
+  </div>
+
+  <div class="foot-link">Nguồn: <a href="https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing/" target="_blank" rel="noopener">Google Cloud Blog — Open Knowledge Format giúp chia sẻ dữ liệu tốt hơn</a></div>
+</section>
+</div>
+
+<!-- ============ SECTION 1 · ĐẶC TẢ ============ -->
+<div class="section-bg s-bg1">
+<section id="sec-1">
+  <div class="section-header">
+    <span class="tag">02 · Đặc tả</span>
+    <h2>Một trường bắt buộc, còn lại tùy chọn</h2>
+    <p>Mỗi concept là một file Markdown: một khối YAML frontmatter bao bởi <code>---</code>, theo sau là phần thân Markdown tự do. Frontmatter chỉ bắt buộc đúng một trường — <code>type</code>.</p>
+  </div>
+
+  <div class="code-wrap">
+    <pre class="code-block"><span class="d">---</span>
+<span class="k">type</span>: <span class="s">BigQuery Table</span>          <span class="c"># trường DUY NHẤT bắt buộc</span>
+<span class="k">title</span>: <span class="s">orders</span>               <span class="c"># tùy chọn, nên có</span>
+<span class="k">description</span>: <span class="s">Mỗi dòng là một đơn hàng</span>
+<span class="k">resource</span>: <span class="s">bigquery://shop.sales.orders</span>
+<span class="k">tags</span>: [<span class="s">commerce</span>, <span class="s">fact-table</span>]
+<span class="k">timestamp</span>: <span class="s">2026-06-12</span>
+<span class="d">---</span>
+
+<span class="c"># Orders</span>
+
+Phần thân Markdown tự do. Liên kết chéo tới concept khác,
+mô tả join path, quy tắc nghiệp vụ, và các lưu ý tại đây.</pre>
+  </div>
+
+  <div class="content-grid three">
+    <div class="card">
+      <h4>Bắt buộc</h4>
+      <ul>
+        <li><b><code>type</code></b> — chuỗi ngắn cho biết loại concept</li>
+        <li>Ví dụ: <code>BigQuery Table</code>, <code>API Endpoint</code>, <code>Metric</code>, <code>Playbook</code></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Tùy chọn (nên có)</h4>
+      <ul>
+        <li><code>title</code> · <code>description</code></li>
+        <li><code>resource</code> — con trỏ/URI ổn định</li>
+        <li><code>tags</code> · <code>timestamp</code></li>
+        <li>Bên tạo có thể thêm <b>khóa bất kỳ</b></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Quy tắc tương thích về sau</h4>
+      <ul>
+        <li>Bên đọc <b>phải bỏ qua được khóa lạ</b></li>
+        <li>Cho phép bên tạo mở rộng mà không làm hỏng bên đọc</li>
+        <li>Giữ ngữ pháp lõi nhỏ gọn và ổn định</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tiêu chí hợp lệ (OKF v0.1)</th><th>Quy tắc</th></tr></thead>
+      <tbody>
+        <tr><td><b>Frontmatter phân tích được</b></td><td>Mọi file Markdown không-bị-dành-riêng trong cây thư mục đều có khối YAML frontmatter phân tích được</td></tr>
+        <tr><td><b>Có type không rỗng</b></td><td>Mọi khối frontmatter đều chứa trường <code>type</code> không rỗng</td></tr>
+        <tr><td><b>Tên file dành riêng</b></td><td>Nếu có, mỗi tên file dành riêng tuân theo cấu trúc mô tả trong đặc tả</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="foot-link">Nguồn: <a href="https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md" target="_blank" rel="noopener">okf/SPEC.md trên GitHub</a></div>
+</section>
+</div>
+
+<!-- ============ SECTION 2 · CÁCH HOẠT ĐỘNG ============ -->
+<div class="section-bg s-bg2">
+<section id="sec-2">
+  <div class="section-header">
+    <span class="tag">03 · Cách hoạt động</span>
+    <h2>Một thư mục concept có type = một đồ thị duyệt được</h2>
+    <p>Vì mỗi file là một concept có type và liên kết chéo trong phần thân, một bộ OKF không phải đống tài liệu phẳng — nó là một đồ thị tri thức mà agent đi qua từng nút, lần theo liên kết y như con người click trong wiki.</p>
+  </div>
+
+  <div class="diagram-box">
+    <p class="diagram-cap">Đồ thị concept OKF — kéo từng nút để khám phá</p>
+    <svg viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg" font-family="var(--font-text)">
+      <defs>
+        <marker id="ar2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#5856d6"/>
+        </marker>
+      </defs>
+      <line x1="170" y1="80" x2="370" y2="60" stroke="#9aa6b6" stroke-width="1.5" class="flow" marker-end="url(#ar2)"/>
+      <line x1="170" y1="100" x2="370" y2="150" stroke="#9aa6b6" stroke-width="1.5" class="flow" marker-end="url(#ar2)"/>
+      <line x1="470" y1="60" x2="640" y2="60" stroke="#9aa6b6" stroke-width="1.5" class="flow" marker-end="url(#ar2)"/>
+      <line x1="470" y1="150" x2="640" y2="150" stroke="#9aa6b6" stroke-width="1.5" class="flow" marker-end="url(#ar2)"/>
+      <line x1="470" y1="160" x2="640" y2="235" stroke="#9aa6b6" stroke-width="1.5" class="flow" marker-end="url(#ar2)"/>
+      <line x1="420" y1="90" x2="420" y2="118" stroke="#9aa6b6" stroke-width="1.5" class="flow" marker-end="url(#ar2)"/>
+
+      <rect x="30" y="65" width="140" height="56" rx="9" fill="rgba(88,86,214,.1)" stroke="#5856d6" stroke-width="1.8" class="pulse"/>
+      <text x="100" y="88" text-anchor="middle" font-size="11" font-weight="700" fill="#5856d6">README.md</text>
+      <text x="100" y="105" text-anchor="middle" font-size="8.5" fill="#7a8090">type: Bundle Root</text>
+
+      <rect x="370" y="32" width="100" height="56" rx="9" fill="rgba(255,255,255,.72)" stroke="#5856d6" stroke-width="1.5"/>
+      <text x="420" y="55" text-anchor="middle" font-size="10.5" font-weight="700" fill="#4a4a55">orders.md</text>
+      <text x="420" y="72" text-anchor="middle" font-size="8" fill="#7a8090">type: Table</text>
+
+      <rect x="370" y="122" width="100" height="56" rx="9" fill="rgba(255,255,255,.72)" stroke="#5856d6" stroke-width="1.5"/>
+      <text x="420" y="145" text-anchor="middle" font-size="10.5" font-weight="700" fill="#4a4a55">customers.md</text>
+      <text x="420" y="162" text-anchor="middle" font-size="8" fill="#7a8090">type: Table</text>
+
+      <rect x="640" y="32" width="120" height="56" rx="9" fill="rgba(255,255,255,.72)" stroke="#30b0c7" stroke-width="1.5"/>
+      <text x="700" y="55" text-anchor="middle" font-size="10" font-weight="700" fill="#30b0c7">revenue.md</text>
+      <text x="700" y="72" text-anchor="middle" font-size="8" fill="#7a8090">type: Metric</text>
+
+      <rect x="640" y="122" width="120" height="56" rx="9" fill="rgba(255,255,255,.72)" stroke="#30b0c7" stroke-width="1.5"/>
+      <text x="700" y="145" text-anchor="middle" font-size="10" font-weight="700" fill="#30b0c7">ltv.md</text>
+      <text x="700" y="162" text-anchor="middle" font-size="8" fill="#7a8090">type: Metric</text>
+
+      <rect x="640" y="207" width="120" height="56" rx="9" fill="rgba(52,199,89,.08)" stroke="#34c759" stroke-width="1.5"/>
+      <text x="700" y="230" text-anchor="middle" font-size="10" font-weight="700" fill="#28a745">refund.md</text>
+      <text x="700" y="247" text-anchor="middle" font-size="8" fill="#7a8090">type: Playbook</text>
+    </svg>
+  </div>
+
+  <div class="content-grid">
+    <div class="card">
+      <h4>Vì sao là đồ thị, không phải thư mục</h4>
+      <ul>
+        <li>Mỗi concept khai báo <b>type</b>, nên agent biết phải xử lý ra sao</li>
+        <li>Liên kết trong phần thân tham chiếu concept khác → <b>cạnh</b></li>
+        <li>Agent có thể <b>đi từ</b> một bảng tới các metric của nó rồi tới playbook</li>
+        <li>Người đọc được và git diff được suốt quá trình</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Bạn thực sự làm gì</h4>
+      <ul>
+        <li>Viết file Markdown có <code>type</code> trong frontmatter</li>
+        <li>Bỏ chúng vào một thư mục (bộ OKF)</li>
+        <li>Trỏ agent / <code>llms.txt</code> tới bộ đó</li>
+        <li>Xong — không server, không bước build index</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="foot-link">Nguồn: <a href="https://flowtivity.ai/blog/google-open-knowledge-format/" target="_blank" rel="noopener">Flowtivity — Chuẩn Markdown có thể thay thế wiki của bạn</a></div>
+</section>
+</div>
+
+<!-- ============ SECTION 3 · BẢN THAM CHIẾU ============ -->
+<div class="section-bg s-bg3">
+<section id="sec-3">
+  <div class="section-header">
+    <span class="tag">04 · Bản triển khai tham chiếu</span>
+    <h2>Đi kèm code chạy được, không chỉ là một file PDF</h2>
+    <p>OKF v0.1 ra mắt cùng hai bản triển khai tham chiếu và ba bộ mẫu xây trên dữ liệu công khai thật — để bạn có thể tạo và đọc một bộ OKF ngay ngày đầu.</p>
+  </div>
+
+  <div class="content-grid">
+    <div class="card">
+      <h4>① Agent làm giàu BigQuery</h4>
+      <p>Tự phác một concept doc cho mỗi bảng và view, rồi làm giàu thêm.</p>
+      <ul>
+        <li>Duyệt một dataset BigQuery, phác một concept cho mỗi bảng/view</li>
+        <li>Lượt LLM thứ hai crawl tài liệu chính thống và thêm <b>trích dẫn, schema, join path</b></li>
+        <li>Xây trên <b>Google Agent Development Kit (ADK)</b> với <b>Gemini</b> làm backend</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>② Trình trực quan hóa HTML tĩnh</h4>
+      <p>Lệnh con <code>visualize</code> render một bộ OKF thành trang xem được.</p>
+      <ul>
+        <li>Xuất ra <b>một file HTML tương tác, tự chứa</b></li>
+        <li>Không backend, bên xem không phải cài gì</li>
+        <li>Biến đồ thị concept thành thứ con người click qua được</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Bộ mẫu</th><th>Dataset</th><th>Khởi tạo từ</th></tr></thead>
+      <tbody>
+        <tr><td><b>GA4 thương mại điện tử</b></td><td>Google Merchandise Store (công khai)</td><td>URL tài liệu chính thống GA4 BigQuery Export</td></tr>
+        <tr><td><b>Stack Overflow</b></td><td>Bản mirror Stack Exchange Data Dump (công khai)</td><td>Tham chiếu schema chính thống của cộng đồng</td></tr>
+        <tr><td><b>Bitcoin</b></td><td>blocks / transactions / inputs / outputs (công khai)</td><td>Pipeline <code>bitcoin-etl</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="foot-link">Nguồn: <a href="https://the-decoder.com/google-clouds-open-knowledge-format-turns-scattered-docs-into-markdown-files-for-ai-agents/" target="_blank" rel="noopener">The Decoder</a> · <a href="https://ppc.land/googles-okf-wants-to-be-the-lingua-franca-for-ai-agent-knowledge/" target="_blank" rel="noopener">PPC Land</a></div>
+</section>
+</div>
+
+<!-- ============ SECTION 4 · VỊ TRÍ HỆ SINH THÁI ============ -->
+<div class="section-bg s-bg4">
+<section id="sec-4">
+  <div class="section-header">
+    <span class="tag">05 · Vị trí hệ sinh thái</span>
+    <h2>OKF, llms.txt và MCP xếp chồng — không cạnh tranh</h2>
+    <p>Góc nhìn sắc bén nhất của cộng đồng: ba định dạng này nằm ở các tầng khác nhau của ngăn xếp tri thức cho agent. llms.txt là biển chỉ đường, OKF mang nội dung, MCP lo công cụ thời gian thực.</p>
+  </div>
+
+  <div class="diagram-box">
+    <p class="diagram-cap">Ngăn xếp tri thức cho agent — ba tầng, một chiều</p>
+    <svg viewBox="0 0 900 260" xmlns="http://www.w3.org/2000/svg" font-family="var(--font-text)">
+      <defs>
+        <marker id="ar4" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
+          <path d="M0,0 L7,3.5 L0,7 Z" fill="#f08c00"/>
+        </marker>
+      </defs>
+      <rect x="60" y="30" width="180" height="190" rx="12" fill="rgba(10,132,255,.08)" stroke="#0a84ff" stroke-width="1.6"/>
+      <text x="150" y="58" text-anchor="middle" font-size="13" font-weight="700" fill="#0a5dc2">llms.txt</text>
+      <text x="150" y="80" text-anchor="middle" font-size="9.5" fill="#4a4a55">biển chỉ đường</text>
+      <line x1="80" y1="100" x2="220" y2="100" stroke="rgba(10,132,255,.2)" stroke-width="1"/>
+      <text x="150" y="124" text-anchor="middle" font-size="9" fill="#7a8090">một file đơn lẻ</text>
+      <text x="150" y="138" text-anchor="middle" font-size="9" fill="#7a8090">dẫn model tới</text>
+      <text x="150" y="152" text-anchor="middle" font-size="9" fill="#7a8090">ngữ cảnh của site</text>
+      <text x="150" y="186" text-anchor="middle" font-size="8.5" fill="#0a5dc2">"thêm một dòng trỏ</text>
+      <text x="150" y="199" text-anchor="middle" font-size="8.5" fill="#0a5dc2">tới bộ OKF"</text>
+
+      <rect x="360" y="30" width="180" height="190" rx="12" fill="rgba(255,149,0,.1)" stroke="#ff9500" stroke-width="1.8" class="pulse"/>
+      <text x="450" y="58" text-anchor="middle" font-size="13" font-weight="700" fill="#c97400">OKF</text>
+      <text x="450" y="80" text-anchor="middle" font-size="9.5" fill="#4a4a55">nội dung</text>
+      <line x1="380" y1="100" x2="520" y2="100" stroke="rgba(255,149,0,.25)" stroke-width="1"/>
+      <text x="450" y="124" text-anchor="middle" font-size="9" fill="#7a8090">trao chính</text>
+      <text x="450" y="138" text-anchor="middle" font-size="9" fill="#7a8090">tri thức —</text>
+      <text x="450" y="152" text-anchor="middle" font-size="9" fill="#7a8090">đồ thị duyệt được của</text>
+      <text x="450" y="166" text-anchor="middle" font-size="9" fill="#7a8090">các concept có type</text>
+      <text x="450" y="199" text-anchor="middle" font-size="8.5" fill="#c97400">tri thức tĩnh, được tuyển chọn</text>
+
+      <rect x="660" y="30" width="180" height="190" rx="12" fill="rgba(88,86,214,.08)" stroke="#5856d6" stroke-width="1.6"/>
+      <text x="750" y="58" text-anchor="middle" font-size="13" font-weight="700" fill="#5856d6">MCP</text>
+      <text x="750" y="80" text-anchor="middle" font-size="9.5" fill="#4a4a55">công cụ thời gian thực</text>
+      <line x1="680" y1="100" x2="820" y2="100" stroke="rgba(88,86,214,.2)" stroke-width="1"/>
+      <text x="750" y="124" text-anchor="middle" font-size="9" fill="#7a8090">truy cập công cụ động</text>
+      <text x="750" y="138" text-anchor="middle" font-size="9" fill="#7a8090">và tương tác lúc</text>
+      <text x="750" y="152" text-anchor="middle" font-size="9" fill="#7a8090">chạy</text>
+      <text x="750" y="186" text-anchor="middle" font-size="8.5" fill="#5856d6">OKF cho tri thức tĩnh,</text>
+      <text x="750" y="199" text-anchor="middle" font-size="8.5" fill="#5856d6">MCP cho gọi thời gian thực</text>
+
+      <line x1="240" y1="125" x2="356" y2="125" stroke="#f08c00" stroke-width="2.2" class="flow" marker-end="url(#ar4)"/>
+      <line x1="540" y1="125" x2="656" y2="125" stroke="#f08c00" stroke-width="2.2" class="flow" marker-end="url(#ar4)"/>
+    </svg>
+  </div>
+
+  <div class="content-grid three">
+    <div class="card">
+      <h4>so với llms.txt</h4>
+      <p>Xếp chồng chứ không cạnh tranh.</p>
+      <ul>
+        <li>llms.txt chỉ đường; OKF giao nội dung</li>
+        <li>Mỗi trang là một concept Markdown sạch, liên kết chéo thành đồ thị</li>
+        <li>Thêm một dòng vào <code>llms.txt</code> trỏ tới bộ OKF là xong</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>so với CLAUDE.md</h4>
+      <p>OKF không thay thế nó.</p>
+      <ul>
+        <li>Nó có thể <b>chứa</b> tri thức có cấu trúc mà <code>CLAUDE.md</code> trỏ tới</li>
+        <li>Giữ file điểm-vào nhỏ gọn</li>
+        <li>Tri thức tuyển chọn nằm trong bộ OKF</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>so với MCP</h4>
+      <p>Hai việc hoàn toàn khác nhau.</p>
+      <ul>
+        <li>MCP = <b>truy cập công cụ thời gian thực</b></li>
+        <li>OKF = <b>tri thức tĩnh được tuyển chọn</b></li>
+        <li>Agent dùng cả hai: đọc OKF, hành động qua MCP</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="foot-link">Nguồn: <a href="https://flowtivity.ai/blog/google-open-knowledge-format/" target="_blank" rel="noopener">Flowtivity</a> · <a href="https://suganthan.com/blog/open-knowledge-format/" target="_blank" rel="noopener">Suganthan</a></div>
+</section>
+</div>
+
+<!-- ============ SECTION 5 · CỘNG ĐỒNG ============ -->
+<div class="section-bg s-bg5">
+<section id="sec-5">
+  <div class="section-header">
+    <span class="tag">06 · Phản ứng cộng đồng</span>
+    <h2>Tò mò, nhưng (chưa) sốt</h2>
+    <p>Ba ngày sau khi ra, OKF được đón nhận như một đề xuất đáng tin hơn là một cú hit bùng nổ — số sao trên repo mạnh ngay ngày đầu, nhưng giới lập trình vốn đã thấy "lại thêm một chuẩn Markdown" nên giữ thái độ chờ xem.</p>
+  </div>
+
+  <div class="content-grid three">
+    <div class="card">
+      <h4>Hacker News — tò mò vừa phải</h4>
+      <p>"Google đề xuất Open Knowledge Format dựa trên Markdown."</p>
+      <ul>
+        <li><b>69 điểm · 13 bình luận</b> — quan tâm thật, chưa cuồng</li>
+        <li>Bàn cùng lúc với <code>CLAW.md</code> và các tranh luận về định dạng cho agent</li>
+        <li>Hoài nghi kiểu "có phải chỉ là thư mục kèm vài quy tắc?"</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>GitHub — tín hiệu ngày đầu mạnh</h4>
+      <p>GoogleCloudPlatform/knowledge-catalog</p>
+      <ul>
+        <li><b>~1.3K sao</b> chỉ vài ngày sau khi ra</li>
+        <li><b>27 issue mở</b> — phản hồi sớm sôi nổi</li>
+        <li>Hugo đã có <a href="https://github.com/gohugoio/hugo/issues/15035" target="_blank" rel="noopener">issue "hỗ trợ OKF"</a></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Reddit — liền kề, chưa trung tâm</h4>
+      <p>r/AI_Agents · r/LocalLLaMA · r/artificial</p>
+      <ul>
+        <li>OKF đi theo dòng thảo luận rộng về "ngữ cảnh/bộ nhớ cho agent"</li>
+        <li>Chưa có megathread riêng</li>
+        <li>Dân thực chiến tò mò chuyện tạo bộ OKF từ wiki sẵn có</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout">
+    <span class="ico">📊</span>
+    <p><b>Chốt lại:</b> Canh bạc đáng chú ý là khả năng tương thích. Nếu một nhà cung cấp agent lớn thứ hai chấp nhận OKF, cách gọi "ngôn ngữ chung" sẽ đứng vững; nếu không, nó vẫn chỉ là một quy ước hay của Google. Sự tối giản (một trường bắt buộc, không SDK) chính là thứ khiến việc áp dụng rẻ — và đó là toàn bộ chiến lược.</p>
+  </div>
+
+  <div class="foot-link">Nguồn: <a href="https://news.ycombinator.com/" target="_blank" rel="noopener">Hacker News</a> · <a href="https://github.com/GoogleCloudPlatform/knowledge-catalog" target="_blank" rel="noopener">GitHub</a> · <a href="https://www.reddit.com/r/AI_Agents/" target="_blank" rel="noopener">r/AI_Agents</a></div>
+</section>
+</div>
+
+<footer>
+  <div class="foot-tree">✅ Cơ sở nghiên cứu — last30days v3.3.2 · đồng bộ 15/06/2026
+├─ 🟠 Reddit: 18 thread │ 3.828 upvote │ 1.447 bình luận
+├─ 🟡 HN: 28 bài │ 5.925 điểm │ 3.266 bình luận
+├─ 🐙 GitHub: GoogleCloudPlatform/knowledge-catalog │ ~1.3K sao │ 27 issue
+├─ 📊 Polymarket: 1 thị trường │ OpenAI + Anthropic vs Google
+└─ 🗣️ Tiếng nói nổi bật: r/AI_Agents, r/artificial, r/LocalLLaMA</div>
+  <p>Tạo từ <code>/last30days</code> + <code>/docs-site-macos</code>. Open Knowledge Format là nhãn hiệu của Google LLC. Đây là bản tóm tắt tài liệu không chính thức.<br>
+  Nguồn gốc: <a href="https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing/" target="_blank" rel="noopener">Google Cloud Blog</a> · <a href="https://github.com/GoogleCloudPlatform/knowledge-catalog" target="_blank" rel="noopener">github.com/GoogleCloudPlatform/knowledge-catalog</a></p>
+</footer>
+
+<script>
+/* ---------- nav toggle (creates ☰ + ✕) ---------- */
+(function(){
+  const nav = document.querySelector('nav'); if (!nav) return;
+  const btn = document.createElement('button'); btn.className = 'nav-toggle'; btn.textContent = '☰';
+  document.body.appendChild(btn);
+  const close = document.createElement('button'); close.className = 'nav-close'; close.textContent = '✕';
+  nav.appendChild(close);
+  const apply = c => { document.body.classList.toggle('nav-collapsed', c);
+    try { localStorage.setItem('navCollapsed', c ? '1' : '0'); } catch(e){} };
+  btn.addEventListener('click', () => apply(false));
+  close.addEventListener('click', () => apply(true));
+  try { const s = localStorage.getItem('navCollapsed');
+    if (s === '1' || (s !== '0' && matchMedia('(max-width:640px)').matches)) apply(true);
+  } catch(e){}
+})();
+
+/* ---------- ripple (sidebar buttons, liquid-glass ink) ---------- */
+(function(){
+  function attach(el){
+    el.addEventListener('pointerdown', function(e){
+      const r = el.getBoundingClientRect();
+      const x = e.clientX - r.left, y = e.clientY - r.top;
+      const rad = Math.hypot(Math.max(x, r.width - x), Math.max(y, r.height - y));
+      const ink = document.createElement('span'); ink.className = 'ripple-ink';
+      ink.style.width = ink.style.height = rad * 2 + 'px';
+      ink.style.left = (x - rad) + 'px'; ink.style.top = (y - rad) + 'px';
+      el.appendChild(ink);
+      ink.addEventListener('animationend', () => ink.remove());
+    });
+  }
+  document.querySelectorAll('nav a, .nav-toggle, .nav-close').forEach(attach);
+})();
+
+/* ---------- generic water ripple on controls ---------- */
+function initRipple(){
+  document.addEventListener('pointerdown', e => {
+    const el = e.target.closest('button, .rc-cta');
+    if (!el || el.dataset.noRipple || el.classList.contains('nav-toggle') || el.classList.contains('nav-close')) return;
+    const r = el.getBoundingClientRect();
+    const d = Math.max(r.width, r.height) * 1.2;
+    const s = document.createElement('span'); s.className = 'ripple';
+    s.style.cssText = `width:${d}px;height:${d}px;left:${e.clientX - r.left - d/2}px;top:${e.clientY - r.top - d/2}px`;
+    if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+    el.style.overflow = 'hidden';
+    el.appendChild(s);
+    s.addEventListener('animationend', () => s.remove());
+  });
+}
+initRipple();
+
+/* ---------- scroll spy ---------- */
+(function(){
+  const links = [...document.querySelectorAll('nav a[href^="#"]')];
+  const sections = [...document.querySelectorAll('section[id]')];
+  const observer = new IntersectionObserver(entries => {
+    let active = '';
+    for (const entry of entries) if (entry.isIntersecting) active = entry.target.id;
+    if (active) links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + active));
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  sections.forEach(s => observer.observe(s));
+})();
+
+/* ---------- scrollbar flash ---------- */
+(function(){
+  const flash = (el) => { let t; return () => { el.classList.add('scrolling'); clearTimeout(t);
+    t = setTimeout(() => el.classList.remove('scrolling'), 900); }; };
+  const root = document.documentElement;
+  window.addEventListener('scroll', flash(root), { passive:true });
+  const nav = document.querySelector('nav');
+  if (nav) nav.addEventListener('scroll', flash(nav), { passive:true });
+})();
+
+/* ---------- code copy ---------- */
+function initCodeCopy(){
+  document.querySelectorAll('pre.code-block').forEach(pre => {
+    if (pre.dataset.copy) return; pre.dataset.copy = '1';
+    const code = pre.textContent;
+    const wrap = document.createElement('div'); wrap.className = 'code-wrap';
+    if (pre.parentNode.classList.contains('code-wrap')) { wrapExisting(pre, code); return; }
+    pre.parentNode.insertBefore(wrap, pre); wrap.appendChild(pre);
+    addBtn(wrap, code);
+  });
+  function wrapExisting(pre, code){ addBtn(pre.parentNode, code); }
+  function addBtn(wrap, code){
+    if (wrap.querySelector('.code-copy')) return;
+    const btn = document.createElement('button'); btn.className = 'code-copy'; btn.textContent = 'Copy';
+    wrap.appendChild(btn);
+    btn.addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText(code); }
+      catch { const ta = document.createElement('textarea'); ta.value = code;
+        document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+      btn.textContent = '✓ Copied'; btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1500);
+    });
+  }
+}
+initCodeCopy();
+
+/* ---------- draggable diagrams ---------- */
+function initDraggableDiagrams(){
+  const NS = 'http://www.w3.org/2000/svg';
+  const nearest = (nodes, x, y) => {
+    let best = null, bd = 1e9;
+    nodes.forEach(n => {
+      const cx = Math.max(n.x, Math.min(x, n.x + n.w)), cy = Math.max(n.y, Math.min(y, n.y + n.h));
+      const d = Math.hypot(x - cx, y - cy);
+      if (d < bd) { bd = d; best = n; }
+    });
+    return bd <= 42 ? best : null;
+  };
+  document.querySelectorAll('.diagram-box').forEach(box => {
+    const svg = box.querySelector('svg');
+    if (!svg || box.dataset.draggable) return;
+    box.dataset.draggable = '1';
+    const vp = document.createElement('div'); vp.className = 'diagram-viewport';
+    box.insertBefore(vp, svg); vp.appendChild(svg);
+    const hint = document.createElement('div'); hint.className = 'diagram-hint';
+    hint.textContent = '✥ kéo từng ô · kéo nền để di chuyển · cuộn để zoom · kéo mép dưới để mở rộng';
+    box.appendChild(hint);
+    const reset = document.createElement('button'); reset.className = 'diagram-reset'; reset.textContent = '⟲ reset';
+    box.appendChild(reset);
+
+    const allRects = [...svg.querySelectorAll('rect')];
+    const nodes = allRects.filter(r => (+r.getAttribute('width')) >= 70 && (+r.getAttribute('height')) >= 30)
+      .map(r => ({ rect: r, x: +r.getAttribute('x'), y: +r.getAttribute('y'),
+        w: +r.getAttribute('width'), h: +r.getAttribute('height'), els: [r], tx: 0, ty: 0 }));
+    const inNode = (px, py) => nodes.find(n => px >= n.x-1 && px <= n.x+n.w+1 && py >= n.y-1 && py <= n.y+n.h+1);
+    [...svg.querySelectorAll('text')].forEach(t => {
+      const x = parseFloat(t.getAttribute('x')), y = parseFloat(t.getAttribute('y'));
+      if (isNaN(x) || isNaN(y)) return; const n = inNode(x, y); if (n) n.els.push(t);
+    });
+    allRects.forEach(r => { if (nodes.some(n => n.rect === r)) return;
+      const x = +r.getAttribute('x'), y = +r.getAttribute('y'), w = +r.getAttribute('width')||0, h = +r.getAttribute('height')||0;
+      const n = inNode(x+w/2, y+h/2); if (n) n.els.push(r); });
+    nodes.forEach(n => { const g = document.createElementNS(NS, 'g'); g.setAttribute('class', 'dnode');
+      n.rect.parentNode.insertBefore(g, n.rect); n.els.forEach(el => g.appendChild(el)); n.g = g; });
+
+    const links = [...svg.querySelectorAll('line')].filter(l => l.hasAttribute('x1') && l.hasAttribute('x2'));
+    links.forEach(l => { l._x1=+l.getAttribute('x1'); l._y1=+l.getAttribute('y1'); l._x2=+l.getAttribute('x2'); l._y2=+l.getAttribute('y2');
+      l._n1 = nearest(nodes, l._x1, l._y1); l._n2 = nearest(nodes, l._x2, l._y2); });
+    const reroute = () => links.forEach(l => {
+      if (l._n1) { l.setAttribute('x1', l._x1+l._n1.tx); l.setAttribute('y1', l._y1+l._n1.ty); }
+      if (l._n2) { l.setAttribute('x2', l._x2+l._n2.tx); l.setAttribute('y2', l._y2+l._n2.ty); } });
+
+    const vbBase = (svg.getAttribute('viewBox') || '0 0 900 220').split(/\s+/).map(Number);
+    const fitViewBox = () => {
+      const pad = 16;
+      let minX = vbBase[0], minY = vbBase[1], maxX = vbBase[0]+vbBase[2], maxY = vbBase[1]+vbBase[3];
+      nodes.forEach(n => { minX = Math.min(minX, n.x+n.tx-pad); minY = Math.min(minY, n.y+n.ty-pad);
+        maxX = Math.max(maxX, n.x+n.w+n.tx+pad); maxY = Math.max(maxY, n.y+n.h+n.ty+pad); });
+      svg.setAttribute('viewBox', `${minX} ${minY} ${maxX-minX} ${maxY-minY}`);
+    };
+
+    let ptx=0, pty=0, scale=1;
+    const applyCanvas = () => { svg.style.transform = `translate(${ptx}px,${pty}px) scale(${scale})`; };
+    const toSvg = (cx, cy) => { const p = svg.createSVGPoint(); p.x=cx; p.y=cy; return p.matrixTransform(svg.getScreenCTM().inverse()); };
+    let mode=null, node=null, start=null, t0=null, p0=null;
+    vp.addEventListener('pointerdown', e => { vp.setPointerCapture(e.pointerId);
+      const g = e.target.closest && e.target.closest('g.dnode');
+      if (g) { mode='node'; node = nodes.find(n => n.g === g); start = toSvg(e.clientX, e.clientY); t0 = { x: node.tx, y: node.ty }; }
+      else { mode='pan'; p0 = { x: e.clientX-ptx, y: e.clientY-pty }; vp.classList.add('grabbing'); } });
+    vp.addEventListener('pointermove', e => {
+      if (mode==='node') { const c = toSvg(e.clientX, e.clientY); node.tx = t0.x+(c.x-start.x); node.ty = t0.y+(c.y-start.y);
+        node.g.setAttribute('transform', `translate(${node.tx},${node.ty})`); reroute(); }
+      else if (mode==='pan') { ptx = e.clientX-p0.x; pty = e.clientY-p0.y; applyCanvas(); } });
+    const end = () => { if (mode==='node') fitViewBox(); mode=null; node=null; vp.classList.remove('grabbing'); };
+    vp.addEventListener('pointerup', end); vp.addEventListener('pointercancel', end);
+    vp.addEventListener('wheel', e => { e.preventDefault();
+      const r = vp.getBoundingClientRect(), mx = e.clientX-r.left, my = e.clientY-r.top;
+      const ns = Math.min(4, Math.max(0.5, scale*(e.deltaY<0?1.1:0.9)));
+      ptx = mx-(mx-ptx)*(ns/scale); pty = my-(my-pty)*(ns/scale); scale = ns; applyCanvas(); }, { passive:false });
+    const doReset = () => { ptx=0; pty=0; scale=1; svg.style.transition='transform .3s cubic-bezier(.4,0,.2,1)'; applyCanvas();
+      setTimeout(() => { svg.style.transition=''; }, 320);
+      nodes.forEach(n => { n.tx=0; n.ty=0; n.g.setAttribute('transform', 'translate(0,0)'); }); reroute(); fitViewBox(); };
+    reset.addEventListener('click', doReset); vp.addEventListener('dblclick', doReset);
+  });
+}
+initDraggableDiagrams();
+</script>
+</body>
+</html>

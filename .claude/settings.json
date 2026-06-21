@@ -1,0 +1,63 @@
+{
+  "permissions": {
+    "deny": [
+      "Write(./llmwiki/raw/**)",
+      "Edit(./llmwiki/raw/**)",
+      "MultiEdit(./llmwiki/raw/**)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/llmwiki/.claude/hooks/pre_tool_use.py\""
+          }
+        ],
+        "matcher": "Write|Edit|MultiEdit|NotebookEdit|Bash"
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/llmwiki/.claude/hooks/post_tool_use.py\""
+          }
+        ],
+        "matcher": "Write|Edit|MultiEdit"
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/llmwiki/.claude/hooks/stop.py\""
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/llmwiki/.claude/hooks/session_end.py\""
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/llmwiki/.claude/hooks/session_start.py\""
+          }
+        ]
+      }
+    ]
+  }
+}

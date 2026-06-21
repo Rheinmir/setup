@@ -1,0 +1,4 @@
+# code-graph artifact — không commit
+graph.db
+# personal Claude Code overrides — local only
+.claude/settings.local.json

@@ -1,0 +1,44 @@
+# L4 evals LLM — golden-question regression: wiki có thật sự giúp agent trả lời đúng?
+# Chạy: npx promptfoo@latest eval -c harness/evals/promptfooconfig.yaml
+# Chi phí: chỉ tốn generation (~$1-5/lượt 15-20 câu) — assertion deterministic, KHÔNG dùng judge model.
+# Đổi vendor = đổi block providers (xem harness/recipe.md).
+#
+# CÁCH DÙNG: khi wiki đã có nội dung, thay 3 câu mẫu dưới bằng 15-20 golden questions
+# mà đáp án CHỈ tồn tại trong wiki (không suy ra được từ code). So pass-rate theo tuần;
+# chạy thêm một lượt với wiki bị ẩn (working_dir trỏ repo không có wiki/) để có baseline A/B.
+
+description: "llmwiki golden-question regression"
+
+providers:
+  - id: anthropic:claude-agent-sdk
+    config:
+      model: claude-sonnet-4-6
+      working_dir: ../../llmwiki
+      append_allowed_tools: ["Read", "Grep", "Glob"]
+      permission_mode: default
+
+prompts:
+  - "Trả lời ngắn gọn dựa trên wiki của project: {{question}}"
+
+defaultTest:
+  assert:
+    - type: cost
+      threshold: 0.5
+
+tests:
+  # ---- VÍ DỤ MẪU — thay bằng golden questions thật khi wiki có nội dung ----
+  - vars:
+      question: "File wiki bắt buộc phải có section nào để truy nguồn gốc?"
+    assert:
+      - type: icontains
+        value: "Origin"
+  - vars:
+      question: "File mới xuất hiện trong raw/ thì skill nào phải được gọi?"
+    assert:
+      - type: icontains
+        value: "ingest"
+  - vars:
+      question: "Wiki entry được tạo trước hay sau khi code được commit?"
+    assert:
+      - type: icontains
+        value: "sau"

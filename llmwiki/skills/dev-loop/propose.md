@@ -18,6 +18,7 @@ Plan a new feature or change before writing any code. Surfaces impact on existin
 7. STOP. Do not write any code. Wait for the user to approve or redirect.
 
 ## Rules
+- **OKF v0.1 (R9):** the draft starts with a YAML frontmatter block (`---`) with `type: draft` (+ optional `title`/`status`/`tags`/`timestamp`); copy `sources/draft/_template.md`. Keep `**Status:** proposed` in the body so R7 can gate it.
 - Never begin implementation during this skill.
 - If the impact list is empty, state explicitly "No existing code affected."
 - If multiple approaches exist, present them with tradeoffs — do not pick silently.
