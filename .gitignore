@@ -1,0 +1,3 @@
+# Root-level raw/ is obsolete (moved to llmwiki/raw/).
+# Block accidental recreation here.
+/raw/
