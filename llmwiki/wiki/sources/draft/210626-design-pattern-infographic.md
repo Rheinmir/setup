@@ -35,5 +35,5 @@ Fetch metadata từ 3 YouTube video (Code Lủng · Học Từ Thiền series), 
 
 ## Origin
 - **Draft:** `wiki/sources/draft/210626-design-pattern-infographic.md`
-- **Commit:** _(filled by verify-before-commit)_
-- **Date promoted:** _(filled by verify-before-commit)_
+- **Commit:** `73ad42f` — feat(wiki): add Học Từ Thiền System Design series
+- **Date promoted:** 2026-06-21
