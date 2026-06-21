@@ -12,7 +12,34 @@ Sync structural/template improvements between project and `https://github.com/Rh
 - **Upstream**: Improved template locally → save to Master.
 - **Downstream**: Master has newer fixes → bring into project.
 
-## Steps
+## FAST PATH — downstream 1 lệnh (< 1 giây, mặc định)
+
+Downstream sync giờ là **1 script non-interactive**, KHÔNG hỏi từng bước, fetch song song:
+
+```bash
+python3 harness/scripts/sync-template.py            # pull NEW+UPDATE, giữ local-custom, cài skill ×3
+python3 harness/scripts/sync-template.py --dry-run   # xem trước, không ghi
+python3 harness/scripts/sync-template.py --strategy pull   # ghi đè cả CONFLICT bằng remote (backup .local-bak)
+python3 harness/scripts/sync-template.py --json      # output máy đọc
+```
+
+Phân loại bằng hash 3 mốc — **disk ↔ R0 (remote tại lần sync trước, lưu ở `version.json:remote_synced`) ↔ remote hiện tại**:
+- `NEW` (thiếu local) + `UPDATE` (remote mới hơn, local chưa đụng) → **tự PULL**.
+- `KEPT` (mình đã custom, remote không mới hơn) → **giữ nguyên**, không hỏi.
+- `CONFLICT` (cả hai cùng đổi) → mặc định **giữ local** + lưu bản remote ra `/tmp/sync-template-conflicts/` để diff; exit code 3.
+
+Quy trình tự động trong script: fetch remote `version.json`+`manifest` → phân loại → tải song song → refresh `version.json` (fingerprint + `template_version` + `remote_synced`) → cài skill ra 3 chỗ (`.claude/commands/`, `~/.claude/skills/`, `~/.claude/commands/`).
+
+**Khi nào CẦN can thiệp tay (chạy script trước, đọc report):**
+- Report có `CONFLICT` và bạn muốn lấy remote → chạy lại `--strategy pull` (1 quyết định, không phải 3).
+- Branch remote KHÁC `version.json:branch` → `--branch <tên>` (xem Step 2 để audit branch).
+- Cấu trúc `skills/` cũ cần migrate (Step 3), hoặc cần upstream (đẩy lên) → dùng MANUAL STEPS bên dưới.
+
+> ⚠ Bug đã fix: `health-check --update` đặt baseline = disk → sync KHÔNG phân biệt được "remote mới" vs "mình đã custom" → suýt ghi đè file custom. Script này dùng baseline riêng `remote_synced` (hash remote tại lần sync) nên phân biệt đúng. **Đừng** quay lại dùng `patterns` (disk) làm baseline phân loại.
+
+---
+
+## MANUAL STEPS (fallback — upstream, migrate cấu trúc cũ, hoặc debug)
 
 ### Step 0: Pre-flight — health-check (chẩn đoán trước khi sync)
 Chạy `/health-check` (`python3 harness/scripts/health-check.py --root .`) để biết NÊN sync hướng nào:

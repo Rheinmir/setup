@@ -1,10 +1,10 @@
 {
   "schema": 1,
-  "template_version": "1.1.0",
+  "template_version": "1.2.0",
   "remote": "https://github.com/Rheinmir/setup.git",
   "branch": "orca",
-  "generated_at": "2026-06-20",
-  "generated_commit": "2fd9757",
+  "generated_at": "2026-06-21",
+  "generated_commit": "aabe1f2",
   "pattern_count": 48,
   "patterns": {
     ".agent": "a99869fa2304ea5d",
@@ -41,7 +41,7 @@
     "llmwiki/skills/utils/docs-site-macos-skill.md": "c0b03ee4c19f778d",
     "llmwiki/skills/utils/health-check.md": "0f9b64b7f38b7707",
     "llmwiki/skills/utils/md-to-html.md": "8bbb4cee890c6ff1",
-    "llmwiki/skills/utils/sync-template.md": "f09fef3630bedfe3",
+    "llmwiki/skills/utils/sync-template.md": "6b51df0d1929568d",
     "llmwiki/skills/wiki-loop/ingest.md": "4103b6f342bf664e",
     "llmwiki/skills/wiki-loop/lint.md": "64f045217475b25e",
     "llmwiki/skills/wiki-loop/query.md": "fb1d02b6662c81e6",
