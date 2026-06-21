@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Pattern Infographic — Proposal 210626</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --blue-deep: #1a6eb5;
+  --glass-bg: rgba(255,255,255,0.55);
+  --glass-border: rgba(255,255,255,0.75);
+  --glass-shadow: rgba(30,100,180,0.10);
+  --sidebar-w: 200px;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --emerald: #059669;
+  --indigo: #4f46e5;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #d6eaf8 0%, #eaf4fb 40%, #f0f7ff 100%);
+  min-height: 100vh;
+  color: var(--text-main);
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(100,160,220,.18) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  left: -60px;
+  top: 10%;
+  width: 260px;
+  height: 70vh;
+  background: radial-gradient(ellipse at left, rgba(99,179,237,.35) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* === Sidebar === */
+nav {
+  position: fixed;
+  left: 0; top: 0;
+  width: var(--sidebar-w);
+  height: 100vh;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, rgba(255,255,255,.65) 0%, rgba(219,239,255,.55) 100%);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-right: 1px solid var(--glass-border);
+  box-shadow: 2px 0 24px var(--glass-shadow);
+  overflow: hidden;
+  transition: transform .3s ease;
+}
+
+nav::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, rgba(255,255,255,.40) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+nav.collapsed { transform: translateX(calc(-1 * var(--sidebar-w) + 32px)); }
+
+.nav-header {
+  padding: 18px 16px 12px;
+  border-bottom: 1px solid rgba(255,255,255,.6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.nav-header .logo {
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--blue-deep);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  line-height: 1.3;
+}
+
+.collapse-btn {
+  width: 28px; height: 28px;
+  border: none;
+  background: rgba(255,255,255,.7);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  color: var(--blue-deep);
+  transition: background .2s;
+}
+.collapse-btn:hover { background: rgba(255,255,255,.95); }
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(26,110,181,.25);
+  transform: scale(0);
+  animation: ripple .5s linear;
+  pointer-events: none;
+}
+@keyframes ripple { to { transform: scale(4); opacity: 0; } }
+
+nav ul { list-style: none; padding: 12px 8px; flex: 1; overflow-y: auto; }
+nav ul li + li { margin-top: 2px; }
+nav a {
+  display: block;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: .80rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all .2s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+nav a:hover { background: rgba(255,255,255,.7); color: var(--blue-deep); }
+nav a.active {
+  background: rgba(255,255,255,.85);
+  color: var(--blue-deep);
+  font-weight: 700;
+  box-shadow: 0 2px 10px rgba(26,110,181,.12);
+}
+
+/* === Main === */
+main {
+  margin-left: var(--sidebar-w);
+  padding: 40px 40px 80px;
+  position: relative;
+  z-index: 1;
+  transition: margin-left .3s ease;
+}
+main.wide { margin-left: 32px; }
+
+.page-header { margin-bottom: 40px; }
+.page-header h1 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--blue-deep);
+  margin-bottom: 6px;
+}
+.page-header .subtitle { color: var(--text-muted); font-size: .9rem; }
+.badge-status {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 3px 12px;
+  border-radius: 20px;
+  background: rgba(245,200,60,.25);
+  border: 1px solid rgba(217,119,6,.30);
+  color: #92400e;
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+section {
+  margin-bottom: 56px;
+  scroll-margin-top: 32px;
+}
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.section-header h2 { font-size: 1.05rem; font-weight: 700; color: var(--text-main); }
+
+.agent-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: rgba(5,150,105,.12);
+  border: 1px solid rgba(5,150,105,.30);
+  color: var(--emerald);
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+.agent-badge::before { content: '●'; font-size: .6rem; }
+
+.diagram-box {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,.8);
+  padding: 24px;
+  overflow-x: auto;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+p.desc {
+  margin-top: 16px;
+  color: var(--text-muted);
+  font-size: .875rem;
+  line-height: 1.65;
+  max-width: 680px;
+  background: rgba(255,255,255,.45);
+  border-left: 3px solid #bde0f7;
+  padding: 10px 16px;
+  border-radius: 0 8px 8px 0;
+}
+
+.seq-svg { width: 100%; min-width: 480px; }
+
+/* Shared SVG text classes */
+.ll-label { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11px; font-weight: 600; fill: #1e293b; }
+.ll-sub   { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 9px; fill: #64748b; }
+
+.msg { opacity: .82; transition: opacity .3s, filter .3s; }
+.msg.active { opacity: 1; filter: drop-shadow(0 0 6px rgba(26,110,181,.45)); }
+
+.controls {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.ctrl-btn {
+  padding: 5px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(26,110,181,.30);
+  background: rgba(255,255,255,.70);
+  color: var(--blue-deep);
+  font-size: .78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s;
+}
+.ctrl-btn:hover { background: rgba(255,255,255,.95); }
+.step-label { font-size: .75rem; color: var(--text-muted); }
+.step-dots { display: flex; gap: 5px; align-items: center; }
+.dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(26,110,181,.18);
+  transition: background .3s;
+}
+.dot.active { background: #1a6eb5; }
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="nav-header">
+    <div class="logo">Design Pattern<br>Infographic</div>
+    <button class="collapse-btn" id="collapseBtn" title="Toggle sidebar">☰</button>
+  </div>
+  <ul>
+    <li><a href="#t1" id="nav-t1">T1 · Video 1 MD</a></li>
+    <li><a href="#t2" id="nav-t2">T2 · Video 2 MD</a></li>
+    <li><a href="#t3" id="nav-t3">T3 · Video 3 MD</a></li>
+    <li><a href="#t4" id="nav-t4">T4 · HTML Infographics</a></li>
+  </ul>
+</nav>
+
+<main id="main">
+  <div class="page-header">
+    <h1>Design Pattern Infographic</h1>
+    <div class="subtitle">Proposal 210626 · 3 YouTube videos → 3 MD + 3 HTML</div>
+    <div class="badge-status">proposed</div>
+  </div>
+
+  <!-- Task 1 -->
+  <section id="t1">
+    <div class="section-header">
+      <h2>Task 1 — Fetch &amp; Distill Video 1</h2>
+      <span class="agent-badge">Claude main · sonnet-4-6</span>
+    </div>
+    <div class="diagram-box">
+      <svg class="seq-svg" viewBox="0 0 580 240">
+        <defs>
+          <marker id="a1d" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#94a3b8"/></marker>
+          <marker id="a1e" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#059669"/></marker>
+          <marker id="a1i" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#4f46e5"/></marker>
+        </defs>
+
+        <!-- Lifeline headers -->
+        <rect x="10" y="8" width="100" height="36" rx="8" fill="rgba(5,150,105,.12)" stroke="#059669" stroke-width="1.5"/>
+        <text x="60" y="27" text-anchor="middle" class="ll-label">Claude main</text>
+        <text x="60" y="40" text-anchor="middle" class="ll-sub">sonnet-4-6</text>
+
+        <rect x="155" y="8" width="90" height="36" rx="8" fill="rgba(79,70,229,.15)" stroke="#4f46e5" stroke-width="1.5"/>
+        <text x="200" y="27" text-anchor="middle" class="ll-label">WebFetch</text>
+        <text x="200" y="40" text-anchor="middle" class="ll-sub">youtube.com</text>
+
+        <rect x="295" y="8" width="90" height="36" rx="8" fill="rgba(79,70,229,.15)" stroke="#4f46e5" stroke-width="1.5"/>
+        <text x="340" y="27" text-anchor="middle" class="ll-label">Transcript</text>
+        <text x="340" y="40" text-anchor="middle" class="ll-sub">raw captions</text>
+
+        <rect x="435" y="8" width="115" height="36" rx="8" fill="rgba(5,150,105,.12)" stroke="#059669" stroke-width="1.5"/>
+        <text x="492" y="27" text-anchor="middle" class="ll-label">design-pattern-v1</text>
+        <text x="492" y="40" text-anchor="middle" class="ll-sub">.md · new</text>
+
+        <!-- Lifelines -->
+        <line x1="60"  y1="44" x2="60"  y2="232" stroke="rgba(100,130,180,.28)" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <line x1="200" y1="44" x2="200" y2="232" stroke="rgba(100,130,180,.28)" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <line x1="340" y1="44" x2="340" y2="232" stroke="rgba(100,130,180,.28)" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <line x1="492" y1="44" x2="492" y2="232" stroke="rgba(100,130,180,.28)" stroke-width="1.5" stroke-dasharray="4 4"/>
+
+        <!-- msg 1 -->
+        <g class="msg" id="t1m1">
+          <line x1="68" y1="72" x2="191" y2="72" stroke="#4f46e5" stroke-width="2" fill="none" marker-end="url(#a1i)"/>
+          <text x="129" y="68" text-anchor="middle" font-size="10" fill="#4f46e5" font-family="-apple-system,sans-serif">fetch transcript</text>
+          <text x="129" y="81" text-anchor="middle" font-size="9" fill="#64748b" font-family="-apple-system,sans-serif">KIrbA-wEURg</text>
+        </g>
+        <!-- msg 2 -->
+        <g class="msg" id="t1m2">
+          <line x1="335" y1="100" x2="208" y2="100" stroke="#94a3b8" stroke-width="2" fill="none" marker-end="url(#a1d)"/>
+          <text x="271" y="96" text-anchor="middle" font-size="10" fill="#64748b" font-style="italic" font-family="-apple-system,sans-serif">captions html</text>
+        </g>
+        <!-- msg 3 -->
+        <g class="msg" id="t1m3">
+          <line x1="207" y1="126" x2="68" y2="126" stroke="#94a3b8" stroke-width="2" fill="none" marker-end="url(#a1d)"/>
+          <text x="137" y="122" text-anchor="middle" font-size="10" fill="#64748b" font-style="italic" font-family="-apple-system,sans-serif">raw transcript text</text>
+        </g>
+        <!-- msg 4: distill box -->
+        <g class="msg" id="t1m4">
+          <rect x="16" y="141" width="88" height="22" rx="5" fill="rgba(5,150,105,.10)" stroke="rgba(5,150,105,.3)" stroke-width="1"/>
+          <text x="60" y="156" text-anchor="middle" font-size="9" fill="#059669" font-weight="600" font-family="-apple-system,sans-serif">distill + structure</text>
+        </g>
+        <!-- msg 5 -->
+        <g class="msg" id="t1m5">
+          <line x1="68" y1="186" x2="482" y2="186" stroke="#059669" stroke-width="2" fill="none" marker-end="url(#a1e)"/>
+          <text x="274" y="182" text-anchor="middle" font-size="10" fill="#059669" font-family="-apple-system,sans-serif">write .md</text>
+          <text x="274" y="195" text-anchor="middle" font-size="9" fill="#64748b" font-family="-apple-system,sans-serif">sections + code examples</text>
+        </g>
+      </svg>
+    </div>
+    <p class="desc">Claude main dùng WebFetch để lấy transcript từ YouTube video KIrbA-wEURg, parse nội dung captions, distill thành file markdown có cấu trúc (định nghĩa pattern, ví dụ code, sơ đồ text). Nếu transcript không có captions → fallback sang mô tả video và metadata.</p>
+    <div class="controls">
+      <button class="ctrl-btn" id="btn1" onclick="toggleAnim(1)">⏸ Pause</button>
+      <div class="step-dots" id="dots1"></div>
+      <span class="step-label" id="stepLabel1">Step 1 / 5</span>
+    </div>
+  </section>
+
+  <!-- Task 2 -->
+  <section id="t2">
+    <div class="section-header">
+      <h2>Task 2 — Fetch &amp; Distill Video 2</h2>
+      <span class="agent-badge">Claude main · sonnet-4-6</span>
+    </div>
+    <div class="diagram-box">
+      <svg class="seq-svg" viewBox="0 0 580 240">
+        <defs>
+          <marker id="a2d" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#94a3b8"/></marker>
+          <marker id="a2e" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#059669"/></marker>
+          <marker id="a2i" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#4f46e5"/></marker>
+        </defs>
+
+        <rect x="10" y="8" width="100" height="36" rx="8" fill="rgba(5,150,105,.12)" stroke="#059669" stroke-width="1.5"/>
+        <text x="60" y="27" text-anchor="middle" class="ll-label">Claude main</text>
+        <text x="60" y="40" text-anchor="middle" class="ll-sub">sonnet-4-6</text>
+
+        <rect x="155" y="8" width="90" height="36" rx="8" fill="rgba(79,70,229,.15)" stroke="#4f46e5" stroke-width="1.5"/>
+        <text x="200" y="27" text-anchor="middle" class="ll-label">WebFetch</text>
+        <text x="200" y="40" text-anchor="middle" class="ll-sub">youtube.com</text>
+
+        <rect x="295" y="8" width="90" height="36" rx="8" fill="rgba(79,70,229,.15)" stroke="#4f46e5" stroke-width="1.5"/>
+        <text x="340" y="27" text-anchor="middle" class="ll-label">Transcript</text>
+        <text x="340" y="40" text-anchor="middle" class="ll-sub">raw captions</text>
+
+        <rect x="435" y="8" width="115" height="36" rx="8" fill="rgba(5,150,105,.12)" stroke="#059669" stroke-width="1.5"/>
+        <text x="492" y="27" text-anchor="middle" class="ll-label">design-pattern-v2</text>
+        <text x="492" y="40" text-anchor="middle" class="ll-sub">.md · new</text>
+
+        <line x1="60"  y1="44" x2="60"  y2="232" stroke="rgba(100,130,180,.28)" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <line x1="200" y1="44" x2="200" y2="232" stroke="rgba(100,130,180,.28)" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <line x1="340" y1="44" x2="340" y2="232" stroke="rgba(100,130,180,.28)" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <line x1="492" y1="44" x2="492" y2="232" stroke="rgba(100,130,180,.28)" stroke-width="1.5" stroke-dasharray="4 4"/>
+
+        <g class="msg" id="t2m1">
+          <line x1="68" y1="72" x2="191" y2="72" stroke="#4f46e5" stroke-width="2" fill="none" marker-end="url(#a2i)"/>
+          <text x="129" y="68" text-anchor="middle" font-size="10" fill="#4f46e5" font-family="-apple-system,sans-serif">fetch transcript</text>
+          <text x="129" y="81" text-anchor="middle" font-size="9" fill="#64748b" font-family="-apple-system,sans-serif">_U4H5FSIb-c</text>
+        </g>
+        <g class="msg" id="t2m2">
+          <line x1="335" y1="100" x2="208" y2="100" stroke="#94a3b8" stroke-width="2" fill="none" marker-end="url(#a2d)"/>
+          <text x="271" y="96" text-anchor="middle" font-size="10" fill="#64748b" font-style="italic" font-family="-apple-system,sans-serif">captions html</text>
+        </g>
+        <g class="msg" id="t2m3">
+          <line x1="207" y1="126" x2="68" y2="126" stroke="#94a3b8" stroke-width="2" fill="none" marker-end="url(#a2d)"/>
+          <text x="137" y="122" text-anchor="middle" font-size="10" fill="#64748b" font-style="italic" font-family="-apple-system,sans-serif">raw transcript text</text>
+        </g>
+        <g class="msg" id="t2m4">
+          <rect x="16" y="141" width="88" height="22" rx="5" fill="rgba(5,150,105,.10)" stroke="rgba(5,150,105,.3)" stroke-width="1"/>
+          <text x="60" y="156" text-anchor="middle" font-size="9" fill="#059669" font-weight="600" font-family="-apple-system,sans-serif">distill + structure</text>
+        </g>
+        <g class="msg" id="t2m5">
+          <line x1="68" y1="186" x2="482" y2="186" stroke="#059669" stroke-width="2" fill="none" marker-end="url(#a2e)"/>
+          <text x="274" y="182" text-anchor="middle" font-size="10" fill="#059669" font-family="-apple-system,sans-serif">write .md</text>
+          <text x="274" y="195" text-anchor="middle" font-size="9" fill="#64748b" font-family="-apple-system,sans-serif">sections + code examples</text>
+        </g>
+      </svg>
+    </div>
+    <p class="desc">Tương tự Task 1 nhưng cho video _U4H5FSIb-c. Claude fetch transcript, parse, distill thành markdown. Hai video được viết vào hai file riêng để dễ review từng chủ đề design pattern độc lập.</p>
+    <div class="controls">
+      <button class="ctrl-btn" id="btn2" onclick="toggleAnim(2)">⏸ Pause</button>
+      <div class="step-dots" id="dots2"></div>
+      <span class="step-label" id="stepLabel2">Step 1 / 5</span>
+    </div>
+  </section>
+
+  <!-- Task 3 -->
+  <section id="t3">
+    <div class="section-header">
+      <h2>Task 3 — Fetch &amp; Distill Video 3</h2>
+      <span class="agent-badge">Claude main · sonnet-4-6</span>
+    </div>
+    <div class="diagram-box">
+      <svg class="seq-svg" viewBox="0 0 580 240">
+        <defs>
+          <marker id="a3d" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#94a3b8"/></marker>
+          <marker id="a3e" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#059669"/></marker>
+          <marker id="a3i" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#4f46e5"/></marker>
+        </defs>
+
+        <rect x="10" y="8" width="100" height="36" rx="8" fill="rgba(5,150,105,.12)" stroke="#059669" stroke-width="1.5"/>
+        <text x="60" y="27" text-anchor="middle" class="ll-label">Claude main</text>
+        <text x="60" y="40" text-anchor="middle" class="ll-sub">sonnet-4-6</text>
+
+        <rect x="155" y="8" width="90" height="36" rx="8" fill="rgba(79,70,229,.15)" stroke="#4f46e5" stroke-width="1.5"/>
+        <text x="200" y="27" text-anchor="middle" class="ll-label">WebFetch</text>
+        <text x="200" y="40" text-anchor="middle" class="ll-sub">youtube.com</text>
+
+        <rect x="295" y="8" width="90" height="36" rx="8" fill="rgba(79,70,229,.15)" stroke="#4f46e5" stroke-width="1.5"/>
+        <text x="340" y="27" text-anchor="middle" class="ll-label">Transcript</text>
+        <text x="340" y="40" text-anchor="middle" class="ll-sub">raw captions</text>
+
+        <rect x="435" y="8" width="115" height="36" rx="8" fill="rgba(5,150,105,.12)" stroke="#059669" stroke-width="1.5"/>
+        <text x="492" y="27" text-anchor="middle" class="ll-label">design-pattern-v3</text>
+        <text x="492" y="40" text-anchor="middle" class="ll-sub">.md · new</text>
+
+        <line x1="60"  y1="44" x2="60"  y2="232" stroke="rgba(100,130,180,.28)" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <line x1="200" y1="44" x2="200" y2="232" stroke="rgba(100,130,180,.28)" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <line x1="340" y1="44" x2="340" y2="232" stroke="rgba(100,130,180,.28)" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <line x1="492" y1="44" x2="492" y2="232" stroke="rgba(100,130,180,.28)" stroke-width="1.5" stroke-dasharray="4 4"/>
+
+        <g class="msg" id="t3m1">
+          <line x1="68" y1="72" x2="191" y2="72" stroke="#4f46e5" stroke-width="2" fill="none" marker-end="url(#a3i)"/>
+          <text x="129" y="68" text-anchor="middle" font-size="10" fill="#4f46e5" font-family="-apple-system,sans-serif">fetch transcript</text>
+          <text x="129" y="81" text-anchor="middle" font-size="9" fill="#64748b" font-family="-apple-system,sans-serif">LY8_RaLDJT4</text>
+        </g>
+        <g class="msg" id="t3m2">
+          <line x1="335" y1="100" x2="208" y2="100" stroke="#94a3b8" stroke-width="2" fill="none" marker-end="url(#a3d)"/>
+          <text x="271" y="96" text-anchor="middle" font-size="10" fill="#64748b" font-style="italic" font-family="-apple-system,sans-serif">captions html</text>
+        </g>
+        <g class="msg" id="t3m3">
+          <line x1="207" y1="126" x2="68" y2="126" stroke="#94a3b8" stroke-width="2" fill="none" marker-end="url(#a3d)"/>
+          <text x="137" y="122" text-anchor="middle" font-size="10" fill="#64748b" font-style="italic" font-family="-apple-system,sans-serif">raw transcript text</text>
+        </g>
+        <g class="msg" id="t3m4">
+          <rect x="16" y="141" width="88" height="22" rx="5" fill="rgba(5,150,105,.10)" stroke="rgba(5,150,105,.3)" stroke-width="1"/>
+          <text x="60" y="156" text-anchor="middle" font-size="9" fill="#059669" font-weight="600" font-family="-apple-system,sans-serif">distill + structure</text>
+        </g>
+        <g class="msg" id="t3m5">
+          <line x1="68" y1="186" x2="482" y2="186" stroke="#059669" stroke-width="2" fill="none" marker-end="url(#a3e)"/>
+          <text x="274" y="182" text-anchor="middle" font-size="10" fill="#059669" font-family="-apple-system,sans-serif">write .md</text>
+          <text x="274" y="195" text-anchor="middle" font-size="9" fill="#64748b" font-family="-apple-system,sans-serif">sections + code examples</text>
+        </g>
+      </svg>
+    </div>
+    <p class="desc">Video thứ ba (LY8_RaLDJT4) được xử lý giống hai video trước. Kết quả là 3 file markdown độc lập, mỗi file tập trung vào chủ đề design pattern cụ thể — đủ để đọc standalone mà không cần xem video.</p>
+    <div class="controls">
+      <button class="ctrl-btn" id="btn3" onclick="toggleAnim(3)">⏸ Pause</button>
+      <div class="step-dots" id="dots3"></div>
+      <span class="step-label" id="stepLabel3">Step 1 / 5</span>
+    </div>
+  </section>
+
+  <!-- Task 4 -->
+  <section id="t4">
+    <div class="section-header">
+      <h2>Task 4 — Build HTML Infographics</h2>
+      <span class="agent-badge">Claude main · sonnet-4-6</span>
+    </div>
+    <div class="diagram-box">
+      <svg class="seq-svg" viewBox="0 0 660 220">
+        <defs>
+          <marker id="a4d" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#94a3b8"/></marker>
+          <marker id="a4e" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#059669"/></marker>
+          <marker id="a4i" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#4f46e5"/></marker>
+        </defs>
+
+        <rect x="10"  y="8" width="80"  height="36" rx="8" fill="rgba(79,70,229,.15)" stroke="#4f46e5" stroke-width="1.5"/>
+        <text x="50"  y="27" text-anchor="middle" class="ll-label">MD Files</text>
+        <text x="50"  y="40" text-anchor="middle" class="ll-sub">v1, v2, v3</text>
+
+        <rect x="130" y="8" width="100" height="36" rx="8" fill="rgba(5,150,105,.12)" stroke="#059669" stroke-width="1.5"/>
+        <text x="180" y="27" text-anchor="middle" class="ll-label">Claude main</text>
+        <text x="180" y="40" text-anchor="middle" class="ll-sub">sonnet-4-6</text>
+
+        <rect x="275" y="8" width="110" height="36" rx="8" fill="rgba(79,70,229,.15)" stroke="#4f46e5" stroke-width="1.5"/>
+        <text x="330" y="27" text-anchor="middle" class="ll-label">docs-site-macos</text>
+        <text x="330" y="40" text-anchor="middle" class="ll-sub">skill / template</text>
+
+        <rect x="430" y="8" width="100" height="36" rx="8" fill="rgba(5,150,105,.12)" stroke="#059669" stroke-width="1.5"/>
+        <text x="480" y="27" text-anchor="middle" class="ll-label">HTML Files</text>
+        <text x="480" y="40" text-anchor="middle" class="ll-sub">v1, v2, v3 · new</text>
+
+        <rect x="570" y="8" width="75"  height="36" rx="8" fill="rgba(5,150,105,.12)" stroke="#059669" stroke-width="1.5"/>
+        <text x="607" y="27" text-anchor="middle" class="ll-label">Wiki Index</text>
+        <text x="607" y="40" text-anchor="middle" class="ll-sub">+ log.md</text>
+
+        <line x1="50"  y1="44" x2="50"  y2="210" stroke="rgba(100,130,180,.28)" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <line x1="180" y1="44" x2="180" y2="210" stroke="rgba(100,130,180,.28)" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <line x1="330" y1="44" x2="330" y2="210" stroke="rgba(100,130,180,.28)" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <line x1="480" y1="44" x2="480" y2="210" stroke="rgba(100,130,180,.28)" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <line x1="607" y1="44" x2="607" y2="210" stroke="rgba(100,130,180,.28)" stroke-width="1.5" stroke-dasharray="4 4"/>
+
+        <g class="msg" id="t4m1">
+          <line x1="58" y1="68" x2="171" y2="68" stroke="#4f46e5" stroke-width="2" fill="none" marker-end="url(#a4i)"/>
+          <text x="114" y="64" text-anchor="middle" font-size="10" fill="#4f46e5" font-family="-apple-system,sans-serif">read 3 MD files</text>
+        </g>
+        <g class="msg" id="t4m2">
+          <line x1="188" y1="94" x2="321" y2="94" stroke="#059669" stroke-width="2" fill="none" marker-end="url(#a4e)"/>
+          <text x="254" y="90" text-anchor="middle" font-size="10" fill="#059669" font-family="-apple-system,sans-serif">apply glass template</text>
+        </g>
+        <g class="msg" id="t4m3">
+          <line x1="322" y1="118" x2="188" y2="118" stroke="#94a3b8" stroke-width="2" fill="none" marker-end="url(#a4d)"/>
+          <text x="255" y="114" text-anchor="middle" font-size="10" fill="#64748b" font-style="italic" font-family="-apple-system,sans-serif">styled HTML structure</text>
+        </g>
+        <g class="msg" id="t4m4">
+          <line x1="188" y1="148" x2="471" y2="148" stroke="#059669" stroke-width="2" fill="none" marker-end="url(#a4e)"/>
+          <text x="329" y="144" text-anchor="middle" font-size="10" fill="#059669" font-family="-apple-system,sans-serif">write design-pattern-v*.html</text>
+        </g>
+        <g class="msg" id="t4m5">
+          <line x1="188" y1="176" x2="598" y2="176" stroke="#059669" stroke-width="2" fill="none" marker-end="url(#a4e)"/>
+          <text x="393" y="172" text-anchor="middle" font-size="10" fill="#059669" font-family="-apple-system,sans-serif">update index.md + log.md</text>
+        </g>
+      </svg>
+    </div>
+    <p class="desc">Claude đọc 3 file markdown đã tạo ở Task 1–3, áp dụng recipe docs-site-macos (light glass, sidebar cố định, animated diagrams), rồi render ra 3 file HTML độc lập trong thư mục html/. Cuối cùng cập nhật wiki/index.md và wiki/log.md.</p>
+    <div class="controls">
+      <button class="ctrl-btn" id="btn4" onclick="toggleAnim(4)">⏸ Pause</button>
+      <div class="step-dots" id="dots4"></div>
+      <span class="step-label" id="stepLabel4">Step 1 / 5</span>
+    </div>
+  </section>
+</main>
+
+<script>
+// Sidebar collapse
+const sidebar = document.getElementById('sidebar');
+const mainEl  = document.getElementById('main');
+const collapseBtn = document.getElementById('collapseBtn');
+
+collapseBtn.addEventListener('click', function(e) {
+  sidebar.classList.toggle('collapsed');
+  mainEl.classList.toggle('wide');
+  collapseBtn.textContent = sidebar.classList.contains('collapsed') ? '☰' : '✕';
+  const ripple = document.createElement('span');
+  ripple.className = 'ripple';
+  const rect = collapseBtn.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  ripple.style.cssText = 'width:'+size+'px;height:'+size+'px;left:'+(e.clientX-rect.left-size/2)+'px;top:'+(e.clientY-rect.top-size/2)+'px';
+  collapseBtn.appendChild(ripple);
+  setTimeout(function(){ ripple.remove(); }, 600);
+});
+
+// Scroll spy
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    var link = document.getElementById('nav-' + e.target.id);
+    if (link) link.classList.toggle('active', e.isIntersecting);
+  });
+}, { threshold: 0.4 });
+['t1','t2','t3','t4'].forEach(function(id) {
+  var el = document.getElementById(id);
+  if (el) observer.observe(el);
+});
+
+// Animation
+var STEPS = 5;
+var paused = { 1: false, 2: false, 3: false, 4: false };
+var current = { 1: 0, 2: 0, 3: 0, 4: 0 };
+var prefixes = { 1: 't1m', 2: 't2m', 3: 't3m', 4: 't4m' };
+
+function buildDots(idx) {
+  var container = document.getElementById('dots' + idx);
+  for (var i = 0; i < STEPS; i++) {
+    var d = document.createElement('div');
+    d.className = 'dot';
+    d.id = 'dot' + idx + '_' + i;
+    container.appendChild(d);
+  }
+}
+
+function setStep(idx, step) {
+  var pfx = prefixes[idx];
+  for (var i = 1; i <= STEPS; i++) {
+    var el = document.getElementById(pfx + i);
+    if (el) el.classList.toggle('active', i === step + 1);
+    var dot = document.getElementById('dot' + idx + '_' + (i - 1));
+    if (dot) dot.classList.toggle('active', i === step + 1);
+  }
+  var lbl = document.getElementById('stepLabel' + idx);
+  if (lbl) lbl.textContent = 'Step ' + (step + 1) + ' / ' + STEPS;
+  current[idx] = step;
+}
+
+function startAnim(idx) {
+  setInterval(function() {
+    if (!paused[idx]) {
+      setStep(idx, (current[idx] + 1) % STEPS);
+    }
+  }, 1200);
+}
+
+function toggleAnim(idx) {
+  paused[idx] = !paused[idx];
+  var btn = document.getElementById('btn' + idx);
+  if (btn) btn.textContent = paused[idx] ? '▶ Play' : '⏸ Pause';
+}
+
+[1,2,3,4].forEach(function(i) {
+  buildDots(i);
+  setStep(i, 0);
+  startAnim(i);
+});
+</script>
+</body>
+</html>

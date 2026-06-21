@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Học Từ Thiền Phần 001 — System Design · Trần Hồng Gấm</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --font-text:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue','Roboto','Segoe UI',sans-serif;
+  --font-display:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue','Roboto','Segoe UI',sans-serif;
+  --font-mono:'SF Mono',ui-monospace,'SFMono-Regular',Menlo,'Roboto Mono',Consolas,monospace;
+  --glass-1:rgba(255,255,255,.55);--glass-2:rgba(255,255,255,.70);--glass-3:rgba(255,255,255,.88);
+  --blur-1:24px;--blur-2:8px;--blur-3:4px;
+  --edge-hi:inset 0 1px 0 rgba(255,255,255,.85);
+  --border:rgba(30,90,170,.14);
+  --text-1:#0f0f12;--text-2:#4a4a55
+}
+html{background:#e9f0fb;scrollbar-width:thin;scrollbar-color:transparent transparent}
+html.scrolling{scrollbar-color:rgba(10,132,255,.32) transparent}
+body{font-family:var(--font-text);color:var(--text-1);padding-left:200px;
+  background:radial-gradient(900px 500px at 12% -10%,rgba(10,132,255,.10),transparent 60%),
+    radial-gradient(700px 420px at 95% 15%,rgba(90,162,232,.08),transparent 55%),
+    linear-gradient(180deg,#eef4fd 0%,#e6eefb 100%);
+  transition:padding-left .28s cubic-bezier(.4,0,.2,1)}
+body.nav-collapsed{padding-left:0}
+body::before{content:'';position:fixed;inset:-10%;z-index:-1;pointer-events:none;
+  background:radial-gradient(640px 440px at 10% 14%,rgba(10,132,255,.22),transparent 65%),
+    radial-gradient(380px 460px at 4% 52%,rgba(48,176,199,.18),transparent 65%),
+    radial-gradient(540px 400px at 88% 10%,rgba(88,86,214,.13),transparent 60%),
+    radial-gradient(720px 500px at 74% 76%,rgba(48,176,199,.13),transparent 65%),
+    radial-gradient(480px 380px at 44% 55%,rgba(255,45,85,.08),transparent 60%);
+  animation:orbDrift 46s ease-in-out infinite alternate}
+@keyframes orbDrift{100%{transform:translate(2.2%,1.6%) scale(1.045)}}
+@media(prefers-reduced-motion:reduce){body::before{animation:none}}
+body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:radial-gradient(rgba(30,90,170,.11) 1px,transparent 1.3px);
+  background-size:22px 22px;
+  mask-image:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.22))}
+::-webkit-scrollbar{width:11px;height:11px;background:transparent}
+::-webkit-scrollbar-track,::-webkit-scrollbar-track-piece,::-webkit-scrollbar-corner,::-webkit-scrollbar-button{background:transparent;border:0;box-shadow:none}
+::-webkit-scrollbar-thumb{background:transparent;border-radius:8px;border:3px solid transparent;background-clip:content-box;transition:background-color .25s ease}
+html.scrolling::-webkit-scrollbar-thumb,::-webkit-scrollbar-thumb:hover{background-color:rgba(10,132,255,.32)}
+nav{position:fixed;top:0;left:0;bottom:0;width:200px;z-index:100;
+  display:flex;flex-direction:column;align-items:stretch;gap:2px;padding:18px 12px;overflow-y:auto;
+  background:linear-gradient(165deg,rgba(255,255,255,.46) 0%,rgba(255,255,255,.22) 48%,rgba(240,248,255,.34) 100%);
+  backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
+  -webkit-backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
+  border-right:1px solid rgba(255,255,255,.55);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 1px 0 0 rgba(255,255,255,.5),inset -1px 0 0 rgba(30,90,170,.10),4px 0 24px rgba(30,90,170,.08);
+  transition:transform .28s cubic-bezier(.4,0,.2,1)}
+nav::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(220px 160px at 18% 4%,rgba(255,255,255,.55),transparent 70%),
+    linear-gradient(115deg,rgba(255,255,255,.28) 0%,transparent 28%,transparent 72%,rgba(255,255,255,.14) 100%)}
+nav>*{position:relative}
+body.nav-collapsed nav{transform:translateX(-100%)}
+.logo{margin:0 0 16px;padding:6px 10px;font-family:var(--font-display);font-size:13px;font-weight:700;line-height:1.4;
+  background:linear-gradient(135deg,#0a84ff,#64b5f7);-webkit-background-clip:text;background-clip:text;color:transparent}
+.logo span{font-size:11px;font-weight:500;opacity:.7;display:block}
+nav a{display:block;padding:8px 12px;border-radius:10px;font-size:13px;color:var(--text-2);text-decoration:none;font-weight:500;position:relative;overflow:hidden;transition:background .2s,color .2s}
+nav a:hover{background:rgba(10,132,255,.07);color:#0a84ff}
+nav a.active{color:#0a84ff;background:rgba(10,132,255,.10);font-weight:600}
+.nav-toggle{position:fixed;top:12px;left:12px;z-index:120;width:32px;height:32px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-size:14px;color:#4a4a55;cursor:pointer;
+  background:linear-gradient(165deg,rgba(255,255,255,.5),rgba(255,255,255,.24));
+  backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
+  -webkit-backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
+  border:1px solid transparent;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 0 0 1px rgba(30,90,170,.08),0 2px 10px rgba(30,90,170,.12);
+  transition:opacity .2s,transform .28s cubic-bezier(.4,0,.2,1);overflow:hidden}
+.nav-toggle:hover{color:#0a84ff}
+body:not(.nav-collapsed) .nav-toggle{opacity:0;pointer-events:none;transform:translateX(-6px)}
+.nav-close{position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-size:12px;color:#4a4a55;cursor:pointer;
+  background:rgba(0,0,0,.04);border:none;overflow:hidden}
+.nav-close:hover{color:#0a84ff;background:rgba(10,132,255,.10)}
+.ripple-ink{position:absolute;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.70) 0%,rgba(255,255,255,.28) 38%,rgba(10,132,255,.20) 72%,transparent 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 0 14px rgba(10,132,255,.10);
+  backdrop-filter:blur(2px) saturate(1.25);-webkit-backdrop-filter:blur(2px) saturate(1.25);
+  transform:scale(0);opacity:1;animation:rippleGrow .6s cubic-bezier(.25,.46,.45,.94) forwards}
+@keyframes rippleGrow{55%{transform:scale(1);opacity:.75}100%{transform:scale(1.04);opacity:0}}
+.hero{padding:64px 40px 56px;max-width:1100px;margin:0 auto}
+.hero-eyebrow{font-size:12px;font-weight:600;color:#30b0c7;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px}
+.hero h1{font-family:var(--font-display);font-size:clamp(32px,5vw,56px);font-weight:800;line-height:1.1;letter-spacing:-.02em;
+  background:linear-gradient(135deg,#30b0c7,#5aa2e8,#cfe3fb);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:16px}
+.hero-sub{font-size:15px;color:var(--text-2);margin-bottom:20px}
+.hero-sub a{color:#30b0c7;text-decoration:none}
+.hero-sub a:hover{text-decoration:underline}
+.hero-meta{display:flex;flex-wrap:wrap;gap:8px}
+.tag{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600}
+.speaker-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:24px;
+  background:rgba(255,255,255,.7);border:1px solid var(--border);font-size:13px;color:var(--text-2);
+  box-shadow:var(--edge-hi);margin-bottom:20px}
+.speaker-badge strong{color:var(--text-1)}
+.section-bg{position:relative;overflow:visible}
+.section-bg::before{content:'';position:absolute;top:0;bottom:0;left:50%;width:100vw;transform:translateX(-50%);pointer-events:none}
+section{padding:64px 40px 72px;max-width:1100px;margin:0 auto}
+.section-header{margin-bottom:32px}
+.section-header h2{font-family:var(--font-display);font-size:28px;font-weight:700;color:#1d1d1f;margin-top:8px;letter-spacing:-.02em}
+.section-header p{color:var(--text-2);font-size:15px;line-height:1.6;margin-top:8px;max-width:680px}
+#sec-0 .tag{background:rgba(48,176,199,.10);color:#30b0c7}
+#sec-0 .card h4{color:#30b0c7}
+#sec-0 .card li::before{color:#30b0c7}
+.s-bg0::before{background:linear-gradient(180deg,rgba(48,176,199,.05) 0%,transparent 60%)}
+#sec-1 .tag{background:rgba(88,86,214,.10);color:#5856d6}
+#sec-1 .card h4{color:#5856d6}
+#sec-1 .card li::before{color:#5856d6}
+.s-bg1::before{background:linear-gradient(180deg,rgba(88,86,214,.05) 0%,transparent 60%)}
+#sec-2 .tag{background:rgba(52,199,89,.12);color:#28a745}
+#sec-2 .card h4{color:#28a745}
+#sec-2 .card li::before{color:#28a745}
+.s-bg2::before{background:linear-gradient(180deg,rgba(52,199,89,.05) 0%,transparent 60%)}
+#sec-3 .tag{background:rgba(255,149,0,.12);color:#f08c00}
+#sec-3 .card h4{color:#f08c00}
+#sec-3 .card li::before{color:#f08c00}
+.s-bg3::before{background:linear-gradient(180deg,rgba(255,149,0,.06) 0%,transparent 60%)}
+.content-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:24px}
+@media(max-width:700px){.content-grid{grid-template-columns:1fr}}
+.content-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}
+@media(max-width:900px){.content-grid-3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.content-grid-3{grid-template-columns:1fr}}
+.card{background:var(--glass-2);backdrop-filter:blur(var(--blur-2)) saturate(1.1);
+  border:1px solid var(--border);border-radius:16px;
+  box-shadow:var(--edge-hi),0 4px 20px rgba(0,0,0,.06);padding:20px}
+.card h4{font-size:14px;font-weight:700;margin-bottom:10px}
+.card p{font-size:13px;color:var(--text-2);line-height:1.6}
+.card ul{list-style:none;display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.card li{font-size:13px;color:var(--text-2);display:flex;gap:8px;line-height:1.5}
+.card li::before{content:'›';font-weight:700;flex-shrink:0}
+.diagram-box{background:var(--glass-2);backdrop-filter:blur(var(--blur-2)) saturate(1.1);
+  border:1px solid var(--border);border-radius:16px;box-shadow:var(--edge-hi),0 4px 20px rgba(0,0,0,.06);
+  padding:24px;margin:24px 0;position:relative;overflow:hidden;display:flex;flex-direction:column;
+  resize:vertical;min-height:160px;transition:box-shadow .2s ease}
+.diagram-box:hover{box-shadow:0 6px 28px rgba(0,0,0,.10)}
+.diagram-viewport{position:relative;flex:1 1 auto;width:100%;overflow:hidden;cursor:grab;touch-action:none}
+.diagram-viewport.grabbing{cursor:grabbing}
+.diagram-viewport svg{width:100%;height:auto;display:block;overflow:visible;transform-origin:0 0;will-change:transform;user-select:none;-webkit-user-select:none}
+.dnode{cursor:move}
+.dnode>rect{transition:filter .15s ease}
+.dnode:hover>rect:first-of-type{filter:drop-shadow(0 3px 8px rgba(0,0,0,.18))}
+.diagram-hint{position:absolute;top:8px;right:12px;z-index:5;font-size:10px;color:#4a4a55;
+  background:rgba(255,255,255,.75);border:1px solid rgba(0,0,0,.05);border-radius:20px;
+  padding:3px 10px;white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none}
+.diagram-box:hover .diagram-hint{opacity:.9}
+.diagram-reset{position:absolute;bottom:8px;right:10px;z-index:5;font-size:11px;
+  background:rgba(255,255,255,.85);border:1px solid rgba(0,0,0,.08);border-radius:8px;
+  padding:3px 9px;cursor:pointer;color:#4a4a55;opacity:0;transition:opacity .2s}
+.diagram-box:hover .diagram-reset{opacity:1}
+.diagram-reset:hover{background:#fff;color:#0f0f12}
+.diagram-box::after{content:'';position:absolute;right:5px;bottom:5px;width:16px;height:16px;
+  pointer-events:none;opacity:0;transition:opacity .25s ease;
+  clip-path:polygon(100% 0,100% 100%,0 100%);
+  background:repeating-linear-gradient(135deg,transparent 0 3.5px,rgba(10,132,255,.45) 3.5px 5px)}
+.diagram-box:hover::after{opacity:.85}
+.diagram-box::-webkit-resizer{display:none}
+.table-wrap{overflow-x:auto;margin-top:24px}
+table{width:100%;border-collapse:collapse;background:var(--glass-3);backdrop-filter:blur(var(--blur-3));
+  border:1px solid var(--border);border-radius:12px;overflow:hidden;font-size:13px;box-shadow:var(--edge-hi)}
+th{padding:10px 16px;text-align:left;font-weight:600;color:var(--text-1);background:rgba(10,132,255,.06);border-bottom:1px solid var(--border)}
+td{padding:10px 16px;color:var(--text-2);border-bottom:1px solid rgba(30,90,170,.07)}
+tr:last-child td{border-bottom:none}
+.code-wrap{position:relative}
+pre.code-block{background:rgba(15,15,22,.88);color:#e2e8f0;border-radius:12px;padding:20px;
+  font-family:var(--font-mono);font-size:12px;line-height:1.7;overflow-x:auto;margin-top:16px;border:1px solid rgba(255,255,255,.08)}
+.code-copy{position:absolute;top:8px;right:8px;z-index:2;font-size:11px;font-family:inherit;font-weight:500;
+  background:rgba(255,255,255,.1);color:#cbd5e1;border:1px solid rgba(255,255,255,.15);
+  border-radius:6px;padding:3px 10px;cursor:pointer;opacity:0;transition:opacity .15s,background .15s,color .15s}
+.code-wrap:hover .code-copy{opacity:1}
+.code-copy:hover{background:rgba(255,255,255,.2);color:#fff}
+.code-copy.copied{background:rgba(16,185,129,.25);color:#6ee7b7;border-color:rgba(16,185,129,.45);opacity:1}
+@keyframes flowArrow{0%{stroke-dashoffset:20}100%{stroke-dashoffset:0}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+footer{padding:32px 40px;max-width:1100px;margin:0 auto;font-size:13px;color:#94a3b8;border-top:1px solid var(--border)}
+footer a{color:#0a84ff;text-decoration:none}
+footer a:hover{text-decoration:underline}
+.section-footer-link{margin-top:24px;font-size:13px;color:var(--text-2)}
+.section-footer-link a{color:#30b0c7;text-decoration:none}
+.section-footer-link a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+
+<nav id="main-nav">
+  <div class="logo">Học Từ Thiền<br><span>Phần 001 · System Design</span></div>
+  <a href="#sec-0" class="nav-link">01 · DB Selection</a>
+  <a href="#sec-1" class="nav-link">02 · Sharding & Index</a>
+  <a href="#sec-2" class="nav-link">03 · API Design</a>
+  <a href="#sec-3" class="nav-link">04 · Distributed</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Code Lủng · Học Từ Thiền Series</div>
+  <h1>Data, APIs &amp;<br>Distributed Systems</h1>
+  <div class="speaker-badge"><strong>Trần Hồng Gấm</strong> · Phần 001</div>
+  <p class="hero-sub">Database selection, Sharding, API patterns, và CAP theorem — từ góc nhìn kỹ sư thực chiến. <a href="https://youtu.be/_U4H5FSIb-c" target="_blank">youtu.be/_U4H5FSIb-c ↗</a></p>
+  <div class="hero-meta">
+    <span class="tag" style="background:rgba(48,176,199,.10);color:#30b0c7">Database</span>
+    <span class="tag" style="background:rgba(88,86,214,.10);color:#5856d6">API Design</span>
+    <span class="tag" style="background:rgba(52,199,89,.12);color:#28a745">CAP Theorem</span>
+    <span class="tag" style="background:rgba(255,149,0,.10);color:#f08c00">Observability</span>
+  </div>
+</div>
+
+<!-- SEC 0: DB Selection -->
+<div class="section-bg s-bg0">
+<section id="sec-0">
+  <div class="section-header">
+    <span class="tag">01 · Database</span>
+    <h2>Chọn Database đúng bài toán</h2>
+    <p>Không có DB nào tốt nhất — chỉ có DB phù hợp nhất với access pattern, scale, và consistency requirement của bạn.</p>
+  </div>
+  <div class="diagram-box">
+    <div class="diagram-viewport">
+      <svg viewBox="0 0 900 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="db-arr" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#30b0c7"/></marker>
+          <style>.dbl{font-family:-apple-system,sans-serif;font-size:10px;font-weight:700}.dbs{font-family:-apple-system,sans-serif;font-size:8.5px;fill:#64748b}.flow3{stroke-dasharray:5 4;animation:flowArrow 1.1s linear infinite}</style>
+        </defs>
+        <!-- Root -->
+        <rect x="360" y="10" width="160" height="40" rx="10" fill="rgba(255,255,255,.85)" stroke="#cbd5e1" stroke-width="1.5"/>
+        <text x="440" y="27" text-anchor="middle" class="dbl">Bài toán?</text>
+        <text x="440" y="42" text-anchor="middle" class="dbs">Xác định access pattern</text>
+        <!-- SQL -->
+        <rect x="80" y="90" width="140" height="50" rx="8" fill="rgba(48,176,199,.12)" stroke="#30b0c7" stroke-width="1.5"/>
+        <text x="150" y="110" text-anchor="middle" class="dbl" fill="#30b0c7">SQL (ACID)</text>
+        <text x="150" y="124" text-anchor="middle" class="dbs">Joins + transactions</text>
+        <text x="150" y="136" text-anchor="middle" class="dbs">PostgreSQL · MySQL</text>
+        <!-- NoSQL Doc -->
+        <rect x="260" y="90" width="140" height="50" rx="8" fill="rgba(88,86,214,.12)" stroke="#5856d6" stroke-width="1.5"/>
+        <text x="330" y="110" text-anchor="middle" class="dbl" fill="#5856d6">Document</text>
+        <text x="330" y="124" text-anchor="middle" class="dbs">Flexible schema</text>
+        <text x="330" y="136" text-anchor="middle" class="dbs">MongoDB · Firestore</text>
+        <!-- KV -->
+        <rect x="440" y="90" width="140" height="50" rx="8" fill="rgba(52,199,89,.12)" stroke="#34c759" stroke-width="1.5"/>
+        <text x="510" y="110" text-anchor="middle" class="dbl" fill="#28a745">Key-Value</text>
+        <text x="510" y="124" text-anchor="middle" class="dbs">O(1) lookup · cache</text>
+        <text x="510" y="136" text-anchor="middle" class="dbs">Redis · DynamoDB</text>
+        <!-- Columnar -->
+        <rect x="620" y="90" width="130" height="50" rx="8" fill="rgba(255,149,0,.12)" stroke="#ff9500" stroke-width="1.5"/>
+        <text x="685" y="110" text-anchor="middle" class="dbl" fill="#f08c00">Wide-Column</text>
+        <text x="685" y="124" text-anchor="middle" class="dbs">Time-series · IoT</text>
+        <text x="685" y="136" text-anchor="middle" class="dbs">Cassandra · HBase</text>
+        <!-- Search -->
+        <rect x="790" y="90" width="100" height="50" rx="8" fill="rgba(255,45,85,.12)" stroke="#ff2d55" stroke-width="1.5"/>
+        <text x="840" y="110" text-anchor="middle" class="dbl" fill="#e0264b">Search</text>
+        <text x="840" y="124" text-anchor="middle" class="dbs">Full-text index</text>
+        <text x="840" y="136" text-anchor="middle" class="dbs">Elasticsearch</text>
+        <!-- Arrows from root -->
+        <line x1="400" y1="50" x2="190" y2="90" stroke="#30b0c7" stroke-width="1.5" fill="none" marker-end="url(#db-arr)" class="flow3"/>
+        <line x1="420" y1="50" x2="345" y2="90" stroke="#5856d6" stroke-width="1.5" fill="none" marker-end="url(#db-arr)" class="flow3"/>
+        <line x1="460" y1="50" x2="490" y2="90" stroke="#28a745" stroke-width="1.5" fill="none" marker-end="url(#db-arr)" class="flow3"/>
+        <line x1="480" y1="50" x2="660" y2="90" stroke="#f08c00" stroke-width="1.5" fill="none" marker-end="url(#db-arr)" class="flow3"/>
+        <line x1="510" y1="50" x2="825" y2="90" stroke="#e0264b" stroke-width="1.5" fill="none" marker-end="url(#db-arr)" class="flow3"/>
+        <!-- Read replicas note -->
+        <text x="150" y="170" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#94a3b8">+ Read Replicas</text>
+        <text x="510" y="170" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#94a3b8">+ Cluster mode</text>
+      </svg>
+    </div>
+  </div>
+  <div class="content-grid">
+    <div class="card">
+      <h4>Khi nào dùng SQL?</h4>
+      <ul>
+        <li>Data có cấu trúc, relationships phức tạp</li>
+        <li>Cần ACID transactions (payment, banking)</li>
+        <li>Joins nhiều bảng là use case chính</li>
+        <li>Schema ổn định, ít thay đổi</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Khi nào dùng NoSQL?</h4>
+      <ul>
+        <li>Cần scale horizontal cực lớn</li>
+        <li>Schema linh hoạt, thay đổi thường xuyên</li>
+        <li>Eventual consistency chấp nhận được</li>
+        <li>Access pattern đơn giản (key lookup)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- SEC 1: Sharding & Indexing -->
+<div class="section-bg s-bg1">
+<section id="sec-1">
+  <div class="section-header">
+    <span class="tag">02 · Sharding</span>
+    <h2>Sharding &amp; Indexing Strategy</h2>
+    <p>Khi single DB không đủ capacity, sharding phân tán dữ liệu ngang. Chọn shard key sai là một trong những quyết định khó sửa nhất.</p>
+  </div>
+  <div class="diagram-box">
+    <div class="diagram-viewport">
+      <svg viewBox="0 0 900 190" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="sh-arr" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#5856d6"/></marker>
+          <style>.shl{font-family:-apple-system,sans-serif;font-size:10px;font-weight:700}.shs{font-family:-apple-system,sans-serif;font-size:8.5px;fill:#64748b}.flow4{stroke-dasharray:5 4;animation:flowArrow 1.3s linear infinite}</style>
+        </defs>
+        <!-- Router -->
+        <rect x="360" y="10" width="160" height="42" rx="10" fill="rgba(88,86,214,.12)" stroke="#5856d6" stroke-width="1.5"/>
+        <text x="440" y="28" text-anchor="middle" class="shl" fill="#5856d6">Shard Router</text>
+        <text x="440" y="44" text-anchor="middle" class="shs">hash(user_id) % N</text>
+        <!-- Shards -->
+        <rect x="60" y="100" width="140" height="70" rx="10" fill="rgba(255,255,255,.80)" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="130" y="120" text-anchor="middle" class="shl">Shard 0</text>
+        <text x="130" y="135" text-anchor="middle" class="shs">user_id: 0–33%</text>
+        <text x="130" y="150" text-anchor="middle" class="shs">DB Node A</text>
+        <text x="130" y="163" text-anchor="middle" class="shs">Primary + Replica</text>
+
+        <rect x="240" y="100" width="140" height="70" rx="10" fill="rgba(255,255,255,.80)" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="310" y="120" text-anchor="middle" class="shl">Shard 1</text>
+        <text x="310" y="135" text-anchor="middle" class="shs">user_id: 33–66%</text>
+        <text x="310" y="150" text-anchor="middle" class="shs">DB Node B</text>
+        <text x="310" y="163" text-anchor="middle" class="shs">Primary + Replica</text>
+
+        <rect x="420" y="100" width="140" height="70" rx="10" fill="rgba(255,255,255,.80)" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="490" y="120" text-anchor="middle" class="shl">Shard 2</text>
+        <text x="490" y="135" text-anchor="middle" class="shs">user_id: 66–100%</text>
+        <text x="490" y="150" text-anchor="middle" class="shs">DB Node C</text>
+        <text x="490" y="163" text-anchor="middle" class="shs">Primary + Replica</text>
+
+        <!-- Issues -->
+        <rect x="600" y="100" width="280" height="70" rx="10" fill="rgba(255,45,85,.08)" stroke="#ff2d55" stroke-width="1.5"/>
+        <text x="740" y="120" text-anchor="middle" class="shl" fill="#e0264b">Sharding Challenges</text>
+        <text x="740" y="137" text-anchor="middle" class="shs">Cross-shard joins: rất khó / không thể</text>
+        <text x="740" y="152" text-anchor="middle" class="shs">Hotspot: celebrity problem</text>
+        <text x="740" y="165" text-anchor="middle" class="shs">Rebalance: consistent hashing giúp</text>
+
+        <line x1="400" y1="52" x2="185" y2="100" stroke="#5856d6" stroke-width="1.5" fill="none" marker-end="url(#sh-arr)" class="flow4"/>
+        <line x1="440" y1="52" x2="360" y2="100" stroke="#5856d6" stroke-width="1.5" fill="none" marker-end="url(#sh-arr)" class="flow4"/>
+        <line x1="480" y1="52" x2="515" y2="100" stroke="#5856d6" stroke-width="1.5" fill="none" marker-end="url(#sh-arr)" class="flow4"/>
+      </svg>
+    </div>
+  </div>
+  <div class="content-grid">
+    <div class="card">
+      <h4>Indexing Strategy</h4>
+      <ul>
+        <li><strong>B-tree</strong>: range + equality — default cho hầu hết DB</li>
+        <li><strong>Hash index</strong>: equality only, O(1) lookup</li>
+        <li><strong>Composite index</strong>: leftmost prefix rule</li>
+        <li><strong>Covering index</strong>: đủ columns → không hit table</li>
+        <li>Partial index: index trên subset của rows</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Shard Key selection</h4>
+      <ul>
+        <li><strong>Hash-based</strong>: phân phối đều, nhưng range query khó</li>
+        <li><strong>Range-based</strong>: dễ query range, hotspot risk</li>
+        <li><strong>Geographic</strong>: data gần user, nhưng tập trung</li>
+        <li>Tránh shard key là timestamp tuần tự → hotspot</li>
+        <li>Consistent hashing giảm rebalance cost</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- SEC 2: API Design -->
+<div class="section-bg s-bg2">
+<section id="sec-2">
+  <div class="section-header">
+    <span class="tag">03 · API Design</span>
+    <h2>REST vs gRPC vs GraphQL</h2>
+    <p>Chọn đúng protocol cho từng layer: public API, internal services, mobile client — mỗi context có ưu/nhược khác nhau.</p>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Protocol</th><th>Transport</th><th>Format</th><th>Perf</th><th>Best for</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>REST</strong></td><td>HTTP/1.1</td><td>JSON</td><td>Baseline</td><td>Public API, 3rd-party integration</td></tr>
+        <tr><td><strong>gRPC</strong></td><td>HTTP/2</td><td>Protobuf (binary)</td><td>~10× faster</td><td>Internal microservices, low latency</td></tr>
+        <tr><td><strong>GraphQL</strong></td><td>HTTP</td><td>JSON</td><td>Flexible fetch</td><td>Complex client needs, BFF layer</td></tr>
+        <tr><td><strong>WebSocket</strong></td><td>TCP persistent</td><td>Any</td><td>Real-time</td><td>Chat, live feeds, gaming</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="content-grid">
+    <div class="card">
+      <h4>Rate Limiting Algorithms</h4>
+      <ul>
+        <li><strong>Token Bucket</strong>: smooth burst, cho phép spike ngắn</li>
+        <li><strong>Leaky Bucket</strong>: strict rate, queue excess requests</li>
+        <li><strong>Fixed Window</strong>: đơn giản nhưng boundary edge case</li>
+        <li><strong>Sliding Window</strong>: chính xác nhất, tốn memory hơn</li>
+        <li>Impl: Redis + Lua script để atomic check-decrement</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>API Gateway patterns</h4>
+      <ul>
+        <li>Auth + authz centralized</li>
+        <li>Rate limiting + quotas</li>
+        <li>Request routing + service discovery</li>
+        <li>SSL termination, request logging</li>
+        <li>Response caching (short TTL)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- SEC 3: Distributed Systems -->
+<div class="section-bg s-bg3">
+<section id="sec-3">
+  <div class="section-header">
+    <span class="tag">04 · Distributed</span>
+    <h2>CAP Theorem &amp; Consistency</h2>
+    <p>Một trong những lý thuyết nền tảng nhất của distributed systems. Mọi kỹ sư SD cần hiểu rõ tradeoff này.</p>
+  </div>
+  <div class="diagram-box">
+    <div class="diagram-viewport">
+      <svg viewBox="0 0 900 200" xmlns="http://www.w3.org/2000/svg">
+        <defs><style>.capl{font-family:-apple-system,sans-serif;font-size:11px;font-weight:700}.caps{font-family:-apple-system,sans-serif;font-size:9px;fill:#64748b}.capa{animation:pulse 2.5s ease-in-out infinite}</style></defs>
+        <!-- CAP Triangle -->
+        <polygon points="450,20 220,170 680,170" fill="rgba(255,149,0,.04)" stroke="rgba(255,149,0,.3)" stroke-width="1.5"/>
+        <!-- C node -->
+        <circle cx="450" cy="28" r="32" fill="rgba(88,86,214,.15)" stroke="#5856d6" stroke-width="2" class="capa" style="animation-delay:0s"/>
+        <text x="450" y="24" text-anchor="middle" class="capl" fill="#5856d6">C</text>
+        <text x="450" y="38" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8.5" fill="#5856d6">Consistency</text>
+        <!-- A node -->
+        <circle cx="228" cy="170" r="32" fill="rgba(52,199,89,.15)" stroke="#34c759" stroke-width="2" class="capa" style="animation-delay:.8s"/>
+        <text x="228" y="166" text-anchor="middle" class="capl" fill="#28a745">A</text>
+        <text x="228" y="180" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8.5" fill="#28a745">Availability</text>
+        <!-- P node -->
+        <circle cx="672" cy="170" r="32" fill="rgba(10,132,255,.15)" stroke="#0a84ff" stroke-width="2" class="capa" style="animation-delay:1.6s"/>
+        <text x="672" y="166" text-anchor="middle" class="capl" fill="#0a84ff">P</text>
+        <text x="672" y="180" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8.5" fill="#0a84ff">Partition Tol.</text>
+        <!-- CP label -->
+        <rect x="295" y="70" width="100" height="36" rx="8" fill="rgba(255,255,255,.80)" stroke="#cbd5e1" stroke-width="1"/>
+        <text x="345" y="87" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="10" font-weight="700">CP</text>
+        <text x="345" y="100" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8.5" fill="#64748b">Zookeeper · HBase</text>
+        <!-- AP label -->
+        <rect x="510" y="70" width="110" height="36" rx="8" fill="rgba(255,255,255,.80)" stroke="#cbd5e1" stroke-width="1"/>
+        <text x="565" y="87" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="10" font-weight="700">AP</text>
+        <text x="565" y="100" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8.5" fill="#64748b">Cassandra · DynamoDB</text>
+        <!-- Note -->
+        <text x="450" y="196" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9.5" fill="#94a3b8">P luôn cần trong distributed system → chỉ chọn được C hoặc A</text>
+      </svg>
+    </div>
+  </div>
+  <div class="content-grid">
+    <div class="card">
+      <h4>Monitoring: 3 Pillars</h4>
+      <ul>
+        <li><strong>Logs</strong>: ghi events có cấu trúc (JSON)</li>
+        <li><strong>Metrics</strong>: CPU, memory, latency, error rate</li>
+        <li><strong>Traces</strong>: request tracking xuyên suốt services</li>
+        <li>Tools: Prometheus + Grafana, Jaeger, ELK</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>SLI / SLO / SLA</h4>
+      <ul>
+        <li><strong>SLI</strong>: metric đo được — p99 latency, error rate</li>
+        <li><strong>SLO</strong>: target nội bộ — "99.9% requests &lt; 200ms"</li>
+        <li><strong>SLA</strong>: cam kết với customer — có penalty vi phạm</li>
+        <li>Error budget = 1 - SLO (dùng để experiment)</li>
+      </ul>
+    </div>
+  </div>
+  <p class="section-footer-link">Chi tiết: <a href="../wiki/sources/draft/design-pattern-v2.md">design-pattern-v2.md</a> · <a href="https://youtu.be/_U4H5FSIb-c" target="_blank">Video gốc ↗</a></p>
+</section>
+</div>
+
+<footer>
+  <p>Học Từ Thiền — Phần 001: System Design · Speaker: Trần Hồng Gấm · Kênh: <a href="https://www.youtube.com/@codelung" target="_blank">@codelung</a></p>
+  <p style="margin-top:6px"><a href="design-pattern-v1.html">← Phần 000</a> · <a href="design-pattern-v3.html">Phần 002 →</a></p>
+</footer>
+
+<script>
+(function(){
+  const nav=document.getElementById('main-nav');if(!nav) return;
+  const btn=document.createElement('button');btn.className='nav-toggle';btn.textContent='☰';
+  document.body.appendChild(btn);
+  const close=document.createElement('button');close.className='nav-close';close.textContent='✕';
+  nav.appendChild(close);
+  const apply=c=>{document.body.classList.toggle('nav-collapsed',c);try{localStorage.setItem('navCollapsed',c?'1':'0')}catch(e){}};
+  btn.addEventListener('click',()=>apply(false));
+  close.addEventListener('click',()=>apply(true));
+  try{const s=localStorage.getItem('navCollapsed');if(s==='1'||(s!=='0'&&matchMedia('(max-width:640px)').matches))apply(true);}catch(e){}
+  function attachRipple(el){el.addEventListener('pointerdown',function(e){const r=el.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;const rad=Math.hypot(Math.max(x,r.width-x),Math.max(y,r.height-y));const ink=document.createElement('span');ink.className='ripple-ink';ink.style.width=ink.style.height=rad*2+'px';ink.style.left=(x-rad)+'px';ink.style.top=(y-rad)+'px';el.appendChild(ink);ink.addEventListener('animationend',()=>ink.remove());});}
+  document.querySelectorAll('nav a,.nav-toggle,.nav-close').forEach(attachRipple);
+  const links=document.querySelectorAll('nav a.nav-link');
+  const secs=document.querySelectorAll('section[id]');
+  const obs=new IntersectionObserver(entries=>{let active='';entries.forEach(e=>{if(e.isIntersecting) active=e.target.id});if(active) links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+active));},{rootMargin:'-40% 0px -55% 0px'});
+  secs.forEach(s=>obs.observe(s));
+  const flash=(el)=>{let t;return()=>{el.classList.add('scrolling');clearTimeout(t);t=setTimeout(()=>el.classList.remove('scrolling'),900);};};
+  window.addEventListener('scroll',flash(document.documentElement),{passive:true});
+  const navEl=document.querySelector('nav');if(navEl) navEl.addEventListener('scroll',flash(navEl),{passive:true});
+  document.querySelectorAll('pre.code-block').forEach(pre=>{if(pre.dataset.copy) return;pre.dataset.copy='1';const code=pre.textContent;const wrap=document.createElement('div');wrap.className='code-wrap';pre.parentNode.insertBefore(wrap,pre);wrap.appendChild(pre);const btn2=document.createElement('button');btn2.className='code-copy';btn2.textContent='Copy';wrap.appendChild(btn2);btn2.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(code);}catch{const ta=document.createElement('textarea');ta.value=code;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}btn2.textContent='✓ Copied';btn2.classList.add('copied');setTimeout(()=>{btn2.textContent='Copy';btn2.classList.remove('copied');},1500);});});
+  const NS='http://www.w3.org/2000/svg';
+  const nearest=(nodes,x,y)=>{let best=null,bd=1e9;nodes.forEach(n=>{const cx=Math.max(n.x,Math.min(x,n.x+n.w)),cy=Math.max(n.y,Math.min(y,n.y+n.h));const d=Math.hypot(x-cx,y-cy);if(d<bd){bd=d;best=n;}});return bd<=42?best:null;};
+  document.querySelectorAll('.diagram-box').forEach(box=>{
+    const svg=box.querySelector('svg');if(!svg||box.dataset.draggable) return;box.dataset.draggable='1';
+    const vp=document.createElement('div');vp.className='diagram-viewport';box.insertBefore(vp,svg);vp.appendChild(svg);
+    const hint=document.createElement('div');hint.className='diagram-hint';hint.textContent='✥ kéo từng ô · kéo nền để pan · cuộn để zoom';box.appendChild(hint);
+    const reset=document.createElement('button');reset.className='diagram-reset';reset.textContent='⟲ reset';box.appendChild(reset);
+    const allRects=[...svg.querySelectorAll('rect')];
+    const nodes=allRects.filter(r=>(+r.getAttribute('width'))>=70&&(+r.getAttribute('height'))>=30).map(r=>({rect:r,x:+r.getAttribute('x'),y:+r.getAttribute('y'),w:+r.getAttribute('width'),h:+r.getAttribute('height'),els:[r],tx:0,ty:0}));
+    const inNode=(px,py)=>nodes.find(n=>px>=n.x-1&&px<=n.x+n.w+1&&py>=n.y-1&&py<=n.y+n.h+1);
+    [...svg.querySelectorAll('text')].forEach(t=>{const x=parseFloat(t.getAttribute('x')),y=parseFloat(t.getAttribute('y'));if(isNaN(x)||isNaN(y)) return;const n=inNode(x,y);if(n) n.els.push(t);});
+    allRects.forEach(r=>{if(nodes.some(n=>n.rect===r)) return;const x=+r.getAttribute('x'),y=+r.getAttribute('y'),w=+r.getAttribute('width')||0,h=+r.getAttribute('height')||0;const n=inNode(x+w/2,y+h/2);if(n) n.els.push(r);});
+    nodes.forEach(n=>{const g=document.createElementNS(NS,'g');g.setAttribute('class','dnode');n.rect.parentNode.insertBefore(g,n.rect);n.els.forEach(el=>g.appendChild(el));n.g=g;});
+    const lks=[...svg.querySelectorAll('line')].filter(l=>l.hasAttribute('x1')&&l.hasAttribute('x2'));
+    lks.forEach(l=>{l._x1=+l.getAttribute('x1');l._y1=+l.getAttribute('y1');l._x2=+l.getAttribute('x2');l._y2=+l.getAttribute('y2');l._n1=nearest(nodes,l._x1,l._y1);l._n2=nearest(nodes,l._x2,l._y2);});
+    const reroute=()=>lks.forEach(l=>{if(l._n1){l.setAttribute('x1',l._x1+l._n1.tx);l.setAttribute('y1',l._y1+l._n1.ty);}if(l._n2){l.setAttribute('x2',l._x2+l._n2.tx);l.setAttribute('y2',l._y2+l._n2.ty);}});
+    const vbBase=(svg.getAttribute('viewBox')||'0 0 900 200').split(/\s+/).map(Number);
+    const fitViewBox=()=>{const pad=16;let minX=vbBase[0],minY=vbBase[1],maxX=vbBase[0]+vbBase[2],maxY=vbBase[1]+vbBase[3];nodes.forEach(n=>{minX=Math.min(minX,n.x+n.tx-pad);minY=Math.min(minY,n.y+n.ty-pad);maxX=Math.max(maxX,n.x+n.w+n.tx+pad);maxY=Math.max(maxY,n.y+n.h+n.ty+pad);});svg.setAttribute('viewBox',`${minX} ${minY} ${maxX-minX} ${maxY-minY}`);};
+    let ptx=0,pty=0,scale=1;
+    const applyCanvas=()=>{svg.style.transform=`translate(${ptx}px,${pty}px) scale(${scale})`;};
+    const toSvg=(cx,cy)=>{const p=svg.createSVGPoint();p.x=cx;p.y=cy;return p.matrixTransform(svg.getScreenCTM().inverse());};
+    let mode=null,node=null,start=null,t0=null,p0=null;
+    vp.addEventListener('pointerdown',e=>{vp.setPointerCapture(e.pointerId);const g=e.target.closest&&e.target.closest('g.dnode');if(g){mode='node';node=nodes.find(n=>n.g===g);start=toSvg(e.clientX,e.clientY);t0={x:node.tx,y:node.ty};}else{mode='pan';p0={x:e.clientX-ptx,y:e.clientY-pty};vp.classList.add('grabbing');}});
+    vp.addEventListener('pointermove',e=>{if(mode==='node'){const c=toSvg(e.clientX,e.clientY);node.tx=t0.x+(c.x-start.x);node.ty=t0.y+(c.y-start.y);node.g.setAttribute('transform',`translate(${node.tx},${node.ty})`);reroute();}else if(mode==='pan'){ptx=e.clientX-p0.x;pty=e.clientY-p0.y;applyCanvas();}});
+    const end=()=>{if(mode==='node') fitViewBox();mode=null;node=null;vp.classList.remove('grabbing');};
+    vp.addEventListener('pointerup',end);vp.addEventListener('pointercancel',end);
+    vp.addEventListener('wheel',e=>{e.preventDefault();const r=vp.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;const ns=Math.min(4,Math.max(0.5,scale*(e.deltaY<0?1.1:0.9)));ptx=mx-(mx-ptx)*(ns/scale);pty=my-(my-pty)*(ns/scale);scale=ns;applyCanvas();},{passive:false});
+    const doReset=()=>{ptx=0;pty=0;scale=1;svg.style.transition='transform .3s cubic-bezier(.4,0,.2,1)';applyCanvas();setTimeout(()=>{svg.style.transition='';},320);nodes.forEach(n=>{n.tx=0;n.ty=0;n.g.setAttribute('transform','translate(0,0)');});reroute();fitViewBox();};
+    reset.addEventListener('click',doReset);vp.addEventListener('dblclick',doReset);attachRipple(reset);
+  });
+})();
+</script>
+</body>
+</html>

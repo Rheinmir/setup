@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Học Từ Thiền Phần 000 — System Design · Phan Văn Ngọc Thắng</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --font-text:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue','Roboto','Segoe UI',sans-serif;
+  --font-display:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue','Roboto','Segoe UI',sans-serif;
+  --font-mono:'SF Mono',ui-monospace,'SFMono-Regular',Menlo,'Roboto Mono',Consolas,monospace;
+  --glass-1:rgba(255,255,255,.55);--glass-2:rgba(255,255,255,.70);--glass-3:rgba(255,255,255,.88);
+  --blur-1:24px;--blur-2:8px;--blur-3:4px;
+  --edge-hi:inset 0 1px 0 rgba(255,255,255,.85);
+  --border:rgba(30,90,170,.14);
+  --text-1:#0f0f12;--text-2:#4a4a55
+}
+html{background:#e9f0fb;scrollbar-width:thin;scrollbar-color:transparent transparent}
+html.scrolling{scrollbar-color:rgba(10,132,255,.32) transparent}
+body{font-family:var(--font-text);color:var(--text-1);padding-left:200px;
+  background:radial-gradient(900px 500px at 12% -10%,rgba(10,132,255,.10),transparent 60%),
+    radial-gradient(700px 420px at 95% 15%,rgba(90,162,232,.08),transparent 55%),
+    linear-gradient(180deg,#eef4fd 0%,#e6eefb 100%);
+  transition:padding-left .28s cubic-bezier(.4,0,.2,1)}
+body.nav-collapsed{padding-left:0}
+body::before{content:'';position:fixed;inset:-10%;z-index:-1;pointer-events:none;
+  background:radial-gradient(640px 440px at 10% 14%,rgba(10,132,255,.22),transparent 65%),
+    radial-gradient(380px 460px at 4% 52%,rgba(48,176,199,.18),transparent 65%),
+    radial-gradient(540px 400px at 88% 10%,rgba(88,86,214,.13),transparent 60%),
+    radial-gradient(720px 500px at 74% 76%,rgba(48,176,199,.13),transparent 65%),
+    radial-gradient(480px 380px at 16% 86%,rgba(255,149,0,.12),transparent 60%);
+  animation:orbDrift 46s ease-in-out infinite alternate}
+@keyframes orbDrift{100%{transform:translate(2.2%,1.6%) scale(1.045)}}
+@media(prefers-reduced-motion:reduce){body::before{animation:none}}
+body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:radial-gradient(rgba(30,90,170,.11) 1px,transparent 1.3px);
+  background-size:22px 22px;
+  mask-image:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.22))}
+::-webkit-scrollbar{width:11px;height:11px;background:transparent}
+::-webkit-scrollbar-track,::-webkit-scrollbar-track-piece,::-webkit-scrollbar-corner,::-webkit-scrollbar-button{background:transparent;border:0;box-shadow:none}
+::-webkit-scrollbar-thumb{background:transparent;border-radius:8px;border:3px solid transparent;background-clip:content-box;transition:background-color .25s ease}
+html.scrolling::-webkit-scrollbar-thumb,::-webkit-scrollbar-thumb:hover{background-color:rgba(10,132,255,.32)}
+::-webkit-scrollbar-thumb:active{background-color:rgba(10,132,255,.6)}
+/* NAV */
+nav{position:fixed;top:0;left:0;bottom:0;width:200px;z-index:100;
+  display:flex;flex-direction:column;align-items:stretch;gap:2px;padding:18px 12px;overflow-y:auto;
+  background:linear-gradient(165deg,rgba(255,255,255,.46) 0%,rgba(255,255,255,.22) 48%,rgba(240,248,255,.34) 100%);
+  backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
+  -webkit-backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
+  border-right:1px solid rgba(255,255,255,.55);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 1px 0 0 rgba(255,255,255,.5),inset -1px 0 0 rgba(30,90,170,.10),4px 0 24px rgba(30,90,170,.08);
+  transition:transform .28s cubic-bezier(.4,0,.2,1)}
+nav::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(220px 160px at 18% 4%,rgba(255,255,255,.55),transparent 70%),
+    linear-gradient(115deg,rgba(255,255,255,.28) 0%,transparent 28%,transparent 72%,rgba(255,255,255,.14) 100%)}
+nav>*{position:relative}
+body.nav-collapsed nav{transform:translateX(-100%)}
+.logo{margin:0 0 16px;padding:6px 10px;font-family:var(--font-display);font-size:13px;font-weight:700;line-height:1.4;
+  background:linear-gradient(135deg,#0a84ff,#64b5f7);-webkit-background-clip:text;background-clip:text;color:transparent}
+.logo span{font-size:11px;font-weight:500;opacity:.7;display:block}
+nav a{display:block;padding:8px 12px;border-radius:10px;font-size:13px;color:var(--text-2);text-decoration:none;font-weight:500;position:relative;overflow:hidden;transition:background .2s,color .2s}
+nav a:hover{background:rgba(10,132,255,.07);color:#0a84ff}
+nav a.active{color:#0a84ff;background:rgba(10,132,255,.10);font-weight:600}
+.nav-section-label{font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em;padding:12px 12px 4px}
+.nav-toggle{position:fixed;top:12px;left:12px;z-index:120;width:32px;height:32px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-size:14px;color:#4a4a55;cursor:pointer;
+  background:linear-gradient(165deg,rgba(255,255,255,.5),rgba(255,255,255,.24));
+  backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
+  -webkit-backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
+  border:1px solid transparent;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 0 0 1px rgba(30,90,170,.08),0 2px 10px rgba(30,90,170,.12);
+  transition:opacity .2s,transform .28s cubic-bezier(.4,0,.2,1);overflow:hidden}
+.nav-toggle:hover{color:#0a84ff}
+body:not(.nav-collapsed) .nav-toggle{opacity:0;pointer-events:none;transform:translateX(-6px)}
+.nav-close{position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-size:12px;color:#4a4a55;cursor:pointer;
+  background:rgba(0,0,0,.04);border:none;overflow:hidden}
+.nav-close:hover{color:#0a84ff;background:rgba(10,132,255,.10)}
+/* RIPPLE */
+.ripple-ink{position:absolute;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.70) 0%,rgba(255,255,255,.28) 38%,rgba(10,132,255,.20) 72%,transparent 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 0 14px rgba(10,132,255,.10);
+  backdrop-filter:blur(2px) saturate(1.25);-webkit-backdrop-filter:blur(2px) saturate(1.25);
+  transform:scale(0);opacity:1;animation:rippleGrow .6s cubic-bezier(.25,.46,.45,.94) forwards}
+@keyframes rippleGrow{55%{transform:scale(1);opacity:.75}100%{transform:scale(1.04);opacity:0}}
+/* HERO */
+.hero{padding:64px 40px 56px;max-width:1100px;margin:0 auto;position:relative}
+.hero-eyebrow{font-size:12px;font-weight:600;color:#0a84ff;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px}
+.hero h1{font-family:var(--font-display);font-size:clamp(32px,5vw,56px);font-weight:800;line-height:1.1;letter-spacing:-.02em;
+  background:linear-gradient(135deg,#0a84ff,#5aa2e8,#cfe3fb);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:16px}
+.hero-sub{font-size:15px;color:var(--text-2);margin-bottom:20px}
+.hero-sub a{color:#0a84ff;text-decoration:none}
+.hero-sub a:hover{text-decoration:underline}
+.hero-meta{display:flex;flex-wrap:wrap;gap:8px}
+.tag{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600}
+.speaker-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:24px;
+  background:rgba(255,255,255,.7);border:1px solid var(--border);font-size:13px;color:var(--text-2);
+  box-shadow:var(--edge-hi);margin-bottom:20px}
+.speaker-badge strong{color:var(--text-1)}
+/* SECTIONS */
+.section-bg{position:relative;overflow:visible}
+.section-bg::before{content:'';position:absolute;top:0;bottom:0;left:50%;width:100vw;transform:translateX(-50%);pointer-events:none}
+section{padding:64px 40px 72px;max-width:1100px;margin:0 auto}
+.section-header{margin-bottom:32px}
+.section-header h2{font-family:var(--font-display);font-size:28px;font-weight:700;color:#1d1d1f;margin-top:8px;letter-spacing:-.02em}
+.section-header p{color:var(--text-2);font-size:15px;line-height:1.6;margin-top:8px;max-width:680px}
+/* SECTION COLORS */
+#sec-0 .tag{background:rgba(10,132,255,.10);color:#0a84ff}
+#sec-0 .card h4{color:#0a84ff}
+#sec-0 .card li::before{color:#0a84ff}
+.s-bg0::before{background:linear-gradient(180deg,rgba(10,132,255,.05) 0%,transparent 60%)}
+#sec-1 .tag{background:rgba(48,176,199,.10);color:#30b0c7}
+#sec-1 .card h4{color:#30b0c7}
+#sec-1 .card li::before{color:#30b0c7}
+.s-bg1::before{background:linear-gradient(180deg,rgba(48,176,199,.05) 0%,transparent 60%)}
+#sec-2 .tag{background:rgba(88,86,214,.10);color:#5856d6}
+#sec-2 .card h4{color:#5856d6}
+#sec-2 .card li::before{color:#5856d6}
+.s-bg2::before{background:linear-gradient(180deg,rgba(88,86,214,.05) 0%,transparent 60%)}
+#sec-3 .tag{background:rgba(52,199,89,.12);color:#28a745}
+#sec-3 .card h4{color:#28a745}
+#sec-3 .card li::before{color:#28a745}
+.s-bg3::before{background:linear-gradient(180deg,rgba(52,199,89,.05) 0%,transparent 60%)}
+/* CARDS */
+.content-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:24px}
+@media(max-width:700px){.content-grid{grid-template-columns:1fr}}
+.card{background:var(--glass-2);backdrop-filter:blur(var(--blur-2)) saturate(1.1);
+  border:1px solid var(--border);border-radius:16px;
+  box-shadow:var(--edge-hi),0 4px 20px rgba(0,0,0,.06);padding:20px}
+.card h4{font-size:14px;font-weight:700;margin-bottom:10px}
+.card p{font-size:13px;color:var(--text-2);line-height:1.6}
+.card ul{list-style:none;display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.card li{font-size:13px;color:var(--text-2);display:flex;gap:8px;line-height:1.5}
+.card li::before{content:'›';font-weight:700;flex-shrink:0}
+/* DIAGRAM BOX */
+.diagram-box{background:var(--glass-2);backdrop-filter:blur(var(--blur-2)) saturate(1.1);
+  border:1px solid var(--border);border-radius:16px;box-shadow:var(--edge-hi),0 4px 20px rgba(0,0,0,.06);
+  padding:24px;margin:24px 0;position:relative;overflow:hidden;display:flex;flex-direction:column;
+  resize:vertical;min-height:160px;transition:box-shadow .2s ease}
+.diagram-box:hover{box-shadow:0 6px 28px rgba(0,0,0,.10)}
+.diagram-viewport{position:relative;flex:1 1 auto;width:100%;overflow:hidden;cursor:grab;touch-action:none}
+.diagram-viewport.grabbing{cursor:grabbing}
+.diagram-viewport svg{width:100%;height:auto;display:block;overflow:visible;transform-origin:0 0;will-change:transform;user-select:none;-webkit-user-select:none}
+.dnode{cursor:move}
+.dnode>rect{transition:filter .15s ease}
+.dnode:hover>rect:first-of-type{filter:drop-shadow(0 3px 8px rgba(0,0,0,.18))}
+.diagram-hint{position:absolute;top:8px;right:12px;z-index:5;font-size:10px;color:#4a4a55;
+  background:rgba(255,255,255,.75);border:1px solid rgba(0,0,0,.05);border-radius:20px;
+  padding:3px 10px;white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none}
+.diagram-box:hover .diagram-hint{opacity:.9}
+.diagram-reset{position:absolute;bottom:8px;right:10px;z-index:5;font-size:11px;
+  background:rgba(255,255,255,.85);border:1px solid rgba(0,0,0,.08);border-radius:8px;
+  padding:3px 9px;cursor:pointer;color:#4a4a55;opacity:0;transition:opacity .2s}
+.diagram-box:hover .diagram-reset{opacity:1}
+.diagram-reset:hover{background:#fff;color:#0f0f12}
+.diagram-box::after{content:'';position:absolute;right:5px;bottom:5px;width:16px;height:16px;
+  pointer-events:none;opacity:0;transition:opacity .25s ease;
+  clip-path:polygon(100% 0,100% 100%,0 100%);
+  background:repeating-linear-gradient(135deg,transparent 0 3.5px,rgba(10,132,255,.45) 3.5px 5px)}
+.diagram-box:hover::after{opacity:.85}
+.diagram-box::-webkit-resizer{display:none}
+/* TABLE */
+.table-wrap{overflow-x:auto;margin-top:24px}
+table{width:100%;border-collapse:collapse;background:var(--glass-3);backdrop-filter:blur(var(--blur-3));
+  border:1px solid var(--border);border-radius:12px;overflow:hidden;font-size:13px;box-shadow:var(--edge-hi)}
+th{padding:10px 16px;text-align:left;font-weight:600;color:var(--text-1);background:rgba(10,132,255,.06);border-bottom:1px solid var(--border)}
+td{padding:10px 16px;color:var(--text-2);border-bottom:1px solid rgba(30,90,170,.07)}
+tr:last-child td{border-bottom:none}
+/* CODE */
+.code-wrap{position:relative}
+pre.code-block{background:rgba(15,15,22,.88);color:#e2e8f0;border-radius:12px;padding:20px;
+  font-family:var(--font-mono);font-size:12px;line-height:1.7;overflow-x:auto;margin-top:16px;border:1px solid rgba(255,255,255,.08)}
+.code-copy{position:absolute;top:8px;right:8px;z-index:2;font-size:11px;font-family:inherit;font-weight:500;
+  background:rgba(255,255,255,.1);color:#cbd5e1;border:1px solid rgba(255,255,255,.15);
+  border-radius:6px;padding:3px 10px;cursor:pointer;opacity:0;transition:opacity .15s,background .15s,color .15s}
+.code-wrap:hover .code-copy{opacity:1}
+.code-copy:hover{background:rgba(255,255,255,.2);color:#fff}
+.code-copy.copied{background:rgba(16,185,129,.25);color:#6ee7b7;border-color:rgba(16,185,129,.45);opacity:1}
+/* SVG ANIMATIONS */
+@keyframes flowArrow{0%{stroke-dashoffset:20}100%{stroke-dashoffset:0}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+/* FOOTER */
+footer{padding:32px 40px;max-width:1100px;margin:0 auto;font-size:13px;color:#94a3b8;border-top:1px solid var(--border)}
+footer a{color:#0a84ff;text-decoration:none}
+footer a:hover{text-decoration:underline}
+.section-footer-link{margin-top:24px;font-size:13px;color:var(--text-2)}
+.section-footer-link a{color:#0a84ff;text-decoration:none}
+.section-footer-link a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+
+<nav id="main-nav">
+  <div class="logo">Học Từ Thiền<br><span>Phần 000 · System Design</span></div>
+  <a href="#sec-0" class="nav-link">01 · Why SD</a>
+  <a href="#sec-1" class="nav-link">02 · Core Axes</a>
+  <a href="#sec-2" class="nav-link">03 · Building Blocks</a>
+  <a href="#sec-3" class="nav-link">04 · Tradeoffs</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Code Lủng · Học Từ Thiền Series</div>
+  <h1>System Design<br>Fundamentals</h1>
+  <div class="speaker-badge"><strong>Phan Văn Ngọc Thắng</strong> · Phần 000</div>
+  <p class="hero-sub">Series về System Design của kênh Code Lủng — góc nhìn thực chiến từ kỹ sư Việt Nam. <a href="https://youtu.be/KIrbA-wEURg" target="_blank">youtu.be/KIrbA-wEURg ↗</a></p>
+  <div class="hero-meta">
+    <span class="tag" style="background:rgba(10,132,255,.10);color:#0a84ff">System Design</span>
+    <span class="tag" style="background:rgba(48,176,199,.10);color:#30b0c7">Scalability</span>
+    <span class="tag" style="background:rgba(88,86,214,.10);color:#5856d6">Architecture</span>
+    <span class="tag" style="background:rgba(255,149,0,.10);color:#f08c00">Fundamentals</span>
+  </div>
+</div>
+
+<!-- SECTION 0: Why System Design -->
+<div class="section-bg s-bg0">
+<section id="sec-0">
+  <div class="section-header">
+    <span class="tag">01 · Foundation</span>
+    <h2>Tại sao cần System Design?</h2>
+    <p>Khi product lớn lên, những câu hỏi kỹ thuật trở nên phức tạp hơn nhiều so với "code đúng". System Design là framework để trả lời chúng.</p>
+  </div>
+  <div class="diagram-box">
+    <div class="diagram-viewport">
+      <svg viewBox="0 0 900 180" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr0" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#0a84ff"/></marker>
+          <style>
+            .flow{stroke-dasharray:6 4;animation:flowArrow 1s linear infinite}
+            .nd-text{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:10px;font-weight:600;fill:#1d1d1f}
+            .nd-sub{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:8.5px;fill:#64748b}
+          </style>
+        </defs>
+        <!-- Nodes -->
+        <rect x="20" y="60" width="130" height="60" rx="10" fill="rgba(255,255,255,.8)" stroke="#cbd5e1" stroke-width="1.5"/>
+        <text x="85" y="84" text-anchor="middle" class="nd-text">Small Product</text>
+        <text x="85" y="100" text-anchor="middle" class="nd-sub">100 users · 1 server</text>
+        <text x="85" y="113" text-anchor="middle" class="nd-sub">1 dev team</text>
+
+        <rect x="200" y="60" width="130" height="60" rx="10" fill="rgba(255,255,255,.8)" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="265" y="84" text-anchor="middle" class="nd-text">Growing</text>
+        <text x="265" y="100" text-anchor="middle" class="nd-sub">10K users · latency↑</text>
+        <text x="265" y="113" text-anchor="middle" class="nd-sub">DB bottleneck</text>
+
+        <rect x="380" y="60" width="130" height="60" rx="10" fill="rgba(255,255,255,.8)" stroke="#f59e0b" stroke-width="1.5"/>
+        <text x="445" y="84" text-anchor="middle" class="nd-text">Scale Crisis</text>
+        <text x="445" y="100" text-anchor="middle" class="nd-sub">1M users · downtime</text>
+        <text x="445" y="113" text-anchor="middle" class="nd-sub">single point of failure</text>
+
+        <rect x="560" y="60" width="130" height="60" rx="10" fill="rgba(10,132,255,.12)" stroke="#0a84ff" stroke-width="1.5"/>
+        <text x="625" y="84" text-anchor="middle" class="nd-text" style="fill:#0a84ff">System Design</text>
+        <text x="625" y="100" text-anchor="middle" class="nd-sub">blueprint trước khi build</text>
+        <text x="625" y="113" text-anchor="middle" class="nd-sub">tradeoffs rõ ràng</text>
+
+        <rect x="740" y="60" width="130" height="60" rx="10" fill="rgba(52,199,89,.12)" stroke="#34c759" stroke-width="1.5"/>
+        <text x="805" y="84" text-anchor="middle" class="nd-text" style="fill:#28a745">Resilient System</text>
+        <text x="805" y="100" text-anchor="middle" class="nd-sub">scale tự tin</text>
+        <text x="805" y="113" text-anchor="middle" class="nd-sub">fail gracefully</text>
+
+        <!-- Arrows -->
+        <line x1="150" y1="90" x2="195" y2="90" stroke="#0a84ff" stroke-width="2" fill="none" marker-end="url(#arr0)" class="flow"/>
+        <line x1="330" y1="90" x2="375" y2="90" stroke="#0a84ff" stroke-width="2" fill="none" marker-end="url(#arr0)" class="flow"/>
+        <line x1="510" y1="90" x2="555" y2="90" stroke="#0a84ff" stroke-width="2" fill="none" marker-end="url(#arr0)" class="flow"/>
+        <line x1="690" y1="90" x2="735" y2="90" stroke="#0a84ff" stroke-width="2" fill="none" marker-end="url(#arr0)" class="flow"/>
+      </svg>
+    </div>
+  </div>
+  <div class="content-grid">
+    <div class="card">
+      <h4>Câu hỏi cần trả lời</h4>
+      <ul>
+        <li>Chịu được bao nhiêu user đồng thời?</li>
+        <li>Dữ liệu lưu ở đâu, truy xuất thế nào?</li>
+        <li>Khi 1 component fail thì toàn hệ thống sập không?</li>
+        <li>Scale như thế nào khi traffic tăng 10×?</li>
+        <li>Latency target là bao nhiêu (p99)?</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Framework tiếp cận (5 bước)</h4>
+      <ul>
+        <li><strong>1.</strong> Clarify requirements (functional + non-functional)</li>
+        <li><strong>2.</strong> Estimate scale (DAU, RPS, storage bytes)</li>
+        <li><strong>3.</strong> High-level design (components + data flow)</li>
+        <li><strong>4.</strong> Deep dive (DB schema, API, caching)</li>
+        <li><strong>5.</strong> Bottlenecks + tradeoffs</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- SECTION 1: Core Axes -->
+<div class="section-bg s-bg1">
+<section id="sec-1">
+  <div class="section-header">
+    <span class="tag">02 · Core Axes</span>
+    <h2>Các trục đánh giá hệ thống</h2>
+    <p>Mọi quyết định System Design đều xoay quanh 5 trục này. Cải thiện một trục thường kéo theo đánh đổi với trục khác.</p>
+  </div>
+  <div class="diagram-box">
+    <div class="diagram-viewport">
+      <svg viewBox="0 0 900 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <style>.ax-label{font-family:-apple-system,sans-serif;font-size:11px;font-weight:700}.ax-sub{font-family:-apple-system,sans-serif;font-size:9px;fill:#64748b}</style>
+        </defs>
+        <!-- 5 axis cards -->
+        <rect x="20" y="30" width="150" height="70" rx="10" fill="rgba(10,132,255,.10)" stroke="#0a84ff" stroke-width="1.5"/>
+        <text x="95" y="55" text-anchor="middle" class="ax-label" fill="#0a84ff">Scalability</text>
+        <text x="95" y="72" text-anchor="middle" class="ax-sub">Horizontal vs Vertical</text>
+        <text x="95" y="87" text-anchor="middle" class="ax-sub">Scale-out thêm node</text>
+
+        <rect x="190" y="30" width="150" height="70" rx="10" fill="rgba(48,176,199,.10)" stroke="#30b0c7" stroke-width="1.5"/>
+        <text x="265" y="55" text-anchor="middle" class="ax-label" fill="#30b0c7">Reliability</text>
+        <text x="265" y="72" text-anchor="middle" class="ax-sub">No SPOF — redundancy</text>
+        <text x="265" y="87" text-anchor="middle" class="ax-sub">Failover tự động</text>
+
+        <rect x="360" y="30" width="150" height="70" rx="10" fill="rgba(88,86,214,.10)" stroke="#5856d6" stroke-width="1.5"/>
+        <text x="435" y="55" text-anchor="middle" class="ax-label" fill="#5856d6">Availability</text>
+        <text x="435" y="72" text-anchor="middle" class="ax-sub">Uptime SLA target</text>
+        <text x="435" y="87" text-anchor="middle" class="ax-sub">99.9% = 8.7h/year down</text>
+
+        <rect x="530" y="30" width="150" height="70" rx="10" fill="rgba(52,199,89,.10)" stroke="#34c759" stroke-width="1.5"/>
+        <text x="605" y="55" text-anchor="middle" class="ax-label" fill="#28a745">Performance</text>
+        <text x="605" y="72" text-anchor="middle" class="ax-sub">Latency vs Throughput</text>
+        <text x="605" y="87" text-anchor="middle" class="ax-sub">p50 / p99 / p999</text>
+
+        <rect x="700" y="30" width="180" height="70" rx="10" fill="rgba(255,149,0,.10)" stroke="#ff9500" stroke-width="1.5"/>
+        <text x="790" y="55" text-anchor="middle" class="ax-label" fill="#f08c00">Consistency</text>
+        <text x="790" y="72" text-anchor="middle" class="ax-sub">CAP Theorem</text>
+        <text x="790" y="87" text-anchor="middle" class="ax-sub">Strong vs Eventual</text>
+
+        <!-- Connection line -->
+        <line x1="170" y1="65" x2="190" y2="65" stroke="rgba(100,116,139,.3)" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <line x1="340" y1="65" x2="360" y2="65" stroke="rgba(100,116,139,.3)" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <line x1="510" y1="65" x2="530" y2="65" stroke="rgba(100,116,139,.3)" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <line x1="680" y1="65" x2="700" y2="65" stroke="rgba(100,116,139,.3)" stroke-width="1.5" stroke-dasharray="4 3"/>
+
+        <!-- Bottom note -->
+        <text x="450" y="145" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="11" fill="#94a3b8">↑ Cải thiện một trục thường đánh đổi trục khác — nhận ra sớm, quyết định có chủ đích</text>
+      </svg>
+    </div>
+  </div>
+  <div class="content-grid">
+    <div class="card">
+      <h4>Availability 9s</h4>
+      <ul>
+        <li>99% = 3.65 ngày/năm downtime</li>
+        <li>99.9% = 8.7 giờ/năm</li>
+        <li>99.99% = 52 phút/năm</li>
+        <li>99.999% = 5.2 phút/năm</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Performance metrics quan trọng</h4>
+      <ul>
+        <li><strong>p50</strong>: median — trải nghiệm trung bình</li>
+        <li><strong>p99</strong>: 99th percentile — worst 1%</li>
+        <li><strong>p999</strong>: 99.9th — tail latency</li>
+        <li>Throughput: requests/second (RPS)</li>
+        <li>Latency budget: end-to-end time</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- SECTION 2: Building Blocks -->
+<div class="section-bg s-bg2">
+<section id="sec-2">
+  <div class="section-header">
+    <span class="tag">03 · Building Blocks</span>
+    <h2>Các thành phần cơ bản</h2>
+    <p>Hầu hết hệ thống lớn đều được lắp ráp từ cùng một bộ building blocks. Hiểu rõ từng block và khi nào dùng là nền tảng của SD interview.</p>
+  </div>
+  <div class="diagram-box">
+    <div class="diagram-viewport">
+      <svg viewBox="0 0 900 220" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#5856d6"/></marker>
+          <style>.bb-label{font-family:-apple-system,sans-serif;font-size:10px;font-weight:700}.bb-sub{font-family:-apple-system,sans-serif;font-size:8.5px;fill:#64748b}.flow2{stroke-dasharray:6 4;animation:flowArrow 1.2s linear infinite}</style>
+        </defs>
+        <!-- Client -->
+        <rect x="20" y="90" width="80" height="40" rx="8" fill="rgba(255,255,255,.85)" stroke="#cbd5e1" stroke-width="1.5"/>
+        <text x="60" y="108" text-anchor="middle" class="bb-label">Client</text>
+        <text x="60" y="122" text-anchor="middle" class="bb-sub">Web / App</text>
+        <!-- CDN -->
+        <rect x="120" y="20" width="90" height="40" rx="8" fill="rgba(88,86,214,.10)" stroke="#5856d6" stroke-width="1.5"/>
+        <text x="165" y="38" text-anchor="middle" class="bb-label" fill="#5856d6">CDN</text>
+        <text x="165" y="52" text-anchor="middle" class="bb-sub">static assets</text>
+        <!-- LB -->
+        <rect x="230" y="90" width="90" height="40" rx="8" fill="rgba(88,86,214,.10)" stroke="#5856d6" stroke-width="1.5"/>
+        <text x="275" y="108" text-anchor="middle" class="bb-label" fill="#5856d6">Load Balancer</text>
+        <text x="275" y="122" text-anchor="middle" class="bb-sub">round-robin / L7</text>
+        <!-- App Servers -->
+        <rect x="360" y="60" width="90" height="35" rx="8" fill="rgba(255,255,255,.85)" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="405" y="78" text-anchor="middle" class="bb-label">App Server 1</text>
+        <text x="405" y="91" text-anchor="middle" class="bb-sub">stateless</text>
+        <rect x="360" y="110" width="90" height="35" rx="8" fill="rgba(255,255,255,.85)" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="405" y="128" text-anchor="middle" class="bb-label">App Server 2</text>
+        <text x="405" y="141" text-anchor="middle" class="bb-sub">stateless</text>
+        <!-- Cache -->
+        <rect x="500" y="20" width="90" height="40" rx="8" fill="rgba(52,199,89,.10)" stroke="#34c759" stroke-width="1.5"/>
+        <text x="545" y="38" text-anchor="middle" class="bb-label" fill="#28a745">Cache</text>
+        <text x="545" y="52" text-anchor="middle" class="bb-sub">Redis · in-memory</text>
+        <!-- DB -->
+        <rect x="500" y="90" width="90" height="40" rx="8" fill="rgba(10,132,255,.10)" stroke="#0a84ff" stroke-width="1.5"/>
+        <text x="545" y="108" text-anchor="middle" class="bb-label" fill="#0a84ff">Database</text>
+        <text x="545" y="122" text-anchor="middle" class="bb-sub">primary + replicas</text>
+        <!-- Queue -->
+        <rect x="500" y="155" width="90" height="40" rx="8" fill="rgba(255,149,0,.10)" stroke="#ff9500" stroke-width="1.5"/>
+        <text x="545" y="173" text-anchor="middle" class="bb-label" fill="#f08c00">MQ</text>
+        <text x="545" y="187" text-anchor="middle" class="bb-sub">Kafka / RabbitMQ</text>
+        <!-- Arrows -->
+        <line x1="100" y1="110" x2="228" y2="110" stroke="#5856d6" stroke-width="1.5" fill="none" marker-end="url(#arr2)" class="flow2"/>
+        <line x1="120" y1="40" x2="100" y2="110" stroke="#5856d6" stroke-width="1" stroke-dasharray="4 3" fill="none"/>
+        <line x1="320" y1="100" x2="358" y2="80" stroke="#5856d6" stroke-width="1.5" fill="none" marker-end="url(#arr2)"/>
+        <line x1="320" y1="116" x2="358" y2="128" stroke="#5856d6" stroke-width="1.5" fill="none" marker-end="url(#arr2)"/>
+        <line x1="450" y1="78" x2="498" y2="38" stroke="#64748b" stroke-width="1" stroke-dasharray="4 3" fill="none"/>
+        <line x1="450" y1="110" x2="498" y2="110" stroke="#64748b" stroke-width="1" stroke-dasharray="4 3" fill="none"/>
+        <line x1="450" y1="127" x2="498" y2="170" stroke="#64748b" stroke-width="1" stroke-dasharray="4 3" fill="none"/>
+      </svg>
+    </div>
+  </div>
+  <div class="content-grid">
+    <div class="card">
+      <h4>Load Balancer</h4>
+      <ul>
+        <li>Phân phối traffic đến nhiều server</li>
+        <li>L4 (TCP) — routing theo IP/port</li>
+        <li>L7 (HTTP) — routing theo URL/header</li>
+        <li>Algo: round-robin, least conn, IP-hash</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Cache (Redis/Memcached)</h4>
+      <ul>
+        <li>Giảm DB load, tăng read throughput</li>
+        <li>Cache-aside: check cache → miss → DB → write</li>
+        <li>Write-through: write cache + DB đồng thời</li>
+        <li>TTL + eviction: LRU, LFU, FIFO</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Database — SQL vs NoSQL</h4>
+      <ul>
+        <li>SQL: ACID, joins, strong consistency</li>
+        <li>NoSQL: horizontal scale, flexible schema</li>
+        <li>Read replicas: phân tán read traffic</li>
+        <li>Sharding: partition dữ liệu ngang</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Message Queue</h4>
+      <ul>
+        <li>Decouple producer và consumer</li>
+        <li>Async processing, retry logic</li>
+        <li>Dead letter queue cho failed messages</li>
+        <li>Fan-out: 1 event → nhiều consumer</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- SECTION 3: Tradeoffs -->
+<div class="section-bg s-bg3">
+<section id="sec-3">
+  <div class="section-header">
+    <span class="tag">04 · Tradeoffs</span>
+    <h2>Tradeoffs thường gặp</h2>
+    <p>Không có kiến trúc "đúng tuyệt đối" — chỉ có tradeoff phù hợp với context. Mục tiêu là nhận ra và quyết định có chủ đích.</p>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Tình huống</th><th>Option A</th><th>Option B</th><th>Chọn A khi</th><th>Chọn B khi</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Consistency vs Availability</td><td>Strong consistency</td><td>High availability</td><td>Banking, payment</td><td>Social feed, timeline</td></tr>
+        <tr><td>SQL vs NoSQL</td><td>Relational DB</td><td>Document / Key-value</td><td>Structured + joins</td><td>Scale + flexible schema</td></tr>
+        <tr><td>Sync vs Async</td><td>Synchronous API</td><td>Message queue</td><td>Real-time response cần</td><td>Decouple + scale</td></tr>
+        <tr><td>Monolith vs Microservices</td><td>Single deployable</td><td>Many services</td><td>Early stage, small team</td><td>Scale teams, diff deploy freq</td></tr>
+        <tr><td>Push vs Pull</td><td>Server push (WebSocket)</td><td>Client poll</td><td>Real-time notifications</td><td>Batch / low-freq updates</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="content-grid">
+    <div class="card">
+      <h4>Estimation tips</h4>
+      <ul>
+        <li>DAU × actions/day ÷ 86400 = QPS</li>
+        <li>Peak = avg QPS × 2–3×</li>
+        <li>Storage: 1 user record ≈ 1KB → 1M users = 1GB</li>
+        <li>Cache hit rate target: ≥ 80–90%</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Checklist interview</h4>
+      <ul>
+        <li>Clarify requirements (5 phút)</li>
+        <li>Estimate scale: DAU, QPS, storage</li>
+        <li>High-level: LB → App → DB + Cache</li>
+        <li>API design + DB schema</li>
+        <li>Deep dive 1 bottleneck + tradeoffs</li>
+      </ul>
+    </div>
+  </div>
+  <p class="section-footer-link">Chi tiết: <a href="../wiki/sources/draft/design-pattern-v1.md">design-pattern-v1.md</a> · <a href="https://youtu.be/KIrbA-wEURg" target="_blank">Video gốc ↗</a></p>
+</section>
+</div>
+
+<footer>
+  <p>Học Từ Thiền — Phần 000: System Design · Speaker: Phan Văn Ngọc Thắng · Kênh: <a href="https://www.youtube.com/@codelung" target="_blank">@codelung</a></p>
+  <p style="margin-top:6px">Series: <a href="design-pattern-v2.html">Phần 001 →</a> · <a href="design-pattern-v3.html">Phần 002 →</a></p>
+</footer>
+
+<script>
+(function(){
+  // Nav collapse
+  const nav = document.getElementById('main-nav'); if(!nav) return;
+  const btn = document.createElement('button'); btn.className='nav-toggle'; btn.textContent='☰';
+  document.body.appendChild(btn);
+  const close = document.createElement('button'); close.className='nav-close'; close.textContent='✕';
+  nav.appendChild(close);
+  const apply = c => { document.body.classList.toggle('nav-collapsed',c);
+    try{localStorage.setItem('navCollapsed',c?'1':'0')}catch(e){} };
+  btn.addEventListener('click',()=>apply(false));
+  close.addEventListener('click',()=>apply(true));
+  try{const s=localStorage.getItem('navCollapsed');
+    if(s==='1'||(s!=='0'&&matchMedia('(max-width:640px)').matches)) apply(true);
+  }catch(e){}
+
+  // Ripple
+  function attachRipple(el){
+    el.addEventListener('pointerdown',function(e){
+      const r=el.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
+      const rad=Math.hypot(Math.max(x,r.width-x),Math.max(y,r.height-y));
+      const ink=document.createElement('span');ink.className='ripple-ink';
+      ink.style.width=ink.style.height=rad*2+'px';
+      ink.style.left=(x-rad)+'px';ink.style.top=(y-rad)+'px';
+      el.appendChild(ink);
+      ink.addEventListener('animationend',()=>ink.remove());
+    });
+  }
+  document.querySelectorAll('nav a,.nav-toggle,.nav-close').forEach(attachRipple);
+
+  // Scroll spy
+  const links=document.querySelectorAll('nav a.nav-link');
+  const sections=document.querySelectorAll('section[id]');
+  const obs=new IntersectionObserver(entries=>{
+    let active='';
+    entries.forEach(e=>{if(e.isIntersecting) active=e.target.id});
+    if(active) links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+active));
+  },{rootMargin:'-40% 0px -55% 0px'});
+  sections.forEach(s=>obs.observe(s));
+
+  // Scrollbar flash
+  const flash=(el)=>{let t;return()=>{el.classList.add('scrolling');clearTimeout(t);t=setTimeout(()=>el.classList.remove('scrolling'),900);}};
+  window.addEventListener('scroll',flash(document.documentElement),{passive:true});
+  const navEl=document.querySelector('nav');
+  if(navEl) navEl.addEventListener('scroll',flash(navEl),{passive:true});
+
+  // Code copy
+  document.querySelectorAll('pre.code-block').forEach(pre=>{
+    if(pre.dataset.copy) return; pre.dataset.copy='1';
+    const code=pre.textContent;
+    const wrap=document.createElement('div');wrap.className='code-wrap';
+    pre.parentNode.insertBefore(wrap,pre);wrap.appendChild(pre);
+    const btn2=document.createElement('button');btn2.className='code-copy';btn2.textContent='Copy';
+    wrap.appendChild(btn2);
+    btn2.addEventListener('click',async()=>{
+      try{await navigator.clipboard.writeText(code);}
+      catch{const ta=document.createElement('textarea');ta.value=code;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}
+      btn2.textContent='✓ Copied';btn2.classList.add('copied');
+      setTimeout(()=>{btn2.textContent='Copy';btn2.classList.remove('copied');},1500);
+    });
+  });
+
+  // Draggable diagrams
+  const NS='http://www.w3.org/2000/svg';
+  const nearest=(nodes,x,y)=>{let best=null,bd=1e9;nodes.forEach(n=>{const cx=Math.max(n.x,Math.min(x,n.x+n.w)),cy=Math.max(n.y,Math.min(y,n.y+n.h));const d=Math.hypot(x-cx,y-cy);if(d<bd){bd=d;best=n;}});return bd<=42?best:null;};
+  document.querySelectorAll('.diagram-box').forEach(box=>{
+    const svg=box.querySelector('svg');if(!svg||box.dataset.draggable) return;
+    box.dataset.draggable='1';
+    const vp=document.createElement('div');vp.className='diagram-viewport';
+    box.insertBefore(vp,svg);vp.appendChild(svg);
+    const hint=document.createElement('div');hint.className='diagram-hint';
+    hint.textContent='✥ kéo từng ô · kéo nền để pan · cuộn để zoom';
+    box.appendChild(hint);
+    const reset=document.createElement('button');reset.className='diagram-reset';reset.textContent='⟲ reset';
+    box.appendChild(reset);
+    const allRects=[...svg.querySelectorAll('rect')];
+    const nodes=allRects.filter(r=>(+r.getAttribute('width'))>=70&&(+r.getAttribute('height'))>=30)
+      .map(r=>({rect:r,x:+r.getAttribute('x'),y:+r.getAttribute('y'),w:+r.getAttribute('width'),h:+r.getAttribute('height'),els:[r],tx:0,ty:0}));
+    const inNode=(px,py)=>nodes.find(n=>px>=n.x-1&&px<=n.x+n.w+1&&py>=n.y-1&&py<=n.y+n.h+1);
+    [...svg.querySelectorAll('text')].forEach(t=>{const x=parseFloat(t.getAttribute('x')),y=parseFloat(t.getAttribute('y'));if(isNaN(x)||isNaN(y)) return;const n=inNode(x,y);if(n) n.els.push(t);});
+    allRects.forEach(r=>{if(nodes.some(n=>n.rect===r)) return;const x=+r.getAttribute('x'),y=+r.getAttribute('y'),w=+r.getAttribute('width')||0,h=+r.getAttribute('height')||0;const n=inNode(x+w/2,y+h/2);if(n) n.els.push(r);});
+    nodes.forEach(n=>{const g=document.createElementNS(NS,'g');g.setAttribute('class','dnode');n.rect.parentNode.insertBefore(g,n.rect);n.els.forEach(el=>g.appendChild(el));n.g=g;});
+    const links=[...svg.querySelectorAll('line')].filter(l=>l.hasAttribute('x1')&&l.hasAttribute('x2'));
+    links.forEach(l=>{l._x1=+l.getAttribute('x1');l._y1=+l.getAttribute('y1');l._x2=+l.getAttribute('x2');l._y2=+l.getAttribute('y2');l._n1=nearest(nodes,l._x1,l._y1);l._n2=nearest(nodes,l._x2,l._y2);});
+    const reroute=()=>links.forEach(l=>{if(l._n1){l.setAttribute('x1',l._x1+l._n1.tx);l.setAttribute('y1',l._y1+l._n1.ty);}if(l._n2){l.setAttribute('x2',l._x2+l._n2.tx);l.setAttribute('y2',l._y2+l._n2.ty);}});
+    const vbBase=(svg.getAttribute('viewBox')||'0 0 900 200').split(/\s+/).map(Number);
+    const fitViewBox=()=>{const pad=16;let minX=vbBase[0],minY=vbBase[1],maxX=vbBase[0]+vbBase[2],maxY=vbBase[1]+vbBase[3];nodes.forEach(n=>{minX=Math.min(minX,n.x+n.tx-pad);minY=Math.min(minY,n.y+n.ty-pad);maxX=Math.max(maxX,n.x+n.w+n.tx+pad);maxY=Math.max(maxY,n.y+n.h+n.ty+pad);});svg.setAttribute('viewBox',`${minX} ${minY} ${maxX-minX} ${maxY-minY}`);};
+    let ptx=0,pty=0,scale=1;
+    const applyCanvas=()=>{svg.style.transform=`translate(${ptx}px,${pty}px) scale(${scale})`;};
+    const toSvg=(cx,cy)=>{const p=svg.createSVGPoint();p.x=cx;p.y=cy;return p.matrixTransform(svg.getScreenCTM().inverse());};
+    let mode=null,node=null,start=null,t0=null,p0=null;
+    vp.addEventListener('pointerdown',e=>{vp.setPointerCapture(e.pointerId);const g=e.target.closest&&e.target.closest('g.dnode');if(g){mode='node';node=nodes.find(n=>n.g===g);start=toSvg(e.clientX,e.clientY);t0={x:node.tx,y:node.ty};}else{mode='pan';p0={x:e.clientX-ptx,y:e.clientY-pty};vp.classList.add('grabbing');}});
+    vp.addEventListener('pointermove',e=>{if(mode==='node'){const c=toSvg(e.clientX,e.clientY);node.tx=t0.x+(c.x-start.x);node.ty=t0.y+(c.y-start.y);node.g.setAttribute('transform',`translate(${node.tx},${node.ty})`);reroute();}else if(mode==='pan'){ptx=e.clientX-p0.x;pty=e.clientY-p0.y;applyCanvas();}});
+    const end=()=>{if(mode==='node') fitViewBox();mode=null;node=null;vp.classList.remove('grabbing');};
+    vp.addEventListener('pointerup',end);vp.addEventListener('pointercancel',end);
+    vp.addEventListener('wheel',e=>{e.preventDefault();const r=vp.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;const ns=Math.min(4,Math.max(0.5,scale*(e.deltaY<0?1.1:0.9)));ptx=mx-(mx-ptx)*(ns/scale);pty=my-(my-pty)*(ns/scale);scale=ns;applyCanvas();},{passive:false});
+    const doReset=()=>{ptx=0;pty=0;scale=1;svg.style.transition='transform .3s cubic-bezier(.4,0,.2,1)';applyCanvas();setTimeout(()=>{svg.style.transition='';},320);nodes.forEach(n=>{n.tx=0;n.ty=0;n.g.setAttribute('transform','translate(0,0)');});reroute();fitViewBox();};
+    reset.addEventListener('click',doReset);vp.addEventListener('dblclick',doReset);
+    attachRipple(reset);
+  });
+})();
+</script>
+</body>
+</html>
