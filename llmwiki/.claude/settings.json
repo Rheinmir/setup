@@ -12,7 +12,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/user_prompt_submit.py\""
+            "command": "if [ -f \"$CLAUDE_PROJECT_DIR/.claude/hooks/user_prompt_submit.py\" ]; then python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/user_prompt_submit.py\"; fi"
           }
         ]
       }
@@ -23,7 +23,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/pre_tool_use.py\""
+            "command": "if [ -f \"$CLAUDE_PROJECT_DIR/.claude/hooks/pre_tool_use.py\" ]; then python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/pre_tool_use.py\"; fi"
           }
         ]
       },
@@ -32,7 +32,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/orca_guard.py\""
+            "command": "if [ -f \"$CLAUDE_PROJECT_DIR/.claude/hooks/orca_guard.py\" ]; then python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/orca_guard.py\"; fi"
           }
         ]
       }
@@ -43,7 +43,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/post_tool_use.py\""
+            "command": "if [ -f \"$CLAUDE_PROJECT_DIR/.claude/hooks/post_tool_use.py\" ]; then python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/post_tool_use.py\"; fi"
           }
         ]
       }
@@ -53,7 +53,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/stop.py\""
+            "command": "if [ -f \"$CLAUDE_PROJECT_DIR/.claude/hooks/stop.py\" ]; then python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/stop.py\"; fi"
           }
         ]
       }
@@ -63,7 +63,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/session_end.py\""
+            "command": "if [ -f \"$CLAUDE_PROJECT_DIR/.claude/hooks/session_end.py\" ]; then python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/session_end.py\"; fi"
           }
         ]
       }
@@ -73,7 +73,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/session_start.py\""
+            "command": "if [ -f \"$CLAUDE_PROJECT_DIR/.claude/hooks/session_start.py\" ]; then python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/session_start.py\"; fi"
           }
         ]
       }

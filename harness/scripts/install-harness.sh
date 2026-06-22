@@ -73,13 +73,18 @@ if [ "${1:-}" = "--global" ]; then
   SETTINGS="$HOME/.claude/settings.json"
   [ -f "$SETTINGS" ] && cp "$SETTINGS" "$SETTINGS.bak.$(date +%s)" || echo '{}' > "$SETTINGS"
   python3 - << 'PYEOF'
-import json, os
+import json, os, re
 path = os.path.expanduser("~/.claude/settings.json")
 cur = json.load(open(path))
 HOOKS_DIR = '$HOME/.claude/harness/hooks'
+def script_of(command):
+    m = re.search(r'([A-Za-z0-9_./-]+\.py)', command or "")
+    return os.path.basename(m.group(1)) if m else None
 def cmd(script):
-    # if-guard (KHÔNG dùng `&& ... || true` — nó nuốt exit 2, mất khả năng chặn)
-    return f'if [ -d "${{CLAUDE_PROJECT_DIR:-.}}/llmwiki" ]; then python3 "{HOOKS_DIR}/{script}"; fi'
+    # if-guard (KHÔNG dùng `&& ... || true` — nó nuốt exit 2, mất khả năng chặn).
+    # `-f` fail-open: hook THIẾU file → bỏ qua, KHÔNG brick tool (sự cố cozyroom).
+    p = f'{HOOKS_DIR}/{script}'
+    return f'if [ -d "${{CLAUDE_PROJECT_DIR:-.}}/llmwiki" ] && [ -f "{p}" ]; then python3 "{p}"; fi'
 tpl = {
     "PreToolUse":  [{"matcher": "Write|Edit|MultiEdit|NotebookEdit|Bash", "script": "pre_tool_use.py"},
                     {"matcher": "Bash", "script": "orca_guard.py"}],
@@ -94,16 +99,18 @@ for d in ["Write(./llmwiki/raw/**)", "Edit(./llmwiki/raw/**)", "MultiEdit(./llmw
     if d not in cur["permissions"]["deny"]:
         cur["permissions"]["deny"].append(d)
 cur.setdefault("hooks", {})
+# idempotent re-merge: dedup theo BASENAME script → chạy lại NÂNG CẤP lệnh trần cũ thành có guard.
 for event, spec in tpl.items():
     defs = cur["hooks"].setdefault(event, [])
-    for s in (spec if isinstance(spec, list) else [spec]):
-        existing = {h.get("command") for d in defs for h in (d.get("hooks") or [])}
-        c = cmd(s["script"])
-        if c not in existing:
-            entry = {"hooks": [{"type": "command", "command": c, "timeout": 30}]}
-            if s["matcher"]:
-                entry["matcher"] = s["matcher"]
-            defs.append(entry)
+    specs = spec if isinstance(spec, list) else [spec]
+    tpl_scripts = {s["script"] for s in specs}
+    defs[:] = [d for d in defs
+               if not any(script_of(hh.get("command")) in tpl_scripts for hh in (d.get("hooks") or []))]
+    for s in specs:
+        entry = {"hooks": [{"type": "command", "command": cmd(s["script"]), "timeout": 30}]}
+        if s["matcher"]:
+            entry["matcher"] = s["matcher"]
+        defs.append(entry)
 json.dump(cur, open(path, "w"), indent=2, ensure_ascii=False)
 print("[harness] GLOBAL: settings.json merged (backup .bak.*)")
 PYEOF
@@ -191,7 +198,9 @@ prefix = "llmwiki/"
 hooks_dir = '$CLAUDE_PROJECT_DIR/llmwiki/.claude/hooks'
 deny = [f"Write(./{prefix}raw/**)", f"Edit(./{prefix}raw/**)", f"MultiEdit(./{prefix}raw/**)"]
 def h(script, matcher=None):
-    d = {"hooks": [{"type": "command", "command": f'python3 "{hooks_dir}/{script}"'}]}
+    # `-f` fail-open: hook THIẾU file → bỏ qua, KHÔNG brick tool (sự cố cozyroom).
+    p = f'{hooks_dir}/{script}'
+    d = {"hooks": [{"type": "command", "command": f'if [ -f "{p}" ]; then python3 "{p}"; fi'}]}
     if matcher: d["matcher"] = matcher
     return d
 tpl = {"permissions": {"deny": deny}, "hooks": {
@@ -211,17 +220,27 @@ for d in tpl["permissions"]["deny"]:
     if d not in cur["permissions"]["deny"]:
         cur["permissions"]["deny"].append(d)
 cur.setdefault("hooks", {})
+# idempotent re-merge: dedup theo BASENAME script (vd orca_guard.py), không theo chuỗi lệnh thô,
+# để chạy lại NÂNG CẤP lệnh trần cũ thành lệnh có guard thay vì sinh hook trùng.
+def script_of(command):
+    m = re.search(r'([A-Za-z0-9_./-]+\.py)', command or "")
+    return os.path.basename(m.group(1)) if m else None
 for event, defs in tpl["hooks"].items():
     cur_defs = cur["hooks"].setdefault(event, [])
-    existing_cmds = {h.get("command") for d in cur_defs for h in (d.get("hooks") or [])}
-    for d in defs:
-        cmd = d["hooks"][0]["command"]
-        if cmd not in existing_cmds:
-            cur_defs.append(d)
+    tpl_scripts = {script_of(d["hooks"][0]["command"]) for d in defs}
+    # bỏ entry cũ trỏ cùng script (lệnh trần) — sẽ thay bằng bản guard mới
+    cur_defs[:] = [d for d in cur_defs
+                   if not any(script_of(hh.get("command")) in tpl_scripts for hh in (d.get("hooks") or []))]
+    cur_defs.extend(defs)
 json.dump(cur, open(path, "w"), indent=2, ensure_ascii=False)
 PY
 grep -q "audit/" "$ROOT/.claude/.gitignore" 2>/dev/null || printf 'audit/\nsettings.json.bak.*\n' >> "$ROOT/.claude/.gitignore"
 log "settings.json ở ROOT: OK (session mở tại root sẽ load hooks)"
+
+# Presence-check: hook đã đăng ký nhưng THIẾU file → WARN (không fatal; lệnh đã fail-open guard).
+for hook_py in pre_tool_use.py orca_guard.py post_tool_use.py stop.py session_end.py session_start.py user_prompt_submit.py; do
+  [ -f "$ROOT/llmwiki/.claude/hooks/$hook_py" ] || warn "hook '$hook_py' đã đăng ký trong settings nhưng THIẾU file (fail-open: bỏ qua) — chạy '/sync-template --full' để tải về."
+done
 
 # ---------- 5. L2 pre-commit ----------
 if [ ! -f "$ROOT/.pre-commit-config.yaml" ]; then

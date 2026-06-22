@@ -45,3 +45,11 @@
 - T1-T3 sync-template.py: cờ `--full` gộp OKF backfill (import okf-check in-process) + fingerprint-sau-OKF + self-verify 3 vị trí + append log vào 1 process. Không cờ = hành vi cũ.
 - T4: viết lại FAST PATH skill về 1 phát `--full`; bench harness/metrics/sync-template-bench.json — steady 0.27s, pull+install+verify 0.76s (cả hai <30s & <5s); phân loại + exit code giữ nguyên, CONFLICT vẫn exit 3.
 - T3 dự kiến opencode → claude làm inline (coupled cùng file T1/T2, opencode dispatch bất ổn).
+
+## 2026-06-23 — orca-workflow: hook fail-open + kênh giao hook (fix client cozyroom)
+- Proposal 230626-orca-guard-failopen (gate gate_357120266bc7 duyệt) → impl T1-T3.
+- Sự cố: client cozyroom mọi Bash bị chặn vì hook orca_guard.py thiếu file + lệnh hook trần không fail-open.
+- T1: guard `if [ -f "<p>" ]; then python3 "<p>"; fi` ở install-harness.sh (GLOBAL cmd + ROOT h) + llmwiki/.claude/settings.json (7 command); re-merge dedup theo basename → nâng cấp lệnh trần cũ, không trùng, giữ user hook.
+- T2: thêm 8 llmwiki/.claude/hooks/*.py + settings.json vào manifest (57 pattern); /sync-template --full giao được orca_guard.py.
+- T3: installer WARN khi hook thiếu file (không fatal) + golden test harness/tests/orca-guard-failopen-test.sh 6/6 PASS; 3 python block embed compile OK.
+- Gỡ ngay client: `git show origin/orca:llmwiki/.claude/hooks/orca_guard.py > llmwiki/.claude/hooks/orca_guard.py`.
