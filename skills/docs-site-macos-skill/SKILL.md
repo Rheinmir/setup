@@ -39,15 +39,13 @@ body{
   background:
     radial-gradient(900px 500px at 12% -10%, rgba(10,132,255,.10), transparent 60%),
     radial-gradient(700px 420px at 95% 15%, rgba(90,162,232,.08), transparent 55%),
-    linear-gradient(180deg, #eef4fd 0%, #e6eefb 100%);  /* hơi xanh — tránh #f7fbff gần trắng (lộ vệt) */
+    linear-gradient(180deg, #f7fbff 0%, #eaf2fd 100%);
 }
 ```
 
 Keep it this quiet — blue-family tints only, no loud glow layers ("light pollution"). The per-section `.s-bgN::before` overlays add the rest of the local variation.
 
 **Base refraction plane (BẮT BUỘC — gương phải thấy gì bên dưới):** gradient phẳng không đủ cho blur "nghiền" — thêm 2 lớp fixed `z-index:-1` dưới mọi content: (1) ORBS — 5-6 radial blobs lớn (blue chủ đạo + 1-2 tint Apple secondary, alpha .06-.22) trôi rất chậm (~46s ease alternate, translate ≤2.5% + scale ≤1.05); (2) DOT-GRID mảnh 1px/22px alpha ~.11 có mask fade dọc — chi tiết tần số cao để backdrop-filter biến thành texture kính thật. **Đặt ít nhất 1-2 orb dọc mép TRÁI viewport (sau lưng sidebar)** — sidebar là pane kính lớn nhất trang, không có màu sau lưng thì blur cỡ nào cũng ra tấm trắng. Kèm `@media (prefers-reduced-motion:reduce){animation:none}`:
-
-**Rải orb phủ liên tục cả trục dọc** — orb layer `position:fixed` nên gap trong nó dính cố định giữa màn; nếu orbs chỉ tụ TRÊN (~10–15%) và DƯỚI (~75–90%), dải giữa (~40–65%) lộ base gradient nhạt. Đặt ít nhất 1 orb dải giữa (vd `at 44% 55%`, `at 80% 48%`); base gradient nên hơi xanh (`#eef4fd→#e6eefb`), tránh `#f7fbff` gần trắng.
 
 ```css
 body::before{content:'';position:fixed;inset:-10%;z-index:-1;pointer-events:none;
@@ -281,10 +279,10 @@ Thay scrollbar mặc định của trình duyệt bằng overlay **ẩn HOÀN TO
 
 ⚠️ **Bài học 13/06/2026 (user: "ẩn đi hoàn toàn luôn kể cả thanh nền"):** chỉ set `track{background:transparent}` là CHƯA đủ — `track-piece`, `corner`, `button` vẫn có thể vẽ nền/viền mặc định thành một dải xám mờ. Phải ép TẤT CẢ phần không phải thumb về `background:transparent;border:0;box-shadow:none`. Default thumb cũng alpha 0 (vô hình); chỉ fade qua `background-color` (transition mượt như opacity) khi `.scrolling` / `:hover`. KHÔNG `opacity` trực tiếp lên pseudo scrollbar (webkit không hỗ trợ ổn định) — dùng alpha của `background-color`.
 
-⚠️ **Khi scrollbar trong suốt → dải gutter lộ CANVAS, phải set nền cho `html` (bài học 13/06/2026 — user: "vệt trắng đó là của thanh scroll bar mà"):** gutter `width:11px` vẫn chiếm chỗ; track + thumb transparent nên nó lộ canvas phía sau. Nền gradient thường đặt trên `body` (đã trừ scrollbar) → KHÔNG phủ dải gutter → canvas `html` mặc định **trắng** → thành **vệt trắng dọc mép phải full-height**. Fix: cho `html` một nền tông xanh khớp field (`html{background:#e9f0fb}`) để gutter không bao giờ ra trắng. (Đừng dựa vào background-propagation body→canvas; nhiều webview/Chromium embed không áp dụng.)
+⚠️ **Khi scrollbar trong suốt → dải gutter lộ CANVAS, phải set nền cho `html`:** gutter `width:11px` vẫn chiếm chỗ; track + thumb transparent nên nó lộ canvas phía sau. Nền gradient thường đặt trên `body` (đã trừ scrollbar) → KHÔNG phủ dải gutter → canvas `html` mặc định **trắng** → thành **vệt trắng dọc mép phải full-height**. Fix: cho `html` một nền tông xanh khớp field (`html{background:#e9f0fb}`).
 
 ```css
-/* Chromium / Safari — overlay ẩn hoàn toàn; CHỈ thumb (pill) fade khi cuộn/hover */
+/* Chromium / Safari */
 ::-webkit-scrollbar{width:11px;height:11px;background:transparent}
 ::-webkit-scrollbar-track,
 ::-webkit-scrollbar-track-piece,
@@ -297,8 +295,8 @@ html.scrolling::-webkit-scrollbar-thumb,
 nav.scrolling::-webkit-scrollbar-thumb,
 ::-webkit-scrollbar-thumb:hover{background-color:rgba(10,132,255,.32)}
 ::-webkit-scrollbar-thumb:active{background-color:rgba(10,132,255,.6)}
-/* Firefox: không ẩn overlay được (reserve width) → trong suốt mặc định, tint khi cuộn */
-html{scrollbar-width:thin;scrollbar-color:transparent transparent}
+/* set nền html để gutter trong suốt không lộ canvas trắng */
+html{background:#e9f0fb;scrollbar-width:thin;scrollbar-color:transparent transparent}
 html.scrolling{scrollbar-color:rgba(10,132,255,.32) transparent}
 ```
 
@@ -314,7 +312,7 @@ html.scrolling{scrollbar-color:rgba(10,132,255,.32) transparent}
 })();
 ```
 
-Lưu ý: tint xanh `#0a84ff` để khớp pattern; thumb đậm dần theo hover→active. `::-webkit-scrollbar-thumb:hover` vẫn fire dù thumb đang alpha 0 (pill vẫn chiếm chỗ trong gutter) → rê chuột vào dải scrollbar là pill hiện. Firefox không ẩn hẳn được (reserve width), nên fallback là thanh `thin` đổi màu — chấp nhận được.
+Lưu ý: tint xanh `#0a84ff` để khớp pattern; thumb đậm dần theo hover→active. Firefox không ẩn hẳn được (reserve width), nên fallback là thanh `thin` đổi màu — chấp nhận được.
 
 ## Page Architecture
 
@@ -770,6 +768,54 @@ Keep the chrome (traffic-light header), Inter font, and monochrome slate palette
 - Number of sections is variable — cycle through the 6-blue palette with modulo (`i % 6`)
 - ALWAYS start an auto-host server after writing the HTML file (see Auto-Host section above)
 
+
+---
+
+## Output Report
+
+After all main skill tasks complete, write a propose draft to the wiki.
+
+### Steps
+
+**1. Build the filename:**
+- Format: `DDMMYY-<ten>.md`
+- `DDMMYY` = today (e.g., `020626` for 2 June 2026)
+- `<ten>` = 2–4 kebab-case words summarising what was done (e.g., `landing-page-coteccons`, `brand-kit-fintech`, `ingest-auth-spec`)
+
+**2. Write** `llmwiki/wiki/sources/draft/DDMMYY-<ten>.md`:
+
+```
+# DDMMYY-<ten>
+**Type:** draft
+**Status:** proposed
+**Tags:** <skill-name>, output-report
+**Proposed:** YYYY-MM-DD
+
+## What
+<One sentence — what this skill invocation produced or decided>
+
+## Output
+<Key artefacts, files created/modified, or decisions made>
+
+## Files
+| File | Action |
+|------|--------|
+| `path/to/file` | created / modified |
+
+## Notes
+- Invoked via: `/<skill-name>` skill
+
+## Origin
+- **Draft:** `wiki/sources/draft/DDMMYY-<ten>.md`
+- **Commit:** _(filled by verify-before-commit)_
+- **Date promoted:** _(filled by verify-before-commit)_
+```
+
+**3. Update wiki index & log:**
+- `llmwiki/wiki/index.md` — append one row: `| [DDMMYY-<ten>](sources/draft/DDMMYY-<ten>.md) | draft | YYYY-MM-DD |`
+- `llmwiki/wiki/log.md` — append: `## YYYY-MM-DD — <skill-name> — <ten>`
+
+> Skip only when the skill produces zero artefacts and zero decisions (e.g., a pure display mode like `/caveman-stats`).
 
 ---
 

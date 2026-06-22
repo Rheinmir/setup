@@ -81,7 +81,6 @@ Skip investigator. Hand exact path:line to `cavecrew-builder` directly.
 
 Subagents drop caveman → normal English for security warnings, irreversible-action confirmations, and any output where fragment ambiguity could be misread. Resume caveman after.
 
-
 ---
 
 ## Output Report

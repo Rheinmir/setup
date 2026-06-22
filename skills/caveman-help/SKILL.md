@@ -58,7 +58,6 @@ Resolution: env var > config file > `full`.
 
 Full docs: https://github.com/JuliusBrussee/caveman
 
-
 ---
 
 ## Output Report

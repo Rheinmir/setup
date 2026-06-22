@@ -6,15 +6,15 @@ description: Periodic wiki health check — orphans, missing links, contradictio
 # Skill: lint
 
 ## When to invoke
-After every 10 ingests, or when wiki feels stale/inconsistent.
+After every 10 ingests, or when wiki stale/inconsistent.
 
 ## Steps
 
 1. **Orphans** — `RUN: grep -rL "wiki/" --include="*.md" llmwiki/wiki/concepts/ llmwiki/wiki/entities/` → files not referenced anywhere. Flag each.
 
-2. **Missing links** — scan pages for entity/concept names that exist as wiki files but aren't written as `[[wikilinks]]`. Fix in place.
+2. **Missing links** — scan pages for entity/concept names that exist as wiki files but not written as `[[wikilinks]]`. Fix in place.
 
-3. **Contradictions** — compare claims about the same entity across ≤2 pages at a time. Flag pairs (file:line vs file:line). Do NOT pick a winner — flag for human review.
+3. **Contradictions** — compare claims about same entity across ≤2 pages at a time. Flag pairs (file:line vs file:line). Do NOT pick winner — flag for human review.
 
 4. **Stale claims** — `RUN: grep -rl "raw/" --include="*.md" llmwiki/wiki/` → pages referencing raw/. Flag each.
 
@@ -28,8 +28,7 @@ After every 10 ingests, or when wiki feels stale/inconsistent.
 
 ## Rules
 - Fix automatically: missing links (step 2), index gaps (step 5).
-- Flag, do not resolve: contradictions, orphans, empty pages — need human decision.
-
+- Flag, not resolve: contradictions, orphans, empty pages — need human decision.
 
 ---
 

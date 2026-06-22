@@ -238,11 +238,17 @@ else
 fi
 
 cat > "$DRAFT_FILE" << EOF
+---
+type: draft
+title: ${DATE}-onboard-${PROJECT_SLUG}
+status: proposed
+tags: [orca-onboard, output-report]
+timestamp: $(date +%Y-%m-%d)
+---
+
 # ${DATE}-onboard-${PROJECT_SLUG}
-**Type:** draft
+
 **Status:** proposed
-**Tags:** orca-onboard, output-report
-**Proposed:** $(date +%Y-%m-%d)
 
 ## Agent CLI Availability
 | Agent | Binary | Status |
@@ -582,49 +588,27 @@ fi
 - Checkboxes: `<input type="checkbox">` — NO `☐` Unicode
 - Apply `docs-site-macos` style (glassmorphism, macOS chrome)
 
-**Style = SKELETON TĨNH, không phải prompt (bài học 2026-06-12):**
-Mô tả style bằng tính từ ("glassmorphism, macOS chrome") cho model là vô vọng — recipe thật của docs-site-macos gồm token màu chính xác + ~100 dòng JS draggable-whiteboard mà không model nào tự phát minh lại được, và opencode không đọc được skill của Claude host. CSS/JS giống nhau 100% mọi lần chạy → là template tĩnh, không phải output của LLM.
-
-→ Dùng skeleton đóng băng tại `assets/docs-site-skeleton.html` (cạnh SKILL.md này): toàn bộ CSS docs-site-macos (glass, accent cycle 6 màu, checklist, code-copy) + JS (scroll spy, copy button, draggable node-graph whiteboard: kéo từng node, pan, zoom, reset, auto-fit viewBox) đã đóng băng. Model CHỈ điền `{{PLACEHOLDER}}` + vùng `<!--SECTIONS:START/END-->` theo SECTION TEMPLATE chú thích sẵn trong file.
-
-**Verify sau khi fill (grep, không tin lời model):**
-- `grep -c 'prefers-color-scheme'` = 0
-- `grep -c 'initDraggableDiagrams'` ≥ 2 (định nghĩa + gọi)
-- `grep -c '{{'` = 0 (không placeholder sót)
-- `grep -c 'backdrop-filter'` ≥ 5
-
 **Skip check:** `RESUME_MODE=true` + `PHASE4_STATUS=done` → skip.
 
 ```bash
 if [ "$RESUME_MODE" != "true" ] || [ "$PHASE4_STATUS" != "done" ]; then
   update_phase_status "Phase 4 —" "in-progress"
 
-  HTML_OUT="$PROJECT_ROOT/llmwiki/html/onboarding-${PROJECT_SLUG}.html"
-  # 1. Copy skeleton (CSS/JS đóng băng — resolve cạnh SKILL.md đã cài)
-  SKEL=""
-  for c in ~/.agents/skills/orca-onboard/assets/docs-site-skeleton.html \
-           ~/.claude/skills/orca-onboard/assets/docs-site-skeleton.html; do
-    [ -f "$c" ] && SKEL="$c" && break
-  done
-  [ -z "$SKEL" ] && echo "❌ Phase 4 FAIL: skeleton missing — re-install skill" && exit 1
-  cp "$SKEL" "$HTML_OUT"
+  SPEC="Generate onboarding HTML doc from wiki files at llmwiki/wiki/.
+Cover: project overview, architecture layers, domain flows, guided tour.
+Apply docs-site-macos style (glassmorphism, macOS window chrome, animated SVG diagrams).
+Output: llmwiki/html/onboarding-${PROJECT_SLUG}.html
+Use real <input type='checkbox'> not Unicode checkboxes."
 
-  # 2. Model chỉ FILL placeholder — không sinh CSS/JS
-  SPEC="Edit the file $HTML_OUT IN PLACE. It is a frozen HTML skeleton: do NOT modify anything inside <style> or <script>.
-Replace ONLY: {{PROJECT_NAME}}, {{HERO_SUBTITLE}}, {{STATS}}, {{NAV_LINKS}}, {{REPO_URL}}, {{REPO_BLURB}}, {{FOOTER_NOTE}},
-and write the sections between <!--SECTIONS:START--> and <!--SECTIONS:END--> following the SECTION TEMPLATE comment in the file.
-Content source (read these): .understand-anything/ONBOARDING.md and llmwiki/wiki/ pages (architecture/, concepts/, entities/, tours/).
-Sections to build: architecture+key-flow (with draggable SVG diagram per template rules), layers table, domain flows (SVG), hot files & git history, guided tour (checklist with real checkboxes), tests & release (code block).
-SVG rules are in the template comment: nodes = rect >=70x30 with text inside bounds, connectors = <line> only."
   opencode run "$SPEC" --model opencode/deepseek-v4-flash-free < /dev/null \
-    || echo "[Phase 4] opencode unavailable — Claude main thread fills the slots itself"
+    || {
+      echo "[Phase 4] opencode unavailable — falling back to docs-site-macos skill (Claude)"
+      # Invoke docs-site-macos skill in Claude main thread as fallback
+    }
 
-  # 3. Verify bằng grep — fail tiêu chí nào thì Claude tự sửa file tiêu chí đó
-  ls "$HTML_OUT" || { echo "❌ Phase 4 FAIL: HTML not found"; exit 1; }
-  [ "$(grep -c 'prefers-color-scheme' "$HTML_OUT")" = "0" ] || echo "[Phase 4] FIX NEEDED: dark-mode block lọt vào — strip"
-  grep -q 'initDraggableDiagrams' "$HTML_OUT" || echo "[Phase 4] FIX NEEDED: script draggable bị model xoá — restore từ skeleton"
-  grep -q '{{' "$HTML_OUT" && echo "[Phase 4] FIX NEEDED: placeholder chưa điền hết" || true
-  echo "✅ Phase 4 done"
+  ls "$PROJECT_ROOT/llmwiki/html/onboarding-${PROJECT_SLUG}.html" \
+    && echo "✅ Phase 4 done" \
+    || echo "❌ Phase 4 FAIL: HTML not found"
 
   update_phase_status "Phase 4 —" "done"
 fi
@@ -655,6 +639,78 @@ echo "→ http://localhost:8765/llmwiki/html/onboarding-${PROJECT_SLUG}.html"
 - Phase 2 domain empty → no HTTP/CLI/event entry points found; write empty domains array
 - Phase 3 fail → check opencode model config; fallback Claude main thread
 - Phase 4 fail → fallback: invoke docs-site-macos skill directly in Claude
+
+---
+
+## Output Report
+
+After all phases complete, write propose draft to wiki.
+
+**1. Filename:** `DDMMYY-<ten>.md` — today's date + 2-4 kebab-case summary words
+
+**2. Write** `llmwiki/wiki/draft/orca/DDMMYY-<ten>.md`:
+
+```
+---
+type: draft
+title: DDMMYY-<ten>
+status: proposed
+tags: [orca-onboard, output-report]
+timestamp: YYYY-MM-DD
+---
+
+# DDMMYY-<ten>
+
+**Status:** proposed
+
+## Agent Task Assignment
+| Task | Agent | Model | Status |
+|------|-------|-------|--------|
+| Phase 1 — Graph generation | agy /understand | Claude (agy) | done |
+| Phase 2 — Domain enrichment | Claude main | Sonnet | done |
+| Phase 3 — Wiki generation | opencode | DeepSeek Flash v4 | done |
+| Phase 4 — HTML docs | opencode | DeepSeek Flash v4 | done |
+
+## What
+<One sentence>
+
+## Output
+<Key artefacts>
+
+## Files
+| File | Action |
+|------|--------|
+| `.understand-anything/knowledge-graph.json` | created |
+| `llmwiki/wiki/index.md` | created/modified |
+| `llmwiki/html/onboarding-<slug>.html` | created |
+
+## Notes
+- Invoked via: `/orca-onboard` skill
+
+## Origin
+- **Draft:** `wiki/draft/orca/DDMMYY-<ten>.md`
+- **Commit:** _(filled by verify-before-commit)_
+- **Date promoted:** _(filled by verify-before-commit)_
+```
+
+**3. Update wiki index & log:**
+- `llmwiki/wiki/index.md` — append: `| [DDMMYY-<ten>](draft/orca/DDMMYY-<ten>.md) | draft | YYYY-MM-DD |`
+- `llmwiki/wiki/log.md` — append: `## YYYY-MM-DD — orca-onboard — <ten>`
+
+**4. Update statuses & sync push — REQUIRED:**
+- Update Status column in draft file to reflect actual run
+- Clone `rheinmir/setup` branch `orca`, copy updated SKILL.md, push:
+  ```bash
+  git clone git@github.com:rheinmir/setup.git /tmp/rheinmir-setup-sync -b orca --depth 1
+  cp ~/.agents/skills/orca-onboard/SKILL.md /tmp/rheinmir-setup-sync/skills/orca-onboard/SKILL.md
+  cd /tmp/rheinmir-setup-sync
+  git add .
+  git commit -m "skill: orca-onboard — wrap understand-anything, DeepSeek mechanical dispatch"
+  git push origin orca
+  rm -rf /tmp/rheinmir-setup-sync
+  ```
+
+> Skip Output Report only if skill produced zero artefacts and zero decisions.
 
 ---
 

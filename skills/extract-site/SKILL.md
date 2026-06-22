@@ -297,7 +297,6 @@ The skill will ask which mode to document. If the dark mode is visually distinct
 
 **Status**: Active Development
 
-
 ---
 
 ## Output Report
