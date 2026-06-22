@@ -73,3 +73,11 @@ rules:
     applies_to: [write]
     scope: "wiki/(concepts|entities|sources|draft|architecture|tours)/**/*.md trừ README.md, _template.md, index.md, log.md, decisions.md, active-context.md"
     note: "OKF v0.1 — Google Cloud 2026-06-12. Dung thứ khóa lạ (tolerate unknown keys); chỉ gate khi thiếu frontmatter/type. Migrate content cũ: harness/scripts/okf-check.py --migrate."
+
+  - id: R10
+    name: docs-gate
+    validator: null              # L1 inject (UserPromptSubmit hook), KHÔNG chặn — chỉ nhắc
+    statement: "Cứ mỗi N prompt (mặc định 5), nếu N request gần nhất chưa dùng /docs-site-macos hay /orca-workflow thì nhắc bổ sung tài liệu."
+    enforce_at: [session]        # UserPromptSubmit hook đếm bằng máy (.claude/audit/.docs-gate.json)
+    applies_to: [user-prompt]
+    note: "Hook user_prompt_submit.py inject directive vào prompt mốc-N: hỏi user có muốn đánh giá+bổ sung docs cho N prompt vừa rồi; nếu đồng ý → dispatch doc-agent skill docs-site-macos (CLI opencode → agy → claude; subagent không gọi được opencode thì /orchestration). Nhịp đổi bằng env LLMWIKI_DOCS_GATE_EVERY. Báo cáo, không gate."

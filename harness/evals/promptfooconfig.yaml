@@ -26,19 +26,97 @@ defaultTest:
       threshold: 0.5
 
 tests:
-  # ---- VÍ DỤ MẪU — thay bằng golden questions thật khi wiki có nội dung ----
+  # ---- 15 GOLDEN QUESTIONS — đáp án CHỈ tồn tại trong llmwiki (AGENT.md, CLAUDE.md,
+  # policy.yaml, skill docs). Assertion deterministic (icontains), KHÔNG dùng judge model.
+  # Chạy A/B: lượt thứ 2 trỏ working_dir tới repo KHÔNG có wiki/ để lấy baseline.
+
+  # --- Nguồn gốc & truy vết (R2) ---
   - vars:
       question: "File wiki bắt buộc phải có section nào để truy nguồn gốc?"
     assert:
       - type: icontains
         value: "Origin"
   - vars:
-      question: "File mới xuất hiện trong raw/ thì skill nào phải được gọi?"
+      question: "Rule R2 yêu cầu mọi wiki file phải có section gì để source luôn truy được?"
+    assert:
+      - type: icontains
+        value: "Origin"
+
+  # --- Vòng wiki-loop ---
+  - vars:
+      question: "File mới xuất hiện trong raw/ thì skill nào phải được gọi ngay?"
     assert:
       - type: icontains
         value: "ingest"
+  - vars:
+      question: "Sau bao nhiêu lần ingest thì nên chạy skill lint?"
+    assert:
+      - type: icontains
+        value: "10"
+  - vars:
+      question: "Cú pháp nào dùng để cross-reference giữa các wiki entry?"
+    assert:
+      - type: icontains
+        value: "[["
+
+  # --- Thứ tự & quy tắc cấu trúc ---
   - vars:
       question: "Wiki entry được tạo trước hay sau khi code được commit?"
     assert:
       - type: icontains
         value: "sau"
+  - vars:
+      question: "Theo rule R5, file wiki KHÔNG được nằm ở thư mục nào?"
+    assert:
+      - type: icontains
+        value: "root"
+  - vars:
+      question: "File nào phải được cập nhật khi thêm hoặc xóa một wiki file?"
+    assert:
+      - type: icontains
+        value: "index"
+  - vars:
+      question: "File nào agent phải append vào sau mỗi operation?"
+    assert:
+      - type: icontains
+        value: "log"
+
+  # --- Vòng dev-loop ---
+  - vars:
+      question: "Khi có feature request mới, skill nào được gọi đầu tiên trước khi code?"
+    assert:
+      - type: icontains
+        value: "propose"
+  - vars:
+      question: "Trước khi sửa một shared symbol, skill nào phải chạy đầu tiên?"
+    assert:
+      - type: icontains
+        value: "impact-check"
+  - vars:
+      question: "Proposal đạt chuẩn R7 phải kèm loại sơ đồ nào cho TỪNG task?"
+    assert:
+      - type: icontains
+        value: "sequence"
+
+  # --- Enforcement & tooling ---
+  - vars:
+      question: "Validator nào (tên file .py) chặn việc agent ghi vào raw/?"
+    assert:
+      - type: icontains
+        value: "no_write_raw"
+  - vars:
+      question: "Skill nào tạo trang tài liệu phong cách macOS (single HTML)?"
+    assert:
+      - type: icontains
+        value: "docs-site-macos"
+
+  # --- Orchestrate (đa-token assert) ---
+  - vars:
+      question: "Orca workflow chạy theo chuỗi bước nào? Kể 3 bước chính."
+    assert:
+      - type: icontains
+        value: "propose"
+      - type: icontains
+        value: "gate"
+      - type: icontains
+        value: "dispatch"

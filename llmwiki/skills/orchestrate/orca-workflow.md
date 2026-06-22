@@ -30,6 +30,12 @@ Claude: analyze. Others: execute. Kill opencode nếu chờ quá lâu.
 6. **Chờ**: `orca orchestration check --wait --types worker_done --timeout-ms 300000`
 7. **Kiểm tra**: `verify-before-commit` tự động chạy trước mỗi commit
 
+## Gotchas orchestration CLI (bài học 230626)
+
+- **2 id từ `task-create --json`**: response có envelope `id` (uuid) VÀ `result.task.id` (`task_xxxx`). Mọi lệnh sau (`gate-create --task`, `dispatch --task`, `task-update --id`) PHẢI dùng `result.task.id`, KHÔNG dùng envelope id. Dùng nhầm: gate vẫn tạo/resolve được nhưng trỏ task ma → task thật kẹt ở `ready`.
+- **Status hợp lệ của `task-update --status`**: `ready` | `in_progress` | `completed` | `failed`. KHÔNG có `done` — truyền `done` trả `ok:false` lặng lẽ (không báo lỗi rõ).
+- Lấy id thật chắc ăn: `orca orchestration task-list --json` rồi match theo `spec`.
+
 ## Dispatch nhanh
 
 ```bash

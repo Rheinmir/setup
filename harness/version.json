@@ -3,8 +3,8 @@
   "template_version": "1.2.0",
   "remote": "https://github.com/Rheinmir/setup.git",
   "branch": "orca",
-  "generated_at": "2026-06-21",
-  "generated_commit": "aabe1f2",
+  "generated_at": "2026-06-23",
+  "generated_commit": "96db410",
   "pattern_count": 48,
   "patterns": {
     ".agent": "a99869fa2304ea5d",

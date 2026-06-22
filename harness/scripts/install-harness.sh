@@ -62,11 +62,13 @@ def cmd(script):
     # if-guard (KHÔNG dùng `&& ... || true` — nó nuốt exit 2, mất khả năng chặn)
     return f'if [ -d "${{CLAUDE_PROJECT_DIR:-.}}/llmwiki" ]; then python3 "{HOOKS_DIR}/{script}"; fi'
 tpl = {
-    "PreToolUse":  {"matcher": "Write|Edit|MultiEdit|NotebookEdit|Bash", "script": "pre_tool_use.py"},
+    "PreToolUse":  [{"matcher": "Write|Edit|MultiEdit|NotebookEdit|Bash", "script": "pre_tool_use.py"},
+                    {"matcher": "Bash", "script": "orca_guard.py"}],
     "PostToolUse": {"matcher": "Write|Edit|MultiEdit", "script": "post_tool_use.py"},
     "Stop":        {"matcher": None, "script": "stop.py"},
     "SessionEnd":  {"matcher": None, "script": "session_end.py"},
     "SessionStart": {"matcher": None, "script": "session_start.py"},
+    "UserPromptSubmit": {"matcher": None, "script": "user_prompt_submit.py"},
 }
 cur.setdefault("permissions", {}).setdefault("deny", [])
 for d in ["Write(./llmwiki/raw/**)", "Edit(./llmwiki/raw/**)", "MultiEdit(./llmwiki/raw/**)"]:
@@ -75,13 +77,14 @@ for d in ["Write(./llmwiki/raw/**)", "Edit(./llmwiki/raw/**)", "MultiEdit(./llmw
 cur.setdefault("hooks", {})
 for event, spec in tpl.items():
     defs = cur["hooks"].setdefault(event, [])
-    existing = {h.get("command") for d in defs for h in (d.get("hooks") or [])}
-    c = cmd(spec["script"])
-    if c not in existing:
-        entry = {"hooks": [{"type": "command", "command": c, "timeout": 30}]}
-        if spec["matcher"]:
-            entry["matcher"] = spec["matcher"]
-        defs.append(entry)
+    for s in (spec if isinstance(spec, list) else [spec]):
+        existing = {h.get("command") for d in defs for h in (d.get("hooks") or [])}
+        c = cmd(s["script"])
+        if c not in existing:
+            entry = {"hooks": [{"type": "command", "command": c, "timeout": 30}]}
+            if s["matcher"]:
+                entry["matcher"] = s["matcher"]
+            defs.append(entry)
 json.dump(cur, open(path, "w"), indent=2, ensure_ascii=False)
 print("[harness] GLOBAL: settings.json merged (backup .bak.*)")
 PYEOF
@@ -173,11 +176,12 @@ def h(script, matcher=None):
     if matcher: d["matcher"] = matcher
     return d
 tpl = {"permissions": {"deny": deny}, "hooks": {
-    "PreToolUse":  [h("pre_tool_use.py",  "Write|Edit|MultiEdit|NotebookEdit|Bash")],
+    "PreToolUse":  [h("pre_tool_use.py",  "Write|Edit|MultiEdit|NotebookEdit|Bash"), h("orca_guard.py", "Bash")],
     "PostToolUse": [h("post_tool_use.py", "Write|Edit|MultiEdit")],
     "Stop":        [h("stop.py")],
     "SessionEnd":  [h("session_end.py")],
     "SessionStart":[h("session_start.py")],
+    "UserPromptSubmit":[h("user_prompt_submit.py")],
 }}
 cur = {}
 if os.path.exists(path):
