@@ -53,3 +53,10 @@
 - T2: thêm 8 llmwiki/.claude/hooks/*.py + settings.json vào manifest (57 pattern); /sync-template --full giao được orca_guard.py.
 - T3: installer WARN khi hook thiếu file (không fatal) + golden test harness/tests/orca-guard-failopen-test.sh 6/6 PASS; 3 python block embed compile OK.
 - Gỡ ngay client: `git show origin/orca:llmwiki/.claude/hooks/orca_guard.py > llmwiki/.claude/hooks/orca_guard.py`.
+
+## 2026-06-23 — orca-workflow: rà 26 npx skill vs bản cũ → vá 2 regression
+- Audit 4 agent song song (old npx cdd3e08~1 vs canonical): 23 OK, 3 flag.
+- orca-workflow: khôi phục section "An toàn container/DB" (Cozyroom DB path + bài học 05-29 recreate→mất DB) bị refactor b0f30e0 làm rớt → canonical + npx.
+- tour-guide: canonical vốn bonbon-specific (fe/components/dms/...) → thay bằng bản generic self-contained (khớp published description) + có frontmatter (vá luôn gap thiếu frontmatter); npx regenerate.
+- onboard-codebase: GIỮ NGUYÊN — canonical cố tình caveman-compress (commit 52827b7), npx mirror đúng harness.
+- Kết quả: npx body == canonical cho toàn bộ skill (chuẩn so với harness).
