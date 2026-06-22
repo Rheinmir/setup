@@ -238,11 +238,17 @@ else
 fi
 
 cat > "$DRAFT_FILE" << EOF
+---
+type: draft
+title: ${DATE}-onboard-${PROJECT_SLUG}
+status: proposed
+tags: [orca-onboard, output-report]
+timestamp: $(date +%Y-%m-%d)
+---
+
 # ${DATE}-onboard-${PROJECT_SLUG}
-**Type:** draft
+
 **Status:** proposed
-**Tags:** orca-onboard, output-report
-**Proposed:** $(date +%Y-%m-%d)
 
 ## Agent CLI Availability
 | Agent | Binary | Status |
@@ -645,11 +651,17 @@ After all phases complete, write propose draft to wiki.
 **2. Write** `llmwiki/wiki/draft/orca/DDMMYY-<ten>.md`:
 
 ```
+---
+type: draft
+title: DDMMYY-<ten>
+status: proposed
+tags: [orca-onboard, output-report]
+timestamp: YYYY-MM-DD
+---
+
 # DDMMYY-<ten>
-**Type:** draft
+
 **Status:** proposed
-**Tags:** orca-onboard, output-report
-**Proposed:** YYYY-MM-DD
 
 ## Agent Task Assignment
 | Task | Agent | Model | Status |

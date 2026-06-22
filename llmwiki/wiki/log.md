@@ -30,3 +30,10 @@
 - T3 `--no-clone` fast-fail (0.02s, không treo mạng) + skip pre-commit install nếu đã cài.
 - T4 viết lại skill 1-phát-gọi + bench harness/metrics/harness-update-bench.json.
 - Bench: migrate-có-nợ 0.56s, re-run sạch 0.31s, smoke ⛔×3. Dispatch opencode T3 treo → kill, claude-cli tiếp quản.
+
+## 2026-06-23 — orca-workflow: skill tạo docs đạt chuẩn OKF v0.1
+- Proposal 230626-docs-skill-okf (gate duyệt) → impl T1-T3.
+- T1 orca-onboard: heredoc + example block `**Type:**` bold → YAML frontmatter `type: draft` (hết tạo nợ R9).
+- T2 onboard-codebase + new-project-setup: thêm dòng Rule nhắc OKF (copy _template.md).
+- T3 harness/tests/docs-skill-okf-test.sh: 10/10 PASS (skill .md áp OKF, skill HTML N/A, wiki repo OKF 7/8 chỉ còn legacy 220626-chown).
+- Dispatch opencode T2 no-op (0 output) → claude-cli tiếp quản (lần 2 liên tiếp opencode hỏng).
