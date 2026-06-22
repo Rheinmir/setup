@@ -8,3 +8,4 @@
 | [230626-docs-gate-register](sources/draft/230626-docs-gate-register.md) | draft | 2026-06-23 — Proposal hoàn tất đăng ký docs-gate hook (R10): settings + install-harness |
 | [230626-orca-guard-hook](sources/draft/230626-orca-guard-hook.md) | draft | 2026-06-23 — Proposal orca_guard.py: L1 PreToolUse chặn --status sai + inject id-trap |
 | [230626-harness-docs-gate-orca-guard-report](sources/draft/230626-harness-docs-gate-orca-guard-report.md) | draft | 2026-06-23 — Output report: trang docs-site-macos tổng hợp docs-gate + orca_guard |
+| [230626-harness-update-sub30s](sources/draft/230626-harness-update-sub30s.md) | draft | 2026-06-23 — Proposal đưa /harness-update < 30s: installer --self-heal, gộp audit 1 process, idempotent |

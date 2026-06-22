@@ -19,6 +19,21 @@
 # Nguồn file: ưu tiên bundle cạnh script; thiếu thì clone rheinmir/setup@orca.
 set -euo pipefail
 
+# ---------- Flag scan (tách --self-heal khỏi positional) ----------
+# --self-heal: sau audit, installer TỰ backfill nợ (Origin+index+OKF) trong 1 process
+# rồi re-audit 1 lần — gộp vòng lặp 3-reinstall của agent thành 1 lệnh bash.
+SELF_HEAL=0
+NO_CLONE=0
+ARGS=()
+for a in "$@"; do
+  case "$a" in
+    --self-heal) SELF_HEAL=1 ;;
+    --no-clone)  NO_CLONE=1 ;;
+    *) ARGS+=("$a") ;;
+  esac
+done
+set -- ${ARGS[@]+"${ARGS[@]}"}   # bash 3.2-safe khi mảng rỗng + set -u
+
 if [ "${1:-}" = "--global" ]; then ROOT="$HOME"; else ROOT="$(cd "${1:-.}" && pwd)"; fi
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BUNDLE="$(cd "$SCRIPT_DIR/../.." && pwd)"   # repo chứa harness/ + llmwiki/
@@ -34,6 +49,10 @@ trap cleanup EXIT
 src_ok() { [ -d "$1/harness/validators" ] && [ -d "$1/llmwiki/.claude/hooks" ]; }
 SRC="$BUNDLE"
 if ! src_ok "$SRC"; then
+  if [ "$NO_CLONE" = "1" ]; then
+    warn "Bundle nguồn thiếu và --no-clone bật → fast-fail (không treo mạng). Cung cấp bundle rồi chạy lại."
+    exit 1
+  fi
   log "Bundle cạnh script thiếu file nguồn → clone template rheinmir/setup@orca"
   TMP_CLONE="$(mktemp -d /tmp/llmwiki-harness-src.XXXXXX)"
   git clone --depth 1 -b orca git@github.com:rheinmir/setup.git "$TMP_CLONE" >/dev/null 2>&1 \
@@ -213,7 +232,13 @@ else
 fi
 # [ -e ] chứ không phải [ -d ]: trong git worktree, .git là FILE trỏ về gitdir chính
 if command -v pre-commit >/dev/null 2>&1 && [ -e "$ROOT/.git" ]; then
-  (cd "$ROOT" && pre-commit install >/dev/null) && log "pre-commit install: OK"
+  # idempotent: hook đã trỏ pre-commit rồi thì khỏi install lại (re-run nhanh hơn)
+  HOOK="$ROOT/.git/hooks/pre-commit"
+  if [ -f "$HOOK" ] && grep -q "pre-commit" "$HOOK" 2>/dev/null; then
+    log "pre-commit: đã cài (skip)"
+  else
+    (cd "$ROOT" && pre-commit install >/dev/null) && log "pre-commit install: OK"
+  fi
 else
   warn "pre-commit chưa cài hoặc không phải git repo → chạy sau: pipx install pre-commit && pre-commit install"
 fi
@@ -239,6 +264,22 @@ if [ -f "$ROOT/.template-manifest.json" ] && [ -f "$ROOT/harness/scripts/health-
   [ -f "$ROOT/harness/version.json" ] \
     || python3 "$ROOT/harness/scripts/health-check.py" --root "$ROOT" --update >/dev/null 2>&1 || true
   python3 "$ROOT/harness/scripts/health-check.py" --root "$ROOT" --branch orca || true
+fi
+
+# ---------- 6c. Self-heal (chỉ khi --self-heal) — installer tự trả nợ trong 1 process ----------
+# Trigger dựa trên audit.py (gồm cả OKF), KHÔNG chỉ DEBT của mục 6 (origin+index).
+# Nhờ vậy nợ OKF-only cũng được bắt. Backfill là THÊM, không sửa/xóa nội dung cũ.
+if [ "$SELF_HEAL" = "1" ] && [ -f "$ROOT/harness/scripts/audit.py" ]; then
+  if ! python3 "$ROOT/harness/scripts/audit.py" --wiki-dir "$WIKI" --root "$ROOT" >/dev/null 2>&1; then
+    log "Self-heal: phát hiện nợ (Origin/index/OKF) → tự backfill trong 1 process..."
+    python3 "$ROOT/harness/scripts/audit.py" --wiki-dir "$WIKI" --root "$ROOT" --fix || true
+  fi
+  if python3 "$ROOT/harness/scripts/audit.py" --wiki-dir "$WIKI" --root "$ROOT" >/dev/null 2>&1; then
+    DEBT=0; log "Self-heal: wiki sạch (Origin + index + OKF) sau backfill."
+  else
+    DEBT=1; warn "Self-heal: còn nợ KHÔNG tự sửa được (cần user quyết):"
+    python3 "$ROOT/harness/scripts/audit.py" --wiki-dir "$WIKI" --root "$ROOT" || true
+  fi
 fi
 
 # ---------- 7. Kết luận ----------
