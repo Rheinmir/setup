@@ -10,3 +10,4 @@
 | [230626-harness-docs-gate-orca-guard-report](sources/draft/230626-harness-docs-gate-orca-guard-report.md) | draft | 2026-06-23 — Output report: trang docs-site-macos tổng hợp docs-gate + orca_guard |
 | [230626-harness-update-sub30s](sources/draft/230626-harness-update-sub30s.md) | draft | 2026-06-23 — Proposal đưa /harness-update < 30s: installer --self-heal, gộp audit 1 process, idempotent |
 | [230626-docs-skill-okf](sources/draft/230626-docs-skill-okf.md) | draft | 2026-06-23 — Proposal vá 3 skill tạo docs đạt OKF v0.1: orca-onboard heredoc, onboard-codebase, new-project-setup |
+| [230626-sync-template-sub30s](sources/draft/230626-sync-template-sub30s.md) | draft | 2026-06-23 — Proposal đưa /sync-template < 30s: cờ --full gộp OKF + fingerprint + self-verify + log vào 1 lần gọi |

@@ -92,6 +92,54 @@ def frontmatter(text: str):
     return name, desc
 
 
+def okf_migrate(root: Path):
+    """Backfill OKF v0.1 in-process: import okf-check.py như module, migrate wiki.
+    Fallback subprocess 1 lần nếu import lỗi. Trả (migrated_list, err_or_None).
+    Idempotent — file đã có YAML frontmatter được bỏ qua (do migrate_text quyết)."""
+    import importlib.util
+    okf_path = Path(__file__).resolve().parent / "okf-check.py"
+    wiki = root / "llmwiki" / "wiki"
+    if not wiki.is_dir():
+        return [], None
+    try:
+        spec = importlib.util.spec_from_file_location("okf_check", okf_path)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        migrated = []
+        for p in mod.content_files(wiki):
+            new, changed = mod.migrate_text(p.read_text(encoding="utf-8"), p, wiki)
+            if changed:
+                p.write_text(new, encoding="utf-8")
+                migrated.append(str(p.relative_to(wiki)))
+        return migrated, None
+    except Exception:
+        # fallback: 1 subprocess (vẫn backfill được, không mất khả năng)
+        try:
+            subprocess.run([sys.executable, str(okf_path), "--migrate", "--root", str(root)],
+                           capture_output=True, timeout=30)
+            return [], None
+        except Exception as e:
+            return [], f"{type(e).__name__}: {e}"
+
+
+def verify_installs(root: Path, home: Path, installed):
+    """Kiểm 3 vị trí cài cho mỗi skill. Trả list (name, ok_bool)."""
+    out = []
+    for name in installed:
+        ok = ((root / ".claude/commands" / f"{name}.md").is_file()
+              and (home / ".claude/skills" / name / "SKILL.md").is_file()
+              and (home / ".claude/commands" / f"{name}.md").is_file())
+        out.append((name, ok))
+    return out
+
+
+def append_sync_log(root: Path, line: str):
+    logf = root / "llmwiki/wiki/log.md"
+    if logf.is_file():
+        with logf.open("a", encoding="utf-8") as fh:
+            fh.write(line if line.endswith("\n") else line + "\n")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", default=".")
@@ -99,6 +147,9 @@ def main():
     ap.add_argument("--strategy", choices=["keep", "pull", "backup"], default="keep")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--no-install", action="store_true")
+    ap.add_argument("--full", action="store_true",
+                    help="gộp mọi bước hậu-sync vào 1 process: OKF backfill + self-verify + ghi log "
+                         "(fingerprint refresh chạy SAU OKF). Không cờ = hành vi cũ y nguyên.")
     ap.add_argument("--timeout", type=int, default=6)
     ap.add_argument("--json", action="store_true")
     args = ap.parse_args()
@@ -197,6 +248,12 @@ def main():
         with cf.ThreadPoolExecutor(max_workers=12) as ex:
             list(ex.map(grabc, CONFLICT))
 
+    # 2b) [--full] OKF backfill TRƯỚC fingerprint — migrate có thể đổi file wiki,
+    #     fingerprint phải chụp trạng thái SAU migrate để health-check không báo DRIFT giả.
+    okf_migrated, okf_err = [], None
+    if args.full and not args.dry_run:
+        okf_migrated, okf_err = okf_migrate(root)
+
     # 3) refresh fingerprint (giữ branch, set template_version = remote)
     if not args.dry_run:
         cur = {}
@@ -239,13 +296,27 @@ def main():
                 dst.write_bytes(src.read_bytes())
             installed.append(name)
 
+    # 5) [--full] self-verify 3 vị trí cài + append wiki/log.md (thay Step 8 + Rule log của agent)
+    verified, verify_bad = [], []
+    if args.full and not args.dry_run:
+        verified = verify_installs(root, Path.home(), installed)
+        verify_bad = [n for n, ok in verified if not ok]
+        pulled_n = len(downloaded) if downloaded else 0
+        append_sync_log(root, (
+            f"- {vj.get('generated_at', '')} sync-template --full ← {owner}/{repo}@{branch} "
+            f"(v{remote_ver}): +{pulled_n} pulled, OKF {len(okf_migrated)} migrated, "
+            f"installed {len(installed)} skill, conflict {len(CONFLICT)}"
+        ))
+
     report = {
         "branch": branch, "remote_version": remote_ver,
-        "strategy": args.strategy, "dry_run": args.dry_run,
+        "strategy": args.strategy, "dry_run": args.dry_run, "full": args.full,
         "same": len(SAME), "new": NEW, "clean": CLEAN,
         "kept_local": LOCAL, "conflicts": CONFLICT,
         "pulled": downloaded if not args.dry_run else to_pull,
         "failed": failed, "installed": installed,
+        "okf_migrated": okf_migrated, "okf_error": okf_err,
+        "verify_bad": verify_bad,
         "conflict_remote_dir": str(conflict_remote_dir) if conflict_remote_dir else None,
     }
     if args.json:
@@ -263,8 +334,16 @@ def main():
             if args.strategy == "keep":
                 print(f"    → bản remote đã lưu ở {conflict_remote_dir} để diff; chạy lại --strategy pull nếu muốn lấy remote.")
         if installed: print(f"  ⚙ installed skills (×3): {', '.join(installed)}")
+        if args.full:
+            print(f"  ✎ OKF migrated: {len(okf_migrated)}" + (f" — {', '.join(okf_migrated)}" if okf_migrated else ""))
+            if okf_err:     print(f"  ✗ OKF error: {okf_err}")
+            if verify_bad:  print(f"  ✗ install verify FAILED: {', '.join(verify_bad)}")
+            elif installed: print(f"  ✓ install verify OK (×3): {', '.join(installed)}")
         if failed:    print(f"  ✗ FAILED : {failed}")
-    return 3 if (CONFLICT and args.strategy == "keep") else (1 if failed else 0)
+    # CONFLICT (keep) → 3; lỗi tải / OKF / verify → 1; sạch → 0
+    if CONFLICT and args.strategy == "keep":
+        return 3
+    return 1 if (failed or okf_err or verify_bad) else 0
 
 
 if __name__ == "__main__":

@@ -12,23 +12,30 @@ Sync structural/template improvements between project and `https://github.com/Rh
 - **Upstream**: Improved template locally → save to Master.
 - **Downstream**: Master has newer fixes → bring into project.
 
-## FAST PATH — downstream 1 lệnh (< 1 giây, mặc định)
+## FAST PATH — downstream 1 lệnh `--full` (< 30s, mặc định)
 
-Downstream sync giờ là **1 script non-interactive**, KHÔNG hỏi từng bước, fetch song song:
+Downstream sync là **1 script non-interactive tự chứa**. Gọi **1 lần** với `--full` → mọi bước
+hậu-sync (Step 6a/6b/8 + ghi log) chạy trong CÙNG process. Agent đọc 1 report rồi báo cáo —
+KHÔNG lặp lại lệnh riêng. Bench repo này: full steady-state 0.27s · full pull+install+verify 0.76s
+(`harness/metrics/sync-template-bench.json`).
 
 ```bash
-python3 harness/scripts/sync-template.py            # pull NEW+UPDATE, giữ local-custom, cài skill ×3
-python3 harness/scripts/sync-template.py --dry-run   # xem trước, không ghi
-python3 harness/scripts/sync-template.py --strategy pull   # ghi đè cả CONFLICT bằng remote (backup .local-bak)
-python3 harness/scripts/sync-template.py --json      # output máy đọc
+python3 harness/scripts/sync-template.py --full        # ⭐ MẶC ĐỊNH: sync + OKF backfill + fingerprint + verify ×3 + ghi log, 1 process
+python3 harness/scripts/sync-template.py --full --json  # như trên, output máy đọc (đọc okf_migrated / verify_bad)
+python3 harness/scripts/sync-template.py --dry-run      # xem trước, không ghi (kèm --full để xem OKF sẽ migrate gì)
+python3 harness/scripts/sync-template.py --strategy pull # ghi đè cả CONFLICT bằng remote (backup .local-bak)
 ```
+
+> Chạy `--full` **1 lần là xong** — đừng gọi tiếp `okf-check`, `health-check --update`, vòng verify,
+> hay tự `Edit` log.md (script đã làm hết). Đó là cách giữ skill dưới 30s: nút thắt cũ là **số
+> round-trip agent** quanh các bước hậu-sync, không phải CPU. Không cờ `--full` = hành vi cũ y nguyên.
 
 Phân loại bằng hash 3 mốc — **disk ↔ R0 (remote tại lần sync trước, lưu ở `version.json:remote_synced`) ↔ remote hiện tại**:
 - `NEW` (thiếu local) + `UPDATE` (remote mới hơn, local chưa đụng) → **tự PULL**.
 - `KEPT` (mình đã custom, remote không mới hơn) → **giữ nguyên**, không hỏi.
-- `CONFLICT` (cả hai cùng đổi) → mặc định **giữ local** + lưu bản remote ra `/tmp/sync-template-conflicts/` để diff; exit code 3.
+- `CONFLICT` (cả hai cùng đổi) → mặc định **giữ local** + lưu bản remote ra `/tmp/sync-template-conflicts/` để diff; exit code 3. **Không bao giờ** tự `--strategy pull` để rút ngắn thời gian.
 
-Quy trình tự động trong script: fetch remote `version.json`+`manifest` → phân loại → tải song song → refresh `version.json` (fingerprint + `template_version` + `remote_synced`) → cài skill ra 3 chỗ (`.claude/commands/`, `~/.claude/skills/`, `~/.claude/commands/`).
+Quy trình tự động trong script (`--full`): fetch remote `version.json`+`manifest` → phân loại → tải song song → **OKF backfill in-process** (migrate bold→YAML, idempotent) → refresh `version.json` (fingerprint SAU OKF + `template_version` + `remote_synced`) → cài skill ra 3 chỗ (`.claude/commands/`, `~/.claude/skills/`, `~/.claude/commands/`) → **self-verify 3 vị trí** → **append `wiki/log.md`**. Exit: 0 sạch · 1 lỗi tải/OKF/verify · 3 CONFLICT cần quyết.
 
 **Khi nào CẦN can thiệp tay (chạy script trước, đọc report):**
 - Report có `CONFLICT` và bạn muốn lấy remote → chạy lại `--strategy pull` (1 quyết định, không phải 3).
@@ -102,7 +109,11 @@ Show table. **STOP** → ask user: pull all / push all / specific files / direct
 - **Upstream**: commit + push via `gh`/`git`
 - File by file — no `cp -R`
 
-### Step 6a: OKF backfill *(sau MỌI downstream sync kéo template/skill mới)*
+> **Step 6a/6b/8 đã GỘP vào `--full`.** Nếu bạn chạy FAST PATH `--full` thì BỎ QUA 6a/6b/8 —
+> script đã OKF-backfill + refresh fingerprint + verify + ghi log trong process. Các bước dưới chỉ
+> dùng khi chạy MANUAL (debug / upstream / migrate cấu trúc cũ), không phải sau `--full`.
+
+### Step 6a: OKF backfill *(MANUAL — `--full` đã làm)*
 Template/skill mới có thể nâng định dạng wiki (vd chuẩn OKF v0.1). Sau khi pull, convert mọi file content cũ còn dùng pseudo-frontmatter dạng bold `**Type:**` sang YAML frontmatter để khỏi vướng R9:
 ```bash
 python3 harness/scripts/okf-check.py --check      # exit 3 = có file chưa đạt OKF
@@ -111,7 +122,7 @@ python3 harness/scripts/okf-check.py --migrate    # convert bold → YAML (chỉ
 - Idempotent — file đã có `---` frontmatter được bỏ qua. Reserved (index/log/README/decisions/_template…) tự miễn.
 - Sau migrate: chạy lại `--check` đến khi `DAT CHUAN OKF v0.1`, rồi cập nhật index/log như mọi thay đổi wiki.
 
-### Step 6b: Refresh version fingerprint *(sau MỌI downstream sync)*
+### Step 6b: Refresh version fingerprint *(MANUAL — `--full` đã làm)*
 Nội dung pattern vừa đổi → cập nhật lại `harness/version.json` để health-check khỏi báo DRIFT giả:
 ```bash
 python3 harness/scripts/health-check.py --update   # KHÔNG --bump ở project con

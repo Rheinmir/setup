@@ -37,3 +37,11 @@
 - T2 onboard-codebase + new-project-setup: thêm dòng Rule nhắc OKF (copy _template.md).
 - T3 harness/tests/docs-skill-okf-test.sh: 10/10 PASS (skill .md áp OKF, skill HTML N/A, wiki repo OKF 7/8 chỉ còn legacy 220626-chown).
 - Dispatch opencode T2 no-op (0 output) → claude-cli tiếp quản (lần 2 liên tiếp opencode hỏng).
+- 2026-06-23 01:44 — session `31d9431b` — 27 tool calls — files: 230626-docs-skill-okf-seq.html, 230626-docs-skill-okf.md, 230626-harness-update-sub30s-seq.html, 230626-harness-update-sub30s.md, audit.py, docs-skill-okf-test.sh, harness-update-test.sh, harness-update.md …
+
+## 2026-06-23 — orca-workflow: /sync-template < 30s (cờ --full)
+- Proposal 230626-sync-template-sub30s (gate gate_70ba7f4b3b1d duyệt) → impl T1-T4.
+- Phát hiện: script đã <1s; nút thắt >30s là 5-6 round-trip agent quanh Step 6a/6b/8 + log.md.
+- T1-T3 sync-template.py: cờ `--full` gộp OKF backfill (import okf-check in-process) + fingerprint-sau-OKF + self-verify 3 vị trí + append log vào 1 process. Không cờ = hành vi cũ.
+- T4: viết lại FAST PATH skill về 1 phát `--full`; bench harness/metrics/sync-template-bench.json — steady 0.27s, pull+install+verify 0.76s (cả hai <30s & <5s); phân loại + exit code giữ nguyên, CONFLICT vẫn exit 3.
+- T3 dự kiến opencode → claude làm inline (coupled cùng file T1/T2, opencode dispatch bất ổn).

@@ -1,0 +1,31 @@
+{
+  "skill": "sync-template",
+  "goal": "downstream /sync-template hoàn thành < 30s (clean < 5s)",
+  "measured_at": "2026-06-23",
+  "repo": "Rheinmir/setup@orca",
+  "method": "time python3 harness/scripts/sync-template.py --full [--json]",
+  "cases": {
+    "full_steady_state": {
+      "desc": "kept-local path — không file nào pull, OKF backfill + verify + log trong 1 process",
+      "wall_clock_s": 0.273,
+      "pulled": 0,
+      "okf_migrated": 1,
+      "installed": 0
+    },
+    "full_pull_install_verify": {
+      "desc": "1 file NEW → pull + install ×3 + self-verify + log, tất cả trong 1 process",
+      "wall_clock_s": 0.756,
+      "pulled": 1,
+      "installed": 1,
+      "verify_bad": 0
+    }
+  },
+  "gate": {
+    "full_under_30s": true,
+    "clean_under_5s": true,
+    "classification_unchanged": "NEW/CLEAN/LOCAL/CONFLICT + exit code y hệt bản cũ; --full chỉ THÊM bước hậu-sync",
+    "conflict_still_blocks": "CONFLICT (strategy=keep) vẫn exit 3, không tự pull",
+    "backward_compatible": "không cờ --full → hành vi cũ y nguyên"
+  },
+  "note": "Nút thắt >30s cũ KHÔNG phải CPU mà là 5-6 round-trip agent quanh các bước hậu-sync (Step 0/6a/6b/8 + log.md). Gộp vào 1 lệnh --full → agent gọi 1 lần, round-trip 6→2. Case pull dùng tải song song (max_workers=12) nên scale theo số file vẫn dưới ngưỡng."
+}
