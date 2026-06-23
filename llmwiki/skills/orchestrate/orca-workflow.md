@@ -30,6 +30,28 @@ Claude: analyze. Others: execute. Kill opencode nếu chờ quá lâu.
 6. **Chờ**: `orca orchestration check --wait --types worker_done --timeout-ms 300000`
 7. **Kiểm tra**: `verify-before-commit` tự động chạy trước mỗi commit
 
+## Gotchas orchestration CLI (bài học 230626)
+
+- **2 id từ `task-create --json`**: response có envelope `id` (uuid) VÀ `result.task.id` (`task_xxxx`). Mọi lệnh sau (`gate-create --task`, `dispatch --task`, `task-update --id`) PHẢI dùng `result.task.id`, KHÔNG dùng envelope id. Dùng nhầm: gate vẫn tạo/resolve được nhưng trỏ task ma → task thật kẹt ở `ready`.
+- **Status hợp lệ của `task-update --status`**: `ready` | `in_progress` | `completed` | `failed`. KHÔNG có `done` — truyền `done` trả `ok:false` lặng lẽ (không báo lỗi rõ).
+- Lấy id thật chắc ăn: `orca orchestration task-list --json` rồi match theo `spec`.
+
+## An toàn container / DB (BẮT BUỘC trước khi đụng docker)
+
+### Trước khi đụng container (docker compose / docker run)
+
+```bash
+# BẮT BUỘC chạy trước bất kỳ --force-recreate, down, recreate nào:
+docker inspect <container_name> --format '{{json .Mounts}}' | python3 -m json.tool
+```
+
+So sánh `Source` path với volume trong compose file sắp dùng. Nếu khác → DỪNG, hỏi user.
+
+**Production DB của Cozyroom:** `/mnt/c/Users/olive/orca/workspaces/home-spotify/m/data/metadata.db`
+Không bao giờ đổi volume mount mà không backup + xác nhận user.
+
+> Bài học 2026-05-29: recreate container với compose sai path → mất toàn bộ DB người dùng.
+
 ## Dispatch nhanh
 
 ```bash

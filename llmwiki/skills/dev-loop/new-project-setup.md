@@ -53,6 +53,7 @@ grep -q "rtk hook claude" ~/.claude/settings.json && echo "RTK hooked" || echo "
 # Đọc README.md, package.json hoặc go.mod → project name + stack
 ```
 - Tạo `llmwiki/wiki/sources/project-requirements.md` — frontmatter + `## Origin`
+- **OKF v0.1 (R9):** frontmatter là khối YAML `---` có `type` không rỗng — copy `_template.md`, đừng dùng `**Type:**` bold (format cũ).
 - Append `llmwiki/wiki/log.md`: `## YYYY-MM-DD — init — <project-name>`
 - Tạo `llmwiki/wiki/index.md` — header + empty table
 

@@ -5,51 +5,64 @@ description: Reference for Antigravity/OpenCode dispatch, skill installation, Ag
 
 # Orca Dispatch Reference
 
-> Đây là tài liệu tham khảo, không phải skill. Không invoke trong loop.
+> Reference doc, not a skill. Do not invoke in loop.
+
+## OpenCode — Default Model
+
+**Default**: `opencode/big-pickle` — $0.00, non-interactive.
+
+```bash
+# Non-interactive task dispatch (default pattern):
+# ⚠ KHÔNG dùng --dangerously-skip-permissions khi dispatch từ Claude Code — auto-mode classifier sẽ DENY (bài học 120626)
+opencode run -m opencode/big-pickle --dir "<project-path>" "<task>"
+
+# Example:
+opencode run -m opencode/big-pickle --dir "C:\Users\olive\orca\workspaces\home-spotify\m" "List all TODO comments in backend/"
+```
+
+**Model tiers** (fallback if big-pickle fails):
+| Model | Cost | Dùng khi |
+|-------|------|---------|
+| `opencode/big-pickle` | $0.00 | Default — all tasks |
+| `google/gemini-2.5-flash` | ~$0.075/1M | big-pickle insufficient context |
+| `opencode/deepseek-v4-flash-free` | $0.00 | Alternative free |
+
+---
 
 ## Antigravity (agy)
 
-**Binary**: `agy` — `%LOCALAPPDATA%\agy\bin\agy.exe`. KHÔNG phải `antigravity`, KHÔNG phải `~/.local/bin/agy`.
+**Binary**: `agy` — `%LOCALAPPDATA%\agy\bin\agy.exe`. NOT `antigravity`, NOT `~/.local/bin/agy`.
 
 ```bash
 # CHECK trước khi dùng:
 agy --version
 ```
 
-**Hook**: Orca v1.4.21 fix Windows hook quoting — không cần sửa tay `antigravity-hook.cmd`.
+**Hook**: Orca v1.4.21 fix Windows hook quoting — no manual `antigravity-hook.cmd` edit.
 
-**Dispatch status** (tested post v1.4.21):
+**Dispatch status** (post v1.4.21):
 
 | Method | Status |
 |--------|--------|
-| `dispatch --inject` | Cần retest |
-| `terminal send` thủ công | OK |
-| Tool calls trong agy | OK |
-| `worker_done` callback | Cần retest |
+| `dispatch --inject` | retest |
+| `terminal send` | OK |
+| Tool calls | OK |
+| `worker_done` callback | retest |
 
-**Fallback workflow nếu `--inject` fail:**
+**Fallback if `--inject` fails:**
 ```bash
 orca terminal send --title "Antigravity" --text "<task>"
 orca terminal wait --for tui-idle
 orca terminal read --title "Antigravity"
 ```
 
-## Kiro CLI (kiro-cli)
-
-**Binary**: `kiro-cli` — `%LOCALAPPDATA%\Kiro-Cli\kiro-cli.exe` (Windows).
-
-```bash
-# CHECK trước khi dùng:
-kiro-cli --version
-```
-
 ## Skill Installation per Agent CLI
 
-Skills nằm tại `llmwiki/skills/<category>/<name>.md`.
+Skills: `llmwiki/skills/<category>/<name>.md`.
 
 ### Claude Code
 ```bash
-# CHECK skills đã cài:
+# CHECK:
 ls .claude/commands/
 
 # Install:
@@ -61,20 +74,10 @@ cp llmwiki/skills/dev-loop/propose.md .claude/commands/propose.md
 # CHECK:
 ls ~/.agents/skills/
 
-# Install (skill phải là thư mục chứa SKILL.md):
+# Install (skill = folder with SKILL.md):
 mkdir -p ~/.agents/skills/propose/
 cp llmwiki/skills/dev-loop/propose.md ~/.agents/skills/propose/SKILL.md
-# Restart OpenCode sau khi install.
-```
-
-### Kiro CLI
-```bash
-# CHECK:
-ls ~/.kiro/skills/
-
-# Install (skill phải là thư mục chứa SKILL.md):
-mkdir -p ~/.kiro/skills/propose/
-cp llmwiki/skills/dev-loop/propose.md ~/.kiro/skills/propose/SKILL.md
+# Restart OpenCode after install.
 ```
 
 ## AgentMemory
@@ -97,45 +100,22 @@ curl -sk -H "Authorization: Bearer $TOKEN" "$BASE/agentmemory/search?query=<keyw
 
 ## RTK — Token Proxy
 
-RTK (Rust Token Killer) tự động filter CLI output trước khi vào context — 60-90% token reduction.
+RTK (Rust Token Killer): auto-filter CLI output before context — 60-90% token reduction.
 
 ```bash
-# CHECK đã cài chưa:
+# CHECK:
 rtk --version
 
-# Cài hook cho agent (chạy 1 lần):
+# Install hook (once):
 rtk hooks install --agent claude
 rtk hooks install --agent opencode
-# Sau khi cài: mọi command agent chạy tự qua RTK, không cần thay đổi gì.
+# All agent commands auto-route through RTK.
 
-# Xem savings:
+# Savings:
 rtk stats --today
 ```
 
 > Xem [[concepts/RTK]] để biết chi tiết.
-
-## Caveman — Prose Compression
-
-Caveman tự động nén ngôn ngữ hội thoại của agent để tiết kiệm ~75% hội thoại (output tokens) mà vẫn giữ nguyên độ chính xác kỹ thuật.
-
-```bash
-# Cài đặt cho mọi agent (chạy 1 lần):
-# Windows:
-irm https://raw.githubusercontent.com/JuliusBrussee/caveman/main/install.ps1 | iex
-# macOS/Linux/WSL:
-curl -fsSL https://raw.githubusercontent.com/JuliusBrussee/caveman/main/install.sh | bash
-
-# Kích hoạt thủ công trong phiên chat (nếu không tự bật):
-/caveman
-# Hoặc nói: "talk like caveman" / "caveman mode"
-
-# Xem thống kê tiết kiệm:
-/caveman-stats
-```
-
-> Hầu hết tình huống giao tiếp thông thường cần dùng caveman để tiết kiệm token. Chỉ bỏ nén khi viết proposal, tài liệu chính thức, hoặc xuất HTML.
-
-
 
 ---
 

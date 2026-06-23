@@ -52,7 +52,16 @@
     "llmwiki/wiki/sources/draft/README.md",
     "llmwiki/wiki/sources/draft/_template.md",
     "llmwiki/orca/flows/daily-propose.json",
-    "llmwiki/orca/flows/onboard-parallel.json"
+    "llmwiki/orca/flows/onboard-parallel.json",
+    "llmwiki/.claude/hooks/hooklib.py",
+    "llmwiki/.claude/hooks/orca_guard.py",
+    "llmwiki/.claude/hooks/post_tool_use.py",
+    "llmwiki/.claude/hooks/pre_tool_use.py",
+    "llmwiki/.claude/hooks/session_end.py",
+    "llmwiki/.claude/hooks/session_start.py",
+    "llmwiki/.claude/hooks/stop.py",
+    "llmwiki/.claude/hooks/user_prompt_submit.py",
+    "llmwiki/.claude/settings.json"
   ],
   "excludes": [
     ".env",

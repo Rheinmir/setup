@@ -9,15 +9,11 @@ description: Tour 3 phút — Claude tự diễn cho user xem harness chặn mì
 Cho user THẤY (không phải đọc) harness hoạt động: bạn — Claude — cố tình vi phạm từng rule trên project thật, bị chặn, và tường thuật lại. Kết thúc không để lại bất kỳ rác nào.
 
 ## Pre-check
-Harness có 2 mode — tour chạy được khi BẤT KỲ mode nào ON:
 ```bash
-test -f llmwiki/.claude/hooks/pre_tool_use.py && echo "per-project: ON" || echo "per-project: missing"
-test -f ~/.claude/harness/hooks/pre_tool_use.py && grep -q 'harness/hooks/pre_tool_use.py' ~/.claude/settings.json 2>/dev/null \
-  && echo "global: ON" || echo "global: missing"
+test -f llmwiki/.claude/hooks/pre_tool_use.py && echo ON || echo MISSING
 ```
-- CẢ HAI missing → dừng, gợi ý: `bash harness/scripts/install-harness.sh .` (per-project, cho team) hoặc `bash harness/scripts/install-harness.sh --global` (cả máy).
-- Chỉ global ON: hooks load từ ~/.claude/settings.json (user scope) — không cần .claude/settings.json ở project root, nhưng project PHẢI có thư mục `llmwiki/` (guard `[ -d llmwiki ]` mới mở hooks).
-- Mode nào ON nhưng Cảnh 1 KHÔNG bị chặn → session chưa reload hooks sau khi cài: bảo user restart session hoặc mở /hooks, rồi chạy lại tour. Đừng nhầm với "hàng rào hỏng".
+Nếu MISSING → dừng, gợi ý: `bash harness/scripts/install-harness.sh .`
+Nếu session hiện tại không load hooks (project root khác llmwiki, không có .claude/settings.json ở root) → nói rõ "tour cần mở session tại project đã cài" và dừng.
 
 ## Kịch bản — diễn TUẦN TỰ, tường thuật TRƯỚC mỗi cảnh
 

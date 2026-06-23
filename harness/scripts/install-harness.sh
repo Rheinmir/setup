@@ -19,6 +19,21 @@
 # Nguồn file: ưu tiên bundle cạnh script; thiếu thì clone rheinmir/setup@orca.
 set -euo pipefail
 
+# ---------- Flag scan (tách --self-heal khỏi positional) ----------
+# --self-heal: sau audit, installer TỰ backfill nợ (Origin+index+OKF) trong 1 process
+# rồi re-audit 1 lần — gộp vòng lặp 3-reinstall của agent thành 1 lệnh bash.
+SELF_HEAL=0
+NO_CLONE=0
+ARGS=()
+for a in "$@"; do
+  case "$a" in
+    --self-heal) SELF_HEAL=1 ;;
+    --no-clone)  NO_CLONE=1 ;;
+    *) ARGS+=("$a") ;;
+  esac
+done
+set -- ${ARGS[@]+"${ARGS[@]}"}   # bash 3.2-safe khi mảng rỗng + set -u
+
 if [ "${1:-}" = "--global" ]; then ROOT="$HOME"; else ROOT="$(cd "${1:-.}" && pwd)"; fi
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BUNDLE="$(cd "$SCRIPT_DIR/../.." && pwd)"   # repo chứa harness/ + llmwiki/
@@ -34,6 +49,10 @@ trap cleanup EXIT
 src_ok() { [ -d "$1/harness/validators" ] && [ -d "$1/llmwiki/.claude/hooks" ]; }
 SRC="$BUNDLE"
 if ! src_ok "$SRC"; then
+  if [ "$NO_CLONE" = "1" ]; then
+    warn "Bundle nguồn thiếu và --no-clone bật → fast-fail (không treo mạng). Cung cấp bundle rồi chạy lại."
+    exit 1
+  fi
   log "Bundle cạnh script thiếu file nguồn → clone template rheinmir/setup@orca"
   TMP_CLONE="$(mktemp -d /tmp/llmwiki-harness-src.XXXXXX)"
   git clone --depth 1 -b orca git@github.com:rheinmir/setup.git "$TMP_CLONE" >/dev/null 2>&1 \
@@ -54,33 +73,43 @@ if [ "${1:-}" = "--global" ]; then
   SETTINGS="$HOME/.claude/settings.json"
   [ -f "$SETTINGS" ] && cp "$SETTINGS" "$SETTINGS.bak.$(date +%s)" || echo '{}' > "$SETTINGS"
   python3 - << 'PYEOF'
-import json, os
+import json, os, re
 path = os.path.expanduser("~/.claude/settings.json")
 cur = json.load(open(path))
 HOOKS_DIR = '$HOME/.claude/harness/hooks'
+def script_of(command):
+    m = re.search(r'([A-Za-z0-9_./-]+\.py)', command or "")
+    return os.path.basename(m.group(1)) if m else None
 def cmd(script):
-    # if-guard (KHÔNG dùng `&& ... || true` — nó nuốt exit 2, mất khả năng chặn)
-    return f'if [ -d "${{CLAUDE_PROJECT_DIR:-.}}/llmwiki" ]; then python3 "{HOOKS_DIR}/{script}"; fi'
+    # if-guard (KHÔNG dùng `&& ... || true` — nó nuốt exit 2, mất khả năng chặn).
+    # `-f` fail-open: hook THIẾU file → bỏ qua, KHÔNG brick tool (sự cố cozyroom).
+    p = f'{HOOKS_DIR}/{script}'
+    return f'if [ -d "${{CLAUDE_PROJECT_DIR:-.}}/llmwiki" ] && [ -f "{p}" ]; then python3 "{p}"; fi'
 tpl = {
-    "PreToolUse":  {"matcher": "Write|Edit|MultiEdit|NotebookEdit|Bash", "script": "pre_tool_use.py"},
+    "PreToolUse":  [{"matcher": "Write|Edit|MultiEdit|NotebookEdit|Bash", "script": "pre_tool_use.py"},
+                    {"matcher": "Bash", "script": "orca_guard.py"}],
     "PostToolUse": {"matcher": "Write|Edit|MultiEdit", "script": "post_tool_use.py"},
     "Stop":        {"matcher": None, "script": "stop.py"},
     "SessionEnd":  {"matcher": None, "script": "session_end.py"},
     "SessionStart": {"matcher": None, "script": "session_start.py"},
+    "UserPromptSubmit": {"matcher": None, "script": "user_prompt_submit.py"},
 }
 cur.setdefault("permissions", {}).setdefault("deny", [])
 for d in ["Write(./llmwiki/raw/**)", "Edit(./llmwiki/raw/**)", "MultiEdit(./llmwiki/raw/**)"]:
     if d not in cur["permissions"]["deny"]:
         cur["permissions"]["deny"].append(d)
 cur.setdefault("hooks", {})
+# idempotent re-merge: dedup theo BASENAME script → chạy lại NÂNG CẤP lệnh trần cũ thành có guard.
 for event, spec in tpl.items():
     defs = cur["hooks"].setdefault(event, [])
-    existing = {h.get("command") for d in defs for h in (d.get("hooks") or [])}
-    c = cmd(spec["script"])
-    if c not in existing:
-        entry = {"hooks": [{"type": "command", "command": c, "timeout": 30}]}
-        if spec["matcher"]:
-            entry["matcher"] = spec["matcher"]
+    specs = spec if isinstance(spec, list) else [spec]
+    tpl_scripts = {s["script"] for s in specs}
+    defs[:] = [d for d in defs
+               if not any(script_of(hh.get("command")) in tpl_scripts for hh in (d.get("hooks") or []))]
+    for s in specs:
+        entry = {"hooks": [{"type": "command", "command": cmd(s["script"]), "timeout": 30}]}
+        if s["matcher"]:
+            entry["matcher"] = s["matcher"]
         defs.append(entry)
 json.dump(cur, open(path, "w"), indent=2, ensure_ascii=False)
 print("[harness] GLOBAL: settings.json merged (backup .bak.*)")
@@ -169,15 +198,18 @@ prefix = "llmwiki/"
 hooks_dir = '$CLAUDE_PROJECT_DIR/llmwiki/.claude/hooks'
 deny = [f"Write(./{prefix}raw/**)", f"Edit(./{prefix}raw/**)", f"MultiEdit(./{prefix}raw/**)"]
 def h(script, matcher=None):
-    d = {"hooks": [{"type": "command", "command": f'python3 "{hooks_dir}/{script}"'}]}
+    # `-f` fail-open: hook THIẾU file → bỏ qua, KHÔNG brick tool (sự cố cozyroom).
+    p = f'{hooks_dir}/{script}'
+    d = {"hooks": [{"type": "command", "command": f'if [ -f "{p}" ]; then python3 "{p}"; fi'}]}
     if matcher: d["matcher"] = matcher
     return d
 tpl = {"permissions": {"deny": deny}, "hooks": {
-    "PreToolUse":  [h("pre_tool_use.py",  "Write|Edit|MultiEdit|NotebookEdit|Bash")],
+    "PreToolUse":  [h("pre_tool_use.py",  "Write|Edit|MultiEdit|NotebookEdit|Bash"), h("orca_guard.py", "Bash")],
     "PostToolUse": [h("post_tool_use.py", "Write|Edit|MultiEdit")],
     "Stop":        [h("stop.py")],
     "SessionEnd":  [h("session_end.py")],
     "SessionStart":[h("session_start.py")],
+    "UserPromptSubmit":[h("user_prompt_submit.py")],
 }}
 cur = {}
 if os.path.exists(path):
@@ -188,17 +220,27 @@ for d in tpl["permissions"]["deny"]:
     if d not in cur["permissions"]["deny"]:
         cur["permissions"]["deny"].append(d)
 cur.setdefault("hooks", {})
+# idempotent re-merge: dedup theo BASENAME script (vd orca_guard.py), không theo chuỗi lệnh thô,
+# để chạy lại NÂNG CẤP lệnh trần cũ thành lệnh có guard thay vì sinh hook trùng.
+def script_of(command):
+    m = re.search(r'([A-Za-z0-9_./-]+\.py)', command or "")
+    return os.path.basename(m.group(1)) if m else None
 for event, defs in tpl["hooks"].items():
     cur_defs = cur["hooks"].setdefault(event, [])
-    existing_cmds = {h.get("command") for d in cur_defs for h in (d.get("hooks") or [])}
-    for d in defs:
-        cmd = d["hooks"][0]["command"]
-        if cmd not in existing_cmds:
-            cur_defs.append(d)
+    tpl_scripts = {script_of(d["hooks"][0]["command"]) for d in defs}
+    # bỏ entry cũ trỏ cùng script (lệnh trần) — sẽ thay bằng bản guard mới
+    cur_defs[:] = [d for d in cur_defs
+                   if not any(script_of(hh.get("command")) in tpl_scripts for hh in (d.get("hooks") or []))]
+    cur_defs.extend(defs)
 json.dump(cur, open(path, "w"), indent=2, ensure_ascii=False)
 PY
 grep -q "audit/" "$ROOT/.claude/.gitignore" 2>/dev/null || printf 'audit/\nsettings.json.bak.*\n' >> "$ROOT/.claude/.gitignore"
 log "settings.json ở ROOT: OK (session mở tại root sẽ load hooks)"
+
+# Presence-check: hook đã đăng ký nhưng THIẾU file → WARN (không fatal; lệnh đã fail-open guard).
+for hook_py in pre_tool_use.py orca_guard.py post_tool_use.py stop.py session_end.py session_start.py user_prompt_submit.py; do
+  [ -f "$ROOT/llmwiki/.claude/hooks/$hook_py" ] || warn "hook '$hook_py' đã đăng ký trong settings nhưng THIẾU file (fail-open: bỏ qua) — chạy '/sync-template --full' để tải về."
+done
 
 # ---------- 5. L2 pre-commit ----------
 if [ ! -f "$ROOT/.pre-commit-config.yaml" ]; then
@@ -209,7 +251,13 @@ else
 fi
 # [ -e ] chứ không phải [ -d ]: trong git worktree, .git là FILE trỏ về gitdir chính
 if command -v pre-commit >/dev/null 2>&1 && [ -e "$ROOT/.git" ]; then
-  (cd "$ROOT" && pre-commit install >/dev/null) && log "pre-commit install: OK"
+  # idempotent: hook đã trỏ pre-commit rồi thì khỏi install lại (re-run nhanh hơn)
+  HOOK="$ROOT/.git/hooks/pre-commit"
+  if [ -f "$HOOK" ] && grep -q "pre-commit" "$HOOK" 2>/dev/null; then
+    log "pre-commit: đã cài (skip)"
+  else
+    (cd "$ROOT" && pre-commit install >/dev/null) && log "pre-commit install: OK"
+  fi
 else
   warn "pre-commit chưa cài hoặc không phải git repo → chạy sau: pipx install pre-commit && pre-commit install"
 fi
@@ -235,6 +283,22 @@ if [ -f "$ROOT/.template-manifest.json" ] && [ -f "$ROOT/harness/scripts/health-
   [ -f "$ROOT/harness/version.json" ] \
     || python3 "$ROOT/harness/scripts/health-check.py" --root "$ROOT" --update >/dev/null 2>&1 || true
   python3 "$ROOT/harness/scripts/health-check.py" --root "$ROOT" --branch orca || true
+fi
+
+# ---------- 6c. Self-heal (chỉ khi --self-heal) — installer tự trả nợ trong 1 process ----------
+# Trigger dựa trên audit.py (gồm cả OKF), KHÔNG chỉ DEBT của mục 6 (origin+index).
+# Nhờ vậy nợ OKF-only cũng được bắt. Backfill là THÊM, không sửa/xóa nội dung cũ.
+if [ "$SELF_HEAL" = "1" ] && [ -f "$ROOT/harness/scripts/audit.py" ]; then
+  if ! python3 "$ROOT/harness/scripts/audit.py" --wiki-dir "$WIKI" --root "$ROOT" >/dev/null 2>&1; then
+    log "Self-heal: phát hiện nợ (Origin/index/OKF) → tự backfill trong 1 process..."
+    python3 "$ROOT/harness/scripts/audit.py" --wiki-dir "$WIKI" --root "$ROOT" --fix || true
+  fi
+  if python3 "$ROOT/harness/scripts/audit.py" --wiki-dir "$WIKI" --root "$ROOT" >/dev/null 2>&1; then
+    DEBT=0; log "Self-heal: wiki sạch (Origin + index + OKF) sau backfill."
+  else
+    DEBT=1; warn "Self-heal: còn nợ KHÔNG tự sửa được (cần user quyết):"
+    python3 "$ROOT/harness/scripts/audit.py" --wiki-dir "$WIKI" --root "$ROOT" || true
+  fi
 fi
 
 # ---------- 7. Kết luận ----------

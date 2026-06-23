@@ -1,35 +1,33 @@
 ---
 name: impact-check
-description: >-
-  Map all callers and dependents of a symbol before modifying shared code
+description: Map all callers and dependents of a symbol before modifying shared code
 ---
 
 # Skill: impact-check
 
 ## Purpose
-Before modifying any symbol (function, class, variable, config key), map everything that depends on it so no callers are blindsided.
+Before modifying any symbol (function, class, variable, config key), map all dependents so no callers blindsided.
 
 ## When to use
-- Before any edit to a shared utility, base class, or widely-imported module
+- Before editing shared utility, base class, or widely-imported module
 - Before renaming or deleting anything
-- As the first step of `safe-change` or `propose`
+- As first step of `safe-change` or `propose`
 
 ## Steps
-1. Identify the exact symbol(s) to be changed.
-2. Search the entire codebase for all imports, calls, or references to each symbol.
-3. For each reference found, note: file path, line number, how it uses the symbol.
-4. Classify each reference as:
-   - **Direct** — calls or imports the symbol itself
-   - **Indirect** — depends on behaviour the symbol produces (e.g. reads its output)
-5. Report the full list. If zero references found outside the file, state that explicitly.
-6. Flag any reference in a test file separately — those must be updated or will give false confidence.
-7. If the symbol being checked is not yet documented in `wiki/`, note it as a gap — do not create the entry now. Wiki entries are only written after code is committed (see `verify-before-commit`).
+1. Identify exact symbol(s) to change.
+2. Search entire codebase for all imports, calls, references to each symbol.
+3. For each reference: note file path, line number, how it uses symbol.
+4. Classify each reference:
+   - **Direct** — calls or imports symbol itself
+   - **Indirect** — depends on behaviour symbol produces (e.g. reads its output)
+5. Report full list. If zero references found outside file, state explicitly.
+6. Flag any reference in test file separately — those must update or give false confidence.
+7. If symbol not yet documented in `wiki/`, note as gap — do not create entry now. Wiki entries only written after code committed (see `verify-before-commit`).
 
 ## Rules
 - Do not modify anything during this skill — output only.
-- If the codebase is large, search by symbol name AND by file pattern (e.g. all `*.ts` files).
-- Do not assume a symbol is unused because it has no direct callers — check indirect dependents too.
-
+- If codebase large, search by symbol name AND file pattern (e.g. all `*.ts` files).
+- Do not assume symbol unused because no direct callers — check indirect dependents too.
 
 ---
 

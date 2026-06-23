@@ -47,4 +47,5 @@ Analyze unmapped codebase, extract technical/business context, populate Wiki per
 - Cross-reference `README.md`/comments but prioritize truth in code.
 - Focus on "Why" and "How" at code level, not just "What".
 - NEVER overwrite existing manual wiki entries without checking `## Origin` section.
+- **OKF v0.1 (R9):** mọi trang wiki bắt đầu bằng YAML frontmatter (`---`) có `type` không rỗng (`concept`/`entity`/`source`) — copy `_template.md` tương ứng. Giữ `## Origin` (R2).
 - For `fe-style.md`: record actual values (hex codes, px/rem sizes, class names), not descriptions — goal is reproducible visual style without guessing.

@@ -33,11 +33,51 @@
 
 ## 2026-06-22 — install-harness — mode=migrate
 - Cài harness L0–L4 (validators, hooks, pre-commit, wiki-health, health-check, evals)
-- ⚠ CÓ NỢ wiki (thiếu Origin / index lệch) — backfill trước khi tin Stop hook
+- Backfill nợ: YAML frontmatter R9 (9 legacy files), ## Origin (design-pattern.md), index sync (5 rows)
+- Fix pre-commit Windows: python3 bash-wrapper → python (real MZ exe); fix arch-scan UnicodeEncodeError
 
-## 2026-06-22 — install-harness — mode=migrate
-- Cài harness L0–L4 (validators, hooks, pre-commit, wiki-health, health-check, evals)
-- ⚠ CÓ NỢ wiki (thiếu Origin / index lệch) — backfill trước khi tin Stop hook
+## 2026-06-22 — docs-site-macos — chown
+- Created llmwiki/html/220626-chown.html (single-file docs về lệnh chown)
+- Created draft wiki/sources/draft/220626-chown.md
+- 2026-06-23 00:17 — session `07d80623` — 8 tool calls — files: 230626-docs-gate-register-seq.html, 230626-docs-gate-register.md, index.md, install-harness.sh, settings.json
 
-## 2026-06-22 — install-harness — mode=migrate
-- Cài harness L0–L4 (validators, hooks, pre-commit, wiki-health, health-check, evals)
+## 2026-06-23 — docs-site-macos — harness-docs-gate-orca-guard
+- 2026-06-23 01:07 — session `07d80623` — 22 tool calls — files: 230626-docs-gate-register-seq.html, 230626-docs-gate-register.md, 230626-harness-docs-gate-orca-guard-report.md, 230626-harness-docs-gate-orca-guard.html, 230626-orca-guard-hook-seq.html, 230626-orca-guard-hook.md, index.md, install-harness.sh …
+
+## 2026-06-23 — orca-workflow: /harness-update < 30s
+- Proposal 230626-harness-update-sub30s (gate duyệt) → impl T1-T4.
+- T1 install-harness.sh `--self-heal`: tự backfill Origin+index+OKF in-process, re-audit 1 lần (gộp vòng lặp 3-reinstall agent → 1 lệnh).
+- T2 harness/scripts/audit.py: gộp 3 audit về 1 process; Origin backfill 1 lượt git log.
+- T3 `--no-clone` fast-fail (0.02s, không treo mạng) + skip pre-commit install nếu đã cài.
+- T4 viết lại skill 1-phát-gọi + bench harness/metrics/harness-update-bench.json.
+- Bench: migrate-có-nợ 0.56s, re-run sạch 0.31s, smoke ⛔×3. Dispatch opencode T3 treo → kill, claude-cli tiếp quản.
+
+## 2026-06-23 — orca-workflow: skill tạo docs đạt chuẩn OKF v0.1
+- Proposal 230626-docs-skill-okf (gate duyệt) → impl T1-T3.
+- T1 orca-onboard: heredoc + example block `**Type:**` bold → YAML frontmatter `type: draft` (hết tạo nợ R9).
+- T2 onboard-codebase + new-project-setup: thêm dòng Rule nhắc OKF (copy _template.md).
+- T3 harness/tests/docs-skill-okf-test.sh: 10/10 PASS (skill .md áp OKF, skill HTML N/A, wiki repo OKF 7/8 chỉ còn legacy 220626-chown).
+- Dispatch opencode T2 no-op (0 output) → claude-cli tiếp quản (lần 2 liên tiếp opencode hỏng).
+- 2026-06-23 01:44 — session `31d9431b` — 27 tool calls — files: 230626-docs-skill-okf-seq.html, 230626-docs-skill-okf.md, 230626-harness-update-sub30s-seq.html, 230626-harness-update-sub30s.md, audit.py, docs-skill-okf-test.sh, harness-update-test.sh, harness-update.md …
+
+## 2026-06-23 — orca-workflow: /sync-template < 30s (cờ --full)
+- Proposal 230626-sync-template-sub30s (gate gate_70ba7f4b3b1d duyệt) → impl T1-T4.
+- Phát hiện: script đã <1s; nút thắt >30s là 5-6 round-trip agent quanh Step 6a/6b/8 + log.md.
+- T1-T3 sync-template.py: cờ `--full` gộp OKF backfill (import okf-check in-process) + fingerprint-sau-OKF + self-verify 3 vị trí + append log vào 1 process. Không cờ = hành vi cũ.
+- T4: viết lại FAST PATH skill về 1 phát `--full`; bench harness/metrics/sync-template-bench.json — steady 0.27s, pull+install+verify 0.76s (cả hai <30s & <5s); phân loại + exit code giữ nguyên, CONFLICT vẫn exit 3.
+- T3 dự kiến opencode → claude làm inline (coupled cùng file T1/T2, opencode dispatch bất ổn).
+
+## 2026-06-23 — orca-workflow: hook fail-open + kênh giao hook (fix client cozyroom)
+- Proposal 230626-orca-guard-failopen (gate gate_357120266bc7 duyệt) → impl T1-T3.
+- Sự cố: client cozyroom mọi Bash bị chặn vì hook orca_guard.py thiếu file + lệnh hook trần không fail-open.
+- T1: guard `if [ -f "<p>" ]; then python3 "<p>"; fi` ở install-harness.sh (GLOBAL cmd + ROOT h) + llmwiki/.claude/settings.json (7 command); re-merge dedup theo basename → nâng cấp lệnh trần cũ, không trùng, giữ user hook.
+- T2: thêm 8 llmwiki/.claude/hooks/*.py + settings.json vào manifest (57 pattern); /sync-template --full giao được orca_guard.py.
+- T3: installer WARN khi hook thiếu file (không fatal) + golden test harness/tests/orca-guard-failopen-test.sh 6/6 PASS; 3 python block embed compile OK.
+- Gỡ ngay client: `git show origin/orca:llmwiki/.claude/hooks/orca_guard.py > llmwiki/.claude/hooks/orca_guard.py`.
+
+## 2026-06-23 — orca-workflow: rà 26 npx skill vs bản cũ → vá 2 regression
+- Audit 4 agent song song (old npx cdd3e08~1 vs canonical): 23 OK, 3 flag.
+- orca-workflow: khôi phục section "An toàn container/DB" (Cozyroom DB path + bài học 05-29 recreate→mất DB) bị refactor b0f30e0 làm rớt → canonical + npx.
+- tour-guide: canonical vốn bonbon-specific (fe/components/dms/...) → thay bằng bản generic self-contained (khớp published description) + có frontmatter (vá luôn gap thiếu frontmatter); npx regenerate.
+- onboard-codebase: GIỮ NGUYÊN — canonical cố tình caveman-compress (commit 52827b7), npx mirror đúng harness.
+- Kết quả: npx body == canonical cho toàn bộ skill (chuẩn so với harness).

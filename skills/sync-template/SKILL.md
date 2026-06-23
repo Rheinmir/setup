@@ -6,25 +6,65 @@ description: Sync structural improvements between project and master template re
 # Skill: sync-template
 
 ## Purpose
-Synchronize structural and template improvements between the current project and the master template repository `https://github.com/Rheinmir/setup.git`.
+Sync structural/template improvements between project and `https://github.com/Rheinmir/setup.git`.
 
 ## When to use
-- **Upstream**: After improving a template file locally and wanting to save it to Master.
-- **Downstream**: When the Master repo has newer features or fixes that you want to bring into the current project.
+- **Upstream**: Improved template locally → save to Master.
+- **Downstream**: Master has newer fixes → bring into project.
 
-## Steps
+## FAST PATH — downstream 1 lệnh `--full` (< 30s, mặc định)
+
+Downstream sync là **1 script non-interactive tự chứa**. Gọi **1 lần** với `--full` → mọi bước
+hậu-sync (Step 6a/6b/8 + ghi log) chạy trong CÙNG process. Agent đọc 1 report rồi báo cáo —
+KHÔNG lặp lại lệnh riêng. Bench repo này: full steady-state 0.27s · full pull+install+verify 0.76s
+(`harness/metrics/sync-template-bench.json`).
+
+```bash
+python3 harness/scripts/sync-template.py --full        # ⭐ MẶC ĐỊNH: sync + OKF backfill + fingerprint + verify ×3 + ghi log, 1 process
+python3 harness/scripts/sync-template.py --full --json  # như trên, output máy đọc (đọc okf_migrated / verify_bad)
+python3 harness/scripts/sync-template.py --dry-run      # xem trước, không ghi (kèm --full để xem OKF sẽ migrate gì)
+python3 harness/scripts/sync-template.py --strategy pull # ghi đè cả CONFLICT bằng remote (backup .local-bak)
+```
+
+> Chạy `--full` **1 lần là xong** — đừng gọi tiếp `okf-check`, `health-check --update`, vòng verify,
+> hay tự `Edit` log.md (script đã làm hết). Đó là cách giữ skill dưới 30s: nút thắt cũ là **số
+> round-trip agent** quanh các bước hậu-sync, không phải CPU. Không cờ `--full` = hành vi cũ y nguyên.
+
+Phân loại bằng hash 3 mốc — **disk ↔ R0 (remote tại lần sync trước, lưu ở `version.json:remote_synced`) ↔ remote hiện tại**:
+- `NEW` (thiếu local) + `UPDATE` (remote mới hơn, local chưa đụng) → **tự PULL**.
+- `KEPT` (mình đã custom, remote không mới hơn) → **giữ nguyên**, không hỏi.
+- `CONFLICT` (cả hai cùng đổi) → mặc định **giữ local** + lưu bản remote ra `/tmp/sync-template-conflicts/` để diff; exit code 3. **Không bao giờ** tự `--strategy pull` để rút ngắn thời gian.
+
+Quy trình tự động trong script (`--full`): fetch remote `version.json`+`manifest` → phân loại → tải song song → **OKF backfill in-process** (migrate bold→YAML, idempotent) → refresh `version.json` (fingerprint SAU OKF + `template_version` + `remote_synced`) → cài skill ra 3 chỗ (`.claude/commands/`, `~/.claude/skills/`, `~/.claude/commands/`) → **self-verify 3 vị trí** → **append `wiki/log.md`**. Exit: 0 sạch · 1 lỗi tải/OKF/verify · 3 CONFLICT cần quyết.
+
+**Khi nào CẦN can thiệp tay (chạy script trước, đọc report):**
+- Report có `CONFLICT` và bạn muốn lấy remote → chạy lại `--strategy pull` (1 quyết định, không phải 3).
+- Branch remote KHÁC `version.json:branch` → `--branch <tên>` (xem Step 2 để audit branch).
+- Cấu trúc `skills/` cũ cần migrate (Step 3), hoặc cần upstream (đẩy lên) → dùng MANUAL STEPS bên dưới.
+
+> ⚠ Bug đã fix: `health-check --update` đặt baseline = disk → sync KHÔNG phân biệt được "remote mới" vs "mình đã custom" → suýt ghi đè file custom. Script này dùng baseline riêng `remote_synced` (hash remote tại lần sync) nên phân biệt đúng. **Đừng** quay lại dùng `patterns` (disk) làm baseline phân loại.
+
+---
+
+## MANUAL STEPS (fallback — upstream, migrate cấu trúc cũ, hoặc debug)
+
+### Step 0: Pre-flight — health-check (chẩn đoán trước khi sync)
+Chạy `/health-check` (`python3 harness/scripts/health-check.py --root .`) để biết NÊN sync hướng nào:
+- `NEEDS-SYNC` (behind/missing) → downstream (kéo về).
+- `DRIFT` (đã sửa local) → upstream (đẩy lên) hoặc revert.
+- `OK` → không cần sync, dừng.
 
 ### Step 1: Load Manifest
-Read `.template-manifest.json` for the inclusion list and remote URL.
+Read `.template-manifest.json` — inclusion list + remote URL.
 
-### Step 2: Fetch Master Repo & Branch Audit
-- **CRITICAL**: Always list all remote branches via `gh api repos/<owner>/<repo>/branches`.
-- Check latest commit date on each branch — do not assume `master`/`main` is most up-to-date.
-- Ask user which branch to use if unclear.
-- Use `gh api` + `curl` to fetch files directly — no need to `git clone`.
+### Step 2: Fetch & Branch Audit
+- **CRITICAL**: List all remote branches: `gh api repos/<owner>/<repo>/branches`.
+- Check commit date per branch — don't assume `master`/`main` is newest.
+- Unclear → ask user which branch.
+- Fetch via `gh api` + `curl` — no `git clone`.
 
 ### Step 3: Detect Old Structure Migration
-Before comparing, check if the project has an **old `skills/` layout** that needs migrating to the new `llmwiki/` structure:
+Check for **old `skills/` layout** needing migration to `llmwiki/`:
 
 ```bash
 # Signs of old structure:
@@ -32,19 +72,19 @@ Before comparing, check if the project has an **old `skills/` layout** that need
 [ -d "skills/" ] && [ -d "llmwiki/skills/" ]       # both exist → migration in progress
 ```
 
-**If old `skills/` exists alongside new `llmwiki/skills/`:**
-1. List files in `skills/` (flat .md + subdirs like `dev-loop/`, `wiki-loop/`, etc.)
-2. Map old → new paths:
+**Old `skills/` + new `llmwiki/skills/` coexist:**
+1. List `skills/` (flat .md + subdirs: `dev-loop/`, `wiki-loop/`, etc.)
+2. Map old → new:
    - `skills/dev-loop/*.md`   → `llmwiki/skills/dev-loop/*.md`
    - `skills/wiki-loop/*.md`  → `llmwiki/skills/wiki-loop/*.md`
    - `skills/orchestrate/*.md`→ `llmwiki/skills/orchestrate/*.md`
    - `skills/utils/*.md`      → `llmwiki/skills/utils/*.md`
    - `skills/*.md` (flat)     → already covered by subdirs, skip duplicates
-3. For each file: if content matches `llmwiki/` counterpart → old is stale, safe to remove.
-4. Present migration table and ask user to confirm before deleting old `skills/`.
+3. Content matches → old stale, safe to remove.
+4. Show migration table → confirm before delete.
 
 ### Step 4: Compare Manifest Files
-Run `diff` between local and remote for each file in `includes`:
+`diff` local vs remote for each file in `includes`:
 
 ```bash
 BASE="https://raw.githubusercontent.com/<owner>/<repo>/<branch>"
@@ -54,49 +94,66 @@ for file in <includes>; do
 done
 ```
 
-Status legend:
-- `SAME` — identical, skip
-- `DIFF` — both exist, content differs
-- `MISSING` — exists on remote, not local → candidate for downstream
-- `NEW` — exists locally, not on remote → candidate for upstream
-- `ABSENT` — neither side has it
+Status:
+- `SAME` — skip
+- `DIFF` — content differs
+- `MISSING` — remote only → downstream candidate
+- `NEW` — local only → upstream candidate
+- `ABSENT` — neither
 
-### Step 5: Sync Plan Presentation
-Present table. **STOP and ask** user for direction before executing:
-- Pull all / Push all / Specific files
-- Which direction for each DIFF file
+### Step 5: Sync Plan
+Show table. **STOP** → ask user: pull all / push all / specific files / direction per DIFF.
 
-### Step 6: Execution
-- **Downstream**: `mkdir -p` target dir → `curl -sfL <url> -o <local_path>`
-- **Upstream**: Commit + push via `gh` or `git`
-- Copy file by file — never `cp -R`
-- After downstream: update `wiki/log.md`
+### Step 6: Execute
+- **Downstream**: `mkdir -p` → `curl -sfL <url> -o <local_path>` → update `wiki/log.md`
+- **Upstream**: commit + push via `gh`/`git`
+- File by file — no `cp -R`
+
+> **Step 6a/6b/8 đã GỘP vào `--full`.** Nếu bạn chạy FAST PATH `--full` thì BỎ QUA 6a/6b/8 —
+> script đã OKF-backfill + refresh fingerprint + verify + ghi log trong process. Các bước dưới chỉ
+> dùng khi chạy MANUAL (debug / upstream / migrate cấu trúc cũ), không phải sau `--full`.
+
+### Step 6a: OKF backfill *(MANUAL — `--full` đã làm)*
+Template/skill mới có thể nâng định dạng wiki (vd chuẩn OKF v0.1). Sau khi pull, convert mọi file content cũ còn dùng pseudo-frontmatter dạng bold `**Type:**` sang YAML frontmatter để khỏi vướng R9:
+```bash
+python3 harness/scripts/okf-check.py --check      # exit 3 = có file chưa đạt OKF
+python3 harness/scripts/okf-check.py --migrate    # convert bold → YAML (chỉ THÊM frontmatter, giữ body/## Origin)
+```
+- Idempotent — file đã có `---` frontmatter được bỏ qua. Reserved (index/log/README/decisions/_template…) tự miễn.
+- Sau migrate: chạy lại `--check` đến khi `DAT CHUAN OKF v0.1`, rồi cập nhật index/log như mọi thay đổi wiki.
+
+### Step 6b: Refresh version fingerprint *(MANUAL — `--full` đã làm)*
+Nội dung pattern vừa đổi → cập nhật lại `harness/version.json` để health-check khỏi báo DRIFT giả:
+```bash
+python3 harness/scripts/health-check.py --update   # KHÔNG --bump ở project con
+```
+- `--bump major|minor|patch` CHỈ chạy ở repo template `Rheinmir/setup` khi PHÁT HÀNH version pattern mới.
+- Upstream sync ở repo template: sau khi push, chạy `--update --bump <part>` rồi commit `harness/version.json`.
 
 ### Step 7: Install as Native Skills *(runs every downstream sync)*
 
-Collect all skill files synced (files under `llmwiki/skills/` in manifest).
-Skip: `README.md`, `index.md`, `log.md`, files without `## Purpose` or `## Steps`.
+Collect skill files synced (under `llmwiki/skills/` in manifest). Skip: `README.md`, `index.md`, `log.md`, no-`## Purpose`/`## Steps` files.
 
-**A. Project-level** (`.claude/commands/` inside project — for this repo only):
+**A. Project-level** (`.claude/commands/` — this repo):
 ```bash
 mkdir -p .claude/commands/
 # Add description: frontmatter if missing, then copy
 printf -- "---\ndescription: %s\n---\n\n" "$desc" | cat - <src> > .claude/commands/<name>.md
 ```
 
-**B. Global user-level** (`~/.claude/skills/<name>/SKILL.md` — toàn máy, mọi project):
+**B. Global user-level** (`~/.claude/skills/<name>/SKILL.md` — all projects):
 ```bash
 mkdir -p ~/.claude/skills/<name>/
 # Requires name: + description: frontmatter
 printf -- "---\nname: %s\ndescription: %s\n---\n\n" "$name" "$desc" | cat - <src> > ~/.claude/skills/<name>/SKILL.md
 ```
 
-**C. Global slash command** (`~/.claude/commands/<name>.md` — autocomplete `/name`):
+**C. Global slash command** (`~/.claude/commands/<name>.md`):
 ```bash
 printf -- "---\ndescription: %s\n---\n\n" "$desc" | cat - <src> > ~/.claude/commands/<name>.md
 ```
 
-Luôn install cả 3 cho Claude Code. Report bảng sau khi xong:
+Install cả 3. Report:
 
 ```
 | Skill          | Project .claude/commands/ | ~/.claude/skills/ | ~/.claude/commands/ |
@@ -113,31 +170,27 @@ for name in <skill-list>; do
   [ -f "$HOME/.claude/skills/$name/SKILL.md" ] && echo "✓ global $name" || echo "✗ global $name"
 done
 ```
-Fix any `✗` before declaring done. Claude Code picks up skills immediately — no restart needed.
+Fix `✗` before done. No restart needed.
 
 ## Agent Compatibility
 
-| Agent | Có thể chạy? | Lý do |
-|-------|-------------|-------|
-| Claude Code CLI | Có | Full tool access |
-| OpenCode | Có | Full tool access |
-| Kiro CLI | Có | Full tool access |
-| Antigravity CLI | Không | Sandbox chặn file/command tools |
+| Agent | Run? | Reason |
+|-------|------|--------|
+| Claude Code | Yes | Full tool access |
+| OpenCode | Yes | Full tool access |
+| Antigravity | No | Sandbox blocks file/command tools |
 
 ## Rules
-- NEVER sync `.env`, credentials, business-specific docs.
-- ALWAYS audit remote branches before syncing — newer content may be on a non-default branch.
-- ALWAYS show diff for `[CONFLICT]` files and wait for user instruction.
-- NEVER bulk copy (`cp -R`) — copy file by file per manifest.
-- **Migration check (Step 3) runs on every sync** — detect old `skills/` layout and offer to migrate.
-- **Step 7 runs on every downstream sync** — install to all 3 Claude Code locations.
-- Use `impact-check` if template change affects shared logic in `skills/`.
-- `[NEW]` files: add to `.template-manifest.json` includes BEFORE upstream commit.
-- `[MISSING]` files: add to `.template-manifest.json` includes AFTER downstream copy.
-- Native skill frontmatter needs `name:` + `description:`. Slash command needs only `description:`.
-- Copy file by file — never `cp -R`.
-- Skip `README.md`, `index.md`, `log.md`, files without `## Purpose` or `## Steps`.
-
+- NEVER sync `.env`, credentials, business docs.
+- ALWAYS audit remote branches — non-default may be newest.
+- ALWAYS show diff for `[CONFLICT]` → wait for instruction.
+- NEVER `cp -R` — file by file.
+- **Step 3 every sync** — detect old `skills/`, offer migrate.
+- **Step 7 every downstream sync** — install all 3 Claude Code locations.
+- `[NEW]`: add to manifest BEFORE upstream commit.
+- `[MISSING]`: add to manifest AFTER downstream copy.
+- Frontmatter: `name:` + `description:` for skills; `description:` only for slash commands.
+- Skip `README.md`, `index.md`, `log.md`, no-Purpose/Steps files.
 
 ---
 

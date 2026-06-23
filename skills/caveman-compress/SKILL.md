@@ -110,7 +110,6 @@ Compressed:
 - Original file is backed up as FILE.original.md before overwriting
 - Never compress FILE.original.md (skip it)
 
-
 ---
 
 ## Output Report

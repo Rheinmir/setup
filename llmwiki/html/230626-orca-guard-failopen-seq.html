@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sequence — hook fail-open + kênh giao hook</title>
+<style>
+  :root { --indigo:#4f46e5; --emerald:#059669; --cam:#ea580c; --ink:#1e293b; --line:#cbd5e1; }
+  * { box-sizing: border-box; }
+  body { font-family:-apple-system,"Segoe UI",system-ui,sans-serif; background:#f8fafc; color:var(--ink); margin:0; padding:32px; line-height:1.55; }
+  h1 { font-size:22px; margin:0 0 4px; }
+  .sub { color:#64748b; margin:0 0 28px; font-size:14px; }
+  .diagram-box { background:#fff; border:1px solid var(--line); border-radius:14px; padding:20px 22px; margin:0 0 22px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+  .diagram-box h2 { font-size:16px; margin:0 0 12px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .badge { font-size:11px; font-weight:700; color:#fff; padding:2px 9px; border-radius:999px; letter-spacing:.3px; }
+  .b-indigo { background:var(--indigo); } .b-emerald { background:var(--emerald); } .b-cam { background:var(--cam); }
+  .lanes { display:flex; gap:8px; flex-wrap:wrap; margin:0 0 12px; }
+  .lane { font-size:12px; font-weight:600; background:#f1f5f9; border:1px solid var(--line); border-radius:8px; padding:4px 10px; }
+  .msg { opacity:.92; font-size:13.5px; padding:6px 0 6px 18px; border-left:3px solid var(--line); margin:0; }
+  .msg.add { border-left-color:var(--emerald); } .msg.legacy { border-left-color:var(--indigo); } .msg.block { border-left-color:var(--cam); }
+  .msg b { color:var(--ink); }
+  .desc { background:#f8fafc; border:1px dashed var(--line); border-radius:8px; padding:10px 14px; font-size:13px; color:#475569; margin:14px 0 0; }
+  code { background:#f1f5f9; padding:1px 5px; border-radius:5px; font-size:12.5px; }
+</style>
+</head>
+<body>
+<h1>Sequence — hook thiếu file phải <code>fail-open</code> + kênh giao hook</h1>
+<p class="sub">230626 · mỗi task một sơ đồ · indigo=legacy · emerald=thêm/sửa · cam=nhánh chặn · ↩ <a href="../wiki/sources/draft/230626-orca-guard-failopen.md">về proposal</a></p>
+
+<div class="diagram-box">
+  <h2><span class="badge b-emerald">T1 · sửa</span> Fail-open guard ở mọi nơi sinh lệnh hook</h2>
+  <div class="lanes"><span class="lane">claude-cli</span><span class="lane">install-harness.sh</span><span class="lane">settings.json</span><span class="lane">Claude Code hook runner</span></div>
+  <p class="msg legacy">1. HÔM NAY: lệnh hook là <code>python3 "&lt;path&gt;/orca_guard.py"</code> TRẦN (settings.json committed + ROOT h() L193 + GLOBAL cmd() L82 chỉ guard <code>-d llmwiki</code>). File thiếu → exit≠0.</p>
+  <p class="msg block">2. HÔM NAY: PreToolUse thấy exit≠0 → báo lỗi → CHẶN luôn Bash. Một guard mất tích lại khoá cả CLI (sự cố cozyroom).</p>
+  <p class="msg add">3. SỬA: mọi nơi sinh lệnh đổi thành <code>if [ -f "&lt;path&gt;" ]; then python3 "&lt;path&gt;"; fi</code> → file thiếu = BỎ QUA, exit 0, không chặn.</p>
+  <p class="msg add">4. Re-merge idempotent: dedup theo ĐƯỜNG DẪN script (không theo chuỗi lệnh thô) → chạy lại NÂNG CẤP lệnh trần cũ thành có guard, không append trùng.</p>
+  <p class="desc"><b>Ai/gì:</b> claude-cli (ngữ nghĩa exit-code hook-critical). <b>Dữ liệu chạy:</b> chuỗi lệnh hook + danh sách hook đã có. <b>Nhánh an toàn (cam):</b> khi CÓ file, hook chặn y như cũ — chỉ đổi hành vi lúc THIẾU file; không nới lỏng bảo mật. Đây là đòn bẩy chính: hết brick.</p>
+</div>
+
+<div class="diagram-box">
+  <h2><span class="badge b-emerald">T2 · thêm</span> Kênh giao hook: thêm hook vào manifest</h2>
+  <div class="lanes"><span class="lane">claude-cli</span><span class="lane">.template-manifest.json</span><span class="lane">sync-template.py --full</span><span class="lane">version.json</span></div>
+  <p class="msg legacy">1. HÔM NAY: 8 file <code>llmwiki/.claude/hooks/*.py</code> KHÔNG nằm trong manifest; installer L149 SAME_BUNDLE bỏ qua copy → project kiểu-bundle có 0 đường nhận hook mới.</p>
+  <p class="msg add">2. THÊM 8 hook vào <code>includes</code> của manifest (orca_guard, pre/post_tool_use, stop, session_start/end, user_prompt_submit, hooklib).</p>
+  <p class="msg add">3. <code>/sync-template --full</code> nay phân loại + kéo hook như mọi pattern → giao orca_guard.py về client; refresh <code>version.json</code> fingerprint sau khi thêm.</p>
+  <p class="desc"><b>Ai/gì:</b> claude-cli (đụng baseline sync/version, phải khớp phân loại NEW/CLEAN/LOCAL). <b>Dữ liệu chạy:</b> danh sách includes + hash. <b>Nhánh an toàn (cam):</b> hook là file template verbatim nên syncable; thêm vào includes không phá phân loại — chỉ mở rộng tập file.</p>
+</div>
+
+<div class="diagram-box">
+  <h2><span class="badge b-cam">T3 · nhánh chặn</span> Presence-check + golden test fail-open</h2>
+  <div class="lanes"><span class="lane">opencode → claude-cli</span><span class="lane">install-harness.sh</span><span class="lane">harness/tests/</span></div>
+  <p class="msg add">1. THÊM presence-check: sau khi ghi ROOT settings, installer duyệt mỗi hook đã đăng ký; thiếu file → in <code>WARN: hook &lt;x&gt; đã đăng ký nhưng thiếu file</code> (KHÔNG fatal).</p>
+  <p class="msg add">2. THÊM <code>harness/tests/orca-guard-failopen-test.sh</code>: (a) xoá orca_guard.py → chạy Bash qua lệnh guard → assert exit 0 (KHÔNG bị chặn); (b) đặt lại file → assert hook chạy.</p>
+  <p class="msg block">3. Cổng nghiệm thu: hook thiếu file KHÔNG BAO GIỜ chặn Bash; hook có file vẫn chặn đúng. Sai bất kỳ → dừng, báo user.</p>
+  <p class="desc"><b>Ai/gì:</b> opencode (cơ học: viết test bash + WARN) → claude-cli tiếp quản nếu opencode treo (rule skill). <b>Dữ liệu chạy:</b> exit code 2 case + dòng WARN. <b>Nhánh an toàn (cam):</b> test phải khoá cả hai chiều (fail-open KHI thiếu, vẫn-chặn KHI có) để không vô tình tắt hẳn guard.</p>
+</div>
+
+</body>
+</html>
