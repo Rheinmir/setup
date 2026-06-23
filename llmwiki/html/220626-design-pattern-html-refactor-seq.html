@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>220626 — Design Pattern HTML Refactor · Sequence Diagram</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --font-text:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue','Roboto','Segoe UI',sans-serif;
+  --font-display:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue','Roboto','Segoe UI',sans-serif;
+  --font-mono:'SF Mono',ui-monospace,'SFMono-Regular',Menlo,'Roboto Mono',Consolas,monospace;
+  --glass-1:rgba(255,255,255,.55);--glass-2:rgba(255,255,255,.70);--glass-3:rgba(255,255,255,.88);
+  --blur-1:24px;--blur-2:8px;
+  --text-1:#0f0f12;--text-2:#4a4a55;
+  --accent:#0a84ff;
+  --indigo:#5856d6;--emerald:#34c759;--amber:#ff9500
+}
+html{background:#e9f0fb;scrollbar-width:thin;scrollbar-color:transparent transparent}
+html.scrolling{scrollbar-color:rgba(10,132,255,.32) transparent}
+body{font-family:var(--font-text);color:var(--text-1);padding-left:200px;
+  background:radial-gradient(900px 500px at 12% -10%,rgba(10,132,255,.10),transparent 60%),
+    radial-gradient(700px 420px at 95% 15%,rgba(90,162,232,.08),transparent 55%),
+    linear-gradient(180deg,#eef4fd 0%,#e6eefb 100%);
+  transition:padding-left .28s cubic-bezier(.4,0,.2,1)}
+body.nav-collapsed{padding-left:0}
+body::before{content:'';position:fixed;inset:-10%;z-index:-1;pointer-events:none;
+  background:radial-gradient(640px 440px at 10% 14%,rgba(10,132,255,.22),transparent 65%),
+    radial-gradient(380px 460px at 4% 52%,rgba(48,176,199,.18),transparent 65%),
+    radial-gradient(540px 400px at 88% 10%,rgba(88,86,214,.13),transparent 60%),
+    radial-gradient(720px 500px at 74% 76%,rgba(48,176,199,.13),transparent 65%),
+    radial-gradient(480px 380px at 16% 86%,rgba(255,149,0,.12),transparent 60%);
+  animation:orbDrift 46s ease-in-out infinite alternate}
+@keyframes orbDrift{100%{transform:translate(2.2%,1.6%) scale(1.045)}}
+@media(prefers-reduced-motion:reduce){body::before{animation:none}}
+body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:radial-gradient(rgba(30,90,170,.11) 1px,transparent 1.3px);
+  background-size:22px 22px;
+  mask-image:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.22))}
+::-webkit-scrollbar{width:11px;height:11px;background:transparent}
+::-webkit-scrollbar-thumb{background:transparent;border-radius:8px;border:3px solid transparent;background-clip:content-box;transition:background-color .25s ease}
+html.scrolling ::-webkit-scrollbar-thumb{background-color:rgba(10,132,255,.32)}
+/* NAV */
+nav{position:fixed;top:0;left:0;bottom:0;width:200px;z-index:100;
+  display:flex;flex-direction:column;align-items:stretch;gap:2px;padding:18px 12px;overflow-y:auto;
+  background:linear-gradient(165deg,rgba(255,255,255,.46) 0%,rgba(255,255,255,.22) 48%,rgba(240,248,255,.34) 100%);
+  backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
+  -webkit-backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
+  border-right:1px solid rgba(255,255,255,.55);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 1px 0 0 rgba(255,255,255,.5),inset -1px 0 0 rgba(30,90,170,.10),4px 0 24px rgba(30,90,170,.08);
+  transition:transform .28s cubic-bezier(.4,0,.2,1)}
+nav::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;
+  background:radial-gradient(220px 160px at 18% 4%,rgba(255,255,255,.55),transparent 70%),
+    linear-gradient(115deg,rgba(255,255,255,.28) 0%,transparent 28%,transparent 72%,rgba(255,255,255,.14) 100%)}
+nav::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;pointer-events:none;
+  background:linear-gradient(180deg,rgba(10,132,255,.55) 0%,rgba(88,86,214,.45) 40%,rgba(48,176,199,.4) 70%,rgba(255,149,0,.3) 100%);
+  border-radius:0 2px 2px 0;opacity:.7}
+nav>*{position:relative}
+body.nav-collapsed nav{transform:translateX(-100%)}
+.logo{margin:0 0 16px;padding:6px 10px;font-family:var(--font-display);font-size:13px;font-weight:700;line-height:1.4;
+  background:linear-gradient(135deg,#0a84ff,#64b5f7);-webkit-background-clip:text;background-clip:text;color:transparent}
+.logo span{font-size:11px;font-weight:500;opacity:.7;display:block}
+nav a{display:block;padding:8px 12px;border-radius:10px;font-size:13px;color:var(--text-2);text-decoration:none;font-weight:500;position:relative;overflow:hidden;transition:background .2s,color .2s}
+nav a:hover{background:rgba(10,132,255,.07);color:#0a84ff}
+nav a.active{color:#0a84ff;background:rgba(10,132,255,.10);font-weight:600}
+.nav-section-label{font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em;padding:12px 12px 4px}
+.nav-toggle{position:fixed;top:12px;left:12px;z-index:120;width:32px;height:32px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-size:14px;color:#4a4a55;cursor:pointer;
+  background:linear-gradient(165deg,rgba(255,255,255,.5),rgba(255,255,255,.24));
+  backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
+  -webkit-backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
+  border:1px solid transparent;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 0 0 1px rgba(30,90,170,.08),0 2px 10px rgba(30,90,170,.12);
+  transition:opacity .2s,transform .28s cubic-bezier(.4,0,.2,1);overflow:hidden}
+.nav-toggle:hover{color:#0a84ff}
+body:not(.nav-collapsed) .nav-toggle{opacity:0;pointer-events:none;transform:translateX(-6px)}
+.nav-close{position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-size:12px;color:#4a4a55;cursor:pointer;
+  background:rgba(0,0,0,.04);border:none;overflow:hidden}
+.nav-close:hover{color:#0a84ff;background:rgba(10,132,255,.10)}
+/* RIPPLE */
+.ripple-ink{position:absolute;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.70) 0%,rgba(255,255,255,.28) 38%,rgba(10,132,255,.20) 72%,transparent 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 0 14px rgba(10,132,255,.10);
+  backdrop-filter:blur(2px) saturate(1.25);-webkit-backdrop-filter:blur(2px) saturate(1.25);
+  animation:rippleAnim .55s cubic-bezier(.25,.46,.45,.94) forwards}
+@keyframes rippleAnim{0%{transform:scale(0);opacity:.9}100%{transform:scale(2.8);opacity:0}}
+/* MAIN */
+main{max-width:860px;margin:0 auto;padding:48px 40px 80px}
+/* HEADER */
+.page-header{margin-bottom:40px}
+.page-header h1{font-family:var(--font-display);font-size:26px;font-weight:700;line-height:1.28;
+  background:linear-gradient(135deg,#0a84ff 0%,#5856d6 60%,#34c759 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:6px}
+.page-header .meta{font-size:13px;color:var(--text-2);display:flex;gap:16px;flex-wrap:wrap;margin-top:8px}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;
+  background:rgba(10,132,255,.10);color:#0a84ff;border:1px solid rgba(10,132,255,.18)}
+.badge.emerald{background:rgba(52,199,89,.10);color:#1a7e38;border-color:rgba(52,199,89,.18)}
+.badge.indigo{background:rgba(88,86,214,.10);color:#3634a3;border-color:rgba(88,86,214,.18)}
+.badge.amber{background:rgba(255,149,0,.12);color:#a85800;border-color:rgba(255,149,0,.20)}
+/* SECTION */
+section{margin-bottom:52px;scroll-margin-top:24px}
+section h2{font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--text-1);margin-bottom:8px}
+section .task-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+section .desc{font-size:14px;line-height:1.65;color:var(--text-2);margin-bottom:20px;padding:14px 16px;
+  background:rgba(255,255,255,.52);border-radius:12px;border-left:3px solid var(--accent);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+/* DIAGRAM BOX */
+.diagram-box{background:rgba(255,255,255,.60);border-radius:16px;
+  border:1px solid rgba(255,255,255,.75);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 2px 20px rgba(30,90,170,.07);
+  backdrop-filter:blur(var(--blur-2)) saturate(1.5);-webkit-backdrop-filter:blur(var(--blur-2)) saturate(1.5);
+  overflow:hidden;margin-bottom:16px}
+.diagram-box svg{display:block;width:100%;height:auto}
+/* SVG MESSAGE labels always visible */
+.msg{opacity:.82;transition:opacity .25s,filter .25s}
+.msg.active{opacity:1;filter:drop-shadow(0 0 5px rgba(10,132,255,.35))}
+/* CONTROLS */
+.controls{display:flex;gap:10px;align-items:center;margin-top:12px}
+.ctrl-btn{padding:6px 16px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;border:none;
+  background:rgba(10,132,255,.10);color:#0a84ff;transition:background .18s}
+.ctrl-btn:hover{background:rgba(10,132,255,.18)}
+.ctrl-btn.pause{background:rgba(255,149,0,.12);color:#a85800}
+.step-counter{font-size:12px;color:var(--text-2);font-family:var(--font-mono)}
+/* LEGEND */
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;padding:10px 14px;
+  background:rgba(255,255,255,.42);border-radius:10px;border:1px solid rgba(255,255,255,.55)}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-2)}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+/* DIVIDER */
+hr{border:none;height:1px;background:linear-gradient(90deg,transparent,rgba(30,90,170,.14),transparent);margin:48px 0}
+/* PROPOSAL LINK */
+.proposal-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#0a84ff;text-decoration:none;
+  padding:7px 14px;border-radius:10px;background:rgba(10,132,255,.08);border:1px solid rgba(10,132,255,.15);
+  transition:background .18s}
+.proposal-link:hover{background:rgba(10,132,255,.14)}
+</style>
+</head>
+<body>
+<button class="nav-toggle" aria-label="Open nav" onclick="openNav()">☰</button>
+<nav id="mainnav">
+  <button class="nav-close" aria-label="Close nav" onclick="closeNav()">✕</button>
+  <div class="logo">Design Pattern<span>HTML Refactor · 220626</span></div>
+  <span class="nav-section-label">Tasks</span>
+  <a href="#t1">T1 — v1 Phần 000</a>
+  <a href="#t2">T2 — v2 Phần 001</a>
+  <a href="#t3">T3 — v3 Phần 002</a>
+  <span class="nav-section-label">Links</span>
+  <a href="design-pattern-v1.html">v1 HTML</a>
+  <a href="design-pattern-v2.html">v2 HTML</a>
+  <a href="design-pattern-v3.html">v3 HTML</a>
+</nav>
+<main>
+  <div class="page-header">
+    <h1>Design Pattern HTML Refactor</h1>
+    <div class="meta">
+      <span class="badge">220626</span>
+      <span class="badge indigo">orca-workflow</span>
+      <span class="badge emerald">agy · claude-sonnet-4-6</span>
+      <span class="badge amber">3 tasks · 3 files</span>
+    </div>
+    <div style="margin-top:14px">
+      <a class="proposal-link" href="../wiki/draft/orca/220626-design-pattern-html-refactor.md">Proposal MD</a>
+    </div>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend" style="margin-bottom:36px">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--indigo)"></div>Component có sẵn (indigo)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--emerald)"></div>Thêm / sửa (emerald)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>Fail / chặn (amber)</div>
+  </div>
+
+  <!-- TASK 1 -->
+  <section id="t1">
+    <h2>Task 1 — Refactor design-pattern-v1.html</h2>
+    <div class="task-label">
+      <span class="badge">Phần 000 · Phan Văn Ngọc Thắng</span>
+      <span class="badge emerald">Agent: agy</span>
+    </div>
+    <p class="desc">agy đọc <code>design-pattern-v1.md</code> (MD source đầy đủ) và <code>design-pattern-v1.html</code> (HTML hiện tại chỉ có 4 section), sau đó bổ sung vào HTML: Bộ khung 5 bước tiếp cận System Design, chi tiết từng building block (Load Balancer, DB, Cache, Queue, CDN), Rate Limiting — mỗi concept thêm 2–3 câu prose WHY/WHEN. Nếu sidebar nav thiếu section mới, cập nhật luôn.</p>
+    <div class="diagram-box">
+      <svg id="svg1" viewBox="0 0 760 280" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif">
+        <!-- background -->
+        <defs>
+          <linearGradient id="g1a" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#eef4fd"/>
+            <stop offset="100%" stop-color="#e6eefb"/>
+          </linearGradient>
+          <marker id="arr1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6 Z" fill="#5856d6" opacity=".7"/>
+          </marker>
+          <marker id="arr1g" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6 Z" fill="#34c759" opacity=".7"/>
+          </marker>
+          <marker id="arr1r" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6 Z" fill="#0a84ff" opacity=".7"/>
+          </marker>
+        </defs>
+        <rect width="760" height="280" fill="url(#g1a)" rx="16"/>
+        <!-- Lifelines -->
+        <!-- agy -->
+        <rect x="48" y="20" width="90" height="32" rx="10" fill="#5856d6" opacity=".18"/>
+        <text x="93" y="41" text-anchor="middle" font-size="13" font-weight="700" fill="#3634a3">agy</text>
+        <line x1="93" y1="52" x2="93" y2="258" stroke="#5856d6" stroke-width="1.5" stroke-dasharray="4,3" opacity=".35"/>
+        <!-- MD Source -->
+        <rect x="228" y="20" width="110" height="32" rx="10" fill="#5856d6" opacity=".13"/>
+        <text x="283" y="41" text-anchor="middle" font-size="12" font-weight="600" fill="#3634a3">MD source v1</text>
+        <line x1="283" y1="52" x2="283" y2="258" stroke="#5856d6" stroke-width="1.5" stroke-dasharray="4,3" opacity=".3"/>
+        <!-- HTML file -->
+        <rect x="418" y="20" width="110" height="32" rx="10" fill="#34c759" opacity=".14"/>
+        <text x="473" y="41" text-anchor="middle" font-size="12" font-weight="600" fill="#1a7e38">v1.html (output)</text>
+        <line x1="473" y1="52" x2="473" y2="258" stroke="#34c759" stroke-width="1.5" stroke-dasharray="4,3" opacity=".3"/>
+        <!-- docs-site-macos -->
+        <rect x="608" y="20" width="120" height="32" rx="10" fill="#5856d6" opacity=".10"/>
+        <text x="668" y="41" text-anchor="middle" font-size="12" font-weight="600" fill="#3634a3">docs-site-macos</text>
+        <line x1="668" y1="52" x2="668" y2="258" stroke="#5856d6" stroke-width="1.5" stroke-dasharray="4,3" opacity=".25"/>
+        <!-- Messages -->
+        <!-- Step 1: read MD -->
+        <g id="s1m1" class="msg">
+          <line x1="93" y1="82" x2="275" y2="82" stroke="#5856d6" stroke-width="1.5" marker-end="url(#arr1)" opacity=".7"/>
+          <text x="184" y="77" text-anchor="middle" font-size="11" fill="#3634a3" font-weight="600">1. read design-pattern-v1.md</text>
+        </g>
+        <!-- Step 2: parse sections -->
+        <g id="s1m2" class="msg">
+          <line x1="283" y1="110" x2="101" y2="110" stroke="#5856d6" stroke-width="1.5" marker-end="url(#arr1)" opacity=".7"/>
+          <text x="192" y="105" text-anchor="middle" font-size="11" fill="#3634a3" font-weight="600">2. full content + missing sections list</text>
+        </g>
+        <!-- Step 3: read HTML -->
+        <g id="s1m3" class="msg">
+          <line x1="93" y1="138" x2="455" y2="138" stroke="#5856d6" stroke-width="1.5" marker-end="url(#arr1)" opacity=".7"/>
+          <text x="274" y="133" text-anchor="middle" font-size="11" fill="#3634a3" font-weight="600">3. read design-pattern-v1.html</text>
+        </g>
+        <!-- Step 4: apply template -->
+        <g id="s1m4" class="msg">
+          <line x1="93" y1="166" x2="650" y2="166" stroke="#5856d6" stroke-width="1.5" marker-end="url(#arr1)" opacity=".6"/>
+          <text x="371" y="161" text-anchor="middle" font-size="11" fill="#3634a3" font-weight="600">4. apply docs-site-macos enriched sections</text>
+        </g>
+        <!-- Step 5: write output -->
+        <g id="s1m5" class="msg">
+          <line x1="668" y1="194" x2="491" y2="194" stroke="#34c759" stroke-width="1.5" marker-end="url(#arr1g)" opacity=".7"/>
+          <text x="580" y="189" text-anchor="middle" font-size="11" fill="#1a7e38" font-weight="600">5. enriched HTML (7+ sections)</text>
+        </g>
+        <!-- Step 6: write file -->
+        <g id="s1m6" class="msg">
+          <line x1="473" y1="222" x2="473" y2="238" stroke="#34c759" stroke-width="1.5" marker-end="url(#arr1g)" opacity=".6"/>
+          <rect x="418" y="238" width="110" height="26" rx="8" fill="#34c759" opacity=".18"/>
+          <text x="473" y="255" text-anchor="middle" font-size="11" fill="#1a7e38" font-weight="700">v1.html saved</text>
+        </g>
+        <!-- activation bars -->
+        <rect x="89" y="72" width="8" height="160" rx="3" fill="#5856d6" opacity=".22"/>
+        <rect x="279" y="100" width="8" height="20" rx="3" fill="#5856d6" opacity=".14"/>
+        <rect x="664" y="156" width="8" height="48" rx="3" fill="#5856d6" opacity=".14"/>
+        <rect x="469" y="128" width="8" height="120" rx="3" fill="#34c759" opacity=".20"/>
+      </svg>
+    </div>
+    <div class="controls" id="ctrl1">
+      <button class="ctrl-btn" onclick="togglePlay(1)">Pause</button>
+      <span class="step-counter" id="ctr1">Step 1 / 6</span>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- TASK 2 -->
+  <section id="t2">
+    <h2>Task 2 — Refactor design-pattern-v2.html</h2>
+    <div class="task-label">
+      <span class="badge">Phần 001 · Trần Hồng Gấm</span>
+      <span class="badge emerald">Agent: agy</span>
+    </div>
+    <p class="desc">agy đọc <code>design-pattern-v2.md</code> — HTML hiện tại bỏ qua 3 sections quan trọng: Rate Limiting (Token Bucket, Leaky Bucket, Sliding Window + Redis implementation), Consensus Algorithms (Raft/Paxos/PBFT), và Monitoring &amp; Observability (Three Pillars: Logs/Metrics/Traces + SLI/SLO/SLA). agy thêm đủ 3 sections này vào HTML, enrich prose cho 4 sections cũ, cập nhật sidebar nav.</p>
+    <div class="diagram-box">
+      <svg id="svg2" viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif">
+        <defs>
+          <linearGradient id="g2a" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#eef4fd"/>
+            <stop offset="100%" stop-color="#e6eefb"/>
+          </linearGradient>
+          <marker id="arr2i" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6 Z" fill="#5856d6" opacity=".7"/>
+          </marker>
+          <marker id="arr2g" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6 Z" fill="#34c759" opacity=".7"/>
+          </marker>
+        </defs>
+        <rect width="760" height="300" fill="url(#g2a)" rx="16"/>
+        <!-- Lifelines -->
+        <rect x="48" y="20" width="80" height="32" rx="10" fill="#5856d6" opacity=".18"/>
+        <text x="88" y="41" text-anchor="middle" font-size="13" font-weight="700" fill="#3634a3">agy</text>
+        <line x1="88" y1="52" x2="88" y2="272" stroke="#5856d6" stroke-width="1.5" stroke-dasharray="4,3" opacity=".35"/>
+        <!-- MD v2 -->
+        <rect x="198" y="20" width="100" height="32" rx="10" fill="#5856d6" opacity=".13"/>
+        <text x="248" y="41" text-anchor="middle" font-size="12" font-weight="600" fill="#3634a3">MD source v2</text>
+        <line x1="248" y1="52" x2="248" y2="272" stroke="#5856d6" stroke-width="1.5" stroke-dasharray="4,3" opacity=".3"/>
+        <!-- diff checker -->
+        <rect x="368" y="20" width="110" height="32" rx="10" fill="#ff9500" opacity=".13"/>
+        <text x="423" y="33" text-anchor="middle" font-size="11" font-weight="700" fill="#a85800">Section</text>
+        <text x="423" y="47" text-anchor="middle" font-size="11" font-weight="700" fill="#a85800">Diff Check</text>
+        <line x1="423" y1="52" x2="423" y2="272" stroke="#ff9500" stroke-width="1.5" stroke-dasharray="4,3" opacity=".3"/>
+        <!-- v2 HTML -->
+        <rect x="548" y="20" width="100" height="32" rx="10" fill="#34c759" opacity=".14"/>
+        <text x="598" y="33" text-anchor="middle" font-size="11" font-weight="600" fill="#1a7e38">v2.html</text>
+        <text x="598" y="47" text-anchor="middle" font-size="11" font-weight="600" fill="#1a7e38">(output)</text>
+        <line x1="598" y1="52" x2="598" y2="272" stroke="#34c759" stroke-width="1.5" stroke-dasharray="4,3" opacity=".3"/>
+        <!-- Messages -->
+        <g id="s2m1" class="msg">
+          <line x1="88" y1="82" x2="240" y2="82" stroke="#5856d6" stroke-width="1.5" marker-end="url(#arr2i)" opacity=".7"/>
+          <text x="164" y="77" text-anchor="middle" font-size="11" fill="#3634a3" font-weight="600">1. read design-pattern-v2.md</text>
+        </g>
+        <g id="s2m2" class="msg">
+          <line x1="248" y1="108" x2="96" y2="108" stroke="#5856d6" stroke-width="1.5" marker-end="url(#arr2i)" opacity=".7"/>
+          <text x="172" y="103" text-anchor="middle" font-size="11" fill="#3634a3" font-weight="600">2. full content (8 sections)</text>
+        </g>
+        <g id="s2m3" class="msg">
+          <line x1="88" y1="136" x2="405" y2="136" stroke="#ff9500" stroke-width="1.5" marker-end="url(#arr2i)" opacity=".7"/>
+          <text x="246" y="131" text-anchor="middle" font-size="11" fill="#a85800" font-weight="600">3. compare HTML vs MD sections</text>
+        </g>
+        <g id="s2m4" class="msg">
+          <line x1="423" y1="162" x2="96" y2="162" stroke="#ff9500" stroke-width="1.5" marker-end="url(#arr2i)" opacity=".7"/>
+          <text x="260" y="157" text-anchor="middle" font-size="11" fill="#a85800" font-weight="600">4. missing: Rate Limit, Consensus, Monitoring</text>
+        </g>
+        <g id="s2m5" class="msg">
+          <line x1="88" y1="190" x2="580" y2="190" stroke="#34c759" stroke-width="1.5" marker-end="url(#arr2g)" opacity=".7"/>
+          <text x="334" y="185" text-anchor="middle" font-size="11" fill="#1a7e38" font-weight="600">5. write enriched HTML (7 sections)</text>
+        </g>
+        <g id="s2m6" class="msg">
+          <line x1="598" y1="218" x2="598" y2="234" stroke="#34c759" stroke-width="1.5" marker-end="url(#arr2g)" opacity=".6"/>
+          <rect x="548" y="234" width="100" height="24" rx="8" fill="#34c759" opacity=".18"/>
+          <text x="598" y="250" text-anchor="middle" font-size="11" fill="#1a7e38" font-weight="700">v2.html saved</text>
+        </g>
+        <!-- activations -->
+        <rect x="84" y="72" width="8" height="156" rx="3" fill="#5856d6" opacity=".22"/>
+        <rect x="244" y="98" width="8" height="20" rx="3" fill="#5856d6" opacity=".14"/>
+        <rect x="419" y="126" width="8" height="46" rx="3" fill="#ff9500" opacity=".18"/>
+        <rect x="594" y="180" width="8" height="72" rx="3" fill="#34c759" opacity=".20"/>
+      </svg>
+    </div>
+    <div class="controls">
+      <button class="ctrl-btn" onclick="togglePlay(2)">Pause</button>
+      <span class="step-counter" id="ctr2">Step 1 / 6</span>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- TASK 3 -->
+  <section id="t3">
+    <h2>Task 3 — Refactor design-pattern-v3.html</h2>
+    <div class="task-label">
+      <span class="badge">Phần 002 · Bạch Hồng Vinh</span>
+      <span class="badge emerald">Agent: agy</span>
+    </div>
+    <p class="desc">v3.html thiếu nhiều nhất: Communication Patterns (Saga Orchestration/Choreography, Event Sourcing), Service Discovery (client-side vs server-side), Retry với Exponential Backoff + Jitter, Stateless Services (scale horizontal), Event-Driven Architecture (fan-out, producer/consumer), CQRS (Command/Query separation). agy bổ sung đủ 6 patterns này, mỗi cái có prose WHY/WHEN + code/diagram minh họa inline trong HTML.</p>
+    <div class="diagram-box">
+      <svg id="svg3" viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif">
+        <defs>
+          <linearGradient id="g3a" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#eef4fd"/>
+            <stop offset="100%" stop-color="#e6eefb"/>
+          </linearGradient>
+          <marker id="arr3i" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6 Z" fill="#5856d6" opacity=".7"/>
+          </marker>
+          <marker id="arr3g" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6 Z" fill="#34c759" opacity=".7"/>
+          </marker>
+          <marker id="arr3a" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6 Z" fill="#ff9500" opacity=".7"/>
+          </marker>
+        </defs>
+        <rect width="760" height="340" fill="url(#g3a)" rx="16"/>
+        <!-- Lifelines -->
+        <rect x="28" y="20" width="80" height="32" rx="10" fill="#5856d6" opacity=".18"/>
+        <text x="68" y="41" text-anchor="middle" font-size="13" font-weight="700" fill="#3634a3">agy</text>
+        <line x1="68" y1="52" x2="68" y2="310" stroke="#5856d6" stroke-width="1.5" stroke-dasharray="4,3" opacity=".35"/>
+        <!-- MD v3 -->
+        <rect x="168" y="20" width="100" height="32" rx="10" fill="#5856d6" opacity=".13"/>
+        <text x="218" y="41" text-anchor="middle" font-size="12" font-weight="600" fill="#3634a3">MD source v3</text>
+        <line x1="218" y1="52" x2="218" y2="310" stroke="#5856d6" stroke-width="1.5" stroke-dasharray="4,3" opacity=".3"/>
+        <!-- Pattern blocks -->
+        <rect x="338" y="20" width="110" height="32" rx="10" fill="#ff9500" opacity=".13"/>
+        <text x="393" y="33" text-anchor="middle" font-size="11" font-weight="700" fill="#a85800">6 Missing</text>
+        <text x="393" y="47" text-anchor="middle" font-size="11" font-weight="700" fill="#a85800">Patterns</text>
+        <line x1="393" y1="52" x2="393" y2="310" stroke="#ff9500" stroke-width="1.5" stroke-dasharray="4,3" opacity=".3"/>
+        <!-- v3 HTML -->
+        <rect x="518" y="20" width="100" height="32" rx="10" fill="#34c759" opacity=".14"/>
+        <text x="568" y="33" text-anchor="middle" font-size="11" font-weight="600" fill="#1a7e38">v3.html</text>
+        <text x="568" y="47" text-anchor="middle" font-size="11" font-weight="600" fill="#1a7e38">(output)</text>
+        <line x1="568" y1="52" x2="568" y2="310" stroke="#34c759" stroke-width="1.5" stroke-dasharray="4,3" opacity=".3"/>
+        <!-- sidebar -->
+        <rect x="638" y="20" width="100" height="32" rx="10" fill="#5856d6" opacity=".10"/>
+        <text x="688" y="33" text-anchor="middle" font-size="11" font-weight="600" fill="#3634a3">Sidebar</text>
+        <text x="688" y="47" text-anchor="middle" font-size="11" font-weight="600" fill="#3634a3">Nav</text>
+        <line x1="688" y1="52" x2="688" y2="310" stroke="#5856d6" stroke-width="1.5" stroke-dasharray="4,3" opacity=".22"/>
+        <!-- Messages -->
+        <g id="s3m1" class="msg">
+          <line x1="68" y1="82" x2="210" y2="82" stroke="#5856d6" stroke-width="1.5" marker-end="url(#arr3i)" opacity=".7"/>
+          <text x="139" y="77" text-anchor="middle" font-size="10.5" fill="#3634a3" font-weight="600">1. read design-pattern-v3.md</text>
+        </g>
+        <g id="s3m2" class="msg">
+          <line x1="218" y1="106" x2="76" y2="106" stroke="#5856d6" stroke-width="1.5" marker-end="url(#arr3i)" opacity=".7"/>
+          <text x="147" y="101" text-anchor="middle" font-size="10.5" fill="#3634a3" font-weight="600">2. content: 10 patterns total</text>
+        </g>
+        <g id="s3m3" class="msg">
+          <line x1="68" y1="132" x2="375" y2="132" stroke="#ff9500" stroke-width="1.5" marker-end="url(#arr3a)" opacity=".7"/>
+          <text x="221" y="127" text-anchor="middle" font-size="10.5" fill="#a85800" font-weight="600">3. identify 6 missing patterns</text>
+        </g>
+        <g id="s3m4" class="msg">
+          <line x1="393" y1="158" x2="76" y2="158" stroke="#ff9500" stroke-width="1.5" marker-end="url(#arr3a)" opacity=".7"/>
+          <text x="235" y="153" text-anchor="middle" font-size="10.5" fill="#a85800" font-weight="600">4. Saga/EventSrc/ServiceDisc/Retry/EDA/CQRS</text>
+        </g>
+        <g id="s3m5" class="msg">
+          <line x1="68" y1="184" x2="550" y2="184" stroke="#34c759" stroke-width="1.5" marker-end="url(#arr3g)" opacity=".7"/>
+          <text x="309" y="179" text-anchor="middle" font-size="10.5" fill="#1a7e38" font-weight="600">5. write 6 new sections + enrich existing 4</text>
+        </g>
+        <g id="s3m6" class="msg">
+          <line x1="568" y1="210" x2="670" y2="210" stroke="#5856d6" stroke-width="1.5" marker-end="url(#arr3i)" opacity=".6"/>
+          <text x="619" y="205" text-anchor="middle" font-size="10.5" fill="#3634a3" font-weight="600">6. update sidebar (10 links)</text>
+        </g>
+        <g id="s3m7" class="msg">
+          <line x1="688" y1="236" x2="576" y2="236" stroke="#5856d6" stroke-width="1.5" marker-end="url(#arr3i)" opacity=".6"/>
+          <text x="632" y="231" text-anchor="middle" font-size="10.5" fill="#3634a3" font-weight="600">7. sidebar synced</text>
+        </g>
+        <g id="s3m8" class="msg">
+          <line x1="568" y1="264" x2="568" y2="280" stroke="#34c759" stroke-width="1.5" marker-end="url(#arr3g)" opacity=".6"/>
+          <rect x="518" y="280" width="100" height="24" rx="8" fill="#34c759" opacity=".18"/>
+          <text x="568" y="296" text-anchor="middle" font-size="11" fill="#1a7e38" font-weight="700">v3.html saved</text>
+        </g>
+        <!-- activations -->
+        <rect x="64" y="72" width="8" height="192" rx="3" fill="#5856d6" opacity=".22"/>
+        <rect x="214" y="96" width="8" height="20" rx="3" fill="#5856d6" opacity=".14"/>
+        <rect x="389" y="122" width="8" height="46" rx="3" fill="#ff9500" opacity=".18"/>
+        <rect x="564" y="174" width="8" height="120" rx="3" fill="#34c759" opacity=".20"/>
+        <rect x="684" y="200" width="8" height="44" rx="3" fill="#5856d6" opacity=".14"/>
+      </svg>
+    </div>
+    <div class="controls">
+      <button class="ctrl-btn" onclick="togglePlay(3)">Pause</button>
+      <span class="step-counter" id="ctr3">Step 1 / 8</span>
+    </div>
+  </section>
+</main>
+
+<script>
+// scroll spy
+const sections=document.querySelectorAll('section[id]');
+const navLinks=document.querySelectorAll('nav a');
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      navLinks.forEach(a=>a.classList.remove('active'));
+      const l=document.querySelector('nav a[href="#'+e.target.id+'"]');
+      if(l)l.classList.add('active');
+    }
+  });
+},{threshold:.3});
+sections.forEach(s=>io.observe(s));
+// scroll fade scrollbar
+let st;
+document.addEventListener('scroll',()=>{
+  document.documentElement.classList.add('scrolling');
+  clearTimeout(st);st=setTimeout(()=>document.documentElement.classList.remove('scrolling'),900);
+},{passive:true});
+// nav toggle
+function openNav(){document.body.classList.remove('nav-collapsed');}
+function closeNav(){document.body.classList.add('nav-collapsed');}
+// ripple
+function addRipple(el,e){
+  const r=el.getBoundingClientRect();
+  const ink=document.createElement('span');
+  ink.className='ripple-ink';
+  const sz=Math.max(r.width,r.height)*1.6;
+  ink.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+(e.clientX-r.left-sz/2)+'px;top:'+(e.clientY-r.top-sz/2)+'px';
+  el.appendChild(ink);
+  ink.addEventListener('animationend',()=>ink.remove());
+}
+document.querySelectorAll('nav a,.ctrl-btn').forEach(el=>el.addEventListener('click',e=>addRipple(el,e)));
+
+// Animation engine
+const configs=[
+  {id:1,steps:6,svgId:'svg1',ctrId:'ctr1'},
+  {id:2,steps:6,svgId:'svg2',ctrId:'ctr2'},
+  {id:3,steps:8,svgId:'svg3',ctrId:'ctr3'}
+];
+const state={};
+configs.forEach(c=>{
+  state[c.id]={step:0,paused:false,timer:null};
+  runAnim(c.id,c);
+});
+function runAnim(id,cfg){
+  const s=state[id];
+  if(s.paused)return;
+  const svg=document.getElementById(cfg.svgId);
+  const ctr=document.getElementById(cfg.ctrId);
+  const msgs=svg.querySelectorAll('.msg');
+  msgs.forEach((m,i)=>m.classList.toggle('active',i===s.step));
+  ctr.textContent='Step '+(s.step+1)+' / '+cfg.steps;
+  s.step=(s.step+1)%cfg.steps;
+  s.timer=setTimeout(()=>runAnim(id,cfg),1600);
+}
+function togglePlay(id){
+  const s=state[id];
+  const cfg=configs.find(c=>c.id===id);
+  const btn=document.querySelector('#ctrl'+id+' .ctrl-btn')||document.querySelectorAll('.ctrl-btn')[id-1];
+  s.paused=!s.paused;
+  btn.textContent=s.paused?'Play':'Pause';
+  btn.classList.toggle('pause',s.paused);
+  if(!s.paused)runAnim(id,cfg);
+  else clearTimeout(s.timer);
+}
+</script>
+</body>
+</html>

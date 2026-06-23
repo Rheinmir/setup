@@ -1,0 +1,14 @@
+{
+  "date": "2026-06-22",
+  "pages": 12,
+  "broken_wikilinks": [
+    {
+      "from": "sources/draft/150626-health-check-pattern-sync.md",
+      "wikilink": "sync-template"
+    }
+  ],
+  "orphans": [],
+  "missing_in_index": [],
+  "extra_in_index": [],
+  "stale": []
+}

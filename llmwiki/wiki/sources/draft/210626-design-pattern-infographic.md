@@ -1,3 +1,11 @@
+---
+type: draft
+title: 210626-design-pattern-infographic
+status: done
+tags: [orca-workflow, design-pattern, infographic]
+timestamp: 2026-06-21
+---
+
 # 210626-design-pattern-infographic
 **Type:** draft
 **Status:** proposed

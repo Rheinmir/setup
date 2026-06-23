@@ -118,10 +118,15 @@ section{padding:64px 40px 72px;max-width:1100px;margin:0 auto}
 #sec-2 .card h4{color:#5856d6}
 #sec-2 .card li::before{color:#5856d6}
 .s-bg2::before{background:linear-gradient(180deg,rgba(88,86,214,.05) 0%,transparent 60%)}
-#sec-3 .tag{background:rgba(52,199,89,.12);color:#28a745}
-#sec-3 .card h4{color:#28a745}
-#sec-3 .card li::before{color:#28a745}
-.s-bg3::before{background:linear-gradient(180deg,rgba(52,199,89,.05) 0%,transparent 60%)}
+#sec-3 .tag{background:rgba(255,149,0,.12);color:#a85800}
+#sec-3 .card h4{color:#a85800}
+#sec-3 .card li::before{color:#a85800}
+.s-bg3::before{background:linear-gradient(180deg,rgba(255,149,0,.05) 0%,transparent 60%)}
+#sec-4 .tag{background:rgba(52,199,89,.12);color:#28a745}
+#sec-4 .card h4{color:#28a745}
+#sec-4 .card li::before{color:#28a745}
+.s-bg4::before{background:linear-gradient(180deg,rgba(52,199,89,.05) 0%,transparent 60%)}
+@media(min-width:701px){.span-2{grid-column:span 2}}
 /* CARDS */
 .content-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:24px}
 @media(max-width:700px){.content-grid{grid-template-columns:1fr}}
@@ -197,7 +202,8 @@ footer a:hover{text-decoration:underline}
   <a href="#sec-0" class="nav-link">01 · Why SD</a>
   <a href="#sec-1" class="nav-link">02 · Core Axes</a>
   <a href="#sec-2" class="nav-link">03 · Building Blocks</a>
-  <a href="#sec-3" class="nav-link">04 · Tradeoffs</a>
+  <a href="#sec-3" class="nav-link">04 · Rate Limiting</a>
+  <a href="#sec-4" class="nav-link">05 · Tradeoffs</a>
 </nav>
 
 <div class="hero">
@@ -213,13 +219,14 @@ footer a:hover{text-decoration:underline}
   </div>
 </div>
 
-<!-- SECTION 0: Why System Design -->
+<!-- SECTION 0: Tại sao cần System Design? -->
 <div class="section-bg s-bg0">
 <section id="sec-0">
   <div class="section-header">
     <span class="tag">01 · Foundation</span>
     <h2>Tại sao cần System Design?</h2>
-    <p>Khi product lớn lên, những câu hỏi kỹ thuật trở nên phức tạp hơn nhiều so với "code đúng". System Design là framework để trả lời chúng.</p>
+    <p><strong>Why:</strong> Khi product tăng từ 100 lên 10 triệu user, câu hỏi không còn là "code đúng không?" mà là "hệ thống có sập không?". System Design là blueprint để trả lời những câu hỏi đó TRƯỚC khi xảy ra sự cố thật.</p>
+    <p style="margin-top: 8px;"><strong>When:</strong> Bắt buộc khi team scale, khi traffic có peak bất thường, khi cần SLA rõ ràng với khách hàng.</p>
   </div>
   <div class="diagram-box">
     <div class="diagram-viewport">
@@ -270,34 +277,34 @@ footer a:hover{text-decoration:underline}
     <div class="card">
       <h4>Câu hỏi cần trả lời</h4>
       <ul>
-        <li>Chịu được bao nhiêu user đồng thời?</li>
+        <li>Chịu bao nhiêu user đồng thời?</li>
         <li>Dữ liệu lưu ở đâu, truy xuất thế nào?</li>
         <li>Khi 1 component fail thì toàn hệ thống sập không?</li>
-        <li>Scale như thế nào khi traffic tăng 10×?</li>
+        <li>Scale thế nào khi traffic tăng 10×?</li>
         <li>Latency target là bao nhiêu (p99)?</li>
       </ul>
     </div>
     <div class="card">
-      <h4>Framework tiếp cận (5 bước)</h4>
+      <h4>Bộ khung 5 bước tiếp cận</h4>
       <ul>
-        <li><strong>1.</strong> Clarify requirements (functional + non-functional)</li>
-        <li><strong>2.</strong> Estimate scale (DAU, RPS, storage bytes)</li>
-        <li><strong>3.</strong> High-level design (components + data flow)</li>
-        <li><strong>4.</strong> Deep dive (DB schema, API, caching)</li>
-        <li><strong>5.</strong> Bottlenecks + tradeoffs</li>
+        <li><strong>1. Clarify requirements</strong> — Tách functional (user phải làm được gì) vs non-functional (latency, availability, scale). Đừng design trước khi hiểu rõ constraint.</li>
+        <li><strong>2. Estimate scale</strong> — DAU × actions/day ÷ 86400 = QPS trung bình. Peak = avg × 2–3×. Storage: 1 record ≈ 1KB → 1M users = 1GB.</li>
+        <li><strong>3. High-level design</strong> — Vẽ components và data flow: Client → LB → App → DB/Cache. "Big picture" để align với interviewer trước khi deep dive.</li>
+        <li><strong>4. Deep dive</strong> — Chọn 1–2 bottleneck để zoom vào: DB schema, API design, sharding strategy, cache invalidation.</li>
+        <li><strong>5. Bottlenecks + tradeoffs</strong> — Mọi quyết định đều có trade-off. Nhận ra và giải thích rõ: "Tôi chọn X vì Y, đánh đổi Z."</li>
       </ul>
     </div>
   </div>
 </section>
 </div>
 
-<!-- SECTION 1: Core Axes -->
+<!-- SECTION 1: Các trục đánh giá hệ thống -->
 <div class="section-bg s-bg1">
 <section id="sec-1">
   <div class="section-header">
     <span class="tag">02 · Core Axes</span>
     <h2>Các trục đánh giá hệ thống</h2>
-    <p>Mọi quyết định System Design đều xoay quanh 5 trục này. Cải thiện một trục thường kéo theo đánh đổi với trục khác.</p>
+    <p><strong>Why:</strong> Mọi quyết định kiến trúc đều cần đặt lên 5 trục này. Cải thiện một trục thường kéo theo đánh đổi với trục khác — biết trục nào quan trọng nhất giúp quyết định nhanh và đúng.</p>
   </div>
   <div class="diagram-box">
     <div class="diagram-viewport">
@@ -342,9 +349,23 @@ footer a:hover{text-decoration:underline}
       </svg>
     </div>
   </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Trục</th><th>Câu hỏi cốt lõi</th><th>Metric đo</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Scalability</td><td>Horizontal vs vertical scaling</td><td>Throughput (RPS) khi thêm node</td></tr>
+        <tr><td>Reliability</td><td>Single point of failure, redundancy</td><td>MTBF, MTTR</td></tr>
+        <tr><td>Availability</td><td>Uptime SLA</td><td>99.9% = 8.7h downtime/year</td></tr>
+        <tr><td>Performance</td><td>Latency vs throughput</td><td>p50, p99, p999 latency</td></tr>
+        <tr><td>Consistency</td><td>CAP theorem</td><td>Strong vs Eventual consistency</td></tr>
+      </tbody>
+    </table>
+  </div>
   <div class="content-grid">
     <div class="card">
-      <h4>Availability 9s</h4>
+      <h4>Availability "nines"</h4>
       <ul>
         <li>99% = 3.65 ngày/năm downtime</li>
         <li>99.9% = 8.7 giờ/năm</li>
@@ -353,13 +374,12 @@ footer a:hover{text-decoration:underline}
       </ul>
     </div>
     <div class="card">
-      <h4>Performance metrics quan trọng</h4>
+      <h4>Performance metrics</h4>
       <ul>
-        <li><strong>p50</strong>: median — trải nghiệm trung bình</li>
-        <li><strong>p99</strong>: 99th percentile — worst 1%</li>
-        <li><strong>p999</strong>: 99.9th — tail latency</li>
-        <li>Throughput: requests/second (RPS)</li>
-        <li>Latency budget: end-to-end time</li>
+        <li><strong>p50</strong>: median — trải nghiệm người dùng trung bình</li>
+        <li><strong>p99</strong>: 99th percentile — worst 1% user experience</li>
+        <li><strong>p999</strong>: tail latency — quan trọng với real-time systems</li>
+        <li>Throughput: requests/second (RPS) — khả năng chịu tải</li>
       </ul>
     </div>
   </div>
@@ -371,8 +391,8 @@ footer a:hover{text-decoration:underline}
 <section id="sec-2">
   <div class="section-header">
     <span class="tag">03 · Building Blocks</span>
-    <h2>Các thành phần cơ bản</h2>
-    <p>Hầu hết hệ thống lớn đều được lắp ráp từ cùng một bộ building blocks. Hiểu rõ từng block và khi nào dùng là nền tảng của SD interview.</p>
+    <h2>Building Blocks</h2>
+    <p><strong>Why:</strong> Hầu hết hệ thống lớn đều lắp từ cùng một bộ building blocks. Hiểu rõ từng block — khi nào dùng, khi nào không — là nền tảng thiết yếu cho mọi System Design interview.</p>
   </div>
   <div class="diagram-box">
     <div class="diagram-viewport">
@@ -426,51 +446,116 @@ footer a:hover{text-decoration:underline}
   <div class="content-grid">
     <div class="card">
       <h4>Load Balancer</h4>
+      <p><strong>Why:</strong> Tránh single point of failure ở tầng server. Khi 1 server chết, LB route traffic sang server khác tự động, user không thấy downtime.</p>
+      <p style="margin-top:4px;"><strong>When:</strong> Ngay khi cần hơn 1 app server.</p>
       <ul>
-        <li>Phân phối traffic đến nhiều server</li>
-        <li>L4 (TCP) — routing theo IP/port</li>
-        <li>L7 (HTTP) — routing theo URL/header</li>
-        <li>Algo: round-robin, least conn, IP-hash</li>
+        <li>L4 (TCP): routing theo IP/port, nhanh hơn, ít overhead</li>
+        <li>L7 (HTTP): routing theo URL/header/cookie, linh hoạt, support path-based routing</li>
+        <li>Algorithms: round-robin (đơn giản), least-connections (phân phối đều khi latency khác nhau), IP-hash (sticky session cùng user)</li>
+        <li>Health check: LB tự loại server unhealthy khỏi pool</li>
       </ul>
     </div>
     <div class="card">
-      <h4>Cache (Redis/Memcached)</h4>
+      <h4>Database</h4>
+      <p><strong>Why:</strong> Chọn đúng DB là quyết định khó thay đổi nhất sau này. SQL mạnh về consistency, NoSQL mạnh về scale.</p>
+      <p style="margin-top:4px;"><strong>When:</strong> SQL khi cần ACID transactions + joins phức tạp (banking, e-commerce). NoSQL khi cần flexible schema + horizontal scale (social feed, user profiles, logs).</p>
       <ul>
-        <li>Giảm DB load, tăng read throughput</li>
-        <li>Cache-aside: check cache → miss → DB → write</li>
-        <li>Write-through: write cache + DB đồng thời</li>
-        <li>TTL + eviction: LRU, LFU, FIFO</li>
+        <li>SQL (PostgreSQL, MySQL): ACID, joins, strong consistency, max ~10M QPS với replicas</li>
+        <li>NoSQL (MongoDB, DynamoDB, Cassandra): BASE, horizontal scale, eventual consistency</li>
+        <li>Read replicas: replica nhận read traffic → giảm tải primary 70–80%</li>
+        <li>Sharding: partition data theo key (user_id hash, geographic) khi single DB không đủ</li>
       </ul>
     </div>
     <div class="card">
-      <h4>Database — SQL vs NoSQL</h4>
+      <h4>Cache</h4>
+      <p><strong>Why:</strong> DB disk I/O là bottleneck phổ biến nhất. Cache đưa hot data vào RAM — latency giảm từ 10ms xuống dưới 1ms, giảm 80% DB load.</p>
+      <p style="margin-top:4px;"><strong>When:</strong> Read-heavy workload, data ít thay đổi, chấp nhận stale data trong vài giây/phút.</p>
       <ul>
-        <li>SQL: ACID, joins, strong consistency</li>
-        <li>NoSQL: horizontal scale, flexible schema</li>
-        <li>Read replicas: phân tán read traffic</li>
-        <li>Sharding: partition dữ liệu ngang</li>
+        <li>Cache-aside (lazy loading): check cache → miss? → read DB → write cache → return. Pattern phổ biến nhất.</li>
+        <li>Write-through: write cache + DB đồng thời. Consistency cao hơn nhưng write latency tăng.</li>
+        <li>Write-behind (write-back): write cache → async flush DB. Write nhanh nhưng risk mất data nếu cache crash.</li>
+        <li>TTL + eviction: LRU (least recently used) phổ biến, LFU (frequency-based) cho hot-cold workloads.</li>
+        <li>Cache invalidation là bài toán khó nhất: thay đổi data phải invalidate cache đúng lúc.</li>
       </ul>
     </div>
     <div class="card">
       <h4>Message Queue</h4>
+      <p><strong>Why:</strong> Decouple producer và consumer — producer không cần biết consumer có sẵn không. Giúp absorb traffic spike mà không mất request.</p>
+      <p style="margin-top:4px;"><strong>When:</strong> Async processing (email, notifications, image resize), decouple microservices, fan-out events.</p>
       <ul>
-        <li>Decouple producer và consumer</li>
-        <li>Async processing, retry logic</li>
-        <li>Dead letter queue cho failed messages</li>
-        <li>Fan-out: 1 event → nhiều consumer</li>
+        <li>Kafka: high-throughput (millions msg/s), persistent log, replay events, partitioned theo key</li>
+        <li>RabbitMQ: flexible routing (exchange/binding), AMQP protocol, lower throughput hơn Kafka</li>
+        <li>Dead letter queue: chứa messages failed sau N retries → alert và debug sau</li>
+        <li>Fan-out: 1 event → nhiều consumer groups xử lý độc lập (billing, notification, analytics)</li>
+      </ul>
+    </div>
+    <div class="card span-2">
+      <h4>CDN</h4>
+      <p><strong>Why:</strong> Static assets không cần request về origin server mỗi lần — CDN cache tại edge node gần user nhất, latency giảm từ 200ms xuống 10ms.</p>
+      <p style="margin-top:4px;"><strong>When:</strong> Khi user phân tán địa lý, khi có nhiều static content (images, JS, CSS, video), khi muốn giảm bandwidth cost origin.</p>
+      <ul>
+        <li>Edge caching: CloudFront, Akamai, Fastly — hàng trăm PoP toàn cầu</li>
+        <li>Cache-Control headers: max-age (browser cache), s-maxage (CDN cache), must-revalidate</li>
+        <li>Invalidation: purge cache khi deploy mới — chú ý cost với Akamai/CloudFront</li>
+        <li>Dynamic content: một số CDN support acceleration (không cache nhưng route tối ưu qua backbone)</li>
       </ul>
     </div>
   </div>
 </section>
 </div>
 
-<!-- SECTION 3: Tradeoffs -->
+<!-- SECTION 3: Rate Limiting -->
 <div class="section-bg s-bg3">
 <section id="sec-3">
   <div class="section-header">
-    <span class="tag">04 · Tradeoffs</span>
+    <span class="tag">04 · Rate Limiting</span>
+    <h2>Rate Limiting</h2>
+    <p><strong>Why:</strong> Không có rate limiting, 1 bad actor có thể gây DoS toàn hệ thống chỉ bằng request burst. Rate limiting bảo vệ downstream resources và đảm bảo fairness giữa các client. Authentication endpoints đặc biệt cần thiết để chống brute-force.</p>
+    <p style="margin-top: 8px;"><strong>When:</strong> Mọi public API. Đặc biệt quan trọng với /login, /payment, /send-email endpoints. Implement ở API Gateway layer để centralize.</p>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Algorithm</th><th>Burst allowed</th><th>Memory</th><th>Accuracy</th><th>Dùng khi</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Token Bucket</td><td>Có (tích lũy)</td><td>Thấp</td><td>Cao</td><td>API rate limit phổ biến nhất</td></tr>
+        <tr><td>Leaky Bucket</td><td>Không</td><td>Trung bình</td><td>Cao</td><td>Smooth processing rate</td></tr>
+        <tr><td>Fixed Window</td><td>Có (ở boundary)</td><td>Rất thấp</td><td>Trung bình</td><td>Simple use case</td></tr>
+        <tr><td>Sliding Window</td><td>Không</td><td>Cao</td><td>Rất cao</td><td>Chính xác cao cần thiết</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="content-grid">
+    <div class="card">
+      <h4>Algorithms detail</h4>
+      <ul>
+        <li><strong>Token Bucket</strong>: mỗi user có bucket N token, mỗi request tiêu 1 token, token refill đều đặn. Cho phép short burst (dùng hết token tích lũy). Linh hoạt nhất.</li>
+        <li><strong>Leaky Bucket</strong>: request vào queue, xử lý với rate cố định (nước chảy qua lỗ). Smooth output nhưng queue có thể đầy → drop request.</li>
+        <li><strong>Fixed Window</strong>: đếm request trong window cố định (100 req/phút). Đơn giản nhưng burst xảy ra ở boundary: 100 req cuối window + 100 req đầu window mới = 200 req trong 1 giây.</li>
+        <li><strong>Sliding Window Log</strong>: ghi timestamp từng request, đếm trong cửa sổ di chuyển. Chính xác tuyệt đối nhưng tốn memory nhiều nhất.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Implementation</h4>
+      <ul>
+        <li>Redis + Lua script để atomic check-and-decrement (tránh race condition)</li>
+        <li>Key pattern: <code>rate_limit:{user_id}:{window}</code> với TTL = window size</li>
+        <li>Response 429 Too Many Requests + <code>Retry-After</code> header (giây còn lại)</li>
+        <li>Distributed rate limiting: Redis cluster để share state giữa nhiều API server</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- SECTION 4: Tradeoffs thường gặp -->
+<div class="section-bg s-bg4">
+<section id="sec-4">
+  <div class="section-header">
+    <span class="tag">05 · Tradeoffs</span>
     <h2>Tradeoffs thường gặp</h2>
-    <p>Không có kiến trúc "đúng tuyệt đối" — chỉ có tradeoff phù hợp với context. Mục tiêu là nhận ra và quyết định có chủ đích.</p>
+    <p><strong>Why:</strong> Không có kiến trúc "đúng tuyệt đối" — chỉ có tradeoff phù hợp với context. Người giỏi System Design là người nhận ra tradeoff và giải thích có chủ đích thay vì chọn mù.</p>
   </div>
   <div class="table-wrap">
     <table>
@@ -478,38 +563,39 @@ footer a:hover{text-decoration:underline}
         <tr><th>Tình huống</th><th>Option A</th><th>Option B</th><th>Chọn A khi</th><th>Chọn B khi</th></tr>
       </thead>
       <tbody>
-        <tr><td>Consistency vs Availability</td><td>Strong consistency</td><td>High availability</td><td>Banking, payment</td><td>Social feed, timeline</td></tr>
-        <tr><td>SQL vs NoSQL</td><td>Relational DB</td><td>Document / Key-value</td><td>Structured + joins</td><td>Scale + flexible schema</td></tr>
-        <tr><td>Sync vs Async</td><td>Synchronous API</td><td>Message queue</td><td>Real-time response cần</td><td>Decouple + scale</td></tr>
+        <tr><td>Consistency vs Availability</td><td>Strong consistency</td><td>High availability</td><td>Banking, payment, inventory</td><td>Social feed, timeline, likes</td></tr>
+        <tr><td>SQL vs NoSQL</td><td>Relational DB</td><td>Document/Key-value</td><td>Structured + joins, ACID cần</td><td>Scale + flexible schema</td></tr>
+        <tr><td>Sync vs Async</td><td>Synchronous API</td><td>Message queue</td><td>Real-time response cần ngay</td><td>Decouple + absorb spike</td></tr>
         <tr><td>Monolith vs Microservices</td><td>Single deployable</td><td>Many services</td><td>Early stage, small team</td><td>Scale teams, diff deploy freq</td></tr>
-        <tr><td>Push vs Pull</td><td>Server push (WebSocket)</td><td>Client poll</td><td>Real-time notifications</td><td>Batch / low-freq updates</td></tr>
+        <tr><td>Push vs Pull</td><td>Server push (WebSocket)</td><td>Client poll</td><td>Real-time notifications</td><td>Batch/low-freq updates</td></tr>
+        <tr><td>Cache-aside vs Write-through</td><td>Cache-aside</td><td>Write-through</td><td>Read-heavy, stale data OK</td><td>Write-heavy, consistency cần</td></tr>
       </tbody>
     </table>
   </div>
   <div class="content-grid">
     <div class="card">
-      <h4>Estimation tips</h4>
+      <h4>Estimation cheat sheet</h4>
       <ul>
-        <li>DAU × actions/day ÷ 86400 = QPS</li>
-        <li>Peak = avg QPS × 2–3×</li>
-        <li>Storage: 1 user record ≈ 1KB → 1M users = 1GB</li>
-        <li>Cache hit rate target: ≥ 80–90%</li>
+        <li>DAU × actions/day ÷ 86400 = QPS trung bình</li>
+        <li>Peak QPS = avg × 2–3× (hoặc × 10 nếu có event đặc biệt)</li>
+        <li>1 user record ≈ 1KB → 1M users = 1GB storage</li>
+        <li>Cache hit rate target: ≥ 80–90% để có hiệu quả</li>
       </ul>
     </div>
     <div class="card">
-      <h4>Checklist interview</h4>
+      <h4>Interview checklist</h4>
       <ul>
         <li>Clarify requirements (5 phút)</li>
-        <li>Estimate scale: DAU, QPS, storage</li>
+        <li>Estimate scale: DAU, QPS, storage (5 phút)</li>
         <li>High-level: LB → App → DB + Cache</li>
-        <li>API design + DB schema</li>
+        <li>API endpoints + DB schema</li>
         <li>Deep dive 1 bottleneck + tradeoffs</li>
+        <li>Monitoring: metrics, alerts</li>
       </ul>
     </div>
   </div>
   <p class="section-footer-link">Chi tiết: <a href="../wiki/sources/draft/design-pattern-v1.md">design-pattern-v1.md</a> · <a href="https://youtu.be/KIrbA-wEURg" target="_blank">Video gốc ↗</a></p>
 </section>
-</div>
 
 <footer>
   <p>Học Từ Thiền — Phần 000: System Design · Speaker: Phan Văn Ngọc Thắng · Kênh: <a href="https://www.youtube.com/@codelung" target="_blank">@codelung</a></p>

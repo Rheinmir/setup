@@ -115,6 +115,18 @@ section{padding:64px 40px 72px;max-width:1100px;margin:0 auto}
 #sec-3 .card h4{color:#f08c00}
 #sec-3 .card li::before{color:#f08c00}
 .s-bg3::before{background:linear-gradient(180deg,rgba(255,149,0,.06) 0%,transparent 60%)}
+#sec-4 .tag{background:rgba(255,45,85,.10);color:#c0165a}
+#sec-4 .card h4{color:#c0165a}
+#sec-4 .card li::before{color:#c0165a}
+.s-bg4::before{background:linear-gradient(180deg,rgba(255,45,85,.04) 0%,transparent 60%)}
+#sec-5 .tag{background:rgba(88,86,214,.10);color:#5856d6}
+#sec-5 .card h4{color:#5856d6}
+#sec-5 .card li::before{color:#5856d6}
+.s-bg5::before{background:linear-gradient(180deg,rgba(88,86,214,.05) 0%,transparent 60%)}
+#sec-6 .tag{background:rgba(52,199,89,.12);color:#28a745}
+#sec-6 .card h4{color:#28a745}
+#sec-6 .card li::before{color:#28a745}
+.s-bg6::before{background:linear-gradient(180deg,rgba(52,199,89,.05) 0%,transparent 60%)}
 .content-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:24px}
 @media(max-width:700px){.content-grid{grid-template-columns:1fr}}
 .content-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}
@@ -186,7 +198,10 @@ footer a:hover{text-decoration:underline}
   <a href="#sec-0" class="nav-link">01 · DB Selection</a>
   <a href="#sec-1" class="nav-link">02 · Sharding & Index</a>
   <a href="#sec-2" class="nav-link">03 · API Design</a>
-  <a href="#sec-3" class="nav-link">04 · Distributed</a>
+  <a href="#sec-3" class="nav-link">04 · CAP Theorem</a>
+  <a href="#sec-4" class="nav-link">05 · Rate Limiting</a>
+  <a href="#sec-5" class="nav-link">06 · Consensus</a>
+  <a href="#sec-6" class="nav-link">07 · Observability</a>
 </nav>
 
 <div class="hero">
@@ -463,6 +478,167 @@ footer a:hover{text-decoration:underline}
     </div>
   </div>
   <p class="section-footer-link">Chi tiết: <a href="../wiki/sources/draft/design-pattern-v2.md">design-pattern-v2.md</a> · <a href="https://youtu.be/_U4H5FSIb-c" target="_blank">Video gốc ↗</a></p>
+</section>
+</div>
+
+<!-- SEC 4: Rate Limiting -->
+<div class="section-bg s-bg4">
+<section id="sec-4">
+  <div class="section-header">
+    <span class="tag">05 · Rate Limiting</span>
+    <h2>Rate Limiting</h2>
+    <p>Rate limiting là tuyến phòng thủ đầu tiên chống DDoS, brute-force và API abuse. Không có rate limiting, một client lỗi hoặc malicious có thể exhaust resources của toàn bộ downstream service. Implement tại API Gateway layer để centralize.</p>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Algorithm</th><th>Burst</th><th>Memory</th><th>Accuracy</th><th>Dùng khi</th></tr></thead>
+      <tbody>
+        <tr><td>Token Bucket</td><td>Có (tích lũy)</td><td>Thấp</td><td>Cao</td><td>API rate limit — phổ biến nhất</td></tr>
+        <tr><td>Leaky Bucket</td><td>Không</td><td>Trung bình</td><td>Cao</td><td>Smooth downstream processing</td></tr>
+        <tr><td>Fixed Window</td><td>Có (boundary)</td><td>Rất thấp</td><td>Trung bình</td><td>Simple, low-risk endpoints</td></tr>
+        <tr><td>Sliding Window Log</td><td>Không</td><td>Cao</td><td>Rất cao</td><td>Strict accuracy cần thiết</td></tr>
+        <tr><td>Sliding Window Counter</td><td>Nhỏ</td><td>Trung bình</td><td>Cao</td><td>Balanced accuracy + memory</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="content-grid">
+    <div class="card">
+      <h4>Algorithm detail</h4>
+      <ul>
+        <li><strong>Token Bucket</strong>: N token, refill R/giây, mỗi request tiêu 1. Burst = tích lũy token. Linh hoạt nhất, dùng nhiều nhất.</li>
+        <li><strong>Leaky Bucket</strong>: Queue cố định, xử lý F req/giây. Smooth rate nhưng queue đầy → drop request.</li>
+        <li><strong>Fixed Window</strong>: Counter reset mỗi phút. Boundary issue: 100 req cuối + 100 req đầu window mới = 200 req trong 2 giây.</li>
+        <li><strong>Sliding Window Counter</strong>: current_count + prev_count × overlap_ratio. Approximate nhưng memory-efficient.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Implementation</h4>
+      <ul>
+        <li>Redis + Lua script: atomic INCR + EXPIRE → no race condition</li>
+        <li>Key: <code>rate:{user_id}:{window}</code>, TTL = window size</li>
+        <li>Response 429 + <code>Retry-After: &lt;seconds&gt;</code></li>
+        <li>Headers: <code>X-RateLimit-Limit</code>, <code>X-RateLimit-Remaining</code>, <code>X-RateLimit-Reset</code></li>
+        <li>Distributed: Redis Cluster share state giữa nhiều API servers</li>
+        <li>Per-user + per-IP + per-API-key — thường kết hợp cả 3</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- SEC 5: Consensus Algorithms -->
+<div class="section-bg s-bg5">
+<section id="sec-5">
+  <div class="section-header">
+    <span class="tag">06 · Consensus</span>
+    <h2>Consensus Algorithms</h2>
+    <p>Consensus algorithms giải quyết bài toán: làm thế nào để nhiều node trong distributed system đồng ý về một giá trị, ngay cả khi một số node fail hoặc network bị partition? Đây là nền tảng của mọi distributed database và coordination service.</p>
+  </div>
+  <div class="content-grid">
+    <div class="card">
+      <h4>Raft</h4>
+      <p>Được thiết kế để dễ hiểu hơn Paxos. Chia consensus thành 3 vấn đề độc lập: leader election, log replication, và safety.</p>
+      <ul>
+        <li><strong>Leader election</strong>: nodes bầu leader qua vote. Leader nhận mọi write, replicate sang followers.</li>
+        <li><strong>Log replication</strong>: write → leader log → replicate majority → commit → response client.</li>
+        <li><strong>Term number</strong>: tăng mỗi khi có election mới, dùng để detect stale leader.</li>
+        <li><strong>Safety</strong>: commit chỉ khi majority (N/2 + 1) xác nhận — không bao giờ mất committed entry.</li>
+        <li>Dùng trong: etcd (Kubernetes), TiKV, CockroachDB, Consul.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Paxos</h4>
+      <p>Thuật toán gốc (Leslie Lamport, 1989). Nền tảng lý thuyết của nhiều distributed systems, nhưng phức tạp để implement đúng.</p>
+      <ul>
+        <li><strong>Phase 1 (Prepare)</strong>: Proposer gửi Prepare(n) → Acceptors promise không accept số nhỏ hơn n.</li>
+        <li><strong>Phase 2 (Accept)</strong>: Proposer gửi Accept(n, v) → Acceptors accept nếu promise còn valid.</li>
+        <li><strong>Multi-Paxos</strong>: optimize với stable leader để skip Phase 1 mỗi round.</li>
+        <li>Dùng trong: Google Chubby, Apache Zookeeper (ZAB — Zookeeper Atomic Broadcast).</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Byzantine Fault Tolerance (PBFT)</h4>
+      <p>Tolerates malicious nodes — không chỉ crash mà còn gửi data sai. Cần 3f+1 nodes để tolerate f Byzantine nodes.</p>
+      <ul>
+        <li>Phức tạp hơn Raft/Paxos, communication overhead O(n²).</li>
+        <li>Dùng trong: permissioned blockchain, Hyperledger Fabric.</li>
+        <li>Blockchain public (Bitcoin, Ethereum) dùng PoW/PoS thay vì PBFT vì scale tốt hơn.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Khi nào cần hiểu Consensus?</h4>
+      <ul>
+        <li>Giải thích tại sao Zookeeper/etcd cần quorum (majority) để hoạt động.</li>
+        <li>Tại sao 2 nodes không đủ (split-brain problem) — cần tối thiểu 3.</li>
+        <li>Tại sao distributed DB có write latency cao hơn single node (round-trip consensus).</li>
+        <li>Leader election trong microservices: ai là primary? Circuit breaker state sync.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- SEC 6: Monitoring & Observability -->
+<div class="section-bg s-bg6">
+<section id="sec-6">
+  <div class="section-header">
+    <span class="tag">07 · Observability</span>
+    <h2>Monitoring &amp; Observability</h2>
+    <p>"You can't improve what you can't measure." Monitoring phát hiện incident trước khi user báo cáo. Observability giúp debug tại sao system misbehave — không chỉ biết hỏng mà còn biết TẠI SAO. Setup ngay từ ngày đầu, không phải sau incident đầu tiên.</p>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Term</th><th>Ý nghĩa</th><th>Ví dụ</th></tr></thead>
+      <tbody>
+        <tr><td><strong>SLI</strong> (Service Level Indicator)</td><td>Metric đo được, phản ánh service health</td><td>p99 latency &lt; 200ms, error rate &lt; 0.1%</td></tr>
+        <tr><td><strong>SLO</strong> (Service Level Objective)</td><td>Target nội bộ — team cam kết với nhau</td><td>99.9% requests trong SLI threshold</td></tr>
+        <tr><td><strong>SLA</strong> (Service Level Agreement)</td><td>Cam kết với khách hàng — có penalty</td><td>99.9% uptime/month, vi phạm → credit 10%</td></tr>
+        <tr><td><strong>Error Budget</strong></td><td>100% − SLO = phần downtime cho phép</td><td>SLO 99.9% → 8.7h/year error budget</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="content-grid">
+    <div class="card">
+      <h4>Logs — Pillar 1</h4>
+      <p>Ghi lại discrete events: user login, order created, error occurred. Structured JSON preferred để dễ query.</p>
+      <ul>
+        <li>Format: <code>{"timestamp":"...","level":"ERROR","service":"...","trace_id":"..."}</code></li>
+        <li>Centralize: ELK Stack (Elasticsearch + Logstash + Kibana), Loki, Datadog Logs</li>
+        <li>Levels: DEBUG → INFO → WARN → ERROR → FATAL</li>
+        <li>Correlation: trace_id xuyên suốt mọi log liên quan đến 1 request</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Metrics — Pillar 2</h4>
+      <p>Đo lường numeric values theo thời gian. The Four Golden Signals (Google SRE): Latency, Traffic, Errors, Saturation.</p>
+      <ul>
+        <li><strong>Counter</strong>: chỉ tăng — total requests, errors</li>
+        <li><strong>Gauge</strong>: tăng/giảm — active connections, memory usage</li>
+        <li><strong>Histogram</strong>: phân phối — latency buckets (p50/p99/p999)</li>
+        <li>Stack: Prometheus + Grafana (open-source) hoặc Datadog, New Relic (managed)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Traces — Pillar 3</h4>
+      <p>Theo dõi request xuyên suốt nhiều service — distributed tracing. Không thể debug microservices mà không có traces.</p>
+      <ul>
+        <li>Trace ID propagate qua headers (W3C Trace Context: <code>traceparent</code>)</li>
+        <li>Span: mỗi service operation. Trace = tree of spans.</li>
+        <li>OpenTelemetry: vendor-neutral standard cho instrumentation</li>
+        <li>Backends: Jaeger, Zipkin (open-source), Datadog APM, AWS X-Ray (managed)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Alerting tốt</h4>
+      <ul>
+        <li>Alert on symptoms (user impact), not causes — "error rate &gt; 1%" tốt hơn "CPU &gt; 80%"</li>
+        <li>Avoid alert fatigue: chỉ page on-call khi action cần thiết</li>
+        <li>Runbook: mọi alert phải link tới runbook — ai làm gì khi fire</li>
+        <li>P1 (page ngay, prod down) → P2 (page 15 phút) → P3 (ticket, sửa ngày mai)</li>
+        <li>Error budget nearly exhausted → freeze releases, tập trung reliability</li>
+      </ul>
+    </div>
+  </div>
 </section>
 </div>
 

@@ -115,6 +115,30 @@ section{padding:64px 40px 72px;max-width:1100px;margin:0 auto}
 #sec-3 .card h4{color:#e0264b}
 #sec-3 .card li::before{color:#e0264b}
 .s-bg3::before{background:linear-gradient(180deg,rgba(255,45,85,.05) 0%,transparent 60%)}
+#sec-4 .tag{background:rgba(10,132,255,.10);color:#0a84ff}
+#sec-4 .card h4{color:#0a84ff}
+#sec-4 .card li::before{color:#0a84ff}
+.s-bg4::before{background:linear-gradient(180deg,rgba(10,132,255,.05) 0%,transparent 60%)}
+#sec-5 .tag{background:rgba(48,176,199,.10);color:#30b0c7}
+#sec-5 .card h4{color:#30b0c7}
+#sec-5 .card li::before{color:#30b0c7}
+.s-bg5::before{background:linear-gradient(180deg,rgba(48,176,199,.05) 0%,transparent 60%)}
+#sec-6 .tag{background:rgba(255,149,0,.12);color:#a85800}
+#sec-6 .card h4{color:#a85800}
+#sec-6 .card li::before{color:#a85800}
+.s-bg6::before{background:linear-gradient(180deg,rgba(255,149,0,.05) 0%,transparent 60%)}
+#sec-7 .tag{background:rgba(88,86,214,.10);color:#5856d6}
+#sec-7 .card h4{color:#5856d6}
+#sec-7 .card li::before{color:#5856d6}
+.s-bg7::before{background:linear-gradient(180deg,rgba(88,86,214,.05) 0%,transparent 60%)}
+#sec-8 .tag{background:rgba(52,199,89,.12);color:#28a745}
+#sec-8 .card h4{color:#28a745}
+#sec-8 .card li::before{color:#28a745}
+.s-bg8::before{background:linear-gradient(180deg,rgba(52,199,89,.05) 0%,transparent 60%)}
+#sec-9 .tag{background:rgba(255,45,85,.10);color:#c0165a}
+#sec-9 .card h4{color:#c0165a}
+#sec-9 .card li::before{color:#c0165a}
+.s-bg9::before{background:linear-gradient(180deg,rgba(255,45,85,.04) 0%,transparent 60%)}
 .content-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:24px}
 @media(max-width:700px){.content-grid{grid-template-columns:1fr}}
 .card{background:var(--glass-2);backdrop-filter:blur(var(--blur-2)) saturate(1.1);
@@ -194,8 +218,14 @@ footer a:hover{text-decoration:underline}
   <div class="logo">Học Từ Thiền<br><span>Phần 002 · System Design</span></div>
   <a href="#sec-0" class="nav-link">01 · Microservices</a>
   <a href="#sec-1" class="nav-link">02 · Caching</a>
-  <a href="#sec-2" class="nav-link">03 · High Availability</a>
-  <a href="#sec-3" class="nav-link">04 · Scale Checklist</a>
+  <a href="#sec-2" class="nav-link">03 · HA Patterns</a>
+  <a href="#sec-3" class="nav-link">04 · Interview Checklist</a>
+  <a href="#sec-4" class="nav-link">05 · Communication</a>
+  <a href="#sec-5" class="nav-link">06 · Service Discovery</a>
+  <a href="#sec-6" class="nav-link">07 · Retry &amp; Backoff</a>
+  <a href="#sec-7" class="nav-link">08 · Stateless Design</a>
+  <a href="#sec-8" class="nav-link">09 · Event-Driven</a>
+  <a href="#sec-9" class="nav-link">10 · CQRS</a>
 </nav>
 
 <div class="hero">
@@ -509,6 +539,306 @@ Fan-out: nhiều consumer xử lý cùng 1 event
     </div>
   </div>
   <p class="section-footer-link" style="margin-top:32px">Chi tiết: <a href="../wiki/sources/draft/design-pattern-v3.md">design-pattern-v3.md</a> · <a href="https://youtu.be/LY8_RaLDJT4" target="_blank">Video gốc ↗</a></p>
+</section>
+</div>
+
+<!-- SEC 4: Communication Patterns -->
+<div class="section-bg s-bg4">
+<section id="sec-4">
+  <div class="section-header">
+    <span class="tag">05 · Communication</span>
+    <h2>Communication Patterns</h2>
+    <p>Microservices phải giao tiếp qua network — lựa chọn pattern ảnh hưởng trực tiếp đến coupling, reliability và performance. Sync communication tạo tight coupling và cascade failure risk; async communication giúp decouple nhưng phức tạp hơn về consistency.</p>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Pattern</th><th>Khi dùng</th><th>Tools</th><th>Trade-off</th></tr></thead>
+      <tbody>
+        <tr><td>Sync REST/gRPC</td><td>Cần response ngay</td><td>HTTP, gRPC</td><td>Tight coupling, cascade failure risk</td></tr>
+        <tr><td>Async Messaging</td><td>Fire-and-forget, decouple</td><td>Kafka, RabbitMQ, SQS</td><td>Eventual consistency, harder debugging</td></tr>
+        <tr><td>Event Sourcing</td><td>Audit trail, replay events</td><td>Kafka, EventStoreDB</td><td>Storage heavy, complex queries</td></tr>
+        <tr><td>Saga Pattern</td><td>Distributed transaction</td><td>Choreography / Orchestration</td><td>Complex compensation logic</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="content-grid">
+    <div class="card">
+      <h4>Saga Pattern (distributed transaction)</h4>
+      <p>Khi microservices cần distributed transaction (Order → Payment → Inventory), Saga chia thành steps, mỗi bước có compensating transaction nếu fail.</p>
+      <ul>
+        <li><strong>Choreography</strong>: mỗi service publish event → service tiếp theo lắng nghe. Loosely coupled, khó visualize flow.</li>
+        <li><strong>Orchestration</strong>: central Saga Orchestrator gửi commands theo thứ tự. Dễ debug, dễ visualize.</li>
+        <li>Compensating transaction: nếu Step 3 fail → trigger undo Step 2 rồi Step 1.</li>
+        <li>Idempotency: mỗi step phải idempotent — retry an toàn khi có network issue.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Event Sourcing</h4>
+      <p>Thay vì lưu current state, lưu tất cả events dẫn đến state đó. Full audit trail và khả năng replay events để rebuild state.</p>
+      <ul>
+        <li>Benefits: audit trail đầy đủ, temporal queries, replay để debug hoặc migrate.</li>
+        <li>Trade-offs: storage tăng, querying current state phức tạp hơn (cần projection).</li>
+        <li>Kết hợp với CQRS: event store = write side, projection = read side.</li>
+        <li>Ví dụ: tài khoản ngân hàng — lưu mọi debit/credit thay vì chỉ số dư hiện tại.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- SEC 5: Service Discovery -->
+<div class="section-bg s-bg5">
+<section id="sec-5">
+  <div class="section-header">
+    <span class="tag">06 · Service Discovery</span>
+    <h2>Service Discovery</h2>
+    <p>Trong môi trường microservices dynamic (containers restart, scale in/out, IP thay đổi), hardcoded IP không hoạt động. Service discovery cho phép services tìm nhau dynamically mà không cần cấu hình tĩnh — cần thiết ngay khi deploy 2+ services trong container environment.</p>
+  </div>
+  <div class="content-grid">
+    <div class="card">
+      <h4>Client-side Discovery</h4>
+      <p>Client query service registry để lấy list instances, tự load balance.</p>
+      <ul>
+        <li>Client gọi registry (Eureka, Consul) → nhận danh sách instances available</li>
+        <li>Client tự chọn instance (round-robin, random, least-connections)</li>
+        <li>Ưu điểm: flexible load balancing logic tại client</li>
+        <li>Nhược điểm: client phải implement discovery logic, coupled với registry</li>
+        <li>Dùng: Netflix Eureka, Consul, Spring Cloud</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Server-side Discovery</h4>
+      <p>Client gọi LB/API Gateway, LB query registry và route tới instance. Client đơn giản hơn — không biết gì về discovery.</p>
+      <ul>
+        <li>Client → LB → (LB query registry) → Service instance</li>
+        <li>Ưu điểm: decouple client khỏi discovery logic, client đơn giản</li>
+        <li>Nhược điểm: thêm network hop, LB có thể là bottleneck</li>
+        <li>Dùng: Kubernetes Service (kube-proxy + CoreDNS), AWS ALB + ECS</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Kubernetes Service Discovery</h4>
+      <ul>
+        <li>Mỗi K8s Service có DNS stable: <code>svc.namespace.svc.cluster.local</code></li>
+        <li>Pod IP thay đổi khi restart, Service IP/DNS không đổi</li>
+        <li>kube-proxy route traffic từ Service IP → Pod IP via iptables/IPVS</li>
+        <li>CoreDNS resolve DNS names trong cluster tự động</li>
+        <li>Headless service: DNS trả thẳng Pod IPs (dùng cho StatefulSet)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Health Checks</h4>
+      <ul>
+        <li><strong>Liveness</strong>: service còn running không? Fail → restart container.</li>
+        <li><strong>Readiness</strong>: service sẵn sàng nhận traffic? Fail → remove khỏi LB pool.</li>
+        <li><strong>Startup</strong>: service đã xong init chưa? Dùng cho slow-start containers.</li>
+        <li>Registry chỉ route traffic tới healthy instances — health check là cơ chế loại trừ automatic.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- SEC 6: Retry & Exponential Backoff -->
+<div class="section-bg s-bg6">
+<section id="sec-6">
+  <div class="section-header">
+    <span class="tag">07 · Retry &amp; Backoff</span>
+    <h2>Retry với Exponential Backoff &amp; Jitter</h2>
+    <p>Retry sai cách gây thundering herd — toàn bộ clients retry cùng lúc → overwhelm service đang recover. Exponential backoff + jitter phân tán retry theo thời gian, giúp service recover gracefully thay vì bị dồn thêm tải.</p>
+  </div>
+  <div class="content-grid">
+    <div class="card">
+      <h4>Backoff strategies</h4>
+      <ul>
+        <li><strong>Fixed</strong>: wait 1s → 1s → 1s. Đơn giản nhất, tệ nhất cho thundering herd.</li>
+        <li><strong>Linear</strong>: wait 1s → 2s → 3s. Tốt hơn Fixed.</li>
+        <li><strong>Exponential</strong>: wait 1s → 2s → 4s → 8s → … Tốt, nhưng max chờ có thể quá lâu.</li>
+        <li><strong>Exponential + Jitter (tốt nhất)</strong>: wait = random(0, min(cap, base × 2^attempt)). Phân tán hoàn toàn, không thundering herd.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Full Jitter formula</h4>
+      <ul>
+        <li><code>wait = random(0, min(cap, base × 2^attempt))</code></li>
+        <li>cap: max wait time (vd: 32s)</li>
+        <li>base: initial wait (vd: 1s)</li>
+        <li>random(0, X): hoàn toàn random → phân tán đều giữa các clients</li>
+        <li>Decorrelated Jitter: <code>wait = random(base, prev_wait × 3)</code> — phân tán tốt hơn với burst nhỏ</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Retry best practices</h4>
+      <ul>
+        <li><strong>Idempotency first</strong>: chỉ retry idempotent ops (GET, PUT, DELETE) hoặc POST với idempotency key</li>
+        <li>Max retries: cap tại 3–5 attempts, exponential backoff cap tại 60s</li>
+        <li>Respect <code>Retry-After</code> header: nếu server trả 429 kèm header, dùng giá trị đó</li>
+        <li>DLQ: sau N retries fail → dead letter queue → alert + manual review</li>
+        <li>Circuit breaker + retry: nếu circuit OPEN → không retry (fail fast ngay)</li>
+        <li>Không retry: 4xx errors (400, 401, 403, 404) — lỗi client-side, retry vô nghĩa</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Thundering Herd</h4>
+      <p>Khi N services đồng loạt retry sau downtime, service recovering bị flood request ngay khi restart → crash lại.</p>
+      <ul>
+        <li>Jitter giải quyết bằng cách phân tán thời điểm retry ngẫu nhiên</li>
+        <li>Circuit breaker ngăn retry trong khi service vẫn down</li>
+        <li>Rate limiting phía server absorb burst dù có jitter</li>
+        <li>Gradual rollout: restart service với traffic thấp trước</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- SEC 7: Stateless Services -->
+<div class="section-bg s-bg7">
+<section id="sec-7">
+  <div class="section-header">
+    <span class="tag">08 · Stateless Design</span>
+    <h2>Stateless Services &amp; Horizontal Scale</h2>
+    <p>Stateful services gắn user session vào 1 specific instance — khi instance chết hoặc cần scale, session mất. Stateless services không lưu state trong process memory → bất kỳ instance nào cũng serve được bất kỳ request → horizontal scale tự do. Đây là điều kiện tiên quyết để auto-scale.</p>
+  </div>
+  <div class="content-grid">
+    <div class="card">
+      <h4>Stateless design rules</h4>
+      <ul>
+        <li><strong>Session data</strong> → Redis (TTL, expiry, accessible từ mọi instance)</li>
+        <li><strong>Authentication</strong> → JWT (self-contained, stateless) hoặc Redis session</li>
+        <li><strong>File uploads</strong> → S3 / object storage (không lưu disk local instance)</li>
+        <li><strong>Background jobs</strong> → Message queue (không hardcode worker vào 1 machine)</li>
+        <li><strong>Configuration</strong> → Environment variables hoặc config service</li>
+        <li><strong>Cache</strong> → Distributed (Redis) thay vì in-process nếu cần share giữa instances</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Benefits</h4>
+      <ul>
+        <li><strong>Auto-scaling</strong>: spin up/down bất kỳ lúc nào — không lo session loss</li>
+        <li><strong>Rolling deployment</strong>: drain traffic từ old instance, route sang new — zero downtime</li>
+        <li><strong>Fault tolerance</strong>: dead instance thay thế tức thì bởi instance mới</li>
+        <li><strong>Load balancing</strong>: bất kỳ LB algorithm nào đều hoạt động (không cần sticky)</li>
+        <li><strong>Testing</strong>: dễ test hơn vì không có shared mutable state</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>JWT vs Redis Session</h4>
+      <ul>
+        <li><strong>JWT</strong>: stateless, self-contained (user_id, roles, exp). Không cần DB lookup. Không thể invalidate trước expire (dùng blacklist Redis nếu cần).</li>
+        <li><strong>Redis session</strong>: session ID trong cookie, data trong Redis. Có thể invalidate bất kỳ lúc nào. Cần Redis HA. Thêm network roundtrip mỗi request.</li>
+        <li>Hybrid: JWT ngắn hạn (15 phút) + refresh token dài hạn (7 ngày) trong Redis.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- SEC 8: Event-Driven Architecture -->
+<div class="section-bg s-bg8">
+<section id="sec-8">
+  <div class="section-header">
+    <span class="tag">09 · Event-Driven</span>
+    <h2>Event-Driven Architecture (EDA)</h2>
+    <p>EDA decouples producers từ consumers hoàn toàn — producer không biết consumer là ai hay có bao nhiêu consumers. Thêm consumer mới (analytics, notification, audit) không cần sửa producer code. Đây là nền tảng để scale và extend system mà không tạo coupling mới.</p>
+  </div>
+  <div class="content-grid">
+    <div class="card">
+      <h4>Architecture</h4>
+      <ul>
+        <li>Producer → Event Bus (Kafka/SQS) → Consumer Group 1 (billing)</li>
+        <li>→ Consumer Group 2 (notifications)</li>
+        <li>→ Consumer Group 3 (analytics)</li>
+        <li>→ Consumer Group 4 (audit log)</li>
+        <li>Mỗi consumer group xử lý độc lập ở tốc độ của mình (consumer lag)</li>
+        <li>Fan-out: 1 topic → nhiều consumer groups, mỗi group nhận 1 copy message</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Fan-out patterns</h4>
+      <ul>
+        <li><strong>Pub/Sub</strong>: 1 topic, nhiều subscriber. Kafka consumer groups mỗi group nhận 1 copy.</li>
+        <li><strong>Queue-based</strong>: 1 queue, nhiều consumers competing. Mỗi message chỉ 1 consumer xử lý.</li>
+        <li><strong>Event streaming</strong>: Kafka — messages persisted, consumer replay từ đầu nếu cần.</li>
+        <li><strong>SNS → SQS fanout</strong>: SNS → nhiều SQS queues. Mỗi downstream có queue riêng → cô lập failure.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Idempotent consumers</h4>
+      <p>Kafka at-least-once delivery → consumer có thể nhận duplicate messages. Mọi consumer phải idempotent:</p>
+      <ul>
+        <li>Upsert thay vì insert: <code>INSERT ... ON CONFLICT DO UPDATE</code></li>
+        <li>Check event_id đã xử lý chưa trong DB/Redis trước khi process</li>
+        <li>Natural idempotency: "set balance = X" an toàn hơn "add X to balance"</li>
+        <li>Deduplication window: Kafka Streams, SQS deduplication ID (FIFO queue)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>EDA trade-offs</h4>
+      <ul>
+        <li>✓ Loose coupling — thêm consumer không cần sửa producer</li>
+        <li>✓ Absorb traffic spikes — queue buffer spike, consumer xử lý bình thường</li>
+        <li>✓ Event replay — debug và migrate data bằng cách replay từ đầu</li>
+        <li>✗ Eventual consistency — consumer lag, read sau write có thể thấy stale data</li>
+        <li>✗ Ordering — Kafka partition đảm bảo order trong partition, không cross-partition</li>
+        <li>✗ Debugging khó — cần distributed tracing để theo dõi event flow</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- SEC 9: CQRS -->
+<div class="section-bg s-bg9">
+<section id="sec-9">
+  <div class="section-header">
+    <span class="tag">10 · CQRS</span>
+    <h2>CQRS — Command Query Responsibility Segregation</h2>
+    <p>Khi write model và read model có access pattern hoàn toàn khác nhau (write cần ACID, read cần aggregation/denormalization), tách chúng ra giúp optimize từng side độc lập. Write side đảm bảo correctness, read side đảm bảo query performance. Đặc biệt mạnh khi kết hợp với Event Sourcing.</p>
+  </div>
+  <div class="content-grid">
+    <div class="card">
+      <h4>Write Side (Command)</h4>
+      <ul>
+        <li><strong>Command</strong>: intent thay đổi state (CreateOrder, UpdateInventory, ProcessPayment)</li>
+        <li><strong>Command Handler</strong>: validate business rules, apply logic, persist to write store</li>
+        <li><strong>Write Model</strong>: normalized, ACID, optimized for correctness — không phải performance</li>
+        <li>Emit domain events sau khi write → async update read models</li>
+        <li>Write DB: thường PostgreSQL, MySQL với strict schema và transactions</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Read Side (Query)</h4>
+      <ul>
+        <li><strong>Query</strong>: không thay đổi state (GetOrderSummary, GetUserDashboard)</li>
+        <li><strong>Read Model</strong>: denormalized, pre-aggregated, optimized cho specific query patterns</li>
+        <li>Materialized view / projection: rebuild từ domain events, updated async</li>
+        <li>Multiple read models: 1 write → nhiều read models cho mobile, admin, analytics</li>
+        <li>Read DB: thường Redis, Elasticsearch, hoặc denormalized relational DB</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Architecture flow</h4>
+      <ul>
+        <li>Client → Command → Command Handler → Write DB + Event Store</li>
+        <li>Event Store → Event Processor → Read Model (async)</li>
+        <li>Client → Query → Query Handler → Read Model (fast)</li>
+        <li>Eventual consistency: read model lag behind write (milliseconds to seconds)</li>
+        <li>Kết hợp với Event Sourcing: events = source of truth cho cả write và read</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Trade-offs</h4>
+      <ul>
+        <li>✓ Optimize read/write independently — scale read replicas không ảnh hưởng write</li>
+        <li>✓ Separation of concerns — write logic và query logic không pha trộn</li>
+        <li>✓ Multiple read models — mỗi use case có projection riêng, query cực nhanh</li>
+        <li>✗ Eventual consistency — read model lag sau write</li>
+        <li>✗ Complexity — 2 models, sync logic, projection rebuild khi schema thay đổi</li>
+        <li>✗ NOT for simple CRUD — overhead không đáng cho app nhỏ hoặc early stage</li>
+      </ul>
+    </div>
+  </div>
 </section>
 </div>
 

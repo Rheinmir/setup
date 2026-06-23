@@ -11,6 +11,14 @@
 - Wire R8 policy, install-harness.sh, sync-template Step 0/6b; +health-check.md vào manifest
 - Draft: wiki/sources/draft/150626-health-check-pattern-sync.md
 
+## 2026-06-22 — orca-workflow — design-pattern-html-refactor
+- Refactor 3 HTML infographics: v1 (4→5 sections), v2 (4→7 sections), v3 (4→10 sections)
+- v1 thêm: Rate Limiting section, CDN card, prose WHY/WHEN cho 5 building blocks, 6-row tradeoff table
+- v2 thêm: Rate Limiting, Consensus Algorithms (Raft/Paxos/PBFT), Monitoring & Observability (Three Pillars, SLI/SLO/SLA)
+- v3 thêm: Communication Patterns (Saga/Event Sourcing), Service Discovery, Retry+Jitter, Stateless Design, EDA, CQRS
+- agy terminals blocked (codex-trust-workspace) → Claude main thực hiện trực tiếp
+- Proposal: wiki/draft/orca/220626-design-pattern-html-refactor.md
+
 ## 2026-06-21 — orca-workflow + docs-site-macos — design-pattern-infographic
 - Fetch 3 YouTube video metadata (Code Lủng · Học Từ Thiền Series: Phần 000/001/002)
 - YouTube SPA → transcript không extract được; dùng fallback: metadata + System Design knowledge
@@ -22,3 +30,14 @@
 ## 2026-06-18 — docs-site-macos — orca-framework-overview
 - Created llmwiki/html/180626-orca-framework-overview.html (single-file overview, skill grid by color)
 - Created draft wiki/sources/draft/180626-orca-framework-overview.md
+
+## 2026-06-22 — install-harness — mode=migrate
+- Cài harness L0–L4 (validators, hooks, pre-commit, wiki-health, health-check, evals)
+- ⚠ CÓ NỢ wiki (thiếu Origin / index lệch) — backfill trước khi tin Stop hook
+
+## 2026-06-22 — install-harness — mode=migrate
+- Cài harness L0–L4 (validators, hooks, pre-commit, wiki-health, health-check, evals)
+- ⚠ CÓ NỢ wiki (thiếu Origin / index lệch) — backfill trước khi tin Stop hook
+
+## 2026-06-22 — install-harness — mode=migrate
+- Cài harness L0–L4 (validators, hooks, pre-commit, wiki-health, health-check, evals)

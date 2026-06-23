@@ -65,7 +65,7 @@ def main():
         for x in findings:
             print("  " + x, file=sys.stderr)
         sys.exit(0 if warn else 2)
-    print(f"[arch-scan] sạch ({len(files)} files)")
+    sys.stdout.buffer.write(f"[arch-scan] sach ({len(files)} files)\n".encode("utf-8"))
 
 
 if __name__ == "__main__":

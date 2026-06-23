@@ -1,3 +1,11 @@
+---
+type: source
+title: design-pattern-v2-draft
+status: implemented
+tags: [design-pattern, hoc-tu-thien, system-design]
+timestamp: 2026-06-21
+---
+
 # Học Từ Thiền — Phần 001: System Design
 
 **Speaker:** Trần Hồng Gấm

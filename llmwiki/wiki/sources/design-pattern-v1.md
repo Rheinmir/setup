@@ -1,3 +1,11 @@
+---
+type: source
+title: design-pattern-v1
+status: implemented
+tags: [design-pattern, hoc-tu-thien, system-design]
+timestamp: 2026-06-21
+---
+
 # Học Từ Thiền — Phần 000: System Design
 
 **Speaker:** Phan Văn Ngọc Thắng
