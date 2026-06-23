@@ -42,7 +42,7 @@ TMP_CLONE=""
 log()  { printf '\033[1;32m[harness]\033[0m %s\n' "$*"; }
 warn() { printf '\033[1;33m[harness]\033[0m %s\n' "$*"; }
 
-cleanup() { [ -n "$TMP_CLONE" ] && rm -rf "$TMP_CLONE" || true; }
+cleanup() { [ -n "$TMP_CLONE" ] && rm -rf "$TMP_CLONE" || true; [ -n "$TMP_SYNC" ] && rm -rf "$TMP_SYNC" || true; }
 trap cleanup EXIT
 
 # ---------- 0. Xác định nguồn ----------
@@ -73,18 +73,13 @@ if [ "${1:-}" = "--global" ]; then
   SETTINGS="$HOME/.claude/settings.json"
   [ -f "$SETTINGS" ] && cp "$SETTINGS" "$SETTINGS.bak.$(date +%s)" || echo '{}' > "$SETTINGS"
   python3 - << 'PYEOF'
-import json, os, re
+import json, os
 path = os.path.expanduser("~/.claude/settings.json")
 cur = json.load(open(path))
 HOOKS_DIR = '$HOME/.claude/harness/hooks'
-def script_of(command):
-    m = re.search(r'([A-Za-z0-9_./-]+\.py)', command or "")
-    return os.path.basename(m.group(1)) if m else None
 def cmd(script):
-    # if-guard (KHÔNG dùng `&& ... || true` — nó nuốt exit 2, mất khả năng chặn).
-    # `-f` fail-open: hook THIẾU file → bỏ qua, KHÔNG brick tool (sự cố cozyroom).
-    p = f'{HOOKS_DIR}/{script}'
-    return f'if [ -d "${{CLAUDE_PROJECT_DIR:-.}}/llmwiki" ] && [ -f "{p}" ]; then python3 "{p}"; fi'
+    # if-guard (KHÔNG dùng `&& ... || true` — nó nuốt exit 2, mất khả năng chặn)
+    return f'if [ -d "${{CLAUDE_PROJECT_DIR:-.}}/llmwiki" ]; then python3 "{HOOKS_DIR}/{script}"; fi'
 tpl = {
     "PreToolUse":  [{"matcher": "Write|Edit|MultiEdit|NotebookEdit|Bash", "script": "pre_tool_use.py"},
                     {"matcher": "Bash", "script": "orca_guard.py"}],
@@ -99,18 +94,16 @@ for d in ["Write(./llmwiki/raw/**)", "Edit(./llmwiki/raw/**)", "MultiEdit(./llmw
     if d not in cur["permissions"]["deny"]:
         cur["permissions"]["deny"].append(d)
 cur.setdefault("hooks", {})
-# idempotent re-merge: dedup theo BASENAME script → chạy lại NÂNG CẤP lệnh trần cũ thành có guard.
 for event, spec in tpl.items():
     defs = cur["hooks"].setdefault(event, [])
-    specs = spec if isinstance(spec, list) else [spec]
-    tpl_scripts = {s["script"] for s in specs}
-    defs[:] = [d for d in defs
-               if not any(script_of(hh.get("command")) in tpl_scripts for hh in (d.get("hooks") or []))]
-    for s in specs:
-        entry = {"hooks": [{"type": "command", "command": cmd(s["script"]), "timeout": 30}]}
-        if s["matcher"]:
-            entry["matcher"] = s["matcher"]
-        defs.append(entry)
+    for s in (spec if isinstance(spec, list) else [spec]):
+        existing = {h.get("command") for d in defs for h in (d.get("hooks") or [])}
+        c = cmd(s["script"])
+        if c not in existing:
+            entry = {"hooks": [{"type": "command", "command": c, "timeout": 30}]}
+            if s["matcher"]:
+                entry["matcher"] = s["matcher"]
+            defs.append(entry)
 json.dump(cur, open(path, "w"), indent=2, ensure_ascii=False)
 print("[harness] GLOBAL: settings.json merged (backup .bak.*)")
 PYEOF
@@ -126,7 +119,7 @@ fi
 # ---------- 1. Detect mode ----------
 if [ -d "$ROOT/llmwiki" ]; then MODE="migrate"; else MODE="new"; fi
 SAME_BUNDLE=0; [ "$SRC" = "$ROOT" ] && SAME_BUNDLE=1
-log "Project: $ROOT — mode: $MODE$([ $SAME_BUNDLE = 1 ] && echo ' (project chính là bundle — bỏ qua copy core)')"
+log "Project: $ROOT — mode: $MODE$([ $SAME_BUNDLE = 1 ] && echo ' (project chính là bundle — merge missing từ remote)')"
 
 # ---------- 2. Khung llmwiki (mode new) ----------
 if [ "$MODE" = "new" ]; then
@@ -148,14 +141,47 @@ if [ "$SAME_BUNDLE" = "0" ]; then
   [ -f "$ROOT/harness/version.json" ] || cp "$SRC/harness/version.json" "$ROOT/harness/version.json" 2>/dev/null || true
   cp "$SRC/harness/scripts/install-harness.sh" "$ROOT/harness/scripts/install-harness.sh" 2>/dev/null || true
   [ -f "$ROOT/harness/evals/promptfooconfig.yaml" ] || cp "$SRC/harness/evals/promptfooconfig.yaml" "$ROOT/harness/evals/promptfooconfig.yaml"
+else
+  # SAME_BUNDLE=1 — pull all harness files from remote (overwrite local)
+  if [ "$NO_CLONE" != "1" ]; then
+    TMP_SYNC="$(mktemp -d /tmp/llmwiki-harness-sync.XXXXXX)"
+    if git clone --depth 1 -b orca git@github.com:rheinmir/setup.git "$TMP_SYNC" >/dev/null 2>&1 \
+        || git clone --depth 1 -b orca https://github.com/rheinmir/setup.git "$TMP_SYNC" >/dev/null 2>&1; then
+      mkdir -p "$ROOT/harness/validators" "$ROOT/harness/scripts" "$ROOT/harness/evals" "$ROOT/harness/tests"
+      cp -R "$TMP_SYNC/harness/validators/"*    "$ROOT/harness/validators/" 2>/dev/null || true
+      cp    "$TMP_SYNC/harness/policy.yaml"      "$ROOT/harness/policy.yaml" 2>/dev/null || true
+      cp    "$TMP_SYNC/harness/recipe.md"        "$ROOT/harness/recipe.md" 2>/dev/null || true
+      cp    "$TMP_SYNC/harness/harness.md"       "$ROOT/harness/harness.md" 2>/dev/null || true
+      cp    "$TMP_SYNC/harness/scripts/"*        "$ROOT/harness/scripts/" 2>/dev/null || true
+      cp    "$TMP_SYNC/harness/tests/"*          "$ROOT/harness/tests/" 2>/dev/null || true
+      cp    "$TMP_SYNC/harness/version.json"     "$ROOT/harness/version.json" 2>/dev/null || true
+      cp    "$TMP_SYNC/harness/evals/"*          "$ROOT/harness/evals/" 2>/dev/null || true
+      log "SAME_BUNDLE: pull all harness files from remote (overwrite)"
+    else
+      warn "Không thể clone remote template — harness files có thể thiếu"
+      rm -rf "$TMP_SYNC" 2>/dev/null || true; unset TMP_SYNC
+    fi
+  fi
 fi
 log "L0 policy + validators + wiki-health + evals: OK"
 
 # ---------- 4. L1 adapter Claude Code ----------
 mkdir -p "$ROOT/llmwiki/.claude/hooks/validators"
-[ "$SAME_BUNDLE" = "0" ] && cp "$SRC/llmwiki/.claude/hooks/"*.py "$ROOT/llmwiki/.claude/hooks/"
+if [ "$SAME_BUNDLE" = "0" ]; then
+  cp "$SRC/llmwiki/.claude/hooks/"*.py "$ROOT/llmwiki/.claude/hooks/"
+else
+  # SAME_BUNDLE: hooks already pulled in TMP_SYNC from step 3; clone if step 3 skipped
+  if [ "$NO_CLONE" != "1" ] && [ ! -d "${TMP_SYNC:-}" ]; then
+    TMP_SYNC="$(mktemp -d /tmp/llmwiki-harness-sync.XXXXXX)"
+    git clone --depth 1 -b orca git@github.com:rheinmir/setup.git "$TMP_SYNC" >/dev/null 2>&1 \
+      || git clone --depth 1 -b orca https://github.com/rheinmir/setup.git "$TMP_SYNC" >/dev/null 2>&1 || true
+  fi
+  if [ -d "${TMP_SYNC:-}" ]; then
+    cp "$TMP_SYNC/llmwiki/.claude/hooks/"*.py "$ROOT/llmwiki/.claude/hooks/" 2>/dev/null || true
+  fi
+fi
 # copy validators vào cạnh hooks để llmwiki deploy standalone vẫn chạy (resolution tier 2)
-cp "$SRC/harness/validators/"*.py "$ROOT/llmwiki/.claude/hooks/validators/"
+cp "$ROOT/harness/validators/"*.py "$ROOT/llmwiki/.claude/hooks/validators/" 2>/dev/null || true
 printf '# runtime data — khong commit\naudit/\n' > "$ROOT/llmwiki/.claude/.gitignore"
 
 SETTINGS="$ROOT/llmwiki/.claude/settings.json"
@@ -198,9 +224,7 @@ prefix = "llmwiki/"
 hooks_dir = '$CLAUDE_PROJECT_DIR/llmwiki/.claude/hooks'
 deny = [f"Write(./{prefix}raw/**)", f"Edit(./{prefix}raw/**)", f"MultiEdit(./{prefix}raw/**)"]
 def h(script, matcher=None):
-    # `-f` fail-open: hook THIẾU file → bỏ qua, KHÔNG brick tool (sự cố cozyroom).
-    p = f'{hooks_dir}/{script}'
-    d = {"hooks": [{"type": "command", "command": f'if [ -f "{p}" ]; then python3 "{p}"; fi'}]}
+    d = {"hooks": [{"type": "command", "command": f'python3 "{hooks_dir}/{script}"'}]}
     if matcher: d["matcher"] = matcher
     return d
 tpl = {"permissions": {"deny": deny}, "hooks": {
@@ -220,27 +244,17 @@ for d in tpl["permissions"]["deny"]:
     if d not in cur["permissions"]["deny"]:
         cur["permissions"]["deny"].append(d)
 cur.setdefault("hooks", {})
-# idempotent re-merge: dedup theo BASENAME script (vd orca_guard.py), không theo chuỗi lệnh thô,
-# để chạy lại NÂNG CẤP lệnh trần cũ thành lệnh có guard thay vì sinh hook trùng.
-def script_of(command):
-    m = re.search(r'([A-Za-z0-9_./-]+\.py)', command or "")
-    return os.path.basename(m.group(1)) if m else None
 for event, defs in tpl["hooks"].items():
     cur_defs = cur["hooks"].setdefault(event, [])
-    tpl_scripts = {script_of(d["hooks"][0]["command"]) for d in defs}
-    # bỏ entry cũ trỏ cùng script (lệnh trần) — sẽ thay bằng bản guard mới
-    cur_defs[:] = [d for d in cur_defs
-                   if not any(script_of(hh.get("command")) in tpl_scripts for hh in (d.get("hooks") or []))]
-    cur_defs.extend(defs)
+    existing_cmds = {h.get("command") for d in cur_defs for h in (d.get("hooks") or [])}
+    for d in defs:
+        cmd = d["hooks"][0]["command"]
+        if cmd not in existing_cmds:
+            cur_defs.append(d)
 json.dump(cur, open(path, "w"), indent=2, ensure_ascii=False)
 PY
 grep -q "audit/" "$ROOT/.claude/.gitignore" 2>/dev/null || printf 'audit/\nsettings.json.bak.*\n' >> "$ROOT/.claude/.gitignore"
 log "settings.json ở ROOT: OK (session mở tại root sẽ load hooks)"
-
-# Presence-check: hook đã đăng ký nhưng THIẾU file → WARN (không fatal; lệnh đã fail-open guard).
-for hook_py in pre_tool_use.py orca_guard.py post_tool_use.py stop.py session_end.py session_start.py user_prompt_submit.py; do
-  [ -f "$ROOT/llmwiki/.claude/hooks/$hook_py" ] || warn "hook '$hook_py' đã đăng ký trong settings nhưng THIẾU file (fail-open: bỏ qua) — chạy '/sync-template --full' để tải về."
-done
 
 # ---------- 5. L2 pre-commit ----------
 if [ ! -f "$ROOT/.pre-commit-config.yaml" ]; then
