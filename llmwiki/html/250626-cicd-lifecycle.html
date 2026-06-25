@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CI/CD — life cycle: từ push tới production (và rollback)</title>
+<style>
+:root{
+  --glass-2: rgba(255,255,255,.72);--glass-3: rgba(255,255,255,.88);
+  --blur-1: 24px; --blur-2: 8px; --blur-3: 4px;
+  --edge-hi: inset 0 1px 0 rgba(255,255,255,.85);--border: rgba(30,90,170,.14);
+  --text-1:#0f0f12; --text-2:#4a4a55;
+  --font-text:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue','Roboto','Segoe UI',sans-serif;
+  --font-display:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue','Roboto','Segoe UI',sans-serif;
+  --font-mono:'SF Mono',ui-monospace,'SFMono-Regular',Menlo,'Roboto Mono',Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:#e9f0fb}
+body{font-family:var(--font-text);color:var(--text-1);line-height:1.6;min-height:100vh;
+  background:radial-gradient(900px 500px at 12% -10%,rgba(10,132,255,.10),transparent 60%),
+    radial-gradient(700px 420px at 95% 15%,rgba(90,162,232,.08),transparent 55%),
+    linear-gradient(180deg,#f7fbff 0%,#eaf2fd 100%)}
+body::before{content:'';position:fixed;inset:-10%;z-index:-1;pointer-events:none;
+  background:radial-gradient(640px 440px at 10% 14%,rgba(10,132,255,.20),transparent 65%),
+    radial-gradient(380px 460px at 4% 52%,rgba(48,176,199,.16),transparent 65%),
+    radial-gradient(540px 400px at 88% 10%,rgba(88,86,214,.12),transparent 60%),
+    radial-gradient(480px 380px at 16% 86%,rgba(255,149,0,.10),transparent 60%);
+  animation:orbDrift 46s ease-in-out infinite alternate}
+@keyframes orbDrift{100%{transform:translate(2.2%,1.6%) scale(1.045)}}
+body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:radial-gradient(rgba(30,90,170,.10) 1px,transparent 1.3px);background-size:22px 22px;
+  mask-image:linear-gradient(180deg,rgba(0,0,0,.5),rgba(0,0,0,.2))}
+@media(prefers-reduced-motion:reduce){body::before{animation:none}}
+
+.wrap{max-width:1240px;margin:0 auto;padding:48px 24px 80px}
+.hero .eyebrow{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#0a84ff;background:rgba(10,132,255,.10);padding:5px 12px;border-radius:20px;margin-bottom:16px}
+.hero h1{font-family:var(--font-display);font-size:clamp(30px,4.6vw,46px);line-height:1.06;letter-spacing:-.03em;background:linear-gradient(135deg,#0a84ff,#5aa2e8,#cfe3fb);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.08em}
+.hero p{font-size:16px;color:var(--text-2);max-width:780px;margin-top:14px}
+
+.controls{display:flex;align-items:center;gap:10px;margin:26px 0 14px;flex-wrap:wrap}
+.controls button{font-family:var(--font-text);font-size:13px;font-weight:600;color:#0a6fd6;cursor:pointer;
+  background:linear-gradient(165deg,rgba(255,255,255,.6),rgba(255,255,255,.3));border:1px solid transparent;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 0 0 1px rgba(30,90,170,.08),0 2px 8px rgba(30,90,170,.1);
+  backdrop-filter:blur(var(--blur-2));border-radius:10px;padding:7px 14px;position:relative;overflow:hidden;transition:color .15s}
+.controls button:hover{color:#0a84ff}
+.controls .prog{font-family:var(--font-mono);font-size:12.5px;color:var(--text-2);margin-left:4px}
+.controls .hint{font-size:11.5px;color:var(--text-2);opacity:.8}
+.controls .phase{font-size:12px;font-weight:700;padding:4px 11px;border-radius:20px;letter-spacing:.02em;background:var(--acbg,rgba(10,132,255,.12));color:var(--ac,#0a84ff)}
+
+.lifecycle{display:grid;grid-template-columns:minmax(190px,.5fr) 1.5fr;gap:22px;align-items:start}
+@media(max-width:920px){.lifecycle{grid-template-columns:1fr}}
+
+.steps{display:flex;flex-direction:column;gap:11px;max-height:74vh;overflow-y:auto;padding:2px 6px 2px 2px}
+.step{background:var(--glass-2);backdrop-filter:blur(var(--blur-2)) saturate(1.1);border:1px solid var(--border);
+  border-left:3px solid transparent;border-radius:14px;box-shadow:var(--edge-hi),0 3px 14px rgba(0,0,0,.05);
+  padding:13px 15px;cursor:pointer;transition:border-color .25s,box-shadow .25s,transform .25s,opacity .25s;opacity:.6}
+.step:hover{opacity:.9}
+.step.active{opacity:1;transform:translateX(3px);border-left-color:var(--ac,#0a84ff);box-shadow:var(--edge-hi),0 8px 26px rgba(10,132,255,.14)}
+.step .sp{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.03em;padding:3px 9px;border-radius:14px;margin-bottom:7px;background:var(--acbg,rgba(10,132,255,.1));color:var(--ac,#0a84ff)}
+.step h3{font-family:var(--font-display);font-size:14.5px;letter-spacing:-.01em}
+
+.tree-pane{position:sticky;top:18px;background:var(--glass-2);backdrop-filter:blur(var(--blur-1)) saturate(1.3);
+  border:1px solid var(--border);border-radius:18px;box-shadow:var(--edge-hi),0 8px 30px rgba(30,90,170,.1);padding:18px 18px 20px;overflow:hidden}
+.tp-head{display:flex;align-items:center;gap:7px;padding-bottom:12px;border-bottom:1px solid var(--border);margin-bottom:12px}
+.tp-head .dot{width:11px;height:11px;border-radius:50%}
+.tp-head .ttl{margin-left:8px;font-family:var(--font-mono);font-size:12px;color:var(--text-2)}
+.controllers{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px;position:relative;z-index:3}
+.chip{display:inline-flex;align-items:center;font-family:var(--font-mono);font-size:11px;font-weight:600;color:#4a4a55;background:rgba(255,255,255,.6);border:1px solid var(--border);border-radius:9px;padding:5px 10px;white-space:nowrap;transition:all .25s}
+.chip.hit{color:#fff;background:linear-gradient(135deg,#0a84ff,#5aa2e8);border-color:transparent;box-shadow:0 3px 12px rgba(10,132,255,.4)}
+.chip .seqslot{width:15px;height:15px;margin-right:6px;font-size:9px}
+.tree{font-family:var(--font-mono);font-size:12.5px;line-height:1.2;position:relative;z-index:2}
+.trow{display:flex;align-items:center;padding:5px 8px;border-radius:8px;color:var(--text-1);white-space:pre;transition:background .25s,color .25s,box-shadow .25s;position:relative}
+.trow .pre{color:#9aa3b2}.trow .nm{font-weight:600}.trow .cm{color:#9aa3b2;font-weight:400}
+.trow.dir .nm{color:#0a6fd6}
+
+.seqslot{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;margin-right:8px;border-radius:50%;font-size:10px;font-weight:800;flex:0 0 auto;background:transparent;color:transparent;border:1px solid rgba(30,90,170,.1);transition:background .2s,color .2s,border-color .2s}
+.seqslot.on{background:var(--ac,#0a84ff);color:#fff;border-color:transparent}
+.seqslot.r-src{background:#0a84ff;color:#fff;border-color:transparent}
+.seqslot.r-dst{background:#30b0c7;color:#fff;border-color:transparent}
+.seqslot.r-pass{background:#9aa3b2;color:#fff;border-color:transparent}
+.seqslot.deny{background:#e0264b;color:#fff;border-color:transparent}
+.seqslot.ok{background:#34c759;color:#fff;border-color:transparent}
+.seqslot.warn{background:#f0902a;color:#fff;border-color:transparent}
+.trow.hit.r-src{background:rgba(10,132,255,.13);box-shadow:inset 0 0 0 1px #0a84ff;color:#0f0f12}
+.trow.hit.r-dst{background:rgba(48,176,199,.17);box-shadow:inset 0 0 0 1px #30b0c7;color:#0f0f12}
+.trow.hit.r-pass{background:rgba(140,150,165,.12);box-shadow:inset 0 0 0 1px rgba(120,130,145,.5);color:#0f0f12}
+.trow.hit.deny{background:rgba(255,45,85,.16);box-shadow:inset 0 0 0 1px rgba(255,45,85,.45);color:#0f0f12}
+.trow.hit.ok{background:rgba(52,199,89,.16);box-shadow:inset 0 0 0 1px rgba(52,199,89,.45);color:#0f0f12}
+.trow.hit.warn{background:rgba(255,149,0,.18);box-shadow:inset 0 0 0 1px rgba(240,144,42,.5);color:#0f0f12}
+.rtag{margin-left:9px;font-size:10px;font-weight:700;padding:1px 8px;border-radius:11px;font-family:var(--font-text)}
+.rtag.r-src{background:rgba(10,132,255,.14);color:#0a84ff}.rtag.r-dst{background:rgba(48,176,199,.2);color:#1d7d8c}
+.rtag.deny{background:rgba(255,45,85,.14);color:#e0264b}.rtag.ok{background:rgba(52,199,89,.2);color:#1f8f3f}.rtag.warn{background:rgba(255,149,0,.2);color:#c2710a}
+.trow.notyet{display:none}
+.trow.typing{overflow:hidden;animation:typeline var(--td,500ms) steps(30) both}
+@keyframes typeline{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+.trow.attempt .nm{color:#e0264b;text-decoration:line-through}
+
+.cursor{position:absolute;left:0;top:0;z-index:7;pointer-events:none;will-change:left,top;color:var(--ac,#0a84ff);
+  filter:drop-shadow(0 2px 5px rgba(10,132,255,.4));
+  transition:left .5s cubic-bezier(.45,.05,.2,1),top .5s cubic-bezier(.45,.05,.2,1),color .3s ease}
+.cursor svg path{fill:currentColor}
+.verdict{position:absolute;z-index:8;font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;opacity:0;transform:translateY(4px) scale(.9);transition:opacity .3s,transform .3s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.verdict.show{opacity:1;transform:none}
+.verdict.deny{background:#e0264b;color:#fff}.verdict.ok{background:#34c759;color:#fff}.verdict.neutral{background:#0a84ff;color:#fff}
+
+.frame-cap{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);position:relative;z-index:3}
+.frame-cap .fc-top{display:flex;align-items:center;gap:9px;margin-bottom:7px}
+.fc-num{font-family:var(--font-mono);font-size:11px;color:var(--text-2);font-variant-numeric:tabular-nums}
+.fc-sp{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:13px;background:var(--acbg,rgba(10,132,255,.1));color:var(--ac,#0a84ff);letter-spacing:.02em}
+.fc-h{font-family:var(--font-display);font-size:14.5px;font-weight:700;letter-spacing:-.01em;margin-bottom:5px}
+.fc-d{font-size:12.5px;color:var(--text-2);line-height:1.55}
+.fc-d.streaming::after{content:'▋';color:var(--ac,#0a84ff);margin-left:1px;animation:caret .6s steps(1) infinite}
+@keyframes caret{50%{opacity:0}}
+.fc-flow{margin-top:9px;font-family:var(--font-mono);font-size:10.5px;color:#5b6472;background:rgba(10,132,255,.05);border:1px solid var(--border);border-radius:8px;padding:6px 9px;line-height:1.5}
+
+.ripple-ink{position:absolute;border-radius:50%;pointer-events:none;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.7) 0%,rgba(255,255,255,.28) 38%,rgba(10,132,255,.2) 72%,transparent 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.9);transform:scale(0);opacity:1;animation:rg .6s cubic-bezier(.25,.46,.45,.94) forwards}
+@keyframes rg{55%{transform:scale(1);opacity:.75}100%{transform:scale(1.04);opacity:0}}
+.legend{margin-top:18px;display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--text-2)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend b{width:12px;height:12px;border-radius:50%;display:inline-block}
+.legend .s-src{background:#0a84ff}.legend .s-dst{background:#30b0c7}.legend .s-ok{background:#34c759}.legend .s-deny{background:#e0264b}.legend .s-warn{background:#f0902a}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <span class="eyebrow">CI/CD life cycle tương tác · 25/06/2026</span>
+    <h1>CI/CD chạy thế nào — từ lúc dev push tới production</h1>
+    <p>Trái: từng bước (push → pipeline → deploy → rollback). Phải: cây repo/artifact — <strong>mũi tên ở đầu dòng trỏ vào thứ mỗi job đọc/ghi</strong>, có số thứ tự để dừng vẫn hiểu, và <strong>artifact hiện ra đúng lúc job tạo nó</strong>. Mặc định đứng yên ở frame đầy đủ; bấm ▶ để xem chạy, hoặc ⏭ tự bước.</p>
+  </header>
+
+  <div class="controls">
+    <button id="prev">⏮</button>
+    <button id="next">⏭ Bước tiếp</button>
+    <button id="play">▶ Tự chạy</button>
+    <span class="hint">⏭ tự bước · ▶ tự chạy chậm</span>
+    <span class="phase" id="phase">TRƯỚC</span>
+    <span class="prog" id="prog">1 / 12</span>
+  </div>
+
+  <div class="lifecycle">
+    <div class="steps" id="steps"></div>
+
+    <div class="tree-pane" id="pane">
+      <div class="tp-head">
+        <span class="dot" style="background:#ff5f57"></span>
+        <span class="dot" style="background:#ffbd2e"></span>
+        <span class="dot" style="background:#28c840"></span>
+        <span class="ttl">repo + pipeline + môi trường</span>
+      </div>
+      <div class="controllers">
+        <span class="chip" id="c-dev"><span class="seqslot"></span>👤 dev</span>
+        <span class="chip" id="c-ci"><span class="seqslot"></span>⚙️ CI runner</span>
+        <span class="chip" id="c-deploy"><span class="seqslot"></span>🚀 deployer</span>
+        <span class="chip" id="c-ops"><span class="seqslot"></span>🛟 ops</span>
+      </div>
+      <div class="tree" id="tree">
+        <div class="trow dir" data-born="-1"><span class="seqslot"></span><span class="pre">repo/</span></div>
+        <div class="trow" id="f-src" data-born="-1"><span class="seqslot"></span><span class="pre">├─ </span><span class="nm">src/app.js</span><span class="cm">  mã nguồn</span></div>
+        <div class="trow" id="f-pkg" data-born="-1"><span class="seqslot"></span><span class="pre">├─ </span><span class="nm">package.json</span><span class="cm">  khai báo thư viện</span></div>
+        <div class="trow" id="f-ci" data-born="-1"><span class="seqslot"></span><span class="pre">├─ </span><span class="nm">.github/workflows/ci.yml</span><span class="cm">  định nghĩa pipeline</span></div>
+        <div class="trow" id="f-nm" data-born="3"><span class="seqslot"></span><span class="pre">├─ </span><span class="nm">node_modules/</span><span class="cm">  thư viện đã cài</span></div>
+        <div class="trow" id="f-lint" data-born="4"><span class="seqslot"></span><span class="pre">├─ </span><span class="nm">lint-report.txt</span></div>
+        <div class="trow" id="f-cov" data-born="5"><span class="seqslot"></span><span class="pre">├─ </span><span class="nm">coverage/</span><span class="cm">  kết quả test</span></div>
+        <div class="trow" id="f-dist" data-born="6"><span class="seqslot"></span><span class="pre">├─ </span><span class="nm">dist/</span><span class="cm">  bản build</span></div>
+        <div class="trow" id="f-img" data-born="6"><span class="seqslot"></span><span class="pre">├─ </span><span class="nm">registry: app:&lt;sha&gt;</span><span class="cm">  docker image</span></div>
+        <div class="trow" id="f-scan" data-born="7"><span class="seqslot"></span><span class="pre">├─ </span><span class="nm">scan-report.sarif</span></div>
+        <div class="trow" id="f-staging" data-born="8"><span class="seqslot"></span><span class="pre">├─ </span><span class="nm">env: staging</span><span class="cm">  bản thử</span></div>
+        <div class="trow" id="f-smoke" data-born="9"><span class="seqslot"></span><span class="pre">├─ </span><span class="nm">smoke-report.txt</span></div>
+        <div class="trow" id="f-prod" data-born="10"><span class="seqslot"></span><span class="pre">└─ </span><span class="nm">env: production</span><span class="cm">  bản chạy thật</span></div>
+      </div>
+      <div class="frame-cap" id="frameCap">
+        <div class="fc-top"><span class="fc-num" id="fcNum"></span><span class="fc-sp" id="fcSp"></span></div>
+        <div class="fc-h" id="fcH"></div>
+        <div class="fc-d" id="fcD"></div>
+        <div class="fc-flow" id="fcFlow"></div>
+      </div>
+      <div class="cursor" id="cursor">
+        <svg width="20" height="18" viewBox="0 0 20 18"><path d="M2 2 L2 16 L17 9 Z" fill="currentColor" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="verdict" id="verdict"></div>
+      <div class="leak" id="leak"></div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span><b class="s-src"></b> đọc / nguồn</span>
+    <span><b class="s-dst"></b> ghi / tạo / triển khai</span>
+    <span><b class="s-ok"></b> qua (pass)</span>
+    <span><b class="s-deny"></b> hỏng / rollback</span>
+  </div>
+</div>
+
+<script>
+const PHLABEL={pre:'TRƯỚC',ci:'PIPELINE',deploy:'DEPLOY',fail:'SỰ CỐ'};
+const STEPS=[
+  {ph:'pre', sp:'BAN ĐẦU', h:'Repo trước khi chạy CI/CD',
+   d:'Đây là kho mã (repo) của bạn lúc chưa có gì chạy. Trong repo đã có sẵn: mã nguồn (src/app.js), file khai báo thư viện (package.json), và file định nghĩa pipeline (.github/workflows/ci.yml — bản mô tả các bước mà máy chủ CI sẽ làm). CHƯA có thư viện đã cài, chưa có bản build, chưa có image, chưa deploy đi đâu — nhìn cây bên phải, mấy thứ đó đều chưa xuất hiện.',
+   flow:'repo: src + package.json + ci.yml (chưa build, chưa deploy)', chain:['c-dev']},
+
+  {ph:'ci', sp:'PUSH', h:'Dev đẩy code lên',
+   d:'Lập trình viên commit thay đổi rồi push code lên GitHub. Cú push này là cái KÍCH HOẠT toàn bộ pipeline — GitHub thấy có code mới trên nhánh và tự chạy đúng các bước đã ghi trong ci.yml. Dev chỉ "đọc/gửi" mã nguồn của mình, chưa tạo ra artifact nào.',
+   flow:'dev push src/app.js → kích hoạt pipeline trong ci.yml', chain:['c-dev','f-src'], role:{'f-src':'src'}},
+
+  {ph:'ci', sp:'1 · CHECKOUT', h:'CI lấy code về máy chạy',
+   d:'Máy chủ CI (một máy ảo sạch GitHub cấp) đọc file pipeline ci.yml để biết phải làm gì, rồi "checkout" — tức tải toàn bộ mã nguồn và package.json về máy đó. Tất cả ở bước này chỉ là ĐỌC; chưa sinh ra file mới nào.',
+   flow:'CI đọc ci.yml → checkout src + package.json', chain:['c-ci','f-ci','f-src','f-pkg'], role:{'f-ci':'src','f-src':'src','f-pkg':'src'}},
+
+  {ph:'ci', sp:'2 · INSTALL', h:'Cài thư viện phụ thuộc',
+   d:'CI đọc danh sách thư viện trong package.json rồi tải tất cả về, tạo ra thư mục node_modules/. Đây là lần đầu pipeline GHI ra thứ gì đó — node_modules/ vừa xuất hiện trong cây. Bước này biến "khai báo cần gì" thành "thư viện thật sự nằm trên đĩa".',
+   flow:'npm install: đọc package.json → tạo node_modules/', chain:['c-ci','f-pkg','f-nm'], role:{'f-pkg':'src','f-nm':'dst'}},
+
+  {ph:'ci', sp:'3 · LINT', h:'Kiểm chuẩn code (lint)',
+   d:'CI đọc mã nguồn và soi xem có viết đúng quy ước không (thừa biến, sai format, lỗi cú pháp nhỏ…), rồi ghi kết quả ra lint-report.txt. Đây là cửa chất lượng đầu tiên: nếu lint fail, pipeline dừng ngay để khỏi tốn công các bước sau.',
+   flow:'lint: đọc src/app.js → ghi lint-report.txt', chain:['c-ci','f-src','f-lint'], role:{'f-src':'src','f-lint':'dst'}},
+
+  {ph:'ci', sp:'4 · TEST', h:'Chạy bộ kiểm thử',
+   d:'CI chạy toàn bộ test của dự án (dùng mã nguồn + thư viện vừa cài), rồi ghi kết quả độ phủ vào thư mục coverage/. Nếu có một test fail, pipeline dừng — code lỗi không được đi tiếp. Ở đây mọi test đều xanh nên cho qua.',
+   flow:'test: chạy src + node_modules → ghi coverage/', chain:['c-ci','f-src','f-cov'], role:{'f-src':'src','f-cov':'dst'}, verdict:{kind:'ok',text:'test xanh · qua'}},
+
+  {ph:'ci', sp:'5 · BUILD', h:'Đóng gói: build + image',
+   d:'CI dịch/đóng gói mã nguồn thành bản chạy được trong thư mục dist/, rồi gói tiếp thành một Docker image gắn nhãn theo mã commit (app:<sha>) và đẩy lên kho image (registry). Hai thứ MỚI vừa được tạo: dist/ và image trong registry. Image này chính là "gói" sẽ đem đi deploy.',
+   flow:'build: đọc src → tạo dist/ + image app:<sha> trong registry', chain:['c-ci','f-src','f-dist','f-img'], role:{'f-src':'src','f-dist':'dst','f-img':'dst'}},
+
+  {ph:'ci', sp:'6 · SCAN', h:'Quét bảo mật image',
+   d:'Trước khi cho image rời pipeline, CI quét nó tìm lỗ hổng (thư viện dính CVE, secret lỡ đóng vào image…) và ghi kết quả ra scan-report.sarif. Nếu phát hiện lỗ hổng nghiêm trọng có thể chặn lại; ở đây sạch nên cho qua.',
+   flow:'scan: đọc image → ghi scan-report.sarif', chain:['c-ci','f-img','f-scan'], role:{'f-img':'src','f-scan':'dst'}, verdict:{kind:'ok',text:'sạch · qua'}},
+
+  {ph:'deploy', sp:'7 · DEPLOY', h:'Triển khai lên staging',
+   d:'Bộ triển khai (deployer) lấy image vừa build ở registry rồi đưa lên môi trường staging — bản sao gần giống production nhưng để THỬ, không phải khách thật dùng. Môi trường staging giờ đang chạy đúng image này. staging vừa xuất hiện trong cây.',
+   flow:'deployer: đọc image → triển khai lên env staging', chain:['c-deploy','f-img','f-staging'], role:{'f-img':'src','f-staging':'dst'}},
+
+  {ph:'deploy', sp:'8 · SMOKE', h:'Smoke test trên staging',
+   d:'CI gọi vài request thật vào staging để kiểm "có sống và chạy cơ bản không" (trang chủ trả 200, login được, API trả đúng…), rồi ghi smoke-report.txt. Đây là chốt chặn cuối trước khi đụng tới khách thật. Ở đây staging chạy tốt nên cho qua.',
+   flow:'smoke: gọi vào staging → ghi smoke-report.txt', chain:['c-ci','f-staging','f-smoke'], role:{'f-staging':'src','f-smoke':'dst'}, verdict:{kind:'ok',text:'staging ổn · qua'}},
+
+  {ph:'deploy', sp:'9 · PROMOTE', h:'Lên production (go live)',
+   d:'Mọi cửa đã xanh, deployer "promote" — đưa CHÍNH image đã thử ở staging lên môi trường production để khách thật dùng. Quan trọng: deploy lại đúng image đã qua test/scan/smoke, không build lại, nên thứ chạy ở prod giống hệt thứ đã kiểm. production giờ đang LIVE.',
+   flow:'deployer: đưa image (đã thử) → env production', chain:['c-deploy','f-img','f-prod'], role:{'f-img':'src','f-prod':'dst'}, verdict:{kind:'ok',text:'🟢 LIVE'}},
+
+  {ph:'fail', sp:'NẾU LỖI · ROLLBACK', h:'Có sự cố → quay về bản trước',
+   d:'Tình huống xấu: smoke test fail, hoặc production vừa lên báo lỗi/health-check đỏ. Lúc này ops (hoặc tự động) ROLLBACK — đưa production trở lại image tốt trước đó ngay lập tức, để khách bớt bị ảnh hưởng, rồi mới điều tra. Vì mỗi bản deploy là một image gắn nhãn rõ ràng nên quay lui rất nhanh. Đây là lý do CI/CD luôn giữ được "đường lùi".',
+   flow:'ops: smoke/prod lỗi → rollback production về image tốt trước', chain:['c-ops','f-smoke','f-img','f-prod'], role:{'f-img':'src'}, marks:{'f-smoke':'deny','f-prod':'warn'}, verdict:{kind:'deny',text:'⟲ ROLLBACK về bản trước'}},
+];
+
+const stepsEl=document.getElementById('steps'), pane=document.getElementById('pane'),
+  cursor=document.getElementById('cursor'), verdict=document.getElementById('verdict'),
+  leakEl=document.getElementById('leak'), progEl=document.getElementById('prog'),
+  phaseEl=document.getElementById('phase'), reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+const cards=STEPS.map((s,i)=>{const el=document.createElement('div');el.className='step';el.dataset.i=i;
+  el.innerHTML=`<span class="sp">${s.sp}</span><h3>${s.h}</h3>`;
+  el.addEventListener('click',()=>{auto=false;setBtns();step(i)}); stepsEl.appendChild(el); return el;});
+const PAL=[{c:'#0a84ff',bg:'rgba(10,132,255,.12)'},{c:'#30b0c7',bg:'rgba(48,176,199,.13)'},{c:'#5856d6',bg:'rgba(88,86,214,.12)'},{c:'#34c759',bg:'rgba(52,199,89,.14)'},{c:'#ff9500',bg:'rgba(255,149,0,.15)'},{c:'#ff2d55',bg:'rgba(255,45,85,.12)'}];
+const ROLEINFO={src:{c:'#0a84ff',t:'đọc',cls:'r-src'},dst:{c:'#30b0c7',t:'ghi/tạo',cls:'r-dst'},
+  pass:{c:'#9aa3b2',t:'',cls:'r-pass'},actor:{c:'#9aa3b2',t:'',cls:'r-pass'},neutral:{c:'#0a84ff',t:'',cls:'r-pass'},
+  deny:{c:'#e0264b',t:'hỏng',cls:'deny'},ok:{c:'#34c759',t:'qua',cls:'ok'},warn:{c:'#f0902a',t:'rollback',cls:'warn'},attempt:{c:'#e0264b',t:'',cls:'deny'}};
+
+let cur=0, auto=false, timers=[];
+const clear=()=>{timers.forEach(clearTimeout);timers=[]};
+const at=id=>{const el=document.getElementById(id),pr=pane.getBoundingClientRect(),r=el.getBoundingClientRect();
+  return {gx:Math.max(2,r.left-pr.left-22), y:r.top-pr.top+r.height/2, el};};
+function setBtns(){document.getElementById('play').textContent=auto?'⏸ Dừng tự chạy':'▶ Tự chạy';}
+function applyVis(i){document.querySelectorAll('.trow[data-born]').forEach(e=>{
+  const b=+e.dataset.born; e.classList.toggle('notyet', !((b===-1)||(b!==99&&b<i)));});}
+
+function prep(){const s=STEPS[cur];
+  cards.forEach((e,k)=>e.classList.toggle('active',k===cur));
+  cards[cur].scrollIntoView({block:'nearest',behavior:'smooth'});
+  progEl.textContent=(cur+1)+' / '+STEPS.length;
+  phaseEl.textContent=PHLABEL[s.ph]||s.ph;
+  document.getElementById('frameCap');
+  document.getElementById('fcNum').textContent=(cur+1)+' / '+STEPS.length;
+  document.getElementById('fcSp').textContent=s.sp;
+  document.getElementById('fcH').textContent=s.h;
+  const fcd=document.getElementById('fcD'); fcd.textContent=s.d; fcd.classList.remove('streaming');
+  document.getElementById('fcFlow').textContent=s.flow;
+  const a=PAL[cur%PAL.length], rs=document.documentElement.style; rs.setProperty('--ac',a.c); rs.setProperty('--acbg',a.bg);
+  document.querySelectorAll('.trow,.chip').forEach(e=>e.classList.remove('hit','deny','ok','warn','attempt','r-src','r-dst','r-pass'));
+  document.querySelectorAll('.rtag').forEach(t=>t.remove());
+  document.querySelectorAll('.seqslot').forEach(s2=>{s2.textContent='';s2.className='seqslot';});
+  verdict.className='verdict'; leakEl.className='leak'; cursor.classList.remove('deny','ok');
+  applyVis(cur); return s;}
+
+function paint(idx,s){const id=s.chain[idx], last=idx===s.chain.length-1, vk=s.verdict?s.verdict.kind:'';
+  const el=document.getElementById(id); el.classList.remove('notyet'); const p=at(id);
+  let role = (s.marks&&s.marks[id]) || (last&&vk) || (s.role&&s.role[id]) || (id.indexOf('c-')===0?'actor':'pass');
+  const ri=ROLEINFO[role]||ROLEINFO.pass;
+  el.classList.add('hit'); if(ri.cls)el.classList.add(ri.cls);
+  const slot=el.querySelector('.seqslot'); if(slot){slot.textContent=idx+1; slot.className='seqslot on '+(ri.cls||'');}
+  if(ri.t && id.indexOf('c-')!==0){const tag=document.createElement('span');tag.className='rtag '+ri.cls;tag.textContent=ri.t;el.appendChild(tag);}
+  cursor.style.left=p.gx+'px'; cursor.style.top=(p.y-9)+'px'; cursor.style.color=ri.c;
+  if(last&&s.verdict){verdict.textContent=s.verdict.text;verdict.className='verdict '+s.verdict.kind+' show';
+    verdict.style.left=Math.max(10,pane.clientWidth-(s.verdict.text.length*7+30))+'px'; verdict.style.top=(p.y-12)+'px';}}
+
+function revealBorn(i){document.querySelectorAll('.trow[data-born]').forEach(e=>{if(+e.dataset.born===i)e.classList.remove('notyet');});}
+function typeRow(e,dur){e.classList.remove('notyet'); if(dur<=0)return; e.style.setProperty('--td',dur+'ms');
+  e.classList.add('typing'); timers.push(setTimeout(()=>e.classList.remove('typing'),dur+40));}
+function typeText(el,txt,per){el.textContent='';el.classList.add('streaming');let i=0;
+  const tick=()=>{el.textContent=txt.slice(0,i); i++<txt.length?timers.push(setTimeout(tick,per)):el.classList.remove('streaming');};tick();}
+function full(){const s=prep(); revealBorn(cur); s.chain.forEach((id,idx)=>paint(idx,s));}
+function animate(){const s=prep();
+  if(reduce){revealBorn(cur); s.chain.forEach((id,idx)=>paint(idx,s)); return;}
+  const per=18, capDur=Math.max(1500, s.d.length*per);
+  typeText(document.getElementById('fcD'), s.d, per);
+  const born=[...document.querySelectorAll('.trow[data-born]')].filter(e=>+e.dataset.born===cur);
+  let bt=400; const slot=born.length?(capDur*0.55)/born.length:0;
+  born.forEach(e=>{timers.push(setTimeout(()=>typeRow(e,Math.min(slot*0.8,700)),bt)); bt+=slot;});
+  const n=Math.max(1,s.chain.length);
+  s.chain.forEach((id,idx)=>timers.push(setTimeout(()=>paint(idx,s), 300+Math.round(idx*(capDur-300)/n))));
+  if(auto) timers.push(setTimeout(()=>step(cur+1), capDur+2200));}
+function step(i){clear(); cur=(i+STEPS.length)%STEPS.length; animate();}
+
+document.getElementById('prev').addEventListener('click',()=>{auto=false;setBtns();step(cur-1)});
+document.getElementById('next').addEventListener('click',()=>{auto=false;setBtns();step(cur+1)});
+document.getElementById('play').addEventListener('click',()=>{auto=!auto;setBtns();clear();auto?step(cur):full();});
+document.addEventListener('pointerdown',e=>{const el=e.target.closest('.controls button');if(!el)return;
+  const r=el.getBoundingClientRect();const x=e.clientX-r.left,y=e.clientY-r.top;const rad=Math.hypot(Math.max(x,r.width-x),Math.max(y,r.height-y));
+  const ink=document.createElement('span');ink.className='ripple-ink';ink.style.width=ink.style.height=rad*2+'px';ink.style.left=(x-rad)+'px';ink.style.top=(y-rad)+'px';
+  el.appendChild(ink);ink.addEventListener('animationend',()=>ink.remove());});
+let rz; addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{clear();full();},200);});
+setBtns();
+requestAnimationFrame(()=>setTimeout(()=>{cur=0;full();},200));
+</script>
+</body>
+</html>

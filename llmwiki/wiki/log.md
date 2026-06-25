@@ -88,3 +88,4 @@
 ## 2026-06-25 — harness — poc-vendor-neutral (13/13 PASS)
 ## 2026-06-25 — concept — cursor-explain-site (distill cloner-template → extract-site Mode 3)
 ## 2026-06-25 — orca-eval — eval-report + promote skill cursor-animated-sites
+## 2026-06-25 — cursor-animated-sites — cicd-lifecycle (kiểm chứng skill)
