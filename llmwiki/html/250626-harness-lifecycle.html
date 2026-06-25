@@ -91,7 +91,6 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
   box-shadow:inset 0 0 0 1px rgba(10,132,255,.35);color:#0f0f12}
 .trow.hit.deny{background:linear-gradient(90deg,rgba(255,45,85,.16),rgba(255,45,85,.04));box-shadow:inset 0 0 0 1px rgba(255,45,85,.4)}
 .trow.hit.ok{background:linear-gradient(90deg,rgba(52,199,89,.16),rgba(52,199,89,.04));box-shadow:inset 0 0 0 1px rgba(52,199,89,.4)}
-.trow.dim{opacity:.34}
 
 /* cursor + wires + verdict */
 .cursor{position:absolute;left:0;top:0;z-index:7;pointer-events:none;
@@ -123,10 +122,9 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
 .seqslot.warn{background:#f0902a;color:#fff;border-color:transparent}
 .chip{display:inline-flex;align-items:center}.chip .seqslot{width:15px;height:15px;margin-right:6px;font-size:9px}
 /* ghost = file CHƯA tạo ở thời điểm này */
-.trow.ghost{opacity:.45}.trow.ghost .nm{color:#aeb6c2;font-style:italic}.trow.ghost .cm{opacity:.45}
-.trow.ghost::after{content:' · chưa tạo';color:#c79a52;font-style:italic;font-size:11px}
-.trow.born-now{animation:bornpop .8s ease}
-@keyframes bornpop{0%{transform:scale(.92);background:rgba(52,199,89,.4)}45%{background:rgba(52,199,89,.22)}100%{transform:scale(1);background:transparent}}
+.trow.notyet{display:none}   /* file CHƯA tồn tại → ẩn hẳn khỏi cây (không mờ) */
+.trow.born-now{animation:bornpop .7s cubic-bezier(.2,.7,.3,1)}
+@keyframes bornpop{0%{transform:translateX(-6px) scale(.9);opacity:0;background:rgba(52,199,89,.5)}45%{opacity:1;background:rgba(52,199,89,.3)}100%{transform:none;opacity:1;background:transparent}}
 .trow.attempt .nm{color:#e0264b;text-decoration:line-through}
 .trow.attempt::after{content:' · CHẶN, không tạo';color:#e0264b;font-style:italic;font-size:11px}
 /* con trỏ = mũi tên phải, nằm GUTTER trái — không che nội dung */
@@ -259,8 +257,9 @@ const at=id=>{const el=document.getElementById(id);const pr=pane.getBoundingClie
 function setPlayLabel(){document.getElementById('play').textContent=playing?'⏸ Tạm dừng':'▶ Chạy';}
 
 // file nào tồn tại tại bước i (born<=i); born=99 = không bao giờ (bị chặn)
-function applyBorn(i){document.querySelectorAll('.trow[data-born]').forEach(e=>{
-  const b=+e.dataset.born; e.classList.toggle('ghost', !(b!==99 && b<=i));});}
+// hiện nếu: pre-existing(-1) hoặc đã tạo ở bước TRƯỚC (b<i). File born ĐÚNG bước này → ẩn, để flashBorn cho nó pop ra.
+function applyVis(i){document.querySelectorAll('.trow[data-born]').forEach(e=>{
+  const b=+e.dataset.born; e.classList.toggle('notyet', !((b===-1)||(b!==99&&b<i)));});}
 
 function prep(){
   const s=STEPS[cur];
@@ -272,15 +271,12 @@ function prep(){
   document.querySelectorAll('.trow,.chip').forEach(e=>e.classList.remove('hit','deny','ok','warn','attempt','born-now','dim'));
   document.querySelectorAll('.seqslot').forEach(s2=>{s2.textContent='';s2.className='seqslot';});
   verdict.className='verdict'; leakEl.className='leak'; cursor.classList.remove('deny','ok');
-  applyBorn(cur);
-  const inChain=new Set(s.chain);
-  document.querySelectorAll('.trow').forEach(e=>{ if(e.id&&!inChain.has(e.id)&&!e.classList.contains('ghost')) e.classList.add('dim'); });
+  applyVis(cur);
   return s;
 }
 function paint(idx,s){
   const id=s.chain[idx], last=idx===s.chain.length-1, vk=s.verdict?s.verdict.kind:'';
-  const el=document.getElementById(id), p=at(id);
-  el.classList.remove('dim','ghost');
+  const el=document.getElementById(id); el.classList.remove('notyet'); const p=at(id);
   if(id==='f-raw') el.classList.add('attempt');
   el.classList.add('hit');
   const mk=(s.marks&&s.marks[id])||(last&&vk?vk:'');
@@ -292,7 +288,7 @@ function paint(idx,s){
   if(last&&s.verdict){verdict.textContent=s.verdict.text;verdict.className='verdict '+s.verdict.kind+' show';
     verdict.style.left=Math.max(10,pane.clientWidth-(s.verdict.text.length*7+30))+'px'; verdict.style.top=(p.y-12)+'px';}
 }
-function flashBorn(){document.querySelectorAll('.trow[data-born]').forEach(e=>{if(+e.dataset.born===cur)e.classList.add('born-now');});}
+function flashBorn(){document.querySelectorAll('.trow[data-born]').forEach(e=>{if(+e.dataset.born===cur){e.classList.remove('notyet');e.classList.add('born-now');}});}
 // TĨNH: frame đầy đủ (frame cuối của step) — mọi node đã đi qua, có số, có verdict
 function full(){const s=prep(); flashBorn(); s.chain.forEach((id,idx)=>paint(idx,s));}
 // CHẠY: con trỏ đi từng hop, file hiện dần
