@@ -89,3 +89,4 @@
 ## 2026-06-25 — concept — cursor-explain-site (distill cloner-template → extract-site Mode 3)
 ## 2026-06-25 — orca-eval — eval-report + promote skill cursor-animated-sites
 ## 2026-06-25 — cursor-animated-sites — cicd-lifecycle (kiểm chứng skill)
+## 2026-06-25 — cursor-animated-sites — index gộp harness + CI/CD

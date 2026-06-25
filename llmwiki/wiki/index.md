@@ -33,3 +33,4 @@
 | [cursor-explain-site](concepts/cursor-explain-site.md) | concept | How-to reverse-engineer & clone a site (extract-site Mode 3) |
 | [250626-eval-report](draft/orca/250626-eval-report.md) | draft | 2026-06-25 |
 | [250626-cicd-lifecycle](sources/draft/250626-cicd-lifecycle.md) | draft | 2026-06-25 |
+| [250626-index](html/250626-index.html) | index | 2026-06-25 |
