@@ -81,3 +81,10 @@
 - tour-guide: canonical vốn bonbon-specific (fe/components/dms/...) → thay bằng bản generic self-contained (khớp published description) + có frontmatter (vá luôn gap thiếu frontmatter); npx regenerate.
 - onboard-codebase: GIỮ NGUYÊN — canonical cố tình caveman-compress (commit 52827b7), npx mirror đúng harness.
 - Kết quả: npx body == canonical cho toàn bộ skill (chuẩn so với harness).
+## 2026-06-25 — orca-onboard — onboard-setup
+## 2026-06-25 — orca-onboard — onboard-setup complete (4 phases, static-parse route, ~$0.04 actual)
+## 2026-06-25 — docs-site-macos — harness-mcp-scenarios
+## 2026-06-25 — docs-site-macos — harness-arch-vs-current
+## 2026-06-25 — harness — poc-vendor-neutral (13/13 PASS)
+## 2026-06-25 — concept — cursor-explain-site (distill cloner-template → extract-site Mode 3)
+## 2026-06-25 — orca-eval — eval-report + promote skill cursor-animated-sites
