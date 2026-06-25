@@ -109,6 +109,10 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
   box-shadow:0 4px 14px rgba(0,0,0,.18)}
 .verdict.show{opacity:1;transform:translateY(0) scale(1)}
 .verdict.deny{background:#e0264b;color:#fff}.verdict.ok{background:#28a745;color:#fff}.verdict.neutral{background:#0a84ff;color:#fff}
+.leak{position:absolute;z-index:8;font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:20px;opacity:0;transform:translateY(4px) scale(.9);transition:opacity .3s,transform .3s;pointer-events:none;white-space:nowrap;background:#f0902a;color:#fff;box-shadow:0 4px 12px rgba(240,144,42,.4)}
+.leak.show{opacity:1;transform:translateY(0) scale(1)}
+.trow.hit.warn{background:linear-gradient(90deg,rgba(255,149,0,.18),rgba(255,149,0,.04));box-shadow:inset 0 0 0 1px rgba(240,144,42,.5)}
+.chip.hit.warn{background:linear-gradient(135deg,#f0902a,#ffbd2e)}
 
 /* ripple */
 .ripple-ink{position:absolute;border-radius:50%;pointer-events:none;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.7) 0%,rgba(255,255,255,.28) 38%,rgba(10,132,255,.2) 72%,transparent 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.9);transform:scale(0);opacity:1;animation:rg .6s cubic-bezier(.25,.46,.45,.94) forwards}
@@ -173,6 +177,7 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
         <svg width="22" height="26" viewBox="0 0 22 26"><path d="M2 2 L2 19 L6.5 14.5 L10.5 23.5 L13.5 22 L9.5 13.5 L16 13.5 Z" fill="#0a84ff" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>
       </div>
       <div class="verdict" id="verdict"></div>
+      <div class="leak" id="leak"></div>
     </div>
   </div>
 
@@ -214,6 +219,12 @@ const STEPS = [
   {ph:'run', sp:'CHẠY · CI', h:'Mở PR → CI (sàn đảm bảo)',
    d:'GitHub chạy .github/workflows/harness.yml: job selftest (67 assertion) + validate file .md đổi. Đây là nơi nói "không" mà agent KHÔNG sửa được khi merge.',
    flow:'CI → harness.yml → demo+broad+LÕI → ✓ merge', chain:['c-ci','f-ciyml','f-demo','f-test','f-cli'], verdict:{kind:'ok',text:'✓ MERGE OK'}},
+  {ph:'run', sp:'CHẠY · GAP → sàn CI', h:'Bypass lọt session → CI vẫn tóm',
+   d:'Agent dùng python3 -c "open(\'wiki/concepts/x.md\',\'w\')" ghi file THIẾU "## Origin". Lệnh python LỌT hook session — lõi soi bề mặt bash không bắt python (KNOWN GAP). NHƯNG khi mở PR, CI chạy validate-content → LÕI files → R2 áp ở layer repo → FAIL, chặn merge. Sàn CI tóm đúng cái session bỏ sót — đây là lý do đảm bảo neo ở CI, không ở hook.',
+   flow:'agent python -c → wiki/x.md [lọt hook] ⟶ CI → LÕI files → R2 → CHẶN MERGE',
+   chain:['c-agent','f-wiki','c-ci','f-ciyml','f-cli','f-policy'],
+   leak:'f-wiki', marks:{'f-wiki':'warn','f-policy':'deny'},
+   verdict:{kind:'deny',text:'CI CHẶN MERGE · R2 (cái session bỏ sót)'}},
 ];
 
 const stepsEl=document.getElementById('steps'), pane=document.getElementById('pane'),
@@ -246,12 +257,12 @@ function go(i,auto){
   phaseEl.textContent=s.ph==='install'?'CÀI ĐẶT':'CHẠY';
   phaseEl.className='phase '+(s.ph==='install'?'install':'run');
   // reset visuals
-  document.querySelectorAll('.trow,.chip').forEach(e=>e.classList.remove('hit','deny','ok'));
+  document.querySelectorAll('.trow,.chip').forEach(e=>e.classList.remove('hit','deny','ok','warn'));
   document.querySelectorAll('.trow').forEach(e=>e.classList.add('dim'));
-  verdict.className='verdict'; wire.setAttribute('points','');
+  verdict.className='verdict'; document.getElementById('leak').className='leak'; wire.setAttribute('points','');
   const vk=s.verdict?s.verdict.kind:'';
   wire.classList.remove('deny','ok'); cursor.classList.remove('deny','ok');
-  if(vk==='deny'){wire.classList.add('deny');} if(vk==='ok'){wire.classList.add('ok');}
+  if(!s.leak){ if(vk==='deny'){wire.classList.add('deny');} if(vk==='ok'){wire.classList.add('ok');} }
 
   const pts=s.chain.map(center);
   const hop=reduce?0:640, baseDelay=reduce?0:120;
@@ -260,8 +271,13 @@ function go(i,auto){
     timers.push(setTimeout(()=>{
       cursor.style.left=p.x+'px'; cursor.style.top=(p.y-4)+'px';
       p.el.classList.remove('dim');
-      const last=idx===pts.length-1;
-      p.el.classList.add('hit'); if(last&&vk){p.el.classList.add(vk); cursor.classList.add(vk);}
+      const last=idx===pts.length-1, id=s.chain[idx];
+      p.el.classList.add('hit');
+      const mk=(s.marks&&s.marks[id])||(last&&vk?vk:'');
+      if(mk)p.el.classList.add(mk);
+      if(last&&vk)cursor.classList.add(vk);
+      if(s.leak===id){const lk=document.getElementById('leak');lk.textContent='⚠ lọt hook session';
+        lk.className='leak show';lk.style.left=Math.min(p.x+24,pane.clientWidth-150)+'px';lk.style.top=(p.y-12)+'px';}
       const prev=wire.getAttribute('points');
       wire.setAttribute('points',(prev?prev+' ':'')+p.x+','+p.y);
       if(last&&s.verdict){
