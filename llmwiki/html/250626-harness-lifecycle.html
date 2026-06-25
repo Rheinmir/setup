@@ -128,6 +128,15 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
 .trow.attempt::after{content:' · CHẶN, không tạo';color:#e0264b;font-style:italic;font-size:11px}
 /* con trỏ = mũi tên phải, nằm GUTTER trái — không che nội dung */
 .cursor{transition:left .32s ease,top .5s cubic-bezier(.5,0,.15,1)}
+/* caption mô tả NGAY DƯỚI khung cây — đổi theo từng frame */
+.frame-cap{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);position:relative;z-index:3}
+.frame-cap .fc-top{display:flex;align-items:center;gap:9px;margin-bottom:7px}
+.fc-num{font-family:var(--font-mono);font-size:11px;color:var(--text-2);font-variant-numeric:tabular-nums}
+.fc-sp{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:13px;background:rgba(10,132,255,.10);color:#0a84ff;letter-spacing:.02em}
+.frame-cap.run .fc-sp{background:rgba(52,199,89,.10);color:#1f8f3f}
+.fc-h{font-family:var(--font-display);font-size:14.5px;font-weight:700;letter-spacing:-.01em;margin-bottom:5px}
+.fc-d{font-size:12.5px;color:var(--text-2);line-height:1.55}
+.fc-flow{margin-top:9px;font-family:var(--font-mono);font-size:10.5px;color:#5b6472;background:rgba(10,132,255,.05);border:1px solid var(--border);border-radius:8px;padding:6px 9px;line-height:1.5}
 </style>
 </head>
 <body>
@@ -179,6 +188,12 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
         <div class="trow" id="f-precommit" data-born="4"><span class="seqslot"></span><span class="pre">├─ </span><span class="nm">.pre-commit-config.yaml</span></div>
         <div class="trow" id="f-wiki" data-born="7"><span class="seqslot"></span><span class="pre">├─ </span><span class="nm">llmwiki/wiki/concepts/x.md</span></div>
         <div class="trow" id="f-raw" data-born="99"><span class="seqslot"></span><span class="pre">└─ </span><span class="nm">llmwiki/raw/x.md</span><span class="cm">  (inbox người)</span></div>
+      </div>
+      <div class="frame-cap" id="frameCap">
+        <div class="fc-top"><span class="fc-num" id="fcNum"></span><span class="fc-sp" id="fcSp"></span></div>
+        <div class="fc-h" id="fcH"></div>
+        <div class="fc-d" id="fcD"></div>
+        <div class="fc-flow" id="fcFlow"></div>
       </div>
       <div class="cursor" id="cursor">
         <svg width="20" height="18" viewBox="0 0 20 18"><path d="M2 2 L2 16 L17 9 Z" fill="#0a84ff" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/></svg>
@@ -271,6 +286,13 @@ function prep(){
   progEl.textContent=(cur+1)+' / '+STEPS.length;
   phaseEl.textContent=s.ph==='install'?'CÀI ĐẶT':'CHẠY';
   phaseEl.className='phase '+(s.ph==='install'?'install':'run');
+  // caption ngay dưới khung cây
+  document.getElementById('frameCap').className='frame-cap '+(s.ph==='install'?'':'run');
+  document.getElementById('fcNum').textContent=(cur+1)+' / '+STEPS.length;
+  document.getElementById('fcSp').textContent=s.sp;
+  document.getElementById('fcH').textContent=s.h;
+  document.getElementById('fcD').textContent=s.d;
+  document.getElementById('fcFlow').textContent=s.flow;
   document.querySelectorAll('.trow,.chip').forEach(e=>e.classList.remove('hit','deny','ok','warn','attempt','born-now','dim'));
   document.querySelectorAll('.seqslot').forEach(s2=>{s2.textContent='';s2.className='seqslot';});
   verdict.className='verdict'; leakEl.className='leak'; cursor.classList.remove('deny','ok');
