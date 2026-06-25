@@ -198,6 +198,18 @@ footer .foot-tree{font-family:var(--font-mono);font-size:11.5px;margin-top:14px;
     </tbody>
   </table></div>
   <div class="callout good"><strong>Ví dụ tầng:</strong> <code>no_write_raw</code> = <code>[session]</code> → agent bị chặn ghi <code>raw/</code>, nhưng <strong>con người vẫn commit <code>raw/</code> hợp lệ</strong> (repo không áp). <code>require_origin</code> = <code>[session, repo]</code> → áp cả hai.</div>
+  <h3 style="font-family:var(--font-display);font-size:17px;margin:28px 0 4px;letter-spacing:-.01em;color:#1d1d1f">Thành phần</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>File</th><th>Vai trò</th></tr></thead>
+    <tbody>
+      <tr><td><code>policy.yaml</code></td><td>Nguồn chân lý: danh sách rule (id, kind, enforce_at, glob…).</td></tr>
+      <tr><td><code>bin/llmwiki-validate.py</code></td><td>Lõi. Đọc policy, áp luật theo <code>kind</code>, lọc theo layer.</td></tr>
+      <tr><td><code>gen-converters.py</code></td><td>Đọc policy → sinh wiring mọi vendor vào <code>out/</code> (gitignore).</td></tr>
+      <tr><td><code>demo.sh</code></td><td>13 assertion happy-path.</td></tr>
+      <tr><td><code>test-broad.sh</code></td><td>54 assertion: false-positive, normalize, bash, biên, files-mode, fail-open, GAPS.</td></tr>
+      <tr><td><code>.github/workflows/harness.yml</code></td><td>CI: job <code>selftest</code> (67) + <code>validate-content</code> (file .md đổi).</td></tr>
+    </tbody>
+  </table></div>
  </div>
 </section>
 
@@ -273,6 +285,19 @@ python3 bin/llmwiki-validate.py files wiki/concepts/a.md wiki/entities/b.md  <sp
       <li><code>Write/Edit/MultiEdit</code> → kiểm <code>file_path</code> + <code>content</code></li>
       <li><code>Bash</code> → kiểm <code>command</code> (redirect/tee/touch/cp→raw)</li>
       <li>Vendor khác có converter tương tự, cùng gọi lõi</li>
+    </ul></div>
+  </div>
+  <h3 style="font-family:var(--font-display);font-size:17px;margin:28px 0 4px;letter-spacing:-.01em;color:#1d1d1f">Nội bộ lõi (chi tiết)</h3>
+  <div class="content-grid">
+    <div class="card"><h4>Quy ước exit code</h4><ul>
+      <li><strong>exit 2</strong> cho session: Claude PreToolUse coi 2 = "block tool", stderr hiện cho agent đọc</li>
+      <li><strong>exit 1</strong> cho repo: pre-commit/CI coi non-zero = fail (tách khỏi 2 để phân biệt nguồn)</li>
+      <li><strong>exit 0 / fail-open</strong>: thiếu pyyaml, không đọc được policy, JSON hỏng, mode lạ → lỗi hạ tầng KHÔNG chặn người dùng; sàn repo vẫn đỡ</li>
+    </ul></div>
+    <div class="card"><h4>Glob engine &amp; bash surface</h4><ul>
+      <li><code>glob_to_regex</code>: <code>**</code> xuyên thư mục · <code>*</code> trong 1 segment · <code>?</code></li>
+      <li>Khớp theo <strong>segment</strong> → <code>coleslaw.md</code>/<code>raws/</code>/<code>myraw/</code> không dính <code>**/raw/**</code></li>
+      <li>Bash deny soi <strong>bề mặt</strong>: bắt <code>&gt;</code>/<code>&gt;&gt;</code>, <code>tee</code>, <code>touch</code>, <code>sed -i&lt;sfx&gt; &lt;file&gt;</code>, <code>cp/mv/rsync</code> đích <code>raw/</code> — KHÔNG bắt <code>python -c</code>, <code>rm</code> (xem GAPS §06)</li>
     </ul></div>
   </div>
  </div>
