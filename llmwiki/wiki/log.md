@@ -90,3 +90,4 @@
 ## 2026-06-25 — orca-eval — eval-report + promote skill cursor-animated-sites
 ## 2026-06-25 — cursor-animated-sites — cicd-lifecycle (kiểm chứng skill)
 ## 2026-06-25 — cursor-animated-sites — index gộp harness + CI/CD
+## 2026-06-25 — cursor-animated-sites — gộp 3 trang (index+harness+cicd) thành 1 file walkthroughs
