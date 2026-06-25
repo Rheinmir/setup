@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harness — life cycle: từ lúc cài tới lúc chạy</title>
+<style>
+:root{
+  --glass-1: rgba(255,255,255,.55);--glass-2: rgba(255,255,255,.72);--glass-3: rgba(255,255,255,.88);
+  --blur-1: 24px; --blur-2: 8px; --blur-3: 4px;
+  --edge-hi: inset 0 1px 0 rgba(255,255,255,.85);--border: rgba(30,90,170,.14);
+  --text-1:#0f0f12; --text-2:#4a4a55;
+  --font-text:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue','Roboto','Segoe UI',sans-serif;
+  --font-display:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue','Roboto','Segoe UI',sans-serif;
+  --font-mono:'SF Mono',ui-monospace,'SFMono-Regular',Menlo,'Roboto Mono',Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:#e9f0fb}
+body{font-family:var(--font-text);color:var(--text-1);line-height:1.6;
+  background:radial-gradient(900px 500px at 12% -10%,rgba(10,132,255,.10),transparent 60%),
+    radial-gradient(700px 420px at 95% 15%,rgba(90,162,232,.08),transparent 55%),
+    linear-gradient(180deg,#f7fbff 0%,#eaf2fd 100%);min-height:100vh}
+body::before{content:'';position:fixed;inset:-10%;z-index:-1;pointer-events:none;
+  background:radial-gradient(640px 440px at 10% 14%,rgba(10,132,255,.20),transparent 65%),
+    radial-gradient(380px 460px at 4% 52%,rgba(48,176,199,.16),transparent 65%),
+    radial-gradient(540px 400px at 88% 10%,rgba(88,86,214,.12),transparent 60%),
+    radial-gradient(480px 380px at 16% 86%,rgba(255,149,0,.10),transparent 60%);
+  animation:orbDrift 46s ease-in-out infinite alternate}
+@keyframes orbDrift{100%{transform:translate(2.2%,1.6%) scale(1.045)}}
+body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:radial-gradient(rgba(30,90,170,.10) 1px,transparent 1.3px);background-size:22px 22px;
+  mask-image:linear-gradient(180deg,rgba(0,0,0,.5),rgba(0,0,0,.2))}
+@media(prefers-reduced-motion:reduce){body::before{animation:none}}
+
+.wrap{max-width:1240px;margin:0 auto;padding:48px 24px 80px}
+.hero .eyebrow{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#0a84ff;background:rgba(10,132,255,.10);padding:5px 12px;border-radius:20px;margin-bottom:16px}
+.hero h1{font-family:var(--font-display);font-size:clamp(30px,4.6vw,48px);line-height:1.06;letter-spacing:-.03em;background:linear-gradient(135deg,#0a84ff,#5aa2e8,#cfe3fb);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.08em}
+.hero p{font-size:16.5px;color:var(--text-2);max-width:760px;margin-top:14px}
+.hero .back{margin-top:14px;font-size:13px}.hero .back a{color:#0a84ff;text-decoration:none}.hero .back a:hover{text-decoration:underline}
+
+.controls{display:flex;align-items:center;gap:10px;margin:26px 0 14px;flex-wrap:wrap}
+.controls button{font-family:var(--font-text);font-size:13px;font-weight:600;color:#0a6fd6;cursor:pointer;
+  background:linear-gradient(165deg,rgba(255,255,255,.6),rgba(255,255,255,.3));border:1px solid transparent;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 0 0 1px rgba(30,90,170,.08),0 2px 8px rgba(30,90,170,.10);
+  backdrop-filter:blur(var(--blur-2));border-radius:10px;padding:7px 14px;position:relative;overflow:hidden;transition:color .15s}
+.controls button:hover{color:#0a84ff}
+.controls .prog{font-family:var(--font-mono);font-size:12.5px;color:var(--text-2);margin-left:4px}
+.controls .phase{font-size:12px;font-weight:700;padding:4px 11px;border-radius:20px;letter-spacing:.02em}
+.phase.install{background:rgba(10,132,255,.12);color:#0a84ff}
+.phase.run{background:rgba(52,199,89,.12);color:#1f8f3f}
+
+.lifecycle{display:grid;grid-template-columns:1fr 1.05fr;gap:24px;align-items:start}
+@media(max-width:920px){.lifecycle{grid-template-columns:1fr}}
+
+/* LEFT — steps */
+.steps{display:flex;flex-direction:column;gap:11px;max-height:74vh;overflow-y:auto;padding:2px 6px 2px 2px}
+.step{background:var(--glass-2);backdrop-filter:blur(var(--blur-2)) saturate(1.1);border:1px solid var(--border);
+  border-left:3px solid transparent;border-radius:14px;box-shadow:var(--edge-hi),0 3px 14px rgba(0,0,0,.05);
+  padding:15px 17px;cursor:pointer;transition:border-color .25s,box-shadow .25s,transform .25s,opacity .25s;opacity:.62}
+.step:hover{opacity:.9}
+.step.active{opacity:1;transform:translateX(3px);box-shadow:var(--edge-hi),0 8px 26px rgba(10,132,255,.14)}
+.step.active.p-install{border-left-color:#0a84ff}
+.step.active.p-run{border-left-color:#28a745}
+.step .sp{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.03em;padding:3px 9px;border-radius:14px;margin-bottom:8px}
+.step.p-install .sp{background:rgba(10,132,255,.10);color:#0a84ff}
+.step.p-run .sp{background:rgba(52,199,89,.10);color:#1f8f3f}
+.step h3{font-family:var(--font-display);font-size:15.5px;letter-spacing:-.01em;margin-bottom:6px}
+.step p{font-size:13px;color:var(--text-2);line-height:1.55}
+.step .flow{margin-top:9px;font-family:var(--font-mono);font-size:11px;color:#5b6472;background:rgba(10,132,255,.05);border:1px solid var(--border);border-radius:8px;padding:6px 9px;line-height:1.5}
+
+/* RIGHT — folder tree pane */
+.tree-pane{position:sticky;top:18px;background:var(--glass-2);backdrop-filter:blur(var(--blur-1)) saturate(1.3);
+  border:1px solid var(--border);border-radius:18px;box-shadow:var(--edge-hi),0 8px 30px rgba(30,90,170,.10);
+  padding:18px 18px 20px;overflow:hidden}
+.tree-pane::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(220px 150px at 84% 6%,rgba(255,255,255,.5),transparent 70%)}
+.tp-head{display:flex;align-items:center;gap:7px;padding-bottom:12px;border-bottom:1px solid var(--border);margin-bottom:12px;position:relative}
+.tp-head .dot{width:11px;height:11px;border-radius:50%}
+.tp-head .ttl{margin-left:8px;font-family:var(--font-mono);font-size:12px;color:var(--text-2)}
+.controllers{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px;position:relative;z-index:3}
+.chip{font-family:var(--font-mono);font-size:11px;font-weight:600;color:#4a4a55;background:rgba(255,255,255,.6);
+  border:1px solid var(--border);border-radius:9px;padding:5px 10px;transition:all .25s;white-space:nowrap}
+.chip.hit{color:#fff;background:linear-gradient(135deg,#0a84ff,#5aa2e8);border-color:transparent;box-shadow:0 3px 12px rgba(10,132,255,.4)}
+.tree{font-family:var(--font-mono);font-size:12.5px;line-height:1.2;position:relative;z-index:2}
+.trow{display:flex;align-items:center;gap:0;padding:5px 8px;border-radius:8px;color:var(--text-1);white-space:pre;transition:background .25s,color .25s,box-shadow .25s;position:relative}
+.trow .pre{color:#9aa3b2}
+.trow .nm{font-weight:600}
+.trow .cm{color:#9aa3b2;font-weight:400}
+.trow.dir .nm{color:#0a6fd6}
+.trow.hit{background:linear-gradient(90deg,rgba(10,132,255,.16),rgba(10,132,255,.04));
+  box-shadow:inset 0 0 0 1px rgba(10,132,255,.35);color:#0f0f12}
+.trow.hit.deny{background:linear-gradient(90deg,rgba(255,45,85,.16),rgba(255,45,85,.04));box-shadow:inset 0 0 0 1px rgba(255,45,85,.4)}
+.trow.hit.ok{background:linear-gradient(90deg,rgba(52,199,89,.16),rgba(52,199,89,.04));box-shadow:inset 0 0 0 1px rgba(52,199,89,.4)}
+.trow.dim{opacity:.34}
+
+/* cursor + wires + verdict */
+.cursor{position:absolute;left:0;top:0;z-index:7;pointer-events:none;
+  transition:left .55s cubic-bezier(.5,0,.15,1),top .55s cubic-bezier(.5,0,.15,1);
+  filter:drop-shadow(0 2px 5px rgba(10,132,255,.45))}
+.cursor.deny{filter:drop-shadow(0 2px 6px rgba(255,45,85,.5))}
+.cursor.ok{filter:drop-shadow(0 2px 6px rgba(52,199,89,.5))}
+.wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:4;overflow:visible}
+.wire{fill:none;stroke:#0a84ff;stroke-width:2;stroke-dasharray:5 6;stroke-linejoin:round;stroke-linecap:round;
+  opacity:.85;animation:dash .7s linear infinite}
+.wire.deny{stroke:#e0264b}.wire.ok{stroke:#28a745}
+@keyframes dash{to{stroke-dashoffset:-22}}
+.verdict{position:absolute;z-index:8;font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;opacity:0;
+  transform:translateY(4px) scale(.9);transition:opacity .3s,transform .3s;pointer-events:none;white-space:nowrap;
+  box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.verdict.show{opacity:1;transform:translateY(0) scale(1)}
+.verdict.deny{background:#e0264b;color:#fff}.verdict.ok{background:#28a745;color:#fff}.verdict.neutral{background:#0a84ff;color:#fff}
+
+/* ripple */
+.ripple-ink{position:absolute;border-radius:50%;pointer-events:none;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.7) 0%,rgba(255,255,255,.28) 38%,rgba(10,132,255,.2) 72%,transparent 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.9);transform:scale(0);opacity:1;animation:rg .6s cubic-bezier(.25,.46,.45,.94) forwards}
+@keyframes rg{55%{transform:scale(1);opacity:.75}100%{transform:scale(1.04);opacity:0}}
+.legend{margin-top:18px;display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--text-2)}
+.legend span{display:inline-flex;align-items:center;gap:6px}.legend i{width:18px;height:0;border-top:2px dashed #0a84ff}
+.legend i.d{border-color:#e0264b}.legend i.o{border-color:#28a745}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <span class="eyebrow">Life cycle tương tác · 25/06/2026</span>
+    <h1>Harness chạy thế nào — từ lúc cài về tới lúc hoạt động</h1>
+    <p>Trái: từng bước tuần tự (cài đặt → chạy). Phải: cây thư mục với <strong>con trỏ chạy từ controller → file được gọi</strong> cho đúng bước đó. Bấm 1 bước để nhảy tới, hoặc để nó tự chạy.</p>
+    <div class="back"><a href="250626-harness-cli-docs.html">← về docs chi tiết (cách hoạt động & cài đặt)</a></div>
+  </header>
+
+  <div class="controls">
+    <button id="prev">⏮ Trước</button>
+    <button id="play">⏸ Tạm dừng</button>
+    <button id="next">Sau ⏭</button>
+    <span class="phase install" id="phase">CÀI ĐẶT</span>
+    <span class="prog" id="prog">1 / 9</span>
+  </div>
+
+  <div class="lifecycle">
+    <!-- LEFT: steps injected by JS -->
+    <div class="steps" id="steps"></div>
+
+    <!-- RIGHT: folder tree -->
+    <div class="tree-pane" id="pane">
+      <div class="tp-head">
+        <span class="dot" style="background:#ff5f57"></span>
+        <span class="dot" style="background:#ffbd2e"></span>
+        <span class="dot" style="background:#28c840"></span>
+        <span class="ttl">project/ (Rheinmir/setup@orca)</span>
+      </div>
+      <div class="controllers">
+        <span class="chip" id="c-install">▶ installer</span>
+        <span class="chip" id="c-agent">🤖 agent (Claude…)</span>
+        <span class="chip" id="c-git">git commit</span>
+        <span class="chip" id="c-ci">CI runner</span>
+      </div>
+      <svg class="wires" id="wires"><polyline class="wire" id="wire" points=""></polyline></svg>
+      <div class="tree" id="tree">
+        <div class="trow dir"><span class="pre">harness/poc-vendor-neutral/</span></div>
+        <div class="trow" id="f-policy"><span class="pre">│  ├─ </span><span class="nm">policy.yaml</span><span class="cm">   ← luật</span></div>
+        <div class="trow" id="f-cli"><span class="pre">│  ├─ </span><span class="nm">bin/llmwiki-validate.py</span><span class="cm">  ← LÕI</span></div>
+        <div class="trow" id="f-gen"><span class="pre">│  ├─ </span><span class="nm">gen-converters.py</span></div>
+        <div class="trow" id="f-demo"><span class="pre">│  ├─ </span><span class="nm">demo.sh</span><span class="cm">  (13)</span></div>
+        <div class="trow" id="f-test"><span class="pre">│  ├─ </span><span class="nm">test-broad.sh</span><span class="cm">  (54)</span></div>
+        <div class="trow dir" id="f-out"><span class="pre">│  └─ </span><span class="nm">out/</span><span class="cm">  (sinh ra, gitignore)</span></div>
+        <div class="trow" id="f-claude"><span class="pre">├─ </span><span class="nm">.claude/settings.json</span></div>
+        <div class="trow" id="f-opencode"><span class="pre">├─ </span><span class="nm">opencode.json</span></div>
+        <div class="trow" id="f-ciyml"><span class="pre">├─ </span><span class="nm">.github/workflows/harness.yml</span></div>
+        <div class="trow" id="f-precommit"><span class="pre">├─ </span><span class="nm">.pre-commit-config.yaml</span></div>
+        <div class="trow" id="f-wiki"><span class="pre">├─ </span><span class="nm">llmwiki/wiki/concepts/x.md</span></div>
+        <div class="trow" id="f-raw"><span class="pre">└─ </span><span class="nm">llmwiki/raw/x.md</span><span class="cm">  (inbox người)</span></div>
+      </div>
+      <div class="cursor" id="cursor">
+        <svg width="22" height="26" viewBox="0 0 22 26"><path d="M2 2 L2 19 L6.5 14.5 L10.5 23.5 L13.5 22 L9.5 13.5 L16 13.5 Z" fill="#0a84ff" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="verdict" id="verdict"></div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span><i></i> gọi/đọc/ghi bình thường</span>
+    <span><i class="o"></i> cho qua (exit 0)</span>
+    <span><i class="d"></i> chặn (exit 2)</span>
+  </div>
+</div>
+
+<script>
+const STEPS = [
+  // ── CÀI ĐẶT ──
+  {ph:'install', sp:'CÀI · B0', h:'Đặt lõi vào repo',
+   d:'Copy 2 file lõi vào harness/. Đây là toàn bộ "bộ não": luật + trình kiểm. Chưa cắm vendor nào.',
+   flow:'installer → policy.yaml + llmwiki-validate.py', chain:['c-install','f-policy','f-cli']},
+  {ph:'install', sp:'CÀI · B1', h:'Dò vendor đang dùng',
+   d:'Quét repo xem có .claude/, opencode.json, .kiro/… để biết cần sinh converter cho vendor nào.',
+   flow:'installer → dò .claude / opencode', chain:['c-install','f-claude','f-opencode']},
+  {ph:'install', sp:'CÀI · B2', h:'Sinh wiring từ policy',
+   d:'gen-converters.py ĐỌC policy.yaml rồi GHI ra out/<vendor>/. Một nguồn chân lý → nhiều dây nối.',
+   flow:'gen-converters.py: đọc policy.yaml → ghi out/', chain:['f-gen','f-policy','f-out']},
+  {ph:'install', sp:'CÀI · B3', h:'Cắm wiring vào đúng chỗ',
+   d:'Copy file trong out/ tới settings.json của vendor + .github/workflows/ + pre-commit. Mỗi vendor 1 dây mỏng.',
+   flow:'out/ → .claude/settings · harness.yml · pre-commit', chain:['f-out','f-claude','f-ciyml','f-precommit']},
+  {ph:'install', sp:'CÀI · B4', h:'Verify',
+   d:'Chạy demo.sh + test-broad.sh = 67 assertion. Xanh hết thì cài xong, harness sẵn sàng.',
+   flow:'installer → demo.sh + test-broad.sh (67 ✓)', chain:['c-install','f-demo','f-test']},
+  // ── CHẠY ──
+  {ph:'run', sp:'CHẠY · session ✗', h:'Agent định ghi raw/ → CHẶN',
+   d:'Claude muốn Write llmwiki/raw/x.md. PreToolUse hook bắt được → gọi llmwiki-validate claude-hook → đọc policy R1 → exit 2. Bị chặn NGAY trong phiên, file không bao giờ ra đời.',
+   flow:'agent → (hook) settings.json → LÕI → policy R1 → DENY', chain:['c-agent','f-raw','f-claude','f-cli','f-policy'], verdict:{kind:'deny',text:'exit 2 · CHẶN (R1)'}},
+  {ph:'run', sp:'CHẠY · session ✓', h:'Agent ghi wiki hợp lệ → CHO QUA',
+   d:'Write llmwiki/wiki/concepts/x.md CÓ "## Origin". Cùng đường hook → LÕI → policy, nhưng R2 thỏa → exit 0. Ghi bình thường.',
+   flow:'agent → settings.json → LÕI → policy R2 → OK', chain:['c-agent','f-wiki','f-claude','f-cli','f-policy'], verdict:{kind:'ok',text:'exit 0 · CHO QUA'}},
+  {ph:'run', sp:'CHẠY · repo', h:'git commit → pre-commit',
+   d:'Lúc commit, pre-commit gọi LÕI ở mode files (layer=repo). R1 KHÔNG áp ở repo (người commit raw/ là hợp lệ); chỉ R2 áp cho file wiki đổi.',
+   flow:'git commit → pre-commit → LÕI files → policy', chain:['c-git','f-precommit','f-cli','f-policy'], verdict:{kind:'neutral',text:'layer=repo · chỉ R2'}},
+  {ph:'run', sp:'CHẠY · CI', h:'Mở PR → CI (sàn đảm bảo)',
+   d:'GitHub chạy .github/workflows/harness.yml: job selftest (67 assertion) + validate file .md đổi. Đây là nơi nói "không" mà agent KHÔNG sửa được khi merge.',
+   flow:'CI → harness.yml → demo+broad+LÕI → ✓ merge', chain:['c-ci','f-ciyml','f-demo','f-test','f-cli'], verdict:{kind:'ok',text:'✓ MERGE OK'}},
+];
+
+const stepsEl=document.getElementById('steps'), pane=document.getElementById('pane'),
+  cursor=document.getElementById('cursor'), wire=document.getElementById('wire'),
+  verdict=document.getElementById('verdict'), progEl=document.getElementById('prog'),
+  phaseEl=document.getElementById('phase'), reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+// render steps
+const cards=STEPS.map((s,i)=>{
+  const el=document.createElement('div');
+  el.className='step p-'+s.ph; el.dataset.i=i;
+  el.innerHTML=`<span class="sp">${s.sp}</span><h3>${s.h}</h3><p>${s.d}</p><div class="flow">${s.flow}</div>`;
+  el.addEventListener('click',()=>{playing=false;setPlayLabel();go(i)});
+  stepsEl.appendChild(el); return el;
+});
+
+let cur=0, playing=!reduce, timers=[];
+const clear=()=>{timers.forEach(clearTimeout);timers=[]};
+const center=id=>{const el=document.getElementById(id);const pr=pane.getBoundingClientRect();const r=el.getBoundingClientRect();
+  return {x:r.left-pr.left+14, y:r.top-pr.top+r.height/2, el};};
+function setPlayLabel(){document.getElementById('play').textContent=playing?'⏸ Tạm dừng':'▶ Chạy';}
+
+function go(i,auto){
+  clear();
+  cur=(i+STEPS.length)%STEPS.length;
+  const s=STEPS[cur];
+  cards.forEach((e,k)=>e.classList.toggle('active',k===cur));
+  cards[cur].scrollIntoView({block:'nearest',behavior:'smooth'});
+  progEl.textContent=(cur+1)+' / '+STEPS.length;
+  phaseEl.textContent=s.ph==='install'?'CÀI ĐẶT':'CHẠY';
+  phaseEl.className='phase '+(s.ph==='install'?'install':'run');
+  // reset visuals
+  document.querySelectorAll('.trow,.chip').forEach(e=>e.classList.remove('hit','deny','ok'));
+  document.querySelectorAll('.trow').forEach(e=>e.classList.add('dim'));
+  verdict.className='verdict'; wire.setAttribute('points','');
+  const vk=s.verdict?s.verdict.kind:'';
+  wire.classList.remove('deny','ok'); cursor.classList.remove('deny','ok');
+  if(vk==='deny'){wire.classList.add('deny');} if(vk==='ok'){wire.classList.add('ok');}
+
+  const pts=s.chain.map(center);
+  const hop=reduce?0:640, baseDelay=reduce?0:120;
+  let acc=baseDelay;
+  pts.forEach((p,idx)=>{
+    timers.push(setTimeout(()=>{
+      cursor.style.left=p.x+'px'; cursor.style.top=(p.y-4)+'px';
+      p.el.classList.remove('dim');
+      const last=idx===pts.length-1;
+      p.el.classList.add('hit'); if(last&&vk){p.el.classList.add(vk); cursor.classList.add(vk);}
+      const prev=wire.getAttribute('points');
+      wire.setAttribute('points',(prev?prev+' ':'')+p.x+','+p.y);
+      if(last&&s.verdict){
+        verdict.textContent=s.verdict.text;
+        verdict.className='verdict '+s.verdict.kind+' show';
+        verdict.style.left=Math.min(p.x+24, pane.clientWidth-150)+'px';
+        verdict.style.top=(p.y-12)+'px';
+      }
+    }, acc));
+    acc+=hop;
+  });
+  if(playing){timers.push(setTimeout(()=>go(cur+1,true), acc+ (reduce?1500:1300)));}
+}
+
+document.getElementById('prev').addEventListener('click',()=>{playing=false;setPlayLabel();go(cur-1)});
+document.getElementById('next').addEventListener('click',()=>{playing=false;setPlayLabel();go(cur+1)});
+document.getElementById('play').addEventListener('click',()=>{playing=!playing;setPlayLabel();if(playing)go(cur);});
+
+// ripple on controls
+document.addEventListener('pointerdown',e=>{const el=e.target.closest('.controls button');if(!el)return;
+  const r=el.getBoundingClientRect();const x=e.clientX-r.left,y=e.clientY-r.top;const rad=Math.hypot(Math.max(x,r.width-x),Math.max(y,r.height-y));
+  const ink=document.createElement('span');ink.className='ripple-ink';ink.style.width=ink.style.height=rad*2+'px';ink.style.left=(x-rad)+'px';ink.style.top=(y-rad)+'px';
+  el.appendChild(ink);ink.addEventListener('animationend',()=>ink.remove());});
+
+let rz; addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{const p=playing;playing=false;go(cur);playing=p;setPlayLabel();},200);});
+setPlayLabel();
+requestAnimationFrame(()=>setTimeout(()=>go(0,true),250));
+</script>
+</body>
+</html>
