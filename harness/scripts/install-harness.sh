@@ -86,7 +86,8 @@ tpl = {
     "PostToolUse": {"matcher": "Write|Edit|MultiEdit", "script": "post_tool_use.py"},
     "Stop":        {"matcher": None, "script": "stop.py"},
     "SessionEnd":  {"matcher": None, "script": "session_end.py"},
-    "SessionStart": {"matcher": None, "script": "session_start.py"},
+    "SessionStart": [{"matcher": None, "script": "session_start.py"},
+                     {"matcher": None, "script": "code_graph_keeper.py"}],
     "UserPromptSubmit": {"matcher": None, "script": "user_prompt_submit.py"},
 }
 cur.setdefault("permissions", {}).setdefault("deny", [])
@@ -232,7 +233,7 @@ tpl = {"permissions": {"deny": deny}, "hooks": {
     "PostToolUse": [h("post_tool_use.py", "Write|Edit|MultiEdit")],
     "Stop":        [h("stop.py")],
     "SessionEnd":  [h("session_end.py")],
-    "SessionStart":[h("session_start.py")],
+    "SessionStart":[h("session_start.py"), h("code_graph_keeper.py")],
     "UserPromptSubmit":[h("user_prompt_submit.py")],
 }}
 cur = {}

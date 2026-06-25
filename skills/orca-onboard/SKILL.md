@@ -453,6 +453,27 @@ echo "✅ Phase 1 done"
 # update_phase_status "Phase 1 —" "done"
 ```
 
+### 1.7 CODE-GRAPH MCP INDEX (optional — chỉ khi server `code-graph` có trong mcpServers)
+
+Tầng truy vấn quan hệ code **chính xác theo line** bổ sung cho graph distill ở trên: `search_symbols`, `get_callers/callees` cho impact-check tức thì. Server `code-graph` (`~/.claude.json → mcpServers`) ghi 1 db SQLite mỗi repo tại `<repo>/.graph-agent/index.db`.
+
+**Khi nào chạy:** project có submodule/repo code thật (Go/TS/Py…) và server `code-graph` đang khai báo. Bỏ qua nếu không có server.
+
+```bash
+# 1. Index từng repo code (auto-detect root từ .git/go.mod/package.json).
+#    Gọi MCP tool reindex_repo(<abs path repo>, force=true) cho MỖI repo code.
+#    Lưu ý: code có thể nằm ở SUBDIR của submodule (vd <sub>/<svc>/go.mod chứ không phải <sub>/).
+#    → trỏ vào thư mục chứa go.mod/package.json, không phải submodule root rỗng.
+# 2. reindex_repo tự thêm repo vào registry ~/.graph-agent/repos.txt
+#    → server --watch re-watch sau restart (durability).
+# 3. Verify: get_stats() phải thấy symbols thật (>0), không phải stub.
+echo "[1.7] code-graph: gọi reindex_repo cho mỗi repo code có manifest"
+```
+
+**Durability harness:** hook SessionStart `code_graph_keeper.py` (cài kèm install-harness.sh) tự re-register repo nếu rớt registry + cảnh báo repo chưa index. Fail-open, **no-op nếu project không dùng code-graph** (không có `.graph-agent/index.db` nào). KHÔNG reindex per-edit (watcher đã lo, debounce 2s). Sau đó ghi 1 wiki concept page `concepts/code-graph-nav.md` (cách dùng tool + ví dụ caller trace) để team biết dùng.
+
+> Freshness sau đó tự động: edit file → watcher reindex ~2s. Không cần reindex tay trừ khi clone mới hoặc đổi hàng loạt lúc server tắt.
+
 ---
 
 ## Phase 2 — Domain Enrichment

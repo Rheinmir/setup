@@ -55,6 +55,7 @@ Task Assignment + seq diagram per-task). R4 = tự động hóa L3, R6 = chính 
 | PostToolUse | `.claude/hooks/post_tool_use.py` | audit JSONL + R2 trên file đã ghi; exit 2 = Claude phải sửa ngay |
 | Stop (block được) | `.claude/hooks/stop.py` | nếu phiên sửa wiki → R3; exit 2 = không cho kết thúc lượt. Guard `stop_hook_active` chống lặp |
 | SessionEnd | `.claude/hooks/session_end.py` | audit + append dòng tổng kết vào `wiki/log.md` |
+| SessionStart (advisory) | `.claude/hooks/code_graph_keeper.py` | giữ luồng code-graph MCP bền: re-register repo vào `~/.graph-agent/repos.txt` nếu rớt + cảnh báo repo chưa index. **No-op nếu project không có `.graph-agent/index.db`** (không dùng code-graph). Không bao giờ block, không reindex per-edit (watcher của code-graph server đã lo) |
 
 Resolve validators theo thứ tự: env `LLMWIKI_VALIDATORS` → `.claude/hooks/validators/` (bản copy
 khi deploy standalone) → `harness/validators/` ở repo cha. Hook luôn **fail-open** (không tìm thấy
