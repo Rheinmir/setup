@@ -14,7 +14,10 @@ import sys
 
 from hooklib import audit, read_payload
 
-VALID_STATUS = {"ready", "in_progress", "completed", "failed"}
+# Union các version CLI: bản cũ (ready|in_progress|completed|failed) + bản mới
+# (pending|ready|dispatched|completed|failed|blocked). Tránh false-block khi CLI
+# thật chấp nhận 'dispatched'/'pending'/'blocked' (bài học 250626 — orca-eval).
+VALID_STATUS = {"pending", "ready", "dispatched", "in_progress", "completed", "failed", "blocked"}
 TASK_UPDATE_RE = re.compile(r"orca\s+orchestration\s+task-update\b")
 TASK_CREATE_RE = re.compile(r"orca\s+orchestration\s+task-create\b")
 STATUS_RE = re.compile(r"--status[=\s]+([^\s'\"]+)")

@@ -23,7 +23,8 @@ Claude: analyze. Others: execute. Kill opencode nếu chờ quá lâu.
 ## Workflow: propose
 
 1. **query**: Gather context từ wiki/ về tính năng được yêu cầu
-2. **propose**: Tạo CẶP file đủ chuẩn R7 (validator chặn nếu thiếu) — draft `llmwiki/wiki/sources/draft/DDMMYY-tên.md` PHẢI có `## Plan` (checklist `- [ ]`) + `## Agent Task Assignment` (Task | Agent CLI | Lý do chọn | Status=pending — khai ngay lúc propose, chọn theo bảng chi phí) + link seq html; và `llmwiki/html/DDMMYY-tên-seq.html` với **MỖI task một diagram** gắn badge agent (indigo = legacy, emerald = thêm/sửa, cam = nhánh chặn; message từng bước, auto-loop). Link 2 chiều md ↔ html
+2. **propose**: Tạo CẶP file đủ chuẩn R7 (validator chặn nếu thiếu) — draft `llmwiki/wiki/sources/draft/DDMMYY-tên.md` PHẢI có `## Plan` (checklist `- [ ]`) + `## Agent Task Assignment` (Task | Agent CLI | Lý do chọn | Status=pending — khai ngay lúc propose, chọn theo bảng chi phí) + link seq html; và `llmwiki/html/DDMMYY-tên-seq.html` với **MỖI task một diagram** gắn badge agent (indigo = legacy, emerald = thêm/sửa, cam = nhánh chặn; message từng bước, auto-loop). Link 2 chiều md ↔ html.
+   - **STYLE seq html BẮT BUỘC theo `docs-site-macos` (liquid-glass macOS), KHÔNG theme tối tự chế** (bài học 250626 — user chê "sao xấu thế"): nền sáng `linear-gradient(180deg,#f7fbff,#eaf2fd)` + 2 lớp refraction `body::before` (orbs blue/indigo/teal) & `body::after` (dot-grid 22px); card `.diagram-box` = glass tier-2 `rgba(255,255,255,.7)` + `backdrop-filter:blur(8px)` + edge-highlight `inset 0 1px 0 rgba(255,255,255,.85)`; traffic-light chrome (🔴🟡🟢) ở header; h2 tối `#1d1d1f`; badge tint Apple secondary (indigo `#5856d6`/emerald `#34c759`/cam `#ff9500` ở alpha ~.14); `.desc` = glass tier-3 viền trái accent; `.msg` opacity ≥ .9 (KHÔNG ẩn). Font `-apple-system`/SF. Self-contained, 0 external request. (Mẫu chuẩn: `llmwiki/html/250626-hris-explorer-v2-3channel-seq.html`.)
 3. **gate**: `orca orchestration gate-create --question "Duyệt proposal này?"` → chờ user (gửi kèm preview URL của html)
 4. **Sau duyệt**: Phân rã tasks từ proposal → `orca orchestration task-create` mỗi task
 5. **dispatch**: `orca orchestration dispatch --task <id> --to <agent> --inject`
@@ -53,6 +54,8 @@ Không bao giờ đổi volume mount mà không backup + xác nhận user.
 > Bài học 2026-05-29: recreate container với compose sai path → mất toàn bộ DB người dùng.
 
 ## Dispatch nhanh
+
+> ⚠️ **CLI agent headless KHÔNG đáng tin (bài học 250626 — orca-eval):** `opencode run` / `agy -p` / `kiro run` chạy nền từ Claude Code thường **không giao hàng** (process thoát/treo, không tạo file — thực đo 1/5 task thành công). Quy tắc: đặt **watchdog** (~60–90s), nếu im lặng/không có file → **kill + Claude tự tiếp quản theo spec** (đừng chờ vô ích). Dùng OpenCode cho task boilerplate ĐỘC LẬP, đã verify được; task có dependency/nuance → Claude làm. Muốn dispatch THẬT cho agent → ưu tiên `orca terminal` interactive thay vì `-p`/`run`.
 
 ```bash
 # OpenCode non-interactive (DEFAULT — dùng big-pickle miễn phí):
