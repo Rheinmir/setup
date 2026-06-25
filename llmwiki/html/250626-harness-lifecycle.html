@@ -45,9 +45,9 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
   backdrop-filter:blur(var(--blur-2));border-radius:10px;padding:7px 14px;position:relative;overflow:hidden;transition:color .15s}
 .controls button:hover{color:#0a84ff}
 .controls .prog{font-family:var(--font-mono);font-size:12.5px;color:var(--text-2);margin-left:4px}
+.controls .hint{font-size:11.5px;color:var(--text-2);opacity:.8}
 .controls .phase{font-size:12px;font-weight:700;padding:4px 11px;border-radius:20px;letter-spacing:.02em}
-.phase.install{background:rgba(10,132,255,.12);color:#0a84ff}
-.phase.run{background:rgba(52,199,89,.12);color:#1f8f3f}
+.phase{background:var(--acbg,rgba(10,132,255,.12));color:var(--ac,#0a84ff)}
 
 .lifecycle{display:grid;grid-template-columns:1fr 1.05fr;gap:24px;align-items:start}
 @media(max-width:920px){.lifecycle{grid-template-columns:1fr}}
@@ -59,8 +59,7 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
   padding:15px 17px;cursor:pointer;transition:border-color .25s,box-shadow .25s,transform .25s,opacity .25s;opacity:.62}
 .step:hover{opacity:.9}
 .step.active{opacity:1;transform:translateX(3px);box-shadow:var(--edge-hi),0 8px 26px rgba(10,132,255,.14)}
-.step.active.p-install{border-left-color:#0a84ff}
-.step.active.p-run{border-left-color:#28a745}
+.step.active{border-left-color:var(--ac,#0a84ff)}
 .step .sp{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.03em;padding:3px 9px;border-radius:14px;margin-bottom:8px}
 .step.p-install .sp{background:rgba(10,132,255,.10);color:#0a84ff}
 .step.p-run .sp{background:rgba(52,199,89,.10);color:#1f8f3f}
@@ -87,8 +86,8 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
 .trow .nm{font-weight:600}
 .trow .cm{color:#9aa3b2;font-weight:400}
 .trow.dir .nm{color:#0a6fd6}
-.trow.hit{background:linear-gradient(90deg,rgba(10,132,255,.16),rgba(10,132,255,.04));
-  box-shadow:inset 0 0 0 1px rgba(10,132,255,.35);color:#0f0f12}
+.trow.hit{background:var(--acbg,rgba(10,132,255,.14));
+  box-shadow:inset 0 0 0 1px var(--ac,#0a84ff);color:#0f0f12}
 .trow.hit.deny{background:linear-gradient(90deg,rgba(255,45,85,.16),rgba(255,45,85,.04));box-shadow:inset 0 0 0 1px rgba(255,45,85,.4)}
 .trow.hit.ok{background:linear-gradient(90deg,rgba(52,199,89,.16),rgba(52,199,89,.04));box-shadow:inset 0 0 0 1px rgba(52,199,89,.4)}
 
@@ -116,7 +115,7 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
 .legend i.d{border-color:#e0264b}.legend i.o{border-color:#28a745}
 /* seq number rail (đầu mỗi dòng — đọc được khi pause) */
 .seqslot{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;margin-right:8px;border-radius:50%;font-size:10px;font-weight:800;flex:0 0 auto;background:transparent;color:transparent;border:1px solid rgba(30,90,170,.10);transition:background .2s,color .2s,border-color .2s}
-.seqslot.on{background:#0a84ff;color:#fff;border-color:transparent}
+.seqslot.on{background:var(--ac,#0a84ff);color:#fff;border-color:transparent}
 .seqslot.deny{background:#e0264b;color:#fff;border-color:transparent}
 .seqslot.ok{background:#28a745;color:#fff;border-color:transparent}
 .seqslot.warn{background:#f0902a;color:#fff;border-color:transparent}
@@ -132,13 +131,13 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
 .trow.attempt .nm{color:#e0264b;text-decoration:line-through}
 .trow.attempt::after{content:' · CHẶN, không tạo';color:#e0264b;font-style:italic;font-size:11px}
 /* con trỏ = mũi tên phải, nằm GUTTER trái — không che nội dung */
-.cursor{transition:left .32s ease,top .5s cubic-bezier(.5,0,.15,1)}
+.cursor{transition:left .32s ease,top .5s cubic-bezier(.5,0,.15,1);color:var(--ac,#0a84ff)}
+.cursor.deny{color:#e0264b}.cursor.ok{color:#28a745}
 /* caption mô tả NGAY DƯỚI khung cây — đổi theo từng frame */
 .frame-cap{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);position:relative;z-index:3}
 .frame-cap .fc-top{display:flex;align-items:center;gap:9px;margin-bottom:7px}
 .fc-num{font-family:var(--font-mono);font-size:11px;color:var(--text-2);font-variant-numeric:tabular-nums}
-.fc-sp{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:13px;background:rgba(10,132,255,.10);color:#0a84ff;letter-spacing:.02em}
-.frame-cap.run .fc-sp{background:rgba(52,199,89,.10);color:#1f8f3f}
+.fc-sp{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:13px;background:var(--acbg,rgba(10,132,255,.10));color:var(--ac,#0a84ff);letter-spacing:.02em}
 .fc-h{font-family:var(--font-display);font-size:14.5px;font-weight:700;letter-spacing:-.01em;margin-bottom:5px}
 .fc-d{font-size:12.5px;color:var(--text-2);line-height:1.55}
 .fc-flow{margin-top:9px;font-family:var(--font-mono);font-size:10.5px;color:#5b6472;background:rgba(10,132,255,.05);border:1px solid var(--border);border-radius:8px;padding:6px 9px;line-height:1.5}
@@ -154,9 +153,10 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
   </header>
 
   <div class="controls">
-    <button id="prev">⏮ Trước</button>
-    <button id="play">▶ Chạy</button>
-    <button id="next">Sau ⏭</button>
+    <button id="prev">⏮</button>
+    <button id="next">⏭ Bước tiếp</button>
+    <button id="play">▶ Tự chạy</button>
+    <span class="hint">⏭ tự bước (gõ 1 frame rồi dừng) · ▶ tự chạy chậm</span>
     <span class="phase install" id="phase">CÀI ĐẶT</span>
     <span class="prog" id="prog">1 / 9</span>
   </div>
@@ -201,7 +201,7 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
         <div class="fc-flow" id="fcFlow"></div>
       </div>
       <div class="cursor" id="cursor">
-        <svg width="20" height="18" viewBox="0 0 20 18"><path d="M2 2 L2 16 L17 9 Z" fill="#0a84ff" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/></svg>
+        <svg width="20" height="18" viewBox="0 0 20 18"><path d="M2 2 L2 16 L17 9 Z" fill="currentColor" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/></svg>
       </div>
       <div class="verdict" id="verdict"></div>
       <div class="leak" id="leak"></div>
@@ -264,20 +264,23 @@ const stepsEl=document.getElementById('steps'), pane=document.getElementById('pa
   phaseEl=document.getElementById('phase'), reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
 
 // render steps
+// cột trái = MỤC LỤC gọn (nhãn + tiêu đề). Chi tiết/mô tả nằm ở caption bên phải → không trùng lặp.
 const cards=STEPS.map((s,i)=>{
   const el=document.createElement('div');
   el.className='step p-'+s.ph; el.dataset.i=i;
-  el.innerHTML=`<span class="sp">${s.sp}</span><h3>${s.h}</h3><p>${s.d}</p><div class="flow">${s.flow}</div>`;
-  el.addEventListener('click',()=>{playing=false;setPlayLabel();go(i)});
+  el.innerHTML=`<span class="sp">${s.sp}</span><h3>${s.h}</h3>`;
+  el.addEventListener('click',()=>{auto=false;setBtns();step(i)});
   stepsEl.appendChild(el); return el;
 });
+// mỗi step một màu (cycle 6 màu Apple) — set qua --ac/--acbg trong prep()
+const PAL=[{c:'#0a84ff',bg:'rgba(10,132,255,.12)'},{c:'#30b0c7',bg:'rgba(48,176,199,.13)'},{c:'#5856d6',bg:'rgba(88,86,214,.12)'},{c:'#34c759',bg:'rgba(52,199,89,.14)'},{c:'#ff9500',bg:'rgba(255,149,0,.15)'},{c:'#ff2d55',bg:'rgba(255,45,85,.12)'}];
 
-let cur=0, playing=false, timers=[];
+let cur=0, auto=false, timers=[];   // auto = chế độ Tự chạy; tắt = Tự bước (⏭)
 const leakEl=document.getElementById('leak');
 const clear=()=>{timers.forEach(clearTimeout);timers=[]};
 const at=id=>{const el=document.getElementById(id);const pr=pane.getBoundingClientRect();const r=el.getBoundingClientRect();
   return {gx:Math.max(2,r.left-pr.left-22), y:r.top-pr.top+r.height/2, el};};
-function setPlayLabel(){document.getElementById('play').textContent=playing?'⏸ Tạm dừng':'▶ Chạy';}
+function setBtns(){document.getElementById('play').textContent=auto?'⏸ Dừng tự chạy':'▶ Tự chạy';}
 
 // file nào tồn tại tại bước i (born<=i); born=99 = không bao giờ (bị chặn)
 // hiện nếu: pre-existing(-1) hoặc đã tạo ở bước TRƯỚC (b<i). File born ĐÚNG bước này → ẩn, để flashBorn cho nó pop ra.
@@ -298,6 +301,7 @@ function prep(){
   document.getElementById('fcH').textContent=s.h;
   const fcd=document.getElementById('fcD'); fcd.textContent=s.d; fcd.classList.remove('streaming');
   document.getElementById('fcFlow').textContent=s.flow;
+  const a=PAL[cur%PAL.length]; const rs=document.documentElement.style; rs.setProperty('--ac',a.c); rs.setProperty('--acbg',a.bg);
   document.querySelectorAll('.trow,.chip').forEach(e=>e.classList.remove('hit','deny','ok','warn','attempt','born-now','dim'));
   document.querySelectorAll('.seqslot').forEach(s2=>{s2.textContent='';s2.className='seqslot';});
   verdict.className='verdict'; leakEl.className='leak'; cursor.classList.remove('deny','ok');
@@ -338,13 +342,14 @@ function animate(){const s=prep();
   born.forEach(e=>{timers.push(setTimeout(()=>typeRow(e,Math.min(slot*0.8,700)),bt)); bt+=slot;});
   const n=Math.max(1,s.chain.length);                        // con trỏ trải đều suốt transcript
   s.chain.forEach((id,idx)=>timers.push(setTimeout(()=>paint(idx,s), 300+Math.round(idx*(capDur-300)/n))));
-  if(playing) timers.push(setTimeout(()=>go(cur+1), capDur+2200));   // dừng lâu cuối frame rồi mới sang
+  if(auto) timers.push(setTimeout(()=>step(cur+1), capDur+2200));   // CHỈ tự sang frame khi đang Tự chạy
 }
-function go(i){clear(); cur=(i+STEPS.length)%STEPS.length; playing?animate():full();}
+// TỰ BƯỚC: gõ transcript 1 lần rồi DỪNG (không tự sang). Tự chạy: animate sẽ tự chuỗi tiếp.
+function step(i){clear(); cur=(i+STEPS.length)%STEPS.length; animate();}
 
-document.getElementById('prev').addEventListener('click',()=>{playing=false;setPlayLabel();go(cur-1)});
-document.getElementById('next').addEventListener('click',()=>{playing=false;setPlayLabel();go(cur+1)});
-document.getElementById('play').addEventListener('click',()=>{playing=!playing;setPlayLabel();clear();playing?animate():full();});
+document.getElementById('prev').addEventListener('click',()=>{auto=false;setBtns();step(cur-1)});
+document.getElementById('next').addEventListener('click',()=>{auto=false;setBtns();step(cur+1)});
+document.getElementById('play').addEventListener('click',()=>{auto=!auto;setBtns();clear();auto?step(cur):full();});
 
 // ripple on controls
 document.addEventListener('pointerdown',e=>{const el=e.target.closest('.controls button');if(!el)return;
@@ -353,8 +358,8 @@ document.addEventListener('pointerdown',e=>{const el=e.target.closest('.controls
   el.appendChild(ink);ink.addEventListener('animationend',()=>ink.remove());});
 
 let rz; addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{clear();full();},200);});
-setPlayLabel();
-requestAnimationFrame(()=>setTimeout(()=>go(0),200));   // mặc định: TĨNH ở frame đầy đủ của step 1
+setBtns();
+requestAnimationFrame(()=>setTimeout(()=>{cur=0;full();},200));   // mặc định: TĨNH ở frame đầy đủ, chờ bạn ⏭
 </script>
 </body>
 </html>
