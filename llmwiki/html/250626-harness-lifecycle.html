@@ -111,14 +111,28 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
 .ripple-ink{position:absolute;border-radius:50%;pointer-events:none;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.7) 0%,rgba(255,255,255,.28) 38%,rgba(10,132,255,.2) 72%,transparent 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.9);transform:scale(0);opacity:1;animation:rg .6s cubic-bezier(.25,.46,.45,.94) forwards}
 @keyframes rg{55%{transform:scale(1);opacity:.75}100%{transform:scale(1.04);opacity:0}}
 .legend{margin-top:18px;display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--text-2)}
-.legend span{display:inline-flex;align-items:center;gap:6px}.legend i{width:18px;height:0;border-top:2px dashed #0a84ff}
-.legend i.d{border-color:#e0264b}.legend i.o{border-color:#28a745}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend b{width:12px;height:12px;border-radius:50%;display:inline-block}
+.legend .s-src{background:#0a84ff}.legend .s-dst{background:#30b0c7}.legend .s-ok{background:#34c759}.legend .s-deny{background:#e0264b}.legend .s-warn{background:#f0902a}
 /* seq number rail (đầu mỗi dòng — đọc được khi pause) */
 .seqslot{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;margin-right:8px;border-radius:50%;font-size:10px;font-weight:800;flex:0 0 auto;background:transparent;color:transparent;border:1px solid rgba(30,90,170,.10);transition:background .2s,color .2s,border-color .2s}
 .seqslot.on{background:var(--ac,#0a84ff);color:#fff;border-color:transparent}
 .seqslot.deny{background:#e0264b;color:#fff;border-color:transparent}
 .seqslot.ok{background:#28a745;color:#fff;border-color:transparent}
 .seqslot.warn{background:#f0902a;color:#fff;border-color:transparent}
+/* màu theo VAI TRÒ trong hành động (không phải theo step): nguồn/đọc ≠ đích/ghi */
+.seqslot.r-src{background:#0a84ff;color:#fff;border-color:transparent}
+.seqslot.r-dst{background:#30b0c7;color:#fff;border-color:transparent}
+.seqslot.r-pass{background:#9aa3b2;color:#fff;border-color:transparent}
+.trow.hit.r-src{background:rgba(10,132,255,.13);box-shadow:inset 0 0 0 1px #0a84ff;color:#0f0f12}
+.trow.hit.r-dst{background:rgba(48,176,199,.17);box-shadow:inset 0 0 0 1px #30b0c7;color:#0f0f12}
+.trow.hit.r-pass{background:rgba(140,150,165,.12);box-shadow:inset 0 0 0 1px rgba(120,130,145,.5);color:#0f0f12}
+.rtag{margin-left:9px;font-size:10px;font-weight:700;padding:1px 8px;border-radius:11px;font-family:var(--font-text)}
+.rtag.r-src{background:rgba(10,132,255,.14);color:#0a84ff}
+.rtag.r-dst{background:rgba(48,176,199,.20);color:#1d7d8c}
+.rtag.deny{background:rgba(255,45,85,.14);color:#e0264b}
+.rtag.ok{background:rgba(52,199,89,.20);color:#1f8f3f}
+.rtag.warn{background:rgba(255,149,0,.20);color:#c2710a}
 .chip{display:inline-flex;align-items:center}.chip .seqslot{width:15px;height:15px;margin-right:6px;font-size:9px}
 .trow.notyet{display:none}   /* file CHƯA tồn tại → ẩn hẳn khỏi cây */
 /* gõ dần như transcript (không pop copy-paste) */
@@ -209,9 +223,11 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
   </div>
 
   <div class="legend">
-    <span><i></i> gọi/đọc/ghi bình thường</span>
-    <span><i class="o"></i> cho qua (exit 0)</span>
-    <span><i class="d"></i> chặn (exit 2)</span>
+    <span><b class="s-src"></b> đọc / nguồn (copy từ)</span>
+    <span><b class="s-dst"></b> ghi / tạo / đích (copy tới)</span>
+    <span><b class="s-ok"></b> cho qua</span>
+    <span><b class="s-deny"></b> chặn</span>
+    <span><b class="s-warn"></b> lọt session</span>
   </div>
 </div>
 
@@ -224,32 +240,32 @@ const STEPS = [
   // ── CÀI ĐẶT ──
   {ph:'install', sp:'CÀI · B0', h:'Đặt lõi vào repo',
    d:'Copy 2 file lõi vào harness/. Đây là toàn bộ "bộ não": luật + trình kiểm. Chưa cắm vendor nào.',
-   flow:'installer → policy.yaml + llmwiki-validate.py', chain:['c-install','f-policy','f-cli']},
+   flow:'installer → policy.yaml + llmwiki-validate.py', chain:['c-install','f-policy','f-cli'], role:{'f-policy':'dst','f-cli':'dst'}},
   {ph:'install', sp:'CÀI · B1', h:'Dò vendor đang dùng',
    d:'Quét repo xem có .claude/, opencode.json, .kiro/… để biết cần sinh converter cho vendor nào.',
-   flow:'installer → dò .claude / opencode', chain:['c-install','f-claude','f-opencode']},
+   flow:'installer → dò .claude / opencode', chain:['c-install','f-claude','f-opencode'], role:{'f-claude':'src','f-opencode':'src'}},
   {ph:'install', sp:'CÀI · B2', h:'Sinh wiring từ policy',
    d:'gen-converters.py ĐỌC policy.yaml rồi GHI ra out/<vendor>/. Một nguồn chân lý → nhiều dây nối.',
-   flow:'gen-converters.py: đọc policy.yaml → ghi out/', chain:['f-gen','f-policy','f-out']},
+   flow:'gen-converters.py: đọc policy.yaml → ghi out/', chain:['f-gen','f-policy','f-out'], role:{'f-policy':'src','f-out':'dst'}},
   {ph:'install', sp:'CÀI · B3', h:'Cắm wiring vào đúng chỗ',
    d:'Copy file trong out/ tới settings.json của vendor + .github/workflows/ + pre-commit. Mỗi vendor 1 dây mỏng.',
-   flow:'out/ → .claude/settings · harness.yml · pre-commit', chain:['f-out','f-claude','f-ciyml','f-precommit']},
+   flow:'out/ (nguồn) → .claude/settings · harness.yml · pre-commit (đích)', chain:['f-out','f-claude','f-ciyml','f-precommit'], role:{'f-out':'src','f-claude':'dst','f-ciyml':'dst','f-precommit':'dst'}},
   {ph:'install', sp:'CÀI · B4', h:'Verify',
    d:'Chạy demo.sh + test-broad.sh = 67 assertion. Xanh hết thì cài xong, harness sẵn sàng.',
-   flow:'installer → demo.sh + test-broad.sh (67 ✓)', chain:['c-install','f-demo','f-test']},
+   flow:'installer → demo.sh + test-broad.sh (67 ✓)', chain:['c-install','f-demo','f-test'], role:{'f-demo':'src','f-test':'src'}},
   // ── CHẠY ──
   {ph:'run', sp:'CHẠY · session ✗', h:'Agent định ghi raw/ → CHẶN',
    d:'Claude muốn Write llmwiki/raw/x.md. PreToolUse hook bắt được → gọi llmwiki-validate claude-hook → đọc policy R1 → exit 2. Bị chặn NGAY trong phiên, file không bao giờ ra đời.',
-   flow:'agent → (hook) settings.json → LÕI → policy R1 → DENY', chain:['c-agent','f-raw','f-claude','f-cli','f-policy'], verdict:{kind:'deny',text:'exit 2 · CHẶN (R1)'}},
+   flow:'agent → (hook) settings.json → LÕI → policy R1 → DENY', chain:['c-agent','f-raw','f-claude','f-cli','f-policy'], role:{'f-policy':'src'}, verdict:{kind:'deny',text:'exit 2 · CHẶN (R1)'}},
   {ph:'run', sp:'CHẠY · session ✓', h:'Agent ghi wiki hợp lệ → CHO QUA',
    d:'Write llmwiki/wiki/concepts/x.md CÓ "## Origin". Cùng đường hook → LÕI → policy, nhưng R2 thỏa → exit 0. Ghi bình thường.',
-   flow:'agent → settings.json → LÕI → policy R2 → OK', chain:['c-agent','f-wiki','f-claude','f-cli','f-policy'], verdict:{kind:'ok',text:'exit 0 · CHO QUA'}},
+   flow:'agent → settings.json → LÕI → policy R2 → OK', chain:['c-agent','f-wiki','f-claude','f-cli','f-policy'], role:{'f-wiki':'dst','f-policy':'src'}, verdict:{kind:'ok',text:'exit 0 · CHO QUA'}},
   {ph:'run', sp:'CHẠY · repo', h:'git commit → pre-commit',
    d:'Lúc commit, pre-commit gọi LÕI ở mode files (layer=repo). R1 KHÔNG áp ở repo (người commit raw/ là hợp lệ); chỉ R2 áp cho file wiki đổi.',
-   flow:'git commit → pre-commit → LÕI files → policy', chain:['c-git','f-precommit','f-cli','f-policy'], verdict:{kind:'neutral',text:'layer=repo · chỉ R2'}},
+   flow:'git commit → pre-commit → LÕI files → policy', chain:['c-git','f-precommit','f-cli','f-policy'], role:{'f-policy':'src'}, verdict:{kind:'neutral',text:'layer=repo · chỉ R2'}},
   {ph:'run', sp:'CHẠY · CI', h:'Mở PR → CI (sàn đảm bảo)',
    d:'GitHub chạy .github/workflows/harness.yml: job selftest (67 assertion) + validate file .md đổi. Đây là nơi nói "không" mà agent KHÔNG sửa được khi merge.',
-   flow:'CI → harness.yml → demo+broad+LÕI → ✓ merge', chain:['c-ci','f-ciyml','f-demo','f-test','f-cli'], verdict:{kind:'ok',text:'✓ MERGE OK'}},
+   flow:'CI → harness.yml → demo+broad+LÕI → ✓ merge', chain:['c-ci','f-ciyml','f-demo','f-test','f-cli'], role:{'f-demo':'src','f-test':'src'}, verdict:{kind:'ok',text:'✓ MERGE OK'}},
   {ph:'run', sp:'CHẠY · GAP → sàn CI', h:'Bypass lọt session → CI vẫn tóm',
    d:'Agent dùng python3 -c "open(\'wiki/concepts/x.md\',\'w\')" ghi file THIẾU "## Origin". Lệnh python LỌT hook session — lõi soi bề mặt bash không bắt python (KNOWN GAP). NHƯNG khi mở PR, CI chạy validate-content → LÕI files → R2 áp ở layer repo → FAIL, chặn merge. Sàn CI tóm đúng cái session bỏ sót — đây là lý do đảm bảo neo ở CI, không ở hook.',
    flow:'agent python -c → wiki/x.md [lọt hook] ⟶ CI → LÕI files → R2 → CHẶN MERGE',
@@ -274,6 +290,13 @@ const cards=STEPS.map((s,i)=>{
 });
 // mỗi step một màu (cycle 6 màu Apple) — set qua --ac/--acbg trong prep()
 const PAL=[{c:'#0a84ff',bg:'rgba(10,132,255,.12)'},{c:'#30b0c7',bg:'rgba(48,176,199,.13)'},{c:'#5856d6',bg:'rgba(88,86,214,.12)'},{c:'#34c759',bg:'rgba(52,199,89,.14)'},{c:'#ff9500',bg:'rgba(255,149,0,.15)'},{c:'#ff2d55',bg:'rgba(255,45,85,.12)'}];
+// vai trò node trong 1 hành động: nguồn/đọc · đích/ghi · cho qua · chặn · lọt
+const ROLEINFO={
+  src:{c:'#0a84ff',t:'đọc',cls:'r-src'}, dst:{c:'#30b0c7',t:'ghi/tạo',cls:'r-dst'},
+  pass:{c:'#9aa3b2',t:'',cls:'r-pass'}, actor:{c:'#9aa3b2',t:'',cls:'r-pass'},
+  neutral:{c:'#0a84ff',t:'',cls:'r-pass'},
+  deny:{c:'#e0264b',t:'chặn',cls:'deny'}, ok:{c:'#34c759',t:'cho qua',cls:'ok'},
+  warn:{c:'#f0902a',t:'lọt',cls:'warn'}, attempt:{c:'#e0264b',t:'',cls:'deny'}};
 
 let cur=0, auto=false, timers=[];   // auto = chế độ Tự chạy; tắt = Tự bước (⏭)
 const leakEl=document.getElementById('leak');
@@ -302,7 +325,8 @@ function prep(){
   const fcd=document.getElementById('fcD'); fcd.textContent=s.d; fcd.classList.remove('streaming');
   document.getElementById('fcFlow').textContent=s.flow;
   const a=PAL[cur%PAL.length]; const rs=document.documentElement.style; rs.setProperty('--ac',a.c); rs.setProperty('--acbg',a.bg);
-  document.querySelectorAll('.trow,.chip').forEach(e=>e.classList.remove('hit','deny','ok','warn','attempt','born-now','dim'));
+  document.querySelectorAll('.trow,.chip').forEach(e=>e.classList.remove('hit','deny','ok','warn','attempt','born-now','dim','r-src','r-dst','r-pass'));
+  document.querySelectorAll('.rtag').forEach(t=>t.remove());
   document.querySelectorAll('.seqslot').forEach(s2=>{s2.textContent='';s2.className='seqslot';});
   verdict.className='verdict'; leakEl.className='leak'; cursor.classList.remove('deny','ok');
   applyVis(cur);
@@ -311,12 +335,18 @@ function prep(){
 function paint(idx,s){
   const id=s.chain[idx], last=idx===s.chain.length-1, vk=s.verdict?s.verdict.kind:'';
   const el=document.getElementById(id); el.classList.remove('notyet'); const p=at(id);
+  let role;
+  if(id==='f-raw') role='attempt';                       // thử ghi raw → bị chặn, không tạo
+  else if(s.marks&&s.marks[id]) role=s.marks[id];        // mark riêng (warn/deny ở bước GAP)
+  else if(last&&vk) role=vk;                             // node cuối = verdict
+  else if(s.role&&s.role[id]) role=s.role[id];           // src (đọc) / dst (ghi)
+  else role=(id.indexOf('c-')===0)?'actor':'pass';       // controller / đi qua
+  const ri=ROLEINFO[role]||ROLEINFO.pass;
+  el.classList.add('hit'); if(ri.cls)el.classList.add(ri.cls);
   if(id==='f-raw') el.classList.add('attempt');
-  el.classList.add('hit');
-  const mk=(s.marks&&s.marks[id])||(last&&vk?vk:'');
-  if(mk) el.classList.add(mk);
-  const slot=el.querySelector('.seqslot'); if(slot){slot.textContent=idx+1; slot.className='seqslot on '+(mk||'');}
-  cursor.style.left=p.gx+'px'; cursor.style.top=(p.y-9)+'px'; if(last&&vk)cursor.classList.add(vk);
+  const slot=el.querySelector('.seqslot'); if(slot){slot.textContent=idx+1; slot.className='seqslot on '+(ri.cls||'');}
+  if(ri.t && id.indexOf('c-')!==0){const tag=document.createElement('span');tag.className='rtag '+ri.cls;tag.textContent=ri.t;el.appendChild(tag);}
+  cursor.style.left=p.gx+'px'; cursor.style.top=(p.y-9)+'px'; cursor.style.color=ri.c;
   if(s.leak===id){leakEl.textContent='⚠ lọt hook session';leakEl.className='leak warn show';
     leakEl.style.left=Math.max(10,pane.clientWidth-178)+'px'; leakEl.style.top=(p.y-12)+'px';}
   if(last&&s.verdict){verdict.textContent=s.verdict.text;verdict.className='verdict '+s.verdict.kind+' show';
