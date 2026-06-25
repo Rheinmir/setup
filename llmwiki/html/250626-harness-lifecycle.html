@@ -166,18 +166,18 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
         <span class="chip" id="c-ci"><span class="seqslot"></span>CI runner</span>
       </div>
       <div class="tree" id="tree">
-        <div class="trow dir" data-born="0"><span class="seqslot"></span><span class="pre">harness/poc-vendor-neutral/</span></div>
-        <div class="trow" id="f-policy" data-born="0"><span class="seqslot"></span><span class="pre">│  ├─ </span><span class="nm">policy.yaml</span><span class="cm">   ← luật</span></div>
-        <div class="trow" id="f-cli" data-born="0"><span class="seqslot"></span><span class="pre">│  ├─ </span><span class="nm">bin/llmwiki-validate.py</span><span class="cm">  ← LÕI</span></div>
-        <div class="trow" id="f-gen" data-born="0"><span class="seqslot"></span><span class="pre">│  ├─ </span><span class="nm">gen-converters.py</span></div>
-        <div class="trow" id="f-demo" data-born="0"><span class="seqslot"></span><span class="pre">│  ├─ </span><span class="nm">demo.sh</span><span class="cm">  (13)</span></div>
-        <div class="trow" id="f-test" data-born="0"><span class="seqslot"></span><span class="pre">│  ├─ </span><span class="nm">test-broad.sh</span><span class="cm">  (54)</span></div>
-        <div class="trow dir" id="f-out" data-born="2"><span class="seqslot"></span><span class="pre">│  └─ </span><span class="nm">out/</span><span class="cm">  (sinh ra, gitignore)</span></div>
+        <div class="trow dir" data-born="1"><span class="seqslot"></span><span class="pre">harness/poc-vendor-neutral/</span></div>
+        <div class="trow" id="f-policy" data-born="1"><span class="seqslot"></span><span class="pre">│  ├─ </span><span class="nm">policy.yaml</span><span class="cm">   ← luật</span></div>
+        <div class="trow" id="f-cli" data-born="1"><span class="seqslot"></span><span class="pre">│  ├─ </span><span class="nm">bin/llmwiki-validate.py</span><span class="cm">  ← LÕI</span></div>
+        <div class="trow" id="f-gen" data-born="1"><span class="seqslot"></span><span class="pre">│  ├─ </span><span class="nm">gen-converters.py</span></div>
+        <div class="trow" id="f-demo" data-born="1"><span class="seqslot"></span><span class="pre">│  ├─ </span><span class="nm">demo.sh</span><span class="cm">  (13)</span></div>
+        <div class="trow" id="f-test" data-born="1"><span class="seqslot"></span><span class="pre">│  ├─ </span><span class="nm">test-broad.sh</span><span class="cm">  (54)</span></div>
+        <div class="trow dir" id="f-out" data-born="3"><span class="seqslot"></span><span class="pre">│  └─ </span><span class="nm">out/</span><span class="cm">  (sinh ra, gitignore)</span></div>
         <div class="trow" id="f-claude" data-born="-1"><span class="seqslot"></span><span class="pre">├─ </span><span class="nm">.claude/settings.json</span><span class="cm">  (vendor có sẵn)</span></div>
         <div class="trow" id="f-opencode" data-born="-1"><span class="seqslot"></span><span class="pre">├─ </span><span class="nm">opencode.json</span><span class="cm">  (vendor có sẵn)</span></div>
-        <div class="trow" id="f-ciyml" data-born="3"><span class="seqslot"></span><span class="pre">├─ </span><span class="nm">.github/workflows/harness.yml</span></div>
-        <div class="trow" id="f-precommit" data-born="3"><span class="seqslot"></span><span class="pre">├─ </span><span class="nm">.pre-commit-config.yaml</span></div>
-        <div class="trow" id="f-wiki" data-born="6"><span class="seqslot"></span><span class="pre">├─ </span><span class="nm">llmwiki/wiki/concepts/x.md</span></div>
+        <div class="trow" id="f-ciyml" data-born="4"><span class="seqslot"></span><span class="pre">├─ </span><span class="nm">.github/workflows/harness.yml</span></div>
+        <div class="trow" id="f-precommit" data-born="4"><span class="seqslot"></span><span class="pre">├─ </span><span class="nm">.pre-commit-config.yaml</span></div>
+        <div class="trow" id="f-wiki" data-born="7"><span class="seqslot"></span><span class="pre">├─ </span><span class="nm">llmwiki/wiki/concepts/x.md</span></div>
         <div class="trow" id="f-raw" data-born="99"><span class="seqslot"></span><span class="pre">└─ </span><span class="nm">llmwiki/raw/x.md</span><span class="cm">  (inbox người)</span></div>
       </div>
       <div class="cursor" id="cursor">
@@ -197,6 +197,10 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
 
 <script>
 const STEPS = [
+  // ── TRƯỚC KHI CÀI (frame trống mặc định) ──
+  {ph:'install', sp:'BAN ĐẦU', h:'Dự án ban đầu — chưa cài harness',
+   d:'Repo của bạn (có thể đã dùng Claude/opencode → có sẵn .claude/settings.json, opencode.json). Harness CHƯA có file nào — phần harness của cây bên phải TRỐNG. Installer sắp chạy.',
+   flow:'project: chỉ vendor config sẵn có · harness = TRỐNG', chain:['c-install']},
   // ── CÀI ĐẶT ──
   {ph:'install', sp:'CÀI · B0', h:'Đặt lõi vào repo',
    d:'Copy 2 file lõi vào harness/. Đây là toàn bộ "bộ não": luật + trình kiểm. Chưa cắm vendor nào.',
