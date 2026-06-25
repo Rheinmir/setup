@@ -99,11 +99,6 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
   filter:drop-shadow(0 2px 5px rgba(10,132,255,.45))}
 .cursor.deny{filter:drop-shadow(0 2px 6px rgba(255,45,85,.5))}
 .cursor.ok{filter:drop-shadow(0 2px 6px rgba(52,199,89,.5))}
-.wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:4;overflow:visible}
-.wire{fill:none;stroke:#0a84ff;stroke-width:2;stroke-dasharray:5 6;stroke-linejoin:round;stroke-linecap:round;
-  opacity:.85;animation:dash .7s linear infinite}
-.wire.deny{stroke:#e0264b}.wire.ok{stroke:#28a745}
-@keyframes dash{to{stroke-dashoffset:-22}}
 .verdict{position:absolute;z-index:8;font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;opacity:0;
   transform:translateY(4px) scale(.9);transition:opacity .3s,transform .3s;pointer-events:none;white-space:nowrap;
   box-shadow:0 4px 14px rgba(0,0,0,.18)}
@@ -120,6 +115,22 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
 .legend{margin-top:18px;display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--text-2)}
 .legend span{display:inline-flex;align-items:center;gap:6px}.legend i{width:18px;height:0;border-top:2px dashed #0a84ff}
 .legend i.d{border-color:#e0264b}.legend i.o{border-color:#28a745}
+/* seq number rail (đầu mỗi dòng — đọc được khi pause) */
+.seqslot{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;margin-right:8px;border-radius:50%;font-size:10px;font-weight:800;flex:0 0 auto;background:transparent;color:transparent;border:1px solid rgba(30,90,170,.10);transition:background .2s,color .2s,border-color .2s}
+.seqslot.on{background:#0a84ff;color:#fff;border-color:transparent}
+.seqslot.deny{background:#e0264b;color:#fff;border-color:transparent}
+.seqslot.ok{background:#28a745;color:#fff;border-color:transparent}
+.seqslot.warn{background:#f0902a;color:#fff;border-color:transparent}
+.chip{display:inline-flex;align-items:center}.chip .seqslot{width:15px;height:15px;margin-right:6px;font-size:9px}
+/* ghost = file CHƯA tạo ở thời điểm này */
+.trow.ghost{opacity:.45}.trow.ghost .nm{color:#aeb6c2;font-style:italic}.trow.ghost .cm{opacity:.45}
+.trow.ghost::after{content:' · chưa tạo';color:#c79a52;font-style:italic;font-size:11px}
+.trow.born-now{animation:bornpop .8s ease}
+@keyframes bornpop{0%{transform:scale(.92);background:rgba(52,199,89,.4)}45%{background:rgba(52,199,89,.22)}100%{transform:scale(1);background:transparent}}
+.trow.attempt .nm{color:#e0264b;text-decoration:line-through}
+.trow.attempt::after{content:' · CHẶN, không tạo';color:#e0264b;font-style:italic;font-size:11px}
+/* con trỏ = mũi tên phải, nằm GUTTER trái — không che nội dung */
+.cursor{transition:left .32s ease,top .5s cubic-bezier(.5,0,.15,1)}
 </style>
 </head>
 <body>
@@ -127,13 +138,13 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
   <header class="hero">
     <span class="eyebrow">Life cycle tương tác · 25/06/2026</span>
     <h1>Harness chạy thế nào — từ lúc cài về tới lúc hoạt động</h1>
-    <p>Trái: từng bước tuần tự (cài đặt → chạy). Phải: cây thư mục với <strong>con trỏ chạy từ controller → file được gọi</strong> cho đúng bước đó. Bấm 1 bước để nhảy tới, hoặc để nó tự chạy.</p>
+    <p>Trái: từng bước tuần tự (cài đặt → chạy). Phải: cây thư mục — <strong>mũi tên ở đầu dòng trỏ vào file được gọi</strong>, mỗi node đánh <strong>số thứ tự</strong> nên dừng lại vẫn đọc được luồng. <strong>File hiện dần</strong> đúng lúc nó được tạo (lúc mới cài chưa có gì). Mặc định đứng yên ở frame đầy đủ; bấm ▶ để xem hoạt họa, hoặc bấm 1 bước để nhảy tới.</p>
     <div class="back"><a href="250626-harness-cli-docs.html">← về docs chi tiết (cách hoạt động & cài đặt)</a></div>
   </header>
 
   <div class="controls">
     <button id="prev">⏮ Trước</button>
-    <button id="play">⏸ Tạm dừng</button>
+    <button id="play">▶ Chạy</button>
     <button id="next">Sau ⏭</button>
     <span class="phase install" id="phase">CÀI ĐẶT</span>
     <span class="prog" id="prog">1 / 9</span>
@@ -152,29 +163,28 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
         <span class="ttl">project/ (Rheinmir/setup@orca)</span>
       </div>
       <div class="controllers">
-        <span class="chip" id="c-install">▶ installer</span>
-        <span class="chip" id="c-agent">🤖 agent (Claude…)</span>
-        <span class="chip" id="c-git">git commit</span>
-        <span class="chip" id="c-ci">CI runner</span>
+        <span class="chip" id="c-install"><span class="seqslot"></span>▶ installer</span>
+        <span class="chip" id="c-agent"><span class="seqslot"></span>🤖 agent</span>
+        <span class="chip" id="c-git"><span class="seqslot"></span>git commit</span>
+        <span class="chip" id="c-ci"><span class="seqslot"></span>CI runner</span>
       </div>
-      <svg class="wires" id="wires"><polyline class="wire" id="wire" points=""></polyline></svg>
       <div class="tree" id="tree">
-        <div class="trow dir"><span class="pre">harness/poc-vendor-neutral/</span></div>
-        <div class="trow" id="f-policy"><span class="pre">│  ├─ </span><span class="nm">policy.yaml</span><span class="cm">   ← luật</span></div>
-        <div class="trow" id="f-cli"><span class="pre">│  ├─ </span><span class="nm">bin/llmwiki-validate.py</span><span class="cm">  ← LÕI</span></div>
-        <div class="trow" id="f-gen"><span class="pre">│  ├─ </span><span class="nm">gen-converters.py</span></div>
-        <div class="trow" id="f-demo"><span class="pre">│  ├─ </span><span class="nm">demo.sh</span><span class="cm">  (13)</span></div>
-        <div class="trow" id="f-test"><span class="pre">│  ├─ </span><span class="nm">test-broad.sh</span><span class="cm">  (54)</span></div>
-        <div class="trow dir" id="f-out"><span class="pre">│  └─ </span><span class="nm">out/</span><span class="cm">  (sinh ra, gitignore)</span></div>
-        <div class="trow" id="f-claude"><span class="pre">├─ </span><span class="nm">.claude/settings.json</span></div>
-        <div class="trow" id="f-opencode"><span class="pre">├─ </span><span class="nm">opencode.json</span></div>
-        <div class="trow" id="f-ciyml"><span class="pre">├─ </span><span class="nm">.github/workflows/harness.yml</span></div>
-        <div class="trow" id="f-precommit"><span class="pre">├─ </span><span class="nm">.pre-commit-config.yaml</span></div>
-        <div class="trow" id="f-wiki"><span class="pre">├─ </span><span class="nm">llmwiki/wiki/concepts/x.md</span></div>
-        <div class="trow" id="f-raw"><span class="pre">└─ </span><span class="nm">llmwiki/raw/x.md</span><span class="cm">  (inbox người)</span></div>
+        <div class="trow dir" data-born="0"><span class="seqslot"></span><span class="pre">harness/poc-vendor-neutral/</span></div>
+        <div class="trow" id="f-policy" data-born="0"><span class="seqslot"></span><span class="pre">│  ├─ </span><span class="nm">policy.yaml</span><span class="cm">   ← luật</span></div>
+        <div class="trow" id="f-cli" data-born="0"><span class="seqslot"></span><span class="pre">│  ├─ </span><span class="nm">bin/llmwiki-validate.py</span><span class="cm">  ← LÕI</span></div>
+        <div class="trow" id="f-gen" data-born="0"><span class="seqslot"></span><span class="pre">│  ├─ </span><span class="nm">gen-converters.py</span></div>
+        <div class="trow" id="f-demo" data-born="0"><span class="seqslot"></span><span class="pre">│  ├─ </span><span class="nm">demo.sh</span><span class="cm">  (13)</span></div>
+        <div class="trow" id="f-test" data-born="0"><span class="seqslot"></span><span class="pre">│  ├─ </span><span class="nm">test-broad.sh</span><span class="cm">  (54)</span></div>
+        <div class="trow dir" id="f-out" data-born="2"><span class="seqslot"></span><span class="pre">│  └─ </span><span class="nm">out/</span><span class="cm">  (sinh ra, gitignore)</span></div>
+        <div class="trow" id="f-claude" data-born="-1"><span class="seqslot"></span><span class="pre">├─ </span><span class="nm">.claude/settings.json</span><span class="cm">  (vendor có sẵn)</span></div>
+        <div class="trow" id="f-opencode" data-born="-1"><span class="seqslot"></span><span class="pre">├─ </span><span class="nm">opencode.json</span><span class="cm">  (vendor có sẵn)</span></div>
+        <div class="trow" id="f-ciyml" data-born="3"><span class="seqslot"></span><span class="pre">├─ </span><span class="nm">.github/workflows/harness.yml</span></div>
+        <div class="trow" id="f-precommit" data-born="3"><span class="seqslot"></span><span class="pre">├─ </span><span class="nm">.pre-commit-config.yaml</span></div>
+        <div class="trow" id="f-wiki" data-born="6"><span class="seqslot"></span><span class="pre">├─ </span><span class="nm">llmwiki/wiki/concepts/x.md</span></div>
+        <div class="trow" id="f-raw" data-born="99"><span class="seqslot"></span><span class="pre">└─ </span><span class="nm">llmwiki/raw/x.md</span><span class="cm">  (inbox người)</span></div>
       </div>
       <div class="cursor" id="cursor">
-        <svg width="22" height="26" viewBox="0 0 22 26"><path d="M2 2 L2 19 L6.5 14.5 L10.5 23.5 L13.5 22 L9.5 13.5 L16 13.5 Z" fill="#0a84ff" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        <svg width="20" height="18" viewBox="0 0 20 18"><path d="M2 2 L2 16 L17 9 Z" fill="#0a84ff" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/></svg>
       </div>
       <div class="verdict" id="verdict"></div>
       <div class="leak" id="leak"></div>
@@ -228,7 +238,7 @@ const STEPS = [
 ];
 
 const stepsEl=document.getElementById('steps'), pane=document.getElementById('pane'),
-  cursor=document.getElementById('cursor'), wire=document.getElementById('wire'),
+  cursor=document.getElementById('cursor'),
   verdict=document.getElementById('verdict'), progEl=document.getElementById('prog'),
   phaseEl=document.getElementById('phase'), reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
 
@@ -241,60 +251,62 @@ const cards=STEPS.map((s,i)=>{
   stepsEl.appendChild(el); return el;
 });
 
-let cur=0, playing=!reduce, timers=[];
+let cur=0, playing=false, timers=[];
+const leakEl=document.getElementById('leak');
 const clear=()=>{timers.forEach(clearTimeout);timers=[]};
-const center=id=>{const el=document.getElementById(id);const pr=pane.getBoundingClientRect();const r=el.getBoundingClientRect();
-  return {x:r.left-pr.left+14, y:r.top-pr.top+r.height/2, el};};
+const at=id=>{const el=document.getElementById(id);const pr=pane.getBoundingClientRect();const r=el.getBoundingClientRect();
+  return {gx:Math.max(2,r.left-pr.left-22), y:r.top-pr.top+r.height/2, el};};
 function setPlayLabel(){document.getElementById('play').textContent=playing?'⏸ Tạm dừng':'▶ Chạy';}
 
-function go(i,auto){
-  clear();
-  cur=(i+STEPS.length)%STEPS.length;
+// file nào tồn tại tại bước i (born<=i); born=99 = không bao giờ (bị chặn)
+function applyBorn(i){document.querySelectorAll('.trow[data-born]').forEach(e=>{
+  const b=+e.dataset.born; e.classList.toggle('ghost', !(b!==99 && b<=i));});}
+
+function prep(){
   const s=STEPS[cur];
   cards.forEach((e,k)=>e.classList.toggle('active',k===cur));
   cards[cur].scrollIntoView({block:'nearest',behavior:'smooth'});
   progEl.textContent=(cur+1)+' / '+STEPS.length;
   phaseEl.textContent=s.ph==='install'?'CÀI ĐẶT':'CHẠY';
   phaseEl.className='phase '+(s.ph==='install'?'install':'run');
-  // reset visuals
-  document.querySelectorAll('.trow,.chip').forEach(e=>e.classList.remove('hit','deny','ok','warn'));
-  document.querySelectorAll('.trow').forEach(e=>e.classList.add('dim'));
-  verdict.className='verdict'; document.getElementById('leak').className='leak'; wire.setAttribute('points','');
-  const vk=s.verdict?s.verdict.kind:'';
-  wire.classList.remove('deny','ok'); cursor.classList.remove('deny','ok');
-  if(!s.leak){ if(vk==='deny'){wire.classList.add('deny');} if(vk==='ok'){wire.classList.add('ok');} }
-
-  const pts=s.chain.map(center);
-  const hop=reduce?0:640, baseDelay=reduce?0:120;
-  let acc=baseDelay;
-  pts.forEach((p,idx)=>{
-    timers.push(setTimeout(()=>{
-      cursor.style.left=p.x+'px'; cursor.style.top=(p.y-4)+'px';
-      p.el.classList.remove('dim');
-      const last=idx===pts.length-1, id=s.chain[idx];
-      p.el.classList.add('hit');
-      const mk=(s.marks&&s.marks[id])||(last&&vk?vk:'');
-      if(mk)p.el.classList.add(mk);
-      if(last&&vk)cursor.classList.add(vk);
-      if(s.leak===id){const lk=document.getElementById('leak');lk.textContent='⚠ lọt hook session';
-        lk.className='leak show';lk.style.left=Math.min(p.x+24,pane.clientWidth-150)+'px';lk.style.top=(p.y-12)+'px';}
-      const prev=wire.getAttribute('points');
-      wire.setAttribute('points',(prev?prev+' ':'')+p.x+','+p.y);
-      if(last&&s.verdict){
-        verdict.textContent=s.verdict.text;
-        verdict.className='verdict '+s.verdict.kind+' show';
-        verdict.style.left=Math.min(p.x+24, pane.clientWidth-150)+'px';
-        verdict.style.top=(p.y-12)+'px';
-      }
-    }, acc));
-    acc+=hop;
-  });
-  if(playing){timers.push(setTimeout(()=>go(cur+1,true), acc+ (reduce?1500:1300)));}
+  document.querySelectorAll('.trow,.chip').forEach(e=>e.classList.remove('hit','deny','ok','warn','attempt','born-now','dim'));
+  document.querySelectorAll('.seqslot').forEach(s2=>{s2.textContent='';s2.className='seqslot';});
+  verdict.className='verdict'; leakEl.className='leak'; cursor.classList.remove('deny','ok');
+  applyBorn(cur);
+  const inChain=new Set(s.chain);
+  document.querySelectorAll('.trow').forEach(e=>{ if(e.id&&!inChain.has(e.id)&&!e.classList.contains('ghost')) e.classList.add('dim'); });
+  return s;
 }
+function paint(idx,s){
+  const id=s.chain[idx], last=idx===s.chain.length-1, vk=s.verdict?s.verdict.kind:'';
+  const el=document.getElementById(id), p=at(id);
+  el.classList.remove('dim','ghost');
+  if(id==='f-raw') el.classList.add('attempt');
+  el.classList.add('hit');
+  const mk=(s.marks&&s.marks[id])||(last&&vk?vk:'');
+  if(mk) el.classList.add(mk);
+  const slot=el.querySelector('.seqslot'); if(slot){slot.textContent=idx+1; slot.className='seqslot on '+(mk||'');}
+  cursor.style.left=p.gx+'px'; cursor.style.top=(p.y-9)+'px'; if(last&&vk)cursor.classList.add(vk);
+  if(s.leak===id){leakEl.textContent='⚠ lọt hook session';leakEl.className='leak warn show';
+    leakEl.style.left=Math.max(10,pane.clientWidth-178)+'px'; leakEl.style.top=(p.y-12)+'px';}
+  if(last&&s.verdict){verdict.textContent=s.verdict.text;verdict.className='verdict '+s.verdict.kind+' show';
+    verdict.style.left=Math.max(10,pane.clientWidth-(s.verdict.text.length*7+30))+'px'; verdict.style.top=(p.y-12)+'px';}
+}
+function flashBorn(){document.querySelectorAll('.trow[data-born]').forEach(e=>{if(+e.dataset.born===cur)e.classList.add('born-now');});}
+// TĨNH: frame đầy đủ (frame cuối của step) — mọi node đã đi qua, có số, có verdict
+function full(){const s=prep(); flashBorn(); s.chain.forEach((id,idx)=>paint(idx,s));}
+// CHẠY: con trỏ đi từng hop, file hiện dần
+function animate(){const s=prep();
+  let acc=reduce?0:160; const hop=reduce?0:560;
+  timers.push(setTimeout(flashBorn, acc));
+  s.chain.forEach((id,idx)=>{timers.push(setTimeout(()=>paint(idx,s),acc)); acc+=hop;});
+  if(playing) timers.push(setTimeout(()=>go(cur+1), acc+(reduce?1400:1200)));
+}
+function go(i){clear(); cur=(i+STEPS.length)%STEPS.length; playing?animate():full();}
 
 document.getElementById('prev').addEventListener('click',()=>{playing=false;setPlayLabel();go(cur-1)});
 document.getElementById('next').addEventListener('click',()=>{playing=false;setPlayLabel();go(cur+1)});
-document.getElementById('play').addEventListener('click',()=>{playing=!playing;setPlayLabel();if(playing)go(cur);});
+document.getElementById('play').addEventListener('click',()=>{playing=!playing;setPlayLabel();clear();playing?animate():full();});
 
 // ripple on controls
 document.addEventListener('pointerdown',e=>{const el=e.target.closest('.controls button');if(!el)return;
@@ -302,9 +314,9 @@ document.addEventListener('pointerdown',e=>{const el=e.target.closest('.controls
   const ink=document.createElement('span');ink.className='ripple-ink';ink.style.width=ink.style.height=rad*2+'px';ink.style.left=(x-rad)+'px';ink.style.top=(y-rad)+'px';
   el.appendChild(ink);ink.addEventListener('animationend',()=>ink.remove());});
 
-let rz; addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{const p=playing;playing=false;go(cur);playing=p;setPlayLabel();},200);});
+let rz; addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{clear();full();},200);});
 setPlayLabel();
-requestAnimationFrame(()=>setTimeout(()=>go(0,true),250));
+requestAnimationFrame(()=>setTimeout(()=>go(0),200));   // mặc định: TĨNH ở frame đầy đủ của step 1
 </script>
 </body>
 </html>
