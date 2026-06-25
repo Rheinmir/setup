@@ -235,39 +235,39 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
 const STEPS = [
   // ── TRƯỚC KHI CÀI (frame trống mặc định) ──
   {ph:'install', sp:'BAN ĐẦU', h:'Dự án ban đầu — chưa cài harness',
-   d:'Repo của bạn (có thể đã dùng Claude/opencode → có sẵn .claude/settings.json, opencode.json). Harness CHƯA có file nào — phần harness của cây bên phải TRỐNG. Installer sắp chạy.',
+   d:'Đây là dự án của bạn LÚC CHƯA cài harness. Nếu bạn đang dùng Claude Code hay opencode thì repo đã có sẵn file cấu hình của chúng (.claude/settings.json, opencode.json) — nên 2 file đó hiển thị sẵn. Còn harness (bộ luật + bộ kiểm tra) thì CHƯA có gì cả: nhìn cây thư mục bên phải, phần harness/ hoàn toàn trống. Bước kế tiếp mới bắt đầu cài.',
    flow:'project: chỉ vendor config sẵn có · harness = TRỐNG', chain:['c-install']},
   // ── CÀI ĐẶT ──
   {ph:'install', sp:'CÀI · B0', h:'Đặt lõi vào repo',
-   d:'Copy 2 file lõi vào harness/. Đây là toàn bộ "bộ não": luật + trình kiểm. Chưa cắm vendor nào.',
+   d:'Cài "bộ não" của harness vào repo bằng cách copy 2 file cốt lõi. policy.yaml = nơi GHI TẤT CẢ luật (ví dụ luật "cấm ghi vào thư mục raw/"). bin/llmwiki-validate.py = chương trình ĐỌC luật đó rồi quyết định cho qua hay chặn. Đi kèm còn có gen-converters.py và 2 file test. Lúc này mới chỉ có lõi, chưa nối với công cụ AI nào — các file vừa tạo nên gõ hiện dần ra ở cây bên phải.',
    flow:'installer → policy.yaml + llmwiki-validate.py', chain:['c-install','f-policy','f-cli'], role:{'f-policy':'dst','f-cli':'dst'}},
   {ph:'install', sp:'CÀI · B1', h:'Dò vendor đang dùng',
-   d:'Quét repo xem có .claude/, opencode.json, .kiro/… để biết cần sinh converter cho vendor nào.',
+   d:'Trình cài DÒ xem dự án đang dùng những công cụ AI nào, bằng cách xem có file cấu hình của chúng hay không: .claude/ là của Claude, opencode.json của opencode, .kiro/ của Kiro… Mục đích là chỉ tạo "đầu nối" (converter) cho đúng những công cụ bạn thật sự dùng, khỏi tạo thừa. Bước này chỉ ĐỌC để dò, không tạo file mới nào.',
    flow:'installer → dò .claude / opencode', chain:['c-install','f-claude','f-opencode'], role:{'f-claude':'src','f-opencode':'src'}},
   {ph:'install', sp:'CÀI · B2', h:'Sinh wiring từ policy',
-   d:'gen-converters.py ĐỌC policy.yaml rồi GHI ra out/<vendor>/. Một nguồn chân lý → nhiều dây nối.',
+   d:'Chạy gen-converters.py: nó ĐỌC file luật policy.yaml (nguồn) rồi GHI ra thư mục out/ một bộ cấu hình cho từng công cụ (đích). Ý chính: luật chỉ viết MỘT CHỖ duy nhất là policy.yaml; mỗi công cụ được sinh ra một đầu nối riêng từ đó. Nhờ vậy sửa luật một nơi thì mọi công cụ tự cập nhật theo. Thư mục out/ vừa được sinh ra nên hiện lên.',
    flow:'gen-converters.py: đọc policy.yaml → ghi out/', chain:['f-gen','f-policy','f-out'], role:{'f-policy':'src','f-out':'dst'}},
   {ph:'install', sp:'CÀI · B3', h:'Cắm wiring vào đúng chỗ',
-   d:'Copy file trong out/ tới settings.json của vendor + .github/workflows/ + pre-commit. Mỗi vendor 1 dây mỏng.',
+   d:'Đem các cấu hình vừa sinh trong out/ (NGUỒN) cắm vào đúng chỗ mà từng công cụ đọc (ĐÍCH): file settings của Claude, thư mục workflow của GitHub, và file pre-commit của git. Mỗi đầu nối chỉ là một đoạn cấu hình nhỏ trỏ ngược về cùng cái lõi, nên gọi là "dây mỏng". Đây đúng là động tác copy TỪ out/ TỚI nhiều đích — vì thế out/ tô màu nguồn (đọc), ba file kia tô màu đích (ghi).',
    flow:'out/ (nguồn) → .claude/settings · harness.yml · pre-commit (đích)', chain:['f-out','f-claude','f-ciyml','f-precommit'], role:{'f-out':'src','f-claude':'dst','f-ciyml':'dst','f-precommit':'dst'}},
   {ph:'install', sp:'CÀI · B4', h:'Verify',
-   d:'Chạy demo.sh + test-broad.sh = 67 assertion. Xanh hết thì cài xong, harness sẵn sàng.',
+   d:'Kiểm tra harness vừa cài có chạy đúng không, bằng cách chạy 2 bộ test có sẵn là demo.sh và test-broad.sh — tổng cộng 67 phép kiểm (mỗi "assertion" là một câu khẳng định "kết quả phải đúng như vầy"). Nếu cả 67 đều xanh thì coi như cài xong, harness đã sẵn sàng canh gác.',
    flow:'installer → demo.sh + test-broad.sh (67 ✓)', chain:['c-install','f-demo','f-test'], role:{'f-demo':'src','f-test':'src'}},
   // ── CHẠY ──
   {ph:'run', sp:'CHẠY · session ✗', h:'Agent định ghi raw/ → CHẶN',
-   d:'Claude muốn Write llmwiki/raw/x.md. PreToolUse hook bắt được → gọi llmwiki-validate claude-hook → đọc policy R1 → exit 2. Bị chặn NGAY trong phiên, file không bao giờ ra đời.',
+   d:'Harness đã chạy. Giả sử AI định GHI vào thư mục raw/ — nơi cấm agent ghi (raw/ là "hộp thư" của con người). TRƯỚC khi lệnh ghi kịp xảy ra, một cái "hook" (móc mà Claude Code gọi trước mỗi hành động) bắt được, rồi chuyển cho lõi kiểm tra. Lõi đọc luật R1 (luật "cấm ghi raw/") và trả về mã 2 = CHẶN. File raw/x.md không bao giờ được tạo. Đây là chặn NGAY trong lúc agent đang làm việc.',
    flow:'agent → (hook) settings.json → LÕI → policy R1 → DENY', chain:['c-agent','f-raw','f-claude','f-cli','f-policy'], role:{'f-policy':'src'}, verdict:{kind:'deny',text:'exit 2 · CHẶN (R1)'}},
   {ph:'run', sp:'CHẠY · session ✓', h:'Agent ghi wiki hợp lệ → CHO QUA',
-   d:'Write llmwiki/wiki/concepts/x.md CÓ "## Origin". Cùng đường hook → LÕI → policy, nhưng R2 thỏa → exit 0. Ghi bình thường.',
+   d:'Lần này AI ghi một file wiki HỢP LỆ: llmwiki/wiki/concepts/x.md, và trong file CÓ mục "## Origin" (luật R2 bắt mọi trang wiki phải ghi rõ nguồn gốc). Đi đúng con đường như trước: hook bắt → đưa cho lõi → lõi đọc luật. Vì luật R2 được thỏa nên lõi trả mã 0 = CHO QUA, file được ghi bình thường.',
    flow:'agent → settings.json → LÕI → policy R2 → OK', chain:['c-agent','f-wiki','f-claude','f-cli','f-policy'], role:{'f-wiki':'dst','f-policy':'src'}, verdict:{kind:'ok',text:'exit 0 · CHO QUA'}},
   {ph:'run', sp:'CHẠY · repo', h:'git commit → pre-commit',
-   d:'Lúc commit, pre-commit gọi LÕI ở mode files (layer=repo). R1 KHÔNG áp ở repo (người commit raw/ là hợp lệ); chỉ R2 áp cho file wiki đổi.',
+   d:'Khi bạn "commit" (lưu thay đổi vào git), một bước kiểm tự động tên pre-commit lại gọi đúng cái lõi đó, nhưng ở "tầng repo" — tức kiểm trên các file đã thay đổi, chứ không phải lúc agent đang gõ. Lưu ý: luật R1 (cấm ghi raw/) KHÔNG áp ở tầng này, vì CON NGƯỜI commit file vào raw/ là hợp lệ. Chỉ luật R2 (bắt buộc có ## Origin) được kiểm cho các file wiki vừa sửa.',
    flow:'git commit → pre-commit → LÕI files → policy', chain:['c-git','f-precommit','f-cli','f-policy'], role:{'f-policy':'src'}, verdict:{kind:'neutral',text:'layer=repo · chỉ R2'}},
   {ph:'run', sp:'CHẠY · CI', h:'Mở PR → CI (sàn đảm bảo)',
-   d:'GitHub chạy .github/workflows/harness.yml: job selftest (67 assertion) + validate file .md đổi. Đây là nơi nói "không" mà agent KHÔNG sửa được khi merge.',
+   d:'Khi bạn mở Pull Request lên GitHub, máy chủ CI tự chạy file .github/workflows/harness.yml: vừa chạy lại 67 phép test, vừa kiểm những file .md thay đổi bằng cùng cái lõi. Đây là "sàn đảm bảo" cuối cùng — nó nói "không" ở chỗ mà agent KHÔNG thể tự tắt hay lách được khi muốn gộp (merge) code vào nhánh chính.',
    flow:'CI → harness.yml → demo+broad+LÕI → ✓ merge', chain:['c-ci','f-ciyml','f-demo','f-test','f-cli'], role:{'f-demo':'src','f-test':'src'}, verdict:{kind:'ok',text:'✓ MERGE OK'}},
   {ph:'run', sp:'CHẠY · GAP → sàn CI', h:'Bypass lọt session → CI vẫn tóm',
-   d:'Agent dùng python3 -c "open(\'wiki/concepts/x.md\',\'w\')" ghi file THIẾU "## Origin". Lệnh python LỌT hook session — lõi soi bề mặt bash không bắt python (KNOWN GAP). NHƯNG khi mở PR, CI chạy validate-content → LÕI files → R2 áp ở layer repo → FAIL, chặn merge. Sàn CI tóm đúng cái session bỏ sót — đây là lý do đảm bảo neo ở CI, không ở hook.',
+   d:'Tình huống lách: AI không dùng lệnh Write mà chạy python3 -c "open(\'wiki/concepts/x.md\',\'w\')" để ghi một file THIẾU mục ## Origin. Lệnh python này LỌT qua hook trong phiên, vì lõi chỉ soi bề ngoài câu lệnh bash chứ không hiểu python (đây là lỗ hổng đã biết trước). NHƯNG khi mở PR, CI chạy lại và kiểm bằng luật R2 ở tầng repo, phát hiện thiếu Origin và CHẶN MERGE. Kết luận: hook trong phiên có thể bị lách, nên thứ THỰC SỰ đảm bảo là CI.',
    flow:'agent python -c → wiki/x.md [lọt hook] ⟶ CI → LÕI files → R2 → CHẶN MERGE',
    chain:['c-agent','f-wiki','c-ci','f-ciyml','f-cli','f-policy'],
    leak:'f-wiki', marks:{'f-wiki':'warn','f-policy':'deny'},
@@ -365,7 +365,7 @@ function full(){const s=prep(); revealBorn(cur); s.chain.forEach((id,idx)=>paint
 // CHẠY: caption stream như transcript = đồng hồ chính; file gõ dần; con trỏ trải đều theo nhịp. CHẬM, dễ theo dõi.
 function animate(){const s=prep();
   if(reduce){revealBorn(cur); s.chain.forEach((id,idx)=>paint(idx,s)); return;}
-  const per=30, capDur=Math.max(1600, s.d.length*per);      // tốc độ gõ — chậm để đọc kịp
+  const per=18, capDur=Math.max(1500, s.d.length*per);      // tốc độ gõ (text dài hơn nên nhanh hơn chút)
   typeText(document.getElementById('fcD'), s.d, per);
   const born=[...document.querySelectorAll('.trow[data-born]')].filter(e=>+e.dataset.born===cur);
   let bt=400; const slot=born.length?(capDur*0.55)/born.length:0;  // file gõ lần lượt trong nửa đầu
