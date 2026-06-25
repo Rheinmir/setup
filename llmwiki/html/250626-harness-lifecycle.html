@@ -145,7 +145,7 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
 .trow.attempt .nm{color:#e0264b;text-decoration:line-through}
 .trow.attempt::after{content:' · CHẶN, không tạo';color:#e0264b;font-style:italic;font-size:11px}
 /* con trỏ = mũi tên phải, nằm GUTTER trái — không che nội dung */
-.cursor{transition:left .32s ease,top .5s cubic-bezier(.5,0,.15,1);color:var(--ac,#0a84ff)}
+.cursor{transition:left .5s cubic-bezier(.45,.05,.2,1),top .5s cubic-bezier(.45,.05,.2,1),color .3s ease;will-change:left,top;color:var(--ac,#0a84ff)}
 .cursor.deny{color:#e0264b}.cursor.ok{color:#28a745}
 /* caption mô tả NGAY DƯỚI khung cây — đổi theo từng frame */
 .frame-cap{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);position:relative;z-index:3}
