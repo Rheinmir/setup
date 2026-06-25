@@ -1,0 +1,56 @@
+name: harness
+
+# Sàn đảm bảo của harness — chạy trên MỌI PR và push lên orca, KHÔNG phụ thuộc
+# vendor/hook nào (advisory rules bị lờ ở mọi agent non-Claude → CI là nơi nói "không"
+# mà không bypass được khi merge). Cả hai job đều gọi CÙNG một lõi llmwiki-validate.py.
+
+on:
+  pull_request:
+  push:
+    branches: [orca]
+
+permissions:
+  contents: read
+
+jobs:
+  selftest:
+    name: self-test lõi (demo 13 + broad 54 = 67 assertion)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: pip install pyyaml
+      - name: demo.sh (13 assertion)
+        run: bash harness/poc-vendor-neutral/demo.sh
+      - name: test-broad.sh (54 assertion)
+        run: bash harness/poc-vendor-neutral/test-broad.sh
+
+  validate-content:
+    name: validate file .md đổi (layer=repo)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: pip install pyyaml
+      - name: harness validator trên file .md thay đổi
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            base="${{ github.event.pull_request.base.sha }}"
+          else
+            base="${{ github.event.before }}"
+          fi
+          # base có thể rỗng / không tồn tại (push đầu, force) → lùi về HEAD~1
+          if [ -z "$base" ] || ! git cat-file -e "$base^{commit}" 2>/dev/null; then
+            base="$(git rev-parse HEAD~1 2>/dev/null || git rev-parse HEAD)"
+          fi
+          files=$(git diff --name-only "$base" HEAD | grep -E '\.md$' || true)
+          if [ -z "$files" ]; then echo "không có .md đổi — bỏ qua"; exit 0; fi
+          echo "kiểm tra:"; echo "$files" | sed 's/^/  /'
+          # shellcheck disable=SC2086
+          python3 harness/poc-vendor-neutral/bin/llmwiki-validate.py files $files

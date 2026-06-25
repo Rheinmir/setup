@@ -1,0 +1,34 @@
+# policy.yaml — NGUỒN CHÂN LÝ DUY NHẤT (PoC vendor-neutral).
+# Lõi `bin/llmwiki-validate.py` và `gen-converters.py` đều đọc file này.
+# Mirror R1/R2 của harness/policy.yaml nhưng ở dạng máy đọc được (glob, layer).
+#
+# enforce_at: 'session' = lúc agent định ghi (hook/CLI chặn ngay).
+#             'repo'    = lúc commit/PR (pre-commit + CI).
+# Đây là chỗ DÀY tùy ý — thêm luật ở đây, KHÔNG sửa code adapter.
+
+version: 1
+
+rules:
+  no_write_raw:
+    id: R1
+    name: no-write-raw
+    kind: deny_write
+    statement: "raw/ là inbox của con người — agent chỉ được đọc, không ghi."
+    enforce_at: [session]          # KHÔNG repo: con người commit file raw/ là hợp lệ
+    deny_write_globs:
+      - "**/raw/**"
+      - "raw/**"
+
+  require_origin:
+    id: R2
+    name: origin-required
+    kind: require_section
+    statement: "Mọi wiki content file phải có section '## Origin' để truy được nguồn gốc."
+    enforce_at: [session, repo]
+    require_section: "## Origin"
+    target_globs:
+      - "**/wiki/concepts/**/*.md"
+      - "**/wiki/entities/**/*.md"
+      - "**/wiki/sources/**/*.md"
+      - "**/wiki/draft/**/*.md"
+    exclude_basenames: ["README.md", "_template.md", "index.md", "log.md"]

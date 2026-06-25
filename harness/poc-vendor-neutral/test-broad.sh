@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+# test-broad.sh — bộ test RỘNG cho lõi: false-positive, normalize, bash bypass,
+# require_origin biên, files-mode, claude-hook hỏng, và KNOWN GAPS (chứng minh vì sao cần CI).
+set -uo pipefail
+cd "$(dirname "$0")"
+CLI="bin/llmwiki-validate.py"
+T=0; P=0; F=0
+assert(){ local want="$1" desc="$2" got="$3"; T=$((T+1))
+  if [ "$got" = "$want" ]; then P=$((P+1)); printf '  \033[1;32mok\033[0m  %s\n' "$desc"
+  else F=$((F+1)); printf '  \033[1;31mNO\033[0m  %s \033[2m(want %s got %s)\033[0m\n' "$desc" "$want" "$got"; fi; }
+pm(){ python3 "$CLI" path "$1" >/dev/null 2>&1; }                 # path mode
+hk(){ printf '%s' "$1" | python3 "$CLI" claude-hook >/dev/null 2>&1; }  # claude-hook mode
+
+echo "── A. no_write_raw · path (block=2) ──"
+pm "llmwiki/raw/x.md";                 assert 2 "raw/ trực tiếp" $?
+pm "raw/x.md";                         assert 2 "raw/ không prefix" $?
+pm "./llmwiki/raw/x.md";               assert 2 "leading ./" $?
+pm "llmwiki/raw/a/b/c.md";             assert 2 "raw/ lồng sâu" $?
+pm "/Users/me/p/llmwiki/raw/x.md";     assert 2 "đường tuyệt đối" $?
+pm "wiki/sources/draft/raw/x.md";      assert 2 "raw/ nằm sâu trong cây" $?
+pm 'llmwiki\raw\x.md';                 assert 2 "backslash (Windows) normalize" $?
+
+echo "── A'. FALSE-POSITIVE guard (phải KHÔNG chặn = 0) ──"
+pm "llmwiki/wiki/concepts/coleslaw.md"; assert 0 "coleslaw.md (chứa 'raw')" $?
+pm "llmwiki/wiki/concepts/draw.md";     assert 0 "draw.md (chứa 'raw')" $?
+pm "llmwiki/raws/x.md";                 assert 0 "raws/ (không phải raw)" $?
+pm "myraw/x.md";                        assert 0 "myraw/ (raw dính từ khác)" $?
+pm "src/app.ts";                        assert 0 "file thường" $?
+
+echo "── B. bash ghi raw/ (claude-hook, block=2) ──"
+hk '{"tool_name":"Bash","tool_input":{"command":"echo hi > llmwiki/raw/x.md"}}';   assert 2 "redirect >" $?
+hk '{"tool_name":"Bash","tool_input":{"command":"echo hi >> llmwiki/raw/x.md"}}';  assert 2 "append >>" $?
+hk '{"tool_name":"Bash","tool_input":{"command":"tee llmwiki/raw/x.md"}}';         assert 2 "tee" $?
+hk '{"tool_name":"Bash","tool_input":{"command":"tee -a llmwiki/raw/x.md"}}';      assert 2 "tee -a" $?
+hk '{"tool_name":"Bash","tool_input":{"command":"touch llmwiki/raw/x.md"}}';       assert 2 "touch" $?
+hk '{"tool_name":"Bash","tool_input":{"command":"cp a.md llmwiki/raw/"}}';         assert 2 "cp đích raw/" $?
+hk '{"tool_name":"Bash","tool_input":{"command":"sed -i.bak llmwiki/raw/x.md"}}'; assert 2 "sed -i.bak <file raw> (file ngay sau -i)" $?
+
+echo "── B'. bash hợp lệ (đọc / ghi nơi khác / mv RA khỏi raw = 0) ──"
+hk '{"tool_name":"Bash","tool_input":{"command":"cat llmwiki/raw/x.md"}}';          assert 0 "cat (đọc raw)" $?
+hk '{"tool_name":"Bash","tool_input":{"command":"grep foo llmwiki/raw/x.md"}}';     assert 0 "grep (đọc raw)" $?
+hk '{"tool_name":"Bash","tool_input":{"command":"ls llmwiki/raw/"}}';               assert 0 "ls raw/" $?
+hk '{"tool_name":"Bash","tool_input":{"command":"mv llmwiki/raw/x.md /tmp/out.md"}}'; assert 0 "mv RA khỏi raw" $?
+hk '{"tool_name":"Bash","tool_input":{"command":"echo hi > llmwiki/wiki/notes.md"}}'; assert 0 "redirect nơi khác" $?
+
+echo "── C. KNOWN GAPS — lõi session soi bề mặt, KHÔNG bắt (đúng như đã verify) ──"
+echo "      → đây là LÝ DO sàn đảm bảo phải ở CI/sandbox, không phải hook regex."
+hk '{"tool_name":"Bash","tool_input":{"command":"python3 -c \"open('llmwiki/raw/x.md','w')\""}}'; assert 0 "GAP: python -c open(w) né regex" $?
+hk '{"tool_name":"Bash","tool_input":{"command":"rm llmwiki/raw/x.md"}}';           assert 0 "GAP: rm raw/ (xóa không phải write)" $?
+hk '{"tool_name":"Bash","tool_input":{"command":"sed -i s/a/b/ llmwiki/raw/x.md"}}'; assert 0 "GAP: sed -i <expr> trước path" $?
+
+echo "── D. require_origin (claude-hook Write/Edit) ──"
+hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/a.md","content":"# a\n## Origin\n- s"}}'; assert 0 "concept CÓ Origin" $?
+hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/b.md","content":"# b"}}';                assert 2 "concept THIẾU Origin" $?
+hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/c.md","content":"# c\n##  Origin\n"}}';  assert 0 "## + 2 space Origin (linh hoạt)" $?
+hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/d.md","content":"# d\n## Origins\n"}}';  assert 2 "## Origins (≠ Origin, chặt biên)" $?
+hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/e.md","content":"# e\n### Origin\n"}}';  assert 2 "### Origin (h3 không tính)" $?
+hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/entities/f.md","content":"# f"}}';               assert 2 "entities thiếu Origin" $?
+hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/sources/draft/g.md","content":"# g"}}';          assert 2 "sources/draft thiếu Origin" $?
+hk '{"tool_name":"Edit","tool_input":{"file_path":"llmwiki/wiki/concepts/h.md","content":"# h"}}';                assert 2 "Edit (không chỉ Write) cũng soi" $?
+hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/README.md","content":"x"}}';            assert 0 "README.md miễn trừ" $?
+hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/index.md","content":"x"}}';             assert 0 "index.md miễn trừ" $?
+hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/architecture/z.md","content":"x"}}';             assert 0 "architecture/ ngoài target → bỏ qua" $?
+hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/note.txt","content":"x"}}';             assert 0 ".txt ngoài *.md → bỏ qua" $?
+
+echo "── E. files mode (layer=repo) ──"
+tmp="$(mktemp -d)"; mkdir -p "$tmp/llmwiki/raw" "$tmp/llmwiki/wiki/concepts" "$tmp/llmwiki/wiki/entities"
+printf 'human inbox\n'        > "$tmp/llmwiki/raw/human.md"
+printf '# g\n## Origin\n- s\n' > "$tmp/llmwiki/wiki/concepts/good.md"
+printf '# b no origin\n'      > "$tmp/llmwiki/wiki/concepts/bad.md"
+printf '# e no origin\n'      > "$tmp/llmwiki/wiki/entities/bad.md"
+python3 "$CLI" files "$tmp/llmwiki/raw/human.md" >/dev/null 2>&1;            assert 0 "repo: raw/ con người commit OK (R1 session-only)" $?
+python3 "$CLI" files "$tmp/llmwiki/wiki/concepts/good.md" >/dev/null 2>&1;   assert 0 "repo: concept tốt" $?
+python3 "$CLI" files "$tmp/llmwiki/wiki/concepts/bad.md" >/dev/null 2>&1;    assert 1 "repo: concept thiếu Origin fail" $?
+python3 "$CLI" files "$tmp/llmwiki/wiki/concepts/good.md" "$tmp/llmwiki/wiki/entities/bad.md" >/dev/null 2>&1; assert 1 "repo: lô [tốt,xấu] → fail" $?
+python3 "$CLI" files "$tmp/llmwiki/wiki/concepts/nope.md" >/dev/null 2>&1;   assert 0 "repo: file không tồn tại → bỏ qua" $?
+rm -rf "$tmp"
+
+echo "── F. claude-hook robustness (fail-open / không áp dụng = 0) ──"
+hk '{';                                                              assert 0 "JSON hỏng → fail-open" $?
+printf '' | python3 "$CLI" claude-hook >/dev/null 2>&1;             assert 0 "stdin rỗng → fail-open" $?
+hk '{"tool_name":"Read","tool_input":{"file_path":"llmwiki/raw/x.md"}}'; assert 0 "tool Read (không phải write) → 0" $?
+hk '{"tool_name":"Write"}';                                         assert 0 "thiếu tool_input → 0" $?
+hk '{"tool_name":"MultiEdit","tool_input":{"file_path":"llmwiki/raw/x.md"}}'; assert 2 "MultiEdit→raw/ vẫn chặn" $?
+
+echo "── G. mode/policy robustness ──"
+python3 "$CLI" frobnicate x >/dev/null 2>&1;                        assert 0 "mode lạ → fail-open" $?
+python3 "$CLI" --policy /no/such.yaml path llmwiki/raw/x.md >/dev/null 2>&1; assert 0 "policy thiếu → fail-open" $?
+python3 "$CLI" path "" >/dev/null 2>&1;                             assert 0 "path rỗng → 0" $?
+
+echo "── H. reason đúng rule (grep stderr) ──"
+r=$(hk_err(){ printf '%s' "$1" | python3 "$CLI" claude-hook 2>&1 >/dev/null; }; hk_err '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/raw/x.md","content":"x"}}')
+case "$r" in *R1*) assert 0 "raw/ báo đúng [R1]" 0;; *) assert 0 "raw/ báo đúng [R1]" 1;; esac
+r=$(hk_err2(){ printf '%s' "$1" | python3 "$CLI" claude-hook 2>&1 >/dev/null; }; hk_err2 '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/x.md","content":"# x"}}')
+case "$r" in *R2*) assert 0 "thiếu Origin báo đúng [R2]" 0;; *) assert 0 "thiếu Origin báo đúng [R2]" 1;; esac
+
+echo
+printf '\033[1mTỔNG: %d test · %d PASS · %d FAIL\033[0m\n' "$T" "$P" "$F"
+[ "$F" = 0 ] || exit 1
