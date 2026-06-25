@@ -44,6 +44,14 @@ Quy trình tự động trong script (`--full`): fetch remote `version.json`+`ma
 
 > ⚠ Bug đã fix: `health-check --update` đặt baseline = disk → sync KHÔNG phân biệt được "remote mới" vs "mình đã custom" → suýt ghi đè file custom. Script này dùng baseline riêng `remote_synced` (hash remote tại lần sync) nên phân biệt đúng. **Đừng** quay lại dùng `patterns` (disk) làm baseline phân loại.
 
+> 🕳️ **LỖ HỔNG legacy — `version.json` THIẾU hẳn `remote_synced` (bài học 250626):** project tạo bởi tool CŨ không có key `remote_synced` → sync **không có baseline R0** → phân loại **KEPT cho MỌI DIFF** → **che file thật sự behind** (thực tế: `orca-onboard.md` stub 16 dòng vs remote 713; `docs-site-macos-skill.md` 270 vs 817 — đều bị giữ lại như "custom"). Triệu chứng: `--full` báo `kept-local` cao bất thường (vd 22) + `version.json` không có key `remote_synced`.
+> **Khắc phục (đúng thứ tự):**
+> 1. Sau `--full`, **AUDIT** các file KEPT bằng so size/hash THẬT local↔remote: `curl -s "$BASE/$f" | md5` + `wc -l` — file **remote >> local** (hoặc local là stub) = **behind thật**, KHÔNG phải custom.
+> 2. **Pull tay** đúng nhóm behind (backup `.local-bak` trước): `cp $f $f.local-bak; curl -sfL "$BASE/$f" -o $f`. KHÔNG `--strategy pull` toàn bộ (đè cả file project-specific).
+> 3. Chạy `--full` **lần 2** → script tự **seed `remote_synced`** vào `version.json` → từ đây phân loại đúng (`UPDATE` vs `KEPT`).
+> 4. ⛔ **TUYỆT ĐỐI không chạy `health-check --update` SAU `--full`** — nó xoá `remote_synced` vừa seed, đưa baseline về disk → tái lập lỗ hổng.
+> Phân biệt khi audit: `llmwiki/CLAUDE.md`/`AGENT.md` = file TEMPLATE (guideline wiki, nên sync) ≠ `CLAUDE.md` ở ROOT project (instruction riêng, KHÔNG đụng — không nằm trong manifest).
+
 ---
 
 ## MANUAL STEPS (fallback — upstream, migrate cấu trúc cũ, hoặc debug)
