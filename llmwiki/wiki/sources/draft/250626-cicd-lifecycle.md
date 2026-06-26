@@ -1,8 +1,14 @@
+---
+type: draft
+title: 250626-cicd-lifecycle
+status: proposed
+tags: [cursor-animated-sites, output-report]
+timestamp: 2026-06-25
+---
+
 # 250626-cicd-lifecycle
-**Type:** draft
+
 **Status:** proposed
-**Tags:** cursor-animated-sites, output-report
-**Proposed:** 2026-06-25
 
 ## What
 Trang walkthrough tương tác cho luồng CI/CD (push → pipeline → deploy → rollback), tạo bằng skill `/cursor-animated-sites` để kiểm chứng skill chạy đúng.

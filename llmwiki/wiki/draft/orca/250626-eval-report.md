@@ -1,9 +1,14 @@
+---
+type: draft
+title: 250626-eval-report
+status: proposed
+tags: [orca-eval, eval-report]
+timestamp: 2026-06-25
+---
+
 # 250626-eval-report
-**Type:** draft
+
 **Status:** proposed
-**Tags:** orca-eval, eval-report
-**Proposed:** 2026-06-25
-**Scope:** session hiện tại — xây `llmwiki/html/250626-harness-lifecycle.html`
 
 ## Best practices
 | # | Tín hiệu | Loại | Bằng chứng (trích ngắn) |
