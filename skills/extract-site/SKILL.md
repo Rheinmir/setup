@@ -68,6 +68,33 @@ Analyze GitHub's design system
 
 ---
 
+## Mode 3: Full-Clone — rebuild to working code
+
+Mặc định extract-site cho ra *design system* (token → DESIGN.md/css/json). Khi user muốn
+**dựng lại nguyên trang thành code chạy được** (pixel-perfect, ví dụ Next.js + shadcn),
+chuyển sang chế độ foreman — distilled từ `ai-website-cloner-template` (MIT). Cùng cửa kích
+hoạt "trỏ vào 1 website", chỉ khác độ cao đầu ra (code thay vì tài liệu).
+
+**Foreman pipeline:** recon → viết spec file mỗi section → dispatch builder song song
+(Agent tool `isolation:"worktree"` hoặc `cavecrew-builder`) → merge → visual QA. Extraction và
+build chồng nhau; spec là **hợp đồng gửi inline** cho builder (builder không đọc doc ngoài).
+
+**Nguyên tắc bất di bất dịch (mỗi cái từng tốn nhiều giờ rework):**
+- Xác định **interaction model TRƯỚC khi build** (scroll- vs click-driven). Sai = viết lại, không phải sửa CSS — #1 đắt nhất. Đừng click trước, cuộn chậm xem cái gì tự đổi đã.
+- Trích **giá trị computed chính xác** (`getComputedStyle`), không ước lượng; bắt **mọi state**, không chỉ default (diff state-A vs state-B = đặc tả hành vi).
+- **Asset thật**, kể cả ảnh overlay xếp lớp; build luôn `tsc --noEmit` pass.
+- Spec >150 dòng → tách nhỏ section (kiểm tra cơ học).
+
+**Browser:** dùng `computer-use` (đã có sẵn trong stack) hoặc Chrome MCP — không cần cài thêm.
+
+**Assets** (`assets/`):
+- `extract-component-styles.js` — DOM-walker dump computed CSS mỗi node (depth ≤4)
+- `enumerate-assets.js` — liệt kê img/video/bg/svg/font/favicon (cả overlay xếp lớp)
+- `component-spec-template.md` — mẫu hợp đồng builder
+- `inspection-checklist.md` — checklist reverse-engineer 5 phase (token → inventory → layout → stack)
+
+---
+
 ## Output Structure
 
 All generated files are saved in the `themes/{brand-slug}/` directory:

@@ -44,14 +44,6 @@ Quy trình tự động trong script (`--full`): fetch remote `version.json`+`ma
 
 > ⚠ Bug đã fix: `health-check --update` đặt baseline = disk → sync KHÔNG phân biệt được "remote mới" vs "mình đã custom" → suýt ghi đè file custom. Script này dùng baseline riêng `remote_synced` (hash remote tại lần sync) nên phân biệt đúng. **Đừng** quay lại dùng `patterns` (disk) làm baseline phân loại.
 
-> 🕳️ **LỖ HỔNG legacy — `version.json` THIẾU hẳn `remote_synced` (bài học 250626):** project tạo bởi tool CŨ không có key `remote_synced` → sync **không có baseline R0** → phân loại **KEPT cho MỌI DIFF** → **che file thật sự behind** (thực tế: `orca-onboard.md` stub 16 dòng vs remote 713; `docs-site-macos-skill.md` 270 vs 817 — đều bị giữ lại như "custom"). Triệu chứng: `--full` báo `kept-local` cao bất thường (vd 22) + `version.json` không có key `remote_synced`.
-> **Khắc phục (đúng thứ tự):**
-> 1. Sau `--full`, **AUDIT** các file KEPT bằng so size/hash THẬT local↔remote: `curl -s "$BASE/$f" | md5` + `wc -l` — file **remote >> local** (hoặc local là stub) = **behind thật**, KHÔNG phải custom.
-> 2. **Pull tay** đúng nhóm behind (backup `.local-bak` trước): `cp $f $f.local-bak; curl -sfL "$BASE/$f" -o $f`. KHÔNG `--strategy pull` toàn bộ (đè cả file project-specific).
-> 3. Chạy `--full` **lần 2** → script tự **seed `remote_synced`** vào `version.json` → từ đây phân loại đúng (`UPDATE` vs `KEPT`).
-> 4. ⛔ **TUYỆT ĐỐI không chạy `health-check --update` SAU `--full`** — nó xoá `remote_synced` vừa seed, đưa baseline về disk → tái lập lỗ hổng.
-> Phân biệt khi audit: `llmwiki/CLAUDE.md`/`AGENT.md` = file TEMPLATE (guideline wiki, nên sync) ≠ `CLAUDE.md` ở ROOT project (instruction riêng, KHÔNG đụng — không nằm trong manifest).
-
 ---
 
 ## MANUAL STEPS (fallback — upstream, migrate cấu trúc cũ, hoặc debug)
@@ -199,3 +191,51 @@ Fix `✗` before done. No restart needed.
 - `[MISSING]`: add to manifest AFTER downstream copy.
 - Frontmatter: `name:` + `description:` for skills; `description:` only for slash commands.
 - Skip `README.md`, `index.md`, `log.md`, no-Purpose/Steps files.
+
+---
+
+## Output Report
+
+After all main skill tasks complete, write a propose draft to the wiki.
+
+### Steps
+
+**1. Build the filename:**
+- Format: `DDMMYY-<ten>.md`
+- `DDMMYY` = today (e.g., `020626` for 2 June 2026)
+- `<ten>` = 2–4 kebab-case words summarising what was done (e.g., `landing-page-coteccons`, `brand-kit-fintech`, `ingest-auth-spec`)
+
+**2. Write** `llmwiki/wiki/sources/draft/DDMMYY-<ten>.md`:
+
+```
+# DDMMYY-<ten>
+**Type:** draft
+**Status:** proposed
+**Tags:** <skill-name>, output-report
+**Proposed:** YYYY-MM-DD
+
+## What
+<One sentence — what this skill invocation produced or decided>
+
+## Output
+<Key artefacts, files created/modified, or decisions made>
+
+## Files
+| File | Action |
+|------|--------|
+| `path/to/file` | created / modified |
+
+## Notes
+- Invoked via: `/<skill-name>` skill
+
+## Origin
+- **Draft:** `wiki/sources/draft/DDMMYY-<ten>.md`
+- **Commit:** _(filled by verify-before-commit)_
+- **Date promoted:** _(filled by verify-before-commit)_
+```
+
+**3. Update wiki index & log:**
+- `llmwiki/wiki/index.md` — append one row: `| [DDMMYY-<ten>](sources/draft/DDMMYY-<ten>.md) | draft | YYYY-MM-DD |`
+- `llmwiki/wiki/log.md` — append: `## YYYY-MM-DD — <skill-name> — <ten>`
+
+> Skip only when the skill produces zero artefacts and zero decisions (e.g., a pure display mode like `/caveman-stats`).

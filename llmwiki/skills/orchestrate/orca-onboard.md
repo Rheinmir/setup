@@ -453,6 +453,27 @@ echo "✅ Phase 1 done"
 # update_phase_status "Phase 1 —" "done"
 ```
 
+### 1.7 CODE-GRAPH MCP INDEX (optional — chỉ khi server `code-graph` có trong mcpServers)
+
+Tầng truy vấn quan hệ code **chính xác theo line** bổ sung cho graph distill ở trên: `search_symbols`, `get_callers/callees` cho impact-check tức thì. Server `code-graph` (`~/.claude.json → mcpServers`) ghi 1 db SQLite mỗi repo tại `<repo>/.graph-agent/index.db`.
+
+**Khi nào chạy:** project có submodule/repo code thật (Go/TS/Py…) và server `code-graph` đang khai báo. Bỏ qua nếu không có server.
+
+```bash
+# 1. Index từng repo code (auto-detect root từ .git/go.mod/package.json).
+#    Gọi MCP tool reindex_repo(<abs path repo>, force=true) cho MỖI repo code.
+#    Lưu ý: code có thể nằm ở SUBDIR của submodule (vd <sub>/<svc>/go.mod chứ không phải <sub>/).
+#    → trỏ vào thư mục chứa go.mod/package.json, không phải submodule root rỗng.
+# 2. reindex_repo tự thêm repo vào registry ~/.graph-agent/repos.txt
+#    → server --watch re-watch sau restart (durability).
+# 3. Verify: get_stats() phải thấy symbols thật (>0), không phải stub.
+echo "[1.7] code-graph: gọi reindex_repo cho mỗi repo code có manifest"
+```
+
+**Durability harness:** hook SessionStart `code_graph_keeper.py` (cài kèm install-harness.sh) tự re-register repo nếu rớt registry + cảnh báo repo chưa index. Fail-open, **no-op nếu project không dùng code-graph** (không có `.graph-agent/index.db` nào). KHÔNG reindex per-edit (watcher đã lo, debounce 2s). Sau đó ghi 1 wiki concept page `concepts/code-graph-nav.md` (cách dùng tool + ví dụ caller trace) để team biết dùng.
+
+> Freshness sau đó tự động: edit file → watcher reindex ~2s. Không cần reindex tay trừ khi clone mới hoặc đổi hàng loạt lúc server tắt.
+
 ---
 
 ## Phase 2 — Domain Enrichment
@@ -662,6 +683,72 @@ timestamp: YYYY-MM-DD
 # DDMMYY-<ten>
 
 **Status:** proposed
+
+## Agent Task Assignment
+| Task | Agent | Model | Status |
+|------|-------|-------|--------|
+| Phase 1 — Graph generation | agy /understand | Claude (agy) | done |
+| Phase 2 — Domain enrichment | Claude main | Sonnet | done |
+| Phase 3 — Wiki generation | opencode | DeepSeek Flash v4 | done |
+| Phase 4 — HTML docs | opencode | DeepSeek Flash v4 | done |
+
+## What
+<One sentence>
+
+## Output
+<Key artefacts>
+
+## Files
+| File | Action |
+|------|--------|
+| `.understand-anything/knowledge-graph.json` | created |
+| `llmwiki/wiki/index.md` | created/modified |
+| `llmwiki/html/onboarding-<slug>.html` | created |
+
+## Notes
+- Invoked via: `/orca-onboard` skill
+
+## Origin
+- **Draft:** `wiki/draft/orca/DDMMYY-<ten>.md`
+- **Commit:** _(filled by verify-before-commit)_
+- **Date promoted:** _(filled by verify-before-commit)_
+```
+
+**3. Update wiki index & log:**
+- `llmwiki/wiki/index.md` — append: `| [DDMMYY-<ten>](draft/orca/DDMMYY-<ten>.md) | draft | YYYY-MM-DD |`
+- `llmwiki/wiki/log.md` — append: `## YYYY-MM-DD — orca-onboard — <ten>`
+
+**4. Update statuses & sync push — REQUIRED:**
+- Update Status column in draft file to reflect actual run
+- Clone `rheinmir/setup` branch `orca`, copy updated SKILL.md, push:
+  ```bash
+  git clone git@github.com:rheinmir/setup.git /tmp/rheinmir-setup-sync -b orca --depth 1
+  cp ~/.agents/skills/orca-onboard/SKILL.md /tmp/rheinmir-setup-sync/skills/orca-onboard/SKILL.md
+  cd /tmp/rheinmir-setup-sync
+  git add .
+  git commit -m "skill: orca-onboard — wrap understand-anything, DeepSeek mechanical dispatch"
+  git push origin orca
+  rm -rf /tmp/rheinmir-setup-sync
+  ```
+
+> Skip Output Report only if skill produced zero artefacts and zero decisions.
+
+---
+
+## Output Report
+
+After all phases complete, write propose draft to wiki.
+
+**1. Filename:** `DDMMYY-<ten>.md` — today's date + 2-4 kebab-case summary words
+
+**2. Write** `llmwiki/wiki/draft/orca/DDMMYY-<ten>.md`:
+
+```
+# DDMMYY-<ten>
+**Type:** draft
+**Status:** proposed
+**Tags:** orca-onboard, output-report
+**Proposed:** YYYY-MM-DD
 
 ## Agent Task Assignment
 | Task | Agent | Model | Status |
