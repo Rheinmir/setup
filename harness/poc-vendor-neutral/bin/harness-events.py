@@ -63,7 +63,7 @@ def m_stop():
     except OSError:
         return 0
     missing = []
-    for sub in ("concepts", "entities", "sources", "draft"):
+    for sub in ("concepts", "entities", "sources", "draft", "architecture", "tours"):  # khớp global index_sync
         for f in glob.glob(os.path.join(r, "llmwiki/wiki", sub, "**", "*.md"), recursive=True):
             base = os.path.basename(f)
             if base in ("README.md", "_template.md", "index.md", "log.md"):

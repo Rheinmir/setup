@@ -68,7 +68,7 @@ Sửa luật: harness/poc-vendor-neutral/policy.yaml → chạy lại lệnh cà
 
 ```bash
 bash demo.sh         # 13 assertion: lõi chặn đúng + sinh wiring 9 file
-bash test-broad.sh   # 64 assertion: false-positive, normalize, bash, biên require_origin, files-mode, fail-open, GAPS
+bash test-broad.sh   # 68 assertion: false-positive, normalize, bash, biên require_origin, files-mode, fail-open, GAPS
 ```
 
 ### Test rộng phát hiện gì (đáng chú ý)

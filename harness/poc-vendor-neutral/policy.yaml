@@ -26,11 +26,13 @@ rules:
     statement: "Mọi wiki content file phải có section '## Origin' để truy được nguồn gốc."
     enforce_at: [session, repo]
     require_section: "## Origin"
-    target_globs:
+    target_globs:                          # khớp global origin_required CONTENT_DIRS (6 dir)
       - "**/wiki/concepts/**/*.md"
       - "**/wiki/entities/**/*.md"
       - "**/wiki/sources/**/*.md"
       - "**/wiki/draft/**/*.md"
+      - "**/wiki/architecture/**/*.md"
+      - "**/wiki/tours/**/*.md"
     exclude_basenames: ["README.md", "_template.md", "index.md", "log.md"]
 
   folder_structure:
@@ -39,8 +41,9 @@ rules:
     kind: forbid_root
     statement: "File wiki phải nằm trong concepts/entities/sources/draft/architecture/tours — KHÔNG ở wiki/ root."
     enforce_at: [session, repo]
-    root_globs: ["**/wiki/*.md"]               # file .md trực tiếp dưới wiki/ (1 segment)
+    root_globs: ["**/wiki/*.md"]               # file .md trực tiếp dưới wiki/ (1 segment) → chặn
     allow_basenames: ["index.md", "log.md", "README.md", "active-context.md", "decisions.md"]
+    allow_subdirs: ["concepts", "entities", "sources", "draft", "architecture", "tours"]  # khớp global: subdir NGOÀI set này cũng chặn (wiki/junk/x.md)
 
   proposal_complete:
     id: R7

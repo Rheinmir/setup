@@ -98,6 +98,12 @@ echo "── I. RULE MỚI PORT (R5 folder · R9 frontmatter · R7 proposal) ─
 pm "llmwiki/wiki/foo.md";                              assert 2 "R5: wiki/ root .md bị chặn" $?
 pm "llmwiki/wiki/index.md";                            assert 0 "R5: index.md ở root miễn trừ" $?
 pm "llmwiki/wiki/concepts/foo.md";                     assert 0 "R5: trong subdir concepts/ ok" $?
+# R5 NỚI (khớp global): subdir NGOÀI allow_subdirs cũng bị chặn, không chỉ root
+pm "llmwiki/wiki/junk/x.md";                           assert 2 "R5: subdir lạ 'junk' bị chặn" $?
+pm "llmwiki/wiki/architecture/a.md";                   assert 0 "R5: subdir architecture/ hợp lệ" $?
+pm "llmwiki/wiki/tours/t.md";                          assert 0 "R5: subdir tours/ hợp lệ" $?
+# R2 NỚI: architecture/tours nay cũng phải có Origin (có frontmatter để R9 qua, thiếu Origin → chỉ R2)
+hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/architecture/arch1.md","content":"---\ntype: architecture\n---\n# a"}}'; assert 2 "R2: architecture thiếu Origin bị chặn (scope mới)" $?
 hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/n1.md","content":"# n\n## Origin\n- s"}}';                         assert 2 "R9: concept KHÔNG frontmatter bị chặn" $?
 hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/n2.md","content":"---\ntype: concept\n---\n# n\n## Origin\n- s"}}';  assert 0 "R9: có frontmatter + type qua" $?
 hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/n3.md","content":"---\nname: x\n---\n# n\n## Origin\n- s"}}';        assert 2 "R9: frontmatter THIẾU type bị chặn" $?

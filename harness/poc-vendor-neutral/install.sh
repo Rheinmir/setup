@@ -154,7 +154,7 @@ if has codex;  then warn "  Codex → thêm nội dung out/codex/AGENTS.snippet.
 if [ "$VERIFY" = 1 ]; then
   log "B4 · verify"
   if bash "$DEST/demo.sh" >/dev/null 2>&1; then log "  ✓ demo.sh (13)"; else warn "  demo.sh FAIL — kiểm pyyaml"; fi
-  if bash "$DEST/test-broad.sh" >/dev/null 2>&1; then log "  ✓ test-broad.sh (64)"; else warn "  test-broad.sh FAIL"; fi
+  if bash "$DEST/test-broad.sh" >/dev/null 2>&1; then log "  ✓ test-broad.sh (68)"; else warn "  test-broad.sh FAIL"; fi
 fi
 
 # ── (tùy chọn) trụ 3: seed khung llmwiki (nhanh, idempotent — không đè file có sẵn) ──

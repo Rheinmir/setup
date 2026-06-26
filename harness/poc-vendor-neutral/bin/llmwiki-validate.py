@@ -30,6 +30,8 @@ DEFAULT_POLICY = os.path.normpath(os.path.join(HERE, "..", "policy.yaml"))
 # bash ghi vào raw/ (mượn semantics no_write_raw.py)
 BASH_WRITE = re.compile(r"(?:>>?|\btee\b(?:\s+-a)?|\btouch\b|\bsed\s+-i\S*)\s+['\"]?(?:\S*/)?raw/")
 BASH_COPY = re.compile(r"\b(?:cp|mv|rsync)\b[^|;&]*\s['\"]?(?:\S*/)?raw/\S*['\"]?\s*(?:$|[|;&])")
+# phần đường dẫn sau "wiki/" (boundary (^|/) để không dính "llmwiki/" nhầm — khớp global)
+WIKI_REL = re.compile(r"(?:^|/)wiki/(.+)$")
 
 
 def glob_to_regex(glob):
@@ -131,14 +133,25 @@ def _read(path, content):
         return None
 
 
-# R5 — file wiki không được nằm trực tiếp ở wiki/ root (phải trong subdir)
+# R5 — file wiki phải nằm trong subdir HỢP LỆ: không ở wiki/ root, cũng không ở subdir lạ
 def check_forbid_root(path, rule):
     p = norm(path)
+    if not p.endswith(".md"):
+        return None
     if os.path.basename(p) in (rule.get("allow_basenames") or []):
         return None
+    # (1) file trực tiếp ở wiki/ root (1 segment) → chặn
     for g in rule.get("root_globs", []):
         if glob_to_regex(g).match(p):
-            return f"[{_tag(rule)}] {p} — {rule.get('statement', '')}"
+            return f"[{_tag(rule)}] {p} ở wiki/ root — {rule.get('statement', '')}"
+    # (2) file trong subdir NGOÀI allow_subdirs → chặn (khớp global folder_structure.py)
+    allow = rule.get("allow_subdirs")
+    if allow:
+        m = WIKI_REL.search(p)
+        if m and "/" in m.group(1):
+            top = m.group(1).split("/", 1)[0]
+            if top not in allow:
+                return f"[{_tag(rule)}] subfolder lạ '{top}': {p} — {rule.get('statement', '')}"
     return None
 
 

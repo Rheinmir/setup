@@ -49,7 +49,7 @@ Ví dụ: `no_write_raw` `enforce_at: [session]` → agent bị chặn ghi `raw/
 | `bin/llmwiki-validate.py` | Lõi. Đọc policy, áp luật theo `kind`, lọc theo layer. |
 | `gen-converters.py` | Đọc policy → sinh wiring mọi vendor vào `out/` (không commit; `.gitignore`). |
 | `demo.sh` | 13 assertion happy-path. |
-| `test-broad.sh` | 64 assertion: false-positive, normalize, bash, biên, files-mode, fail-open, GAPS, R5/R7/R9-nới. |
+| `test-broad.sh` | 68 assertion: false-positive, normalize, bash, biên, files-mode, fail-open, GAPS, R5/R7/R9-nới. |
 | `.github/workflows/harness.yml` | CI: job `selftest` (67 assertion) + `validate-content` (file .md đổi). |
 
 ---
