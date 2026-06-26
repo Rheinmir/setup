@@ -14,8 +14,11 @@ Tải lõi từ GitHub rồi cài trọn B0–B4 vào thư mục hiện tại (t
 ```bash
 curl -fsSL .../bootstrap.sh | bash -s -- --vendor claude,opencode   # ép vendor
 curl -fsSL .../bootstrap.sh | bash -s -- --clean                    # cài MỚI = gỡ cũ rồi cài
-curl -fsSL .../bootstrap.sh | bash -s -- --with-skills              # cài harness + KÈM bộ skill llmwiki (global)
+curl -fsSL .../bootstrap.sh | bash -s -- --with-skills              # harness + skill (global)
+curl -fsSL .../bootstrap.sh | bash -s -- --full                     # ĐỦ 3 TRỤ: harness + skills + seed llmwiki
 ```
+
+> **Tốc độ:** mặc định (harness) + `--with-wiki` (seed llmwiki) đều **nhanh như code** (copy + mkdir). Chỉ `--with-skills` (npx) là bước mạng chậm hơn — nên để tùy chọn. `--full` = cả 3 trụ trong 1 lệnh.
 
 > **Harness là HOOK, không phải MCP.** Cài xong KHÔNG thấy trong `/mcp` là ĐÚNG — kiểm bằng **`/hooks`** (hoặc khối `hooks` trong `.claude/settings.json`). `/mcp` chỉ liệt kê MCP server (tool cho model gọi), harness không nằm ở đó.
 >
@@ -37,7 +40,7 @@ Cài xong, harness đăng ký **5 hook sự kiện** trong `.claude/settings.jso
 Chặn-cứng: **R1/R2/R3/R5/R7/R9**. Tự-động/báo-cáo/nhắc: **R4/R8/R10**. Cổng commit: **R6**.
 Mọi hook sự kiện đều **fail-open** (lỗi hạ tầng → exit 0, không phá session).
 
-> **3 trụ khi đẩy sang dự án khác:** Harness (10R, per-project, `install.sh`) · Skills (workflow: propose/verify-before-commit…, global, `--with-skills`) · llmwiki (khung wiki). One-liner `bootstrap.sh --with-skills` lo trụ Harness + Skills.
+> **3 trụ khi đẩy sang dự án khác:** Harness (10R, per-project, `install.sh`) · Skills (workflow: propose/verify-before-commit…, global, `--with-skills`) · llmwiki (khung wiki, `--with-wiki`). One-liner **`bootstrap.sh ... --full`** lo trọn 3 trụ trong 1 lệnh.
 > URL trỏ nhánh `orca` → luôn kéo **bản mới nhất** (không outdate); chỉ hỏng nếu đổi tên branch/đường dẫn. Đổi nguồn: đặt env `HARNESS_BASE`.
 
 **Dán nguyên khối này vào system prompt của AI** (agent tự cài khi được yêu cầu):

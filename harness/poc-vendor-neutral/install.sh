@@ -12,13 +12,15 @@
 set -euo pipefail
 
 SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"   # nguồn = poc-vendor-neutral/
-ROOT="."; VENDORS=""; VERIFY=1; CLEAN=0; WITH_SKILLS=0
+ROOT="."; VENDORS=""; VERIFY=1; CLEAN=0; WITH_SKILLS=0; WITH_WIKI=0
 while [ $# -gt 0 ]; do
   case "$1" in
     --vendor) VENDORS="${2:-}"; shift 2;;
     --no-verify) VERIFY=0; shift;;
     --clean) CLEAN=1; shift;;
     --with-skills) WITH_SKILLS=1; shift;;
+    --with-wiki) WITH_WIKI=1; shift;;
+    --full) WITH_SKILLS=1; WITH_WIKI=1; shift;;   # đủ 3 trụ: harness + skills + llmwiki
     -*) echo "tham số lạ: $1" >&2; exit 1;;
     *) ROOT="$1"; shift;;
   esac
@@ -144,6 +146,15 @@ if [ "$VERIFY" = 1 ]; then
   log "B4 · verify"
   if bash "$DEST/demo.sh" >/dev/null 2>&1; then log "  ✓ demo.sh (13)"; else warn "  demo.sh FAIL — kiểm pyyaml"; fi
   if bash "$DEST/test-broad.sh" >/dev/null 2>&1; then log "  ✓ test-broad.sh (54)"; else warn "  test-broad.sh FAIL"; fi
+fi
+
+# ── (tùy chọn) trụ 3: seed khung llmwiki (nhanh, idempotent — không đè file có sẵn) ──
+if [ "$WITH_WIKI" = 1 ]; then
+  log "+ seed khung llmwiki"
+  mkdir -p "$ROOT/llmwiki/raw" "$ROOT/llmwiki/wiki/concepts" "$ROOT/llmwiki/wiki/entities" "$ROOT/llmwiki/wiki/sources/draft"
+  [ -f "$ROOT/llmwiki/wiki/index.md" ] || printf '# Wiki index\n\n| File | Type | Date |\n|---|---|---|\n' > "$ROOT/llmwiki/wiki/index.md"
+  [ -f "$ROOT/llmwiki/wiki/log.md" ]   || printf '# Log\n' > "$ROOT/llmwiki/wiki/log.md"
+  log "  ✓ llmwiki/ (wiki/{concepts,entities,sources/draft} · raw/ · index.md · log.md)"
 fi
 
 # ── (tùy chọn) cài skill llmwiki (GLOBAL — khác phạm vi với harness theo-project) ──
