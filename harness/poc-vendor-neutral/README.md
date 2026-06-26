@@ -25,6 +25,14 @@ bash harness/poc-vendor-neutral/install.sh /đường-dẫn/dự-án
 ```
 Tự làm B0–B4: copy lõi → dò vendor → `gen-converters.py` → **merge** `.claude/settings.json` + `opencode.json` (backup `.bak`), thả `harness.yml` vào `.github/workflows/`, tạo `.pre-commit-config.yaml`, copy advisory cho Cursor/Kiro → chạy `demo.sh` + `test-broad.sh`. Idempotent. CI + pre-commit luôn cài (sàn); adapter chỉ cài cho vendor có mặt. Sau đó mở session Claude mới để hook có hiệu lực.
 
+## Gỡ / cài lại
+
+```bash
+bash harness/poc-vendor-neutral/uninstall.sh /đường-dẫn/dự-án   # gỡ ĐÚNG phần harness, giữ config của bạn
+bash harness/poc-vendor-neutral/install.sh   /đường-dẫn/dự-án --clean   # cài MỚI = gỡ cũ rồi cài
+```
+`uninstall.sh` đảo ngược: gỡ CI, gỡ hook harness khỏi `.claude/settings.json` (giữ hook khác của bạn), gỡ glob deny harness khỏi `opencode.json` (giữ rule khác), gỡ pre-commit hook + advisory, xoá lõi. Có backup `.bak`. Cờ: `--keep-core` (chỉ gỡ wiring) · `--purge-bak`.
+
 ## Thành phần
 
 | File | Vai trò |

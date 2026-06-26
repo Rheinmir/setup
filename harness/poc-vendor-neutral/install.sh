@@ -12,11 +12,12 @@
 set -euo pipefail
 
 SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"   # nguồn = poc-vendor-neutral/
-ROOT="."; VENDORS=""; VERIFY=1
+ROOT="."; VENDORS=""; VERIFY=1; CLEAN=0
 while [ $# -gt 0 ]; do
   case "$1" in
     --vendor) VENDORS="${2:-}"; shift 2;;
     --no-verify) VERIFY=0; shift;;
+    --clean) CLEAN=1; shift;;
     -*) echo "tham số lạ: $1" >&2; exit 1;;
     *) ROOT="$1"; shift;;
   esac
@@ -26,6 +27,12 @@ DEST="$ROOT/harness/poc-vendor-neutral"; OUT="$DEST/out"
 log(){ printf '\033[1;32m[install]\033[0m %s\n' "$*"; }
 warn(){ printf '\033[1;33m[install]\033[0m %s\n' "$*"; }
 has(){ case ",$VENDORS," in *",$1,"*) return 0;; *) return 1;; esac; }
+
+# --clean: gỡ bản cũ trước khi cài (cài mới sạch). Cần uninstall.sh cạnh script.
+if [ "$CLEAN" = 1 ] && [ -f "$SRC/uninstall.sh" ]; then
+  log "--clean → gỡ bản cũ trước"
+  bash "$SRC/uninstall.sh" "$ROOT" || warn "uninstall gặp lỗi, vẫn cài tiếp"
+fi
 
 # ── B0. Copy lõi vào dự án ──
 log "B0 · copy lõi → $DEST"
