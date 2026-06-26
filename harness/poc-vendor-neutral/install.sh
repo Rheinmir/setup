@@ -60,8 +60,11 @@ if [ -z "$VENDORS" ]; then
   { [ -f "$ROOT/AGENTS.md" ] || [ -d "$ROOT/.codex" ]; } && det="${det}codex,"
   [ -d "$ROOT/.kiro" ] && det="${det}kiro,"
   VENDORS="${det%,}"
+  # harness chạy TRONG Claude Code → nếu không dò ra vendor nào, mặc định Claude
+  # (tạo .claude/settings.json để wire PreToolUse hook, kể cả project chưa có .claude/)
+  [ -z "$VENDORS" ] && VENDORS="claude"
 fi
-log "B1 · vendor: ${VENDORS:-(không thấy — chỉ cài CI + pre-commit)}"
+log "B1 · vendor: $VENDORS"
 
 # ── B2. Sinh wiring từ policy ──
 log "B2 · gen-converters → out/"
@@ -145,7 +148,7 @@ if has codex;  then warn "  Codex → thêm nội dung out/codex/AGENTS.snippet.
 if [ "$VERIFY" = 1 ]; then
   log "B4 · verify"
   if bash "$DEST/demo.sh" >/dev/null 2>&1; then log "  ✓ demo.sh (13)"; else warn "  demo.sh FAIL — kiểm pyyaml"; fi
-  if bash "$DEST/test-broad.sh" >/dev/null 2>&1; then log "  ✓ test-broad.sh (54)"; else warn "  test-broad.sh FAIL"; fi
+  if bash "$DEST/test-broad.sh" >/dev/null 2>&1; then log "  ✓ test-broad.sh (63)"; else warn "  test-broad.sh FAIL"; fi
 fi
 
 # ── (tùy chọn) trụ 3: seed khung llmwiki (nhanh, idempotent — không đè file có sẵn) ──
