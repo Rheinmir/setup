@@ -4,6 +4,21 @@ Chứng minh kiến trúc trong `llmwiki/html/250626-harness-architecture-vs-cur
 **logic chặn KHÔNG nằm trong MCP, cũng KHÔNG nhúng vào 1 vendor — nó là 1 CLI lõi đọc
 `policy.yaml`, và mỗi vendor chỉ là caller mỏng gọi vào (hoặc đọc config sinh ra từ policy).**
 
+## Cài — 1 dòng (không cần clone repo)
+
+Chạy NGAY trong thư mục dự án của bạn:
+```bash
+curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash
+```
+Tải lõi từ GitHub rồi cài trọn B0–B4 vào thư mục hiện tại (tự dò vendor, merge config, thả CI + pre-commit, verify). Kèm cờ:
+```bash
+curl -fsSL .../bootstrap.sh | bash -s -- --vendor claude,opencode   # ép vendor
+curl -fsSL .../bootstrap.sh | bash -s -- --clean                    # cài MỚI = gỡ cũ rồi cài
+```
+**Đưa vào system prompt của AI:** dán đúng dòng `curl … | bash` trên + câu "cài harness vào dự án này" — AI tự chạy là xong.
+
+> Đã clone repo sẵn? Dùng `bash harness/poc-vendor-neutral/install.sh <dự-án>` (mục dưới). Gỡ: `uninstall.sh`.
+
 ## Chạy thử
 
 ```bash
