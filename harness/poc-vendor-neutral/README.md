@@ -16,6 +16,15 @@ bash test-broad.sh   # 54 assertion: false-positive, normalize, bash, biên requ
 - **KNOWN GAPS (mục C, có chủ đích)**: lõi session soi *bề mặt* lệnh bash nên **KHÔNG** bắt: `python3 -c "open('…/raw/…','w')"`, `rm …/raw/…`, `sed -i <script> …/raw/…` (script chen giữa `-i` và file). Đây đúng là lý do **sàn đảm bảo phải ở CI/sandbox**, không phải regex hook — khớp kết quả verify 2026-06-25.
 - **layer**: `raw/` bị chặn ở session nhưng **được phép** ở repo (con người commit raw/ hợp lệ) — do `enforce_at` trong policy, không hard-code.
 
+## Cài vào dự án (1 lệnh)
+
+```bash
+bash harness/poc-vendor-neutral/install.sh /đường-dẫn/dự-án
+#   [--vendor claude,opencode,cursor,codex,kiro]   # bỏ → tự dò
+#   [--no-verify]
+```
+Tự làm B0–B4: copy lõi → dò vendor → `gen-converters.py` → **merge** `.claude/settings.json` + `opencode.json` (backup `.bak`), thả `harness.yml` vào `.github/workflows/`, tạo `.pre-commit-config.yaml`, copy advisory cho Cursor/Kiro → chạy `demo.sh` + `test-broad.sh`. Idempotent. CI + pre-commit luôn cài (sàn); adapter chỉ cài cho vendor có mặt. Sau đó mở session Claude mới để hook có hiệu lực.
+
 ## Thành phần
 
 | File | Vai trò |
