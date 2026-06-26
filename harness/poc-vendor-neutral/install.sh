@@ -12,12 +12,13 @@
 set -euo pipefail
 
 SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"   # nguồn = poc-vendor-neutral/
-ROOT="."; VENDORS=""; VERIFY=1; CLEAN=0
+ROOT="."; VENDORS=""; VERIFY=1; CLEAN=0; WITH_SKILLS=0
 while [ $# -gt 0 ]; do
   case "$1" in
     --vendor) VENDORS="${2:-}"; shift 2;;
     --no-verify) VERIFY=0; shift;;
     --clean) CLEAN=1; shift;;
+    --with-skills) WITH_SKILLS=1; shift;;
     -*) echo "tham số lạ: $1" >&2; exit 1;;
     *) ROOT="$1"; shift;;
   esac
@@ -145,6 +146,18 @@ if [ "$VERIFY" = 1 ]; then
   if bash "$DEST/test-broad.sh" >/dev/null 2>&1; then log "  ✓ test-broad.sh (54)"; else warn "  test-broad.sh FAIL"; fi
 fi
 
+# ── (tùy chọn) cài skill llmwiki (GLOBAL — khác phạm vi với harness theo-project) ──
+if [ "$WITH_SKILLS" = 1 ]; then
+  log "+ cài bộ skill llmwiki (global, qua npx skills)"
+  if command -v npx >/dev/null; then
+    npx -y skills add rheinmir/setup#orca --global --all 2>&1 | tail -4 | sed 's/^/    /' \
+      || warn "  cài skill lỗi — chạy tay: npx skills add rheinmir/setup#orca --global --all"
+  else
+    warn "  không có npx — cài skill tay: npx skills add rheinmir/setup#orca --global --all"
+  fi
+fi
+
 log "HOÀN TẤT."
+[ "$WITH_SKILLS" = 1 ] && echo "   • Skill cài GLOBAL (~/.claude/skills) — dùng cho mọi project, khác với harness (theo từng project)."
 echo "   • Claude: mở session mới (hoặc /hooks reload) để hook có hiệu lực."
 echo "   • CI chạy khi push lên GitHub. Sửa luật: harness/poc-vendor-neutral/policy.yaml → chạy lại install.sh (hoặc gen-converters.py)."

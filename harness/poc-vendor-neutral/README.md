@@ -14,7 +14,12 @@ Tải lõi từ GitHub rồi cài trọn B0–B4 vào thư mục hiện tại (t
 ```bash
 curl -fsSL .../bootstrap.sh | bash -s -- --vendor claude,opencode   # ép vendor
 curl -fsSL .../bootstrap.sh | bash -s -- --clean                    # cài MỚI = gỡ cũ rồi cài
+curl -fsSL .../bootstrap.sh | bash -s -- --with-skills              # cài harness + KÈM bộ skill llmwiki (global)
 ```
+
+> **Harness là HOOK, không phải MCP.** Cài xong KHÔNG thấy trong `/mcp` là ĐÚNG — kiểm bằng **`/hooks`** (hoặc khối `hooks` trong `.claude/settings.json`). `/mcp` chỉ liệt kê MCP server (tool cho model gọi), harness không nằm ở đó.
+>
+> **Phạm vi khác nhau:** harness cài **theo từng project** (hook trong `.claude/settings.json` của project). Skill (`--with-skills`) cài **GLOBAL** (`~/.claude/skills`, dùng mọi project). Hai thứ tách biệt — "cài harness" không tự kéo skill, trừ khi thêm `--with-skills`.
 > URL trỏ nhánh `orca` → luôn kéo **bản mới nhất** (không outdate); chỉ hỏng nếu đổi tên branch/đường dẫn. Đổi nguồn: đặt env `HARNESS_BASE`.
 
 **Dán nguyên khối này vào system prompt của AI** (agent tự cài khi được yêu cầu):
