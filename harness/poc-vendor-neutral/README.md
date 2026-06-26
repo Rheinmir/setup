@@ -15,7 +15,26 @@ Tải lõi từ GitHub rồi cài trọn B0–B4 vào thư mục hiện tại (t
 curl -fsSL .../bootstrap.sh | bash -s -- --vendor claude,opencode   # ép vendor
 curl -fsSL .../bootstrap.sh | bash -s -- --clean                    # cài MỚI = gỡ cũ rồi cài
 ```
-**Đưa vào system prompt của AI:** dán đúng dòng `curl … | bash` trên + câu "cài harness vào dự án này" — AI tự chạy là xong.
+> URL trỏ nhánh `orca` → luôn kéo **bản mới nhất** (không outdate); chỉ hỏng nếu đổi tên branch/đường dẫn. Đổi nguồn: đặt env `HARNESS_BASE`.
+
+**Dán nguyên khối này vào system prompt của AI** (agent tự cài khi được yêu cầu):
+
+```text
+# Harness guardrail
+Khi user yêu cầu "cài harness / bật guardrail", chạy ở THƯ MỤC GỐC dự án:
+
+curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash
+
+Nó cài 1 validator vendor-neutral: chặn ghi vào raw/, bắt buộc mọi file wiki có "## Origin",
+qua hook native của công cụ (Claude/opencode) + CI (.github/workflows/harness.yml) làm sàn.
+Cờ tùy chọn (thêm sau `| bash -s --`):
+  --vendor claude,opencode   ép vendor (mặc định tự dò)
+  --clean                    cài MỚI = gỡ cũ rồi cài
+  --no-verify                bỏ chạy test
+Sau khi cài: nhắc user mở session Claude mới (hoặc /hooks reload) để hook có hiệu lực.
+Gỡ: bash harness/poc-vendor-neutral/uninstall.sh .   (giữ nguyên config khác của user)
+Sửa luật: harness/poc-vendor-neutral/policy.yaml → chạy lại lệnh cài.
+```
 
 > Đã clone repo sẵn? Dùng `bash harness/poc-vendor-neutral/install.sh <dự-án>` (mục dưới). Gỡ: `uninstall.sh`.
 
