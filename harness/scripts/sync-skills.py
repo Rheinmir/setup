@@ -38,6 +38,15 @@ LOOP_MAP = {
     "docs-site-macos-skill": "utils", "extract-site": "utils", "harness-tour": "utils",
     "harness-update": "utils", "health-check": "utils", "md-to-html": "utils",
     "sync-template": "utils", "uat-nonit-testcase": "utils", "cursor-animated-sites": "utils",
+    # publish 260626 — skill trước LOCAL-ONLY (đẩy vào repo để không mất khi cài máy/dự án khác)
+    "orca-cli": "orchestrate", "orchestration": "orchestrate", "jenkins-agent-l3-deploy": "orchestrate",
+    "brandkit": "utils", "check-approve": "utils", "computer-use": "utils",
+    "design-taste-frontend": "utils", "design-taste-frontend-v1": "utils", "docs-site-macos": "utils",
+    "find-skills": "utils", "full-output-enforcement": "utils", "gpt-taste": "utils",
+    "high-end-visual-design": "utils", "image-to-code": "utils", "imagegen-frontend-mobile": "utils",
+    "imagegen-frontend-web": "utils", "industrial-brutalist-ui": "utils", "join-project": "utils",
+    "last30days": "utils", "minimalist-ui": "utils", "redesign-existing-projects": "utils",
+    "snapshot-push": "utils", "stitch-design-taste": "utils", "tour-guide-supademo": "utils",
 }
 
 
