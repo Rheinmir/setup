@@ -48,17 +48,18 @@ def main():
     import json
     EVT = "harness/poc-vendor-neutral/bin/harness-events.py"
     def _ev(c, t=15): return [{"type": "command", "command": c, "timeout": t}]
+    # CHẶN-ĐƯỢC (PreToolUse/Stop): exec giữ exit 2 khi script chặn; file THIẾU → exit 0 (fail-open, không khoá cứng)
+    def _block(f, a): return f'[ -f "$CLAUDE_PROJECT_DIR/{f}" ] && exec python3 "$CLAUDE_PROJECT_DIR/{f}" {a} || exit 0'
+    # KHÔNG-CHẶN (PostToolUse/SessionStart/UserPromptSubmit): LUÔN exit 0 — file thiếu/lỗi KHÔNG bao giờ chặn input
+    def _info(f, a): return f'python3 "$CLAUDE_PROJECT_DIR/{f}" {a} 2>/dev/null || true'
     claude = {
         "_generated": GEN,
         "hooks": {
-            # PreToolUse = lõi chặn R1/R2/R5/R7/R9 ; 4 hook còn lại = R3/R4/R8/R10
-            "PreToolUse": [{"matcher": "Write|Edit|MultiEdit|Bash",
-                "hooks": _ev(f'python3 "$CLAUDE_PROJECT_DIR/{CLI}" claude-hook')}],
-            "PostToolUse": [{"matcher": "Write|Edit|MultiEdit",
-                "hooks": _ev(f'python3 "$CLAUDE_PROJECT_DIR/{EVT}" audit', 10)}],     # R4 log-append
-            "Stop": [{"hooks": _ev(f'python3 "$CLAUDE_PROJECT_DIR/{EVT}" stop')}],     # R3 index-sync
-            "SessionStart": [{"hooks": _ev(f'python3 "$CLAUDE_PROJECT_DIR/{EVT}" session', 10)}],   # R8 health
-            "UserPromptSubmit": [{"hooks": _ev(f'python3 "$CLAUDE_PROJECT_DIR/{EVT}" docs', 10)}],   # R10 docs-gate
+            "PreToolUse": [{"matcher": "Write|Edit|MultiEdit|Bash", "hooks": _ev(_block(CLI, "claude-hook"))}],   # R1/R2/R5/R7/R9
+            "PostToolUse": [{"matcher": "Write|Edit|MultiEdit", "hooks": _ev(_info(EVT, "audit"), 10)}],          # R4
+            "Stop": [{"hooks": _ev(_block(EVT, "stop"))}],                                                        # R3
+            "SessionStart": [{"hooks": _ev(_info(EVT, "session"), 10)}],                                          # R8
+            "UserPromptSubmit": [{"hooks": _ev(_info(EVT, "docs"), 10)}],                                         # R10
         },
     }
     write("claude/settings.snippet.json", json.dumps(claude, ensure_ascii=False, indent=2) + "\n")

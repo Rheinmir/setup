@@ -18,7 +18,7 @@ command -v curl >/dev/null || { echo "cần curl" >&2; exit 1; }
 TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
 mkdir -p "$TMP/bin"
 say "tải lõi từ $BASE"
-for f in policy.yaml gen-converters.py demo.sh test-broad.sh install.sh uninstall.sh bin/llmwiki-validate.py; do
+for f in policy.yaml gen-converters.py demo.sh test-broad.sh install.sh uninstall.sh bin/llmwiki-validate.py bin/harness-events.py; do
   curl -fsSL "$BASE/$f" -o "$TMP/$f" || { echo "tải lỗi: $f" >&2; exit 1; }
 done
 chmod +x "$TMP"/*.sh "$TMP/bin/llmwiki-validate.py" 2>/dev/null || true
