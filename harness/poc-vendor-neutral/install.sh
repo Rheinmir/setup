@@ -105,14 +105,20 @@ os.makedirs(os.path.dirname(sp),exist_ok=True)
 cur=json.load(open(sp,encoding='utf-8')) if os.path.exists(sp) else {}
 if os.path.exists(sp): shutil.copy(sp, sp+'.bak')
 add=json.load(open(snip,encoding='utf-8'))
+MARK='harness/poc-vendor-neutral/bin/'
 cur.setdefault('hooks',{})
+# 1) GỠ mọi hook harness cũ trước (idempotent kể cả khi đổi format lệnh → không trùng);
+#    giữ nguyên hook KHÁC của user trong cùng event.
+for ev,defs in list(cur['hooks'].items()):
+    nd=[]
+    for d in defs:
+        d['hooks']=[h for h in (d.get('hooks') or []) if MARK not in (h.get('command') or '')]
+        if d.get('hooks'): nd.append(d)
+    if nd: cur['hooks'][ev]=nd
+    else: cur['hooks'].pop(ev,None)
+# 2) THÊM hook harness mới (đúng 1 bản, đã fail-open)
 for ev,entries in add.get('hooks',{}).items():
-    defs=cur['hooks'].setdefault(ev,[])
-    existing={h.get('command') for d in defs for h in (d.get('hooks') or [])}
-    for d in entries:
-        cmds={h.get('command') for h in (d.get('hooks') or [])}
-        if cmds & existing: continue
-        defs.append(d)
+    cur['hooks'].setdefault(ev,[]).extend(entries)
 json.dump(cur,open(sp,'w',encoding='utf-8'),ensure_ascii=False,indent=2)
 print('  \033[1;32m✓\033[0m Claude   → .claude/settings.json (merged, backup .bak)')
 PY
