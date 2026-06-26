@@ -318,11 +318,25 @@ const CICD_WHY=[
   'Đưa CHÍNH gói đã thử lên prod (không build lại) — để thứ chạy thật giống HỆT thứ đã kiểm.',
   'Luôn giữ đường lùi nhanh — vì lỗi vẫn có thể lọt, để giảm thiệt hại cho khách.',
 ];
+// mục đích từng bước harness (theo thứ tự HARNESS_STEPS)
+const HARNESS_WHY=[
+  '',
+  'Đưa "bộ não" (luật + bộ kiểm) vào repo — nền tảng để mọi quyết định chặn/cho-qua về sau dựa vào.',
+  'Biết đúng công cụ AI đang dùng để chỉ tạo đầu nối cần thiết — khỏi cấu hình thừa.',
+  'Sinh cấu hình từ MỘT nguồn luật duy nhất — sửa luật một nơi thì mọi công cụ tự cập nhật theo.',
+  'Nối lõi vào đúng chỗ từng công cụ đọc — để công cụ nào cũng gọi chung một bộ luật.',
+  'Chạy test xác nhận harness lắp đúng trước khi tin nó canh gác.',
+  'Chặn agent ghi bậy NGAY trong lúc làm — bắt lỗi sớm nhất, file bẩn không kịp ra đời.',
+  'Chỉ chặn cái SAI, không cản việc hợp lệ — để harness không gây phiền khi agent làm đúng.',
+  'Kiểm lại lúc commit nhưng ĐÚNG TẦNG — việc con người làm hợp lệ (commit raw/) thì không chặn nhầm.',
+  'Sàn đảm bảo cuối — nói "không" ở chỗ agent KHÔNG tự tắt được khi merge.',
+  'Cho thấy hook trong phiên có thể bị lách → lý do phải neo đảm bảo ở CI, không chỉ ở hook.',
+];
 const SCEN={
-  harness:{title:'harness/poc-vendor-neutral + vendor + CI',phlabel:{install:'CÀI ĐẶT',run:'CHẠY'},
+  harness:{title:'harness/poc-vendor-neutral + vendor + CI',phlabel:{install:'CÀI ĐẶT',run:'CHẠY'},why:HARNESS_WHY,
     chips:[['c-install','▶ installer'],['c-agent','🤖 agent'],['c-git','git commit'],['c-ci','CI runner']],
     tree:HARNESS_TREE,steps:HARNESS_STEPS},
-  cicd:{title:'repo + pipeline + môi trường',phlabel:{pre:'TRƯỚC',ci:'PIPELINE',deploy:'DEPLOY',fail:'SỰ CỐ'},
+  cicd:{title:'repo + pipeline + môi trường',phlabel:{pre:'TRƯỚC',ci:'PIPELINE',deploy:'DEPLOY',fail:'SỰ CỐ'},why:CICD_WHY,
     chips:[['c-dev','👤 dev'],['c-ci','⚙️ CI runner'],['c-deploy','🚀 deployer'],['c-ops','🛟 ops']],
     tree:CICD_TREE,steps:CICD_STEPS},
 };
@@ -393,7 +407,7 @@ function step(i){clear();cur=(i+STEPS.length)%STEPS.length;animate();}
 function loadScenario(key){
   clear();auto=false;setBtns();
   const sc=SCEN[key];STEPS=sc.steps;PHLABEL=sc.phlabel;
-  if(key==='cicd')STEPS.forEach((s,i)=>{s.why=CICD_WHY[i]||'';});   // gắn mục đích cho CI/CD
+  STEPS.forEach((s,i)=>{s.why=(sc.why&&sc.why[i])||'';});   // gắn mục đích cho cả 2 kịch bản
   document.getElementById('paneTitle').textContent=sc.title;
   document.getElementById('controllers').innerHTML=sc.chips.map(c=>`<span class="chip" id="${c[0]}"><span class="seqslot"></span>${c[1]}</span>`).join('');
   document.getElementById('tree').innerHTML=sc.tree.map(r=>{
