@@ -22,7 +22,7 @@ echo '{"tool_name":"Bash","tool_input":{"command":"echo hi > llmwiki/raw/x.md"}}
 [ $? = 2 ] && ok "Bash redirect→raw/ bị chặn" || bad "Bash→raw/ KHÔNG bị chặn"
 echo '{"tool_name":"Bash","tool_input":{"command":"cat llmwiki/raw/x.md"}}' | python3 "$CLI" claude-hook >/dev/null 2>&1
 [ $? = 0 ] && ok "Bash ĐỌC raw/ được phép" || bad "Bash đọc raw/ bị chặn nhầm"
-echo '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/x.md","content":"# x\n## Origin\n- src"}}' | python3 "$CLI" claude-hook >/dev/null 2>&1
+echo '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/x.md","content":"---\ntype: concept\n---\n# x\n## Origin\n- src"}}' | python3 "$CLI" claude-hook >/dev/null 2>&1
 [ $? = 0 ] && ok "concept CÓ ## Origin được phép" || bad "concept có Origin bị chặn nhầm"
 echo '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/y.md","content":"# y no origin"}}' | python3 "$CLI" claude-hook >/dev/null 2>&1
 [ $? = 2 ] && ok "concept THIẾU ## Origin bị chặn" || bad "concept thiếu Origin KHÔNG bị chặn"
@@ -30,7 +30,10 @@ echo '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/y.md
 echo "── 3. LÕI: mode files (layer=repo — KHÔNG áp no_write_raw vì enforce_at=[session]) ──"
 tmp="$(mktemp -d)"; mkdir -p "$tmp/llmwiki/raw" "$tmp/llmwiki/wiki/concepts"
 echo "human inbox" > "$tmp/llmwiki/raw/human.md"
-echo "# c
+echo "---
+type: concept
+---
+# c
 ## Origin
 - src" > "$tmp/llmwiki/wiki/concepts/good.md"
 echo "# c no origin" > "$tmp/llmwiki/wiki/concepts/bad.md"

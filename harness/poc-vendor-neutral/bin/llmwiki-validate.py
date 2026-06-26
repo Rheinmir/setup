@@ -112,14 +112,97 @@ def check_require_section(path, content, rule):
     return None
 
 
+def _in_scope(path, rule):
+    p = norm(path)
+    if os.path.basename(p) in (rule.get("exclude_basenames") or []):
+        return None
+    if not any(glob_to_regex(g).match(p) for g in rule.get("target_globs", [])):
+        return None
+    return p
+
+
+def _read(path, content):
+    if content is not None:
+        return content
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return f.read()
+    except OSError:
+        return None
+
+
+# R5 — file wiki không được nằm trực tiếp ở wiki/ root (phải trong subdir)
+def check_forbid_root(path, rule):
+    p = norm(path)
+    if os.path.basename(p) in (rule.get("allow_basenames") or []):
+        return None
+    for g in rule.get("root_globs", []):
+        if glob_to_regex(g).match(p):
+            return f"[{_tag(rule)}] {p} — {rule.get('statement', '')}"
+    return None
+
+
+# R9 — file phải có YAML frontmatter parse được + trường require_key không rỗng
+def check_require_frontmatter(path, content, rule):
+    p = _in_scope(path, rule)
+    if p is None:
+        return None
+    content = _read(path, content)
+    if content is None:
+        return None
+    m = re.match(r"^---\s*\n(.*?)\n---\s*(?:\n|$)", content, re.DOTALL)
+    if not m:
+        return f"[{_tag(rule)}] {p} thiếu YAML frontmatter (--- … ---) — {rule.get('statement', '')}"
+    try:
+        fm = yaml.safe_load(m.group(1)) or {}
+    except Exception:
+        return f"[{_tag(rule)}] {p} frontmatter không parse được — {rule.get('statement', '')}"
+    key = rule.get("require_key", "type")
+    if not (fm.get(key) if isinstance(fm, dict) else None):
+        return f"[{_tag(rule)}] {p} frontmatter thiếu/để trống '{key}' — {rule.get('statement', '')}"
+    return None
+
+
+# R7 — nếu content khớp ALL when_contains thì phải có ALL need_contains
+def check_conditional_require(path, content, rule):
+    p = _in_scope(path, rule)
+    if p is None:
+        return None
+    content = _read(path, content)
+    if content is None:
+        return None
+    if not all(w in content for w in rule.get("when_contains", [])):
+        return None
+    missing = [n for n in rule.get("need_contains", []) if n not in content]
+    if missing:
+        return f"[{_tag(rule)}] {p} thiếu: {', '.join(missing)} — {rule.get('statement', '')}"
+    return None
+
+
+# dispatch theo kind
+def apply_rule(rule, path, content, command):
+    k = rule.get("kind")
+    if k == "deny_write":
+        return check_deny_write_bash(command, rule) if command is not None else check_deny_write_path(path, rule)
+    if k == "require_section":
+        return check_require_section(path, content, rule)
+    if k == "forbid_root":
+        return check_forbid_root(path, rule)
+    if k == "require_frontmatter":
+        return check_require_frontmatter(path, content, rule)
+    if k == "conditional_require":
+        return check_conditional_require(path, content, rule)
+    return None
+
+
 # ---- modes ----
 def mode_path(policy, filepath):
+    # chỉ có path → content-kinds tự bỏ qua (đọc disk thất bại nếu file chưa tồn tại)
     v = []
     for _, r in rules_for_layer(policy, "session"):
-        if r.get("kind") == "deny_write":
-            m = check_deny_write_path(filepath, r)
-            if m:
-                v.append(m)
+        m = apply_rule(r, filepath, None, None)
+        if m:
+            v.append(m)
     return v
 
 
@@ -132,16 +215,10 @@ def mode_claude_hook(policy):
     ti = data.get("tool_input", {}) or {}
     v = []
     for _, r in rules_for_layer(policy, "session"):
-        kind = r.get("kind")
         if tool in ("Write", "Edit", "MultiEdit"):
-            if kind == "deny_write":
-                m = check_deny_write_path(ti.get("file_path", ""), r)
-            elif kind == "require_section":
-                m = check_require_section(ti.get("file_path", ""), ti.get("content"), r)
-            else:
-                m = None
+            m = apply_rule(r, ti.get("file_path", ""), ti.get("content"), None)
         elif tool == "Bash":
-            m = check_deny_write_bash(ti.get("command", ""), r) if kind == "deny_write" else None
+            m = apply_rule(r, None, None, ti.get("command", "")) if r.get("kind") == "deny_write" else None
         else:
             m = None
         if m:
@@ -154,13 +231,7 @@ def mode_files(policy, files):
     repo = rules_for_layer(policy, "repo")
     for fp in files:
         for _, r in repo:
-            kind = r.get("kind")
-            if kind == "require_section":
-                m = check_require_section(fp, None, r)
-            elif kind == "deny_write":
-                m = check_deny_write_path(fp, r)
-            else:
-                m = None
+            m = apply_rule(r, fp, None, None)   # content-kinds đọc fp từ disk
             if m:
                 v.append(m)
     return v

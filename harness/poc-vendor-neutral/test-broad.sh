@@ -50,9 +50,9 @@ hk '{"tool_name":"Bash","tool_input":{"command":"rm llmwiki/raw/x.md"}}';       
 hk '{"tool_name":"Bash","tool_input":{"command":"sed -i s/a/b/ llmwiki/raw/x.md"}}'; assert 0 "GAP: sed -i <expr> trước path" $?
 
 echo "── D. require_origin (claude-hook Write/Edit) ──"
-hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/a.md","content":"# a\n## Origin\n- s"}}'; assert 0 "concept CÓ Origin" $?
+hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/a.md","content":"---\ntype: concept\n---\n# a\n## Origin\n- s"}}'; assert 0 "concept CÓ Origin + frontmatter" $?
 hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/b.md","content":"# b"}}';                assert 2 "concept THIẾU Origin" $?
-hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/c.md","content":"# c\n##  Origin\n"}}';  assert 0 "## + 2 space Origin (linh hoạt)" $?
+hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/c.md","content":"---\ntype: concept\n---\n# c\n##  Origin\n"}}';  assert 0 "## + 2 space Origin (linh hoạt)" $?
 hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/d.md","content":"# d\n## Origins\n"}}';  assert 2 "## Origins (≠ Origin, chặt biên)" $?
 hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/e.md","content":"# e\n### Origin\n"}}';  assert 2 "### Origin (h3 không tính)" $?
 hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/entities/f.md","content":"# f"}}';               assert 2 "entities thiếu Origin" $?
@@ -60,13 +60,13 @@ hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/sources/draft/g
 hk '{"tool_name":"Edit","tool_input":{"file_path":"llmwiki/wiki/concepts/h.md","content":"# h"}}';                assert 2 "Edit (không chỉ Write) cũng soi" $?
 hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/README.md","content":"x"}}';            assert 0 "README.md miễn trừ" $?
 hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/index.md","content":"x"}}';             assert 0 "index.md miễn trừ" $?
-hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/architecture/z.md","content":"x"}}';             assert 0 "architecture/ ngoài target → bỏ qua" $?
+hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/architecture/z.md","content":"x"}}';             assert 2 "architecture/ thuộc R9 → thiếu frontmatter bị chặn" $?
 hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/note.txt","content":"x"}}';             assert 0 ".txt ngoài *.md → bỏ qua" $?
 
 echo "── E. files mode (layer=repo) ──"
 tmp="$(mktemp -d)"; mkdir -p "$tmp/llmwiki/raw" "$tmp/llmwiki/wiki/concepts" "$tmp/llmwiki/wiki/entities"
 printf 'human inbox\n'        > "$tmp/llmwiki/raw/human.md"
-printf '# g\n## Origin\n- s\n' > "$tmp/llmwiki/wiki/concepts/good.md"
+printf '%b' '---\ntype: concept\n---\n# g\n## Origin\n- s\n' > "$tmp/llmwiki/wiki/concepts/good.md"
 printf '# b no origin\n'      > "$tmp/llmwiki/wiki/concepts/bad.md"
 printf '# e no origin\n'      > "$tmp/llmwiki/wiki/entities/bad.md"
 python3 "$CLI" files "$tmp/llmwiki/raw/human.md" >/dev/null 2>&1;            assert 0 "repo: raw/ con người commit OK (R1 session-only)" $?
@@ -93,6 +93,17 @@ r=$(hk_err(){ printf '%s' "$1" | python3 "$CLI" claude-hook 2>&1 >/dev/null; }; 
 case "$r" in *R1*) assert 0 "raw/ báo đúng [R1]" 0;; *) assert 0 "raw/ báo đúng [R1]" 1;; esac
 r=$(hk_err2(){ printf '%s' "$1" | python3 "$CLI" claude-hook 2>&1 >/dev/null; }; hk_err2 '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/x.md","content":"# x"}}')
 case "$r" in *R2*) assert 0 "thiếu Origin báo đúng [R2]" 0;; *) assert 0 "thiếu Origin báo đúng [R2]" 1;; esac
+
+echo "── I. RULE MỚI PORT (R5 folder · R9 frontmatter · R7 proposal) ──"
+pm "llmwiki/wiki/foo.md";                              assert 2 "R5: wiki/ root .md bị chặn" $?
+pm "llmwiki/wiki/index.md";                            assert 0 "R5: index.md ở root miễn trừ" $?
+pm "llmwiki/wiki/concepts/foo.md";                     assert 0 "R5: trong subdir concepts/ ok" $?
+hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/n1.md","content":"# n\n## Origin\n- s"}}';                         assert 2 "R9: concept KHÔNG frontmatter bị chặn" $?
+hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/n2.md","content":"---\ntype: concept\n---\n# n\n## Origin\n- s"}}';  assert 0 "R9: có frontmatter + type qua" $?
+hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/n3.md","content":"---\nname: x\n---\n# n\n## Origin\n- s"}}';        assert 2 "R9: frontmatter THIẾU type bị chặn" $?
+hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/sources/draft/p1.md","content":"# p\n## Origin\n- x\n## Plan\n- [ ] t\nStatus: proposed"}}';                                          assert 2 "R7: proposal thiếu Agent Task/Sequence bị chặn" $?
+hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/sources/draft/p2.md","content":"# p\n## Origin\n- x\n## Plan\n## Agent Task Assignment\n| a |\n**Sequence diagram**: x\nStatus: proposed"}}'; assert 0 "R7: proposal đủ mục qua" $?
+hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/sources/draft/p3.md","content":"# p\n## Origin\n- x\n## Plan\nStatus: done"}}';  assert 0 "R7: không 'proposed' → R7 không áp" $?
 
 echo
 printf '\033[1mTỔNG: %d test · %d PASS · %d FAIL\033[0m\n' "$T" "$P" "$F"

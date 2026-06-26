@@ -32,3 +32,32 @@ rules:
       - "**/wiki/sources/**/*.md"
       - "**/wiki/draft/**/*.md"
     exclude_basenames: ["README.md", "_template.md", "index.md", "log.md"]
+
+  folder_structure:
+    id: R5
+    name: folder-structure
+    kind: forbid_root
+    statement: "File wiki phải nằm trong concepts/entities/sources/draft/architecture/tours — KHÔNG ở wiki/ root."
+    enforce_at: [session, repo]
+    root_globs: ["**/wiki/*.md"]               # file .md trực tiếp dưới wiki/ (1 segment)
+    allow_basenames: ["index.md", "log.md", "README.md", "active-context.md", "decisions.md"]
+
+  proposal_complete:
+    id: R7
+    name: proposal-complete
+    kind: conditional_require
+    statement: "Proposal (có '## Plan' + còn 'proposed') phải khai '## Agent Task Assignment' + link Sequence diagram."
+    enforce_at: [session, repo]
+    target_globs: ["**/wiki/sources/draft/**/*.md", "**/wiki/draft/**/*.md"]
+    when_contains: ["## Plan", "proposed"]
+    need_contains: ["## Agent Task Assignment", "Sequence diagram"]
+
+  okf_frontmatter:
+    id: R9
+    name: okf-frontmatter
+    kind: require_frontmatter
+    statement: "Wiki concept/entity phải có YAML frontmatter parse được + trường 'type' không rỗng (OKF v0.1)."
+    enforce_at: [session, repo]
+    target_globs: ["**/wiki/concepts/**/*.md", "**/wiki/entities/**/*.md", "**/wiki/architecture/**/*.md", "**/wiki/tours/**/*.md"]
+    exclude_basenames: ["README.md", "_template.md", "index.md", "log.md", "decisions.md", "active-context.md"]
+    require_key: type
