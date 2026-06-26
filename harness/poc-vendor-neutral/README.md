@@ -32,10 +32,10 @@ Cài xong, harness đăng ký **5 hook sự kiện** trong `.claude/settings.jso
 |---|---|---|
 | **R1·R2·R5·R7·R9** (no-write-raw · origin · folder · proposal · okf-frontmatter) | lõi `llmwiki-validate.py` — chặn lúc Write | **PreToolUse** |
 | **R3** index-sync | `harness-events.py stop` — chặn kết thúc lượt nếu `index.md` lệch | **Stop** |
-| **R4** log-append | `harness-events.py audit` — ghi `.claude/audit/audit.jsonl` | **PostToolUse** |
+| **R4** log-append | `harness-events.py audit` — ghi `audit.jsonl` (+timestamp) **+ sinh `log.md`** | **PostToolUse** |
 | **R6** verify-before-commit | pre-commit + CI gọi lõi (+ skill `/verify-before-commit`) | repo / skill |
-| **R8** pattern-health | `harness-events.py session` — in trạng thái (không chặn) | **SessionStart** |
-| **R10** docs-gate | `harness-events.py docs` — nhắc mỗi N prompt | **UserPromptSubmit** |
+| **R8** pattern-health | `harness-events.py session` — in trạng thái **+ check drift vs remote** | **SessionStart** |
+| **R10** docs-gate | `harness-events.py docs` — mỗi N prompt **inject directive gọi `/docs-site-macos`** | **UserPromptSubmit** |
 
 Chặn-cứng: **R1/R2/R3/R5/R7/R9**. Tự-động/báo-cáo/nhắc: **R4/R8/R10**. Cổng commit: **R6**.
 Mọi hook sự kiện đều **fail-open** (lỗi hạ tầng → exit 0, không phá session).

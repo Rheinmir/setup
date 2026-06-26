@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
 """Hook sự kiện cho harness PoC (ngoài PreToolUse/llmwiki-validate):
   stop     R3 index-sync   — chặn kết thúc lượt nếu wiki/index.md lệch file thật (exit 2)
-  audit    R4 log-append   — ghi .claude/audit/audit.jsonl (PostToolUse)
-  session  R8 health       — in trạng thái harness lúc SessionStart (không chặn)
-  docs     R10 docs-gate   — nhắc bổ sung docs mỗi N prompt (UserPromptSubmit)
+  audit    R4 log-append   — ghi .claude/audit/audit.jsonl (có timestamp) + sinh .claude/audit/log.md
+  session  R8 health       — in trạng thái + CHECK DRIFT vs remote (cảnh báo nếu policy lệch)
+  docs     R10 docs-gate   — mỗi N prompt: inject directive đề nghị bổ sung docs + gọi /docs-site-macos
 
-MỌI lỗi → fail-open (exit 0), tuyệt đối không phá session.
+MỌI lỗi → fail-open (exit 0). Drift-check best-effort (timeout ngắn), tắt bằng env LLMWIKI_NO_DRIFT=1.
 """
 import glob
 import json
 import os
 import sys
+
+REMOTE_POLICY = ("https://raw.githubusercontent.com/Rheinmir/setup/orca/"
+                 "harness/poc-vendor-neutral/policy.yaml")
 
 
 def root():
@@ -24,8 +27,34 @@ def _stdin():
         return {}
 
 
+def _audit_dir():
+    d = os.path.join(root(), ".claude/audit")
+    os.makedirs(d, exist_ok=True)
+    return d
+
+
+# R4 — sinh log.md (người đọc được) từ audit.jsonl
+def _machine_log():
+    d = os.path.join(root(), ".claude/audit")
+    jf = os.path.join(d, "audit.jsonl")
+    if not os.path.exists(jf):
+        return
+    try:
+        recs = [json.loads(x) for x in open(jf, encoding="utf-8") if x.strip()]
+    except Exception:
+        return
+    out = ["# Machine log (R4 — sinh tự động từ audit.jsonl, đừng sửa tay)", ""]
+    for e in recs[-300:]:
+        out.append(f"- {e.get('ts', '')} · {e.get('tool', '')} · {e.get('path', '') or ''}".rstrip(" ·"))
+    try:
+        open(os.path.join(d, "log.md"), "w", encoding="utf-8").write("\n".join(out) + "\n")
+    except OSError:
+        pass
+
+
 def m_stop():
     r = root()
+    _machine_log()  # R4: làm tươi log.md cuối lượt
     idx = os.path.join(r, "llmwiki/wiki/index.md")
     if not os.path.exists(idx):
         return 0
@@ -34,8 +63,8 @@ def m_stop():
     except OSError:
         return 0
     missing = []
-    for d in ("concepts", "entities", "sources", "draft"):
-        for f in glob.glob(os.path.join(r, "llmwiki/wiki", d, "**", "*.md"), recursive=True):
+    for sub in ("concepts", "entities", "sources", "draft"):
+        for f in glob.glob(os.path.join(r, "llmwiki/wiki", sub, "**", "*.md"), recursive=True):
             base = os.path.basename(f)
             if base in ("README.md", "_template.md", "index.md", "log.md"):
                 continue
@@ -50,35 +79,47 @@ def m_stop():
 
 def m_audit():
     data = _stdin()
-    d = os.path.join(root(), ".claude/audit")
     try:
-        os.makedirs(d, exist_ok=True)
-        rec = {"tool": data.get("tool_name"), "path": (data.get("tool_input") or {}).get("file_path")}
-        with open(os.path.join(d, "audit.jsonl"), "a", encoding="utf-8") as f:
+        import datetime
+        rec = {"ts": datetime.datetime.now().isoformat(timespec="seconds"),
+               "tool": data.get("tool_name"),
+               "path": (data.get("tool_input") or {}).get("file_path")}
+        with open(os.path.join(_audit_dir(), "audit.jsonl"), "a", encoding="utf-8") as f:
             f.write(json.dumps(rec, ensure_ascii=False) + "\n")
-    except OSError:
+        _machine_log()  # R4 full: log.md sinh từ jsonl
+    except Exception:
         pass
     return 0
 
 
 def m_session():
+    pol = os.path.join(root(), "harness/poc-vendor-neutral/policy.yaml")
     n = 0
     try:
         import yaml
-        pol = os.path.join(root(), "harness/poc-vendor-neutral/policy.yaml")
         n = len((yaml.safe_load(open(pol, encoding="utf-8")) or {}).get("rules", {}))
     except Exception:
         pass
     print(f"[harness] {n} rule đang gác (policy.yaml) — vi phạm bị hook chặn ngay. Kiểm hook: /hooks")
+    # R8 full: check drift vs remote (best-effort, fail-open, tắt bằng LLMWIKI_NO_DRIFT=1)
+    if os.environ.get("LLMWIKI_NO_DRIFT") != "1":
+        try:
+            import hashlib
+            import urllib.request
+            local = hashlib.md5(open(pol, "rb").read()).hexdigest()
+            remote = hashlib.md5(urllib.request.urlopen(REMOTE_POLICY, timeout=2).read()).hexdigest()
+            if local != remote:
+                print("[harness R8] policy.yaml LỆCH remote — cập nhật: "
+                      "curl -fsSL .../poc-vendor-neutral/bootstrap.sh | bash")
+        except Exception:
+            pass
     return 0
 
 
 def m_docs():
-    d = os.path.join(root(), ".claude/audit")
     every = int(os.environ.get("LLMWIKI_DOCS_GATE_EVERY", "5") or 5)
     try:
-        os.makedirs(d, exist_ok=True)
-        p = os.path.join(d, ".docs-gate.json")
+        p = os.path.join(_audit_dir(), ".docs-gate.json")
         try:
             c = json.load(open(p)).get("n", 0)
         except Exception:
@@ -86,8 +127,12 @@ def m_docs():
         c += 1
         json.dump({"n": c}, open(p, "w"))
         if every > 0 and c % every == 0:
-            print("[harness R10] Đã qua vài lượt — cân nhắc bổ sung tài liệu (/docs-site-macos) cho phần vừa làm.")
-    except OSError:
+            # R10 full: inject DIRECTIVE (UserPromptSubmit stdout → vào context → Claude hành động)
+            print(f"[harness R10 docs-gate] Đã qua {every} lượt. ĐỀ NGHỊ với user: có muốn đánh giá "
+                  f"& BỔ SUNG tài liệu cho {every} việc gần đây không? Nếu user đồng ý → gọi "
+                  f"/docs-site-macos (hoặc /cursor-animated-sites cho luồng/sequence) để sinh docs, "
+                  f"rồi viết output-report (YAML frontmatter, OKF). Nếu user từ chối → bỏ qua, không nhắc lại lượt này.")
+    except Exception:
         pass
     return 0
 
