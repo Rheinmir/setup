@@ -56,8 +56,8 @@ rules:
     id: R9
     name: okf-frontmatter
     kind: require_frontmatter
-    statement: "Wiki concept/entity phải có YAML frontmatter parse được + trường 'type' không rỗng (OKF v0.1)."
+    statement: "Wiki content (concepts/entities/sources/draft/architecture/tours — KỂ CẢ nháp) phải có YAML frontmatter + 'type' không rỗng (OKF v0.1). Scope khớp global production: siết frontmatter ngay từ nháp."
     enforce_at: [session, repo]
-    target_globs: ["**/wiki/concepts/**/*.md", "**/wiki/entities/**/*.md", "**/wiki/architecture/**/*.md", "**/wiki/tours/**/*.md"]
+    target_globs: ["**/wiki/concepts/**/*.md", "**/wiki/entities/**/*.md", "**/wiki/sources/**/*.md", "**/wiki/draft/**/*.md", "**/wiki/architecture/**/*.md", "**/wiki/tours/**/*.md"]
     exclude_basenames: ["README.md", "_template.md", "index.md", "log.md", "decisions.md", "active-context.md"]
     require_key: type

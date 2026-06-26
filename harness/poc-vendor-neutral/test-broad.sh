@@ -101,9 +101,11 @@ pm "llmwiki/wiki/concepts/foo.md";                     assert 0 "R5: trong subdi
 hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/n1.md","content":"# n\n## Origin\n- s"}}';                         assert 2 "R9: concept KHÔNG frontmatter bị chặn" $?
 hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/n2.md","content":"---\ntype: concept\n---\n# n\n## Origin\n- s"}}';  assert 0 "R9: có frontmatter + type qua" $?
 hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/concepts/n3.md","content":"---\nname: x\n---\n# n\n## Origin\n- s"}}';        assert 2 "R9: frontmatter THIẾU type bị chặn" $?
-hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/sources/draft/p1.md","content":"# p\n## Origin\n- x\n## Plan\n- [ ] t\nStatus: proposed"}}';                                          assert 2 "R7: proposal thiếu Agent Task/Sequence bị chặn" $?
-hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/sources/draft/p2.md","content":"# p\n## Origin\n- x\n## Plan\n## Agent Task Assignment\n| a |\n**Sequence diagram**: x\nStatus: proposed"}}'; assert 0 "R7: proposal đủ mục qua" $?
-hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/sources/draft/p3.md","content":"# p\n## Origin\n- x\n## Plan\nStatus: done"}}';  assert 0 "R7: không 'proposed' → R7 không áp" $?
+hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/sources/draft/p1.md","content":"---\ntype: draft\n---\n# p\n## Origin\n- x\n## Plan\n- [ ] t\nStatus: proposed"}}';                                          assert 2 "R7: proposal thiếu Agent Task/Sequence bị chặn" $?
+hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/sources/draft/p2.md","content":"---\ntype: draft\n---\n# p\n## Origin\n- x\n## Plan\n## Agent Task Assignment\n| a |\n**Sequence diagram**: x\nStatus: proposed"}}'; assert 0 "R7: proposal đủ mục qua" $?
+hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/sources/draft/p3.md","content":"---\ntype: draft\n---\n# p\n## Origin\n- x\n## Plan\nStatus: done"}}';  assert 0 "R7: không 'proposed' → R7 không áp" $?
+# R9 NỚI (khớp global): sources/draft cũng cần frontmatter — file có Origin nhưng THIẾU frontmatter → chặn
+hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/sources/draft/q.md","content":"# q\n## Origin\n- x"}}';                       assert 2 "R9 nới: draft có Origin nhưng thiếu frontmatter bị chặn" $?
 
 echo
 printf '\033[1mTỔNG: %d test · %d PASS · %d FAIL\033[0m\n' "$T" "$P" "$F"

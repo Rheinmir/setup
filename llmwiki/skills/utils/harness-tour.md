@@ -43,11 +43,13 @@ Nhiều rule cùng soi `wiki/` → chọn sai path là 2 rule cùng chặn, rố
 | Rule | File để vi phạm | Vì sao CHỈ rule đó kích |
 |---|---|---|
 | **R1** no-write-raw | `llmwiki/raw/tour-demo.md` | deny_write glob `raw/**` |
-| **R2** origin-required | `llmwiki/wiki/sources/draft/tour-demo.md` — body KHÔNG có `## Origin`, KHÔNG có `## Plan` | R9 không áp `sources/`; R7 cần `## Plan`+`proposed` mới kích |
+| **R2** origin-required | `llmwiki/wiki/sources/draft/tour-demo.md` = `---\ntype: draft\n---\n# Tour Demo` (CÓ frontmatter, KHÔNG `## Origin`, KHÔNG `## Plan`) | frontmatter → R9 qua; thiếu Origin → R2 chặn |
 | **R3** index-sync | (Stop) chính file R2 vừa tạo, CHƯA có trong `wiki/index.md` | `m_stop` quét `concepts/entities/sources/draft` so với index |
 | **R5** folder-structure | `llmwiki/wiki/tour-demo.md` (ngay dưới `wiki/`, basename lạ) | forbid_root: `wiki/*.md` không thuộc allow-list |
-| **R7** proposal-complete | `llmwiki/wiki/sources/draft/tour-demo-proposal.md` — CÓ `## Origin` + `## Plan` + `proposed`, THIẾU `## Agent Task Assignment` & `Sequence diagram` | có Origin nên R2 qua → R7 là cái chặn |
+| **R7** proposal-complete | `llmwiki/wiki/sources/draft/tour-demo-proposal.md` — CÓ frontmatter + `## Origin` + `## Plan` + `proposed`, THIẾU `## Agent Task Assignment` & `Sequence diagram` | frontmatter→R9 qua, Origin→R2 qua → R7 là cái chặn |
 | **R9** okf-frontmatter | `llmwiki/wiki/concepts/tour-demo.md` — CÓ `## Origin` nhưng KHÔNG có YAML frontmatter | có Origin nên R2 qua; thiếu `type:` → R9 chặn |
+
+> ⚠️ R9 nay phủ **CẢ `sources/` + `draft/`** (khớp global production — nháp cũng cần frontmatter). Vì R2/R9 cùng soi mọi content dir → **cô lập bằng NỘI DUNG, không bằng path**: file CÓ frontmatter mà THIẾU Origin → chỉ R2; file CÓ Origin mà THIẾU frontmatter → chỉ R9.
 
 Không-chặn-live (chỉ cho XEM artifact, nói rõ "không chặn"): **R4** (`.claude/audit/audit.jsonl` + `log.md`),
 **R8** (dòng `[harness] N rule…` lúc SessionStart), **R10** (`.claude/audit/.docs-gate.json` đếm prompt).
@@ -65,8 +67,8 @@ Tầng repo: **R6** (pre-commit + CI `.github/workflows/harness.yml` + skill `/v
 
 **Cảnh 2 — R2 (PreToolUse · ép `## Origin`):**
 - Tường thuật: "Tạo file nguồn mà 'quên' `## Origin` → không truy được gốc."
-- **Write** `llmwiki/wiki/sources/draft/tour-demo.md` body `# Tour Demo` + 1 dòng (KHÔNG có `## Origin`) → exit 2 → CHẶN. Trích `[R2 origin-required] …`.
-- **Sửa**: Write lại đúng file đó, thêm `## Origin\n- harness-tour demo` → lần này **PASS**, file được ghi.
+- **Write** `llmwiki/wiki/sources/draft/tour-demo.md` = `---\ntype: draft\n---\n# Tour Demo` (CÓ frontmatter để R9 qua, nhưng KHÔNG có `## Origin`) → exit 2 → CHẶN. Trích `[R2 origin-required] …`.
+- **Sửa**: Write lại đúng file đó, thêm `## Origin\n- harness-tour demo` (giữ nguyên frontmatter) → lần này **PASS**, file được ghi.
 
 **Cảnh 3 — R3 (Stop · index nói dối):**
 - Tường thuật: "File tour-demo vừa tạo nhưng tôi cố tình KHÔNG ghi nó vào `wiki/index.md`. Giờ thử kết thúc lượt."
@@ -84,7 +86,7 @@ Nói rõ trước nhóm không-chặn: "3 rule sau KHÔNG chặn lúc gõ — ch
 
 **R1 — Write `llmwiki/raw/tour-demo.md`** → CHẶN (deny raw/). Trích, không retry.
 
-**R2 — Write `llmwiki/wiki/sources/draft/tour-demo.md`** (thiếu `## Origin`) → CHẶN → sửa thêm `## Origin` → PASS.
+**R2 — Write `llmwiki/wiki/sources/draft/tour-demo.md`** (CÓ frontmatter `---\ntype: draft\n---` để R9 qua, nhưng thiếu `## Origin`) → CHẶN → thêm `## Origin` → PASS.
 
 **R3 — (Stop)** kết thúc lượt khi file R2 chưa vào `index.md` → Stop block → thêm row index → tiếp.
 *(Trong FULL, để liền mạch có thể gộp R3 vào cuối: sau khi tạo các file PASS bên dưới, thử kết thúc 1 lượt còn lệch index → block → cập nhật index.)*
@@ -95,7 +97,7 @@ Nói rõ trước nhóm không-chặn: "3 rule sau KHÔNG chặn lúc gõ — ch
 
 **R6 — verify-before-commit (repo, KHÔNG chặn-live):** chỉ ra cổng commit gồm pre-commit hook + CI `.github/workflows/harness.yml` (gọi lõi `files` mode trên .md đổi) + skill `/verify-before-commit` (Claude tự soi code mới trước khi commit). Đây là tầng repo, không phải session — không demo block trực tiếp.
 
-**R7 — Write `llmwiki/wiki/sources/draft/tour-demo-proposal.md`** có `## Origin` + `## Plan` + `proposed` nhưng THIẾU `## Agent Task Assignment` & `Sequence diagram` → CHẶN `[R7 proposal-complete] …` → sửa thêm 2 mục đó → PASS.
+**R7 — Write `llmwiki/wiki/sources/draft/tour-demo-proposal.md`** có frontmatter + `## Origin` + `## Plan` + `proposed` nhưng THIẾU `## Agent Task Assignment` & `Sequence diagram` → CHẶN `[R7 proposal-complete] …` → sửa thêm 2 mục đó → PASS.
 
 **R8 — pattern-health (KHÔNG chặn):** chạy `python3 harness/poc-vendor-neutral/bin/harness-events.py session` để hiện dòng `[harness] N rule đang gác…` (+ cảnh báo drift nếu policy lệch remote). Đây là thứ in lúc SessionStart.
 
