@@ -44,19 +44,21 @@ def main():
 
     print("gen-converters: sinh wiring từ policy.yaml →")
 
-    # ---- 1. Claude (deny: hook → CLI) ----
+    # ---- 1. Claude — PreToolUse (lõi chặn) + 4 hook sự kiện R3/R4/R8/R10 ----
     import json
+    EVT = "harness/poc-vendor-neutral/bin/harness-events.py"
+    def _ev(c, t=15): return [{"type": "command", "command": c, "timeout": t}]
     claude = {
         "_generated": GEN,
         "hooks": {
-            "PreToolUse": [{
-                "matcher": "Write|Edit|MultiEdit|Bash",
-                "hooks": [{
-                    "type": "command",
-                    "command": f'python3 "$CLAUDE_PROJECT_DIR/{CLI}" claude-hook',
-                    "timeout": 15,
-                }],
-            }]
+            # PreToolUse = lõi chặn R1/R2/R5/R7/R9 ; 4 hook còn lại = R3/R4/R8/R10
+            "PreToolUse": [{"matcher": "Write|Edit|MultiEdit|Bash",
+                "hooks": _ev(f'python3 "$CLAUDE_PROJECT_DIR/{CLI}" claude-hook')}],
+            "PostToolUse": [{"matcher": "Write|Edit|MultiEdit",
+                "hooks": _ev(f'python3 "$CLAUDE_PROJECT_DIR/{EVT}" audit', 10)}],     # R4 log-append
+            "Stop": [{"hooks": _ev(f'python3 "$CLAUDE_PROJECT_DIR/{EVT}" stop')}],     # R3 index-sync
+            "SessionStart": [{"hooks": _ev(f'python3 "$CLAUDE_PROJECT_DIR/{EVT}" session', 10)}],   # R8 health
+            "UserPromptSubmit": [{"hooks": _ev(f'python3 "$CLAUDE_PROJECT_DIR/{EVT}" docs', 10)}],   # R10 docs-gate
         },
     }
     write("claude/settings.snippet.json", json.dumps(claude, ensure_ascii=False, indent=2) + "\n")

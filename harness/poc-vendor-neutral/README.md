@@ -20,6 +20,24 @@ curl -fsSL .../bootstrap.sh | bash -s -- --with-skills              # cài harne
 > **Harness là HOOK, không phải MCP.** Cài xong KHÔNG thấy trong `/mcp` là ĐÚNG — kiểm bằng **`/hooks`** (hoặc khối `hooks` trong `.claude/settings.json`). `/mcp` chỉ liệt kê MCP server (tool cho model gọi), harness không nằm ở đó.
 >
 > **Phạm vi khác nhau:** harness cài **theo từng project** (hook trong `.claude/settings.json` của project). Skill (`--with-skills`) cài **GLOBAL** (`~/.claude/skills`, dùng mọi project). Hai thứ tách biệt — "cài harness" không tự kéo skill, trừ khi thêm `--with-skills`.
+
+## Luật được gác — đủ R1–R10
+
+Cài xong, harness đăng ký **5 hook sự kiện** trong `.claude/settings.json`, phủ cả 10 rule của bản production:
+
+| Rule | Gác bằng | Hook event |
+|---|---|---|
+| **R1·R2·R5·R7·R9** (no-write-raw · origin · folder · proposal · okf-frontmatter) | lõi `llmwiki-validate.py` — chặn lúc Write | **PreToolUse** |
+| **R3** index-sync | `harness-events.py stop` — chặn kết thúc lượt nếu `index.md` lệch | **Stop** |
+| **R4** log-append | `harness-events.py audit` — ghi `.claude/audit/audit.jsonl` | **PostToolUse** |
+| **R6** verify-before-commit | pre-commit + CI gọi lõi (+ skill `/verify-before-commit`) | repo / skill |
+| **R8** pattern-health | `harness-events.py session` — in trạng thái (không chặn) | **SessionStart** |
+| **R10** docs-gate | `harness-events.py docs` — nhắc mỗi N prompt | **UserPromptSubmit** |
+
+Chặn-cứng: **R1/R2/R3/R5/R7/R9**. Tự-động/báo-cáo/nhắc: **R4/R8/R10**. Cổng commit: **R6**.
+Mọi hook sự kiện đều **fail-open** (lỗi hạ tầng → exit 0, không phá session).
+
+> **3 trụ khi đẩy sang dự án khác:** Harness (10R, per-project, `install.sh`) · Skills (workflow: propose/verify-before-commit…, global, `--with-skills`) · llmwiki (khung wiki). One-liner `bootstrap.sh --with-skills` lo trụ Harness + Skills.
 > URL trỏ nhánh `orca` → luôn kéo **bản mới nhất** (không outdate); chỉ hỏng nếu đổi tên branch/đường dẫn. Đổi nguồn: đặt env `HARNESS_BASE`.
 
 **Dán nguyên khối này vào system prompt của AI** (agent tự cài khi được yêu cầu):
