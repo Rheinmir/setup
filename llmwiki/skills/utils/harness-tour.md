@@ -15,6 +15,11 @@ test -f llmwiki/.claude/hooks/pre_tool_use.py && echo ON || echo MISSING
 Nếu MISSING → dừng, gợi ý: `bash harness/scripts/install-harness.sh .`
 Nếu session hiện tại không load hooks (project root khác llmwiki, không có .claude/settings.json ở root) → nói rõ "tour cần mở session tại project đã cài" và dừng.
 
+## Harness là HOOK, KHÔNG phải MCP (giải thích nếu user hỏi "sao /mcp không thấy")
+Harness KHÔNG xuất hiện trong `/mcp` — và sẽ không bao giờ. Lớp chặn là PreToolUse/PostToolUse/Stop **hook** → kiểm bằng `/hooks` hoặc khối `hooks` trong `.claude/settings.json`, KHÔNG phải `/mcp`. MCP là thứ khác (tool cho model gọi). Hai installer KHÁC nhau, đừng lẫn:
+- `harness/scripts/install-harness.sh` — harness CHÍNH, cài đúng các hook mà tour này diễn.
+- `harness/poc-vendor-neutral/install.sh` — PoC vendor-neutral (CLI + gen-converters; cài qua hook `claude-hook`), cơ chế khác, cũng KHÔNG phải MCP.
+
 ## Kịch bản — diễn TUẦN TỰ, tường thuật TRƯỚC mỗi cảnh
 
 **Mở màn** — nói: "Tôi sẽ cố tình vi phạm 3 rule. Hãy xem hệ thống chặn tôi."
