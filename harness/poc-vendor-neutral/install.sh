@@ -37,11 +37,15 @@ fi
 # ── B0. Copy lõi vào dự án ──
 log "B0 · copy lõi → $DEST"
 mkdir -p "$DEST/bin"
-cp "$SRC/policy.yaml" "$SRC/gen-converters.py" "$SRC/demo.sh" "$SRC/test-broad.sh" "$DEST/"
-cp "$SRC/bin/llmwiki-validate.py" "$DEST/bin/"
-for f in README.md DOCS.md; do [ -f "$SRC/$f" ] && cp "$SRC/$f" "$DEST/"; done
+if [ "$(cd "$SRC" && pwd -P)" != "$(cd "$DEST" && pwd -P)" ]; then
+  cp "$SRC/policy.yaml" "$SRC/gen-converters.py" "$SRC/demo.sh" "$SRC/test-broad.sh" "$DEST/"
+  cp "$SRC/bin/llmwiki-validate.py" "$DEST/bin/"
+  for f in install.sh uninstall.sh bootstrap.sh README.md DOCS.md; do [ -f "$SRC/$f" ] && cp "$SRC/$f" "$DEST/"; done
+else
+  log "  · lõi đã ở đúng chỗ (SRC=DEST), bỏ qua copy"
+fi
 printf 'out/\n' > "$DEST/.gitignore"
-chmod +x "$DEST/bin/llmwiki-validate.py" "$DEST/demo.sh" "$DEST/test-broad.sh" "$DEST/gen-converters.py" 2>/dev/null || true
+chmod +x "$DEST/bin/llmwiki-validate.py" "$DEST/gen-converters.py" "$DEST"/*.sh 2>/dev/null || true
 python3 -c 'import yaml' 2>/dev/null || { warn "thiếu pyyaml → thử pip install"; pip3 install --quiet pyyaml 2>/dev/null || warn "không cài được pyyaml — lõi sẽ fail-open tới khi có pyyaml"; }
 
 # ── B1. Dò vendor ──
