@@ -135,3 +135,6 @@ Render fdk.md thành trang docs glass đọc được: llmwiki/html/270626-fdk-d
 
 ## 2026-06-27 — fix+skill — fdk opt-in (/fdk) + audit
 Sửa lỗi tư duy "mặc định phiên = dev framework": gỡ fdk_context() khỏi session_start.py (giữ pattern-health); tạo skill /fdk (canonical utils + mirror, diff=SAME) gọi chủ động; slim pointer AGENT/CLAUDE → /fdk điều kiện + đăng ký skill table; ADR-004 + audit 5 điểm auto-fire (2 phạm: fdk_context + pointer; 3 không). fdk.md + docs HTML section 4 cập nhật.
+
+## 2026-06-27 — durability — ghim luật opt-in vào repo
+Memory cá nhân là máy-local (không theo git) → ghim luật "auto-fire chỉ phục vụ dự án hiện tại; context nội-bộ-framework phải opt-in" vào AGENT.md + CLAUDE.md (## Rules, feedback 2026-06-27) + guard actionable trong fdk.md pre-flight + trang docs. Travel với repo, mọi máy/agent đều thấy.

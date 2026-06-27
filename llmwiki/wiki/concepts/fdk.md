@@ -44,6 +44,8 @@ Chạy theo đúng thứ tự này. Mỗi bước trỏ tới công cụ/runbook
 6. **Verify trước commit.** `verify-before-commit` + drift-test liên quan (`policy-converters-drift-test.sh` nếu đụng policy). CI thật = `harness.yml` (`llmwiki-validate files` + `demo.sh` + `test-broad.sh`).
 7. **Ghi vết.** Cập nhật [[rule-registry]] (nếu rule), `decisions.md`/`log.md` 1 dòng, ADR nếu là quyết định kiến trúc.
 
+> **Design rule — khi thêm bất kỳ auto-fire / injected context nào** (hook SessionStart/UserPromptSubmit, dòng auto-load trong AGENT/CLAUDE, banner đầu phiên): hỏi *"phục vụ DỰ ÁN HIỆN TẠI hay nội-bộ-framework?"*. Chỉ loại đầu được auto-fire; context nội-bộ-framework (FDK, inventory, runbook sửa rule) phải **opt-in** qua skill gọi chủ động. Đừng lặp lỗi auto-bơm FDK — xem [[ADR-004-framework-dev-context-opt-in]]. Luật ghim trong repo (AGENT/CLAUDE + đây) vì memory cá nhân không theo git.
+
 ---
 
 ## Phần 2 — Không bao giờ MISS rule

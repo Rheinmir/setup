@@ -260,6 +260,12 @@ footer{max-width:1100px;margin:0 auto;padding:30px 24px 60px;font-size:12.5px;co
     <li><input type="checkbox" id="p6"><label for="p6"><b>6 · Verify trước commit.</b> <code>verify-before-commit</code> + drift-test liên quan. CI thật = <code>harness.yml</code>.</label></li>
     <li><input type="checkbox" id="p7"><label for="p7"><b>7 · Ghi vết.</b> Cập nhật <code>rule-registry</code> (nếu rule), <code>decisions.md</code>/<code>log.md</code> một dòng, ADR nếu là quyết định kiến trúc.</label></li>
   </ul>
+  <div class="card" style="margin-top:18px;border-left:4px solid #30b0c7"><h4>⚠ Design rule — khi thêm auto-fire / injected context</h4><ul>
+    <li>Hook SessionStart/UserPromptSubmit, dòng auto-load AGENT/CLAUDE, banner đầu phiên → hỏi: <b>"phục vụ dự án hiện tại hay nội-bộ-framework?"</b></li>
+    <li>Chỉ loại <i>phục vụ dự án hiện tại</i> được auto-fire (pattern-health, docs-gate).</li>
+    <li>Context <i>nội-bộ-framework</i> (FDK, inventory, runbook sửa rule) phải <b>opt-in</b> qua skill gọi chủ động — đừng lặp lỗi auto-bơm FDK (ADR-004).</li>
+    <li>Luật ghim trong repo (AGENT/CLAUDE + fdk.md) vì memory cá nhân là máy-local, không theo git.</li>
+  </ul></div>
 </div></section>
 
 <!-- 2 -->
