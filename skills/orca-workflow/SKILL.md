@@ -11,7 +11,7 @@ Propose → gate → dispatch → verify qua Orca. Agent pool 1:1 per engine (cl
 
 Claude: analyze. Others: execute. Kill opencode nếu chờ quá lâu.
 
-**Caveman Mode**: Chỉ dùng `caveman` (~75% token save) cho giao tiếp agent-to-agent tạm thời. **BẮT BUỘC tắt caveman khi viết bất kỳ TÀI LIỆU nào con người sẽ đọc** — proposal, output-report, wiki content (concept/ADR/registry), README, CONTRIBUTING, và mọi trang HTML. Tài liệu phải là văn xuôi đầy đủ, câu hoàn chỉnh, dễ đọc; không bỏ liên từ, không viết tắt cụt, không nhồi bảng thay cho câu giải thích. Bài học 2026-06-27: user phản hồi "caveman đã nén quá mức khi viết tài liệu" — nén tiết kiệm token nhưng làm tài liệu khó hiểu, không đáng.
+**Caveman Mode**: Chọn độ chi tiết theo người đọc file. File markdown mà MÁY hoặc AGENT đọc và thực thi (SKILL.md, policy.yaml, AGENT.md, bảng tham chiếu thuần) thì viết ngắn gọn được — caveman ở đây tiết kiệm token mà không hại gì. Nhưng **tài liệu CON NGƯỜI đọc hoặc review thì BẮT BUỘC tắt caveman và viết đầy đủ** — proposal, output-report, wiki content (concept/ADR/registry), README, CONTRIBUTING và runbook, cùng mọi trang HTML. Những file này phải là văn xuôi với câu hoàn chỉnh, dễ đọc; không bỏ liên từ, không viết tắt cụt, không nhồi bảng thay cho câu giải thích. Bài học 2026-06-27: user phản hồi "caveman đã nén quá mức khi viết tài liệu", rồi làm rõ — file máy đọc thì gọn được, file người đọc thì cần đầy đủ.
 
 
 ## Triggers

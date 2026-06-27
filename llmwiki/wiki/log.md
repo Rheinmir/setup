@@ -108,3 +108,4 @@
 ## 2026-06-27 — commit — 5 wiki untracked có-sẵn được index trỏ (architecture, cursor-explain-site, onboarding-tour, project-structure, 250626-onboard-setup)
 ## 2026-06-27 — docs-site-macos — session-review-html (trang glass 6 section, self-contained, :8765)
 ## 2026-06-27 — feedback — siết luật: tắt caveman khi viết tài liệu (orca-workflow x2 + CLAUDE.md); lưu memory docs-no-caveman
+## 2026-06-27 — feedback — tinh chỉnh luật caveman: máy đọc thì gọn được, người đọc thì đầy đủ (orca-workflow x2 + CLAUDE.md)

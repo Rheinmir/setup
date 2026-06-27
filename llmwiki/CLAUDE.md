@@ -65,7 +65,7 @@ These guidelines are working if: fewer unnecessary changes in diffs, fewer rewri
 - Use `[[wikilinks]]` to cross-reference entries in `wiki/`
 - Wiki files live in `concepts/`, `entities/`, `sources/`, `draft/`, `architecture/`, or `tours/` — never in `wiki/` root (enforced by R5 validator)
 - Wiki entries are only created AFTER code is committed — never during proposal or planning
-- Documentation (wiki content, ADR, README, CONTRIBUTING, proposal, output-report, HTML) must be written in full, readable prose with complete sentences. Never use caveman mode or over-compressed shorthand when writing documentation — caveman is only for ephemeral agent-to-agent messages. (Feedback 2026-06-27.)
+- Match a file's verbosity to its reader. Markdown that a machine or agent reads and executes (SKILL.md, policy.yaml, AGENT.md, pure reference tables) may be concise. Documentation a human reads or reviews (review reports, ADRs, README, CONTRIBUTING and runbooks, output-reports, HTML pages) must be full, readable prose with complete sentences — never caveman or over-compressed shorthand there; caveman is only for ephemeral agent-to-agent messages. (Feedback 2026-06-27.)
 
 ## Skills
 
