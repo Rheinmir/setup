@@ -70,7 +70,7 @@ rules:
     name: seq-html-glass-style
     kind: conditional_require
     statement: "Seq diagram HTML (*-seq.html) PHẢI theo style docs-site-macos liquid-glass — KHÔNG theme flat/tối tự chế (bài học 250626 'sao xấu thế'). Bắt buộc: backdrop-filter glass + nền sáng linear-gradient(180deg,#f7fbff…) + edge-highlight inset."
-    enforce_at: [session]                  # CHỈ session: chặn lúc agent ghi. KHÔNG repo — ~8 seq html cũ là flat, repo-tier sẽ fail lịch sử (migrate trước rồi mới bật).
+    enforce_at: [session, repo]            # 2026-06-27: ĐÃ migrate 8 seq html cũ → glass → bật repo-tier (pre-commit/CI). Lịch sử giờ sạch.
     target_globs:
       - "**/llmwiki/html/*-seq.html"
       - "**/html/*-seq.html"

@@ -100,3 +100,4 @@
 ## 2026-06-27 — T5 drift-test — policy-converters-drift-test.sh (28/28 + negative bắt drift); wire .pre-commit
 ## 2026-06-27 — T4 — CONTRIBUTING-harness.md (runbook thêm rule); gap-backfill CLOSED (T1-T5 done)
 ## 2026-06-27 — policy-drives-wiring — gen-converters SINH hook claude từ hook_event rules (output identical, drift-test 36/0 + negative)
+## 2026-06-27 — R11 [repo] — migrate 8 seq html flat → glass (override docs-site-macos); bật enforce_at [session,repo] + pre-commit seq-html-glass

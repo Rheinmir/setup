@@ -13,3 +13,4 @@
 | 2026-06-27 | T5 drift-test gen-converters↔policy | test | out/ gitignored → bắt 'gen DROP/lệch policy' | drift-test 28/28, negative proven, wire pre-commit |
 | 2026-06-27 | T4 + đóng gap-backfill | docs | Runbook thiếu → người mới phải đọc đầu tác giả | CONTRIBUTING-harness.md; T1-T5 done |
 | 2026-06-27 | policy-drives-wiring | architecture | wiring hook hardcode ở gen-converters | gen SINH từ hook_event (event_action/blocking/matcher/timeout); output IDENTICAL; drift-test 36/0 |
+| 2026-06-27 | R11 bật repo-tier | rule | 8 seq html cũ flat chặn repo-tier | migrate override glass (non-destructive); enforce_at +repo; pre-commit hook |

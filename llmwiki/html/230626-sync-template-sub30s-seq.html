@@ -22,6 +22,13 @@
   .desc { background:#f8fafc; border:1px dashed var(--line); border-radius:8px; padding:10px 14px; font-size:13px; color:#475569; margin:14px 0 0; }
   code { background:#f1f5f9; padding:1px 5px; border-radius:5px; font-size:12.5px; }
 </style>
+<style>
+/* R11 glass migration (docs-site-macos) — override để đạt liquid-glass, giữ nguyên markup */
+body{background:linear-gradient(180deg,#f7fbff,#eaf2fd)!important;position:relative;}
+body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(40% 32% at 14% 8%,rgba(88,86,214,.18),transparent 70%),radial-gradient(38% 30% at 88% 14%,rgba(10,132,255,.16),transparent 72%),radial-gradient(46% 38% at 72% 92%,rgba(48,209,184,.14),transparent 74%);}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.5;background-image:radial-gradient(rgba(60,60,67,.10) 1px,transparent 1px);background-size:22px 22px;}
+.diagram-box{background:rgba(255,255,255,.7)!important;backdrop-filter:blur(8px) saturate(150%);-webkit-backdrop-filter:blur(8px) saturate(150%);box-shadow:0 6px 22px rgba(20,40,90,.08), inset 0 1px 0 rgba(255,255,255,.85)!important;border:1px solid rgba(255,255,255,.55)!important;}
+</style>
 </head>
 <body>
 <h1>Sequence — đưa <code>/sync-template</code> về dưới 30s</h1>
