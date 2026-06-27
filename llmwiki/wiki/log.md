@@ -138,3 +138,6 @@ Sửa lỗi tư duy "mặc định phiên = dev framework": gỡ fdk_context() k
 
 ## 2026-06-27 — durability — ghim luật opt-in vào repo
 Memory cá nhân là máy-local (không theo git) → ghim luật "auto-fire chỉ phục vụ dự án hiện tại; context nội-bộ-framework phải opt-in" vào AGENT.md + CLAUDE.md (## Rules, feedback 2026-06-27) + guard actionable trong fdk.md pre-flight + trang docs. Travel với repo, mọi máy/agent đều thấy.
+
+## 2026-06-28 — goal — karpathy distill + skills cheatsheet + clean remote
+(1) AGENT.md/CLAUDE.md: distill 4 nguyên tắc Karpathy gọn (~60→10 dòng) + attribute (multica-ai/andrej-karpathy-skills) + merge framework context. (2) Mind-map cheatsheet skill: llmwiki/html/280626-skills-cheatsheet.html (local-only do html gitignored). (3) Clean remote giữ local: gitignore + git rm --cached 21 docs html + 29 draft md — giữ file trên đĩa + row index (index_sync 2-chiều nhưng KHÔNG ở CI → local PASS, remote slim).
