@@ -9,6 +9,13 @@ một dự án: nền tri thức (`llmwiki/`), quy trình dựng dự án, và *
 
 Chạy trong thư mục gốc dự án của bạn — **1 lệnh lo trọn harness + skills + llmwiki**, khỏi nhớ cờ:
 
+Agent Prompt:
+
+```bash
+chạy curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash và kiểm tra xem mọi thứ đã ở đúng chỗ chưa
+```
+hoặc
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash
 ```
