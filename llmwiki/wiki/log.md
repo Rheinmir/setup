@@ -94,3 +94,4 @@
 ## 2026-06-27 — orca-workflow — framework-gap-backfill: proposal + R11 seq-glass-style + R12 pull-before-change (gate1 PreToolUse + gate2 pre-push)
 ## 2026-06-27 — orca-workflow — R12 rút gọn về (B) orchestrator pre-work sweep + (C) pre-push; BỎ (A) per-edit PreToolUse (cost cao, lệch đa-vendor)
 ## 2026-06-27 — orca-workflow — propose R12 v3 workspace-aware (pull-gate-sweep + --all-subrepos), gate chờ duyệt
+## 2026-06-27 — orca-workflow — R12 v3 DUYỆT + impl T1-T5 (list-subrepos.py, pull-gate-sweep.sh, install --all-subrepos, Step 0 sweep ×2, test 4/4 PASS); Kiro thiếu → Claude inline

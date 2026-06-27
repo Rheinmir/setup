@@ -33,25 +33,32 @@ Hai điểm phủ-mọi-vendor đã chốt: **(B)** do orchestrator chạy (khô
 
 > Execution **hoãn** tới sau gate.
 
-- [ ] **T1** — `harness/poc-vendor-neutral/bin/pull-gate-sweep.sh`: discover subrepo (manifest|find) → fetch song song (timeout, fail-open) → in bảng `repo · branch · ahead/behind`; exit 2 nếu **subrepo đích** behind. Tái dùng `pull-gate.sh` per repo.
-- [ ] **T2** — Schema + parser `.harness-workspace.yaml` (`subrepos: [...]`, `exclude: [...]`, `targets: [...]`); thiếu manifest → auto-discover depth N + lọc harnessed.
-- [ ] **T3** — `install-harness.sh --all-subrepos`: loop subrepo → cài pre-push (gate2) + `.pre-commit` mỗi cái; idempotent; report bảng đã-cài.
-- [ ] **T4** — orca-workflow Step 0: gọi `pull-gate-sweep.sh` thay `pull-gate.sh gate1` (sweep cả workspace trước fan-out); cập nhật 2 bản skill.
-- [ ] **T5** — Test multi-subrepo fixture: tạo 2-3 repo giả, 1 cái cố tình behind → sweep phát hiện đúng (exit 2 khi là đích); `--all-subrepos` wire đúng N pre-push; reversible.
+- [x] **T1** — `harness/poc-vendor-neutral/bin/pull-gate-sweep.sh`: discover subrepo (manifest|find) → fetch song song (timeout, fail-open) → in bảng `repo · branch · ahead/behind`; exit 2 nếu **subrepo đích** behind. Tái dùng `pull-gate.sh` per repo.
+- [x] **T2** — Schema + parser `.harness-workspace.yaml` (`subrepos: [...]`, `exclude: [...]`, `targets: [...]`); thiếu manifest → auto-discover depth N + lọc harnessed.
+- [x] **T3** — `install-harness.sh --all-subrepos`: loop subrepo → cài pre-push (gate2) + `.pre-commit` mỗi cái; idempotent; report bảng đã-cài.
+- [x] **T4** — orca-workflow Step 0: gọi `pull-gate-sweep.sh` thay `pull-gate.sh gate1` (sweep cả workspace trước fan-out); cập nhật 2 bản skill.
+- [x] **T5** — Test multi-subrepo fixture: tạo 2-3 repo giả, 1 cái cố tình behind → sweep phát hiện đúng (exit 2 khi là đích); `--all-subrepos` wire đúng N pre-push; reversible.
 
 ## Agent Task Assignment
 
 | Task | Agent CLI | Lý do chọn | Status |
 |------|-----------|------------|--------|
-| T1 pull-gate-sweep.sh | Claude Code | Ngữ nghĩa orchestration + exit-code đích/không-đích dễ vỡ | pending |
-| T2 manifest schema + parser | OpenCode `big-pickle` | Parse YAML + glob, cơ học | pending |
-| T3 install --all-subrepos | Kiro | Loop cài + config, độc lập verify | pending |
-| T4 Step 0 → sweep (2 skill) | Claude Code | Sửa luồng workflow, prose (không caveman) | pending |
-| T5 multi-subrepo test fixture | Kiro | Tạo fixture + assert, độc lập | pending |
+| T1 pull-gate-sweep.sh | Claude Code | Ngữ nghĩa orchestration + exit-code đích/không-đích dễ vỡ | done |
+| T2 manifest schema + parser | OpenCode `big-pickle` | Parse YAML + glob, cơ học | done |
+| T3 install --all-subrepos | Kiro | Loop cài + config, độc lập verify | done |
+| T4 Step 0 → sweep (2 skill) | Claude Code | Sửa luồng workflow, prose (không caveman) | done |
+| T5 multi-subrepo test fixture | Kiro | Tạo fixture + assert, độc lập | done |
 
 ## Sequence diagram
 
 Mỗi task một sơ đồ (glass docs-site-macos, badge agent): [`270626-r12-v3-workspace-aware-seq.html`](../../../html/270626-r12-v3-workspace-aware-seq.html)
+
+## Execution (2026-06-27, sau gate `gate_16a0e503882d` duyệt)
+
+- **T2 gộp vào discovery dùng chung** `bin/list-subrepos.py` (manifest | fallback find harnessed) — sweep + installer cùng gọi (≥2 use case → abstraction hợp lệ), KHÔNG đẻ parser riêng.
+- **Kiro không có** trên máy (chỉ opencode+agy) + T1–T5 phụ thuộc nặng → **Claude thực thi inline** (fallback chuẩn theo skill, dispatch headless không tin được).
+- Artifacts: `bin/list-subrepos.py`, `bin/pull-gate-sweep.sh`, `install-harness.sh --all-subrepos`, Step 0 ×2 skill, `tests/r12-v3-workspace-test.sh`.
+- **Test T5: 4/4 PASS** — target behind→exit 2; chỉ watch behind→exit 0 (phân biệt target/watch); `--all-subrepos` cài pre-push mỗi target. Fixture tmp reversible.
 
 ## Origin
 

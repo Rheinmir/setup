@@ -24,11 +24,13 @@ set -euo pipefail
 # rồi re-audit 1 lần — gộp vòng lặp 3-reinstall của agent thành 1 lệnh bash.
 SELF_HEAL=0
 NO_CLONE=0
+ALL_SUBREPOS=0
 ARGS=()
 for a in "$@"; do
   case "$a" in
-    --self-heal) SELF_HEAL=1 ;;
-    --no-clone)  NO_CLONE=1 ;;
+    --self-heal)    SELF_HEAL=1 ;;
+    --no-clone)     NO_CLONE=1 ;;
+    --all-subrepos) ALL_SUBREPOS=1 ;;
     *) ARGS+=("$a") ;;
   esac
 done
@@ -59,6 +61,38 @@ if ! src_ok "$SRC"; then
     || git clone --depth 1 -b orca https://github.com/rheinmir/setup.git "$TMP_CLONE" >/dev/null 2>&1
   SRC="$TMP_CLONE"
   src_ok "$SRC" || { warn "Template repo chưa có harness/ — sync template trước"; exit 1; }
+fi
+
+# ---------- 0.4. --all-subrepos: R12 v3 (C) — nhân gate2 (pre-push) ra mọi subrepo harnessed ----------
+if [ "$ALL_SUBREPOS" = "1" ]; then
+  LIST="$SRC/harness/poc-vendor-neutral/bin/list-subrepos.py"
+  [ -f "$LIST" ] || { warn "thiếu list-subrepos.py — không quét được"; exit 1; }
+  log "R12 v3: quét subrepo trong workspace $ROOT (gate2 = pre-push)"
+  n=0; ok=0
+  while IFS=$'\t' read -r path kind; do
+    [ -n "$path" ] || continue
+    n=$((n+1))
+    GATEPATH="$path/harness/poc-vendor-neutral/bin/pull-gate.sh"
+    if [ "$kind" != "target" ] || [ ! -f "$GATEPATH" ]; then
+      warn "  skip $(basename "$path") ($kind — không có pull-gate.sh): gate2 cần harnessed repo"; continue
+    fi
+    if [ -d "$path/.git/hooks" ]; then
+      cat > "$path/.git/hooks/pre-push" <<'PP'
+#!/usr/bin/env bash
+# harness R12 (C) gate2 — pull-before-push. Bypass khẩn: git push --no-verify
+ROOT="$(git rev-parse --show-toplevel 2>/dev/null)"
+GATE="$ROOT/harness/poc-vendor-neutral/bin/pull-gate.sh"
+[ -x "$GATE" ] || { echo "pre-push: thiếu pull-gate.sh — fail-open"; exit 0; }
+exec "$GATE" gate2
+PP
+      chmod +x "$path/.git/hooks/pre-push"
+      ok=$((ok+1)); log "  ✓ pre-push (gate2) → $(basename "$path")"
+    else
+      warn "  skip $(basename "$path") — không thấy .git/hooks (worktree/submodule?)"
+    fi
+  done < <(python3 "$LIST" "$ROOT" 2>/dev/null)
+  log "--all-subrepos: gate2 cài cho $ok/$n subrepo target. Xong."
+  exit 0
 fi
 
 # ---------- 0.5. GLOBAL mode ----------
