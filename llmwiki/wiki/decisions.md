@@ -15,3 +15,5 @@
 | 2026-06-27 | policy-drives-wiring | architecture | wiring hook hardcode ở gen-converters | gen SINH từ hook_event (event_action/blocking/matcher/timeout); output IDENTICAL; drift-test 36/0 |
 | 2026-06-27 | R11 bật repo-tier | rule | 8 seq html cũ flat chặn repo-tier | migrate override glass (non-destructive); enforce_at +repo; pre-commit hook |
 | 2026-06-27 | R6 + reconcile 2 policy | rule | R6 chỉ ở production policy; 2 policy lệch rule-set | R6=verify-before-commit; +R11/R12 prod, +R6 poc; drift-test gác parity |
+| 2026-06-27 | propose = single source of truth | architecture | /propose ↔ orca-workflow tả lại lệch nhau (glass-style drift) | ADR-003: orchestrator delegate /propose; Claude=substance, CLI-rẻ=render (Full, watchdog+R7) |
+| 2026-06-27 | seq html message phải hiện sẵn | rule | R7-(d) bài 130626: opacity:0 ẩn nội dung người-đọc | spec /propose + 2 seq html sửa: .msg opacity≥.82, animation chỉ highlight |

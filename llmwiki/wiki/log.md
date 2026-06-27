@@ -111,3 +111,15 @@
 ## 2026-06-27 — feedback — tinh chỉnh luật caveman: máy đọc thì gọn được, người đọc thì đầy đủ (orca-workflow x2 + CLAUDE.md)
 ## 2026-06-27 — docs-site-macos — viết lại 270626-session-review.html bằng văn xuôi đầy đủ (theo feedback caveman), giữ design system glass
 ## 2026-06-27 — docs-site-macos — tinh gọn session-review.html (cô đọng vừa đủ, không sơ sài) theo feedback
+
+## 2026-06-27 — propose — wiki-sync-structure
+Draft proposal `270626-wiki-sync-structure.md` + seq HTML `270626-wiki-sync-structure-seq.html`. Skill tái gọi `/wiki-sync-structure` để phát hiện & sửa drift tài liệu cấu trúc (số liệu 32→56 / 25→44, gap file 03, bảng skill AGENT.md≠CLAUDE.md, dedupe design-pattern + infographic). 4 task, all claude. STOP chờ duyệt.
+
+## 2026-06-27 — propose — propose-single-source
+Draft `270626-propose-single-source.md` + seq HTML (glass-style). Refactor DRY: /propose hấp thụ gap glass-style → thành single source of truth; orca-workflow bước 2 đổi sang GỌI /propose (như bước 1 đã gọi query); giữ R12/query/gate/dispatch. 3 task, all claude. STOP chờ duyệt.
+
+## 2026-06-27 — edit(skill) — propose step-7 rich-prose + glass
+Sửa thẳng bước 7 của /propose (cả 3 bản: dev-loop canonical + mirror skills/ + global ~/.claude, diff=SAME): companion HTML phải có CẢ (A) animated diagram VÀ (B) prose chi tiết câu hoàn chỉnh cho mỗi task — chỉ-diagram = chưa đạt; + bắt buộc style docs-site-macos glass. Theo rule CLAUDE.md 2026-06-27 (HTML là tài liệu người-đọc). Gộp luôn gap glass-style của proposal #2-T1.
+
+## 2026-06-27 — implement — propose-single-source (proposal #2)
+Đã làm T1–T3: (T1) bước 7 /propose nuốt glass-style + prose (B); (T2) orca-workflow bước 2 → GỌI /propose + mô hình Claude-nghĩ/CLI-rẻ-render (OpenCode→agy→kiro, Full tier, watchdog+R7 gate+fallback); (T3) ADR-003 + decisions.md. Bonus: vá drift skill↔validator R7-(d) — /propose spec + 2 seq html đổi .msg opacity≥.82 (bài 130626). 5 file skill (3 propose + 2 orca-workflow) giữ diff=SAME. Chưa commit.

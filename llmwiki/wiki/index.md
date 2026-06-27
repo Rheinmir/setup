@@ -39,7 +39,10 @@
 | [rule-registry](concepts/rule-registry.md) | concept | 2026-06-27 — Registry R1..R12 (1 trang) + 2 policy.yaml + R6=verify-before-commit |
 | [ADR-001-policy-as-source-of-truth](sources/adr/ADR-001-policy-as-source-of-truth.md) | decision | 2026-06-27 — policy.yaml nguồn chân lý, thin-adapter (case R11) |
 | [ADR-002-pull-before-change-gates](sources/adr/ADR-002-pull-before-change-gates.md) | decision | 2026-06-27 — R12 git-level+orchestrator, bỏ per-edit, đa-vendor/đa-subrepo |
+| [ADR-003-skill-as-single-source-of-truth](sources/adr/ADR-003-skill-as-single-source-of-truth.md) | decision | 2026-06-27 — skill con = SoT, orchestrator delegate; Claude nghĩ / CLI rẻ render |
 | [extract-site](concepts/extract-site.md) | concept | 2026-06-27 — stub skill extract-site (giải broken wikilink) |
 | [docs-site-macos-skill](concepts/docs-site-macos-skill.md) | concept | 2026-06-27 — stub skill docs-site-macos (giải broken wikilink) |
 | [270626-session-review](draft/orca/270626-session-review.md) | draft | 2026-06-27 — Review tổng hợp phiên: 13 commit, 10/10 test, caveat |
 | [270626-session-review-html](sources/draft/270626-session-review-html.md) | draft | 2026-06-27 — docs-site-macos render của session review |
+| [270626-wiki-sync-structure](sources/draft/270626-wiki-sync-structure.md) | draft | 2026-06-27 — Proposal skill /wiki-sync-structure: phát hiện & sửa drift tài liệu cấu trúc (số liệu, bảng skill, dedupe) |
+| [270626-propose-single-source](sources/draft/270626-propose-single-source.md) | draft | 2026-06-27 — Proposal DRY: /propose là SoT (nuốt gap glass-style), orca-workflow delegate thay vì chép lại |
