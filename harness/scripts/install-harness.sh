@@ -273,6 +273,8 @@ if command -v pre-commit >/dev/null 2>&1 && [ -e "$ROOT/.git" ]; then
   else
     (cd "$ROOT" && pre-commit install >/dev/null) && log "pre-commit install: OK"
   fi
+  # R12 gate2: pull-before-push — version-controlled qua .pre-commit-config (stage pre-push)
+  (cd "$ROOT" && pre-commit install --hook-type pre-push >/dev/null 2>&1) && log "pre-commit pre-push (R12 gate2): OK"
 else
   warn "pre-commit chưa cài hoặc không phải git repo → chạy sau: pipx install pre-commit && pre-commit install"
 fi

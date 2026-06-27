@@ -50,6 +50,14 @@ repos:
         always_run: true
         pass_filenames: false
 
+      - id: harness-pull-gate
+        name: "R12 gate2: pull-before-push (chan push neu local SAU remote)"
+        entry: bash harness/poc-vendor-neutral/bin/pull-gate.sh gate2
+        language: system
+        stages: [pre-push]
+        always_run: true
+        pass_filenames: false
+
   # Tùy chọn — bật khi đã cài binary (brew install lychee):
   # - repo: local
   #   hooks:

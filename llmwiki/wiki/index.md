@@ -34,3 +34,4 @@
 | [250626-eval-report](draft/orca/250626-eval-report.md) | draft | 2026-06-25 |
 | [250626-cicd-lifecycle](sources/draft/250626-cicd-lifecycle.md) | draft | 2026-06-25 |
 | [250626-walkthroughs](html/250626-walkthroughs.html) | index | 2026-06-25 |
+| [270626-framework-gap-backfill](sources/draft/270626-framework-gap-backfill.md) | draft | 2026-06-27 — Gap backfill: policy↔validator drift (R8/R10) + ADR rỗng; thêm live R11 seq-glass-style + R12 pull-before-change |
