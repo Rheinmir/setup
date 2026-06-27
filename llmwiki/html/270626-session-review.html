@@ -178,8 +178,7 @@
 <header class="hero">
   <span class="eyebrow">REVIEW · rheinmir/setup#orca</span>
   <h1>Làm cứng harness — phiên 27/06</h1>
-  <p>Trang này tổng hợp lại toàn bộ một phiên làm việc dài để bạn đọc và review đầy đủ, không cần lội qua từng commit. Phiên này có mười bốn commit liên tiếp, đi từ việc thêm hai luật mới cho đến lúc rà soát và làm thống nhất lại toàn bộ tập luật của harness.</p>
-  <p>Mọi thay đổi đều đã được commit, push và đồng bộ với nhánh <code>orca</code> trên remote. Mỗi việc đều có bài kiểm thử đi kèm để chứng minh, và bộ kiểm thử tổng hợp đạt mười trên mười.</p>
+  <p>Tổng hợp một phiên mười bốn commit — từ thêm hai luật mới đến rà soát và làm thống nhất toàn bộ tập luật của harness — để bạn review mà không phải lội qua từng commit. Mọi thay đổi đã push và đồng bộ với nhánh <code>orca</code>; mỗi việc có kiểm thử đi kèm, tổng hợp mười trên mười.</p>
   <div class="meta"><span>HEAD a5ea519</span><span>đồng bộ 0/0</span><span>kiểm thử 10/10</span><span>0 wikilink hỏng</span></div>
 </header>
 
@@ -195,11 +194,9 @@
 <section id="sec-0" class="section-bg s-bg0"><div class="section-inner">
   <div class="section-header"><span class="tag">01 · Tổng quan & dòng thời gian</span>
     <h2>Một mạch tiến hóa qua mười bốn commit</h2>
-    <p>Phiên không nhảy lung tung. Nó đi theo một mạch hợp lý: thêm luật mới, rồi rút gọn cho đúng, rồi mở rộng để chịu được nhiều repo, rồi quay lại rà soát và làm thống nhất toàn bộ, và cuối cùng là viết tài liệu để đóng lại.</p></div>
+    <p>Phiên đi theo một mạch: thêm luật, rút gọn cho đúng, mở rộng để chịu nhiều repo, rồi rà soát và làm thống nhất toàn bộ, cuối cùng viết tài liệu đóng lại.</p></div>
 
-  <p class="lede">Bắt đầu bằng hai luật <b>R11</b> (seq HTML phải theo phong cách kính) và <b>R12</b> (kéo về trước khi sửa). Sau đó R12 được rút gọn lại cho gọn và đúng bản chất, rồi nâng lên thành bản workspace-aware để chịu được một thư mục làm việc có nhiều repo con. Tiếp theo là cả một đợt rà soát: đưa các luật còn thiếu vào policy, điều tra một luật tưởng là “bí ẩn”, và làm khớp hai file policy vốn đã lệch nhau. Khép lại bằng việc viết tài liệu và xác nhận toàn bộ kiểm thử xanh.</p>
-
-  <div class="diagram-box"><p class="diagram-cap">Sơ đồ năm pha chính của phiên (kéo từng ô để xem rõ, cuộn để phóng to):</p><svg viewBox="0 0 900 200" xmlns="http://www.w3.org/2000/svg">
+  <div class=”diagram-box”><p class=”diagram-cap”>Năm pha chính (kéo từng ô để xem rõ, cuộn để phóng to):</p><svg viewBox="0 0 900 200" xmlns="http://www.w3.org/2000/svg">
     <defs><marker id="ar0" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#0a84ff"/></marker></defs>
     <rect x="20" y="78" width="120" height="48" rx="8" fill="rgba(255,255,255,.7)" stroke="#0a84ff" stroke-width="1.5"/>
     <text x="80" y="99" text-anchor="middle" font-size="11" font-weight="700" fill="#0f0f12">Thêm luật</text>
@@ -223,19 +220,18 @@
     <circle class="pulse" cx="80" cy="58" r="5" fill="#0a84ff"/><circle class="pulse" cx="595" cy="58" r="5" fill="#28a745"/>
   </svg></div>
 
-  <p class="lede">Bảng dưới đây liệt kê các commit theo thứ tự, mỗi dòng kèm một câu mô tả việc commit đó làm.</p>
   <div class="table-wrap"><table>
     <tr><th>Commit</th><th>Việc đã làm</th></tr>
-    <tr><td><code>4d61cf4</code></td><td>Thêm hai luật đầu tiên: R11 yêu cầu seq HTML theo phong cách kính, và R12 yêu cầu kéo về trước khi thay đổi.</td></tr>
-    <tr><td><code>188afae</code></td><td>Rút gọn R12: chỉ giữ lại cơ chế quét trước khi làm (B) và cổng pre-push (C), bỏ hẳn cơ chế chặn từng lần sửa (A) vì nó tốn kém và không đồng đều giữa các vendor.</td></tr>
-    <tr><td><code>e699b2d</code> · <code>076f970</code></td><td>Đề xuất rồi triển khai R12 bản workspace-aware. Đề xuất được duyệt qua một cổng quyết định trước khi code; bản triển khai gồm năm task, kiểm thử bốn trên bốn.</td></tr>
-    <tr><td><code>8ef5b2c</code></td><td>Viết tài liệu nền: bảng tra cứu luật (rule-registry), hai bản ghi quyết định kiến trúc (ADR-001, ADR-002), và điền vào sổ quyết định vốn đang trống.</td></tr>
-    <tr><td><code>f329078</code></td><td>Đưa bốn luật R3, R4, R8, R10 vào policy. Quá trình điều tra cho thấy R3 và R8 thực ra <b>không hề mâu thuẫn</b> như tôi từng lo.</td></tr>
-    <tr><td><code>049abd8</code> · <code>47613b5</code></td><td>Viết bài kiểm thử chống lệch giữa policy và adapter, rồi viết runbook hướng dẫn thêm luật — khép lại đợt rà soát.</td></tr>
-    <tr><td><code>95770ee</code></td><td>Để policy điều khiển cả phần wiring: trình sinh adapter giờ sinh ra các hook của Claude trực tiếp từ luật trong policy, thay vì viết cứng.</td></tr>
-    <tr><td><code>99a4b7e</code></td><td>Bật R11 ở mức repo: chuyển tám trang seq HTML cũ sang phong cách kính rồi bật kiểm tra ở tầng commit.</td></tr>
-    <tr><td><code>d64a747</code></td><td>Xác định R6 chính là verify-before-commit, và làm khớp hai file policy vốn đã lệch nhau về tập luật.</td></tr>
-    <tr><td><code>a1384e4</code> · <code>36aa018</code> · <code>15d3e80</code></td><td>Vá các wikilink hỏng, sửa một lỗ hổng nhỏ trong luật R7 với file template, và commit năm file wiki vốn đã được index trỏ tới nhưng chưa được lưu.</td></tr>
+    <tr><td><code>4d61cf4</code></td><td>Thêm R11 (seq HTML phải theo phong cách kính) và R12 (kéo về trước khi sửa).</td></tr>
+    <tr><td><code>188afae</code></td><td>Rút gọn R12: giữ lượt quét trước khi làm (B) và cổng pre-push (C), bỏ cơ chế chặn từng lần sửa (A) vì tốn kém và lệch giữa các vendor.</td></tr>
+    <tr><td><code>e699b2d</code> · <code>076f970</code></td><td>Đề xuất (qua cổng duyệt) rồi triển khai R12 bản workspace-aware — năm task, kiểm thử bốn trên bốn.</td></tr>
+    <tr><td><code>8ef5b2c</code></td><td>Viết tài liệu nền: bảng tra cứu luật, hai bản ghi quyết định (ADR-001, ADR-002), và điền sổ quyết định đang trống.</td></tr>
+    <tr><td><code>f329078</code></td><td>Đưa R3, R4, R8, R10 vào policy. Điều tra cho thấy R3 và R8 <b>không hề mâu thuẫn</b> như từng lo.</td></tr>
+    <tr><td><code>049abd8</code> · <code>47613b5</code></td><td>Kiểm thử chống lệch policy ↔ adapter, rồi runbook hướng dẫn thêm luật — khép lại đợt rà soát.</td></tr>
+    <tr><td><code>95770ee</code></td><td>Để policy điều khiển wiring: trình sinh adapter sinh hook của Claude từ luật, thay vì viết cứng.</td></tr>
+    <tr><td><code>99a4b7e</code></td><td>Bật R11 ở tầng repo: chuyển tám trang seq cũ sang phong cách kính rồi bật kiểm tra lúc commit.</td></tr>
+    <tr><td><code>d64a747</code></td><td>Xác định R6 là verify-before-commit; làm khớp hai file policy vốn lệch nhau về tập luật.</td></tr>
+    <tr><td><code>a1384e4</code> · <code>36aa018</code> · <code>15d3e80</code></td><td>Vá wikilink hỏng, sửa lỗ hổng nhỏ của R7 với file template, commit năm file wiki mà index trỏ tới.</td></tr>
   </table></div>
   <div class="foot">Tài liệu nguồn đầy đủ: <a href="../wiki/draft/orca/270626-session-review.md">270626-session-review.md</a></div>
 </div></section>
@@ -246,7 +242,7 @@
     <h2>Toàn bộ R1 đến R12, phân loại rõ ràng</h2>
     <p>Harness có bốn kiểu cơ chế khác nhau, và việc nhầm lẫn giữa chúng chính là nguồn gốc của phần lớn rối rắm trước đây. Phần này tách bạch chúng ra.</p></div>
 
-  <p class="lede">Bốn cơ chế là: <b>kiểm tra nội dung</b> (một validator soi nội dung file lúc ghi hoặc lúc commit), <b>hook sự kiện</b> (phản ứng theo sự kiện của phiên làm việc như lúc kết thúc lượt hay lúc mở phiên), <b>cổng quy trình</b> (kiểm tra trạng thái git như kéo về trước khi sửa), và <b>cổng commit</b> (chặn ngay tại lúc commit). Sau phiên này, mọi luật đều được liệt kê đầy đủ trong policy chứ không còn rải rác mỗi nơi một ít.</p>
+  <p class="lede">Bốn cơ chế: <b>kiểm tra nội dung</b> (validator soi file lúc ghi/commit), <b>hook sự kiện</b> (phản ứng theo sự kiện phiên), <b>cổng quy trình</b> (kiểm trạng thái git), và <b>cổng commit</b> (chặn lúc commit). Sau phiên, mọi luật đều liệt kê đủ trong policy, không còn rải rác.</p>
 
   <div class="diagram-box"><p class="diagram-cap">Bốn cơ chế cùng quy về một nguồn duy nhất là policy.yaml:</p><svg viewBox="0 0 900 240" xmlns="http://www.w3.org/2000/svg">
     <rect x="30" y="30" width="180" height="78" rx="8" fill="rgba(255,255,255,.7)" stroke="#30b0c7" stroke-width="1.5"/>
@@ -278,11 +274,9 @@
     <div class="card"><h4>R11 — seq HTML phải theo phong cách kính</h4>
       <p>Luật này yêu cầu mọi trang sơ đồ tuần tự (<code>*-seq.html</code>) phải dùng phong cách kính của docs-site-macos, chứ không phải một theme phẳng tự chế. Nó chặn ngay lúc ghi file, và sau khi tôi chuyển tám trang cũ sang phong cách kính thì nó được bật luôn ở tầng commit qua một hook pre-commit.</p></div>
     <div class="card"><h4>R12 — kéo về trước khi thay đổi</h4>
-      <p>Luật này có hai phần. Phần (B) là một lượt quét do người điều phối chạy một lần trước khi bắt đầu hoặc trước khi giao việc cho nhiều agent, để mọi agent cùng xuất phát trên một nền mới. Phần (C) là một hook git pre-push chặn việc push khi nhánh local đang ở sau remote.</p>
-      <p>Bản v3 nâng cả hai phần lên để chịu được một workspace có nhiều repo con, và bổ sung lệnh cài cổng pre-push cho mọi repo cùng lúc.</p></div>
+      <p>Hai phần: (B) lượt quét do người điều phối chạy một lần trước khi làm hoặc giao việc, để mọi agent cùng xuất phát trên nền mới; (C) hook git pre-push chặn push khi local ở sau remote. Bản v3 nâng cả hai để chịu workspace nhiều repo con, kèm lệnh cài pre-push cho mọi repo cùng lúc.</p></div>
     <div class="card"><h4>R3, R4, R8, R10 — các hook sự kiện</h4>
-      <p>Lần lượt là kiểm tra index khớp file, ghi nhật ký thao tác, báo cáo sức khỏe đầu phiên, và nhắc bổ sung tài liệu định kỳ. Trước đây chúng được viết cứng trong trình sinh adapter; nay đã đưa vào policy và để policy tự sinh ra phần wiring.</p>
-      <p>Khi điều tra, tôi xác nhận R3 và R8 <b>không hề mâu thuẫn</b> như từng nghi.</p></div>
+      <p>Lần lượt: kiểm index khớp file, ghi nhật ký thao tác, báo cáo sức khỏe đầu phiên, nhắc bổ sung tài liệu định kỳ. Trước viết cứng trong trình sinh adapter, nay đưa vào policy để policy tự sinh wiring. Điều tra xác nhận R3 và R8 <b>không mâu thuẫn</b> như từng nghi.</p></div>
     <div class="card"><h4>R6 — verify-before-commit</h4>
       <p>Đây hóa ra không phải một số bị bỏ trống như tôi từng đánh dấu, mà chính là cổng commit của hệ thống. Nó vốn chỉ được khai báo trong file policy production, nên khi nhìn vào file policy của bản PoC thì tưởng như nó biến mất. Tôi đã thêm nó vào cả hai để hai file cùng đầy đủ R1 đến R12.</p></div>
   </div>
@@ -295,7 +289,6 @@
     <h2>Bộ kiểm thử tổng hợp đạt mười trên mười</h2>
     <p>Một bài kiểm thử xanh chưa đủ thuyết phục nếu nó không bao giờ có khả năng đỏ. Vì vậy với mỗi bài, tôi đều chạy thêm một trường hợp âm — cố tình tạo lỗi — để chứng minh bài kiểm thử thật sự bắt được lỗi đó.</p></div>
 
-  <p class="lede">Bảng dưới đây liệt kê từng bài kiểm thử, điều nó chứng minh khi xanh, và cách tôi làm cho nó đỏ để chứng minh nó không phải xanh giả.</p>
   <div class="table-wrap"><table>
     <tr><th>Bài kiểm thử</th><th>Chứng minh điều gì khi xanh</th><th>Cách làm cho nó đỏ</th></tr>
     <tr><td>Chống lệch policy ↔ adapter (38 mục)</td><td>Mọi luật đều xuất hiện trong adapter; các hook sự kiện khớp với wiring; và hai file policy khớp nhau về tập luật.</td><td>Thêm một luật chưa được nối wiring, hoặc xóa R12 khỏi file production — bài kiểm thử đỏ ngay.</td></tr>
@@ -318,7 +311,7 @@
     <h2>Một nguồn chân lý cho cả ngữ nghĩa lẫn wiring</h2>
     <p>Đây là hai thay đổi mang tính kiến trúc rõ rệt nhất của phiên, nên đáng được giải thích kỹ.</p></div>
 
-  <p class="lede">Thay đổi thứ nhất là <b>để policy điều khiển wiring</b>. Trước đây, phần nối các hook của Claude (các sự kiện như kết thúc lượt, sau khi dùng công cụ, mở phiên, gửi prompt) được viết cứng ngay trong trình sinh adapter. Giờ trình sinh đó đọc thẳng từ các luật hook sự kiện trong policy và tự sinh ra phần nối, dựa trên các trường như tên sự kiện, hành động, có chặn hay không, bộ lọc và thời gian chờ. Tôi đã xác nhận đầu ra sinh ra <b>giống hệt</b> bản viết cứng cũ, nên đây là một thay đổi an toàn, không đổi hành vi.</p>
+  <p class="lede">Thứ nhất, <b>policy điều khiển wiring</b>. Trước đây phần nối hook của Claude (kết thúc lượt, sau khi dùng công cụ, mở phiên, gửi prompt) viết cứng trong trình sinh adapter. Giờ trình sinh đọc thẳng các luật hook trong policy và tự sinh phần nối từ các trường như sự kiện, hành động, có chặn không, bộ lọc, thời gian chờ. Đầu ra <b>giống hệt</b> bản cũ — thay đổi an toàn, không đổi hành vi.</p>
 
   <div class="diagram-box"><p class="diagram-cap">Luồng từ policy ra adapter, và bài kiểm thử canh giữ cho chúng không lệch:</p><svg viewBox="0 0 900 200" xmlns="http://www.w3.org/2000/svg">
     <defs><marker id="ar3" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#28a745"/></marker></defs>
@@ -341,7 +334,7 @@
     <line class="flow" x1="642" y1="100" x2="686" y2="104" stroke="#f08c00" stroke-width="1.5"/>
   </svg></div>
 
-  <p class="lede">Thay đổi thứ hai là <b>làm khớp hai file policy</b>. Hóa ra hệ thống có hai file <code>policy.yaml</code> với cấu trúc khác nhau và vai trò khác nhau: một file production đóng vai khai báo, và một file PoC mà trình sinh adapter cùng bộ kiểm thực sự đọc. Trước phiên, hai file đã lệch nhau — bản production có R6 nhưng thiếu R11 và R12, còn bản PoC thì ngược lại. Tôi đã đưa chúng về cùng tập luật R1 đến R12, và quan trọng hơn là thêm một mục kiểm tra vào bài kiểm thử chống lệch để từ nay hai file luôn phải khớp nhau, lệch là đỏ ngay.</p>
+  <p class="lede">Thứ hai, <b>làm khớp hai file policy</b>. Hệ thống có hai <code>policy.yaml</code>: bản production (khai báo) và bản PoC (cái trình sinh và bộ kiểm thực sự đọc). Trước phiên chúng lệch nhau — production có R6 nhưng thiếu R11/R12, PoC thì ngược lại. Tôi đưa về cùng tập R1–R12 và thêm mục kiểm tra parity vào bài kiểm thử chống lệch, để từ nay lệch là đỏ ngay.</p>
 
   <div class="content-grid">
     <div class="card"><h4>Vì sao giữ hai file thay vì gộp một</h4>
