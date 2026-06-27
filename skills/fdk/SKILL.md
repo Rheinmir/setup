@@ -20,7 +20,7 @@ CHỈ khi đang phát triển **chính** framework này — thêm/sửa skill, r
    echo "rules:      $(grep -cE 'id: R' harness/poc-vendor-neutral/policy.yaml 2>/dev/null)"
    ```
 3. **Nhắc pre-flight** trước khi sửa: pull-gate (R12) → biết rule (`rule-registry`) → check trùng (Phần 3 + `impact-check`) → `propose` → verify + drift-test.
-4. **Thêm/sửa rule** → theo `harness/CONTRIBUTING-harness.md` (content-check / hook-event / process-gate; số kế tiếp R13).
+4. **Thêm/sửa rule** → theo `fdk/docs/CONTRIBUTING.md` (content-check / hook-event / process-gate; số kế tiếp R13).
 
 ## Rules
 - **On-demand only** — KHÔNG đăng ký vào hook auto-fire đầu phiên. Phần lớn phiên là dev dự án khác; bơm nội-bộ-framework vào đó là nhiễu (ADR-004: framework-dev context là opt-in).

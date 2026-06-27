@@ -21,7 +21,7 @@ Nguyên tắc nền: FDK **không chép lại** nội dung của các tài liệ
 | Mảnh xương | Trạng thái | Nguồn |
 |---|---|---|
 | Danh sách rule (never-miss) | ✅ có | [[rule-registry]] + `harness/poc-vendor-neutral/policy.yaml` |
-| Runbook thêm/sửa rule | ✅ có | `harness/CONTRIBUTING-harness.md` |
+| Runbook thêm/sửa rule | ✅ có | `fdk/docs/CONTRIBUTING.md` |
 | Kiến trúc harness + cách cook vendor | ✅ có | `harness/recipe.md`, `harness/poc-vendor-neutral/DOCS.md` |
 | Quyết định kiến trúc | ✅ có | [[ADR-001-policy-as-source-of-truth]], [[ADR-002-pull-before-change-gates]], [[ADR-003-skill-as-single-source-of-truth]] |
 | Luồng dev (propose → verify) | ✅ có | skill `propose`, `impact-check`, `safe-change`, `verify-before-commit` |
@@ -39,7 +39,7 @@ Chạy theo đúng thứ tự này. Mỗi bước trỏ tới công cụ/runbook
 1. **Đồng bộ trước (R12).** `bash harness/poc-vendor-neutral/bin/pull-gate-sweep.sh` (nhiều subrepo) hoặc `pull-gate.sh` (1 repo). Không bao giờ sửa trên base cũ.
 2. **Biết luật (Phần 2).** Mở [[rule-registry]]; nếu việc bạn làm tạo file wiki / seq-html / proposal / sửa raw → có rule gác. Đừng đoán.
 3. **Đừng dẫm module cũ (Phần 3).** Chạy lệnh inventory + grep tên trước khi tạo skill/validator/script/hook mới. Sửa code dùng-chung → `impact-check` rồi `safe-change`.
-4. **Propose trước (dev-loop).** Mọi thay đổi → skill `propose` tạo cặp `.md`+`.html`, STOP chờ duyệt. Nếu là thêm/sửa **rule harness** → theo `harness/CONTRIBUTING-harness.md` (có cổng quyết định ADR-001/002 riêng).
+4. **Propose trước (dev-loop).** Mọi thay đổi → skill `propose` tạo cặp `.md`+`.html`, STOP chờ duyệt. Nếu là thêm/sửa **rule harness** → theo `fdk/docs/CONTRIBUTING.md` (có cổng quyết định ADR-001/002 riêng).
 5. **Làm — surgical.** Chỉ chạm cái phải chạm; giữ style cũ; bản sao mirror phải giữ `diff` = SAME.
 6. **Verify trước commit.** `verify-before-commit` + drift-test liên quan (`policy-converters-drift-test.sh` nếu đụng policy). CI thật = `harness.yml` (`llmwiki-validate files` + `demo.sh` + `test-broad.sh`).
 7. **Ghi vết.** Cập nhật [[rule-registry]] (nếu rule), `decisions.md`/`log.md` 1 dòng, ADR nếu là quyết định kiến trúc.
@@ -62,7 +62,7 @@ Rule được gác ở ba tầng, hiểu để biết cái nào chặn bạn lú
 - **pre-commit / commit-time** — `.pre-commit-config.yaml` chạy lại toàn bộ validator (R2/R5/R7/R9/R3/L4…).
 - **CI / push-time** — `harness.yml` chạy `llmwiki-validate files` trên file đổi + `demo.sh`/`test-broad.sh`.
 
-Muốn THÊM/SỬA một rule → KHÔNG sửa ở đây. Theo `harness/CONTRIBUTING-harness.md` (phân loại content-check / hook-event / process-gate, "thick policy / thin adapter", số hiệu kế tiếp là **R13**).
+Muốn THÊM/SỬA một rule → KHÔNG sửa ở đây. Theo `fdk/docs/CONTRIBUTING.md` (phân loại content-check / hook-event / process-gate, "thick policy / thin adapter", số hiệu kế tiếp là **R13**).
 
 ---
 
@@ -105,7 +105,8 @@ Quy ước **single source of truth** để không tạo bản trùng phân kỳ
 |---|---|---|
 | **FDK (trang này)** | `llmwiki/wiki/concepts/fdk.md` | Front-door + pre-flight + map |
 | Rule registry | [[rule-registry]] | R1..Rn, đánh dấu chỗ lệch |
-| Runbook rule | `harness/CONTRIBUTING-harness.md` | Thêm/sửa rule không cần đọc đầu tác giả |
+| Runbook rule | `fdk/docs/CONTRIBUTING.md` | Thêm/sửa rule không cần đọc đầu tác giả |
+| **Kit folder (vật lý)** | `fdk/` | `tools/` (build-cheatsheet…) + `docs/` (CONTRIBUTING) + README map |
 | Recipe harness | `harness/recipe.md` | Kiến trúc 5 lớp, cook vendor mới |
 | DOCS vendor-neutral | `harness/poc-vendor-neutral/DOCS.md` | Cách hoạt động + cài đặt chi tiết |
 | ADR | `llmwiki/wiki/sources/adr/ADR-00N-*.md` | Quyết định kiến trúc |
