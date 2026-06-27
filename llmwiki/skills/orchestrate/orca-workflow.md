@@ -11,7 +11,7 @@ Propose → gate → dispatch → verify qua Orca. Agent pool 1:1 per engine (cl
 
 Claude: analyze. Others: execute. Kill opencode nếu chờ quá lâu.
 
-**Caveman Mode**: Agent comms dùng `caveman` (~75% token save). Tắt khi: viết proposal, tài liệu, HTML.
+**Caveman Mode**: Chỉ dùng `caveman` (~75% token save) cho giao tiếp agent-to-agent tạm thời. **BẮT BUỘC tắt caveman khi viết bất kỳ TÀI LIỆU nào con người sẽ đọc** — proposal, output-report, wiki content (concept/ADR/registry), README, CONTRIBUTING, và mọi trang HTML. Tài liệu phải là văn xuôi đầy đủ, câu hoàn chỉnh, dễ đọc; không bỏ liên từ, không viết tắt cụt, không nhồi bảng thay cho câu giải thích. Bài học 2026-06-27: user phản hồi "caveman đã nén quá mức khi viết tài liệu" — nén tiết kiệm token nhưng làm tài liệu khó hiểu, không đáng.
 
 
 ## Triggers
