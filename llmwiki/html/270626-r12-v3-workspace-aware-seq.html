@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sequence — R12 v3 workspace-aware pull-gate</title>
+<style>
+  :root {
+    --indigo:#5856d6; --emerald:#34c759; --cam:#ff9500;
+    --ink:#1d1d1f; --ink2:#3c3c43; --muted:#6e6e73; --hair:rgba(60,60,67,.14);
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing:antialiased; }
+  body {
+    font-family:-apple-system,"SF Pro Text","SF Pro Display","Segoe UI",system-ui,sans-serif;
+    color:var(--ink); margin:0; padding:40px 24px 64px; line-height:1.55;
+    background:linear-gradient(180deg,#f7fbff,#eaf2fd); min-height:100vh; position:relative; overflow-x:hidden;
+  }
+  body::before {
+    content:""; position:fixed; inset:0; z-index:-2; pointer-events:none;
+    background:
+      radial-gradient(40% 32% at 14% 8%, rgba(88,86,214,.20), transparent 70%),
+      radial-gradient(38% 30% at 88% 14%, rgba(10,132,255,.18), transparent 72%),
+      radial-gradient(46% 38% at 72% 92%, rgba(48,209,184,.16), transparent 74%);
+  }
+  body::after {
+    content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.5;
+    background-image:radial-gradient(rgba(60,60,67,.10) 1px, transparent 1px);
+    background-size:22px 22px;
+  }
+  .wrap { max-width:1040px; margin:0 auto; }
+  .head {
+    background:rgba(255,255,255,.62); backdrop-filter:blur(14px) saturate(160%); -webkit-backdrop-filter:blur(14px) saturate(160%);
+    border:1px solid rgba(255,255,255,.6); border-radius:18px; padding:16px 22px 18px; margin:0 0 26px;
+    box-shadow:0 8px 30px rgba(20,40,90,.10), inset 0 1px 0 rgba(255,255,255,.9);
+  }
+  .lights { display:flex; gap:8px; margin:0 0 12px; }
+  .lights i { width:12px; height:12px; border-radius:50%; display:inline-block; box-shadow:inset 0 0 0 .5px rgba(0,0,0,.12); }
+  .lights .r{background:#ff5f57;} .lights .y{background:#febc2e;} .lights .g{background:#28c840;}
+  h1 { font-family:-apple-system,"SF Pro Display",system-ui,sans-serif; font-size:23px; letter-spacing:-.02em; margin:0 0 4px; color:var(--ink); }
+  .sub { color:var(--muted); margin:0; font-size:13.5px; }
+  .sub a { color:#0a84ff; text-decoration:none; }
+  .diagram-box {
+    background:rgba(255,255,255,.7); backdrop-filter:blur(8px) saturate(150%); -webkit-backdrop-filter:blur(8px) saturate(150%);
+    border:1px solid rgba(255,255,255,.55); border-radius:16px; padding:20px 22px; margin:0 0 20px;
+    box-shadow:0 6px 22px rgba(20,40,90,.08), inset 0 1px 0 rgba(255,255,255,.85);
+  }
+  .diagram-box h2 { font-size:16px; letter-spacing:-.01em; margin:0 0 12px; color:var(--ink); display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-weight:650; }
+  .badge { font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px; letter-spacing:.2px; }
+  .b-indigo { background:rgba(88,86,214,.14); color:#4b49c4; }
+  .b-emerald { background:rgba(52,199,89,.16); color:#1f8f44; }
+  .b-cam { background:rgba(255,149,0,.16); color:#c26a00; }
+  .lanes { display:flex; gap:8px; flex-wrap:wrap; margin:0 0 14px; }
+  .lane { font-size:12px; font-weight:600; color:var(--ink2); background:rgba(118,118,128,.10); border:1px solid var(--hair); border-radius:8px; padding:4px 10px; }
+  .msg { opacity:.92; font-size:13.5px; color:var(--ink2); padding:7px 0 7px 18px; border-left:3px solid var(--hair); margin:0; }
+  .msg.add { border-left-color:var(--emerald); } .msg.legacy { border-left-color:var(--indigo); } .msg.block { border-left-color:var(--cam); }
+  .msg b { color:var(--ink); }
+  .desc {
+    background:rgba(255,255,255,.5); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);
+    border:1px solid rgba(255,255,255,.5); border-left:3px solid rgba(10,132,255,.5); border-radius:10px;
+    padding:11px 15px; font-size:13px; color:var(--muted); margin:15px 0 0; box-shadow:inset 0 1px 0 rgba(255,255,255,.7);
+  }
+  .desc b { color:var(--ink2); }
+  code { background:rgba(118,118,128,.12); padding:1.5px 6px; border-radius:6px; font-size:12.5px; font-family:"SF Mono",ui-monospace,Menlo,monospace; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="head">
+  <div class="lights"><i class="r"></i><i class="y"></i><i class="g"></i></div>
+  <h1>Sequence — R12 v3 workspace-aware pull-gate</h1>
+  <p class="sub">270626 · mỗi task một sơ đồ · <span style="color:#4b49c4">indigo=legacy/luồng</span> · <span style="color:#1f8f44">emerald=thêm/sửa</span> · <span style="color:#c26a00">cam=nhánh chặn</span> · ↩ <a href="../wiki/sources/draft/270626-r12-v3-workspace-aware.md">về proposal</a></p>
+</div>
+
+<div class="diagram-box">
+  <h2><span class="badge b-emerald">T1 · thêm</span> <code>pull-gate-sweep.sh</code> — quét cả workspace, chỉ chặn repo đích</h2>
+  <div class="lanes"><span class="lane">claude-cli</span><span class="lane">pull-gate-sweep.sh</span><span class="lane">pull-gate.sh</span><span class="lane">subrepos</span></div>
+  <p class="msg legacy">1. HÔM NAY: `pull-gate.sh` check repo của <code>cwd</code> thôi → workspace nhiều subrepo thì sai repo/sót.</p>
+  <p class="msg add">2. THÊM sweep: discover subrepo → <code>git fetch</code> SONG SONG từng cái (timeout, fail-open) → in bảng <code>repo · branch · ahead/behind</code>.</p>
+  <p class="msg add">3. Tái dùng <code>pull-gate.sh</code> cho từng repo (không nhân đôi logic behind).</p>
+  <p class="msg block">4. CHỈ exit 2 khi <b>subrepo ĐÍCH</b> (sắp ghi) sau remote; repo khác behind → chỉ cảnh báo. Offline → fail-open.</p>
+  <p class="desc"><b>Ai/gì:</b> claude-cli — exit-code đích/không-đích ảnh hưởng fan-out, dễ vỡ. <b>Dữ liệu chạy:</b> danh sách subrepo + cờ targets. <b>Nhánh an toàn (cam):</b> mặc định read-only, không auto-pull; nghi ngờ → cảnh báo, không chặn.</p>
+</div>
+
+<div class="diagram-box">
+  <h2><span class="badge b-emerald">T2 · thêm</span> <code>.harness-workspace.yaml</code> — nguồn danh sách subrepo</h2>
+  <div class="lanes"><span class="lane">opencode</span><span class="lane">manifest parser</span></div>
+  <p class="msg legacy">1. HÔM NAY: không có nguồn "subrepo nào trong workspace" → auto-discover thô dễ quét nhầm deps/vendored.</p>
+  <p class="msg add">2. THÊM manifest: <code>subrepos: [...]</code>, <code>exclude: [...]</code>, <code>targets: [...]</code>. Có manifest → dùng manifest.</p>
+  <p class="msg add">3. Thiếu manifest → fallback <code>find -maxdepth N -name .git</code> + lọc "harnessed-repo only".</p>
+  <p class="desc"><b>Ai/gì:</b> opencode — parse YAML + glob, cơ học. <b>Dữ liệu chạy:</b> manifest hoặc kết quả find. <b>Nhánh an toàn (cam):</b> chỉ liệt kê; không tự thêm/xóa repo khỏi workspace.</p>
+</div>
+
+<div class="diagram-box">
+  <h2><span class="badge b-cam">T3 · nhân ra</span> <code>install-harness.sh --all-subrepos</code> — gate2 mọi repo</h2>
+  <div class="lanes"><span class="lane">kiro</span><span class="lane">install-harness.sh</span><span class="lane">mỗi subrepo/.git</span></div>
+  <p class="msg legacy">1. HÔM NAY: pre-push + .pre-commit chỉ cài 1 ROOT → subrepo khác KHÔNG có gate2, push lọt.</p>
+  <p class="msg add">2. THÊM cờ <code>--all-subrepos</code>: loop subrepo (từ T2) → cài pre-push + <code>.pre-commit</code> mỗi cái; idempotent.</p>
+  <p class="msg block">3. Report bảng đã-cài; subrepo lỗi (không phải git / không quyền) → skip + cảnh báo, KHÔNG fatal cả lô.</p>
+  <p class="desc"><b>Ai/gì:</b> kiro — loop cài + config, verify độc lập. <b>Dữ liệu chạy:</b> danh sách subrepo. <b>Nhánh an toàn (cam):</b> idempotent, không đè hook user tự thêm.</p>
+</div>
+
+<div class="diagram-box">
+  <h2><span class="badge b-indigo">T4 · sửa luồng</span> Step 0 → gọi sweep thay single-repo gate1</h2>
+  <div class="lanes"><span class="lane">claude-cli</span><span class="lane">orca-workflow ×2</span></div>
+  <p class="msg legacy">1. HÔM NAY: Step 0 chạy <code>pull-gate.sh gate1</code> (1 repo).</p>
+  <p class="msg add">2. SỬA Step 0: orchestrator chạy <code>pull-gate-sweep.sh</code> quét cả workspace TRƯỚC fan-out → mọi agent chung base tươi.</p>
+  <p class="msg add">3. Cập nhật cả 2 bản skill (canonical + npx mirror) — tránh drift.</p>
+  <p class="desc"><b>Ai/gì:</b> claude-cli — sửa luồng workflow, prose (không caveman). <b>Dữ liệu chạy:</b> bảng sweep. <b>Nhánh an toàn (cam):</b> sweep fail-open; không chặn workflow vì lỗi hạ tầng.</p>
+</div>
+
+<div class="diagram-box">
+  <h2><span class="badge b-cam">T5 · verify</span> Test multi-subrepo fixture</h2>
+  <div class="lanes"><span class="lane">kiro</span><span class="lane">fixture 2-3 repo giả</span></div>
+  <p class="msg legacy">1. HÔM NAY: chỉ test single-repo (reset --soft).</p>
+  <p class="msg add">2. THÊM fixture 2-3 repo giả; 1 cái cố tình behind → sweep phát hiện đúng (exit 2 khi là đích, cảnh báo khi không).</p>
+  <p class="msg block">3. Cổng nghiệm thu: <code>--all-subrepos</code> wire đúng N pre-push; cố tình lệch 1 repo → đỏ; teardown sạch (reversible).</p>
+  <p class="desc"><b>Ai/gì:</b> kiro — tạo fixture + assert, độc lập. <b>Dữ liệu chạy:</b> N repo giả + trạng thái behind. <b>Nhánh an toàn (cam):</b> fixture trong tmp, teardown bắt buộc; không đụng repo thật.</p>
+</div>
+
+</div>
+</body>
+</html>
