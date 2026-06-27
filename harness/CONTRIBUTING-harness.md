@@ -1,5 +1,7 @@
 # CONTRIBUTING — Thêm/sửa một rule của harness
 
+> Lối vào tổng cho phát triển framework: `llmwiki/wiki/concepts/fdk.md` (FDK). Runbook này là nhánh "thêm/sửa rule" của bộ xương đó.
+
 Runbook để **một người mới** thêm luật vào harness mà không cần đọc đầu tác giả. Gắn với
 [[rule-registry]] (danh sách luật) + ADR-001 (policy là nguồn chân lý) + ADR-002 (tiêu chí
 quyết định). Mọi đường dẫn dưới đây tương đối từ root repo.

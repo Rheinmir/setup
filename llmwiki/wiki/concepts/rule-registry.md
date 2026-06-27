@@ -8,6 +8,8 @@ timestamp: 2026-06-27
 
 # Rule Registry — R1..R12
 
+> Lối vào tổng cho phát triển framework: [[fdk]]. Trang này là phần "danh sách rule" của bộ xương đó.
+
 Một trang đọc-là-đủ. Nguồn chân lý máy-đọc là `harness/poc-vendor-neutral/policy.yaml`; nhưng một số luật được wire ở `gen-converters.py` (hook) → `harness-events.py`, KHÔNG nằm trong policy.yaml. Bảng này hợp nhất và **đánh dấu chỗ lệch**.
 
 | ID | Tên | Cơ chế / file | Điểm enforce | enforce_at | Status |

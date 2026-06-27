@@ -17,3 +17,6 @@
 | 2026-06-27 | R6 + reconcile 2 policy | rule | R6 chỉ ở production policy; 2 policy lệch rule-set | R6=verify-before-commit; +R11/R12 prod, +R6 poc; drift-test gác parity |
 | 2026-06-27 | propose = single source of truth | architecture | /propose ↔ orca-workflow tả lại lệch nhau (glass-style drift) | ADR-003: orchestrator delegate /propose; Claude=substance, CLI-rẻ=render (Full, watchdog+R7) |
 | 2026-06-27 | seq html message phải hiện sẵn | rule | R7-(d) bài 130626: opacity:0 ẩn nội dung người-đọc | spec /propose + 2 seq html sửa: .msg opacity≥.82, animation chỉ highlight |
+| 2026-06-27 | FDK = front-door phát triển framework | architecture | xương rải rác + AGENT.md không có lối vào + module-map drift | [[fdk]]: hợp nhất rule-registry/CONTRIBUTING/recipe/ADR/dev-loop; pre-flight gate; map bằng lệnh live (không hardcode số) |
+| 2026-06-27 | FDK có cửa chủ động bơm ngữ cảnh | architecture | doc thụ động phải tự mở → vẫn miss | session_start.py thêm fdk_context(): SessionStart inject cửa FDK + inventory live; pointer ở AGENT/CLAUDE |
+| 2026-06-27 | framework-dev context opt-in | architecture | auto-bơm FDK mọi phiên = nhiễu (phần lớn phiên dev dự án KHÁC) + trỏ file ma downstream | ADR-004: gỡ fdk_context khỏi SessionStart → skill /fdk on-demand; audit 5 điểm auto-fire |

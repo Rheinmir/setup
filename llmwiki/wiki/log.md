@@ -123,3 +123,15 @@ Sửa thẳng bước 7 của /propose (cả 3 bản: dev-loop canonical + mirro
 
 ## 2026-06-27 — implement — propose-single-source (proposal #2)
 Đã làm T1–T3: (T1) bước 7 /propose nuốt glass-style + prose (B); (T2) orca-workflow bước 2 → GỌI /propose + mô hình Claude-nghĩ/CLI-rẻ-render (OpenCode→agy→kiro, Full tier, watchdog+R7 gate+fallback); (T3) ADR-003 + decisions.md. Bonus: vá drift skill↔validator R7-(d) — /propose spec + 2 seq html đổi .msg opacity≥.82 (bài 130626). 5 file skill (3 propose + 2 orca-workflow) giữ diff=SAME. Chưa commit.
+
+## 2026-06-27 — concept — fdk (Framework Development Kit)
+Dựng bộ xương phát triển framework: front-door `concepts/fdk.md` (pre-flight gate + Phần 2 không-miss-rule + Phần 3 không-dẫm-module với lệnh inventory live, không hardcode số). Wire vào AGENT.md + CLAUDE.md (rule đầu), cross-link rule-registry + CONTRIBUTING-harness. index/decisions cập nhật.
+
+## 2026-06-27 — hook — fdk context-pump (SessionStart)
+session_start.py thêm fdk_context(): mỗi phiên tự bơm 1 block "framework có gì" (skills/validators/scripts/hooks/rules đếm live) + cửa vào fdk.md. Fail-open, test in đúng + exit 0. fdk.md ghi nhận cửa chủ động.
+
+## 2026-06-27 — docs-site-macos — fdk-docs
+Render fdk.md thành trang docs glass đọc được: llmwiki/html/270626-fdk-docs.html (sidebar + 6 section accent + draggable SVG pre-flight + checklist + copy/ripple/scroll-spy, self-contained). Cross-link fdk.md ↔ html.
+
+## 2026-06-27 — fix+skill — fdk opt-in (/fdk) + audit
+Sửa lỗi tư duy "mặc định phiên = dev framework": gỡ fdk_context() khỏi session_start.py (giữ pattern-health); tạo skill /fdk (canonical utils + mirror, diff=SAME) gọi chủ động; slim pointer AGENT/CLAUDE → /fdk điều kiện + đăng ký skill table; ADR-004 + audit 5 điểm auto-fire (2 phạm: fdk_context + pointer; 3 không). fdk.md + docs HTML section 4 cập nhật.

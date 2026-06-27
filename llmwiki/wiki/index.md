@@ -37,9 +37,11 @@
 | [270626-framework-gap-backfill](sources/draft/270626-framework-gap-backfill.md) | draft | 2026-06-27 — Gap backfill: policy↔validator drift (R8/R10) + ADR rỗng; thêm live R11 seq-glass-style + R12 pull-before-change |
 | [270626-r12-v3-workspace-aware](sources/draft/270626-r12-v3-workspace-aware.md) | draft | 2026-06-27 — R12 v3: pull-gate-sweep cả workspace (B) + install --all-subrepos (C) cho nhiều subrepo |
 | [rule-registry](concepts/rule-registry.md) | concept | 2026-06-27 — Registry R1..R12 (1 trang) + 2 policy.yaml + R6=verify-before-commit |
+| [fdk](concepts/fdk.md) | concept | 2026-06-27 — Framework Development Kit: front-door + pre-flight + module map (không miss rule, không dẫm module cũ) |
 | [ADR-001-policy-as-source-of-truth](sources/adr/ADR-001-policy-as-source-of-truth.md) | decision | 2026-06-27 — policy.yaml nguồn chân lý, thin-adapter (case R11) |
 | [ADR-002-pull-before-change-gates](sources/adr/ADR-002-pull-before-change-gates.md) | decision | 2026-06-27 — R12 git-level+orchestrator, bỏ per-edit, đa-vendor/đa-subrepo |
 | [ADR-003-skill-as-single-source-of-truth](sources/adr/ADR-003-skill-as-single-source-of-truth.md) | decision | 2026-06-27 — skill con = SoT, orchestrator delegate; Claude nghĩ / CLI rẻ render |
+| [ADR-004-framework-dev-context-opt-in](sources/adr/ADR-004-framework-dev-context-opt-in.md) | decision | 2026-06-27 — framework-dev context opt-in (/fdk), không auto-bơm SessionStart; audit lỗi tư duy |
 | [extract-site](concepts/extract-site.md) | concept | 2026-06-27 — stub skill extract-site (giải broken wikilink) |
 | [docs-site-macos-skill](concepts/docs-site-macos-skill.md) | concept | 2026-06-27 — stub skill docs-site-macos (giải broken wikilink) |
 | [270626-session-review](draft/orca/270626-session-review.md) | draft | 2026-06-27 — Review tổng hợp phiên: 13 commit, 10/10 test, caveat |

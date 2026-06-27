@@ -31,6 +31,10 @@ def main() -> None:
     root = Path(project_dir(payload))
     if not (root / ".template-manifest.json").is_file():
         sys.exit(0)  # không phải project dùng template → bỏ qua
+
+    # NOTE: KHÔNG auto-bơm context framework-dev (FDK) ở đây. Phần lớn phiên là dùng
+    # framework để dev DỰ ÁN KHÁC, không phải dev chính framework → bơm nội-bộ-framework
+    # vào mọi phiên là nhiễu. Front-door FDK là skill gọi chủ động `/fdk` (xem ADR-004).
     script = find_health_check(root)
     if script is None or not (root / "harness" / "version.json").is_file():
         sys.exit(0)  # chưa có version.json → chưa khởi tạo, im lặng
