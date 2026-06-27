@@ -42,3 +42,4 @@
 | [extract-site](concepts/extract-site.md) | concept | 2026-06-27 — stub skill extract-site (giải broken wikilink) |
 | [docs-site-macos-skill](concepts/docs-site-macos-skill.md) | concept | 2026-06-27 — stub skill docs-site-macos (giải broken wikilink) |
 | [270626-session-review](draft/orca/270626-session-review.md) | draft | 2026-06-27 — Review tổng hợp phiên: 13 commit, 10/10 test, caveat |
+| [270626-session-review-html](sources/draft/270626-session-review-html.md) | draft | 2026-06-27 — docs-site-macos render của session review |

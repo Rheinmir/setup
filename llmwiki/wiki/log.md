@@ -106,3 +106,4 @@
 ## 2026-06-27 — fix — poc R7 thêm exclude_basenames (_template miễn, khớp production); full test sweep 10/10
 ## 2026-06-27 — review — session-review output report (13 commit, full sweep 10/10) + re-sync ~/.claude skill
 ## 2026-06-27 — commit — 5 wiki untracked có-sẵn được index trỏ (architecture, cursor-explain-site, onboarding-tour, project-structure, 250626-onboard-setup)
+## 2026-06-27 — docs-site-macos — session-review-html (trang glass 6 section, self-contained, :8765)
