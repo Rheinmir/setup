@@ -83,8 +83,8 @@ rules:
   pull_before_change:
     id: R12
     name: pull-before-change
-    kind: process_gate                     # git-state gate — KHÔNG phải content-check → llmwiki-validate bỏ qua (an toàn). Enforce thật bằng pull-gate.sh: gate1 ở workflow Step 0/SessionStart, gate2 ở pre-push hook.
-    statement: "Gate 1: TRƯỚC khi sửa bất cứ gì trong framework, phải pull remote về kiểm tra trước (git fetch + không được sau remote). Gate 2: TRƯỚC khi push, pull kiểm lần nữa. Lệch/sau remote → DỪNG, pull --rebase rồi mới tiếp."
-    enforce_at: [session, repo]            # session = gate1 (workflow Step 0 / SessionStart) · repo = gate2 (pre-push)
-    gate1_cmd: "harness/poc-vendor-neutral/bin/pull-gate.sh gate1"
-    gate2_cmd: "harness/poc-vendor-neutral/bin/pull-gate.sh gate2"
+    kind: process_gate                     # git-state gate — KHÔNG phải content-check → llmwiki-validate bỏ qua. CHỈ 2 điểm enforce phủ được mọi vendor.
+    statement: "(B) TRƯỚC khi bắt đầu việc / fan-out đa-agent: orchestrator chạy pull-gate sweep 1 lần (base tươi cho cả đàn agent). (C) TRƯỚC khi push: pre-push hook git-level chặn nếu local SAU remote. KHÔNG có hook chặn từng-edit (per-edit PreToolUse) — cố tình bỏ: cost cao, lệch vendor, đã được (B) phủ."
+    enforce_at: [session, repo]            # session = (B) pre-work sweep do orchestrator chạy ở workflow Step 0 · repo = (C) gate2 pre-push (vendor-neutral floor)
+    prework_sweep_cmd: "harness/poc-vendor-neutral/bin/pull-gate.sh gate1"   # (B) — orchestrator gọi 1 lần trước khi làm/dispatch; KHÔNG gắn vào PreToolUse
+    prepush_cmd: "harness/poc-vendor-neutral/bin/pull-gate.sh gate2"          # (C) — .git/hooks/pre-push + .pre-commit stage pre-push

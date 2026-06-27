@@ -50,18 +50,12 @@ def main():
     def _ev(c, t=15): return [{"type": "command", "command": c, "timeout": t}]
     # CHẶN-ĐƯỢC (PreToolUse/Stop): exec giữ exit 2 khi script chặn; file THIẾU → exit 0 (fail-open, không khoá cứng)
     def _block(f, a): return f'[ -f "$CLAUDE_PROJECT_DIR/{f}" ] && exec python3 "$CLAUDE_PROJECT_DIR/{f}" {a} || exit 0'
-    # R12 gate1: bash script, chỉ chạy nếu tồn tại (repo framework); offline → fail-open trong chính script
-    def _block_sh(f, a): return f'[ -f "$CLAUDE_PROJECT_DIR/{f}" ] && exec bash "$CLAUDE_PROJECT_DIR/{f}" {a} || exit 0'
-    PULLGATE = "harness/poc-vendor-neutral/bin/pull-gate.sh"
     # KHÔNG-CHẶN (PostToolUse/SessionStart/UserPromptSubmit): LUÔN exit 0 — file thiếu/lỗi KHÔNG bao giờ chặn input
     def _info(f, a): return f'python3 "$CLAUDE_PROJECT_DIR/{f}" {a} 2>/dev/null || true'
     claude = {
         "_generated": GEN,
         "hooks": {
-            "PreToolUse": [
-                {"matcher": "Write|Edit|MultiEdit|Bash", "hooks": _ev(_block(CLI, "claude-hook"))},   # R1/R2/R5/R7/R9
-                {"matcher": "Write|Edit|MultiEdit", "hooks": _ev(_block_sh(PULLGATE, "gate1"))},       # R12 gate1
-            ],
+            "PreToolUse": [{"matcher": "Write|Edit|MultiEdit|Bash", "hooks": _ev(_block(CLI, "claude-hook"))}],   # R1/R2/R5/R7/R9
             "PostToolUse": [{"matcher": "Write|Edit|MultiEdit", "hooks": _ev(_info(EVT, "audit"), 10)}],          # R4
             "Stop": [{"hooks": _ev(_block(EVT, "stop"))}],                                                        # R3
             "SessionStart": [{"hooks": _ev(_info(EVT, "session"), 10)}],                                          # R8

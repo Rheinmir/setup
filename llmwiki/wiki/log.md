@@ -92,3 +92,4 @@
 ## 2026-06-25 — cursor-animated-sites — index gộp harness + CI/CD
 ## 2026-06-25 — cursor-animated-sites — gộp 3 trang (index+harness+cicd) thành 1 file walkthroughs
 ## 2026-06-27 — orca-workflow — framework-gap-backfill: proposal + R11 seq-glass-style + R12 pull-before-change (gate1 PreToolUse + gate2 pre-push)
+## 2026-06-27 — orca-workflow — R12 rút gọn về (B) orchestrator pre-work sweep + (C) pre-push; BỎ (A) per-edit PreToolUse (cost cao, lệch đa-vendor)
