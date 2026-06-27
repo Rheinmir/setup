@@ -14,14 +14,14 @@ Một trang đọc-là-đủ. Nguồn chân lý máy-đọc là `harness/poc-ven
 |----|-----|---------------|--------------|------------|--------|
 | **R1** | no-write-raw | `deny_write` · `validators/no_write_raw.py` | PreToolUse + pre-commit | session, repo | active |
 | **R2** | origin-required | `require_section` · `validators/origin_required.py` | PreToolUse(claude-hook) + pre-commit | session, repo | active |
-| **R3** | ⚠️ DRIFT | pre-commit gán `index_sync.py`="R3"; `gen-converters` gán **Stop hook**="R3" | mâu thuẫn 2 file | — | **needs-reconcile** |
-| **R4** | audit | `harness-events.py audit` · PostToolUse | session | session | active |
+| **R3** | index-sync | `hook_event` (policy) · `index_sync.py` | Stop hook + pre-commit | session, repo | active |
+| **R4** | audit-log | `hook_event` (policy) · `harness-events.py audit` · PostToolUse | session | session | active |
 | **R5** | folder-structure | `forbid_root` · `validators/folder_structure.py` | PreToolUse + pre-commit | session, repo | active |
 | **R6** | (trống) | không thấy validator/hook nào | — | — | **unknown/reserved** |
 | **R7** | proposal-complete | `conditional_require` · `validators/proposal_complete.py` | PreToolUse + pre-commit | session, repo | active |
-| **R8** | ⚠️ DRIFT | `gen-converters` gán **SessionStart**="R8"; nhưng pre-commit gọi `index_sync.py`="R3" | mâu thuẫn | session | **needs-reconcile** |
+| **R8** | session-health | `hook_event` (policy) · `harness-events.py session` · `session_start.py` | SessionStart | session | active |
 | **R9** | okf-frontmatter | `require_frontmatter` · `validators/okf_frontmatter.py` | PreToolUse + pre-commit | session, repo | active |
-| **R10** | docs-gate | `harness-events.py docs` · UserPromptSubmit | session (report, không chặn) | session | active |
+| **R10** | docs-gate | `hook_event` (policy) · `harness-events.py docs` · UserPromptSubmit | session (report, không chặn) | session | active |
 | **R11** | seq-html-glass-style | `conditional_require` · **policy.yaml** | session (write seq html) | session | active |
 | **R12** | pull-before-change | `process_gate` · **policy.yaml** | (B) workflow Step 0 sweep · (C) git `pre-push` | session, repo | active |
 
@@ -33,10 +33,11 @@ Seq diagram HTML (`*-seq.html`) phải theo style `docs-site-macos` liquid-glass
 - **(C) pre-push** — git hook per-repo (`.git/hooks/pre-push` + `.pre-commit` stage), **vendor-neutral** (mọi `git push` đều dính). Nhân ra mọi subrepo bằng `install-harness.sh --all-subrepos`.
 - **ĐÃ BỎ (A)** per-edit PreToolUse: cost cao, lệch đa-vendor, (B) đã phủ. Xem [[ADR-002-pull-before-change-gates]].
 
-## Lệch cần xử (G2 — không che giấu)
-- **policy.yaml chỉ chứa**: R1, R2, R5, R7, R9, R11, R12. R3/R4/R8/R10 wire ở `gen-converters.py` (hook → `harness-events.py`), KHÔNG trong policy → "nguồn chân lý duy nhất" còn rò.
-- **R3 vs R8 mâu thuẫn**: pre-commit gọi `index_sync.py` nhãn "R3"; gen-converters nhãn Stop="R3", SessionStart="R8". Cần chốt số. (T1 của [[270626-framework-gap-backfill]]).
-- **R6 trống** — chưa rõ retired hay reserved.
+## Tình trạng reconcile (T1 — 2026-06-27)
+- ✅ **policy.yaml giờ liệt kê ĐỦ** R1–R5, R7–R12 (thêm R3/R4/R8/R10 dạng `kind: hook_event`, documentary). "Nguồn chân lý" hết rò ở mức **liệt kê**.
+- ✅ **R3/R8 KHÔNG mâu thuẫn** — điều tra `harness-events.py` + `stop.py` + `index_sync.py` cho thấy: **R3 = index-sync** (nhất quán Stop + pre-commit), **R8 = session-health** (riêng). Flag "drift" cũ là **quá thận trọng → đã gỡ**.
+- ⚠️ **Caveat còn lại**: wiring R3/R4/R8/R10 vẫn **hardcode** ở `gen-converters.py` (PreToolUse/PostToolUse/Stop/SessionStart/UserPromptSubmit), CHƯA do policy DRIVE. Làm policy sinh hook = bước sau (kèm drift-test T5).
+- ⚠️ **R6 trống** — chưa rõ retired hay reserved.
 
 ## Origin
 - **Source:** đọc trực tiếp `harness/poc-vendor-neutral/policy.yaml`, `harness/validators/*.py`, `harness/poc-vendor-neutral/gen-converters.py`, `.pre-commit-config.yaml`, `concepts/R10.md` (baseline `188afae`→`076f970`).

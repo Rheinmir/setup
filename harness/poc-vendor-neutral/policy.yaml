@@ -88,3 +88,48 @@ rules:
     enforce_at: [session, repo]            # session = (B) pre-work sweep do orchestrator chạy ở workflow Step 0 · repo = (C) gate2 pre-push (vendor-neutral floor)
     prework_sweep_cmd: "harness/poc-vendor-neutral/bin/pull-gate.sh gate1"   # (B) — orchestrator gọi 1 lần trước khi làm/dispatch; KHÔNG gắn vào PreToolUse
     prepush_cmd: "harness/poc-vendor-neutral/bin/pull-gate.sh gate2"          # (C) — .git/hooks/pre-push + .pre-commit stage pre-push
+
+  # ── Hook-event rules (R3/R4/R8/R10) — T1 reconcile 2026-06-27 ────────────────
+  # Enforce bằng HOOK SỰ KIỆN (không phải content-check) → kind `hook_event`,
+  # llmwiki-validate bỏ qua an toàn. Wiring thật vẫn HARDCODE ở gen-converters.py →
+  # harness-events.py / production hooks; ghi vào đây để policy.yaml LIỆT KÊ ĐỦ luật
+  # (hết rò "nguồn chân lý"). Làm policy DRIVE wiring là bước sau. Xem [[rule-registry]].
+  index_sync:
+    id: R3
+    name: index-sync
+    kind: hook_event
+    statement: "wiki/index.md phải liệt kê đúng tập file wiki tồn tại; phiên có sửa wiki mà index lệch → chặn kết thúc lượt."
+    enforce_at: [session, repo]            # session = Stop hook · repo = pre-commit (index_sync.py)
+    event: Stop
+    handler: "harness/validators/index_sync.py · harness-events.py stop · llmwiki/.claude/hooks/stop.py"
+    blocking: true
+
+  audit_log:
+    id: R4
+    name: audit-log
+    kind: hook_event
+    statement: "Mọi tool-call ghi .claude/audit/audit.jsonl (timestamp) + sinh log.md người-đọc-được. Không chặn."
+    enforce_at: [session]
+    event: PostToolUse
+    handler: "harness-events.py audit · llmwiki/.claude/hooks/post_tool_use.py"
+    blocking: false
+
+  session_health:
+    id: R8
+    name: session-health
+    kind: hook_event
+    statement: "Đầu phiên: báo số rule đang gác + CHECK DRIFT policy/version vs remote (cảnh báo nếu lệch → /sync-template). Không chặn."
+    enforce_at: [session]
+    event: SessionStart
+    handler: "harness-events.py session · llmwiki/.claude/hooks/session_start.py (health-check.py)"
+    blocking: false
+
+  docs_gate:
+    id: R10
+    name: docs-gate
+    kind: hook_event
+    statement: "Mỗi N prompt (default 5) chưa dùng /docs-site-macos hay /orca-workflow → inject directive đề nghị bổ sung docs. Báo cáo, không chặn."
+    enforce_at: [session]
+    event: UserPromptSubmit
+    handler: "harness-events.py docs · llmwiki/.claude/hooks/user_prompt_submit.py"
+    blocking: false
