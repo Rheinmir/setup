@@ -35,7 +35,7 @@ Gemini (xem chat import) khuyên đúng tinh thần — "viết design philosoph
 - [x] **T1** ✓ — Reconcile `policy.yaml`: thêm R3/R4/R8/R10 (kind `hook_event`) → policy liệt kê đủ 11 rule. Điều tra ra **R3/R8 KHÔNG drift** (R3=index-sync nhất quán, R8=session-health). R6 vẫn reserved. Caveat: wiring còn hardcode ở gen-converters (T5 phủ).
 - [x] **T2** ✓ — `wiki/concepts/rule-registry.md` R1..R12, 1 trang, flag honest caveat.
 - [x] **T3** ✓ — Lấp `decisions.md` + `sources/adr/ADR-001-policy-as-source-of-truth` + `ADR-002-pull-before-change-gates` (gộp agent-vs-deterministic + thin-adapter + R12 reasoning).
-- [ ] **T4** — `harness/CONTRIBUTING-harness.md`: runbook "thêm một rule thế nào" gắn tiêu chí ADR (sửa policy.yaml → thêm validator → regen converters → test).
+- [x] **T4** ✓ — `harness/CONTRIBUTING-harness.md`: runbook thêm/sửa rule (cổng quyết định ADR → phân loại content/hook-event/process → quy trình từng loại → checklist + drift-test bắt buộc + test âm). **→ gap-backfill CLOSED: T1–T5 done.**
 - [x] **T5** ✓ — `harness/tests/policy-converters-drift-test.sh`: assert mọi rule vào advisory + deny globs vào opencode/antigravity + **hook_event event khớp wiring claude** (R3→Stop…) + không orphan. **28/28 PASS**; negative test (rule chưa-wire → FAIL=2) chứng minh bắt drift. Wire `.pre-commit-config` (commit-stage). *(out/ gitignored → drift thật = gen-converters DROP/lệch policy, không phải out lệch git.)*
 - [x] **R11 (thêm live 2026-06-27)** — `seq-html-glass-style` (kind `conditional_require`, enforce_at `[session]`): seq HTML phải có marker glass docs-site-macos (`backdrop-filter` + `linear-gradient(180deg,#f7fbff…` + edge-highlight). Đã test: chặn flat (exit 2), cho qua glass, không đụng non-seq. **Nợ:** backfill R11 vào rule-registry (T2) + 1 ADR (T3); cân nhắc bật `[repo]` sau khi migrate ~8 seq html cũ.
 - [x] **R12 (thêm live 2026-06-27 · rút gọn về (B)+(C))** — `pull-before-change` (kind `process_gate`): **(B)** pre-work sweep MỘT LẦN do orchestrator (workflow Step 0, `pull-gate.sh gate1`) → base tươi trước fan-out đa-agent; **(C)** pre-push git-level (`.git/hooks/pre-push` + `.pre-commit` stage pre-push + install-harness `--hook-type pre-push`) chặn **mọi vendor**. **ĐÃ BỎ (A) per-edit PreToolUse** (cost cao, lệch vendor, (B) đã phủ) — gỡ khỏi `pre_tool_use.py` + `gen-converters.py`. Lý do: chỉ git-level (C) + orchestrator (B) phủ được mọi vendor; lifecycle session từng vendor không tin được. Đã test: synced→pass, local-sau-remote→pre-push block exit 2. **Nợ:** rule-registry (T2) + ADR (T3); R12 v3 workspace-aware sweep nhiều subrepo (propose riêng).
@@ -47,7 +47,7 @@ Gemini (xem chat import) khuyên đúng tinh thần — "viết design philosoph
 | T1 reconcile policy.yaml | Claude Code | Ngữ nghĩa hook/enforce_at dễ vỡ → architectural | done |
 | T2 rule-registry.md | Claude Code (Kiro/OC thiếu) | Tổng hợp từ nguồn đã xác minh | done |
 | T3 decisions.md + ADR | Claude Code | Cần reasoning tác giả | done |
-| T4 CONTRIBUTING-harness.md | OpenCode `big-pickle` | Runbook theo khuôn T1–T3 | pending |
+| T4 CONTRIBUTING-harness.md | Claude Code (OC thiếu) | Runbook theo khuôn T1-T3+T5 | done |
 | T5 drift-test | Claude Code (Kiro thiếu) | Test + wire pre-commit; 28/28 + negative chứng minh | done |
 
 ## Sequence diagram

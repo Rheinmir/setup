@@ -98,3 +98,4 @@
 ## 2026-06-27 — backfill — rule-registry (R1..R12 + flag drift R3/R8) + ADR-001/002 + lấp decisions.md
 ## 2026-06-27 — T1 reconcile — thêm R3/R4/R8/R10 (hook_event) vào policy.yaml (11 rule); điều tra: R3/R8 KHÔNG drift, gỡ flag; registry cập nhật
 ## 2026-06-27 — T5 drift-test — policy-converters-drift-test.sh (28/28 + negative bắt drift); wire .pre-commit
+## 2026-06-27 — T4 — CONTRIBUTING-harness.md (runbook thêm rule); gap-backfill CLOSED (T1-T5 done)

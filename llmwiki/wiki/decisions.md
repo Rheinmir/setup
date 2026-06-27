@@ -11,3 +11,4 @@
 | 2026-06-27 | Backfill rule-registry + ADR | docs | Bus-factor=1: luật/lý do trong đầu | [[rule-registry]] + ADR-001/002; decisions.md lấp |
 | 2026-06-27 | T1 reconcile policy.yaml | rule | R3/R4/R8/R10 enforce bằng hook, vắng khỏi policy | thêm dạng hook_event (11 rule); R3/R8 điều tra ra KHÔNG drift |
 | 2026-06-27 | T5 drift-test gen-converters↔policy | test | out/ gitignored → bắt 'gen DROP/lệch policy' | drift-test 28/28, negative proven, wire pre-commit |
+| 2026-06-27 | T4 + đóng gap-backfill | docs | Runbook thiếu → người mới phải đọc đầu tác giả | CONTRIBUTING-harness.md; T1-T5 done |
