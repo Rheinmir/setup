@@ -109,3 +109,4 @@
 ## 2026-06-27 — docs-site-macos — session-review-html (trang glass 6 section, self-contained, :8765)
 ## 2026-06-27 — feedback — siết luật: tắt caveman khi viết tài liệu (orca-workflow x2 + CLAUDE.md); lưu memory docs-no-caveman
 ## 2026-06-27 — feedback — tinh chỉnh luật caveman: máy đọc thì gọn được, người đọc thì đầy đủ (orca-workflow x2 + CLAUDE.md)
+## 2026-06-27 — docs-site-macos — viết lại 270626-session-review.html bằng văn xuôi đầy đủ (theo feedback caveman), giữ design system glass
