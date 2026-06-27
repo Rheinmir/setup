@@ -103,3 +103,4 @@
 ## 2026-06-27 — R11 [repo] — migrate 8 seq html flat → glass (override docs-site-macos); bật enforce_at [session,repo] + pre-commit seq-html-glass
 ## 2026-06-27 — R6 + two-policy — R6=verify-before-commit (KHÔNG reserved); reconcile harness/policy.yaml↔poc (cả hai R1-R12); drift-test check parity
 ## 2026-06-27 — fix broken wikilink — stub concepts extract-site + docs-site-macos-skill (wiki-health 0 broken)
+## 2026-06-27 — fix — poc R7 thêm exclude_basenames (_template miễn, khớp production); full test sweep 10/10

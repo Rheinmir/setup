@@ -52,6 +52,7 @@ rules:
     statement: "Proposal (có '## Plan' + còn 'proposed') phải khai '## Agent Task Assignment' + link Sequence diagram."
     enforce_at: [session, repo]
     target_globs: ["**/wiki/sources/draft/**/*.md", "**/wiki/draft/**/*.md"]
+    exclude_basenames: ["_template.md", "README.md", "index.md", "log.md"]   # template/meta miễn R7 (khớp production proposal_complete.py)
     when_contains: ["## Plan", "proposed"]
     need_contains: ["## Agent Task Assignment", "Sequence diagram"]
 
