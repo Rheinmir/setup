@@ -14,3 +14,4 @@
 | 2026-06-27 | T4 + đóng gap-backfill | docs | Runbook thiếu → người mới phải đọc đầu tác giả | CONTRIBUTING-harness.md; T1-T5 done |
 | 2026-06-27 | policy-drives-wiring | architecture | wiring hook hardcode ở gen-converters | gen SINH từ hook_event (event_action/blocking/matcher/timeout); output IDENTICAL; drift-test 36/0 |
 | 2026-06-27 | R11 bật repo-tier | rule | 8 seq html cũ flat chặn repo-tier | migrate override glass (non-destructive); enforce_at +repo; pre-commit hook |
+| 2026-06-27 | R6 + reconcile 2 policy | rule | R6 chỉ ở production policy; 2 policy lệch rule-set | R6=verify-before-commit; +R11/R12 prod, +R6 poc; drift-test gác parity |

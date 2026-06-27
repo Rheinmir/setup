@@ -81,3 +81,19 @@ rules:
     enforce_at: [session]        # UserPromptSubmit hook đếm bằng máy (.claude/audit/.docs-gate.json)
     applies_to: [user-prompt]
     note: "Hook user_prompt_submit.py inject directive vào prompt mốc-N: hỏi user có muốn đánh giá+bổ sung docs cho N prompt vừa rồi; nếu đồng ý → dispatch doc-agent skill docs-site-macos (CLI opencode → agy → claude; subagent không gọi được opencode thì /orchestration). Nhịp đổi bằng env LLMWIKI_DOCS_GATE_EVERY. Báo cáo, không gate."
+
+  - id: R11
+    name: seq-html-glass-style
+    validator: null              # enforce qua poc llmwiki-validate (conditional_require) + pre-commit seq-html-glass
+    statement: "Seq diagram HTML (*-seq.html) phải theo style docs-site-macos liquid-glass — không theme flat tự chế."
+    enforce_at: [session, repo]
+    applies_to: [write]
+    scope: "**/*-seq.html"
+    note: "Marker bắt buộc: backdrop-filter + linear-gradient(180deg,#f7fbff…) + edge-highlight inset. Chi tiết kind/marker ở poc-vendor-neutral/policy.yaml."
+
+  - id: R12
+    name: pull-before-change
+    validator: null              # process-gate: (B) orchestrator sweep + (C) git pre-push — không validator content
+    statement: "Pull/check remote trước khi bắt đầu việc (orchestrator sweep) và trước khi push (pre-push hook)."
+    enforce_at: [session, repo]
+    note: "(B) pull-gate-sweep.sh ở orca-workflow Step 0 (quét mọi subrepo) · (C) .git/hooks/pre-push + .pre-commit pre-push + install-harness --all-subrepos. Đã bỏ per-edit PreToolUse. Lý do ở ADR-002-pull-before-change-gates."

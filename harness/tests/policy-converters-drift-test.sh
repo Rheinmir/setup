@@ -21,6 +21,14 @@ rules = (yaml.safe_load((poc / "policy.yaml").read_text(encoding="utf-8")) or {}
 PASS, FAIL = [], []
 def chk(name, cond): (PASS if cond else FAIL).append(name)
 
+# 0) hai policy (production list-schema ↔ poc dict-schema) phải khớp rule-id set
+prod = yaml.safe_load((poc.parent / "policy.yaml").read_text(encoding="utf-8"))
+prod_ids = {r["id"] for r in prod["rules"]}
+poc_ids = {r["id"] for r in rules.values()}
+chk(f"hai policy khớp rule-set (prod={len(prod_ids)} poc={len(poc_ids)})", prod_ids == poc_ids)
+if prod_ids != poc_ids:
+    print("  chỉ-prod:", sorted(prod_ids - poc_ids), "| chỉ-poc:", sorted(poc_ids - prod_ids))
+
 # 2) mọi rule id có trong advisory (codex + cursor + kiro)
 adv = "".join((out / p).read_text(encoding="utf-8") for p in (
     "codex/AGENTS.snippet.md", "cursor/.cursor/rules/harness.mdc", "kiro/.kiro/steering/harness.md"))
