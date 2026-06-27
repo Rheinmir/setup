@@ -177,7 +177,22 @@ if [ "$WITH_SKILLS" = 1 ]; then
   fi
 fi
 
-log "HOÀN TẤT."
-[ "$WITH_SKILLS" = 1 ] && echo "   • Skill cài GLOBAL (~/.claude/skills) — dùng cho mọi project, khác với harness (theo từng project)."
+echo ""
+log    "═══════════ TRẠNG THÁI 3 TRỤ ═══════════"
+log    "  1. Harness  ✓ cài/cập nhật   (per-project: hook validate + CI + R1–R10)"
+if [ "$WITH_SKILLS" = 1 ]; then
+  log  "  2. Skills   ✓ cài/cập nhật   (GLOBAL ~/.claude/skills, qua npx)"
+else
+  warn "  2. Skills   — BỎ QUA         → thêm cờ --with-skills (hoặc --full)"
+fi
+if [ "$WITH_WIKI" = 1 ]; then
+  log  "  3. llmwiki  ✓ seed khung     (llmwiki/wiki + raw + index/log)"
+else
+  warn "  3. llmwiki  — BỎ QUA         → thêm cờ --with-wiki (hoặc --full)"
+fi
+if [ "$WITH_SKILLS" = 0 ] || [ "$WITH_WIKI" = 0 ]; then
+  warn "  ► Muốn CẢ 3 trụ trong 1 lệnh: chạy lại với  --full"
+fi
+log    "═════════════════════════════════════════"
 echo "   • Claude: mở session mới (hoặc /hooks reload) để hook có hiệu lực."
 echo "   • CI chạy khi push lên GitHub. Sửa luật: harness/poc-vendor-neutral/policy.yaml → chạy lại install.sh (hoặc gen-converters.py)."
