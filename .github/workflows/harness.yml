@@ -54,3 +54,29 @@ jobs:
           echo "kiểm tra:"; echo "$files" | sed 's/^/  /'
           # shellcheck disable=SC2086
           python3 harness/poc-vendor-neutral/bin/llmwiki-validate.py files $files
+
+  repo-health:
+    name: repo health (fresh-clone gates — trước nay chỉ pre-commit, bypass được)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: pip install pyyaml
+      # Các validator này trước nay CHỈ chạy pre-commit (bypass bằng --no-verify / không cài).
+      # Nay git-aware (bỏ qua draft/html gitignored) nên chạy được trên checkout sạch của CI.
+      - name: R3 index-sync (git-aware)
+        run: python3 harness/validators/index_sync.py --wiki-dir llmwiki/wiki
+      - name: L4 wiki-health — broken wikilink (git-aware)
+        run: python3 harness/scripts/wiki-health.py --wiki-dir llmwiki/wiki --fail-on broken
+      - name: arch-scan — doc vs rule
+        run: python3 harness/scripts/arch-scan.py --root .
+      - name: harness-lint — meta-drift (hằng số content-dir + wiring policy→settings)
+        run: python3 harness/scripts/harness-lint.py --check
+      - name: agent↔claude skill-table parity
+        run: python3 harness/validators/agent_claude_parity.py
+      - name: duplicate-basename — slug wiki không trùng giữa các thư mục
+        run: python3 harness/validators/duplicate_basename.py --wiki-dir llmwiki/wiki
+      - name: harness-doctor — fire-drill (mọi rail còn cắn?)
+        run: python3 harness/scripts/harness-doctor.py --ci

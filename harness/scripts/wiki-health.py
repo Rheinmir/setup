@@ -17,9 +17,33 @@ import sys
 from pathlib import Path
 
 SKIP_BASENAMES = {"README.md", "_template.md"}
-CONTENT_DIRS = ("concepts", "entities", "sources", "draft")
+CONTENT_DIRS = ("concepts", "entities", "sources", "draft", "architecture", "tours")
 WIKILINK_RE = re.compile(r"\[\[([^\]|#]+)(?:[|#][^\]]*)?\]\]")
 MDLINK_RE = re.compile(r"\]\(([^)#\s]+\.md)\)")
+
+_LO_CACHE: dict = {}
+
+
+def local_only_stem(stem: str, wiki: Path) -> bool:
+    """True nếu một file tên <stem>.md sẽ nằm ở thư mục draft gitignored (local-only cố ý).
+
+    Wikilink trỏ tới draft local-only KHÔNG phải broken — file vắng trên fresh clone là CHỦ Ý.
+    Dùng `git check-ignore` (glob khớp kể cả file vắng mặt) → nhất quán local ↔ clone sạch.
+    Fail-open: git lỗi → False (vẫn báo broken như cũ).
+    """
+    if stem not in _LO_CACHE:
+        res = False
+        for c in (f"sources/draft/{stem}.md", f"draft/{stem}.md", f"draft/orca/{stem}.md"):
+            try:
+                r = subprocess.run(["git", "check-ignore", "-q", (wiki / c).as_posix()],
+                                   capture_output=True, timeout=5)
+                if r.returncode == 0:
+                    res = True
+                    break
+            except Exception:
+                pass
+        _LO_CACHE[stem] = res
+    return _LO_CACHE[stem]
 
 
 def content_files(wiki: Path) -> list[Path]:
@@ -72,7 +96,8 @@ def main() -> None:
             name = name.strip()
             target = stems.get(name)
             if target is None:
-                broken.append({"from": src.relative_to(wiki).as_posix(), "wikilink": name})
+                if not local_only_stem(name, wiki):   # wikilink→draft local-only ≠ broken
+                    broken.append({"from": src.relative_to(wiki).as_posix(), "wikilink": name})
             elif target != src:
                 inbound[target] += 1
         for link in MDLINK_RE.findall(text):

@@ -7,10 +7,30 @@ Exit 0 = khớp, exit 2 = lệch (liệt kê thiếu/thừa trên stderr).
 """
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 
 SKIP_BASENAMES = {"README.md", "_template.md"}
+_IGN_CACHE: dict[str, bool] = {}
+
+
+def gitignored(rel: str, wiki: Path) -> bool:
+    """True nếu (wiki/rel) bị .gitignore loại — drafts/html local-only cố ý (xem ADR/.gitignore).
+
+    Hoạt động cả trên FRESH CLONE (file vắng mặt nhưng .gitignore tracked → khớp pattern),
+    nên index_sync nhất quán giữa máy tác giả và clone sạch: file gitignored được BỎ QUA cả
+    hai chiều (không bắt buộc có row, mà row trỏ tới nó cũng không bị coi là 'thừa').
+    Fail-open: git lỗi/không có → coi như KHÔNG ignore.
+    """
+    full = (wiki / rel).as_posix()
+    if full not in _IGN_CACHE:
+        try:
+            r = subprocess.run(["git", "check-ignore", "-q", full], capture_output=True, timeout=5)
+            _IGN_CACHE[full] = (r.returncode == 0)
+        except Exception:
+            _IGN_CACHE[full] = False
+    return _IGN_CACHE[full]
 CONTENT_DIRS = ("concepts", "entities", "sources", "draft", "architecture", "tours")
 LINK_RE = re.compile(r"\]\(([^)#\s]+\.md)\)")
 WIKILINK_RE = re.compile(r"\[\[([^\]|#]+)")
@@ -62,10 +82,12 @@ def main() -> None:
     if not wiki.is_dir():
         sys.exit(0)
 
-    exist = content_files(wiki)
+    # Bỏ qua file gitignored (drafts/html local-only): không bắt buộc index, và row trỏ
+    # tới chúng không bị coi là 'thừa' → nhất quán local ↔ fresh clone (đóng gap fresh-clone).
+    exist = {f for f in content_files(wiki) if not gitignored(f, wiki)}
     indexed = indexed_files(wiki)
-    missing = sorted(exist - indexed)   # có file, index chưa ghi
-    stale = sorted(indexed - exist)     # index ghi, file không còn
+    missing = sorted(exist - indexed)                                   # có file (tracked), index chưa ghi
+    stale = sorted(f for f in (indexed - exist) if not gitignored(f, wiki))  # row trỏ file tracked không tồn tại
 
     if missing or stale:
         lines = ["[R3 index-sync] wiki/index.md lech voi thuc te:"]

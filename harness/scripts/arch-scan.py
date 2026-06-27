@@ -15,8 +15,8 @@ import re
 import sys
 from pathlib import Path
 
-R5_DIRS = {"concepts", "entities", "sources", "draft"}
-ROOT_MD = {"index.md", "log.md", "README.md", "active-context.md", "decisions.md", "_template.md"}
+R5_DIRS = {"concepts", "entities", "sources", "draft", "architecture", "tours"}
+ROOT_MD = {"index.md", "log.md", "README.md", "active-context.md", "decisions.md", "_template.md", "tour-demo.md"}
 FLAG = "--dangerously-skip-permissions"
 WIKI_DIR_RE = re.compile(r"(?<![a-zA-Z])wiki/([a-z][a-z0-9-]*)/")
 WIKI_ROOTMD_RE = re.compile(r"(?<![a-zA-Z])wiki/([A-Za-z][\w-]*\.md)")

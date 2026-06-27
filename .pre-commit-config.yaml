@@ -7,45 +7,65 @@ repos:
     hooks:
       - id: wiki-origin-required
         name: "R2: wiki file phai co '## Origin'"
-        entry: python harness/validators/origin_required.py
+        entry: python3 harness/validators/origin_required.py
         language: system
         files: ^llmwiki/wiki/(concepts|entities|sources|draft)/.*\.md$
 
       - id: wiki-okf-frontmatter
         name: "R9: wiki concept co YAML frontmatter + type (OKF v0.1)"
-        entry: python harness/validators/okf_frontmatter.py
+        entry: python3 harness/validators/okf_frontmatter.py
         language: system
         files: ^llmwiki/wiki/(concepts|entities|sources|draft|architecture|tours)/.*\.md$
 
       - id: wiki-folder-structure
         name: "R5: file wiki dung subfolder"
-        entry: python harness/validators/folder_structure.py
+        entry: python3 harness/validators/folder_structure.py
         language: system
         files: ^llmwiki/wiki/.*\.md$
 
       - id: wiki-proposal-complete
         name: "R7: proposal cho duyet phai co Agent table + seq per-task"
-        entry: python harness/validators/proposal_complete.py
+        entry: python3 harness/validators/proposal_complete.py
         language: system
         files: ^llmwiki/wiki/(draft|sources/draft)/.*\.md$
 
       - id: arch-scan
         name: "arch-scan: van ban skill/doc khop luat R1-R7"
-        entry: python harness/scripts/arch-scan.py --root .
+        entry: python3 harness/scripts/arch-scan.py --root .
         language: system
         always_run: true
         pass_filenames: false
 
       - id: wiki-index-sync
         name: "R3: index.md khop tap file wiki"
-        entry: python harness/validators/index_sync.py --wiki-dir llmwiki/wiki
+        entry: python3 harness/validators/index_sync.py --wiki-dir llmwiki/wiki
         language: system
         always_run: true
         pass_filenames: false
 
       - id: wiki-health
         name: "L4: wiki health (broken wikilink = fail)"
-        entry: python harness/scripts/wiki-health.py --wiki-dir llmwiki/wiki --fail-on broken
+        entry: python3 harness/scripts/wiki-health.py --wiki-dir llmwiki/wiki --fail-on broken
+        language: system
+        always_run: true
+        pass_filenames: false
+
+      - id: harness-lint
+        name: "meta-drift: hằng số content-dir + wiring policy→settings"
+        entry: python3 harness/scripts/harness-lint.py --check
+        language: system
+        always_run: true
+        pass_filenames: false
+
+      - id: agent-claude-parity
+        name: "AGENT.md ↔ CLAUDE.md bảng skill phải khớp"
+        entry: python3 harness/validators/agent_claude_parity.py
+        language: system
+        files: ^llmwiki/(AGENT|CLAUDE)\.md$
+
+      - id: wiki-duplicate-basename
+        name: "không có basename .md trùng ở ≥2 thư mục wiki/ (diverging-dup guard)"
+        entry: python3 harness/validators/duplicate_basename.py --wiki-dir llmwiki/wiki
         language: system
         always_run: true
         pass_filenames: false

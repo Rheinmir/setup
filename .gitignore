@@ -10,3 +10,7 @@ llmwiki/wiki/sources/draft/*.md
 !llmwiki/wiki/sources/draft/_template.md
 llmwiki/wiki/draft/*.md
 llmwiki/wiki/draft/orca/*.md
+
+# generated artifact manifest (local, per artifacts.config.yaml manifest.tracked:false)
+fdk/MANIFEST.json
+fdk/MANIFEST.md

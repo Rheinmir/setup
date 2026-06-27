@@ -1,0 +1,25 @@
+# fdk/tools/artifacts.config.yaml
+# THE single place artifact-lifecycle unknowns live — the /build-now-adapt-later
+# quarantine boundary. artifacts.py reads EVERY retention/lifecycle threshold from
+# here; none is hard-coded in the tool. While `verified: false`, every value below is
+# a documented best-guess (NOT confirmed against observed repo behavior) and every
+# destructive --apply is refused. Finalize procedure: fdk/docs/ARTIFACTS.md → ADAPT-CHECKLIST.
+
+verified: false                   # ASSUMPTION (not verified) — flip true ONLY after conformance passes; gates --apply
+
+archive:
+  trigger: status                 # ASSUMPTION (not verified) — what sends an artifact to archive/: status | age | both
+  stale_days: 30                  # ASSUMPTION (not verified) — days since `date` before a draft counts as stale
+  keep_last_renders: 1            # ASSUMPTION (not verified) — newest renders to keep per slug; older ones archivable
+
+renders:
+  disposable: true                # ASSUMPTION (not verified) — .html renders are rebuildable, safe to drop/regenerate
+
+index:
+  local_rows: section             # ASSUMPTION (not verified) — how index.md should hold gitignored rows: section | drop | keep
+
+manifest:
+  tracked: false                  # ASSUMPTION (not verified) — keep MANIFEST.json/.md local (untracked) vs commit them
+
+promote:
+  mode: manual                    # ASSUMPTION (not verified) — draft→promoted is a manual step (vs auto-on-status)
