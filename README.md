@@ -5,16 +5,17 @@ một dự án: nền tri thức (`llmwiki/`), quy trình dựng dự án, và *
 
 > Nhánh làm việc chính: **`orca`**.
 
-## ⚡ Cài guardrail (harness) — 1 dòng
+## ⚡ Cài/update — 1 dòng (CẢ 3 TRỤ)
 
-Chạy trong thư mục gốc dự án của bạn:
+Chạy trong thư mục gốc dự án của bạn — **1 lệnh lo trọn harness + skills + llmwiki**, khỏi nhớ cờ:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash
 ```
 
-Cài **1 lõi validator vendor-neutral**: chặn agent ghi vào `raw/`, bắt buộc mọi file wiki có `## Origin`,
-qua **hook native** của công cụ (Claude/opencode) + **CI** làm sàn đảm bảo. Tự dò vendor, có `--clean` / `uninstall`.
+Mặc định cài/update **cả 3 trụ**: **Harness** (lõi validator vendor-neutral — chặn ghi `raw/`, ép wiki có `## Origin`…
+qua hook native Claude/opencode + CI làm sàn) · **Skills** (global `~/.claude/skills`) · **llmwiki** (khung wiki).
+Cuối lần chạy in **bảng TRẠNG THÁI 3 TRỤ**. Cờ: `--harness-only` (chỉ trụ 1) · `--clean` · `uninstall`.
 
 - Chi tiết, gỡ, cài thủ công: [`harness/poc-vendor-neutral/README.md`](harness/poc-vendor-neutral/README.md)
 - Bản tải về (offline): [Releases](../../releases)
