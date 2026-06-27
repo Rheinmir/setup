@@ -50,6 +50,13 @@ repos:
         always_run: true
         pass_filenames: false
 
+      - id: policy-converters-drift
+        name: "T5: drift gen-converters <-> policy.yaml (adapter khop rule)"
+        entry: bash harness/tests/policy-converters-drift-test.sh
+        language: system
+        always_run: true
+        pass_filenames: false
+
       - id: harness-pull-gate
         name: "R12 gate2: pull-before-push (chan push neu local SAU remote)"
         entry: bash harness/poc-vendor-neutral/bin/pull-gate.sh gate2

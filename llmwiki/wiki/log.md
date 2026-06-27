@@ -97,3 +97,4 @@
 ## 2026-06-27 — orca-workflow — R12 v3 DUYỆT + impl T1-T5 (list-subrepos.py, pull-gate-sweep.sh, install --all-subrepos, Step 0 sweep ×2, test 4/4 PASS); Kiro thiếu → Claude inline
 ## 2026-06-27 — backfill — rule-registry (R1..R12 + flag drift R3/R8) + ADR-001/002 + lấp decisions.md
 ## 2026-06-27 — T1 reconcile — thêm R3/R4/R8/R10 (hook_event) vào policy.yaml (11 rule); điều tra: R3/R8 KHÔNG drift, gỡ flag; registry cập nhật
+## 2026-06-27 — T5 drift-test — policy-converters-drift-test.sh (28/28 + negative bắt drift); wire .pre-commit

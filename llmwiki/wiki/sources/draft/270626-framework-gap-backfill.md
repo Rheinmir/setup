@@ -32,11 +32,11 @@ Gemini (xem chat import) khuyên đúng tinh thần — "viết design philosoph
 
 > Execution **hoãn** — scope user đợt này = "chỉ dựng propose draft". Các task dưới đây chờ gate.
 
-- [ ] **T1** — Reconcile `policy.yaml` về đúng nguồn chân lý: thêm entry R8 (`index_sync`) + R10 (`docs-gate`, enforce_at `[session]` UserPromptSubmit); annotate trạng thái R3/R4/R6 (retired/reserved) ngay trong file để không còn số ma.
-- [ ] **T2** — Tạo `wiki/concepts/rule-registry.md`: bảng canonical R1..R10 (id · name · validator/hook · enforce_at · status · vì sao). Một trang người mới đọc là đủ.
-- [ ] **T3** — Lấp `wiki/decisions.md` + seed ADR thật: `ADR-001-policy-as-source-of-truth`, `ADR-002-agent-vs-deterministic`, `ADR-003-thin-adapter-thick-policy` — chốt tiêu chí quyết định rút từ chat Gemini + đầu tác giả.
-- [ ] **T4** — `harness/CONTRIBUTING-harness.md`: runbook "thêm một rule thế nào" gắn với tiêu chí ADR (sửa policy.yaml → thêm validator → regen converters → test).
-- [ ] **T5** — Drift-test: assert output `gen-converters.py` khớp `policy.yaml`; wire vào CI (`.github/`/`evals`). *(Ghi chú: `out/` đang gitignored — regenerate từ policy → drift chặn từ nguồn; test chỉ cần assert gen chạy sạch.)*
+- [x] **T1** ✓ — Reconcile `policy.yaml`: thêm R3/R4/R8/R10 (kind `hook_event`) → policy liệt kê đủ 11 rule. Điều tra ra **R3/R8 KHÔNG drift** (R3=index-sync nhất quán, R8=session-health). R6 vẫn reserved. Caveat: wiring còn hardcode ở gen-converters (T5 phủ).
+- [x] **T2** ✓ — `wiki/concepts/rule-registry.md` R1..R12, 1 trang, flag honest caveat.
+- [x] **T3** ✓ — Lấp `decisions.md` + `sources/adr/ADR-001-policy-as-source-of-truth` + `ADR-002-pull-before-change-gates` (gộp agent-vs-deterministic + thin-adapter + R12 reasoning).
+- [ ] **T4** — `harness/CONTRIBUTING-harness.md`: runbook "thêm một rule thế nào" gắn tiêu chí ADR (sửa policy.yaml → thêm validator → regen converters → test).
+- [x] **T5** ✓ — `harness/tests/policy-converters-drift-test.sh`: assert mọi rule vào advisory + deny globs vào opencode/antigravity + **hook_event event khớp wiring claude** (R3→Stop…) + không orphan. **28/28 PASS**; negative test (rule chưa-wire → FAIL=2) chứng minh bắt drift. Wire `.pre-commit-config` (commit-stage). *(out/ gitignored → drift thật = gen-converters DROP/lệch policy, không phải out lệch git.)*
 - [x] **R11 (thêm live 2026-06-27)** — `seq-html-glass-style` (kind `conditional_require`, enforce_at `[session]`): seq HTML phải có marker glass docs-site-macos (`backdrop-filter` + `linear-gradient(180deg,#f7fbff…` + edge-highlight). Đã test: chặn flat (exit 2), cho qua glass, không đụng non-seq. **Nợ:** backfill R11 vào rule-registry (T2) + 1 ADR (T3); cân nhắc bật `[repo]` sau khi migrate ~8 seq html cũ.
 - [x] **R12 (thêm live 2026-06-27 · rút gọn về (B)+(C))** — `pull-before-change` (kind `process_gate`): **(B)** pre-work sweep MỘT LẦN do orchestrator (workflow Step 0, `pull-gate.sh gate1`) → base tươi trước fan-out đa-agent; **(C)** pre-push git-level (`.git/hooks/pre-push` + `.pre-commit` stage pre-push + install-harness `--hook-type pre-push`) chặn **mọi vendor**. **ĐÃ BỎ (A) per-edit PreToolUse** (cost cao, lệch vendor, (B) đã phủ) — gỡ khỏi `pre_tool_use.py` + `gen-converters.py`. Lý do: chỉ git-level (C) + orchestrator (B) phủ được mọi vendor; lifecycle session từng vendor không tin được. Đã test: synced→pass, local-sau-remote→pre-push block exit 2. **Nợ:** rule-registry (T2) + ADR (T3); R12 v3 workspace-aware sweep nhiều subrepo (propose riêng).
 
@@ -44,11 +44,11 @@ Gemini (xem chat import) khuyên đúng tinh thần — "viết design philosoph
 
 | Task | Agent CLI | Lý do chọn | Status |
 |------|-----------|------------|--------|
-| T1 reconcile policy.yaml (R8/R10/annotate R3-4-6) | Claude Code | Ngữ nghĩa hook/enforce_at dễ vỡ, ảnh hưởng gate thật → architectural | pending |
-| T2 rule-registry.md | OpenCode `big-pickle` | Tổng hợp bảng từ nguồn đã xác định, cơ học | pending |
-| T3 decisions.md + 3 ADR | Claude Code | Cần reasoning của tác giả (tiêu chí quyết định), không boilerplate | pending |
-| T4 CONTRIBUTING-harness.md | OpenCode `big-pickle` | Runbook theo khuôn đã chốt ở T1–T3 | pending |
-| T5 drift-test + CI wire | Kiro | Test + config CI, độc lập verify được | pending |
+| T1 reconcile policy.yaml | Claude Code | Ngữ nghĩa hook/enforce_at dễ vỡ → architectural | done |
+| T2 rule-registry.md | Claude Code (Kiro/OC thiếu) | Tổng hợp từ nguồn đã xác minh | done |
+| T3 decisions.md + ADR | Claude Code | Cần reasoning tác giả | done |
+| T4 CONTRIBUTING-harness.md | OpenCode `big-pickle` | Runbook theo khuôn T1–T3 | pending |
+| T5 drift-test | Claude Code (Kiro thiếu) | Test + wire pre-commit; 28/28 + negative chứng minh | done |
 
 ## Sequence diagram
 
