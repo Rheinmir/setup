@@ -6,23 +6,22 @@ Chứng minh kiến trúc trong `llmwiki/html/250626-harness-architecture-vs-cur
 
 ## Cài — 1 dòng (không cần clone repo)
 
-Chạy NGAY trong thư mục dự án của bạn:
+Chạy NGAY trong thư mục dự án của bạn — **1 dòng này cài/UPDATE CẢ 3 TRỤ** (harness + skills + llmwiki), khỏi nhớ cờ:
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash
 ```
-Tải lõi từ GitHub rồi cài trọn B0–B4 vào thư mục hiện tại (tự dò vendor, merge config, thả CI + pre-commit, verify). Kèm cờ:
+Cuối lần chạy in **bảng TRẠNG THÁI 3 TRỤ** (mỗi trụ ✓ hay bỏ qua). Kèm cờ:
 ```bash
-curl -fsSL .../bootstrap.sh | bash -s -- --vendor claude,opencode   # ép vendor
-curl -fsSL .../bootstrap.sh | bash -s -- --clean                    # cài MỚI = gỡ cũ rồi cài
-curl -fsSL .../bootstrap.sh | bash -s -- --with-skills              # harness + skill (global)
-curl -fsSL .../bootstrap.sh | bash -s -- --full                     # ĐỦ 3 TRỤ: harness + skills + seed llmwiki
+curl -fsSL .../bootstrap.sh | bash -s -- --harness-only          # CHỈ harness (bỏ skills + llmwiki)
+curl -fsSL .../bootstrap.sh | bash -s -- --clean                 # cài MỚI = gỡ cũ rồi cài (vẫn đủ 3 trụ)
+curl -fsSL .../bootstrap.sh | bash -s -- --vendor claude,opencode # ép vendor
 ```
 
-> **Tốc độ:** mặc định (harness) + `--with-wiki` (seed llmwiki) đều **nhanh như code** (copy + mkdir). Chỉ `--with-skills` (npx) là bước mạng chậm hơn — nên để tùy chọn. `--full` = cả 3 trụ trong 1 lệnh.
+> **Tốc độ:** harness + llmwiki **nhanh như code** (copy + mkdir). Trụ skills chạy `npx` (bước mạng, chậm hơn vài giây) — nay **mặc định bật** để 1 lệnh lo trọn; không muốn thì `--harness-only`. `bash install.sh` (đã clone repo) thì ngược lại: mặc định harness-only, thêm `--full` mới đủ 3.
 
 > **Harness là HOOK, không phải MCP.** Cài xong KHÔNG thấy trong `/mcp` là ĐÚNG — kiểm bằng **`/hooks`** (hoặc khối `hooks` trong `.claude/settings.json`). `/mcp` chỉ liệt kê MCP server (tool cho model gọi), harness không nằm ở đó.
 >
-> **Phạm vi khác nhau:** harness cài **theo từng project** (hook trong `.claude/settings.json` của project). Skill (`--with-skills`) cài **GLOBAL** (`~/.claude/skills`, dùng mọi project). Hai thứ tách biệt — "cài harness" không tự kéo skill, trừ khi thêm `--with-skills`.
+> **Phạm vi khác nhau:** harness + llmwiki cài **theo từng project** (hook trong `.claude/settings.json`, khung `llmwiki/` của project). Skills cài **GLOBAL** (`~/.claude/skills`, dùng mọi project). Bootstrap **mặc định cài cả 3** — dùng `--harness-only` nếu chỉ muốn lớp per-project, không đụng skill global.
 
 ## Luật được gác — đủ R1–R10
 
@@ -40,7 +39,7 @@ Cài xong, harness đăng ký **5 hook sự kiện** trong `.claude/settings.jso
 Chặn-cứng: **R1/R2/R3/R5/R7/R9**. Tự-động/báo-cáo/nhắc: **R4/R8/R10**. Cổng commit: **R6**.
 Mọi hook sự kiện đều **fail-open** (lỗi hạ tầng → exit 0, không phá session).
 
-> **3 trụ khi đẩy sang dự án khác:** Harness (10R, per-project, `install.sh`) · Skills (workflow: propose/verify-before-commit…, global, `--with-skills`) · llmwiki (khung wiki, `--with-wiki`). One-liner **`bootstrap.sh ... --full`** lo trọn 3 trụ trong 1 lệnh.
+> **3 trụ khi đẩy sang dự án khác:** Harness (10R, per-project) · Skills (workflow: propose/verify-before-commit…, global) · llmwiki (khung wiki, per-project). One-liner **`bootstrap.sh | bash`** (không cờ) lo trọn **CẢ 3 trụ** trong 1 lệnh; `--harness-only` nếu chỉ muốn trụ 1.
 > URL trỏ nhánh `orca` → luôn kéo **bản mới nhất** (không outdate); chỉ hỏng nếu đổi tên branch/đường dẫn. Đổi nguồn: đặt env `HARNESS_BASE`.
 
 **Dán nguyên khối này vào system prompt của AI** (agent tự cài khi được yêu cầu):
@@ -51,9 +50,11 @@ Khi user yêu cầu "cài harness / bật guardrail", chạy ở THƯ MỤC GỐ
 
 curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash
 
-Nó cài 1 validator vendor-neutral: chặn ghi vào raw/, bắt buộc mọi file wiki có "## Origin",
-qua hook native của công cụ (Claude/opencode) + CI (.github/workflows/harness.yml) làm sàn.
+1 dòng này cài/UPDATE CẢ 3 TRỤ (harness + skills global + seed llmwiki). Harness = validator
+vendor-neutral: chặn ghi raw/, ép mọi wiki file có "## Origin"… qua hook native (Claude/opencode)
++ CI (.github/workflows/harness.yml) làm sàn. Cuối lần chạy in bảng TRẠNG THÁI 3 TRỤ.
 Cờ tùy chọn (thêm sau `| bash -s --`):
+  --harness-only             CHỈ harness (bỏ skills + llmwiki)
   --vendor claude,opencode   ép vendor (mặc định tự dò)
   --clean                    cài MỚI = gỡ cũ rồi cài
   --no-verify                bỏ chạy test

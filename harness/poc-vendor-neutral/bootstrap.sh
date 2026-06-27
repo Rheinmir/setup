@@ -4,7 +4,10 @@
 #
 #   curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash
 #
+# MẶC ĐỊNH = cài/update CẢ 3 TRỤ (harness + skills + llmwiki). Khỏi nhớ cờ gì.
+#
 # Kèm cờ (sau `bash -s --`):
+#   ... | bash -s -- --harness-only   # CHỈ harness (bỏ skills + llmwiki)
 #   ... | bash -s -- --vendor claude,opencode
 #   ... | bash -s -- --clean          # cài mới = gỡ cũ rồi cài
 #   ... | bash -s -- --no-verify
@@ -22,5 +25,16 @@ for f in policy.yaml gen-converters.py demo.sh test-broad.sh install.sh uninstal
   curl -fsSL "$BASE/$f" -o "$TMP/$f" || { echo "tải lỗi: $f" >&2; exit 1; }
 done
 chmod +x "$TMP"/*.sh "$TMP/bin/llmwiki-validate.py" 2>/dev/null || true
-say "cài vào $TARGET"
-bash "$TMP/install.sh" "$TARGET" "$@"
+# MẶC ĐỊNH: cài/UPDATE CẢ 3 TRỤ (harness + skills + llmwiki) — 1 lệnh, khỏi nhớ cờ.
+# Opt-out: --harness-only (chỉ harness). Tự chỉ --with-skills/--with-wiki/--full → tôn trọng.
+WANT_FULL=1; NEWARGS=()
+for a in "$@"; do
+  case "$a" in
+    --harness-only) WANT_FULL=0;;
+    --full|--with-skills|--with-wiki) WANT_FULL=0; NEWARGS+=("$a");;
+    *) NEWARGS+=("$a");;
+  esac
+done
+[ "$WANT_FULL" = 1 ] && NEWARGS+=(--full)
+say "cài/update vào $TARGET $([ "$WANT_FULL" = 1 ] && echo '— CẢ 3 TRỤ' || echo '(harness-only)')"
+bash "$TMP/install.sh" "$TARGET" ${NEWARGS[@]+"${NEWARGS[@]}"}
