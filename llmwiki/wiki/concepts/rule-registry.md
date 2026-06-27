@@ -36,7 +36,7 @@ Seq diagram HTML (`*-seq.html`) phải theo style `docs-site-macos` liquid-glass
 ## Tình trạng reconcile (T1 — 2026-06-27)
 - ✅ **policy.yaml giờ liệt kê ĐỦ** R1–R5, R7–R12 (thêm R3/R4/R8/R10 dạng `kind: hook_event`, documentary). "Nguồn chân lý" hết rò ở mức **liệt kê**.
 - ✅ **R3/R8 KHÔNG mâu thuẫn** — điều tra `harness-events.py` + `stop.py` + `index_sync.py` cho thấy: **R3 = index-sync** (nhất quán Stop + pre-commit), **R8 = session-health** (riêng). Flag "drift" cũ là **quá thận trọng → đã gỡ**.
-- ⚠️ **Caveat còn lại**: wiring R3/R4/R8/R10 vẫn **hardcode** ở `gen-converters.py` (PreToolUse/PostToolUse/Stop/SessionStart/UserPromptSubmit), CHƯA do policy DRIVE. Làm policy sinh hook = bước sau (kèm drift-test T5).
+- ✅ **Policy-drives-wiring (2026-06-27)**: `gen-converters.py` giờ **SINH** hook claude (Stop/PostToolUse/SessionStart/UserPromptSubmit) TỪ `hook_event` rules (`event`/`event_action`/`blocking`/`matcher`/`timeout`) — không còn hardcode. Output verify **IDENTICAL** bản cũ; drift-test 36/0 + assert `event_action` + lệnh chứa action. Policy là nguồn DUY NHẤT cho cả **semantics lẫn wiring**. (PreToolUse = content-gate gộp nhiều rule, giữ hardcode — không thuộc 1 hook_event.)
 - ⚠️ **R6 trống** — chưa rõ retired hay reserved.
 
 ## Origin

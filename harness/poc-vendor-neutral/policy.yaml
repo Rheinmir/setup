@@ -101,6 +101,8 @@ rules:
     statement: "wiki/index.md phải liệt kê đúng tập file wiki tồn tại; phiên có sửa wiki mà index lệch → chặn kết thúc lượt."
     enforce_at: [session, repo]            # session = Stop hook · repo = pre-commit (index_sync.py)
     event: Stop
+    event_action: stop                     # arg cho harness-events.py (gen-converters SINH hook từ đây)
+    timeout: 15
     handler: "harness/validators/index_sync.py · harness-events.py stop · llmwiki/.claude/hooks/stop.py"
     blocking: true
 
@@ -111,6 +113,9 @@ rules:
     statement: "Mọi tool-call ghi .claude/audit/audit.jsonl (timestamp) + sinh log.md người-đọc-được. Không chặn."
     enforce_at: [session]
     event: PostToolUse
+    event_action: audit
+    matcher: "Write|Edit|MultiEdit"
+    timeout: 10
     handler: "harness-events.py audit · llmwiki/.claude/hooks/post_tool_use.py"
     blocking: false
 
@@ -121,6 +126,8 @@ rules:
     statement: "Đầu phiên: báo số rule đang gác + CHECK DRIFT policy/version vs remote (cảnh báo nếu lệch → /sync-template). Không chặn."
     enforce_at: [session]
     event: SessionStart
+    event_action: session
+    timeout: 10
     handler: "harness-events.py session · llmwiki/.claude/hooks/session_start.py (health-check.py)"
     blocking: false
 
@@ -131,5 +138,7 @@ rules:
     statement: "Mỗi N prompt (default 5) chưa dùng /docs-site-macos hay /orca-workflow → inject directive đề nghị bổ sung docs. Báo cáo, không chặn."
     enforce_at: [session]
     event: UserPromptSubmit
+    event_action: docs
+    timeout: 10
     handler: "harness-events.py docs · llmwiki/.claude/hooks/user_prompt_submit.py"
     blocking: false

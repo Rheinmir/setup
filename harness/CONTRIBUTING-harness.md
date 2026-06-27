@@ -61,12 +61,14 @@ tới khi điều tra. Xem [[rule-registry]].
 
 ## 3. Quy trình — Hook-event (R3/R4/R8/R10 kiểu này)
 
-1–2 như trên, nhưng block policy dùng `kind: hook_event` + `event:` (Stop/PostToolUse/
-SessionStart/UserPromptSubmit) + `handler:` + `blocking:`.
-3. **Wire thật** (chưa policy-driven): thêm/sửa trong `gen-converters.py` (dict `claude.hooks`) và
-   hook production tương ứng ở `llmwiki/.claude/hooks/*.py` (+ `harness-events.py` cho PoC).
-4. **Regen + Drift-test BẮT BUỘC**: drift-test assert `event` của rule khớp wiring claude
-   (R3→Stop…) và không orphan → đây là chốt giữ policy↔wiring không lệch.
+1–2 như trên, nhưng block policy dùng `kind: hook_event` + các **field máy**:
+   `event:` (Stop/PostToolUse/SessionStart/UserPromptSubmit) · `event_action:` (arg cho
+   `harness-events.py`) · `blocking:` (true→chặn exit 2 / false→báo cáo) · `matcher:?` · `timeout:?`.
+3. **gen-converters TỰ SINH hook claude từ field trên** (policy-drives-wiring) — KHÔNG còn sửa dict
+   hardcode. Chỉ khi `event_action` là **hành động MỚI** mới thêm nhánh trong `harness-events.py`
+   (PoC) + hook production `llmwiki/.claude/hooks/<event>.py`.
+4. **Regen + Drift-test BẮT BUỘC**: drift-test assert `event` khớp kỳ vọng + có `event_action` +
+   lệnh hook chứa action + không orphan → chốt giữ policy↔wiring không lệch.
 
 ---
 

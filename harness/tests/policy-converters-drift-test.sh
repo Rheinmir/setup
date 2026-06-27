@@ -44,6 +44,12 @@ for r in rules.values():
         ev = r.get("event")
         chk(f"{r['id']} event {ev} wired", ev in hooks and len(hooks[ev]) > 0)
         chk(f"{r['id']} event khớp kỳ vọng", EXPECT.get(r["id"]) == ev)
+        # policy-drives-wiring: rule phải có event_action, và lệnh sinh ra phải tham chiếu nó
+        act = r.get("event_action")
+        chk(f"{r['id']} có event_action (policy-driven)", bool(act))
+        if act and ev in hooks:
+            cmd = hooks[ev][0]["hooks"][0]["command"]
+            chk(f"{r['id']} lệnh hook chứa action '{act}'", act in cmd)
 
 # 5) reverse — mọi event wire (trừ PreToolUse=content rules) phải có hook_event rule
 he_events = {r.get("event") for r in rules.values() if r.get("kind") == "hook_event"}

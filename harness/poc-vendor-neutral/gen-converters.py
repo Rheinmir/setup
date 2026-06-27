@@ -52,14 +52,27 @@ def main():
     def _block(f, a): return f'[ -f "$CLAUDE_PROJECT_DIR/{f}" ] && exec python3 "$CLAUDE_PROJECT_DIR/{f}" {a} || exit 0'
     # KHÔNG-CHẶN (PostToolUse/SessionStart/UserPromptSubmit): LUÔN exit 0 — file thiếu/lỗi KHÔNG bao giờ chặn input
     def _info(f, a): return f'python3 "$CLAUDE_PROJECT_DIR/{f}" {a} 2>/dev/null || true'
+    # R3/R4/R8/R10 — SINH hook từ hook_event rules trong policy.yaml (policy-drives-wiring).
+    # Trước đây hardcode; giờ policy là nguồn DUY NHẤT cho cả semantics LẪN wiring.
+    # blocking=true → _block (giữ exit 2); false → _info (luôn exit 0). matcher/timeout optional.
+    hook_events = {}
+    for r in rules.values():
+        if r.get("kind") != "hook_event":
+            continue
+        ev, action = r.get("event"), r.get("event_action")
+        if not ev or not action:
+            continue   # hook_event thiếu field máy → bỏ qua; drift-test sẽ bắt (event không wired)
+        cmd = _block(EVT, action) if r.get("blocking") else _info(EVT, action)
+        entry = {"hooks": _ev(cmd, r.get("timeout", 15))}
+        if r.get("matcher"):
+            entry["matcher"] = r["matcher"]
+        hook_events.setdefault(ev, []).append(entry)
     claude = {
         "_generated": GEN,
         "hooks": {
-            "PreToolUse": [{"matcher": "Write|Edit|MultiEdit|Bash", "hooks": _ev(_block(CLI, "claude-hook"))}],   # R1/R2/R5/R7/R9
-            "PostToolUse": [{"matcher": "Write|Edit|MultiEdit", "hooks": _ev(_info(EVT, "audit"), 10)}],          # R4
-            "Stop": [{"hooks": _ev(_block(EVT, "stop"))}],                                                        # R3
-            "SessionStart": [{"hooks": _ev(_info(EVT, "session"), 10)}],                                          # R8
-            "UserPromptSubmit": [{"hooks": _ev(_info(EVT, "docs"), 10)}],                                         # R10
+            # PreToolUse = cổng content-rule (validator claude-hook), gộp R1/R2/R5/R7/R9 — giữ hardcode
+            "PreToolUse": [{"matcher": "Write|Edit|MultiEdit|Bash", "hooks": _ev(_block(CLI, "claude-hook"))}],
+            **hook_events,   # Stop(R3)/PostToolUse(R4)/SessionStart(R8)/UserPromptSubmit(R10) ← policy
         },
     }
     write("claude/settings.snippet.json", json.dumps(claude, ensure_ascii=False, indent=2) + "\n")
