@@ -24,6 +24,35 @@ def find_health_check(root: Path):
     return None
 
 
+def orient(root: Path) -> None:
+    """SessionStart orientation: in NGẮN để agent BIẾT project có code-index + wiki + capabilities,
+    và NHẮC query chúng để định vị nhanh (đừng grep/đọc mù). Project-relevant — KHÔNG phải FDK
+    framework-dev (ADR-004 chỉ cấm auto-bơm FDK). Chỉ in khi thật sự có; fail-open tuyệt đối."""
+    try:
+        bits = []
+        has_cg = (root / ".graph-agent" / "index.db").is_file()
+        if not has_cg:
+            try:
+                has_cg = any((d / ".graph-agent" / "index.db").is_file()
+                             for d in root.iterdir() if d.is_dir())
+            except Exception:
+                pass
+        if has_cg:
+            bits.append("• code-index (code-graph, auto-reindex khi code đổi) — query `mcp__code-graph__*` "
+                        "(search_symbols / get_symbol_context / get_callers) để ĐỊNH VỊ code nhanh, đừng grep mù.")
+        wiki = root / "fdk" / "wiki" if (root / "fdk" / "wiki").is_dir() else root / "llmwiki" / "wiki"
+        if wiki.is_dir():
+            bits.append(f"• wiki `{wiki.relative_to(root)}` — query concept/entity/sources/adr/decisions cho context.")
+        for cap in (root / "fdk" / "CAPABILITIES.md", root / "CAPABILITIES.md"):
+            if cap.is_file():
+                bits.append(f"• `{cap.relative_to(root)}` — bản đồ skill/tool đang có (đọc khi chưa chắc có đồ nghề gì).")
+                break
+        if bits:
+            print("📍 [orientation] Project này có — QUERY trước khi đọc/grep rộng:\n  " + "\n  ".join(bits))
+    except Exception:
+        pass
+
+
 def main() -> None:
     payload = read_payload()
     audit(payload, "SessionStart")
@@ -31,6 +60,8 @@ def main() -> None:
     root = Path(project_dir(payload))
     if not (root / ".template-manifest.json").is_file():
         sys.exit(0)  # không phải project dùng template → bỏ qua
+
+    orient(root)  # đầu phiên: cho agent BIẾT project có gì + nhắc query trước (chống 'lơ ngơ')
 
     # NOTE: KHÔNG auto-bơm context framework-dev (FDK) ở đây. Phần lớn phiên là dùng
     # framework để dev DỰ ÁN KHÁC, không phải dev chính framework → bơm nội-bộ-framework
