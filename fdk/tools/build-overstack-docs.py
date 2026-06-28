@@ -98,6 +98,24 @@ def esc(s: str) -> str:
 ACCENTS = [("#0a84ff", "10,132,255"), ("#30b0c7", "48,176,199"), ("#5856d6", "88,86,214"),
            ("#28a745", "52,199,89"), ("#f08c00", "255,149,0"), ("#e0264b", "255,45,85")]
 
+# utils là catch-all 37 skill → quá dài. Phân loại theo MỤC ĐÍCH SỬ DỤNG (nguồn dữ liệu, dùng
+# cho cả mind map LẪN bảng tham chiếu). docs · design · caveman · fdk · utility.
+PURPOSE_OF = {
+    "brandkit": "design", "cursor-animated-sites": "design", "design-taste-frontend": "design",
+    "design-taste-frontend-v1": "design", "gpt-taste": "design", "high-end-visual-design": "design",
+    "image-to-code": "design", "imagegen-frontend-mobile": "design", "imagegen-frontend-web": "design",
+    "industrial-brutalist-ui": "design", "minimalist-ui": "design", "redesign-existing-projects": "design",
+    "stitch-design-taste": "design",
+    "docs-site-macos": "docs", "extract-site": "docs", "md-to-html": "docs", "tour-guide-supademo": "docs",
+    "cavecrew": "caveman", "caveman": "caveman", "caveman-commit": "caveman", "caveman-compress": "caveman",
+    "caveman-help": "caveman", "caveman-review": "caveman", "caveman-stats": "caveman",
+    "fdk": "fdk", "harness-tour": "fdk", "harness-update": "fdk", "health-check": "fdk",
+    "snapshot-push": "fdk", "sync-template": "fdk",
+    "check-approve": "utility", "computer-use": "utility", "find-skills": "utility",
+    "full-output-enforcement": "utility", "join-project": "utility", "last30days": "utility",
+    "uat-nonit-testcase": "utility",
+}
+
 CSS_BASE = r"""
 :root{--font:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Roboto,sans-serif;
 --mono:'SF Mono',ui-monospace,Menlo,monospace;--glass2:rgba(255,255,255,.7);--glass3:rgba(255,255,255,.88);
@@ -167,13 +185,18 @@ footer{max-width:1080px;margin:0 auto;padding:26px 24px 60px;font-size:12px;colo
 .mm .b-orch .nm{color:#e07b00}.mm .b-orch .ct{background:#ff9500}.mm .b-orch.node{border-color:rgba(255,149,0,.42)}
 .mm .b-utils .nm{color:#1e8e3e}.mm .b-utils .ct{background:#34c759}.mm .b-utils.node{border-color:rgba(52,199,89,.4)}
 .mm .b-rule .nm{color:#e0264b}.mm .b-rule .ct{background:#ff2d55}.mm .b-rule.node{border-color:rgba(255,45,85,.4)}
+.mm .b-docs .nm{color:#0a5ec7}.mm .b-docs .ct{background:#0a84ff}.mm .b-docs.node{border-color:rgba(10,132,255,.4)}
+.mm .b-design .nm{color:#c81e4a}.mm .b-design .ct{background:#ff2d55}.mm .b-design.node{border-color:rgba(255,45,85,.4)}
+.mm .b-cave .nm{color:#5a5a60}.mm .b-cave .ct{background:#8e8e93}.mm .b-cave.node{border-color:rgba(142,142,147,.4)}
+.mm .b-fdk .nm{color:#8944c2}.mm .b-fdk .ct{background:#af52de}.mm .b-fdk.node{border-color:rgba(175,82,222,.4)}
+.mm .b-util .nm{color:#c77f00}.mm .b-util .ct{background:#ff9f0a}.mm .b-util.node{border-color:rgba(255,159,10,.4)}
 """
 
 JS = r"""
 (function(){const n=document.querySelector('nav');if(!n)return;const o=document.createElement('button');o.className='nav-toggle';o.textContent='☰';document.body.appendChild(o);const c=document.createElement('button');c.className='nav-close';c.textContent='✕';n.appendChild(c);o.onclick=function(){document.body.classList.remove('nav-collapsed')};c.onclick=function(){document.body.classList.add('nav-collapsed')};if(matchMedia('(max-width:640px)').matches)document.body.classList.add('nav-collapsed')})();
 (function(){var ls=[].slice.call(document.querySelectorAll('nav a')),ss=[].slice.call(document.querySelectorAll('section[id]'));var ob=new IntersectionObserver(function(es){var a='';es.forEach(function(e){if(e.isIntersecting)a=e.target.id});if(a)ls.forEach(function(l){l.classList.toggle('active',l.getAttribute('href')==='#'+a)})},{rootMargin:'-40% 0px -55% 0px'});ss.forEach(function(s){ob.observe(s)})})();
 (function(){var t;addEventListener('scroll',function(){document.documentElement.classList.add('scrolling');clearTimeout(t);t=setTimeout(function(){document.documentElement.classList.remove('scrolling')},900)},{passive:true})})();
-(function(){var mm=document.querySelector('.mm');if(!mm)return;var NS='http://www.w3.org/2000/svg';function colorOf(n){return n.classList.contains('b-wiki')?'#30b0c7':n.classList.contains('b-dev')?'#5856d6':n.classList.contains('b-orch')?'#ff9500':n.classList.contains('b-utils')?'#34c759':n.classList.contains('b-rule')?'#ff2d55':'#9aa4b2';}function draw(){var canvas=mm.querySelector('.mm-canvas'),svg=mm.querySelector('.mm-links');if(!canvas||!svg)return;var w=canvas.offsetWidth,h=canvas.offsetHeight;svg.setAttribute('width',w);svg.setAttribute('height',h);svg.setAttribute('viewBox','0 0 '+w+' '+h);while(svg.firstChild)svg.removeChild(svg.firstChild);var cR=canvas.getBoundingClientRect();[].slice.call(canvas.querySelectorAll('.node.has-children')).forEach(function(p){var row=p.parentElement,kids=null,ch=row.children;for(var i=0;i<ch.length;i++){if(ch[i].classList.contains('children'))kids=ch[i];}if(!kids||kids.classList.contains('collapsed'))return;var pr=p.getBoundingClientRect(),px=pr.right-cR.left,py=pr.top+pr.height/2-cR.top;[].slice.call(kids.children).forEach(function(crow){var cn=crow.querySelector(':scope > .node');if(!cn)return;var rr=cn.getBoundingClientRect(),cx=rr.left-cR.left,cy=rr.top+rr.height/2-cR.top,dx=Math.max(22,(cx-px)*0.55);var pa=document.createElementNS(NS,'path');pa.setAttribute('d','M'+px+' '+py+' C'+(px+dx)+' '+py+' '+(cx-dx)+' '+cy+' '+cx+' '+cy);pa.setAttribute('stroke',colorOf(cn));svg.appendChild(pa);});});}[].slice.call(mm.querySelectorAll('.node.has-children')).forEach(function(n){var row=n.parentElement,kids=null,c=row.children;for(var i=0;i<c.length;i++){if(c[i].classList.contains('children'))kids=c[i];}if(!kids)return;if(n.classList.contains('cat')){kids.classList.add('collapsed');n.classList.add('collapsed-parent');}n.addEventListener('click',function(e){e.stopPropagation();var open=kids.classList.toggle('collapsed');n.classList.toggle('collapsed-parent',open);draw();});});draw();addEventListener('load',function(){setTimeout(draw,60);});addEventListener('resize',function(){clearTimeout(window.__mmt);window.__mmt=setTimeout(draw,120);},{passive:true});})();
+(function(){var mm=document.querySelector('.mm');if(!mm)return;var NS='http://www.w3.org/2000/svg';function colorOf(n){return n.classList.contains('b-wiki')?'#30b0c7':n.classList.contains('b-dev')?'#5856d6':n.classList.contains('b-orch')?'#ff9500':n.classList.contains('b-utils')?'#34c759':n.classList.contains('b-rule')?'#ff2d55':n.classList.contains('b-docs')?'#0a84ff':n.classList.contains('b-design')?'#ff2d55':n.classList.contains('b-cave')?'#8e8e93':n.classList.contains('b-fdk')?'#af52de':n.classList.contains('b-util')?'#ff9f0a':'#9aa4b2';}function draw(){var canvas=mm.querySelector('.mm-canvas'),svg=mm.querySelector('.mm-links');if(!canvas||!svg)return;var w=canvas.offsetWidth,h=canvas.offsetHeight;svg.setAttribute('width',w);svg.setAttribute('height',h);svg.setAttribute('viewBox','0 0 '+w+' '+h);while(svg.firstChild)svg.removeChild(svg.firstChild);var cR=canvas.getBoundingClientRect();[].slice.call(canvas.querySelectorAll('.node.has-children')).forEach(function(p){var row=p.parentElement,kids=null,ch=row.children;for(var i=0;i<ch.length;i++){if(ch[i].classList.contains('children'))kids=ch[i];}if(!kids||kids.classList.contains('collapsed'))return;var pr=p.getBoundingClientRect(),px=pr.right-cR.left,py=pr.top+pr.height/2-cR.top;[].slice.call(kids.children).forEach(function(crow){var cn=crow.querySelector(':scope > .node');if(!cn)return;var rr=cn.getBoundingClientRect(),cx=rr.left-cR.left,cy=rr.top+rr.height/2-cR.top,dx=Math.max(22,(cx-px)*0.55);var pa=document.createElementNS(NS,'path');pa.setAttribute('d','M'+px+' '+py+' C'+(px+dx)+' '+py+' '+(cx-dx)+' '+cy+' '+cx+' '+cy);pa.setAttribute('stroke',colorOf(cn));svg.appendChild(pa);});});}[].slice.call(mm.querySelectorAll('.node.has-children')).forEach(function(n){var row=n.parentElement,kids=null,c=row.children;for(var i=0;i<c.length;i++){if(c[i].classList.contains('children'))kids=c[i];}if(!kids)return;if(n.classList.contains('cat')){kids.classList.add('collapsed');n.classList.add('collapsed-parent');}n.addEventListener('click',function(e){e.stopPropagation();var open=kids.classList.toggle('collapsed');n.classList.toggle('collapsed-parent',open);draw();});});draw();addEventListener('load',function(){setTimeout(draw,60);});addEventListener('resize',function(){clearTimeout(window.__mmt);window.__mmt=setTimeout(draw,120);},{passive:true});})();
 """
 
 
@@ -198,37 +221,61 @@ def sections(root: Path):
     skill_rows = []
     for loop in loop_order + [l for l in by_loop if l not in loop_order]:
         for name, desc in sorted(by_loop.get(loop, [])):
-            skill_rows.append(f"<tr><td><code>/{esc(name)}</code></td><td>{esc(loop)}</td><td>{esc(desc)}</td></tr>")
+            lp = ("utils / " + PURPOSE_OF.get(name, "utility")) if loop == "utils" else loop
+            skill_rows.append(f"<tr><td><code>/{esc(name)}</code></td><td>{esc(lp)}</td><td>{esc(desc)}</td></tr>")
     skills_table = ("<table><tr><th>Skill</th><th>Loop</th><th>Dùng khi</th></tr>"
                     + "".join(skill_rows) + "</table>")
     rule_rows = "".join(f"<tr><td><code>{rid}</code></td><td>{esc(name)}</td></tr>" for rid, name in rs)
     rules_table = f"<table><tr><th>Rule</th><th>Chặn / đảm bảo điều gì</th></tr>{rule_rows}</table>"
 
-    # ── mind map (distilled từ cheatsheet — tree collapsible, default close, sinh từ đĩa) ──
+    # ── mind map (cheatsheet style, bezier; utils chia theo MỤC ĐÍCH vì 37 quá dài) ──
     loop_cls = {"wiki-loop": "b-wiki", "dev-loop": "b-dev", "orchestrate": "b-orch", "utils": "b-utils"}
     loop_ds = {"wiki-loop": "vòng tri thức", "dev-loop": "vòng làm-việc",
-               "orchestrate": "đa-agent", "utils": "tiện ích"}
+               "orchestrate": "đa-agent", "utils": "chia theo mục đích"}
+    PURPOSE = {"docs": ("📄 tài liệu & render", "b-docs"), "design": ("🎨 thiết kế & UI", "b-design"),
+               "caveman": ("🦴 caveman", "b-cave"), "fdk": ("🛠️ framework-dev", "b-fdk"),
+               "utility": ("🔧 tiện ích khác", "b-util")}
+    PURPOSE_ORDER = ["docs", "design", "caveman", "fdk", "utility"]
+    PMAP = PURPOSE_OF
 
     def _node(cls, nm, ds="", ct=None):
         dsh = '<span class="ds">%s</span>' % esc(ds) if ds else ''
         cth = '<span class="ct">%s</span>' % ct if ct is not None else ''
         return '<div class="node %s"><span class="nm">%s</span>%s%s</div>' % (cls, esc(nm), dsh, cth)
 
-    def _branch(cls, nm, ds, leaves):
-        rows = "".join('<div class="row">%s</div>' % lf for lf in leaves)
-        return ('<div class="row">%s<div class="children">%s</div></div>'
-                % (_node(cls + " cat has-children", nm, ds, len(leaves)), rows))
+    def _row(inner):
+        return '<div class="row">%s</div>' % inner
+
+    def _leaf(cls, name, desc):
+        return _row(_node(cls + " leaf", "/" + name, (desc[:52] + "…") if len(desc) > 54 else desc))
+
+    def _subtree(cls, nm, ds, child_rows, count=None):
+        cnt = count if count is not None else len(child_rows)
+        return _row(_node(cls + " cat has-children", nm, ds, cnt)
+                    + '<div class="children">%s</div>' % "".join(child_rows))
 
     branches = []
     for loop in loop_order + [l for l in by_loop if l not in loop_order]:
         items = sorted(by_loop.get(loop, []))
         if not items:
             continue
-        cls = loop_cls.get(loop, "b-utils")
-        leaves = [_node(cls + " leaf", "/" + n, (d[:52] + "…") if len(d) > 54 else d) for n, d in items]
-        branches.append(_branch(cls, loop, loop_ds.get(loop, ""), leaves))
-    rule_leaves = [_node("b-rule leaf", rid, name) for rid, name in rs]
-    branches.append(_branch("b-rule", "rules", "harness gác", rule_leaves))
+        if loop == "utils":   # chia thành nhánh con theo mục đích
+            groups = {}
+            for n, d in items:
+                groups.setdefault(PMAP.get(n, "utility"), []).append((n, d))
+            subs = []
+            for pk in PURPOSE_ORDER:
+                g = sorted(groups.get(pk, []))
+                if not g:
+                    continue
+                label, pcls = PURPOSE[pk]
+                subs.append(_subtree(pcls, label, "", [_leaf(pcls, n, d) for n, d in g]))
+            branches.append(_subtree("b-utils", "utils", loop_ds["utils"], subs, count=len(items)))
+        else:
+            cls = loop_cls.get(loop, "b-utils")
+            branches.append(_subtree(cls, loop, loop_ds.get(loop, ""), [_leaf(cls, n, d) for n, d in items]))
+    branches.append(_subtree("b-rule", "rules", "harness gác",
+                             [_row(_node("b-rule leaf", rid, name)) for rid, name in rs]))
 
     mindmap_html = ('<div class="mm"><div class="mm-canvas"><svg class="mm-links"></svg>'
                     '<div class="tree"><div class="row">'
