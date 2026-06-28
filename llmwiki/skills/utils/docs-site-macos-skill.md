@@ -319,6 +319,7 @@ Lưu ý: tint xanh `#0a84ff` để khớp pattern; thumb đậm dần theo hover
 ```
 <nav>          — fixed top bar with section links
 <hero>         — gradient title + subtitle
+<div class="mm">  — MẶC ĐỊNH: một mind map collapsible (xem § Mind Map) — luôn vẽ
 <repo-card>    — optional: link to source repo with chrome + collapse
 <section id="sec-{i}">  — repeat for each topic (i = 0..N-1):
   class="section-bg s-bg{i}"
@@ -329,6 +330,55 @@ Lưu ý: tint xanh `#0a84ff` để khớp pattern; thumb đậm dần theo hover
   footer link      — "Chi tiết: file.md"
 <footer>
 ```
+
+## Mind Map (MẶC ĐỊNH — luôn vẽ một bản)
+
+Mọi docs site PHẢI kèm **một mind map collapsible** tóm tắt cấu trúc trang (các section / thực thể / mục chính) — đặt ngay sau hero hoặc trong section "Tổng quan". Định dạng distilled từ skills-cheatsheet: node chip glass + chevron + nhánh màu; **mặc định ĐÓNG, click mở/đóng**. Self-contained (CSS+JS thuần, KHÔNG thư viện ngoài). Nội dung mind map nên **sinh từ chính nội dung tài liệu** (mỗi section = một nhánh, mục con = lá), không bịa.
+
+**Cấu trúc** (tree ngang: root → nhánh `.cat` → lá `.leaf`):
+```html
+<div class="mm"><div class="tree"><div class="row">
+  <div class="node root has-children"><span class="nm">Chủ đề</span><span class="ds">phụ đề</span><span class="ct">N</span></div>
+  <div class="children">
+    <div class="row">
+      <div class="node b-0 cat has-children"><span class="nm">Nhánh</span><span class="ds">mô tả</span><span class="ct">3</span></div>
+      <div class="children">
+        <div class="row"><div class="node b-0 leaf"><span class="nm">mục</span><span class="ds">mô tả ngắn</span></div></div>
+      </div>
+    </div>
+  </div>
+</div></div></div>
+```
+
+**CSS** (trong `<style>`; `--ink2`/`--border` lấy từ design system; `.b-0..b-5` cycle Apple secondary cho `.nm`+`.ct`+border):
+```css
+.mm{overflow-x:auto;padding:14px 4px 6px}
+.mm .tree,.mm .children{display:flex;flex-direction:column;gap:9px;justify-content:center}
+.mm .row{display:flex;align-items:center;gap:30px;position:relative}
+.mm .children{position:relative}.mm .children.collapsed{display:none}
+.mm .node{position:relative;display:inline-flex;flex-direction:column;gap:1px;padding:7px 13px;border-radius:13px;cursor:default;white-space:nowrap;background:rgba(255,255,255,.72);backdrop-filter:blur(7px) saturate(1.1);border:1px solid var(--border);box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 3px 14px rgba(20,40,90,.07);transition:transform .12s}
+.mm .node.has-children{cursor:pointer}.mm .node:hover{transform:translateY(-1px)}
+.mm .node .nm{font-size:13px;font-weight:700;letter-spacing:-.01em}.mm .node .ds{font-size:10.5px;color:var(--ink2)}
+.mm .node .ct{font-size:10px;color:#fff;font-weight:700;padding:1px 7px;border-radius:999px;position:absolute;top:-8px;right:-8px;background:#0a84ff}
+.mm .node.has-children::after{content:'';position:absolute;right:-7px;top:50%;width:6px;height:6px;border-right:2px solid var(--ink2);border-bottom:2px solid var(--ink2);transform:translateY(-50%) rotate(-45deg);opacity:.5}
+.mm .node.collapsed-parent::after{transform:translateY(-50%) rotate(45deg)}
+.mm .node.root{background:linear-gradient(135deg,rgba(10,132,255,.16),rgba(88,86,214,.14));border-color:rgba(10,132,255,.4)}
+.mm .row::before{content:'';position:absolute;left:-15px;top:50%;width:15px;height:2px;background:var(--border)}
+.mm>.tree>.row::before{display:none}
+.mm .children::before{content:'';position:absolute;left:-15px;top:15px;bottom:15px;width:2px;background:var(--border)}
+```
+
+**JS** (mặc định ĐÓNG mọi nhánh `.cat` + click toggle — trong `<script>`):
+```js
+[].slice.call(document.querySelectorAll('.mm .node.has-children')).forEach(function(n){
+  var row=n.parentElement,kids=null,c=row.children;
+  for(var i=0;i<c.length;i++){if(c[i].classList.contains('children'))kids=c[i];}
+  if(!kids)return;
+  if(n.classList.contains('cat')){kids.classList.add('collapsed');n.classList.add('collapsed-parent');}
+  n.addEventListener('click',function(e){e.stopPropagation();var open=kids.classList.toggle('collapsed');n.classList.toggle('collapsed-parent',open);});
+});
+```
+Root (`.has-children` không `.cat`) mở sẵn → các nhánh hiện; mỗi nhánh `.cat` đóng → click mới xổ lá. Tham khảo bản chạy thật: `llmwiki/html/overstack.html` tab "Tham chiếu".
 
 ## Section-Bg Pattern
 

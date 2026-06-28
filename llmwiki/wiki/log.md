@@ -154,24 +154,6 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-06-28 10:06:29 | `file.write` | llmwiki/wiki/sources/evals/README.md · tool=Write |
-| 2026-06-28 10:06:29 | `file.write` | harness/evals/wikieval-outputs.example.json · tool=Write |
-| 2026-06-28 10:06:54 | `file.write` | skills/wikieval/SKILL.md · tool=Write |
-| 2026-06-28 10:07:57 | `file.write` | harness/scripts/sync-skills.py · tool=Edit |
-| 2026-06-28 10:08:49 | `file.write` | llmwiki/AGENT.md · tool=Edit |
-| 2026-06-28 10:08:53 | `file.write` | llmwiki/CLAUDE.md · tool=Edit |
-| 2026-06-28 10:09:12 | `file.write` | llmwiki/AGENT.md · tool=Edit |
-| 2026-06-28 10:09:14 | `file.write` | llmwiki/CLAUDE.md · tool=Edit |
-| 2026-06-28 10:10:40 | `file.write` | .github/workflows/harness.yml · tool=Edit |
-| 2026-06-28 10:12:59 | `file.write` | llmwiki/wiki/concepts/feature-catalog.md · tool=Write |
-| 2026-06-28 10:15:12 | `file.write` | llmwiki/html/280626-framework-master-wiki.html · tool=Write |
-| 2026-06-28 10:18:06 | `file.write` | harness/scripts/adapt-registry.py · tool=Edit |
-| 2026-06-28 10:41:30 | `file.write` | llmwiki/html/280626-framework-master-wiki.html · tool=Edit |
-| 2026-06-28 10:42:21 | `file.write` | llmwiki/html/280626-framework-master-wiki.html · tool=Edit |
-| 2026-06-28 10:54:50 | `file.write` | fdk/tools/build-capabilities.py · tool=Write |
-| 2026-06-28 10:55:25 | `file.write` | llmwiki/.claude/hooks/hooklib.py · tool=Edit |
-| 2026-06-28 10:55:44 | `file.write` | harness/scripts/install-harness.sh · tool=Edit |
-| 2026-06-28 10:56:22 | `file.write` | llmwiki/AGENT.md · tool=Edit |
 | 2026-06-28 10:56:30 | `file.write` | llmwiki/CLAUDE.md · tool=Edit |
 | 2026-06-28 10:57:46 | `file.write` | llmwiki/wiki/sources/adr/ADR-005-logger-and-capabilities-travel-downstream.md · tool=Write |
 | 2026-06-28 10:58:52 | `file.write` | llmwiki/html/280626-framework-master-wiki.html · tool=Edit |
@@ -194,5 +176,23 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 | 2026-06-28 11:47:45 | `file.write` | harness/scripts/install-harness.sh · tool=Edit |
 | 2026-06-28 11:49:58 | `file.write` | harness/scripts/fdk-gate.py · tool=Edit |
 | 2026-06-28 11:52:14 | `file.write` | harness/version.json · tool=Edit |
+| 2026-06-28 11:58:52 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 11:59:39 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 11:59:56 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 12:06:38 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 12:18:09 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 12:18:27 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 12:18:43 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 12:21:40 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 12:24:00 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 12:24:58 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 12:26:24 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 12:26:34 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 12:28:19 | `file.write` | fdk/tools/fdk-kit.sh · tool=Write |
+| 2026-06-28 12:29:15 | `file.write` | skills/fdk/SKILL.md · tool=Edit |
+| 2026-06-28 12:29:37 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 15:36:13 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 15:37:09 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 15:37:31 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
 
 <!-- log:auto:end -->
