@@ -70,6 +70,13 @@ repos:
         always_run: true
         pass_filenames: false
 
+      - id: adr-normal-user
+        name: "ADR first-class trong khuôn per-project (skeleton + functional)"
+        entry: bash harness/tests/adr-normal-user-test.sh .
+        language: system
+        always_run: true
+        pass_filenames: false
+
       - id: capabilities-current
         name: "fdk/CAPABILITIES.md khớp đĩa (agent biết đúng đồ nghề)"
         entry: python3 fdk/tools/build-capabilities.py --check

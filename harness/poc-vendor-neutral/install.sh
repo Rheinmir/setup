@@ -160,7 +160,7 @@ fi
 # ── (tùy chọn) trụ 3: seed khung llmwiki (nhanh, idempotent — không đè file có sẵn) ──
 if [ "$WITH_WIKI" = 1 ]; then
   log "+ seed khung llmwiki"
-  mkdir -p "$ROOT/llmwiki/raw" "$ROOT/llmwiki/wiki/concepts" "$ROOT/llmwiki/wiki/entities" "$ROOT/llmwiki/wiki/sources/draft"
+  mkdir -p "$ROOT/llmwiki/raw" "$ROOT/llmwiki/wiki/concepts" "$ROOT/llmwiki/wiki/entities" "$ROOT/llmwiki/wiki/sources/adr" "$ROOT/llmwiki/wiki/sources/draft"
   [ -f "$ROOT/llmwiki/wiki/index.md" ] || printf '# Wiki index\n\n| File | Type | Date |\n|---|---|---|\n' > "$ROOT/llmwiki/wiki/index.md"
   [ -f "$ROOT/llmwiki/wiki/log.md" ]   || printf '# Log\n' > "$ROOT/llmwiki/wiki/log.md"
   log "  ✓ llmwiki/ (wiki/{concepts,entities,sources/draft} · raw/ · index.md · log.md)"
