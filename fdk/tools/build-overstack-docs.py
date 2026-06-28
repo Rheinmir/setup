@@ -395,6 +395,12 @@ def sections(root: Path):
         "<p class=\"lead\">Harness là phần làm overstack khác mọi \"prompt pack\": luật là CODE chạy ở hook/CI, chặn được agent kể cả khi nó cố tình lờ. 0 token, không bypass được khi merge.</p>",
         f"<p>Hiện có <b>{n_rules} rule</b> (R1–R{n_rules}). Mỗi rule là một validator tất định; vi phạm bị chặn ở write-time (hook), commit (pre-commit), và merge (CI) — ba lớp.</p>",
         rules_table,
+        "<p><b>Cơ chế mới (2026-06-28):</b> ngoài <i>chặn</i>, harness còn <b>tự sửa</b> và <b>ép grounding</b>: "
+        "<b>R3 auto-index</b> — thêm file wiki mới thì <code>index.md</code> tự khớp (Stop hook chạy <code>index_sync --fix</code>, chiều xóa vẫn chặn); "
+        "<b>R7-f force-query</b> — <code>/propose</code> buộc query wiki + có <code>## Context</code> trước khi draft (không propose \"mù\"); "
+        "<b>R13 decision→ADR</b> — quyết định <i>architecture</i> phải ref một ADR, cho edit tự do nhưng xóa ADR chỉ khi đã bị đè (Superseded by / supersedes); "
+        "<b>orientation</b> đầu phiên nhắc agent query <b>code-index</b> (code-graph, auto-watch) + <b>wiki</b> để định vị nhanh (chống \"lơ ngơ\").</p>",
+        "<p><b>Wiki của framework</b> nay ở <code>fdk/wiki/</code> (\"the kit\" — ADR-008), tách khỏi <code>llmwiki/wiki/</code> (khuôn per-project). Drift của chính các wiki-scanner được gác bằng <code>harness-lint --scanners</code> (mỗi scanner phải lọc gitignored) + <code>--copies</code> (bản deployed == master) — ADR-007.</p>",
         "<div class=\"grid\"><div class=\"card\"><h4>Bốn lớp gác (L0–L4)</h4><ul class=\"s\">"
         "<li><b>L0 hook</b> — chặn ngay lúc agent định ghi (PreToolUse).</li>"
         "<li><b>L1 settings</b> — wiring policy→agent.</li>"

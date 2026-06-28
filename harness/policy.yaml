@@ -97,3 +97,10 @@ rules:
     statement: "Pull/check remote trước khi bắt đầu việc (orchestrator sweep) và trước khi push (pre-push hook)."
     enforce_at: [session, repo]
     note: "(B) pull-gate-sweep.sh ở orca-workflow Step 0 (quét mọi subrepo) · (C) .git/hooks/pre-push + .pre-commit pre-push + install-harness --all-subrepos. Đã bỏ per-edit PreToolUse. Lý do ở ADR-002-pull-before-change-gates."
+
+  - id: R13
+    name: decision-to-adr
+    validator: harness/validators/decision_adr.py
+    statement: "Quyết định 'architecture' trong decisions.md phải ref một ADR; ADR cho EDIT tự do; XÓA ADR chỉ khi đã bị đè (Superseded by / supersedes ADR-N)."
+    enforce_at: [repo]
+    note: "pre-commit decision-adr-link (decisions.md) + adr-delete-guard (always-run) + CI repo-health. Vòng đời ở ADR-010."

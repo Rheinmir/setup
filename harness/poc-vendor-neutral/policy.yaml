@@ -155,3 +155,13 @@ rules:
     timeout: 10
     handler: "harness-events.py docs · llmwiki/.claude/hooks/user_prompt_submit.py"
     blocking: false
+
+  decision_adr:
+    id: R13
+    name: decision-to-adr
+    kind: content_check
+    statement: "Quyết định 'architecture' trong decisions.md phải ref một ADR; ADR cho EDIT tự do; XÓA ADR chỉ khi đã bị đè (Superseded by / supersedes ADR-N)."
+    enforce_at: [repo]
+    target_globs: ["**/wiki/decisions.md", "**/wiki/sources/adr/**/*.md"]
+    handler: "harness/validators/decision_adr.py · pre-commit (decision-adr-link/adr-delete-guard) + CI repo-health"
+    blocking: true
