@@ -16,4 +16,4 @@ Skills:
 4. Feed file `02-Setup-Knowledge-Base.md`. Agent tạo cấu trúc: thư mục `skills/`, `commands/`, `raw/`, `wiki/` (gồm `concepts/`, `entities/`, `sources/`), file `AGENT.md`, và `wiki/log.md`.
 5. Feed file `03-Scaffold-Application.md` để Agent scaffold toàn bộ codebase MVP.
 
-Quá trình này biến AI Agent thành một Tech Lead tự động setup kiến trúc hoàn chỉnh.
+Quá trình này biến AI Agent thành một cộng sự kỹ thuật tự động setup kiến trúc hoàn chỉnh.

@@ -154,21 +154,6 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-06-28 10:03:58 | `file.write` | harness/tests/council/answers.json · tool=Write |
-| 2026-06-28 10:03:59 | `file.write` | harness/tests/trace-grader.fixtures.json · tool=Write |
-| 2026-06-28 10:04:01 | `file.write` | harness/tests/council/judges.json · tool=Write |
-| 2026-06-28 10:04:37 | `file.write` | harness/scripts/failure-flywheel.py · tool=Write |
-| 2026-06-28 10:04:41 | `file.write` | harness/scripts/council.py · tool=Edit |
-| 2026-06-28 10:04:45 | `file.write` | harness/scripts/council.py · tool=Edit |
-| 2026-06-28 10:04:49 | `file.write` | llmwiki/wiki/concepts/fdk.md · tool=Edit |
-| 2026-06-28 10:04:55 | `file.write` | skills/loop-runner/SKILL.md · tool=Write |
-| 2026-06-28 10:04:58 | `file.write` | skills/failure-flywheel/SKILL.md · tool=Write |
-| 2026-06-28 10:05:10 | `file.write` | skills/trace-grader/SKILL.md · tool=Write |
-| 2026-06-28 10:05:37 | `file.write` | skills/council/SKILL.md · tool=Write |
-| 2026-06-28 10:05:45 | `file.write` | harness/scripts/wikieval.py · tool=Write |
-| 2026-06-28 10:06:05 | `file.write` | harness/wikieval.config.yaml · tool=Write |
-| 2026-06-28 10:06:13 | `file.write` | llmwiki/wiki/sources/evals/r2-origin-section.md · tool=Write |
-| 2026-06-28 10:06:19 | `file.write` | llmwiki/wiki/sources/evals/sql-active-users.md · tool=Write |
 | 2026-06-28 10:06:29 | `file.write` | llmwiki/wiki/sources/evals/README.md · tool=Write |
 | 2026-06-28 10:06:29 | `file.write` | harness/evals/wikieval-outputs.example.json · tool=Write |
 | 2026-06-28 10:06:54 | `file.write` | skills/wikieval/SKILL.md · tool=Write |
@@ -194,5 +179,20 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 | 2026-06-28 10:59:24 | `file.write` | llmwiki/html/280626-framework-master-wiki.html · tool=Edit |
 | 2026-06-28 11:09:59 | `file.write` | harness/scripts/install-harness.sh · tool=Edit |
 | 2026-06-28 11:11:32 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit |
+| 2026-06-28 11:31:29 | `file.write` | harness/council.config.yaml · tool=Edit |
+| 2026-06-28 11:33:13 | `file.write` | harness/trace-grader.config.yaml · tool=Edit |
+| 2026-06-28 11:33:18 | `file.write` | harness/failure-flywheel.config.yaml · tool=Edit |
+| 2026-06-28 11:33:24 | `file.write` | harness/loop-runner.config.yaml · tool=Edit |
+| 2026-06-28 11:34:56 | `file.write` | harness/scripts/wikieval.py · tool=Edit |
+| 2026-06-28 11:35:25 | `file.write` | harness/wikieval.config.yaml · tool=Edit |
+| 2026-06-28 11:36:24 | `file.write` | harness/scripts/fdk-gate.py · tool=Edit |
+| 2026-06-28 11:39:27 | `file.write` | llmwiki/skills/utils/harness-update.md · tool=Edit |
+| 2026-06-28 11:39:40 | `file.write` | llmwiki/skills/utils/harness-update.md · tool=Edit |
+| 2026-06-28 11:40:22 | `file.write` | skills/harness-update/SKILL.md · tool=Edit |
+| 2026-06-28 11:40:35 | `file.write` | skills/harness-update/SKILL.md · tool=Edit |
+| 2026-06-28 11:46:12 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Write |
+| 2026-06-28 11:47:45 | `file.write` | harness/scripts/install-harness.sh · tool=Edit |
+| 2026-06-28 11:49:58 | `file.write` | harness/scripts/fdk-gate.py · tool=Edit |
+| 2026-06-28 11:52:14 | `file.write` | harness/version.json · tool=Edit |
 
 <!-- log:auto:end -->

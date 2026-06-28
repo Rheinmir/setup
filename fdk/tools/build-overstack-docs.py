@@ -170,6 +170,9 @@ def sections(root: Path):
     S.append(("quickstart", "★ Quickstart", "00 · Bắt đầu", "Quickstart — chạy được trong 2 phút", [
         "<p class=\"lead\">Bạn chỉ cần nhớ ba thứ: <b>cài</b>, <b>để agent làm việc</b>, và <b>khi muốn tính năng mới thì /propose trước</b>. Phần còn lại overstack lo (rào chắn tất định chặn agent làm bậy, 0 token).</p>",
         "<h3>1. Cài vào dự án của bạn (một dòng)</h3>",
+        "<p><b>Cách 1 — dán cho Agent</b> (agent tự cài rồi tự kiểm tra mọi thứ đã đúng chỗ):</p>",
+        "<pre><code>chạy curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash và kiểm tra xem mọi thứ đã ở đúng chỗ chưa</code></pre>",
+        "<p><b>Cách 2 — chạy thẳng trong terminal:</b></p>",
         "<pre><code>curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash</code></pre>",
         "<p>Lệnh này kéo cả ba trụ — <b>harness</b> (rào chắn), <b>skills</b> (kỹ năng), <b>llmwiki</b> (nền tri thức) — và bật guardrail ngay. Dự án cũ đã có wiki? Gọi <code>/harness-update</code> để migrate + tự trả nợ.</p>",
         "<h3>2. Cứ làm việc bình thường với agent</h3>",
@@ -184,7 +187,7 @@ def sections(root: Path):
     ]))
 
     S.append(("what", "overstack là gì", "01 · Tổng quan", "overstack là gì", [
-        "<p class=\"lead\">overstack <b>không phải một app</b> — nó là một lớp khung (a stack you put over your project) biến AI Agent thành một <b>Tech Lead tự-kỷ-luật</b>: có trí nhớ (wiki), có nguyên tắc không thể phá (harness), có tay nghề đóng gói sẵn (skills), và biết điều phối nhiều agent (Orca).</p>",
+        "<p class=\"lead\">overstack <b>không phải một app</b> — nó là một lớp khung (a stack you put over your project) biến AI Agent thành một <b>cộng sự kỹ thuật tự-kỷ-luật</b>: có trí nhớ (wiki), có nguyên tắc không thể phá (harness), có tay nghề đóng gói sẵn (skills), và biết điều phối nhiều agent (Orca).</p>",
         f"<div class=\"kpi\"><div class=\"b\"><div class=\"n\" style=\"color:#0a84ff\">{n_sk}</div><div class=\"l\">skills (/…)</div></div>"
         f"<div class=\"b\"><div class=\"n\" style=\"color:#e0264b\">{n_rules}</div><div class=\"l\">rules tất định</div></div>"
         f"<div class=\"b\"><div class=\"n\" style=\"color:#5856d6\">{n_scripts}</div><div class=\"l\">harness scripts</div></div>"
@@ -205,6 +208,9 @@ def sections(root: Path):
     S.append(("install", "Cài đặt", "02 · Cài đặt", "Cài đặt — global vs per-project", [
         "<p class=\"lead\">overstack cài bằng một dòng bootstrap. Có hai chế độ, dùng cả hai là tốt nhất.</p>",
         "<h3>Bootstrap (mặc định — cả 3 trụ)</h3>",
+        "<p><b>Cách 1 — dán cho Agent</b> (agent tự cài + tự kiểm tra):</p>",
+        "<pre><code>chạy curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash và kiểm tra xem mọi thứ đã ở đúng chỗ chưa</code></pre>",
+        "<p><b>Cách 2 — terminal:</b></p>",
         "<pre><code>curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash</code></pre>",
         "<p>Kéo harness + skills + llmwiki và bật chặn ngay. Opt-out: <code>--harness-only</code>.</p>",
         "<div class=\"grid\"><div class=\"card\"><h4>Per-project (cho team)</h4><ul class=\"s\">"
@@ -390,7 +396,7 @@ def render(root: Path) -> str:
         "<nav>", "".join(nav), "</nav>",
         '<header class="hero"><span class="eyebrow">Tài liệu chính thức · cho người đọc</span>',
         "<h1>overstack</h1>",
-        f"<p>Lớp khung biến AI Agent thành một Tech Lead tự-kỷ-luật: <b>tri thức</b> (wiki) · "
+        f"<p>Lớp khung biến AI Agent thành một cộng sự kỹ thuật tự-kỷ-luật: <b>tri thức</b> (wiki) · "
         f"<b>rào chắn tất định</b> (harness, {n_rules} rule, 0 token) · <b>kỹ năng</b> ({n_sk} skill) · "
         f"<b>điều phối đa-agent</b> (Orca). Bắt đầu ở Quickstart; các tab sau đi sâu từng phần.</p></header>",
         "".join(body),

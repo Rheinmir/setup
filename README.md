@@ -1,12 +1,20 @@
 # overstack — the self-disciplined AI-agent framework
 
-**overstack** là một lớp khung (*a stack you put over your project*) biến AI Agent (Claude Code · opencode · Antigravity · Cursor…) thành một **Tech Lead tự-kỷ-luật**: có trí nhớ (nền tri thức `llmwiki/`), có nguyên tắc không thể phá (**guardrail** tất định chặn agent làm bậy, 0 token), có tay nghề đóng gói sẵn (skills), và biết điều phối nhiều agent (Orca).
+**overstack** là một lớp khung (*a stack you put over your project*) biến AI Agent (Claude Code · opencode · Antigravity · Cursor…) thành một **cộng sự kỹ thuật tự-kỷ-luật**: có trí nhớ (nền tri thức `llmwiki/`), có nguyên tắc không thể phá (**guardrail** tất định chặn agent làm bậy, 0 token), có tay nghề đóng gói sẵn (skills), và biết điều phối nhiều agent (Orca).
 
 > Nhánh làm việc chính: **`orca`**.
 
 ## ⚡ Cài / update — 1 dòng (cả 3 trụ)
 
-Chạy trong thư mục gốc dự án của bạn — **1 lệnh lo trọn harness + skills + llmwiki**, khỏi nhớ cờ:
+Chạy trong thư mục gốc dự án của bạn — **1 lệnh lo trọn harness + skills + llmwiki**, khỏi nhớ cờ.
+
+**Cách 1 — dán cho Agent** (agent tự cài rồi tự kiểm tra mọi thứ đã đúng chỗ):
+
+```
+chạy curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash và kiểm tra xem mọi thứ đã ở đúng chỗ chưa
+```
+
+**Cách 2 — chạy thẳng trong terminal:**
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash
