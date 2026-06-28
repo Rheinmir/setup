@@ -10,6 +10,7 @@ Output-report (không có Plan) và draft đã implemented/done tự miễn.
   (c) Số '<div class="diagram-box"' trong html ≥ số task '- [ ]' trong '## Plan'
   (d) html KHÔNG ẩn nhãn message bằng 'opacity:0' (.msg phải hiện sẵn — bài học 130626)
   (e) html có ≥1 prose 'class="desc"' mỗi diagram (đọc hiểu không cần animation)
+  (f) có '## Context' CÓ NỘI DUNG — ép force-query wiki liên quan trước khi propose (không propose mù)
 
 Contract chung: stdin JSON {"action":"write","file_path":...} hoặc argv files. Exit 0/2.
 """
@@ -105,6 +106,13 @@ def check(path):
                     f"(e) seq html co {n_diagrams} diagram nhung chi {n_desc} doan prose 'class=\"desc\"' — "
                     f"MOI task can 1 doan mo ta text (ai lam gi, du lieu chay, nhanh an toan)"
                 )
+
+    # (f) FORCE-QUERY grounding: proposal phải có '## Context' CÓ NỘI DUNG — ép query lại wiki
+    # (concept/entity/ADR/decision liên quan) rồi tóm tắt vào đây TRƯỚC khi propose. Không propose "mù".
+    ctx = section(text, "Context")
+    if ctx is None or len(ctx.strip()) < 20:
+        problems.append("(f) thieu '## Context' co noi dung — PHAI query wiki lien quan "
+                        "(concept/entity/ADR/decision) va tom tat vao day truoc khi propose (force-query grounding)")
 
     if problems:
         print(

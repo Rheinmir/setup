@@ -14,12 +14,14 @@ Plan feature/change before writing code. Surfaces impact on existing functionali
 - Scope unclear or multi-interpretable
 
 ## Steps
+0. **Force-query wiki TRƯỚC khi draft** — query/đọc wiki (`concepts/`, `entities/`, `sources/adr/`, `decisions.md`) tìm concept/ADR/quyết định liên quan; tóm tắt vào `## Context` của draft + cite `[[wikilink]]`/path. KHÔNG propose "mù" (R7-f chặn draft thiếu `## Context` có nội dung).
 1. Restate request in one sentence to confirm understanding.
 2. List every existing file, function, or module affected or must change.
 3. List every existing feature or behaviour that could break as side effect.
 4. Propose minimal implementation plan as numbered steps.
 5. State what success looks like (verifiable criteria).
 6. Create draft file at `llmwiki/wiki/sources/draft/DDMMYY-feature-name-module.md` (e.g. `260425-new-approval-button-fe.md`) containing proposal output from steps 1–5. Draft MUST include (enforced by validator R7 — blocked at write-time and commit if missing):
+   - `## Context` — tóm tắt wiki liên quan đã query ở bước 0 (concept/ADR/decision), cite `[[wikilink]]`/path (force-query grounding — R7-f chặn nếu thiếu/rỗng)
    - `## Plan` — tasks as `- [ ]` checklist items
    - `## Agent Task Assignment` — table `| Task | Agent (CLI) | Lý do chọn | Status |`, one row per task, **no empty Agent cell**, Status=pending. Pick agents by cost table; if all on one agent, say why.
    - `**Sequence diagram:**` link to companion `.html` (must exist on disk)

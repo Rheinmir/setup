@@ -77,6 +77,13 @@ repos:
         always_run: true
         pass_filenames: false
 
+      - id: auto-index-grounding
+        name: "auto-index khi wiki đổi + force-query grounding khi propose"
+        entry: bash harness/tests/auto-index-and-grounding-test.sh .
+        language: system
+        always_run: true
+        pass_filenames: false
+
       - id: capabilities-current
         name: "fdk/CAPABILITIES.md khớp đĩa (agent biết đúng đồ nghề)"
         entry: python3 fdk/tools/build-capabilities.py --check

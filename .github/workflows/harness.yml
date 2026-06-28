@@ -82,6 +82,8 @@ jobs:
         run: python3 harness/validators/duplicate_basename.py --wiki-dir fdk/wiki
       - name: ADR first-class trong khuôn per-project (skeleton + functional)
         run: bash harness/tests/adr-normal-user-test.sh .
+      - name: auto-index khi wiki đổi + force-query grounding khi propose
+        run: bash harness/tests/auto-index-and-grounding-test.sh .
       - name: harness-doctor — fire-drill (mọi rail còn cắn?)
         run: python3 harness/scripts/harness-doctor.py --ci
       - name: capabilities current (fdk/CAPABILITIES.md khớp đĩa)

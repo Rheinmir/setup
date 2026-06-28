@@ -57,6 +57,15 @@ def main() -> None:
     if wiki is None or vdir is None:
         sys.exit(0)
 
+    # (1) AUTO-INDEX: tự thêm row cho file wiki MỚI vào index.md (self-heal) NGAY khi có thay đổi —
+    # index khớp mà không bắt agent sửa tay. Chiều 'stale' (xóa file mà còn row) vẫn để check bên dưới
+    # chặn (gỡ row là quyết định của người). Fail-open: lỗi git/python → bỏ qua, không chặn lượt.
+    try:
+        subprocess.run([sys.executable, os.path.join(vdir, "index_sync.py"),
+                        "--wiki-dir", str(wiki), "--fix"], capture_output=True, timeout=15)
+    except Exception:
+        pass
+
     rc, err = run_validator("index_sync.py", {"action": "stop", "wiki_dir": str(wiki)}, vdir)
     if rc == 2:
         print(err, file=sys.stderr)
