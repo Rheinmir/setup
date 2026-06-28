@@ -52,6 +52,17 @@ def _machine_log():
         pass
 
 
+def _gitignored(path, cwd):
+    """True nếu path bị .gitignore loại (archive/draft/html local-only — khớp canonical
+    index_sync.py: file gitignored KHÔNG bắt buộc có trong index). Fail-open: git lỗi → False."""
+    try:
+        import subprocess
+        return subprocess.run(["git", "check-ignore", "-q", path],
+                              cwd=cwd, capture_output=True, timeout=5).returncode == 0
+    except Exception:
+        return False
+
+
 def m_stop():
     r = root()
     _machine_log()  # R4: làm tươi log.md cuối lượt
@@ -68,7 +79,7 @@ def m_stop():
             base = os.path.basename(f)
             if base in ("README.md", "_template.md", "index.md", "log.md"):
                 continue
-            if base[:-3] not in index:
+            if base[:-3] not in index and not _gitignored(f, r):  # bỏ qua file gitignored (archive/draft local-only)
                 missing.append(os.path.relpath(f, r))
     if missing:
         sys.stderr.write("[R3 index-sync] wiki/index.md chưa liệt kê: " + ", ".join(missing[:10]) +

@@ -22,9 +22,16 @@ A guardrail is only as strong as its weakest copy. Two kinds of copy quietly rot
                (e.g. PreToolUse by the R1 deny-write rule, SessionEnd by
                housekeeping).
 
-  --check      Run both; exit 2 if either reports drift. Wire this into
+  --scanners   Every tool that diffs the wiki tree against index.md (R3) must skip
+               gitignored local-only files (archive/draft/html). When the skip is
+               hand-copied into each scanner, one copy can lose it (it did:
+               harness-events.py and audit.py both flagged archived files until the
+               skip was restored). This check asserts each scanner still carries a
+               `git check-ignore` / gitignored() marker.
+
+  --check      Run all; exit 2 if any reports drift. Wire this into
                pre-commit and CI.
-  (no flags)   Report both and exit 0 (non-gating).
+  (no flags)   Report all and exit 0 (non-gating).
 
 Fail-open by design: a missing harness/wikidirs.py, policy.yaml, or settings.json
 (or absent pyyaml) is reported and skipped — harness-lint never crashes a commit
@@ -57,6 +64,19 @@ SETTINGS_PATH = "llmwiki/.claude/settings.json"
 
 # A quoted lowercase-ish identifier token, e.g. "concepts" or 'tours'.
 _TOKEN_RE = re.compile(r"""['"]([A-Za-z][A-Za-z0-9_-]*)['"]""")
+
+# R3 index-membership consumers: each diffs the on-disk wiki tree against index.md,
+# so each MUST skip gitignored local-only files (archive/draft/html) or it false-positives
+# on them (it did — harness-events.py m_stop and audit.py both flagged archived files until
+# the skip was added). This check asserts each still carries the skip, so a future edit can't
+# silently drop it. Marker = a `git check-ignore` call or the shared gitignored() helper.
+R3_SCANNERS = [
+    "harness/poc-vendor-neutral/bin/harness-events.py",
+    "harness/scripts/audit.py",
+    "harness/validators/index_sync.py",
+    "llmwiki/.claude/hooks/validators/index_sync.py",
+]
+_SKIP_RE = re.compile(r"check-ignore|gitignored")
 
 
 def _canonical_dirs():
@@ -136,6 +156,27 @@ def check_constants():
     return drift, lines
 
 
+def check_scanners():
+    """Assert every R3 index-membership scanner skips gitignored files.
+
+    Returns (drift_count, report_lines). A missing file is WARN (fail-open), not drift.
+    """
+    lines = ["== --scanners : every R3 index-membership scanner skips gitignored =="]
+    drift = 0
+    for rel in R3_SCANNERS:
+        path = REPO_ROOT / rel
+        if not path.is_file():
+            lines.append("  WARN  %s : file missing (fail-open, not counted)" % rel)
+            continue
+        if _SKIP_RE.search(path.read_text(encoding="utf-8", errors="replace")):
+            lines.append("  ok    %s : skips gitignored" % rel)
+        else:
+            lines.append("  DRIFT %s : no `git check-ignore` / gitignored() — will "
+                         "false-positive on archive/draft local-only files" % rel)
+            drift += 1
+    return drift, lines
+
+
 def check_wiring():
     """Assert every hook_event policy rule is wired in the deployed settings.json.
 
@@ -204,21 +245,28 @@ def main():
                     help="check the wiki content-dir set is single-sourced from wikidirs.py")
     ap.add_argument("--wiring", action="store_true",
                     help="check every hook_event policy rule is deployed in settings.json")
+    ap.add_argument("--scanners", action="store_true",
+                    help="check every R3 index-membership scanner skips gitignored")
     ap.add_argument("--check", action="store_true",
                     help="run both; exit 2 on any drift (use in pre-commit / CI)")
     args = ap.parse_args()
 
     do_constants = args.constants or args.check
     do_wiring = args.wiring or args.check
-    gating = args.constants or args.wiring or args.check
-    if not (do_constants or do_wiring):        # no flags -> default report, non-gating
-        do_constants = do_wiring = True
+    do_scanners = args.scanners or args.check
+    gating = args.constants or args.wiring or args.scanners or args.check
+    if not (do_constants or do_wiring or do_scanners):   # no flags -> default report, non-gating
+        do_constants = do_wiring = do_scanners = True
         gating = False
 
     total_drift = 0
     out = []
     if do_constants:
         d, ls = check_constants()
+        total_drift += d
+        out += ls + [""]
+    if do_scanners:
+        d, ls = check_scanners()
         total_drift += d
         out += ls + [""]
     if do_wiring:

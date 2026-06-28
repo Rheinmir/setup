@@ -60,11 +60,11 @@ def detect(wiki: Path) -> dict:
             if not origin_mod.ORIGIN_RE.search(f.read_text(encoding="utf-8", errors="replace")):
                 missing_origin.append(rel)
 
-    # R3 index
-    exist = index_mod.content_files(wiki)
+    # R3 index — bỏ qua file gitignored (archive/draft local-only), khớp index_sync.main()
+    exist = {f for f in index_mod.content_files(wiki) if not index_mod.gitignored(f, wiki)}
     indexed = index_mod.indexed_files(wiki)
     index_missing = sorted(exist - indexed)
-    index_stale = sorted(indexed - exist)
+    index_stale = sorted(f for f in (indexed - exist) if not index_mod.gitignored(f, wiki))
 
     # R9 OKF
     okf_bad = [
