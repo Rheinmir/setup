@@ -53,4 +53,6 @@
 | [sql-active-users](sources/evals/sql-active-users.md) | eval | Golden: SQL active users |
 | [feature-catalog](concepts/feature-catalog.md) | concept | Feature Catalog — và VÌ SAO mỗi cái phải có |
 | [ADR-005-logger-and-capabilities-travel-downstream](sources/adr/ADR-005-logger-and-capabilities-travel-downstream.md) | decision | ADR-005: logger + capability-map đi xuống cùng dự án (scoped) |
+| [harness-enforcement-floor](concepts/harness-enforcement-floor.md) | concept | Harness enforcement floor — vì sao CI mới là sàn thật |
+| [ADR-006-blocking-stays-hook-mcp-for-tooling](sources/adr/ADR-006-blocking-stays-hook-mcp-for-tooling.md) | decision | ADR-006: lớp chặn giữ là hook/CI, MCP chỉ cho công cụ/đọc |
 <!-- index:auto:end -->
