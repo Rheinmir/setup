@@ -36,8 +36,20 @@ def _fm_desc(p: Path) -> str:
     m = re.match(r"^---\n(.*?)\n---", t, re.S)
     if not m:
         return ""
-    dm = re.search(r"^description:\s*(.*)$", m.group(1), re.M)
-    val = (dm.group(1).strip().strip('"').strip("'")) if dm else ""
+    fm = m.group(1)
+    dm = re.search(r"^description:\s*(.*)$", fm, re.M)
+    if not dm:
+        return ""
+    val = dm.group(1).strip()
+    if val in (">", ">-", "|", "|-"):  # YAML folded/literal → gom dòng thụt sau
+        body = []
+        for ln in fm[dm.end():].splitlines():
+            if ln.strip() and (ln.startswith(" ") or ln.startswith("\t")):
+                body.append(ln.strip())
+            elif ln.strip():
+                break
+        val = " ".join(body)
+    val = val.strip().strip('"').strip("'")
     return re.split(r"(?<=[.!?。])\s|—| - |\. |\. ", val, 1)[0].strip()
 
 
@@ -133,7 +145,7 @@ footer{max-width:1080px;margin:0 auto;padding:26px 24px 60px;font-size:12px;colo
 /* mind map — distilled từ skills-cheatsheet (node chip glass + chevron + collapse, default close) */
 .mm{overflow-x:auto;padding:14px 4px 6px}
 .mm .tree,.mm .children{display:flex;flex-direction:column;gap:9px;justify-content:center}
-.mm .row{display:flex;align-items:center;gap:30px;position:relative}
+.mm .row{display:flex;align-items:center;gap:48px;position:relative}
 .mm .children{position:relative}
 .mm .children.collapsed{display:none}
 .mm .node{position:relative;display:inline-flex;flex-direction:column;gap:1px;padding:7px 13px;border-radius:13px;cursor:default;white-space:nowrap;background:var(--glass2);backdrop-filter:blur(7px) saturate(1.1);-webkit-backdrop-filter:blur(7px) saturate(1.1);border:1px solid var(--border);box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 3px 14px rgba(20,40,90,.07);transition:transform .12s,box-shadow .12s}
@@ -146,9 +158,10 @@ footer{max-width:1080px;margin:0 auto;padding:26px 24px 60px;font-size:12px;colo
 .mm .node.collapsed-parent::after{transform:translateY(-50%) rotate(45deg)}
 .mm .node.root{background:linear-gradient(135deg,rgba(10,132,255,.16),rgba(88,86,214,.14));border-color:rgba(10,132,255,.4)}
 .mm .node.root .nm{font-size:15px}
-.mm .row::before{content:'';position:absolute;left:-15px;top:50%;width:15px;height:2px;background:var(--border)}
-.mm>.tree>.row::before{display:none}
-.mm .children::before{content:'';position:absolute;left:-15px;top:15px;bottom:15px;width:2px;background:var(--border)}
+.mm-canvas{position:relative;width:max-content}
+.mm-links{position:absolute;top:0;left:0;pointer-events:none;overflow:visible;z-index:0}
+.mm-links path{fill:none;stroke-width:2.2;opacity:.55;stroke-linecap:round}
+.mm .tree{position:relative;z-index:1}
 .mm .b-wiki .nm{color:#1f8a9c}.mm .b-wiki .ct{background:#30b0c7}.mm .b-wiki.node{border-color:rgba(48,176,199,.4)}
 .mm .b-dev .nm{color:#5856d6}.mm .b-dev .ct{background:#5856d6}.mm .b-dev.node{border-color:rgba(88,86,214,.4)}
 .mm .b-orch .nm{color:#e07b00}.mm .b-orch .ct{background:#ff9500}.mm .b-orch.node{border-color:rgba(255,149,0,.42)}
@@ -160,7 +173,7 @@ JS = r"""
 (function(){const n=document.querySelector('nav');if(!n)return;const o=document.createElement('button');o.className='nav-toggle';o.textContent='☰';document.body.appendChild(o);const c=document.createElement('button');c.className='nav-close';c.textContent='✕';n.appendChild(c);o.onclick=function(){document.body.classList.remove('nav-collapsed')};c.onclick=function(){document.body.classList.add('nav-collapsed')};if(matchMedia('(max-width:640px)').matches)document.body.classList.add('nav-collapsed')})();
 (function(){var ls=[].slice.call(document.querySelectorAll('nav a')),ss=[].slice.call(document.querySelectorAll('section[id]'));var ob=new IntersectionObserver(function(es){var a='';es.forEach(function(e){if(e.isIntersecting)a=e.target.id});if(a)ls.forEach(function(l){l.classList.toggle('active',l.getAttribute('href')==='#'+a)})},{rootMargin:'-40% 0px -55% 0px'});ss.forEach(function(s){ob.observe(s)})})();
 (function(){var t;addEventListener('scroll',function(){document.documentElement.classList.add('scrolling');clearTimeout(t);t=setTimeout(function(){document.documentElement.classList.remove('scrolling')},900)},{passive:true})})();
-(function(){[].slice.call(document.querySelectorAll('.mm .node.has-children')).forEach(function(n){var row=n.parentElement,kids=null,c=row.children;for(var i=0;i<c.length;i++){if(c[i].classList.contains('children'))kids=c[i];}if(!kids)return;if(n.classList.contains('cat')){kids.classList.add('collapsed');n.classList.add('collapsed-parent');}n.addEventListener('click',function(e){e.stopPropagation();var open=kids.classList.toggle('collapsed');n.classList.toggle('collapsed-parent',open);});});})();
+(function(){var mm=document.querySelector('.mm');if(!mm)return;var NS='http://www.w3.org/2000/svg';function colorOf(n){return n.classList.contains('b-wiki')?'#30b0c7':n.classList.contains('b-dev')?'#5856d6':n.classList.contains('b-orch')?'#ff9500':n.classList.contains('b-utils')?'#34c759':n.classList.contains('b-rule')?'#ff2d55':'#9aa4b2';}function draw(){var canvas=mm.querySelector('.mm-canvas'),svg=mm.querySelector('.mm-links');if(!canvas||!svg)return;var w=canvas.offsetWidth,h=canvas.offsetHeight;svg.setAttribute('width',w);svg.setAttribute('height',h);svg.setAttribute('viewBox','0 0 '+w+' '+h);while(svg.firstChild)svg.removeChild(svg.firstChild);var cR=canvas.getBoundingClientRect();[].slice.call(canvas.querySelectorAll('.node.has-children')).forEach(function(p){var row=p.parentElement,kids=null,ch=row.children;for(var i=0;i<ch.length;i++){if(ch[i].classList.contains('children'))kids=ch[i];}if(!kids||kids.classList.contains('collapsed'))return;var pr=p.getBoundingClientRect(),px=pr.right-cR.left,py=pr.top+pr.height/2-cR.top;[].slice.call(kids.children).forEach(function(crow){var cn=crow.querySelector(':scope > .node');if(!cn)return;var rr=cn.getBoundingClientRect(),cx=rr.left-cR.left,cy=rr.top+rr.height/2-cR.top,dx=Math.max(22,(cx-px)*0.55);var pa=document.createElementNS(NS,'path');pa.setAttribute('d','M'+px+' '+py+' C'+(px+dx)+' '+py+' '+(cx-dx)+' '+cy+' '+cx+' '+cy);pa.setAttribute('stroke',colorOf(cn));svg.appendChild(pa);});});}[].slice.call(mm.querySelectorAll('.node.has-children')).forEach(function(n){var row=n.parentElement,kids=null,c=row.children;for(var i=0;i<c.length;i++){if(c[i].classList.contains('children'))kids=c[i];}if(!kids)return;if(n.classList.contains('cat')){kids.classList.add('collapsed');n.classList.add('collapsed-parent');}n.addEventListener('click',function(e){e.stopPropagation();var open=kids.classList.toggle('collapsed');n.classList.toggle('collapsed-parent',open);draw();});});draw();addEventListener('load',function(){setTimeout(draw,60);});addEventListener('resize',function(){clearTimeout(window.__mmt);window.__mmt=setTimeout(draw,120);},{passive:true});})();
 """
 
 
@@ -212,14 +225,15 @@ def sections(root: Path):
         if not items:
             continue
         cls = loop_cls.get(loop, "b-utils")
-        leaves = [_node(cls + " leaf", "/" + n, d) for n, d in items]
+        leaves = [_node(cls + " leaf", "/" + n, (d[:52] + "…") if len(d) > 54 else d) for n, d in items]
         branches.append(_branch(cls, loop, loop_ds.get(loop, ""), leaves))
     rule_leaves = [_node("b-rule leaf", rid, name) for rid, name in rs]
     branches.append(_branch("b-rule", "rules", "harness gác", rule_leaves))
 
-    mindmap_html = ('<div class="mm"><div class="tree"><div class="row">'
+    mindmap_html = ('<div class="mm"><div class="mm-canvas"><svg class="mm-links"></svg>'
+                    '<div class="tree"><div class="row">'
                     + _node("root has-children", "overstack", "gõ /<tên> để gọi · %d rule" % n_rules, n_sk)
-                    + '<div class="children">' + "".join(branches) + '</div></div></div></div>')
+                    + '<div class="children">' + "".join(branches) + '</div></div></div></div></div>')
 
     S = []
     S.append(("quickstart", "★ Quickstart", "00 · Bắt đầu", "Quickstart — chạy được trong 2 phút", [
