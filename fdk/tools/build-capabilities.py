@@ -115,8 +115,13 @@ def build(root: Path) -> str:
         by_loop.setdefault(loop, []).append((name, desc))
 
     rules = []
-    pol = root / "harness" / "poc-vendor-neutral" / "policy.yaml"
-    if pol.is_file():
+    # policy.yaml ở vị trí khác nhau tuỳ bối cảnh: repo framework dùng poc-vendor-neutral/;
+    # dự án CÀI per-project để ở harness/policy.yaml (xem install-harness.sh). Tìm cả hai.
+    pol = next((p for p in (
+        root / "harness" / "poc-vendor-neutral" / "policy.yaml",   # repo framework
+        root / "harness" / "policy.yaml",                          # dự án đã cài (per-project)
+    ) if p.is_file()), None)
+    if pol and pol.is_file():
         for blk in re.findall(r"id:\s*(R\d+).*?name:\s*([^\n]+)", pol.read_text(encoding="utf-8"), re.S):
             rules.append((blk[0], blk[1].strip().strip('"')))
         rules = sorted(set(rules), key=lambda r: int(r[0][1:]))

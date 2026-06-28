@@ -154,17 +154,6 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-06-28 09:59:54 | `file.write` | harness/scripts/dispatch-verify.py · tool=Edit |
-| 2026-06-28 10:00:03 | `file.write` | harness/scripts/dispatch-verify.py · tool=Edit |
-| 2026-06-28 10:01:36 | `file.write` | harness/validators/index_sync.py · tool=Edit |
-| 2026-06-28 10:01:44 | `file.write` | harness/validators/index_sync.py · tool=Edit |
-| 2026-06-28 10:02:03 | `file.write` | harness/scripts/dispatch-verify.py · tool=Edit |
-| 2026-06-28 10:02:10 | `file.write` | harness/scripts/dispatch-verify.py · tool=Edit |
-| 2026-06-28 10:03:21 | `file.write` | harness/scripts/trace-grader.py · tool=Write |
-| 2026-06-28 10:03:29 | `file.write` | harness/scripts/loop-runner.py · tool=Write |
-| 2026-06-28 10:03:40 | `file.write` | harness/scripts/council.py · tool=Write |
-| 2026-06-28 10:03:41 | `file.write` | harness/trace-grader.config.yaml · tool=Write |
-| 2026-06-28 10:03:46 | `file.write` | harness/failure-flywheel.config.yaml · tool=Write |
 | 2026-06-28 10:03:54 | `file.write` | harness/council.config.yaml · tool=Write |
 | 2026-06-28 10:03:57 | `file.write` | harness/loop-runner.config.yaml · tool=Write |
 | 2026-06-28 10:03:58 | `file.write` | harness/tests/council/answers.json · tool=Write |
@@ -194,5 +183,16 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 | 2026-06-28 10:12:59 | `file.write` | llmwiki/wiki/concepts/feature-catalog.md · tool=Write |
 | 2026-06-28 10:15:12 | `file.write` | llmwiki/html/280626-framework-master-wiki.html · tool=Write |
 | 2026-06-28 10:18:06 | `file.write` | harness/scripts/adapt-registry.py · tool=Edit |
+| 2026-06-28 10:41:30 | `file.write` | llmwiki/html/280626-framework-master-wiki.html · tool=Edit |
+| 2026-06-28 10:42:21 | `file.write` | llmwiki/html/280626-framework-master-wiki.html · tool=Edit |
+| 2026-06-28 10:54:50 | `file.write` | fdk/tools/build-capabilities.py · tool=Write |
+| 2026-06-28 10:55:25 | `file.write` | llmwiki/.claude/hooks/hooklib.py · tool=Edit |
+| 2026-06-28 10:55:44 | `file.write` | harness/scripts/install-harness.sh · tool=Edit |
+| 2026-06-28 10:56:22 | `file.write` | llmwiki/AGENT.md · tool=Edit |
+| 2026-06-28 10:56:30 | `file.write` | llmwiki/CLAUDE.md · tool=Edit |
+| 2026-06-28 10:57:46 | `file.write` | llmwiki/wiki/sources/adr/ADR-005-logger-and-capabilities-travel-downstream.md · tool=Write |
+| 2026-06-28 10:58:52 | `file.write` | llmwiki/html/280626-framework-master-wiki.html · tool=Edit |
+| 2026-06-28 10:58:58 | `file.write` | llmwiki/html/280626-framework-master-wiki.html · tool=Edit |
+| 2026-06-28 10:59:24 | `file.write` | llmwiki/html/280626-framework-master-wiki.html · tool=Edit |
 
 <!-- log:auto:end -->

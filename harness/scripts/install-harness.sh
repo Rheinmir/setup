@@ -44,7 +44,7 @@ TMP_CLONE=""
 log()  { printf '\033[1;32m[harness]\033[0m %s\n' "$*"; }
 warn() { printf '\033[1;33m[harness]\033[0m %s\n' "$*"; }
 
-cleanup() { [ -n "$TMP_CLONE" ] && rm -rf "$TMP_CLONE" || true; [ -n "$TMP_SYNC" ] && rm -rf "$TMP_SYNC" || true; }
+cleanup() { [ -n "${TMP_CLONE:-}" ] && rm -rf "${TMP_CLONE:-}" || true; [ -n "${TMP_SYNC:-}" ] && rm -rf "${TMP_SYNC:-}" || true; }
 trap cleanup EXIT
 
 # ---------- 0. Xác định nguồn ----------
