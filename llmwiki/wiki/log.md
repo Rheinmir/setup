@@ -1,5 +1,8 @@
 # Operation Log
 
+## 2026-06-28 — failure-flywheel — ADR-007 wiki-scanner skip gitignored
+Đóng drift class "wiki-tree scanner không lọc gitignored → false-positive archive" (recur 3×: harness-events, audit, okf-check). Ba tầng: vá consumer · `content_files()` an-toàn-mặc-định · `harness-lint --scanners/--copies` vào CI repo-health. Promote seed `/failure-flywheel` (spec-violation ×3) → [[ADR-007-wiki-scanner-skip-gitignored-at-lister]]. Commit 06884e2/b0b238b/976c6c0.
+
 ## 2026-04-28 — init — Knowledge Base initialized
 - Created folder structure: concepts/, entities/, sources/, sources/draft/
 - Created wiki/index.md, wiki/log.md

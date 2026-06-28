@@ -55,4 +55,5 @@
 | [ADR-005-logger-and-capabilities-travel-downstream](sources/adr/ADR-005-logger-and-capabilities-travel-downstream.md) | decision | ADR-005: logger + capability-map đi xuống cùng dự án (scoped) |
 | [harness-enforcement-floor](concepts/harness-enforcement-floor.md) | concept | Harness enforcement floor — vì sao CI mới là sàn thật |
 | [ADR-006-blocking-stays-hook-mcp-for-tooling](sources/adr/ADR-006-blocking-stays-hook-mcp-for-tooling.md) | decision | ADR-006: lớp chặn giữ là hook/CI, MCP chỉ cho công cụ/đọc |
+| [ADR-007-wiki-scanner-skip-gitignored-at-lister](sources/adr/ADR-007-wiki-scanner-skip-gitignored-at-lister.md) | decision | ADR-007: wiki-tree scanner lọc gitignored tại lister (nguồn), không per-consumer; guard mọi bản hand-synced |
 <!-- index:auto:end -->
