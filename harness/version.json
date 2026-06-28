@@ -1,10 +1,12 @@
 {
   "schema": 1,
-  "template_version": "1.2.0",
+  "name": "overstack",
+  "release": "1.0.0",
+  "template_version": "1.3.0",
   "remote": "https://github.com/Rheinmir/setup.git",
   "branch": "orca",
-  "generated_at": "2026-06-23",
-  "generated_commit": "cdd3e08",
+  "generated_at": "2026-06-28",
+  "generated_commit": "aa8f9f1",
   "pattern_count": 57,
   "patterns": {
     ".agent": "a99869fa2304ea5d",
