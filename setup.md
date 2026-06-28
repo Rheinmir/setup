@@ -13,6 +13,8 @@ Mở agent (Claude Code · opencode · Cursor · Antigravity…) ở thư mục 
 
 Agent dừng hỏi đúng lúc cần; bạn chỉ trả lời.
 
+> **Chọn đúng lối vào:** dự án **từ con số 0** (chưa có code) → dán `00-New-Project.md` (kickoff + scaffold, như trên). Dự án **đã có codebase** muốn gắn overstack → gọi `/new-project-setup` (onboard code có sẵn vào wiki). Đã có overstack bản cũ → `/harness-update`.
+
 ## Prerequisites (tuỳ chọn)
 
 Bộ skills cài sẵn cho UI/UX đẹp hơn:
