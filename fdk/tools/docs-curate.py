@@ -134,9 +134,25 @@ def cmd_plan(keep_dates=2):
     return out
 
 
+def _ensure_gitignore():
+    """archive/ phải GIỮ local-only (html/draft vốn gitignored top-level; subfolder thoát pattern
+    → phải ignore tường minh, kẻo file local bị track/push)."""
+    gi = ROOT / ".gitignore"
+    want = ["llmwiki/html/archive/", "llmwiki/wiki/sources/draft/archive/"]
+    try:
+        txt = gi.read_text(encoding="utf-8") if gi.is_file() else ""
+        add = [w for w in want if w not in txt]
+        if add:
+            gi.write_text(txt.rstrip("\n") + "\n" + "\n".join(add) + "\n", encoding="utf-8")
+            print("  ✓ .gitignore: thêm archive/ (giữ local-only)")
+    except Exception:
+        pass
+
+
 def cmd_apply(keep_dates=2):
     out = classify()
     _resolve_reports(out, keep_dates)
+    _ensure_gitignore()
     HTML_ARC.mkdir(parents=True, exist_ok=True)
     DRAFT_ARC.mkdir(parents=True, exist_ok=True)
     moved = 0
