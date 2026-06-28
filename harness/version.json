@@ -1,10 +1,10 @@
 {
   "schema": 1,
-  "template_version": "1.3.5",
+  "template_version": "1.3.6",
   "remote": "https://github.com/Rheinmir/setup.git",
   "branch": "orca",
   "generated_at": "2026-06-28",
-  "generated_commit": "c81cf9f",
+  "generated_commit": "9590963",
   "pattern_count": 60,
   "patterns": {
     ".agent": "a99869fa2304ea5d",
@@ -29,7 +29,7 @@
     "llmwiki/commands/serve": "e1846847abcedbea",
     "llmwiki/html/README.md": "24f3b0b0d4c26c88",
     "llmwiki/html/assets/style.css": "16fb62ad0f0512d7",
-    "llmwiki/html/overstack.html": "e3bc6c0d8b5fa219",
+    "llmwiki/html/overstack.html": "11a95c5ae1418322",
     "llmwiki/orca/flows/daily-propose.json": "a2558c8c8beac99c",
     "llmwiki/orca/flows/onboard-parallel.json": "ef28648a376cd038",
     "llmwiki/raw/README.md": "1d25957d8376de33",

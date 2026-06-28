@@ -85,8 +85,15 @@ def rules(root: Path):
     if not pol:
         return []
     out = []
-    for rid, name in re.findall(r"id:\s*(R\d+).*?name:\s*([^\n]+)", pol.read_text(encoding="utf-8"), re.S):
-        out.append((rid, name.strip().strip('"')))
+    try:
+        import yaml
+        rd = (yaml.safe_load(pol.read_text(encoding="utf-8")) or {}).get("rules", {})
+        for r in (rd.values() if isinstance(rd, dict) else rd):
+            if isinstance(r, dict) and r.get("id"):
+                out.append((r["id"], str(r.get("name", "")).strip(), str(r.get("statement", "")).strip()))
+    except Exception:
+        for rid, name in re.findall(r"id:\s*(R\d+).*?name:\s*([^\n]+)", pol.read_text(encoding="utf-8"), re.S):
+            out.append((rid, name.strip().strip('"'), ""))
     return sorted(set(out), key=lambda r: int(r[0][1:]))
 
 
@@ -253,7 +260,7 @@ def sections(root: Path):
             skill_rows.append(f"<tr><td><code>/{esc(name)}</code></td><td>{esc(lp)}</td><td>{esc(desc)}</td></tr>")
     skills_table = ("<table><tr><th>Skill</th><th>Loop</th><th>Dùng khi</th></tr>"
                     + "".join(skill_rows) + "</table>")
-    rule_rows = "".join(f"<tr><td><code>{rid}</code></td><td>{esc(name)}</td></tr>" for rid, name in rs)
+    rule_rows = "".join(f"<tr><td><code>{rid}</code></td><td><b>{esc(name)}</b>{(' — ' + esc(stmt)) if stmt else ''}</td></tr>" for rid, name, stmt in rs)
     rules_table = f"<table><tr><th>Rule</th><th>Chặn / đảm bảo điều gì</th></tr>{rule_rows}</table>"
 
     # ── mind map (cheatsheet bezier; loop >~8 skill chia nhánh con theo CHỨC NĂNG) ──
@@ -306,8 +313,23 @@ def sections(root: Path):
             branches.append(_subtree(parent_cls, loop, loop_ds.get(loop, ""), subs, count=len(items)))
         else:
             branches.append(_subtree(parent_cls, loop, loop_ds.get(loop, ""), [_leaf(parent_cls, n, d) for n, d in items]))
-    branches.append(_subtree("b-rule", "rules", "harness gác",
-                             [_row(_node("b-rule leaf", rid, name)) for rid, name in rs]))
+    branches.append(_subtree("b-rule", "rules", "harness gác (mỗi rule = 1 validator tất định)",
+                             [_row(_node("b-rule leaf", rid,
+                                         (stmt[:74] + "…") if len(stmt) > 76 else (stmt or name)))
+                              for rid, name, stmt in rs]))
+    # cơ chế runtime + tự-gác (KHÔNG phải rule — chia từng chức năng nhỏ, có giải thích)
+    branches.append(_subtree("b-rule", "cơ chế", "hook runtime + harness tự-gác", [
+        _row(_node("b-rule leaf", "orientation", "SessionStart in ngắn: nhắc agent query code-index + wiki để định vị nhanh (chống lơ ngơ) — ADR-009")),
+        _row(_node("b-rule leaf", "auto-index", "Stop hook chạy index_sync --fix: thêm file wiki mới → index.md tự khớp; chiều xóa vẫn chặn")),
+        _row(_node("b-rule leaf", "force-query", "/propose buộc query wiki + có '## Context' trước khi draft, không propose 'mù' (R7-f)")),
+        _row(_node("b-rule leaf", "code-index", "code-graph --watch tự reindex khi code đổi; code_graph_keeper giữ bền qua restart")),
+        _row(_node("b-rule leaf", "code-logger", "PostToolUse: ghi log thao tác BẰNG CODE vào log.md (block auto, không nhờ agent nhớ)")),
+        _row(_node("b-rule leaf", "health-check", "SessionStart: báo pattern-sync lệch (version local↔remote↔disk) — không chặn")),
+        _row(_node("b-rule leaf", "wiki→fdk", "wiki RIÊNG của framework ở fdk/wiki (the kit); llmwiki/wiki = khuôn per-project — ADR-008")),
+        _row(_node("b-rule leaf", "harness-lint", "tự-gác: --scanners (mọi wiki-scanner lọc gitignored) + --copies (bản deployed==master) — ADR-007")),
+        _row(_node("b-rule leaf", "harness-doctor", "chạy fixture sai/đúng qua từng validator — chứng minh rào còn cắn")),
+        _row(_node("b-rule leaf", "fdk-gate", "định-nghĩa-hoàn-thành: mọi bước phải xanh mới cho push")),
+    ]))
 
     mindmap_html = ('<div class="mm"><div class="mm-canvas"><svg class="mm-links"></svg>'
                     '<div class="tree"><div class="row">'
@@ -393,14 +415,8 @@ def sections(root: Path):
 
     S.append(("harness", "Trụ 2 · Harness", "04 · Rào chắn", "Trụ 2 — Harness (rào chắn tất định)", [
         "<p class=\"lead\">Harness là phần làm overstack khác mọi \"prompt pack\": luật là CODE chạy ở hook/CI, chặn được agent kể cả khi nó cố tình lờ. 0 token, không bypass được khi merge.</p>",
-        f"<p>Hiện có <b>{n_rules} rule</b> (R1–R{n_rules}). Mỗi rule là một validator tất định; vi phạm bị chặn ở write-time (hook), commit (pre-commit), và merge (CI) — ba lớp.</p>",
+        f"<p>Hiện có <b>{n_rules} rule</b> (R1–R{n_rules}), mỗi rule là một validator tất định; vi phạm bị chặn ở write-time (hook), commit (pre-commit), và merge (CI) — ba lớp. Bảng dưới giải thích <b>từng rule</b>. Các <b>cơ chế runtime + tự-gác</b> (auto-index, force-query, orientation, code-index, harness-lint…) là một nhánh <i>“cơ chế”</i> riêng — chia & giải thích từng cái trong <b>mind map</b> (mục Tham chiếu cuối trang).</p>",
         rules_table,
-        "<p><b>Cơ chế mới (2026-06-28):</b> ngoài <i>chặn</i>, harness còn <b>tự sửa</b> và <b>ép grounding</b>: "
-        "<b>R3 auto-index</b> — thêm file wiki mới thì <code>index.md</code> tự khớp (Stop hook chạy <code>index_sync --fix</code>, chiều xóa vẫn chặn); "
-        "<b>R7-f force-query</b> — <code>/propose</code> buộc query wiki + có <code>## Context</code> trước khi draft (không propose \"mù\"); "
-        "<b>R13 decision→ADR</b> — quyết định <i>architecture</i> phải ref một ADR, cho edit tự do nhưng xóa ADR chỉ khi đã bị đè (Superseded by / supersedes); "
-        "<b>orientation</b> đầu phiên nhắc agent query <b>code-index</b> (code-graph, auto-watch) + <b>wiki</b> để định vị nhanh (chống \"lơ ngơ\").</p>",
-        "<p><b>Wiki của framework</b> nay ở <code>fdk/wiki/</code> (\"the kit\" — ADR-008), tách khỏi <code>llmwiki/wiki/</code> (khuôn per-project). Drift của chính các wiki-scanner được gác bằng <code>harness-lint --scanners</code> (mỗi scanner phải lọc gitignored) + <code>--copies</code> (bản deployed == master) — ADR-007.</p>",
         "<div class=\"grid\"><div class=\"card\"><h4>Bốn lớp gác (L0–L4)</h4><ul class=\"s\">"
         "<li><b>L0 hook</b> — chặn ngay lúc agent định ghi (PreToolUse).</li>"
         "<li><b>L1 settings</b> — wiring policy→agent.</li>"
