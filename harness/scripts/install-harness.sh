@@ -221,6 +221,14 @@ else
 fi
 # copy validators vào cạnh hooks để llmwiki deploy standalone vẫn chạy (resolution tier 2)
 cp "$ROOT/harness/validators/"*.py "$ROOT/llmwiki/.claude/hooks/validators/" 2>/dev/null || true
+# harness-local/ — scaffold rule RIÊNG của dự án (chỉ tạo nếu CHƯA có; project-owned, sync-template KHÔNG đụng)
+if [ ! -d "$ROOT/harness-local" ] && [ -d "$SRC/harness-local" ]; then
+  mkdir -p "$ROOT/harness-local/validators"
+  cp "$SRC/harness-local/run.py" "$SRC/harness-local/README.md" "$ROOT/harness-local/" 2>/dev/null || true
+  cp "$SRC/harness-local/policy.yaml" "$ROOT/harness-local/policy.yaml" 2>/dev/null || true
+  cp "$SRC/harness-local/validators/_template.py" "$ROOT/harness-local/validators/" 2>/dev/null || true
+  printf '\033[1;32m[harness]\033[0m %s\n' "harness-local/ — scaffold rule riêng dự án (P-namespace; sync-template không đụng)"
+fi
 # overstack docs user — TRAVEL cùng install (Phase D): trang tài liệu chính thức về cho dự án
 mkdir -p "$ROOT/llmwiki/html"
 cp "$SRC/llmwiki/html/overstack.html" "$ROOT/llmwiki/html/overstack.html" 2>/dev/null \

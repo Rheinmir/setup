@@ -1,0 +1,19 @@
+# harness-local/policy.yaml — registry rule RIÊNG của dự án này.
+#
+# Id dùng namespace P<n> (P = project), KHÔNG dùng R<n> (đụng framework R1–R13 → bị guard chặn).
+# Mỗi rule: id · name · validator (path tương đối từ gốc repo) · statement.
+# `harness-local/run.py --check` kiểm: id hợp lệ (P<n>, không trùng), validator tồn tại + chạy được.
+
+rules: []
+
+# Ví dụ (bỏ comment + sửa, rồi tạo validator tương ứng):
+#
+# rules:
+#   - id: P1
+#     name: no-console-log
+#     validator: harness-local/validators/no_console_log.py
+#     statement: "Không để console.log trong src/ khi commit."
+#   - id: P2
+#     name: api-needs-test
+#     validator: harness-local/validators/api_needs_test.py
+#     statement: "Mỗi endpoint mới trong api/ phải có test tương ứng."

@@ -86,6 +86,8 @@ jobs:
         run: bash harness/tests/auto-index-and-grounding-test.sh .
       - name: R13 decision→ADR gate (link + edit/delete-when-superseded)
         run: bash harness/tests/decision-adr-gate-test.sh .
+      - name: harness-local — rule RIÊNG dự án (P-namespace, sync-safe, không giẫm R)
+        run: bash harness/tests/harness-local-test.sh .
       - name: harness-doctor — fire-drill (mọi rail còn cắn?)
         run: python3 harness/scripts/harness-doctor.py --ci
       - name: capabilities current (fdk/CAPABILITIES.md khớp đĩa)
