@@ -60,3 +60,5 @@
 | [ADR-009-session-orientation-autoindex-forcequery](sources/adr/ADR-009-session-orientation-autoindex-forcequery.md) | decision | ADR-009: phiên mới biết hệ thống có gì (orientation) + auto-index + force-query grounding |
 | [ADR-010-decision-to-adr-gate](sources/adr/ADR-010-decision-to-adr-gate.md) | decision | ADR-010: gate decision→ADR (R13) — ép quyết định có ADR, nhưng cho edit + xóa khi bị đè |
 <!-- index:auto:end -->
+| [harness-local](concepts/harness-local.md) | concept | harness-local — harness RIÊNG của dự án |
+| [ADR-011-project-local-harness](sources/adr/ADR-011-project-local-harness.md) | source | "ADR-011: project-local harness — dự án tự phát triển rule riêng (P-namespace, sandbox-safe)" |

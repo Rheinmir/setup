@@ -329,6 +329,8 @@ def sections(root: Path):
         _row(_node("b-rule leaf", "harness-lint", "tự-gác: --scanners (mọi wiki-scanner lọc gitignored) + --copies (bản deployed==master) — ADR-007")),
         _row(_node("b-rule leaf", "harness-doctor", "chạy fixture sai/đúng qua từng validator — chứng minh rào còn cắn")),
         _row(_node("b-rule leaf", "fdk-gate", "định-nghĩa-hoàn-thành: mọi bước phải xanh mới cho push")),
+        _row(_node("b-rule leaf", "harness-local", "dự án TỰ viết rule riêng (harness-local/, id P&lt;n&gt;≠R) chạy song song R1–R13; ngoài manifest nên sync không đụng; framework chạy trước (AND) — ADR-011")),
+        _row(_node("b-rule leaf", "docs-gate 2 trụ", "R10 mỗi 5 prompt nhắc CẢ tài liệu (/docs-site-macos) LẪN đánh giá/eval (wikieval) — trụ nào thiếu nhắc nấy")),
     ]))
 
     mindmap_html = ('<div class="mm"><div class="mm-canvas"><svg class="mm-links"></svg>'

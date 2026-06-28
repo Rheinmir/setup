@@ -1,5 +1,8 @@
 # Operation Log
 
+## 2026-06-29 — feature+docs — project-local harness + docs-gate 2 trụ
+Thêm cơ chế `harness-local/` (dự án tự viết rule `P<n>` chạy song song R1–R13, sync-safe vì ngoài manifest, framework chạy trước theo AND; sandbox 13 test) — [[ADR-011-project-local-harness]] + concept [[harness-local]]. Mở rộng R10 docs-gate nhắc cả **đánh giá/eval** (`wikieval`) bên cạnh tài liệu (cập nhật [[R10]]). decisions.md +2 row; index +2 file; overstack.html regen (node `harness-local` + `docs-gate 2 trụ`). Code: commit `4c0e370` + `7bdcd97`.
+
 ## 2026-06-28 — goal-set — gate decision→ADR (R13) + edit/delete-when-superseded (ADR-010)
 `harness/validators/decision_adr.py`: (1) decisions.md row architecture phải ref `ADR-N` (hoặc `(no-adr:)`); (2) EDIT ADR tự do; (3) XÓA ADR chỉ khi đã bị đè (`Superseded by`/`supersedes`). Wire pre-commit (decision-adr-link · adr-delete-guard · self-test) + CI repo-health. Test 5/5. Retro-fit 3 row architecture cũ. → [[ADR-010-decision-to-adr-gate]].
 
