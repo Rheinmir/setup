@@ -302,15 +302,15 @@ def sections(root: Path):
         "<div class=\"note\"><h4>overstack tự ăn dog food</h4><p style=\"margin:0\">5 tính năng nâng cao của chính overstack (council · loop-runner · wikieval · trace-grader · failure-flywheel) đều dựng bằng BNAL — nên pattern này đã chứng minh trên thực tế, không phải lý thuyết.</p></div>",
     ]))
 
-    S.append(("advanced", "Eval · Council · Loop", "09 · Nâng cao", "Eval · Council · Loop (5 tính năng đánh giá)", [
-        "<p class=\"lead\">Năm tính năng nâng cao theo trend 2026 — mỗi cái lõi tất định, phần LLM nhốt sau adapter.</p>",
-        "<div class=\"grid\"><div class=\"card\"><h4>Đánh giá</h4><ul class=\"s\">"
-        "<li><b>wikieval</b> — bộ eval hồi quy từ wiki goldens (cascade assert tất định + baseline chặn merge).</li>"
-        "<li><b>trace-grader</b> — chấm ĐƯỜNG ĐI của agent (tool/thứ tự/pass^k), bắt \"corrupt success\".</li></ul></div>"
-        "<div class=\"card\"><h4>Hội đồng & vòng lặp</h4><ul class=\"s\">"
-        "<li><b>council</b> — nhiều model trả lời độc lập → chấm chéo ẩn danh → chairman tổng hợp (Karpathy 3-stage).</li>"
-        "<li><b>loop-runner</b> — vòng lặp agent có chốt dừng bắt buộc (max-iter/budget/no-progress).</li>"
-        "<li><b>failure-flywheel</b> — gom lỗi lặp → đề xuất rule/skill mới vào luồng /propose.</li></ul></div></div>",
+    S.append(("advanced", "Eval · Council · Loop", "09 · Nâng cao", "Eval · Council · Loop — 5 skill cho dự án của bạn", [
+        "<p class=\"lead\">Năm skill nâng cao BẠN gọi khi dev dự án của mình (mỗi cái lõi tất định, phần LLM nhốt sau adapter). Dùng khi cần đánh giá chất lượng, quyết một vấn đề khó, hay chạy một vòng lặp tự-sửa an toàn.</p>",
+        "<div class=\"grid\"><div class=\"card\"><h4>Đánh giá chất lượng</h4><ul class=\"s\">"
+        "<li><b><code>/wikieval</code></b> — bộ eval hồi quy cho wiki dự án bạn (cascade assert tất định + baseline chặn merge khi tụt).</li>"
+        "<li><b><code>/trace-grader</code></b> — chấm ĐƯỜNG ĐI agent đã đi (tool/thứ tự/pass^k), bắt \"đúng kết quả nhưng đi đường tệ\".</li></ul></div>"
+        "<div class=\"card\"><h4>Quyết định khó & vòng lặp</h4><ul class=\"s\">"
+        "<li><b><code>/council</code></b> — nhiều model trả lời độc lập → chấm chéo ẩn danh → tổng hợp, cho một vấn đề khó (Karpathy 3-stage).</li>"
+        "<li><b><code>/loop-runner</code></b> — chạy vòng lặp agent CÓ chốt dừng bắt buộc (max-iter/budget/no-progress) — không sợ loop hoang.</li>"
+        "<li><b><code>/failure-flywheel</code></b> — gom lỗi lặp trong dự án bạn → đề xuất rule/skill mới vào luồng /propose.</li></ul></div></div>",
     ]))
 
     S.append(("awareness", "Bản đồ năng lực & Logger", "10 · Tự-biết", "Bản đồ năng lực & Logger (đừng tin agent nhớ)", [
@@ -336,6 +336,7 @@ def sections(root: Path):
     ]))
 
     S.append(("fdk", "FDK · dev overstack", "12 · Mở rộng", "FDK — phát triển chính overstack", [
+        "<p style=\"font-size:12.5px;color:#b46a00;background:rgba(255,149,0,.1);border-radius:8px;padding:6px 12px;display:inline-block;margin:0 0 6px\">👷 Hai tab này (FDK + Dev cái mới) dành cho người <b>PHÁT TRIỂN chính overstack</b> — bỏ qua nếu bạn chỉ DÙNG overstack cho dự án của mình.</p>",
         "<p class=\"lead\">Khi bạn muốn sửa CHÍNH overstack (thêm skill/rule/validator/hook), gọi <code>/fdk</code> — front-door on-demand. KHÔNG auto-bơm mọi phiên (phần lớn phiên là dùng overstack cho DỰ ÁN KHÁC — ADR-004).</p>",
         "<div class=\"grid\"><div class=\"card\"><h4>/fdk lo gì</h4><ul class=\"s\">"
         "<li>Pre-flight: pull trước khi sửa · biết luật · đừng dẫm module cũ · propose trước.</li>"
@@ -347,7 +348,7 @@ def sections(root: Path):
     ]))
 
     S.append(("newfeature", "★ Dev cái mới cần update gì", "13 · Checklist", "★ Dev một cái mới — cần update gì cho HỢP LỆ", [
-        "<p class=\"lead\">Khi thêm một tính năng/skill/rule mới cho overstack, đây là những chỗ phải đồng bộ để nó <b>hợp lệ</b> (bản máy-đọc = <code>fdk-gate</code>).</p>",
+        "<p class=\"lead\">👷 <i>(cho người phát triển overstack)</i> Khi thêm một tính năng/skill/rule mới cho overstack, đây là những chỗ phải đồng bộ để nó <b>hợp lệ</b> (bản máy-đọc = <code>fdk-gate</code>).</p>",
         "<ol class=\"ck\">"
         "<li><b>Code + test</b> — viết lõi tất định + self-test; ẩn số → nhốt sau MỘT adapter (<code>verified:false</code>).</li>"
         "<li><b>Rule mới?</b> → thêm vào <code>policy.yaml</code> + validator + wiring (đừng hardcode rời rạc).</li>"
@@ -378,7 +379,8 @@ def render(root: Path) -> str:
                ("Ba trụ", ["wiki", "harness", "skills"]),
                ("Quy trình", ["workflow", "orca"]),
                ("Nâng cao", ["bnal", "advanced", "awareness"]),
-               ("Vận hành & mở rộng", ["maintain", "fdk", "newfeature", "reference"])]
+               ("Vận hành", ["maintain", "reference"]),
+               ("👷 Phát triển overstack", ["fdk", "newfeature"])]
     id2nav = {sid: navlabel for sid, navlabel, *_ in S}
     idx = {sid: i for i, (sid, *_rest) in enumerate(S)}
     nav = ['<div class="logo">overstack<small>tài liệu chính thức · sinh từ đĩa</small></div>']
