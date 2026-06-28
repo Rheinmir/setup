@@ -1,6 +1,6 @@
 # CONTRIBUTING — Thêm/sửa một rule của harness
 
-> Lối vào tổng cho phát triển framework: `llmwiki/wiki/concepts/fdk.md` (FDK). Runbook này là nhánh "thêm/sửa rule" của bộ xương đó.
+> Lối vào tổng cho phát triển framework: `fdk/wiki/concepts/fdk.md` (FDK). Runbook này là nhánh "thêm/sửa rule" của bộ xương đó.
 
 Runbook để **một người mới** thêm luật vào harness mà không cần đọc đầu tác giả. Gắn với
 [[rule-registry]] (danh sách luật) + ADR-001 (policy là nguồn chân lý) + ADR-002 (tiêu chí
@@ -21,7 +21,7 @@ Trả lời TRƯỚC khi viết dòng nào (tiêu chí từ ADR-001/002):
 4. **Fail-open**: lỗi hạ tầng (offline, thiếu file, parse hỏng) KHÔNG được khoá cứng người dùng.
 
 Nếu rule là một **quyết định kiến trúc** (đánh đổi, chọn hướng) → viết kèm 1 **ADR** ở
-`llmwiki/wiki/sources/adr/ADR-00N-*.md` (template: `sources/adr/README.md`).
+`fdk/wiki/sources/adr/ADR-00N-*.md` (template: `sources/adr/README.md`).
 
 ---
 
@@ -98,5 +98,5 @@ tới khi điều tra. Xem [[rule-registry]].
 ## Origin
 - **Source:** runbook chưng cất từ thực thi R11/R12/R12v3 + reconcile R3/R4/R8/R10 (T1–T5 của
   proposal `270626-framework-gap-backfill`), phiên 2026-06-27.
-- **Liên quan:** `llmwiki/wiki/concepts/rule-registry.md`, `sources/adr/ADR-001`, `ADR-002`,
+- **Liên quan:** `fdk/wiki/concepts/rule-registry.md`, `sources/adr/ADR-001`, `ADR-002`,
   `policy.yaml`, `gen-converters.py`, `tests/policy-converters-drift-test.sh`.

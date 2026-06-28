@@ -15,7 +15,8 @@ The assertion CASCADE per golden runs cheap -> expensive and short-circuits:
           NEVER called from this engine in deterministic mode — escalated goldens are
           reported as "needs-judge" only.
 
-Goldens live as Markdown files under llmwiki/wiki/sources/evals/ with YAML frontmatter:
+Goldens live as Markdown files under <wiki>/sources/evals/ (fdk/wiki framework · llmwiki/wiki
+downstream — auto-detect, xem _default_evals_dir) with YAML frontmatter:
     id:       (optional) golden id — defaults to the filename stem
     input:    the prompt / question
     expected: the reference answer (used by tier-2 similarity)

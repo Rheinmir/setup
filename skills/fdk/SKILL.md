@@ -48,7 +48,7 @@ grep -cE 'id: R' harness/poc-vendor-neutral/policy.yaml 2>/dev/null   # số rul
 
 ## Nếu đang TRONG repo framework (Rheinmir/setup) — bản đầy đủ
 Các file dưới đây CHỈ có trong repo framework, KHÔNG distribute xuống project khác (cố ý — ADR-004). Khi có mặt thì đọc để lấy bản chi tiết:
-- `llmwiki/wiki/concepts/fdk.md` — front-door đầy đủ (pre-flight + module map theo loại).
+- `fdk/wiki/concepts/fdk.md` — front-door đầy đủ (pre-flight + module map theo loại).
 - `fdk/docs/CONTRIBUTING.md` — runbook thêm/sửa **rule harness** (content-check / hook-event / process-gate; số kế tiếp R13).
 - `fdk/README.md` + `fdk/tools/` — kit folder (vd `build-cheatsheet.py`).
 - `llmwiki/html/*-fdk-docs.html` — bản đọc HTML.

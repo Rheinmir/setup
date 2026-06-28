@@ -2,7 +2,7 @@
   "schema": "wikieval-baseline/v1",
   "generated_by": "harness/scripts/wikieval.py",
   "generated_at": "2026-06-28",
-  "evals_dir": "llmwiki/wiki/sources/evals",
+  "evals_dir": "fdk/wiki/sources/evals",
   "summary": {
     "goldens": 2,
     "decided": 2,

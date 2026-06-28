@@ -32,9 +32,9 @@ GENERATED = "2026-06-28"  # hardcode theo yêu cầu — KHÔNG gọi datetime.n
 # ─────────────────────────────────────────────────────────── traffic-light checks
 CHECKS = [
     ("Index ↔ wiki sync (R3)", "Mọi file wiki có 1 dòng trong index.md",
-     ["python3", "harness/validators/index_sync.py", "--wiki-dir", "llmwiki/wiki"], None),
+     ["python3", "harness/validators/index_sync.py", "--wiki-dir", "fdk/wiki"], None),
     ("Wiki health — broken links", "Không có [[wikilink]] gãy",
-     ["python3", "harness/scripts/wiki-health.py", "--wiki-dir", "llmwiki/wiki", "--fail-on", "broken"], None),
+     ["python3", "harness/scripts/wiki-health.py", "--wiki-dir", "fdk/wiki", "--fail-on", "broken"], None),
     ("Architecture scan", "Không có anti-pattern kiến trúc",
      ["python3", "harness/scripts/arch-scan.py", "--root", "."], None),
     ("OKF frontmatter (R9)", "Frontmatter chuẩn OKF v0.1",
@@ -310,9 +310,9 @@ def main():
         "validators": count_glob("harness/validators/*.py"),
         "hooks": count_glob("llmwiki/.claude/hooks/*.py"),
         "rules": count_rules(),
-        "drafts": count_glob("llmwiki/wiki/sources/draft/*.md") + count_glob("llmwiki/wiki/draft/orca/*.md"),
+        "drafts": count_glob("fdk/wiki/sources/draft/*.md") + count_glob("fdk/wiki/draft/orca/*.md"),
         "html": count_html_docs(),
-        "adrs": count_glob("llmwiki/wiki/sources/adr/ADR-*.md"),
+        "adrs": count_glob("fdk/wiki/sources/adr/ADR-*.md"),
     }
 
     # 3) drift table (skill-count, 5-way + stale docs)
@@ -322,8 +322,8 @@ def main():
         "agent": count_skill_table("llmwiki/AGENT.md"),
         "claude": count_skill_table("llmwiki/CLAUDE.md"),
         "loop_map": count_loop_map(),
-        "arch": grep_num("llmwiki/wiki/concepts/architecture.md", r"Published Skills\s*\((\d+)"),
-        "proj": grep_num("llmwiki/wiki/entities/project-structure.md", r"(\d+)\s+published skills"),
+        "arch": grep_num("fdk/wiki/concepts/architecture.md", r"Published Skills\s*\((\d+)"),
+        "proj": grep_num("fdk/wiki/entities/project-structure.md", r"(\d+)\s+published skills"),
     }
     disagree = sum(1 for k in ("marketplace", "agent", "claude", "loop_map", "arch", "proj")
                    if drift[k] is not None and drift[k] != truth)
@@ -345,8 +345,8 @@ def main():
         drift_row("AGENT.md skill-table rows", "llmwiki/AGENT.md", drift["agent"], "bảng router cho agent", truth),
         drift_row("CLAUDE.md skill-table rows", "llmwiki/CLAUDE.md", drift["claude"], "bảng router cho Claude", truth),
         drift_row("sync-skills LOOP_MAP entries", "harness/scripts/sync-skills.py", drift["loop_map"], "map skill → loop của mirror", truth),
-        drift_row("architecture.md (hardcoded)", "llmwiki/wiki/concepts/architecture.md", drift["arch"], "số cứng trong tài liệu", truth, stale=True),
-        drift_row("project-structure.md (hardcoded)", "llmwiki/wiki/entities/project-structure.md", drift["proj"], "số cứng trong tài liệu", truth, stale=True),
+        drift_row("architecture.md (hardcoded)", "fdk/wiki/concepts/architecture.md", drift["arch"], "số cứng trong tài liệu", truth, stale=True),
+        drift_row("project-structure.md (hardcoded)", "fdk/wiki/entities/project-structure.md", drift["proj"], "số cứng trong tài liệu", truth, stale=True),
     ])
 
     health_word = "khỏe" if passed == len(results) else "có vấn đề"

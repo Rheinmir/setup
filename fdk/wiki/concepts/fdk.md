@@ -79,7 +79,7 @@ Trước khi tạo một thứ "mới", kiểm tra nó **chưa tồn tại**. Ma
 | Lõi vendor-neutral | `harness/poc-vendor-neutral/bin/*` | `ls harness/poc-vendor-neutral/bin/` |
 | Hook phiên (Claude) | `llmwiki/.claude/hooks/*.py` | `ls llmwiki/.claude/hooks/` |
 | Policy | `harness/policy.yaml` (L0 prod) · `harness/poc-vendor-neutral/policy.yaml` (PoC executable) | xem [[rule-registry]] §"Hai file policy.yaml" |
-| Thư mục wiki | `llmwiki/wiki/{concepts,entities,sources,sources/adr,sources/draft,draft}` | `ls llmwiki/wiki/` |
+| Thư mục wiki | `fdk/wiki/{concepts,entities,sources,sources/adr,sources/draft,draft}` | `ls fdk/wiki/` |
 
 Một lệnh quét nhanh toàn bộ bề mặt (in inventory hiện tại, không drift):
 
@@ -103,13 +103,13 @@ Quy ước **single source of truth** để không tạo bản trùng phân kỳ
 
 | Bone | File | Vai trò |
 |---|---|---|
-| **FDK (trang này)** | `llmwiki/wiki/concepts/fdk.md` | Front-door + pre-flight + map |
+| **FDK (trang này)** | `fdk/wiki/concepts/fdk.md` | Front-door + pre-flight + map |
 | Rule registry | [[rule-registry]] | R1..Rn, đánh dấu chỗ lệch |
 | Runbook rule | `fdk/docs/CONTRIBUTING.md` | Thêm/sửa rule không cần đọc đầu tác giả |
 | **Kit folder (vật lý)** | `fdk/` | `tools/` (build-cheatsheet…) + `docs/` (CONTRIBUTING) + README map |
 | Recipe harness | `harness/recipe.md` | Kiến trúc 5 lớp, cook vendor mới |
 | DOCS vendor-neutral | `harness/poc-vendor-neutral/DOCS.md` | Cách hoạt động + cài đặt chi tiết |
-| ADR | `llmwiki/wiki/sources/adr/ADR-00N-*.md` | Quyết định kiến trúc |
+| ADR | `fdk/wiki/sources/adr/ADR-00N-*.md` | Quyết định kiến trúc |
 | Module map | [[project-structure]], [[architecture]] | Tổng quan (kiểm chéo bằng lệnh Phần 3) |
 | Dev-loop skills | `propose`, `impact-check`, `safe-change`, `verify-before-commit` | Vòng làm-việc an toàn |
 
