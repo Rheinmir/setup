@@ -131,13 +131,16 @@ LOOP_GROUPS = {
 }
 
 
+UNCLASSIFIED = []   # (loop, skill) chưa khai trong LOOP_GROUPS — main() cảnh báo để phân loại 1 lần
+
+
 def group_key(loop, name):
-    """key nhóm chức năng của skill (hoặc None nếu loop không chia nhóm)."""
+    """key nhóm chức năng của skill; 'uncat' nếu loop chia nhóm mà skill chưa khai; None nếu loop không chia."""
     cfg = LOOP_GROUPS.get(loop)
     if not cfg:
         return None
     order, gmap = cfg
-    return gmap.get(name, order[-1][0])
+    return gmap.get(name, "uncat")
 
 CSS_BASE = r"""
 :root{--font:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Roboto,sans-serif;
@@ -284,7 +287,11 @@ def sections(root: Path):
             order, gmap = LOOP_GROUPS[loop]
             groups = {}
             for n, d in items:
-                groups.setdefault(gmap.get(n, order[-1][0]), []).append((n, d))
+                gk = gmap.get(n)
+                if gk is None:                      # skill MỚI chưa phân nhóm → KHÔNG âm thầm nhét nhóm cuối
+                    gk = "__uncat__"
+                    UNCLASSIFIED.append((loop, n))
+                groups.setdefault(gk, []).append((n, d))
             subs = []
             for gi, (gk, glabel) in enumerate(order):
                 g = sorted(groups.get(gk, []))
@@ -292,6 +299,10 @@ def sections(root: Path):
                     continue
                 gcls = "g%d" % (gi % 6)
                 subs.append(_subtree(gcls, glabel, "", [_leaf(gcls, n, d) for n, d in g]))
+            unc = sorted(groups.get("__uncat__", []))
+            if unc:   # nhóm hiện-rõ để dev phân loại 1 lần (đừng giấu trong nhóm khác)
+                subs.append(_subtree("g5", "❓ chưa phân loại", "thêm vào LOOP_GROUPS",
+                                     [_leaf("g5", n, d) for n, d in unc]))
             branches.append(_subtree(parent_cls, loop, loop_ds.get(loop, ""), subs, count=len(items)))
         else:
             branches.append(_subtree(parent_cls, loop, loop_ds.get(loop, ""), [_leaf(parent_cls, n, d) for n, d in items]))
@@ -507,6 +518,7 @@ def sections(root: Path):
 
 
 def render(root: Path) -> str:
+    UNCLASSIFIED.clear()
     S = sections(root)
     by_loop, n_sk = skills_by_loop(root)
     n_rules = len(rules(root))
@@ -552,6 +564,11 @@ def render(root: Path) -> str:
 
 def main():
     content = render(ROOT)
+    if UNCLASSIFIED:   # hỏi-1-lần: nhắc dev khai nhóm cho skill mới (rồi nó tự vào mind map)
+        skills = ", ".join(f"{n} ({lp})" for lp, n in sorted(UNCLASSIFIED))
+        print(f"[build-overstack-docs] ⚠ {len(UNCLASSIFIED)} skill chưa phân nhóm mind map "
+              f"(đang ở '❓ chưa phân loại'): {skills}\n  → thêm vào LOOP_GROUPS trong "
+              f"fdk/tools/build-overstack-docs.py (1 lần), rồi auto-vào nhóm.", file=sys.stderr)
     if "--check" in sys.argv[1:]:
         cur = OUT.read_text(encoding="utf-8") if OUT.is_file() else ""
         if cur.strip() != content.strip():

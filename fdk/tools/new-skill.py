@@ -100,7 +100,11 @@ NEXT — register `{name}` on the curated surfaces (this tool does NOT edit them
 
          | `{name}` | <when to invoke> | `skills/{loop}/{name}.md` | {loop} |
 
-  4. Verify every surface agrees:
+  4. Mind map nhóm (HỎI 1 LẦN) — nếu `{loop}` được chia nhánh con theo chức năng trong
+     LOOP_GROUPS (fdk/tools/build-overstack-docs.py), thêm `{name}` vào ĐÚNG nhóm 1 lần;
+     không thì nó hiện ở "❓ chưa phân loại". overstack.html tự regen (Stop hook khi skill đổi).
+
+  5. Verify every surface agrees:
 
          python3 harness/scripts/sync-skills.py --check        # mirror parity (skills/ <-> llmwiki/skills/)
          python3 harness/scripts/skill-registry.py --check      # cross-surface drift (marketplace + AGENT + CLAUDE + LOOP_MAP)

@@ -154,14 +154,6 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-06-28 12:28:19 | `file.write` | fdk/tools/fdk-kit.sh · tool=Write |
-| 2026-06-28 12:29:15 | `file.write` | skills/fdk/SKILL.md · tool=Edit |
-| 2026-06-28 12:29:37 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
-| 2026-06-28 15:36:13 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
-| 2026-06-28 15:37:09 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
-| 2026-06-28 15:37:31 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
-| 2026-06-28 15:45:15 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
-| 2026-06-28 15:45:41 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
 | 2026-06-28 15:46:01 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
 | 2026-06-28 15:46:45 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
 | 2026-06-28 15:48:34 | `file.write` | skills/docs-site-macos/SKILL.md · tool=Edit |
@@ -194,5 +186,13 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 | 2026-06-28 16:53:59 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
 | 2026-06-28 16:54:13 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
 | 2026-06-28 16:55:59 | `file.write` | skills/docs-site-macos/SKILL.md · tool=Edit |
+| 2026-06-28 17:23:02 | `file.write` | fdk/tools/docs-curate.py · tool=Write |
+| 2026-06-28 17:23:45 | `file.write` | fdk/tools/docs-curate.py · tool=Edit |
+| 2026-06-28 17:24:37 | `file.write` | skills/docs-curate/SKILL.md · tool=Write |
+| 2026-06-28 17:25:41 | `file.write` | harness/scripts/sync-skills.py · tool=Edit |
+| 2026-06-28 17:25:50 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 17:26:06 | `file.write` | llmwiki/AGENT.md · tool=Edit |
+| 2026-06-28 17:26:16 | `file.write` | llmwiki/CLAUDE.md · tool=Edit |
+| 2026-06-28 17:30:51 | `file.write` | fdk/tools/docs-curate.py · tool=Edit |
 
 <!-- log:auto:end -->
