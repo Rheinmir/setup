@@ -1,0 +1,24 @@
+# harness/mem-rank.config.yaml
+# THE single place the MemRank unknowns live — the /build-now-adapt-later quarantine.
+# mem-rank.py reads its relevance scorer + eviction policy FROM HERE. Trend mirrored (2026):
+# agent memory as production infra (Mem0/Zep/Letta) — ADD/UPDATE/DELETE/NOOP ops + ranked
+# retrieval that returns the few relevant memories instead of dumping full context.
+#
+# The store, the 4 ops, and the deterministic token-overlap ranker are built now (--self-test).
+# The BEST relevance signal (an embedding model) and the right eviction policy are the unknowns.
+
+verified: false                   # ASSUMPTION (not verified) — relevance.scorer defaults to deterministic token-overlap (no embedding model wired); eviction thresholds are ship-guesses, not tuned on real memory load.
+
+relevance:
+  scorer: token-overlap           # ASSUMPTION (not verified) — 'token-overlap' (Jaccard) now; 'embedding' is the absent adapter
+  embedding_model: null           # ASSUMPTION (absent) — no embedding model wired; null => fall back to token-overlap
+
+eviction:
+  policy: score                   # ASSUMPTION (not verified) — score | lru | none; evict lowest-relevance when over cap
+  max_entries: 500                # ASSUMPTION (not verified) — 500 is a guess; tune to real memory volume
+
+# ADAPT-CHECKLIST (finalize when an embedding backend / real memory load exists):
+#   1. Name relevance.embedding_model + set scorer: embedding (richer than token-overlap).
+#   2. Calibrate eviction.policy + max_entries against real memory volume / recall needs.
+#   3. Run: python3 harness/scripts/mem-rank.py --self-test  (must PASS).
+#   4. Flip verified:true. Only then trust ranked retrieval for production recall.

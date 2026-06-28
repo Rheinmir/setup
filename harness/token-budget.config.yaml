@@ -1,0 +1,30 @@
+# harness/token-budget.config.yaml
+# THE single place the TokenBudget unknowns live — the /build-now-adapt-later quarantine.
+# token-budget.py reads its per-model $ rates + budget caps + enforce mode FROM HERE. Trend
+# mirrored (2026): AI FinOps — "3x over the 2026 token budget by April"; no agent framework
+# ships a native dollar budget cap, so per-action/per-session enforcement must be built.
+#
+# Counting tokens by code, summing per session/task, and computing $ from rates are deterministic
+# and built now (--self-test). The actual rates (change per provider/model) and the budget caps
+# (a stakeholder/FinOps decision) are the unknowns.
+
+verified: false                   # ASSUMPTION (not verified) — rates are illustrative provider numbers (drift constantly); caps are un-calibrated guesses; mode stays 'warn' so an un-tuned cap never kills a session.
+
+mode: warn                        # ASSUMPTION (not verified) — warn (advise, exit 0) until caps tuned; then 'block' (exit 2 over cap)
+
+budgets:
+  per_session_tokens: 2000000     # ASSUMPTION (not verified) — 2M tokens/session is a guess
+  per_task_usd: 5.0               # ASSUMPTION (not verified) — $5/task cap is a guess
+
+# $ per 1K tokens. Provider numbers drift — treat as a guess, reconcile against real billing.
+rates:                            # ASSUMPTION (not verified) — illustrative; update from the provider price page
+  default:  {input: 0.003,  output: 0.015}
+  opus:     {input: 0.015,  output: 0.075}
+  sonnet:   {input: 0.003,  output: 0.015}
+  haiku:    {input: 0.0008, output: 0.004}
+
+# ADAPT-CHECKLIST (finalize when real billing data exists):
+#   1. Reconcile rates against the provider's CURRENT price page (per model).
+#   2. Calibrate budgets (per_session_tokens, per_task_usd) against real workloads + FinOps targets.
+#   3. Run: python3 harness/scripts/token-budget.py --self-test  (must PASS).
+#   4. Flip mode: block AND verified: true. Only then does exceeding a cap actually block.

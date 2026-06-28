@@ -342,6 +342,15 @@ def sections(root: Path):
         _row(_node("b-rule leaf", "scoped-hooks", "skill tự khai guard ở frontmatter, chỉ chạy khi skill active (tầng global→project→component); adapter: detector active")),
     ]))
 
+    # đợt 2: 5 trend nữa (memory · cost · injection-output · hallucination · prospective-reflection) — ADR-013
+    branches.append(_subtree("b-rule", "BNAL đợt 2", "5 trend 2026 nữa → chức năng (build-now-adapt-later) — ADR-013", [
+        _row(_node("b-rule leaf", "mem-rank", "memory agent: ADD/UPDATE/DELETE/NOOP + retrieve ranked (Jaccard now); adapter: embedding scorer + eviction")),
+        _row(_node("b-rule leaf", "token-budget", "governor token+$ per session/task (FinOps: framework chưa có $ cap); adapter: rates + caps, warn→block")),
+        _row(_node("b-rule leaf", "inject-scan", "quét OUTPUT tool tìm injection gián tiếp (egress-guard lo mô tả; cái này lo kết quả); adapter: patterns/classifier")),
+        _row(_node("b-rule leaf", "claim-receipts", "cổng hallucination: trích reference file/symbol → verify tồn tại (Tool Receipts); adapter: resolver code-graph")),
+        _row(_node("b-rule leaf", "prospect-critic", "reflection TRƯỚC chạy: soi plan vs taxonomy failure-flywheel, ép revise; adapter: triggers + threshold")),
+    ]))
+
     mindmap_html = ('<div class="mm"><div class="mm-canvas"><svg class="mm-links"></svg>'
                     '<div class="tree"><div class="row">'
                     + _node("root has-children", "overstack", "gõ /<tên> để gọi · %d rule" % n_rules, n_sk)

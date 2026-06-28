@@ -57,8 +57,13 @@ STEPS = [
         "python3 harness/scripts/egress-guard.py --self-test >/dev/null && "
         "python3 harness/scripts/trace-otel.py --self-test >/dev/null && "
         "python3 harness/scripts/spec-gate.py --self-test >/dev/null && "
-        "python3 harness/scripts/scoped-hooks.py --self-test >/dev/null"],
-     "10 chức năng BNAL — self-test phải còn PASS (5 verified:true + 5 verified:false; giữ verified trung thực)"),
+        "python3 harness/scripts/scoped-hooks.py --self-test >/dev/null && "
+        "python3 harness/scripts/mem-rank.py --self-test >/dev/null && "
+        "python3 harness/scripts/token-budget.py --self-test >/dev/null && "
+        "python3 harness/scripts/inject-scan.py --self-test >/dev/null && "
+        "python3 harness/scripts/claim-receipts.py --self-test >/dev/null && "
+        "python3 harness/scripts/prospect-critic.py --self-test >/dev/null"],
+     "15 chức năng BNAL — self-test phải còn PASS (5 verified:true + 10 verified:false; giữ verified trung thực)"),
 ]
 
 

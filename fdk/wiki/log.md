@@ -1,5 +1,8 @@
 # Operation Log
 
+## 2026-06-29 — feature+docs — 5 trend 2026 NỮA → 5 chức năng (build-now-adapt-later, đợt 2)
+Quét trend tiếp (last30days WebSearch-fallback) → 5 feature nữa, cùng khuôn BNAL: `mem-rank` (memory agent ADD/UPDATE/DELETE/NOOP + retrieve ranked), `token-budget` (governor token+$ per session/task — FinOps gap), `inject-scan` (quét OUTPUT tool tìm injection gián tiếp), `claim-receipts` (gate hallucination: verify reference resolve), `prospect-critic` (reflection trước-chạy soi plan vs taxonomy failure-flywheel). Mỗi cái `--self-test`; fdk-gate giờ 15 self-test BNAL; leak-gate xanh (14 adapter verified:false). CAPABILITIES + overstack regen (+nhánh "BNAL đợt 2"). fdk-gate 15/15, 9/9 test. → [[ADR-013-five-more-trend-features-bnal]].
+
 ## 2026-06-29 — feature+docs — 5 trend 2026 → 5 chức năng (build-now-adapt-later)
 Dựng 5 feature từ lượt quét trend, mỗi cái core tất định + adapter `verified:false`: `success-flywheel` (gương dương của failure-flywheel), `egress-guard` (tool/MCP/egress security), `trace-otel` (span OTel-GenAI + truy nhân-quả), `spec-gate` (spec-driven anti-drift), `scoped-hooks` (guard ở frontmatter skill). Mỗi feature có `--self-test`; wire 10 self-test + leak-gate vào fdk-gate (mở `GENERIC_KEYS` cho recurrence_threshold/prompt vì flywheel song song). CAPABILITIES + overstack regen (+nhánh "BNAL 2026"). fdk-gate 15/15. → [[ADR-012-five-trend-features-bnal]]. Trend source: [[ADR-011-project-local-harness]] (egress/scoped bám vào).
 

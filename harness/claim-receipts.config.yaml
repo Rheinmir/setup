@@ -1,0 +1,31 @@
+# harness/claim-receipts.config.yaml
+# THE single place the ClaimReceipts unknowns live — the /build-now-adapt-later quarantine.
+# claim-receipts.py reads its resolver + claim taxonomy + strictness FROM HERE. Trend mirrored
+# (2026): "Tool Receipts, not zero-knowledge proofs" + CiteAudit — agents fabricate tool results
+# and cite files/APIs that do not exist; classify each claim by epistemic source and VERIFY the
+# references resolve. Pairs with failure-flywheel's "hallucination" class as a live gate.
+#
+# Extracting references from text and checking they resolve on disk is deterministic and built
+# now (--self-test). A richer resolver (the code graph) and the full claim taxonomy are the unknowns.
+
+verified: false                   # ASSUMPTION (not verified) — resolver is plain filesystem (no code-graph symbol resolution); strictness stays 'advisory' so a missed reference never blocks a real change.
+
+resolver: filesystem              # ASSUMPTION (not verified) — filesystem now; 'code-graph' (symbol-aware) is the absent richer adapter
+strictness: advisory              # ASSUMPTION (not verified) — advisory (warn, exit 0) until resolver is symbol-aware; then 'strict'
+
+# Epistemic-source buckets for a claim (Tool Receipts). Used to label, not yet to gate.
+claim_taxonomy:                   # ASSUMPTION (not verified) — starter taxonomy; refine with real audits
+  - tool-output                   #   came from a real tool result
+  - inference                     #   derived, not directly observed
+  - external-testimony            #   cited a source
+  - absence                       #   "no X found"
+  - ungrounded-opinion            #   asserted without basis
+
+# File extensions treated as resolvable references (conservative — avoids flagging prose words).
+ref_extensions: [py, md, yaml, yml, json, sh, js, ts, html, txt, toml, cfg]   # ASSUMPTION (not verified)
+
+# ADAPT-CHECKLIST (finalize when a symbol-aware resolver exists):
+#   1. Set resolver: code-graph + wire it (verify cited SYMBOLS/APIs, not just file paths).
+#   2. Refine claim_taxonomy + ref_extensions against real hallucination audits.
+#   3. Run: python3 harness/scripts/claim-receipts.py --self-test  (must PASS).
+#   4. Flip strictness: strict AND verified: true. Only then does an unresolved reference block.

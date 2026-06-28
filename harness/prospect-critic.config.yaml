@@ -1,0 +1,30 @@
+# harness/prospect-critic.config.yaml
+# THE single place the ProspectCritic unknowns live — the /build-now-adapt-later quarantine.
+# prospect-critic.py reads its trigger phrases + revision threshold FROM HERE. Trend mirrored
+# (2026): PROSPECTIVE reflection — a lightweight critic checks a PLAN before execution against a
+# distilled planning-error taxonomy and forces revision, rather than only reflecting after failure.
+# It consumes failure-flywheel's taxonomy: the negative flywheel LABELS failure classes; this
+# critic catches a plan walking into one of them.
+#
+# Matching a plan against trigger phrases per category is deterministic and built now (--self-test).
+# The trigger phrases (heuristic) + the revision threshold + a semantic matcher are the unknowns.
+
+verified: false                   # ASSUMPTION (not verified) — triggers are hand-written keyword heuristics (not learned from labelled plans); revision_threshold un-calibrated; match.mode keyword (semantic matcher absent).
+
+taxonomy_source: harness/failure-flywheel.config.yaml   # ASSUMPTION (not verified) — read canonical failure classes from the negative flywheel
+revision_threshold: 1             # ASSUMPTION (not verified) — # of failure-class hits before "revision recommended"; 1 = any hit
+match:
+  mode: keyword                   # ASSUMPTION (not verified) — keyword now; 'semantic' (embedding) is the absent adapter
+
+# Per failure-class trigger phrases — a plan containing one is walking toward that class.
+triggers:                         # ASSUMPTION (not verified) — starter heuristics; tune against real flagged plans
+  overcomplication: ["flexible", "future-proof", "just in case", "framework for", "abstraction layer", "generic enough"]
+  scope-creep: ["also refactor", "while we're at it", "also clean up", "also improve", "and rewrite"]
+  missing-verification: ["should work", "probably works", "assume it", "no need to test", "looks correct"]
+  spec-violation: ["ignore the rule", "skip the gate", "bypass", "work around the check"]
+
+# ADAPT-CHECKLIST (finalize when labelled plan data / a semantic matcher exists):
+#   1. Tune triggers per class against real plans the critic flagged (precision/recall).
+#   2. Set match.mode: semantic + wire an embedding matcher (catch paraphrases), if available.
+#   3. Calibrate revision_threshold. Run: python3 harness/scripts/prospect-critic.py --self-test (PASS).
+#   4. Flip verified:true. Only then does a flagged plan actually force revision (exit 2).

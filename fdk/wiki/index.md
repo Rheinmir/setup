@@ -63,3 +63,4 @@
 | [harness-local](concepts/harness-local.md) | concept | harness-local — harness RIÊNG của dự án |
 | [ADR-011-project-local-harness](sources/adr/ADR-011-project-local-harness.md) | source | "ADR-011: project-local harness — dự án tự phát triển rule riêng (P-namespace, sandbox-safe)" |
 | [ADR-012-five-trend-features-bnal](sources/adr/ADR-012-five-trend-features-bnal.md) | source | "ADR-012: 5 trend 2026 → 5 chức năng qua build-now-adapt-later (core now, adapter verified:false)" |
+| [ADR-013-five-more-trend-features-bnal](sources/adr/ADR-013-five-more-trend-features-bnal.md) | source | "ADR-013: 5 trend 2026 nữa → 5 chức năng qua build-now-adapt-later (memory · cost · injection · hallucination · prospect |

@@ -1,0 +1,30 @@
+# harness/inject-scan.config.yaml
+# THE single place the InjectScan unknowns live — the /build-now-adapt-later quarantine.
+# inject-scan.py reads its injection signatures + action FROM HERE. Trend mirrored (2026):
+# Anthropic dropped the DIRECT-injection metric — INDIRECT injection (a tool's OUTPUT / retrieved
+# content carrying adversarial instructions that enter context as "trusted") is the enterprise
+# threat. This scans the tool RESULT text (egress-guard handles the tool DESCRIPTION/egress side).
+#
+# Scanning text against signatures is deterministic and built now (--self-test). The real
+# detector (a trained classifier) and the right action (flag vs halt) are the unknowns.
+
+verified: false                   # ASSUMPTION (not verified) — patterns are starter heuristics (NOT a trained classifier); action stays 'flag' so false positives never halt a real session. Go 'halt' only after tuning.
+
+action: flag                      # ASSUMPTION (not verified) — flag (advise, exit 0) until tuned; then 'halt' (exit 2 on hit)
+classifier: null                  # ASSUMPTION (absent) — no BERT/trained injection classifier wired; null => regex signatures only
+
+# Signatures of an injected instruction sitting inside tool output / retrieved content.
+patterns:                         # ASSUMPTION (not verified) — starter regex set; tune to your false-positive tolerance
+  - "ignore (all )?previous instructions"
+  - "disregard (your|the|all) (instructions|system prompt|rules)"
+  - "you are now"
+  - "new instructions\\s*:"
+  - "do not tell the user"
+  - "exfiltrate"
+  - "send (the )?(secret|token|credential|env)"
+
+# ADAPT-CHECKLIST (finalize when a real classifier / labelled data exists):
+#   1. Wire classifier (e.g. a BERT injection detector) + keep patterns as a cheap pre-filter.
+#   2. Tune patterns against real tool-output corpora for an acceptable false-positive rate.
+#   3. Run: python3 harness/scripts/inject-scan.py --self-test  (must PASS).
+#   4. Flip action: halt AND verified: true. Only then does a hit actually halt processing.
