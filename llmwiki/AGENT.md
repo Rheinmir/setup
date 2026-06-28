@@ -48,6 +48,7 @@ Giảm lỗi LLM-coding phổ biến. Thiên về cẩn trọng hơn tốc độ
 | `council` | Hội đồng nhiều model đánh giá → câu trả lời tốt nhất (Karpathy) | `skills/orchestrate/council.md` | orchestrate |
 | `trace-grader` | Chấm ĐƯỜNG ĐI của agent (tool/thứ tự/pass^k), không chỉ kết quả | `skills/orchestrate/trace-grader.md` | orchestrate |
 | `wikieval` | Bộ eval hồi quy từ wiki goldens (cascade assert + baseline, CI gate) | `skills/dev-loop/wikieval.md` | dev-loop |
+| `docs-curate` | Sắp xếp gọn kho docs local (html/draft phình to): promote bản chất→wiki, archive render, re-index | `skills/utils/docs-curate.md` | utils |
 
 ## Invocation rules
 - New file in `raw/` → invoke `ingest` immediately

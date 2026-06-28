@@ -39,6 +39,7 @@ LOOP_MAP = {
     "caveman-help": "utils", "caveman-review": "utils", "caveman-stats": "utils",
     "extract-site": "utils", "harness-tour": "utils",
     "harness-update": "utils", "health-check": "utils", "fdk": "utils", "md-to-html": "utils",
+    "docs-curate": "utils",
     "sync-template": "utils", "uat-nonit-testcase": "utils", "cursor-animated-sites": "utils",
     # publish 260626 — skill trước LOCAL-ONLY (đẩy vào repo để không mất khi cài máy/dự án khác)
     "orca-cli": "orchestrate", "orchestration": "orchestrate", "jenkins-agent-l3-deploy": "orchestrate",

@@ -1,7 +1,7 @@
 <!-- SINH BẰNG CODE: build-capabilities.py — ĐỪNG sửa tay; chạy lại để cập nhật. -->
 # CAPABILITIES — toàn bộ đồ nghề (luôn-mới, đếm từ đĩa)
 
-**62 skill · 12 rule · 8 fdk-tool · 20 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
+**63 skill · 12 rule · 9 fdk-tool · 20 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
 
 ## Skills (gọi bằng `/<tên>`)
 
@@ -36,7 +36,7 @@
 - **`/orchestration`** — Use Orca orchestration for structured multi-agent coordination: threaded messages, blockin…
 - **`/trace-grader`** — Score the PATH an agent took (tool choice, ordering, retries, repeatability)
 
-### utils (37)
+### utils (38)
 - **`/brandkit`** — Premium brand-kit image generation skill for creating high-end brand-guidelines boards, lo…
 - **`/cavecrew`** — Decision guide for delegating to caveman-style subagents
 - **`/caveman`** — Ultra-compressed communication mode
@@ -50,6 +50,7 @@
 - **`/cursor-animated-sites`** — Build an interactive "cursor-animated walkthrough" page on top of the /docs-site-macos gla…
 - **`/design-taste-frontend`** — Anti-slop frontend skill for landing pages, portfolios, and redesigns
 - **`/design-taste-frontend-v1`** — The original v1 taste-skill, preserved for projects depending on its exact behavior
+- **`/docs-curate`** — Sắp xếp gọn kho tài liệu LOCAL (llmwiki/html/ + wiki/sources/draft/) khi phình to
 - **`/docs-site-macos`** — Build a beautiful macOS-inspired documentation site (single HTML file) with a liquid-glass…
 - **`/extract-site`** — Extract and convert a website or docs site into clean markdown
 - **`/fdk`** — Front-door on-demand cho phát triển framework HOẶC distill/author một skill
@@ -97,6 +98,7 @@
 - `build-health-dashboard.py`
 - `build-overstack-docs.py`
 - `build-skill-search.py`
+- `docs-curate.py`
 - `new-skill.py`
 
 ## Harness scripts (`python3 harness/scripts/<x>`)
