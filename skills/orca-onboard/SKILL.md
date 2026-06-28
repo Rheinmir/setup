@@ -744,11 +744,13 @@ After all phases complete, write propose draft to wiki.
 **2. Write** `llmwiki/wiki/draft/orca/DDMMYY-<ten>.md`:
 
 ```
+---
+type: draft
+status: proposed
+tags: [orca-onboard, output-report]
+proposed: YYYY-MM-DD
+---
 # DDMMYY-<ten>
-**Type:** draft
-**Status:** proposed
-**Tags:** orca-onboard, output-report
-**Proposed:** YYYY-MM-DD
 
 ## Agent Task Assignment
 | Task | Agent | Model | Status |
