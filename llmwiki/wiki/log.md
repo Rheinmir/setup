@@ -154,27 +154,6 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-06-28 11:36:24 | `file.write` | harness/scripts/fdk-gate.py · tool=Edit |
-| 2026-06-28 11:39:27 | `file.write` | llmwiki/skills/utils/harness-update.md · tool=Edit |
-| 2026-06-28 11:39:40 | `file.write` | llmwiki/skills/utils/harness-update.md · tool=Edit |
-| 2026-06-28 11:40:22 | `file.write` | skills/harness-update/SKILL.md · tool=Edit |
-| 2026-06-28 11:40:35 | `file.write` | skills/harness-update/SKILL.md · tool=Edit |
-| 2026-06-28 11:46:12 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Write |
-| 2026-06-28 11:47:45 | `file.write` | harness/scripts/install-harness.sh · tool=Edit |
-| 2026-06-28 11:49:58 | `file.write` | harness/scripts/fdk-gate.py · tool=Edit |
-| 2026-06-28 11:52:14 | `file.write` | harness/version.json · tool=Edit |
-| 2026-06-28 11:58:52 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
-| 2026-06-28 11:59:39 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
-| 2026-06-28 11:59:56 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
-| 2026-06-28 12:06:38 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
-| 2026-06-28 12:18:09 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
-| 2026-06-28 12:18:27 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
-| 2026-06-28 12:18:43 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
-| 2026-06-28 12:21:40 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
-| 2026-06-28 12:24:00 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
-| 2026-06-28 12:24:58 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
-| 2026-06-28 12:26:24 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
-| 2026-06-28 12:26:34 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
 | 2026-06-28 12:28:19 | `file.write` | fdk/tools/fdk-kit.sh · tool=Write |
 | 2026-06-28 12:29:15 | `file.write` | skills/fdk/SKILL.md · tool=Edit |
 | 2026-06-28 12:29:37 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
@@ -194,5 +173,26 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 | 2026-06-28 16:11:34 | `file.write` | llmwiki/html/280626-merge-docs-site-macos-dup-seq.html · tool=Write |
 | 2026-06-28 16:12:20 | `file.write` | llmwiki/wiki/sources/draft/280626-merge-docs-site-macos-dup.md · tool=Write |
 | 2026-06-28 16:12:46 | `file.write` | llmwiki/wiki/sources/draft/280626-merge-docs-site-macos-dup.md · tool=Edit |
+| 2026-06-28 16:20:21 | `file.write` | llmwiki/wiki/concepts/docs-site-macos-skill.md · tool=Edit |
+| 2026-06-28 16:26:17 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 16:26:24 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 16:27:02 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 16:27:43 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 16:28:40 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 16:30:52 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 16:31:07 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 16:35:50 | `file.write` | skills/docs-site-macos/SKILL.md · tool=Edit |
+| 2026-06-28 16:39:57 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 16:40:29 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 16:40:44 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 16:41:12 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 16:41:21 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 16:46:53 | `file.write` | skills/docs-site-macos/SKILL.md · tool=Edit |
+| 2026-06-28 16:52:41 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 16:53:31 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 16:53:40 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 16:53:59 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 16:54:13 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 16:55:59 | `file.write` | skills/docs-site-macos/SKILL.md · tool=Edit |
 
 <!-- log:auto:end -->
