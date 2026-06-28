@@ -1,5 +1,8 @@
 # Operation Log
 
+## 2026-06-29 — feature — 2 skill web-crawl + web-clone (build-now-adapt-later)
+`/web-crawl` (site/URL → markdown LLM-ready): script `web-crawl.py` builtin urllib+regex→markdown (offline, no key) + `--self-test`; adapter `web-crawl.config.yaml` (backend firecrawl/crawl4ai/jina, verified:false). `/web-clone` (clone UI faithful → 1 file self-contained): `web-clone.py` inline local CSS/JS/img (offline) + adapter engine single-file CLI/monolith. Register đủ 4 surface (LOOP_MAP·marketplace·AGENT·CLAUDE) + sinh mirror; fdk-gate giờ 17 self-test BNAL. **Test crawl thật** `signals.forwardfuture.com/loop-library` → builtin backend chạy OK. (skill-registry --check còn drift CŨ 35/42 skill chưa đăng ký đủ — KHÔNG do 2 skill này, không gate.)
+
 ## 2026-06-29 — feature+docs — kho pattern tham chiếu BẢO VỆ (R14) + crawl loop-library
 Folder `llmwiki/patterns/` (README + 7 vai trò frontend/backend/adapter/system-design/ba/tester/pm + `loops.md`), mỗi file Patterns(When·Do·Why)+Anti-patterns(Smell·Why bad·Instead). **R14 patterns-protected** = `patterns_guard.py` wired PreToolUse: chặn Write/Edit/bash-ghi vào patterns/ trừ khi `LLMWIKI_PATTERNS_UNLOCK=1` (raw nhưng thấp 1 bậc). Khai R14 cả 2 policy (parity 14=14, drift ✓), test `patterns-guard-test.sh` 7/7 + CI. BNAL: folder+guard built now; nội dung seeded `verified:false` (config `pattern-library.config.yaml`) chờ user curate. Seed: /last30days + repo Rheinmir star (gstack/system-design-notes/SkillSpector) + **crawl** `signals.forwardfuture.com/loop-library` (70 loop). 7 role doc sinh song song qua subagent. fdk-gate 15/15. → [[ADR-014-protected-pattern-library]].
 

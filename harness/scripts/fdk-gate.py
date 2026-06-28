@@ -62,8 +62,10 @@ STEPS = [
         "python3 harness/scripts/token-budget.py --self-test >/dev/null && "
         "python3 harness/scripts/inject-scan.py --self-test >/dev/null && "
         "python3 harness/scripts/claim-receipts.py --self-test >/dev/null && "
-        "python3 harness/scripts/prospect-critic.py --self-test >/dev/null"],
-     "15 chức năng BNAL — self-test phải còn PASS (5 verified:true + 10 verified:false; giữ verified trung thực)"),
+        "python3 harness/scripts/prospect-critic.py --self-test >/dev/null && "
+        "python3 harness/scripts/web-crawl.py --self-test >/dev/null && "
+        "python3 harness/scripts/web-clone.py --self-test >/dev/null"],
+     "17 chức năng BNAL — self-test phải còn PASS (5 verified:true + 12 verified:false; giữ verified trung thực)"),
 ]
 
 

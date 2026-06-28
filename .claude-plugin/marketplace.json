@@ -43,6 +43,8 @@
       "strict": false,
       "skills": [
         "./skills/docs-site-macos",
+        "./skills/web-crawl",
+        "./skills/web-clone",
         "./skills/extract-site",
         "./skills/harness-tour",
         "./skills/harness-update",

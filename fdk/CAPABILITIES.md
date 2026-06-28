@@ -1,7 +1,7 @@
 <!-- SINH BẰNG CODE: build-capabilities.py — ĐỪNG sửa tay; chạy lại để cập nhật. -->
 # CAPABILITIES — toàn bộ đồ nghề (luôn-mới, đếm từ đĩa)
 
-**63 skill · 14 rule · 9 fdk-tool · 30 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
+**65 skill · 14 rule · 9 fdk-tool · 32 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
 
 ## Skills (gọi bằng `/<tên>`)
 
@@ -36,7 +36,7 @@
 - **`/orchestration`** — Use Orca orchestration for structured multi-agent coordination: threaded messages, blockin…
 - **`/trace-grader`** — Score the PATH an agent took (tool choice, ordering, retries, repeatability)
 
-### utils (38)
+### utils (40)
 - **`/brandkit`** — Premium brand-kit image generation skill for creating high-end brand-guidelines boards, lo…
 - **`/cavecrew`** — Decision guide for delegating to caveman-style subagents
 - **`/caveman`** — Ultra-compressed communication mode
@@ -75,6 +75,8 @@
 - **`/sync-template`** — Sync structural improvements between project and master template repo
 - **`/tour-guide-supademo`** — Style thiết kế Supademo cho in-app product tour (dùng kèm skill tour-guide
 - **`/uat-nonit-testcase`** — Tạo bộ test case / checklist UAT cho người dùng nghiệp vụ NON-IT (C&B, kế toán, vận hành)
+- **`/web-clone`** — Clone a website's exact look
+- **`/web-crawl`** — Crawl/scrape a website or single page into clean LLM-ready MARKDOWN
 
 ## Harness rules (gác tự động — vi phạm bị chặn)
 - **R1** — no-write-raw
@@ -131,6 +133,8 @@
 - `token-budget.py`
 - `trace-grader.py`
 - `trace-otel.py`
+- `web-clone.py`
+- `web-crawl.py`
 - `wiki-graph.py`
 - `wiki-health.py`
 - `wikieval.py`

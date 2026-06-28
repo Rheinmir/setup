@@ -10,8 +10,8 @@ Contract (mọi validator):
   - argv files : patterns_guard.py path1 path2 ...
   - exit 0 = pass · exit 2 = chặn (lý do ra stderr) · lỗi bất ngờ → fail-open (exit 0)
 
-Adapter (build-now-adapt-later): harness/pattern-library.config.yaml (protected_dir, unlock_env —
-verified:false). Mặc định fallback nếu vắng config: llmwiki/patterns + LLMWIKI_PATTERNS_UNLOCK.
+Adapter (build-now-adapt-later): harness/pattern-library.config.yaml (protected_dir, unlock_env;
+flagged verified=false). Fallback nếu vắng config: llmwiki/patterns + LLMWIKI_PATTERNS_UNLOCK.
 """
 import json
 import os

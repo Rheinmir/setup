@@ -1,0 +1,23 @@
+# harness/web-crawl.config.yaml
+# THE single place the WebCrawl unknowns live — the /build-now-adapt-later quarantine.
+# web-crawl.py reads its backend + key env FROM HERE. Trend mirrored (2026): feed LLMs MARKDOWN
+# not raw HTML (5-10x fewer tokens) — Firecrawl (managed, MCP), Crawl4AI (self-hosted OSS), Jina.
+#
+# The HTML->markdown converter + a urllib fetch fallback are deterministic and built now
+# (--self-test). WHICH backend (and its API key) is the unknown — premium backends need a key /
+# self-host that may be absent; default 'builtin' works offline with no key.
+
+verified: false                   # ASSUMPTION (not verified) — default backend is the builtin urllib+regex converter (no key); premium backends (firecrawl/crawl4ai/jina) are un-wired until a key/host is set.
+
+backend: builtin                  # ASSUMPTION (not verified) — builtin | firecrawl | crawl4ai | jina ; builtin = urllib fetch + regex→markdown (offline, no key)
+api_key_env: FIRECRAWL_API_KEY    # ASSUMPTION (not verified) — env holding the premium backend key (chỉ dùng khi backend≠builtin)
+endpoint: null                    # ASSUMPTION (absent) — self-host endpoint for crawl4ai, if used
+
+max_bytes: 2000000                # ASSUMPTION (not verified) — cap fetched HTML size (an toàn)
+default_output_dir: raw           # ASSUMPTION (not verified) — nơi lưu markdown crawl (raw/ = inbox người; agent đề xuất, người duyệt)
+
+# ADAPT-CHECKLIST (finalize khi có backend tốt hơn):
+#   1. Chọn backend (firecrawl cho managed+MCP / crawl4ai cho self-host) + đặt api_key_env / endpoint.
+#   2. (tuỳ) cài MCP firecrawl cho luồng agent.
+#   3. Chạy: python3 harness/scripts/web-crawl.py --self-test  (phải PASS).
+#   4. Flip verified:true. Builtin vẫn là fallback offline khi backend vắng.
