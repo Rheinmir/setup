@@ -1,5 +1,8 @@
 # Operation Log
 
+## 2026-06-29 — feature+docs — 5 trend 2026 → 5 chức năng (build-now-adapt-later)
+Dựng 5 feature từ lượt quét trend, mỗi cái core tất định + adapter `verified:false`: `success-flywheel` (gương dương của failure-flywheel), `egress-guard` (tool/MCP/egress security), `trace-otel` (span OTel-GenAI + truy nhân-quả), `spec-gate` (spec-driven anti-drift), `scoped-hooks` (guard ở frontmatter skill). Mỗi feature có `--self-test`; wire 10 self-test + leak-gate vào fdk-gate (mở `GENERIC_KEYS` cho recurrence_threshold/prompt vì flywheel song song). CAPABILITIES + overstack regen (+nhánh "BNAL 2026"). fdk-gate 15/15. → [[ADR-012-five-trend-features-bnal]]. Trend source: [[ADR-011-project-local-harness]] (egress/scoped bám vào).
+
 ## 2026-06-29 — feature+docs — project-local harness + docs-gate 2 trụ
 Thêm cơ chế `harness-local/` (dự án tự viết rule `P<n>` chạy song song R1–R13, sync-safe vì ngoài manifest, framework chạy trước theo AND; sandbox 13 test) — [[ADR-011-project-local-harness]] + concept [[harness-local]]. Mở rộng R10 docs-gate nhắc cả **đánh giá/eval** (`wikieval`) bên cạnh tài liệu (cập nhật [[R10]]). decisions.md +2 row; index +2 file; overstack.html regen (node `harness-local` + `docs-gate 2 trụ`). Code: commit `4c0e370` + `7bdcd97`.
 

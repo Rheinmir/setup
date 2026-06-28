@@ -52,8 +52,13 @@ STEPS = [
         "python3 harness/scripts/trace-grader.py --self-test >/dev/null && "
         "python3 harness/scripts/loop-runner.py selftest >/dev/null && "
         "python3 harness/scripts/wikieval.py --self-test >/dev/null && "
-        "python3 harness/scripts/failure-flywheel.py --root . --report >/dev/null"],
-     "5 chức năng BNAL verified:true — self-test phải còn PASS (giữ verified trung thực)"),
+        "python3 harness/scripts/failure-flywheel.py --root . --report >/dev/null && "
+        "python3 harness/scripts/success-flywheel.py --self-test >/dev/null && "
+        "python3 harness/scripts/egress-guard.py --self-test >/dev/null && "
+        "python3 harness/scripts/trace-otel.py --self-test >/dev/null && "
+        "python3 harness/scripts/spec-gate.py --self-test >/dev/null && "
+        "python3 harness/scripts/scoped-hooks.py --self-test >/dev/null"],
+     "10 chức năng BNAL — self-test phải còn PASS (5 verified:true + 5 verified:false; giữ verified trung thực)"),
 ]
 
 

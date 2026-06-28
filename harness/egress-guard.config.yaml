@@ -1,0 +1,37 @@
+# harness/egress-guard.config.yaml
+# THE single place the EgressGuard unknowns live — the /build-now-adapt-later quarantine.
+# egress-guard.py reads its allow-list, net-command set, and MCP-injection patterns FROM HERE;
+# none is hard-coded in the tool. Trend mirrored (2026): 1-in-8 AI breaches are agentic; a
+# poisoned MCP tool-description or an un-allow-listed curl hands an attacker your permissions.
+#
+# DETECTION (parse a Bash command / MCP description, match against the lists below, decide
+# violation) is deterministic and built now (--self-test). The actual allow-list and the
+# enforce/advise decision are project-specific guesses -> quarantined here.
+
+verified: false                   # ASSUMPTION (not verified) — allow_domains is an EMPTY guess (every project differs); mode stays 'warn' so an un-calibrated list never blocks a real session. Flip to 'block' only AFTER the allow-list is real.
+
+# warn  -> detect + advise on stderr, exit 0 (fail-safe for usability: a wrong/empty allow-list
+#          must not break dev). block -> exit 2 on violation (turn on AFTER calibration).
+mode: warn                        # ASSUMPTION (not verified) — 'warn' until the allow-list is real; then 'block'
+
+egress:
+  # Domains an agent's network command may reach. EMPTY = nothing is verified-safe yet; the
+  # project fills its real allow-list. (Under mode:warn an empty list only advises, never blocks.)
+  allow_domains: []               # ASSUMPTION (not verified) — project MUST list its real egress allow-list
+  # Commands that can move data off-box -> any of these reaching a non-allow-listed domain is flagged.
+  net_commands: [curl, wget, nc, ncat, telnet, scp, sftp, rsync]   # ASSUMPTION (not verified) — starter set; widen per stack
+
+# Substrings in an MCP/tool DESCRIPTION that smell like an injected instruction (poisoned tool).
+mcp_injection_patterns:           # ASSUMPTION (not verified) — starter heuristics; tune to your false-positive tolerance
+  - "ignore previous"
+  - "ignore all previous"
+  - "disregard your instructions"
+  - "exfiltrate"
+  - "send the contents"
+  - "base64 and send"
+
+# ADAPT-CHECKLIST (finalize when the real egress policy is known):
+#   1. Fill egress.allow_domains with the domains this project legitimately reaches.
+#   2. Tune net_commands + mcp_injection_patterns to your stack / false-positive tolerance.
+#   3. Run: python3 harness/scripts/egress-guard.py --self-test  (must PASS).
+#   4. Flip mode: block  AND  verified: true. Only then does a violation actually block.

@@ -333,6 +333,15 @@ def sections(root: Path):
         _row(_node("b-rule leaf", "docs-gate 2 trụ", "R10 mỗi 5 prompt nhắc CẢ tài liệu (/docs-site-macos) LẪN đánh giá/eval (wikieval) — trụ nào thiếu nhắc nấy")),
     ]))
 
+    # 5 trend 2026 → 5 chức năng qua build-now-adapt-later (core tất định now, adapter verified:false)
+    branches.append(_subtree("b-rule", "BNAL 2026", "5 trend 2026 → chức năng (build-now-adapt-later: core now, adapter verified:false) — ADR-012", [
+        _row(_node("b-rule leaf", "success-flywheel", "gom trace THẮNG → playbook tái dùng (gương DƯƠNG của failure-flywheel); adapter: distill model còn null")),
+        _row(_node("b-rule leaf", "egress-guard", "chặn egress/MCP độc: allow-list domain + cờ injection trong mô tả tool; warn→block sau khi hiệu chỉnh allow-list")),
+        _row(_node("b-rule leaf", "trace-otel", "audit phẳng → span OTel-GenAI + truy nhân-quả (lỗi step 10 ⇒ tool ở step 3); adapter: attribute-map experimental")),
+        _row(_node("b-rule leaf", "spec-gate", "spec→plan→tasks là nguồn-sự-thật + conformance (chống drift; cf Spec Kit); advisory→strict sau khi chốt schema")),
+        _row(_node("b-rule leaf", "scoped-hooks", "skill tự khai guard ở frontmatter, chỉ chạy khi skill active (tầng global→project→component); adapter: detector active")),
+    ]))
+
     mindmap_html = ('<div class="mm"><div class="mm-canvas"><svg class="mm-links"></svg>'
                     '<div class="tree"><div class="row">'
                     + _node("root has-children", "overstack", "gõ /<tên> để gọi · %d rule" % n_rules, n_sk)

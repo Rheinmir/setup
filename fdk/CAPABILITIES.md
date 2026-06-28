@@ -1,7 +1,7 @@
 <!-- SINH BẰNG CODE: build-capabilities.py — ĐỪNG sửa tay; chạy lại để cập nhật. -->
 # CAPABILITIES — toàn bộ đồ nghề (luôn-mới, đếm từ đĩa)
 
-**63 skill · 13 rule · 9 fdk-tool · 20 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
+**63 skill · 13 rule · 9 fdk-tool · 25 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
 
 ## Skills (gọi bằng `/<tên>`)
 
@@ -109,6 +109,7 @@
 - `code-logger.py`
 - `council.py`
 - `dispatch-verify.py`
+- `egress-guard.py`
 - `failure-flywheel.py`
 - `fdk-gate.py`
 - `harness-doctor.py`
@@ -116,10 +117,14 @@
 - `health-check.py`
 - `loop-runner.py`
 - `okf-check.py`
+- `scoped-hooks.py`
 - `skill-registry.py`
+- `spec-gate.py`
+- `success-flywheel.py`
 - `sync-skills.py`
 - `sync-template.py`
 - `trace-grader.py`
+- `trace-otel.py`
 - `wiki-graph.py`
 - `wiki-health.py`
 - `wikieval.py`

@@ -1,0 +1,34 @@
+# harness/success-flywheel.config.yaml
+# THE single place the SuccessFlywheel unknowns live — the /build-now-adapt-later
+# quarantine boundary. success-flywheel.py reads its success threshold, recurrence
+# threshold, and (absent) distill model FROM HERE; none is hard-coded in the tool.
+#
+# Deterministic capture / ranking / counting / playbook-scaffolding do NOT depend on any
+# value here; they are built now and tested now (--self-test). Trend mirrored: "Agentic
+# Context Engineering" — distil SUCCESSFUL trajectories into a ranked, reusable playbook.
+# We already own the negative half (failure-flywheel); this is the positive half.
+
+verified: false                   # ASSUMPTION (not verified) — thresholds are ship-guesses, NOT calibrated on real trace scores; distill model is UNWIRED (null) so --draft emits a human-TODO playbook stub, never auto-writes one.
+
+# A trace counts as "successful / worth distilling" when its grader score (trace-grader /
+# council) is >= this. Best-guess; the right cut depends on your scoring scale.
+success_threshold: 8              # ASSUMPTION (not verified) — 8/10 is a guess for "clearly good enough to reuse"
+
+# How many times a task-class must recur (at success) before --draft scaffolds a playbook
+# entry. Mirrors failure-flywheel: distil a pattern once it clearly repeats, not on a one-off.
+recurrence_threshold: 3           # ASSUMPTION (not verified) — 3 is a guess; depends on how varied your tasks are
+
+# The LLM that would summarise the winning trajectories into a reusable playbook entry.
+# ABSENT on purpose — this is the ONE adapter. Until a model is named AND verified:true,
+# --draft inserts a templated "TODO: distil playbook from these N wins" + the trace list
+# and STOPS for a human (feeds /propose; never auto-promotes).
+distill:
+  model: null                     # ASSUMPTION (absent) — no distill model wired; null => human-TODO stub
+  prompt: null                    # ASSUMPTION (absent) — the distillation prompt is a stakeholder decision
+
+# ADAPT-CHECKLIST (finalize when real trace scores exist):
+#   1. Run the agent for a while; let trace-grader/council populate scores.
+#   2. Calibrate success_threshold + recurrence_threshold against that data.
+#   3. Name distill.model + write distill.prompt (trajectory -> playbook entry).
+#   4. Run: python3 harness/scripts/success-flywheel.py --self-test  (must PASS).
+#   5. Flip verified:true here. Only then does --draft trust the auto-distilled playbook.

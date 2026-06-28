@@ -1,0 +1,31 @@
+# harness/spec-gate.config.yaml
+# THE single place the SpecGate unknowns live — the /build-now-adapt-later quarantine.
+# spec-gate.py reads the spec schema (required sections), spec dir, and conformance strictness
+# FROM HERE. Trend mirrored (2026): Spec-Driven Development — the spec, not the code, is the
+# source of truth (GitHub Spec Kit, Kiro, Cursor, Claude); it exists to kill "drift" where
+# confident code quietly solves the wrong problem.
+#
+# Parsing a spec, checking its sections, and detecting whether a change links its spec are
+# deterministic and built now (--self-test). The exact schema and how STRICT conformance should
+# be are project decisions -> quarantined here.
+
+verified: false                   # ASSUMPTION (not verified) — required_sections is a starter schema; conformance.mode stays 'advisory' so an un-settled schema never blocks a commit. Go 'strict' only after the schema is agreed.
+
+# A valid spec must contain these headings (the spec->plan->tasks backbone).
+required_sections:                # ASSUMPTION (not verified) — starter SDD schema; agree + freeze before going strict
+  - "## Intent"
+  - "## Plan"
+  - "## Tasks"
+  - "## Success criteria"
+
+spec_dir: llmwiki/wiki/sources/spec        # ASSUMPTION (not verified) — where tracked specs live
+
+conformance:
+  mode: advisory                  # ASSUMPTION (not verified) — advisory (warn, exit 0) until schema settled; then 'strict' (block)
+  link_token: "Spec:"             # ASSUMPTION (not verified) — how a commit/change references its spec, e.g. "Spec: <path>"
+
+# ADAPT-CHECKLIST (finalize when the SDD schema is agreed):
+#   1. Agree + freeze required_sections (the spec->plan->tasks contract for this project).
+#   2. Decide the conformance.link_token convention (how commits cite their spec).
+#   3. Run: python3 harness/scripts/spec-gate.py --self-test  (must PASS).
+#   4. Flip conformance.mode: strict  AND  verified: true. Only then does a missing spec/link block.

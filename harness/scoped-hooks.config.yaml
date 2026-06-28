@@ -1,0 +1,27 @@
+# harness/scoped-hooks.config.yaml
+# THE single place the ScopedHooks unknowns live — the /build-now-adapt-later quarantine.
+# scoped-hooks.py reads which frontmatter field names a skill's own guard, and HOW to decide a
+# skill is "active", FROM HERE. Trend mirrored (2026): Claude Code lets hooks be declared in
+# skill/subagent frontmatter, scoped to that component's lifecycle — a guardrail that fires only
+# while that skill runs. This extends harness-local one level down: global -> project -> component.
+#
+# Parsing the frontmatter, reading the declared guard, and dispatching it are deterministic and
+# built now (--self-test). HOW you reliably know a skill is currently active has no clean signal
+# in the host today -> that detector is the quarantined unknown.
+
+verified: false                   # ASSUMPTION (not verified) — activation.detector is a heuristic (no first-class "skill is active" signal exists in the host yet); frontmatter_key is a convention not yet agreed.
+
+frontmatter_key: guard            # ASSUMPTION (not verified) — the SKILL.md frontmatter field naming the skill's own validator
+
+activation:
+  # How to decide a skill is active for THIS event:
+  #   prompt-token = the skill whose /name appears in the latest user prompt/context
+  #   state-file   = a runtime marker file names the active skill (not wired yet)
+  #   null         = cannot tell -> dispatch nothing (fail-safe)
+  detector: prompt-token          # ASSUMPTION (not verified) — best available heuristic until the host exposes active-skill
+
+# ADAPT-CHECKLIST (finalize when the host exposes a real active-skill signal):
+#   1. Agree frontmatter_key (the field skills use to declare their guard).
+#   2. Replace activation.detector with the real signal (host event field / state file) when available.
+#   3. Run: python3 harness/scripts/scoped-hooks.py --self-test  (must PASS).
+#   4. Flip verified:true. Only then trust scoped dispatch to fire on exactly the active skill.

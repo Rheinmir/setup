@@ -102,6 +102,9 @@ def read_text(repo, rel):
 GENERIC_KEYS = {
     "verified", "enabled", "threshold", "model", "mode", "status", "tracked", "trigger",
     "disposable", "source", "kind", "timeout", "budget", "backend", "rubric", "category",
+    # parallel BNAL adapters legitimately share these schema keys (e.g. failure-flywheel ↔
+    # success-flywheel both carry recurrence_threshold + distill.prompt) — not a leak.
+    "recurrence_threshold", "prompt",
 }
 
 
