@@ -1,0 +1,22 @@
+# harness/pattern-library.config.yaml
+# THE single place the PatternLibrary unknowns live — the /build-now-adapt-later quarantine.
+# patterns_guard.py (R14) reads the protected dir + unlock signal FROM HERE. The folder, the
+# write-guard, and the structure are deterministic and built now. The UNKNOWN is whether the
+# SEEDED content is canonical — that is the user's curation call, so it stays verified:false.
+#
+# Protection level: "raw/ nhưng thấp hơn một bậc". raw/ = không bao giờ ghi (R1). patterns/ =
+# chỉ ghi KHI user cho phép (đặt env unlock). Vô tình → bị chặn (fail-safe).
+
+verified: false                   # ASSUMPTION (not verified) — nội dung seeded best-guess (từ /last30days + repo star + crawl), CHỜ user curate; protected_dir/unlock_env là ship default.
+
+protected_dir: llmwiki/patterns   # ASSUMPTION (not verified) — folder kho pattern được bảo vệ
+unlock_env: LLMWIKI_PATTERNS_UNLOCK   # ASSUMPTION (not verified) — đặt =1 thì user cho phép sửa; vắng → chặn mọi Write/Edit vào protected_dir
+
+roles: [frontend, backend, adapter, system-design, ba, tester, pm, loops]   # ASSUMPTION (not verified)
+content_status: seeded            # ASSUMPTION (not verified) — seeded | curated; lật từng vai trò khi user duyệt xong
+
+# ADAPT-CHECKLIST (finalize khi user đã curate nội dung):
+#   1. User đọc + sửa từng file vai trò (đặt LLMWIKI_PATTERNS_UNLOCK=1 để mở khoá ghi).
+#   2. Khi một vai trò đã đúng → ghi chú ở đây (content_status hoặc per-role note).
+#   3. Chạy: python3 harness/scripts/patterns-guard-selftest.py  (hoặc test) — phải PASS.
+#   4. Khi toàn bộ đã curate → flip verified:true. Guard vẫn chặn auto-edit; cờ chỉ nói "nội dung đã duyệt".

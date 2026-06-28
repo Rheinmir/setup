@@ -165,3 +165,14 @@ rules:
     target_globs: ["**/wiki/decisions.md", "**/wiki/sources/adr/**/*.md"]
     handler: "harness/validators/decision_adr.py · pre-commit (decision-adr-link/adr-delete-guard) + CI repo-health"
     blocking: true
+
+  patterns_guard:
+    id: R14
+    name: patterns-protected
+    kind: deny_write
+    statement: "Kho pattern llmwiki/patterns/ chỉ sửa khi user cho phép (env LLMWIKI_PATTERNS_UNLOCK=1) — agent không tự ý sửa kho tham chiếu (raw/ nhưng thấp hơn một bậc)."
+    enforce_at: [session]
+    deny_write_globs:
+      - "**/llmwiki/patterns/**"
+      - "llmwiki/patterns/**"
+    handler: "harness/validators/patterns_guard.py · PreToolUse; unlock qua env. Adapter pattern-library.config.yaml (verified:false). ADR-014."

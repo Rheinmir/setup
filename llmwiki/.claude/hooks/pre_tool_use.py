@@ -41,10 +41,10 @@ def main() -> None:
             "file_path": ti.get("file_path", ""),
             "content": ti.get("content") or ti.get("new_string") or "",
         }
-        checks = ["no_write_raw.py", "folder_structure.py"]
+        checks = ["no_write_raw.py", "folder_structure.py", "patterns_guard.py"]
     elif tool == "Bash":
         event = {"action": "bash", "command": ti.get("command", "")}
-        checks = ["no_write_raw.py"]
+        checks = ["no_write_raw.py", "patterns_guard.py"]
     else:
         sys.exit(0)
 

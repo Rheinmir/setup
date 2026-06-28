@@ -104,3 +104,11 @@ rules:
     statement: "Quyết định 'architecture' trong decisions.md phải ref một ADR; ADR cho EDIT tự do; XÓA ADR chỉ khi đã bị đè (Superseded by / supersedes ADR-N)."
     enforce_at: [repo]
     note: "pre-commit decision-adr-link (decisions.md) + adr-delete-guard (always-run) + CI repo-health. Vòng đời ở ADR-010."
+
+  - id: R14
+    name: patterns-protected
+    validator: patterns_guard.py
+    statement: "Kho pattern tham chiếu llmwiki/patterns/ chỉ được sửa KHI user cho phép (env LLMWIKI_PATTERNS_UNLOCK=1) — agent không tự ý sửa kho tham chiếu (raw/ nhưng thấp hơn một bậc)."
+    enforce_at: [session]
+    applies_to: [write, bash]
+    note: "PreToolUse guard; adapter harness/pattern-library.config.yaml (verified:false). Xem ADR-014."

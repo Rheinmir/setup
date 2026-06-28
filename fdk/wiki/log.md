@@ -1,5 +1,8 @@
 # Operation Log
 
+## 2026-06-29 — feature+docs — kho pattern tham chiếu BẢO VỆ (R14) + crawl loop-library
+Folder `llmwiki/patterns/` (README + 7 vai trò frontend/backend/adapter/system-design/ba/tester/pm + `loops.md`), mỗi file Patterns(When·Do·Why)+Anti-patterns(Smell·Why bad·Instead). **R14 patterns-protected** = `patterns_guard.py` wired PreToolUse: chặn Write/Edit/bash-ghi vào patterns/ trừ khi `LLMWIKI_PATTERNS_UNLOCK=1` (raw nhưng thấp 1 bậc). Khai R14 cả 2 policy (parity 14=14, drift ✓), test `patterns-guard-test.sh` 7/7 + CI. BNAL: folder+guard built now; nội dung seeded `verified:false` (config `pattern-library.config.yaml`) chờ user curate. Seed: /last30days + repo Rheinmir star (gstack/system-design-notes/SkillSpector) + **crawl** `signals.forwardfuture.com/loop-library` (70 loop). 7 role doc sinh song song qua subagent. fdk-gate 15/15. → [[ADR-014-protected-pattern-library]].
+
 ## 2026-06-29 — feature+docs — 5 trend 2026 NỮA → 5 chức năng (build-now-adapt-later, đợt 2)
 Quét trend tiếp (last30days WebSearch-fallback) → 5 feature nữa, cùng khuôn BNAL: `mem-rank` (memory agent ADD/UPDATE/DELETE/NOOP + retrieve ranked), `token-budget` (governor token+$ per session/task — FinOps gap), `inject-scan` (quét OUTPUT tool tìm injection gián tiếp), `claim-receipts` (gate hallucination: verify reference resolve), `prospect-critic` (reflection trước-chạy soi plan vs taxonomy failure-flywheel). Mỗi cái `--self-test`; fdk-gate giờ 15 self-test BNAL; leak-gate xanh (14 adapter verified:false). CAPABILITIES + overstack regen (+nhánh "BNAL đợt 2"). fdk-gate 15/15, 9/9 test. → [[ADR-013-five-more-trend-features-bnal]].
 
