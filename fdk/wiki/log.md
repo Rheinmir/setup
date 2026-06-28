@@ -1,5 +1,8 @@
 # Operation Log
 
+## 2026-06-28 — goal-set — gate decision→ADR (R13) + edit/delete-when-superseded (ADR-010)
+`harness/validators/decision_adr.py`: (1) decisions.md row architecture phải ref `ADR-N` (hoặc `(no-adr:)`); (2) EDIT ADR tự do; (3) XÓA ADR chỉ khi đã bị đè (`Superseded by`/`supersedes`). Wire pre-commit (decision-adr-link · adr-delete-guard · self-test) + CI repo-health. Test 5/5. Retro-fit 3 row architecture cũ. → [[ADR-010-decision-to-adr-gate]].
+
 ## 2026-06-28 — goal-set — session-orientation + auto-index + force-query (ADR-009)
 Phiên mới không còn "lơ ngơ": `session_start.py` `orient()` nhắc agent query code-index (code-graph, auto-watch) + wiki + CAPABILITIES. `stop.py` auto `index_sync --fix` (file wiki mới tự vào index). R7-f buộc propose có `## Context` (force-query). Test wire CI/pre-commit. Đóng #1 (overstack ships by-design) + #2 (pre-commit đã wired downstream). → [[ADR-009-session-orientation-autoindex-forcequery]].
 

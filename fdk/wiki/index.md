@@ -58,4 +58,5 @@
 | [ADR-007-wiki-scanner-skip-gitignored-at-lister](sources/adr/ADR-007-wiki-scanner-skip-gitignored-at-lister.md) | decision | ADR-007: wiki-tree scanner lọc gitignored tại lister (nguồn), không per-consumer; guard mọi bản hand-synced |
 | [ADR-008-framework-wiki-lives-in-the-kit](sources/adr/ADR-008-framework-wiki-lives-in-the-kit.md) | decision | ADR-008: wiki riêng của framework sống trong the kit (fdk/wiki); llmwiki/wiki là khuôn per-project |
 | [ADR-009-session-orientation-autoindex-forcequery](sources/adr/ADR-009-session-orientation-autoindex-forcequery.md) | decision | ADR-009: phiên mới biết hệ thống có gì (orientation) + auto-index + force-query grounding |
+| [ADR-010-decision-to-adr-gate](sources/adr/ADR-010-decision-to-adr-gate.md) | decision | ADR-010: gate decision→ADR (R13) — ép quyết định có ADR, nhưng cho edit + xóa khi bị đè |
 <!-- index:auto:end -->

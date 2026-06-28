@@ -84,6 +84,26 @@ repos:
         always_run: true
         pass_filenames: false
 
+      - id: decision-adr-link
+        name: "R13: quyết định architecture trong decisions.md phải ref ADR"
+        entry: python3 harness/validators/decision_adr.py
+        language: system
+        files: 'decisions\.md$'
+
+      - id: adr-delete-guard
+        name: "R13: xóa ADR chỉ khi đã bị đè (Superseded by / supersedes)"
+        entry: python3 harness/validators/decision_adr.py --guard-deletions
+        language: system
+        always_run: true
+        pass_filenames: false
+
+      - id: decision-adr-gate-test
+        name: "R13 gate self-test (decision→ADR + edit/delete-when-superseded)"
+        entry: bash harness/tests/decision-adr-gate-test.sh .
+        language: system
+        always_run: true
+        pass_filenames: false
+
       - id: capabilities-current
         name: "fdk/CAPABILITIES.md khớp đĩa (agent biết đúng đồ nghề)"
         entry: python3 fdk/tools/build-capabilities.py --check
