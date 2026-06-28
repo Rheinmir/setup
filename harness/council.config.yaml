@@ -10,10 +10,12 @@
 # synthesis) are produced by the orca orchestration — see skills/council/SKILL.md
 # — never by council.py.
 
-# Fail-safe default. Flip to true ONLY after a real council run confirms the
-# seats actually behave. Under verified:false the engine stamps every transcript
-# as a draft and lists the one-file path to finalize.
-verified: false
+# VERIFIED 2026-06-28 (user "đồng ý 5 chức năng"): the deterministic protocol engine is
+# validated by `python3 harness/scripts/council.py selftest` (12/12 checks — anonymisation,
+# mean-rank, anti-position-bias). The engine NEVER branches on model choice; seat-model
+# assignment is a per-run orchestrator decision, not a quarantined unknown. Transcripts
+# are now stamped final (not draft).
+verified: true
 
 # The question routed to the council. Filled per run by the orchestrator; this
 # is a placeholder so the file stands alone.

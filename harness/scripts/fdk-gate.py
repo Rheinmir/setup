@@ -45,6 +45,13 @@ STEPS = [
      "self-test lõi (demo)"),
     ("vendor-neutral broad", ["bash", "harness/poc-vendor-neutral/test-broad.sh"],
      "self-test lõi (broad)"),
+    ("BNAL feature self-tests", ["bash", "-c",
+        "python3 harness/scripts/council.py selftest >/dev/null && "
+        "python3 harness/scripts/trace-grader.py --self-test >/dev/null && "
+        "python3 harness/scripts/loop-runner.py selftest >/dev/null && "
+        "python3 harness/scripts/wikieval.py --self-test >/dev/null && "
+        "python3 harness/scripts/failure-flywheel.py --root . --report >/dev/null"],
+     "5 chức năng BNAL verified:true — self-test phải còn PASS (giữ verified trung thực)"),
 ]
 
 

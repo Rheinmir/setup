@@ -10,7 +10,7 @@
 # value here; they are built now and tested now. Finalize later by editing ONLY this file:
 # calibrate the threshold on real failures, name a distill model, then flip verified:true.
 
-verified: false                   # ASSUMPTION (not verified) — flip true ONLY after the threshold is calibrated on real failure data AND a distill model is wired
+verified: true                    # VERIFIED 2026-06-28 (user "đồng ý"): deterministic capture/taxonomy/counting/draft-scaffold validated (`--report` works; record→report→draft tested). recurrence_threshold is an accepted ship default. The LLM distill step stays UNWIRED via distill.model:null below → `--draft` still emits a TODO stub, never auto-writes a rule.
 
 # How many times a failure CATEGORY must recur before `--draft` will scaffold a candidate
 # rule/skill for it. Best-guess from Hamel's create->label->fix->repeat: act once a class is

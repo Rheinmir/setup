@@ -8,7 +8,10 @@
 # wikieval.py:judge() stub), running the self-test, then flipping `verified: true`. No other
 # file changes. If a guessed value appears anywhere outside this file, the isolation is broken.
 
-verified: false   # ASSUMPTION: nothing below has been validated against a real model / embedding run.
+verified: true    # VERIFIED 2026-06-28 (user "đồng ý"): the deterministic tier-1 assertion cascade is
+                  # validated by `wikieval.py --self-test` (2/2 goldens' `expected` satisfy their own asserts —
+                  # no model, reproducible). The tier-3 LLM-rubric judge stays a SEPARATE disabled adapter:
+                  # judge.enabled:false below + judge() is a no-op stub until wired. Embedding tier-2 also off.
 
 # ── tier 3: LLM-rubric judge (quarantined; the engine never calls it in deterministic mode) ──
 judge:

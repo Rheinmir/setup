@@ -10,9 +10,11 @@
 # not the loop code. Do not scatter these values anywhere else (that is a leak).
 # Each `# ASSUMPTION` marks a guessed/unverified value and its source-of-truth.
 
-verified: false        # ASSUMPTION: flip to true only AFTER guard values are tuned on
-                       #             real load AND the llm-revise hook is wired + passes
-                       #             conformance end-to-end. Until then, treat as fail-safe.
+verified: true         # VERIFIED 2026-06-28 (user "đồng ý"): the deterministic control loop +
+                       #             ALL termination guards + progress detection + reflexion are validated by
+                       #             `loop-runner.py selftest` (ALL PASS). Guard values are accepted ship defaults.
+                       #             The LLM revise hook is SEPARATE: revise.cmd:null + revise.verified:false below
+                       #             keep it a no-op stub (loop still exercises every guard). Wire that to enable revise.
 
 # ── Termination guards (deterministic, MANDATORY, all enforced) ─────────────
 guards:

@@ -154,8 +154,6 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-06-28 10:03:54 | `file.write` | harness/council.config.yaml · tool=Write |
-| 2026-06-28 10:03:57 | `file.write` | harness/loop-runner.config.yaml · tool=Write |
 | 2026-06-28 10:03:58 | `file.write` | harness/tests/council/answers.json · tool=Write |
 | 2026-06-28 10:03:59 | `file.write` | harness/tests/trace-grader.fixtures.json · tool=Write |
 | 2026-06-28 10:04:01 | `file.write` | harness/tests/council/judges.json · tool=Write |
@@ -194,5 +192,7 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 | 2026-06-28 10:58:52 | `file.write` | llmwiki/html/280626-framework-master-wiki.html · tool=Edit |
 | 2026-06-28 10:58:58 | `file.write` | llmwiki/html/280626-framework-master-wiki.html · tool=Edit |
 | 2026-06-28 10:59:24 | `file.write` | llmwiki/html/280626-framework-master-wiki.html · tool=Edit |
+| 2026-06-28 11:09:59 | `file.write` | harness/scripts/install-harness.sh · tool=Edit |
+| 2026-06-28 11:11:32 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit |
 
 <!-- log:auto:end -->

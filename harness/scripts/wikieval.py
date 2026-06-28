@@ -314,6 +314,36 @@ def print_report(results, evals_dir, n_outputs):
     print(f"Summary: decided {passed}/{decided}" + (f" passed (of {len(results)} goldens)" if decided else " (nothing decided)"))
 
 
+# ───────────────────────────── self-test ─────────────────────────────
+
+def self_test(evals_dir, cfg):
+    """Deterministic engine validation, no model, fully reproducible. For every golden that
+    declares tier-1 `asserts`, run those asserts against the golden's OWN `expected` reference
+    answer. The reference answer MUST satisfy the asserts that encode the rule it documents —
+    if it does, the deterministic tier-1 cascade and the goldens are coherent. This is what
+    makes the wikieval adapter's `verified: true` honest: the deterministic engine is proven
+    here; only the tier-3 LLM-rubric judge stays a separate, disabled adapter."""
+    goldens = load_goldens(evals_dir)
+    with_asserts = [g for g in goldens if g.get("asserts")]
+    if not with_asserts:
+        print("[wikieval selftest] no golden declares tier-1 asserts — nothing deterministic to validate.")
+        return 1
+    all_ok = True
+    print(f"[wikieval selftest] {len(with_asserts)} golden(s) with tier-1 asserts (asserts vs own `expected`):")
+    for g in sorted(with_asserts, key=lambda x: x["id"]):
+        r = run_golden(g, g.get("expected") or "", cfg)
+        ok = r.get("pass") is True and r.get("decided_by") == "tier1-asserts"
+        all_ok = all_ok and ok
+        detail = ""
+        if "checks" in r:
+            fails = [c["assert"] for c in r["checks"] if not c["pass"]]
+            if fails:
+                detail = "  x " + ", ".join(fails)
+        print(f"  {'[OK ]' if ok else '[FAIL]'} {g['id']:<18} expected satisfies its own asserts{detail}")
+    print("SELFTEST: ALL PASS" if all_ok else "SELFTEST: FAILED")
+    return 0 if all_ok else 1
+
+
 # ───────────────────────────── main ─────────────────────────────
 
 def main():
@@ -324,10 +354,13 @@ def main():
     ap.add_argument("--config", default=str(DEFAULT_CONFIG))
     ap.add_argument("--write-baseline", action="store_true", help="write per-golden pass/score baseline")
     ap.add_argument("--check", action="store_true", help="compare to baseline; exit 2 on regression")
+    ap.add_argument("--self-test", action="store_true", help="deterministic: each golden's asserts vs its own expected (validates the tier-1 engine, no model)")
     ap.add_argument("--json", action="store_true", help="emit raw run results as JSON")
     args = ap.parse_args()
 
     cfg = load_config(args.config)
+    if args.self_test:
+        sys.exit(self_test(args.evals_dir, cfg))
     goldens = load_goldens(args.evals_dir)
     outputs = load_outputs(args.outputs)
     results = [run_golden(g, outputs.get(g["id"]), cfg) for g in goldens]

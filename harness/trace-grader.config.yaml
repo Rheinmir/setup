@@ -10,8 +10,10 @@
 # against THIS project's real traces, tune, then flip `verified: true`.
 # ─────────────────────────────────────────────────────────────────────────────
 
-verified: false          # ASSUMPTION — flip to true ONLY after the values below are
-                         # validated against real traces from this project.
+verified: true           # VERIFIED 2026-06-28 (user "đồng ý"): deterministic grader (schema, pass^k,
+                         # rule algorithms, report) validated by `trace-grader.py --self-test` (3/3 ALL PASS).
+                         # Thresholds below are accepted ship defaults — re-tune on real traces if needed.
+                         # The agent-as-judge needs verified:true AND judge.enabled:true; judge stays enabled:false.
 
 # Tools an agent must NEVER use on a good path. Using one = high-severity flag →
 # a delivered run becomes "corrupt-success".
