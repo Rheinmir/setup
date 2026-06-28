@@ -5,6 +5,7 @@
 # Session-output artifacts — keep LOCAL, drop from REMOTE (goal 2026-06-28).
 # Files stay on disk; index.md rows kept so local index_sync (R3) still passes.
 llmwiki/html/*.html
+!llmwiki/html/overstack.html
 llmwiki/wiki/sources/draft/*.md
 !llmwiki/wiki/sources/draft/README.md
 !llmwiki/wiki/sources/draft/_template.md

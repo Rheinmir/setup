@@ -221,6 +221,10 @@ else
 fi
 # copy validators vào cạnh hooks để llmwiki deploy standalone vẫn chạy (resolution tier 2)
 cp "$ROOT/harness/validators/"*.py "$ROOT/llmwiki/.claude/hooks/validators/" 2>/dev/null || true
+# overstack docs user — TRAVEL cùng install (Phase D): trang tài liệu chính thức về cho dự án
+mkdir -p "$ROOT/llmwiki/html"
+cp "$SRC/llmwiki/html/overstack.html" "$ROOT/llmwiki/html/overstack.html" 2>/dev/null \
+  || cp "${TMP_SYNC:-/nonexistent}/llmwiki/html/overstack.html" "$ROOT/llmwiki/html/overstack.html" 2>/dev/null || true
 printf '# runtime data — khong commit\naudit/\n' > "$ROOT/llmwiki/.claude/.gitignore"
 
 SETTINGS="$ROOT/llmwiki/.claude/settings.json"

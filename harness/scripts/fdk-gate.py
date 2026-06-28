@@ -35,6 +35,8 @@ STEPS = [
      "mọi rail còn 'cắn' (validator chưa chết âm thầm)"),
     ("adapt-registry leak-gate", ["python3", "harness/scripts/adapt-registry.py", "--check"],
      "ẩn số quarantine không rò qua adapter (BNAL Step 7)"),
+    ("overstack-docs current", ["python3", "fdk/tools/build-overstack-docs.py", "--check"],
+     "llmwiki/html/overstack.html khớp đĩa (docs user luôn-mới, travel cùng install)"),
     ("capabilities current", ["python3", "fdk/tools/build-capabilities.py", "--check"],
      "fdk/CAPABILITIES.md khớp đĩa (agent biết đúng đồ nghề)"),
     ("skill mirror parity", ["python3", "harness/scripts/sync-skills.py", "--check"],

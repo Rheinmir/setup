@@ -1,34 +1,30 @@
-# Rheinmir / setup — llmwiki AI-agent project template
+# overstack — the self-disciplined AI-agent framework
 
-Bộ khung biến AI Agent (Claude Code · opencode · Antigravity · Cursor…) thành **Tech Lead tự setup**
-một dự án: nền tri thức (`llmwiki/`), quy trình dựng dự án, và **guardrail** chặn agent làm bậy.
+**overstack** là một lớp khung (*a stack you put over your project*) biến AI Agent (Claude Code · opencode · Antigravity · Cursor…) thành một **Tech Lead tự-kỷ-luật**: có trí nhớ (nền tri thức `llmwiki/`), có nguyên tắc không thể phá (**guardrail** tất định chặn agent làm bậy, 0 token), có tay nghề đóng gói sẵn (skills), và biết điều phối nhiều agent (Orca).
 
 > Nhánh làm việc chính: **`orca`**.
 
-## ⚡ Cài/update — 1 dòng (CẢ 3 TRỤ)
+## ⚡ Cài / update — 1 dòng (cả 3 trụ)
 
 Chạy trong thư mục gốc dự án của bạn — **1 lệnh lo trọn harness + skills + llmwiki**, khỏi nhớ cờ:
-
-Agent Prompt:
-
-```bash
-chạy curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash và kiểm tra xem mọi thứ đã ở đúng chỗ chưa
-```
-hoặc
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash
 ```
 
-Mặc định cài/update **cả 3 trụ**: **Harness** (lõi validator vendor-neutral — chặn ghi `raw/`, ép wiki có `## Origin`…
-qua hook native Claude/opencode + CI làm sàn) · **Skills** (global `~/.claude/skills`) · **llmwiki** (khung wiki).
-Cuối lần chạy in **bảng TRẠNG THÁI 3 TRỤ**. Cờ: `--harness-only` (chỉ trụ 1) · `--clean` · `uninstall`.
+Mặc định cài/update **cả 3 trụ**: **Harness** (validator tất định vendor-neutral — chặn ghi `raw/`, ép wiki có `## Origin`… qua hook native + CI làm sàn) · **Skills** (global `~/.claude/skills`) · **llmwiki** (khung wiki). Cuối lần chạy in **bảng trạng thái 3 trụ**. Cờ: `--harness-only` · `--clean` · `uninstall`.
 
-- Chi tiết, gỡ, cài thủ công: [`harness/poc-vendor-neutral/README.md`](harness/poc-vendor-neutral/README.md)
-- Bản tải về (offline): [Releases](../../releases)
-- Dán vào system prompt AI để agent tự cài: xem code panel trong README của harness.
+Tự bảo trì về sau (cập nhật + trả nợ wiki + refresh bản đồ năng lực + health-check trong một lệnh): gọi skill **`/harness-update`**.
 
-## 🏗️ Dựng dự án mới (workflow 3 bước prompt)
+## 📖 Tài liệu chính thức (cho người đọc)
+
+Mở trực tiếp file self-contained — **đi theo dự án khi bạn cài** (không cần mạng, không build):
+
+**[`llmwiki/html/overstack.html`](llmwiki/html/overstack.html)** — bắt đầu ở **Quickstart** (chạy được trong 2 phút), rồi hàng chục tab đi sâu: cài đặt · ba trụ (wiki / harness / skills) · workflow propose→gate→dispatch · Orca · build-now-adapt-later · eval/council/loop · tự bảo trì · FDK · và ★ *dev một cái mới thì cần update gì cho hợp lệ*.
+
+Trang này **sinh bằng code** (`fdk/tools/build-overstack-docs.py`) nên bảng skill/rule luôn khớp đĩa. Bản máy-đọc của bản đồ năng lực: `fdk/CAPABILITIES.md`.
+
+## 🏗️ Dựng dự án mới (workflow prompt)
 
 1. Copy thư mục `llmwiki/` sang gốc dự án mới.
 2. Feed `01-Project-Kickoff.md` cho Agent → hỏi 3 câu → tạo `AGENT-business.md` / `AGENT-code.md`.
@@ -41,13 +37,16 @@ Chi tiết: [`setup.md`](setup.md). Cài bộ skills: `npx skills add rheinmir/s
 
 | Thư mục / file | Là gì |
 |---|---|
-| `llmwiki/` | Khung tri thức: `wiki/` (concepts/entities/sources/draft), `skills/`, rules (`CLAUDE.md`/`AGENT.md`), `html/` docs |
-| `harness/` | **Guardrail.** `validators/` + `scripts/install-harness.sh` = bản chính (hooks). `poc-vendor-neutral/` = PoC **1 lõi CLI vendor-neutral** (đề xuất redesign + installer 1-dòng) |
+| `llmwiki/` | **Trụ tri thức.** `wiki/` (concepts/entities/sources/draft/adr), `skills/`, rules (`CLAUDE.md`/`AGENT.md`), `html/overstack.html` (docs) |
+| `harness/` | **Trụ guardrail.** `validators/` + `scripts/` (install, fdk-gate, code-logger, council/loop/eval…). `poc-vendor-neutral/` = lõi CLI vendor-neutral + installer 1-dòng |
+| `skills/` | **Trụ kỹ năng** — mỗi `SKILL.md` gọi bằng `/tên`; canonical, mirror sang `llmwiki/skills/` |
+| `fdk/` | **Framework Dev Kit** — đồ nghề phát triển CHÍNH overstack (`CAPABILITIES.md`, `tools/`). Không travel xuống dự án (ADR-004) |
 | `01/02/04-*.md`, `setup.md` | Prompt workflow dựng dự án |
-| `.github/workflows/harness.yml` | CI: chạy validator + self-test mỗi PR |
+| `.github/workflows/harness.yml` | CI: validator + self-test mỗi PR |
 
-## 📖 Tài liệu (single-file HTML, mở trực tiếp)
+## 🛠️ Phát triển chính overstack
 
-- `llmwiki/html/250626-walkthroughs.html` — walkthrough tương tác: harness & CI/CD chạy thế nào, từng bước.
-- `llmwiki/html/250626-harness-cli-docs.html` — cách hoạt động & cài đặt harness vendor-neutral.
-- `llmwiki/html/250626-harness-architecture-vs-current.html` — kiến trúc đề xuất vs hiện tại.
+Gọi skill **`/fdk`** (front-door on-demand: pre-flight + inventory live). Định-nghĩa-hoàn-thành cho mọi thay đổi: `python3 harness/scripts/fdk-gate.py` (đủ 14 bước mới push). Quyết định kiến trúc: `llmwiki/wiki/sources/adr/`.
+
+- Cài thủ công / gỡ / chi tiết: [`harness/poc-vendor-neutral/README.md`](harness/poc-vendor-neutral/README.md)
+- Bản tải về (offline): [Releases](../../releases)

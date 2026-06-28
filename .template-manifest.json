@@ -13,6 +13,7 @@
     "llmwiki/commands/serve",
     "llmwiki/html/README.md",
     "llmwiki/html/assets/style.css",
+    "llmwiki/html/overstack.html",
     "llmwiki/raw/README.md",
     "llmwiki/skills/README.md",
     "llmwiki/skills/wiki-loop/ingest.md",

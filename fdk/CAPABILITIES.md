@@ -1,7 +1,7 @@
 <!-- SINH BẰNG CODE: build-capabilities.py — ĐỪNG sửa tay; chạy lại để cập nhật. -->
 # CAPABILITIES — toàn bộ đồ nghề (luôn-mới, đếm từ đĩa)
 
-**63 skill · 12 rule · 7 fdk-tool · 20 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
+**63 skill · 12 rule · 8 fdk-tool · 20 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
 
 ## Skills (gọi bằng `/<tên>`)
 
@@ -58,7 +58,7 @@
 - **`/full-output-enforcement`** — Overrides default LLM truncation behavior
 - **`/gpt-taste`** — Elite UX/UI & Advanced GSAP Motion Engineer
 - **`/harness-tour`** — Tour
-- **`/harness-update`** — Migrate llmwiki cũ lên harness (case B) hoặc update harness bản mới (case C)
+- **`/harness-update`** — TỰ BẢO TRÌ framework overstack trên máy user (self-maintain)
 - **`/health-check`** — Kiểm tra sức khỏe "pattern chuẩn" của template
 - **`/high-end-visual-design`** — Teaches the AI to design like a high-end agency
 - **`/image-to-code`** — Elite website image-to-code skill for Codex
@@ -96,6 +96,7 @@
 - `build-cheatsheet.py`
 - `build-docs-index.py`
 - `build-health-dashboard.py`
+- `build-overstack-docs.py`
 - `build-skill-search.py`
 - `new-skill.py`
 
