@@ -23,3 +23,6 @@ harness/metrics/events.jsonl
 harness/metrics/unknowns.json
 graph.db
 .graph-agent/
+
+# failure-flywheel raw failure history (local)
+harness/metrics/failures.jsonl
