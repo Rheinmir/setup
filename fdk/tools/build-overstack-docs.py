@@ -177,10 +177,11 @@ def sections(root: Path):
         "<p>Lệnh này kéo cả ba trụ — <b>harness</b> (rào chắn), <b>skills</b> (kỹ năng), <b>llmwiki</b> (nền tri thức) — và bật guardrail ngay. Dự án cũ đã có wiki? Gọi <code>/harness-update</code> để migrate + tự trả nợ.</p>",
         "<h3>2. Cứ làm việc bình thường với agent</h3>",
         "<p>Agent (Claude Code, Cursor, opencode…) giờ bị overstack gác: không ghi bậy vào <code>raw/</code>, mọi trang wiki buộc có nguồn gốc (<code>## Origin</code>), index/log tự cập-nhật-bằng-code. Bạn không phải nhớ luật — hàng rào tự cắn.</p>",
-        "<h3>3. Muốn một tính năng/đổi thay? <code>/propose</code> trước</h3>",
-        "<p>Gõ <code>/propose</code> để agent vẽ kế hoạch (file ảnh hưởng, cái gì có thể vỡ, sequence diagram) rồi DỪNG chờ bạn duyệt — không code thẳng. Duyệt xong nó mới làm, rồi <code>/verify-before-commit</code> trước khi commit.</p>",
-        "<div class=\"note\"><h4>Ba lệnh hay dùng nhất</h4><ul class=\"s\">"
-        "<li><code>/propose</code> — kế hoạch trước khi code (bắt buộc cho tính năng mới).</li>"
+        "<h3>3. Muốn một tính năng/đổi thay? gọi <code>/orca-workflow</code></h3>",
+        "<p>Đây là lệnh bạn dùng nhiều nhất. <code>/orca-workflow</code> tự chạy trọn vòng <b>propose → gate → dispatch → verify</b>: vẽ kế hoạch (file ảnh hưởng, cái gì có thể vỡ, sequence diagram) + DỪNG chờ bạn duyệt, rồi giao việc cho các agent chạy song song, rồi đối chiếu kết quả. Các skill con (<code>propose</code>, <code>safe-change</code>, <code>verify-before-commit</code>…) do nó <b>điều phối</b> — bạn hiếm khi gọi tay từng cái.</p>",
+        "<div class=\"note\"><h4>Lệnh bạn gọi TRỰC TIẾP nhiều nhất</h4><ul class=\"s\">"
+        "<li><code>/orca-workflow</code> — dựng/đổi một tính năng (điều phối cả propose→gate→dispatch→verify).</li>"
+        "<li><code>/orca-onboard</code> — onboard codebase (một hay nhiều) song song vào wiki.</li>"
         "<li><code>/harness-update</code> — tự bảo trì: cập nhật overstack + trả nợ wiki + health-check.</li>"
         "<li><code>find-skills \"&lt;việc&gt;\"</code> — không chắc có sẵn kỹ năng gì? hỏi nó.</li></ul></div>",
         "<p style=\"margin-top:14px\">Cần hiểu sâu từng phần? Các tab bên trái đi từ <b>tổng quan</b> → <b>cài đặt</b> → <b>ba trụ</b> → <b>workflow</b> → <b>tự bảo trì</b> → <b>tham chiếu đầy đủ</b>.</p>",
@@ -261,19 +262,19 @@ def sections(root: Path):
         f"<p class=\"lead\">Skill là một quy trình đóng gói thành file <code>SKILL.md</code>, gọi bằng <code>/tên</code>. Hiện có <b>{n_sk}</b> skill, chia theo \"loop\" (vòng công việc). Cài global qua <code>npx skills add</code> → dùng ở mọi dự án.</p>",
         "<div class=\"grid\"><div class=\"card\"><h4>wiki-loop</h4><ul class=\"s\"><li>nuôi tri thức: <code>/ingest</code>, <code>/query</code>, <code>/lint</code>.</li></ul></div>"
         "<div class=\"card\"><h4>dev-loop</h4><ul class=\"s\"><li>vòng phát triển: <code>/propose</code>, <code>/impact-check</code>, <code>/safe-change</code>, <code>/verify-before-commit</code>…</li></ul></div>"
-        "<div class=\"card\"><h4>orchestrate</h4><ul class=\"s\"><li>đa-agent: <code>/orca-workflow</code>, <code>/council</code>, <code>/trace-grader</code>.</li></ul></div>"
+        "<div class=\"card\"><h4>orchestrate (entry chính)</h4><ul class=\"s\"><li><b><code>/orca-workflow</code></b> · <b><code>/orca-onboard</code></b> — lệnh bạn gọi trực tiếp; chúng điều phối các skill dev-loop. Cùng nhóm: <code>/council</code>, <code>/trace-grader</code>.</li></ul></div>"
         "<div class=\"card\"><h4>utils</h4><ul class=\"s\"><li>tiện ích: <code>/fdk</code>, <code>/harness-update</code>, <code>/docs-site-macos</code>…</li></ul></div></div>",
         "<p>Bảng đầy đủ luôn-mới ở tab <a href=\"#reference\">Tham chiếu</a>. Không chắc dùng skill nào? <code>find-skills \"&lt;việc&gt;\"</code>.</p>",
     ]))
 
-    S.append(("workflow", "Workflow dev", "06 · Quy trình", "Workflow — propose → gate → dispatch → verify", [
-        "<p class=\"lead\">Quy trình phát triển chuẩn của overstack, để thay đổi không bao giờ \"xồ thẳng vào code\".</p>",
+    S.append(("workflow", "Workflow dev", "06 · Quy trình", "Workflow — gọi /orca-workflow, nó lo 4 bước", [
+        "<p class=\"lead\">Cách bạn làm việc thực tế: gọi <b><code>/orca-workflow</code></b> cho một tính năng — nó tự chạy trọn 4 bước dưới. Các skill dev-loop là <b>bước con</b> do nó điều phối, bạn không gọi tay từng cái.</p>",
         "<ol class=\"ck\">"
-        "<li><b>/propose</b> — agent restate yêu cầu, liệt kê file ảnh hưởng + cái có thể vỡ, vẽ sequence diagram, viết draft. Rồi DỪNG chờ duyệt.</li>"
-        "<li><b>gate</b> — validator R7 chặn proposal thiếu (phải đủ cặp <code>.md</code> + <code>.html</code> một-diagram-mỗi-task).</li>"
-        "<li><b>dispatch</b> — Orca giao việc cho các agent (chọn CLI theo bảng chi phí); chạy song song.</li>"
-        "<li><b>verify</b> — <code>/verify-before-commit</code> + <code>dispatch-verify</code> đối chiếu \"khai done\" với file thật; <code>/trace-grader</code> chấm cả ĐƯỜNG ĐI.</li></ol>",
-        "<div class=\"note\"><h4>Vì sao bắt buộc propose trước</h4><p style=\"margin:0\">Yêu cầu mơ hồ + agent đoán = sai sau khi đã viết. propose ép câu hỏi làm rõ đến TRƯỚC khi sai, và để bạn thấy impact trước khi đồng ý.</p></div>",
+        "<li><b>propose</b> — restate yêu cầu, liệt kê file ảnh hưởng + cái có thể vỡ, vẽ sequence diagram, viết draft. DỪNG chờ bạn duyệt.</li>"
+        "<li><b>gate</b> — validator R7 chặn proposal thiếu (đủ cặp <code>.md</code> + <code>.html</code> một-diagram-mỗi-task).</li>"
+        "<li><b>dispatch</b> — giao việc cho các agent (chọn CLI theo bảng chi phí); chạy song song.</li>"
+        "<li><b>verify</b> — <code>dispatch-verify</code> đối chiếu \"khai done\" với file thật; <code>/trace-grader</code> chấm cả ĐƯỜNG ĐI.</li></ol>",
+        "<div class=\"note\"><h4>Hai lệnh điều phối bạn gọi trực tiếp</h4><p style=\"margin:0\"><code>/orca-workflow</code> (một tính năng) và <code>/orca-onboard</code> (onboard nhiều codebase song song). Các skill dev-loop (<code>propose</code> · <code>impact-check</code> · <code>safe-change</code> · <code>verify-before-commit</code>) là bước CON trong các flow này — gọi tay chỉ khi muốn chạy lẻ một bước.</p></div>",
     ]))
 
     S.append(("orca", "Orca (đa-agent)", "07 · Điều phối", "Orca — điều phối đa-agent", [
