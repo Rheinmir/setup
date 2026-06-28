@@ -333,7 +333,7 @@ Lưu ý: tint xanh `#0a84ff` để khớp pattern; thumb đậm dần theo hover
 
 ## Mind Map (MẶC ĐỊNH — luôn vẽ một bản)
 
-Mọi docs site PHẢI kèm **một mind map collapsible kiểu NotebookLM** tóm tắt cấu trúc trang (các section / thực thể / mục chính) — đặt ngay sau hero hoặc trong section "Tổng quan". Đặc trưng: **đường nối CONG (bezier) màu theo nhánh** + node chip glass + chevron; **mặc định ĐÓNG, click mở/đóng**. Self-contained (CSS + JS thuần vẽ SVG, KHÔNG thư viện). Nội dung **sinh từ chính tài liệu** (mỗi section = một nhánh, mục con = lá), cắt mô tả lá ≤~54 ký tự cho gọn.
+Mọi docs site PHẢI kèm **một mind map collapsible kiểu NotebookLM** tóm tắt cấu trúc trang (các section / thực thể / mục chính) — đặt ngay sau hero hoặc trong section "Tổng quan". Đặc trưng: **đường nối CONG (bezier) màu theo nhánh** + node chip glass + chevron; **mặc định ĐÓNG, click mở/đóng**. Self-contained (CSS + JS thuần vẽ SVG, KHÔNG thư viện). Nội dung **sinh từ chính tài liệu** (mỗi section = một nhánh, mục con = lá), cắt mô tả lá ≤~54 ký tự cho gọn. **Nhánh quá dài (>~15 lá) → KHÔNG để phẳng, chia tiếp thành nhánh con theo MỤC ĐÍCH SỬ DỤNG** (root → nhánh → nhóm-mục-đích → lá): mỗi nhóm là một node `.cat has-children` lồng trong, mang một class màu `.b-N` riêng (JS `colorOf` trả đúng màu đó cho đường cong). Ví dụ overstack chia `utils` (37 skill) thành 📄 tài liệu · 🎨 thiết kế · 🦴 caveman · 🛠️ framework-dev · 🔧 tiện ích — xem `fdk/tools/build-overstack-docs.py` (`PURPOSE_OF`).
 
 **Cấu trúc** (tree ngang: root → nhánh `.cat` → lá `.leaf`; có `.mm-canvas` + `<svg class="mm-links">` để vẽ đường cong):
 ```html
