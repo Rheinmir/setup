@@ -154,23 +154,6 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-06-28 09:53:32 | `file.write` | llmwiki/.claude/hooks/stop.py · tool=Edit |
-| 2026-06-28 09:53:35 | `file.write` | skills/new-skill/SKILL.md · tool=Write |
-| 2026-06-28 09:53:55 | `feature.add` | harness/scripts/code-logger.py |
-| 2026-06-28 09:53:55 | `feature.add` | harness/scripts/wiki-graph.py |
-| 2026-06-28 09:54:56 | `file.write` | fdk/tools/build-docs-index.py · tool=Write |
-| 2026-06-28 09:55:01 | `file.write` | fdk/tools/build-capabilities.py · tool=Write |
-| 2026-06-28 09:55:42 | `file.write` | harness/scripts/wiki-graph.py · tool=Write |
-| 2026-06-28 09:56:10 | `file.write` | harness/scripts/adapt-registry.py · tool=Write |
-| 2026-06-28 09:56:11 | `file.write` | llmwiki/AGENT.md · tool=Edit |
-| 2026-06-28 09:56:14 | `file.write` | llmwiki/CLAUDE.md · tool=Edit |
-| 2026-06-28 09:56:31 | `file.write` | fdk/tools/build-skill-search.py · tool=Write |
-| 2026-06-28 09:58:34 | `file.write` | harness/scripts/dispatch-verify.py · tool=Write |
-| 2026-06-28 09:59:29 | `file.write` | fdk/tools/build-skill-search.py · tool=Edit |
-| 2026-06-28 09:59:38 | `file.write` | fdk/tools/build-skill-search.py · tool=Edit |
-| 2026-06-28 09:59:43 | `file.write` | fdk/tools/build-skill-search.py · tool=Edit |
-| 2026-06-28 09:59:48 | `file.write` | harness/scripts/dispatch-verify.py · tool=Edit |
-| 2026-06-28 09:59:49 | `file.write` | harness/scripts/fdk-gate.py · tool=Write |
 | 2026-06-28 09:59:54 | `file.write` | harness/scripts/dispatch-verify.py · tool=Edit |
 | 2026-06-28 10:00:03 | `file.write` | harness/scripts/dispatch-verify.py · tool=Edit |
 | 2026-06-28 10:01:36 | `file.write` | harness/validators/index_sync.py · tool=Edit |
@@ -194,5 +177,22 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 | 2026-06-28 10:04:55 | `file.write` | skills/loop-runner/SKILL.md · tool=Write |
 | 2026-06-28 10:04:58 | `file.write` | skills/failure-flywheel/SKILL.md · tool=Write |
 | 2026-06-28 10:05:10 | `file.write` | skills/trace-grader/SKILL.md · tool=Write |
+| 2026-06-28 10:05:37 | `file.write` | skills/council/SKILL.md · tool=Write |
+| 2026-06-28 10:05:45 | `file.write` | harness/scripts/wikieval.py · tool=Write |
+| 2026-06-28 10:06:05 | `file.write` | harness/wikieval.config.yaml · tool=Write |
+| 2026-06-28 10:06:13 | `file.write` | llmwiki/wiki/sources/evals/r2-origin-section.md · tool=Write |
+| 2026-06-28 10:06:19 | `file.write` | llmwiki/wiki/sources/evals/sql-active-users.md · tool=Write |
+| 2026-06-28 10:06:29 | `file.write` | llmwiki/wiki/sources/evals/README.md · tool=Write |
+| 2026-06-28 10:06:29 | `file.write` | harness/evals/wikieval-outputs.example.json · tool=Write |
+| 2026-06-28 10:06:54 | `file.write` | skills/wikieval/SKILL.md · tool=Write |
+| 2026-06-28 10:07:57 | `file.write` | harness/scripts/sync-skills.py · tool=Edit |
+| 2026-06-28 10:08:49 | `file.write` | llmwiki/AGENT.md · tool=Edit |
+| 2026-06-28 10:08:53 | `file.write` | llmwiki/CLAUDE.md · tool=Edit |
+| 2026-06-28 10:09:12 | `file.write` | llmwiki/AGENT.md · tool=Edit |
+| 2026-06-28 10:09:14 | `file.write` | llmwiki/CLAUDE.md · tool=Edit |
+| 2026-06-28 10:10:40 | `file.write` | .github/workflows/harness.yml · tool=Edit |
+| 2026-06-28 10:12:59 | `file.write` | llmwiki/wiki/concepts/feature-catalog.md · tool=Write |
+| 2026-06-28 10:15:12 | `file.write` | llmwiki/html/280626-framework-master-wiki.html · tool=Write |
+| 2026-06-28 10:18:06 | `file.write` | harness/scripts/adapt-registry.py · tool=Edit |
 
 <!-- log:auto:end -->

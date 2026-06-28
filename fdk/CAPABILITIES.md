@@ -1,5 +1,5 @@
-<!-- SINH BẰNG CODE: fdk/tools/build-capabilities.py — ĐỪNG sửa tay; chạy lại để cập nhật. -->
-# CAPABILITIES — toàn bộ đồ nghề framework (luôn-mới, đếm từ đĩa)
+<!-- SINH BẰNG CODE: build-capabilities.py — ĐỪNG sửa tay; chạy lại để cập nhật. -->
+# CAPABILITIES — toàn bộ đồ nghề (luôn-mới, đếm từ đĩa)
 
 **63 skill · 12 rule · 7 fdk-tool · 20 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
 

@@ -102,7 +102,11 @@ if [ "${1:-}" = "--global" ]; then
   cp "$SRC/llmwiki/.claude/hooks/"*.py "$GH/hooks/"
   cp "$SRC/harness/validators/"*.py "$GH/hooks/validators/"
   cp "$SRC/harness/scripts/health-check.py" "$GH/hooks/health-check.py"   # session_start.py tìm cạnh hooks
-  log "GLOBAL: hooks + validators + health-check → $GH/hooks/"
+  # logger + capability-map XUỐNG CÙNG PROJECT (ADR-005): hooklib gọi code-logger cạnh hooks;
+  # build-capabilities tự nhận bối cảnh downstream (global skills + rule đã cài).
+  cp "$SRC/harness/scripts/code-logger.py" "$GH/hooks/code-logger.py"
+  cp "$SRC/fdk/tools/build-capabilities.py" "$GH/hooks/build-capabilities.py"
+  log "GLOBAL: hooks + validators + health-check + code-logger + build-capabilities → $GH/hooks/"
 
   SETTINGS="$HOME/.claude/settings.json"
   [ -f "$SETTINGS" ] && cp "$SETTINGS" "$SETTINGS.bak.$(date +%s)" || echo '{}' > "$SETTINGS"

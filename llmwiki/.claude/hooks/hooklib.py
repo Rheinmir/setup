@@ -62,10 +62,14 @@ def code_log(root, *args) -> None:
     Để hook (PostToolUse/Stop) ghi log nghiệp vụ tự động, không phụ thuộc agent nhớ append log.md.
     """
     try:
-        cl = pathlib.Path(root) / "harness" / "scripts" / "code-logger.py"
-        if cl.is_file():
-            subprocess.run([sys.executable, str(cl), "--root", str(root), *args],
-                           capture_output=True, timeout=5)
+        here = pathlib.Path(__file__).resolve().parent
+        # cạnh hooks (deployed downstream — logger xuống cùng project) HOẶC repo framework
+        for cl in (here / "code-logger.py",
+                   pathlib.Path(root) / "harness" / "scripts" / "code-logger.py"):
+            if cl.is_file():
+                subprocess.run([sys.executable, str(cl), "--root", str(root), *args],
+                               capture_output=True, timeout=5)
+                return
     except Exception:
         pass
 
