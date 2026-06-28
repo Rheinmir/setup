@@ -138,11 +138,13 @@ def m_docs():
         c += 1
         json.dump({"n": c}, open(p, "w"))
         if every > 0 and c % every == 0:
-            # R10 full: inject DIRECTIVE (UserPromptSubmit stdout → vào context → Claude hành động)
-            print(f"[harness R10 docs-gate] Đã qua {every} lượt. ĐỀ NGHỊ với user: có muốn đánh giá "
-                  f"& BỔ SUNG tài liệu cho {every} việc gần đây không? Nếu user đồng ý → gọi "
-                  f"/docs-site-macos (hoặc /cursor-animated-sites cho luồng/sequence) để sinh docs, "
-                  f"rồi viết output-report (YAML frontmatter, OKF). Nếu user từ chối → bỏ qua, không nhắc lại lượt này.")
+            # R10 full: inject DIRECTIVE (UserPromptSubmit stdout → vào context → Claude hành động).
+            # 2 trụ: TÀI LIỆU (docs-site-macos) + ĐÁNH GIÁ/eval (wikieval) — hỏi user TRƯỚC khi chạy nặng.
+            print(f"[harness R10 docs-gate] Đã qua {every} lượt. ĐỀ NGHỊ với user 2 việc — hỏi trước khi chạy: "
+                  f"(1) BỔ SUNG TÀI LIỆU cho {every} việc gần đây? Đồng ý → /docs-site-macos "
+                  f"(hoặc /cursor-animated-sites cho luồng/sequence), rồi viết output-report (YAML frontmatter, OKF). "
+                  f"(2) BỔ SUNG ĐÁNH GIÁ/eval? Đồng ý → skill `wikieval` thêm/chạy case cho phần vừa làm "
+                  f"(output agent thì `trace-grader`/`council`). Từ chối → bỏ qua, không nhắc lại lượt này.")
     except Exception:
         pass
     return 0
