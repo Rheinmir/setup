@@ -97,8 +97,22 @@ def read_text(repo, rel):
 
 
 # ── leak-test predicates ────────────────────────────────────────────────────────────────
+# Khoá schema config CHUNG — tái xuất hợp lệ ở NHIỀU adapter song song (mỗi adapter có
+# `verified`/`enabled`/`threshold`… riêng). KHÔNG phải hằng-số-ẩn-số đặc trưng → không tính leak.
+GENERIC_KEYS = {
+    "verified", "enabled", "threshold", "model", "mode", "status", "tracked", "trigger",
+    "disposable", "source", "kind", "timeout", "budget", "backend", "rubric", "category",
+}
+
+
 def is_distinctive(name):
-    """Conservative: only names unlikely to collide by accident across files."""
+    """Conservative: only names unlikely to collide by accident across files.
+
+    Loại khoá schema chung (GENERIC_KEYS): nhiều adapter song song cùng có chúng là CỐ Ý,
+    không phải một ẩn số bị nhân bản → tránh false-positive khi repo có nhiều *.config.yaml.
+    """
+    if name in GENERIC_KEYS:
+        return False
     return len(name) >= 6 or "_" in name or name.isupper()
 
 

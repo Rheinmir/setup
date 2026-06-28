@@ -48,8 +48,8 @@
 | [270626-session-review-html](sources/draft/270626-session-review-html.md) | draft | 2026-06-27 — docs-site-macos render của session review |
 | [270626-wiki-sync-structure](sources/draft/270626-wiki-sync-structure.md) | draft | 2026-06-27 — Proposal skill /wiki-sync-structure: phát hiện & sửa drift tài liệu cấu trúc (số liệu, bảng skill, dedupe) |
 | [270626-propose-single-source](sources/draft/270626-propose-single-source.md) | draft | 2026-06-27 — Proposal DRY: /propose là SoT (nuốt gap glass-style), orca-workflow delegate thay vì chép lại |
-
 <!-- index:auto:start -->
 | [r2-origin-section](sources/evals/r2-origin-section.md) | eval | Golden: R2 origin-required |
 | [sql-active-users](sources/evals/sql-active-users.md) | eval | Golden: SQL active users |
+| [feature-catalog](concepts/feature-catalog.md) | concept | Feature Catalog — và VÌ SAO mỗi cái phải có |
 <!-- index:auto:end -->
