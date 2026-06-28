@@ -53,7 +53,7 @@ except ImportError:  # the engine needs structured frontmatter (lists) -> requir
 
 # repo root = .../setup/setup  (harness/scripts/wikieval.py -> parents[2])
 REPO_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_EVALS_DIR = REPO_ROOT / "llmwiki" / "wiki" / "sources" / "evals"
+DEFAULT_EVALS_DIR = REPO_ROOT / "fdk" / "wiki" / "sources" / "evals"
 DEFAULT_BASELINE = REPO_ROOT / "harness" / "metrics" / "eval-baseline.json"
 DEFAULT_CONFIG = REPO_ROOT / "harness" / "wikieval.config.yaml"
 

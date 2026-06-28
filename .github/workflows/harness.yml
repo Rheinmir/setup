@@ -66,10 +66,12 @@ jobs:
       - run: pip install pyyaml
       # Các validator này trước nay CHỈ chạy pre-commit (bypass bằng --no-verify / không cài).
       # Nay git-aware (bỏ qua draft/html gitignored) nên chạy được trên checkout sạch của CI.
-      - name: R3 index-sync (git-aware)
-        run: python3 harness/validators/index_sync.py --wiki-dir llmwiki/wiki
+      - name: R3 index-sync (git-aware) — framework wiki (fdk/wiki) + demo template (llmwiki/wiki)
+        run: |
+          python3 harness/validators/index_sync.py --wiki-dir fdk/wiki
+          python3 harness/validators/index_sync.py --wiki-dir llmwiki/wiki
       - name: L4 wiki-health — broken wikilink (git-aware)
-        run: python3 harness/scripts/wiki-health.py --wiki-dir llmwiki/wiki --fail-on broken
+        run: python3 harness/scripts/wiki-health.py --wiki-dir fdk/wiki --fail-on broken
       - name: arch-scan — doc vs rule
         run: python3 harness/scripts/arch-scan.py --root .
       - name: harness-lint — meta-drift (hằng số content-dir + wiring policy→settings)
@@ -77,7 +79,7 @@ jobs:
       - name: agent↔claude skill-table parity
         run: python3 harness/validators/agent_claude_parity.py
       - name: duplicate-basename — slug wiki không trùng giữa các thư mục
-        run: python3 harness/validators/duplicate_basename.py --wiki-dir llmwiki/wiki
+        run: python3 harness/validators/duplicate_basename.py --wiki-dir fdk/wiki
       - name: harness-doctor — fire-drill (mọi rail còn cắn?)
         run: python3 harness/scripts/harness-doctor.py --ci
       - name: capabilities current (fdk/CAPABILITIES.md khớp đĩa)

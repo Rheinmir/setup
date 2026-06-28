@@ -7,12 +7,13 @@
 llmwiki/html/*.html
 !llmwiki/html/overstack.html
 llmwiki/html/archive/
-llmwiki/wiki/sources/draft/*.md
-!llmwiki/wiki/sources/draft/README.md
-!llmwiki/wiki/sources/draft/_template.md
-llmwiki/wiki/sources/draft/archive/
-llmwiki/wiki/draft/*.md
-llmwiki/wiki/draft/orca/*.md
+# framework's OWN wiki now lives in the kit (fdk/wiki); llmwiki/wiki is the per-project template demo
+fdk/wiki/sources/draft/*.md
+!fdk/wiki/sources/draft/README.md
+!fdk/wiki/sources/draft/_template.md
+fdk/wiki/sources/draft/archive/
+fdk/wiki/draft/*.md
+fdk/wiki/draft/orca/*.md
 
 # generated artifact manifest (local, per artifacts.config.yaml manifest.tracked:false)
 fdk/MANIFEST.json

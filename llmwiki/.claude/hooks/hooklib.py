@@ -50,7 +50,9 @@ def run_validator(name: str, event: dict, validators_dir: pathlib.Path):
 
 
 def find_wiki_dir(root: str):
-    for cand in (pathlib.Path(root) / "wiki", pathlib.Path(root) / "llmwiki" / "wiki"):
+    # fdk/wiki first: in the framework repo the framework's OWN wiki lives in the kit (fdk/wiki);
+    # downstream projects have no fdk/ → fall through to their per-project llmwiki/wiki.
+    for cand in (pathlib.Path(root) / "fdk" / "wiki", pathlib.Path(root) / "wiki", pathlib.Path(root) / "llmwiki" / "wiki"):
         if cand.is_dir():
             return cand
     return None

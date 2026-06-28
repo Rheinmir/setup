@@ -59,7 +59,7 @@ done
 
 hdr "D — toàn wiki repo OKF (chỉ cho phép file legacy đã biết)"
 ALLOW="220626-chown.md"   # draft legacy, ngoài phạm vi proposal này
-BADF=$(python3 "$OKF" --wiki-dir llmwiki/wiki 2>/dev/null | awk '/chua dat chuan/{f=1;next} f&&/^ +- /{sub(/^ +- +/,"");print}' )
+BADF=$(python3 "$OKF" --wiki-dir fdk/wiki 2>/dev/null | awk '/chua dat chuan/{f=1;next} f&&/^ +- /{sub(/^ +- +/,"");print}' )
 UNEXPECTED=""
 for b in $BADF; do case "$b" in *"$ALLOW") : ;; *) UNEXPECTED="$UNEXPECTED $b" ;; esac; done
 if [ -z "${UNEXPECTED// }" ]; then
