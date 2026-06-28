@@ -1,105 +1,79 @@
 # CONTEXT
-We have defined the project goals and tech stack. Now, we must establish the Agentic Knowledge Base following the LLM Wiki pattern — a persistent, compounding artifact that the agent maintains over time. Humans curate raw sources; the agent handles summarization, cross-referencing, and maintenance.
+Mục tiêu của pha này: dựng **nền tri thức (knowledge base)** cho dự án theo chuẩn overstack. Đây là một artifact bền, agent bồi đắp dần theo thời gian — con người bỏ nguồn thô vào, agent tóm tắt, liên kết, bảo trì.
 
-The knowledge base has three layers:
-- **`raw/`** — immutable source documents. Humans write here, agent never touches.
-- **`wiki/`** — agent-maintained markdown pages: entities, concepts, sources. The agent owns this layer.
-- **`AGENT.md`** — the schema: defines structure, conventions, and the three core operations (ingest, query, lint).
+**Quan trọng:** nếu bạn đã chạy PHA 0 (cài overstack), thì khung `llmwiki/` đã có sẵn (đi kèm bản cài) — pha này **kiểm tra + seed nội dung**, không dựng lại từ con số 0. Nếu chưa cài, tạo mới theo đúng cấu trúc dưới.
+
+Ba lớp, tất cả **nằm dưới `llmwiki/`**:
+- **`llmwiki/raw/`** — nguồn thô, bất biến. Người viết vào đây, **agent KHÔNG bao giờ ghi** (rule R1).
+- **`llmwiki/wiki/`** — trang tri thức agent bảo trì: concepts, entities, sources.
+- **`llmwiki/AGENT.md`** + **`llmwiki/CLAUDE.md`** — schema + luật (đi kèm bản cài; KHÔNG viết tay đè).
 
 # INSTRUCTIONS
 
-**IMPORTANT — before doing anything else:** Do NOT create any `.md` documentation or knowledge files in the project root. The only `.md` files allowed in root are: `AGENT.md`, `README.md`, and numbered step files (e.g. `01-*.md`).
+**Trước khi làm gì:** chỉ các file `.md` sau được phép ở **gốc dự án**: `README.md`, `AGENT-business.md`, `AGENT-code.md`, và file đánh số (`00-*.md`, `01-*.md`…). Mọi tri thức khác phải nằm trong `llmwiki/wiki/` (rule R5).
 
-You must execute the following file system operations:
+Kiểm tra/khởi tạo các thao tác sau (đã có thì verify, thiếu thì tạo):
 
-1. Create the following folders directly in the project root (note: `.agent` already exists as a config file — do not create a `.agent/` folder):
-   - `skills/` — multi-step reusable workflows the agent invokes autonomously (e.g. `propose`, `safe-change`).
-   - `commands/` — single-shot, parameterized instructions triggered explicitly by the user (e.g. `scaffold-feature`, `add-env-var`).
-   - `html/` — visual documentation layer (dashboard and rendered reports).
+1. **Thư mục dưới `llmwiki/`** (đã có nếu cài overstack):
+   - `llmwiki/skills/` — quy trình nhiều bước agent tự gọi (`propose`, `safe-change`…).
+   - `llmwiki/raw/` — lớp nguồn bất biến: người bỏ tài liệu gốc (spec, note, paper, data). Agent chỉ ĐỌC khi `ingest`.
+   - `llmwiki/html/` — lớp tài liệu trực quan (gồm `overstack.html`).
 
-2. Create a `raw/` folder in the root. This is the **immutable source-of-truth layer**:
-   - Humans drop original documents here: articles, specs, meeting notes, vendor docs, papers, images, data files.
-   - The agent NEVER writes, modifies, or deletes anything in `raw/`.
-   - The agent reads `raw/` only during the `ingest` operation to distill knowledge into `wiki/`.
+2. **`llmwiki/wiki/`** — lớp tri thức agent bảo trì. Chọn subfolder:
 
-3. Create a `wiki/` folder. This is the **agent-maintained knowledge layer**. Use the table below to decide which subfolder:
+   | Subfolder | Đặt vào khi… | Ví dụ |
+   |-----------|--------------|-------|
+   | `concepts/` | Ý tưởng/pattern/thuật ngữ trừu tượng — giải thích cho người mới, không trỏ vào code | `rag.md`, `graph-memory.md` |
+   | `entities/` | Thứ cụ thể có tên trong hệ thống — service, model, API, component, config | `auth-service.md`, `postgres.md` |
+   | `sources/` | Tham chiếu/quyết định chưng cất từ `raw/` — tóm tắt URL, ADR, takeaway | `why-postgres.md`, `api-docs.md` |
+   | `sources/draft/` | Đề xuất chưa làm (do skill `propose` tạo) | `260425-new-approval-button-fe.md` |
 
-   | Subfolder | Put here when... | Example |
-   |-----------|-----------------|---------|
-   | `concepts/` | Abstract idea, pattern, or domain term — explained to a new team member, not pointed to in the codebase | `rag.md`, `graph-memory.md` |
-   | `entities/` | Concrete named thing in the system — service, model, API, tool, component, config | `auth-service.md`, `postgres.md` |
-   | `sources/` | Distilled reference or decision record from `raw/` — URL summary, ADR, paper takeaway | `why-postgres.md`, `api-docs.md` |
-   | `sources/draft/` | Proposal not yet implemented (created by the `propose` skill) | `260425-new-approval-button-fe.md` |
-
-   Each wiki file must follow this format:
+   **Mỗi file wiki phải theo OKF v0.1 — frontmatter YAML (rule R9), KHÔNG dùng `**Type:**` bold kiểu cũ:**
    ```
-   # <Title>
-   **Type:** concept | entity | source
-   **Tags:** tag1, tag2
+   ---
+   type: concept            # concept | entity | source | draft
+   title: <Title>
+   tags: [tag1, tag2]
+   timestamp: YYYY-MM-DD
+   ---
 
-   <1-3 sentence description>
+   # <Title>
+
+   <mô tả 1–3 câu>
 
    ## Notes
-   <extra detail, [[wikilinks]] to related entries>
+   <chi tiết, [[wikilinks]] tới trang liên quan>
 
    ## Origin
-   - **Source:** raw/<filename> | wiki/sources/draft/<filename> | https://...
-   - **Commit:** <hash> (if created from a code change)
+   - **Source:** `llmwiki/raw/<file>` | `llmwiki/wiki/sources/draft/<file>` | https://…
+   - **Commit:** <hash> (nếu sinh từ một thay đổi code)
    - **Date:** YYYY-MM-DD
    ```
-   A wiki file without `## Origin` is considered incomplete.
+   File wiki thiếu `## Origin` bị coi là chưa hợp lệ (rule R2).
 
-4. Create `wiki/index.md`:
+3. **`llmwiki/wiki/index.md`** — thêm/bớt file wiki phải cập nhật (rule R3; có thể tự sửa bằng `index_sync --fix`):
    ```
    # Wiki Index
    | File | Type | Summary |
    |------|------|---------|
    ```
-   A row must be added every time a wiki file is created or removed.
 
-5. Create `wiki/log.md`:
+4. **`llmwiki/wiki/log.md`** — append sau mỗi thao tác (nay có code-logger ghi giúp bằng code):
    ```
    # Operation Log
-   ## YYYY-MM-DD — <operation: ingest | query | lint | init> — <summary>
-   - <detail>
+   ## YYYY-MM-DD — <init | ingest | query | lint> — <summary>
    ```
-   Log today's initialization as the first entry.
+   Log lần khởi tạo hôm nay làm entry đầu.
 
-6. Create `AGENT.md` in the root with the following content:
+5. **`llmwiki/AGENT.md` + `llmwiki/CLAUDE.md`** — KHÔNG viết tay. Hai file này đi kèm bản cài overstack, đã chứa đủ luật (R1–R12) + bảng skill. Chỉ cần xác nhận chúng tồn tại; thiếu → chạy lại bootstrap (PHA 0) hoặc `/harness-update`.
 
-   **Rules:**
-   - NEVER write to `raw/`
-   - ALWAYS update `wiki/index.md` when adding or removing a wiki file
-   - ALWAYS append to `wiki/log.md` after every operation
-   - Use `[[wikilinks]]` to cross-reference entries in `wiki/`
-   - Wiki files live in `concepts/`, `entities/`, or `sources/` — never in `wiki/` root
-   - Wiki entries are only created AFTER code is committed — never during proposal or planning
+6. **Seed nội dung dự án:** tạo `llmwiki/wiki/sources/project-requirements.md` (đúng frontmatter + `## Origin`) tóm tắt câu trả lời PHA 1 (tên, bài toán, stack). Thêm row vào `index.md`, append `log.md`.
 
-   **Core operations** (read the skill file before invoking):
-
-   | Operation | When to invoke | Skill file |
-   |-----------|---------------|------------|
-   | `ingest` | A new file appears in `raw/` | `llmwiki/skills/wiki-loop/ingest.md` |
-   | `query` | User asks a question that requires synthesizing wiki knowledge | `llmwiki/skills/wiki-loop/query.md` |
-   | `lint` | Periodically or when wiki feels stale | `llmwiki/skills/wiki-loop/lint.md` |
-   | `propose` | Any new feature or change is requested | `llmwiki/skills/dev-loop/propose.md` |
-   | `impact-check` | Before modifying any shared symbol | `llmwiki/skills/dev-loop/impact-check.md` |
-   | `safe-change` | Editing code called from more than one place | `llmwiki/skills/dev-loop/safe-change.md` |
-   | `verify-before-commit` | Before every commit | `llmwiki/skills/dev-loop/verify-before-commit.md` |
-
-   **Invocation rules:**
-   - New file in `raw/` → invoke `ingest` immediately
-   - New feature request → invoke `propose` first, stop, wait for approval
-   - Edit to shared code → invoke `impact-check` then `safe-change`
-   - Before every commit → invoke `verify-before-commit`
-
-7. Scan the project root for any stray `.md` files that are NOT `AGENT.md`, `README.md`, or numbered step files (`01-*.md`, `02-*.md`, etc.).
-   - For each found: classify as concept, entity, or source; move to correct `wiki/` subfolder; add row to `wiki/index.md`; log the move in `wiki/log.md`.
-   - If none found: skip silently.
+7. Quét gốc dự án tìm `.md` lạc (không phải `README.md`/`AGENT-*.md`/file đánh số): phân loại concept/entity/source, chuyển vào `llmwiki/wiki/` đúng subfolder, cập nhật index + log. Không có → bỏ qua.
 
 # ACTION
-For each folder and file listed above:
-- IF it does not exist: create it exactly as specified.
-- IF it already exists: verify it contains the required sections and format. If anything is missing or malformed, fix only the missing parts — do not overwrite valid content.
+Với mỗi thư mục/file ở trên:
+- Chưa có → tạo đúng đặc tả.
+- Đã có (vd từ bản cài) → verify đủ section + đúng frontmatter YAML. Thiếu/sai → chỉ sửa phần thiếu, KHÔNG đè nội dung hợp lệ.
 
-Reply with a checklist: each item marked ✅ (already valid), 🔧 (created or fixed), or ❌ (could not create — explain why).
+Trả lời bằng checklist: mỗi mục ✅ (đã hợp lệ), 🔧 (tạo/sửa), hoặc ❌ (không tạo được — nêu lý do).
