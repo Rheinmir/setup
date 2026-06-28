@@ -32,13 +32,26 @@ H1_RE = re.compile(r"^#\s+(.*?)\s*$")
 DIR_TYPE = {"concepts": "concept", "entities": "entity", "draft": "draft", "sources": "source"}
 
 
+def gitignored(path) -> bool:
+    """True nếu path bị .gitignore loại (archive/draft/html local-only). Fail-open: git lỗi → False.
+    Khớp index_sync.gitignored — file gitignored là local-only, không phải đối tượng OKF/migrate."""
+    try:
+        import subprocess
+        return subprocess.run(["git", "check-ignore", "-q", str(path)],
+                              capture_output=True, timeout=5).returncode == 0
+    except Exception:
+        return False
+
+
 def content_files(wiki: Path):
+    """File wiki để check/migrate OKF — ĐÃ loại file gitignored (local-only): an-toàn-mặc-định,
+    caller (audit, sync-template) khỏi tự lọc → không flag/migrate file archive/draft cố ý local."""
     out = []
     for p in wiki.rglob("*.md"):
         if p.name in SKIP_BASENAMES:
             continue
         rel = p.relative_to(wiki).parts
-        if rel and rel[0] in CONTENT_DIRS:
+        if rel and rel[0] in CONTENT_DIRS and not gitignored(p):
             out.append(p)
     return sorted(out)
 

@@ -22,9 +22,9 @@ A guardrail is only as strong as its weakest copy. Two kinds of copy quietly rot
                (e.g. PreToolUse by the R1 deny-write rule, SessionEnd by
                housekeeping).
 
-  --scanners   Every tool that diffs the wiki tree against index.md (R3) must skip
-               gitignored local-only files (archive/draft/html). When the skip is
-               hand-copied into each scanner, one copy can lose it (it did:
+  --scanners   Every tool that walks the wiki tree — R3 index-membership and R9 OKF —
+               must skip gitignored local-only files (archive/draft/html). When the
+               skip is hand-copied into each scanner, one copy can lose it (it did:
                harness-events.py and audit.py both flagged archived files until the
                skip was restored). This check asserts each scanner still carries a
                `git check-ignore` / gitignored() marker.
@@ -72,14 +72,16 @@ SETTINGS_PATH = "llmwiki/.claude/settings.json"
 # A quoted lowercase-ish identifier token, e.g. "concepts" or 'tours'.
 _TOKEN_RE = re.compile(r"""['"]([A-Za-z][A-Za-z0-9_-]*)['"]""")
 
-# R3 index-membership consumers: each diffs the on-disk wiki tree against index.md,
-# so each MUST skip gitignored local-only files (archive/draft/html) or it false-positives
-# on them (it did — harness-events.py m_stop and audit.py both flagged archived files until
-# the skip was added). This check asserts each still carries the skip, so a future edit can't
-# silently drop it. Marker = a `git check-ignore` call or the shared gitignored() helper.
-R3_SCANNERS = [
+# Wiki-tree scanners that walk the wiki tree and so MUST skip gitignored local-only files
+# (archive/draft/html) — else they false-positive on them. Covers R3 index-membership
+# (harness-events.py, the two index_sync.py, audit.py) AND R9 OKF (okf-check.py). It bit
+# twice: harness-events.py m_stop and audit.py both flagged archived files until the skip was
+# added. This asserts each still carries the skip, so a future edit can't silently drop it.
+# Marker = a `git check-ignore` call or a gitignored() helper.
+WIKI_TREE_SCANNERS = [
     "harness/poc-vendor-neutral/bin/harness-events.py",
     "harness/scripts/audit.py",
+    "harness/scripts/okf-check.py",
     "harness/validators/index_sync.py",
     "llmwiki/.claude/hooks/validators/index_sync.py",
 ]
@@ -172,13 +174,13 @@ def check_constants():
 
 
 def check_scanners():
-    """Assert every R3 index-membership scanner skips gitignored files.
+    """Assert every wiki-tree scanner skips gitignored files.
 
     Returns (drift_count, report_lines). A missing file is WARN (fail-open), not drift.
     """
-    lines = ["== --scanners : every R3 index-membership scanner skips gitignored =="]
+    lines = ["== --scanners : every wiki-tree scanner skips gitignored =="]
     drift = 0
-    for rel in R3_SCANNERS:
+    for rel in WIKI_TREE_SCANNERS:
         path = REPO_ROOT / rel
         if not path.is_file():
             lines.append("  WARN  %s : file missing (fail-open, not counted)" % rel)
@@ -281,7 +283,7 @@ def main():
     ap.add_argument("--wiring", action="store_true",
                     help="check every hook_event policy rule is deployed in settings.json")
     ap.add_argument("--scanners", action="store_true",
-                    help="check every R3 index-membership scanner skips gitignored")
+                    help="check every wiki-tree scanner skips gitignored")
     ap.add_argument("--copies", action="store_true",
                     help="check hand-synced validator copies are byte-identical")
     ap.add_argument("--check", action="store_true",
