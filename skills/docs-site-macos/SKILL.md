@@ -333,11 +333,11 @@ Lưu ý: tint xanh `#0a84ff` để khớp pattern; thumb đậm dần theo hover
 
 ## Mind Map (MẶC ĐỊNH — luôn vẽ một bản)
 
-Mọi docs site PHẢI kèm **một mind map collapsible** tóm tắt cấu trúc trang (các section / thực thể / mục chính) — đặt ngay sau hero hoặc trong section "Tổng quan". Định dạng distilled từ skills-cheatsheet: node chip glass + chevron + nhánh màu; **mặc định ĐÓNG, click mở/đóng**. Self-contained (CSS+JS thuần, KHÔNG thư viện ngoài). Nội dung mind map nên **sinh từ chính nội dung tài liệu** (mỗi section = một nhánh, mục con = lá), không bịa.
+Mọi docs site PHẢI kèm **một mind map collapsible kiểu NotebookLM** tóm tắt cấu trúc trang (các section / thực thể / mục chính) — đặt ngay sau hero hoặc trong section "Tổng quan". Đặc trưng: **đường nối CONG (bezier) màu theo nhánh** + node chip glass + chevron; **mặc định ĐÓNG, click mở/đóng**. Self-contained (CSS + JS thuần vẽ SVG, KHÔNG thư viện). Nội dung **sinh từ chính tài liệu** (mỗi section = một nhánh, mục con = lá), cắt mô tả lá ≤~54 ký tự cho gọn.
 
-**Cấu trúc** (tree ngang: root → nhánh `.cat` → lá `.leaf`):
+**Cấu trúc** (tree ngang: root → nhánh `.cat` → lá `.leaf`; có `.mm-canvas` + `<svg class="mm-links">` để vẽ đường cong):
 ```html
-<div class="mm"><div class="tree"><div class="row">
+<div class="mm"><div class="mm-canvas"><svg class="mm-links"></svg><div class="tree"><div class="row">
   <div class="node root has-children"><span class="nm">Chủ đề</span><span class="ds">phụ đề</span><span class="ct">N</span></div>
   <div class="children">
     <div class="row">
@@ -347,14 +347,18 @@ Mọi docs site PHẢI kèm **một mind map collapsible** tóm tắt cấu trú
       </div>
     </div>
   </div>
-</div></div></div>
+</div></div></div></div>
 ```
 
-**CSS** (trong `<style>`; `--ink2`/`--border` lấy từ design system; `.b-0..b-5` cycle Apple secondary cho `.nm`+`.ct`+border):
+**CSS** (trong `<style>`; `--ink2`/`--border` từ design system; `.b-0..b-4` cycle Apple secondary cho `.nm`+`.ct`+border — JS dùng CÙNG màu cho đường cong):
 ```css
 .mm{overflow-x:auto;padding:14px 4px 6px}
+.mm-canvas{position:relative;width:max-content}
+.mm-links{position:absolute;top:0;left:0;pointer-events:none;overflow:visible;z-index:0}
+.mm-links path{fill:none;stroke-width:2.2;opacity:.55;stroke-linecap:round}
+.mm .tree{position:relative;z-index:1}
 .mm .tree,.mm .children{display:flex;flex-direction:column;gap:9px;justify-content:center}
-.mm .row{display:flex;align-items:center;gap:30px;position:relative}
+.mm .row{display:flex;align-items:center;gap:48px;position:relative}
 .mm .children{position:relative}.mm .children.collapsed{display:none}
 .mm .node{position:relative;display:inline-flex;flex-direction:column;gap:1px;padding:7px 13px;border-radius:13px;cursor:default;white-space:nowrap;background:rgba(255,255,255,.72);backdrop-filter:blur(7px) saturate(1.1);border:1px solid var(--border);box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 3px 14px rgba(20,40,90,.07);transition:transform .12s}
 .mm .node.has-children{cursor:pointer}.mm .node:hover{transform:translateY(-1px)}
@@ -363,22 +367,18 @@ Mọi docs site PHẢI kèm **một mind map collapsible** tóm tắt cấu trú
 .mm .node.has-children::after{content:'';position:absolute;right:-7px;top:50%;width:6px;height:6px;border-right:2px solid var(--ink2);border-bottom:2px solid var(--ink2);transform:translateY(-50%) rotate(-45deg);opacity:.5}
 .mm .node.collapsed-parent::after{transform:translateY(-50%) rotate(45deg)}
 .mm .node.root{background:linear-gradient(135deg,rgba(10,132,255,.16),rgba(88,86,214,.14));border-color:rgba(10,132,255,.4)}
-.mm .row::before{content:'';position:absolute;left:-15px;top:50%;width:15px;height:2px;background:var(--border)}
-.mm>.tree>.row::before{display:none}
-.mm .children::before{content:'';position:absolute;left:-15px;top:15px;bottom:15px;width:2px;background:var(--border)}
 ```
+(KHÔNG còn connector thẳng `.row::before`/`.children::before` — đường nối do JS vẽ bezier vào `<svg class="mm-links">`.)
 
-**JS** (mặc định ĐÓNG mọi nhánh `.cat` + click toggle — trong `<script>`):
+**JS** (vẽ bezier màu theo nhánh + mặc định ĐÓNG nhánh `.cat` + click toggle + redraw — trong `<script>`):
 ```js
-[].slice.call(document.querySelectorAll('.mm .node.has-children')).forEach(function(n){
-  var row=n.parentElement,kids=null,c=row.children;
-  for(var i=0;i<c.length;i++){if(c[i].classList.contains('children'))kids=c[i];}
-  if(!kids)return;
-  if(n.classList.contains('cat')){kids.classList.add('collapsed');n.classList.add('collapsed-parent');}
-  n.addEventListener('click',function(e){e.stopPropagation();var open=kids.classList.toggle('collapsed');n.classList.toggle('collapsed-parent',open);});
-});
+(function(){var mm=document.querySelector('.mm');if(!mm)return;var NS='http://www.w3.org/2000/svg';
+function colorOf(n){return n.classList.contains('b-0')?'#30b0c7':n.classList.contains('b-1')?'#5856d6':n.classList.contains('b-2')?'#ff9500':n.classList.contains('b-3')?'#34c759':n.classList.contains('b-4')?'#ff2d55':'#9aa4b2';}
+function draw(){var canvas=mm.querySelector('.mm-canvas'),svg=mm.querySelector('.mm-links');if(!canvas||!svg)return;var w=canvas.offsetWidth,h=canvas.offsetHeight;svg.setAttribute('width',w);svg.setAttribute('height',h);svg.setAttribute('viewBox','0 0 '+w+' '+h);while(svg.firstChild)svg.removeChild(svg.firstChild);var cR=canvas.getBoundingClientRect();[].slice.call(canvas.querySelectorAll('.node.has-children')).forEach(function(p){var row=p.parentElement,kids=null,ch=row.children;for(var i=0;i<ch.length;i++){if(ch[i].classList.contains('children'))kids=ch[i];}if(!kids||kids.classList.contains('collapsed'))return;var pr=p.getBoundingClientRect(),px=pr.right-cR.left,py=pr.top+pr.height/2-cR.top;[].slice.call(kids.children).forEach(function(crow){var cn=crow.querySelector(':scope > .node');if(!cn)return;var rr=cn.getBoundingClientRect(),cx=rr.left-cR.left,cy=rr.top+rr.height/2-cR.top,dx=Math.max(22,(cx-px)*0.55);var pa=document.createElementNS(NS,'path');pa.setAttribute('d','M'+px+' '+py+' C'+(px+dx)+' '+py+' '+(cx-dx)+' '+cy+' '+cx+' '+cy);pa.setAttribute('stroke',colorOf(cn));svg.appendChild(pa);});});}
+[].slice.call(mm.querySelectorAll('.node.has-children')).forEach(function(n){var row=n.parentElement,kids=null,c=row.children;for(var i=0;i<c.length;i++){if(c[i].classList.contains('children'))kids=c[i];}if(!kids)return;if(n.classList.contains('cat')){kids.classList.add('collapsed');n.classList.add('collapsed-parent');}n.addEventListener('click',function(e){e.stopPropagation();var open=kids.classList.toggle('collapsed');n.classList.toggle('collapsed-parent',open);draw();});});
+draw();addEventListener('load',function(){setTimeout(draw,60);});addEventListener('resize',function(){clearTimeout(window.__mmt);window.__mmt=setTimeout(draw,120);},{passive:true});})();
 ```
-Root (`.has-children` không `.cat`) mở sẵn → các nhánh hiện; mỗi nhánh `.cat` đóng → click mới xổ lá. Tham khảo bản chạy thật: `llmwiki/html/overstack.html` tab "Tham chiếu".
+Root (`.has-children` không `.cat`) mở sẵn → nhánh hiện; nhánh `.cat` đóng → click xổ lá; đường cong tự vẽ lại mỗi lần toggle/resize. `colorOf` trả CÙNG màu với class `.b-N`. Bản chạy thật: `llmwiki/html/overstack.html` tab "Tham chiếu".
 
 ## Section-Bg Pattern
 
