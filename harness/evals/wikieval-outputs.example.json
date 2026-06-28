@@ -1,0 +1,4 @@
+{
+  "r2-origin": "Theo rule R2, mọi file nội dung wiki phải có section '## Origin' để luôn truy được nguồn gốc.",
+  "sql-active-users": "SELECT * FROM users WHERE active = true;"
+}

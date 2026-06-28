@@ -1,0 +1,5 @@
+[
+  {"id": "ans-claude", "author": "claude-opus", "text": "Use a hash map for O(1) average lookups."},
+  {"id": "ans-gpt",    "author": "gpt-5",       "text": "Sort once then binary-search, O(log n) per query."},
+  {"id": "ans-gemini", "author": "gemini-pro",  "text": "A linear scan is simplest at O(n)."}
+]

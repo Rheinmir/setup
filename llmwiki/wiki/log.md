@@ -147,3 +147,52 @@ Gom framework-dev vào folder riêng travel cùng repo: fdk/tools/build-cheatshe
 
 ## 2026-06-28 — skill — /fdk self-contained
 Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-flight + cách distill skill + inventory đứng độc lập, chạy ở project bất kỳ; mọi tham chiếu file repo-local dồn vào 1 mục điều kiện "nếu đang trong repo framework". KHÔNG thêm fdk/ vào install (ADR-004, downstream gọn). Skill travel qua global skills (npx --all). Docs HTML + cheatsheet cập nhật.
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-06-28 09:53:32 | `file.write` | llmwiki/.claude/hooks/stop.py · tool=Edit |
+| 2026-06-28 09:53:35 | `file.write` | skills/new-skill/SKILL.md · tool=Write |
+| 2026-06-28 09:53:55 | `feature.add` | harness/scripts/code-logger.py |
+| 2026-06-28 09:53:55 | `feature.add` | harness/scripts/wiki-graph.py |
+| 2026-06-28 09:54:56 | `file.write` | fdk/tools/build-docs-index.py · tool=Write |
+| 2026-06-28 09:55:01 | `file.write` | fdk/tools/build-capabilities.py · tool=Write |
+| 2026-06-28 09:55:42 | `file.write` | harness/scripts/wiki-graph.py · tool=Write |
+| 2026-06-28 09:56:10 | `file.write` | harness/scripts/adapt-registry.py · tool=Write |
+| 2026-06-28 09:56:11 | `file.write` | llmwiki/AGENT.md · tool=Edit |
+| 2026-06-28 09:56:14 | `file.write` | llmwiki/CLAUDE.md · tool=Edit |
+| 2026-06-28 09:56:31 | `file.write` | fdk/tools/build-skill-search.py · tool=Write |
+| 2026-06-28 09:58:34 | `file.write` | harness/scripts/dispatch-verify.py · tool=Write |
+| 2026-06-28 09:59:29 | `file.write` | fdk/tools/build-skill-search.py · tool=Edit |
+| 2026-06-28 09:59:38 | `file.write` | fdk/tools/build-skill-search.py · tool=Edit |
+| 2026-06-28 09:59:43 | `file.write` | fdk/tools/build-skill-search.py · tool=Edit |
+| 2026-06-28 09:59:48 | `file.write` | harness/scripts/dispatch-verify.py · tool=Edit |
+| 2026-06-28 09:59:49 | `file.write` | harness/scripts/fdk-gate.py · tool=Write |
+| 2026-06-28 09:59:54 | `file.write` | harness/scripts/dispatch-verify.py · tool=Edit |
+| 2026-06-28 10:00:03 | `file.write` | harness/scripts/dispatch-verify.py · tool=Edit |
+| 2026-06-28 10:01:36 | `file.write` | harness/validators/index_sync.py · tool=Edit |
+| 2026-06-28 10:01:44 | `file.write` | harness/validators/index_sync.py · tool=Edit |
+| 2026-06-28 10:02:03 | `file.write` | harness/scripts/dispatch-verify.py · tool=Edit |
+| 2026-06-28 10:02:10 | `file.write` | harness/scripts/dispatch-verify.py · tool=Edit |
+| 2026-06-28 10:03:21 | `file.write` | harness/scripts/trace-grader.py · tool=Write |
+| 2026-06-28 10:03:29 | `file.write` | harness/scripts/loop-runner.py · tool=Write |
+| 2026-06-28 10:03:40 | `file.write` | harness/scripts/council.py · tool=Write |
+| 2026-06-28 10:03:41 | `file.write` | harness/trace-grader.config.yaml · tool=Write |
+| 2026-06-28 10:03:46 | `file.write` | harness/failure-flywheel.config.yaml · tool=Write |
+| 2026-06-28 10:03:54 | `file.write` | harness/council.config.yaml · tool=Write |
+| 2026-06-28 10:03:57 | `file.write` | harness/loop-runner.config.yaml · tool=Write |
+| 2026-06-28 10:03:58 | `file.write` | harness/tests/council/answers.json · tool=Write |
+| 2026-06-28 10:03:59 | `file.write` | harness/tests/trace-grader.fixtures.json · tool=Write |
+| 2026-06-28 10:04:01 | `file.write` | harness/tests/council/judges.json · tool=Write |
+| 2026-06-28 10:04:37 | `file.write` | harness/scripts/failure-flywheel.py · tool=Write |
+| 2026-06-28 10:04:41 | `file.write` | harness/scripts/council.py · tool=Edit |
+| 2026-06-28 10:04:45 | `file.write` | harness/scripts/council.py · tool=Edit |
+| 2026-06-28 10:04:49 | `file.write` | llmwiki/wiki/concepts/fdk.md · tool=Edit |
+| 2026-06-28 10:04:55 | `file.write` | skills/loop-runner/SKILL.md · tool=Write |
+| 2026-06-28 10:04:58 | `file.write` | skills/failure-flywheel/SKILL.md · tool=Write |
+| 2026-06-28 10:05:10 | `file.write` | skills/trace-grader/SKILL.md · tool=Write |
+
+<!-- log:auto:end -->

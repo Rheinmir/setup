@@ -1,0 +1,37 @@
+# harness/failure-flywheel.config.yaml
+# THE single place the FailureFlywheel unknowns live — the /build-now-adapt-later
+# quarantine boundary. failure-flywheel.py reads its recurrence threshold, taxonomy,
+# and (absent) distill model FROM HERE; none is hard-coded in the tool. While
+# `verified: false`, every value below is a documented best-guess (NOT calibrated against
+# observed failure data) and the LLM "distill N failures -> one candidate rule" step is
+# NOT wired — `--draft` emits a human-TODO stub instead of an auto-written rule.
+#
+# Deterministic capture / taxonomy / counting / draft-scaffolding do NOT depend on any
+# value here; they are built now and tested now. Finalize later by editing ONLY this file:
+# calibrate the threshold on real failures, name a distill model, then flip verified:true.
+
+verified: false                   # ASSUMPTION (not verified) — flip true ONLY after the threshold is calibrated on real failure data AND a distill model is wired
+
+# How many times a failure CATEGORY must recur before `--draft` will scaffold a candidate
+# rule/skill for it. Best-guess from Hamel's create->label->fix->repeat: act once a class is
+# clearly recurring, not on a one-off.
+recurrence_threshold: 3           # ASSUMPTION (not verified) — 3 is a guess; the right value depends on how noisy your failures are
+
+# Deterministic buckets failures are sorted into. record/report/draft treat these as the
+# known classes; an UNLISTED category is still recorded (capture never blocks) but flagged
+# "unlisted" in `--report` so the taxonomy stays honest and you notice new failure modes.
+taxonomy:                         # ASSUMPTION (not verified) — starter buckets; widen as real failure modes appear
+  - hallucination                 #   invented an API / file / fact that does not exist
+  - regression                    #   a change broke a previously-passing behavior
+  - spec-violation                #   ignored an explicit rule / instruction / constraint
+  - overcomplication              #   200 lines where 50 would do (CLAUDE.md section 2)
+  - missing-verification          #   claimed done without running the check (CLAUDE.md section 4)
+  - scope-creep                   #   touched code the task did not require (CLAUDE.md section 3)
+
+# The LLM that would summarize the captured failures into a candidate rule. ABSENT on
+# purpose — this is the ONE adapter. Until a model is named here AND verified:true, `--draft`
+# inserts a templated "TODO: distill rule from these N failures" + the raw failure list and
+# STOPS for a human (fits /propose -> gate; it never auto-promotes).
+distill:
+  model: null                     # ASSUMPTION (absent) — no distill model wired; null => emit human-TODO stub, never auto-write the rule
+  prompt: null                    # ASSUMPTION (absent) — the distillation prompt is a stakeholder decision, not yet written

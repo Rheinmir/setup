@@ -4,7 +4,7 @@ Exit 2 = chặn dừng, Claude phải sửa index trước. Có guard chống l�
 import subprocess
 import sys
 
-from hooklib import audit, find_validators, find_wiki_dir, project_dir, read_payload, run_validator
+from hooklib import audit, code_log, find_validators, find_wiki_dir, project_dir, read_payload, run_validator
 
 
 def wiki_changed(root: str) -> bool:
@@ -26,6 +26,7 @@ def main() -> None:
         sys.exit(0)  # đã block một lần rồi → không lặp vô hạn
 
     root = project_dir(payload)
+    code_log(root, "--render-md")  # log.md auto-block do CODE sinh từ events.jsonl (không nhờ agent ghi)
     if not wiki_changed(root):
         sys.exit(0)  # phiên không đụng wiki → không can thiệp
 

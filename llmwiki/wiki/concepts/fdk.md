@@ -113,6 +113,41 @@ Quy ước **single source of truth** để không tạo bản trùng phân kỳ
 | Module map | [[project-structure]], [[architecture]] | Tổng quan (kiểm chéo bằng lệnh Phần 3) |
 | Dev-loop skills | `propose`, `impact-check`, `safe-change`, `verify-before-commit` | Vòng làm-việc an toàn |
 
+## Phần 4 — Cơ chế adapt: framework đã đủ mở để luôn thêm cái mới chưa?
+
+Câu hỏi sống còn của một framework: thêm một năng lực mới có phải sửa lõi không, hay chỉ cần cắm vào một điểm mở rộng có sẵn? Nếu mỗi cái mới đều đụng lõi thì framework sẽ cứng lại và chết. Dưới đây là các **điểm cắm (extension points)** — nơi thêm cái mới mà KHÔNG đụng engine, cùng câu trả lời cho "đủ mở chưa".
+
+### Điểm cắm — thêm cái mới ở đâu (không sửa lõi)
+
+| Thêm gì | Cắm vào đâu | Không đụng |
+|---|---|---|
+| **Rule mới** | thêm 1 entry vào `harness/poc-vendor-neutral/policy.yaml` (thick policy / thin adapter, [[ADR-001-policy-as-source-of-truth]]) | `llmwiki-validate.py` (chỉ thêm `kind` mới mới đụng) |
+| **Skill mới** | `skills/<name>/SKILL.md` + canonical mirror + `LOOP_MAP` + bảng AGENT/CLAUDE — hoặc một lệnh `/new-skill` | engine |
+| **Tool mới** | `fdk/tools/<x>.py` (dev-framework) hoặc `harness/scripts/<x>.py` (vận hành) | engine |
+| **Ẩn số chưa rõ** | một **adapter + config** (`verified:false`) — BNAL; `adapt-registry` gác không cho rò | mọi nơi khác |
+| **Gate mới (định-nghĩa-hoàn-thành)** | thêm 1 dòng vào `STEPS` của `fdk-gate.py` + checklist dưới | engine |
+
+### Tự-gác để adapt mà KHÔNG vỡ
+Mở rộng dễ thì dễ vỡ — nên mỗi điểm cắm có một validator code canh: `harness-lint` (hằng số/wiring không drift), `agent_claude_parity` + `skill-registry` (skill khai đủ mọi bề mặt), `duplicate_basename` (không trùng), `harness-doctor` (rail còn cắn), `adapt-registry` (ẩn số không rò), `build-capabilities` (agent biết đúng đồ nghề), và `fdk-gate` gom tất cả thành "đủ step mới cho push".
+
+### Audit — câu trả lời: **ĐỦ MỞ** (có điều kiện)
+Bằng chứng sống: trong **một phiên** đã thêm hơn **14 chức năng** (registry, harness-lint, artifacts, harness-doctor, health-dashboard, wiki-graph, adapt-registry, docs-index, new-skill, skill-search, council, loop-runner, wikieval, trace-grader, failure-flywheel, code-logger, build-capabilities, fdk-gate, index_sync --fix) mà **lõi `llmwiki-validate.py` không đổi một dòng** — mọi cái đều cắm vào điểm mở rộng có sẵn. Pattern **BNAL adapter** khiến cả ẩn số cũng adapt được bằng cách sửa MỘT file. Đó là định nghĩa "đủ mở".
+
+**Điều kiện/giới hạn còn lại** (hướng adapt tiếp, từ khảo sát trend 2026): (1) **durable-execution / checkpoint-resume** — chưa snapshot được trạng thái run để hồi phục sau crash; (2) **layered guardrails 4 điểm** (input / tool-call / tool-response / final-output) như một config tường minh; (3) **permissions + lọc prompt-injection/credential** mặc định. (Ba hướng đã được lấp một phần: eval-gate = WikiEval, trajectory = TraceGrader, self-evolving = FailureFlywheel.) → framework mở đủ để thêm cả ba cái này theo đúng pattern điểm-cắm, không cần viết lại.
+
+## Checklist — dev MỘT chức năng mới cho HỢP LỆ (fdk-gate enforce)
+
+Khi thêm một chức năng/skill/rule/tool mới, để được push hợp lệ phải đủ các bước sau (bản máy-đọc là `harness/scripts/fdk-gate.py`):
+
+1. **Code + self-test** — script chạy được, có test dương + **test âm** (cố tình sai → đỏ).
+2. **Nếu là RULE** → thêm vào `policy.yaml`, regen converters, drift-test xanh, cập nhật [[rule-registry]].
+3. **Nếu là SKILL** → canonical + mirror byte-identical, khai `LOOP_MAP`, thêm dòng vào **CẢ** AGENT.md & CLAUDE.md (giữ parity), rồi `build-capabilities` để CAPABILITIES.md cập nhật.
+4. **Nếu là VALIDATOR/GATE** → wire vào `.pre-commit-config.yaml` + CI (`harness.yml`) + thêm step vào `fdk-gate.py`.
+5. **Nếu có ẩn số** → nhốt sau 1 adapter (`verified:false`) + ADAPT-CHECKLIST; `adapt-registry --check` phải xanh.
+6. **Wiki "vì sao"** — một entry/dòng giải thích tại sao cần nó (`## Origin` + frontmatter).
+7. **Docs người-đọc** — cập nhật bản đọc tổng (master-wiki HTML) / trang docs liên quan.
+8. **`python3 harness/scripts/fdk-gate.py` → GREEN** (mọi step pass) → mới push.
+
 ## Origin
 - **Source:** khảo sát trực tiếp `harness/` + `llmwiki/` phiên 2026-06-27 — hợp nhất rule-registry, CONTRIBUTING-harness, recipe, DOCS, ADR và dev-loop skills thành một front-door; lấp gap "không có lối vào" + "map module drift".
 - **Request:** user — `/goal` "bộ xương phát triển framework (FDK) chuẩn: không miss rule, không dẫm module cũ".

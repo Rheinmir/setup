@@ -1,0 +1,45 @@
+# wikieval.config.yaml — THE ONE ADAPTER for WikiEval (build-now-adapt-later).
+#
+# Everything in harness/scripts/wikieval.py that is CERTAIN (the deterministic tier-1
+# assertion cascade + the baseline regression diff) is built and tested now and never
+# imports a value from this file. Everything UNCERTAIN — what model judges a rubric, what
+# the judge prompt looks like, which embedding backend scores similarity — lives ONLY here,
+# behind `verified: false`. Finalizing WikiEval = editing THIS file (+ wiring the
+# wikieval.py:judge() stub), running the self-test, then flipping `verified: true`. No other
+# file changes. If a guessed value appears anywhere outside this file, the isolation is broken.
+
+verified: false   # ASSUMPTION: nothing below has been validated against a real model / embedding run.
+
+# ── tier 3: LLM-rubric judge (quarantined; the engine never calls it in deterministic mode) ──
+judge:
+  enabled: false                  # ASSUMPTION: keep OFF until verified (fail-safe — a judge is never auto-trusted).
+  model: claude-opus-4-8          # ASSUMPTION (source: claude-api skill, cached 2026-06 — the default judge model).
+  max_tokens: 1024                # ASSUMPTION: unverified against real scoring output length.
+  thinking: adaptive              # ASSUMPTION: Opus 4.8 uses adaptive thinking (budget_tokens is rejected).
+  pass_threshold: 0.7             # ASSUMPTION: judge score >= threshold counts as pass.
+  # rubric_prompt is rendered then sent as ONE Messages API user turn by wikieval.py:judge().
+  # {input} {expected} {rubric} {output} are filled in when the adapter is wired.
+  rubric_prompt: |                # ASSUMPTION: prompt shape unverified — calibrate against real scores before trusting.
+    Bạn là giám khảo chấm điểm. Chấm câu trả lời CANDIDATE theo RUBRIC dưới đây.
+    Chỉ trả về JSON duy nhất, không thêm chữ nào khác: {"score": <0.0-1.0>, "reason": "<ngắn gọn>"}.
+
+    INPUT:    {input}
+    EXPECTED: {expected}
+    RUBRIC:   {rubric}
+    CANDIDATE:
+    {output}
+
+# ── tier 2: embedding / similarity (OPTIONAL — default OFF = skipped + noted) ──
+embedding:
+  backend: none                   # ASSUMPTION: 'none' (off) | 'difflib' (stdlib lexical, offline) | <real model id>.
+  model: sentence-transformers/all-MiniLM-L6-v2   # ASSUMPTION: not installed in this env — tier-2 stays skipped+noted.
+  threshold: 0.80                 # ASSUMPTION: similarity >= threshold counts as pass.
+  # When `backend` names a real embedding model, the engine does NOT bundle it -> tier-2 is
+  # skipped + noted (fail-safe) until the adapter is wired. Set backend: difflib for an
+  # offline lexical approximation usable in CI without any model.
+
+# ── ADAPT-CHECKLIST (finalize each ⚠️ in ONE file) ──
+# 1. Wire harness/scripts/wikieval.py:judge() to call judge.model with judge.rubric_prompt.
+# 2. (optional) Install an embedding lib and set embedding.backend to the real model id.
+# 3. Re-run the self-test in skills/wikieval/SKILL.md; confirm tier-1 baseline still holds.
+# 4. Flip `verified: true` above. Done — the rest of WikiEval did not change.

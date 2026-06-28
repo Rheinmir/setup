@@ -1,0 +1,33 @@
+{
+  "schema": "wikieval-baseline/v1",
+  "generated_by": "harness/scripts/wikieval.py",
+  "generated_at": "2026-06-28",
+  "evals_dir": "llmwiki/wiki/sources/evals",
+  "summary": {
+    "goldens": 2,
+    "decided": 2,
+    "passed": 2
+  },
+  "goldens": {
+    "r2-origin": {
+      "pass": true,
+      "score": 1.0,
+      "decided_by": "tier1-asserts",
+      "asserts": [
+        "contains:Origin",
+        "regex:(?i)\\borigin\\b"
+      ]
+    },
+    "sql-active-users": {
+      "pass": true,
+      "score": 1.0,
+      "decided_by": "tier1-asserts",
+      "asserts": [
+        "is-sql-ish",
+        "icontains:select",
+        "contains:FROM",
+        "regex:(?i)\\bwhere\\b"
+      ]
+    }
+  }
+}

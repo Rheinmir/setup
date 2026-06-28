@@ -56,6 +56,20 @@ def find_wiki_dir(root: str):
     return None
 
 
+def code_log(root, *args) -> None:
+    """Gọi harness/scripts/code-logger.py qua subprocess (fail-open) — log framework BẰNG CODE.
+
+    Để hook (PostToolUse/Stop) ghi log nghiệp vụ tự động, không phụ thuộc agent nhớ append log.md.
+    """
+    try:
+        cl = pathlib.Path(root) / "harness" / "scripts" / "code-logger.py"
+        if cl.is_file():
+            subprocess.run([sys.executable, str(cl), "--root", str(root), *args],
+                           capture_output=True, timeout=5)
+    except Exception:
+        pass
+
+
 def audit(payload: dict, event: str) -> None:
     """R4 log-append, bằng máy: mọi event append vào .claude/audit/YYYY-MM-DD.jsonl."""
     try:

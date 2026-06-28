@@ -1,0 +1,51 @@
+# council.config.yaml — THE adapter / quarantine boundary for the Council feature.
+#
+# build-now-adapt-later: every value below is an UNKNOWN — a model-selection
+# decision that only a real run can confirm — isolated here so finalizing the
+# council later means editing THIS ONE FILE, not the engine.
+#
+# The deterministic protocol engine (harness/scripts/council.py) NEVER branches
+# on these values. It reads them ONLY to stamp provenance into the transcript.
+# The model GENERATIONS themselves (seat answers, judge rankings, chairman
+# synthesis) are produced by the orca orchestration — see skills/council/SKILL.md
+# — never by council.py.
+
+# Fail-safe default. Flip to true ONLY after a real council run confirms the
+# seats actually behave. Under verified:false the engine stamps every transcript
+# as a draft and lists the one-file path to finalize.
+verified: false
+
+# The question routed to the council. Filled per run by the orchestrator; this
+# is a placeholder so the file stands alone.
+question: "<the question put to the council>"
+
+# Stage 1 — the N seats. Each seat independently produces ONE candidate answer.
+seats:
+  - id: seat-1
+    model: claude-opus-4    # ASSUMPTION (not verified) — which model fills seat 1
+  - id: seat-2
+    model: gpt-5            # ASSUMPTION (not verified)
+  - id: seat-3
+    model: gemini-2.5-pro   # ASSUMPTION (not verified)
+
+# Stage 2 — the judges. They peer-rank the BLIND (anonymized) answers. Usually
+# the same models as the seats; blindness — not exclusion — is what stops a
+# model from favouring its own answer.
+judges:
+  - id: seat-1
+    model: claude-opus-4    # ASSUMPTION (not verified)
+  - id: seat-2
+    model: gpt-5            # ASSUMPTION (not verified)
+  - id: seat-3
+    model: gemini-2.5-pro   # ASSUMPTION (not verified)
+
+# Stage 3 — the chairman. Synthesizes the final answer from the mean-rank
+# consensus plus the surfaced dissent. Which model synthesizes best is a
+# judgment call, hence an assumption.
+chairman:
+  model: claude-opus-4      # ASSUMPTION (not verified)
+
+# Anchor guard — deterministic seed for the per-judge presentation shuffle.
+# NOT Math.random: council.py derives each judge's display order from this seed,
+# so the same seed always yields the same orders. Change it to re-roll.
+anchor_seed: 42             # ASSUMPTION (not verified) — any fixed int

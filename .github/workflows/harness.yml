@@ -80,3 +80,7 @@ jobs:
         run: python3 harness/validators/duplicate_basename.py --wiki-dir llmwiki/wiki
       - name: harness-doctor — fire-drill (mọi rail còn cắn?)
         run: python3 harness/scripts/harness-doctor.py --ci
+      - name: capabilities current (fdk/CAPABILITIES.md khớp đĩa)
+        run: python3 fdk/tools/build-capabilities.py --check
+      - name: adapt-registry leak-gate (ẩn số quarantine không rò — BNAL Step 7)
+        run: python3 harness/scripts/adapt-registry.py --check

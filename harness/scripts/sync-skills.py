@@ -27,9 +27,11 @@ LOOP_MAP = {
     "impact-check": "dev-loop", "new-project-setup": "dev-loop", "onboard-codebase": "dev-loop",
     "propose": "dev-loop", "safe-change": "dev-loop", "tour-guide": "dev-loop",
     "verify-before-commit": "dev-loop", "build-now-adapt-later": "dev-loop",
+    "new-skill": "dev-loop", "loop-runner": "dev-loop", "failure-flywheel": "dev-loop", "wikieval": "dev-loop",
     # orchestrate
     "orca-dispatch-reference": "orchestrate", "orca-onboard": "orchestrate",
     "orca-sec-scans": "orchestrate", "orca-workflow": "orchestrate", "orca-eval": "orchestrate",
+    "council": "orchestrate", "trace-grader": "orchestrate",
     # wiki-loop
     "ingest": "wiki-loop", "lint": "wiki-loop", "query": "wiki-loop",
     # utils

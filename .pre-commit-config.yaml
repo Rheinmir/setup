@@ -70,6 +70,20 @@ repos:
         always_run: true
         pass_filenames: false
 
+      - id: capabilities-current
+        name: "fdk/CAPABILITIES.md khớp đĩa (agent biết đúng đồ nghề)"
+        entry: python3 fdk/tools/build-capabilities.py --check
+        language: system
+        always_run: true
+        pass_filenames: false
+
+      - id: adapt-registry-leak
+        name: "adapt-registry: ẩn số quarantine không rò qua adapter (BNAL Step 7)"
+        entry: python3 harness/scripts/adapt-registry.py --check
+        language: system
+        always_run: true
+        pass_filenames: false
+
       - id: seq-html-glass
         name: "R11: seq html phai glass docs-site-macos (repo-tier)"
         entry: python3 harness/poc-vendor-neutral/bin/llmwiki-validate.py files
@@ -86,6 +100,14 @@ repos:
       - id: harness-pull-gate
         name: "R12 gate2: pull-before-push (chan push neu local SAU remote)"
         entry: bash harness/poc-vendor-neutral/bin/pull-gate.sh gate2
+        language: system
+        stages: [pre-push]
+        always_run: true
+        pass_filenames: false
+
+      - id: fdk-gate
+        name: "FDK gate: đủ step định-nghĩa-hoàn-thành mới cho push"
+        entry: python3 harness/scripts/fdk-gate.py
         language: system
         stages: [pre-push]
         always_run: true

@@ -1,0 +1,5 @@
+[
+  {"judge": "seat-1", "ranking": ["A", "B", "C"]},
+  {"judge": "seat-2", "ranking": ["A", "C", "B"]},
+  {"judge": "seat-3", "ranking": ["C", "A", "B"]}
+]

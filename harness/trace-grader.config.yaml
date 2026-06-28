@@ -1,0 +1,53 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# trace-grader adapter — THE single quarantine boundary for TraceGrader.
+#
+# The grader ENGINE (schema, parsers, pass^k, rule algorithms, report) is built
+# and tested now and contains NO unknowns. Everything that IS a project-specific
+# guess lives ONLY here. Adapting later = edit this one file, not the engine.
+#
+# Per /build-now-adapt-later: every value below is a best-guess default, flagged
+# `# ASSUMPTION`, and the whole file is `verified: false`. Validate the thresholds
+# against THIS project's real traces, tune, then flip `verified: true`.
+# ─────────────────────────────────────────────────────────────────────────────
+
+verified: false          # ASSUMPTION — flip to true ONLY after the values below are
+                         # validated against real traces from this project.
+
+# Tools an agent must NEVER use on a good path. Using one = high-severity flag →
+# a delivered run becomes "corrupt-success".
+forbidden_tools:         # ASSUMPTION — illustrative tool ids; replace with THIS
+  - force_push           #   project's real destructive/out-of-policy tool names
+  - rm_rf                #   (e.g. your actual tool registry: Bash-with-rm, prod
+  - prod_write           #   writers, raw-shell, unsandboxed exec, etc.).
+
+# Retry-storm: more than this many CONSECUTIVE failures of the SAME tool = a
+# flakiness/thrash signal (medium severity).
+retry_threshold: 2       # ASSUMPTION — 2 = "3rd consecutive same-tool failure trips it".
+                         #   Tune to your tools' normal retry behaviour.
+
+# Excessive steps: a run longer than this is flagged (low severity) as likely
+# wandering / no plan.
+step_budget: 25          # ASSUMPTION — depends on task complexity; calibrate from
+                         #   the step-count distribution of known-good runs.
+
+# Out-of-order / planning order. must_precede: [[A, B], ...] means every use of B
+# must have an earlier A in the same run (medium severity if violated).
+order_constraints:
+  must_precede:          # ASSUMPTION — encode YOUR project's sane ordering, e.g.
+    - [read, edit]       #   never edit a file you haven't read,
+    - [read, write]      #   never write before reading,
+    - [plan, act]        #   act only after a planning step exists.
+
+# ── QUARANTINED INFERENTIAL AXIS — the agent-as-judge rubric ──────────────────
+# This is the deeper unknown: scoring task-completion / tool-rationale / planning
+# QUALITY needs an LLM judge. The engine's `judge_trajectory()` is a STUB and is
+# NOT called while this is disabled. Configure + verify before trusting any score.
+judge:
+  enabled: false         # ASSUMPTION — off until a judge is chosen AND verified.
+  model: null            # ASSUMPTION — judge model is ABSENT/unverified. Candidate
+                         #   (read harness via the claude-api skill before wiring):
+                         #   an Anthropic Claude model id, to be confirmed.
+  rubric:                # ASSUMPTION — axes the judge WOULD score (not yet scored):
+    - task_completion    #   did the trajectory actually accomplish the task?
+    - tool_rationale     #   was each tool choice justified by the prior observation?
+    - planning           #   coherent plan vs. reactive flailing?

@@ -1,0 +1,58 @@
+# loop-runner.config.yaml — THE ONE ADAPTER (build-now-adapt-later).
+#
+# verified: false  → the guard values here are BEST-GUESS defaults, and the
+# LLM critique/revise hook is NOT wired yet. EVERYTHING else — the control loop,
+# all guards, progress detection, the run-log, reflexion — lives in
+# `harness/scripts/loop-runner.py` and is fully DETERMINISTIC (built + tested now).
+#
+# This file is the SINGLE place the "not-yet-certain" lives: the tunable guard
+# parameters, and the (absent) LLM revise step. Adapting later = edit THIS file,
+# not the loop code. Do not scatter these values anywhere else (that is a leak).
+# Each `# ASSUMPTION` marks a guessed/unverified value and its source-of-truth.
+
+verified: false        # ASSUMPTION: flip to true only AFTER guard values are tuned on
+                       #             real load AND the llm-revise hook is wired + passes
+                       #             conformance end-to-end. Until then, treat as fail-safe.
+
+# ── Termination guards (deterministic, MANDATORY, all enforced) ─────────────
+guards:
+  max_iter: 6                 # ASSUMPTION (best-guess, untuned): hard cap on loop iterations.
+                              #   Always-on backstop — cannot be disabled. Source: pick per task.
+  budget_seconds: 900         # ASSUMPTION: wall-clock budget for the whole loop (15 min). 0 = off.
+  no_progress_k: 2            # ASSUMPTION: state-hash unchanged for K consecutive iters → NO_PROGRESS.
+  escalate_after_iter: 4      # ASSUMPTION: reach iteration N without a pass → ESCALATE (hand to human).
+                              #   0 = off. Source: stakeholder policy, not yet decided.
+
+# ── Progress detection (deterministic) ──────────────────────────────────────
+# The loop hashes these paths each iteration. Hash changed → reset the streak;
+# unchanged → grow the streak. Fail-safe: an EMPTY list DISABLES no-progress
+# detection (never stop on a signal we cannot measure) — only max_iter/budget remain.
+progress:
+  state_paths:                # ASSUMPTION: the workspace region the agent actually edits.
+    - "src/**"                #   Tune per project — where the revise step is expected to act.
+
+# ── Reflexion / episodic memory (deterministic write) ───────────────────────
+reflexion:
+  enabled: true
+  episodic_memory_page: "llmwiki/wiki/concepts/loop-runner-episodic.md"
+  # ASSUMPTION: a managed wiki page; each FAILED iteration appends one "lesson" line.
+  # Created lazily (with valid frontmatter + ## Origin) on the first failing real run —
+  # never at plan time. The self-test redirects this to a temp dir, so running
+  # `selftest` does NOT write anything under llmwiki/wiki/.
+
+# ── Run-log artifact ────────────────────────────────────────────────────────
+run_log:
+  path: "harness/out/loop-runner-run.json"   # ASSUMPTION: where the per-run JSON log is written
+                                             #   (iterations, verdicts, termination reason).
+
+# ── THE QUARANTINED UNKNOWN: the LLM critique/revise hook ───────────────────
+# This is the genuine adapter. After each failing verify, the loop calls the
+# revise step. `revise.cmd` is a SHELL command so the loop runs WITHOUT an LLM:
+#   • null      → no-op stub (default; loop still exercises every guard)
+#   • "<shell>" → a deterministic script (demo), OR the real LLM-revise adapter
+#                 (reads verify output → edits code) once it exists.
+# To adapt: set revise.cmd to the LLM call, run the loop on a known-failing case,
+# then flip the two `verified:` flags. Keep this value ONLY here.
+revise:
+  cmd: null              # ASSUMPTION (NOT VERIFIED): LLM revise step not wired. null = no-op stub.
+  verified: false        # ASSUMPTION: the revise step has not been validated end-to-end.

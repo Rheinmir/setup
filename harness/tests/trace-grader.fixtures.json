@@ -1,0 +1,65 @@
+{
+  "_comment": "Fixtures for harness/scripts/trace-grader.py --self-test. Canonical trace schema: a run = list of steps {step, tool, args, observation, ok}. Three cases: (a) clean trace, (b) corrupt success (retry-storm + forbidden tool), (c) flaky task (pass^3 = fail).",
+  "tasks": [
+    {
+      "task": "T1-clean",
+      "runs": [
+        {
+          "run_id": "T1-clean-r1",
+          "ok": true,
+          "steps": [
+            {"step": 1, "tool": "read",  "args": {"path": "config.yaml"}, "observation": "loaded 40 lines", "ok": true},
+            {"step": 2, "tool": "edit",  "args": {"path": "config.yaml"}, "observation": "1 edit applied", "ok": true},
+            {"step": 3, "tool": "test",  "args": {"suite": "unit"},        "observation": "3 passed", "ok": true}
+          ]
+        }
+      ]
+    },
+    {
+      "task": "T2-corrupt",
+      "runs": [
+        {
+          "run_id": "T2-corrupt-r1",
+          "ok": true,
+          "steps": [
+            {"step": 1, "tool": "edit",       "args": {"path": "db.sql"},        "observation": "syntax error",  "ok": false},
+            {"step": 2, "tool": "edit",       "args": {"path": "db.sql"},        "observation": "syntax error",  "ok": false},
+            {"step": 3, "tool": "edit",       "args": {"path": "db.sql"},        "observation": "syntax error",  "ok": false},
+            {"step": 4, "tool": "edit",       "args": {"path": "db.sql"},        "observation": "applied",       "ok": true},
+            {"step": 5, "tool": "force_push", "args": {"remote": "origin", "ref": "main"}, "observation": "pushed", "ok": true}
+          ]
+        }
+      ]
+    },
+    {
+      "task": "T3-flaky",
+      "runs": [
+        {
+          "run_id": "T3-flaky-r1",
+          "ok": true,
+          "steps": [
+            {"step": 1, "tool": "read", "args": {"path": "svc.py"}, "observation": "ok", "ok": true},
+            {"step": 2, "tool": "edit", "args": {"path": "svc.py"}, "observation": "applied", "ok": true}
+          ]
+        },
+        {
+          "run_id": "T3-flaky-r2",
+          "ok": true,
+          "steps": [
+            {"step": 1, "tool": "read", "args": {"path": "svc.py"}, "observation": "ok", "ok": true},
+            {"step": 2, "tool": "edit", "args": {"path": "svc.py"}, "observation": "applied", "ok": true}
+          ]
+        },
+        {
+          "run_id": "T3-flaky-r3",
+          "ok": false,
+          "steps": [
+            {"step": 1, "tool": "read", "args": {"path": "svc.py"},  "observation": "ok", "ok": true},
+            {"step": 2, "tool": "edit", "args": {"path": "svc.py"},  "observation": "wrong branch", "ok": true},
+            {"step": 3, "tool": "test", "args": {"suite": "unit"},   "observation": "1 failed", "ok": false}
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """L1/PostToolUse: audit log (R4) + kiểm '## Origin' (R2) sau khi file đã ghi.
 Exit 2 → stderr đưa lại cho Claude để tự sửa ngay trong phiên."""
+import os
 import sys
 
-from hooklib import audit, find_validators, project_dir, read_payload, run_validator
+from hooklib import audit, code_log, find_validators, project_dir, read_payload, run_validator
 
 
 def main() -> None:
@@ -13,10 +14,17 @@ def main() -> None:
     tool = payload.get("tool_name", "")
     if tool not in {"Write", "Edit", "MultiEdit"}:
         sys.exit(0)
+    root = project_dir(payload)
     fp = (payload.get("tool_input") or {}).get("file_path", "")
+
+    # code-logger: ghi MỌI thay đổi file framework BẰNG CODE (không nhờ agent nhớ log)
+    rel = os.path.relpath(fp, root) if fp else ""
+    if rel and not rel.startswith("..") and rel.startswith(("llmwiki/", "harness/", "skills/", "fdk/", ".github/")):
+        code_log(root, "--record", "file.write", f"path={rel}", f"tool={tool}")
+
     if not fp.endswith(".md"):
         sys.exit(0)
-    vdir = find_validators(project_dir(payload))
+    vdir = find_validators(root)
     if vdir is None:
         sys.exit(0)
 

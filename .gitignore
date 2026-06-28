@@ -14,3 +14,9 @@ llmwiki/wiki/draft/orca/*.md
 # generated artifact manifest (local, per artifacts.config.yaml manifest.tracked:false)
 fdk/MANIFEST.json
 fdk/MANIFEST.md
+
+# code-logger raw event history (local)
+harness/metrics/events.jsonl
+harness/metrics/unknowns.json
+graph.db
+.graph-agent/

@@ -63,6 +63,49 @@ def indexed_files(wiki: Path) -> set[str]:
     return refs
 
 
+IDX_AUTO_START = "<!-- index:auto:start -->"
+IDX_AUTO_END = "<!-- index:auto:end -->"
+
+
+def _row(wiki: Path, rel: str) -> str:
+    """1 dòng index cho file wiki (type từ frontmatter, summary = dòng # đầu)."""
+    stem = Path(rel).stem
+    typ, summ = "auto", ""
+    try:
+        t = (wiki / rel).read_text(encoding="utf-8")
+        m = re.search(r"^type:\s*(\w+)", t, re.M)
+        if m:
+            typ = m.group(1)
+        h = re.search(r"^#\s+(.+)$", t, re.M)
+        if h:
+            summ = h.group(1).strip()[:80]
+    except Exception:
+        pass
+    return f"| [{stem}]({rel}) | {typ} | {summ} |"
+
+
+def fix(wiki: Path, missing) -> int:
+    """Self-healing: thêm dòng cho file thiếu vào block auto của index.md. Giữ nguyên phần người viết."""
+    idx = wiki / "index.md"
+    if not idx.is_file() or not missing:
+        return 0
+    rows = [_row(wiki, m) for m in missing]
+    block = IDX_AUTO_START + "\n" + "\n".join(rows) + "\n" + IDX_AUTO_END
+    text = idx.read_text(encoding="utf-8")
+    if IDX_AUTO_START in text and IDX_AUTO_END in text:
+        pre = text.split(IDX_AUTO_START)[0]
+        post = text.split(IDX_AUTO_END, 1)[1]
+        # gộp với dòng auto cũ
+        old = text.split(IDX_AUTO_START, 1)[1].split(IDX_AUTO_END, 1)[0]
+        existing = [ln for ln in old.splitlines() if ln.strip().startswith("|")]
+        block = IDX_AUTO_START + "\n" + "\n".join(existing + rows) + "\n" + IDX_AUTO_END
+        new = pre.rstrip() + "\n" + block + post
+    else:
+        new = text.rstrip() + "\n\n" + block + "\n"
+    idx.write_text(new, encoding="utf-8")
+    return len(rows)
+
+
 def main() -> None:
     wiki_dir = None
     args = sys.argv[1:]
@@ -88,6 +131,11 @@ def main() -> None:
     indexed = indexed_files(wiki)
     missing = sorted(exist - indexed)                                   # có file (tracked), index chưa ghi
     stale = sorted(f for f in (indexed - exist) if not gitignored(f, wiki))  # row trỏ file tracked không tồn tại
+
+    if "--fix" in sys.argv[1:]:
+        n = fix(wiki, missing)
+        print(f"[R3 index-sync --fix] đã auto-thêm {n} dòng vào index.md (block auto); còn stale: {len(stale)}")
+        sys.exit(0)
 
     if missing or stale:
         lines = ["[R3 index-sync] wiki/index.md lech voi thuc te:"]
