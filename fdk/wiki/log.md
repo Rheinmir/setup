@@ -1,5 +1,8 @@
 # Operation Log
 
+## 2026-06-28 — goal-set — session-orientation + auto-index + force-query (ADR-009)
+Phiên mới không còn "lơ ngơ": `session_start.py` `orient()` nhắc agent query code-index (code-graph, auto-watch) + wiki + CAPABILITIES. `stop.py` auto `index_sync --fix` (file wiki mới tự vào index). R7-f buộc propose có `## Context` (force-query). Test wire CI/pre-commit. Đóng #1 (overstack ships by-design) + #2 (pre-commit đã wired downstream). → [[ADR-009-session-orientation-autoindex-forcequery]].
+
 ## 2026-06-28 — migrate — wiki framework → fdk/wiki (the kit)
 Tách wiki riêng của framework (64 file: ADR-001..008, concepts harness/fdk, decisions/index/log, evals) `mv` từ `llmwiki/wiki/` → `fdk/wiki/`. `llmwiki/wiki/` còn 1 file demo (khuôn per-project). Repath ~10 invocation (CI repo-health, pre-commit, `find_wiki_dir` +fdk/wiki, wikieval, okf-test, .gitignore). Validators cả hai root xanh. → [[ADR-008-framework-wiki-lives-in-the-kit]].
 
