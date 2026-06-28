@@ -48,6 +48,8 @@
     "llmwiki/wiki/entities/_template.md",
     "llmwiki/wiki/sources/README.md",
     "llmwiki/wiki/sources/_template.md",
+    "llmwiki/wiki/sources/adr/README.md",
+    "llmwiki/wiki/sources/adr/_template.md",
     "llmwiki/wiki/sources/draft/README.md",
     "llmwiki/wiki/sources/draft/_template.md",
     "llmwiki/orca/flows/daily-propose.json",

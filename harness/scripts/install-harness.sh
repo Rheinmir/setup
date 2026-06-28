@@ -162,7 +162,7 @@ log "Project: $ROOT â€” mode: $MODE$([ $SAME_BUNDLE = 1 ] && echo ' (project chÃ
 
 # ---------- 2. Khung llmwiki (mode new) ----------
 if [ "$MODE" = "new" ]; then
-  mkdir -p "$ROOT/llmwiki/wiki"/{concepts,entities,sources/draft,draft/orca} \
+  mkdir -p "$ROOT/llmwiki/wiki"/{concepts,entities,sources/adr,sources/draft,draft/orca} \
            "$ROOT/llmwiki"/{raw,html,skills}
   touch "$ROOT/llmwiki/raw/.gitkeep"
   [ -f "$ROOT/llmwiki/wiki/index.md" ] || printf '# Wiki Index\n\n| File | Type | Summary |\n|------|------|---------|\n' > "$ROOT/llmwiki/wiki/index.md"

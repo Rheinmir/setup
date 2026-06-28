@@ -1,14 +1,14 @@
 {
   "schema": 1,
-  "template_version": "1.3.1",
+  "template_version": "1.3.2",
   "remote": "https://github.com/Rheinmir/setup.git",
   "branch": "orca",
   "generated_at": "2026-06-28",
-  "generated_commit": "8a9d5d4",
-  "pattern_count": 58,
+  "generated_commit": "3d02e7e",
+  "pattern_count": 60,
   "patterns": {
     ".agent": "a99869fa2304ea5d",
-    ".template-manifest.json": "d36ba2e24f550461",
+    ".template-manifest.json": "6746dcd443b37279",
     "00-New-Project.md": "211eae538add9ab6",
     "01-Project-Kickoff.md": "f4c6327b02798462",
     "02-Setup-Knowledge-Base.md": "013341ce15b58da1",
@@ -63,6 +63,8 @@
     "llmwiki/wiki/entities/_template.md": "9e340853349b0b6d",
     "llmwiki/wiki/sources/README.md": "01233e24abf2d809",
     "llmwiki/wiki/sources/_template.md": "68b0fcbb41cba54b",
+    "llmwiki/wiki/sources/adr/README.md": "0def32508ee69e28",
+    "llmwiki/wiki/sources/adr/_template.md": "9f1b88351200bc02",
     "llmwiki/wiki/sources/draft/README.md": "16b8e0a4d7ef1622",
     "llmwiki/wiki/sources/draft/_template.md": "c6d4059f946b9fe3"
   }
