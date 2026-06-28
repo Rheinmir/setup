@@ -37,14 +37,18 @@ WIKILINK_RE = re.compile(r"\[\[([^\]|#]+)")
 
 
 def content_files(wiki: Path) -> set[str]:
+    """Tập file wiki 'tính vào index' — ĐÃ loại file gitignored (drafts/html/archive local-only):
+    chúng không bắt buộc index và nhất quán local ↔ fresh clone. An-toàn-mặc-định: caller (main,
+    audit, indexed_files) khỏi tự lọc lại 'exist' → không tái lặp drift bỏ-quên-lọc gitignored."""
     out = set()
     for d in CONTENT_DIRS:
         base = wiki / d
         if not base.is_dir():
             continue
         for f in base.rglob("*.md"):
-            if f.name not in SKIP_BASENAMES:
-                out.add(f.relative_to(wiki).as_posix())
+            rel = f.relative_to(wiki).as_posix()
+            if f.name not in SKIP_BASENAMES and not gitignored(rel, wiki):
+                out.add(rel)
     return out
 
 
@@ -61,6 +65,49 @@ def indexed_files(wiki: Path) -> set[str]:
             if Path(f).stem in names:
                 refs.add(f)
     return refs
+
+
+IDX_AUTO_START = "<!-- index:auto:start -->"
+IDX_AUTO_END = "<!-- index:auto:end -->"
+
+
+def _row(wiki: Path, rel: str) -> str:
+    """1 dòng index cho file wiki (type từ frontmatter, summary = dòng # đầu)."""
+    stem = Path(rel).stem
+    typ, summ = "auto", ""
+    try:
+        t = (wiki / rel).read_text(encoding="utf-8")
+        m = re.search(r"^type:\s*(\w+)", t, re.M)
+        if m:
+            typ = m.group(1)
+        h = re.search(r"^#\s+(.+)$", t, re.M)
+        if h:
+            summ = h.group(1).strip()[:80]
+    except Exception:
+        pass
+    return f"| [{stem}]({rel}) | {typ} | {summ} |"
+
+
+def fix(wiki: Path, missing) -> int:
+    """Self-healing: thêm dòng cho file thiếu vào block auto của index.md. Giữ nguyên phần người viết."""
+    idx = wiki / "index.md"
+    if not idx.is_file() or not missing:
+        return 0
+    rows = [_row(wiki, m) for m in missing]
+    block = IDX_AUTO_START + "\n" + "\n".join(rows) + "\n" + IDX_AUTO_END
+    text = idx.read_text(encoding="utf-8")
+    if IDX_AUTO_START in text and IDX_AUTO_END in text:
+        pre = text.split(IDX_AUTO_START)[0]
+        post = text.split(IDX_AUTO_END, 1)[1]
+        # gộp với dòng auto cũ
+        old = text.split(IDX_AUTO_START, 1)[1].split(IDX_AUTO_END, 1)[0]
+        existing = [ln for ln in old.splitlines() if ln.strip().startswith("|")]
+        block = IDX_AUTO_START + "\n" + "\n".join(existing + rows) + "\n" + IDX_AUTO_END
+        new = pre.rstrip() + "\n" + block + post
+    else:
+        new = text.rstrip() + "\n\n" + block + "\n"
+    idx.write_text(new, encoding="utf-8")
+    return len(rows)
 
 
 def main() -> None:
@@ -82,12 +129,17 @@ def main() -> None:
     if not wiki.is_dir():
         sys.exit(0)
 
-    # Bỏ qua file gitignored (drafts/html local-only): không bắt buộc index, và row trỏ
-    # tới chúng không bị coi là 'thừa' → nhất quán local ↔ fresh clone (đóng gap fresh-clone).
-    exist = {f for f in content_files(wiki) if not gitignored(f, wiki)}
+    # content_files() đã loại file gitignored (local-only, an-toàn-mặc-định) — khỏi lọc 'exist' lại.
+    # Chiều 'stale' vẫn phải lọc: 'indexed' lấy từ index.md có thể trỏ tới file gitignored.
+    exist = content_files(wiki)
     indexed = indexed_files(wiki)
     missing = sorted(exist - indexed)                                   # có file (tracked), index chưa ghi
     stale = sorted(f for f in (indexed - exist) if not gitignored(f, wiki))  # row trỏ file tracked không tồn tại
+
+    if "--fix" in sys.argv[1:]:
+        n = fix(wiki, missing)
+        print(f"[R3 index-sync --fix] đã auto-thêm {n} dòng vào index.md (block auto); còn stale: {len(stale)}")
+        sys.exit(0)
 
     if missing or stale:
         lines = ["[R3 index-sync] wiki/index.md lech voi thuc te:"]

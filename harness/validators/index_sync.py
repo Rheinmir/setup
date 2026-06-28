@@ -37,14 +37,18 @@ WIKILINK_RE = re.compile(r"\[\[([^\]|#]+)")
 
 
 def content_files(wiki: Path) -> set[str]:
+    """Tập file wiki 'tính vào index' — ĐÃ loại file gitignored (drafts/html/archive local-only):
+    chúng không bắt buộc index và nhất quán local ↔ fresh clone. An-toàn-mặc-định: caller (main,
+    audit, indexed_files) khỏi tự lọc lại 'exist' → không tái lặp drift bỏ-quên-lọc gitignored."""
     out = set()
     for d in CONTENT_DIRS:
         base = wiki / d
         if not base.is_dir():
             continue
         for f in base.rglob("*.md"):
-            if f.name not in SKIP_BASENAMES:
-                out.add(f.relative_to(wiki).as_posix())
+            rel = f.relative_to(wiki).as_posix()
+            if f.name not in SKIP_BASENAMES and not gitignored(rel, wiki):
+                out.add(rel)
     return out
 
 
@@ -125,9 +129,9 @@ def main() -> None:
     if not wiki.is_dir():
         sys.exit(0)
 
-    # Bỏ qua file gitignored (drafts/html local-only): không bắt buộc index, và row trỏ
-    # tới chúng không bị coi là 'thừa' → nhất quán local ↔ fresh clone (đóng gap fresh-clone).
-    exist = {f for f in content_files(wiki) if not gitignored(f, wiki)}
+    # content_files() đã loại file gitignored (local-only, an-toàn-mặc-định) — khỏi lọc 'exist' lại.
+    # Chiều 'stale' vẫn phải lọc: 'indexed' lấy từ index.md có thể trỏ tới file gitignored.
+    exist = content_files(wiki)
     indexed = indexed_files(wiki)
     missing = sorted(exist - indexed)                                   # có file (tracked), index chưa ghi
     stale = sorted(f for f in (indexed - exist) if not gitignored(f, wiki))  # row trỏ file tracked không tồn tại

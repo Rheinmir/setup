@@ -29,6 +29,13 @@ A guardrail is only as strong as its weakest copy. Two kinds of copy quietly rot
                skip was restored). This check asserts each scanner still carries a
                `git check-ignore` / gitignored() marker.
 
+  --copies     The R3 index-sync validator ships in two trees that must stay
+               byte-identical: harness/validators (used by pre-commit/audit) and
+               llmwiki/.claude/hooks/validators (the deployed Stop-hook copy, kept
+               self-contained for downstream clones without harness/). They drifted
+               once — the deployed copy lost the self-heal fix() master had. This
+               check asserts each synced pair is identical.
+
   --check      Run all; exit 2 if any reports drift. Wire this into
                pre-commit and CI.
   (no flags)   Report all and exit 0 (non-gating).
@@ -77,6 +84,14 @@ R3_SCANNERS = [
     "llmwiki/.claude/hooks/validators/index_sync.py",
 ]
 _SKIP_RE = re.compile(r"check-ignore|gitignored")
+
+# Hand-synced validator copies that MUST stay byte-identical: the R3 index-sync validator
+# lives in the framework repo (harness/validators) AND ships in the deployed llmwiki hook tree
+# (which must be self-contained for downstream clones that don't carry harness/). They drifted
+# once — the deployed copy lost the self-heal fix() that master gained. This asserts they match.
+SYNCED_COPIES = [
+    ("harness/validators/index_sync.py", "llmwiki/.claude/hooks/validators/index_sync.py"),
+]
 
 
 def _canonical_dirs():
@@ -177,6 +192,26 @@ def check_scanners():
     return drift, lines
 
 
+def check_copies():
+    """Assert hand-synced validator copies are byte-identical.
+
+    Returns (drift_count, report_lines). A missing copy is WARN (fail-open), not drift.
+    """
+    lines = ["== --copies : hand-synced validator copies stay byte-identical =="]
+    drift = 0
+    for a, b in SYNCED_COPIES:
+        pa, pb = REPO_ROOT / a, REPO_ROOT / b
+        if not pa.is_file() or not pb.is_file():
+            lines.append("  WARN  %s <-> %s : a copy is missing (fail-open, not counted)" % (a, b))
+            continue
+        if pa.read_text(encoding="utf-8") == pb.read_text(encoding="utf-8"):
+            lines.append("  ok    %s == %s : identical" % (a, b))
+        else:
+            lines.append("  DRIFT %s != %s : copies diverged — re-sync (cp master -> deployed)" % (a, b))
+            drift += 1
+    return drift, lines
+
+
 def check_wiring():
     """Assert every hook_event policy rule is wired in the deployed settings.json.
 
@@ -247,6 +282,8 @@ def main():
                     help="check every hook_event policy rule is deployed in settings.json")
     ap.add_argument("--scanners", action="store_true",
                     help="check every R3 index-membership scanner skips gitignored")
+    ap.add_argument("--copies", action="store_true",
+                    help="check hand-synced validator copies are byte-identical")
     ap.add_argument("--check", action="store_true",
                     help="run both; exit 2 on any drift (use in pre-commit / CI)")
     args = ap.parse_args()
@@ -254,9 +291,10 @@ def main():
     do_constants = args.constants or args.check
     do_wiring = args.wiring or args.check
     do_scanners = args.scanners or args.check
-    gating = args.constants or args.wiring or args.scanners or args.check
-    if not (do_constants or do_wiring or do_scanners):   # no flags -> default report, non-gating
-        do_constants = do_wiring = do_scanners = True
+    do_copies = args.copies or args.check
+    gating = args.constants or args.wiring or args.scanners or args.copies or args.check
+    if not (do_constants or do_wiring or do_scanners or do_copies):  # no flags -> default report, non-gating
+        do_constants = do_wiring = do_scanners = do_copies = True
         gating = False
 
     total_drift = 0
@@ -267,6 +305,10 @@ def main():
         out += ls + [""]
     if do_scanners:
         d, ls = check_scanners()
+        total_drift += d
+        out += ls + [""]
+    if do_copies:
+        d, ls = check_copies()
         total_drift += d
         out += ls + [""]
     if do_wiring:
