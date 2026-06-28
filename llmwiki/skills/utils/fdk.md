@@ -32,6 +32,20 @@ ls harness/validators/*.py 2>/dev/null | wc -l                        # số val
 grep -cE 'id: R' harness/poc-vendor-neutral/policy.yaml 2>/dev/null   # số rule
 ```
 
+## Adapt vào overstack remote — khi đang dev TỪ một dự án khác
+Đang dở dự án khác mà muốn chưng cất một skill rồi đẩy vào overstack? `fdk-gate` + `fdk/tools` KHÔNG có ở dự án đó (cố ý — ADR-004), nên kéo **kit** về sandbox rồi submit bằng PR — đừng sửa tay lung tung:
+
+1. **Pull kit** (lần đầu — chạy thẳng từ remote, không cần file local):
+   ```bash
+   bash <(curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/fdk/tools/fdk-kit.sh) pull
+   ```
+   → clone overstack vào `.overstack-kit/` (tự thêm vào `.gitignore`, KHÔNG đụng dự án của bạn).
+2. **Distill skill TRONG kit:** `cd .overstack-kit && python3 fdk/tools/new-skill.py <tên>` → viết `SKILL.md` → register (mirror + LOOP_MAP + bảng AGENT/CLAUDE + CAPABILITIES — pre-flight #3 + checklist).
+3. **Check:** `bash .overstack-kit/fdk/tools/fdk-kit.sh check` — `fdk-gate` đủ 15 bước mới hợp lệ.
+4. **Submit (TỰ mở PR):** `bash .overstack-kit/fdk/tools/fdk-kit.sh submit skill/<tên> "<mô tả>"` → gate xanh → push branch → `gh pr create` vào `orca`.
+
+Đang Ở TRONG repo overstack thì bỏ qua bước pull — `fdk-kit check` / `submit` chạy thẳng trên repo.
+
 ## Nếu đang TRONG repo framework (Rheinmir/setup) — bản đầy đủ
 Các file dưới đây CHỈ có trong repo framework, KHÔNG distribute xuống project khác (cố ý — ADR-004). Khi có mặt thì đọc để lấy bản chi tiết:
 - `llmwiki/wiki/concepts/fdk.md` — front-door đầy đủ (pre-flight + module map theo loại).

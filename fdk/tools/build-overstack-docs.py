@@ -345,6 +345,7 @@ def sections(root: Path):
         "<div class=\"card\"><h4>Ranh giới (travel)</h4><ul class=\"s\">"
         "<li>Đồ nghề DEV (fdk-gate, meta-guards) ở LẠI repo overstack.</li>"
         "<li>Cái phục vụ dự án (skills, harness, code-logger, capability-map) thì TRAVEL xuống.</li></ul></div></div>",
+        "<div class=\"note\"><h4>Dev framework TỪ một dự án khác → tự mở PR</h4><p style=\"margin:0\">Đang dở dự án khác mà cần chưng cất một skill vào overstack? Vì <code>fdk-gate</code>/<code>fdk/tools</code> không travel (ADR-004), <code>/fdk</code> dùng <code>fdk-kit.sh</code>: <b>pull</b> kit về sandbox <code>.overstack-kit/</code> → distill + <b>check</b> (fdk-gate) → <b>submit</b> = push branch + <code>gh pr create</code> tự mở PR vào <code>orca</code>. Một lệnh kéo về, một lệnh đẩy lên.</p></div>",
     ]))
 
     S.append(("newfeature", "★ Dev cái mới cần update gì", "13 · Checklist", "★ Dev một cái mới — cần update gì cho HỢP LỆ", [
