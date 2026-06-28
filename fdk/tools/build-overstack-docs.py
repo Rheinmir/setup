@@ -288,17 +288,18 @@ def sections(root: Path):
         "<li>trace-grader chấm tool/thứ tự/pass^k — không chỉ kết quả.</li></ul></div></div>",
     ]))
 
-    S.append(("bnal", "Build-now-adapt-later", "08 · Mẫu BNAL", "Build-now-adapt-later (BNAL)", [
-        "<p class=\"lead\">Cách overstack thêm tính năng có ẩn số mà không liều: dựng phần CHẮC CHẮN ngay, nhốt phần CHƯA CHẮC sau MỘT adapter + config <code>verified:false</code> + một ADAPT-CHECKLIST.</p>",
-        "<div class=\"grid\"><div class=\"card\"><h4>Nguyên tắc</h4><ul class=\"s\">"
-        "<li>Lõi tất định build + test ngay (không phụ thuộc ẩn số).</li>"
+    S.append(("bnal", "Build-now-adapt-later", "08 · Mẫu BNAL", "Build-now-adapt-later — thêm tính năng có ẩn số, không liều", [
+        "<p class=\"lead\">Skill <b><code>/build-now-adapt-later</code></b> cho BẠN khi thêm vào <b>dự án của bạn</b> một tính năng còn phần chưa chắc (dùng model/API/lib nào, ngưỡng bao nhiêu, dịch vụ ngoài nào). Thay vì chờ chắc-chắn-mới-làm hay liều-đoán-rồi-khoá-mình, nó dựng phần CHẮC CHẮN ngay và nhốt phần CHƯA CHẮC sau MỘT adapter + config <code>verified:false</code> + một ADAPT-CHECKLIST — ship sớm, chỉnh sau ở đúng một chỗ.</p>",
+        "<div class=\"grid\"><div class=\"card\"><h4>Build now</h4><ul class=\"s\">"
+        "<li>Lõi tất định (cái bạn CHẮC) build + test ngay, không phụ thuộc ẩn số.</li>"
         "<li>Mọi ẩn số (model nào, ngưỡng bao nhiêu) sống ở ĐÚNG MỘT file config.</li>"
-        "<li><code>verified:false</code> = đoán chưa xác nhận; phần LLM mặc định <code>enabled:false</code> (fail-safe).</li>"
-        "<li><b>adapt-registry</b> gác: ẩn số không được rò ra ngoài adapter (Step-7 leak-gate).</li></ul></div>"
-        "<div class=\"card\"><h4>Adapt sau (finalize)</h4><ul class=\"s\">"
-        "<li>Lõi tất định pass self-test → <code>verified:true</code> hợp lệ (đã chứng minh).</li>"
-        "<li>Phần LLM: nối adapter + bật <code>enabled:true</code> khi đã kiểm chứng riêng.</li>"
-        "<li>fdk-gate có bước chạy self-test 5 tính năng → giữ <code>verified:true</code> luôn trung thực.</li></ul></div></div>",
+        "<li><code>verified:false</code> = đoán chưa xác nhận; phần gọi LLM/dịch vụ ngoài mặc định <code>enabled:false</code> (fail-safe).</li>"
+        "<li><b>adapt-registry</b> gác: ẩn số không rò ra ngoài adapter (Step-7 leak-gate).</li></ul></div>"
+        "<div class=\"card\"><h4>Adapt later</h4><ul class=\"s\">"
+        "<li>Khi đã có dữ liệu / đã chốt lựa chọn: lõi pass self-test → <code>verified:true</code> hợp lệ.</li>"
+        "<li>Phần ngoài (model/API): nối adapter + bật <code>enabled:true</code> sau khi kiểm chứng riêng.</li>"
+        "<li>Chỉ sửa MỘT file adapter — không phải lục lại khắp codebase.</li></ul></div></div>",
+        "<div class=\"note\"><h4>overstack tự ăn dog food</h4><p style=\"margin:0\">5 tính năng nâng cao của chính overstack (council · loop-runner · wikieval · trace-grader · failure-flywheel) đều dựng bằng BNAL — nên pattern này đã chứng minh trên thực tế, không phải lý thuyết.</p></div>",
     ]))
 
     S.append(("advanced", "Eval · Council · Loop", "09 · Nâng cao", "Eval · Council · Loop (5 tính năng đánh giá)", [
