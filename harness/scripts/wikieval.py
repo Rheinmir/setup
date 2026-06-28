@@ -53,7 +53,15 @@ except ImportError:  # the engine needs structured frontmatter (lists) -> requir
 
 # repo root = .../setup/setup  (harness/scripts/wikieval.py -> parents[2])
 REPO_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_EVALS_DIR = REPO_ROOT / "fdk" / "wiki" / "sources" / "evals"
+def _default_evals_dir(root: Path) -> Path:
+    """fdk/wiki (repo framework) nếu có, else llmwiki/wiki (downstream) — khớp hooklib.find_wiki_dir.
+    Goldens sống ở <wiki>/sources/evals; downstream không có fdk/ nên fall-through đúng."""
+    for cand in (root / "fdk" / "wiki" / "sources" / "evals",
+                 root / "llmwiki" / "wiki" / "sources" / "evals"):
+        if cand.is_dir():
+            return cand
+    return root / "llmwiki" / "wiki" / "sources" / "evals"  # fallback = quy ước downstream
+DEFAULT_EVALS_DIR = _default_evals_dir(REPO_ROOT)
 DEFAULT_BASELINE = REPO_ROOT / "harness" / "metrics" / "eval-baseline.json"
 DEFAULT_CONFIG = REPO_ROOT / "harness" / "wikieval.config.yaml"
 
