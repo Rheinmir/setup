@@ -130,6 +130,20 @@ th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--border);ver
 .note{background:rgba(255,149,0,.08);border:1px solid rgba(255,149,0,.25);border-radius:14px;padding:16px 18px;margin-top:14px}
 .note h4{margin:0 0 8px;color:#b46a00}
 footer{max-width:1080px;margin:0 auto;padding:26px 24px 60px;font-size:12px;color:var(--t2);border-top:1px solid var(--border)}
+.mindmap{display:flex;gap:20px;align-items:center;padding:14px 2px;overflow-x:auto}
+.mm-root{flex-shrink:0;position:relative;padding:15px 20px;border-radius:16px;background:linear-gradient(135deg,#0a84ff,#5856d6);color:#fff;font-weight:800;font-size:17px;letter-spacing:-.02em;text-align:center;box-shadow:var(--edge),0 6px 22px rgba(10,132,255,.28)}
+.mm-root small{display:block;font-size:10px;font-weight:600;opacity:.88;margin-top:3px}
+.mm-root::after{content:'';position:absolute;right:-20px;top:50%;width:20px;height:2px;background:var(--border)}
+.mm-tree{display:flex;flex-direction:column;gap:10px;position:relative;padding-left:22px}
+.mm-tree::before{content:'';position:absolute;left:0;top:18px;bottom:18px;width:2px;background:var(--border);border-radius:2px}
+.mm-branch{position:relative;display:flex;align-items:flex-start;gap:12px}
+.mm-branch::before{content:'';position:absolute;left:-22px;top:16px;width:22px;height:2px;background:var(--c,#9aa4b2);border-radius:2px}
+.mm-trunk{flex-shrink:0;display:flex;align-items:center;gap:8px;padding:7px 12px;border-radius:11px;background:var(--glass2);color:var(--c);font-weight:700;font-size:12.5px;border:1px solid var(--c);min-width:110px;box-shadow:var(--edge);backdrop-filter:blur(8px)}
+.mm-trunk b{margin-left:auto;font-size:10px;background:var(--c);color:#fff;border-radius:6px;padding:1px 7px;font-weight:800}
+.mm-leaves{display:flex;flex-wrap:wrap;gap:5px;align-content:flex-start;padding-top:5px;max-width:640px}
+.mm-leaf{font-family:var(--mono);font-size:11px;padding:3px 8px;border-radius:7px;background:var(--glass3);border:1px solid var(--border);color:#0a5ec7;cursor:default;transition:border-color .15s,transform .1s}
+.mm-leaf:hover{border-color:var(--c,#0a84ff);transform:translateY(-1px)}
+@media(max-width:640px){.mindmap{flex-direction:column;align-items:stretch}.mm-root::after{display:none}.mm-leaves{max-width:none}}
 """
 
 JS = r"""
@@ -165,6 +179,31 @@ def sections(root: Path):
                     + "".join(skill_rows) + "</table>")
     rule_rows = "".join(f"<tr><td><code>{rid}</code></td><td>{esc(name)}</td></tr>" for rid, name in rs)
     rules_table = f"<table><tr><th>Rule</th><th>Chặn / đảm bảo điều gì</th></tr>{rule_rows}</table>"
+
+    # ── mind map skill+rule (sinh từ đĩa, self-contained CSS) ──
+    mm_color = {"wiki-loop": ACCENTS[0][0], "dev-loop": ACCENTS[1][0],
+                "orchestrate": ACCENTS[2][0], "utils": ACCENTS[3][0]}
+
+    def _leaf(label, tip):
+        t = ' title="%s"' % esc(tip) if tip else ''
+        return '<span class="mm-leaf"%s>%s</span>' % (t, esc(label))
+
+    mm = ['<div class="mindmap">',
+          '<div class="mm-root">overstack<small>%d skill · %d rule</small></div>' % (n_sk, n_rules),
+          '<div class="mm-tree">']
+    for loop in loop_order + [l for l in by_loop if l not in loop_order]:
+        items = sorted(by_loop.get(loop, []))
+        if not items:
+            continue
+        leaves = "".join(_leaf("/" + n, d) for n, d in items)
+        mm.append('<div class="mm-branch" style="--c:%s"><div class="mm-trunk">%s<b>%d</b></div>'
+                  '<div class="mm-leaves">%s</div></div>'
+                  % (mm_color.get(loop, ACCENTS[3][0]), esc(loop), len(items), leaves))
+    rleaves = "".join(_leaf("%s · %s" % (rid, name), name) for rid, name in rs)
+    mm.append('<div class="mm-branch" style="--c:%s"><div class="mm-trunk">rules<b>%d</b></div>'
+              '<div class="mm-leaves">%s</div></div>' % (ACCENTS[5][0], n_rules, rleaves))
+    mm.append('</div></div>')
+    mindmap_html = "".join(mm)
 
     S = []
     S.append(("quickstart", "★ Quickstart", "00 · Bắt đầu", "Quickstart — chạy được trong 2 phút", [
@@ -361,10 +400,10 @@ def sections(root: Path):
         "<div class=\"note\"><h4>Vì sao cần checklist này</h4><p style=\"margin:0\">overstack lớn → thêm một thứ mà quên đồng bộ một chỗ = drift âm thầm. fdk-gate biến \"hợp lệ\" thành 14 bước máy-kiểm, không phụ thuộc trí nhớ.</p></div>",
     ]))
 
-    S.append(("reference", "Tham chiếu (live)", "14 · Tham chiếu", "Tham chiếu — bảng skill & rule (đếm từ đĩa)", [
-        f"<p class=\"lead\">Bản đầy đủ, sinh bằng code từ đĩa nên luôn khớp thực tế: <b>{n_sk} skill</b> · <b>{n_rules} rule</b>. Bản máy-đọc: <code>fdk/CAPABILITIES.md</code>.</p>",
-        "<h3>Skills</h3>", skills_table,
-        "<h3>Rules</h3>", rules_table,
+    S.append(("reference", "Tham chiếu (mind map)", "14 · Tham chiếu", "Tham chiếu — mind map skill & rule (đếm từ đĩa)", [
+        f"<p class=\"lead\">Bản đồ tư duy toàn bộ đồ nghề, sinh từ đĩa nên luôn khớp thực tế: <b>{n_sk} skill</b> theo loop · <b>{n_rules} rule</b>. Rê chuột lên một lá để xem mô tả. Bản máy-đọc: <code>fdk/CAPABILITIES.md</code>.</p>",
+        mindmap_html,
+        "<h3 style=\"margin-top:26px\">Bảng chi tiết (mô tả đầy đủ)</h3>", skills_table, rules_table,
     ]))
     return S
 
