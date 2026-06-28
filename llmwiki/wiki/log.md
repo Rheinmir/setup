@@ -154,13 +154,6 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-06-28 15:46:01 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
-| 2026-06-28 15:46:45 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
-| 2026-06-28 15:48:34 | `file.write` | skills/docs-site-macos/SKILL.md · tool=Edit |
-| 2026-06-28 15:49:00 | `file.write` | skills/docs-site-macos/SKILL.md · tool=Edit |
-| 2026-06-28 15:55:28 | `file.write` | skills/docs-site-macos/SKILL.md · tool=Edit |
-| 2026-06-28 15:55:56 | `file.write` | skills/docs-site-macos/SKILL.md · tool=Edit |
-| 2026-06-28 15:56:35 | `file.write` | skills/docs-site-macos-skill/SKILL.md · tool=Edit |
 | 2026-06-28 15:56:59 | `file.write` | skills/docs-site-macos-skill/SKILL.md · tool=Edit |
 | 2026-06-28 16:11:34 | `file.write` | llmwiki/html/280626-merge-docs-site-macos-dup-seq.html · tool=Write |
 | 2026-06-28 16:12:20 | `file.write` | llmwiki/wiki/sources/draft/280626-merge-docs-site-macos-dup.md · tool=Write |
@@ -194,5 +187,12 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 | 2026-06-28 17:26:06 | `file.write` | llmwiki/AGENT.md · tool=Edit |
 | 2026-06-28 17:26:16 | `file.write` | llmwiki/CLAUDE.md · tool=Edit |
 | 2026-06-28 17:30:51 | `file.write` | fdk/tools/docs-curate.py · tool=Edit |
+| 2026-06-28 17:40:00 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 17:40:29 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 17:40:56 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 17:41:16 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 17:42:42 | `file.write` | llmwiki/.claude/hooks/stop.py · tool=Edit |
+| 2026-06-28 17:42:57 | `file.write` | llmwiki/.claude/hooks/stop.py · tool=Edit |
+| 2026-06-28 17:44:12 | `file.write` | fdk/tools/new-skill.py · tool=Edit |
 
 <!-- log:auto:end -->

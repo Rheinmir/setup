@@ -149,36 +149,121 @@ def _ensure_gitignore():
         pass
 
 
+# archive KHÔNG để phẳng — gom theo CHỨC NĂNG (subfolder), và index lại (kể cả file đã archive)
+CATEGORIES = [
+    ("proposals", "📋 Proposals (đã xong — cặp draft + seq)"),
+    ("superseded", "🔁 Bản bị thay thế"),
+    ("analysis", "🔬 Phân tích (cân nhắc promote lên wiki)"),
+    ("reports", "📰 Reports / docs một-lần"),
+]
+CAT_LABEL = dict(CATEGORIES)
+
+
+def _seq_stems():
+    """stem của mọi *-seq.html (active + đã archive) → biết draft nào là cặp proposal."""
+    stems = set()
+    for base in (HTML, HTML_ARC):
+        if base.is_dir():
+            for p in base.rglob("*-seq.html"):
+                stems.add(p.name[:-len("-seq.html")])
+    return stems
+
+
+def _category(name, kind, seq_stems):
+    if kind == "html":
+        if name.endswith("-seq.html"):
+            return "proposals"
+        if re.search(r"-v\d+\.html$", name) or "master-wiki" in name:
+            return "superseded"
+        return "reports"
+    stem = name[:-3]                                  # draft .md
+    return "proposals" if stem in seq_stems else "analysis"
+
+
+def _organize_existing():
+    """Gom file đang nằm PHẲNG ở gốc archive/ vào subfolder chức năng (kể cả đã archive từ trước)."""
+    seq = _seq_stems()
+    n = 0
+    for base, kind in ((HTML_ARC, "html"), (DRAFT_ARC, "draft")):
+        if not base.is_dir():
+            continue
+        for p in list(base.iterdir()):
+            if p.is_file() and p.suffix in (".html", ".md") and p.name != "INDEX.md":
+                d = base / _category(p.name, kind, seq)
+                d.mkdir(parents=True, exist_ok=True)
+                p.replace(d / p.name)
+                n += 1
+    return n
+
+
+def _build_archive_index():
+    """Chỉ mục archive theo chức năng → llmwiki/html/archive/INDEX.md (archive vẫn tìm được)."""
+    lines = ["# Archive index — tài liệu đã archive (local-only), theo chức năng",
+             "",
+             "> Sinh bởi `fdk/tools/docs-curate.py`. Archive = GIỮ (không xoá); đây là chỉ mục để tìm lại.", ""]
+    total = 0
+    for cat, label in CATEGORIES:
+        items = []
+        hd = HTML_ARC / cat
+        if hd.is_dir():
+            items += [(p.name, f"{cat}/{p.name}") for p in sorted(hd.glob("*.html"))]
+        dd = DRAFT_ARC / cat
+        if dd.is_dir():
+            items += [(p.name, f"../../wiki/sources/draft/archive/{cat}/{p.name}") for p in sorted(dd.glob("*.md"))]
+        if not items:
+            continue
+        lines.append(f"## {label} ({len(items)})")
+        lines.append("")
+        lines += [f"- [{nm}]({rel})" for nm, rel in items]
+        lines.append("")
+        total += len(items)
+    lines.append("---")
+    lines.append(f"Tổng **{total}** file đã archive.")
+    HTML_ARC.mkdir(parents=True, exist_ok=True)
+    (HTML_ARC / "INDEX.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return total
+
+
 def cmd_apply(keep_dates=2):
     out = classify()
     _resolve_reports(out, keep_dates)
     _ensure_gitignore()
-    HTML_ARC.mkdir(parents=True, exist_ok=True)
-    DRAFT_ARC.mkdir(parents=True, exist_ok=True)
+    seq = _seq_stems()
     moved = 0
     for n, (kind, action, _r) in sorted(out.items()):
         if action != "archive":
             continue
-        src = (HTML if kind == "html" else DRAFT) / n
-        dst = (HTML_ARC if kind == "html" else DRAFT_ARC) / n
+        base = HTML if kind == "html" else DRAFT
+        arc = HTML_ARC if kind == "html" else DRAFT_ARC
+        cat = _category(n, kind, seq)
+        src = base / n
+        dstdir = arc / cat
+        dstdir.mkdir(parents=True, exist_ok=True)
         if src.is_file():
-            src.replace(dst)
+            src.replace(dstdir / n)
             moved += 1
-            print(f"  📦 {kind}/{n} → archive/")
-    print(f"docs-curate · apply — dời {moved} file vào archive/. Re-index…")
+            print(f"  📦 {kind}/{n} → archive/{cat}/")
+    print(f"docs-curate · apply — archive {moved} mục mới (theo chức năng). Sắp xếp + re-index…")
     cmd_reindex()
     return moved
 
 
 def cmd_reindex():
-    # 1) dashboard html
+    # 0) sắp xếp file đã-archive vào nhóm chức năng (kể cả vào archive rồi)
+    reorg = _organize_existing()
+    if reorg:
+        print(f"  🗂  sắp xếp {reorg} file đã-archive vào nhóm chức năng")
+    # 1) dashboard html (active)
     r = subprocess.run([sys.executable, str(ROOT / "fdk" / "tools" / "build-docs-index.py")],
                        capture_output=True, text=True)
-    print("  " + (r.stdout or r.stderr or "").strip().splitlines()[-1] if (r.stdout or r.stderr) else "  docs-index ok")
-    # 2) wiki index (R3) — archive/ là draft gitignored, index_sync git-aware bỏ qua
+    if r.stdout or r.stderr:
+        print("  " + (r.stdout or r.stderr).strip().splitlines()[-1])
+    # 2) wiki index (R3) — git-aware bỏ qua draft gitignored
     subprocess.run([sys.executable, str(ROOT / "harness" / "validators" / "index_sync.py"),
                     "--wiki-dir", str(ROOT / "llmwiki" / "wiki"), "--fix"], capture_output=True, text=True)
-    print("  ✓ build-docs-index + index_sync --fix")
+    # 3) chỉ mục ARCHIVE theo chức năng
+    n = _build_archive_index()
+    print(f"  ✓ build-docs-index + index_sync --fix + archive/INDEX.md ({n} file đã archive, theo nhóm)")
 
 
 def main():

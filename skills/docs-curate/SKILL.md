@@ -24,12 +24,16 @@ Merge HTML local lại vẫn LOCAL → vẫn mất khi kéo repo ở máy khác 
      Đúng frontmatter YAML (`type:`…) + `## Origin` (trỏ draft/commit nguồn). Cập nhật `wiki/index.md` + `wiki/log.md`.
    - Đã có trong wiki/git rồi → bỏ qua, chỉ để archive.
    - KHÔNG promote thứ tầm thường (report tiến độ, render trùng). Chỉ cái "đáng cho máy/người khác đọc".
-3. **Apply (dời ARCHIVE + tự re-index):**
+3. **Apply (dời ARCHIVE theo CHỨC NĂNG + tự re-index):**
    ```bash
-   python3 fdk/tools/docs-curate.py apply        # dời vào archive/, chạy build-docs-index + index_sync --fix
+   python3 fdk/tools/docs-curate.py apply        # archive theo nhóm + reorg file đã-archive + reindex
    ```
-   Tuỳ chỉnh số mốc-ngày giữ active: `apply --keep-dates 3`.
-4. **Verify + commit:** xác nhận `llmwiki/html/index.html` (dashboard) mới + `wiki/index.md` không lệch R3 (đang dev framework → chạy `fdk-gate`). Commit gồm: ADR/concept mới promote + `archive/` + index. Append `log.md`.
+   - Archive **KHÔNG để phẳng**: gom vào `archive/<nhóm>/` theo chức năng — `proposals/` (cặp draft+seq), `superseded/` (bản bị thay thế), `analysis/` (phân tích cân nhắc promote), `reports/`.
+   - **Sắp xếp cả file ĐÃ archive từ trước** (file phẳng ở gốc archive → dồn vào đúng nhóm) — kể cả đã vào archive rồi.
+   - **Index cả archive**: sinh `llmwiki/html/archive/INDEX.md` (chỉ mục theo nhóm, vẫn tìm lại được) + `index.html` dashboard (active) + `wiki/index.md` (R3).
+   - Chỉ muốn sắp-xếp-lại + index archive (không archive thêm gì): `python3 fdk/tools/docs-curate.py reindex`.
+   - Tuỳ chỉnh số mốc-ngày giữ active: `apply --keep-dates 3`.
+4. **Verify + commit:** xác nhận `index.html` (active) + `archive/INDEX.md` (archive theo nhóm) mới + `wiki/index.md` không lệch R3 (dev framework → chạy `fdk-gate`). Commit gồm: ADR/concept mới promote (archive/ + index là local gitignored). Append `log.md`.
 
 ## Rules
 - **PROMOTE trước ARCHIVE** — tuyệt đối đừng archive một draft chứa bản chất quý mà chưa kịp lên wiki (local gitignored → mất là mất thật).
