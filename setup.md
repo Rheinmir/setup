@@ -1,19 +1,32 @@
-# Setup AI Agent Project Workflow
+# Dựng dự án mới với overstack
 
-tự động setup dự án 3 bước prompt, feed lần lượt các file prompt cho AI Agent.
+**Cách chuẩn — dán MỘT prompt, agent lo phần còn lại.** Không copy thư mục, không feed từng file.
 
-## Prerequisites
+## Bắt đầu (1 bước)
 
-Skills:
-- ```UI/UX: npx skills add https://github.com/Leonxlnx/taste-skill --all```
-- ```Own: npx skills add rheinmir/setup#orca --global --all```
+Mở agent (Claude Code · opencode · Cursor · Antigravity…) ở thư mục gốc dự án mới, rồi **dán nội dung [`00-New-Project.md`](00-New-Project.md)**. Agent sẽ tự:
 
-## Cách sử dụng
+0. **Cài overstack** (bootstrap — kéo harness + skills + llmwiki, không cần copy folder).
+1. **Kickoff** — hỏi bạn 3 câu (tên · bài toán · stack), rồi tạo `AGENT-business.md` + `AGENT-code.md`.
+2. **Knowledge base** — dựng `wiki/` · `skills/` · `commands/` · `raw/` đúng kỷ luật overstack.
+3. **Scaffold MVP** — dựng codebase + health check + cập nhật wiki.
 
-1. Copy thư mục `llmwiki` sang thư mục gốc của dự án mới.
-2. Mở cửa sổ chat với AI Agent (Claude Code, OpenCode, hoặc Antigravity).
-3. Feed toàn bộ nội dung file `01-Project-Kickoff.md` cho Agent. Agent sẽ hỏi 3 câu về dự án — trả lời xong, Agent tạo `AGENT-business.md` và `AGENT-code.md`.
-4. Feed file `02-Setup-Knowledge-Base.md`. Agent tạo cấu trúc: thư mục `skills/`, `commands/`, `raw/`, `wiki/` (gồm `concepts/`, `entities/`, `sources/`), file `AGENT.md`, và `wiki/log.md`.
-5. Feed file `03-Scaffold-Application.md` để Agent scaffold toàn bộ codebase MVP.
+Agent dừng hỏi đúng lúc cần; bạn chỉ trả lời.
+
+## Prerequisites (tuỳ chọn)
+
+Bộ skills cài sẵn cho UI/UX đẹp hơn:
+- `npx skills add https://github.com/Leonxlnx/taste-skill --all`
+- `npx skills add rheinmir/setup#orca --global --all`
+
+## Bản chi tiết từng pha
+
+Prompt `00` đã gói đủ để chạy độc lập. Nếu muốn đọc/sửa nội dung từng pha:
+
+| Pha | File | Làm gì |
+|-----|------|--------|
+| 1 | [`01-Project-Kickoff.md`](01-Project-Kickoff.md) | 3 câu hỏi → `AGENT-business.md` / `AGENT-code.md` |
+| 2 | [`02-Setup-Knowledge-Base.md`](02-Setup-Knowledge-Base.md) | dựng nền tri thức (wiki/skills/raw/AGENT.md) |
+| 3 | [`03-Scaffold-Application.md`](03-Scaffold-Application.md) | scaffold codebase MVP + cập nhật wiki |
 
 Quá trình này biến AI Agent thành một cộng sự kỹ thuật tự động setup kiến trúc hoàn chỉnh.

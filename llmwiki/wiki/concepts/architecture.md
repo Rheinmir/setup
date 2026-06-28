@@ -14,7 +14,7 @@ The repo is NOT an app; it is the **Orca template/skill/harness ecosystem** (Mar
 - `setup.md` — entry point
 - `01-Project-Kickoff.md` — agent asks 3 questions → emits `AGENT-business/code.md`
 - `02-Setup-Knowledge-Base.md` — scaffolds wiki skeleton
-- `04-Scaffold-Application.md` — scaffolds MVP code
+- `03-Scaffold-Application.md` — scaffolds MVP code
 - `RESTRUCTURE.md`, `CLAUDE.md`, `.agent`, `.template-manifest.json`
 
 ## 2. Published Skills (32 SKILL.md under `skills/`)

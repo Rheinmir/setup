@@ -12,7 +12,7 @@ timestamp: 2026-06-25
 | `setup.md` | Usage instructions for the setup repo |
 | `01-Project-Kickoff.md` | Kickoff prompt — asks 3 questions, emits AGENT files |
 | `02-Setup-Knowledge-Base.md` | Kickoff prompt — scaffolds wiki skeleton |
-| `04-Scaffold-Application.md` | Kickoff prompt — scaffolds MVP code |
+| `03-Scaffold-Application.md` | Kickoff prompt — scaffolds MVP code |
 | `skills/` | 32 published skills (npx-publishable) |
 | `harness/` | Python guard engine — validators, scripts, policy, evals |
 | `llmwiki/` | Template payload + canonical skill sources |

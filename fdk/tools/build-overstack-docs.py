@@ -213,6 +213,7 @@ def sections(root: Path):
         "<p><b>Cách 2 — terminal:</b></p>",
         "<pre><code>curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash</code></pre>",
         "<p>Kéo harness + skills + llmwiki và bật chặn ngay. Opt-out: <code>--harness-only</code>.</p>",
+        "<div class=\"note\"><h4>Dự án MỚI từ đầu (chưa có code)?</h4><p style=\"margin:0\">Không cần cài tay rồi feed từng file — chỉ <b>dán nội dung <code>00-New-Project.md</code></b> cho agent. Nó tự cài overstack → kickoff (hỏi 3 câu) → dựng knowledge base → scaffold MVP, dừng hỏi đúng lúc. Chi tiết: <code>setup.md</code>.</p></div>",
         "<div class=\"grid\"><div class=\"card\"><h4>Per-project (cho team)</h4><ul class=\"s\">"
         "<li>harness/ + .claude/settings.json được <b>commit vào repo</b> → đồng đội clone về là được bảo vệ.</li>"
         "<li>Có pre-commit (L2) + baseline audit cho dự án cũ.</li>"

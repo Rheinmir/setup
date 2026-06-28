@@ -13,7 +13,7 @@
     ".template-manifest.json": "b5b84ae2e294eff5",
     "01-Project-Kickoff.md": "f4c6327b02798462",
     "02-Setup-Knowledge-Base.md": "84a30c0c4cbe769c",
-    "04-Scaffold-Application.md": "20bb25e6a882ebe6",
+    "03-Scaffold-Application.md": "20bb25e6a882ebe6",
     "CLAUDE.md": "d369256cea1e9665",
     "llmwiki/.agent": "1e46dde700d7da21",
     "llmwiki/.claude/hooks/hooklib.py": "1742779a344850a6",

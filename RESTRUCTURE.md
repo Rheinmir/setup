@@ -130,7 +130,7 @@ Thêm cột Loop, sửa path thành `skills/<loop>/<skill>.md`:
 - md-to-html → `skills/utils/md-to-html.md` (utils)
 - docs-site-macos → `skills/utils/docs-site-macos-skill.md` (utils)
 
-## 5. Cập nhật 02-Setup-Knowledge-Base.md + 04-Scaffold-Application.md
+## 5. Cập nhật 02-Setup-Knowledge-Base.md + 03-Scaffold-Application.md
 
 Sửa path `wiki/` → `llmwiki/wiki/`, `skills/` → `llmwiki/skills/<loop>/` trong 2 file này.
 
@@ -142,7 +142,7 @@ Sửa path `wiki/` → `llmwiki/wiki/`, `skills/` → `llmwiki/skills/<loop>/` t
     "SKILL.md", "NOTE-migration.md",
     "CLAUDE.md", ".agent", ".template-manifest.json",
     "01-Project-Kickoff.md", "02-Setup-Knowledge-Base.md",
-    "04-Scaffold-Application.md",
+    "03-Scaffold-Application.md",
     "RESTRUCTURE.md",
     "llmwiki/.agent", "llmwiki/AGENT.md", "llmwiki/CLAUDE.md",
     "llmwiki/commands/serve",

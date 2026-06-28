@@ -32,14 +32,11 @@ Mở trực tiếp file self-contained — **đi theo dự án khi bạn cài** 
 
 Trang này **sinh bằng code** (`fdk/tools/build-overstack-docs.py`) nên bảng skill/rule luôn khớp đĩa. Bản máy-đọc của bản đồ năng lực: `fdk/CAPABILITIES.md`.
 
-## 🏗️ Dựng dự án mới (workflow prompt)
+## 🏗️ Dựng dự án mới — dán 1 prompt
 
-1. Copy thư mục `llmwiki/` sang gốc dự án mới.
-2. Feed `01-Project-Kickoff.md` cho Agent → hỏi 3 câu → tạo `AGENT-business.md` / `AGENT-code.md`.
-3. Feed `02-Setup-Knowledge-Base.md` → dựng cấu trúc `wiki/` · `skills/` · `commands/` · `raw/`.
-4. Feed `04-Scaffold-Application.md` → scaffold codebase MVP.
+Không copy folder, không feed từng file: mở agent ở thư mục gốc dự án mới rồi **dán nội dung [`00-New-Project.md`](00-New-Project.md)**. Agent tự cài overstack → kickoff (hỏi 3 câu) → dựng knowledge base → scaffold MVP, dừng hỏi đúng lúc cần.
 
-Chi tiết: [`setup.md`](setup.md). Cài bộ skills: `npx skills add rheinmir/setup#orca --global --all`.
+Chi tiết + bản từng pha (`01`/`02`/`03`): [`setup.md`](setup.md). Cài bộ skills: `npx skills add rheinmir/setup#orca --global --all`.
 
 ## 📂 Cấu trúc
 
@@ -49,7 +46,7 @@ Chi tiết: [`setup.md`](setup.md). Cài bộ skills: `npx skills add rheinmir/s
 | `harness/` | **Trụ guardrail.** `validators/` + `scripts/` (install, fdk-gate, code-logger, council/loop/eval…). `poc-vendor-neutral/` = lõi CLI vendor-neutral + installer 1-dòng |
 | `skills/` | **Trụ kỹ năng** — mỗi `SKILL.md` gọi bằng `/tên`; canonical, mirror sang `llmwiki/skills/` |
 | `fdk/` | **Framework Dev Kit** — đồ nghề phát triển CHÍNH overstack (`CAPABILITIES.md`, `tools/`). Không travel xuống dự án (ADR-004) |
-| `01/02/04-*.md`, `setup.md` | Prompt workflow dựng dự án |
+| `00–03-*.md`, `setup.md` | Prompt dựng dự án mới — **bắt đầu ở `00-New-Project.md`** (1 lần dán) |
 | `.github/workflows/harness.yml` | CI: validator + self-test mỗi PR |
 
 ## 🛠️ Phát triển chính overstack
