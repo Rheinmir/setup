@@ -30,4 +30,4 @@ Multi-step reusable workflows the agent invokes autonomously based on context. E
 |-------|------|---------|
 | `sync-template` | `utils/sync-template.md` | Sync template improvements to master repo |
 | `md-to-html` | `utils/md-to-html.md` | Render markdown → professional HTML |
-| `docs-site-macos` | `utils/docs-site-macos-skill.md` | Build macOS-style documentation site |
+| `docs-site-macos` | `utils/docs-site-macos.md` | Build macOS-style documentation site |

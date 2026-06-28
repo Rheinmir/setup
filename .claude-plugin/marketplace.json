@@ -42,7 +42,7 @@
       "source": "./",
       "strict": false,
       "skills": [
-        "./skills/docs-site-macos-skill",
+        "./skills/docs-site-macos",
         "./skills/extract-site",
         "./skills/harness-tour",
         "./skills/harness-update",

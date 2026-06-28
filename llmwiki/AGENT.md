@@ -40,7 +40,7 @@ Giảm lỗi LLM-coding phổ biến. Thiên về cẩn trọng hơn tốc độ
 | `orca-onboard` | Parallel codebase onboarding with Orca | `skills/orchestrate/orca-onboard.md` | orchestrate |
 | `sync-template` | Upstreaming template improvements to master repo | `skills/utils/sync-template.md` | utils |
 | `md-to-html` | User wants to render a professional HTML report | `skills/utils/md-to-html.md` | utils |
-| `docs-site-macos` | User wants macOS-style documentation site | `skills/utils/docs-site-macos-skill.md` | utils |
+| `docs-site-macos` | User wants macOS-style documentation site | `skills/utils/docs-site-macos.md` | utils |
 | `fdk` | Đang phát triển CHÍNH framework (skill/rule/validator/hook/wiki) | `skills/utils/fdk.md` | utils |
 | `new-skill` | Scaffold một skill mới (canonical+mirror+lệnh register) | `skills/dev-loop/new-skill.md` | dev-loop |
 | `loop-runner` | Vòng lặp agent có guardrail (propose→verify→revise, termination) | `skills/dev-loop/loop-runner.md` | dev-loop |

@@ -18,7 +18,7 @@ WIKI_SKILLS=(
   "dev-loop/onboard-codebase" "dev-loop/new-project-setup"
 )
 # Skill xuất HTML → N/A
-HTML_SKILLS=( "utils/md-to-html" "utils/docs-site-macos-skill" )
+HTML_SKILLS=( "utils/md-to-html" "utils/docs-site-macos" )
 
 hdr "A — skill tạo wiki .md phải nhắc OKF (R9)"
 for s in "${WIKI_SKILLS[@]}"; do

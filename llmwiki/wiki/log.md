@@ -154,19 +154,6 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-06-28 10:56:30 | `file.write` | llmwiki/CLAUDE.md · tool=Edit |
-| 2026-06-28 10:57:46 | `file.write` | llmwiki/wiki/sources/adr/ADR-005-logger-and-capabilities-travel-downstream.md · tool=Write |
-| 2026-06-28 10:58:52 | `file.write` | llmwiki/html/280626-framework-master-wiki.html · tool=Edit |
-| 2026-06-28 10:58:58 | `file.write` | llmwiki/html/280626-framework-master-wiki.html · tool=Edit |
-| 2026-06-28 10:59:24 | `file.write` | llmwiki/html/280626-framework-master-wiki.html · tool=Edit |
-| 2026-06-28 11:09:59 | `file.write` | harness/scripts/install-harness.sh · tool=Edit |
-| 2026-06-28 11:11:32 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit |
-| 2026-06-28 11:31:29 | `file.write` | harness/council.config.yaml · tool=Edit |
-| 2026-06-28 11:33:13 | `file.write` | harness/trace-grader.config.yaml · tool=Edit |
-| 2026-06-28 11:33:18 | `file.write` | harness/failure-flywheel.config.yaml · tool=Edit |
-| 2026-06-28 11:33:24 | `file.write` | harness/loop-runner.config.yaml · tool=Edit |
-| 2026-06-28 11:34:56 | `file.write` | harness/scripts/wikieval.py · tool=Edit |
-| 2026-06-28 11:35:25 | `file.write` | harness/wikieval.config.yaml · tool=Edit |
 | 2026-06-28 11:36:24 | `file.write` | harness/scripts/fdk-gate.py · tool=Edit |
 | 2026-06-28 11:39:27 | `file.write` | llmwiki/skills/utils/harness-update.md · tool=Edit |
 | 2026-06-28 11:39:40 | `file.write` | llmwiki/skills/utils/harness-update.md · tool=Edit |
@@ -194,5 +181,18 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 | 2026-06-28 15:36:13 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
 | 2026-06-28 15:37:09 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
 | 2026-06-28 15:37:31 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 15:45:15 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 15:45:41 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 15:46:01 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 15:46:45 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
+| 2026-06-28 15:48:34 | `file.write` | skills/docs-site-macos/SKILL.md · tool=Edit |
+| 2026-06-28 15:49:00 | `file.write` | skills/docs-site-macos/SKILL.md · tool=Edit |
+| 2026-06-28 15:55:28 | `file.write` | skills/docs-site-macos/SKILL.md · tool=Edit |
+| 2026-06-28 15:55:56 | `file.write` | skills/docs-site-macos/SKILL.md · tool=Edit |
+| 2026-06-28 15:56:35 | `file.write` | skills/docs-site-macos-skill/SKILL.md · tool=Edit |
+| 2026-06-28 15:56:59 | `file.write` | skills/docs-site-macos-skill/SKILL.md · tool=Edit |
+| 2026-06-28 16:11:34 | `file.write` | llmwiki/html/280626-merge-docs-site-macos-dup-seq.html · tool=Write |
+| 2026-06-28 16:12:20 | `file.write` | llmwiki/wiki/sources/draft/280626-merge-docs-site-macos-dup.md · tool=Write |
+| 2026-06-28 16:12:46 | `file.write` | llmwiki/wiki/sources/draft/280626-merge-docs-site-macos-dup.md · tool=Edit |
 
 <!-- log:auto:end -->
