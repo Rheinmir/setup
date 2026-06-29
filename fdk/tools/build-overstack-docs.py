@@ -339,22 +339,44 @@ def sections(root: Path):
     ]))
 
     # 5 trend 2026 → 5 chức năng qua build-now-adapt-later (core tất định now, adapter verified:false)
-    branches.append(_subtree("b-rule", "BNAL 2026", "5 trend 2026 → chức năng (build-now-adapt-later: core now, adapter verified:false) — ADR-012", [
-        _row(_node("b-rule leaf", "success-flywheel", "gom trace THẮNG → playbook tái dùng (gương DƯƠNG của failure-flywheel); adapter: distill model còn null")),
-        _row(_node("b-rule leaf", "egress-guard", "chặn egress/MCP độc: allow-list domain + cờ injection trong mô tả tool; warn→block sau khi hiệu chỉnh allow-list")),
-        _row(_node("b-rule leaf", "trace-otel", "audit phẳng → span OTel-GenAI + truy nhân-quả (lỗi step 10 ⇒ tool ở step 3); adapter: attribute-map experimental")),
-        _row(_node("b-rule leaf", "spec-gate", "spec→plan→tasks là nguồn-sự-thật + conformance (chống drift; cf Spec Kit); advisory→strict sau khi chốt schema")),
-        _row(_node("b-rule leaf", "scoped-hooks", "skill tự khai guard ở frontmatter, chỉ chạy khi skill active (tầng global→project→component); adapter: detector active")),
-    ]))
-
-    # đợt 2: 5 trend nữa (memory · cost · injection-output · hallucination · prospective-reflection) — ADR-013
-    branches.append(_subtree("b-rule", "BNAL đợt 2", "5 trend 2026 nữa → chức năng (build-now-adapt-later) — ADR-013", [
-        _row(_node("b-rule leaf", "mem-rank", "memory agent: ADD/UPDATE/DELETE/NOOP + retrieve ranked (Jaccard now); adapter: embedding scorer + eviction")),
-        _row(_node("b-rule leaf", "token-budget", "governor token+$ per session/task (FinOps: framework chưa có $ cap); adapter: rates + caps, warn→block")),
-        _row(_node("b-rule leaf", "inject-scan", "quét OUTPUT tool tìm injection gián tiếp (egress-guard lo mô tả; cái này lo kết quả); adapter: patterns/classifier")),
-        _row(_node("b-rule leaf", "claim-receipts", "cổng hallucination: trích reference file/symbol → verify tồn tại (Tool Receipts); adapter: resolver code-graph")),
-        _row(_node("b-rule leaf", "prospect-critic", "reflection TRƯỚC chạy: soi plan vs taxonomy failure-flywheel, ép revise; adapter: triggers + threshold")),
-    ]))
+    # BNAL — AUTO từ harness/*.config.yaml (mỗi config = 1 adapter). KHÔNG hardcode → không drift (ADR-012/013/015).
+    import glob as _glob
+    _BDESC = {
+        "success-flywheel": "gom trace THẮNG → playbook tái dùng (gương dương của failure-flywheel)",
+        "egress-guard": "chặn egress/MCP độc: allow-list domain + cờ injection mô tả tool",
+        "trace-otel": "audit phẳng → span OTel-GenAI + truy nhân-quả (lỗi step 10 ⇒ tool step 3)",
+        "spec-gate": "spec→plan→tasks nguồn-sự-thật + conformance (chống drift; cf Spec Kit)",
+        "scoped-hooks": "skill tự khai guard ở frontmatter, chỉ chạy khi skill active",
+        "mem-rank": "memory agent: ADD/UPDATE/DELETE/NOOP + retrieve ranked (Jaccard)",
+        "token-budget": "governor token+$ per session/task (FinOps gap); warn→block",
+        "inject-scan": "quét OUTPUT tool tìm injection gián tiếp (egress lo mô tả)",
+        "claim-receipts": "cổng hallucination: trích reference → verify tồn tại (Tool Receipts)",
+        "prospect-critic": "reflection TRƯỚC chạy: soi plan vs taxonomy failure-flywheel",
+        "web-crawl": "crawl URL → markdown (builtin urllib; adapter Firecrawl/Crawl4AI)",
+        "web-clone": "clone site: snapshot 1-file HOẶC reconstruct→Next.js (ai-website-cloner)",
+        "sweep-gate": "nhịp Sweeper: đếm accretion → nhắc gọt (Boris Cherny)",
+        "archetypes": "5 persona Boris (proto/build/sweep/grow/maintain): dispatch + phase-map",
+        "pattern-library": "R14 kho pattern bảo vệ (chỉ sửa khi unlock env)",
+        "failure-flywheel": "gom lỗi lặp → draft rule stub (Hamel flywheel)",
+        "council": "hội đồng N model blind peer-rank + chairman",
+        "trace-grader": "chấm ĐƯỜNG ĐI agent (tool/thứ tự/pass^k)",
+        "loop-runner": "vòng lặp guardrail propose→verify→revise + termination",
+        "wikieval": "eval hồi quy từ wiki goldens + baseline (CI gate)",
+    }
+    _broot = Path(__file__).resolve().parents[2]
+    _bf, _bt = [], []
+    for _cf in sorted(_glob.glob(str(_broot / "harness" / "*.config.yaml"))):
+        _nm = Path(_cf).name[:-len(".config.yaml")]
+        try:
+            _ver = re.search(r"^\s*verified\s*:\s*true\b", Path(_cf).read_text(encoding="utf-8"), re.M) is not None
+        except Exception:
+            _ver = False
+        _leafrow = _row(_node("b-rule leaf", _nm, _BDESC.get(_nm, "BNAL adapter (1 config quarantine)")))
+        (_bt if _ver else _bf).append(_leafrow)
+    branches.append(_subtree("b-rule", "BNAL", "build-now-adapt-later: core tất định now + 1 config adapter. AUTO từ harness/*.config.yaml — ADR-012/013/015",
+        [_subtree("b-rule", "verified:false — chờ hiệu chỉnh", "guess best-effort; finalize = sửa 1 config", _bf, count=len(_bf)),
+         _subtree("b-rule", "verified:true — đã chốt", "đã verify; self-test giữ trung thực", _bt, count=len(_bt))],
+        count=len(_bf) + len(_bt)))
 
     mindmap_html = ('<div class="mm"><div class="mm-canvas"><svg class="mm-links"></svg>'
                     '<div class="tree"><div class="row">'

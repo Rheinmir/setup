@@ -1,5 +1,8 @@
 # Operation Log
 
+## 2026-06-29 — fix — overstack.html: nhánh BNAL AUTO từ config (hết outdate, chống drift)
+User báo overstack.html trông cũ — mind-map chỉ show 10 chức năng BNAL (2 nhánh hardcode "BNAL 2026"+"BNAL đợt 2") trong khi đã có ~20 adapter. Sửa GỐC ở `build-overstack-docs.py`: thay 2 nhánh cứng bằng AUTO-GEN — quét `harness/*.config.yaml`, đọc cờ `verified`, gom 2 nhóm verified:false (chờ hiệu chỉnh) / verified:true (đã chốt), desc từ map curated (fallback generic). Thêm config BNAL mới → tự vào mind map, không drift nữa (đúng /fdk "đếm LIVE, không hardcode"). Regen overstack.html; fdk-gate 16/16.
+
 ## 2026-06-29 — fix — nút copy dạng ICON (sửa GỐC ở docs-site-macos → lan proposal + mọi docs site)
 User: nút copy nên là ICON không phải chữ "Copy"; truy nguồn — đúng từ `docs-site-macos` (R7 bắt `/propose` render glass docs-site-macos; `/orca-workflow` render theo nó → kế thừa pattern copy). Sửa GỐC: canonical `skills/docs-site-macos/SKILL.md` đổi `.code-copy` thành nút icon vuông 28×26 + `initCodeCopy` dùng SVG clipboard→check (bỏ text 'Copy'/'✓ Copied'); sync mirror. Đồng bộ generator `build-overstack-docs.py` (icon) → regen overstack.html. fdk-gate 16/16 (mirror parity + overstack current). Proposal/docs site sinh sau tự có icon.
 
