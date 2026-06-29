@@ -588,29 +588,34 @@ Every code panel MUST have a hover-revealed Copy button. Capture `textContent` B
 
 ```css
 .code-wrap{position:relative}
-.code-copy{position:absolute;top:8px;right:8px;z-index:2;font-size:11px;font-family:inherit;font-weight:500;
+.code-copy{position:absolute;top:7px;right:7px;z-index:2;width:28px;height:26px;display:inline-flex;align-items:center;justify-content:center;
   background:rgba(255,255,255,.1);color:#cbd5e1;border:1px solid rgba(255,255,255,.15);
-  border-radius:6px;padding:3px 10px;cursor:pointer;opacity:0;transition:opacity .15s,background .15s,color .15s}
+  border-radius:7px;cursor:pointer;opacity:0;transition:opacity .15s,background .15s,color .15s}
+.code-copy svg{width:14px;height:14px;display:block}
 .code-wrap:hover .code-copy{opacity:1}
 .code-copy:hover{background:rgba(255,255,255,.2);color:#fff}
 .code-copy.copied{background:rgba(16,185,129,.25);color:#6ee7b7;border-color:rgba(16,185,129,.45);opacity:1}
+@media(max-width:640px){.code-copy{opacity:1}}
 ```
 
 ```js
 function initCodeCopy() {
+  const COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+  const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
   document.querySelectorAll('pre.code-block').forEach(pre => {
     if (pre.dataset.copy) return; pre.dataset.copy = '1';
     const code = pre.textContent;
     const wrap = document.createElement('div'); wrap.className = 'code-wrap';
     pre.parentNode.insertBefore(wrap, pre); wrap.appendChild(pre);
-    const btn = document.createElement('button'); btn.className = 'code-copy'; btn.textContent = 'Copy';
+    const btn = document.createElement('button'); btn.className = 'code-copy';
+    btn.setAttribute('aria-label', 'Copy'); btn.title = 'Copy'; btn.innerHTML = COPY;
     wrap.appendChild(btn);
     btn.addEventListener('click', async () => {
       try { await navigator.clipboard.writeText(code); }
       catch { const ta = document.createElement('textarea'); ta.value = code;
         document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
-      btn.textContent = '✓ Copied'; btn.classList.add('copied');
-      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1500);
+      btn.innerHTML = CHECK; btn.classList.add('copied');
+      setTimeout(() => { btn.innerHTML = COPY; btn.classList.remove('copied'); }, 1500);
     });
   });
 }

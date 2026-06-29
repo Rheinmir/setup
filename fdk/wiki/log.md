@@ -1,5 +1,8 @@
 # Operation Log
 
+## 2026-06-29 — fix — nút copy dạng ICON (sửa GỐC ở docs-site-macos → lan proposal + mọi docs site)
+User: nút copy nên là ICON không phải chữ "Copy"; truy nguồn — đúng từ `docs-site-macos` (R7 bắt `/propose` render glass docs-site-macos; `/orca-workflow` render theo nó → kế thừa pattern copy). Sửa GỐC: canonical `skills/docs-site-macos/SKILL.md` đổi `.code-copy` thành nút icon vuông 28×26 + `initCodeCopy` dùng SVG clipboard→check (bỏ text 'Copy'/'✓ Copied'); sync mirror. Đồng bộ generator `build-overstack-docs.py` (icon) → regen overstack.html. fdk-gate 16/16 (mirror parity + overstack current). Proposal/docs site sinh sau tự có icon.
+
 ## 2026-06-29 — fix — overstack.html: nút copy + wrapping + TRAVEL theo install
 User báo 3 lỗi ở `llmwiki/html/overstack.html` (file hướng dẫn travel cùng khung xương): (1) thiếu nút copy ở khối lệnh, (2) `<pre>` overflow ngang làm lệnh "dài ngoằng" + thiếu padding, (3) cài từ README (bootstrap→install.sh) KHÔNG thấy file. Fix ở generator `build-overstack-docs.py`: thêm `.code-block` + `initCodeCopy` (nút Copy hover, fallback execCommand) + CSS `.code-copy`; `<pre>` đổi `overflow:auto`→`white-space:pre-wrap;word-break;overflow-wrap` + padding-right chừa nút. TRAVEL: PoC `install.sh` (block --with-wiki) curl `$REPO_RAW/llmwiki/html/overstack.html` → `llmwiki/html/`; `bootstrap.sh` export `REPO_RAW` (strip /harness/poc-vendor-neutral, đúng fork/branch). URL orca HTTP 200; fdk-gate 16/16.
 
