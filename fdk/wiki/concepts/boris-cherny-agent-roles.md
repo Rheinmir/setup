@@ -1,89 +1,80 @@
 ---
 type: concept
-title: "Boris Cherny — 5 agent role trong Claude Code (scope deep-dive)"
+title: "Boris Cherny — 5 archetype (Prototyper/Builder/Sweeper/Grower/Maintainer): scope deep-dive"
 status: implemented
-tags: [boris-cherny, claude-code, subagent, roles, workflow, reference]
+tags: [boris-cherny, archetypes, roles, product-lifecycle, claude-code, reference]
 timestamp: 2026-06-29
 ---
 
-# Boris Cherny — 5 agent role (deep-dive scope)
+# Boris Cherny — 5 archetype của người làm sản phẩm (deep-dive scope)
 
-> **Nguồn:** `.claude/agents` của Boris Cherny (creator + Head of Claude Code) — site chính chủ
-> [howborisusesclaudecode.com](https://howborisusesclaudecode.com/) + [Pragmatic Engineer interview](https://newsletter.pragmaticengineer.com/p/building-claude-code-with-boris-cherny).
-> ⚠️ Boris **không** chốt "bộ 5 role chuẩn" — đây là 5 agent ông kể cùng nhau trong `.claude/agents`.
-> Nếu ảnh của bạn liệt kê 5 cái KHÁC, sửa lại danh sách + tôi deep-dive theo đúng ảnh.
+> **Nguồn (verbatim từ Boris Cherny):** khi engineering, product, design, DS… *tan vào* một loại
+> vai trò mới, nhìn team Claude Code ông thấy **5 archetype**. Quan trọng: **không gắn job function**
+> — ở Anthropic có designer thuộc nhóm 1, có người nhóm 2/3; engineer/PM/DS cũng vậy. **Nhiều người
+> span 2 role, đôi khi 3.**
 
-## Triết lý nền (vì sao có role)
-Boris coi Claude Code là **hạ tầng, không phải phép màu**: ông dựng hệ thống quanh nó (memory file,
-permission config, **verification loop**, formatting hook) rồi **điều phối nhiều subagent như một
-hạm trưởng** — mỗi agent một role hẹp, một bộ tool/permission riêng, chạy đúng một khúc của vòng đời.
-Role = **ranh giới trách nhiệm + bộ quyền** đóng gói trong một file `.claude/agents/<name>.md`
-(custom name, color, tool set, pre-allowed/disallowed tools, permission mode, model).
+5 archetype xếp theo **vòng đời sản phẩm**: ý-tưởng → production → gọt → vừa-thị-trường → quy-mô.
 
-## 5 role — scope từng cái
+## 1. Prototyper — *đẻ ý tưởng mới (0→1)*
+> "comes up with brand new ideas; churns out many ideas, most of which don't ship"
+- **Scope:** khám phá phân kỳ; bắn ra **nhiều** prototype/ý tưởng, **phần lớn không ship** (đó là điểm).
+- **Output/dấu hiệu:** nhiều bản nháp vứt đi, tốc độ ý tưởng cao, gắn bó thấp với từng cái.
+- **Khúc vòng đời:** sớm nhất, trước khi có gì "thật".
+- **Ranh giới (KHÔNG):** không productionize, không bảo trì, không tối ưu PMF.
+- **Failure mode:** yêu một ý tưởng → không buông để thử cái mới; hoặc prototype-rồi-bỏ-mãi.
+- **↔ overstack:** `/last30days` (quét trend đẻ hướng) + `build-now-adapt-later` (ship phần chắc, nhốt ẩn số để thử nhanh).
 
-### 1. code-architect — *thiết kế TRƯỚC khi code*
-- **Scope:** chuyển một yêu cầu mơ hồ thành **kế hoạch/kiến trúc** rõ ràng: chia module, chọn
-  ranh giới, nêu trade-off — TRƯỚC khi viết dòng code nào.
-- **Khi chạy:** đầu vòng đời, lúc nhận task mới hoặc thay đổi lớn.
-- **Ranh giới (KHÔNG làm):** không implement, không sửa file sản phẩm — chỉ ra "bản thiết kế".
-- **Vì sao hẹp:** tách "quyết định kiến trúc" khỏi "gõ code" để không vừa nghĩ vừa làm (giảm
-  over-engineer + sai hướng từ gốc).
-- **Tool/permission điển hình:** read-heavy (đọc codebase), không cần write rộng.
+## 2. Builder — *biến ý tưởng → production (1→N)*
+> "quickly turns a prototype/idea into production-grade product/infra"
+- **Scope:** lấy một prototype/ý tưởng đã chọn → **dựng thành sản phẩm/hạ tầng production-grade, NHANH**.
+- **Output/dấu hiệu:** thứ chạy thật, đủ chắc để giao; tốc độ ship cao.
+- **Khúc vòng đời:** ngay sau khi một ý tưởng được chọn.
+- **Ranh giới (KHÔNG):** không lặp PMF vô hạn, không dọn dẹp sâu, không gánh vận hành dài hạn.
+- **Failure mode:** ship nhanh nhưng để lại nợ kỹ thuật/UI lộn xộn (việc của Sweeper sau đó).
+- **↔ overstack:** chính các feature BNAL (lõi tất định + adapter) + `propose → verify-before-commit`.
 
-### 2. code-simplifier — *dọn SAU khi xong*
-- **Scope:** chạy **sau khi Claude hoàn thành** một task → gỡ abstraction thừa, siết logic, cải
-  thiện readability mà **không đổi hành vi**.
-- **Khi chạy:** cuối vòng, trước khi mở PR.
-- **Ranh giới:** không thêm tính năng, không đổi behavior — chỉ làm code gọn hơn (diff phải an toàn).
-- **Vì sao hẹp:** "viết cho chạy" và "viết cho gọn" là hai não trạng khác nhau; tách ra để bản
-  cuối không phình. (Khớp `/simplify` của overstack.)
+## 3. Sweeper — *gọt, đơn giản hoá, GỠ BỚT*
+> "cleans up the UI, simplifies the code and system, unships, optimizes performance"
+- **Scope:** dọn UI, **đơn giản hoá code + hệ thống**, **unship** (gỡ thứ thừa), tối ưu hiệu năng.
+- **Output/dấu hiệu:** diff âm (xoá nhiều), hệ thống nhỏ hơn/nhanh hơn, **không thêm tính năng**.
+- **Khúc vòng đời:** sau Builder, định kỳ suốt đời sản phẩm.
+- **Ranh giới (KHÔNG):** không thêm feature, không đổi hành vi — chỉ làm gọn + nhanh.
+- **Failure mode:** bikeshed / gọt quá đà / xoá nhầm thứ còn dùng.
+- **↔ overstack:** `/simplify`, đợt **refactor "gọn 13 chức năng"** (merge flywheel, unship trùng lặp), `docs-curate` (gỡ render phình).
 
-### 3. verify-app — *chứng minh thay đổi CHẠY ĐÚNG*
-- **Scope:** chứa **hướng dẫn e2e test cụ thể** cho app → chạy thật, quan sát hành vi, **xác minh
-  thay đổi đúng** trước khi PR mở.
-- **Khi chạy:** sau implement, trước PR.
-- **Ranh giới:** không sửa code để "làm cho test xanh" — chỉ kiểm chứng + báo cáo pass/fail thật.
-- **Vì sao hẹp:** chống "corrupt success" (claim done mà chưa chạy). Đây là **verification loop**
-  Boris nhấn mạnh. (Khớp `verify-before-commit` + `trace-grader` của overstack.)
+## 4. Grower — *lặp để vừa thị trường (PMF)*
+> "takes a product that has been built and iterates on it to improve Product-Market Fit"
+- **Scope:** sản phẩm đã dựng xong → **lặp dựa trên dữ liệu dùng thật** để cải thiện product-market fit.
+- **Output/dấu hiệu:** thử nghiệm có đo, vòng lặp metric-driven, tăng retention/activation.
+- **Khúc vòng đời:** sau khi có sản phẩm chạy, trước/song song scale.
+- **Ranh giới (KHÔNG):** không đẻ ý tưởng mới toanh (Prototyper), không gánh hardening dài hạn (Maintainer).
+- **Failure mode:** kẹt local-maxima, đuổi **vanity metric**, tối ưu cục bộ hại tổng thể.
+- **↔ overstack:** `success-flywheel` (promote cái thắng trên holdout), `wikieval`/`trace-grader` (đo), PM patterns (outcome>output, guardrail metric).
 
-### 4. build-validator — *cổng build phải xanh*
-- **Scope:** validate **build/compile/lint** của toàn dự án sau mỗi thay đổi (vd `npm run build`,
-  `tsc --noEmit`) — bắt lỗi tích hợp mà unit test bỏ sót.
-- **Khi chạy:** sau mỗi merge/builder, deterministic.
-- **Ranh giới:** không phán xét logic nghiệp vụ — chỉ "build có dựng được không".
-- **Vì sao hẹp:** một cổng tất định, rẻ, chạy liên tục = sàn chất lượng. (Khớp tinh thần
-  "CI là sàn" + fdk-gate của overstack.)
+## 5. Maintainer — *giữ hệ trưởng thành khoẻ ở quy mô*
+> "owns a mature system to make it secure, reliable, fast, and efficient as it scales"
+- **Scope:** **sở hữu** một hệ đã trưởng thành → giữ **an toàn, tin cậy, nhanh, hiệu quả** khi scale.
+- **Output/dấu hiệu:** SLO, hardening bảo mật, vá CVE, tối ưu chi phí/perf dưới tải.
+- **Khúc vòng đời:** muộn nhất, dài nhất.
+- **Ranh giới (KHÔNG):** không chạy theo feature mới — ưu tiên sức khoẻ hệ thống.
+- **Failure mode:** cứng nhắc / gatekeeping quá mức / sợ thay đổi.
+- **↔ overstack:** `harness-update` (self-maintain), `orca-sec-scans`, dàn rail R1–R14 + "CI là sàn".
 
-### 5. oncall-guide — *runbook khi prod đau*
-- **Scope:** **runbook oncall** — khi có sự cố/lỗi production, hướng dẫn chẩn đoán + xử lý theo
-  bước. Hay đi kèm **`sentry-errors`** (agent thứ 6): kéo lỗi gần đây từ Sentry → đề xuất fix,
-  cho đường "một lệnh: từ lỗi prod → PR".
-- **Khi chạy:** lúc vận hành/incident, không phải lúc dev tính năng.
-- **Ranh giới:** không refactor lan man — chỉ đưa hệ thống về trạng thái lành, ghi lại nguyên nhân.
-- **Vì sao hẹp:** incident cần đường đi NGẮN + an toàn, không cần sáng tạo.
+## Hai insight cốt lõi (đáng nhớ hơn cả danh sách)
+1. **Role ≠ job function.** Eng/PM/Design/DS đang *tan* vào nhau; một designer có thể là Prototyper,
+   một engineer có thể là Maintainer. Phân theo **việc bạn giỏi ở khúc nào của vòng đời**, không theo chức danh.
+2. **Người span 2–3 archetype.** Hiếm ai thuần một cái. Hữu ích để **tự định vị** (mình mạnh khúc nào)
+   và **ghép đội** (phủ đủ 5 khúc idea→prod→gọt→PMF→scale).
 
-## Bản đồ sang overstack (role ↔ đồ ta đã có)
-| Boris role | Tương đương trong overstack |
-|---|---|
-| code-architect | `propose` + `impact-check` (thiết kế + map caller trước khi sửa) |
-| code-simplifier | `/simplify` + Karpathy "simplicity first" (CLAUDE.md §2) |
-| verify-app | `verify-before-commit` + `trace-grader` (chấm đường đi, chống corrupt success) |
-| build-validator | CI "là sàn" + `fdk-gate` (cổng tất định mọi bước) |
-| oncall-guide | `orca-sec-scans` + runbook; `claim-receipts` (verify reference) cho khâu chẩn đoán |
-
-## Bài học rút ra (cho framework)
-- **Role = ranh giới quyền + một khúc vòng đời**, đóng gói thành file khai báo (name/tool/permission/
-  model) — đúng mô hình `scoped-hooks` (guard theo component) ta vừa làm.
-- **Tách "làm" và "kiểm"**: architect (trước) · simplifier/verify/build (sau) — không để một agent
-  vừa code vừa tự chấm mình (chống confirmation bias) — đúng tinh thần `trace-grader`/`council`.
-- **Hạ tầng > phép màu:** memory + permission + verification loop + hook = cách Boris (và overstack)
-  biến agent thành đáng tin.
+## Khác trục với pattern-library hiện có
+Kho `llmwiki/patterns/` chia theo **chức năng** (FE/BE/adapter/BA/tester/PM). 5 archetype này là một
+**trục KHÁC** — theo **khúc vòng đời**. Hai trục bổ sung nhau: một người = (chức năng) × (archetype),
+vd "BE × Sweeper" hay "PM × Grower".
 
 ## Origin
-- **Source:** research site chính chủ [howborisusesclaudecode.com](https://howborisusesclaudecode.com/)
-  + [Pragmatic Engineer](https://newsletter.pragmaticengineer.com/p/building-claude-code-with-boris-cherny),
-  theo goal-set 2026-06-29 ("tạo file .md của boris cherny về 5 role, deep dive scope"). Ảnh user đính kèm
-  là nguồn xác thực — nếu khác 5 role trên, cập nhật theo ảnh.
-- **Liên quan:** `scoped-hooks` (role = component-scoped guard), [[harness-enforcement-floor]], pattern library `llmwiki/patterns/` (BA/tester/PM roles).
+- **Source:** transcript Boris Cherny do user cung cấp (ảnh đính kèm + text), goal-set 2026-06-29
+  ("tạo file .md của boris cherny về 5 role, deep dive scope"). Định nghĩa từng role trích **verbatim**;
+  phần scope/ranh giới/failure-mode/map-overstack là deep-dive thêm.
+- **Liên quan:** [[harness-enforcement-floor]]; pattern library `llmwiki/patterns/` (trục chức năng);
+  `success-flywheel`/`/simplify`/`harness-update` (đồ overstack khớp Grower/Sweeper/Maintainer).
 - **Date:** 2026-06-29
