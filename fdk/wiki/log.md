@@ -1,5 +1,8 @@
 # Operation Log
 
+## 2026-06-29 — doc — Boris Cherny 5 agent role (deep-dive scope)
+Tạo `fdk/wiki/concepts/boris-cherny-agent-roles.md`: deep-dive scope 5 role từ `.claude/agents` của Boris Cherny (code-architect·code-simplifier·verify-app·build-validator·oncall-guide, +sentry-errors), mỗi role: scope·khi chạy·ranh giới·vì sao hẹp + map sang đồ overstack (propose/simplify/verify-before-commit/fdk-gate/orca-sec-scans). Nguồn: howborisusesclaudecode.com + Pragmatic Engineer (ảnh user là nguồn xác thực; sửa nếu ảnh khác). Đặt ở fdk/wiki (KHÔNG llmwiki/patterns vì R14 khoá — đúng cơ chế). → [[boris-cherny-agent-roles]]. fdk-gate 16/16.
+
 ## 2026-06-29 — refactor — gọn 13 chức năng: merge flywheel + tách 3 module dùng chung
 Theo review "đầu giống, cuối khác" (load_config trùng 17×, capture-jsonl 4×, emit-mode 6×): (1) **MERGE** failure+success-flywheel (trùng 11/11 hàm) → `flywheel.py --kind failure|success`; 2 file cũ thành shim `os.execv` giữ skill/fdk-gate refs. (2) **Tách 3 module dùng chung**: `bnal_config` (load adapter — 12 consumer dùng), `bnal_metrics` (capture JSONL by-code — flywheel dùng), `bnal_guard` (emit advisory/block theo mode+verified — egress+inject dùng). BNAL an toàn: mỗi feature giữ file config riêng (adapter = config, không phải loader). Verify: 17 self-test PASS, leak-gate xanh, 10/10 test, fdk-gate 16/16. Slash: chỉ web-crawl/web-clone cần (+/flywheel cho cặp merge); 11 cái còn lại là code chạy tự động/CI.
 
