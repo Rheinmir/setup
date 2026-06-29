@@ -51,6 +51,48 @@ Giảm lỗi LLM-coding phổ biến. Thiên về cẩn trọng hơn tốc độ
 | `trace-grader` | Chấm ĐƯỜNG ĐI của agent (tool/thứ tự/pass^k), không chỉ kết quả | `skills/orchestrate/trace-grader.md` | orchestrate |
 | `wikieval` | Bộ eval hồi quy từ wiki goldens (cascade assert + baseline, CI gate) | `skills/dev-loop/wikieval.md` | dev-loop |
 | `docs-curate` | Sắp xếp gọn kho docs local (html/draft phình to): promote bản chất→wiki, archive render, re-index | `skills/utils/docs-curate.md` | utils |
+| `brandkit` | Premium brand-kit image generation skill for creating high-end… | `skills/utils/brandkit.md` | utils |
+| `build-now-adapt-later` | When a task is blocked by missing or unverified information (an… | `skills/dev-loop/build-now-adapt-later.md` | dev-loop |
+| `cavecrew` | Decision guide for delegating to caveman-style subagents. | `skills/utils/cavecrew.md` | utils |
+| `caveman` | Ultra-compressed communication mode. | `skills/utils/caveman.md` | utils |
+| `caveman-commit` | Ultra-compressed commit message generator. | `skills/utils/caveman-commit.md` | utils |
+| `caveman-compress` | Compress natural language memory files (CLAUDE.md, todos, preferences)… | `skills/utils/caveman-compress.md` | utils |
+| `caveman-help` | Quick-reference card for all caveman modes, skills, and commands. | `skills/utils/caveman-help.md` | utils |
+| `caveman-review` | Ultra-compressed code review comments. | `skills/utils/caveman-review.md` | utils |
+| `caveman-stats` | Show real token usage and estimated savings for the current session. | `skills/utils/caveman-stats.md` | utils |
+| `check-approve` | Sinh sẵn 1-liner để trace 1 lệnh approve/return/reject của DMS trên log BE… | `skills/utils/check-approve.md` | utils |
+| `computer-use` | Use Orca's computer-use CLI to inspect and operate local desktop app… | `skills/utils/computer-use.md` | utils |
+| `cursor-animated-sites` | Build an interactive "cursor-animated walkthrough" page on top of the… | `skills/utils/cursor-animated-sites.md` | utils |
+| `design-taste-frontend` | Anti-slop frontend skill for landing pages, portfolios, and redesigns. | `skills/utils/design-taste-frontend.md` | utils |
+| `design-taste-frontend-v1` | The original v1 taste-skill, preserved for projects depending on its exact… | `skills/utils/design-taste-frontend-v1.md` | utils |
+| `extract-site` | Extract and convert a website or docs site into clean markdown | `skills/utils/extract-site.md` | utils |
+| `find-skills` | Helps users discover and install agent skills when they ask questions like… | `skills/utils/find-skills.md` | utils |
+| `full-output-enforcement` | Overrides default LLM truncation behavior. | `skills/utils/full-output-enforcement.md` | utils |
+| `gpt-taste` | Elite UX/UI & Advanced GSAP Motion Engineer. | `skills/utils/gpt-taste.md` | utils |
+| `harness-tour` | Tour — Claude tự diễn cho user xem harness chặn mình theo thời gian thực… | `skills/utils/harness-tour.md` | utils |
+| `harness-update` | TỰ BẢO TRÌ framework overstack trên máy user (self-maintain) — migrate… | `skills/utils/harness-update.md` | utils |
+| `health-check` | Kiểm tra sức khỏe "pattern chuẩn" của template — pattern đã đủ chưa, có… | `skills/utils/health-check.md` | utils |
+| `high-end-visual-design` | Teaches the AI to design like a high-end agency. | `skills/utils/high-end-visual-design.md` | utils |
+| `image-to-code` | Elite website image-to-code skill for Codex. | `skills/utils/image-to-code.md` | utils |
+| `imagegen-frontend-mobile` | Elite mobile app image-generation skill for creating premium, app-native… | `skills/utils/imagegen-frontend-mobile.md` | utils |
+| `imagegen-frontend-web` | Elite frontend image-direction skill for generating premium,… | `skills/utils/imagegen-frontend-web.md` | utils |
+| `industrial-brutalist-ui` | Raw mechanical interfaces fusing Swiss typographic print with military… | `skills/utils/industrial-brutalist-ui.md` | utils |
+| `jenkins-agent-l3-deploy` | Deploy a docker-compose app via a Jenkins INBOUND AGENT running on the… | `skills/orchestrate/jenkins-agent-l3-deploy.md` | orchestrate |
+| `join-project` | Orient nhanh vào dự án đang chạy đã có llmwiki — read-only, không ghi wiki | `skills/utils/join-project.md` | utils |
+| `last30days` | Research what people actually say about any topic in the last 30 days. | `skills/utils/last30days.md` | utils |
+| `minimalist-ui` | Clean editorial-style interfaces. | `skills/utils/minimalist-ui.md` | utils |
+| `new-project-setup` | Deploy llmwiki từ đầu vào project mới — template pull, skill install, RTK,… | `skills/dev-loop/new-project-setup.md` | dev-loop |
+| `orca-cli` | Use the public `orca` CLI to operate Orca-managed worktrees/workspaces,… | `skills/orchestrate/orca-cli.md` | orchestrate |
+| `orca-dispatch-reference` | Reference for Antigravity/OpenCode dispatch, skill installation,… | `skills/orchestrate/orca-dispatch-reference.md` | orchestrate |
+| `orca-eval` | Quét N session Claude Code gần nhất, distill best practices thành report… | `skills/orchestrate/orca-eval.md` | orchestrate |
+| `orca-sec-scans` | Quét bảo mật mã nguồn bằng Trivy — tự check/cài Trivy nếu chưa có, quét… | `skills/orchestrate/orca-sec-scans.md` | orchestrate |
+| `orchestration` | Use Orca orchestration for structured multi-agent coordination: threaded… | `skills/orchestrate/orchestration.md` | orchestrate |
+| `redesign-existing-projects` | Upgrades existing websites and apps to premium quality. | `skills/utils/redesign-existing-projects.md` | utils |
+| `snapshot-push` | Push bonbon-ai outer repo as full snapshot, including be/ and fe/ content | `skills/utils/snapshot-push.md` | utils |
+| `stitch-design-taste` | Semantic Design System Skill for Google Stitch. | `skills/utils/stitch-design-taste.md` | utils |
+| `tour-guide` | Thêm một in-app product tour (spotlight onboarding overlay) tự viết, KHÔNG… | `skills/dev-loop/tour-guide.md` | dev-loop |
+| `tour-guide-supademo` | Style thiết kế Supademo cho in-app product tour (dùng kèm skill tour-guide… | `skills/utils/tour-guide-supademo.md` | utils |
+| `uat-nonit-testcase` | Tạo bộ test case / checklist UAT cho người dùng nghiệp vụ NON-IT (C&B, kế… | `skills/utils/uat-nonit-testcase.md` | utils |
 
 ## Invocation rules
 - New file in `raw/` → invoke `ingest` immediately

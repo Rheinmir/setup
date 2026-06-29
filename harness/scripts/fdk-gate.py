@@ -41,6 +41,8 @@ STEPS = [
      "fdk/CAPABILITIES.md khớp đĩa (agent biết đúng đồ nghề)"),
     ("skill mirror parity", ["python3", "harness/scripts/sync-skills.py", "--check"],
      "canonical ↔ mirror skill byte-identical + loop khai đủ"),
+    ("skill cross-surface", ["python3", "harness/scripts/skill-registry.py", "--check"],
+     "mọi skill có mặt đủ marketplace + AGENT + CLAUDE + LOOP_MAP (không drift surface)"),
     ("policy↔converters drift", ["bash", "harness/tests/policy-converters-drift-test.sh"],
      "adapter sinh khớp policy.yaml"),
     ("vendor-neutral demo", ["bash", "harness/poc-vendor-neutral/demo.sh"],

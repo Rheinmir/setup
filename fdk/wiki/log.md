@@ -1,5 +1,8 @@
 # Operation Log
 
+## 2026-06-29 — maintenance — dọn drift skill-registry (42 skill) + wire gate
+`skill-registry --check` lâu nay đỏ: 42 skill thiếu khỏi bảng AGENT.md/CLAUDE.md, 35 thiếu khỏi marketplace.json (drift CŨ, không do skill mới). Đăng ký đủ: +42 row giống hệt vào CẢ 2 bảng (sinh từ frontmatter `name`+`description`+loop, sort theo name), +35 path vào marketplace (plugin 'project'). Giờ "all surfaces agree" (mkt 64+1 allowlist fdk, AGENT/CLAUDE/LOOP_MAP 65). **Wire `skill-registry --check` vào fdk-gate (16 step) + CI skills-sync** để drift không tái phát (gốc rễ: trước đây không có cổng gác surface này). agent↔claude parity giữ nguyên ✓.
+
 ## 2026-06-29 — feature — 2 skill web-crawl + web-clone (build-now-adapt-later)
 `/web-crawl` (site/URL → markdown LLM-ready): script `web-crawl.py` builtin urllib+regex→markdown (offline, no key) + `--self-test`; adapter `web-crawl.config.yaml` (backend firecrawl/crawl4ai/jina, verified:false). `/web-clone` (clone UI faithful → 1 file self-contained): `web-clone.py` inline local CSS/JS/img (offline) + adapter engine single-file CLI/monolith. Register đủ 4 surface (LOOP_MAP·marketplace·AGENT·CLAUDE) + sinh mirror; fdk-gate giờ 17 self-test BNAL. **Test crawl thật** `signals.forwardfuture.com/loop-library` → builtin backend chạy OK. (skill-registry --check còn drift CŨ 35/42 skill chưa đăng ký đủ — KHÔNG do 2 skill này, không gate.)
 

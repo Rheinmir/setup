@@ -11,3 +11,5 @@ jobs:
         with: { python-version: '3.x' }
       - name: skills/ ↔ llmwiki/skills/ phải khớp (canonical = skills/)
         run: python3 harness/scripts/sync-skills.py --check
+      - name: skill cross-surface (marketplace + AGENT + CLAUDE + LOOP_MAP không drift)
+        run: python3 harness/scripts/skill-registry.py --check
