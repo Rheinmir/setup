@@ -66,3 +66,4 @@
 | [ADR-013-five-more-trend-features-bnal](sources/adr/ADR-013-five-more-trend-features-bnal.md) | source | "ADR-013: 5 trend 2026 nữa → 5 chức năng qua build-now-adapt-later (memory · cost · injection · hallucination · prospect |
 | [ADR-014-protected-pattern-library](sources/adr/ADR-014-protected-pattern-library.md) | source | "ADR-014: kho pattern tham chiếu BẢO VỆ (llmwiki/patterns/) + R14 patterns-protected" |
 | [boris-cherny-agent-roles](concepts/boris-cherny-agent-roles.md) | concept | "Boris Cherny — 5 agent role trong Claude Code (scope deep-dive)" |
+| [ADR-015-boris-archetypes-into-template](sources/adr/ADR-015-boris-archetypes-into-template.md) | source | "ADR-015: áp 5 archetype Boris Cherny vào template — sweep-gate (nhịp Sweeper) + persona dispatch + phase-map" |

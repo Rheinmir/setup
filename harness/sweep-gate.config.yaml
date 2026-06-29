@@ -1,0 +1,21 @@
+# harness/sweep-gate.config.yaml
+# THE single place the SweepGate unknowns live — /build-now-adapt-later quarantine.
+# Áp dụng archetype "Sweeper" của Boris Cherny vào template: overstack hay ACCRETE (cứ thêm
+# feature/rule/skill) mà ít gọt định kỳ. sweep-gate đếm "đã thêm bao nhiêu kể từ lần Sweep cuối"
+# và NHẮC chạy một đợt gọt (simplify/unship/merge) khi vượt ngưỡng — như R10 docs-gate nhưng cho
+# nhịp Sweeper. Đếm tất định (git + marker); ngưỡng + cái-gì-tính-là-"thêm" là ẩn số.
+
+verified: false                   # ASSUMPTION (not verified) — sweep_threshold là ship-guess (chưa hiệu chỉnh trên nhịp dev thật); counted_globs là khởi đầu.
+
+sweep_threshold: 12               # ASSUMPTION (not verified) — thêm >= 12 đơn vị (script/rule/skill) kể từ Sweep cuối thì nhắc gọt
+counted_globs:                    # ASSUMPTION (not verified) — cái gì tính là "thêm" (accretion surface)
+  - "harness/scripts/*.py"
+  - "harness/*.config.yaml"
+  - "harness/validators/*.py"
+  - "skills/*/SKILL.md"
+
+# ADAPT-CHECKLIST (finalize khi có nhịp dev thật):
+#   1. Quan sát vài chu kỳ build→sweep; chỉnh sweep_threshold cho khớp (đừng nhắc quá dày/thưa).
+#   2. Tinh counted_globs (thêm/bớt surface accretion thật sự cần gọt).
+#   3. Chạy: python3 harness/scripts/sweep-gate.py --self-test  (phải PASS).
+#   4. Flip verified:true.

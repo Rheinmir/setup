@@ -1,5 +1,8 @@
 # Operation Log
 
+## 2026-06-29 — feature — áp 5 archetype Boris Cherny vào template (sweep-gate + persona dispatch + phase-map)
+Cái lens 5-archetype chẩn ra overstack **accrete** nhiều mà ít gọt. Làm 3 thứ (BNAL): (1) **sweep-gate** — đếm "đã thêm bao nhiêu kể từ Sweep cuối" (counted_globs vs marker) → nhắc gọt khi vượt ngưỡng (như R10 nhưng cho Sweeper); dogfood bnal_config+bnal_metrics. (2) **archetype.py** + `archetypes.config.yaml` + 5 posture `llmwiki/personas/*` → vừa **phase-map** (`--phase`: tool overstack hợp archetype) vừa **persona dispatch** (`--get /sweep`: in CLI gợi ý + preamble để orca-workflow inject cho agy/opencode/kiro). Từ khoá: `/proto /build /sweep /grow /maintain`. (3) Wire orca-workflow bước dispatch + 2 self-test vào fdk-gate (19 BNAL). Routing cli↔archetype `verified:false` (đoán, đo bằng orca-eval rồi chốt). → [[ADR-015-boris-archetypes-into-template]].
+
 ## 2026-06-29 — doc — Boris Cherny 5 agent role (deep-dive scope)
 Tạo `fdk/wiki/concepts/boris-cherny-agent-roles.md`: deep-dive scope 5 role từ `.claude/agents` của Boris Cherny (code-architect·code-simplifier·verify-app·build-validator·oncall-guide, +sentry-errors), mỗi role: scope·khi chạy·ranh giới·vì sao hẹp + map sang đồ overstack (propose/simplify/verify-before-commit/fdk-gate/orca-sec-scans). Nguồn: howborisusesclaudecode.com + Pragmatic Engineer (ảnh user là nguồn xác thực; sửa nếu ảnh khác). Đặt ở fdk/wiki (KHÔNG llmwiki/patterns vì R14 khoá — đúng cơ chế). → [[boris-cherny-agent-roles]]. fdk-gate 16/16.
 

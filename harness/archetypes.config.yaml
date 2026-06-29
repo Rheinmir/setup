@@ -1,0 +1,52 @@
+# harness/archetypes.config.yaml
+# THE single place the Archetype unknowns live — /build-now-adapt-later quarantine.
+# 5 archetype của Boris Cherny (Prototyper/Builder/Sweeper/Grower/Maintainer) thành PERSONA dispatch
+# được cho agy/opencode/kiro trong orca-workflow + TỪ KHOÁ gọi. archetype.py đọc file này.
+#
+# Map keyword→archetype, archetype→tools (phase-map #2), archetype→posture là TẤT ĐỊNH (built now,
+# --self-test). CLI/model nào HỢP nhất cho từng archetype là PHÁN ĐOÁN → quarantine ở đây.
+
+verified: false                   # ASSUMPTION (not verified) — routing cli/model theo archetype là best-guess (chưa đo trên task thật); keyword/tools/posture thì chốt được.
+
+archetypes:
+  prototyper:
+    keyword: "/proto"
+    phase: "0→1 explore"
+    cli: opencode                 # ASSUMPTION (not verified) — CLI rẻ/nhanh cho việc bắn nhiều ý tưởng vứt-đi
+    model: opencode/deepseek-v4-flash-free
+    tools: [last30days, build-now-adapt-later]
+    posture: llmwiki/personas/prototyper.md
+  builder:
+    keyword: "/build"
+    phase: "1→N production"
+    cli: claude                   # ASSUMPTION (not verified) — cần năng lực cao + nuance → Claude
+    model: null
+    tools: [propose, impact-check, verify-before-commit]
+    posture: llmwiki/personas/builder.md
+  sweeper:
+    keyword: "/sweep"
+    phase: "clean / unship"
+    cli: opencode                 # ASSUMPTION (not verified) — gọt cơ học, độc lập, verify được → CLI rẻ
+    model: opencode/big-pickle
+    tools: [simplify, docs-curate, sweep-gate]
+    posture: llmwiki/personas/sweeper.md
+  grower:
+    keyword: "/grow"
+    phase: "iterate PMF"
+    cli: claude                   # ASSUMPTION (not verified) — cần phán đoán metric/PMF → Claude
+    model: null
+    tools: [success-flywheel, wikieval]
+    posture: llmwiki/personas/grower.md
+  maintainer:
+    keyword: "/maintain"
+    phase: "scale / harden"
+    cli: claude                   # ASSUMPTION (not verified) — security/reliability cần cẩn trọng → Claude
+    model: null
+    tools: [harness-update, orca-sec-scans]
+    posture: llmwiki/personas/maintainer.md
+
+# ADAPT-CHECKLIST (finalize khi đo được CLI nào hợp archetype nào):
+#   1. Dispatch thử mỗi archetype vài task → ghi CLI/model nào giao hàng tốt (orca-eval).
+#   2. Cập nhật cli/model cho khớp thực tế (vd Sweeper agy nhanh hơn opencode?).
+#   3. Chạy: python3 harness/scripts/archetype.py --self-test  (phải PASS).
+#   4. Flip verified:true.

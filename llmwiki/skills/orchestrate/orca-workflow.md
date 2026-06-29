@@ -30,6 +30,13 @@ Claude: analyze. Others: execute. Kill opencode nếu chờ quá lâu.
 3. **gate**: `orca orchestration gate-create --question "Duyệt proposal này?"` → chờ user (gửi kèm preview URL của html)
 4. **Sau duyệt**: Phân rã tasks từ proposal → `orca orchestration task-create` mỗi task
 5. **dispatch**: `orca orchestration dispatch --task <id> --to <agent> --inject`
+   - **Persona theo archetype (Boris Cherny — 5 vai vòng đời):** muốn dispatch theo một *posture* cụ
+     thể thì gọi bằng **từ khoá** — `/proto` `/build` `/sweep` `/grow` `/maintain`. Cơ chế:
+     `python3 harness/scripts/archetype.py --get /<kw>` → in (a) **CLI gợi ý** cho archetype đó
+     (Prototyper→opencode rẻ · Builder/Grower/Maintainer→Claude · Sweeper→opencode), và (b)
+     **PREAMBLE persona** (`llmwiki/personas/<archetype>.md`) — **inject preamble đó vào `<task>`**
+     trước khi dispatch để agy/opencode/kiro vào đúng vai (vd Sweeper bị cấm thêm feature). CLI nào
+     hợp archetype nào là adapter `verified:false` (`harness/archetypes.config.yaml`). Xem ADR-015.
 6. **Chờ**: `orca orchestration check --wait --types worker_done --timeout-ms 300000`
 7. **Kiểm tra**: `verify-before-commit` tự động chạy trước mỗi commit
 
