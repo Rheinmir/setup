@@ -21,6 +21,8 @@ import tempfile
 from collections import defaultdict
 from pathlib import Path
 
+import bnal_config
+
 _FALLBACK = {"verified": False, "mode": "warn",
              "budgets": {"per_session_tokens": 2000000, "per_task_usd": 5.0},
              "rates": {"default": {"input": 0.003, "output": 0.015}}}
@@ -47,16 +49,7 @@ def _ensure_gitignored(root: Path) -> None:
 
 
 def load_config(root: Path) -> dict:
-    cfg = json.loads(json.dumps(_FALLBACK))
-    try:
-        import yaml
-        data = yaml.safe_load(_config_file(root).read_text(encoding="utf-8"))
-        if isinstance(data, dict):
-            for k, v in data.items():
-                if v is not None:
-                    cfg[k] = v
-    except Exception:
-        pass
+    cfg = bnal_config.load(root, "token-budget", _FALLBACK)
     return cfg
 
 

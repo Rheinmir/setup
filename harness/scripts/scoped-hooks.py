@@ -20,6 +20,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import bnal_config
+
 _FALLBACK = {"verified": False, "frontmatter_key": "guard",
              "activation": {"detector": "prompt-token"}}
 
@@ -29,17 +31,7 @@ def _config_file(root: Path) -> Path:
 
 
 def load_config(root: Path) -> dict:
-    cfg = json.loads(json.dumps(_FALLBACK))
-    try:
-        import yaml
-        data = yaml.safe_load(_config_file(root).read_text(encoding="utf-8"))
-        if isinstance(data, dict):
-            for k, v in data.items():
-                if v is not None:
-                    cfg[k] = v
-            cfg.setdefault("activation", {}).setdefault("detector", "prompt-token")
-    except Exception:
-        pass
+    cfg = bnal_config.load(root, "scoped-hooks", _FALLBACK)
     return cfg
 
 

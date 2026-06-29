@@ -18,6 +18,8 @@ import re
 import sys
 import tempfile
 from pathlib import Path
+
+import bnal_config
 from urllib.request import Request, urlopen
 
 _FALLBACK = {"verified": False, "backend": "builtin", "api_key_env": "FIRECRAWL_API_KEY",
@@ -29,16 +31,7 @@ def _config_file(root: Path) -> Path:
 
 
 def load_config(root: Path) -> dict:
-    cfg = dict(_FALLBACK)
-    try:
-        import yaml
-        data = yaml.safe_load(_config_file(root).read_text(encoding="utf-8"))
-        if isinstance(data, dict):
-            for k, v in data.items():
-                if v is not None:
-                    cfg[k] = v
-    except Exception:
-        pass
+    cfg = bnal_config.load(root, "web-crawl", _FALLBACK)
     return cfg
 
 

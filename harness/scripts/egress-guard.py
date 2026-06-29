@@ -23,6 +23,9 @@ import re
 import sys
 from pathlib import Path
 
+import bnal_config
+import bnal_guard
+
 _FALLBACK = {"verified": False, "mode": "warn",
              "egress": {"allow_domains": [], "net_commands": ["curl", "wget", "nc"]},
              "mcp_injection_patterns": []}
@@ -33,18 +36,9 @@ def _config_file(root: Path) -> Path:
 
 
 def load_config(root: Path) -> dict:
-    cfg = json.loads(json.dumps(_FALLBACK))   # deep copy of defaults
-    try:
-        import yaml
-        data = yaml.safe_load(_config_file(root).read_text(encoding="utf-8"))
-        if isinstance(data, dict):
-            for k, v in data.items():
-                if v is not None:
-                    cfg[k] = v
-            cfg.setdefault("egress", {}).setdefault("allow_domains", [])
-            cfg["egress"].setdefault("net_commands", _FALLBACK["egress"]["net_commands"])
-    except Exception:
-        pass
+    cfg = bnal_config.load(root, "egress-guard", _FALLBACK)
+    cfg.setdefault("egress", {}).setdefault("allow_domains", [])
+    cfg["egress"].setdefault("net_commands", _FALLBACK["egress"]["net_commands"])
     return cfg
 
 
@@ -89,17 +83,8 @@ def evaluate(event: dict, cfg: dict):
 
 
 def _emit_and_exit(problems, cfg):
-    if not problems:
-        sys.exit(0)
-    mode = str(cfg.get("mode", "warn")).lower()
-    tag = "[egress-guard]"
-    msg = tag + " " + "; ".join(problems)
-    if mode == "block" and cfg.get("verified") is True:
-        print(msg + "  (mode:block)", file=sys.stderr)
-        sys.exit(2)
-    # warn (or un-verified) -> advise, never break the session
-    print(msg + "  (mode:warn — set mode:block + verified:true to enforce)", file=sys.stderr)
-    sys.exit(0)
+    bnal_guard.emit(problems, tag="[egress-guard]", mode=cfg.get("mode", "warn"),
+                    verified=cfg.get("verified"), advise="set mode:block + verified:true to enforce")
 
 
 def self_test() -> int:

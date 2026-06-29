@@ -18,6 +18,8 @@ import re
 import sys
 from pathlib import Path
 
+import bnal_config
+
 _FALLBACK = {"verified": False, "resolver": "filesystem", "strictness": "advisory",
              "ref_extensions": ["py", "md", "yaml", "yml", "json", "sh", "js", "ts", "html", "txt", "toml", "cfg"]}
 
@@ -27,16 +29,7 @@ def _config_file(root: Path) -> Path:
 
 
 def load_config(root: Path) -> dict:
-    cfg = json.loads(json.dumps(_FALLBACK))
-    try:
-        import yaml
-        data = yaml.safe_load(_config_file(root).read_text(encoding="utf-8"))
-        if isinstance(data, dict):
-            for k, v in data.items():
-                if v is not None:
-                    cfg[k] = v
-    except Exception:
-        pass
+    cfg = bnal_config.load(root, "claim-receipts", _FALLBACK)
     return cfg
 
 

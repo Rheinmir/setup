@@ -18,6 +18,8 @@ import os
 import sys
 from pathlib import Path
 
+import bnal_config
+
 _FALLBACK = {
     "verified": False,
     "attribute_map": {"action": "gen_ai.operation.name", "tool": "gen_ai.tool.name",
@@ -33,16 +35,7 @@ def _config_file(root: Path) -> Path:
 
 
 def load_config(root: Path) -> dict:
-    cfg = json.loads(json.dumps(_FALLBACK))
-    try:
-        import yaml
-        data = yaml.safe_load(_config_file(root).read_text(encoding="utf-8"))
-        if isinstance(data, dict):
-            for k, v in data.items():
-                if v is not None:
-                    cfg[k] = v
-    except Exception:
-        pass
+    cfg = bnal_config.load(root, "trace-otel", _FALLBACK)
     return cfg
 
 

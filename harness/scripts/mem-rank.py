@@ -22,6 +22,8 @@ import sys
 import tempfile
 from pathlib import Path
 
+import bnal_config
+
 _FALLBACK = {"verified": False, "relevance": {"scorer": "token-overlap", "embedding_model": None},
              "eviction": {"policy": "score", "max_entries": 500}}
 
@@ -47,16 +49,7 @@ def _ensure_gitignored(root: Path) -> None:
 
 
 def load_config(root: Path) -> dict:
-    cfg = json.loads(json.dumps(_FALLBACK))
-    try:
-        import yaml
-        data = yaml.safe_load(_config_file(root).read_text(encoding="utf-8"))
-        if isinstance(data, dict):
-            for k, v in data.items():
-                if v is not None:
-                    cfg[k] = v
-    except Exception:
-        pass
+    cfg = bnal_config.load(root, "mem-rank", _FALLBACK)
     return cfg
 
 

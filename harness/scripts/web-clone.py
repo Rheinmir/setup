@@ -22,6 +22,8 @@ import sys
 import tempfile
 from pathlib import Path
 
+import bnal_config
+
 _FALLBACK = {"verified": False, "engine": "builtin", "singlefile_cmd": "single-file",
              "monolith_cmd": "monolith", "embed_images": True, "preserve_interactions": "best-effort"}
 
@@ -31,16 +33,7 @@ def _config_file(root: Path) -> Path:
 
 
 def load_config(root: Path) -> dict:
-    cfg = dict(_FALLBACK)
-    try:
-        import yaml
-        data = yaml.safe_load(_config_file(root).read_text(encoding="utf-8"))
-        if isinstance(data, dict):
-            for k, v in data.items():
-                if v is not None:
-                    cfg[k] = v
-    except Exception:
-        pass
+    cfg = bnal_config.load(root, "web-clone", _FALLBACK)
     return cfg
 
 

@@ -19,6 +19,8 @@ import os
 import sys
 from pathlib import Path
 
+import bnal_config
+
 _FALLBACK = {
     "verified": False,
     "required_sections": ["## Intent", "## Plan", "## Tasks", "## Success criteria"],
@@ -32,18 +34,7 @@ def _config_file(root: Path) -> Path:
 
 
 def load_config(root: Path) -> dict:
-    cfg = json.loads(json.dumps(_FALLBACK))
-    try:
-        import yaml
-        data = yaml.safe_load(_config_file(root).read_text(encoding="utf-8"))
-        if isinstance(data, dict):
-            for k, v in data.items():
-                if v is not None:
-                    cfg[k] = v
-            cfg.setdefault("conformance", {}).setdefault("mode", "advisory")
-            cfg["conformance"].setdefault("link_token", "Spec:")
-    except Exception:
-        pass
+    cfg = bnal_config.load(root, "spec-gate", _FALLBACK)
     return cfg
 
 

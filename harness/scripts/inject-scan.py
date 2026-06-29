@@ -21,6 +21,9 @@ import re
 import sys
 from pathlib import Path
 
+import bnal_config
+import bnal_guard
+
 _FALLBACK = {"verified": False, "action": "flag", "classifier": None,
              "patterns": ["ignore (all )?previous instructions", "you are now", "exfiltrate"]}
 
@@ -30,16 +33,7 @@ def _config_file(root: Path) -> Path:
 
 
 def load_config(root: Path) -> dict:
-    cfg = json.loads(json.dumps(_FALLBACK))
-    try:
-        import yaml
-        data = yaml.safe_load(_config_file(root).read_text(encoding="utf-8"))
-        if isinstance(data, dict):
-            for k, v in data.items():
-                if v is not None:
-                    cfg[k] = v
-    except Exception:
-        pass
+    cfg = bnal_config.load(root, "inject-scan", _FALLBACK)
     return cfg
 
 
@@ -59,14 +53,11 @@ def scan(content: str, patterns):
 
 
 def _emit_and_exit(hits, cfg):
-    if not hits:
-        sys.exit(0)
-    reasons = "; ".join(f"{p!r}~“{snip}”" for p, snip in hits)
-    msg = f"[inject-scan] injection signature in tool output: {reasons}"
-    if str(cfg.get("action", "flag")).lower() == "halt" and cfg.get("verified") is True:
-        print(msg + "  (action:halt)", file=sys.stderr); sys.exit(2)
-    print(msg + "  (action:flag — set action:halt + verified:true to stop processing)", file=sys.stderr)
-    sys.exit(0)
+    problems = (["injection signature in tool output: "
+                 + "; ".join(f"{p!r}~“{snip}”" for p, snip in hits)] if hits else [])
+    bnal_guard.emit(problems, tag="[inject-scan]", mode=cfg.get("action", "flag"),
+                    verified=cfg.get("verified"), enforce_mode="halt",
+                    advise="set action:halt + verified:true to stop processing")
 
 
 def self_test() -> int:
