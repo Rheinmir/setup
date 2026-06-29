@@ -37,4 +37,6 @@ for a in "$@"; do
 done
 [ "$WANT_FULL" = 1 ] && NEWARGS+=(--full)
 say "cài/update vào $TARGET $([ "$WANT_FULL" = 1 ] && echo '— CẢ 3 TRỤ' || echo '(harness-only)')"
+# repo-root raw (strip /harness/poc-vendor-neutral) → install.sh tải overstack.html từ đúng nguồn/branch
+export REPO_RAW="${BASE%/harness/poc-vendor-neutral}"
 bash "$TMP/install.sh" "$TARGET" ${NEWARGS[@]+"${NEWARGS[@]}"}

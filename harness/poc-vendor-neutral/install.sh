@@ -164,6 +164,16 @@ if [ "$WITH_WIKI" = 1 ]; then
   [ -f "$ROOT/llmwiki/wiki/index.md" ] || printf '# Wiki index\n\n| File | Type | Date |\n|---|---|---|\n' > "$ROOT/llmwiki/wiki/index.md"
   [ -f "$ROOT/llmwiki/wiki/log.md" ]   || printf '# Log\n' > "$ROOT/llmwiki/wiki/log.md"
   log "  ✓ llmwiki/ (wiki/{concepts,entities,sources/draft} · raw/ · index.md · log.md)"
+  # tài liệu hướng dẫn overstack — TRAVEL cùng khung xương (luôn refresh bản mới nhất)
+  if command -v curl >/dev/null 2>&1; then
+    REPO_RAW="${REPO_RAW:-https://raw.githubusercontent.com/Rheinmir/setup/orca}"
+    mkdir -p "$ROOT/llmwiki/html"
+    if curl -fsSL "$REPO_RAW/llmwiki/html/overstack.html" -o "$ROOT/llmwiki/html/overstack.html" 2>/dev/null; then
+      log "  ✓ llmwiki/html/overstack.html (tài liệu overstack — mở bằng trình duyệt)"
+    else
+      warn "  overstack.html chưa tải được (mạng?) → lấy tay: $REPO_RAW/llmwiki/html/overstack.html"
+    fi
+  fi
 fi
 
 # ── (tùy chọn) cài skill llmwiki (GLOBAL — khác phạm vi với harness theo-project) ──

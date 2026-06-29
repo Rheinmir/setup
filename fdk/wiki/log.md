@@ -1,5 +1,8 @@
 # Operation Log
 
+## 2026-06-29 — fix — overstack.html: nút copy + wrapping + TRAVEL theo install
+User báo 3 lỗi ở `llmwiki/html/overstack.html` (file hướng dẫn travel cùng khung xương): (1) thiếu nút copy ở khối lệnh, (2) `<pre>` overflow ngang làm lệnh "dài ngoằng" + thiếu padding, (3) cài từ README (bootstrap→install.sh) KHÔNG thấy file. Fix ở generator `build-overstack-docs.py`: thêm `.code-block` + `initCodeCopy` (nút Copy hover, fallback execCommand) + CSS `.code-copy`; `<pre>` đổi `overflow:auto`→`white-space:pre-wrap;word-break;overflow-wrap` + padding-right chừa nút. TRAVEL: PoC `install.sh` (block --with-wiki) curl `$REPO_RAW/llmwiki/html/overstack.html` → `llmwiki/html/`; `bootstrap.sh` export `REPO_RAW` (strip /harness/poc-vendor-neutral, đúng fork/branch). URL orca HTTP 200; fdk-gate 16/16.
+
 ## 2026-06-29 — feature — áp 5 archetype Boris Cherny vào template (sweep-gate + persona dispatch + phase-map)
 Cái lens 5-archetype chẩn ra overstack **accrete** nhiều mà ít gọt. Làm 3 thứ (BNAL): (1) **sweep-gate** — đếm "đã thêm bao nhiêu kể từ Sweep cuối" (counted_globs vs marker) → nhắc gọt khi vượt ngưỡng (như R10 nhưng cho Sweeper); dogfood bnal_config+bnal_metrics. (2) **archetype.py** + `archetypes.config.yaml` + 5 posture `llmwiki/personas/*` → vừa **phase-map** (`--phase`: tool overstack hợp archetype) vừa **persona dispatch** (`--get /sweep`: in CLI gợi ý + preamble để orca-workflow inject cho agy/opencode/kiro). Từ khoá: `/proto /build /sweep /grow /maintain`. (3) Wire orca-workflow bước dispatch + 2 self-test vào fdk-gate (19 BNAL). Routing cli↔archetype `verified:false` (đoán, đo bằng orca-eval rồi chốt). → [[ADR-015-boris-archetypes-into-template]].
 
