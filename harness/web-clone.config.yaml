@@ -1,24 +1,34 @@
 # harness/web-clone.config.yaml
 # THE single place the WebClone unknowns live — the /build-now-adapt-later quarantine.
-# web-clone.py reads its engine + options FROM HERE. Trend mirrored (2026): save a FAITHFUL copy
-# of a page (UI + resources) as one self-contained HTML — SingleFile CLI (keeps scripts),
-# monolith (Rust), HTTrack. Interactive JS behaviour is the imperfect part across all engines.
+# web-clone.py + the /web-clone skill read mode/engine FROM HERE. Two honestly-different jobs:
+#   snapshot   = faithful 1-file offline copy (SingleFile/monolith style) — exact bytes.
+#   reconstruct = AI reverse-engineer → editable Next.js/Tailwind codebase
+#                 (the ai-website-cloner-template method: tokens → specs → parallel builders → diff QA).
 #
-# Inlining a LOCAL page's local resources (CSS/JS/images) into one self-contained file is
-# deterministic and built now (--self-test). WHICH engine handles a live URL faithfully — and how
-# well it preserves JS INTERACTIONS — is the unknown; default 'builtin' inlines a local page offline.
+# Inlining a LOCAL page's resources into one self-contained file is deterministic and built now
+# (--self-test). Faithful LIVE-URL capture, JS-INTERACTION fidelity, and reconstruct fidelity are
+# the unknowns — default mode 'snapshot' + engine 'builtin' works offline with no key/browser.
 
-verified: false                   # ASSUMPTION (not verified) — builtin inlines LOCAL resources only; faithful live-URL capture + JS-interaction preservation need an external engine (single-file CLI / monolith) that may be absent. preserve_interactions is a known imperfection.
+verified: false                   # ASSUMPTION (not verified) — builtin inlines LOCAL resources only; faithful live capture + reconstruct quality need an external engine / browser-MCP that may be absent. preserve_interactions is a known imperfection.
 
+mode: snapshot                    # ASSUMPTION (not verified) — snapshot (faithful 1-file) | reconstruct (→ editable Next.js)
+
+# snapshot engines
 engine: builtin                   # ASSUMPTION (not verified) — builtin | singlefile-cli | monolith ; builtin = inline local CSS/JS/img → 1 file (offline)
-singlefile_cmd: single-file       # ASSUMPTION (not verified) — CLI name nếu engine=singlefile-cli (npm i -g single-file-cli)
-monolith_cmd: monolith            # ASSUMPTION (not verified) — CLI name nếu engine=monolith (cargo install monolith)
-
+singlefile_cmd: single-file       # ASSUMPTION (not verified) — CLI nếu engine=singlefile-cli (npm i -g single-file-cli)
+monolith_cmd: monolith            # ASSUMPTION (not verified) — CLI nếu engine=monolith (cargo install monolith)
 embed_images: true                # ASSUMPTION (not verified) — nhúng ảnh local thành data: URI
-preserve_interactions: best-effort  # ASSUMPTION (not verified) — best-effort: giữ <script>, nhưng tương tác động phụ thuộc engine (chưa đảm bảo)
+preserve_interactions: best-effort  # ASSUMPTION (not verified) — giữ <script>, nhưng tương tác động phụ thuộc engine
 
-# ADAPT-CHECKLIST (finalize khi chọn được engine faithful):
-#   1. Cài + chọn engine (single-file CLI giữ script tốt; monolith nhanh) → set engine + *_cmd.
-#   2. Kiểm tương tác động trên 1-2 trang thật; ghi mức preserve_interactions thực tế.
-#   3. Chạy: python3 harness/scripts/web-clone.py --self-test  (phải PASS).
-#   4. Flip verified:true. builtin vẫn là fallback cho trang local/tĩnh.
+# reconstruct pipeline (skill-orchestrated; cf github.com/JCodesMore/ai-website-cloner-template)
+reconstruct:                      # ASSUMPTION (not verified) — pipeline + stack là best-guess; fidelity tuỳ chất lượng extraction
+  stack: nextjs-tailwind-shadcn   #   Next.js + TS + Tailwind v4 + shadcn/ui
+  recon_via: browser-mcp          #   browser-MCP / computer-use cho screenshot + getComputedStyle (cần cài)
+  parallel_builders: true         #   dispatch builder qua /orchestration hoặc Agent tool
+  spec_dir: docs/research/components   #   spec = hợp đồng giữa extraction và builder
+
+# ADAPT-CHECKLIST (finalize khi chọn được engine/pipeline thật):
+#   1. snapshot: cài + chọn engine (single-file CLI giữ script tốt; monolith nhanh) → set engine + *_cmd.
+#   2. reconstruct: bật browser-MCP/computer-use cho recon; xác nhận stack; chạy thử 1 trang, đo fidelity.
+#   3. Chạy: python3 harness/scripts/web-clone.py --self-test  (snapshot core; phải PASS).
+#   4. Flip verified:true. builtin snapshot vẫn là fallback offline cho trang local/tĩnh.

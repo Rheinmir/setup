@@ -16,13 +16,16 @@ adapter (`harness/web-crawl.config.yaml`, `verified:false`) — the builtin work
 ## Steps
 1. **JS-heavy / rendered site?** In an agent session, prefer the in-session **WebFetch** tool
    (it renders JS + returns markdown). That is the richest path and needs no setup.
-2. **Otherwise / scripted:** run the builtin (offline, no key):
+2. **Scripted, single static page (offline, no key):**
    `python3 harness/scripts/web-crawl.py fetch "<URL>" --out raw/<slug>.md`
-   (urllib fetch → deterministic HTML→markdown: headings, links, lists, code; strips script/style).
+   ⚠️ The `builtin` backend is **BASIC on purpose**: `urllib` fetch + regex HTML→markdown — **no JS
+   rendering, single page only, no smart extraction**. It is the offline fallback, NOT Firecrawl-quality.
    Local HTML already downloaded? `web-crawl.py md <file.html>`.
-3. **Many pages / better fidelity:** wire a backend in `harness/web-crawl.config.yaml`
-   (`backend: firecrawl|crawl4ai|jina` + `api_key_env`/`endpoint`), then flip `verified:true`.
-   Firecrawl also ships an MCP for agent loops.
+3. **Real crawling (JS render, whole-site, clean extraction) → wire the real engine:** the premium
+   backend is where the quality is — `backend: firecrawl|crawl4ai|jina` + `api_key_env`/`endpoint`
+   in `harness/web-crawl.config.yaml`, then flip `verified:true`. **Firecrawl** (managed, crawl-to-
+   markdown, ~5-10x token reduction, ships an **MCP** for agent loops) or **Crawl4AI** (open-source,
+   self-host, adaptive selectors). The builtin exists so the skill runs today; these are the real upgrade.
 4. **Land it:** save markdown to `raw/` (human inbox) or a wiki draft, then `/propose` / `ingest`
    to bring the distilled bits into the wiki — never write straight into `wiki/` (R1/R2).
 
@@ -34,6 +37,8 @@ adapter (`harness/web-crawl.config.yaml`, `verified:false`) — the builtin work
 - Self-test: `python3 harness/scripts/web-crawl.py --self-test`.
 
 ## Related
-- `harness/scripts/web-crawl.py` + `harness/web-crawl.config.yaml` (the adapter).
+- `harness/scripts/web-crawl.py` + `harness/web-crawl.config.yaml` (the backend adapter).
+- **Real engines (the upgrade):** Firecrawl (`github.com/mendableai/firecrawl`, managed + MCP),
+  Crawl4AI (`github.com/unclecode/crawl4ai`, OSS self-host), Jina Reader. MinerU (in your stars) for PDFs/docs.
 - `/web-clone` — when you want the page's UI/look, not its text.
 - `build-now-adapt-later` — the quarantine pattern this backend follows.

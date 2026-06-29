@@ -75,7 +75,7 @@
 - **`/sync-template`** — Sync structural improvements between project and master template repo
 - **`/tour-guide-supademo`** — Style thiết kế Supademo cho in-app product tour (dùng kèm skill tour-guide
 - **`/uat-nonit-testcase`** — Tạo bộ test case / checklist UAT cho người dùng nghiệp vụ NON-IT (C&B, kế toán, vận hành)
-- **`/web-clone`** — Clone a website's exact look
+- **`/web-clone`** — Clone a website
 - **`/web-crawl`** — Crawl/scrape a website or single page into clean LLM-ready MARKDOWN
 
 ## Harness rules (gác tự động — vi phạm bị chặn)

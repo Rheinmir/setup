@@ -1,5 +1,8 @@
 # Operation Log
 
+## 2026-06-29 — fix — web-crawl/web-clone tham chiếu đúng nguồn (Firecrawl + ai-website-cloner-template)
+User hỏi thẳng: crawler có tham khảo Firecrawl không, cloner có tham khảo ai-website-cloner-template chưa. Trả lời thật: builtin crawl là đồ cơ bản (urllib+regex, không render JS) — Firecrawl/Crawl4AI mới là engine thật (đã nêu rõ trong SKILL.md + Related repo). web-clone thêm **2 mode**: `snapshot` (1-file faithful, SingleFile/monolith) + `reconstruct` (reverse-engineer → Next.js editable, distill 5-phase pipeline của JCodesMore/ai-website-cloner-template ~6k★: recon browser-MCP → design tokens → component spec → parallel builders → visual-diff QA). Config web-clone +mode adapter; SKILL.md cite cả 2 nguồn. sync mirror + regen capabilities/overstack; fdk-gate 16/16.
+
 ## 2026-06-29 — maintenance — dọn drift skill-registry (42 skill) + wire gate
 `skill-registry --check` lâu nay đỏ: 42 skill thiếu khỏi bảng AGENT.md/CLAUDE.md, 35 thiếu khỏi marketplace.json (drift CŨ, không do skill mới). Đăng ký đủ: +42 row giống hệt vào CẢ 2 bảng (sinh từ frontmatter `name`+`description`+loop, sort theo name), +35 path vào marketplace (plugin 'project'). Giờ "all surfaces agree" (mkt 64+1 allowlist fdk, AGENT/CLAUDE/LOOP_MAP 65). **Wire `skill-registry --check` vào fdk-gate (16 step) + CI skills-sync** để drift không tái phát (gốc rễ: trước đây không có cổng gác surface này). agent↔claude parity giữ nguyên ✓.
 
@@ -228,3 +231,4 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 <!-- log:auto:end -->
 
 ## 2026-06-28 — docs-curate promote — ADR-006 (hook-vs-MCP) + concept harness-enforcement-floor (từ 3 draft analysis 250626; cicd-lifecycle skip=demo)
+- 2026-06-29 07:53 — session `1fdd736b` — 100 tool calls — files: .pre-commit-config.yaml, 290626-bnal-trend-features-docs.md, 290626-bnal-trend-features.html, ADR-011-project-local-harness.md, ADR-012-five-trend-features-bnal.md, ADR-013-five-more-trend-features-bnal.md, ADR-014-protected-pattern-library.md, AGENT.md …
