@@ -45,6 +45,8 @@ STEPS = [
      "mọi skill có mặt đủ marketplace + AGENT + CLAUDE + LOOP_MAP (không drift surface)"),
     ("task-lifecycle", ["python3", "harness/validators/task_lifecycle.py", "--root", "."],
      "Trụ 3: task-ID đi đúng proposed→approved→dispatched→done + draft không ref task lạ"),
+    ("audit-chain", ["python3", "harness/scripts/code-logger.py", "--audit", "--check"],
+     "Trụ 5: hash-chain events.jsonl nguyên vẹn — sửa/chèn/xoá dòng log đã-chained → đỏ"),
     ("bnal self-test wired", ["python3", "harness/scripts/bnal-selftest.py", "--check"],
      "mọi script có --self-test ĐỀU được fdk-gate chạy (anti-drift: thêm feature quên gate → đỏ)"),
     ("policy↔converters drift", ["bash", "harness/tests/policy-converters-drift-test.sh"],

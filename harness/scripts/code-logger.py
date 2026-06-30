@@ -290,16 +290,19 @@ def cost_summary(root) -> None:
         print(f"    ${c:8.2f}  {m}")
 
 
-def audit_verify(root) -> None:
+def audit_verify(root) -> bool:
     """Trụ 5 — Audit & Analytics. Kiểm tra toàn vẹn chuỗi tamper-evident của events.jsonl
     rồi in tóm tắt hội tụ (số sự kiện, khoảng thời gian, phân loại). Đọc RAW (không nuốt
-    dòng hỏng như _read_events) để chính tamper cũng lộ ra."""
+    dòng hỏng như _read_events) để chính tamper cũng lộ ra.
+
+    Trả True nếu chuỗi NGUYÊN VẸN / chưa khởi tạo / chưa có file (fail-open); False nếu
+    chuỗi ĐỨT hoặc JSON hỏng giữa file (dùng cho `--audit --check` ở gate)."""
     root = Path(root)
     try:
         raw = _events_path(root).read_text(encoding="utf-8").splitlines()
     except Exception:
         print("audit: chưa có events.jsonl")
-        return
+        return True
     lines = [ln for ln in raw if ln.strip()]
     total = len(lines)
     objs = []
@@ -308,7 +311,7 @@ def audit_verify(root) -> None:
             objs.append(json.loads(ln))
         except Exception:
             print(f"audit: ✗ dòng {i + 1} JSON hỏng — không verify được phần còn lại")
-            return
+            return False
     first = next((i for i, o in enumerate(objs) if o.get("h")), None)
     pre = total if first is None else first
     broken = None
@@ -340,6 +343,7 @@ def audit_verify(root) -> None:
         print(f"    {n:4d}  {k}")
     print("  ⚠️ tamper-EVIDENT, không tamper-proof: bắt sửa/chèn/xoá dòng giữa file; KHÔNG chống được")
     print("     agent tự tính lại cả chuỗi, và không bắt cắt-đuôi (cần neo ngoại bộ — council: khoan làm).")
+    return broken is None
 
 
 def _tasks_path(root: Path) -> Path:
@@ -480,7 +484,9 @@ def main() -> None:
     elif "--cost-summary" in args:
         cost_summary(root)
     elif "--audit" in args:
-        audit_verify(root)
+        ok = audit_verify(root)
+        if "--check" in args:          # chế độ gate: chuỗi đứt → exit 2 (interactive --audit vẫn exit 0)
+            sys.exit(0 if ok else 2)
     elif "--reconcile" in args:
         i = args.index("--reconcile")
         reconcile(root, args[i + 1:])
