@@ -59,5 +59,5 @@ The question "generate mirror at install vs commit it from repo" was resolved in
 
 ## Origin
 - **Draft:** `wiki/draft/uiux/300626-audit-fix-docs-site-macos.md`
-- **Commit:** _(filled by verify-before-commit)_
-- **Date promoted:** _(filled by verify-before-commit)_
+- **Commit:** `9ecff0d` — fix(skills): a11y/head hardening cho skill sinh-HTML + auto-sync mirror
+- **Date promoted:** 2026-06-30 (output-report draft — giữ ở draft/uiux theo /redesign-existing-projects, không promote sang concepts/)
