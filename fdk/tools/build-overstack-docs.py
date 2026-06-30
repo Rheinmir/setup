@@ -412,11 +412,15 @@ def sections(root: Path):
     S.append(("quickstart", "★ Quickstart", "00 · Bắt đầu", "Quickstart — chạy được trong 2 phút", [
         "<p class=\"lead\">Bạn chỉ cần nhớ ba thứ: <b>cài</b>, <b>để agent làm việc</b>, và <b>khi muốn tính năng mới thì /propose trước</b>. Phần còn lại overstack lo (rào chắn tất định chặn agent làm bậy, 0 token).</p>",
         "<h3>1. Cài vào dự án của bạn (một dòng)</h3>",
-        "<p><b>Cách 1 — dán cho Agent</b> (agent tự cài rồi tự kiểm tra mọi thứ đã đúng chỗ):</p>",
-        "<pre class='code-block'><code>chạy curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash và kiểm tra xem mọi thứ đã ở đúng chỗ chưa</code></pre>",
-        "<p><b>Cách 2 — chạy thẳng trong terminal:</b></p>",
-        "<pre class='code-block'><code>curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash</code></pre>",
-        "<p>Lệnh này kéo cả ba trụ — <b>harness</b> (rào chắn), <b>skills</b> (kỹ năng), <b>llmwiki</b> (nền tri thức) — và bật guardrail ngay. Dự án cũ đã có wiki? Gọi <code>/harness-update</code> để migrate + tự trả nợ.</p>",
+        "<div class=\"grid\">"
+        "<div class=\"card\"><h4>Cách 1 — dán cho Agent</h4>"
+        "<p style=\"margin:0 0 8px\">Agent tự cài rồi tự kiểm tra mọi thứ đã đúng chỗ:</p>"
+        "<pre class='code-block'><code>chạy curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash và kiểm tra xem mọi thứ đã ở đúng chỗ chưa</code></pre></div>"
+        "<div class=\"card\"><h4>Cách 2 — terminal</h4>"
+        "<p style=\"margin:0 0 8px\">Chạy thẳng một dòng:</p>"
+        "<pre class='code-block'><code>curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash</code></pre></div>"
+        "</div>",
+        "<p>Lệnh này kéo cả <b>3 nền tảng</b> — <b>harness</b> (rào chắn), <b>skills</b> (kỹ năng), <b>llmwiki</b> (nền tri thức) — và bật guardrail ngay. Dự án cũ đã có wiki? Gọi <code>/harness-update</code> để migrate + tự trả nợ.</p>",
         "<h3>2. Cứ làm việc bình thường với agent</h3>",
         "<p>Agent (Claude Code, Cursor, opencode…) giờ bị overstack gác: không ghi bậy vào <code>raw/</code>, mọi trang wiki buộc có nguồn gốc (<code>## Origin</code>), index/log tự cập-nhật-bằng-code. Bạn không phải nhớ luật — hàng rào tự cắn.</p>",
         "<h3>3. Muốn một tính năng/đổi thay? gọi <code>/orca-workflow</code></h3>",
@@ -806,9 +810,9 @@ def render(root: Path) -> str:
         "<nav>", "".join(nav), "</nav>",
         '<header class="hero"><span class="eyebrow">Tài liệu chính thức · cho người đọc</span>',
         "<h1>overstack</h1>",
-        f"<p><b>overstack không còn chỉ là một \"framework\"</b> — nó là <b>Outer Harness</b>: lớp <b>vận hành</b> biến AI Agent thành cộng sự kỹ thuật tự-kỷ-luật ở <b>CẢ HAI thì</b>. "
-        f"<b>Build-time</b> (scaffolding): tri thức (wiki) · rào chắn tất định (harness, {n_rules} rule, 0 token) · kỹ năng ({n_sk} skill) · điều phối đa-agent (Orca). "
-        f"<b>Runtime</b> (đo &amp; gác lúc chạy): đo cost · theo dõi task · gác chất lượng · truy vết audit — <b>5 trụ Outer Harness</b>, cộng evaluation (council) + tự-bảo-trì. "
+        f"<p>Gọi cho đúng: overstack là một <b>lớp AgentOps + guardrails-as-code</b> đặt trên dự án của bạn — phần <i>Harness</i> trong công thức <b>Agent = Model + Harness</b> (LangChain) mà bình thường mỗi nhóm phải tự xây. "
+        f"<b>Build-time</b> (kỷ luật trước khi chạy): tri thức (wiki) · rào chắn tất định (harness, {n_rules} rule, 0 token) · kỹ năng ({n_sk} skill) · điều phối đa-agent (Orca). "
+        f"<b>Runtime — AgentOps</b> (đo &amp; gác lúc chạy): đo cost · theo dõi task · gác chất lượng · truy vết audit · evaluation. "
         f"Bắt đầu ở Quickstart; các tab sau đi sâu từng phần.</p></header>",
         "".join(body),
         '<footer>overstack · tài liệu sinh bằng <code>fdk/tools/build-overstack-docs.py</code> (số liệu live từ đĩa) · '
