@@ -74,6 +74,10 @@ jobs:
         run: python3 harness/scripts/wiki-health.py --wiki-dir fdk/wiki --fail-on broken
       - name: arch-scan — doc vs rule
         run: python3 harness/scripts/arch-scan.py --root .
+      - name: code-health — Trụ 4 cổng CI tất định không-LLM (mọi .py compile; ruff nếu có)
+        run: |
+          pip install ruff --quiet || echo "ruff không cài được — chạy floor compile"
+          python3 harness/validators/code_health.py --root .
       - name: harness-lint — meta-drift (hằng số content-dir + wiring policy→settings)
         run: python3 harness/scripts/harness-lint.py --check
       - name: agent↔claude skill-table parity
