@@ -46,6 +46,7 @@ Schemas (the stable contract -- contains NO unverified value)
   judges.json  : [{"judge": str, "ranking": [<anon label>, ...]}, ...]  # best first
 """
 import argparse
+import difflib
 import hashlib
 import json
 import math
@@ -632,23 +633,48 @@ def cmd_roster(args):
         print("\nVí dụ:  council.py roster --case risk   ·   --profile lean   ·   --personas feynman,taleb,rams")
         return
 
+    # GỌI CHÍNH XÁC kể cả khi nhớ nhầm: khớp không-phân-biệt-hoa/thường, theo id LẪN tên,
+    # gõ sai → gợi ý gần nhất (difflib) thay vì fail trơ.
+    def _sug(tok, opts):
+        m = difflib.get_close_matches(tok.lower(), [o.lower() for o in opts], n=1, cutoff=0.5)
+        return f" — ý bạn là '{m[0]}'?" if m else " (xem: roster --list)"
+
+    def _resolve_persona(tok):
+        t = tok.strip()
+        low = t.lower()
+        if t in P:
+            return t
+        for i in P:                                    # id không phân biệt hoa/thường
+            if i.lower() == low:
+                return i
+        for i, v in P.items():                         # theo TÊN (đầy đủ hoặc 1 từ: "Feynman"/"taleb")
+            nm = v.get("name", "").lower()
+            if low == nm or low in nm.split():
+                return i
+        cand = list(P) + [v.get("name", "") for v in P.values()]
+        m = difflib.get_close_matches(t, cand, n=1, cutoff=0.5)
+        _die(f"persona lạ '{tok}'" + (f" — ý bạn là '{m[0]}'?" if m else " (xem: roster --list)"))
+
     if args.personas_list:
-        ids, why = [x.strip() for x in args.personas_list.split(",") if x.strip()], "chỉ định tay"
+        ids = [_resolve_persona(x) for x in args.personas_list.split(",") if x.strip()]
+        why = "chỉ định tay"
     elif args.profile:
-        ids = profiles.get(args.profile) or _die(f"profile lạ '{args.profile}' (có: {', '.join(profiles)})")
-        why = f"profile {args.profile}"
+        key = next((k for k in profiles if k.lower() == args.profile.strip().lower()), None)
+        if not key:
+            _die(f"profile lạ '{args.profile}' (có: {', '.join(profiles)}){_sug(args.profile, profiles)}")
+        ids, why = profiles[key], f"profile {key}"
     elif args.case:
-        c = cases.get(args.case) or _die(f"case lạ '{args.case}' (có: {', '.join(cases)})")
+        key = next((k for k in cases if k.lower() == args.case.strip().lower()), None)
+        if not key:
+            _die(f"case lạ '{args.case}' (có: {', '.join(cases)}){_sug(args.case, cases)}")
+        c = cases[key]
         ids = list(c.get("base", []))
         if args.size and args.size >= 5:
             ids += list(c.get("extra", []))[:max(0, args.size - len(ids))]
-        why = f"case {args.case} (size {len(ids)})"
+        why = f"case {key} (size {len(ids)})"
     else:
         _die("cần --case <tag> | --profile <name> | --personas a,b,c")
 
-    unknown = [i for i in ids if i not in P]
-    if unknown:
-        _die(f"persona lạ: {unknown}")
     idset = set(ids)
     tensions = [list(p) for p in pairs if p[0] in idset and p[1] in idset]
     if not tensions and len(ids) > 1:
