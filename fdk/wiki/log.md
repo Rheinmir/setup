@@ -250,3 +250,8 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 
 ## 2026-06-28 — docs-curate promote — ADR-006 (hook-vs-MCP) + concept harness-enforcement-floor (từ 3 draft analysis 250626; cicd-lifecycle skip=demo)
 - 2026-06-29 07:53 — session `1fdd736b` — 100 tool calls — files: .pre-commit-config.yaml, 290626-bnal-trend-features-docs.md, 290626-bnal-trend-features.html, ADR-011-project-local-harness.md, ADR-012-five-trend-features-bnal.md, ADR-013-five-more-trend-features-bnal.md, ADR-014-protected-pattern-library.md, AGENT.md …
+
+## 2026-06-30 — concept outer-harness-evaluation + index cleanup
+- Tạo `concepts/outer-harness-evaluation.md` — distill Outer Harness (raw/outer-harness.md) + kết quả phiên /council (3 ghế, blind peer-rank seed 42, single-provider caveat); gap-map overstack vs 5 trụ cột + roadmap.
+- Dọn `index.md`: xóa 21 dòng orphan trỏ tới `sources/draft/*.md` không tồn tại (đã được archive sang `sources/draft/archive/...`, auto-index block giữ bản đúng). 88→67 dòng (sau đó +1 entry mới).
+- 2026-06-30 — docs-site-macos render: `llmwiki/html/300626-outer-harness-evaluation.html` (glass single-file, mind map + 2 draggable SVG + 5 section) cho concept outer-harness-evaluation. Self-contained, served :8765.

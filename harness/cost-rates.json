@@ -1,0 +1,11 @@
+{
+  "_note": "Cost Attribution adapter (Tru 1 Outer Harness). build-now-adapt-later: don gia token la AN SO — sua o day, engine khong bao gio hardcode. Don vi: USD tren 1 TRIEU token. Khop model bang substring (key nam trong ten model, vd 'opus' khop 'claude-opus-4-8').",
+  "_verified": false,
+  "_verify_how": "Doi chieu bang gia provider hien hanh roi set _verified=true; key '_default' dung khi khong khop model nao.",
+  "rates": {
+    "opus":   { "in": 15.0, "out": 75.0, "cache_write": 18.75, "cache_read": 1.50 },
+    "sonnet": { "in": 3.0,  "out": 15.0, "cache_write": 3.75,  "cache_read": 0.30 },
+    "haiku":  { "in": 1.0,  "out": 5.0,  "cache_write": 1.25,  "cache_read": 0.10 },
+    "_default": { "in": 15.0, "out": 75.0, "cache_write": 18.75, "cache_read": 1.50 }
+  }
+}

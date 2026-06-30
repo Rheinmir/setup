@@ -48,6 +48,9 @@ def main() -> None:
 
     root = project_dir(payload)
     code_log(root, "--render-md")  # log.md auto-block do CODE sinh từ events.jsonl (không nhờ agent ghi)
+    tp = payload.get("transcript_path")  # Trụ 1 Cost Attribution: 1 cost record / run, upsert theo session (cumulative, idempotent)
+    if tp:
+        code_log(root, "--run-cost", f"--transcript={tp}", f"--session={payload.get('session_id') or ''}")
     regen_docs(root)               # overstack.html + CAPABILITIES tự cập nhật khi skill/rule đổi (repo framework)
     if not wiki_changed(root):
         sys.exit(0)  # phiên không đụng wiki → không can thiệp
