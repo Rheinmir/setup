@@ -1,5 +1,8 @@
 # Operation Log
 
+## 2026-06-29 — anti-drift — meta-gate bnal-selftest + dọn rác lỗi-vị-trí
+User hỏi "sao vẫn drift, không có cơ chế ngầm?". Trả lời: gate cũ chỉ verify render==generator / config-có-ADAPT-CHECKLIST, KHÔNG ai cross-check "mọi script có --self-test ĐỀU được fdk-gate chạy" → thêm feature quên wire self-test thì trôi lọt. Thêm `bnal-selftest.py --check` (discover script có --self-test vs fdk-gate khai; thiếu→exit 2; EXEMPT fdk-gate/flywheel/bnal-selftest) + wire vào fdk-gate (17 step). Cũng tìm ra thủ phạm vụ `fdk/tools/` biến mất trước đây: có `fdk/wiki/tools/` = bản duplicate lỗi-vị-trí (untracked, thiếu edit mới) → đã xoá. fdk-gate 17/17.
+
 ## 2026-06-29 — fix — overstack.html: nhánh BNAL AUTO từ config (hết outdate, chống drift)
 User báo overstack.html trông cũ — mind-map chỉ show 10 chức năng BNAL (2 nhánh hardcode "BNAL 2026"+"BNAL đợt 2") trong khi đã có ~20 adapter. Sửa GỐC ở `build-overstack-docs.py`: thay 2 nhánh cứng bằng AUTO-GEN — quét `harness/*.config.yaml`, đọc cờ `verified`, gom 2 nhóm verified:false (chờ hiệu chỉnh) / verified:true (đã chốt), desc từ map curated (fallback generic). Thêm config BNAL mới → tự vào mind map, không drift nữa (đúng /fdk "đếm LIVE, không hardcode"). Regen overstack.html; fdk-gate 16/16.
 
@@ -255,3 +258,4 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 - Tạo `concepts/outer-harness-evaluation.md` — distill Outer Harness (raw/outer-harness.md) + kết quả phiên /council (3 ghế, blind peer-rank seed 42, single-provider caveat); gap-map overstack vs 5 trụ cột + roadmap.
 - Dọn `index.md`: xóa 21 dòng orphan trỏ tới `sources/draft/*.md` không tồn tại (đã được archive sang `sources/draft/archive/...`, auto-index block giữ bản đúng). 88→67 dòng (sau đó +1 entry mới).
 - 2026-06-30 — docs-site-macos render: `llmwiki/html/300626-outer-harness-evaluation.html` (glass single-file, mind map + 2 draggable SVG + 5 section) cho concept outer-harness-evaluation. Self-contained, served :8765.
+- 2026-06-30 13:10 — session `b5d0b1d7` — 13 tool calls — files: 300626-outer-harness-evaluation.html, answers.json, chairman_synthesis.md, code-logger.py, cost-rates.json, feature-catalog.md, index.md, outer-harness-evaluation.md …

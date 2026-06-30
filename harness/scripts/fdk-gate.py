@@ -43,6 +43,8 @@ STEPS = [
      "canonical ↔ mirror skill byte-identical + loop khai đủ"),
     ("skill cross-surface", ["python3", "harness/scripts/skill-registry.py", "--check"],
      "mọi skill có mặt đủ marketplace + AGENT + CLAUDE + LOOP_MAP (không drift surface)"),
+    ("bnal self-test wired", ["python3", "harness/scripts/bnal-selftest.py", "--check"],
+     "mọi script có --self-test ĐỀU được fdk-gate chạy (anti-drift: thêm feature quên gate → đỏ)"),
     ("policy↔converters drift", ["bash", "harness/tests/policy-converters-drift-test.sh"],
      "adapter sinh khớp policy.yaml"),
     ("vendor-neutral demo", ["bash", "harness/poc-vendor-neutral/demo.sh"],
