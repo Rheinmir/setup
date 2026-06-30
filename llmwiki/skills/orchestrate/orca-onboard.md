@@ -594,22 +594,23 @@ fi
 
 ---
 
-## Phase 4 — HTML Docs
+## Phase 4 — HTML Docs (skeleton v2 + JSON island)
 
-**Agent:** opencode | **Model:** `opencode/deepseek-v4-flash-free`
+**Agent:** assemble JSON = opencode (mechanical) / Claude fallback · **fill skeleton = python (no LLM)**
 
-> **READ FIRST** (inject into SPEC before dispatch — DeepSeek won't read files unless injected):
-> 1. `llmwiki/wiki/index.md` — list all wiki pages
-> 2. `llmwiki/wiki/concepts/architecture.md` — architecture overview
-> 3. `llmwiki/wiki/concepts/onboarding-tour.md` — tour steps
-> 4. `llmwiki/wiki/concepts/*.md` — layer descriptions
+**Cách hoạt động (KHÁC bản cũ — chống sơ sài + đứt UX):** KHÔNG để model sinh HTML thô
+(DeepSeek tự chế CSS/JS → mất "gương", ấn không ăn, output 173–816 dòng không ổn định).
+Thay vào đó: model CHỈ phát **một object JSON** theo schema; UI do **skeleton v2 frozen**
+(`assets/docs-site-skeleton.html`, đã áp đúng design-system `/docs-site-macos`) render.
+Skeleton = nav 5 tab CỐ ĐỊNH (Overview/Architecture/Guided Tour/Modules/Docker) + sidebar
+fixed + collapse + scroll-spy + tour master-detail + draggable diagram; **Modules/Docker tự
+ẩn khi mono**. Nội dung con (layer/tour/module/docker) DATA-DRIVEN từ JSON.
 
-**Required output rules:**
-- Output to `llmwiki/html/onboarding-<project-slug>.html` — NEVER project root
-- Cover: architecture overview, graph summary (from ONBOARDING.md), layer diagram, tour steps
-- Animated SVG for architecture diagram
-- Checkboxes: `<input type="checkbox">` — NO `☐` Unicode
-- Apply `docs-site-macos` style (glassmorphism, macOS chrome)
+> **READ FIRST** (nguồn GIÀU — inject vào SPEC; DeepSeek không tự đọc file):
+> 1. `.understand-anything/ONBOARDING.md` — full (overview, hot files, flows, tour narrative)
+> 2. `.orca-onboard/intermediate/domain-graph.json` — domain→flow→step (tour + lifecycle)
+> 3. `knowledge-graph.json` **chỉ** `layers` + `tour` + node entry-point (⛔ KHÔNG full — overflow)
+> ⛔ KHÔNG dùng wiki md mỏng làm nguồn chính (đó là lý do bản cũ sơ sài).
 
 **Skip check:** `RESUME_MODE=true` + `PHASE4_STATUS=done` → skip.
 
@@ -617,25 +618,51 @@ fi
 if [ "$RESUME_MODE" != "true" ] || [ "$PHASE4_STATUS" != "done" ]; then
   update_phase_status "Phase 4 —" "in-progress"
 
-  SPEC="Generate onboarding HTML doc from wiki files at llmwiki/wiki/.
-Cover: project overview, architecture layers, domain flows, guided tour.
-Apply docs-site-macos style (glassmorphism, macOS window chrome, animated SVG diagrams).
-Output: llmwiki/html/onboarding-${PROJECT_SLUG}.html
-Use real <input type='checkbox'> not Unicode checkboxes."
+  # --- locate skeleton v2 ---
+  SKELETON=$(ls ~/.agents/skills/orca-onboard/assets/docs-site-skeleton.html \
+                ~/.claude/skills/orca-onboard/assets/docs-site-skeleton.html \
+                "$PROJECT_ROOT/skills/orca-onboard/assets/docs-site-skeleton.html" 2>/dev/null | head -1)
+  [ -z "$SKELETON" ] && echo "❌ Phase 4: skeleton v2 not found" && exit 1
 
-  opencode run "$SPEC" --model opencode/deepseek-v4-flash-free < /dev/null \
-    || {
-      echo "[Phase 4] opencode unavailable — falling back to docs-site-macos skill (Claude)"
-      # Invoke docs-site-macos skill in Claude main thread as fallback
-    }
+  # --- detect Docker (multi-service → tab Docker; mono → docker:null, Modules:[]) ---
+  DKFILE=$(ls "$PROJECT_ROOT"/docker-compose.y*ml "$PROJECT_ROOT"/compose.y*ml 2>/dev/null | head -1)
+  N_SVC=0; [ -n "$DKFILE" ] && N_SVC=$(grep -cE '^  [a-zA-Z0-9_-]+:' "$DKFILE" 2>/dev/null || echo 0)
+  echo "[Phase 4] skeleton=$SKELETON | compose=$DKFILE | services=$N_SVC"
 
-  ls "$PROJECT_ROOT/llmwiki/html/onboarding-${PROJECT_SLUG}.html" \
-    && echo "✅ Phase 4 done" \
-    || echo "❌ Phase 4 FAIL: HTML not found"
+  # --- STEP A: assemble ONBOARD_JSON (model emit JSON ONLY → file) ---
+  JSON_OUT="$PROJECT_ROOT/.orca-onboard/tmp/onboard.json"
+  SPEC="Đọc .understand-anything/ONBOARDING.md + .orca-onboard/intermediate/domain-graph.json.
+Phát ra MỘT object JSON (KHÔNG markdown, KHÔNG giải thích) theo ĐÚNG schema trong header của
+$SKELETON, ghi vào $JSON_OUT. Yêu cầu chất lượng:
+- project: name/subtitle/about thật; stack[] + versions[] từ manifest; stats[] (files, services, layers, tour steps).
+- architecture.layers[] = layers thật; architecture.diagram.nodes[] (toạ độ trong ~760×rộng, rect≥70×30) + edges[] theo luồng.
+- tour[] 5–15 bước, MỖI bước GIÀU: role(1-2 câu), file+line THẬT, in[]/out[], hot(churn), narr — KHÔNG 1–2 dòng.
+- modules[] = mỗi container/image (đọc $DKFILE): name,img,meta(port/env/volume),life[[read|proc|write,desc]],arch. Repo mono ($N_SVC≤1) → modules:[].
+- docker = {strategy, cmd[[text,c|p|]], table[[svc,img,cmd/port,deps]], order[]} nếu có compose; mono → docker:null."
+  opencode run "$SPEC" --model opencode/deepseek-v4-flash-free < /dev/null 2>/dev/null \
+    || echo "[Phase 4] opencode unavailable — Claude main thread tự assemble $JSON_OUT theo schema skeleton"
+  # Nếu opencode treo/trống → Claude main thread đọc 2 nguồn trên, tự viết $JSON_OUT (reasoning OK ở đây).
 
+  # --- STEP B: fill skeleton (python, no LLM) — thay {{TITLE}} + {{ONBOARD_JSON}} ---
+  OUT="$PROJECT_ROOT/llmwiki/html/onboarding-${PROJECT_SLUG}.html"
+  mkdir -p "$PROJECT_ROOT/llmwiki/html"
+  python3 - "$SKELETON" "$JSON_OUT" "$OUT" <<'PY'
+import json,sys,html
+sk=open(sys.argv[1]).read(); data=json.load(open(sys.argv[2]))
+name=(data.get("project") or {}).get("name","Project")
+out=sk.replace("{{TITLE}}",html.escape(name)).replace("{{ONBOARD_JSON}}",json.dumps(data,ensure_ascii=False))
+assert "{{ONBOARD_JSON}}" not in out and "{{TITLE}}" not in out, "token chưa thay hết"
+open(sys.argv[3],"w").write(out); print("✅ filled →",sys.argv[3],len(out),"bytes")
+PY
+
+  ls "$OUT" && echo "✅ Phase 4 done" || echo "❌ Phase 4 FAIL: HTML not found"
   update_phase_status "Phase 4 —" "done"
 fi
 ```
+
+> **Fallback:** opencode chết/treo → Claude main thread tự đọc `ONBOARDING.md` +
+> `domain-graph.json`, viết `$JSON_OUT` theo schema (đây là assemble dữ liệu, OK ở Claude),
+> rồi chạy STEP B. KHÔNG bao giờ tự viết HTML thô — luôn qua skeleton v2.
 
 **After completion:**
 ```bash

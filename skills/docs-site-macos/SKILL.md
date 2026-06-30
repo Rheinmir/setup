@@ -701,6 +701,44 @@ addEventListener('resize', () => document.querySelectorAll('.collapse-body.open'
   .forEach(b => { b.style.maxHeight = b.scrollHeight + 'px'; }));
 ```
 
+## Master-Detail Click-Reveal (list trái → chi tiết phải, trong 1 trang cuộn)
+
+Khi một section có một DANH SÁCH mục mà mỗi mục có nội dung chi tiết dài (tour steps,
+endpoints, modules, rule list…), KHÔNG đổ hết chi tiết ra hoặc tách thành trang/tab riêng.
+Dùng **master-detail**: cột trái = list mục (chip glass, bấm được); cột phải = 1 panel chi
+tiết **đổi tại-chỗ** khi bấm — KHÔNG điều hướng, KHÔNG ẩn section khác (vẫn trong trang cuộn
+liền mạch). Đây là cách cho "đọc tuần tự + bấm để đào sâu" mà không vỡ scroll-spy.
+
+```html
+<div class="md-wrap"><ul class="md-list" role="listbox"></ul><div class="card md-detail"></div></div>
+```
+```css
+.md-wrap{display:grid;grid-template-columns:268px 1fr;gap:18px}
+.md-list li{padding:11px 13px;border-radius:13px;cursor:pointer;margin-bottom:8px;background:var(--glass-2);
+  backdrop-filter:blur(var(--blur-2));border:1px solid var(--border);box-shadow:var(--edge-hi);transition:.16s}
+.md-list li:hover{transform:translateX(3px)}
+.md-list li[aria-selected=true]{background:linear-gradient(120deg,rgba(255,255,255,.92),rgba(244,242,255,.85));border-color:#cdc4ff}
+@media(max-width:760px){.md-wrap{grid-template-columns:1fr}}
+```
+- A11y: `role="listbox"`/`role="option"` + `aria-selected` trên mục đang chọn; mục chọn đầu = index 0.
+- Ripple: chỉ gắn ở list-control nếu muốn — KHÔNG để splash lan sang panel chi tiết.
+- Bản chạy thật: skill `orca-onboard` tab "Guided Tour" (skeleton v2).
+
+## Sidebar Icon Tiles (macOS SF-Symbols-style)
+
+Mỗi mục `nav a` = **tile bo góc đổ màu** (kiểu macOS System Settings) chứa **icon line vẽ
+bằng inline SVG** (stroke trắng, ~14px, round caps). ⛔ KHÔNG dùng glyph unicode (◫ ▸ ▤ —
+lệch baseline, xấu). Logo app = icon "display/monitor" SVG trong tile gradient. SF Symbols là
+font độc quyền Apple → **vẽ lại path SVG mô phỏng**, KHÔNG nhúng font (self-contained).
+
+```css
+nav a .ic{width:24px;height:24px;border-radius:7px;display:grid;place-items:center}
+nav a .ic svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* mỗi tab 1 màu tile (theo section accent) */
+```
+Map gợi ý: overview→`info.circle` · architecture→`square.stack.3d` · guided-tour→`mappin.and.ellipse`
+· modules→`cube.box` · run/docker→`terminal`. Bản chạy thật: `orca-onboard` skeleton v2.
+
 ## Responsive
 
 ```css
