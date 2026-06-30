@@ -618,6 +618,20 @@ def cmd_roster(args):
     P, pairs = data.get("personas", {}), [tuple(p) for p in data.get("polarity_pairs", [])]
     cases, profiles = data.get("cases", {}), data.get("profiles", {})
 
+    # Khỏi nhớ tên ai: `roster --list` hoặc `roster` trống → in catalog (bốc theo CASE/việc).
+    if args.list or not (args.case or args.profile or args.personas_list):
+        print("Bốc theo CASE (theo VIỆC — không cần nhớ tên ai):")
+        for tag, c in cases.items():
+            print(f"  --case {tag:<10} → {' · '.join(P[i]['name'] for i in c.get('base', []))}")
+        print("Hoặc PROFILE:")
+        for pf, ids in profiles.items():
+            print(f"  --profile {pf:<12} ({len(ids)} người)")
+        print("18 PERSONA (id → tên · lens) — chỉ cần khi muốn --personas tay:")
+        for i, v in P.items():
+            print(f"  {i:<12} {v['name']:<17} · {v['lens']}")
+        print("\nVí dụ:  council.py roster --case risk   ·   --profile lean   ·   --personas feynman,taleb,rams")
+        return
+
     if args.personas_list:
         ids, why = [x.strip() for x in args.personas_list.split(",") if x.strip()], "chỉ định tay"
     elif args.profile:
@@ -677,6 +691,7 @@ def main():
     ro.add_argument("--case", help="design|strategy|debug|risk|product|decision|simplify|ml-ai")
     ro.add_argument("--profile", help="classic|exploration|lean")
     ro.add_argument("--personas", dest="personas_list", help="chỉ định tay: a,b,c")
+    ro.add_argument("--list", action="store_true", help="in catalog case/profile/persona (khỏi nhớ tên)")
     ro.add_argument("--size", type=int, default=3, help="3 (mặc định) hoặc 5")
     ro.add_argument("--personas-file", dest="personas", default="harness/council.personas.yaml")
     ro.add_argument("--json", action="store_true")
