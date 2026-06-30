@@ -806,9 +806,10 @@ def render(root: Path) -> str:
         "<nav>", "".join(nav), "</nav>",
         '<header class="hero"><span class="eyebrow">Tài liệu chính thức · cho người đọc</span>',
         "<h1>overstack</h1>",
-        f"<p>Lớp khung biến AI Agent thành một cộng sự kỹ thuật tự-kỷ-luật: <b>tri thức</b> (wiki) · "
-        f"<b>rào chắn tất định</b> (harness, {n_rules} rule, 0 token) · <b>kỹ năng</b> ({n_sk} skill) · "
-        f"<b>điều phối đa-agent</b> (Orca). Bắt đầu ở Quickstart; các tab sau đi sâu từng phần.</p></header>",
+        f"<p><b>overstack không còn chỉ là một \"framework\"</b> — nó là <b>Outer Harness</b>: lớp <b>vận hành</b> biến AI Agent thành cộng sự kỹ thuật tự-kỷ-luật ở <b>CẢ HAI thì</b>. "
+        f"<b>Build-time</b> (scaffolding): tri thức (wiki) · rào chắn tất định (harness, {n_rules} rule, 0 token) · kỹ năng ({n_sk} skill) · điều phối đa-agent (Orca). "
+        f"<b>Runtime</b> (đo &amp; gác lúc chạy): đo cost · theo dõi task · gác chất lượng · truy vết audit — <b>5 trụ Outer Harness</b>, cộng evaluation (council) + tự-bảo-trì. "
+        f"Bắt đầu ở Quickstart; các tab sau đi sâu từng phần.</p></header>",
         "".join(body),
         '<footer>overstack · tài liệu sinh bằng <code>fdk/tools/build-overstack-docs.py</code> (số liệu live từ đĩa) · '
         "self-contained, offline-proof · travel cùng install.</footer>",
