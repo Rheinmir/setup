@@ -536,8 +536,30 @@ def sections(root: Path):
         "<div class=\"note\"><h4>Hai lệnh điều phối bạn gọi trực tiếp</h4><p style=\"margin:0\"><code>/orca-workflow</code> (một tính năng) và <code>/orca-onboard</code> (onboard nhiều codebase song song). Các skill dev-loop (<code>propose</code> · <code>impact-check</code> · <code>safe-change</code> · <code>verify-before-commit</code>) là bước CON trong các flow này — gọi tay chỉ khi muốn chạy lẻ một bước.</p></div>",
     ]))
 
+    _agents = [("claude", "#0a84ff"), ("opencode", "#30b0c7"), ("agy/kiro", "#ff9500")]
+    _osvg = ['<svg viewBox="0 0 900 200" xmlns="http://www.w3.org/2000/svg">'
+             '<defs><marker id="arrO" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">'
+             '<path d="M0,0 L9,4.5 L0,9 Z" fill="#9aa4b2"/></marker></defs>'
+             '<rect x="18" y="76" width="150" height="48" rx="8" fill="rgba(255,255,255,.7)" stroke="#5856d6" stroke-width="1.6"/>'
+             '<text x="93" y="104" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f12">coordinator</text>'
+             '<rect x="556" y="76" width="150" height="48" rx="8" fill="rgba(255,255,255,.7)" stroke="#30b0c7" stroke-width="1.6"/>'
+             '<text x="631" y="98" text-anchor="middle" font-size="11" font-weight="700" fill="#0f0f12">worker_done</text>'
+             '<text x="631" y="113" text-anchor="middle" font-size="8.5" fill="#4a4a55">gom kết quả</text>'
+             '<rect x="730" y="76" width="150" height="48" rx="8" fill="rgba(255,255,255,.7)" stroke="#34c759" stroke-width="1.6"/>'
+             '<text x="805" y="98" text-anchor="middle" font-size="11" font-weight="700" fill="#0f0f12">verify</text>'
+             '<text x="805" y="113" text-anchor="middle" font-size="8.5" fill="#4a4a55">dispatch-verify</text>'
+             '<line class="flow" x1="706" y1="100" x2="726" y2="100" stroke="#9aa4b2" stroke-width="2" marker-end="url(#arrO)"/>']
+    for _i, (_nm, _c) in enumerate(_agents):
+        _y = 18 + _i * 64
+        _cy = _y + 23
+        _osvg.append(f'<rect x="318" y="{_y}" width="170" height="46" rx="7" fill="rgba(255,255,255,.7)" stroke="{_c}" stroke-width="1.5"/>')
+        _osvg.append(f'<text x="403" y="{_cy + 4}" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0f0f12">agent · {_nm}</text>')
+        _osvg.append(f'<line class="flow" x1="168" y1="100" x2="314" y2="{_cy}" stroke="#9aa4b2" stroke-width="1.5" marker-end="url(#arrO)"/>')
+        _osvg.append(f'<line class="flow" x1="488" y1="{_cy}" x2="552" y2="100" stroke="#9aa4b2" stroke-width="1.5" marker-end="url(#arrO)"/>')
+    _osvg.append('</svg>')
     S.append(("orca", "Orca (đa-agent)", "07 · Điều phối", "Orca — điều phối đa-agent", [
-        "<p class=\"lead\">Orca là lớp điều phối: thay vì một agent làm tuần tự, nhiều agent chạy song song theo một flow có kiểm soát.</p>",
+        "<p class=\"lead\">Orca là lớp điều phối: thay vì một agent làm tuần tự, nhiều agent chạy song song theo một flow có kiểm soát — coordinator <b>fan-out</b> việc cho N agent (chọn CLI theo cost), gom <code>worker_done</code>, rồi verify.</p>",
+        '<div class="diagram-box">' + "".join(_osvg) + '<div class="diagram-hint">✥ kéo từng ô · cuộn để zoom</div></div>',
         "<div class=\"grid\"><div class=\"card\"><h4>Khi nào dùng</h4><ul class=\"s\">"
         "<li><code>/orca-workflow</code> — vòng propose→gate→dispatch hằng ngày cho một tính năng.</li>"
         "<li><code>/orca-onboard</code> — onboard nhiều codebase song song (phân tích đồng thời).</li></ul></div>"
@@ -547,8 +569,33 @@ def sections(root: Path):
         "<li>trace-grader chấm tool/thứ tự/pass^k — không chỉ kết quả.</li></ul></div></div>",
     ]))
 
+    _bsvg = ('<svg viewBox="0 0 900 190" xmlns="http://www.w3.org/2000/svg">'
+             '<defs><marker id="arrB" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">'
+             '<path d="M0,0 L9,4.5 L0,9 Z" fill="#9aa4b2"/></marker></defs>'
+             '<rect x="16" y="68" width="140" height="52" rx="8" fill="rgba(255,255,255,.7)" stroke="#ff9500" stroke-width="1.6"/>'
+             '<text x="86" y="90" text-anchor="middle" font-size="11" font-weight="700" fill="#0f0f12">Ẩn số ⚠️</text>'
+             '<text x="86" y="105" text-anchor="middle" font-size="8.5" fill="#4a4a55">model/API/ngưỡng</text>'
+             '<rect x="222" y="20" width="196" height="48" rx="7" fill="rgba(255,255,255,.7)" stroke="#34c759" stroke-width="1.5"/>'
+             '<text x="320" y="40" text-anchor="middle" font-size="11" font-weight="700" fill="#0f0f12">Contract — build now</text>'
+             '<text x="320" y="55" text-anchor="middle" font-size="8.5" fill="#4a4a55">UI/logic/safety (test đủ)</text>'
+             '<rect x="222" y="120" width="196" height="48" rx="7" fill="rgba(255,255,255,.7)" stroke="#ff2d55" stroke-width="1.5"/>'
+             '<text x="320" y="140" text-anchor="middle" font-size="11" font-weight="700" fill="#0f0f12">Adapter — quarantine</text>'
+             '<text x="320" y="155" text-anchor="middle" font-size="8.5" fill="#4a4a55">verified:false (1 file)</text>'
+             '<rect x="486" y="68" width="150" height="52" rx="8" fill="rgba(255,255,255,.7)" stroke="#0a84ff" stroke-width="1.6"/>'
+             '<text x="561" y="90" text-anchor="middle" font-size="11" font-weight="700" fill="#0f0f12">Mock → E2E</text>'
+             '<text x="561" y="105" text-anchor="middle" font-size="8.5" fill="#4a4a55">chạy được NGAY</text>'
+             '<rect x="704" y="68" width="180" height="52" rx="8" fill="rgba(255,255,255,.7)" stroke="#30b0c7" stroke-width="1.6"/>'
+             '<text x="794" y="90" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0f0f12">Adapt-checklist</text>'
+             '<text x="794" y="105" text-anchor="middle" font-size="8.5" fill="#4a4a55">→ verified:true (1 chỗ)</text>'
+             '<line class="flow" x1="156" y1="84" x2="218" y2="46" stroke="#9aa4b2" stroke-width="1.5" marker-end="url(#arrB)"/>'
+             '<line class="flow" x1="156" y1="106" x2="218" y2="144" stroke="#9aa4b2" stroke-width="1.5" marker-end="url(#arrB)"/>'
+             '<line class="flow" x1="418" y1="44" x2="482" y2="86" stroke="#9aa4b2" stroke-width="1.5" marker-end="url(#arrB)"/>'
+             '<line class="flow" x1="418" y1="144" x2="482" y2="104" stroke="#9aa4b2" stroke-width="1.5" marker-end="url(#arrB)"/>'
+             '<line class="flow" x1="636" y1="94" x2="700" y2="94" stroke="#9aa4b2" stroke-width="2" marker-end="url(#arrB)"/>'
+             '</svg>')
     S.append(("bnal", "Build-now-adapt-later", "08 · Mẫu BNAL", "Build-now-adapt-later — thêm tính năng có ẩn số, không liều", [
         "<p class=\"lead\">Skill <b><code>/build-now-adapt-later</code></b> cho BẠN khi thêm vào <b>dự án của bạn</b> một tính năng còn phần chưa chắc (dùng model/API/lib nào, ngưỡng bao nhiêu, dịch vụ ngoài nào). Thay vì chờ chắc-chắn-mới-làm hay liều-đoán-rồi-khoá-mình, nó dựng phần CHẮC CHẮN ngay và nhốt phần CHƯA CHẮC sau MỘT adapter + config <code>verified:false</code> + một ADAPT-CHECKLIST — ship sớm, chỉnh sau ở đúng một chỗ.</p>",
+        '<div class="diagram-box">' + _bsvg + '<div class="diagram-hint">✥ kéo từng ô · cuộn để zoom</div></div>',
         "<div class=\"grid\"><div class=\"card\"><h4>Build now</h4><ul class=\"s\">"
         "<li>Lõi tất định (cái bạn CHẮC) build + test ngay, không phụ thuộc ẩn số.</li>"
         "<li>Mọi ẩn số (model nào, ngưỡng bao nhiêu) sống ở ĐÚNG MỘT file config.</li>"
