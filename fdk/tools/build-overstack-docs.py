@@ -525,8 +525,8 @@ def sections(root: Path):
         "<div class=\"note\"><h4>overstack tự ăn dog food</h4><p style=\"margin:0\">5 tính năng nâng cao của chính overstack (council · loop-runner · wikieval · trace-grader · failure-flywheel) đều dựng bằng BNAL — nên pattern này đã chứng minh trên thực tế, không phải lý thuyết.</p></div>",
     ]))
 
-    S.append(("advanced", "Eval · Council · Loop", "09 · Nâng cao", "Eval · Council · Loop — 5 skill cho dự án của bạn", [
-        "<p class=\"lead\">Năm skill nâng cao BẠN gọi khi dev dự án của mình (mỗi cái lõi tất định, phần LLM nhốt sau adapter). Dùng khi cần đánh giá chất lượng, quyết một vấn đề khó, hay chạy một vòng lặp tự-sửa an toàn.</p>",
+    S.append(("advanced", "Đánh giá (Evaluation)", "09 · Đánh giá", "Evaluation — đánh giá chất lượng &amp; quyết định khó (council · wikieval · trace-grader · loop-runner · failure-flywheel)", [
+        "<p class=\"lead\">Năm skill <b>evaluation</b> BẠN gọi khi dev dự án của mình (mỗi cái lõi tất định, phần LLM nhốt sau adapter). Dùng khi cần đánh giá chất lượng, quyết một vấn đề khó, hay chạy một vòng lặp tự-sửa an toàn. Đây là trục PHÁN-XỬ; cổng tất định không-LLM nằm ở Trụ 4 (xem tab 5 trụ runtime).</p>",
         "<div class=\"grid\"><div class=\"card\"><h4>Đánh giá chất lượng</h4><ul class=\"s\">"
         "<li><b><code>/wikieval</code></b> — bộ eval hồi quy cho wiki dự án bạn (cascade assert tất định + baseline chặn merge khi tụt).</li>"
         "<li><b><code>/trace-grader</code></b> — chấm ĐƯỜNG ĐI agent đã đi (tool/thứ tự/pass^k), bắt \"đúng kết quả nhưng đi đường tệ\".</li></ul></div>"
@@ -536,8 +536,8 @@ def sections(root: Path):
         "<li><b><code>/failure-flywheel</code></b> — gom lỗi lặp trong dự án bạn → đề xuất rule/skill mới vào luồng /propose.</li></ul></div></div>",
     ]))
 
-    S.append(("awareness", "Bản đồ năng lực & Logger", "10 · Tự-biết", "Bản đồ năng lực & Logger (đừng tin agent nhớ)", [
-        "<p class=\"lead\">Hai cơ chế bảo đảm agent <b>biết mình có gì</b> và <b>nhớ đã làm gì</b> — bằng code, không bằng trí nhớ LLM (ADR-005).</p>",
+    S.append(("awareness", "Quan sát (Observability)", "10 · Quan sát", "Observability — capabilities map &amp; logger (agent biết mình CÓ GÌ &amp; ĐÃ LÀM GÌ, bằng code)", [
+        "<p class=\"lead\">Hai cơ chế <b>observability</b> bảo đảm agent <b>biết mình có gì</b> (capabilities) và <b>nhớ đã làm gì</b> (logger) — bằng code, không bằng trí nhớ LLM (ADR-005). Logger này chính là nguồn nuôi 5 trụ runtime ở tab kế.</p>",
         "<div class=\"grid\"><div class=\"card\"><h4>Bản đồ năng lực</h4><ul class=\"s\">"
         "<li><code>build-capabilities</code> sinh <code>CAPABILITIES.md</code> từ đĩa: mọi skill + rule.</li>"
         "<li>Xuống cùng dự án: downstream đọc <b>global skills + rule đã cài</b> → \"đồ nghề bạn có Ở DỰ ÁN NÀY\".</li>"
@@ -546,6 +546,46 @@ def sections(root: Path):
         "<li><b>code-logger</b> để hook ghi <code>log.md</code> bằng CODE mỗi Write/Stop.</li>"
         "<li>Không trông chờ agent \"nhớ append log\" — máy ghi.</li>"
         "<li>Xuống cùng dự án (deploy cạnh hooks) → log wiki của chính dự án đó.</li></ul></div></div>",
+    ]))
+
+    # 5 trụ runtime (Outer Harness) — sơ đồ luồng tương tác: 1 sổ-cái nuôi 5 trụ, gác ở gate.
+    _pillars = [
+        ("1 · Cost", "#0a84ff", "code-logger --run-cost", "STRONG", "ok"),
+        ("2 · Knowledge", "#30b0c7", "llmwiki + CAPABILITIES", "STRONG", "ok"),
+        ("3 · Task", "#5856d6", "task_lifecycle (T-ID)", "STRONG", "ok"),
+        ("4 · Quality", "#34c759", "code-health + fdk-gate", "STRONG", "ok"),
+        ("5 · Audit", "#ff9500", "--audit hash-chain", "STRONG", "ok"),
+    ]
+    _svg = ['<svg viewBox="0 0 900 280" xmlns="http://www.w3.org/2000/svg">'
+            '<defs><marker id="arrR" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">'
+            '<path d="M0,0 L9,4.5 L0,9 Z" fill="#9aa4b2"/></marker></defs>'
+            '<rect x="22" y="118" width="150" height="46" rx="8" fill="rgba(255,255,255,.7)" stroke="#5856d6" stroke-width="1.6"/>'
+            '<text x="97" y="139" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f12">Mỗi action agent</text>'
+            '<text x="97" y="154" text-anchor="middle" font-size="9" fill="#4a4a55">record(event,…)</text>'
+            '<rect x="222" y="113" width="160" height="56" rx="8" fill="rgba(255,255,255,.7)" stroke="#0a84ff" stroke-width="1.6"/>'
+            '<text x="302" y="135" text-anchor="middle" font-size="11" font-weight="700" fill="#0f0f12">events.jsonl</text>'
+            '<text x="302" y="151" text-anchor="middle" font-size="8.5" fill="#4a4a55">append-only + hash-chain</text>'
+            '<rect x="716" y="118" width="160" height="46" rx="8" fill="rgba(255,255,255,.7)" stroke="#1d1d1f" stroke-width="1.6"/>'
+            '<text x="796" y="139" text-anchor="middle" font-size="11" font-weight="700" fill="#0f0f12">fdk-gate + CI</text>'
+            '<text x="796" y="154" text-anchor="middle" font-size="8.5" fill="#4a4a55">vi phạm → đỏ</text>']
+    for _i, (_nm, _col, _mech, _st, _) in enumerate(_pillars):
+        _y = 16 + _i * 51
+        _cy = _y + 20
+        _svg.append(f'<rect x="438" y="{_y}" width="174" height="40" rx="7" fill="rgba(255,255,255,.7)" stroke="{_col}" stroke-width="1.5"/>')
+        _svg.append(f'<text x="525" y="{_cy - 2}" text-anchor="middle" font-size="11" font-weight="700" fill="#0f0f12">{_nm}</text>')
+        _svg.append(f'<text x="525" y="{_cy + 12}" text-anchor="middle" font-size="8.5" fill="#4a4a55">{_mech}</text>')
+        _svg.append(f'<line class="flow" x1="382" y1="141" x2="434" y2="{_cy}" stroke="#9aa4b2" stroke-width="1.5" marker-end="url(#arrR)"/>')
+        _svg.append(f'<line class="flow" x1="612" y1="{_cy}" x2="712" y2="141" stroke="#9aa4b2" stroke-width="1.5" marker-end="url(#arrR)"/>')
+    _svg.append('</svg>')
+    _rows = "".join(
+        f'<tr><td><b>{_nm}</b></td><td>{_mech}</td><td><span class="pill {_p}">{_st}</span></td></tr>'
+        for (_nm, _c, _mech, _st, _p) in _pillars)
+    S.append(("runtime", "5 trụ runtime", "11 · Runtime", "5 trụ runtime — Cost · Knowledge · Task · Quality · Audit (Outer Harness)", [
+        "<p class=\"lead\">Năm trụ <b>Outer Harness</b> là phần overstack <b>đo lường &amp; gác LÚC CHẠY</b> — không phải 3 cái rời (eval/capabilities/logger) mà là một hệ: mọi action agent ghi vào một sổ-cái <code>events.jsonl</code> (append-only + hash-chain), từ đó nuôi 5 trụ, rồi <b>gác ở <code>fdk-gate</code> + CI</b>. Đánh giá đầy đủ + bằng chứng: <a href=\"300626-outer-harness-evaluation.html\">outer-harness-evaluation</a>.</p>",
+        '<div class="diagram-box">' + "".join(_svg) + '<div class="diagram-hint">✥ kéo từng ô · cuộn để zoom · kéo mép dưới để mở rộng</div></div>',
+        '<div class="table-wrap"><table><thead><tr><th>Trụ</th><th>Cơ chế (bằng CODE, không-LLM)</th><th>Trạng thái</th></tr></thead><tbody>'
+        + _rows + '</tbody></table></div>',
+        "<p class=\"lead\" style=\"margin-top:10px\">Mấu chốt: trục <b>phán-xử</b> (tab Đánh giá: council/wikieval) và trục <b>tất định</b> (Trụ 4 code-health, Trụ 5 audit-chain) tách bạch — cổng tất định chặn cả khi LLM bị lừa.</p>",
     ]))
 
     S.append(("maintain", "Tự bảo trì", "11 · Bảo trì", "Tự bảo trì overstack trên máy bạn", [
@@ -601,9 +641,10 @@ def render(root: Path) -> str:
            '<div class="grp">Bắt đầu</div>']
     grouped = [("Bắt đầu", ["quickstart"]),
                ("Tổng quan", ["what", "install"]),
-               ("Ba trụ", ["wiki", "harness", "skills"]),
-               ("Quy trình", ["workflow", "orca"]),
-               ("Nâng cao", ["bnal", "advanced", "awareness"]),
+               ("3 nền tảng", ["wiki", "harness", "skills"]),
+               ("Quy trình & điều phối", ["workflow", "orca"]),
+               ("Đánh giá & quan sát", ["advanced", "awareness", "runtime"]),
+               ("An toàn khi mở rộng", ["bnal"]),
                ("Vận hành", ["maintain", "reference"]),
                ("👷 Phát triển overstack", ["fdk", "newfeature"])]
     id2nav = {sid: navlabel for sid, navlabel, *_ in S}
