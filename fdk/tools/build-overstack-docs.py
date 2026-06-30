@@ -123,6 +123,7 @@ LOOP_GROUPS = {
         [("docs", "📄 tài liệu & render"), ("taste", "🎨 thiết kế & style"), ("imagegen", "🖼️ image→code/gen"),
          ("caveman", "🦴 caveman"), ("fdk", "🛠️ framework-dev"), ("utility", "🔧 tiện ích khác")],
         {"docs-site-macos": "docs", "extract-site": "docs", "md-to-html": "docs", "tour-guide-supademo": "docs",
+         "web-crawl": "docs", "web-clone": "docs",
          "brandkit": "taste", "design-taste-frontend": "taste", "design-taste-frontend-v1": "taste",
          "gpt-taste": "taste", "high-end-visual-design": "taste", "stitch-design-taste": "taste",
          "minimalist-ui": "taste", "industrial-brutalist-ui": "taste", "redesign-existing-projects": "taste",
@@ -490,8 +491,25 @@ def sections(root: Path):
         "<p>Bảng đầy đủ luôn-mới ở tab <a href=\"#reference\">Tham chiếu</a>. Không chắc dùng skill nào? <code>find-skills \"&lt;việc&gt;\"</code>.</p>",
     ]))
 
+    _wf = [("propose", "#0a84ff", "draft + DỪNG duyệt", "proposed"),
+           ("gate", "#5856d6", "R7 đủ cặp .md+.html", "approved"),
+           ("dispatch", "#30b0c7", "agent + CLI rẻ", "dispatched"),
+           ("verify", "#34c759", "dispatch-verify + trace-grader", "done")]
+    _wsvg = ['<svg viewBox="0 0 900 150" xmlns="http://www.w3.org/2000/svg">'
+             '<defs><marker id="arrW" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">'
+             '<path d="M0,0 L9,4.5 L0,9 Z" fill="#9aa4b2"/></marker></defs>']
+    for _i, (_nm, _c, _mech, _state) in enumerate(_wf):
+        _x = 22 + _i * 220
+        _wsvg.append(f'<rect x="{_x}" y="42" width="186" height="56" rx="8" fill="rgba(255,255,255,.7)" stroke="{_c}" stroke-width="1.6"/>')
+        _wsvg.append(f'<text x="{_x + 93}" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#0f0f12">{_nm}</text>')
+        _wsvg.append(f'<text x="{_x + 93}" y="84" text-anchor="middle" font-size="8.5" fill="#4a4a55">{_mech}</text>')
+        _wsvg.append(f'<text x="{_x + 93}" y="120" text-anchor="middle" font-size="9" font-weight="600" fill="{_c}">task: {_state}</text>')
+        if _i < 3:
+            _wsvg.append(f'<line class="flow" x1="{_x + 186}" y1="70" x2="{_x + 218}" y2="70" stroke="#9aa4b2" stroke-width="2" marker-end="url(#arrW)"/>')
+    _wsvg.append('</svg>')
     S.append(("workflow", "Workflow dev", "06 · Quy trình", "Workflow — gọi /orca-workflow, nó lo 4 bước", [
-        "<p class=\"lead\">Cách bạn làm việc thực tế: gọi <b><code>/orca-workflow</code></b> cho một tính năng — nó tự chạy trọn 4 bước dưới. Các skill dev-loop là <b>bước con</b> do nó điều phối, bạn không gọi tay từng cái.</p>",
+        "<p class=\"lead\">Cách bạn làm việc thực tế: gọi <b><code>/orca-workflow</code></b> cho một tính năng — nó tự chạy trọn 4 bước dưới. Các skill dev-loop là <b>bước con</b> do nó điều phối, bạn không gọi tay từng cái. Mỗi bước khớp một trạng thái <b>task-lifecycle</b> (Trụ 3) — gate validator chặn nếu đi sai.</p>",
+        '<div class="diagram-box">' + "".join(_wsvg) + '<div class="diagram-hint">✥ kéo từng ô · cuộn để zoom</div></div>',
         "<ol class=\"ck\">"
         "<li><b>propose</b> — restate yêu cầu, liệt kê file ảnh hưởng + cái có thể vỡ, vẽ sequence diagram, viết draft. DỪNG chờ bạn duyệt.</li>"
         "<li><b>gate</b> — validator R7 chặn proposal thiếu (đủ cặp <code>.md</code> + <code>.html</code> một-diagram-mỗi-task).</li>"
