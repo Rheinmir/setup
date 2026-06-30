@@ -7,51 +7,55 @@
 ## 2026-06-30 — redesign-existing-projects — audit-fix-docs-site-macos
 Audit skill `docs-site-macos` theo checklist redesign; vá 8 defect (focus-ring, viewport/meta+favicon, collapse-clip, prototype self-contained, Output-Report lặp, shadow tint, smooth-scroll, reduced-motion) + a11y (skip-link/`<main>`/SVG-aria/tabular-nums/text-wrap). Áp cho CẢ 2 bản mirror (`skills/docs-site-macos/SKILL.md` ↔ `llmwiki/skills/utils/docs-site-macos.md`), verify content identical (939 dòng, diff=0). Mở rộng audit sang 3 skill sinh-HTML họ hàng (cursor-animated-sites, md-to-html, uat-nonit-testcase). Quyết định chiến thuật parity: GIỮ committed-mirror + gate (bác generate-at-install vì gây cross-project drift); vá `stop.py` để tự chạy `sync-skills.py` cuối mỗi lượt đụng skill. Toàn bộ 65 cặp canonical↔mirror verify identical.
 
+## 2026-07-01 — build-now-adapt-later — trupillar4-council-persona
+Chốt cứng Trụ 4 bằng cổng CI tất định không-LLM (`code_health.py`: mọi .py compile sạch, wire fdk-gate+CI; lint sâu advisory — BNAL). Triển khai persona-lens council: 18 vĩ nhân + 13 cặp đối-trọng + lệnh `council.py roster --case` (thuần lookup, ép ≥1 cặp). Commit 490df16 + 04b3fcd, fdk-gate 20/20.
+
 <!-- log:auto:start -->
 
 ### 🤖 Log tự-động (code-logger, không do agent ghi)
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-06-30 14:32:18 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
-| 2026-06-30 14:32:20 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
-| 2026-06-30 14:32:27 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
-| 2026-06-30 14:32:37 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit |
-| 2026-06-30 14:35:25 | `file.write` | llmwiki/html/300626-outer-harness-evaluation.html · tool=Edit |
-| 2026-06-30 14:35:39 | `file.write` | llmwiki/html/300626-outer-harness-evaluation.html · tool=Edit |
-| 2026-06-30 14:43:52 | `file.write` | harness/scripts/code-logger.py · tool=Edit |
-| 2026-06-30 14:47:42 | `file.write` | llmwiki/html/300626-outer-harness-evaluation.html · tool=Edit |
-| 2026-06-30 14:47:56 | `file.write` | llmwiki/html/300626-outer-harness-evaluation.html · tool=Edit |
-| 2026-06-30 14:57:05 | `file.write` | harness/scripts/code-logger.py · tool=Edit |
-| 2026-06-30 14:57:18 | `file.write` | harness/scripts/code-logger.py · tool=Edit · prev=genesis · h=352cd192a411afd6b77ce29b0d29dff9be4e112f3d051ac448b46ca3ff |
-| 2026-06-30 14:57:36 | `file.write` | harness/scripts/code-logger.py · tool=Edit · prev=352cd192a411afd6b77ce29b0d29dff9be4e112f3d051ac448b46ca3ff089d1a · h=4 |
-| 2026-06-30 14:57:42 | `file.write` | harness/scripts/code-logger.py · tool=Edit · prev=489eeb023e5546d71a353664634a15036a8953c8bc67b5b8b1ba89bbd507b995 · h=0 |
-| 2026-06-30 14:57:50 | `audit.bootstrap` |  · note=trupillar5 · prev=0c3827f451f185660ffcca363389c7e876ad1e84fd7470f473b1a69414bdf9b4 · h=8df422df15c1bcbf7dcc52679 |
-| 2026-06-30 14:57:50 | `test.a` |  · x=1 · prev=8df422df15c1bcbf7dcc526793bdcb584aee0f4e5925dac4e3d63d2013b55d3a · h=f7230740c2723396d122c38d54ba8eea39205 |
-| 2026-06-30 14:57:50 | `test.b` |  · y=2 · prev=f7230740c2723396d122c38d54ba8eea39205a856e04396e2dbb333f69aeb5a2 · h=55607a7955791e4beb90b65dccbf24d98e645 |
-| 2026-06-30 14:58:41 | `file.write` | llmwiki/html/300626-outer-harness-evaluation.html · tool=Edit · prev=55607a7955791e4beb90b65dccbf24d98e645157dda7bdc3161 |
-| 2026-06-30 14:58:52 | `file.write` | llmwiki/html/300626-outer-harness-evaluation.html · tool=Edit · prev=025e7783749ba39f9fcc1cb012a4d6c1b2e78abee37e75ae852 |
-| 2026-06-30 15:03:10 | `file.write` | llmwiki/html/300626-outer-harness-evaluation.html · tool=Edit · prev=8e0c1c85cedc7326128f85a595a73ef70006a540ac34093dafe |
-| 2026-06-30 15:03:15 | `file.write` | llmwiki/html/300626-outer-harness-evaluation.html · tool=Edit · prev=43c0f440fb8679d1755aeb367ca345cbc41e778e05134f07475 |
-| 2026-06-30 15:03:27 | `file.write` | llmwiki/html/300626-outer-harness-evaluation.html · tool=Edit · prev=4ebf813f2b324a12955d9b56e9ce5bf21abf878343d68859040 |
-| 2026-06-30 15:03:37 | `file.write` | llmwiki/html/300626-outer-harness-evaluation.html · tool=Edit · prev=808bc354c2dec413f65eb82e27814fc19be9c8fb47bbb26a440 |
-| 2026-06-30 15:03:45 | `file.write` | llmwiki/html/300626-outer-harness-evaluation.html · tool=Edit · prev=05d15d8cd023c473a03306a19a623a8c48ff9b414e8dbce13e1 |
-| 2026-06-30 15:03:51 | `file.write` | llmwiki/html/300626-outer-harness-evaluation.html · tool=Edit · prev=3fa70c5c4d60e23e177b57f44ffad0eaa51ba3ab819853bc654 |
-| 2026-06-30 15:04:52 | `file.write` | llmwiki/html/300626-outer-harness-evaluation.html · tool=Edit · prev=be11a95c831ee0a512ac7655f4b6240e0ec285b1dd9f6d027c0 |
-| 2026-06-30 15:08:50 | `file.write` | harness/scripts/code-logger.py · tool=Edit · prev=70dc37554312ba2c43c791ab6615119b67ab525188344edaebcdfc471380b884 · h=9 |
-| 2026-06-30 15:08:58 | `file.write` | harness/scripts/code-logger.py · tool=Edit · prev=95f6e8e5b04fbf36bdf9b88c46f309c30c8bbf169dcbc08c58cc7b78aea89091 · h=f |
-| 2026-06-30 15:09:07 | `task.new` |  · task=T-260630-01 · title=Wire task-id vào propose→gate · state=proposed · prev=fc2a35f6a239b5b580560a35732709a0c1efc2 |
-| 2026-06-30 15:09:08 | `task.set` |  · task=T-260630-01 · state=approved · note=gate duyệt · prev=7f11e2f6eff666d786aab389a49431addb81a70636224650ae4b3f984c |
-| 2026-06-30 15:09:08 | `task.set` |  · task=T-260630-01 · state=dispatched · note=giao opencode · prev=b46fc65cbb3b34f3e1c36469af3d806ec1528d47da1215cfc5a20 |
-| 2026-06-30 15:09:08 | `task.set` |  · task=T-260630-01 · state=done · note=merged · prev=f4524e11fe0207ae523433909190d5d7915240b9257af5b5f5e0089232615efd · |
-| 2026-06-30 15:10:25 | `file.write` | llmwiki/html/300626-outer-harness-evaluation.html · tool=Edit · prev=4dffdb45cb10d83bd5fcf95da2d4d82f10c94e80057c98e8f5c |
-| 2026-06-30 15:31:17 | `file.write` | harness/scripts/code-logger.py · tool=Edit · prev=d14c9d65a28c4d25af62d9f8ca9125ae23399285de9619a44884d768708fd85d · h=a |
-| 2026-06-30 15:31:29 | `file.write` | harness/scripts/code-logger.py · tool=Edit · prev=a61924f978fc98f5837b32cd8306e0d36facab12f9fc548e159ca35c7e17e0fd · h=0 |
-| 2026-06-30 15:33:06 | `file.write` | skills/propose/SKILL.md · tool=Edit · prev=02ecd3f63838db934a096b4576448ba8a0e16eb527d1a991d9c8c94c095ffeab · h=bb0dfb56 |
-| 2026-06-30 15:33:13 | `file.write` | skills/propose/SKILL.md · tool=Edit · prev=bb0dfb56982b5025497b64e568bd5b01807615599636384147d9bdd7c696d045 · h=6447a0c7 |
-| 2026-06-30 15:33:25 | `file.write` | skills/orca-workflow/SKILL.md · tool=Edit · prev=6447a0c74e07fcee908edd367da249c6ae61303d65a7b59e40cb30a5b122a688 · h=91 |
-| 2026-06-30 15:33:35 | `file.write` | skills/verify-before-commit/SKILL.md · tool=Edit · prev=91940769e443b9099958324a8be1326523c2a618afd79dbf3c0706b14a2d2347 |
-| 2026-06-30 15:36:33 | `file.write` | llmwiki/html/300626-outer-harness-evaluation.html · tool=Edit · prev=1ac0e76fa84419fc78ec6caf06ebadc9500dd1c8266c6e34fff |
-| 2026-06-30 15:36:40 | `file.write` | llmwiki/html/300626-outer-harness-evaluation.html · tool=Edit · prev=cb1b26fbdd573912ab4f8596ec036fe6ef04e132115b0783c03 |
+| 2026-06-30 23:21:43 | `file.write` | harness/validators/task_lifecycle.py · tool=Write · actor=agent · prev=0b33f389d2c176689f2dc086213d5c170197908639b8b8e7c |
+| 2026-06-30 23:22:26 | `file.write` | harness/scripts/fdk-gate.py · tool=Edit · actor=agent · prev=d7c969ba50db2cf2a6ac7d60d97aac27cf751b93fe466d7b5bd67cc9658 |
+| 2026-06-30 23:22:47 | `file.write` | skills/verify-before-commit/SKILL.md · tool=Edit · actor=agent · prev=939c09e5cecfd780aae51af48ba746d324642a6083ca701f8e |
+| 2026-06-30 23:23:10 | `file.write` | llmwiki/html/300626-outer-harness-evaluation.html · tool=Edit · actor=agent · prev=d911afaa594077cca770775c1e35e3eb996ee |
+| 2026-06-30 23:41:03 | `file.write` | harness/scripts/code-logger.py · tool=Edit · actor=agent · prev=d0c2e8a21875b2c46529069bf8817a298d3172568ef2d8f12507be70 |
+| 2026-06-30 23:41:16 | `file.write` | harness/scripts/code-logger.py · tool=Edit · actor=agent · prev=5d11fe8da2159391e4cf73280489302fd775ae59a8716511bb0619d8 |
+| 2026-06-30 23:41:24 | `file.write` | harness/scripts/code-logger.py · tool=Edit · actor=agent · prev=3ba1a4e6c20cf62c5ecd1507e4c4bd570a4bfd379eac809bceb01e69 |
+| 2026-06-30 23:42:45 | `file.write` | harness/scripts/fdk-gate.py · tool=Edit · actor=agent · prev=f2941209278bc831c1c6426988366ae49a8ad05ca696c1f2efa864472c8 |
+| 2026-06-30 23:43:00 | `file.write` | llmwiki/html/300626-outer-harness-evaluation.html · tool=Edit · actor=agent · prev=8390a52a0eb4f4c37866ee807c06fea47e3dd |
+| 2026-07-01 00:13:08 | `file.write` | llmwiki/html/300626-outer-harness-evaluation.html · tool=Edit · actor=agent · prev=8a9dda638a6a6295c2919a9d77a6f54ea5b20 |
+| 2026-07-01 00:13:22 | `file.write` | llmwiki/html/300626-outer-harness-evaluation.html · tool=Edit · actor=agent · prev=8081a9dc7d708c652f8a892bc015b0ad91425 |
+| 2026-07-01 00:13:34 | `file.write` | llmwiki/html/300626-outer-harness-evaluation.html · tool=Edit · actor=agent · prev=9deddeb55ca361516cfd62794effeaedd229e |
+| 2026-07-01 00:24:33 | `file.write` | llmwiki/html/300626-outer-harness-evaluation.html · tool=Edit · actor=agent · prev=36e9e7ac3b6156cd6f6fff25312a4fb1ef73d |
+| 2026-07-01 00:24:49 | `file.write` | llmwiki/html/300626-outer-harness-evaluation.html · tool=Edit · actor=agent · prev=49a0a0bf90dec6f40e5f6fbdf7126db0ec707 |
+| 2026-07-01 01:15:44 | `file.write` | llmwiki/wiki/draft/orca/010726-onboard-html-tabs-redesign.md · tool=Write · actor=agent · prev=5f12fd4b3d62bbc42e8bf2b1f |
+| 2026-07-01 01:17:14 | `file.write` | skills/orca-dispatch-reference/SKILL.md · tool=Edit · actor=agent · prev=970ba07c7c54d338eedf649b0bb68a510c19ecc893f3f81 |
+| 2026-07-01 01:17:48 | `file.write` | skills/orca-workflow/SKILL.md · tool=Edit · actor=agent · prev=6a3d4caeaf1635fde0fd66f3035c367f03b5c7432e92499b97df17242 |
+| 2026-07-01 01:17:54 | `file.write` | skills/orca-onboard/SKILL.md · tool=Edit · actor=agent · prev=264d3adb37904f8ab9ce82155216e20010df5795f7df174d0617e64c22 |
+| 2026-07-01 01:17:59 | `file.write` | skills/orca-cli/SKILL.md · tool=Edit · actor=agent · prev=fa879ee0b3197e49a4b9191c2a72f46b89d9816f5ff444091e87a6a71f46ac |
+| 2026-07-01 01:18:04 | `file.write` | skills/orchestration/SKILL.md · tool=Edit · actor=agent · prev=6033175d3339901fdf34275600809f7aa21b60603cab098292268cb21 |
+| 2026-07-01 01:18:10 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=892a543eed1a9d8a2d68dca13816ad329fe046ddf7debe774054790bac13f4f |
+| 2026-07-01 01:41:40 | `file.write` | harness/validators/code_health.py · tool=Write · actor=agent · prev=a49a518fadd1b1fc3a427116a30185eeae46affa502c7204baab |
+| 2026-07-01 01:42:01 | `file.write` | harness/scripts/fdk-gate.py · tool=Edit · actor=agent · prev=d2d5b3fbc8667f694b49a06aeb6b342ee0e9bc301996a9da02b956e1c98 |
+| 2026-07-01 01:42:15 | `file.write` | .github/workflows/harness.yml · tool=Edit · actor=agent · prev=f68d4bf17b449d93d84afb5802555b094a8f7196b84bd2aff223acad4 |
+| 2026-07-01 01:43:22 | `file.write` | harness/validators/code_health.py · tool=Edit · actor=agent · prev=1495d6c5f25d700139c7f0eb045c1ab25ad1ce27a2703b64b6a61 |
+| 2026-07-01 01:43:39 | `file.write` | harness/validators/code_health.py · tool=Edit · actor=agent · prev=89ead82105ee2406ef3f835ab2b5c170c64051e9609157cd45c07 |
+| 2026-07-01 01:44:35 | `file.write` | llmwiki/html/300626-outer-harness-evaluation.html · tool=Edit · actor=agent · prev=d397178ceffa3e932bd98e842ee3fda926574 |
+| 2026-07-01 01:45:50 | `file.write` | llmwiki/wiki/draft/orca/010726-onboard-html-tabs-redesign.md · tool=Edit · actor=agent · prev=d46bbbc206266c29d90db37734 |
+| 2026-07-01 01:46:01 | `file.write` | llmwiki/wiki/draft/orca/010726-onboard-html-tabs-redesign.md · tool=Edit · actor=agent · prev=b949d2ca2f9bb7aa545014ae0e |
+| 2026-07-01 01:46:12 | `file.write` | llmwiki/wiki/draft/orca/010726-onboard-html-tabs-redesign.md · tool=Edit · actor=agent · prev=a2a185bbd36ace06a769c0c6e1 |
+| 2026-07-01 01:46:19 | `file.write` | llmwiki/wiki/draft/orca/010726-onboard-html-tabs-redesign.md · tool=Edit · actor=agent · prev=b998b1d86c924106ed204602ac |
+| 2026-07-01 01:46:45 | `file.write` | harness/council.personas.yaml · tool=Write · actor=agent · prev=c73dc04564f811e22688a8539ec9fc6db466d113a8f947e304697ef5 |
+| 2026-07-01 01:47:31 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=86e08f35b0dbcd5f558c13f64ae30c3d41be9fb2fd81399add48c56d36cd |
+| 2026-07-01 01:47:33 | `file.write` | llmwiki/wiki/draft/orca/010726-onboard-html-tabs-redesign.md · tool=Edit · actor=agent · prev=bf2d97841fca180f919d66ec17 |
+| 2026-07-01 01:47:40 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=07f11224264c59b97a4588c935ecb4c83041b5bda6daa64b572d86ab2a37 |
+| 2026-07-01 01:48:45 | `file.write` | harness/council.config.yaml · tool=Edit · actor=agent · prev=bf822ee5552255673da7b0fa6bccbd4134af3baa35b1dd31a636238ba52 |
+| 2026-07-01 01:49:29 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=248e564234013aabd1557d6cfae41cc9306939655f8ad0701676c98dedaa6fc |
+| 2026-07-01 01:49:44 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=53e768c5c418331840d3e09b9509622fd3895b82e9f034d7b94d3873c9b4b36 |
+| 2026-07-01 01:51:02 | `file.write` | llmwiki/wiki/draft/orca/010726-onboard-html-tabs-redesign.md · tool=Edit · actor=agent · prev=34fef36f5c0123c1d881ad9153 |
+| 2026-07-01 01:51:16 | `file.write` | llmwiki/wiki/draft/orca/010726-trupillar4-council-persona.md · tool=Write · actor=agent · prev=37771f728213fd335dc4fdf30 |
 
 <!-- log:auto:end -->
+## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
