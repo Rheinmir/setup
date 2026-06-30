@@ -763,8 +763,22 @@ def sections(root: Path):
         "<div class=\"note\"><h4>Vì sao cần checklist này</h4><p style=\"margin:0\">overstack lớn → thêm một thứ mà quên đồng bộ một chỗ = drift âm thầm. fdk-gate biến \"hợp lệ\" thành 14 bước máy-kiểm, không phụ thuộc trí nhớ.</p></div>",
     ]))
 
+    _branch7 = [
+        ("wiki-loop", "#30b0c7", "Vòng tri thức", "ingest · query · lint — nạp / hỏi / dọn wiki của dự án."),
+        ("dev-loop", "#5856d6", "Vòng phát triển", "propose → gate → verify · onboard · eval (wikieval / loop-runner / failure-flywheel)."),
+        ("orchestrate", "#ff9500", "Điều phối đa-agent", "orca-workflow · council · trace-grader · dispatch (orca-cli) · ops/deploy."),
+        ("utils", "#34c759", "Tiện ích", "docs & render · taste/design · imagegen · caveman · framework-dev · utility khác."),
+        ("rules", "#e0264b", "Luật harness", f"{n_rules} rule R1–R{n_rules}, mỗi rule = 1 validator tất định; gác 3 lớp (hook / commit / CI)."),
+        ("cơ chế", "#ff2d55", "Cơ chế runtime tự-gác", "orientation · auto-index · force-query · code-index · code-logger · health-check · harness-lint / -doctor · fdk-gate…"),
+        ("BNAL", "#0a84ff", "Build-now-adapt-later", "core tất định now + 1 config adapter (verified:false → true), auto từ harness/*.config.yaml."),
+    ]
+    _b7html = ('<h3 class="sub">7 nhánh mind map — mỗi nhánh một mảng chức năng</h3>'
+               '<div class="pgrid">' + "".join(
+                   f'<div class="pcard"><div><div class="pn" style="color:{_c}">{esc(_nm)} — {esc(_t)}</div>'
+                   f'<div class="ps">{_d}</div></div></div>' for (_nm, _c, _t, _d) in _branch7) + '</div>')
     S.append(("reference", "Tham chiếu (mind map)", "14 · Tham chiếu", "Tham chiếu — mind map skill & rule (đếm từ đĩa)", [
-        f"<p class=\"lead\">Bản đồ tư duy (định dạng cheatsheet) toàn bộ đồ nghề, sinh từ đĩa nên luôn khớp: <b>{n_sk} skill</b> theo loop · <b>{n_rules} rule</b>. Mỗi nhánh <b>mặc định đóng — click để mở/đóng</b> (mũi tên ▸); mô tả nằm ngay dưới tên node. Bản máy-đọc: <code>fdk/CAPABILITIES.md</code>.</p>",
+        f"<p class=\"lead\">Bản đồ tư duy (định dạng cheatsheet) toàn bộ đồ nghề, sinh từ đĩa nên luôn khớp: <b>{n_sk} skill</b> theo loop · <b>{n_rules} rule</b>. Mind map chia <b>7 nhánh</b> (4 loop skill + rules + cơ chế + BNAL) — giải thích từng nhánh ngay dưới. Mỗi nhánh <b>mặc định đóng — click để mở/đóng</b> (mũi tên ▸).</p>",
+        _b7html,
         mindmap_html,
         "<h3 style=\"margin-top:26px\">Bảng chi tiết (mô tả đầy đủ)</h3>", skills_table, rules_table,
     ]))
