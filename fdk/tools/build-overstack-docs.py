@@ -467,8 +467,26 @@ def sections(root: Path):
         "<li>Liên kết chéo bằng <code>[[wikilink]]</code>; trang chỉ tạo SAU khi code đã commit.</li></ul></div></div>",
     ]))
 
+    _flow = [("agent định ghi", "#9aa4b2", ""), ("L0 · hook", "#0a84ff", "PreToolUse"),
+             ("L2 · pre-commit", "#5856d6", "fdk-gate"), ("L4 · CI", "#ff9500", "harness.yml (merge)"),
+             ("✓ vào main", "#34c759", "")]
+    _hsvg = ['<svg viewBox="0 0 900 165" xmlns="http://www.w3.org/2000/svg">'
+             '<defs><marker id="arrH" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">'
+             '<path d="M0,0 L9,4.5 L0,9 Z" fill="#9aa4b2"/></marker></defs>']
+    for _i, (_nm, _c, _sub) in enumerate(_flow):
+        _x = 16 + _i * 180
+        _hsvg.append(f'<rect x="{_x}" y="46" width="152" height="52" rx="8" fill="rgba(255,255,255,.7)" stroke="{_c}" stroke-width="1.6"/>')
+        _hsvg.append(f'<text x="{_x + 76}" y="{68 if _sub else 76}" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0f0f12">{_nm}</text>')
+        if _sub:
+            _hsvg.append(f'<text x="{_x + 76}" y="86" text-anchor="middle" font-size="8.5" fill="#4a4a55">{_sub}</text>')
+        if _i < 4:
+            _hsvg.append(f'<line class="flow" x1="{_x + 152}" y1="72" x2="{_x + 184}" y2="72" stroke="#9aa4b2" stroke-width="2" marker-end="url(#arrH)"/>')
+        if 1 <= _i <= 3:  # mỗi lớp gác có nhánh CHẶN
+            _hsvg.append(f'<text x="{_x + 76}" y="124" text-anchor="middle" font-size="9" font-weight="600" fill="#ff2d55">✗ exit 2 → chặn</text>')
+    _hsvg.append('</svg>')
     S.append(("harness", "Trụ 2 · Harness", "04 · Rào chắn", "Trụ 2 — Harness (rào chắn tất định)", [
-        "<p class=\"lead\">Harness là phần làm overstack khác mọi \"prompt pack\": luật là CODE chạy ở hook/CI, chặn được agent kể cả khi nó cố tình lờ. 0 token, không bypass được khi merge.</p>",
+        "<p class=\"lead\">Harness là phần làm overstack khác mọi \"prompt pack\": luật là CODE chạy ở hook/CI, chặn được agent kể cả khi nó cố tình lờ. 0 token, không bypass được khi merge. Một thay đổi phải qua <b>3 lớp gác</b> mới vào main — vi phạm ở lớp nào thì <b>exit 2</b> chặn ngay lớp đó:</p>",
+        '<div class="diagram-box">' + "".join(_hsvg) + '<div class="diagram-hint">✥ kéo từng ô · cuộn để zoom</div></div>',
         f"<p>Hiện có <b>{n_rules} rule</b> (R1–R{n_rules}), mỗi rule là một validator tất định; vi phạm bị chặn ở write-time (hook), commit (pre-commit), và merge (CI) — ba lớp. Bảng dưới giải thích <b>từng rule</b>. Các <b>cơ chế runtime + tự-gác</b> (auto-index, force-query, orientation, code-index, harness-lint…) là một nhánh <i>“cơ chế”</i> riêng — chia & giải thích từng cái trong <b>mind map</b> (mục Tham chiếu cuối trang).</p>",
         rules_table,
         "<div class=\"grid\"><div class=\"card\"><h4>Bốn lớp gác (L0–L4)</h4><ul class=\"s\">"
