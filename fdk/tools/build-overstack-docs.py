@@ -101,6 +101,19 @@ def esc(s: str) -> str:
     return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
+def load_personas(root: Path):
+    """18 persona-lens + cases từ harness/council.personas.yaml (nguồn chân lý). Fail-safe → {}."""
+    p = root / "harness" / "council.personas.yaml"
+    if not p.is_file():
+        return {}, {}
+    try:
+        import yaml
+        d = yaml.safe_load(p.read_text(encoding="utf-8")) or {}
+        return d.get("personas", {}), d.get("cases", {})
+    except Exception:
+        return {}, {}
+
+
 # ── style + script (glass docs-site-macos, đã chứng minh ở master-wiki) ───────────────────
 ACCENTS = [("#0a84ff", "10,132,255"), ("#30b0c7", "48,176,199"), ("#5856d6", "88,86,214"),
            ("#28a745", "52,199,89"), ("#f08c00", "255,149,0"), ("#e0264b", "255,45,85")]
@@ -186,6 +199,10 @@ h3{font-size:15.5px;margin:20px 0 6px;color:#1d1d1f}
 p{margin:10px 0;max-width:860px;font-size:14.5px}
 .card{background:var(--glass2);backdrop-filter:blur(8px) saturate(1.1);-webkit-backdrop-filter:blur(8px) saturate(1.1);border:1px solid var(--border);border-radius:16px;box-shadow:var(--edge),0 4px 20px rgba(0,0,0,.06);padding:18px 20px;margin-top:14px}
 .card h4{margin:0 0 9px;font-size:14px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}.grid3{grid-template-columns:1fr 1fr 1fr}@media(max-width:780px){.grid,.grid3{grid-template-columns:1fr}}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin-top:12px}
+.pcard{display:flex;gap:10px;align-items:flex-start;background:var(--glass2);border:1px solid var(--border);border-radius:12px;padding:10px 11px}
+.pcard .pav{width:36px;height:36px;flex-shrink:0}.pcard .pn{font-size:12.5px;font-weight:700;color:var(--t1)}
+.pcard .pl{font-size:10.5px;font-weight:600}.pcard .ps{font-size:10px;color:var(--t2);margin-top:2px;line-height:1.35}
 code{font-family:var(--mono);font-size:.85em;background:rgba(10,132,255,.08);padding:1px 5px;border-radius:5px;color:#0a5ec7}
 .code-wrap{position:relative;margin:12px 0}
 pre{background:rgba(13,24,40,.92);color:#e6edf6;border-radius:12px;padding:14px 46px 14px 16px;white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere;font-family:var(--mono);font-size:12.5px;line-height:1.55;margin:0;box-shadow:var(--edge),0 4px 20px rgba(0,0,0,.12)}pre code{background:none;color:inherit;padding:0;white-space:inherit}
@@ -613,6 +630,24 @@ def sections(root: Path):
         "<div class=\"note\"><h4>overstack tự ăn dog food</h4><p style=\"margin:0\">5 tính năng nâng cao của chính overstack (council · loop-runner · wikieval · trace-grader · failure-flywheel) đều dựng bằng BNAL — nên pattern này đã chứng minh trên thực tế, không phải lý thuyết.</p></div>",
     ]))
 
+    _pers, _ = load_personas(root)
+    _pcards = []
+    for _i, (_pid, _pv) in enumerate(_pers.items()):
+        _nm = _pv.get("name", _pid)
+        _ini = esc("".join(w[0] for w in _nm.split()[:2]).upper())
+        _col = ACCENTS[_i % len(ACCENTS)][0]
+        _av = (f'<svg viewBox="0 0 36 36" class="pav"><circle cx="18" cy="18" r="17" fill="{_col}22" '
+               f'stroke="{_col}" stroke-width="1.4"/><text x="18" y="23" text-anchor="middle" '
+               f'font-size="13" font-weight="700" fill="{_col}">{_ini}</text></svg>')
+        _pcards.append(f'<div class="pcard">{_av}<div><div class="pn">{esc(_nm)}</div>'
+                       f'<div class="pl" style="color:{_col}">{esc(_pv.get("lens", ""))}</div>'
+                       f'<div class="ps">{esc(_pv.get("sig", ""))}</div></div></div>')
+    _pblock = ('<h3 class="sub">18 persona-lens (council) — góc nhìn "vĩ nhân"</h3>'
+               '<p class="lead">Council bốc 3-5 lens theo VIỆC: <code>council.py roster --case risk</code> '
+               '(8 case design/strategy/debug/risk/product/decision/simplify/ml-ai), luôn ép ≥1 cặp đối-trọng. '
+               'Avatar tự sinh từ chữ-cái-đầu (self-contained, không ảnh ngoài); nguồn '
+               '<code>harness/council.personas.yaml</code>.</p>'
+               '<div class="pgrid">' + "".join(_pcards) + '</div>') if _pcards else ""
     S.append(("advanced", "Đánh giá (Evaluation)", "09 · Đánh giá", "Evaluation — đánh giá chất lượng &amp; quyết định khó (council · wikieval · trace-grader · loop-runner · failure-flywheel)", [
         "<p class=\"lead\">Năm skill <b>evaluation</b> BẠN gọi khi dev dự án của mình (mỗi cái lõi tất định, phần LLM nhốt sau adapter). Dùng khi cần đánh giá chất lượng, quyết một vấn đề khó, hay chạy một vòng lặp tự-sửa an toàn. Đây là trục PHÁN-XỬ; cổng tất định không-LLM nằm ở Trụ 4 (xem tab 5 trụ runtime).</p>",
         "<div class=\"grid\"><div class=\"card\"><h4>Đánh giá chất lượng</h4><ul class=\"s\">"
@@ -622,6 +657,7 @@ def sections(root: Path):
         "<li><b><code>/council</code></b> — nhiều model trả lời độc lập → chấm chéo ẩn danh → tổng hợp, cho một vấn đề khó (Karpathy 3-stage).</li>"
         "<li><b><code>/loop-runner</code></b> — chạy vòng lặp agent CÓ chốt dừng bắt buộc (max-iter/budget/no-progress) — không sợ loop hoang.</li>"
         "<li><b><code>/failure-flywheel</code></b> — gom lỗi lặp trong dự án bạn → đề xuất rule/skill mới vào luồng /propose.</li></ul></div></div>",
+        _pblock,
     ]))
 
     S.append(("awareness", "Năng lực & Truy vết", "10 · Truy vết", "Capabilities &amp; Traceability — bản đồ năng lực + logger (agent biết mình CÓ GÌ &amp; ĐÃ LÀM GÌ, bằng code)", [
@@ -668,11 +704,22 @@ def sections(root: Path):
     _rows = "".join(
         f'<tr><td><b>{_nm}</b></td><td>{_mech}</td><td><span class="pill {_p}">{_st}</span></td></tr>'
         for (_nm, _c, _mech, _st, _p) in _pillars)
+    _pdetail = [
+        ("1 · Cost Attribution", "#0a84ff", "Đo TIỀN: tokens + chi phí mỗi run, ghi ledger từ Stop hook (<code>code-logger --run-cost</code>). Trả lời: tiền chảy đi đâu, run nào đắt bất thường."),
+        ("2 · Knowledge Flow", "#30b0c7", "Tri thức ĐÚNG tới agent: <code>CLAUDE.md</code>/CAPABILITIES top-down + promote bottom-up (propose→gate, failure-flywheel). Trả lời: agent có đúng ngữ cảnh không."),
+        ("3 · Task Tracking", "#5856d6", "Mỗi việc một mã bền <code>T-YYMMDD-NN</code> đi proposed→approved→dispatched→done; validator <code>task_lifecycle</code> chặn nếu đi sai. Trả lời: draft này → commit nào, đã duyệt chưa."),
+        ("4 · Quality Gates", "#34c759", "Cổng TẤT ĐỊNH không-LLM: <code>code_health</code> (mọi .py compile) + self-test, chạy ở fdk-gate + CI. Trả lời: code có hồi quy không — chặn cả khi LLM bị lừa."),
+        ("5 · Audit &amp; Analytics", "#ff9500", "Sổ-cái <code>events.jsonl</code> append-only + hash-chain; <code>--audit --check</code> verify ở gate; <code>--reconcile</code> quy actor agent/người. Trả lời: ai sửa gì, log có bị giả mạo không."),
+    ]
+    _pdet_html = ('<h3 class="sub">Chi tiết từng trụ</h3><div class="pgrid">' + "".join(
+        f'<div class="pcard"><div><div class="pn" style="color:{_c}">{_nm}</div><div class="ps">{_d}</div></div></div>'
+        for (_nm, _c, _d) in _pdetail) + '</div>')
     S.append(("runtime", "5 trụ runtime", "11 · Runtime", "5 trụ runtime — Cost · Knowledge · Task · Quality · Audit (Outer Harness)", [
         "<p class=\"lead\">Năm trụ <b>Outer Harness</b> là phần overstack <b>đo lường &amp; gác LÚC CHẠY</b> — không phải 3 cái rời (eval/capabilities/logger) mà là một hệ: mọi action agent ghi vào một sổ-cái <code>events.jsonl</code> (append-only + hash-chain), từ đó nuôi 5 trụ, rồi <b>gác ở <code>fdk-gate</code> + CI</b>. Đánh giá đầy đủ + bằng chứng: <a href=\"300626-outer-harness-evaluation.html\">outer-harness-evaluation</a>.</p>",
         '<div class="diagram-box">' + "".join(_svg) + '<div class="diagram-hint">✥ kéo từng ô · cuộn để zoom · kéo mép dưới để mở rộng</div></div>',
         '<div class="table-wrap"><table><thead><tr><th>Trụ</th><th>Cơ chế (bằng CODE, không-LLM)</th><th>Trạng thái</th></tr></thead><tbody>'
         + _rows + '</tbody></table></div>',
+        _pdet_html,
         "<p class=\"lead\" style=\"margin-top:10px\">Mấu chốt: trục <b>phán-xử</b> (tab Đánh giá: council/wikieval) và trục <b>tất định</b> (Trụ 4 code-health, Trụ 5 audit-chain) tách bạch — cổng tất định chặn cả khi LLM bị lừa.</p>",
     ]))
 
