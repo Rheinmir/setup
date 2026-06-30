@@ -14,8 +14,9 @@ After any impl task, before `git commit`.
 1. `RUN: <type-check-cmd>` — detect from repo: `npx tsc --noEmit` (package.json) / `go build ./...` (go.mod). Fix all errors.
 2. `RUN: <lint-cmd>` — detect: `npx eslint src/` / `go vet ./...`. Fix errors; note warnings.
 3. `RUN: <test-cmd>` — detect: `npm test` / `go test ./...`. Fix failures.
-4. Smoke check: verify golden path end-to-end.
-5. Commit with message: *why*, not *what*.
+4. **Trụ 3 gate (nếu có harness):** `RUN: [ -f harness/validators/task_lifecycle.py ] && python3 harness/validators/task_lifecycle.py --root .` — chặn cứng nếu task-ID đi sai state-machine (lùi/nhảy/né gate) hoặc draft trỏ task lạ. Không có file (install cũ) → bỏ qua. Đây là bản CỨNG của step 8 best-effort bên dưới.
+5. Smoke check: verify golden path end-to-end.
+6. Commit with message: *why*, not *what*.
 
 **Post-commit — mandatory, never skip:**
 6. Find draft in `llmwiki/wiki/sources/draft/` matching feature.
