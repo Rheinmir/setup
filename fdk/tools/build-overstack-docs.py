@@ -167,6 +167,7 @@ nav::before{content:'';position:absolute;inset:0;pointer-events:none;background:
 nav .logo{margin:0 0 8px;padding:6px 10px;font-weight:800;font-size:17px;letter-spacing:-.03em;background:linear-gradient(135deg,#0a84ff,#5856d6);-webkit-background-clip:text;background-clip:text;color:transparent}
 nav .logo small{display:block;font-size:10px;font-weight:600;color:var(--t2);-webkit-text-fill-color:var(--t2);letter-spacing:0}
 nav a{position:relative;overflow:hidden;padding:5.5px 12px;border-radius:9px;font-size:12.5px;color:var(--t2);text-decoration:none;transition:background .15s,color .15s}nav a:hover{background:rgba(10,132,255,.06);color:#0a84ff}nav a.active{color:#0a84ff;background:rgba(10,132,255,.08);font-weight:600}
+nav a .ic{display:inline-block;width:17px;margin-right:6px;text-align:center;opacity:.95}
 nav .grp{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#9aa4b2;margin:12px 12px 2px}
 .nav-close{position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--t2);cursor:pointer;background:rgba(0,0,0,.05);border:none;overflow:hidden}.nav-close:hover{color:#0a84ff;background:rgba(10,132,255,.1)}
 .nav-toggle{position:fixed;top:12px;left:12px;z-index:120;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--t2);cursor:pointer;background:linear-gradient(165deg,rgba(255,255,255,.5),rgba(255,255,255,.24));backdrop-filter:blur(24px) saturate(1.7);-webkit-backdrop-filter:blur(24px) saturate(1.7);border:1px solid transparent;box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 0 0 1px rgba(30,90,170,.08),0 2px 10px rgba(30,90,170,.12);transition:opacity .2s;overflow:hidden}body:not(.nav-collapsed) .nav-toggle{opacity:0;pointer-events:none}body.nav-collapsed nav{transform:translateX(-100%)}body.nav-collapsed{padding-left:0}@media(max-width:640px){body{padding-left:0}}
@@ -417,12 +418,12 @@ def sections(root: Path):
         f"<div class=\"b\"><div class=\"n\" style=\"color:#e0264b\">{n_rules}</div><div class=\"l\">rules tất định</div></div>"
         f"<div class=\"b\"><div class=\"n\" style=\"color:#5856d6\">{n_scripts}</div><div class=\"l\">harness scripts</div></div>"
         "<div class=\"b\"><div class=\"n\" style=\"color:#28a745\">0</div><div class=\"l\">token/lần gác</div></div>"
-        "<div class=\"b\"><div class=\"n\" style=\"color:#30b0c7\">4</div><div class=\"l\">trụ</div></div></div>",
-        "<div class=\"grid\"><div class=\"card\"><h4>Bốn trụ</h4><ul class=\"s\">"
-        "<li><b>Wiki (tri thức)</b> — nơi dự án nhớ: concept, entity, nguồn, ADR, draft; mỗi trang truy được nguồn.</li>"
-        "<li><b>Harness (rào chắn)</b> — luật tất định bằng code chặn agent làm bậy, không tốn token, không bypass được khi merge.</li>"
-        "<li><b>Skills (kỹ năng)</b> — quy trình đóng gói, gọi bằng <code>/tên</code>, cài global dùng mọi dự án.</li>"
-        "<li><b>Orca (điều phối)</b> — chạy nhiều agent song song: propose → gate → dispatch → verify.</li></ul></div>"
+        "<div class=\"b\"><div class=\"n\" style=\"color:#30b0c7\">3</div><div class=\"l\">nền tảng + Orca</div></div></div>",
+        "<div class=\"grid\"><div class=\"card\"><h4>3 nền tảng + lớp điều phối</h4><ul class=\"s\">"
+        "<li><b>Nền 1 · Wiki (tri thức)</b> — nơi dự án nhớ: concept, entity, nguồn, ADR, draft; mỗi trang truy được nguồn.</li>"
+        "<li><b>Nền 2 · Harness (rào chắn)</b> — luật tất định bằng code chặn agent làm bậy, không tốn token, không bypass được khi merge.</li>"
+        "<li><b>Nền 3 · Skills (kỹ năng)</b> — quy trình đóng gói, gọi bằng <code>/tên</code>, cài global dùng mọi dự án.</li>"
+        "<li><b>Orca (điều phối)</b> — KHÔNG phải nền tảng mà là LỚP chạy nhiều agent trên 3 nền đó: propose → gate → dispatch → verify. (Lưu ý: \"5 trụ runtime\" lại là khái niệm khác — đo lường &amp; gác LÚC CHẠY.)</li></ul></div>"
         "<div class=\"card\"><h4>Triết lý</h4><ul class=\"s\">"
         "<li><b>Đừng tin agent nhớ</b> — luật, log, bản đồ năng lực đều do CODE đảm bảo, không trông chờ trí nhớ LLM.</li>"
         "<li><b>Tất định &gt; xác suất</b> — rào chắn là code chạy 0-token; phần cần LLM bị nhốt sau adapter.</li>"
@@ -432,11 +433,15 @@ def sections(root: Path):
 
     S.append(("install", "Cài đặt", "02 · Cài đặt", "Cài đặt — global vs per-project", [
         "<p class=\"lead\">overstack cài bằng một dòng bootstrap. Có hai chế độ, dùng cả hai là tốt nhất.</p>",
-        "<h3>Bootstrap (mặc định — cả 3 trụ)</h3>",
-        "<p><b>Cách 1 — dán cho Agent</b> (agent tự cài + tự kiểm tra):</p>",
-        "<pre class='code-block'><code>chạy curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash và kiểm tra xem mọi thứ đã ở đúng chỗ chưa</code></pre>",
-        "<p><b>Cách 2 — terminal:</b></p>",
-        "<pre class='code-block'><code>curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash</code></pre>",
+        "<h3>Bootstrap (mặc định — cả 3 nền tảng)</h3>",
+        "<div class=\"grid\">"
+        "<div class=\"card\"><h4>Cách 1 — dán cho Agent</h4>"
+        "<p style=\"margin:0 0 8px\">Agent tự cài + tự kiểm tra mọi thứ đã đúng chỗ:</p>"
+        "<pre class='code-block'><code>chạy curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash và kiểm tra xem mọi thứ đã ở đúng chỗ chưa</code></pre></div>"
+        "<div class=\"card\"><h4>Cách 2 — terminal</h4>"
+        "<p style=\"margin:0 0 8px\">Chạy thẳng một dòng:</p>"
+        "<pre class='code-block'><code>curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash</code></pre></div>"
+        "</div>",
         "<p>Kéo harness + skills + llmwiki và bật chặn ngay. Opt-out: <code>--harness-only</code>.</p>",
         "<div class=\"note\"><h4>Dự án MỚI từ đầu (chưa có code)?</h4><p style=\"margin:0\">Không cần cài tay rồi feed từng file — chỉ <b>dán nội dung <code>00-New-Project.md</code></b> cho agent. Nó tự cài overstack → kickoff (hỏi 3 câu) → dựng knowledge base → scaffold MVP, dừng hỏi đúng lúc. Chi tiết: <code>setup.md</code>.</p></div>",
         "<div class=\"grid\"><div class=\"card\"><h4>Per-project (cho team)</h4><ul class=\"s\">"
@@ -453,7 +458,7 @@ def sections(root: Path):
         "<li>Tự bảo trì về sau: <code>/harness-update</code> (cập nhật + trả nợ + refresh bản đồ năng lực).</li></ul></div>",
     ]))
 
-    S.append(("wiki", "Trụ 1 · Wiki", "03 · Tri thức", "Trụ 1 — Wiki (nền tri thức)", [
+    S.append(("wiki", "Nền 1 · Wiki", "03 · Tri thức", "Nền tảng 1 — Wiki (tri thức)", [
         "<p class=\"lead\">Wiki là bộ nhớ dài hạn của dự án. overstack ép nó luôn truy được nguồn và không bao giờ lệch index — bằng rào chắn, không bằng kỷ luật con người.</p>",
         "<div class=\"grid\"><div class=\"card\"><h4>Luật vàng của wiki</h4><ul class=\"s\">"
         "<li>Mọi trang phải có <code>## Origin</code> — luôn truy được nguồn gốc (R2).</li>"
@@ -484,7 +489,7 @@ def sections(root: Path):
         if 1 <= _i <= 3:  # mỗi lớp gác có nhánh CHẶN
             _hsvg.append(f'<text x="{_x + 76}" y="124" text-anchor="middle" font-size="9" font-weight="600" fill="#ff2d55">✗ exit 2 → chặn</text>')
     _hsvg.append('</svg>')
-    S.append(("harness", "Trụ 2 · Harness", "04 · Rào chắn", "Trụ 2 — Harness (rào chắn tất định)", [
+    S.append(("harness", "Nền 2 · Harness", "04 · Rào chắn", "Nền tảng 2 — Harness (rào chắn tất định)", [
         "<p class=\"lead\">Harness là phần làm overstack khác mọi \"prompt pack\": luật là CODE chạy ở hook/CI, chặn được agent kể cả khi nó cố tình lờ. 0 token, không bypass được khi merge. Một thay đổi phải qua <b>3 lớp gác</b> mới vào main — vi phạm ở lớp nào thì <b>exit 2</b> chặn ngay lớp đó:</p>",
         '<div class="diagram-box">' + "".join(_hsvg) + '<div class="diagram-hint">✥ kéo từng ô · cuộn để zoom</div></div>',
         f"<p>Hiện có <b>{n_rules} rule</b> (R1–R{n_rules}), mỗi rule là một validator tất định; vi phạm bị chặn ở write-time (hook), commit (pre-commit), và merge (CI) — ba lớp. Bảng dưới giải thích <b>từng rule</b>. Các <b>cơ chế runtime + tự-gác</b> (auto-index, force-query, orientation, code-index, harness-lint…) là một nhánh <i>“cơ chế”</i> riêng — chia & giải thích từng cái trong <b>mind map</b> (mục Tham chiếu cuối trang).</p>",
@@ -500,7 +505,7 @@ def sections(root: Path):
         "<li><b>fdk-gate</b> — định-nghĩa-hoàn-thành: 14 bước phải xanh mới cho push.</li></ul></div></div>",
     ]))
 
-    S.append(("skills", "Trụ 3 · Skills", "05 · Kỹ năng", "Trụ 3 — Skills (kỹ năng đóng gói)", [
+    S.append(("skills", "Nền 3 · Skills", "05 · Kỹ năng", "Nền tảng 3 — Skills (kỹ năng đóng gói)", [
         f"<p class=\"lead\">Skill là một quy trình đóng gói thành file <code>SKILL.md</code>, gọi bằng <code>/tên</code>. Hiện có <b>{n_sk}</b> skill, chia theo \"loop\" (vòng công việc). Cài global qua <code>npx skills add</code> → dùng ở mọi dự án.</p>",
         "<div class=\"grid\"><div class=\"card\"><h4>wiki-loop</h4><ul class=\"s\"><li>nuôi tri thức: <code>/ingest</code>, <code>/query</code>, <code>/lint</code>.</li></ul></div>"
         "<div class=\"card\"><h4>dev-loop</h4><ul class=\"s\"><li>vòng phát triển: <code>/propose</code>, <code>/impact-check</code>, <code>/safe-change</code>, <code>/verify-before-commit</code>…</li></ul></div>"
@@ -619,8 +624,8 @@ def sections(root: Path):
         "<li><b><code>/failure-flywheel</code></b> — gom lỗi lặp trong dự án bạn → đề xuất rule/skill mới vào luồng /propose.</li></ul></div></div>",
     ]))
 
-    S.append(("awareness", "Quan sát (Observability)", "10 · Quan sát", "Observability — capabilities map &amp; logger (agent biết mình CÓ GÌ &amp; ĐÃ LÀM GÌ, bằng code)", [
-        "<p class=\"lead\">Hai cơ chế <b>observability</b> bảo đảm agent <b>biết mình có gì</b> (capabilities) và <b>nhớ đã làm gì</b> (logger) — bằng code, không bằng trí nhớ LLM (ADR-005). Logger này chính là nguồn nuôi 5 trụ runtime ở tab kế.</p>",
+    S.append(("awareness", "Năng lực & Truy vết", "10 · Truy vết", "Capabilities &amp; Traceability — bản đồ năng lực + logger (agent biết mình CÓ GÌ &amp; ĐÃ LÀM GÌ, bằng code)", [
+        "<p class=\"lead\">Hai cơ chế: <b>capabilities</b> (bản đồ năng lực — agent biết mình có gì) + <b>traceability / logger</b> (ghi lại mọi việc đã làm) — bằng code, không bằng trí nhớ LLM (ADR-005). Logger này chính là nguồn nuôi 5 trụ runtime ở tab kế.</p>",
         "<div class=\"grid\"><div class=\"card\"><h4>Bản đồ năng lực</h4><ul class=\"s\">"
         "<li><code>build-capabilities</code> sinh <code>CAPABILITIES.md</code> từ đĩa: mọi skill + rule.</li>"
         "<li>Xuống cùng dự án: downstream đọc <b>global skills + rule đã cài</b> → \"đồ nghề bạn có Ở DỰ ÁN NÀY\".</li>"
@@ -726,17 +731,21 @@ def render(root: Path) -> str:
                ("Tổng quan", ["what", "install"]),
                ("3 nền tảng", ["wiki", "harness", "skills"]),
                ("Quy trình & điều phối", ["workflow", "orca"]),
-               ("Đánh giá & quan sát", ["advanced", "awareness", "runtime"]),
+               ("Đánh giá & truy vết", ["advanced", "awareness", "runtime"]),
                ("An toàn khi mở rộng", ["bnal"]),
                ("Vận hành", ["maintain", "reference"]),
                ("👷 Phát triển overstack", ["fdk", "newfeature"])]
     id2nav = {sid: navlabel for sid, navlabel, *_ in S}
     idx = {sid: i for i, (sid, *_rest) in enumerate(S)}
+    ICON = {"quickstart": "🚀", "what": "📖", "install": "📦", "wiki": "📚", "harness": "🛡️",
+            "skills": "🧰", "workflow": "🔄", "orca": "🐳", "advanced": "⚖️", "awareness": "🧭",
+            "runtime": "📡", "bnal": "🧩", "maintain": "🔧", "reference": "🗺️", "fdk": "👷",
+            "newfeature": "✅"}
     nav = ['<div class="logo">overstack<small>tài liệu chính thức · sinh từ đĩa</small></div>']
     for grp, ids in grouped:
         nav.append(f'<div class="grp">{grp}</div>')
         for sid in ids:
-            nav.append(f'<a href="#s{idx[sid]}">{id2nav[sid]}</a>')
+            nav.append(f'<a href="#s{idx[sid]}"><span class="ic">{ICON.get(sid, "•")}</span>{id2nav[sid]}</a>')
     body = []
     for i, (sid, navlabel, tag, title, blocks) in enumerate(S):
         inner = [f'<span class="tag">{tag}</span>', f"<h2>{title}</h2>"]
