@@ -121,7 +121,7 @@ For each section, use the accent for:
   backdrop-filter: blur(var(--blur-2)) saturate(1.1);
   border: 1px solid var(--border);
   border-radius: 16px;
-  box-shadow: var(--edge-hi), 0 4px 20px rgba(0,0,0,.06);  /* top highlight + lower shadow = directional light */
+  box-shadow: var(--edge-hi), 0 4px 20px rgba(20,40,90,.08);  /* top highlight + lower BLUE-TINTED shadow = directional light; never pure black on a blue field */
   padding: 20px;
 }
 ```
@@ -317,7 +317,9 @@ Lưu ý: tint xanh `#0a84ff` để khớp pattern; thumb đậm dần theo hover
 ## Page Architecture
 
 ```
-<nav>          — fixed top bar with section links
+<a class="skip-link"> — first focusable, jumps to #main (see Accessibility section)
+<nav>          — fixed LEFT sidebar with section links (never a top bar)
+<main id="main">  — wraps everything below for the landmark + skip-link target
 <hero>         — gradient title + subtitle
 <div class="mm">  — MẶC ĐỊNH: một mind map collapsible (xem § Mind Map) — luôn vẽ
 <repo-card>    — optional: link to source repo with chrome + collapse
@@ -456,11 +458,11 @@ CSS — replace the old static `.diagram-box` rule with:
 
 ```css
 .diagram-box{background:var(--glass-2);backdrop-filter:blur(var(--blur-2)) saturate(1.1);
-  border:1px solid var(--border);border-radius:16px;box-shadow:var(--edge-hi),0 4px 20px rgba(0,0,0,.06);
+  border:1px solid var(--border);border-radius:16px;box-shadow:var(--edge-hi),0 4px 20px rgba(20,40,90,.08);
   padding:24px;margin:24px 0;
   position:relative;overflow:hidden;display:flex;flex-direction:column;
   resize:vertical;min-height:160px;transition:box-shadow .2s ease}
-.diagram-box:hover{box-shadow:0 6px 28px rgba(0,0,0,.1)}
+.diagram-box:hover{box-shadow:var(--edge-hi),0 6px 28px rgba(20,40,90,.14)}
 .diagram-viewport{position:relative;flex:1 1 auto;width:100%;overflow:hidden;cursor:grab;touch-action:none}
 .diagram-viewport.grabbing{cursor:grabbing}
 .diagram-viewport svg{width:100%;height:auto;display:block;overflow:visible;transform-origin:0 0;
@@ -679,17 +681,24 @@ CSS:
   transition: max-height .35s cubic-bezier(.4,0,.2,1), opacity .25s ease;
   opacity: 0;
 }
-.collapse-body.open { max-height: 800px; opacity: 1; }
+.collapse-body.open { opacity: 1; }   /* open max-height is set by JS = scrollHeight, NOT a magic cap */
 .collapse-toggle .arrow { transition: transform .25s cubic-bezier(.4,0,.2,1); }
 .collapse-toggle .arrow.open { transform: rotate(90deg); }
 ```
 
+⛔ NEVER hardcode `.collapse-body.open{max-height:800px}` — any content taller than the cap gets silently clipped. Measure `scrollHeight` and set `max-height` inline so the panel always fits its content; clear it back to `0` on close so the transition animates:
+
 JS:
 ```js
 function toggleX() {
-  document.getElementById('bodyX').classList.toggle('open');
+  const body = document.getElementById('bodyX');
+  const open = body.classList.toggle('open');
   document.getElementById('arrowX').classList.toggle('open');
+  body.style.maxHeight = open ? body.scrollHeight + 'px' : '0';
 }
+/* if a panel contains images/late-laid-out content, re-measure on resize for any .open panel */
+addEventListener('resize', () => document.querySelectorAll('.collapse-body.open')
+  .forEach(b => { b.style.maxHeight = b.scrollHeight + 'px'; }));
 ```
 
 ## Responsive
@@ -732,6 +741,63 @@ pre.code-block,.foot-tree{font-family:var(--font-mono)}
 - Roboto/Segoe UI là fallback hệ (Android/Linux/Windows có sẵn) — KHÔNG tải webfont để giữ self-contained.
 - Mono luôn đi qua `ui-monospace` trước Menlo để bắt SF Mono trên macOS mới.
 
+## Accessibility & Document Head (REQUIRED)
+
+These are easy to forget and break silently — wire all of them on every page.
+
+**`<head>` — meta + favicon (without `viewport` the whole Responsive section is dead on mobile):**
+```html
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page Title — concise, sentence case</title>
+<meta name="description" content="One specific sentence about the page.">
+<meta name="theme-color" content="#eaf2fd">
+<!-- inline favicon, keeps the file self-contained (no /favicon.ico request) -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a84ff'/%3E%3C/svg%3E">
+```
+Add Open Graph (`og:title`/`og:description`/`og:image`) only when the page is meant to be shared/linked externally — skip for purely local `file://` docs.
+
+**Focus ring (a11y, not optional)** — every custom control (`nav a`, `button`, `.code-copy`, `.diagram-reset`, `.collapse-toggle`, checkboxes) hides the native outline; restore a visible keyboard ring. Use `:focus-visible` so it shows for keyboard, not mouse:
+```css
+:focus-visible{outline:2px solid #0a84ff;outline-offset:2px;border-radius:8px}
+:focus:not(:focus-visible){outline:none}
+```
+
+**Skip link + `<main>` landmark** — wrap the content (everything after `<nav>`) in `<main id="main">` and add a hidden skip-link as the first focusable element so keyboard users can jump past the sidebar:
+```html
+<a class="skip-link" href="#main">Skip to content</a>
+```
+```css
+.skip-link{position:fixed;top:8px;left:8px;z-index:200;padding:8px 14px;border-radius:10px;
+  background:var(--glass-1);backdrop-filter:blur(var(--blur-1));border:1px solid var(--border);
+  transform:translateY(-150%);transition:transform .2s}
+.skip-link:focus-visible{transform:translateY(0)}
+```
+
+**Smooth scroll + anchor offset** — anchor clicks must glide, and a section must not hide under the top edge:
+```css
+html{scroll-behavior:smooth}
+section[id]{scroll-margin-top:24px}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+```
+
+**`prefers-reduced-motion` — cover ALL motion, not just the body orbs** — one global guard kills decorative animation (orbs, ripple, float/pulse/glow/flowArrow, mind-map draw) for users who ask for it:
+```css
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;
+    transition-duration:.001ms!important;scroll-behavior:auto!important}
+}
+```
+
+**Informative SVG diagrams need a text alternative** — a draggable node graph carries meaning, so give each `.diagram-box` SVG `role="img"` + a `<title>` (first child) describing what it shows; mark purely decorative SVG (icons already paired with a text label) `aria-hidden="true"`.
+
+**Data figures use tabular numerals** — tables and diagram number labels must not jiggle column width:
+```css
+table, .diagram-box text, .mm .node .ct{font-variant-numeric:tabular-nums}
+```
+
+**Headline orphans** — add `text-wrap:balance` to hero/`h2` and `text-wrap:pretty` to body paragraphs so a single word never strands on its own line.
+
 ## Self-Contained — CRITICAL
 
 The user opens these files directly (`file://`, offline, double-click). The output HTML must make ZERO external requests: no font/CSS/JS CDN links, no remote images, no `@import`, no `<script src>`. Everything (CSS, JS, SVG, icons) lives inline in the one file. `<a href>` hyperlinks to external sites are fine — they are navigation, not resource loads.
@@ -773,7 +839,7 @@ When generating separate pages per wiki file (all files share the same `DDMMYY-`
 
 ## Interactive Prototype / Editable Data-Grid (optional)
 
-When the user asks to "see how the UI will look", "tạo bảng tương tác thử", or wants a clickable demo of an editable grid/spreadsheet feature, build a **standalone interactive prototype** (same `DDMMYY-<slug>.html`, Tailwind CDN + vanilla JS, no build). These reusable patterns make override/cascade UIs consistent and self-explanatory:
+When the user asks to "see how the UI will look", "tạo bảng tương tác thử", or wants a clickable demo of an editable grid/spreadsheet feature, build a **standalone interactive prototype** (same `DDMMYY-<slug>.html`, vanilla JS, no build). ⚠️ **Self-Contained still applies — do NOT pull Tailwind CDN, Google Fonts, or any remote script.** Use plain inline CSS (or an inlined utility layer copied into `<style>`) and the system-font stack from the Font section; the file must open from `file://` with ZERO external requests like every other page this skill emits. These reusable patterns make override/cascade UIs consistent and self-explanatory:
 
 - **Locale-aware number input** — `parseUserNumber(raw, locale)`: strip the locale's thousand sep, swap decimal to `.`, `Number()`. Display via `Intl.NumberFormat(locale)`. Offer a VN ↔ US/Đài toggle.
 - **Override vs Affected, persistent coloring** — compute each row TWICE: with overrides (`v`) and without (`base`). A cell is: **override** (in the override map) → amber `bg-amber-50 ring-amber-300` + `✦`; **affected/cascade** (`base[code] !== v[code]`) → emerald `bg-emerald-50 ring-emerald-200` + `↻`. Both persist (not just a flash) until the override is removed. Add a transient `flash` (~1.4s) on the cells that changed this commit.
@@ -782,7 +848,7 @@ When the user asks to "see how the UI will look", "tạo bảng tương tác th�
 - **Proper modal, not `confirm()`** — reserve a styled modal ONLY for destructive actions (e.g. "clear all overrides"); parametrize title/okText/danger.
 - **Focus after async UI** — when an edit starts right after closing a modal/dialog, focus the input on a tick (`setTimeout(...,0)`), or it won't take focus.
 
-Keep the chrome (traffic-light header), Inter font, and monochrome slate palette consistent with the doc sites (amber/emerald override-state colors in the data-grid pattern above are the one allowed exception — they encode editing state, not theme).
+Keep the chrome (traffic-light header), the system-font stack (`var(--font-text)`), and the liquid-glass blue/white palette consistent with the doc sites (amber/emerald override-state colors in the data-grid pattern above are the one allowed exception — they encode editing state, not theme).
 
 ## Best Practices
 
@@ -823,54 +889,6 @@ Keep the chrome (traffic-light header), Inter font, and monochrome slate palette
 - Number of sections is variable — cycle through the 6-blue palette with modulo (`i % 6`)
 - ALWAYS start an auto-host server after writing the HTML file (see Auto-Host section above)
 
-
----
-
-## Output Report
-
-After all main skill tasks complete, write a propose draft to the wiki.
-
-### Steps
-
-**1. Build the filename:**
-- Format: `DDMMYY-<ten>.md`
-- `DDMMYY` = today (e.g., `020626` for 2 June 2026)
-- `<ten>` = 2–4 kebab-case words summarising what was done (e.g., `landing-page-coteccons`, `brand-kit-fintech`, `ingest-auth-spec`)
-
-**2. Write** `llmwiki/wiki/sources/draft/DDMMYY-<ten>.md`:
-
-```
-# DDMMYY-<ten>
-**Type:** draft
-**Status:** proposed
-**Tags:** <skill-name>, output-report
-**Proposed:** YYYY-MM-DD
-
-## What
-<One sentence — what this skill invocation produced or decided>
-
-## Output
-<Key artefacts, files created/modified, or decisions made>
-
-## Files
-| File | Action |
-|------|--------|
-| `path/to/file` | created / modified |
-
-## Notes
-- Invoked via: `/<skill-name>` skill
-
-## Origin
-- **Draft:** `wiki/sources/draft/DDMMYY-<ten>.md`
-- **Commit:** _(filled by verify-before-commit)_
-- **Date promoted:** _(filled by verify-before-commit)_
-```
-
-**3. Update wiki index & log:**
-- `llmwiki/wiki/index.md` — append one row: `| [DDMMYY-<ten>](sources/draft/DDMMYY-<ten>.md) | draft | YYYY-MM-DD |`
-- `llmwiki/wiki/log.md` — append: `## YYYY-MM-DD — <skill-name> — <ten>`
-
-> Skip only when the skill produces zero artefacts and zero decisions (e.g., a pure display mode like `/caveman-stats`).
 
 ---
 

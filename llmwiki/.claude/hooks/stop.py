@@ -22,6 +22,11 @@ def regen_docs(root: str) -> None:
         if not re.search(r"(skills/.*SKILL\.md|llmwiki/skills/|policy\.yaml|"
                          r"build-overstack-docs\.py|build-capabilities\.py|sync-skills\.py)", st):
             return  # phiên không đụng skill/rule/generator → khỏi regen
+        # mirror parity TRƯỚC: sửa canonical skills/<name>/SKILL.md → sinh lại llmwiki/skills/ y hệt
+        # NGAY cuối lượt, để 2 cây không stale tạm thời (trước đây phải cp tay → gate mới bắt).
+        ss = os.path.join(root, "harness", "scripts", "sync-skills.py")
+        if os.path.isfile(ss):
+            subprocess.run([sys.executable, ss], capture_output=True, timeout=40)
         for t in ("build-capabilities.py", "build-overstack-docs.py", "build-skill-search.py"):
             subprocess.run([sys.executable, os.path.join(td, t)], capture_output=True, timeout=40)
     except Exception:

@@ -10,6 +10,8 @@ tree, step by step. It is a LAYER on top of **`/docs-site-macos`** — reuse tha
 design system (background plane, glass tiers, scrollbar, fonts, ripple, output path
 `llmwiki/html/DDMMYY-<slug>.html`, auto-host). This skill ADDS the interactive walkthrough.
 
+> Inherit docs-site-macos's **Accessibility & Document Head** section too — `<meta viewport>` + `<title>`/`description`, inline favicon, `:focus-visible` ring on the ⏮/⏭/▶ controls, and the global `prefers-reduced-motion` guard (rule 11 already skips the walkthrough animation; the guard also stills the cursor/typewriter). Do NOT ship the page without viewport meta or its responsive grid breaks on mobile.
+
 ## When to use
 - Explaining a **lifecycle** (install → configure → run), a **sequence**, or a **data-flow**.
 - Any "how does X work, step by step" where the viewer needs to SEE *which file each action reads/writes* and *in what order*.

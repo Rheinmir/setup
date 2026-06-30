@@ -45,6 +45,13 @@ KHÔNG bỏ bước.
 
 - **Offline-proof tuyệt đối**: CSS thuần trong file, KHÔNG Tailwind CDN (mạng chặn = trang trắng).
   Google Fonts cho phép nhưng phải có fallback stack.
+- **`<head>` đủ:** `<meta charset="utf-8">` + `<meta name="viewport" content="width=device-width, initial-scale=1">`
+  + `<title>` thật. Thiếu viewport → bảng tràn ngang trên laptop nhỏ/máy tính bảng của nghiệp vụ.
+- **Cột số căn theo `tabular-nums`** (`td.num, .exp-val{font-variant-numeric:tabular-nums}`) — số kỳ vọng
+  (lương, trần BHXH…) phải thẳng cột để soi nhanh; font tỉ lệ làm số nhảy cột, sai lệch khó thấy.
+- **Focus ring bàn phím:** mọi nút (Sao chép Excel / Tải CSV / Xuất PDF / "Hiển thị đầy đủ") + ô chọn
+  Đạt/Không đạt cần `:focus-visible{outline:2px solid var(--accent);outline-offset:2px}` — nghiệp vụ
+  hay thao tác bằng Tab/Enter, mất ring là lạc chỗ. (Bỏ ring chuột bằng `:focus:not(:focus-visible){outline:none}`.)
 - **`localStorage` bọc try/catch** — `file://` có thể chặn storage, để hở là chết toàn bộ script:
   ```js
   const store={get(k){try{return localStorage.getItem(k)}catch(_){return null}},

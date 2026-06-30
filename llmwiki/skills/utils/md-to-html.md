@@ -22,6 +22,14 @@ HTML → `html/` dir (e.g. `html/tên-file.html`). NOT same dir as source `.md`.
 ## Full instructions
 `~/.gemini/antigravity/skills/md-to-html/SKILL.md`
 
+## Output requirements (don't ship a broken page)
+The generated HTML must include, regardless of the external template:
+- `<meta charset="utf-8">` + `<meta name="viewport" content="width=device-width, initial-scale=1">` and a real `<title>` — without viewport the TOC/tables overflow on mobile.
+- `:focus-visible{outline:2px solid <accent>;outline-offset:2px}` so the floating-TOC links and any buttons show a keyboard focus ring.
+- `font-variant-numeric:tabular-nums` on `table` (number columns must not jiggle).
+- `@media(prefers-reduced-motion:reduce)` to skip Mermaid/Chart entry animation and set `scroll-behavior:auto`; add `html{scroll-behavior:smooth}` + `scroll-margin-top` so TOC anchor jumps glide and headings don't hide under any sticky header.
+- A favicon (inline data-URI is fine) and `alt`/`<title>` on informative diagrams.
+
 ---
 
 ## Output Report
