@@ -9,6 +9,8 @@ requires:
 
 # orca-onboard
 
+> 🧭 Dispatch backend — chọn agent/model rẻ, chạy nhiều worker song song, cú pháp opencode/orchestration → xem **orca-dispatch-reference** (nguồn chân lý duy nhất, đừng nhân bản syntax ở đây).
+
 Onboard codebase via distilled understand-anything pipeline (graph + git history, no plugin), then domain enrichment + wiki + HTML.
 
 ## Triggers

@@ -5,6 +5,8 @@ description: Daily propose → gate → dispatch workflow with Orca
 
 # Skill: orca-workflow
 
+> 🧭 Dispatch backend — chọn agent/model rẻ, chạy nhiều worker song song, cú pháp opencode/orchestration → xem **orca-dispatch-reference** (nguồn chân lý duy nhất, đừng nhân bản syntax ở đây).
+
 ## Purpose
 
 Propose → gate → dispatch → verify qua Orca. Agent pool 1:1 per engine (claude, agy, opencode, kiro, copilot).

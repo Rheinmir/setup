@@ -13,6 +13,8 @@ description: >-
 
 # Skill: council
 
+> 🧭 Chọn backend cho mỗi seat (model rẻ vs Claude), chạy nhiều seat song song (1 worktree/seat — KHÔNG nhiều opencode/1 folder) → xem **orca-dispatch-reference** (nguồn chân lý duy nhất).
+
 A deterministic harness around Andrej Karpathy's `llm-council`
 (https://github.com/karpathy/llm-council) three stages — Stage 1 "First
 Opinions", Stage 2 "Review" (anonymized peer-rank), Stage 3 "Final Response"

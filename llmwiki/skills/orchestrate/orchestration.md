@@ -13,6 +13,8 @@ description: >-
 
 # Orca Inter-Agent Orchestration
 
+> 🧭 Dispatch backend — chọn agent/model rẻ, chạy nhiều worker song song, cú pháp opencode/orchestration → xem **orca-dispatch-reference** (nguồn chân lý duy nhất, đừng nhân bản syntax ở đây).
+
 Orchestration is Orca's structured coordination layer for agent messages, task ownership, dispatch state, and worker completion tracking.
 
 Use this skill when coordination state matters. For lightweight terminal prompts or basic worktree/terminal/built-in-browser control, use `orca-cli`.
