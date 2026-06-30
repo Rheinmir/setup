@@ -160,6 +160,13 @@ repos:
         always_run: true
         pass_filenames: false
 
+      - id: audit-reconcile
+        name: "Tru 5: quy actor agent/nguoi vao audit chain tai chot git (fail-open)"
+        entry: bash -c 'python3 harness/scripts/code-logger.py --reconcile "$@" || true' --
+        language: system
+        files: '^(llmwiki/|harness/|skills/|fdk/|\.github/)'
+        pass_filenames: true
+
   # Tùy chọn — bật khi đã cài binary (brew install lychee):
   # - repo: local
   #   hooks:

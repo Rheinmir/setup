@@ -28,8 +28,10 @@ Claude: analyze. Others: execute. Kill opencode nếu chờ quá lâu.
    - **Tách Claude-nghĩ / CLI-rẻ-render:** Claude (qua `/propose`) chỉ sản xuất SUBSTANCE = `.md` render-complete (Plan + prose + `## Render brief` = bước diagram dạng data + đoạn prose mỗi task). Phần `.html` là RENDER **cơ học** của `## Render brief` → **dispatch sang một CLI rẻ** theo bảng chi phí (OpenCode `big-pickle` → `agy` → `kiro`, $0). Render free nên dùng **Full** `docs-site-macos` richness, KHÔNG cắt bớt — token Claude chỉ tốn cho substance, không phình theo độ giàu HTML.
    - **Watchdog + R7 gate (bài học 250626 — headless giao ~1/5):** chờ ~60–90s; im lặng / không tạo file / thiếu `diagram-box` → **kill, Claude render fallback**. Thử CLI rẻ theo thứ tự sẵn-có (probe `--version`); cạn → Claude. R7 vẫn chặn lúc write+commit nên chất lượng được gác bất kể ai render.
 3. **gate**: `orca orchestration gate-create --question "Duyệt proposal này?"` → chờ user (gửi kèm preview URL của html)
+   - **Trụ 3 lifecycle (best-effort, fail-open):** user DUYỆT → `python3 harness/scripts/code-logger.py --task set <T-id> state=approved note="gate"` (`<T-id>` = field `task:` trong frontmatter draft do `/propose` mint; trống thì bỏ qua). User TỪ CHỐI → `--task set <T-id> state=rejected`. Lệnh fail-open, không chặn flow.
 4. **Sau duyệt**: Phân rã tasks từ proposal → `orca orchestration task-create` mỗi task
 5. **dispatch**: `orca orchestration dispatch --task <id> --to <agent> --inject`
+   - **Trụ 3 lifecycle (best-effort):** khi giao việc → `python3 harness/scripts/code-logger.py --task set <T-id> state=dispatched note="<agent>"`. Đây là `T-id` bền (audit trail bất biến), độc lập với `task_xxxx` ephemeral của orca orchestration. Fail-open.
    - **Persona theo archetype (Boris Cherny — 5 vai vòng đời):** muốn dispatch theo một *posture* cụ
      thể thì gọi bằng **từ khoá** — `/proto` `/build` `/sweep` `/grow` `/maintain`. Cơ chế:
      `python3 harness/scripts/archetype.py --get /<kw>` → in (a) **CLI gợi ý** cho archetype đó

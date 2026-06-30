@@ -23,8 +23,10 @@ After any impl task, before `git commit`.
    - Add `## Origin` section: `Draft: <path>` / `Commit: <hash> — <msg>` / `Date: YYYY-MM-DD`
    - `CHECK: grep -l "## Origin" <promoted-file>` — must return file.
 7. `RUN: echo "promoted" >> llmwiki/wiki/log.md` — then edit log properly; update `llmwiki/wiki/index.md`.
+8. **Trụ 3 — đóng vòng đời (best-effort, fail-open):** draft có frontmatter `task: T-…` → `python3 harness/scripts/code-logger.py --task set <T-id> state=done note="<commit-hash>"`. Lệnh fail-open (thiếu `--task`/id → bỏ qua, không chặn commit). Xác nhận: `--task show <T-id>` in lifecycle proposed→approved→dispatched→done; `--audit` xác minh các transition nằm trong chuỗi bất biến.
 
 > No draft (hotfix/refactor)? Note "no draft — <reason>" in log.md, skip step 6.
+> No `task:` id (install cũ / propose bỏ qua mint)? Skip step 8 — fail-open, không phải lỗi.
 
 All steps mandatory. No exceptions.
 

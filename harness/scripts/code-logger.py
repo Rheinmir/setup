@@ -17,6 +17,7 @@ cho LOG NGHIỆP VỤ (curated), không chỉ raw audit:
 CLI: code-logger.py [--root DIR] [--tail N | --summary | --render-md | --record EVENT k=v ...]
 Fail-open TUYỆT ĐỐI: logging không bao giờ được làm gãy phiên (mọi lỗi → nuốt).
 """
+import hashlib
 import json
 import os
 import sys
@@ -48,13 +49,36 @@ def is_framework_file(rel: str) -> bool:
     return rel.endswith((".md", ".py", ".sh", ".yaml", ".yml", ".json")) and rel.startswith(FRAMEWORK_PREFIXES)
 
 
+def _chain_hash(prev_h: str, body: dict) -> str:
+    """Hash 1 mắt xích = sha256(prev_h + nội-dung-chuẩn-hoá). Bao cả `prev` (nằm trong body)."""
+    canon = json.dumps(body, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+    return hashlib.sha256((str(prev_h) + "\n" + canon).encode("utf-8")).hexdigest()
+
+
+def _last_hash(path: Path) -> str:
+    """`h` của dòng cuối (mắt xích gần nhất). '' nếu file rỗng / dòng cuối chưa hashed (pre-audit)."""
+    try:
+        last = ""
+        with open(path, "r", encoding="utf-8", errors="ignore") as f:
+            for ln in f:
+                if ln.strip():
+                    last = ln
+        return (json.loads(last).get("h") or "") if last else ""
+    except Exception:
+        return ""
+
+
 def record(root, event: str, **fields) -> None:
-    """Append 1 event vào sổ cái — gọi từ hook. Fail-open."""
+    """Append 1 event vào sổ cái — gọi từ hook. Móc vào hash-chain tamper-evident. Fail-open."""
     try:
         root = Path(root)
+        path = _events_path(root)
         rec = {"ts": datetime.now().isoformat(timespec="seconds"), "event": event}
         rec.update({k: v for k, v in fields.items() if v is not None})
-        with open(_events_path(root), "a", encoding="utf-8") as f:
+        rec.setdefault("actor", "agent")              # event từ hook = agent; reconcile ghi đè "system"/"human"
+        rec["prev"] = _last_hash(path) or "genesis"   # neo vào mắt xích trước (append-only)
+        rec["h"] = _chain_hash(rec["prev"], rec)        # rec lúc này chưa có "h"
+        with open(path, "a", encoding="utf-8") as f:
             f.write(json.dumps(rec, ensure_ascii=False) + "\n")
     except Exception:
         pass
@@ -186,8 +210,12 @@ def run_cost(root, transcript: str, session: str = "") -> dict:
             u = msg.get("usage") or {}
             if not u:
                 continue
+            model = msg.get("model") or "?"
+            # Bỏ qua turn synthetic (compaction/sidechain do Claude Code tự bơm — không phải call model thật)
+            if model in ("<synthetic>", "?"):
+                continue
             mid = msg.get("id") or o.get("uuid") or id(o)
-            seen[mid] = (msg.get("model") or "?", u)
+            seen[mid] = (model, u)
             ts = o.get("timestamp") or o.get("ts")
             if ts:
                 first_ts = first_ts or ts
@@ -262,6 +290,178 @@ def cost_summary(root) -> None:
         print(f"    ${c:8.2f}  {m}")
 
 
+def audit_verify(root) -> None:
+    """Trụ 5 — Audit & Analytics. Kiểm tra toàn vẹn chuỗi tamper-evident của events.jsonl
+    rồi in tóm tắt hội tụ (số sự kiện, khoảng thời gian, phân loại). Đọc RAW (không nuốt
+    dòng hỏng như _read_events) để chính tamper cũng lộ ra."""
+    root = Path(root)
+    try:
+        raw = _events_path(root).read_text(encoding="utf-8").splitlines()
+    except Exception:
+        print("audit: chưa có events.jsonl")
+        return
+    lines = [ln for ln in raw if ln.strip()]
+    total = len(lines)
+    objs = []
+    for i, ln in enumerate(lines):
+        try:
+            objs.append(json.loads(ln))
+        except Exception:
+            print(f"audit: ✗ dòng {i + 1} JSON hỏng — không verify được phần còn lại")
+            return
+    first = next((i for i, o in enumerate(objs) if o.get("h")), None)
+    pre = total if first is None else first
+    broken = None
+    if first is not None:
+        prev_h = "genesis"
+        for i in range(first, total):
+            o = objs[i]
+            if not o.get("h"):
+                broken = (i + 1, "thiếu hash (dòng pre-audit chen vào giữa chuỗi)"); break
+            if o.get("prev") != prev_h:
+                broken = (i + 1, "đứt liên kết prev (dòng bị chèn hoặc xoá)"); break
+            if _chain_hash(o.get("prev", "genesis"), {k: v for k, v in o.items() if k != "h"}) != o["h"]:
+                broken = (i + 1, "hash không khớp (nội dung dòng bị sửa)"); break
+            prev_h = o["h"]
+    from collections import Counter
+    c = Counter(o.get("event", "?") for o in objs)
+    ts = [o.get("ts") for o in objs if o.get("ts")]
+    span = f", {ts[0]} → {ts[-1]}" if ts else ""
+    print(f"Audit & Analytics (Trụ 5) — {total} sự kiện{span}")
+    print(f"  pre-audit (chưa bảo vệ chuỗi): {pre}")
+    if first is None:
+        print("  chuỗi tamper-evident: CHƯA khởi tạo — sẽ bắt đầu từ event tiếp theo")
+    elif broken:
+        print(f"  chuỗi tamper-evident: ✗ ĐỨT ở dòng {broken[0]} — {broken[1]}")
+    else:
+        print(f"  chuỗi tamper-evident: ✓ {total - pre} mắt xích liên tục, toàn vẹn")
+    print("  theo loại sự kiện:")
+    for k, n in c.most_common():
+        print(f"    {n:4d}  {k}")
+    print("  ⚠️ tamper-EVIDENT, không tamper-proof: bắt sửa/chèn/xoá dòng giữa file; KHÔNG chống được")
+    print("     agent tự tính lại cả chuỗi, và không bắt cắt-đuôi (cần neo ngoại bộ — council: khoan làm).")
+
+
+def _tasks_path(root: Path) -> Path:
+    p = root / "harness" / "metrics"
+    p.mkdir(parents=True, exist_ok=True)
+    gi = root / ".gitignore"
+    try:
+        if not gi.exists() or "harness/metrics/tasks.json" not in gi.read_text(encoding="utf-8", errors="ignore"):
+            with open(gi, "a", encoding="utf-8") as f:
+                f.write("harness/metrics/tasks.json\n")
+    except Exception:
+        pass
+    return p / "tasks.json"
+
+
+def _load_tasks(root: Path) -> dict:
+    try:
+        return json.loads(_tasks_path(root).read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def _save_tasks(root: Path, tasks: dict) -> None:
+    _tasks_path(root).write_text(json.dumps(tasks, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def task_new(root, title: str, **fields) -> str:
+    """Trụ 3 — tạo task, ID bền T-YYMMDD-NN, state=proposed. State store mutable (cache),
+    nhưng MỖI chuyển trạng thái ghi 1 mắt xích vào events.jsonl → audit trail bất biến (Trụ 5).
+    Fail-open: lỗi I/O → trả "" (flow gọi không bao giờ vỡ)."""
+    try:
+        root = Path(root)
+        tasks = _load_tasks(root)
+        day = datetime.now().strftime("%y%m%d")
+        seq = sum(1 for t in tasks if t.startswith(f"T-{day}-")) + 1
+        tid = f"T-{day}-{seq:02d}"
+        now = datetime.now().isoformat(timespec="seconds")
+        tasks[tid] = {"id": tid, "title": title, "state": "proposed", "created": now, "updated": now,
+                      "history": [{"state": "proposed", "ts": now}],
+                      **{k: v for k, v in fields.items() if v is not None}}
+        _save_tasks(root, tasks)
+        record(root, "task.new", task=tid, title=title, state="proposed")
+        return tid
+    except Exception:
+        return ""
+
+
+def task_set(root, tid: str, state: str, note: str = "") -> bool:
+    """Chuyển trạng thái — cập nhật store + ghi 1 mắt xích audit bất biến. Fail-open."""
+    try:
+        root = Path(root)
+        tasks = _load_tasks(root)
+        if tid not in tasks:
+            return False
+        now = datetime.now().isoformat(timespec="seconds")
+        tasks[tid]["state"] = state
+        tasks[tid]["updated"] = now
+        h = {"state": state, "ts": now}
+        if note:
+            h["note"] = note
+        tasks[tid].setdefault("history", []).append(h)
+        _save_tasks(root, tasks)
+        record(root, "task.set", task=tid, state=state, note=note or None)
+        return True
+    except Exception:
+        return False
+
+
+def task_list(root) -> None:
+    tasks = _load_tasks(Path(root))
+    if not tasks:
+        print("tasks: chưa có task nào")
+        return
+    print(f"Task Tracking (Trụ 3) — {len(tasks)} task")
+    for tid, t in sorted(tasks.items()):
+        print(f"  {tid:>13}  {t.get('state',''):<11}  {t.get('title','')}")
+
+
+def task_show(root, tid: str) -> None:
+    t = _load_tasks(Path(root)).get(tid)
+    if not t:
+        print(f"task: không thấy {tid}")
+        return
+    print(f"{t['id']}  [{t['state']}]  {t.get('title','')}")
+    print(f"  tạo: {t.get('created','')}  ·  đổi gần nhất: {t.get('updated','')}")
+    print("  lịch sử (audit trail bất biến — chuỗi trong events.jsonl):")
+    for h in t.get("history", []):
+        note = f"  — {h['note']}" if h.get("note") else ""
+        print(f"    {h.get('ts','')}  → {h.get('state','')}{note}")
+
+
+def reconcile(root, files) -> None:
+    """Trụ 5 — quy ACTOR (agent vs người/tool ngoài) tại chốt GIT. Gọi từ pre-commit hook.
+    Nguyên lý: git là kênh DUY NHẤT mọi thay đổi muốn tồn tại đều phải qua. File framework
+    được stage mà KHÔNG có `file.write` của agent (kể từ lần reconcile trước) → người/tool ngoài
+    đã sửa (hook in-process của agent mù với bash/Cursor/vim). Ghi 1 mắt xích `commit.reconcile`
+    vào chuỗi bất biến. Fail-open TUYỆT ĐỐI — logging không bao giờ chặn commit."""
+    try:
+        root = Path(root)
+        fw = [f.replace("\\", "/").lstrip("./") for f in files if is_framework_file(f)]
+        if not fw:
+            return
+        evs = _read_events(root)
+        last = -1
+        for i, e in enumerate(evs):
+            if e.get("event") == "commit.reconcile":
+                last = i
+        agent_paths = {e.get("path") for e in evs[last + 1:]
+                       if e.get("event") == "file.write" and e.get("path")}
+        agent = [f for f in fw if f in agent_paths]
+        human = [f for f in fw if f not in agent_paths]
+        record(root, "commit.reconcile", actor="system",
+               agent_n=len(agent), human_n=len(human), human=human or None)
+        if human:
+            print(f"[reconcile] {len(agent)} agent-logged · {len(human)} NGOÀI agent-log "
+                  f"(người/tool ngoài): {', '.join(human[:6])}")
+        else:
+            print(f"[reconcile] {len(agent)} file framework đều agent-logged ✓")
+    except Exception:
+        pass
+
+
 def main() -> None:
     args = sys.argv[1:]
     root = Path(os.environ.get("CLAUDE_PROJECT_DIR") or os.getcwd())
@@ -279,6 +479,32 @@ def main() -> None:
         print(f"run.cost: ${rec.get('cost_usd')} ({rec.get('turns')} turns)" if rec else "skip (no transcript/usage)")
     elif "--cost-summary" in args:
         cost_summary(root)
+    elif "--audit" in args:
+        audit_verify(root)
+    elif "--reconcile" in args:
+        i = args.index("--reconcile")
+        reconcile(root, args[i + 1:])
+    elif "--task" in args:
+        try:
+            i = args.index("--task")
+            sub = args[i + 1] if len(args) > i + 1 else "list"
+            rest = args[i + 2:]
+            kv = dict(a.split("=", 1) for a in rest if "=" in a)
+            pos = [a for a in rest if "=" not in a]
+            if sub == "new":
+                title = kv.get("title") or (" ".join(pos) if pos else "untitled")
+                tid = task_new(root, title, **{k: v for k, v in kv.items() if k != "title"})
+                print(f"task tạo: {tid}  [proposed]  {title}" if tid else "task: bỏ qua (fail-open)")
+            elif sub == "set":
+                tid = pos[0] if pos else kv.get("task", "")
+                state = kv.get("state") or (pos[1] if len(pos) > 1 else "")
+                print(f"task {tid} → {state}" if task_set(root, tid, state, kv.get("note", "")) else f"task: bỏ qua {tid} (fail-open)")
+            elif sub == "show":
+                task_show(root, pos[0] if pos else kv.get("task", ""))
+            else:
+                task_list(root)
+        except Exception:
+            print("task: bỏ qua (fail-open)")
     elif "--render-md" in args:
         ok = render_md(root)
         print("rendered log.md auto-block" if ok else "skip (no events / no log.md)")

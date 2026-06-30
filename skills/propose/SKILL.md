@@ -25,6 +25,7 @@ Plan feature/change before writing code. Surfaces impact on existing functionali
    - `## Plan` — tasks as `- [ ]` checklist items
    - `## Agent Task Assignment` — table `| Task | Agent (CLI) | Lý do chọn | Status |`, one row per task, **no empty Agent cell**, Status=pending. Pick agents by cost table; if all on one agent, say why.
    - `**Sequence diagram:**` link to companion `.html` (must exist on disk)
+   - **Task ID bền (Trụ 3 — best-effort, fail-open):** `python3 harness/scripts/code-logger.py --task new title="<feature>"` → in `T-YYMMDD-NN`; ghi vào frontmatter `task: T-YYMMDD-NN`. Lệnh **fail-open** — install cũ thiếu `--task` hoặc store lỗi → in "bỏ qua", cứ để trống `task:`, KHÔNG chặn propose. Đây là id mà gate/dispatch/verify dùng để advance vòng đời + neo vào audit trail bất biến (events.jsonl chained).
    Add row to `llmwiki/wiki/index.md` and append to `llmwiki/wiki/log.md`.
 7. Create the **companion HTML page** at `llmwiki/html/DDMMYY-feature-name-seq.html`. For EACH task in Plan the page MUST contain **both** parts — a page that is only diagrams with no rich prose, OR only prose with no diagram, is INCOMPLETE (R7 checks `diagram-box` count ≥ task count):
    - **(A) Animated diagram** — one per task, titled by its task + badge naming the assigned agent; lifelines = participants; messages are **all visible by default** (`.msg` opacity ≥ .82) — the animation only *highlights* the running step (auto-loop, click to pause), **never hide a message with `opacity:0`** (lesson 130626 / R7-d); 2-color: indigo = existing, emerald = added/changed, amber = blocked/fail branches.
@@ -35,7 +36,7 @@ Plan feature/change before writing code. Surfaces impact on existing functionali
 8. STOP. No code. Show the draft content + the HTML preview URL. Wait for user to approve or redirect.
 
 ## Rules
-- **OKF v0.1 (R9):** the draft starts with a YAML frontmatter block (`---`) with `type: draft` (+ optional `title`/`status`/`tags`/`timestamp`); copy `sources/draft/_template.md`. Keep `**Status:** proposed` in the body so R7 can gate it.
+- **OKF v0.1 (R9):** the draft starts with a YAML frontmatter block (`---`) with `type: draft` (+ optional `title`/`status`/`tags`/`timestamp`/`task`); copy `sources/draft/_template.md`. Keep `**Status:** proposed` in the body so R7 can gate it.
 - Never begin implementation during this skill.
 - The proposal is a PAIR: `.md` + `.html` (one diagram per task). Validator R7 blocks incomplete proposals at write and commit — fix before asking for approval.
 - If impact list empty, state explicitly "No existing code affected."
