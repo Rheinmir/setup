@@ -606,6 +606,51 @@ def cmd_selftest(args):
 # --------------------------------------------------------------------------- #
 # argparse
 # --------------------------------------------------------------------------- #
+def cmd_roster(args):
+    """Bốc 3-5 persona theo case/profile/--personas — THUẦN LOOKUP, không gọi model.
+    In lens + cặp đối-trọng + lý do (log-được vào transcript). Đây là lớp ADDITIVE; engine
+    rank/anonymize/mean-rank KHÔNG đụng tới. Nguồn: harness/council.personas.yaml."""
+    try:
+        import yaml  # optional dependency (giống cmd_rank)
+    except ImportError:
+        _die("roster cần pyyaml — pip install pyyaml")
+    data = yaml.safe_load(Path(args.personas).read_text(encoding="utf-8")) or {}
+    P, pairs = data.get("personas", {}), [tuple(p) for p in data.get("polarity_pairs", [])]
+    cases, profiles = data.get("cases", {}), data.get("profiles", {})
+
+    if args.personas_list:
+        ids, why = [x.strip() for x in args.personas_list.split(",") if x.strip()], "chỉ định tay"
+    elif args.profile:
+        ids = profiles.get(args.profile) or _die(f"profile lạ '{args.profile}' (có: {', '.join(profiles)})")
+        why = f"profile {args.profile}"
+    elif args.case:
+        c = cases.get(args.case) or _die(f"case lạ '{args.case}' (có: {', '.join(cases)})")
+        ids = list(c.get("base", []))
+        if args.size and args.size >= 5:
+            ids += list(c.get("extra", []))[:max(0, args.size - len(ids))]
+        why = f"case {args.case} (size {len(ids)})"
+    else:
+        _die("cần --case <tag> | --profile <name> | --personas a,b,c")
+
+    unknown = [i for i in ids if i not in P]
+    if unknown:
+        _die(f"persona lạ: {unknown}")
+    idset = set(ids)
+    tensions = [list(p) for p in pairs if p[0] in idset and p[1] in idset]
+    if not tensions and len(ids) > 1:
+        sys.stderr.write(f"[roster] ⚠ KHÔNG có cặp đối-trọng trong {ids} — nguy cơ phòng vọng âm.\n")
+
+    roster = [{"id": i, **{k: P[i][k] for k in ("name", "lens", "sig")}} for i in ids]
+    out = {"why": why, "personas": roster, "tensions": tensions}
+    if args.json:
+        print(json.dumps(out, ensure_ascii=False, indent=2))
+    else:
+        print(f"[roster] {why} · {len(ids)} ghế · tension: {tensions or '⚠ THIẾU'}")
+        for r in roster:
+            print(f"  • {r['name']:<17} — {r['lens']}  | {r['sig']}")
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser(prog="council.py", description="Deterministic LLM-council protocol engine.")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -627,6 +672,15 @@ def main():
 
     s = sub.add_parser("selftest", help="run conformance vectors; assert determinism + correctness")
     s.set_defaults(func=cmd_selftest)
+
+    ro = sub.add_parser("roster", help="bốc 3-5 persona theo case/profile (thuần lookup, log-được)")
+    ro.add_argument("--case", help="design|strategy|debug|risk|product|decision|simplify|ml-ai")
+    ro.add_argument("--profile", help="classic|exploration|lean")
+    ro.add_argument("--personas", dest="personas_list", help="chỉ định tay: a,b,c")
+    ro.add_argument("--size", type=int, default=3, help="3 (mặc định) hoặc 5")
+    ro.add_argument("--personas-file", dest="personas", default="harness/council.personas.yaml")
+    ro.add_argument("--json", action="store_true")
+    ro.set_defaults(func=cmd_roster)
 
     args = ap.parse_args()
     args.func(args)

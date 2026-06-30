@@ -40,6 +40,29 @@ Hard questions where one model's answer is risky and you want a panel + an
 audit trail of who-ranked-what, with the favour-your-own bias removed by
 blinding. For a single quick answer, just ask one model.
 
+## Persona lenses — góc nhìn "vĩ nhân" (optional, ADDITIVE)
+
+Mặc định mỗi seat = một MODEL trả lời. Lớp persona thêm **đa-dạng GÓC NHÌN**: mỗi seat đội một
+**lens** (Feynman / Munger / Taleb / Rams …) — quan trọng khi đa-dạng-model bị hạn chế (chỉ có ít
+provider). Engine `council.py` KHÔNG đổi: persona chỉ là chữ nhét vào prompt Stage-1.
+
+**Bốc 3-5 người theo case (thuần code, log-được):**
+```bash
+python3 harness/scripts/council.py roster --case risk            # 3 ghế, có ≥1 cặp đối-trọng
+python3 harness/scripts/council.py roster --case ml-ai --size 5  # 5 ghế
+python3 harness/scripts/council.py roster --profile lean         # 5 người execution-lean
+python3 harness/scripts/council.py roster --personas feynman,taleb,rams --json
+```
+- Case tag: `design · strategy · debug · risk · product · decision · simplify · ml-ai` (bảng trong `harness/council.personas.yaml`).
+- **Luật:** roster luôn cài **≥1 cặp đối-trọng** (chống phòng vọng âm); thiếu → cảnh báo ở stderr. Size lẻ (3/5) để mean-rank không hoà.
+- Thư viện: 18 persona + 13 cặp đối-trọng (nguồn `github.com/0xNyk/council-of-high-intelligence`).
+
+**Dùng trong protocol:** sau khi bốc roster, gán mỗi persona vào một seat — có 2 cách:
+1. **Động (khuyên):** orchestrator lấy output `roster --json`, với mỗi seat chèn lens vào prompt Stage-1: *"Trả lời qua lăng kính \<name>: \<lens>. \<sig>."*
+2. **Cố định:** điền field `persona:` mỗi seat trong `harness/council.config.yaml`.
+
+Roster + lý do bốc (case, cặp tension) **ghi vào transcript** để auditable (Trụ 5). Phần "model nào fill seat" vẫn là unknown đã quarantine ở `council.config.yaml` (`verified`) — persona-lens độc lập với nó.
+
 ## Preconditions
 
 - `python3 harness/scripts/council.py selftest` exits 0 (engine is healthy).
@@ -95,6 +118,7 @@ back under `chairman_synthesis` in the transcript for the record.
 | `rank <answers.json> --judges <judges.json>` | full aggregation → transcript.json + .md |
 | `rank <answers.json>` (no judges) | emits the blind packet, then stops |
 | `prepare <answers.json>` | blind packet only (Stage 2a) |
+| `roster --case <tag>` / `--profile <p>` / `--personas a,b,c` | bốc 3-5 persona-lens (thuần lookup, ≥1 cặp đối-trọng); `--size 3\|5`, `--json` |
 | `selftest` | conformance vectors; asserts determinism + correctness |
 
 Flags: `--seed N` (anchor-guard seed; overrides config `anchor_seed`),

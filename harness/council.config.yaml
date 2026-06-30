@@ -22,13 +22,19 @@ verified: true
 question: "<the question put to the council>"
 
 # Stage 1 — the N seats. Each seat independently produces ONE candidate answer.
+# `persona:` (OPTIONAL) = lens "vĩ nhân" từ harness/council.personas.yaml — orchestrator nhét lens
+# vào prompt Stage-1 của seat ("Trả lời qua lăng kính <name>: <lens>. <sig>"). Bỏ trống = không lens.
+# Để bốc động theo case thay vì cố định ở đây: `council.py roster --case <tag>` (xem skills/council).
 seats:
   - id: seat-1
     model: claude-opus-4    # ASSUMPTION (not verified) — which model fills seat 1
+    persona: feynman        # OPTIONAL — id trong council.personas.yaml (bỏ trống nếu không dùng lens)
   - id: seat-2
     model: gpt-5            # ASSUMPTION (not verified)
+    persona: taleb          # OPTIONAL
   - id: seat-3
     model: gemini-2.5-pro   # ASSUMPTION (not verified)
+    persona: rams           # OPTIONAL
 
 # Stage 2 — the judges. They peer-rank the BLIND (anonymized) answers. Usually
 # the same models as the seats; blindness — not exclusion — is what stops a
