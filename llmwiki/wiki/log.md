@@ -19,31 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-01 08:57:13 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=9088f0eb7763c2de44e004143f305ae43309e226ac603b716abba |
-| 2026-07-01 08:57:39 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=002a4d9b125ab27a93ae76c4e5feb8576146f2f185748ab946b44 |
-| 2026-07-01 09:01:06 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=a2771cb2d1c455e9b594463ec07d7ed72e7cd367e1c7d32121abb |
-| 2026-07-01 09:01:15 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=81d6a5c353e36fff5df5dc265ae35e1b668239154ea931bc17270 |
-| 2026-07-01 10:47:30 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=7211adeb485976131372bd81bf4f34e8b904a1037ee491b5162bb |
-| 2026-07-01 16:18:14 | `file.write` | llmwiki/wiki/draft/orca/010726-query-retrieval-eval.md · tool=Write · actor=agent · prev=c07c23aeb7adbd9b31e9999415580fc |
-| 2026-07-01 16:26:10 | `file.write` | harness/scripts/query-log.py · tool=Write · actor=agent · prev=0aa8b0eba2dd4ba29c2a91541b9c7e0096e2c53c3fc5a22abb40ea0f4 |
-| 2026-07-01 16:26:33 | `file.write` | harness/scripts/query-log.py · tool=Edit · actor=agent · prev=2b5d01d3405fdf312cb83753dfd197f65bddd72c3d9ffe3b65ede50405 |
-| 2026-07-01 16:26:59 | `file.write` | harness/scripts/query-log.py · tool=Edit · actor=agent · prev=8d6fbf00ac16bfd8c5ab732058c7632fc1c218d751d99f2dcc5b854ba9 |
-| 2026-07-01 16:27:05 | `file.write` | harness/scripts/query-log.py · tool=Edit · actor=agent · prev=50dc20b2afc9774a0951cc351168d8439810eb00a59f8823bdf0773698 |
-| 2026-07-01 16:28:13 | `file.write` | llmwiki/skills/wiki-loop/query.md · tool=Edit · actor=agent · prev=5a526560815bf8afb8903f422b6ab712ad2a0acdc48851107c407 |
-| 2026-07-01 16:28:19 | `query-telemetry` | harness/scripts/query-log.py · state=done · actor=agent · prev=7b5ce0f10fca662738ffa727e8ea83bb1d6df27823047cc7a2ec556f7 |
-| 2026-07-01 16:32:19 | `file.write` | harness/scripts/retrieval-eval.py · tool=Write · actor=agent · prev=7304bb785017d21d34ec2e4afc7644f726fbc1b626c8c5198368 |
-| 2026-07-01 16:35:04 | `file.write` | harness/scripts/query-proxy.py · tool=Write · actor=agent · prev=7c1e95349dd4c4e60d70b892f5f1ab8ee3ae6105cf0f80216e4c3b4 |
-| 2026-07-01 16:35:14 | `file.write` | harness/scripts/query-proxy.py · tool=Edit · actor=agent · prev=d481834faa4368c0f64e5b0553c6b7ad54270d48ee99db82087f9b12 |
-| 2026-07-01 16:36:03 | `file.write` | harness/scripts/query-proxy.py · tool=Edit · actor=agent · prev=15e62c0c8a751513ff02c97b5555072de92745f0c47625188be70780 |
-| 2026-07-01 16:37:29 | `file.write` | harness/scripts/query-proxy.py · tool=Edit · actor=agent · prev=097e2633f0e078a1d588396f10fc856533f978fe18e47978bafda003 |
-| 2026-07-01 16:38:42 | `file.write` | llmwiki/skills/wiki-loop/query.md · tool=Edit · actor=agent · prev=58f172225fc0d81b5ffe8a7181ecbfa20b5895f0d1f984649ac85 |
-| 2026-07-01 16:40:21 | `file.write` | llmwiki/wiki/draft/orca/010726-query-retrieval-eval.md · tool=Edit · actor=agent · prev=5ebfb5aa19fd23e08aa547a308abf096 |
-| 2026-07-01 16:40:53 | `task.new` |  · task=T-260701-01 · title=Query L0→L1: eval truy-hồi + telemetry + 3-tầng · state=proposed · actor=agent · prev=8a6601 |
-| 2026-07-01 16:40:53 | `task.set` |  · task=T-260701-01 · state=approved · note=gate duyệt · actor=agent · prev=f4ae975809f07d0292a4e95edb2102381313a21c1670 |
-| 2026-07-01 16:40:53 | `task.set` |  · task=T-260701-01 · state=dispatched · note=claude self-impl mảnh1-3 · actor=agent · prev=16dd1ebcc3db0e8c614eeea06f2b |
-| 2026-07-01 16:42:42 | `file.write` | fdk/wiki/concepts/query-retrieval-eval.md · tool=Write · actor=agent · prev=30f7b31cc81c38abe8d9c50588c8d6e3157cadcd3c86 |
-| 2026-07-01 16:43:16 | `task.set` |  · task=T-260701-01 · state=done · note=08ebb32 promoted · actor=agent · prev=d636ebc073d71be15e36242f8ac203588d3e767411 |
-| 2026-07-01 16:51:21 | `file.write` | .github/workflows/harness.yml · tool=Edit · actor=agent · prev=bd07df84d47a56dffeb73d0c7ed6197931467869493ab99b1df4a7323 |
 | 2026-07-01 19:41:16 | `file.write` | llmwiki/html/010726-21-quy-tac.html · tool=Write · actor=agent · prev=7048eaa7ea6f8ef86f3f6f31409e29b3419ebccf25514446b1 |
 | 2026-07-01 19:41:42 | `file.write` | llmwiki/wiki/sources/draft/010726-21-quy-tac-docs.md · tool=Write · actor=agent · prev=ece08cab0684b247193dd8946fd5b9ba9 |
 | 2026-07-01 19:41:47 | `file.write` | llmwiki/wiki/sources/draft/010726-21-quy-tac-docs.md · tool=Edit · actor=agent · prev=8a56aee52a8d8e5f9d308c9429dcb9b862 |
@@ -59,9 +34,36 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-01 23:50:27 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=c0daeab84d1ca972430698fb484e855f87636f06a9d24a2c72b001d12270 |
 | 2026-07-01 23:51:36 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=02de6f1f1aafa4cb1f1ef771b157f5792bcfcd780f7705c9293d64b7dbcf |
 | 2026-07-01 23:51:46 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=fc89373c4e61461901fc3b33053ab95274e20051bc888844e43a976f1518 |
+| 2026-07-01 23:53:23 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=39dce4ae5901e1736d5f85ffd37ff90cad9e3d36d1763651863ea4a3958210d |
+| 2026-07-01 23:53:51 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=950348c615b8539ef9506cf2a72f6426ed9465d0b697d2cc02beef8ab7ccb21 |
+| 2026-07-01 23:53:59 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=d34a03fb290cc414f84a703eddf428eed5eb13f389c047d73a92b799b77eb5d |
+| 2026-07-01 23:54:03 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=79db94e94f7bbb3c8c4e6a63c683c37d52617dee8940cb8413f441fce5b874c |
+| 2026-07-02 00:00:18 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=3f9c7ab6b60164c9080fc77818e0ecc6e7525c83f40888e8736cea07768d |
+| 2026-07-02 00:04:42 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=a37e5524efea770b6bf30d9868240e736345b5f387f9868b0c8818ebcf02 |
+| 2026-07-02 00:05:02 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=fd231af8e966141d73644c40757c751cdac68159cce6802bf48a7d796dad |
+| 2026-07-02 00:05:07 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=09d415e2843fc89bebbebbd374c890ab658ec983f31d2cac1d25daa2d1ea |
+| 2026-07-02 00:05:13 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=c68cac58931185df804c0fcc13d550367746cba1863b2abba1010bc2ce14 |
+| 2026-07-02 00:05:24 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=7875456ac3c6917b86e7e6ea4b577995c3faf08d67b5e2e69e77129a386a |
+| 2026-07-02 00:05:40 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=ff38e0f9d06c489573faf0a438a6cfdf69e53611f46244077275b5398f29 |
+| 2026-07-02 00:05:59 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=1863869afb81b40fd7c3915cd9651c659331a2c182d3707829f6ab632dac |
+| 2026-07-02 00:06:22 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=8db450f0ec5df6c36476f9b906e696a66a4b8a8c31cff33c708501a7dcd0 |
+| 2026-07-02 00:06:51 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=ce369980ffbe8a539a5f2160b2c874413b992a55d13b84e95cf7a71bf05c |
+| 2026-07-02 00:08:06 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=4822b5e49fa2a2349962e5f8c422b0bdf388c0a63ba6fa89e5d7216ea06d304 |
+| 2026-07-02 00:08:20 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=38f5760cb75f8946ab56d0445ab9f933ee243ba95acdae1acec6a65796a2cd1 |
+| 2026-07-02 00:08:26 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=44089e86890811b810be5dacb63f06080d354e2c5d32e87d4ef246b79dfbf9b |
+| 2026-07-02 00:08:35 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=fe7f03d663bbbf22b48ac6538ad6df3dd3be92492871a82f8996846d42021eb |
+| 2026-07-02 00:09:13 | `file.write` | skills/redesign-existing-projects/SKILL.md · tool=Edit · actor=agent · prev=aa704fa4127eadeca2566e8207cfdb286fa59d1ee8bd |
+| 2026-07-02 00:09:24 | `file.write` | llmwiki/skills/utils/redesign-existing-projects.md · tool=Edit · actor=agent · prev=30edb90bcf409463258bffa08a67e1e4c939 |
+| 2026-07-02 00:24:50 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=d43b183d235ca0ef60c61e004b82e187c063796aaa484ce6825914e90885 |
+| 2026-07-02 00:25:11 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=32469c57995c4de56ca098e49fe5057767a9d0055cfbdeabbe3d38e2a6bc |
+| 2026-07-02 00:25:27 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=f75eeeed115eb62cec7c4bdc07eeb27ea42c4eebf71cc06f274084c478c5 |
+| 2026-07-02 00:25:55 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=2249d551ea4ff0e740b43365d23f84da7a2a8e689b7e48dddbd92ab2eaaaa96 |
+| 2026-07-02 00:26:06 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=6ba523971cb79da97ad8de8a06aa49e2edec4d57d5b0e4f3e7b1c9f62875aa0 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
 ## 2026-07-01 — docs-site-macos — 21-quy-tac-docs
 
 ## 2026-07-01 — redesign-existing-projects — council-report-redesign
+
+## 2026-07-02 — build-now-adapt-later+fdk — cor-controlled-output-renderer (council verdict: khả thi/hẹp)

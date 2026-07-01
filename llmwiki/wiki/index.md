@@ -42,3 +42,4 @@
 | [010726-query-retrieval-eval](draft/orca/010726-query-retrieval-eval.md) | draft | Query L0→L1: eval truy-hồi + telemetry + query 3-tầng |
 | [010726-21-quy-tac-docs](sources/draft/010726-21-quy-tac-docs.md) | draft | Docs site bóc tách "21 Quy Tắc Không Thể Phá Vỡ" |
 | [010726-council-report-redesign](draft/uiux/010726-council-report-redesign.md) | draft | 2026-07-01 |
+| [020726-cor-pattern](draft/uiux/020726-cor-pattern.md) | draft | 2026-07-02 |

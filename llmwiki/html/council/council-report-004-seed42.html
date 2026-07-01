@@ -1,0 +1,131 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Council Stage-4 report — blind peer-rank. Deterministic từ council.transcript.json.">
+<title>Council · báo cáo Stage-4</title><link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23232028'/><path d='M8 22h16M16 7l7 5H9z' stroke='%23c9a24b' stroke-width='2' fill='none' stroke-linejoin='round'/></svg>">
+<style>
+:root{--paper:#f4f1ea;--ink:#26221c;--dim:#7a7266;--faint:#a79e90;--line:rgba(60,52,40,.13);
+ --card:rgba(255,253,249,.74);--stroke:rgba(255,255,255,.9);--accent:#8a6d2f;--shadow:24px 40px 24px rgba(60,48,28,.10)}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;font:15px/1.6 "Iowan Old Style","Palatino",Georgia,ui-serif,serif;color:var(--ink);background:var(--paper);
+ background-image:radial-gradient(120% 80% at 15% -5%,rgba(214,198,160,.35),transparent 55%),radial-gradient(90% 70% at 100% 0%,rgba(150,168,178,.22),transparent 50%);
+ min-height:100dvh;-webkit-font-smoothing:antialiased}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:99;opacity:.5;mix-blend-mode:multiply;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.045'/%3E%3C/svg%3E")}
+.wrap{max-width:940px;margin:0 auto;padding:56px 22px 90px}
+.tabnum{font-variant-numeric:tabular-nums}
+.body-sans{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.eyebrow{font:600 12px/1 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+h1{font-weight:600;font-size:clamp(30px,5vw,44px);line-height:1.04;letter-spacing:-.015em;margin:12px 0 10px;text-wrap:balance;max-width:22ch}
+.q{color:var(--dim);font-size:16px;max-width:60ch;text-wrap:pretty}
+.meta{margin-top:14px;font:500 12.5px/1 ui-monospace,Menlo,monospace;color:var(--faint)}
+.warn{background:rgba(176,106,44,.09);border:1px solid rgba(176,106,44,.32);border-left:3px solid #b06a2c;border-radius:13px;
+ padding:14px 16px;margin:26px 0 8px;font-size:13.5px;color:#5f4a2e;font-family:ui-sans-serif,system-ui,sans-serif}
+.sect{margin:46px 0 18px;display:flex;align-items:baseline;gap:14px}
+.sect .n{font-size:26px;color:var(--accent);line-height:1} .sect h2{font-weight:600;font-size:21px;margin:0;letter-spacing:-.01em}
+.sect .rule{flex:1;height:1px;background:var(--line)}
+.pcard{background:var(--card);border:1px solid var(--stroke);border-radius:20px;padding:22px 24px;margin:18px 0;position:relative;overflow:hidden;
+ box-shadow:0 1px 0 rgba(255,255,255,.7) inset,var(--shadow);transition:transform .28s cubic-bezier(.2,.7,.2,1),box-shadow .28s}
+.pcard:hover{transform:translateY(-3px);box-shadow:0 1px 0 rgba(255,255,255,.8) inset,32px 54px 30px rgba(60,48,28,.14)}
+.phead{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.pav{width:46px;height:46px;border-radius:14px;color:#fff;font-weight:600;font-size:20px;display:grid;place-items:center;flex:0 0 46px}
+.pname{font-size:19px;font-weight:600;letter-spacing:-.01em;text-transform:capitalize}
+.rankpill{font:600 11.5px/1 ui-monospace,Menlo,monospace;color:var(--dim);margin-left:6px}
+.blindtag{margin-left:auto;align-self:flex-start;font:600 11px/1 ui-monospace,Menlo,monospace;color:var(--ac);
+ border:1px solid var(--ac);border-radius:7px;padding:5px 9px}
+.ansbody{font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px}
+.ansbody p{margin:6px 0;color:#3a342c} ol.ans{margin:8px 0 2px;padding-left:0;list-style:none;counter-reset:a}
+ol.ans li{position:relative;padding-left:26px;margin-bottom:8px;line-height:1.55}
+ol.ans li::before{counter-increment:a;content:counter(a);position:absolute;left:0;top:1px;width:18px;height:18px;border-radius:6px;
+ background:var(--ac);color:#fff;font:700 11px/18px ui-monospace,Menlo,monospace;text-align:center}
+.tblwrap{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:rgba(255,253,249,.6);box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;font-size:13.5px;font-family:ui-sans-serif,system-ui,sans-serif}
+th,td{text-align:left;padding:12px 15px;border-bottom:1px solid var(--line)} tbody tr:last-child td{border-bottom:0}
+tbody tr{transition:background .18s} tbody tr:hover{background:rgba(138,109,47,.06)}
+th{color:var(--faint);font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.06em;background:rgba(60,52,40,.03)}
+.mono{font-family:ui-monospace,Menlo,monospace} .dim{color:var(--dim)}
+.chip{display:inline-flex;align-items:center;gap:6px;background:color-mix(in srgb,var(--c) 12%,var(--paper));
+ border:1px solid color-mix(in srgb,var(--c) 55%,transparent);color:var(--c);border-radius:9px;padding:5px 11px;margin:9px 8px 0 0;
+ font:600 12.5px/1 ui-sans-serif,system-ui,sans-serif;transition:transform .2s}
+.chip:hover{transform:translateY(-2px)} .chip::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c)}
+.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin:0 0 18px}
+@media(max-width:640px){.kpi{grid-template-columns:1fr}}
+.kpi div{background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:16px 18px;box-shadow:var(--shadow);transition:transform .26s}
+.kpi div:hover{transform:translateY(-3px)}
+.kpi b{display:block;font-size:22px;font-weight:600;margin:5px 0 3px;text-transform:capitalize}
+.kpi span{color:var(--faint);font:600 10.5px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.07em}
+.kpi em{font-style:normal;color:var(--dim);font-size:12px;font-family:ui-sans-serif,system-ui,sans-serif}
+.synth{background:linear-gradient(158deg,rgba(138,109,47,.10),rgba(63,125,116,.06));border:1px solid rgba(138,109,47,.26);
+ border-radius:20px;padding:24px 26px;margin-top:16px;box-shadow:var(--shadow)}
+.synth .lbl{font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.09em;color:var(--accent)}
+.synth p{margin:7px 0;font-size:13.5px;line-height:1.6;font-family:ui-sans-serif,system-ui,sans-serif}
+ul.synlist{margin:6px 0 10px;padding:0;list-style:none;counter-reset:s;font-family:ui-sans-serif,system-ui,sans-serif}
+ul.synlist li{position:relative;padding-left:26px;margin-bottom:8px;font-size:13.5px;line-height:1.55}
+ul.synlist li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:0;width:18px;height:18px;border-radius:6px;
+ background:var(--accent);color:#fff;font:700 11px/18px ui-monospace,Menlo,monospace;text-align:center}
+.reveal{margin-top:16px} .reveal .lbl{font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--faint)}
+footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);color:var(--faint);font-size:12.5px;text-align:center;
+ font-family:ui-sans-serif,system-ui,sans-serif}
+a:focus-visible,tr:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+</style></head><body><div class="wrap">
+<header>
+  <div class="eyebrow">🏛 Council · Stage-4</div>
+  <h1>Hội đồng chấm mù</h1>
+  <p class="q">Có nên generalize Controlled Output Renderer (COR) thành hạ tầng dùng chung cho ~13 skill sinh docs? Dạng nào, scope bao nhiêu, chống fragility ra sao?</p>
+  <div class="meta tabnum">seed 42 · council.py/1.0 · 3 giám khảo · 5 ghế</div>
+</header>
+
+<section><div class="sect"><span class="n tabnum">1</span><h2>Ý kiến hội đồng</h2><span class="rule"></span></div>
+    <article class="pcard" style="--ac:#3f7d74">
+      <div class="phead">
+        <div class="pav" style="background:#3f7d74">C</div>
+        <div><div class="pname">Charlie Munger <span class="rankpill tabnum">🥇 #1 · mean 1.666667</span></div><div class="plens">Đa mô hình &amp; nghịch đảo</div></div>
+        <div class="blindtag">blind B</div>
+      </div>
+      <div class="ansbody"><p>Invert — cách ĐẢM BẢO thất bại:</p><ol class='ans'><li>god-module 13 skill phụ thuộc, 1 breaking vỡ all;</li><li>ép khuôn cứng lên skill cần creative (cursor-animated-sites, uat, extract-site) → phải patch/bỏ qua;</li><li>sai abstraction boundary → refactor lại;</li><li>maintenance debt &gt; gain (39 integration point nhưng DRY chỉ lợi ở 3-4);</li><li>docs-site-macos đã build full render → COR duplicate. Điều kiện TỐI THIỂU không thất bại: microlib KHÔNG god-module (chỉ 6 bất biến lõi, render sáng tạo = hook optional); OPT-IN không bắt buộc; boundary hẹp ổn định 1-2 hàm public; SCOPE 3-4 skill MAX (propose, docs-curate, onboard, tour-guide) — LOẠI cursor-animated/uat/extract-site (cần creative); checksum per output phát hiện regress. ROI: DRY chỉ thực ở 3-4 skill; lớn hơn = fragility &gt; reuse. Kết: áp đúng 3 skill, bỏ ám thị generalize-thành-13.</li></ol></div>
+    </article>
+    <article class="pcard" style="--ac:#7a5c86">
+      <div class="phead">
+        <div class="pav" style="background:#7a5c86">N</div>
+        <div><div class="pname">Nassim Taleb <span class="rankpill tabnum">🥈 #2 · mean 2.333333</span></div><div class="plens">Phản mong manh &amp; rủi ro đuôi</div></div>
+        <div class="blindtag">blind C</div>
+      </div>
+      <div class="ansbody"><p>Shared-lib tạo systemic tail-risk NẾU có state/tight-coupling/breaking-change/không pin version. Copy-in cũng nhầm: 6 bất biến đơn giản nhưng thiết kế lại 13 lần = drift/inconsistency → lỗi subtle (tệ hơn breaking rõ ràng). Barbell:</p><ol class='ans'><li>COR là stateless PURE-FUNCTION lib, không side-effect;</li><li>semantic versioning + explicit pin mỗi skill (assert __version__, fail-fast);</li><li>sacred backwards-compat: cor.py chỉ ADD never BREAK, 6 bất biến không đổi;</li><li>emergency copy-in escape hatch nếu cor.py chết. Điều kiện chấp nhận shared-lib: ≤200 dòng (tái bản 30 phút), zero runtime error (pure/typed/tested), version-pin enforced (CI fail floating import), deprecation path rõ. Kết: shared-lib OK nếu THIẾT KẾ CHO FAILURE MODE — không phải &#x27;không bao giờ gãy&#x27; mà &#x27;khi gãy isolated + dễ restore&#x27;. Small+pinned+backwards-compat = antifragile ở đuôi.</li></ol></div>
+    </article>
+    <article class="pcard" style="--ac:#3f7d74">
+      <div class="phead">
+        <div class="pav" style="background:#3f7d74">L</div>
+        <div><div class="pname">Linus Torvalds <span class="rankpill tabnum">🌱 #3 · mean 2.666667</span></div><div class="plens">Kỹ thuật thực dụng</div></div>
+        <div class="blindtag">blind A</div>
+      </div>
+      <div class="ansbody"><p>Không generalize toàn bộ — chỉ EXTRACT helpers I/O (30% effort, 80% payoff): versioning+atomic-write (no-overwrite), html.escape wrapper, try/except context-manager scaffold, version naming+cleanup. KHÔNG share renderer transform (data-shape riêng mỗi skill, error-handling khác, generalize làm chậm). API minimal chạy ngay: safe_render(out_dir, version, data, renderer_fn, max_versions) — renderer_fn do skill sở hữu, COR lo atomic write+versioning+escape+fallback. Adoption low-risk: tuần này extract cor_helpers.py (optional, không đặt lib chung), áp PROPOSE trước (data-shape đơn giản nhất) làm proof; tuần sau offer 1-2 skill nếu họ muốn; 11 skill còn lại ship riêng không rủi ro. Verdict: propose tuần này, mở helpers nếu +1 skill muốn. Không lib, không thiết kế trước.</p></div>
+    </article>
+    <article class="pcard" style="--ac:#3f7d74">
+      <div class="phead">
+        <div class="pav" style="background:#3f7d74">D</div>
+        <div><div class="pname">Donella Meadows <span class="rankpill tabnum">#4 #4 · mean 4.0</span></div><div class="plens">Tư duy hệ thống &amp; vòng phản hồi</div></div>
+        <div class="blindtag">blind D</div>
+      </div>
+      <div class="ansbody"><p>Leverage: cả 3 tầng nhưng THỨ TỰ khác. Cao nhất = RULE/GATE harness (b) — 65 skill hành xử độc lập nên lib (a) sẽ ngồi yên; chuẩn hoá TỪ HÀNH ĐỘNG (gate buộc conform trước merge) mới đổi tâm lý quyết định (structural constraint mạnh nhất). Sau đó (c) tái dùng docs-site-macos làm shell COR — KHÔNG viết renderer thứ 3: renderer là TOOL không phải POLICY; 2 renderer sẵn có là tool, COR chứa logic CHỌN cái nào fit + kiểm soát data/escape. Cuối (a) lib chỉ để codify bất biến thành schema/validator, KHÔNG generator. Rủi ro không làm gì: drift tích luỹ, khi breach (ghi đè lịch sử/quên escape) khó trace root. Rủi ro ép sớm: khoá use-case hợp lệ (vd CDN cho heavy-asset) — đợi ~3 sprint observe rồi mới ép. COR bổ sung, không chồng vai 2 renderer.</p></div>
+    </article>
+    <article class="pcard" style="--ac:#5f7a3f">
+      <div class="phead">
+        <div class="pav" style="background:#5f7a3f">D</div>
+        <div><div class="pname">Dieter Rams <span class="rankpill tabnum">#5 #5 · mean 4.333333</span></div><div class="plens">Thiết kế lấy người dùng</div></div>
+        <div class="blindtag">blind E</div>
+      </div>
+      <div class="ansbody"><p>KHÔNG nên làm LIB — over-abstraction. 13 fit-high nhưng chỉ 1-2 thực sự share code render; 11-12 chỉ cần TUÂN 6 nguyên tắc (html.escape/try-except/no-overwrite quá generic, mỗi skill độc lập). LIB = coupling: COR đổi thì 13 skill test lại, nhưng 11 không dùng logic core. SKILL guidance = thêm indirect layer làm chậm iteration; author đã biết nguyên tắc, họ cần VÍ DỤ không wrapper. NÊN:</p><ol class='ans'><li>RULE/GATE harness kiểm 6 bất biến trước push (linter, non-blocking) +</li><li>DOCUMENT harness/docs/cor-guide.md: template copy-paste + checklist 6 điểm, mỗi skill tự implement → owned. Ít hơn nhưng tốt hơn: đừng xây cầu cho 2 skill. Quyết: Document + Gate, KHÔNG lib.</li></ol></div>
+    </article></section>
+<section><div class="sect"><span class="n tabnum">2</span><h2>Bỏ phiếu kín</h2><span class="rule"></span></div>
+<div class="tblwrap"><table><thead><tr><th>Giám khảo</th><th>Ranking (nhãn ẩn)</th><th>Thứ tự trình bày · anchor guard</th></tr></thead><tbody><tr><td>seat-1</td><td class="mono">A › C › B › E › D</td><td class="mono dim">C → E → D → B → A</td></tr><tr><td>seat-2</td><td class="mono">B › D › C › A › E</td><td class="mono dim">B → D → A → C → E</td></tr><tr><td>seat-3</td><td class="mono">B › C › A › E › D</td><td class="mono dim">A → C → B → D → E</td></tr></tbody></table></div>
+<div class="reveal"><span class="lbl">Reveal map — chỉ lộ ở cuối</span><br><span class="chip" style="--c:#3f7d74">B = Charlie Munger</span><span class="chip" style="--c:#7a5c86">C = Nassim Taleb</span><span class="chip" style="--c:#3f7d74">A = Linus Torvalds</span><span class="chip" style="--c:#3f7d74">D = Donella Meadows</span><span class="chip" style="--c:#5f7a3f">E = Dieter Rams</span></div></section>
+<section><div class="sect"><span class="n tabnum">3</span><h2>Dashboard chốt</h2><span class="rule"></span></div>
+<div class="kpi">
+ <div><span>Winner</span><b>🥇 Charlie Munger</b><em class="tabnum">blind B · mean 1.666667</em></div>
+ <div><span>Most contested</span><b>Donella Meadows</b><em class="tabnum">blind D · var 2.0</em></div>
+ <div><span>Đồng thuận</span><b class="tabnum">3 GK</b><em>phân hoá</em></div>
+</div>
+<div class="tblwrap"><table><thead><tr><th>Blind</th><th>Ghế</th><th>Mean rank</th><th>Judge ranks</th></tr></thead><tbody><tr><td class="mono"><b>B</b></td><td>🥇 Charlie Munger</td><td class="mono tabnum">1.666667</td><td class="mono dim tabnum">[3, 1, 1]</td></tr><tr><td class="mono"><b>C</b></td><td>🥈 Nassim Taleb</td><td class="mono tabnum">2.333333</td><td class="mono dim tabnum">[2, 3, 2]</td></tr><tr><td class="mono"><b>A</b></td><td>🌱 Linus Torvalds</td><td class="mono tabnum">2.666667</td><td class="mono dim tabnum">[1, 4, 3]</td></tr><tr><td class="mono"><b>D</b></td><td> Donella Meadows</td><td class="mono tabnum">4.0</td><td class="mono dim tabnum">[5, 2, 5]</td></tr><tr><td class="mono"><b>E</b></td><td> Dieter Rams</td><td class="mono tabnum">4.333333</td><td class="mono dim tabnum">[4, 5, 4]</td></tr></tbody></table></div>
+<div class='synth'><span class='lbl'>Chairman synthesis — câu trả lời chốt</span><p>PHÁN QUYẾT: KHẢ THI nhưng HẸP — KHÔNG xây god-lib cho 13 skill. Làm microlib opt-in + contract, prove trên 1 skill.</p><ul class='synlist'><li>Extract 6 bất biến khỏi council.py thành harness/scripts/lib/cor.py — STATELESS pure-function, ≤200 dòng, __version__, backwards-compat chỉ ADD (Taleb antifragile).</li><li>Scope 3-4 skill MAX có backend .py thật (Munger): consumer thật = skill có code (trace-grader/wikieval/orca-eval...). Skill guidance thuần (propose) áp CONTRACT/doc, không import.</li><li>Prove trên council.py trước (dogfood — nó đã là ref-impl) + 1 skill .py thứ hai; loại skill creative (cursor-animated/uat/extract-site) khỏi khuôn.</li><li>Governance: cor-guide.md (checklist 6 điểm) + GATE harness kiểm non-blocking (Rams/Meadows) — nhưng ĐỢI observe, đừng ép cứng sớm.</li><li>Tái dùng docs-site-macos làm shell khi cần glass-render (Meadows); COR lo data/escape/versioning/isolation, KHÔNG viết renderer thứ 3.</li><li>Chống fragility (Taleb): mỗi consumer pin version; emergency copy-in escape hatch nếu cor.py chết; checksum per output (Munger).</li></ul><p>Dissent (Meadows/Rams xếp thấp): &#x27;gate-first/no-lib&#x27; đúng hướng governance nhưng thiếu tính khả-thi-tuần-này của top-3; giữ phần GATE+DOC của họ làm tầng 2, không phải thay lib.</p></div>
+</section>
+<footer>Mọi số liệu từ council.transcript.json — report chỉ là lớp trình bày, không thêm phán xét mới.</footer>
+</div></body></html>

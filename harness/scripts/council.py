@@ -55,6 +55,14 @@ import random
 import sys
 from pathlib import Path
 
+# Shared Controlled-Output-Renderer invariants (versioning + isolation + escape).
+# council.py is the reference consumer + dogfood of cor. Pinned to the 0.x line;
+# cor is backwards-compat add-only. Escape hatch: if cor is missing, the 5
+# invariants can be inlined here again (they used to live in this file).
+sys.path.insert(0, str(Path(__file__).resolve().parent / "lib"))
+import cor  # noqa: E402
+assert cor.__version__.startswith("0."), f"cor version lạ: {cor.__version__}"
+
 # Static generator tag. Deliberately no wall-clock timestamp anywhere in the
 # artifact -- a timestamp would break byte-for-byte determinism, which is the
 # property the self-test proves.
@@ -692,32 +700,18 @@ def _write_packet(answers, seed, config, out: Path):
 
 
 def _write_report(t, config, seed):
-    """Render Stage-4 HTML from a transcript `t`. Mandatory but ISOLATED: any
-    failure here only WARNs — it must never sink the caller (rank) nor the core
-    transcript (Taleb blast-radius guard). Each call = a NEW versioned file
-    (council-report-NNN-seed<seed>.html), never an overwrite -> structured names +
-    immutable per-run history, no diff-churn. `latest.html` is a convenience
-    pointer (gitignored)."""
-    try:
-        repo_root = Path(__file__).resolve().parents[2]
-        html_dir = repo_root / "llmwiki" / "html" / "council"
-        html_dir.mkdir(parents=True, exist_ok=True)
-        nxt = 1
-        for f in html_dir.glob("council-report-*.html"):
-            try:
-                nxt = max(nxt, int(f.name.split("-")[2]) + 1)
-            except (IndexError, ValueError):
-                continue
-        html_path = html_dir / f"council-report-{nxt:03d}-seed{seed}.html"
-        html = render_report_html(t, _load_persona_meta(config))
-        html_path.write_text(html, encoding="utf-8")
-        (html_dir / "latest.html").write_text(html, encoding="utf-8")
-        print(f"[council] wrote {html_path} (Stage-4 HTML #{nxt:03d})")
-        return html_path
-    except Exception as exc:  # noqa: BLE001 - report is derived; never fatal
-        print(f"[council] WARN: Stage-4 HTML render skipped ({type(exc).__name__}: {exc}); "
-              f"transcript is intact.", file=sys.stderr)
-        return None
+    """Render Stage-4 HTML from a transcript `t` via the shared cor invariants:
+    versioned council-report-NNN-seed<seed>.html (no overwrite -> immutable per-run
+    history), isolated in try/except (a render bug only WARNs, never sinks `rank`
+    nor the core transcript), + a gitignored latest.html pointer. council.py owns
+    ONLY the layout (`render_report_html`); cor owns the mechanical invariants."""
+    html_dir = Path(__file__).resolve().parents[2] / "llmwiki" / "html" / "council"
+    path, idx = cor.write_versioned(
+        lambda: render_report_html(t, _load_persona_meta(config)),
+        html_dir, "council-report", f"seed{seed}")
+    if path is not None:
+        print(f"[council] wrote {path} (Stage-4 HTML #{idx:03d})")
+    return path
 
 
 def cmd_render(args):
