@@ -449,8 +449,28 @@ def _fmt_answer(text: str) -> str:
 _MEDAL = {1: "\U0001F947", 2: "\U0001F948", 3: "\U0001F331"}
 
 
-def render_report_html(t) -> str:
+def _load_persona_meta(config) -> dict:
+    """id -> {name, lens} from council.personas.yaml (best-effort). Lets the
+    report show 'Nassim Taleb · Phản mong manh...' instead of the bare seat id.
+    Missing file/lib -> {} (renderer falls back to the raw author id)."""
+    path = (config or {}).get("personas_file") or "harness/council.personas.yaml"
+    try:
+        import yaml
+        p = Path(path)
+        if not p.is_absolute():
+            p = Path(__file__).resolve().parents[2] / path
+        data = yaml.safe_load(p.read_text(encoding="utf-8")) or {}
+        out = {}
+        for pid, meta in (data.get("personas") or {}).items():
+            out[str(pid).lower()] = {"name": meta.get("name", pid), "lens": meta.get("lens", "")}
+        return out
+    except Exception:
+        return {}
+
+
+def render_report_html(t, personas=None) -> str:
     e = lambda x: _html.escape(str(x), quote=True)
+    personas = personas or {}
     agg = t["aggregate"]
     jr = t["judge_rankings"]
     pres = t["anchor_guard"].get("presentation_order", {})
@@ -459,17 +479,28 @@ def render_report_html(t) -> str:
     w, mc = t["winner"], t["most_contested"]
     seed, verified = t.get("seed"), t.get("verified", False)
     synth = t.get("chairman_synthesis", "") or ""
-    q = t.get("question") or "Council evaluation"
+    _q = t.get("question")
+    q = None if (not _q or str(_q).strip() in ("", "<the question put to the council>")) else _q
+
+    def pname(a):
+        m = personas.get(str(a).lower())
+        return m["name"] if m else str(a)
+
+    def plens(a):
+        m = personas.get(str(a).lower())
+        return m["lens"] if m else ""
 
     cards = ""
     for author, label, mean, ranks, crank in order:
         ac = _hue_for(author)
         medal = _MEDAL.get(crank, f"#{crank}")
+        lens = plens(author)
+        lens_html = f'<div class="plens">{e(lens)}</div>' if lens else ""
         cards += f'''
     <article class="pcard" style="--ac:{ac}">
       <div class="phead">
-        <div class="pav" style="background:{ac}">{e(str(author)[:1].upper())}</div>
-        <div><div class="pname">{e(author)} <span class="rankpill tabnum">{medal} #{e(crank)} · mean {e(mean)}</span></div></div>
+        <div class="pav" style="background:{ac}">{e(pname(author)[:1].upper())}</div>
+        <div><div class="pname">{e(pname(author))} <span class="rankpill tabnum">{medal} #{e(crank)} · mean {e(mean)}</span></div>{lens_html}</div>
         <div class="blindtag">blind {e(label)}</div>
       </div>
       <div class="ansbody">{_fmt_answer(answers[author]["text"])}</div>
@@ -479,9 +510,9 @@ def render_report_html(t) -> str:
         f'<tr><td>{e(j["judge"])}</td><td class="mono">{" › ".join(e(x) for x in j["ranking_labels"])}</td>'
         f'<td class="mono dim">{" → ".join(e(x) for x in pres.get(j["judge"], []))}</td></tr>' for j in jr)
     reveal = "".join(
-        f'<span class="chip" style="--c:{_hue_for(a)}">{e(l)} = {e(a)}</span>' for a, l, _, _, _ in order)
+        f'<span class="chip" style="--c:{_hue_for(a)}">{e(l)} = {e(pname(a))}</span>' for a, l, _, _, _ in order)
     dash = "".join(
-        f'<tr><td class="mono"><b>{e(l)}</b></td><td>{_MEDAL.get(cr,"")} {e(a)}</td>'
+        f'<tr><td class="mono"><b>{e(l)}</b></td><td>{_MEDAL.get(cr,"")} {e(pname(a))}</td>'
         f'<td class="mono tabnum">{e(m)}</td><td class="mono dim tabnum">{e(rk)}</td></tr>'
         for a, l, m, rk, cr in order)
     unan = all(j["ranking_labels"] == jr[0]["ranking_labels"] for j in jr) if jr else False
@@ -504,7 +535,7 @@ def render_report_html(t) -> str:
     warn = "" if verified else (
         '<div class="warn"><b>⚠️ verified: false</b> — model identities đã quarantine trong '
         'council.config.yaml. Đây là <b>consensus mean-rank</b>, không phải chân lý.</div>')
-    mc_cell = (f'<b>{e(mc["author"])}</b><em class="tabnum">blind {e(mc["label"])} · var {e(mc["variance"])}</em>'
+    mc_cell = (f'<b>{e(pname(mc["author"]))}</b><em class="tabnum">blind {e(mc["label"])} · var {e(mc["variance"])}</em>'
                if mc else "<b>—</b><em>n/a</em>")
 
     fav = ("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'>"
@@ -538,7 +569,6 @@ h1{{font-weight:600;font-size:clamp(30px,5vw,44px);line-height:1.04;letter-spaci
 .sect .rule{{flex:1;height:1px;background:var(--line)}}
 .pcard{{background:var(--card);border:1px solid var(--stroke);border-radius:20px;padding:22px 24px;margin:18px 0;position:relative;overflow:hidden;
  box-shadow:0 1px 0 rgba(255,255,255,.7) inset,var(--shadow);transition:transform .28s cubic-bezier(.2,.7,.2,1),box-shadow .28s}}
-.pcard::before{{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--ac)}}
 .pcard:hover{{transform:translateY(-3px);box-shadow:0 1px 0 rgba(255,255,255,.8) inset,32px 54px 30px rgba(60,48,28,.14)}}
 .phead{{display:flex;align-items:center;gap:14px;margin-bottom:12px}}
 .pav{{width:46px;height:46px;border-radius:14px;color:#fff;font-weight:600;font-size:20px;display:grid;place-items:center;flex:0 0 46px}}
@@ -584,7 +614,7 @@ a:focus-visible,tr:focus-visible{{outline:2px solid var(--accent);outline-offset
 <header>
   <div class="eyebrow">🏛 Council · Stage-4</div>
   <h1>Hội đồng chấm mù</h1>
-  <p class="q">{e(q)}</p>
+  {f'<p class="q">{e(q)}</p>' if q else ''}
   <div class="meta tabnum">seed {e(seed)} · council.py/1.0 · {len(jr)} giám khảo · {len(order)} ghế</div>
 </header>
 {warn}
@@ -594,7 +624,7 @@ a:focus-visible,tr:focus-visible{{outline:2px solid var(--accent);outline-offset
 <div class="reveal"><span class="lbl">Reveal map — chỉ lộ ở cuối</span><br>{reveal}</div></section>
 <section><div class="sect"><span class="n tabnum">3</span><h2>Dashboard chốt</h2><span class="rule"></span></div>
 <div class="kpi">
- <div><span>Winner</span><b>{_MEDAL[1]} {e(w["author"])}</b><em class="tabnum">blind {e(w["label"])} · mean {e(w["mean_rank"])}</em></div>
+ <div><span>Winner</span><b>{_MEDAL[1]} {e(pname(w["author"]))}</b><em class="tabnum">blind {e(w["label"])} · mean {e(w["mean_rank"])}</em></div>
  <div><span>Most contested</span>{mc_cell}</div>
  <div><span>Đồng thuận</span><b class="tabnum">{len(jr)} GK</b><em>{"nhất trí tuyệt đối ✓" if unan else "phân hoá"}</em></div>
 </div>
@@ -663,6 +693,10 @@ def _write_packet(answers, seed, config, out: Path):
 
 def cmd_rank(args):
     config = load_config(args.config)
+    # --question (optional) overrides the config placeholder so the report/
+    # transcript show the real prompt instead of "<the question...>".
+    if getattr(args, "question", None):
+        config = {**config, "question": args.question}
     answers = _load_json(Path(args.answers))
     seed = _resolve_seed(args, config)
     out = Path(args.out) if args.out else Path(args.answers).resolve().parent
@@ -685,19 +719,37 @@ def cmd_rank(args):
     judges = _load_json(Path(judges_path))
     t = build_transcript(answers, judges, seed, config)
     out.mkdir(parents=True, exist_ok=True)
+    # CORE artifacts first — these must never be at risk from the report layer.
     (out / "council.transcript.json").write_text(serialize(t), encoding="utf-8")
     (out / "council.transcript.md").write_text(render_transcript_md(t), encoding="utf-8")
-    # Stage-4 HTML report — ALWAYS rendered (mandatory), self-contained/offline,
-    # written to the repo's canonical html folder. Feeds purely from `t`.
-    repo_root = Path(__file__).resolve().parents[2]
-    html_dir = repo_root / "llmwiki" / "html" / "council"
-    html_dir.mkdir(parents=True, exist_ok=True)
-    html_path = html_dir / "council.report.html"
-    html_path.write_text(render_report_html(t), encoding="utf-8")
     w = t["winner"]
     mc = t["most_contested"]
     print(f"[council] wrote {out}/council.transcript.{{json,md}}")
-    print(f"[council] wrote {html_path} (Stage-4 HTML, mandatory)")
+    # Stage-4 HTML report — ALWAYS rendered (mandatory, ~0 cost/offline), BUT
+    # isolated: a renderer bug on a weird transcript must NOT kill `rank` nor the
+    # core transcript above (Taleb tail-risk / blast-radius guard). Fail loud, skip.
+    # Each run = a NEW versioned file (council-report-NNN-seedNN.html), never an
+    # overwrite -> structured names + immutable per-run history, no diff-churn.
+    try:
+        repo_root = Path(__file__).resolve().parents[2]
+        html_dir = repo_root / "llmwiki" / "html" / "council"
+        html_dir.mkdir(parents=True, exist_ok=True)
+        existing = sorted(html_dir.glob("council-report-*.html"))
+        nxt = 1
+        for f in existing:
+            try:
+                nxt = max(nxt, int(f.name.split("-")[2]) + 1)
+            except (IndexError, ValueError):
+                continue
+        html_path = html_dir / f"council-report-{nxt:03d}-seed{seed}.html"
+        personas = _load_persona_meta(config)
+        html_path.write_text(render_report_html(t, personas), encoding="utf-8")
+        # stable pointer to the newest report for convenience (also versioned dir)
+        (html_dir / "latest.html").write_text(html_path.read_text(encoding="utf-8"), encoding="utf-8")
+        print(f"[council] wrote {html_path} (Stage-4 HTML #{nxt:03d}, mandatory)")
+    except Exception as exc:  # noqa: BLE001 - report is derived; never fatal
+        print(f"[council] WARN: Stage-4 HTML render skipped ({type(exc).__name__}: {exc}); "
+              f"transcript is intact.", file=sys.stderr)
     print(f"[council] consensus winner: {w['author']} (blind {w['label']}, mean rank {w['mean_rank']})")
     if mc:
         print(f"[council] most contested : {mc['author']} (blind {mc['label']}, variance {mc['variance']})")
@@ -899,6 +951,7 @@ def main():
     r.add_argument("--seed", type=int, help="anchor-guard seed (overrides config anchor_seed)")
     r.add_argument("--out", help="output dir (default: alongside answers.json)")
     r.add_argument("--config", default="harness/council.config.yaml", help="adapter config")
+    r.add_argument("--question", help="câu hỏi thật cho hội đồng (hiện trên report; bỏ trống -> report ẩn dòng question)")
     r.set_defaults(func=cmd_rank)
 
     p = sub.add_parser("prepare", help="emit the blind packet only (alias for rank without --judges)")

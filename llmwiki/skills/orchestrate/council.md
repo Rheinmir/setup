@@ -10,8 +10,10 @@ description: >-
   when the user says "run a council", "llm-council", "panel of models", "blind
   peer-rank these answers", "ensemble + chairman", or invokes /council. Stage-4
   is a MANDATORY HTML report, rendered inside council.py itself (offline, no CDN,
-  no external skill): every `rank` writes a self-contained council.report.html to
-  llmwiki/html/council/ — opinion cards, a blind-vote table, and a dashboard.
+  no external skill): every `rank` writes a NEW versioned self-contained report
+  (llmwiki/html/council/council-report-NNN-seed<seed>.html) — opinion cards
+  (persona name + lens), a blind-vote table, and a dashboard. Isolated in
+  try/except so a render bug never kills the core transcript.
 ---
 
 # Skill: council
@@ -120,11 +122,16 @@ back under `chairman_synthesis` in the transcript for the record.
 
 ### Stage 4 — HTML report (MANDATORY, tự render trong council.py, offline)
 **Luôn render — không cần cờ, không phụ thuộc skill ngoài.** Mỗi lần `rank` thành
-công, `render_report_html(t)` (nằm ngay trong `council.py`) ghi **một `.html`
-self-contained** vào `llmwiki/html/council/council.report.html`. Không CDN
-(system font + inline SVG favicon/grain) → mở được offline; không coupling
-`docs-site-macos`. Feed **thuần** từ transcript vừa build (`t`) → không bịa gì mới,
-mọi chuỗi seat được `html.escape` tại chỗ (chống HTML-injection ở boundary).
+công, `render_report_html(t, personas)` (nằm ngay trong `council.py`) ghi **một
+`.html` versioned** — `llmwiki/html/council/council-report-NNN-seed<seed>.html`
+(NNN tăng dần, KHÔNG ghi đè → mỗi run một bản ghi bất biến) + `latest.html` là con
+trỏ tiện dụng (gitignore, tránh diff-churn). Không CDN (system font + inline SVG
+favicon/grain) → offline; không coupling `docs-site-macos`. Feed **thuần** từ
+transcript vừa build (`t`) → không bịa gì mới, mọi chuỗi seat `html.escape` tại chỗ
+(chống HTML-injection). Toàn khối render bọc **try/except**: lỗi renderer chỉ WARN,
+KHÔNG bao giờ giết lệnh `rank` hay `transcript.{json,md}` (Taleb blast-radius guard).
+Tên+lăng kính ủy viên lấy từ `council.personas.yaml`; câu hỏi hiển thị khi truyền
+`--question` (bỏ trống → report ẩn dòng question thay vì in placeholder).
 
 Trang có đúng ba section, theo thứ tự:
 
@@ -149,15 +156,16 @@ không thêm phán xét mới. Same transcript → cùng HTML.
 | Command | Does |
 |---------|------|
 | `rank <answers.json> --judges <judges.json>` | full aggregation → transcript.json + .md |
-| `rank <answers.json> --judges <j>` | + auto-writes `llmwiki/html/council/council.report.html` (Stage-4, mandatory) |
+| `rank <answers.json> --judges <j>` | + auto-writes versioned `llmwiki/html/council/council-report-NNN-seed<seed>.html` (Stage-4, mandatory) |
 | `rank <answers.json>` (no judges) | emits the blind packet, then stops |
 | `prepare <answers.json>` | blind packet only (Stage 2a) |
 | `roster --case <tag>` / `--profile <p>` / `--personas a,b,c` | bốc 3-5 persona-lens (thuần lookup, ≥1 cặp đối-trọng); `--size 3\|5`, `--json` |
 | `selftest` | conformance vectors; asserts determinism + correctness |
 
 Flags: `--seed N` (anchor-guard seed; overrides config `anchor_seed`),
-`--out DIR` (transcript json/md), `--config harness/council.config.yaml`. Stage-4
-HTML is always written to `llmwiki/html/council/` — no flag needed.
+`--out DIR` (transcript json/md), `--config harness/council.config.yaml`,
+`--question "..."` (câu hỏi thật hiện trên report; bỏ trống → ẩn dòng question).
+Stage-4 HTML versioned luôn ghi vào `llmwiki/html/council/` — no flag needed.
 
 ## Adapter boundary (build-now-adapt-later)
 

@@ -1,0 +1,3 @@
+# latest.html = con trỏ tiện dụng, ghi đè mỗi run -> gitignore để tránh diff-churn.
+# Các bản council-report-NNN-*.html versioned thì COMMIT (bản ghi bất biến mỗi lần chạy).
+latest.html

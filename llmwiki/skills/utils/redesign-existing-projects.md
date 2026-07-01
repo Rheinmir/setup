@@ -91,6 +91,7 @@ Check for these problems and fix them:
 ### Component Patterns
 
 - **Generic card look (border + shadow + white background).** Remove the border, or use only background color, or use only spacing. Cards should exist only when elevation communicates hierarchy.
+- **Colored accent bar on the left edge of a card (`border-left: 3-4px solid` or a `::before` stripe).** This is a tired AI/Bootstrap "alert/callout" tell — it reads as a status flag, adds a hard vertical line that fights the card's rounded corners, and gets repeated on every card until the whole page looks like a log viewer. Carry the accent/identity color somewhere intrinsic instead: the avatar/icon, a small dot or chip, the heading color, or a soft full-bleed tint — not a spine on the side. Same verdict for a top accent bar when it's applied uniformly to every card.
 - **Always one filled button + one ghost button.** Add text links or tertiary styles to reduce visual noise.
 - **Pill-shaped "New" and "Beta" badges.** Try square badges, flags, or plain text labels.
 - **Accordion FAQ sections.** Use a side-by-side list, searchable help, or inline progressive disclosure.
