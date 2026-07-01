@@ -8,7 +8,10 @@ description: >-
   model calls; harness/scripts/council.py does the deterministic protocol math
   (anonymization, mean-rank aggregation, dissent, anchor guard, transcript). Use
   when the user says "run a council", "llm-council", "panel of models", "blind
-  peer-rank these answers", "ensemble + chairman", or invokes /council.
+  peer-rank these answers", "ensemble + chairman", or invokes /council. OPTIONAL
+  Stage-4 (opt-in via --report, or when output is shared beyond the operator):
+  render a self-contained HTML report via /docs-site-macos — one big chat-room
+  debate section, a blind-vote section, and a final dashboard table.
 ---
 
 # Skill: council
@@ -115,6 +118,37 @@ Dispatch the chairman the `chairman_brief` from the transcript (consensus order 
 the dissent points it must resolve). Its synthesis is the final answer; paste it
 back under `chairman_synthesis` in the transcript for the record.
 
+### Stage 4 — HTML report (OPTIONAL, opt-in, via /docs-site-macos)
+**Mặc định KHÔNG render.** Lõi robust là `transcript.{json,md}`; HTML chỉ là lớp
+trình bày, phải gỡ-được (không thêm coupling `docs-site-macos` cho mỗi run). Chỉ
+render khi **một** trong hai điều đúng:
+- người dùng bật cờ **`--report`** (hoặc nói rõ "xuất HTML / báo cáo đẹp"), HOẶC
+- output được **chia sẻ ra ngoài người vận hành** (stakeholder non-IT cần đọc).
+
+Cho check nội bộ nhanh → `transcript.md` là đủ, bỏ qua Stage-4.
+
+Khi có bật: render **one self-contained `.html`** bằng `docs-site-macos`
+(liquid-glass, sidebar nav, single file — no build step). Feed nó **thuần** từ
+`run/council.transcript.json` + `answers.json` + `judges.json` (dữ liệu đã
+deterministic → không bịa gì mới). Trang có đúng ba section, theo thứ tự:
+
+1. **Debate room (một section LỚN, kiểu phòng chat).** Render Stage 1 + Stage 2
+   as a chat transcript: mỗi seat là một chat bubble (avatar = persona/lens name,
+   căn trái/phải xen kẽ), theo dòng thời gian first-opinions → mỗi judge phản biện.
+   Đây là section chiếm nhiều đất nhất — dùng để "xem cả hội đồng cãi nhau".
+   *Nguồn:* `answers.json` (bong bóng first-opinion) + `judges.json` rationale.
+2. **Bỏ phiếu KÍN (blind vote).** Bảng phiếu dùng NHÃN A/B/C ẩn danh (chưa lộ ai là
+   ai): mỗi judge một hàng, ranking của nó theo nhãn, + presentation-order của
+   anchor guard. Reveal map A/B/C → author chỉ ở cuối section này.
+   *Nguồn:* `run/council.packet.json` (nhãn ẩn) + `judges.json` (ranking).
+3. **Dashboard cuối (output cuối cùng).** Bảng tổng: winner + mean-rank consensus
+   order, cột dissent (câu bị tranh cãi nhất), và `chairman_synthesis` là câu trả
+   lời chốt hiển thị nổi bật trên cùng dashboard.
+   *Nguồn:* `run/council.transcript.json`.
+
+Lưu HTML cạnh transcript: `run/council.report.html`. Vì mọi số liệu lấy từ
+transcript đã deterministic, report chỉ là lớp trình bày — không thêm phán xét mới.
+
 ## council.py commands
 
 | Command | Does |
@@ -126,7 +160,8 @@ back under `chairman_synthesis` in the transcript for the record.
 | `selftest` | conformance vectors; asserts determinism + correctness |
 
 Flags: `--seed N` (anchor-guard seed; overrides config `anchor_seed`),
-`--out DIR`, `--config harness/council.config.yaml`.
+`--out DIR`, `--config harness/council.config.yaml`, `--report` (opt-in Stage-4:
+render `run/council.report.html` via docs-site-macos; off by default).
 
 ## Adapter boundary (build-now-adapt-later)
 
