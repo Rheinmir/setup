@@ -681,7 +681,7 @@ def sections(root: Path):
         "<li>Xuống cùng dự án (deploy cạnh hooks) → log wiki của chính dự án đó.</li></ul></div></div>",
     ]))
 
-    # 5 trụ runtime (Outer Harness) — sơ đồ luồng tương tác: 1 sổ-cái nuôi 5 trụ, gác ở gate.
+    # 5 trụ runtime (AgentOps) — sơ đồ luồng tương tác: 1 sổ-cái nuôi 5 trụ, gác ở gate.
     _pillars = [
         ("1 · Cost", "#0a84ff", "code-logger --run-cost", "STRONG", "ok"),
         ("2 · Knowledge", "#30b0c7", "llmwiki + CAPABILITIES", "STRONG", "ok"),
@@ -724,7 +724,7 @@ def sections(root: Path):
         f'<div class="pcard"><div><div class="pn" style="color:{_c}">{_nm}</div><div class="ps">{_d}</div></div></div>'
         for (_nm, _c, _d) in _pdetail) + '</div>')
     S.append(("runtime", "AgentOps · 5 trụ", "11 · AgentOps", "AgentOps — 5 trụ runtime (Cost · Knowledge · Task · Quality · Audit)", [
-        "<p class=\"lead\">Đây chính là tầng <b>AgentOps</b> của overstack — <i>\"DevOps cho AI agent\"</i>: <b>đo &amp; gác việc agent làm LÚC CHẠY</b> (chi phí · evals · observability · audit), không phải kỷ luật lúc-code. Năm trụ (cộng đồng gọi khung này là <i>Outer Harness</i>) là một hệ: mọi action agent ghi vào một sổ-cái <code>events.jsonl</code> (append-only + hash-chain), từ đó nuôi 5 trụ, rồi <b>gác ở <code>fdk-gate</code> + CI</b>. Đánh giá đầy đủ + bằng chứng: <a href=\"300626-outer-harness-evaluation.html\">outer-harness-evaluation</a>.</p>",
+        "<p class=\"lead\">Đây chính là tầng <b>AgentOps</b> của overstack — <i>\"DevOps cho AI agent\"</i>: <b>đo &amp; gác việc agent làm LÚC CHẠY</b> (chi phí · evals · observability · audit), không phải kỷ luật lúc-code. Năm trụ là một hệ: mọi action agent ghi vào một sổ-cái <code>events.jsonl</code> (append-only + hash-chain), từ đó nuôi 5 trụ, rồi <b>gác ở <code>fdk-gate</code> + CI</b>. Đánh giá đầy đủ + bằng chứng: <a href=\"300626-outer-harness-evaluation.html\">outer-harness-evaluation</a>.</p>",
         '<div class="diagram-box">' + "".join(_svg) + '<div class="diagram-hint">✥ kéo từng ô · cuộn để zoom · kéo mép dưới để mở rộng</div></div>',
         '<div class="table-wrap"><table><thead><tr><th>Trụ</th><th>Cơ chế (bằng CODE, không-LLM)</th><th>Trạng thái</th></tr></thead><tbody>'
         + _rows + '</tbody></table></div>',
