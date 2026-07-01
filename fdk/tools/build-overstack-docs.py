@@ -275,6 +275,23 @@ def accent_css(n: int) -> str:
 
 
 # ── sections (prose tay; bảng live tiêm vào) ──────────────────────────────────────────────
+# 12 cơ chế runtime + tự-gác (KHÔNG phải rule) — nguồn CHUNG cho mind map LẪN section chi tiết (DRY).
+MECHANISMS = [
+    ("orientation", "SessionStart in ngắn: nhắc agent query code-index + wiki để định vị nhanh (chống lơ ngơ) — ADR-009"),
+    ("auto-index", "Stop hook chạy index_sync --fix: thêm file wiki mới → index.md tự khớp; chiều xóa vẫn chặn"),
+    ("force-query", "/propose buộc query wiki + có '## Context' trước khi draft, không propose 'mù' (R7-f)"),
+    ("code-index", "code-graph --watch tự reindex khi code đổi; code_graph_keeper giữ bền qua restart"),
+    ("code-logger", "PostToolUse: ghi log thao tác BẰNG CODE vào log.md (block auto, không nhờ agent nhớ)"),
+    ("health-check", "SessionStart: báo pattern-sync lệch (version local↔remote↔disk) — không chặn"),
+    ("wiki→fdk", "wiki RIÊNG của framework ở fdk/wiki (the kit); llmwiki/wiki = khuôn per-project — ADR-008"),
+    ("harness-lint", "tự-gác: --scanners (mọi wiki-scanner lọc gitignored) + --copies (bản deployed==master) — ADR-007"),
+    ("harness-doctor", "chạy fixture sai/đúng qua từng validator — chứng minh rào còn cắn"),
+    ("fdk-gate", "định-nghĩa-hoàn-thành: mọi bước phải xanh mới cho push"),
+    ("harness-local", "dự án TỰ viết rule riêng (harness-local/, id P&lt;n&gt;≠R) chạy song song R1–R13; ngoài manifest nên sync không đụng; framework chạy trước (AND) — ADR-011"),
+    ("docs-gate 2 trụ", "R10 mỗi 5 prompt nhắc CẢ tài liệu (/docs-site-macos) LẪN đánh giá/eval (wikieval) — trụ nào thiếu nhắc nấy"),
+]
+
+
 def sections(root: Path):
     by_loop, n_sk = skills_by_loop(root)
     rs = rules(root)
@@ -347,21 +364,9 @@ def sections(root: Path):
                              [_row(_node("b-rule leaf", rid,
                                          (stmt[:74] + "…") if len(stmt) > 76 else (stmt or name)))
                               for rid, name, stmt in rs]))
-    # cơ chế runtime + tự-gác (KHÔNG phải rule — chia từng chức năng nhỏ, có giải thích)
-    branches.append(_subtree("b-rule", "cơ chế", "hook runtime + harness tự-gác", [
-        _row(_node("b-rule leaf", "orientation", "SessionStart in ngắn: nhắc agent query code-index + wiki để định vị nhanh (chống lơ ngơ) — ADR-009")),
-        _row(_node("b-rule leaf", "auto-index", "Stop hook chạy index_sync --fix: thêm file wiki mới → index.md tự khớp; chiều xóa vẫn chặn")),
-        _row(_node("b-rule leaf", "force-query", "/propose buộc query wiki + có '## Context' trước khi draft, không propose 'mù' (R7-f)")),
-        _row(_node("b-rule leaf", "code-index", "code-graph --watch tự reindex khi code đổi; code_graph_keeper giữ bền qua restart")),
-        _row(_node("b-rule leaf", "code-logger", "PostToolUse: ghi log thao tác BẰNG CODE vào log.md (block auto, không nhờ agent nhớ)")),
-        _row(_node("b-rule leaf", "health-check", "SessionStart: báo pattern-sync lệch (version local↔remote↔disk) — không chặn")),
-        _row(_node("b-rule leaf", "wiki→fdk", "wiki RIÊNG của framework ở fdk/wiki (the kit); llmwiki/wiki = khuôn per-project — ADR-008")),
-        _row(_node("b-rule leaf", "harness-lint", "tự-gác: --scanners (mọi wiki-scanner lọc gitignored) + --copies (bản deployed==master) — ADR-007")),
-        _row(_node("b-rule leaf", "harness-doctor", "chạy fixture sai/đúng qua từng validator — chứng minh rào còn cắn")),
-        _row(_node("b-rule leaf", "fdk-gate", "định-nghĩa-hoàn-thành: mọi bước phải xanh mới cho push")),
-        _row(_node("b-rule leaf", "harness-local", "dự án TỰ viết rule riêng (harness-local/, id P&lt;n&gt;≠R) chạy song song R1–R13; ngoài manifest nên sync không đụng; framework chạy trước (AND) — ADR-011")),
-        _row(_node("b-rule leaf", "docs-gate 2 trụ", "R10 mỗi 5 prompt nhắc CẢ tài liệu (/docs-site-macos) LẪN đánh giá/eval (wikieval) — trụ nào thiếu nhắc nấy")),
-    ]))
+    # cơ chế runtime + tự-gác (KHÔNG phải rule) — data từ MECHANISMS (dùng chung với section chi tiết)
+    branches.append(_subtree("b-rule", "cơ chế", "hook runtime + harness tự-gác",
+                             [_row(_node("b-rule leaf", _m, _d)) for _m, _d in MECHANISMS]))
 
     # 5 trend 2026 → 5 chức năng qua build-now-adapt-later (core tất định now, adapter verified:false)
     # BNAL — AUTO từ harness/*.config.yaml (mỗi config = 1 adapter). KHÔNG hardcode → không drift (ADR-012/013/015).
@@ -763,19 +768,29 @@ def sections(root: Path):
         "<div class=\"note\"><h4>Vì sao cần checklist này</h4><p style=\"margin:0\">overstack lớn → thêm một thứ mà quên đồng bộ một chỗ = drift âm thầm. fdk-gate biến \"hợp lệ\" thành 14 bước máy-kiểm, không phụ thuộc trí nhớ.</p></div>",
     ]))
 
-    _branch7 = [
-        ("wiki-loop", "#30b0c7", "Vòng tri thức", "ingest · query · lint — nạp / hỏi / dọn wiki của dự án."),
-        ("dev-loop", "#5856d6", "Vòng phát triển", "propose → gate → verify · onboard · eval (wikieval / loop-runner / failure-flywheel)."),
-        ("orchestrate", "#ff9500", "Điều phối đa-agent", "orca-workflow · council · trace-grader · dispatch (orca-cli) · ops/deploy."),
-        ("utils", "#34c759", "Tiện ích", "docs & render · taste/design · imagegen · caveman · framework-dev · utility khác."),
-        ("rules", "#e0264b", "Luật harness", f"{n_rules} rule R1–R{n_rules}, mỗi rule = 1 validator tất định; gác 3 lớp (hook / commit / CI)."),
-        ("cơ chế", "#ff2d55", "Cơ chế runtime tự-gác", "orientation · auto-index · force-query · code-index · code-logger · health-check · harness-lint / -doctor · fdk-gate…"),
-        ("BNAL", "#0a84ff", "Build-now-adapt-later", "core tất định now + 1 config adapter (verified:false → true), auto từ harness/*.config.yaml."),
-    ]
-    _b7html = ('<h3 class="sub">7 nhánh mind map — mỗi nhánh một mảng chức năng</h3>'
-               '<div class="pgrid">' + "".join(
-                   f'<div class="pcard"><div><div class="pn" style="color:{_c}">{esc(_nm)} — {esc(_t)}</div>'
-                   f'<div class="ps">{_d}</div></div></div>' for (_nm, _c, _t, _d) in _branch7) + '</div>')
+    _loop_meta = {
+        "wiki-loop": ("#30b0c7", "Vòng tri thức", "Nạp → hỏi → dọn wiki của dự án. Dùng khi có tài liệu mới, cần tổng hợp câu trả lời từ wiki, hay wiki phình cần dọn."),
+        "dev-loop": ("#5856d6", "Vòng phát triển", "Luồng làm tính năng: propose → gate → verify, cộng onboard codebase và eval (kiểm hồi quy, vòng lặp có guardrail)."),
+        "orchestrate": ("#ff9500", "Điều phối đa-agent", "Chạy nhiều agent song song có kiểm soát: propose→gate→dispatch→verify, đánh giá (council/trace-grader), và deploy."),
+        "utils": ("#34c759", "Tiện ích", "Đồ nghề rời: render tài liệu, thiết kế/style, image→code, caveman (nén token), dev-framework, và tiện ích khác."),
+    }
+
+    def _skitems(lp):
+        return '<ul class="s">' + "".join(
+            f'<li><b><code>/{esc(n)}</code></b> — {esc((d[:64] + "…") if len(d) > 66 else d)}</li>'
+            for n, d in sorted(by_loop.get(lp, []))) + '</ul>'
+    _secs = []
+    for _lp in ("wiki-loop", "dev-loop", "orchestrate", "utils"):
+        _c, _t, _intro = _loop_meta[_lp]
+        _secs.append(f'<div class="card"><h4 style="color:{_c}">{_lp} — {_t}</h4><p>{_intro}</p>{_skitems(_lp)}</div>')
+    _secs.append(f'<div class="card"><h4 style="color:#e0264b">rules — luật harness</h4>'
+                 f'<p>{n_rules} rule (R1–R{n_rules}), mỗi rule = 1 validator tất định, gác 3 lớp: <b>hook</b> (write-time) · <b>pre-commit</b> · <b>CI</b> (merge — không bypass được). Bảng đầy đủ từng rule ở tab <b>Nền 2 · Harness</b>.</p></div>')
+    _secs.append('<div class="card"><h4 style="color:#ff2d55">cơ chế — runtime tự-gác (không phải rule)</h4>'
+                 '<p>Các hook + cơ chế chạy nền để harness tự vận hành và tự kiểm chính nó — không nhờ agent nhớ:</p><ul class="s">'
+                 + "".join(f'<li><b>{esc(_m)}</b> — {esc(_d)}</li>' for _m, _d in MECHANISMS) + '</ul></div>')
+    _secs.append('<div class="card"><h4 style="color:#0a84ff">BNAL — build-now-adapt-later</h4>'
+                 '<p>Thêm tính năng còn ẩn số mà không liều: dựng phần chắc chắn now, nhốt ẩn số sau MỘT config adapter (verified:false → true), auto từ harness/*.config.yaml. Chi tiết + sơ đồ ở tab <b>An toàn khi mở rộng</b>.</p></div>')
+    _b7html = '<h3 class="sub">7 nhánh mind map — giải thích chi tiết từng nhánh</h3>' + "".join(_secs)
     S.append(("reference", "Tham chiếu (mind map)", "14 · Tham chiếu", "Tham chiếu — mind map skill & rule (đếm từ đĩa)", [
         f"<p class=\"lead\">Bản đồ tư duy (định dạng cheatsheet) toàn bộ đồ nghề, sinh từ đĩa nên luôn khớp: <b>{n_sk} skill</b> theo loop · <b>{n_rules} rule</b>. Mind map chia <b>7 nhánh</b> (4 loop skill + rules + cơ chế + BNAL) — giải thích từng nhánh ngay dưới. Mỗi nhánh <b>mặc định đóng — click để mở/đóng</b> (mũi tên ▸).</p>",
         _b7html,
