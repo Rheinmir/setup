@@ -40,3 +40,4 @@
 | [trend-bnal-2](sources/evals/retrieval/trend-bnal-2.md) | eval | Golden truy-hồi: 5 trend 2026 tiếp (memory, cost, injection, hallucination) áp ntn? |
 | [wiki-in-kit](sources/evals/retrieval/wiki-in-kit.md) | eval | Golden truy-hồi: Vì sao wiki của framework sống trong kit (fdk)? |
 | [010726-query-retrieval-eval](draft/orca/010726-query-retrieval-eval.md) | draft | Query L0→L1: eval truy-hồi + telemetry + query 3-tầng |
+| [010726-21-quy-tac-docs](sources/draft/010726-21-quy-tac-docs.md) | draft | Docs site bóc tách "21 Quy Tắc Không Thể Phá Vỡ" |

@@ -270,3 +270,5 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 - 2026-07-01 13:15 — session `42d7b209` — 82 tool calls — files: 010726-dev-harness-kit-council.html, 010726-dev-harness-kit.md, 010726-trupillar4-council-persona.md, 300626-outer-harness-evaluation.html, MEMORY.md, SKILL.md, build-overstack-docs.py, code_health.py …
 
 ## 2026-07-01 — verify-before-commit — query-retrieval-eval (promoted 632e29c → fdk/wiki/concepts/query-retrieval-eval.md)
+- 2026-07-01 18:36 — session `071d8d58` — 16 tool calls — files: 010726-query-retrieval-eval.md, answers.json, harness.yml, query-log.py, query-proxy.py, query-retrieval-eval.md, query.md, retrieval-eval.py
+- 2026-07-01 22:54 — session `87754f76` — 5 tool calls — files: 010726-21-quy-tac-docs.md, 010726-21-quy-tac.html, index.md, log.md
