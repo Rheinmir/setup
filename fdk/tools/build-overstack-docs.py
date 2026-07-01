@@ -557,7 +557,7 @@ def sections(root: Path):
             _wsvg.append(f'<line class="flow" x1="{_x + 186}" y1="70" x2="{_x + 218}" y2="70" stroke="#9aa4b2" stroke-width="2" marker-end="url(#arrW)"/>')
     _wsvg.append('</svg>')
     S.append(("workflow", "Workflow dev", "06 · Quy trình", "Workflow — gọi /orca-workflow, nó lo 4 bước", [
-        "<p class=\"lead\">Cách bạn làm việc thực tế: gọi <b><code>/orca-workflow</code></b> cho một tính năng — nó tự chạy trọn 4 bước dưới. Các skill dev-loop là <b>bước con</b> do nó điều phối, bạn không gọi tay từng cái. Mỗi bước khớp một trạng thái <b>task-lifecycle</b> (Trụ 3) — gate validator chặn nếu đi sai.</p>",
+        "<p class=\"lead\">Cách bạn làm việc thực tế: gọi <b><code>/orca-workflow</code></b> cho một tính năng — nó tự chạy trọn <b>vòng lặp</b> 4 bước dưới (cộng đồng gọi việc thiết kế vòng này là <i>loop engineering / agentic loop</i>). Các skill dev-loop là <b>bước con</b> do nó điều phối, bạn không gọi tay từng cái. Mỗi bước khớp một trạng thái <b>task-lifecycle</b> (Trụ 3) — gate validator chặn nếu đi sai. Cần vòng lặp tự-sửa CÓ chốt dừng bắt buộc (max-iter/budget/no-progress)? → <b><code>/loop-runner</code></b>.</p>",
         '<div class="diagram-box">' + "".join(_wsvg) + '<div class="diagram-hint">✥ kéo từng ô · cuộn để zoom</div></div>',
         "<ol class=\"ck\">"
         "<li><b>propose</b> — restate yêu cầu, liệt kê file ảnh hưởng + cái có thể vỡ, vẽ sequence diagram, viết draft. DỪNG chờ bạn duyệt.</li>"
@@ -723,8 +723,8 @@ def sections(root: Path):
     _pdet_html = ('<h3 class="sub">Chi tiết từng trụ</h3><div class="pgrid">' + "".join(
         f'<div class="pcard"><div><div class="pn" style="color:{_c}">{_nm}</div><div class="ps">{_d}</div></div></div>'
         for (_nm, _c, _d) in _pdetail) + '</div>')
-    S.append(("runtime", "5 trụ runtime", "11 · Runtime", "5 trụ runtime — Cost · Knowledge · Task · Quality · Audit (Outer Harness)", [
-        "<p class=\"lead\">Năm trụ <b>Outer Harness</b> là phần overstack <b>đo lường &amp; gác LÚC CHẠY</b> — không phải 3 cái rời (eval/capabilities/logger) mà là một hệ: mọi action agent ghi vào một sổ-cái <code>events.jsonl</code> (append-only + hash-chain), từ đó nuôi 5 trụ, rồi <b>gác ở <code>fdk-gate</code> + CI</b>. Đánh giá đầy đủ + bằng chứng: <a href=\"300626-outer-harness-evaluation.html\">outer-harness-evaluation</a>.</p>",
+    S.append(("runtime", "AgentOps · 5 trụ", "11 · AgentOps", "AgentOps — 5 trụ runtime (Cost · Knowledge · Task · Quality · Audit)", [
+        "<p class=\"lead\">Đây chính là tầng <b>AgentOps</b> của overstack — <i>\"DevOps cho AI agent\"</i>: <b>đo &amp; gác việc agent làm LÚC CHẠY</b> (chi phí · evals · observability · audit), không phải kỷ luật lúc-code. Năm trụ (cộng đồng gọi khung này là <i>Outer Harness</i>) là một hệ: mọi action agent ghi vào một sổ-cái <code>events.jsonl</code> (append-only + hash-chain), từ đó nuôi 5 trụ, rồi <b>gác ở <code>fdk-gate</code> + CI</b>. Đánh giá đầy đủ + bằng chứng: <a href=\"300626-outer-harness-evaluation.html\">outer-harness-evaluation</a>.</p>",
         '<div class="diagram-box">' + "".join(_svg) + '<div class="diagram-hint">✥ kéo từng ô · cuộn để zoom · kéo mép dưới để mở rộng</div></div>',
         '<div class="table-wrap"><table><thead><tr><th>Trụ</th><th>Cơ chế (bằng CODE, không-LLM)</th><th>Trạng thái</th></tr></thead><tbody>'
         + _rows + '</tbody></table></div>',
