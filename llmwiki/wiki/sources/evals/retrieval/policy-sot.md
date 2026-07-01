@@ -1,0 +1,13 @@
+---
+type: eval
+id: policy-sot
+question: "Policy là nguồn chân lý — quyết định enforcement nằm ở đâu?"
+expected_pages: [ADR-001-policy-as-source-of-truth]
+---
+
+# Retrieval golden: policy-sot
+
+Golden truy-hồi (mảnh 2). Frontmatter là hợp đồng máy-đọc: `question` đưa vào query pipeline, `expected_pages` là TẬP trang chấp nhận được (case xấu #4 — không phải 1 trang). Scorer chấm hit@k + token, không gọi model.
+
+## Origin
+- Seed dogfood từ fdk/wiki (gói 010726-query-retrieval-eval). Cap 30 golden (case xấu #1).

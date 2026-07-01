@@ -11,15 +11,23 @@ Answer question by synthesizing wiki knowledge. Valuable findings not in wiki be
 ## When to invoke
 When user asks question requiring synthesis across multiple wiki pages or raw sources.
 
-## Steps
-1. Identify relevant wiki pages. List them.
-2. Read each relevant page in full.
-3. If answer needs info not in wiki, check `raw/` for unprocessed sources.
-4. Synthesize and answer directly.
-5. Evaluate: does answer contain non-obvious insight, connection, or conclusion not already in wiki?
+## Steps — progressive disclosure 3 tầng (ĐỪNG nạp cả trang ở bước 1)
+> Nguyên tắc: quét RẺ để xếp hạng trước, chỉ ĐỌC FULL vài trang cao điểm. Đo trên bộ golden
+> `wiki/sources/evals/retrieval/` cho thấy cách này giữ nguyên recall mà cắt ~65% token so với
+> "đọc mọi trang khớp" (baseline L0). Kiểm chứng: `retrieval-eval.py --check`.
+
+1. **Tầng 1 — quét, KHÔNG mở full trang nào:** `ripgrep` câu hỏi trên `wiki/index.md` + nội dung wiki (`rg -c '<term>' wiki/` để đếm khớp), xếp hạng trang theo **độ phủ term** (trang chứa nhiều term của câu hỏi nhất). Câu hỏi về code → dùng code-graph MCP (`search_symbols`) thay `rg`. Kết quả tầng này = danh sách slug + dòng khớp; chưa `Read` full trang nào.
+2. **Tầng 2 — khoan:** chỉ `Read` FULL **top-N trang cao điểm nhất** (mặc định ~5). Bỏ phần đuôi bảng xếp hạng — không đọc cho "chắc".
+3. **Tầng 3 — bối cảnh:** nếu câu trả lời cần mạch liên quan, lần theo `[[wikilinks]]` của các trang vừa đọc (tương đương timeline/related của engram) — vẫn chỉ mở trang được trỏ tới, không mở tất cả.
+4. If answer needs info not in wiki, check `raw/` for unprocessed sources.
+5. Synthesize and answer directly.
+6. Evaluate: does answer contain non-obvious insight, connection, or conclusion not already in wiki?
    - If yes: create new wiki page (concept or source), update `wiki/index.md`, log in `wiki/log.md`.
    - If no: skip.
-6. Append to `wiki/log.md`: `## YYYY-MM-DD — query — <question summary>` with note on whether new page created.
+7. Append to `wiki/log.md`: `## YYYY-MM-DD — query — <question summary>` with note on whether new page created.
+8. **Telemetry (đo TRUY HỒI — fail-open):** sau khi trả lời, ghi lại query để độ hiệu quả truy-hồi đo được:
+   `python3 harness/scripts/query-log.py --record --question "<câu hỏi>" --pages "<slug1,slug2>" --tokens <ước tính token đã đọc> --tier <1|2|3>`
+   `--pages` = các trang wiki thực sự đọc; `--tier` = tầng sâu nhất chạm tới (1 quét / 2 đọc full / 3 wikilinks). Script fail-open — không bao giờ làm gãy phiên. Giới hạn đã biết: chỉ đo khi skill `query` được gọi, không đo lượt model tự Read thẳng.
 
 ## Rules
 - **OKF v0.1 (R9):** any new wiki page starts with a YAML frontmatter block (`---`) with a non-empty `type`; copy the matching `_template.md` and keep the `## Origin` section.

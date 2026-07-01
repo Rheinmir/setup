@@ -1,0 +1,65 @@
+{
+  "schema": "retrieval-baseline/v1",
+  "generated_by": "harness/scripts/retrieval-eval.py",
+  "generated_at": "2026-07-01",
+  "k": 5,
+  "evals_dir": "llmwiki/wiki/sources/evals/retrieval",
+  "summary": {
+    "goldens": 10,
+    "decided": 10,
+    "hits": 7,
+    "total_tokens": 272087
+  },
+  "goldens": {
+    "boris-roles": {
+      "hit": 1,
+      "recall": 1.0,
+      "tokens": 22543
+    },
+    "docs-macos": {
+      "hit": 0,
+      "recall": 1.0,
+      "tokens": 29769
+    },
+    "harness-local": {
+      "hit": 0,
+      "recall": 1.0,
+      "tokens": 29344
+    },
+    "orient-forcequery": {
+      "hit": 1,
+      "recall": 1.0,
+      "tokens": 29155
+    },
+    "outer-eval": {
+      "hit": 1,
+      "recall": 1.0,
+      "tokens": 26180
+    },
+    "policy-sot": {
+      "hit": 0,
+      "recall": 1.0,
+      "tokens": 28920
+    },
+    "protected-lib": {
+      "hit": 1,
+      "recall": 0.5,
+      "tokens": 19489
+    },
+    "pull-gate": {
+      "hit": 1,
+      "recall": 1.0,
+      "tokens": 25104
+    },
+    "skill-sot": {
+      "hit": 1,
+      "recall": 1.0,
+      "tokens": 30178
+    },
+    "wiki-in-kit": {
+      "hit": 1,
+      "recall": 1.0,
+      "tokens": 31405
+    }
+  }
+}

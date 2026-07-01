@@ -33,3 +33,5 @@ fdk/html/*.html
 harness/metrics/cost-by-session.json
 .DS_Store
 harness/metrics/tasks.json
+
+harness/metrics/query-log.jsonl
