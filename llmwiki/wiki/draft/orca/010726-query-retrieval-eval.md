@@ -1,7 +1,7 @@
 ---
 type: draft
 title: "Query L0→L1: eval truy-hồi + telemetry + tool có-lọc (land chung, cap 30 golden)"
-status: proposed
+status: promoted
 tags: [query, retrieval, eval, telemetry, wikieval, council, output-report]
 proposed: 2026-07-01
 task: T-260701-01
@@ -85,6 +85,6 @@ Bốn case xấu, **mỗi case có chốt chặn cụ thể** (đây là phần 
 - **Draft:** `wiki/draft/orca/010726-query-retrieval-eval.md`
 - **Nguồn quyết định:** council 5 ghế (Karpathy/Linus/Taleb/Meadows/Munger), transcript `scratchpad/council-query/run/council.transcript.md` — winner Karpathy mean-rank 1.33, dissent Linus (var 3.56, "ship tool trước").
 - **Chẩn đoán:** Explore engram `/tmp/engram` (cơ chế L1 3-tầng) + xác minh code overstack (query prose, hook không inject, wikieval đo nội-dung).
-- **Commit:** _(filled by verify-before-commit)_
-- **Date promoted:** _(filled by verify-before-commit)_
+- **Commit:** `632e29c` — feat(query): nâng L0→L1 có đo
+- **Date promoted:** 2026-07-01 → `fdk/wiki/concepts/query-retrieval-eval.md`
 ```

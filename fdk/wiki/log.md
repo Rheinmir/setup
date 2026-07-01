@@ -259,3 +259,14 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 - Dọn `index.md`: xóa 21 dòng orphan trỏ tới `sources/draft/*.md` không tồn tại (đã được archive sang `sources/draft/archive/...`, auto-index block giữ bản đúng). 88→67 dòng (sau đó +1 entry mới).
 - 2026-06-30 — docs-site-macos render: `llmwiki/html/300626-outer-harness-evaluation.html` (glass single-file, mind map + 2 draggable SVG + 5 section) cho concept outer-harness-evaluation. Self-contained, served :8765.
 - 2026-06-30 13:10 — session `b5d0b1d7` — 13 tool calls — files: 300626-outer-harness-evaluation.html, answers.json, chairman_synthesis.md, code-logger.py, cost-rates.json, feature-catalog.md, index.md, outer-harness-evaluation.md …
+- 2026-06-30 13:46 — session `1fdd736b` — 1 tool calls — files: fdk-gate.py
+- 2026-06-30 15:34 — session `a4a5a012` — 4 tool calls — files: build-overstack-docs.py
+- 2026-06-30 16:05 — session `42d7b209` — 18 tool calls — files: 300626-audit-fix-docs-site-macos.md, SKILL.md, index.md, log.md, stop.py
+- 2026-06-30 16:05 — session `75158c72` — 36 tool calls — files: .pre-commit-config.yaml, 300626-outer-harness-evaluation.html, SKILL.md, code-logger.py
+- 2026-06-30 21:35 — session `42d7b209` — 18 tool calls — files: 300626-audit-fix-docs-site-macos.md, SKILL.md, index.md, log.md, stop.py
+- 2026-06-30 21:37 — session `75158c72` — 36 tool calls — files: .pre-commit-config.yaml, 300626-outer-harness-evaluation.html, SKILL.md, code-logger.py
+- 2026-06-30 21:38 — session `a4a5a012` — 4 tool calls — files: build-overstack-docs.py
+- 2026-06-30 22:02 — session `42d7b209` — 18 tool calls — files: 300626-audit-fix-docs-site-macos.md, SKILL.md, index.md, log.md, stop.py
+- 2026-07-01 13:15 — session `42d7b209` — 82 tool calls — files: 010726-dev-harness-kit-council.html, 010726-dev-harness-kit.md, 010726-trupillar4-council-persona.md, 300626-outer-harness-evaluation.html, MEMORY.md, SKILL.md, build-overstack-docs.py, code_health.py …
+
+## 2026-07-01 — verify-before-commit — query-retrieval-eval (promoted 632e29c → fdk/wiki/concepts/query-retrieval-eval.md)
