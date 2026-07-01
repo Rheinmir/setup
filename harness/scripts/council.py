@@ -48,6 +48,7 @@ Schemas (the stable contract -- contains NO unverified value)
 import argparse
 import difflib
 import hashlib
+import html as _html
 import json
 import math
 import random
@@ -416,6 +417,195 @@ def render_transcript_md(t) -> str:
 
 
 # --------------------------------------------------------------------------- #
+# Stage-4 HTML report (GENERIC + deterministic + offline)
+# Feeds PURELY from the transcript already built above. Every seat-supplied
+# string is escaped here (Taleb fix): no unescaped author/text can break or
+# inject into the report. No CDN -> self-contained/offline (docs-site spec).
+# --------------------------------------------------------------------------- #
+_PALETTE = ["#7a5c86", "#3f7d74", "#b06a2c", "#4a6d99", "#9a5560", "#5f7a3f"]
+
+
+def _hue_for(name: str) -> str:
+    h = int(hashlib.sha256(name.encode("utf-8")).hexdigest(), 16)
+    return _PALETTE[h % len(_PALETTE)]
+
+
+def _fmt_answer(text: str) -> str:
+    """Turn a raw seat answer into tidy HTML: split '(1)/(2)' or '1.' enumerations
+    into <li>, keep the rest as <p>. Pure presentation, adds no new content."""
+    import re
+    esc = _html.escape
+    parts = re.split(r"(?:(?<=[.\s])|^)\((\d+)\)\s*", text)
+    if len(parts) >= 3:  # had (1) (2) ... markers
+        lead = esc(parts[0].strip())
+        items = []
+        for i in range(1, len(parts) - 1, 2):
+            items.append(f"<li>{esc(parts[i + 1].strip())}</li>")
+        body = (f"<p>{lead}</p>" if lead else "") + f"<ol class='ans'>{''.join(items)}</ol>"
+        return body
+    return "".join(f"<p>{esc(s.strip())}</p>" for s in text.split("\n") if s.strip())
+
+
+_MEDAL = {1: "\U0001F947", 2: "\U0001F948", 3: "\U0001F331"}
+
+
+def render_report_html(t) -> str:
+    e = lambda x: _html.escape(str(x), quote=True)
+    agg = t["aggregate"]
+    jr = t["judge_rankings"]
+    pres = t["anchor_guard"].get("presentation_order", {})
+    answers = {a["author"]: a for a in t["answers"]}
+    order = [(r["author"], r["label"], r["mean_rank"], r["ranks"], r["consensus_rank"]) for r in agg]
+    w, mc = t["winner"], t["most_contested"]
+    seed, verified = t.get("seed"), t.get("verified", False)
+    synth = t.get("chairman_synthesis", "") or ""
+    q = t.get("question") or "Council evaluation"
+
+    cards = ""
+    for author, label, mean, ranks, crank in order:
+        ac = _hue_for(author)
+        medal = _MEDAL.get(crank, f"#{crank}")
+        cards += f'''
+    <article class="pcard" style="--ac:{ac}">
+      <div class="phead">
+        <div class="pav" style="background:{ac}">{e(str(author)[:1].upper())}</div>
+        <div><div class="pname">{e(author)} <span class="rankpill tabnum">{medal} #{e(crank)} · mean {e(mean)}</span></div></div>
+        <div class="blindtag">blind {e(label)}</div>
+      </div>
+      <div class="ansbody">{_fmt_answer(answers[author]["text"])}</div>
+    </article>'''
+
+    vote_rows = "".join(
+        f'<tr><td>{e(j["judge"])}</td><td class="mono">{" › ".join(e(x) for x in j["ranking_labels"])}</td>'
+        f'<td class="mono dim">{" → ".join(e(x) for x in pres.get(j["judge"], []))}</td></tr>' for j in jr)
+    reveal = "".join(
+        f'<span class="chip" style="--c:{_hue_for(a)}">{e(l)} = {e(a)}</span>' for a, l, _, _, _ in order)
+    dash = "".join(
+        f'<tr><td class="mono"><b>{e(l)}</b></td><td>{_MEDAL.get(cr,"")} {e(a)}</td>'
+        f'<td class="mono tabnum">{e(m)}</td><td class="mono dim tabnum">{e(rk)}</td></tr>'
+        for a, l, m, rk, cr in order)
+    unan = all(j["ranking_labels"] == jr[0]["ranking_labels"] for j in jr) if jr else False
+
+    syn = ""
+    if synth:
+        for ln in synth.split("\n"):
+            ln = ln.strip()
+            if not ln:
+                continue
+            if ln[:2] in ("1.", "2.", "3.", "4.", "5.", "6."):
+                if "<ul" not in syn.rsplit("<p", 1)[-1]:
+                    pass
+                syn += f'<li>{e(ln[2:].strip())}</li>'
+            else:
+                syn += f'<p>{e(ln)}</p>'
+    syn = syn.replace("<li>", "<ul class='synlist'><li>", 1)
+    if "<li>" in syn:
+        syn = syn[::-1].replace(">il/<", ">lu/<>il/<", 1)[::-1]
+    warn = "" if verified else (
+        '<div class="warn"><b>⚠️ verified: false</b> — model identities đã quarantine trong '
+        'council.config.yaml. Đây là <b>consensus mean-rank</b>, không phải chân lý.</div>')
+    mc_cell = (f'<b>{e(mc["author"])}</b><em class="tabnum">blind {e(mc["label"])} · var {e(mc["variance"])}</em>'
+               if mc else "<b>—</b><em>n/a</em>")
+
+    fav = ("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'>"
+           "<rect width='32' height='32' rx='7' fill='%23232028'/>"
+           "<path d='M8 22h16M16 7l7 5H9z' stroke='%23c9a24b' stroke-width='2' fill='none' stroke-linejoin='round'/></svg>")
+
+    return f'''<!doctype html><html lang="vi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Council Stage-4 report — blind peer-rank. Deterministic từ council.transcript.json.">
+<title>Council · báo cáo Stage-4</title><link rel="icon" href="{fav}">
+<style>
+:root{{--paper:#f4f1ea;--ink:#26221c;--dim:#7a7266;--faint:#a79e90;--line:rgba(60,52,40,.13);
+ --card:rgba(255,253,249,.74);--stroke:rgba(255,255,255,.9);--accent:#8a6d2f;--shadow:24px 40px 24px rgba(60,48,28,.10)}}
+*{{box-sizing:border-box}} html{{scroll-behavior:smooth}}
+body{{margin:0;font:15px/1.6 "Iowan Old Style","Palatino",Georgia,ui-serif,serif;color:var(--ink);background:var(--paper);
+ background-image:radial-gradient(120% 80% at 15% -5%,rgba(214,198,160,.35),transparent 55%),radial-gradient(90% 70% at 100% 0%,rgba(150,168,178,.22),transparent 50%);
+ min-height:100dvh;-webkit-font-smoothing:antialiased}}
+body::after{{content:"";position:fixed;inset:0;pointer-events:none;z-index:99;opacity:.5;mix-blend-mode:multiply;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.045'/%3E%3C/svg%3E")}}
+.wrap{{max-width:940px;margin:0 auto;padding:56px 22px 90px}}
+.tabnum{{font-variant-numeric:tabular-nums}}
+.body-sans{{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}}
+.eyebrow{{font:600 12px/1 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}}
+h1{{font-weight:600;font-size:clamp(30px,5vw,44px);line-height:1.04;letter-spacing:-.015em;margin:12px 0 10px;text-wrap:balance;max-width:22ch}}
+.q{{color:var(--dim);font-size:16px;max-width:60ch;text-wrap:pretty}}
+.meta{{margin-top:14px;font:500 12.5px/1 ui-monospace,Menlo,monospace;color:var(--faint)}}
+.warn{{background:rgba(176,106,44,.09);border:1px solid rgba(176,106,44,.32);border-left:3px solid #b06a2c;border-radius:13px;
+ padding:14px 16px;margin:26px 0 8px;font-size:13.5px;color:#5f4a2e;font-family:ui-sans-serif,system-ui,sans-serif}}
+.sect{{margin:46px 0 18px;display:flex;align-items:baseline;gap:14px}}
+.sect .n{{font-size:26px;color:var(--accent);line-height:1}} .sect h2{{font-weight:600;font-size:21px;margin:0;letter-spacing:-.01em}}
+.sect .rule{{flex:1;height:1px;background:var(--line)}}
+.pcard{{background:var(--card);border:1px solid var(--stroke);border-radius:20px;padding:22px 24px;margin:18px 0;position:relative;overflow:hidden;
+ box-shadow:0 1px 0 rgba(255,255,255,.7) inset,var(--shadow);transition:transform .28s cubic-bezier(.2,.7,.2,1),box-shadow .28s}}
+.pcard::before{{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--ac)}}
+.pcard:hover{{transform:translateY(-3px);box-shadow:0 1px 0 rgba(255,255,255,.8) inset,32px 54px 30px rgba(60,48,28,.14)}}
+.phead{{display:flex;align-items:center;gap:14px;margin-bottom:12px}}
+.pav{{width:46px;height:46px;border-radius:14px;color:#fff;font-weight:600;font-size:20px;display:grid;place-items:center;flex:0 0 46px}}
+.pname{{font-size:19px;font-weight:600;letter-spacing:-.01em;text-transform:capitalize}}
+.rankpill{{font:600 11.5px/1 ui-monospace,Menlo,monospace;color:var(--dim);margin-left:6px}}
+.blindtag{{margin-left:auto;align-self:flex-start;font:600 11px/1 ui-monospace,Menlo,monospace;color:var(--ac);
+ border:1px solid var(--ac);border-radius:7px;padding:5px 9px}}
+.ansbody{{font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px}}
+.ansbody p{{margin:6px 0;color:#3a342c}} ol.ans{{margin:8px 0 2px;padding-left:0;list-style:none;counter-reset:a}}
+ol.ans li{{position:relative;padding-left:26px;margin-bottom:8px;line-height:1.55}}
+ol.ans li::before{{counter-increment:a;content:counter(a);position:absolute;left:0;top:1px;width:18px;height:18px;border-radius:6px;
+ background:var(--ac);color:#fff;font:700 11px/18px ui-monospace,Menlo,monospace;text-align:center}}
+.tblwrap{{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:rgba(255,253,249,.6);box-shadow:var(--shadow)}}
+table{{width:100%;border-collapse:collapse;font-size:13.5px;font-family:ui-sans-serif,system-ui,sans-serif}}
+th,td{{text-align:left;padding:12px 15px;border-bottom:1px solid var(--line)}} tbody tr:last-child td{{border-bottom:0}}
+tbody tr{{transition:background .18s}} tbody tr:hover{{background:rgba(138,109,47,.06)}}
+th{{color:var(--faint);font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.06em;background:rgba(60,52,40,.03)}}
+.mono{{font-family:ui-monospace,Menlo,monospace}} .dim{{color:var(--dim)}}
+.chip{{display:inline-flex;align-items:center;gap:6px;background:color-mix(in srgb,var(--c) 12%,var(--paper));
+ border:1px solid color-mix(in srgb,var(--c) 55%,transparent);color:var(--c);border-radius:9px;padding:5px 11px;margin:9px 8px 0 0;
+ font:600 12.5px/1 ui-sans-serif,system-ui,sans-serif;transition:transform .2s}}
+.chip:hover{{transform:translateY(-2px)}} .chip::before{{content:"";width:8px;height:8px;border-radius:50%;background:var(--c)}}
+.kpi{{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin:0 0 18px}}
+@media(max-width:640px){{.kpi{{grid-template-columns:1fr}}}}
+.kpi div{{background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:16px 18px;box-shadow:var(--shadow);transition:transform .26s}}
+.kpi div:hover{{transform:translateY(-3px)}}
+.kpi b{{display:block;font-size:22px;font-weight:600;margin:5px 0 3px;text-transform:capitalize}}
+.kpi span{{color:var(--faint);font:600 10.5px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.07em}}
+.kpi em{{font-style:normal;color:var(--dim);font-size:12px;font-family:ui-sans-serif,system-ui,sans-serif}}
+.synth{{background:linear-gradient(158deg,rgba(138,109,47,.10),rgba(63,125,116,.06));border:1px solid rgba(138,109,47,.26);
+ border-radius:20px;padding:24px 26px;margin-top:16px;box-shadow:var(--shadow)}}
+.synth .lbl{{font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.09em;color:var(--accent)}}
+.synth p{{margin:7px 0;font-size:13.5px;line-height:1.6;font-family:ui-sans-serif,system-ui,sans-serif}}
+ul.synlist{{margin:6px 0 10px;padding:0;list-style:none;counter-reset:s;font-family:ui-sans-serif,system-ui,sans-serif}}
+ul.synlist li{{position:relative;padding-left:26px;margin-bottom:8px;font-size:13.5px;line-height:1.55}}
+ul.synlist li::before{{counter-increment:s;content:counter(s);position:absolute;left:0;top:0;width:18px;height:18px;border-radius:6px;
+ background:var(--accent);color:#fff;font:700 11px/18px ui-monospace,Menlo,monospace;text-align:center}}
+.reveal{{margin-top:16px}} .reveal .lbl{{font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--faint)}}
+footer{{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);color:var(--faint);font-size:12.5px;text-align:center;
+ font-family:ui-sans-serif,system-ui,sans-serif}}
+a:focus-visible,tr:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
+</style></head><body><div class="wrap">
+<header>
+  <div class="eyebrow">🏛 Council · Stage-4</div>
+  <h1>Hội đồng chấm mù</h1>
+  <p class="q">{e(q)}</p>
+  <div class="meta tabnum">seed {e(seed)} · council.py/1.0 · {len(jr)} giám khảo · {len(order)} ghế</div>
+</header>
+{warn}
+<section><div class="sect"><span class="n tabnum">1</span><h2>Ý kiến hội đồng</h2><span class="rule"></span></div>{cards}</section>
+<section><div class="sect"><span class="n tabnum">2</span><h2>Bỏ phiếu kín</h2><span class="rule"></span></div>
+<div class="tblwrap"><table><thead><tr><th>Giám khảo</th><th>Ranking (nhãn ẩn)</th><th>Thứ tự trình bày · anchor guard</th></tr></thead><tbody>{vote_rows}</tbody></table></div>
+<div class="reveal"><span class="lbl">Reveal map — chỉ lộ ở cuối</span><br>{reveal}</div></section>
+<section><div class="sect"><span class="n tabnum">3</span><h2>Dashboard chốt</h2><span class="rule"></span></div>
+<div class="kpi">
+ <div><span>Winner</span><b>{_MEDAL[1]} {e(w["author"])}</b><em class="tabnum">blind {e(w["label"])} · mean {e(w["mean_rank"])}</em></div>
+ <div><span>Most contested</span>{mc_cell}</div>
+ <div><span>Đồng thuận</span><b class="tabnum">{len(jr)} GK</b><em>{"nhất trí tuyệt đối ✓" if unan else "phân hoá"}</em></div>
+</div>
+<div class="tblwrap"><table><thead><tr><th>Blind</th><th>Ghế</th><th>Mean rank</th><th>Judge ranks</th></tr></thead><tbody>{dash}</tbody></table></div>
+{"<div class='synth'><span class='lbl'>Chairman synthesis — câu trả lời chốt</span>" + syn + "</div>" if synth else ""}
+</section>
+<footer>Mọi số liệu từ council.transcript.json — report chỉ là lớp trình bày, không thêm phán xét mới.</footer>
+</div></body></html>'''
+
+
+# --------------------------------------------------------------------------- #
 # io
 # --------------------------------------------------------------------------- #
 def serialize(obj) -> str:
@@ -497,9 +687,17 @@ def cmd_rank(args):
     out.mkdir(parents=True, exist_ok=True)
     (out / "council.transcript.json").write_text(serialize(t), encoding="utf-8")
     (out / "council.transcript.md").write_text(render_transcript_md(t), encoding="utf-8")
+    # Stage-4 HTML report — ALWAYS rendered (mandatory), self-contained/offline,
+    # written to the repo's canonical html folder. Feeds purely from `t`.
+    repo_root = Path(__file__).resolve().parents[2]
+    html_dir = repo_root / "llmwiki" / "html" / "council"
+    html_dir.mkdir(parents=True, exist_ok=True)
+    html_path = html_dir / "council.report.html"
+    html_path.write_text(render_report_html(t), encoding="utf-8")
     w = t["winner"]
     mc = t["most_contested"]
     print(f"[council] wrote {out}/council.transcript.{{json,md}}")
+    print(f"[council] wrote {html_path} (Stage-4 HTML, mandatory)")
     print(f"[council] consensus winner: {w['author']} (blind {w['label']}, mean rank {w['mean_rank']})")
     if mc:
         print(f"[council] most contested : {mc['author']} (blind {mc['label']}, variance {mc['variance']})")

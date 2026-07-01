@@ -1,0 +1,116 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Council Stage-4 report — blind peer-rank. Deterministic từ council.transcript.json.">
+<title>Council · báo cáo Stage-4</title><link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23232028'/><path d='M8 22h16M16 7l7 5H9z' stroke='%23c9a24b' stroke-width='2' fill='none' stroke-linejoin='round'/></svg>">
+<style>
+:root{--paper:#f4f1ea;--ink:#26221c;--dim:#7a7266;--faint:#a79e90;--line:rgba(60,52,40,.13);
+ --card:rgba(255,253,249,.74);--stroke:rgba(255,255,255,.9);--accent:#8a6d2f;--shadow:24px 40px 24px rgba(60,48,28,.10)}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;font:15px/1.6 "Iowan Old Style","Palatino",Georgia,ui-serif,serif;color:var(--ink);background:var(--paper);
+ background-image:radial-gradient(120% 80% at 15% -5%,rgba(214,198,160,.35),transparent 55%),radial-gradient(90% 70% at 100% 0%,rgba(150,168,178,.22),transparent 50%);
+ min-height:100dvh;-webkit-font-smoothing:antialiased}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:99;opacity:.5;mix-blend-mode:multiply;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.045'/%3E%3C/svg%3E")}
+.wrap{max-width:940px;margin:0 auto;padding:56px 22px 90px}
+.tabnum{font-variant-numeric:tabular-nums}
+.body-sans{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.eyebrow{font:600 12px/1 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+h1{font-weight:600;font-size:clamp(30px,5vw,44px);line-height:1.04;letter-spacing:-.015em;margin:12px 0 10px;text-wrap:balance;max-width:22ch}
+.q{color:var(--dim);font-size:16px;max-width:60ch;text-wrap:pretty}
+.meta{margin-top:14px;font:500 12.5px/1 ui-monospace,Menlo,monospace;color:var(--faint)}
+.warn{background:rgba(176,106,44,.09);border:1px solid rgba(176,106,44,.32);border-left:3px solid #b06a2c;border-radius:13px;
+ padding:14px 16px;margin:26px 0 8px;font-size:13.5px;color:#5f4a2e;font-family:ui-sans-serif,system-ui,sans-serif}
+.sect{margin:46px 0 18px;display:flex;align-items:baseline;gap:14px}
+.sect .n{font-size:26px;color:var(--accent);line-height:1} .sect h2{font-weight:600;font-size:21px;margin:0;letter-spacing:-.01em}
+.sect .rule{flex:1;height:1px;background:var(--line)}
+.pcard{background:var(--card);border:1px solid var(--stroke);border-radius:20px;padding:22px 24px;margin:18px 0;position:relative;overflow:hidden;
+ box-shadow:0 1px 0 rgba(255,255,255,.7) inset,var(--shadow);transition:transform .28s cubic-bezier(.2,.7,.2,1),box-shadow .28s}
+.pcard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--ac)}
+.pcard:hover{transform:translateY(-3px);box-shadow:0 1px 0 rgba(255,255,255,.8) inset,32px 54px 30px rgba(60,48,28,.14)}
+.phead{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.pav{width:46px;height:46px;border-radius:14px;color:#fff;font-weight:600;font-size:20px;display:grid;place-items:center;flex:0 0 46px}
+.pname{font-size:19px;font-weight:600;letter-spacing:-.01em;text-transform:capitalize}
+.rankpill{font:600 11.5px/1 ui-monospace,Menlo,monospace;color:var(--dim);margin-left:6px}
+.blindtag{margin-left:auto;align-self:flex-start;font:600 11px/1 ui-monospace,Menlo,monospace;color:var(--ac);
+ border:1px solid var(--ac);border-radius:7px;padding:5px 9px}
+.ansbody{font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px}
+.ansbody p{margin:6px 0;color:#3a342c} ol.ans{margin:8px 0 2px;padding-left:0;list-style:none;counter-reset:a}
+ol.ans li{position:relative;padding-left:26px;margin-bottom:8px;line-height:1.55}
+ol.ans li::before{counter-increment:a;content:counter(a);position:absolute;left:0;top:1px;width:18px;height:18px;border-radius:6px;
+ background:var(--ac);color:#fff;font:700 11px/18px ui-monospace,Menlo,monospace;text-align:center}
+.tblwrap{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:rgba(255,253,249,.6);box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;font-size:13.5px;font-family:ui-sans-serif,system-ui,sans-serif}
+th,td{text-align:left;padding:12px 15px;border-bottom:1px solid var(--line)} tbody tr:last-child td{border-bottom:0}
+tbody tr{transition:background .18s} tbody tr:hover{background:rgba(138,109,47,.06)}
+th{color:var(--faint);font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.06em;background:rgba(60,52,40,.03)}
+.mono{font-family:ui-monospace,Menlo,monospace} .dim{color:var(--dim)}
+.chip{display:inline-flex;align-items:center;gap:6px;background:color-mix(in srgb,var(--c) 12%,var(--paper));
+ border:1px solid color-mix(in srgb,var(--c) 55%,transparent);color:var(--c);border-radius:9px;padding:5px 11px;margin:9px 8px 0 0;
+ font:600 12.5px/1 ui-sans-serif,system-ui,sans-serif;transition:transform .2s}
+.chip:hover{transform:translateY(-2px)} .chip::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c)}
+.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin:0 0 18px}
+@media(max-width:640px){.kpi{grid-template-columns:1fr}}
+.kpi div{background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:16px 18px;box-shadow:var(--shadow);transition:transform .26s}
+.kpi div:hover{transform:translateY(-3px)}
+.kpi b{display:block;font-size:22px;font-weight:600;margin:5px 0 3px;text-transform:capitalize}
+.kpi span{color:var(--faint);font:600 10.5px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.07em}
+.kpi em{font-style:normal;color:var(--dim);font-size:12px;font-family:ui-sans-serif,system-ui,sans-serif}
+.synth{background:linear-gradient(158deg,rgba(138,109,47,.10),rgba(63,125,116,.06));border:1px solid rgba(138,109,47,.26);
+ border-radius:20px;padding:24px 26px;margin-top:16px;box-shadow:var(--shadow)}
+.synth .lbl{font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.09em;color:var(--accent)}
+.synth p{margin:7px 0;font-size:13.5px;line-height:1.6;font-family:ui-sans-serif,system-ui,sans-serif}
+ul.synlist{margin:6px 0 10px;padding:0;list-style:none;counter-reset:s;font-family:ui-sans-serif,system-ui,sans-serif}
+ul.synlist li{position:relative;padding-left:26px;margin-bottom:8px;font-size:13.5px;line-height:1.55}
+ul.synlist li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:0;width:18px;height:18px;border-radius:6px;
+ background:var(--accent);color:#fff;font:700 11px/18px ui-monospace,Menlo,monospace;text-align:center}
+.reveal{margin-top:16px} .reveal .lbl{font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--faint)}
+footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);color:var(--faint);font-size:12.5px;text-align:center;
+ font-family:ui-sans-serif,system-ui,sans-serif}
+a:focus-visible,tr:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+</style></head><body><div class="wrap">
+<header>
+  <div class="eyebrow">🏛 Council · Stage-4</div>
+  <h1>Hội đồng chấm mù</h1>
+  <p class="q">&lt;the question put to the council&gt;</p>
+  <div class="meta tabnum">seed 42 · council.py/1.0 · 3 giám khảo · 3 ghế</div>
+</header>
+
+<section><div class="sect"><span class="n tabnum">1</span><h2>Ý kiến hội đồng</h2><span class="rule"></span></div>
+    <article class="pcard" style="--ac:#7a5c86">
+      <div class="phead">
+        <div class="pav" style="background:#7a5c86">T</div>
+        <div><div class="pname">taleb <span class="rankpill tabnum">🥇 #1 · mean 1.0</span></div></div>
+        <div class="blindtag">blind B</div>
+      </div>
+      <div class="ansbody"><p>Opt-in default OFF hợp lý nhưng lũy kế fragility 3 điểm (tail-first).</p><ol class='ans'><li>Coupling /docs-site-macos không phase-locked với core: template đổi -&gt; HTML break trong khi transcript.json vẫn deterministic; user chạy --report fail không biết lỗi ở council.py hay docs-site-macos -&gt; tail event chạy lại cả council.</li><li>HTML INJECTION: author+text không sanitize trong council.py, chỉ dặn docs-site-macos escape — nằm layer khác; ngã lúc integration -&gt; HTML broken/unescaped. Complexity debt tại boundary.</li><li>Scope &#x27;3 section chat room&#x27; là complexity thừa cho presentational layer: debate bubble/avatar/timeline thêm kỳ vọng hành vi mà docs-site-macos không cam kết; upgrade template phải port cả 3. QUYẾT: GIỮ opt-in; SỬA — sanitize HTML entities cho author/text NGAY trong council.py (không defer sang layer khác); GIẢM scope: bỏ chat-room debate (theater complexity), giữ</li><li>blind-vote table+reveal,</li><li>consensus+dissent dashboard; fail-safe: render fail vẫn emit transcript.json/.md, --report trả graceful error không silent skip. Core robust hơn presentation.</li></ol></div>
+    </article>
+    <article class="pcard" style="--ac:#3f7d74">
+      <div class="phead">
+        <div class="pav" style="background:#3f7d74">M</div>
+        <div><div class="pname">munger <span class="rankpill tabnum">🥈 #2 · mean 2.0</span></div></div>
+        <div class="blindtag">blind C</div>
+      </div>
+      <div class="ansbody"><p>Thiết kế Stage-4 cơ bản ĐÚNG nhưng có rủi ro tích hợp. INVERT — cái gì đảm bảo thất bại:</p><ol class='ans'><li>Coupling /docs-site-macos: HTML không thực sự self-contained nếu phụ thuộc skill ngoài; skill unavailable -&gt; dependent-failure trong khi core transcript vẫn tốt; deployment determinism bị phá.</li><li>Trigger thứ 2 &#x27;chia sẻ ra ngoài người vận hành&#x27; mơ hồ, cần context-detection phức tạp hơn flag.</li><li>Chairman synthesis delay: render --report trước khi chairman fill chairman_synthesis -&gt; HTML incomplete/misleading, chưa có protocol.</li><li>No fallback nếu render fail. GIỮ vì lõi deterministic isolation tốt, opt-in sound, 3 section map đúng 3-stage. SỬA: bỏ heuristic trigger thứ 2 -&gt; chỉ explicit --report; spec rõ self-contained (embed CSS/JS hay CDN); chain-guard block --report nếu chairman_synthesis==None; graceful fallback về markdown nếu docs-site-macos unavailable. Nợ: integration test payload-&gt;render, error handling khi invoke skill. Fix cốt lõi: dependency chaining phải có fallback.</li></ol></div>
+    </article>
+    <article class="pcard" style="--ac:#4a6d99">
+      <div class="phead">
+        <div class="pav" style="background:#4a6d99">K</div>
+        <div><div class="pname">kahneman <span class="rankpill tabnum">🌱 #3 · mean 3.0</span></div></div>
+        <div class="blindtag">blind A</div>
+      </div>
+      <div class="ansbody"><p>Opt-in hợp lý (default OFF, render chỉ khi --report hoặc sharing non-IT) — tránh novelty coupling. BA BIAS nguy hiểm:</p><ol class='ans'><li>WYSIATI: HTML bóng bẩy (dashboard winner, chat bubbles, số canh dàn) làm người đọc TIN kết quả hơn thực chất -&gt; authority illusion kể cả khi verified:false ghi mờ.</li><li>Cognitive fatigue &#x27;one big page&#x27;: non-IT skip debate, nhìn thẳng dashboard -&gt; nhầm consensus là chân lý.</li><li>Novelty + sunk-cost: bật --report lần đầu -&gt; xu hướng render liên tục để &#x27;xác thực&#x27; feature -&gt; coupling docs-site-macos thành non-negotiable (sunk-cost ratchet). Nợ: schema transcript đổi -&gt; phải sync 3 section, maintenance tăng. ĐỀ XUẤT: giữ opt-in; SỬA thêm warning box rõ khi verified:false (counter authority bias), tách Findings vs Caveats; defer visual refinement — transcript.md đủ 95% use-case internal. HTML là công cụ tâm lý, KHÔNG trung lập: cần decouple visual authority khỏi deterministic math.</li></ol></div>
+    </article></section>
+<section><div class="sect"><span class="n tabnum">2</span><h2>Bỏ phiếu kín</h2><span class="rule"></span></div>
+<div class="tblwrap"><table><thead><tr><th>Giám khảo</th><th>Ranking (nhãn ẩn)</th><th>Thứ tự trình bày · anchor guard</th></tr></thead><tbody><tr><td>seat-1</td><td class="mono">B › C › A</td><td class="mono dim">B → C → A</td></tr><tr><td>seat-2</td><td class="mono">B › C › A</td><td class="mono dim">A → B → C</td></tr><tr><td>seat-3</td><td class="mono">B › C › A</td><td class="mono dim">A → B → C</td></tr></tbody></table></div>
+<div class="reveal"><span class="lbl">Reveal map — chỉ lộ ở cuối</span><br><span class="chip" style="--c:#7a5c86">B = taleb</span><span class="chip" style="--c:#3f7d74">C = munger</span><span class="chip" style="--c:#4a6d99">A = kahneman</span></div></section>
+<section><div class="sect"><span class="n tabnum">3</span><h2>Dashboard chốt</h2><span class="rule"></span></div>
+<div class="kpi">
+ <div><span>Winner</span><b>🥇 taleb</b><em class="tabnum">blind B · mean 1.0</em></div>
+ <div><span>Most contested</span><b>kahneman</b><em class="tabnum">blind A · var 0.0</em></div>
+ <div><span>Đồng thuận</span><b class="tabnum">3 GK</b><em>nhất trí tuyệt đối ✓</em></div>
+</div>
+<div class="tblwrap"><table><thead><tr><th>Blind</th><th>Ghế</th><th>Mean rank</th><th>Judge ranks</th></tr></thead><tbody><tr><td class="mono"><b>B</b></td><td>🥇 taleb</td><td class="mono tabnum">1.0</td><td class="mono dim tabnum">[1, 1, 1]</td></tr><tr><td class="mono"><b>C</b></td><td>🥈 munger</td><td class="mono tabnum">2.0</td><td class="mono dim tabnum">[2, 2, 2]</td></tr><tr><td class="mono"><b>A</b></td><td>🌱 kahneman</td><td class="mono tabnum">3.0</td><td class="mono dim tabnum">[3, 3, 3]</td></tr></tbody></table></div>
+
+</section>
+<footer>Mọi số liệu từ council.transcript.json — report chỉ là lớp trình bày, không thêm phán xét mới.</footer>
+</div></body></html>

@@ -19,16 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-01 03:18:37 | `file.write` | skills/orca-onboard/SKILL.md · tool=Edit · actor=agent · prev=132087714057ecff4ce0534061a27de44f923c9ad9a89d4007027589c9 |
-| 2026-07-01 03:19:12 | `file.write` | skills/docs-site-macos/SKILL.md · tool=Edit · actor=agent · prev=3a7abb5efa31542c10508f25e2f4cae5d676f5912ed6004fd1a1d09 |
-| 2026-07-01 03:19:41 | `file.write` | llmwiki/wiki/draft/orca/010726-dev-harness-kit.md · tool=Write · actor=agent · prev=960e41bfa819f4972f288b7290fe292e65ac |
-| 2026-07-01 08:40:38 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=683512cd5494a3f847478392c735bb2a697a07ef6668e98681865 |
-| 2026-07-01 08:40:48 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=f6abd66762aa3456929b439a698e037064a38bb4d5767df8a7651 |
-| 2026-07-01 08:42:35 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=69abb7a500915a7a5ac195c627b4584e3738a4f4e22061642c490 |
-| 2026-07-01 08:43:30 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=dcf0b74c24eab4431e9f5a6edb6c06f2f5ff8a5ecbf020a59b94e |
-| 2026-07-01 08:44:26 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=1723923e4f3acc5661d3d228486d8d8d5b3c075c23bd751d78578 |
-| 2026-07-01 08:47:27 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=9d63461e0d8a081fb948c2c230f240dd4768999d0bff32806544c |
-| 2026-07-01 08:47:36 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=bde8026054bd7dbc0a72613bc454ba999e9cfdd96e89ebc4c4032 |
 | 2026-07-01 08:57:13 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=9088f0eb7763c2de44e004143f305ae43309e226ac603b716abba |
 | 2026-07-01 08:57:39 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=002a4d9b125ab27a93ae76c4e5feb8576146f2f185748ab946b44 |
 | 2026-07-01 09:01:06 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=a2771cb2d1c455e9b594463ec07d7ed72e7cd367e1c7d32121abb |
@@ -59,7 +49,19 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-01 19:41:47 | `file.write` | llmwiki/wiki/sources/draft/010726-21-quy-tac-docs.md · tool=Edit · actor=agent · prev=8a56aee52a8d8e5f9d308c9429dcb9b862 |
 | 2026-07-01 19:41:53 | `file.write` | llmwiki/wiki/index.md · tool=Edit · actor=agent · prev=b0d99b098e1a10667fdceec29e5e3f8eb711fdf53e421bcd144f4ead0815cdc2  |
 | 2026-07-01 19:41:57 | `file.write` | llmwiki/wiki/log.md · tool=Edit · actor=agent · prev=3b599d3a55166adc30bd1c04b2937d82d0fb3efa7e9dacef74cd34749c41c115 ·  |
+| 2026-07-01 23:16:12 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=1acea7dec95d2680b634ad1de17a67e2ea510ec70c734cd2196028fa28044c2 |
+| 2026-07-01 23:16:30 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=6f45ff140fca16864ebe32cd3947ecca2c7661baafdc49167e5aea967ce0ee9 |
+| 2026-07-01 23:27:16 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=fa364b187aa15097fdeb14c97106b790386bf6cefd462ce2620b1596f308ed1 |
+| 2026-07-01 23:27:28 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=b7fa950a8483e23edbf3ad225aff95b6c9dc1cf97222d22f48a711f386ab6e6 |
+| 2026-07-01 23:27:36 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=d66d662c887fb6d988f8d3db2567c501b42cfe03bf42844dab2d5ebc4f29f4e |
+| 2026-07-01 23:48:00 | `file.write` | llmwiki/wiki/draft/uiux/010726-council-report-redesign.md · tool=Write · actor=agent · prev=a55780a39c8189ce3c1180562acb |
+| 2026-07-01 23:48:06 | `file.write` | llmwiki/wiki/draft/uiux/010726-council-report-redesign.md · tool=Edit · actor=agent · prev=e0e014a23cf6bf82641a0ec904b3f |
+| 2026-07-01 23:50:27 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=c0daeab84d1ca972430698fb484e855f87636f06a9d24a2c72b001d12270 |
+| 2026-07-01 23:51:36 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=02de6f1f1aafa4cb1f1ef771b157f5792bcfcd780f7705c9293d64b7dbcf |
+| 2026-07-01 23:51:46 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=fc89373c4e61461901fc3b33053ab95274e20051bc888844e43a976f1518 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
 ## 2026-07-01 — docs-site-macos — 21-quy-tac-docs
+
+## 2026-07-01 — redesign-existing-projects — council-report-redesign

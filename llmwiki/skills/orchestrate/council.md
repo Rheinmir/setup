@@ -8,7 +8,10 @@ description: >-
   model calls; harness/scripts/council.py does the deterministic protocol math
   (anonymization, mean-rank aggregation, dissent, anchor guard, transcript). Use
   when the user says "run a council", "llm-council", "panel of models", "blind
-  peer-rank these answers", "ensemble + chairman", or invokes /council.
+  peer-rank these answers", "ensemble + chairman", or invokes /council. Stage-4
+  is a MANDATORY HTML report, rendered inside council.py itself (offline, no CDN,
+  no external skill): every `rank` writes a self-contained council.report.html to
+  llmwiki/html/council/ — opinion cards, a blind-vote table, and a dashboard.
 ---
 
 # Skill: council
@@ -115,18 +118,46 @@ Dispatch the chairman the `chairman_brief` from the transcript (consensus order 
 the dissent points it must resolve). Its synthesis is the final answer; paste it
 back under `chairman_synthesis` in the transcript for the record.
 
+### Stage 4 — HTML report (MANDATORY, tự render trong council.py, offline)
+**Luôn render — không cần cờ, không phụ thuộc skill ngoài.** Mỗi lần `rank` thành
+công, `render_report_html(t)` (nằm ngay trong `council.py`) ghi **một `.html`
+self-contained** vào `llmwiki/html/council/council.report.html`. Không CDN
+(system font + inline SVG favicon/grain) → mở được offline; không coupling
+`docs-site-macos`. Feed **thuần** từ transcript vừa build (`t`) → không bịa gì mới,
+mọi chuỗi seat được `html.escape` tại chỗ (chống HTML-injection ở boundary).
+
+Trang có đúng ba section, theo thứ tự:
+
+1. **Ý kiến hội đồng.** Mỗi seat một card (viền màu = `sha256(author)`, xếp theo
+   consensus rank + huy chương), answer tự format `(1)(2)(3)` thành list.
+   *Nguồn:* `t["answers"]` + `t["aggregate"]`.
+2. **Bỏ phiếu KÍN (blind vote).** Bảng phiếu dùng NHÃN A/B/C ẩn danh: mỗi judge
+   một hàng, ranking theo nhãn + presentation-order của anchor guard. Reveal map
+   A/B/C → author chỉ ở cuối section.
+   *Nguồn:* `t["judge_rankings"]` + `t["anchor_guard"]`.
+3. **Dashboard cuối.** KPI (winner / most-contested / đồng thuận) + bảng mean-rank
+   consensus, và `chairman_synthesis` hiển thị nổi bật KHI đã được dán vào
+   transcript (rank build lại từ answers+judges nên field này rỗng cho tới khi
+   chairman fill — lúc đó khối synth tự ẩn).
+   *Nguồn:* `t["winner"]` / `t["most_contested"]` / `t["aggregate"]`.
+
+Vì mọi số liệu lấy từ transcript đã deterministic, report chỉ là lớp trình bày —
+không thêm phán xét mới. Same transcript → cùng HTML.
+
 ## council.py commands
 
 | Command | Does |
 |---------|------|
 | `rank <answers.json> --judges <judges.json>` | full aggregation → transcript.json + .md |
+| `rank <answers.json> --judges <j>` | + auto-writes `llmwiki/html/council/council.report.html` (Stage-4, mandatory) |
 | `rank <answers.json>` (no judges) | emits the blind packet, then stops |
 | `prepare <answers.json>` | blind packet only (Stage 2a) |
 | `roster --case <tag>` / `--profile <p>` / `--personas a,b,c` | bốc 3-5 persona-lens (thuần lookup, ≥1 cặp đối-trọng); `--size 3\|5`, `--json` |
 | `selftest` | conformance vectors; asserts determinism + correctness |
 
 Flags: `--seed N` (anchor-guard seed; overrides config `anchor_seed`),
-`--out DIR`, `--config harness/council.config.yaml`.
+`--out DIR` (transcript json/md), `--config harness/council.config.yaml`. Stage-4
+HTML is always written to `llmwiki/html/council/` — no flag needed.
 
 ## Adapter boundary (build-now-adapt-later)
 
