@@ -74,6 +74,13 @@ jobs:
         run: python3 harness/scripts/wiki-health.py --wiki-dir fdk/wiki --fail-on broken
       - name: arch-scan — doc vs rule
         run: python3 harness/scripts/arch-scan.py --root .
+      - name: retrieval-eval — query truy-hồi không tụt dưới sàn (tất định, không LLM)
+        run: |
+          # 1. goldens coherent (mỗi golden tự thoả expected_pages) + cap 30 còn giữ
+          python3 harness/scripts/retrieval-eval.py --self-test
+          # 2. chiến lược query (proxy L1 tất định) không hồi quy hit@k / phình token so baseline L0 đã commit
+          python3 harness/scripts/query-proxy.py --mode L1 --topn 5 --out "$RUNNER_TEMP/retrieval-L1.json"
+          python3 harness/scripts/retrieval-eval.py --outputs "$RUNNER_TEMP/retrieval-L1.json" --check
       - name: code-health — Trụ 4 cổng CI tất định không-LLM (mọi .py compile; ruff nếu có)
         run: |
           pip install ruff --quiet || echo "ruff không cài được — chạy floor compile"
