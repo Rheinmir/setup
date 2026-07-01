@@ -828,6 +828,7 @@ def render(root: Path) -> str:
             nav.append(f'<a href="#s{idx[sid]}"><span class="ic">{ICON.get(sid, "•")}</span>{id2nav[sid]}</a>')
     body = []
     for i, (sid, navlabel, tag, title, blocks) in enumerate(S):
+        tag = re.sub(r'^\s*\d+\s*·\s*', f'{i:02d} · ', tag)   # auto-số eyebrow theo thứ tự (chống trùng khi chèn tab)
         inner = [f'<span class="tag">{tag}</span>', f"<h2>{title}</h2>"]
         inner.extend(blocks)
         body.append(f'<section id="s{i}" class="sec s{i}"><div class="inner">{"".join(inner)}</div></section>')
