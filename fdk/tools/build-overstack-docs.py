@@ -439,7 +439,7 @@ def sections(root: Path):
     ]))
 
     S.append(("what", "overstack là gì", "01 · Tổng quan", "overstack là gì", [
-        "<p class=\"lead\">overstack <b>không phải một app</b> — nó là <b>một lớp bạn đặt lên dự án</b> để biến AI agent thành một <b>kỹ sư có kỷ luật</b>: có <b>trí nhớ</b> (wiki), <b>luật không phá được</b> (harness), <b>kỹ năng đóng sẵn</b> (skills), biết <b>điều phối nhiều agent</b> (Orca) — và tự <b>đo &amp; kiểm</b> việc agent làm khi chạy (chi phí, chất lượng, dấu vết). <i>Giới chuyên môn gọi lớp này là AgentOps + guardrails-as-code — nhưng bản chất chỉ có vậy: agent làm việc có kỷ luật, đo được, kiểm được.</i></p>",
+        "<p class=\"lead\">overstack <b>không phải một app</b> — nó là <b>một lớp bạn đặt lên dự án</b> để biến AI agent thành một <b>kỹ sư có kỷ luật</b>: có <b>trí nhớ</b> (wiki), <b>luật không phá được</b> (harness), <b>kỹ năng đóng sẵn</b> (skills), biết <b>điều phối nhiều agent</b> (Orca) — và tự <b>đo &amp; kiểm</b> việc agent làm khi chạy (chi phí, chất lượng, dấu vết). <i>Giới chuyên môn (2026) gọi cả lớp này là <b>agent harness engineering</b> / <b>AI control plane</b>; từng mảng có tên riêng — <b>context engineering</b> (trí nhớ) · <b>guardrails / policy-as-code</b> (luật) · <b>agent orchestration</b> (điều phối) · <b>AgentOps + evals</b> (đo &amp; kiểm). Nhánh nghề rộng hơn: <b>agentic engineering</b>. Bản chất vẫn chỉ là: agent làm việc có kỷ luật, đo được, kiểm được.</i></p>",
         f"<div class=\"kpi\"><div class=\"b\"><div class=\"n\" style=\"color:#0a84ff\">{n_sk}</div><div class=\"l\">skills (/…)</div></div>"
         f"<div class=\"b\"><div class=\"n\" style=\"color:#e0264b\">{n_rules}</div><div class=\"l\">rules tất định</div></div>"
         f"<div class=\"b\"><div class=\"n\" style=\"color:#5856d6\">{n_scripts}</div><div class=\"l\">harness scripts</div></div>"
@@ -839,7 +839,7 @@ def render(root: Path) -> str:
         "<nav>", "".join(nav), "</nav>",
         '<header class="hero"><span class="eyebrow">Tài liệu chính thức · cho người đọc</span>',
         "<h1>overstack</h1>",
-        f"<p>overstack là <b>một lớp bạn đặt lên dự án</b> để AI agent làm việc như một <b>kỹ sư có kỷ luật</b>: có <b>trí nhớ</b> (wiki), có <b>luật không phá được</b> (harness — {n_rules} rule chạy bằng code, 0 token), có <b>kỹ năng đóng sẵn</b> ({n_sk} skill), biết <b>điều phối nhiều agent</b> (Orca) — và tự <b>đo + kiểm</b> việc nó làm khi chạy (chi phí · chất lượng · dấu vết audit). "
+        f"<p>overstack là <b>một lớp bạn đặt lên dự án</b> (<i>agent harness · AI control plane</i>) để AI agent làm việc như một <b>kỹ sư có kỷ luật</b>: có <b>trí nhớ</b> (wiki — <i>context engineering</i>), có <b>luật không phá được</b> (harness — <i>guardrails / policy-as-code</i>, {n_rules} rule · 0 token), có <b>kỹ năng đóng sẵn</b> ({n_sk} skill), biết <b>điều phối nhiều agent</b> (Orca — <i>agent orchestration</i>) — và tự <b>đo + kiểm</b> khi chạy (<i>AgentOps: evals + observability</i>). "
         f"Bắt đầu ở Quickstart; các tab sau đi sâu từng phần.</p></header>",
         "".join(body),
         '<footer>overstack · tài liệu sinh bằng <code>fdk/tools/build-overstack-docs.py</code> (số liệu live từ đĩa) · '
