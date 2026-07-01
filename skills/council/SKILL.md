@@ -118,7 +118,10 @@ dissent table (most-contested answer), and a `chairman_brief`.
 ### Stage 3 — Final Response (orchestration generates)
 Dispatch the chairman the `chairman_brief` from the transcript (consensus order +
 the dissent points it must resolve). Its synthesis is the final answer; paste it
-back under `chairman_synthesis` in the transcript for the record.
+back under `chairman_synthesis` in the transcript for the record, then
+`council.py render <transcript.json>` to regenerate the Stage-4 HTML **with the
+synthesis shown** (the report auto-written during `rank` has an empty synthesis
+because `rank` rebuilds from answers+judges only).
 
 ### Stage 4 — HTML report (MANDATORY, tự render trong council.py, offline)
 **Luôn render — không cần cờ, không phụ thuộc skill ngoài.** Mỗi lần `rank` thành
@@ -159,6 +162,7 @@ không thêm phán xét mới. Same transcript → cùng HTML.
 | `rank <answers.json> --judges <j>` | + auto-writes versioned `llmwiki/html/council/council-report-NNN-seed<seed>.html` (Stage-4, mandatory) |
 | `rank <answers.json>` (no judges) | emits the blind packet, then stops |
 | `prepare <answers.json>` | blind packet only (Stage 2a) |
+| `render <transcript.json>` | re-render Stage-4 HTML từ transcript đã có (vd sau khi dán `chairman_synthesis`) → versioned file mới |
 | `roster --case <tag>` / `--profile <p>` / `--personas a,b,c` | bốc 3-5 persona-lens (thuần lookup, ≥1 cặp đối-trọng); `--size 3\|5`, `--json` |
 | `selftest` | conformance vectors; asserts determinism + correctness |
 

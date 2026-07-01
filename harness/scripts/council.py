@@ -691,6 +691,52 @@ def _write_packet(answers, seed, config, out: Path):
           "judges.json, then run: council.py rank <answers.json> --judges judges.json")
 
 
+def _write_report(t, config, seed):
+    """Render Stage-4 HTML from a transcript `t`. Mandatory but ISOLATED: any
+    failure here only WARNs — it must never sink the caller (rank) nor the core
+    transcript (Taleb blast-radius guard). Each call = a NEW versioned file
+    (council-report-NNN-seed<seed>.html), never an overwrite -> structured names +
+    immutable per-run history, no diff-churn. `latest.html` is a convenience
+    pointer (gitignored)."""
+    try:
+        repo_root = Path(__file__).resolve().parents[2]
+        html_dir = repo_root / "llmwiki" / "html" / "council"
+        html_dir.mkdir(parents=True, exist_ok=True)
+        nxt = 1
+        for f in html_dir.glob("council-report-*.html"):
+            try:
+                nxt = max(nxt, int(f.name.split("-")[2]) + 1)
+            except (IndexError, ValueError):
+                continue
+        html_path = html_dir / f"council-report-{nxt:03d}-seed{seed}.html"
+        html = render_report_html(t, _load_persona_meta(config))
+        html_path.write_text(html, encoding="utf-8")
+        (html_dir / "latest.html").write_text(html, encoding="utf-8")
+        print(f"[council] wrote {html_path} (Stage-4 HTML #{nxt:03d})")
+        return html_path
+    except Exception as exc:  # noqa: BLE001 - report is derived; never fatal
+        print(f"[council] WARN: Stage-4 HTML render skipped ({type(exc).__name__}: {exc}); "
+              f"transcript is intact.", file=sys.stderr)
+        return None
+
+
+def cmd_render(args):
+    """Re-render the Stage-4 HTML from an EXISTING transcript.json — the way to
+    get chairman_synthesis onto the page: fill it into the transcript (Stage 3),
+    then `council.py render transcript.json`. Pure presentation, no protocol math."""
+    t = _load_json(Path(args.transcript))
+    if not isinstance(t, dict) or "aggregate" not in t:
+        _die(f"{args.transcript} không giống council.transcript.json (thiếu 'aggregate').")
+    config = load_config(args.config)
+    seed = t.get("seed", "NA")
+    if not (t.get("chairman_synthesis") or "").strip():
+        print("[council] note: transcript chưa có chairman_synthesis -> report sẽ ẩn khối synthesis.",
+              file=sys.stderr)
+    path = _write_report(t, config, seed)
+    if path is None:
+        _die("render thất bại (xem WARN ở trên).")
+
+
 def cmd_rank(args):
     config = load_config(args.config)
     # --question (optional) overrides the config placeholder so the report/
@@ -725,31 +771,7 @@ def cmd_rank(args):
     w = t["winner"]
     mc = t["most_contested"]
     print(f"[council] wrote {out}/council.transcript.{{json,md}}")
-    # Stage-4 HTML report — ALWAYS rendered (mandatory, ~0 cost/offline), BUT
-    # isolated: a renderer bug on a weird transcript must NOT kill `rank` nor the
-    # core transcript above (Taleb tail-risk / blast-radius guard). Fail loud, skip.
-    # Each run = a NEW versioned file (council-report-NNN-seedNN.html), never an
-    # overwrite -> structured names + immutable per-run history, no diff-churn.
-    try:
-        repo_root = Path(__file__).resolve().parents[2]
-        html_dir = repo_root / "llmwiki" / "html" / "council"
-        html_dir.mkdir(parents=True, exist_ok=True)
-        existing = sorted(html_dir.glob("council-report-*.html"))
-        nxt = 1
-        for f in existing:
-            try:
-                nxt = max(nxt, int(f.name.split("-")[2]) + 1)
-            except (IndexError, ValueError):
-                continue
-        html_path = html_dir / f"council-report-{nxt:03d}-seed{seed}.html"
-        personas = _load_persona_meta(config)
-        html_path.write_text(render_report_html(t, personas), encoding="utf-8")
-        # stable pointer to the newest report for convenience (also versioned dir)
-        (html_dir / "latest.html").write_text(html_path.read_text(encoding="utf-8"), encoding="utf-8")
-        print(f"[council] wrote {html_path} (Stage-4 HTML #{nxt:03d}, mandatory)")
-    except Exception as exc:  # noqa: BLE001 - report is derived; never fatal
-        print(f"[council] WARN: Stage-4 HTML render skipped ({type(exc).__name__}: {exc}); "
-              f"transcript is intact.", file=sys.stderr)
+    _write_report(t, config, seed)
     print(f"[council] consensus winner: {w['author']} (blind {w['label']}, mean rank {w['mean_rank']})")
     if mc:
         print(f"[council] most contested : {mc['author']} (blind {mc['label']}, variance {mc['variance']})")
@@ -960,6 +982,11 @@ def main():
     p.add_argument("--out")
     p.add_argument("--config", default="harness/council.config.yaml")
     p.set_defaults(func=cmd_prepare)
+
+    rr = sub.add_parser("render", help="re-render Stage-4 HTML từ transcript.json đã có (vd sau khi dán chairman_synthesis)")
+    rr.add_argument("transcript", help="council.transcript.json")
+    rr.add_argument("--config", default="harness/council.config.yaml", help="để đọc persona meta")
+    rr.set_defaults(func=cmd_render)
 
     s = sub.add_parser("selftest", help="run conformance vectors; assert determinism + correctness")
     s.set_defaults(func=cmd_selftest)
