@@ -160,9 +160,9 @@ def build_static(primary: str, out_abs: str, nodes, edges, ledger, stale):
             flags += '<span class="flag s">S</span>'
         if n["type"] == "tombstone":
             flags += '<span class="flag t">T</span>'
-        cls = "nd" + (" other" if n["wiki"] != primary else "")
+        cls = "nd" + (" code" if n["wiki"] == "code" else (" other" if n["wiki"] != primary else ""))
         ndoms.append(f'<div id="n{i}" class="{cls}" style="left:{n["px"]:.0f}px;top:{n["py"]:.0f}px" '
-                     f'title="{_h.escape(n["wiki"]+"/"+n["path"])}">{_h.escape(n["id"])}{flags}</div>')
+                     f'title="{_h.escape(n["wiki"]+"/"+n["path"])}">{_h.escape(n.get("label") or n["id"])}{flags}</div>')
     # CSS hover per-node (:has) — dim tất cả, sáng node hover + hàng xóm + dây của nó
     hov = []
     for i in range(len(nodes)):
@@ -205,6 +205,7 @@ path.soft{{display:none;stroke-dasharray:5 5;opacity:.25}}   /* wikilink ẩn ch
 font-size:12px;font-weight:600;background:rgba(255,255,255,.94);border:1px solid var(--border);
 box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 3px 12px rgba(20,40,90,.1);transition:opacity .15s;cursor:default}}
 .nd.other{{background:rgba(240,244,252,.9);opacity:.4}}   /* wiki phụ mờ sẵn */
+.nd.code{{background:rgba(30,32,40,.9);color:#cfe3fb;font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:11px;border-color:rgba(120,140,180,.4);opacity:.5}}
 .nd .flag{{font-size:9px;font-weight:800;border-radius:999px;padding:0 5px;margin-left:4px}}
 .nd .s{{background:rgba(255,149,0,.16);color:#f08c00}} .nd .t{{background:rgba(0,0,0,.08);color:#4a4a55}}
 /* hover bất kỳ node → mờ hết, chỉ sáng node đó + hàng xóm + dây của nó */
@@ -224,6 +225,18 @@ box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 3px 12px rgba(20,40,90,.1);tran
 <div class="legend">sáng = wiki chính (<b>{primary}</b>) · mờ = wiki phụ · S stale · T tombstone · dây wikilink ẩn cho tới khi tick lọc</div>
 <div class="foot"><code>{out_abs}</code></div>
 </div></body></html>"""
+
+
+def add_code_nodes(nodes, edges):
+    """Thêm node lá cho target của quan hệ `touches` (đường dẫn code) để cạnh wiki→code hiện ra."""
+    ids = {n["id"] for n in nodes}
+    seen = set()
+    for e in edges:
+        if e.get("kind") == "path" and e["to"] not in ids and e["to"] not in seen:
+            seen.add(e["to"])
+            short = e["to"].rsplit("/", 1)[-1]      # tên file cho gọn
+            nodes.append({"id": e["to"], "path": e["to"], "group": "code",
+                          "type": "code", "title": e["to"], "wiki": "code", "label": short})
 
 
 def build_html(primary: str, out_abs: str, nodes, edges, ledger, stale):
@@ -286,6 +299,7 @@ transition:left .38s cubic-bezier(.4,0,.2,1),top .38s cubic-bezier(.4,0,.2,1),op
 .nd.hot{{border-color:#0a84ff;box-shadow:0 0 0 2px rgba(10,132,255,.32);z-index:5}}
 .nd.match{{border-color:#0a84ff}}
 .nd.wiki-fdk{{background:rgba(240,244,252,.9)}}  /* wiki phụ tông xám lạnh hơn */
+.nd.wiki-code{{background:rgba(30,32,40,.9);color:#cfe3fb;font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:11px;font-weight:500;border-color:rgba(120,140,180,.4)}}
 #ac{{position:fixed;z-index:60;background:rgba(255,255,255,.98);border:1px solid var(--border);
 border-radius:10px;box-shadow:0 8px 28px rgba(20,40,90,.18);max-height:320px;overflow-y:auto;
 min-width:280px;display:none}}
@@ -371,7 +385,7 @@ D.nodes.forEach(function(n){{
   var el=document.createElement('div');el.className='nd wiki-'+n.wiki;el.style.left=n.x+'px';el.style.top=n.y+'px';
   var flags=''; if(D.stale[n.wiki+'/'+n.path])flags+='<span class="flag s">S</span>';
   if(n.type==='tombstone')flags+='<span class="flag t">T</span>';
-  el.innerHTML=n.id+flags;
+  el.innerHTML=(n.label||n.id)+flags;
   world.appendChild(el); n._el=el; n.hx=n.x; n.hy=n.y;  // hx/hy = vị trí gốc (để trả về khi bỏ chọn)
 }});
 function place(n,x,y){{n.x=x;n.y=y;n._el.style.left=x+'px';n._el.style.top=y+'px';}}
@@ -571,6 +585,7 @@ def main() -> None:
         o = Path(other).resolve()
         if o.is_dir():
             scan(o, o.parent.name if o.name == "wiki" else o.name, nodes, edges, ledger, stale)
+    add_code_nodes(nodes, edges)   # node lá cho touches → cạnh wiki→code hiện ra
     default_name = "wiki-graph-static.html" if a.static else "wiki-graph.html"
     out = Path(a.out).resolve() if a.out else Path("llmwiki/html").resolve() / default_name
     out.parent.mkdir(parents=True, exist_ok=True)

@@ -19,7 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-02 17:07:58 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=a02f0efac6f99d3d8249428af287f8cd10dce1f74b83ca9fb26b2e19b |
 | 2026-07-02 17:08:08 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=a3d45d1f7cd8f6b9f5ea2f8bb8ea4225d05cdf5a1e4d819a0d3882f14 |
 | 2026-07-02 17:08:18 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=32a2f656e4f08a57eff6071915ef991c5ef0723a661c5fb72fad428a4 |
 | 2026-07-02 17:08:34 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=9afcc0733703a8cb762c04c1293086e522994d62b8b715bdd1fba84ba |
@@ -59,6 +58,7 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-02 18:13:33 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=7069753a922ddc14b81c81cfd764f0eef214c825ffd6a52fbae37faef |
 | 2026-07-02 18:13:41 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=e4e1b9b76e14d2986c52a7ac4c8bcc2a05a37ab2feb0ad1d852ca5933 |
 | 2026-07-02 18:13:52 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=c558957e2eaeca6a53d6e4b452df3f37e1d9768012924f6bbb8629f11 |
+| 2026-07-02 18:42:05 | `file.write` | llmwiki/.claude/hooks/wiki_ledger.py · tool=Edit · actor=agent · prev=76cffc74a17fc9146b84582a9f08a84c4244d74e9d9f32f0fa |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
