@@ -218,5 +218,5 @@ Transcript đầy đủ (5 câu trả lời gốc, thứ tự trình bày chốn
 ## Origin
 - **Source:** yêu cầu user 2026-07-02 (/goal — đánh giá hệ thống, lõi wiki quan hệ + traceability + chống context rot) + khảo sát repo (hooks, validators, fdk/tools, wiki structure)
 - **Draft:** `wiki/sources/draft/020726-wiki-core-relations.md`
-- **Commit:** _(filled by verify-before-commit)_
-- **Date:** 2026-07-02
+- **Commit:** `d4d8b90` — feat(wiki-core): ledger sự kiện + relations có kiểu + validator R-rel (bước 1+2&3)
+- **Date promoted:** 2026-07-02

@@ -10,7 +10,7 @@
 | [010726-trupillar4-council-persona](draft/orca/010726-trupillar4-council-persona.md) | draft | Chốt cứng Trụ 4 (cổng CI code-health) + persona-lens 18 vĩ nhân cho council (BNAL) |
 | [010726-dev-harness-kit](draft/orca/010726-dev-harness-kit.md) | draft | Thiết kế 'dev tự build harness' (BNAL) + council 18 ông chọn checksum-seal; report HTML |
 | [020726-docs-site-fdk-strategy](sources/draft/020726-docs-site-fdk-strategy.md) | draft | Render concept fdk-dev-strategy (Mongol pattern) thành docs site HTML liquid-glass |
-| [020726-wiki-core-relations](sources/draft/020726-wiki-core-relations.md) | draft | Đánh giá wiki theo 6 tiêu chí + thiết kế wiki-core v2, đã qua council 5-phản-biện (roadmap sửa: guardrail concurrency/depth-cap trước khi build) |
+| [wiki-core-relations](concepts/wiki-core-relations.md) | concept | Wiki-core v2 (đánh giá 6 tiêu chí + relations/ledger/validator, council-approved) — bước 1+2&3 shipped d4d8b90 |
 | [architecture](sources/evals/retrieval/architecture.md) | eval | Golden truy-hồi: Kiến trúc repo setup gồm những gì? |
 | [blocking-layer](sources/evals/retrieval/blocking-layer.md) | eval | Golden truy-hồi: Lớp CHẶN nằm ở hook/CI hay ở MCP? |
 | [bnal-adapter](sources/evals/retrieval/bnal-adapter.md) | eval | Golden truy-hồi: build-now-adapt-later: core-now + adapter verified:false nghĩa là gì? |

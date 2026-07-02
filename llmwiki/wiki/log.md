@@ -105,3 +105,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 ## 2026-07-02 — fdk — wiki-core v2 buoc 1+2&3
 - Ledger JSONL (wiki_ledger.py, flock G1, test 8-process pass) + tombstone; migrate id+relations 82 trang (fdk/tools/wiki-relations.py, idempotent); validator rel_integrity.py warn-only (G4/G7, full-scan 0 canh bao that). Problem-tree +p-11 (partial 2/3). Buoc 4-6 cho on dinh 4-6 tuan.
+
+## 2026-07-02 — verify-before-commit — promoted wiki-core-relations
+- Gate: py_compile OK, task_lifecycle OK (backfill T-260702-01), G1 test 400/400 pass, rel-scan 0 canh bao, patterns-guard OK. Commit d4d8b90. Draft -> concepts/wiki-core-relations.md, Origin dien commit.
