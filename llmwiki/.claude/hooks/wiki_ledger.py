@@ -61,22 +61,25 @@ def detect_action(root: str, fp: str, wiki_dir=None, rel=None) -> str:
             ["git", "-C", str(root), "ls-files", "--error-unmatch", fp],
             capture_output=True, timeout=5,
         ).returncode
-        return "modify" if rc == 0 else "add"
+        if rc == 0:
+            return "modify"            # git xác nhận file đã theo dõi → sửa
+        # rc != 0: file chưa track HOẶC thư mục không phải git repo (rc 128).
+        # Không thể tin "add" mù quáng — dùng ledger fallback: đã thấy rel chưa?
     except FileNotFoundError:
-        # git không cài — fallback tự chứa: lần đầu thấy `rel` trong ledger = add
-        if wiki_dir is not None and rel is not None:
-            ledger = pathlib.Path(wiki_dir) / "ledger.jsonl"
-            try:
-                needle = json.dumps(rel, ensure_ascii=False)
-                for ln in ledger.read_text(encoding="utf-8").splitlines():
-                    if needle in ln:
-                        return "modify"
-            except OSError:
-                pass
-            return "add"
-        return "modify"
+        pass                          # git không cài — cũng rơi xuống fallback
     except Exception:
         return "modify"
+    # Fallback tự chứa (git vắng / không-repo / chưa-track): lần đầu thấy `rel` = add
+    if wiki_dir is not None and rel is not None:
+        ledger = pathlib.Path(wiki_dir) / "ledger.jsonl"
+        try:
+            needle = json.dumps(rel, ensure_ascii=False)
+            for ln in ledger.read_text(encoding="utf-8").splitlines():
+                if needle in ln:
+                    return "modify"
+        except OSError:
+            pass
+    return "add"
 
 
 ID_LINE_RE = re.compile(r"^id[ \t]*:[ \t]*(\S.*?)[ \t]*$", re.MULTILINE)

@@ -19,9 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-02 17:00:41 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=4359fd62ce6983b3a409768f906a08a701b3ca25d10795c2a7fbf33b5 |
-| 2026-07-02 17:00:52 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=6af01326999fb8dcd1c723f83bab293adabc19e9ae871760fea940908 |
-| 2026-07-02 17:01:11 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=e09bf04ee5534473d40a0b5cd60b3eddff43c4ca0b427649cea6d04c1 |
 | 2026-07-02 17:07:58 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=a02f0efac6f99d3d8249428af287f8cd10dce1f74b83ca9fb26b2e19b |
 | 2026-07-02 17:08:08 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=a3d45d1f7cd8f6b9f5ea2f8bb8ea4225d05cdf5a1e4d819a0d3882f14 |
 | 2026-07-02 17:08:18 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=32a2f656e4f08a57eff6071915ef991c5ef0723a661c5fb72fad428a4 |
@@ -59,6 +56,9 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-02 17:53:31 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=13572310291e1b12ef710faf0c085d800b29f618e933e026a6706cdb5 |
 | 2026-07-02 18:08:10 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=2d1c39e1baa7f27ab56848761eda52b69b9ee421baf692c1f917547d3 |
 | 2026-07-02 18:11:37 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=d30ad8dde8008887b8e02490288ce778c0cf9e7fe3c1f3fd4cdba408d |
+| 2026-07-02 18:13:33 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=7069753a922ddc14b81c81cfd764f0eef214c825ffd6a52fbae37faef |
+| 2026-07-02 18:13:41 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=e4e1b9b76e14d2986c52a7ac4c8bcc2a05a37ab2feb0ad1d852ca5933 |
+| 2026-07-02 18:13:52 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=c558957e2eaeca6a53d6e4b452df3f37e1d9768012924f6bbb8629f11 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
