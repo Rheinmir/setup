@@ -19,46 +19,46 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-02 13:03:05 | `file.write` | llmwiki/.claude/hooks/session_end.py · tool=Edit · actor=agent · prev=0fa2cd32cdb9a166b951eb749bb6f844d93fedff4b1c35b3e5 |
-| 2026-07-02 13:04:20 | `file.write` | llmwiki/wiki/concepts/problem-tree.md · tool=Write · actor=agent · prev=450e568a2caaa2b2fbd497ab07f13229cec02024715da5a7 |
-| 2026-07-02 13:11:09 | `file.write` | fdk/wiki/concepts/fdk-dev-strategy.md · tool=Write · actor=agent · prev=6ec512883c8c4e1d2c504a82c2774a815a888bc34760996f |
-| 2026-07-02 13:11:20 | `file.write` | fdk/wiki/sources/mongol-ai-strategy.md · tool=Write · actor=agent · prev=0fbd49403e30e443bb7227bd6064d26ebca7ed95df3155e |
-| 2026-07-02 13:11:59 | `file.write` | fdk/wiki/index.md · tool=Edit · actor=agent · prev=93b1923f21936f521d776d938a662f088d49d4ba5df8014cb27de8d9395c5633 · h= |
-| 2026-07-02 13:12:14 | `file.write` | llmwiki/wiki/sources/draft/020726-ingest-fdk-strategy.md · tool=Write · actor=agent · prev=db449df58b1d38de5b5dc3699d3a6 |
-| 2026-07-02 13:12:21 | `file.write` | llmwiki/wiki/sources/draft/020726-ingest-fdk-strategy.md · tool=Edit · actor=agent · prev=9f395eae32637ad4301a5d875cbd5b |
-| 2026-07-02 13:12:29 | `file.write` | llmwiki/wiki/index.md · tool=Edit · actor=agent · prev=99d4dbb5c2defae7345e974963839bd369f9e2dc4fc0175a837f39a6480b8025  |
-| 2026-07-02 13:13:52 | `file.write` | harness/poc-vendor-neutral/bin/harness-events.py · tool=Edit · actor=agent · prev=9a5f42ddb7967dc1d6cc9ff20bf4b132c046d8 |
-| 2026-07-02 13:15:14 | `task.set` |  · task=T-260702-01 · state=done · note=49d2361 · actor=agent · prev=d294f254d7095a58c74637081a002c7874b953e41ac62930c39 |
-| 2026-07-02 13:30:24 | `file.write` | llmwiki/html/020726-fdk-dev-strategy.html · tool=Write · actor=agent · prev=4ae2d3dd2144be76d8f05cd00c169c797c0b5839a79b |
-| 2026-07-02 13:30:33 | `file.write` | llmwiki/html/020726-fdk-dev-strategy.html · tool=Edit · actor=agent · prev=7e92571df727bdfdbcc4e05dc472109035b44625bd59d |
-| 2026-07-02 13:30:58 | `file.write` | llmwiki/wiki/sources/draft/020726-docs-site-fdk-strategy.md · tool=Write · actor=agent · prev=1a2633417dc413acb3b777cb8d |
-| 2026-07-02 13:31:06 | `file.write` | llmwiki/wiki/sources/draft/020726-docs-site-fdk-strategy.md · tool=Edit · actor=agent · prev=588aac7f2da14ea845e3a304019 |
-| 2026-07-02 13:31:13 | `file.write` | llmwiki/wiki/index.md · tool=Edit · actor=agent · prev=213f5f4b9e739d2e9039f629c4a881144795ffe492c46c07bd58fe4ca1858955  |
-| 2026-07-02 13:34:24 | `file.write` | llmwiki/wiki/sources/draft/020726-audit-fdk-strategy.md · tool=Write · actor=agent · prev=9780f800dbb5a4e68c3dd568488e3d |
-| 2026-07-02 13:34:34 | `file.write` | llmwiki/wiki/index.md · tool=Edit · actor=agent · prev=955148f0f33ab3d0954928a3c01c15dafa439082d9cb745947d7af428607d771  |
-| 2026-07-02 13:54:02 | `file.write` | llmwiki/html/020726-audit-fdk-strategy.html · tool=Write · actor=agent · prev=d8187806152f9076d6be1c5fcf6ff808682b9d7511 |
-| 2026-07-02 13:54:17 | `file.write` | llmwiki/wiki/sources/draft/020726-audit-fdk-strategy.md · tool=Edit · actor=agent · prev=5383896908096b8ea65d2ecf25b59e1 |
-| 2026-07-02 14:08:46 | `file.write` | llmwiki/wiki/sources/draft/020726-wiki-core-relations.md · tool=Write · actor=agent · prev=9c699aedc79cd3e4e9dd10c5a4837 |
-| 2026-07-02 14:08:55 | `file.write` | llmwiki/wiki/index.md · tool=Edit · actor=agent · prev=b618051b7a9397ceded38944df4176da8b68c5c00a901894ae8bb4100ef29859  |
-| 2026-07-02 14:20:44 | `file.write` | llmwiki/wiki/sources/draft/020726-wiki-core-relations.md · tool=Edit · actor=agent · prev=79cec55afe3297105f6f693d3d5808 |
-| 2026-07-02 14:20:50 | `file.write` | llmwiki/wiki/index.md · tool=Edit · actor=agent · prev=79fcd8f033779f91117d617bb7139502a32ea1de6878d1eb23a8fd96bbcae840  |
-| 2026-07-02 14:37:41 | `file.write` | llmwiki/.claude/hooks/wiki_ledger.py · tool=Write · actor=agent · prev=46c31fdebe240d05052086626233bb2d37b387842a5e53ba0 |
-| 2026-07-02 14:38:12 | `file.write` | llmwiki/.claude/hooks/validators/rel_integrity.py · tool=Write · actor=agent · prev=95b06580f58867e39edec0ec2e91799d321a |
-| 2026-07-02 14:38:28 | `file.write` | llmwiki/.claude/hooks/post_tool_use.py · tool=Edit · actor=agent · prev=59b80bdf678d22f17ce6cd37b10fa41022501f7a8d59cfa8 |
-| 2026-07-02 14:38:32 | `file.write` | llmwiki/.claude/hooks/post_tool_use.py · tool=Edit · actor=agent · prev=635bbea5f36615f852b083f30731c96007caba1b3ee4c46f |
-| 2026-07-02 14:38:55 | `file.write` | fdk/tools/wiki-relations.py · tool=Write · actor=agent · prev=ddf4e677fc29f6f2beace27f9c033d835ef941015f49ba47fc3a7bc5ce |
-| 2026-07-02 14:39:18 | `file.write` | llmwiki/.claude/hooks/wiki_ledger.py · tool=Edit · actor=agent · prev=5e602c12b58f08f088a70e0111456046c71eb627da9322bc65 |
-| 2026-07-02 14:39:20 | `file.write` | fdk/tools/wiki-relations.py · tool=Edit · actor=agent · prev=c6b9a3e317a6ddac0e85f6deab55d08897d4f31d744ed641badc4e12f73 |
-| 2026-07-02 14:40:25 | `file.write` | llmwiki/.claude/hooks/validators/rel_integrity.py · tool=Edit · actor=agent · prev=f56a2d04e9ea6862a23412cb377851bfdd7be |
-| 2026-07-02 14:41:00 | `file.write` | llmwiki/wiki/sources/draft/020726-wiki-core-relations.md · tool=Edit · actor=agent · prev=f34a3f00a267a0a971c785164a4ec6 |
-| 2026-07-02 14:42:07 | `file.write` | llmwiki/wiki/sources/draft/020726-wiki-core-relations.md · tool=Edit · actor=agent · prev=a452d0087c8841ae02a3d5253d5b26 |
-| 2026-07-02 14:59:56 | `file.write` | llmwiki/wiki/index.md · tool=Edit · actor=agent · prev=af7de97f1a74108f64ce2e0ea828b4e79c07e2b89edfc8cdbc8179690357f6c7  |
-| 2026-07-02 16:02:47 | `file.write` | llmwiki/.claude/hooks/wiki_ledger.py · tool=Edit · actor=agent · prev=19a4ebe7003abda5d7d716b5e81253fb3286528f3d9a6af4c4 |
-| 2026-07-02 16:02:55 | `file.write` | llmwiki/.claude/hooks/wiki_ledger.py · tool=Edit · actor=agent · prev=0e1cb48e4fb08ab3e866e2dc0c4e3dd6f69403078ed514885c |
-| 2026-07-02 16:02:59 | `file.write` | llmwiki/.claude/hooks/wiki_ledger.py · tool=Edit · actor=agent · prev=d77196543ebd2a8a7482b52a8088652ae267457042654e7fdb |
-| 2026-07-02 16:04:49 | `file.write` | skills/wiki-room/SKILL.md · tool=Write · actor=agent · prev=9c56048afcc55ec7e48462310803fa088f88dc1b9e6f1497f0ba61b48134 |
-| 2026-07-02 16:07:18 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Write · actor=agent · prev=b3f5d7921a94051d0dc562cb5812cb7ac18778a558afcb7058936ad7 |
-| 2026-07-02 16:08:44 | `file.write` | llmwiki/wiki/concepts/wiki-core-relations.md · tool=Edit · actor=agent · prev=5ebec1bb38b9c9b2d2c680ea0bff1d7f0c0fd7d0be |
+| 2026-07-02 16:59:43 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=52af825734efa320eab27a8061608694e72e95835cb25c9188b9349e5 |
+| 2026-07-02 17:00:17 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=26e876b2ba2858c559c9d3176628ee5985ad7803ccbcba0a358d3cecf |
+| 2026-07-02 17:00:41 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=4359fd62ce6983b3a409768f906a08a701b3ca25d10795c2a7fbf33b5 |
+| 2026-07-02 17:00:52 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=6af01326999fb8dcd1c723f83bab293adabc19e9ae871760fea940908 |
+| 2026-07-02 17:01:11 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=e09bf04ee5534473d40a0b5cd60b3eddff43c4ca0b427649cea6d04c1 |
+| 2026-07-02 17:07:58 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=a02f0efac6f99d3d8249428af287f8cd10dce1f74b83ca9fb26b2e19b |
+| 2026-07-02 17:08:08 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=a3d45d1f7cd8f6b9f5ea2f8bb8ea4225d05cdf5a1e4d819a0d3882f14 |
+| 2026-07-02 17:08:18 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=32a2f656e4f08a57eff6071915ef991c5ef0723a661c5fb72fad428a4 |
+| 2026-07-02 17:08:34 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=9afcc0733703a8cb762c04c1293086e522994d62b8b715bdd1fba84ba |
+| 2026-07-02 17:29:33 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Write · actor=agent · prev=10acf1ca774e3b4d98c032df7e1ef9be88da19c5d15dfae7e0b74920 |
+| 2026-07-02 17:32:07 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=86237fe0d5e1ffe8cd90577db9ecee01bf613b1af6e744f89f6cdb747 |
+| 2026-07-02 17:32:16 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=b7493230ab89870e19ccf456deb1cefa0caba1063f1a3d4765c07d270 |
+| 2026-07-02 17:32:49 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=aab55bb1d3c976ce0d75221dd34f34ac8e2fb914a59561bacd6d26861 |
+| 2026-07-02 17:34:19 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=e2d94704de420fc5a11e7ee0c24b936ed54d584028a9cacf9bcd4964b |
+| 2026-07-02 17:34:30 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=f9a7930d2bf741ceb4ccd8a48f32eb0ca9526ce4bdf585934dfd17e7d |
+| 2026-07-02 17:34:37 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=6627569fd7c97400616897d1836b200244abca36fdd5f9e8c07d051f8 |
+| 2026-07-02 17:34:44 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=6700c11311fcd975fe9006f65a05553ed9661573c7fcae2af5fc87c49 |
+| 2026-07-02 17:34:55 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=9291895738b288c5001209cf88ceb9f27a22e5e737787237e61d4bdfb |
+| 2026-07-02 17:37:02 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=4583f0190f4fff1f5eec8f6614da258002f0f3bf52d95307af9f41c30 |
+| 2026-07-02 17:37:20 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=f0114d1a0d8fffc5ec373aba72787650ca483a7a59de1c8b206d96a21 |
+| 2026-07-02 17:37:31 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=bce5911aa0bcf0336bddcd14fd2e8ee88e186fe7ba56fa6f8f61538d9 |
+| 2026-07-02 17:38:04 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=312fa9ad4f6612c749a1f2ed254d9e97df711da46bc63a144d5ff453d |
+| 2026-07-02 17:38:14 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=9e23e5876bd116980258a390ad87970d85a10b9fdd1832554d9c6bc29 |
+| 2026-07-02 17:41:38 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=0b6b4cab08b5df84e25d5c5c16104de2123d17f44e02f3ac46e814957 |
+| 2026-07-02 17:41:46 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=9a7d8dccd71e13631d1119fda182dddaf0d24be53c4775287bcfec7c8 |
+| 2026-07-02 17:41:53 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=560aaf2b155cb4d7f6ce53c519e177e445d1db2a13f7f8e73ba3c01ab |
+| 2026-07-02 17:42:01 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=e9dd6bf5562d16bddcbc51778a60c500d3cb058f9f122dbed65a970e8 |
+| 2026-07-02 17:42:13 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=93d82377683589fb73d5a8a604770667ee6996c746e549ca420d7c91c |
+| 2026-07-02 17:42:36 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=a46e843c94e512804314f04bf66af519255664ff8dbb9dc175dc4bae2 |
+| 2026-07-02 17:44:51 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=eaf3b983f6a6a9bca3a90cf04639c169ee01b71197024b8994792c352 |
+| 2026-07-02 17:48:01 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=55943227977e7dbc0a77a88767596c7e09142cc8a009cf30724bddcc1 |
+| 2026-07-02 17:48:10 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=e898552d9d3189d583134a6faf28630efee29923085b584ac895ecd57 |
+| 2026-07-02 17:48:19 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=dce446c3eba956d23e19a62eb33e64a34a3bc004a7ebf8a729c130eb5 |
+| 2026-07-02 17:48:36 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=37721d293d52d2d2e589e54a5368bd59c956fb6b1a56936efe8586399 |
+| 2026-07-02 17:48:46 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=1eddebed3fe4e3a0e15e74132d881d82c9b239dd218dc83d5ef88341d |
+| 2026-07-02 17:49:02 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=ebb22bf5e4ba58ddfdcfa4a209c41329066978661fb76fa3b0b46b5b0 |
+| 2026-07-02 17:49:12 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=a35f67a6d4996f88dc34482cc2ece75625d8b6e9a0f1c85daa0f97bc6 |
+| 2026-07-02 17:53:14 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=6a58439487f92284363337555c5dc621be89eed3a7c921d8fb58bb3b3 |
+| 2026-07-02 17:53:21 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=f72f562315f752ecdae68a495ae3f3861c56943382e28c3b5c442c16a |
+| 2026-07-02 17:53:31 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=13572310291e1b12ef710faf0c085d800b29f618e933e026a6706cdb5 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
