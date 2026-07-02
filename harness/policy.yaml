@@ -120,3 +120,20 @@ rules:
     enforce_at: [repo]
     applies_to: [commit-msg]
     note: "git commit-msg gate — pre-commit stage commit-msg (no-ai-attribution) + CI. Xem ADR-016."
+
+  - id: R16
+    name: report-show-path
+    validator: report_show_path.py
+    statement: "HTML report/visualization dưới llmwiki/html/ (trừ archive/, assets/) phải chứa đường dẫn tuyệt đối của chính nó (footer/titlebar) — người xem biết file nằm đâu để mở lại/sửa."
+    enforce_at: [session]
+    applies_to: [write]
+    note: "PostToolUse nhánh .html (llmwiki/.claude/hooks/post_tool_use.py). Nguồn: feedback 020726 + rule skill fdk."
+
+  - id: R17
+    name: problem-tree-flush
+    validator: session_end.py
+    statement: "SessionEnd: phiên có diff/untracked chạm bề mặt framework mà problem-tree chưa cập nhật → hook tự append node stub pending bằng code thuần (0 token); fallback problem-tree.html cho downstream; fail-open khi không có sổ."
+    enforce_at: [session]
+    event: SessionEnd
+    event_action: session-end
+    note: "llmwiki/.claude/hooks/session_end.py::flush_problem_tree. Đích: tắt app bình thường thì cây truy vết vẫn nằm đúng chỗ (feedback 020726)."

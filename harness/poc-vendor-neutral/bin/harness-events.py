@@ -150,9 +150,61 @@ def m_docs():
     return 0
 
 
+def m_session_end():
+    """R17 problem-tree-flush: phiên chạm framework mà sổ chưa cập nhật → append stub pending
+    bằng code thuần (0 token). Fail-open mọi nhánh. Bản vendor-neutral của
+    llmwiki/.claude/hooks/session_end.py::flush_problem_tree."""
+    import datetime
+    import re
+    import subprocess
+    r = root()
+    tree = None
+    for rel in ("llmwiki/html/fdk-problem-tree.html", "llmwiki/html/problem-tree.html"):
+        if os.path.isfile(os.path.join(r, rel)):
+            tree = os.path.join(r, rel)
+            break
+    if not tree:
+        return 0
+    try:
+        diff = subprocess.run(["git", "diff", "--name-only", "HEAD"], cwd=r,
+                              capture_output=True, text=True, timeout=10).stdout.split()
+        st = subprocess.run(["git", "status", "--porcelain"], cwd=r,
+                            capture_output=True, text=True, timeout=10).stdout
+        touched = set(diff) | {l[3:] for l in st.splitlines() if l.startswith("?? ")}
+    except Exception:
+        return 0
+    names = ("fdk-problem-tree.html", "problem-tree.html")
+    fw = sorted(p for p in touched
+                if p.startswith(("skills/", "harness/", "llmwiki/", "fdk/")) and not p.endswith(names))
+    if not fw or any(p.endswith(names) for p in touched):
+        return 0
+    try:
+        html = open(tree, encoding="utf-8").read()
+        m = re.search(r'(id="tree-data">\s*)(\[.*?\])(\s*</script>)', html, re.S)
+        if not m:
+            return 0
+        nodes = json.loads(m.group(2))
+        n = sum(1 for x in nodes if str(x.get("id", "")).startswith("p-auto-")) + 1
+        nodes.append({
+            "id": f"p-auto-{n:02d}", "parent": None,
+            "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
+            "desc": "Bề mặt bị chạm: " + ", ".join(fw[:8]) + (" …" if len(fw) > 8 else "")
+                    + ". Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát).",
+            "status": "open", "scope": [],
+            "date": datetime.date.today().strftime("%d/%m/%y"),
+            "session": (_stdin().get("session_id") or "unknown")[:8], "pending": True,
+        })
+        out = html[:m.start(2)] + json.dumps(nodes, ensure_ascii=False, indent=2) + html[m.end(2):]
+        open(tree, "w", encoding="utf-8").write(out)
+    except Exception:
+        pass
+    return 0
+
+
 def main():
     ev = sys.argv[1] if len(sys.argv) > 1 else ""
-    fn = {"stop": m_stop, "audit": m_audit, "session": m_session, "docs": m_docs}.get(ev)
+    fn = {"stop": m_stop, "audit": m_audit, "session": m_session, "docs": m_docs,
+          "session-end": m_session_end}.get(ev)
     try:
         sys.exit(fn() if fn else 0)
     except Exception:

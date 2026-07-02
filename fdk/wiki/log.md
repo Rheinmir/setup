@@ -1,5 +1,8 @@
 # Operation Log
 
+## 2026-07-02 — harness R15 — không ghi công AI trong commit
+User: dọn ghi công AI khỏi GitHub (filter-repo cắt 50 `Co-Authored-By: Claude` + 1 `Generated with`, force-push toàn bộ branch/tag; contributor "claude" còn lại chỉ là cache GitHub) → rồi "thêm ràng buộc vào /fdk … ý là phần harness luôn". Qua /fdk (pre-flight + propose + gate): thêm **R15 no-ai-attribution** — `process_gate` git `commit-msg` (validators/no_ai_attribution.py, chỉ quét message, fail-open, selftest PASS). Bắt Co-Authored-By:<AI> / Generated with|by <AI> / 🤖. Khai R15 ở cả policy prod (list) + poc (dict) → drift-test 45/0. `.pre-commit-config` +hook stage commit-msg; `install-harness.sh` +`--hook-type commit-msg`. E2E: commit bẩn BỊ CHẶN (HEAD không đổi). ADR-016 + rule-registry (bổ sung luôn R13/R14 còn thiếu) + decisions. Ghi vào /fdk mục Rules (luật mềm) — R15 là sàn cứng git-level.
+
 ## 2026-06-29 — anti-drift — meta-gate bnal-selftest + dọn rác lỗi-vị-trí
 User hỏi "sao vẫn drift, không có cơ chế ngầm?". Trả lời: gate cũ chỉ verify render==generator / config-có-ADAPT-CHECKLIST, KHÔNG ai cross-check "mọi script có --self-test ĐỀU được fdk-gate chạy" → thêm feature quên wire self-test thì trôi lọt. Thêm `bnal-selftest.py --check` (discover script có --self-test vs fdk-gate khai; thiếu→exit 2; EXEMPT fdk-gate/flywheel/bnal-selftest) + wire vào fdk-gate (17 step). Cũng tìm ra thủ phạm vụ `fdk/tools/` biến mất trước đây: có `fdk/wiki/tools/` = bản duplicate lỗi-vị-trí (untracked, thiếu edit mới) → đã xoá. fdk-gate 17/17.
 
@@ -273,3 +276,11 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 - 2026-07-01 18:36 — session `071d8d58` — 16 tool calls — files: 010726-query-retrieval-eval.md, answers.json, harness.yml, query-log.py, query-proxy.py, query-retrieval-eval.md, query.md, retrieval-eval.py
 - 2026-07-01 22:54 — session `87754f76` — 5 tool calls — files: 010726-21-quy-tac-docs.md, 010726-21-quy-tac.html, index.md, log.md
 - 2026-07-01 23:32 — session `43086569` — 7 tool calls — files: SKILL.md, answers.json, judges.json
+- 2026-07-02 08:13 — session `f7b1b1f6` — 31 tool calls — files: 020726-cor-pattern.md, SKILL.md, answers.json, co:controlled-output-pattern.md, cor-guide.md, cor.py, council.py, redesign-existing-projects.md
+- 2026-07-02 09:19 — session `4aaab8ea` — 11 tool calls — files: 020726-overstack-docs-redesign.md, build-overstack-docs.py
+- 2026-07-02 09:20 — session `aea1a0d5` — 14 tool calls — files: .pre-commit-config.yaml, ADR-016-no-ai-attribution-in-commits.md, LICENSE, SKILL.md, decisions.md, install-harness.sh, log.md, no_ai_attribution.py …
+- 2026-07-02 13:07 — session `bf38cf4e` — 47 tool calls — files: 020726-eval-report.md, 020726-orca-issue-ledger-travel-seq.html, 020726-orca-issue-ledger-travel.md, SKILL.md, fdk-problem-tree.html, flush_problem_tree.py, install.sh, post_tool_use.py …
+- 2026-07-02 13:08 — session `7c68668a` — 3 tool calls — files: 020726-adr-015-status.html, 020726-adr-015-status.md
+- 2026-07-02 13:08 — session `4aaab8ea` — 18 tool calls — files: 020726-overstack-docs-redesign.md, AGENT.md, CLAUDE.md, build-overstack-docs.py, sync-skills.py
+- 2026-07-02 13:08 — session `aea1a0d5` — 14 tool calls — files: .pre-commit-config.yaml, ADR-016-no-ai-attribution-in-commits.md, LICENSE, SKILL.md, decisions.md, install-harness.sh, log.md, no_ai_attribution.py …
+- 2026-07-02 13:08 — session `7aba727b` — 3 tool calls — files: 020726-openai-compat-endpoint-pools.html, 020726-openai-compat-endpoint-pools.md

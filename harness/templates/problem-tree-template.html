@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Problem Tree — sổ cây vấn đề của dự án</title>
+<style>
+  :root{
+    --blue-050:#eef6ff; --blue-100:#dbeafe; --blue-500:#3b82f6; --blue-700:#1d4ed8;
+    --ink:#0f2749; --ink-soft:#4a6285;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;
+    color:#0f2749; min-height:100vh; padding:40px 16px 80px;
+    background:
+      radial-gradient(1100px 600px at 15% -10%, #dbeafe 0%, transparent 60%),
+      radial-gradient(900px 700px at 110% 20%, #e0f2fe 0%, transparent 55%),
+      radial-gradient(800px 800px at 50% 120%, #dbeafe 0%, transparent 60%),
+      linear-gradient(180deg,#f0f7ff 0%,#e6f0fd 100%);
+  }
+  .window{
+    max-width:1080px;margin:0 auto;border-radius:22px;overflow:hidden;
+    background:rgba(255,255,255,.55);backdrop-filter:blur(28px) saturate(1.4);
+    -webkit-backdrop-filter:blur(28px) saturate(1.4);
+    border:1px solid rgba(255,255,255,.75);
+    box-shadow:0 24px 70px rgba(29,78,216,.14), inset 0 1px 0 rgba(255,255,255,.9);
+  }
+  .titlebar{display:flex;align-items:center;gap:8px;padding:13px 18px;
+    background:rgba(255,255,255,.5);border-bottom:1px solid rgba(148,187,255,.35)}
+  .dot{width:12px;height:12px;border-radius:50%}
+  .dot.r{background:#ff5f57}.dot.y{background:#febc2e}.dot.g{background:#28c840}
+  .titlebar span{margin-left:8px;font-size:13px;color:#5b7397;font-weight:500}
+  header.hero{padding:34px 38px 10px}
+  header.hero h1{font-size:26px;letter-spacing:-.02em}
+  header.hero p{margin-top:8px;color:#4a6285;font-size:14.5px;line-height:1.6;max-width:760px}
+  .legend{padding:14px 38px 6px;font-size:12.5px;color:#4a6285;line-height:1.6}
+  .legend p + p{margin-top:6px}
+  .legend b{font-weight:600}
+  .pillar{display:inline-block;font-size:10.5px;font-weight:600;padding:1px 7px;border-radius:999px;margin:0 4px 0 0}
+  .pillar.on{background:#dcfce7;color:#15803d}
+  .pillar.off{background:#f1f5f9;color:#94a3b8}
+  .pillars{margin:0 0 9px 6px;display:inline-block}
+  #stage{position:relative;padding:26px 38px 46px}
+  #wires{position:absolute;inset:0;pointer-events:none;z-index:0}
+  .lvl{display:flex;gap:22px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
+  .lvl + .lvl{margin-top:56px}
+  .node{
+    width:300px;border-radius:16px;padding:16px 18px;position:relative;
+    background:rgba(255,255,255,.72);backdrop-filter:blur(18px);
+    border:1px solid rgba(255,255,255,.9);
+    box-shadow:0 10px 30px rgba(29,78,216,.10), inset 0 1px 0 #fff;
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .node:hover{transform:translateY(-3px);box-shadow:0 16px 38px rgba(29,78,216,.16)}
+  .node .badge{
+    display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;
+    padding:3px 10px;border-radius:999px;margin-bottom:9px;letter-spacing:.02em;
+  }
+  /* màu theo ĐỘ PHỦ (0/3 nghiêm trọng nhất → 3/3 xong hẳn); xanh lá CHỈ khi 3/3 */
+  .node.c0 .badge{background:#fee2e2;color:#b91c1c}
+  .node.c1 .badge{background:#ffedd5;color:#c2410c}
+  .node.c2 .badge{background:#fef9c3;color:#a16207}
+  .node.c3 .badge{background:#dcfce7;color:#15803d}
+  .node.pending{border-style:dashed;border-color:#94a3b8;background:rgba(255,255,255,.5)}
+  .node.pending .badge{background:#e2e8f0;color:#475569}
+  .node.c0{border-left:4px solid #ef4444}
+  .node.c1{border-left:4px solid #f97316}
+  .node.c2{border-left:4px solid #eab308}
+  .node.c3{border-left:4px solid #22c55e}
+  .node .scope{
+    display:inline-flex;align-items:center;gap:5px;font-size:10.8px;font-weight:600;
+    padding:2px 9px;border-radius:999px;margin:0 0 9px 6px;letter-spacing:.02em;
+    background:#e0e9f7;color:#3f5a82;border:1px solid rgba(63,90,130,.18);
+  }
+  .node .scope.full{background:#dbeafe;color:#1d4ed8;border-color:rgba(29,78,216,.25)}
+  .node h3{font-size:15px;margin-bottom:6px;letter-spacing:-.01em}
+  .node p{font-size:12.8px;line-height:1.55;color:#4a6285}
+  .node .solvedby{margin-top:9px;font-size:11.8px;color:#15803d;background:rgba(220,252,231,.6);
+    border-radius:8px;padding:6px 9px;line-height:1.5}
+  .node .meta{margin-top:8px;font-size:10.8px;color:#8aa0bf;display:flex;gap:10px}
+  footer{padding:0 38px 30px;font-size:11.5px;color:#8aa0bf}
+</style>
+</head>
+<body>
+<div class="window">
+  <div class="titlebar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+    <span>problem-tree.html — sổ cây vấn đề (cập nhật qua orca-workflow / hook R17)</span></div>
+  <header class="hero">
+    <h1>🌳 Problem Tree — chúng ta đã giải tới đâu</h1>
+    <p>Cây vấn đề xuyên session (theo dõi qua nhiều phiên làm việc) của dự án này. Mỗi thẻ là một bài toán; đường nối cha→con được vẽ tự động từ vị trí thật của thẻ (tự vẽ lại khi đổi cỡ cửa sổ). Sổ chỉ-thêm-không-xoá: vấn đề được giải thì đổi nhãn trạng thái + ghi <em>giải bằng gì</em>, lịch sử giữ nguyên.</p>
+  </header>
+  <div class="legend">
+    <p><b>Cách đọc:</b> một vấn đề chỉ được coi là giải TRỌN khi lời giải được cài vào đủ <b>3 trụ</b> của framework:
+    <b>harness</b> (rào chắn tự động — code tự chặn/tự nhắc, không cần ai nhớ luật), <b>skills</b> (quy trình viết thành kỹ năng để agent làm theo), và <b>llmwiki</b> (nền tri thức — ghi lại để phiên sau còn biết).
+    Con số <b>x/3</b> trên mỗi thẻ = lời giải đã cài vào mấy trụ; hàng nhãn xanh/xám dưới badge liệt kê từng trụ <b>đã có ✓</b> / <b>còn thiếu ✗</b>.</p>
+    <p><b>Màu thẻ</b> theo mức đó — càng thiếu càng nghiêm trọng: <b style="color:#b91c1c">0/3 đỏ (chưa có gì)</b> → <b style="color:#c2410c">1/3 cam</b> → <b style="color:#a16207">2/3 vàng</b> → <b style="color:#15803d">3/3 xanh lá (chỉ khi đủ cả ba)</b>.</p>
+  </div>
+  <div id="stage"><svg id="wires"></svg></div>
+  <footer>Data nằm trong <code>#tree-data</code> — mỗi lần /fdk chỉ append/sửa JSON, không đụng markup. Nguồn quy tắc: skill <code>orca-workflow</code> § Sổ vấn đề quy trình (problem-tree).<br>
+  📄 File: <code id="self-path">(đang xác định…)</code><script>document.getElementById("self-path").textContent=decodeURIComponent(location.pathname);</script></footer>
+</div>
+
+<script type="application/json" id="tree-data">
+[]
+</script>
+
+<script>
+(function(){
+  const data = JSON.parse(document.getElementById('tree-data').textContent);
+  const stage = document.getElementById('stage');
+  const svg = document.getElementById('wires');
+  const LABEL = {solved:'SOLVED', partial:'PARTIAL', open:'OPEN'};
+  // độ phủ 3 trụ quyết định màu; xanh lá chỉ khi 3/3
+  const cov = n => n.scope === 'full' ? 3 : (Array.isArray(n.scope) ? Math.min(n.scope.length, 3) : 0);
+  const COLOR = ['#ef4444', '#f97316', '#eab308', '#22c55e'];
+  const ICONC = ['⭕', '🟠', '🟡', '✅'];
+
+  // xếp tầng theo độ sâu
+  const depth = n => n.parent == null ? 0 : 1 + depth(data.find(d => d.id === n.parent));
+  const levels = [];
+  data.forEach(n => { const d = depth(n); (levels[d] = levels[d] || []).push(n); });
+
+  levels.forEach(nodes => {
+    const row = document.createElement('div'); row.className = 'lvl';
+    nodes.forEach(n => {
+      const el = document.createElement('div');
+      const c = cov(n);
+      el.className = 'node c' + c + (n.pending ? ' pending' : ''); el.id = 'node-' + n.id;
+      // checklist 3 trụ: mỗi trụ một nhãn ✓ (đã cài) hoặc ✗ (còn thiếu)
+      const PILLARS = ['harness', 'skills', 'llmwiki'];
+      const has = pl => n.scope === 'full' || (Array.isArray(n.scope) && n.scope.includes(pl));
+      const scopeChip = '<span class="pillars">' + PILLARS.map(pl =>
+        '<span class="pillar ' + (has(pl) ? 'on' : 'off') + '">' + (has(pl) ? '✓' : '✗') + ' ' + pl + '</span>'
+      ).join('') + '</span>';
+      el.innerHTML =
+        '<span class="badge">' + (n.pending ? '⏳ PENDING — auto-flush, chờ distill' : ICONC[c] + ' ' + LABEL[n.status] + ' ' + c + '/3') + '</span>' + (n.pending ? '' : scopeChip) +
+        '<h3>' + n.title + '</h3><p>' + n.desc + '</p>' +
+        (n.solvedBy ? '<div class="solvedby">↳ giải bằng: ' + n.solvedBy + '</div>' : '') +
+        '<div class="meta"><span>' + n.id + '</span><span>' + n.date + '</span>' +
+        (n.session ? '<span>' + n.session + '</span>' : '') + '</div>';
+      row.appendChild(el);
+    });
+    stage.appendChild(row);
+  });
+
+  // vectorizer: vẽ connector cha→con bằng bezier từ toạ độ thật
+  function draw(){
+    const sr = stage.getBoundingClientRect();
+    svg.setAttribute('width', sr.width); svg.setAttribute('height', sr.height);
+    svg.innerHTML = '';
+    data.filter(n => n.parent).forEach(n => {
+      const p = document.getElementById('node-' + n.parent).getBoundingClientRect();
+      const c = document.getElementById('node-' + n.id).getBoundingClientRect();
+      const x1 = p.left + p.width/2 - sr.left, y1 = p.bottom - sr.top;
+      const x2 = c.left + c.width/2 - sr.left, y2 = c.top - sr.top;
+      const my = (y1 + y2) / 2;
+      const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+      path.setAttribute('d', `M ${x1} ${y1} C ${x1} ${my}, ${x2} ${my}, ${x2} ${y2}`);
+      path.setAttribute('fill','none');
+      path.setAttribute('stroke', COLOR[cov(n)]);
+      path.setAttribute('stroke-width','2'); path.setAttribute('opacity','.55');
+      path.setAttribute('stroke-linecap','round');
+      svg.appendChild(path);
+    });
+  }
+  draw();
+  addEventListener('resize', draw);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# sync-skill.sh <tên-skill> [...] — đồng bộ 1 skill từ bản canonical ra 2 bản còn lại:
+#   canonical : skills/<tên>/SKILL.md            (nguồn sự thật)
+#   mirror    : llmwiki/skills/<loop>/<tên>.md   (tự dò loop dir đang có)
+#   installed : ~/.claude/skills/<tên>/SKILL.md  (bản máy user, phiên nào cũng đọc)
+# Sinh ra từ eval 020726: sync tay bằng cp lặp 3 lần/phiên → drift khi quên (finding #2).
+set -euo pipefail
+cd "$(git rev-parse --show-toplevel)"
+
+[ $# -ge 1 ] || { echo "usage: sync-skill.sh <tên-skill> [...]"; exit 2; }
+
+fail=0
+for name in "$@"; do
+  src="skills/$name/SKILL.md"
+  if [ ! -f "$src" ]; then echo "✗ $name: thiếu canonical $src"; fail=1; continue; fi
+
+  mirror=$(ls llmwiki/skills/*/"$name".md 2>/dev/null | head -1 || true)
+  if [ -n "$mirror" ]; then
+    cp "$src" "$mirror" && echo "✓ $name → $mirror"
+  else
+    echo "⚠ $name: chưa có mirror trong llmwiki/skills/*/ — đăng ký bằng new-skill.py trước"
+  fi
+
+  inst="$HOME/.claude/skills/$name/SKILL.md"
+  mkdir -p "$(dirname "$inst")"
+  cp "$src" "$inst" && echo "✓ $name → $inst"
+
+  # verify parity — sync mà không kiểm là vòng phản hồi cụt
+  [ -z "$mirror" ] || diff -q "$src" "$mirror" >/dev/null
+  diff -q "$src" "$inst" >/dev/null
+done
+exit $fail

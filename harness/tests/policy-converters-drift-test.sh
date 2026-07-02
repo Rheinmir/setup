@@ -46,7 +46,7 @@ for g in deny:
 # 4) hook_event → claude settings event wiring đúng kỳ vọng
 claude = json.loads((out / "claude/settings.snippet.json").read_text(encoding="utf-8"))
 hooks = claude["hooks"]
-EXPECT = {"R3": "Stop", "R4": "PostToolUse", "R8": "SessionStart", "R10": "UserPromptSubmit"}
+EXPECT = {"R3": "Stop", "R4": "PostToolUse", "R8": "SessionStart", "R10": "UserPromptSubmit", "R17": "SessionEnd"}
 for r in rules.values():
     if r.get("kind") == "hook_event":
         ev = r.get("event")

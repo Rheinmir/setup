@@ -22,6 +22,12 @@ Claude: analyze. Others: execute. Kill opencode nếu chờ quá lâu.
 - "chạy lint", "verify wiki"
 - "sync template", "upstream"
 
+## Rẽ nhánh: SỰ CỐ ≠ tính năng
+Đầu vào là **sự cố** (bug, lỗi runtime, regression, "hôm qua còn chạy") → **GỌI skill `orca-issue`** thay vì propose: vòng riêng triage → repro-first gate (chưa tái hiện chưa được sửa) → fix red→green → distill kép. Sự cố nặng cần fan-out thì orca-issue escalate ngược về đây để dispatch, nhưng 2 chốt cứng của nó vẫn giữ.
+
+## Sổ vấn đề quy trình (problem-tree) — convention mọi dự án
+Dự án có `llmwiki/` thì sổ cây vấn đề nằm ở `llmwiki/html/problem-tree.html` (repo framework: `fdk-problem-tree.html`). Phiên nào **phát hiện hoặc giải một vấn đề quy trình/framework** → cập nhật node vào block JSON `#tree-data` (append-only; solved phải ghi `solvedBy`; scope theo 3 trụ harness/skills/llmwiki — xanh lá chỉ khi 3/3). Quên cũng không mất: hook SessionEnd (R17) tự ghi thẻ pending bằng code, lần sau distill.
+
 ## Workflow: propose
 
 0. **R12 (B) — pre-work sweep cả workspace (MỘT LẦN, trước khi làm / fan-out đa-agent)**: orchestrator chạy `harness/poc-vendor-neutral/bin/pull-gate-sweep.sh` — quét MỌI subrepo (từ `.harness-workspace.yaml`, thiếu → auto-discover harnessed), fetch song song; subrepo **TARGET** sau remote → DỪNG, `git pull --rebase` trong repo đó rồi mới dispatch (cả đàn agent chung base tươi); subrepo `watch` chỉ cảnh báo. 1 repo → sweep tự rút về `pull-gate.sh`. Offline → fail-open. **KHÔNG chặn từng-edit** (cố tình bỏ per-edit PreToolUse). **R12 (C)** gate2 per-repo: cài mọi subrepo bằng `install-harness.sh --all-subrepos`; check tay `pull-gate.sh gate2`.

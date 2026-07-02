@@ -173,6 +173,14 @@ if [ "$WITH_WIKI" = 1 ]; then
     else
       warn "  overstack.html chưa tải được (mạng?) → lấy tay: $REPO_RAW/llmwiki/html/overstack.html"
     fi
+    # sổ cây vấn đề (problem-tree) — seed CHỈ khi chưa có, không bao giờ ghi đè sổ đang dùng
+    if [ ! -f "$ROOT/llmwiki/html/problem-tree.html" ] && [ ! -f "$ROOT/llmwiki/html/fdk-problem-tree.html" ]; then
+      if curl -fsSL "$REPO_RAW/harness/templates/problem-tree-template.html" -o "$ROOT/llmwiki/html/problem-tree.html" 2>/dev/null; then
+        log "  ✓ llmwiki/html/problem-tree.html (sổ cây vấn đề — hook R17 tự xả sổ khi phiên kết thúc)"
+      else
+        warn "  problem-tree template chưa tải được (mạng?) — hook R17 sẽ fail-open tới khi có sổ"
+      fi
+    fi
   fi
 fi
 

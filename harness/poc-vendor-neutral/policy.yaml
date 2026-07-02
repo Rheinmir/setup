@@ -186,3 +186,25 @@ rules:
       - "**/llmwiki/patterns/**"
       - "llmwiki/patterns/**"
     handler: "harness/validators/patterns_guard.py · PreToolUse; unlock qua env. Adapter pattern-library.config.yaml (verified:false). ADR-014."
+
+  report_show_path:
+    id: R16
+    name: report-show-path
+    kind: content_check
+    statement: "HTML report/visualization dưới llmwiki/html/ (trừ archive/, assets/) phải chứa đường dẫn tuyệt đối của chính nó (footer/titlebar) — người xem biết file nằm đâu để mở lại/sửa."
+    enforce_at: [session]
+    target_globs: ["**/llmwiki/html/*.html"]
+    handler: "harness/validators/report_show_path.py · PostToolUse (llmwiki/.claude/hooks/post_tool_use.py nhánh .html). Nguồn: feedback 020726 + rule skill fdk."
+    blocking: true
+
+  problem_tree_flush:
+    id: R17
+    name: problem-tree-flush
+    kind: hook_event
+    statement: "SessionEnd: phiên có diff/untracked chạm bề mặt framework (skills/ harness/ llmwiki/ fdk/) mà problem-tree chưa được cập nhật → hook tự append node stub pending vào llmwiki/html/fdk-problem-tree.html bằng code thuần (0 token). Lần /fdk kế tiếp distill. Báo cáo, không chặn — SessionEnd không block được."
+    enforce_at: [session]
+    event: SessionEnd
+    event_action: session-end
+    timeout: 15
+    handler: "harness-events.py session-end · llmwiki/.claude/hooks/session_end.py::flush_problem_tree. Đích: tắt app bình thường thì cây truy vết vẫn nằm đúng chỗ (feedback 020726)."
+    blocking: false

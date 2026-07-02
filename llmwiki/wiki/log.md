@@ -19,46 +19,46 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-02 00:26:06 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=6ba523971cb79da97ad8de8a06aa49e2edec4d57d5b0e4f3e7b1c9f62875aa0 |
-| 2026-07-02 01:02:37 | `file.write` | harness/scripts/lib/cor.py · tool=Write · actor=agent · prev=9669b9b645bc3cb616a439c1a8361d399fc4fffea464be57d2a1afaec4e |
-| 2026-07-02 01:02:54 | `file.write` | harness/scripts/lib/cor.py · tool=Edit · actor=agent · prev=e47e4e75ac9fa27482cc490b1c8d6b7e73cad69175395fffdc029842d84b |
-| 2026-07-02 01:03:19 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=2d25c886d8341771a80a7f1e91bfc978cad8f41eaa42d68dd77609a7efaa |
-| 2026-07-02 01:03:33 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=a1fc201b76bb0e59f20a429cbf4f8e664050d3b0fe400e71caeadbb66e95 |
-| 2026-07-02 01:04:09 | `file.write` | harness/scripts/lib/cor.py · tool=Edit · actor=agent · prev=107b186590c4b5625672595f17a607b8ac744d23f734f9c3a913f6f34023 |
-| 2026-07-02 01:04:51 | `file.write` | harness/docs/cor-guide.md · tool=Write · actor=agent · prev=8024b1f2ebe5a2914199bc469d74191210f3af51df5b1a3425e7c4c95b08 |
-| 2026-07-02 01:05:19 | `file.write` | llmwiki/wiki/draft/uiux/020726-cor-pattern.md · tool=Write · actor=agent · prev=e730addd20397acf79ea93f69b36e66a96e9b56f |
-| 2026-07-02 08:50:41 | `file.write` | skills/fdk/SKILL.md · tool=Edit · actor=agent · prev=8be3161168531ced87cbd154050e2309a90535549009449100a3299abf9c3a93 ·  |
-| 2026-07-02 09:02:44 | `file.write` | llmwiki/html/020726-openai-compat-endpoint-pools.html · tool=Write · actor=agent · prev=0b8ae75ca6c5367c6442706afbce2657 |
-| 2026-07-02 09:03:07 | `file.write` | llmwiki/wiki/sources/draft/020726-openai-compat-endpoint-pools.md · tool=Write · actor=agent · prev=e204bdabd76f2b2ad3a9 |
-| 2026-07-02 09:03:12 | `file.write` | llmwiki/wiki/sources/draft/020726-openai-compat-endpoint-pools.md · tool=Edit · actor=agent · prev=bf4397046029ab6961c25 |
-| 2026-07-02 09:05:26 | `file.write` | harness/validators/no_ai_attribution.py · tool=Write · actor=agent · prev=5b5aa6668091f84c52d95ae0d7ec5d9c3f94bac37503d3 |
-| 2026-07-02 09:05:42 | `file.write` | harness/poc-vendor-neutral/policy.yaml · tool=Edit · actor=agent · prev=e28ca387186623dd27ca2034ac335ab46e6f2940cde50366 |
-| 2026-07-02 09:06:12 | `file.write` | harness/policy.yaml · tool=Edit · actor=agent · prev=44adc464594b3d1dbd5e26040d000f241ab2406801b210d878251a12095e8307 ·  |
-| 2026-07-02 09:06:41 | `file.write` | harness/scripts/install-harness.sh · tool=Edit · actor=agent · prev=6ba22d8c2b40a29370fb939a6d7433f0f4a1ff2d58d8ba20ffd2 |
-| 2026-07-02 09:07:46 | `file.write` | fdk/wiki/sources/adr/ADR-016-no-ai-attribution-in-commits.md · tool=Write · actor=agent · prev=1229cedb9f0dce29b0f6f09b0 |
-| 2026-07-02 09:07:57 | `file.write` | fdk/wiki/sources/adr/ADR-016-no-ai-attribution-in-commits.md · tool=Edit · actor=agent · prev=1eff18fa30f6057e1b0571d346 |
-| 2026-07-02 09:08:15 | `file.write` | fdk/wiki/concepts/rule-registry.md · tool=Edit · actor=agent · prev=208a1731fee28365ad7add92996cc0905098fbf4c7460635a496 |
-| 2026-07-02 09:08:20 | `file.write` | fdk/wiki/concepts/rule-registry.md · tool=Edit · actor=agent · prev=850588aaedf205427f5a4bba3aa7fbdf0395bb7f67c70d7cabba |
-| 2026-07-02 09:08:27 | `file.write` | fdk/wiki/decisions.md · tool=Edit · actor=agent · prev=f2a29cc84a7074a32a1325c681723a10d11ded27f4183a81a4bda853b4145201  |
-| 2026-07-02 09:08:45 | `file.write` | fdk/wiki/log.md · tool=Edit · actor=agent · prev=1492b98f339169a551004429f6b93daaa44fa7dc226fab8843fdfa301859f2b3 · h=4f |
-| 2026-07-02 09:09:49 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=4f9f982a4cc1aa924551402a1f6996a47eb6d875a8868caced485 |
-| 2026-07-02 09:11:19 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=720ea0714b576a46887f5945f7d1062e5c3c78ec9e736784c9183 |
-| 2026-07-02 09:13:45 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=69084ef2014b21d0857f2156f183ea33d677f16e926361edcffa0 |
-| 2026-07-02 09:13:53 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=508211a83910553b6d7bc4c67e460e72ad8e314fe9b52ae1daaf4 |
-| 2026-07-02 09:14:58 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=831cc813f1558290b02507910f9fd988095a6a3f61e7d9d994f3b |
-| 2026-07-02 09:15:06 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=9cd295cb33704847739d4e9e28f7e99714cda4b068e62b7360b46 |
-| 2026-07-02 09:15:12 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=07cbd502c7f69450ffbd020c02fae95a16a36f80e5eef2cfa1276 |
-| 2026-07-02 09:16:56 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=d7c5d9fb8b2324fcf79f077b7a6bd398afb1671da49f5681ca1f9 |
-| 2026-07-02 09:17:21 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=d15982646498e4aeca6b97ca6e5dc1fa764ccc2b0451cbd9d5bbb |
-| 2026-07-02 09:17:39 | `file.write` | llmwiki/html/020726-adr-015-status.html · tool=Write · actor=agent · prev=14a15504770a699cc5721a8176409264a842f2c746bfc7 |
-| 2026-07-02 09:17:53 | `file.write` | llmwiki/wiki/draft/uiux/020726-overstack-docs-redesign.md · tool=Write · actor=agent · prev=28bc720c9f395cbc1260728c507f |
-| 2026-07-02 09:18:00 | `file.write` | llmwiki/wiki/sources/draft/020726-adr-015-status.md · tool=Write · actor=agent · prev=9dbd3d5d762297b41a38c25837ee0993ea |
-| 2026-07-02 09:18:08 | `file.write` | llmwiki/wiki/draft/uiux/020726-overstack-docs-redesign.md · tool=Edit · actor=agent · prev=a634fc26711b83854215c196eabce |
-| 2026-07-02 09:18:09 | `file.write` | llmwiki/wiki/sources/draft/020726-adr-015-status.md · tool=Edit · actor=agent · prev=d823ee3982dbb893c34ddc3f3e05d33cbbe |
-| 2026-07-02 09:28:37 | `file.write` | harness/scripts/sync-skills.py · tool=Edit · actor=agent · prev=f2a7b13cc8488a48f6f79edcbfdfcd61b7ee9829b803fc2f8cf2f03b |
-| 2026-07-02 09:28:42 | `file.write` | harness/scripts/sync-skills.py · tool=Edit · actor=agent · prev=58b6c6d0ddbda73a84230a7bbab20bc227c78c4f578fe0929d92934e |
-| 2026-07-02 09:28:48 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=93ebc2ac88f8ed37095d8a050e8bf9451e864531af8c0578e33a7 |
-| 2026-07-02 09:28:58 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=5aec3b12656708f5a428db927388a6e15fbb6fe9b76df18984e3f |
+| 2026-07-02 11:26:24 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=a3ce2ecaa567912a2196820bd6177398fc3123be18364c00d7b1 |
+| 2026-07-02 11:26:27 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=f5303f4a3ed8b1d4de3090cd8f484115fbeafe923df0225bc33c |
+| 2026-07-02 11:26:30 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=fc2d20e211a05331cc6119aad263a12c9a1b241a566d9b0e8f29 |
+| 2026-07-02 11:28:55 | `file.write` | skills/fdk/SKILL.md · tool=Edit · actor=agent · prev=2086eed4c9cce37081ef12c1c3cbadbe6baadf09faa1b2530b7f59db375e08aa ·  |
+| 2026-07-02 11:29:00 | `file.write` | skills/fdk/SKILL.md · tool=Edit · actor=agent · prev=61ed26fcfa1170683471b749c2ba78a7d32234ec790ef369575ab6699ffe9cb8 ·  |
+| 2026-07-02 11:29:19 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=9d2ca119eb5da37394f7b347ce120c869a77eaaad86d7e80edaf |
+| 2026-07-02 11:29:23 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=54b2142ad17e39220dbd97c24d45de663887ae9898b7bc87a7a2 |
+| 2026-07-02 11:29:34 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=c5b464ee96deef570497f11df30ca183c95432eafa874423aa1e |
+| 2026-07-02 11:29:40 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=dfe606961f1bc43e286baa88eff5b4e7cdd7abad6b6e68d43d5e |
+| 2026-07-02 11:29:41 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=aedfb9a5c74a40b598054e312bfcb32843c4264d9902b67d5f3c |
+| 2026-07-02 11:31:47 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=78998fff037735a08d9094ce4ea3f49cd832d2430182afa348d8 |
+| 2026-07-02 12:20:57 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=11be0ea1d274165734c150c354dda5a04898bf28553d1c620405 |
+| 2026-07-02 12:20:58 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=e37e37ceb5e9f881064dc984c0f22b38a3d94853a2429d5d03cc |
+| 2026-07-02 12:21:00 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=775c24408ac1ba8324168977b4057644cbbbbf224dde894c9f8a |
+| 2026-07-02 12:28:08 | `file.write` | skills/fdk/SKILL.md · tool=Edit · actor=agent · prev=0535039f1504c8361f14f7ab78f529e2a353ad63b5e67b47234fc58850283a08 ·  |
+| 2026-07-02 12:28:24 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=e14ba6d45be7b8cf5266c2aafe2d79e81c76e105840fe3d7aa5a |
+| 2026-07-02 12:28:35 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=da6d609bab34188489a569c564b2158667b14e0ecf258f199bd0 |
+| 2026-07-02 12:31:56 | `file.write` | skills/fdk/SKILL.md · tool=Edit · actor=agent · prev=cd2de553e39ea06455c166dfbadb94c11518681cb5385aa0bb56b6e5bfd982db ·  |
+| 2026-07-02 12:32:44 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=3f7ebd1728a7d2f7f684a848237ed863d5cd3f707198a05e6d32 |
+| 2026-07-02 12:32:52 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=17b4e2bef90d59d3dee1f0c83d3bcaef6c1d72aeccd1ea932d73 |
+| 2026-07-02 12:33:11 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=5cc575cdb03713d0916280a6bda8b5fb6a728b6fc85192775f59 |
+| 2026-07-02 12:33:26 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=5cdd2622037eba60ce59c2eb8ea716e96219b80ec1ce7fc197f5 |
+| 2026-07-02 12:38:42 | `file.write` | skills/fdk/SKILL.md · tool=Edit · actor=agent · prev=00f03c8259bc083f97aa9139196957d6667c82f212edfc162b99aa924bed24cc ·  |
+| 2026-07-02 12:41:57 | `file.write` | llmwiki/wiki/sources/draft/020726-eval-report.md · tool=Write · actor=agent · prev=d02f0f8be1a6f04e765b0c9e120a62528b764 |
+| 2026-07-02 12:42:08 | `file.write` | llmwiki/wiki/sources/draft/020726-eval-report.md · tool=Edit · actor=agent · prev=023f472e9427e93895264e589a7a44df440253 |
+| 2026-07-02 12:45:36 | `file.write` | fdk/tools/sync-skill.sh · tool=Write · actor=agent · prev=9610569284b5c81703a5f5f69cd3f15947a57de3ec8bb652964095e7dc64f3 |
+| 2026-07-02 12:45:54 | `file.write` | skills/fdk/SKILL.md · tool=Edit · actor=agent · prev=c6570d74a2affb1877c7f90935080683c6193196dfed96374971bbf6574753fb ·  |
+| 2026-07-02 12:47:08 | `file.write` | harness/validators/report_show_path.py · tool=Write · actor=agent · prev=49e613de5b6d5c53f671b17154541b767298be35fe17059 |
+| 2026-07-02 12:47:20 | `file.write` | llmwiki/.claude/hooks/post_tool_use.py · tool=Edit · actor=agent · prev=38680a45436f5d289fe31eb6d2cde267ef2596947cadb075 |
+| 2026-07-02 12:47:41 | `file.write` | llmwiki/.claude/hooks/session_end.py · tool=Edit · actor=agent · prev=7f177268894fdf793918ca7950e0cf84c21df0755e384e6638 |
+| 2026-07-02 12:47:50 | `file.write` | llmwiki/.claude/hooks/session_end.py · tool=Edit · actor=agent · prev=5cdc2aaa13b69722754680e6c765b92a4a1f53550832db66df |
+| 2026-07-02 12:52:49 | `task.new` |  · task=T-260702-01 · title=orca-issue + ledger travel (p-02, p-04) · state=proposed · actor=agent · prev=4bcac2f15648c6 |
+| 2026-07-02 12:54:09 | `file.write` | llmwiki/wiki/sources/draft/020726-orca-issue-ledger-travel.md · tool=Write · actor=agent · prev=9ea9e5aa58d3004a97723c8d |
+| 2026-07-02 12:55:58 | `file.write` | llmwiki/html/020726-orca-issue-ledger-travel-seq.html · tool=Write · actor=agent · prev=75147860a8ddef8bcf2b278e0ba270d9 |
+| 2026-07-02 13:00:05 | `file.write` | skills/orca-issue/SKILL.md · tool=Write · actor=agent · prev=574cf76fb1ec9fa6470a099f01331c2df640824b0e08372c6e2f825fa53 |
+| 2026-07-02 13:01:33 | `file.write` | skills/orca-workflow/SKILL.md · tool=Edit · actor=agent · prev=ed8a065a33fa318d277391471a0ecc4550a1cff7e24484f512996c90a |
+| 2026-07-02 13:02:23 | `file.write` | harness/poc-vendor-neutral/install.sh · tool=Edit · actor=agent · prev=804c4c309725acd2f4d5b08bfad9e28f98abaf5e7702f7fbd |
+| 2026-07-02 13:02:57 | `file.write` | llmwiki/.claude/hooks/session_end.py · tool=Edit · actor=agent · prev=8e1a1cec86179e0a9ad94b7325d7b91cf8ace44126efae76e4 |
+| 2026-07-02 13:03:05 | `file.write` | llmwiki/.claude/hooks/session_end.py · tool=Edit · actor=agent · prev=0fa2cd32cdb9a166b951eb749bb6f844d93fedff4b1c35b3e5 |
+| 2026-07-02 13:04:20 | `file.write` | llmwiki/wiki/concepts/problem-tree.md · tool=Write · actor=agent · prev=450e568a2caaa2b2fbd497ab07f13229cec02024715da5a7 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -72,3 +72,9 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 ## 2026-07-02 — docs-site-macos — adr-015-status
 
 ## 2026-07-02 — redesign-existing-projects — overstack-docs-redesign
+
+## 2026-07-02 — orca-eval — eval-report session hiện tại (lens Meadows)
+
+## 2026-07-02 — propose — orca-issue-ledger-travel (T-260702-01, p-02+p-04)
+
+## 2026-07-02 — orca-issue+ledger-travel — T1-T5 implemented (skill orca-issue, orca-workflow rẽ nhánh, seed template, R17 fallback, concept problem-tree)

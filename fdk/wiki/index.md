@@ -68,3 +68,5 @@
 | [boris-cherny-agent-roles](concepts/boris-cherny-agent-roles.md) | concept | "Boris Cherny — 5 agent role trong Claude Code (scope deep-dive)" |
 | [ADR-015-boris-archetypes-into-template](sources/adr/ADR-015-boris-archetypes-into-template.md) | source | "ADR-015: áp 5 archetype Boris Cherny vào template — sweep-gate (nhịp Sweeper) + persona dispatch + phase-map" |
 | [outer-harness-evaluation](concepts/outer-harness-evaluation.md) | concept | 2026-06-30 — Distill Outer Harness (Phúc) + council 3-ghế đánh giá: overstack mạnh Trụ 2/4, thiếu Trụ 1 (cost) & 5 (audit); roadmap per-run JSONL trước |
+| [fdk-dev-strategy](concepts/fdk-dev-strategy.md) | concept | 8 nguyên tắc "Mongol pattern" cho phát triển framework — decision latency, chuẩn hóa, modular, intelligence-first, logistics/harness, demo liên tục |
+| [mongol-ai-strategy](sources/mongol-ai-strategy.md) | source | Nguồn raw: 8 bài học Đế quốc Mông Cổ → chiến lược AI (`llmwiki/raw/fdk-stragegy.md`) |

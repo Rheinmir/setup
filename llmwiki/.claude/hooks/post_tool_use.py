@@ -22,10 +22,19 @@ def main() -> None:
     if rel and not rel.startswith("..") and rel.startswith(("llmwiki/", "harness/", "skills/", "fdk/", ".github/")):
         code_log(root, "--record", "file.write", f"path={rel}", f"tool={tool}")
 
-    if not fp.endswith(".md"):
-        sys.exit(0)
     vdir = find_validators(root)
     if vdir is None:
+        sys.exit(0)
+
+    # R16: HTML report phải tự khai đường dẫn của mình
+    if fp.endswith(".html"):
+        rc, err = run_validator("report_show_path.py", {"action": "write", "file_path": fp}, vdir)
+        if rc == 2:
+            print(err, file=sys.stderr)
+            sys.exit(2)
+        sys.exit(0)
+
+    if not fp.endswith(".md"):
         sys.exit(0)
 
     # không truyền content → validator đọc file đã ghi trên disk (trạng thái cuối)
