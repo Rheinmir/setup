@@ -450,7 +450,7 @@ function refresh(){{
     var soft=(e.rel==='wikilink');
     var show = active ? !!relFilter[e.rel] : (showSoft.checked||!soft);   // có lọc → chỉ loại được tick
     if(focus) show = show && (e.from===focus.id||e.to===focus.id);
-    else show = show && (baseVisible(byId[e.from])&&baseVisible(byId[e.to]));
+    else if(!active) show = show && (baseVisible(byId[e.from])&&baseVisible(byId[e.to]));  // lọc thì bỏ ràng buộc wiki chính/phụ
     e._p.style.display=show?'':'none'; if(show){{edgePath(e);lit[e.from]=1;lit[e.to]=1;}}
   }});
   // node: mờ nếu không nằm trong tiêu điểm / không dính dây nào đang hiện
