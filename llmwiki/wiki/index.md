@@ -46,6 +46,7 @@
 | [020726-openai-compat-endpoint-pools](sources/draft/020726-openai-compat-endpoint-pools.md) | draft | 2026-07-02 |
 | [020726-adr-015-status](sources/draft/020726-adr-015-status.md) | draft | 2026-07-02 |
 | [020726-eval-report](sources/draft/020726-eval-report.md) | draft | 2026-07-02 |
-| [020726-orca-issue-ledger-travel](sources/draft/020726-orca-issue-ledger-travel.md) | draft | 2026-07-02 |
+| [020726-orca-issue-ledger-travel](sources/020726-orca-issue-ledger-travel.md) | draft | 2026-07-02 |
 | [problem-tree](concepts/problem-tree.md) | concept | 2026-07-02 |
 | [020726-overstack-docs-redesign](draft/uiux/020726-overstack-docs-redesign.md) | draft | 2026-07-02 |
+| [020726-ingest-fdk-strategy](sources/draft/020726-ingest-fdk-strategy.md) | draft | Ingest fdk-stragegy.md → pattern 8 nguyên tắc "Mongol" cho dev fdk (ghi vào fdk/wiki) |

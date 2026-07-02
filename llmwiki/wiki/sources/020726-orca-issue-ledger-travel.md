@@ -1,16 +1,16 @@
 ---
 type: draft
 title: "orca-issue loop + problem-tree travel (p-02, p-04)"
-status: proposed
+status: implemented
 tags: [propose, orca-issue, problem-tree, distribution, systems-thinking]
 timestamp: 2026-07-02
 task: T-260702-01
 ---
 
 # 020726-orca-issue-ledger-travel
-**Status:** proposed
+**Status:** implemented
 **Task:** T-260702-01
-**Sequence diagram:** [020726-orca-issue-ledger-travel-seq.html](../../../html/020726-orca-issue-ledger-travel-seq.html)
+**Sequence diagram:** [020726-orca-issue-ledger-travel-seq.html](../../html/020726-orca-issue-ledger-travel-seq.html)
 
 ## Context
 
@@ -83,4 +83,5 @@ Một câu: tạo skill điều phối `orca-issue` (vòng xử lý sự cố: b
 ## Origin
 - **Draft:** `wiki/sources/draft/020726-orca-issue-ledger-travel.md`
 - **Nguồn vấn đề:** ledger `llmwiki/html/fdk-problem-tree.html` node p-02, p-04 (session 020726) + eval `020726-eval-report.md`
-- **Commit:** _(filled by verify-before-commit)_
+- **Commit:** 49d2361 — feat(harness+skills): problem-tree ledger đủ 3 trụ + vòng orca-issue (T-260702-01)
+- **Date promoted:** 2026-07-02
