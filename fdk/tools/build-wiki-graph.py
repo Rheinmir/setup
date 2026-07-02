@@ -11,8 +11,10 @@ Usage:
   # vd: build-wiki-graph.py llmwiki/wiki --also fdk/wiki   (mặc định sáng llmwiki, mờ fdk)
 """
 import argparse
+import ast
 import json
 import re
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -26,13 +28,13 @@ WIKILINK_RE = re.compile(r"\[\[([^\]\n|]+)\]\]")
 REL_COLORS = {
     "derives-from": "#30b0c7", "depends-on": "#5856d6", "implements": "#34c759",
     "supersedes": "#ff9500", "touches": "#8e8e93", "contradicts": "#ff2d55",
-    "wikilink": "#9aa4b2",
+    "imports": "#a0522d", "wikilink": "#9aa4b2",
 }
 REL_VI = {
     "derives-from": "chưng cất từ (nguồn gốc)", "depends-on": "phụ thuộc vào",
     "implements": "hiện thực (quyết định/ADR)", "supersedes": "thay thế (bản cũ)",
     "touches": "chạm file code", "contradicts": "mâu thuẫn với",
-    "wikilink": "liên quan mềm (wikilink trong thân bài)",
+    "imports": "code import code", "wikilink": "liên quan mềm (wikilink trong thân bài)",
 }
 
 
@@ -227,6 +229,11 @@ box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 3px 12px rgba(20,40,90,.1);tran
 </div></body></html>"""
 
 
+def _mk_code_node(path):
+    return {"id": path, "path": path, "group": "code", "type": "code",
+            "title": path, "wiki": "code", "label": path.rsplit("/", 1)[-1]}
+
+
 def add_code_nodes(nodes, edges):
     """Thêm node lá cho target của quan hệ `touches` (đường dẫn code) để cạnh wiki→code hiện ra."""
     ids = {n["id"] for n in nodes}
@@ -234,9 +241,66 @@ def add_code_nodes(nodes, edges):
     for e in edges:
         if e.get("kind") == "path" and e["to"] not in ids and e["to"] not in seen:
             seen.add(e["to"])
-            short = e["to"].rsplit("/", 1)[-1]      # tên file cho gọn
-            nodes.append({"id": e["to"], "path": e["to"], "group": "code",
-                          "type": "code", "title": e["to"], "wiki": "code", "label": short})
+            nodes.append(_mk_code_node(e["to"]))
+
+
+def _py_facts(abs_path):
+    """(symbols top-level, tập module import) của 1 file .py — parse bằng ast, fail-open."""
+    try:
+        tree = ast.parse(Path(abs_path).read_text(encoding="utf-8", errors="ignore"))
+    except Exception:
+        return [], set()
+    syms = [n.name for n in tree.body
+            if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))]
+    mods = set()
+    for n in ast.walk(tree):
+        if isinstance(n, ast.Import):
+            for a in n.names:
+                mods.add(a.name.split(".")[0])
+        elif isinstance(n, ast.ImportFrom) and n.module:
+            mods.add(n.module.split(".")[0])
+    return syms, mods
+
+
+def enrich_code(nodes, edges, repo_root):
+    """Opt 1 (imports) + Opt 3 (symbols/commit) cho node code — thuần ast, không cần code-graph MCP.
+
+    - imports: file .py touches → cạnh `imports` tới file .py khác trong repo (1 hop).
+    - làm giàu: mỗi node code gắn symbols (def/class) + commit gần nhất.
+    """
+    root = Path(repo_root)
+    # index basename .py → relpath (bỏ .git, node_modules, .overstack-kit)
+    pyindex = {}
+    for p in root.rglob("*.py"):
+        rel = p.relative_to(root).as_posix()
+        if any(seg in rel for seg in (".git/", "node_modules/", ".overstack-kit/", "workspaces/")):
+            continue
+        pyindex.setdefault(p.stem, rel)
+    ids = {n["id"] for n in nodes}
+    # 1 hop: từ node code touches → thêm cạnh imports + node code mới
+    for cn in [n for n in nodes if n["wiki"] == "code" and n["path"].endswith(".py")]:
+        ap = root / cn["path"]
+        if not ap.exists():
+            continue
+        _, mods = _py_facts(ap)
+        for m in mods:
+            tgt = pyindex.get(m)
+            if tgt and tgt != cn["path"]:
+                if tgt not in ids:
+                    nodes.append(_mk_code_node(tgt)); ids.add(tgt)
+                edges.append({"from": cn["path"], "rel": "imports", "to": tgt, "kind": "to"})
+    # làm giàu MỌI node code hiện có (gồm cả mới thêm)
+    for cn in [n for n in nodes if n["wiki"] == "code"]:
+        ap = root / cn["path"]
+        if cn["path"].endswith(".py") and ap.exists():
+            syms, _ = _py_facts(ap)
+            cn["symbols"] = syms[:20]
+        try:
+            r = subprocess.run(["git", "-C", str(root), "log", "-1", "--format=%h %s", "--", cn["path"]],
+                               capture_output=True, text=True, timeout=5)
+            cn["commit"] = r.stdout.strip()[:80]
+        except Exception:
+            pass
 
 
 def build_html(primary: str, out_abs: str, nodes, edges, ledger, stale):
@@ -500,8 +564,10 @@ function showDetail(n){{
   var out=adj.filter(function(e){{return e.from===n.id;}}),inn=adj.filter(function(e){{return e.to===n.id;}});
   var ev=D.ledger.filter(function(l){{return l.target===n.path&&l.wiki===n.wiki;}}).slice(0,4);
   var st=D.stale[n.wiki+'/'+n.path];
-  var h='<b>'+n.id+'</b> <code>'+n.wiki+'/'+n.path+'</code> · '+n.type+'  <span style="opacity:.6">(double-click để hút vệ tinh + zoom)</span>';
+  var h='<b>'+(n.label||n.id)+'</b> <code>'+n.wiki+'/'+n.path+'</code> · '+n.type+'  <span style="opacity:.6">(double-click để hút vệ tinh + zoom)</span>';
   if(st)h+=' · <b style="color:#f08c00">STALE</b> (do <code>'+st.by+'</code> '+st.action+')';
+  if(n.commit)h+='<br><span style="opacity:.75">commit:</span> <code>'+n.commit+'</code>';
+  if(n.symbols&&n.symbols.length)h+='<br><span style="opacity:.75">symbols ('+n.symbols.length+'):</span> '+n.symbols.map(function(s){{return '<code>'+s+'</code>';}}).join(' ');
   h+='<br>→ trỏ đi: '+(out.map(function(e){{return e.rel+' <code>'+e.to+'</code>';}}).join(' · ')||'(không)');
   h+='<br>← được trỏ tới: '+(inn.map(function(e){{return '<code>'+e.from+'</code> '+e.rel;}}).join(' · ')||'(không)');
   if(ev.length)h+='<br>ledger: '+ev.map(function(l){{return l.ts+' '+l.action;}}).join(' · ');
@@ -586,6 +652,11 @@ def main() -> None:
         if o.is_dir():
             scan(o, o.parent.name if o.name == "wiki" else o.name, nodes, edges, ledger, stale)
     add_code_nodes(nodes, edges)   # node lá cho touches → cạnh wiki→code hiện ra
+    # repo root = cha của primary wiki (…/wiki → repo). Tìm .git đi lên.
+    rr = prim
+    while rr.parent != rr and not (rr / ".git").exists():
+        rr = rr.parent
+    enrich_code(nodes, edges, rr)  # opt1 imports + opt3 symbols/commit (ast thuần)
     default_name = "wiki-graph-static.html" if a.static else "wiki-graph.html"
     out = Path(a.out).resolve() if a.out else Path("llmwiki/html").resolve() / default_name
     out.parent.mkdir(parents=True, exist_ok=True)

@@ -17,6 +17,9 @@ from pathlib import Path
 CONTENT_DIRS = ("concepts", "entities", "sources", "draft", "architecture", "tours")
 FRONTMATTER_RE = re.compile(r"^(---[ \t]*\n)(.*?)(\n---)", re.DOTALL)
 SOURCE_RE = re.compile(r"^\s*-\s*\*\*Source:\*\*\s*`([^`]+)`", re.MULTILINE)
+# path code trong backtick: `dir/file.ext` (ext code phổ biến)
+CODE_PATH_RE = re.compile(r"`([\w./-]+\.(?:py|js|ts|sh|yaml|yml|json|html))`")
+    # cập nhật docstring: derives-from (Origin) + touches (backtick path tồn tại)
 
 
 def migrate(path: Path, repo_root: Path, dry: bool):
@@ -34,6 +37,14 @@ def migrate(path: Path, repo_root: Path, dry: bool):
         src = origin.group(1).split(" ")[0].strip()
         if (repo_root / src).exists():
             rels.append(f"  - {{rel: derives-from, path: {src}}}")
+    # auto touches (low-risk): path code trong BACKTICK body + TỒN TẠI trên đĩa (tránh false-positive)
+    body = text[m.end(2):]
+    seen_t = set()
+    for cp in CODE_PATH_RE.findall(body):
+        cp = cp.strip()
+        if cp not in seen_t and "/" in cp and (repo_root / cp).exists():
+            seen_t.add(cp)
+            rels.append(f"  - {{rel: touches, path: {cp}}}")
     if rels:
         add.append("relations:")
         add.extend(rels)

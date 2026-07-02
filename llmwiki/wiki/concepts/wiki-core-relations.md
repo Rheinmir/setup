@@ -6,6 +6,7 @@ timestamp: 2026-07-02
 id: 020726-wiki-core-relations
 relations:
   - {rel: touches, path: llmwiki/.claude/hooks/wiki_ledger.py}
+  - {rel: touches, path: llmwiki/.claude/hooks/post_tool_use.py}
   - {rel: touches, path: llmwiki/.claude/hooks/validators/rel_integrity.py}
   - {rel: touches, path: fdk/tools/wiki-relations.py}
   - {rel: touches, path: fdk/tools/build-wiki-graph.py}
