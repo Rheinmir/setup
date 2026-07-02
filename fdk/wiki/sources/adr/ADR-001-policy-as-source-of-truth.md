@@ -4,6 +4,7 @@ title: "ADR-001: policy.yaml là nguồn chân lý + thin-adapter/thick-policy"
 status: accepted
 tags: [adr, harness, policy, thin-adapter, R11]
 timestamp: 2026-06-27
+id: ADR-001-policy-as-source-of-truth
 ---
 
 # ADR-001: policy.yaml là nguồn chân lý — thin adapter, thick policy

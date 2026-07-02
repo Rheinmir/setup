@@ -35,3 +35,6 @@ harness/metrics/cost-by-session.json
 harness/metrics/tasks.json
 
 harness/metrics/query-log.jsonl
+
+# sweep-gate baseline (local)
+harness/metrics/sweep-marker.json

@@ -1,0 +1,396 @@
+{
+  "aggregate": [
+    {
+      "author": "munger",
+      "consensus_rank": 1,
+      "label": "B",
+      "mean_rank": 1.666667,
+      "ranks": [
+        3,
+        1,
+        1
+      ]
+    },
+    {
+      "author": "taleb",
+      "consensus_rank": 2,
+      "label": "C",
+      "mean_rank": 2.333333,
+      "ranks": [
+        2,
+        3,
+        2
+      ]
+    },
+    {
+      "author": "linus",
+      "consensus_rank": 3,
+      "label": "A",
+      "mean_rank": 2.666667,
+      "ranks": [
+        1,
+        4,
+        3
+      ]
+    },
+    {
+      "author": "meadows",
+      "consensus_rank": 4,
+      "label": "D",
+      "mean_rank": 4.0,
+      "ranks": [
+        5,
+        2,
+        5
+      ]
+    },
+    {
+      "author": "rams",
+      "consensus_rank": 5,
+      "label": "E",
+      "mean_rank": 4.333333,
+      "ranks": [
+        4,
+        5,
+        4
+      ]
+    }
+  ],
+  "anchor_guard": {
+    "note": "Each judge was shown the blind answers in this order (position-bias guard).",
+    "presentation_order": {
+      "seat-1": [
+        "C",
+        "E",
+        "D",
+        "B",
+        "A"
+      ],
+      "seat-2": [
+        "B",
+        "D",
+        "A",
+        "C",
+        "E"
+      ],
+      "seat-3": [
+        "A",
+        "C",
+        "B",
+        "D",
+        "E"
+      ]
+    },
+    "seed": 42
+  },
+  "anonymization": {
+    "label_to_author": {
+      "A": "linus",
+      "B": "munger",
+      "C": "taleb",
+      "D": "meadows",
+      "E": "rams"
+    },
+    "label_to_id": {
+      "A": "a2",
+      "B": "a4",
+      "C": "a5",
+      "D": "a3",
+      "E": "a1"
+    }
+  },
+  "answers": [
+    {
+      "author": "linus",
+      "id": "a2",
+      "label": "A",
+      "text": "Không generalize toàn bộ — chỉ EXTRACT helpers I/O (30% effort, 80% payoff): versioning+atomic-write (no-overwrite), html.escape wrapper, try/except context-manager scaffold, version naming+cleanup. KHÔNG share renderer transform (data-shape riêng mỗi skill, error-handling khác, generalize làm chậm). API minimal chạy ngay: safe_render(out_dir, version, data, renderer_fn, max_versions) — renderer_fn do skill sở hữu, COR lo atomic write+versioning+escape+fallback. Adoption low-risk: tuần này extract cor_helpers.py (optional, không đặt lib chung), áp PROPOSE trước (data-shape đơn giản nhất) làm proof; tuần sau offer 1-2 skill nếu họ muốn; 11 skill còn lại ship riêng không rủi ro. Verdict: propose tuần này, mở helpers nếu +1 skill muốn. Không lib, không thiết kế trước."
+    },
+    {
+      "author": "munger",
+      "id": "a4",
+      "label": "B",
+      "text": "Invert — cách ĐẢM BẢO thất bại: (1) god-module 13 skill phụ thuộc, 1 breaking vỡ all; (2) ép khuôn cứng lên skill cần creative (cursor-animated-sites, uat, extract-site) → phải patch/bỏ qua; (3) sai abstraction boundary → refactor lại; (4) maintenance debt > gain (39 integration point nhưng DRY chỉ lợi ở 3-4); (5) docs-site-macos đã build full render → COR duplicate. Điều kiện TỐI THIỂU không thất bại: microlib KHÔNG god-module (chỉ 6 bất biến lõi, render sáng tạo = hook optional); OPT-IN không bắt buộc; boundary hẹp ổn định 1-2 hàm public; SCOPE 3-4 skill MAX (propose, docs-curate, onboard, tour-guide) — LOẠI cursor-animated/uat/extract-site (cần creative); checksum per output phát hiện regress. ROI: DRY chỉ thực ở 3-4 skill; lớn hơn = fragility > reuse. Kết: áp đúng 3 skill, bỏ ám thị generalize-thành-13."
+    },
+    {
+      "author": "taleb",
+      "id": "a5",
+      "label": "C",
+      "text": "Shared-lib tạo systemic tail-risk NẾU có state/tight-coupling/breaking-change/không pin version. Copy-in cũng nhầm: 6 bất biến đơn giản nhưng thiết kế lại 13 lần = drift/inconsistency → lỗi subtle (tệ hơn breaking rõ ràng). Barbell: (1) COR là stateless PURE-FUNCTION lib, không side-effect; (2) semantic versioning + explicit pin mỗi skill (assert __version__, fail-fast); (3) sacred backwards-compat: cor.py chỉ ADD never BREAK, 6 bất biến không đổi; (4) emergency copy-in escape hatch nếu cor.py chết. Điều kiện chấp nhận shared-lib: ≤200 dòng (tái bản 30 phút), zero runtime error (pure/typed/tested), version-pin enforced (CI fail floating import), deprecation path rõ. Kết: shared-lib OK nếu THIẾT KẾ CHO FAILURE MODE — không phải 'không bao giờ gãy' mà 'khi gãy isolated + dễ restore'. Small+pinned+backwards-compat = antifragile ở đuôi."
+    },
+    {
+      "author": "meadows",
+      "id": "a3",
+      "label": "D",
+      "text": "Leverage: cả 3 tầng nhưng THỨ TỰ khác. Cao nhất = RULE/GATE harness (b) — 65 skill hành xử độc lập nên lib (a) sẽ ngồi yên; chuẩn hoá TỪ HÀNH ĐỘNG (gate buộc conform trước merge) mới đổi tâm lý quyết định (structural constraint mạnh nhất). Sau đó (c) tái dùng docs-site-macos làm shell COR — KHÔNG viết renderer thứ 3: renderer là TOOL không phải POLICY; 2 renderer sẵn có là tool, COR chứa logic CHỌN cái nào fit + kiểm soát data/escape. Cuối (a) lib chỉ để codify bất biến thành schema/validator, KHÔNG generator. Rủi ro không làm gì: drift tích luỹ, khi breach (ghi đè lịch sử/quên escape) khó trace root. Rủi ro ép sớm: khoá use-case hợp lệ (vd CDN cho heavy-asset) — đợi ~3 sprint observe rồi mới ép. COR bổ sung, không chồng vai 2 renderer."
+    },
+    {
+      "author": "rams",
+      "id": "a1",
+      "label": "E",
+      "text": "KHÔNG nên làm LIB — over-abstraction. 13 fit-high nhưng chỉ 1-2 thực sự share code render; 11-12 chỉ cần TUÂN 6 nguyên tắc (html.escape/try-except/no-overwrite quá generic, mỗi skill độc lập). LIB = coupling: COR đổi thì 13 skill test lại, nhưng 11 không dùng logic core. SKILL guidance = thêm indirect layer làm chậm iteration; author đã biết nguyên tắc, họ cần VÍ DỤ không wrapper. NÊN: (1) RULE/GATE harness kiểm 6 bất biến trước push (linter, non-blocking) + (2) DOCUMENT harness/docs/cor-guide.md: template copy-paste + checklist 6 điểm, mỗi skill tự implement → owned. Ít hơn nhưng tốt hơn: đừng xây cầu cho 2 skill. Quyết: Document + Gate, KHÔNG lib."
+    }
+  ],
+  "chairman_brief": {
+    "consensus_order": [
+      {
+        "author": "munger",
+        "mean_rank": 1.666667,
+        "rank": 1
+      },
+      {
+        "author": "taleb",
+        "mean_rank": 2.333333,
+        "rank": 2
+      },
+      {
+        "author": "linus",
+        "mean_rank": 2.666667,
+        "rank": 3
+      },
+      {
+        "author": "meadows",
+        "mean_rank": 4.0,
+        "rank": 4
+      },
+      {
+        "author": "rams",
+        "mean_rank": 4.333333,
+        "rank": 5
+      }
+    ],
+    "dissent_points": [
+      {
+        "author": "meadows",
+        "ranks": [
+          5,
+          2,
+          5
+        ],
+        "variance": 2.0
+      },
+      {
+        "author": "linus",
+        "ranks": [
+          1,
+          4,
+          3
+        ],
+        "variance": 1.555556
+      },
+      {
+        "author": "munger",
+        "ranks": [
+          3,
+          1,
+          1
+        ],
+        "variance": 0.888889
+      },
+      {
+        "author": "taleb",
+        "ranks": [
+          2,
+          3,
+          2
+        ],
+        "variance": 0.222222
+      },
+      {
+        "author": "rams",
+        "ranks": [
+          4,
+          5,
+          4
+        ],
+        "variance": 0.222222
+      }
+    ],
+    "instruction": "Synthesize ONE final answer. Lead with the consensus winner, fold in unique correct points from the others, and explicitly resolve the contested answer(s) below rather than averaging them away."
+  },
+  "chairman_synthesis": "PHÁN QUYẾT: KHẢ THI nhưng HẸP — KHÔNG xây god-lib cho 13 skill. Làm microlib opt-in + contract, prove trên 1 skill.\n1. Extract 6 bất biến khỏi council.py thành harness/scripts/lib/cor.py — STATELESS pure-function, ≤200 dòng, __version__, backwards-compat chỉ ADD (Taleb antifragile).\n2. Scope 3-4 skill MAX có backend .py thật (Munger): consumer thật = skill có code (trace-grader/wikieval/orca-eval...). Skill guidance thuần (propose) áp CONTRACT/doc, không import.\n3. Prove trên council.py trước (dogfood — nó đã là ref-impl) + 1 skill .py thứ hai; loại skill creative (cursor-animated/uat/extract-site) khỏi khuôn.\n4. Governance: cor-guide.md (checklist 6 điểm) + GATE harness kiểm non-blocking (Rams/Meadows) — nhưng ĐỢI observe, đừng ép cứng sớm.\n5. Tái dùng docs-site-macos làm shell khi cần glass-render (Meadows); COR lo data/escape/versioning/isolation, KHÔNG viết renderer thứ 3.\n6. Chống fragility (Taleb): mỗi consumer pin version; emergency copy-in escape hatch nếu cor.py chết; checksum per output (Munger).\nDissent (Meadows/Rams xếp thấp): 'gate-first/no-lib' đúng hướng governance nhưng thiếu tính khả-thi-tuần-này của top-3; giữ phần GATE+DOC của họ làm tầng 2, không phải thay lib.",
+  "config_provenance": {
+    "anchor_seed": 42,
+    "chairman": {
+      "model": "claude-opus-4"
+    },
+    "judges": [
+      {
+        "id": "seat-1",
+        "model": "claude-opus-4"
+      },
+      {
+        "id": "seat-2",
+        "model": "gpt-5"
+      },
+      {
+        "id": "seat-3",
+        "model": "gemini-2.5-pro"
+      }
+    ],
+    "note": "Adapter values (model identities). Provenance only -- the engine never branches on these.",
+    "seats": [
+      {
+        "id": "seat-1",
+        "model": "claude-opus-4",
+        "persona": "feynman"
+      },
+      {
+        "id": "seat-2",
+        "model": "gpt-5",
+        "persona": "taleb"
+      },
+      {
+        "id": "seat-3",
+        "model": "gemini-2.5-pro",
+        "persona": "rams"
+      }
+    ]
+  },
+  "dissent": [
+    {
+      "author": "meadows",
+      "label": "D",
+      "max_rank": 5,
+      "min_rank": 2,
+      "range": 3,
+      "ranks": [
+        5,
+        2,
+        5
+      ],
+      "stdev": 1.414214,
+      "variance": 2.0
+    },
+    {
+      "author": "linus",
+      "label": "A",
+      "max_rank": 4,
+      "min_rank": 1,
+      "range": 3,
+      "ranks": [
+        1,
+        4,
+        3
+      ],
+      "stdev": 1.247219,
+      "variance": 1.555556
+    },
+    {
+      "author": "munger",
+      "label": "B",
+      "max_rank": 3,
+      "min_rank": 1,
+      "range": 2,
+      "ranks": [
+        3,
+        1,
+        1
+      ],
+      "stdev": 0.942809,
+      "variance": 0.888889
+    },
+    {
+      "author": "taleb",
+      "label": "C",
+      "max_rank": 3,
+      "min_rank": 2,
+      "range": 1,
+      "ranks": [
+        2,
+        3,
+        2
+      ],
+      "stdev": 0.471405,
+      "variance": 0.222222
+    },
+    {
+      "author": "rams",
+      "label": "E",
+      "max_rank": 5,
+      "min_rank": 4,
+      "range": 1,
+      "ranks": [
+        4,
+        5,
+        4
+      ],
+      "stdev": 0.471405,
+      "variance": 0.222222
+    }
+  ],
+  "generator": "council.py/1.0",
+  "judge_rankings": [
+    {
+      "judge": "seat-1",
+      "ranking_authors": [
+        "linus",
+        "taleb",
+        "munger",
+        "rams",
+        "meadows"
+      ],
+      "ranking_labels": [
+        "A",
+        "C",
+        "B",
+        "E",
+        "D"
+      ]
+    },
+    {
+      "judge": "seat-2",
+      "ranking_authors": [
+        "munger",
+        "meadows",
+        "taleb",
+        "linus",
+        "rams"
+      ],
+      "ranking_labels": [
+        "B",
+        "D",
+        "C",
+        "A",
+        "E"
+      ]
+    },
+    {
+      "judge": "seat-3",
+      "ranking_authors": [
+        "munger",
+        "taleb",
+        "linus",
+        "rams",
+        "meadows"
+      ],
+      "ranking_labels": [
+        "B",
+        "C",
+        "A",
+        "E",
+        "D"
+      ]
+    }
+  ],
+  "most_contested": {
+    "author": "meadows",
+    "label": "D",
+    "ranks": [
+      5,
+      2,
+      5
+    ],
+    "variance": 2.0
+  },
+  "pending_adapter_steps": [],
+  "question": "Có nên generalize Controlled Output Renderer (COR) thành hạ tầng dùng chung cho ~13 skill sinh docs? Dạng nào, scope bao nhiêu, chống fragility ra sao?",
+  "seed": 42,
+  "stage": "1-2-3-complete",
+  "verified": true,
+  "winner": {
+    "author": "munger",
+    "label": "B",
+    "mean_rank": 1.666667
+  }
+}

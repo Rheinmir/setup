@@ -4,6 +4,7 @@ title: "ADR-003: skill con là nguồn chân lý — orchestrator delegate, Clau
 status: accepted
 tags: [adr, skill, dry, propose, orca-workflow, dispatch]
 timestamp: 2026-06-27
+id: ADR-003-skill-as-single-source-of-truth
 ---
 
 # ADR-003: skill con là nguồn chân lý — orchestrator chỉ delegate

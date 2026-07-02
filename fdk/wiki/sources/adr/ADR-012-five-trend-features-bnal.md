@@ -4,6 +4,7 @@ title: "ADR-012: 5 trend 2026 → 5 chức năng qua build-now-adapt-later (core
 status: accepted
 tags: [adr, build-now-adapt-later, bnal, trends, observability, security, spec-driven, self-improving, quarantine]
 timestamp: 2026-06-29
+id: ADR-012-five-trend-features-bnal
 ---
 
 # ADR-012: 5 trend 2026 → 5 chức năng, dựng bằng build-now-adapt-later

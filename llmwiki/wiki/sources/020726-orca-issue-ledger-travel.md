@@ -5,6 +5,7 @@ status: implemented
 tags: [propose, orca-issue, problem-tree, distribution, systems-thinking]
 timestamp: 2026-07-02
 task: T-260702-01
+id: 020726-orca-issue-ledger-travel
 ---
 
 # 020726-orca-issue-ledger-travel

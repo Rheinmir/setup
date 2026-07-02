@@ -4,6 +4,7 @@ title: "ADR-011: project-local harness — dự án tự phát triển rule riê
 status: accepted
 tags: [adr, harness, project-local, namespace, sync-safe, precedence, sandbox]
 timestamp: 2026-06-29
+id: ADR-011-project-local-harness
 ---
 
 # ADR-011: project-local harness — rule RIÊNG của dự án chạy song song framework

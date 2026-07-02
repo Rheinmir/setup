@@ -3,6 +3,7 @@ type: concept
 title: Explain & clone a site (extract-site Mode 3)
 tags: [extract-site, clone, reverse-engineer, methodology]
 timestamp: 2026-06-25
+id: cursor-explain-site
 ---
 
 # Explain & clone a site (extract-site Mode 3)

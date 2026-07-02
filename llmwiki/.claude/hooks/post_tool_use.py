@@ -22,6 +22,14 @@ def main() -> None:
     if rel and not rel.startswith("..") and rel.startswith(("llmwiki/", "harness/", "skills/", "fdk/", ".github/")):
         code_log(root, "--record", "file.write", f"path={rel}", f"tool={tool}")
 
+    # wiki-core v2: ledger sự kiện wiki (add/modify/delete-tombstone), flock chống ghi song song (G1)
+    if fp:
+        try:
+            from wiki_ledger import append_event
+            append_event(root, fp, tool, payload.get("session_id"))
+        except Exception:
+            pass  # fail-open
+
     vdir = find_validators(root)
     if vdir is None:
         sys.exit(0)
@@ -43,6 +51,11 @@ def main() -> None:
         if rc == 2:
             print(err, file=sys.stderr)
             sys.exit(2)
+
+    # R-rel (warn-only, G4): kiểm toàn vẹn tham chiếu relations — in cảnh báo, không chặn
+    rc, err = run_validator("rel_integrity.py", {"action": "write", "file_path": fp}, vdir)
+    if err:
+        print(err, file=sys.stderr)
     sys.exit(0)
 
 

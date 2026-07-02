@@ -4,6 +4,7 @@ title: design-pattern-v2
 status: implemented
 tags: [design-pattern, hoc-tu-thien, system-design]
 timestamp: 2026-06-21
+id: design-pattern-v2
 ---
 
 # Học Từ Thiền — Phần 001: System Design

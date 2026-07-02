@@ -4,6 +4,7 @@ title: "ADR-008: wiki RIÊNG của framework sống trong the kit (fdk/wiki); ll
 status: accepted
 tags: [adr, fdk, wiki, kit, architecture, separation]
 timestamp: 2026-06-28
+id: ADR-008-framework-wiki-lives-in-the-kit
 ---
 
 # ADR-008: framework wiki sống trong the kit (fdk/wiki)

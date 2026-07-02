@@ -1,0 +1,256 @@
+{
+  "aggregate": [
+    {
+      "author": "taleb",
+      "consensus_rank": 1,
+      "label": "B",
+      "mean_rank": 1.0,
+      "ranks": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "author": "munger",
+      "consensus_rank": 2,
+      "label": "C",
+      "mean_rank": 2.0,
+      "ranks": [
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "author": "kahneman",
+      "consensus_rank": 3,
+      "label": "A",
+      "mean_rank": 3.0,
+      "ranks": [
+        3,
+        3,
+        3
+      ]
+    }
+  ],
+  "anchor_guard": {
+    "note": "Each judge was shown the blind answers in this order (position-bias guard).",
+    "presentation_order": {
+      "seat-1": [
+        "B",
+        "C",
+        "A"
+      ],
+      "seat-2": [
+        "A",
+        "B",
+        "C"
+      ],
+      "seat-3": [
+        "A",
+        "B",
+        "C"
+      ]
+    },
+    "seed": 42
+  },
+  "anonymization": {
+    "label_to_author": {
+      "A": "kahneman",
+      "B": "taleb",
+      "C": "munger"
+    },
+    "label_to_id": {
+      "A": "a2",
+      "B": "a3",
+      "C": "a1"
+    }
+  },
+  "answers": [
+    {
+      "author": "kahneman",
+      "id": "a2",
+      "label": "A",
+      "text": "Opt-in hợp lý (default OFF, render chỉ khi --report hoặc sharing non-IT) — tránh novelty coupling. BA BIAS nguy hiểm: (1) WYSIATI: HTML bóng bẩy (dashboard winner, chat bubbles, số canh dàn) làm người đọc TIN kết quả hơn thực chất -> authority illusion kể cả khi verified:false ghi mờ. (2) Cognitive fatigue 'one big page': non-IT skip debate, nhìn thẳng dashboard -> nhầm consensus là chân lý. (3) Novelty + sunk-cost: bật --report lần đầu -> xu hướng render liên tục để 'xác thực' feature -> coupling docs-site-macos thành non-negotiable (sunk-cost ratchet). Nợ: schema transcript đổi -> phải sync 3 section, maintenance tăng. ĐỀ XUẤT: giữ opt-in; SỬA thêm warning box rõ khi verified:false (counter authority bias), tách Findings vs Caveats; defer visual refinement — transcript.md đủ 95% use-case internal. HTML là công cụ tâm lý, KHÔNG trung lập: cần decouple visual authority khỏi deterministic math."
+    },
+    {
+      "author": "taleb",
+      "id": "a3",
+      "label": "B",
+      "text": "Opt-in default OFF hợp lý nhưng lũy kế fragility 3 điểm (tail-first). (1) Coupling /docs-site-macos không phase-locked với core: template đổi -> HTML break trong khi transcript.json vẫn deterministic; user chạy --report fail không biết lỗi ở council.py hay docs-site-macos -> tail event chạy lại cả council. (2) HTML INJECTION: author+text không sanitize trong council.py, chỉ dặn docs-site-macos escape — nằm layer khác; ngã lúc integration -> HTML broken/unescaped. Complexity debt tại boundary. (3) Scope '3 section chat room' là complexity thừa cho presentational layer: debate bubble/avatar/timeline thêm kỳ vọng hành vi mà docs-site-macos không cam kết; upgrade template phải port cả 3. QUYẾT: GIỮ opt-in; SỬA — sanitize HTML entities cho author/text NGAY trong council.py (không defer sang layer khác); GIẢM scope: bỏ chat-room debate (theater complexity), giữ (1) blind-vote table+reveal, (2) consensus+dissent dashboard; fail-safe: render fail vẫn emit transcript.json/.md, --report trả graceful error không silent skip. Core robust hơn presentation."
+    },
+    {
+      "author": "munger",
+      "id": "a1",
+      "label": "C",
+      "text": "Thiết kế Stage-4 cơ bản ĐÚNG nhưng có rủi ro tích hợp. INVERT — cái gì đảm bảo thất bại: (1) Coupling /docs-site-macos: HTML không thực sự self-contained nếu phụ thuộc skill ngoài; skill unavailable -> dependent-failure trong khi core transcript vẫn tốt; deployment determinism bị phá. (2) Trigger thứ 2 'chia sẻ ra ngoài người vận hành' mơ hồ, cần context-detection phức tạp hơn flag. (3) Chairman synthesis delay: render --report trước khi chairman fill chairman_synthesis -> HTML incomplete/misleading, chưa có protocol. (4) No fallback nếu render fail. GIỮ vì lõi deterministic isolation tốt, opt-in sound, 3 section map đúng 3-stage. SỬA: bỏ heuristic trigger thứ 2 -> chỉ explicit --report; spec rõ self-contained (embed CSS/JS hay CDN); chain-guard block --report nếu chairman_synthesis==None; graceful fallback về markdown nếu docs-site-macos unavailable. Nợ: integration test payload->render, error handling khi invoke skill. Fix cốt lõi: dependency chaining phải có fallback."
+    }
+  ],
+  "chairman_brief": {
+    "consensus_order": [
+      {
+        "author": "taleb",
+        "mean_rank": 1.0,
+        "rank": 1
+      },
+      {
+        "author": "munger",
+        "mean_rank": 2.0,
+        "rank": 2
+      },
+      {
+        "author": "kahneman",
+        "mean_rank": 3.0,
+        "rank": 3
+      }
+    ],
+    "dissent_points": [],
+    "instruction": "Synthesize ONE final answer. Lead with the consensus winner, fold in unique correct points from the others, and explicitly resolve the contested answer(s) below rather than averaging them away."
+  },
+  "chairman_synthesis": null,
+  "config_provenance": {
+    "anchor_seed": 42,
+    "chairman": {
+      "model": "claude-opus-4"
+    },
+    "judges": [
+      {
+        "id": "seat-1",
+        "model": "claude-opus-4"
+      },
+      {
+        "id": "seat-2",
+        "model": "gpt-5"
+      },
+      {
+        "id": "seat-3",
+        "model": "gemini-2.5-pro"
+      }
+    ],
+    "note": "Adapter values (model identities). Provenance only -- the engine never branches on these.",
+    "seats": [
+      {
+        "id": "seat-1",
+        "model": "claude-opus-4",
+        "persona": "feynman"
+      },
+      {
+        "id": "seat-2",
+        "model": "gpt-5",
+        "persona": "taleb"
+      },
+      {
+        "id": "seat-3",
+        "model": "gemini-2.5-pro",
+        "persona": "rams"
+      }
+    ]
+  },
+  "dissent": [
+    {
+      "author": "kahneman",
+      "label": "A",
+      "max_rank": 3,
+      "min_rank": 3,
+      "range": 0,
+      "ranks": [
+        3,
+        3,
+        3
+      ],
+      "stdev": 0.0,
+      "variance": 0.0
+    },
+    {
+      "author": "taleb",
+      "label": "B",
+      "max_rank": 1,
+      "min_rank": 1,
+      "range": 0,
+      "ranks": [
+        1,
+        1,
+        1
+      ],
+      "stdev": 0.0,
+      "variance": 0.0
+    },
+    {
+      "author": "munger",
+      "label": "C",
+      "max_rank": 2,
+      "min_rank": 2,
+      "range": 0,
+      "ranks": [
+        2,
+        2,
+        2
+      ],
+      "stdev": 0.0,
+      "variance": 0.0
+    }
+  ],
+  "generator": "council.py/1.0",
+  "judge_rankings": [
+    {
+      "judge": "seat-1",
+      "ranking_authors": [
+        "taleb",
+        "munger",
+        "kahneman"
+      ],
+      "ranking_labels": [
+        "B",
+        "C",
+        "A"
+      ]
+    },
+    {
+      "judge": "seat-2",
+      "ranking_authors": [
+        "taleb",
+        "munger",
+        "kahneman"
+      ],
+      "ranking_labels": [
+        "B",
+        "C",
+        "A"
+      ]
+    },
+    {
+      "judge": "seat-3",
+      "ranking_authors": [
+        "taleb",
+        "munger",
+        "kahneman"
+      ],
+      "ranking_labels": [
+        "B",
+        "C",
+        "A"
+      ]
+    }
+  ],
+  "most_contested": {
+    "author": "kahneman",
+    "label": "A",
+    "ranks": [
+      3,
+      3,
+      3
+    ],
+    "variance": 0.0
+  },
+  "pending_adapter_steps": [],
+  "question": "<the question put to the council>",
+  "seed": 42,
+  "stage": "1-2-3-complete",
+  "verified": true,
+  "winner": {
+    "author": "taleb",
+    "label": "B",
+    "mean_rank": 1.0
+  }
+}

@@ -4,6 +4,7 @@ title: FDK — Framework Development Kit (bộ xương phát triển framework)
 status: active
 tags: [fdk, framework, harness, workflow, front-door, anti-drift, anti-collision]
 timestamp: 2026-06-27
+id: fdk
 ---
 
 # FDK — Framework Development Kit

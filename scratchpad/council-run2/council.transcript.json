@@ -1,0 +1,284 @@
+{
+  "aggregate": [
+    {
+      "author": "kahneman",
+      "consensus_rank": 1,
+      "label": "A",
+      "mean_rank": 1.666667,
+      "ranks": [
+        3,
+        1,
+        1
+      ]
+    },
+    {
+      "author": "taleb",
+      "consensus_rank": 2,
+      "label": "B",
+      "mean_rank": 2.0,
+      "ranks": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "author": "munger",
+      "consensus_rank": 3,
+      "label": "C",
+      "mean_rank": 2.333333,
+      "ranks": [
+        2,
+        3,
+        2
+      ]
+    }
+  ],
+  "anchor_guard": {
+    "note": "Each judge was shown the blind answers in this order (position-bias guard).",
+    "presentation_order": {
+      "seat-1": [
+        "B",
+        "C",
+        "A"
+      ],
+      "seat-2": [
+        "A",
+        "B",
+        "C"
+      ],
+      "seat-3": [
+        "A",
+        "B",
+        "C"
+      ]
+    },
+    "seed": 42
+  },
+  "anonymization": {
+    "label_to_author": {
+      "A": "kahneman",
+      "B": "taleb",
+      "C": "munger"
+    },
+    "label_to_id": {
+      "A": "a2",
+      "B": "a3",
+      "C": "a1"
+    }
+  },
+  "answers": [
+    {
+      "author": "kahneman",
+      "id": "a2",
+      "label": "A",
+      "text": "Cả hai phía đều dính bias. Council trước: cost-anchoring (phản xạ 'thêm output = xấu' dù token ~0) + availability. Dev: zero-cost fallacy (token ~0 ≠ tổng chi phí ~0) + recency ('vài chục ms' che chi phí lưu/review/maintain). Chi phí THẬT không phải token mà là: (1) git noise + review tax (artifact commit mỗi lần), (2) authority/rollback friction (mandatory = quyết định ẩn, sau khó rollback), (3) lock-in (cli/script phụ thuộc), (4) maintenance entropy. KẾT LUẬN: 'Mandatory COMPUTE, Optional ARTIFACT' — luôn render (audit trail, 0 token) NHƯNG report nên gitignore hoặc fetch từ artifact store, KHÔNG hardcode commit vào VCS (bloat, review fatigue), cũng KHÔNG opt-in (ai nhớ cờ?). Tách compute-always khỏi persist-flex thay vì either/or."
+    },
+    {
+      "author": "taleb",
+      "id": "a3",
+      "label": "B",
+      "text": "Dev đúng chi phí trung bình, nhưng council phải nhìn CÁI ĐUÔI. Chi phí trung bình ~0 KHÔNG nghĩa rủi ro đuôi = 0. Always-render nghĩa lệnh rank phụ thuộc renderer: 1 lỗi renderer (regex crash input dị, encoding edge, memory spike, future PDF) → rank fail cho MỌI transcript. Blast radius: từ đơn lẻ thành hệ thống. Vấn đề không phải chi phí mà là KẾT NỐI: mandatory ghép chặt core (rank) với subsystem (report). Điều kiện an toàn để mandatory: (1) decoupling — render isolated (process/thread hoặc try-except+timeout), (2) fail-gracefully — report lỗi KHÔNG được giết rank, fallback skip/minimal, (3) monitoring tách biệt, (4) fuzz renderer 10k input dị → zero crash. KẾT LUẬN: OPT-IN hiện an toàn hơn dưới góc đuôi; muốn mandatory thì DECOUPLE + wrap try-except TRƯỚC, mandatory SAU. Không mandatory khi chưa decoupling."
+    },
+    {
+      "author": "munger",
+      "id": "a1",
+      "label": "C",
+      "text": "Luận điểm dev ĐÚNG về chi phí (~0) nhưng sai về bản chất: rendering rẻ KHÔNG kéo theo always-render an toàn. Lý do chính đáng để giữ opt-in (1) Coupling: report là derived artifact; always-render tạo implicit dependency, renderer hỏng thì cả lệnh vỡ; opt-in cô lập lỗi. (2) Authority-illusion: report luôn hiện ngầm nói 'trạng thái đã verified', nhưng nếu synthesis stale thì thành pseudo-validation của data cũ. (3) Disk+git churn: report đổi ở mọi diff, nhiễu code review, ô nhiễm history. (4) Maintenance debt: hôm nay Python thuần, mai thêm chart/style thì cost bị ép vào mandatory path. (5) Invert: always-on = failure luôn surface và nhiễm state; thà lỗi tường minh còn hơn stale âm thầm. KẾT LUẬN: OPT-IN + guardrails, nhưng frictionless (một cờ). Prevent failure bằng ISOLATION chứ không phải omission."
+    }
+  ],
+  "chairman_brief": {
+    "consensus_order": [
+      {
+        "author": "kahneman",
+        "mean_rank": 1.666667,
+        "rank": 1
+      },
+      {
+        "author": "taleb",
+        "mean_rank": 2.0,
+        "rank": 2
+      },
+      {
+        "author": "munger",
+        "mean_rank": 2.333333,
+        "rank": 3
+      }
+    ],
+    "dissent_points": [
+      {
+        "author": "kahneman",
+        "ranks": [
+          3,
+          1,
+          1
+        ],
+        "variance": 0.888889
+      },
+      {
+        "author": "taleb",
+        "ranks": [
+          1,
+          2,
+          3
+        ],
+        "variance": 0.666667
+      },
+      {
+        "author": "munger",
+        "ranks": [
+          2,
+          3,
+          2
+        ],
+        "variance": 0.222222
+      }
+    ],
+    "instruction": "Synthesize ONE final answer. Lead with the consensus winner, fold in unique correct points from the others, and explicitly resolve the contested answer(s) below rather than averaging them away."
+  },
+  "chairman_synthesis": "PHÁN QUYẾT: Dev thắng điểm cốt lõi — render 0 token nên GIỮ mandatory-compute.\n1. Blast-radius (Taleb): render bọc try/except, lỗi report không giết rank.\n2. Versioning: mỗi run 1 file bất biến, latest.html gitignore.\n3. Persona name+lens khôi phục; bỏ thanh viền trái (bad pattern).",
+  "config_provenance": {
+    "anchor_seed": 42,
+    "chairman": {
+      "model": "claude-opus-4"
+    },
+    "judges": [
+      {
+        "id": "seat-1",
+        "model": "claude-opus-4"
+      },
+      {
+        "id": "seat-2",
+        "model": "gpt-5"
+      },
+      {
+        "id": "seat-3",
+        "model": "gemini-2.5-pro"
+      }
+    ],
+    "note": "Adapter values (model identities). Provenance only -- the engine never branches on these.",
+    "seats": [
+      {
+        "id": "seat-1",
+        "model": "claude-opus-4",
+        "persona": "feynman"
+      },
+      {
+        "id": "seat-2",
+        "model": "gpt-5",
+        "persona": "taleb"
+      },
+      {
+        "id": "seat-3",
+        "model": "gemini-2.5-pro",
+        "persona": "rams"
+      }
+    ]
+  },
+  "dissent": [
+    {
+      "author": "kahneman",
+      "label": "A",
+      "max_rank": 3,
+      "min_rank": 1,
+      "range": 2,
+      "ranks": [
+        3,
+        1,
+        1
+      ],
+      "stdev": 0.942809,
+      "variance": 0.888889
+    },
+    {
+      "author": "taleb",
+      "label": "B",
+      "max_rank": 3,
+      "min_rank": 1,
+      "range": 2,
+      "ranks": [
+        1,
+        2,
+        3
+      ],
+      "stdev": 0.816497,
+      "variance": 0.666667
+    },
+    {
+      "author": "munger",
+      "label": "C",
+      "max_rank": 3,
+      "min_rank": 2,
+      "range": 1,
+      "ranks": [
+        2,
+        3,
+        2
+      ],
+      "stdev": 0.471405,
+      "variance": 0.222222
+    }
+  ],
+  "generator": "council.py/1.0",
+  "judge_rankings": [
+    {
+      "judge": "seat-1",
+      "ranking_authors": [
+        "taleb",
+        "munger",
+        "kahneman"
+      ],
+      "ranking_labels": [
+        "B",
+        "C",
+        "A"
+      ]
+    },
+    {
+      "judge": "seat-2",
+      "ranking_authors": [
+        "kahneman",
+        "taleb",
+        "munger"
+      ],
+      "ranking_labels": [
+        "A",
+        "B",
+        "C"
+      ]
+    },
+    {
+      "judge": "seat-3",
+      "ranking_authors": [
+        "kahneman",
+        "munger",
+        "taleb"
+      ],
+      "ranking_labels": [
+        "A",
+        "C",
+        "B"
+      ]
+    }
+  ],
+  "most_contested": {
+    "author": "kahneman",
+    "label": "A",
+    "ranks": [
+      3,
+      1,
+      1
+    ],
+    "variance": 0.888889
+  },
+  "pending_adapter_steps": [],
+  "question": "<the question put to the council>",
+  "seed": 42,
+  "stage": "1-2-3-complete",
+  "verified": true,
+  "winner": {
+    "author": "kahneman",
+    "label": "A",
+    "mean_rank": 1.666667
+  }
+}

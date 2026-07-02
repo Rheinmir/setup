@@ -4,6 +4,7 @@ type: draft
 status: proposed
 tags: [redesign-existing-projects, output-report]
 proposed: 2026-07-01
+id: 010726-council-report-redesign
 ---
 
 # 010726-council-report-redesign

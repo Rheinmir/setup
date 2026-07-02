@@ -1,0 +1,8 @@
+{
+  "total_skills": 65,
+  "fit_high": ["propose","trace-grader","wikieval","orca-eval","uat-nonit-testcase","orca-onboard","impact-check","failure-flywheel","onboard-codebase","ingest","docs-curate","build-now-adapt-later","cursor-animated-sites"],
+  "already_renderer": ["md-to-html","docs-site-macos"],
+  "fit_medium": ["health-check","join-project","loop-runner","orca-sec-scans","web-clone","extract-site","new-project-setup","new-skill","check-approve","cavecrew"],
+  "fit_na_or_low_count": 30,
+  "reference_impl": "council (render_report_html + _write_report: data/present split, html.escape, offline, versioned, try/except isolation, deterministic)"
+}

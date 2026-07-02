@@ -4,6 +4,7 @@ title: "Redesign overstack docs site — a11y + mind map reorder"
 status: proposed
 tags: [redesign-existing-projects, output-report]
 proposed: 2026-07-02
+id: 020726-overstack-docs-redesign
 ---
 
 # 020726-overstack-docs-redesign

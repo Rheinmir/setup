@@ -4,6 +4,7 @@ title: "ADR-007: wiki-tree scanner lọc gitignored TẠI LISTER (nguồn), khô
 status: accepted
 tags: [adr, harness, gitignore, drift, failure-flywheel, content-files, guard]
 timestamp: 2026-06-28
+id: ADR-007-wiki-scanner-skip-gitignored-at-lister
 ---
 
 # ADR-007: wiki-tree scanner lọc gitignored tại lister, không per-consumer

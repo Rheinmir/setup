@@ -4,6 +4,7 @@ title: 010726-onboard-html-tabs-redesign
 status: proposed
 tags: [orca-onboard, framework-dev, html-report, docs-site-macos]
 timestamp: 2026-07-01
+id: 010726-onboard-html-tabs-redesign
 ---
 
 # 010726-onboard-html-tabs-redesign

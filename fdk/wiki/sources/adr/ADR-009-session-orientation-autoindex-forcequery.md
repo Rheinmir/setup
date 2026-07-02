@@ -4,6 +4,7 @@ title: "ADR-009: session-orientation + auto-index + force-query — phiên mới
 status: accepted
 tags: [adr, session, orientation, code-index, code-graph, auto-index, force-query, propose]
 timestamp: 2026-06-28
+id: ADR-009-session-orientation-autoindex-forcequery
 ---
 
 # ADR-009: phiên mới phải BIẾT hệ thống có gì (orientation) + index tự khớp + propose buộc ground wiki

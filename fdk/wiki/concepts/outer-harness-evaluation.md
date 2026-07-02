@@ -4,6 +4,9 @@ title: Outer Harness — distill + council evaluation (overstack vs 5 trụ cộ
 status: active
 tags: [outer-harness, council, evaluation, governance, cost-attribution, audit, roadmap]
 timestamp: 2026-06-30
+id: outer-harness-evaluation
+relations:
+  - {rel: derives-from, path: llmwiki/raw/outer-harness.md}
 ---
 
 # Outer Harness — distill + đánh giá bằng council

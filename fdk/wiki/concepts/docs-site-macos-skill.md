@@ -4,6 +4,7 @@ title: docs-site-macos (skill)
 status: stub
 tags: [skill, docs-site-macos, glass, theme, R11]
 timestamp: 2026-06-27
+id: docs-site-macos-skill
 ---
 
 # docs-site-macos (skill)

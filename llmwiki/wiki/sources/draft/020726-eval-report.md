@@ -4,6 +4,7 @@ status: proposed
 tags: [orca-eval, eval-report, systems-thinking]
 proposed: 2026-07-02
 scope: "session hiện tại — bf38cf4e-fe00-449d-9b88-bdf67a0798ed.jsonl"
+id: 020726-eval-report
 ---
 
 # 020726-eval-report

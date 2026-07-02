@@ -4,6 +4,7 @@ title: "Chốt cứng Trụ 4 (CI gate) + persona-lens cho council"
 status: proposed
 tags: [build-now-adapt-later, quality-gates, council, output-report]
 proposed: 2026-07-01
+id: 010726-trupillar4-council-persona
 ---
 
 # 010726-trupillar4-council-persona

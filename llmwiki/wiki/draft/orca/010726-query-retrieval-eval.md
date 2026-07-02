@@ -5,6 +5,7 @@ status: promoted
 tags: [query, retrieval, eval, telemetry, wikieval, council, output-report]
 proposed: 2026-07-01
 task: T-260701-01
+id: 010726-query-retrieval-eval
 ---
 
 # 010726-query-retrieval-eval

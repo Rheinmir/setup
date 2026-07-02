@@ -4,6 +4,7 @@ title: query-retrieval-eval — đo TRUY HỒI của skill query (L0→L1)
 status: implemented
 tags: [query, retrieval, eval, telemetry, progressive-disclosure, measure-first]
 timestamp: 2026-07-01
+id: query-retrieval-eval
 ---
 
 # query-retrieval-eval — đo truy hồi trước, cải tiến sau

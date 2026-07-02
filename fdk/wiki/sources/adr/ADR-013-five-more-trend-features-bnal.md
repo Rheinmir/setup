@@ -4,6 +4,7 @@ title: "ADR-013: 5 trend 2026 nữa → 5 chức năng qua build-now-adapt-later
 status: accepted
 tags: [adr, build-now-adapt-later, bnal, trends, memory, finops, prompt-injection, hallucination, reflection]
 timestamp: 2026-06-29
+id: ADR-013-five-more-trend-features-bnal
 ---
 
 # ADR-013: 5 trend 2026 nữa → 5 chức năng (build-now-adapt-later, đợt 2)

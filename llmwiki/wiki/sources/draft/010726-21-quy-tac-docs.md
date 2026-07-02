@@ -4,6 +4,7 @@ type: draft
 status: proposed
 tags: [docs-site-macos, output-report]
 proposed: 2026-07-01
+id: 010726-21-quy-tac-docs
 ---
 
 # 010726-21-quy-tac-docs

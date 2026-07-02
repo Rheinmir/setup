@@ -262,6 +262,71 @@
     "date": "02/07/26",
     "session": "7aba727b",
     "pending": true
+  },
+  {
+    "id": "p-auto-08",
+    "parent": null,
+    "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
+    "desc": "Bề mặt bị chạm: fdk/wiki/concepts/fdk-dev-strategy.md, fdk/wiki/log.md, fdk/wiki/sources/mongol-ai-strategy.md, llmwiki/html/overstack.html, llmwiki/raw/fdk-stragegy.md, llmwiki/wiki/log.md, llmwiki/wiki/sources/draft/020726-adr-015-status.md, llmwiki/wiki/sources/draft/020726-ingest-fdk-strategy.md …. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát); lần /fdk kế tiếp sẽ chưng lọc về đúng nhánh.",
+    "status": "open",
+    "scope": [],
+    "date": "02/07/26",
+    "session": "d123a203",
+    "pending": true
+  },
+  {
+    "id": "p-07",
+    "parent": "p-01",
+    "title": "Policy chưa DRIVE enforcement — wiring hardcode",
+    "desc": "Audit 02/07 (kim chỉ nam fdk-dev-strategy #3): hook pre_tool_use hardcode danh sách validator (pre_tool_use.py:44) thay vì đọc policy.yaml; policy tự thú nhận wiring thật nằm ở gen-converters.py. Policy (nguồn chân lý — ADR-001) mới LIỆT KÊ chứ chưa điều khiển. Kèm theo: validator mồ côi task_lifecycle.py không được wire ở đâu; code_health/agent_claude_parity/duplicate_basename chạy ở CI nhưng không có rule R* trong policy.",
+    "status": "open",
+    "scope": [],
+    "date": "2026-07-02",
+    "session": "audit-fdk-strategy"
+  },
+  {
+    "id": "p-08",
+    "parent": "p-01",
+    "title": "Drift 15 pattern bị che bởi version tĩnh",
+    "desc": "health-check báo drift 15 file (5 hook + 6 skill + AGENT/CLAUDE.md + overstack.html) nhưng version.json local = remote = 1.3.6 nên hệ tưởng đồng bộ. Cần buộc bump version khi pattern đổi (vòng phản hồi #7 — drift không được im lặng). Liên đới: bản cài ~/.claude/skills/query lệch repo canonical (ADR-003).",
+    "status": "open",
+    "scope": [],
+    "date": "2026-07-02",
+    "session": "audit-fdk-strategy"
+  },
+  {
+    "id": "p-09",
+    "parent": "p-01",
+    "title": "Mép đăng ký skill hụt + mô tả sai trigger",
+    "desc": "Audit trụ skills: parity canonical↔mirror 66/66 hoàn hảo, nhưng (a) skill fdk thiếu trong marketplace.json (65/66); (b) extract-site có description sai bản chất (khai 'site→markdown' nhưng body là design-token extraction) → dẫm chân web-crawl, cần merge/deprecate; (c) ingest/propose/query bị đăng ký 2 lần trong runtime list.",
+    "status": "open",
+    "scope": [],
+    "date": "2026-07-02",
+    "session": "audit-fdk-strategy"
+  },
+  {
+    "id": "p-10",
+    "parent": "p-03",
+    "title": "Nhịp ship wiki: 15 draft tồn + flywheel gần rỗng",
+    "desc": "Nguyên tắc #8: 15 draft status proposed chưa promote (cũ nhất 25/06), 2 draft done chưa archive, 1 raw chưa ingest (tech-pattern). Vòng phản hồi #7 chưa chảy: events.jsonl 712 dòng nhưng failures.jsonl chỉ 3; 7 node ghi-tạm p-auto-02..08 trong chính cây này còn open rỗng chưa distill. Fix hệ thống: chạy /docs-curate + /lint định kỳ, và cơ chế flush p-auto phải kèm distill.",
+    "status": "open",
+    "scope": [],
+    "date": "2026-07-02",
+    "session": "audit-fdk-strategy"
+  },
+  {
+    "id": "p-11",
+    "parent": "p-01",
+    "title": "Wiki là queue dữ liệu — thiếu quan hệ, ledger, traceability máy-đọc-được",
+    "desc": "Mọi mắt xích wiki ghi văn bản cho người (log.md), không mắt xích nào ghi sự kiện có cấu trúc cho máy: sửa/xóa xuyên phiên không truy được, [[wikilink]] vô kiểu không validate. Giải bước 1+2+3 (đã qua council 5-phản-biện, guardrail G1-G7): ledger JSONL flock (khóa file — chống ghi song song, test 8-process pass), tombstone (bia mộ — đánh dấu xóa thay vì xóa cứng), id+relations frontmatter (82 trang migrate, chỉ suy từ tín hiệu khách quan), validator R-rel warn-only (chỉ cảnh báo, chưa chặn). Còn thiếu: stale-propagation giới hạn 1 bước, /wiki-room (đệ quy cap=1), wiki-graph HTML — chờ chạy ổn định 4-6 tuần rồi đánh giá lại.",
+    "status": "partial",
+    "scope": [
+      "harness",
+      "llmwiki"
+    ],
+    "date": "02/07/26",
+    "session": "session 020726 — draft 020726-wiki-core-relations + council seed42",
+    "solvedBy": "wiki_ledger.py (hook post_tool_use, flock G1) + validators/rel_integrity.py (warn-only G4/G7) + fdk/tools/wiki-relations.py (migrate 82 trang, idempotent) — bước 4-6 chưa làm nên 2/3."
   }
 ]
 </script>

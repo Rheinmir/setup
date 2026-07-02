@@ -4,6 +4,7 @@ title: "ADR-014: kho pattern tham chiếu BẢO VỆ (llmwiki/patterns/) + R14 p
 status: accepted
 tags: [adr, pattern-library, R14, protected, build-now-adapt-later, roles, anti-pattern]
 timestamp: 2026-06-29
+id: ADR-014-protected-pattern-library
 ---
 
 # ADR-014: kho pattern tham chiếu bảo vệ + R14 patterns-protected

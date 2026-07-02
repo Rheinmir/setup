@@ -4,6 +4,7 @@ title: "ADR-006: lớp CHẶN giữ là hook/CI — MCP chỉ cho phần công c
 status: accepted
 tags: [adr, harness, mcp, hook, enforcement, boundary]
 timestamp: 2026-06-28
+id: ADR-006-blocking-stays-hook-mcp-for-tooling
 ---
 
 # ADR-006: lớp chặn giữ là hook/CI, MCP chỉ cho công cụ/đọc

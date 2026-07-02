@@ -4,6 +4,7 @@ title: harness-local — harness RIÊNG của dự án
 status: implemented
 tags: [harness, project-local, validator, namespace, sync-safe]
 timestamp: 2026-06-29
+id: harness-local
 ---
 
 # harness-local — dự án tự phát triển rule riêng

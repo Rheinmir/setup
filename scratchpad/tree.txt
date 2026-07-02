@@ -1,0 +1,86 @@
+ROOT overstack (65 skill, 15 rule)
+
+[LOOP wiki-loop] 3 skill
+    ingest: Process new file in llmwiki/raw/ and distill into wiki pages
+    lint: Periodic wiki health check
+    query: Synthesize answer from wiki; persist new insights as wiki en
+
+[LOOP dev-loop] 12 skill
+  <lá edit> ✏️ sửa code an toàn (5)
+      build-now-adapt-later: When a task is blocked by missing or unverified information (an undocu
+      impact-check: Map all callers and dependents of a symbol before modifying shared cod
+      propose: Plan a feature before coding
+      safe-change: Modify shared code without breaking existing callers
+      verify-before-commit: Gate every commit
+  <lá build> 🏗️ dựng & onboard (4)
+      new-project-setup: Deploy llmwiki từ đầu vào project mới
+      new-skill: Scaffold a new skill into both publish trees at once
+      onboard-codebase: Deep codebase analysis
+      tour-guide: Thêm một in-app product tour (spotlight onboarding overlay) tự viết, K
+  <lá eval> 📊 eval & vòng lặp (3)
+      failure-flywheel: Capture each agent failure, bucket and count it deterministically, and
+      loop-runner: Deterministic guardrailed agent-loop driver
+      wikieval: Turn wiki golden pages into a CI-blocking eval suite with a cheap→expe
+
+[LOOP orchestrate] 10 skill
+  <lá dispatch> 🐳 điều phối (5)
+      orca-cli: Use the public `orca` CLI to operate Orca-managed worktrees/workspaces
+      orca-dispatch-reference: Reference for Antigravity/OpenCode dispatch, skill installation, Agent
+      orca-onboard: Parallel codebase onboarding
+      orca-workflow: Daily propose → gate → dispatch workflow with Orca
+      orchestration: Use Orca orchestration for structured multi-agent coordination: thread
+  <lá eval> 📊 đánh giá (3)
+      council: Run a Karpathy-style LLM council (3-stage multi-agent evaluation) on t
+      orca-eval: Quét N session Claude Code gần nhất, distill best practices thành repo
+      trace-grader: Score the PATH an agent took (tool choice, ordering, retries, repeatab
+  <lá ops> 🚀 vận hành & deploy (2)
+      jenkins-agent-l3-deploy: Deploy a docker-compose app via a Jenkins INBOUND AGENT running on the
+      orca-sec-scans: Quét bảo mật mã nguồn bằng Trivy
+
+[LOOP utils] 40 skill
+  <lá docs> 📄 tài liệu & render (6)
+      cursor-animated-sites: Build an interactive "cursor-animated walkthrough" page on top of the 
+      docs-site-macos: Build a beautiful macOS-inspired documentation site (single HTML file)
+      extract-site: Extract and convert a website or docs site into clean markdown
+      md-to-html: Render Markdown thành standalone HTML
+      web-clone: Clone a website
+      web-crawl: Crawl/scrape a website or single page into clean LLM-ready MARKDOWN
+  <lá taste> 🎨 thiết kế & style (10)
+      brandkit: Premium brand-kit image generation skill for creating high-end brand-g
+      design-taste-frontend: Anti-slop frontend skill for landing pages, portfolios, and redesigns
+      design-taste-frontend-v1: The original v1 taste-skill, preserved for projects depending on its e
+      gpt-taste: Elite UX/UI & Advanced GSAP Motion Engineer
+      high-end-visual-design: Teaches the AI to design like a high-end agency
+      industrial-brutalist-ui: Raw mechanical interfaces fusing Swiss typographic print with military
+      minimalist-ui: Clean editorial-style interfaces
+      redesign-existing-projects: Upgrades existing websites and apps to premium quality
+      stitch-design-taste: Semantic Design System Skill for Google Stitch
+      tour-guide-supademo: Style thiết kế Supademo cho in-app product tour (dùng kèm skill tour-g
+  <lá imagegen> 🖼️ image→code/gen (3)
+      image-to-code: Elite website image-to-code skill for Codex
+      imagegen-frontend-mobile: Elite mobile app image-generation skill for creating premium, app-nati
+      imagegen-frontend-web: Elite frontend image-direction skill for generating premium, conversio
+  <lá caveman> 🦴 caveman (7)
+      cavecrew: Decision guide for delegating to caveman-style subagents
+      caveman: Ultra-compressed communication mode
+      caveman-commit: Ultra-compressed commit message generator
+      caveman-compress: Compress natural language memory files (CLAUDE.md, todos, preferences)
+      caveman-help: Quick-reference card for all caveman modes, skills, and commands
+      caveman-review: Ultra-compressed code review comments
+      caveman-stats: Show real token usage and estimated savings for the current session
+  <lá fdk> 🛠️ framework-dev (7)
+      docs-curate: Sắp xếp gọn kho tài liệu LOCAL (llmwiki/html/ + wiki/sources/draft/) k
+      fdk: Front-door on-demand cho phát triển framework HOẶC distill/author một 
+      harness-tour: Tour
+      harness-update: TỰ BẢO TRÌ framework overstack trên máy user (self-maintain)
+      health-check: Kiểm tra sức khỏe "pattern chuẩn" của template
+      snapshot-push: Push bonbon-ai outer repo as full snapshot, including be/ and fe/ cont
+      sync-template: Sync structural improvements between project and master template repo
+  <lá utility> 🔧 tiện ích khác (7)
+      check-approve: Sinh sẵn 1-liner để trace 1 lệnh approve/return/reject của DMS trên lo
+      computer-use: Use Orca's computer-use CLI to inspect and operate local desktop app w
+      find-skills: Helps users discover and install agent skills when they ask questions 
+      full-output-enforcement: Overrides default LLM truncation behavior
+      join-project: Orient nhanh vào dự án đang chạy đã có llmwiki
+      last30days: Research what people actually say about any topic in the last 30 days
+      uat-nonit-testcase: Tạo bộ test case / checklist UAT cho người dùng nghiệp vụ NON-IT (C&B,

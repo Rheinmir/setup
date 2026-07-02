@@ -284,3 +284,14 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 - 2026-07-02 13:08 — session `4aaab8ea` — 18 tool calls — files: 020726-overstack-docs-redesign.md, AGENT.md, CLAUDE.md, build-overstack-docs.py, sync-skills.py
 - 2026-07-02 13:08 — session `aea1a0d5` — 14 tool calls — files: .pre-commit-config.yaml, ADR-016-no-ai-attribution-in-commits.md, LICENSE, SKILL.md, decisions.md, install-harness.sh, log.md, no_ai_attribution.py …
 - 2026-07-02 13:08 — session `7aba727b` — 3 tool calls — files: 020726-openai-compat-endpoint-pools.html, 020726-openai-compat-endpoint-pools.md
+
+## 2026-07-02 — ingest — fdk-stragegy.md
+- Created `concepts/fdk-dev-strategy.md` — pattern hóa 8 bài học Mông Cổ thành 8 nguyên tắc phát triển fdk
+- Created `sources/mongol-ai-strategy.md` — tóm tắt nguồn raw `llmwiki/raw/fdk-stragegy.md`
+- Updated `index.md` — thêm 2 trang mới
+- 2026-07-02 13:19 — session `bf38cf4e` — 49 tool calls — files: 020726-eval-report.md, 020726-orca-issue-ledger-travel-seq.html, 020726-orca-issue-ledger-travel.md, SKILL.md, fdk-problem-tree.html, flush_problem_tree.py, harness-events.py, install.sh …
+- 2026-07-02 13:21 — session `a1833594` — 6 tool calls — files: 020726-ingest-fdk-strategy.md, fdk-dev-strategy.md, index.md, mongol-ai-strategy.md
+- 2026-07-02 13:47 — session `a1833594` — 8 tool calls — files: 020726-audit-fdk-strategy.md, 020726-ingest-fdk-strategy.md, fdk-dev-strategy.md, index.md, mongol-ai-strategy.md
+
+## 2026-07-02 — fdk — wiki-core v2 buoc 1+2&3 (framework wiki)
+- fdk/wiki cung nhan ledger + id/relations migrate (63 trang). Nguon: draft llmwiki 020726-wiki-core-relations (council-approved).

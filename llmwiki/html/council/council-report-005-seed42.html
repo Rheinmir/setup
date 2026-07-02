@@ -1,0 +1,131 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Council Stage-4 report — blind peer-rank. Deterministic từ council.transcript.json.">
+<title>Council · báo cáo Stage-4</title><link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23232028'/><path d='M8 22h16M16 7l7 5H9z' stroke='%23c9a24b' stroke-width='2' fill='none' stroke-linejoin='round'/></svg>">
+<style>
+:root{--paper:#f4f1ea;--ink:#26221c;--dim:#7a7266;--faint:#a79e90;--line:rgba(60,52,40,.13);
+ --card:rgba(255,253,249,.74);--stroke:rgba(255,255,255,.9);--accent:#8a6d2f;--shadow:24px 40px 24px rgba(60,48,28,.10)}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;font:15px/1.6 "Iowan Old Style","Palatino",Georgia,ui-serif,serif;color:var(--ink);background:var(--paper);
+ background-image:radial-gradient(120% 80% at 15% -5%,rgba(214,198,160,.35),transparent 55%),radial-gradient(90% 70% at 100% 0%,rgba(150,168,178,.22),transparent 50%);
+ min-height:100dvh;-webkit-font-smoothing:antialiased}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:99;opacity:.5;mix-blend-mode:multiply;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.045'/%3E%3C/svg%3E")}
+.wrap{max-width:940px;margin:0 auto;padding:56px 22px 90px}
+.tabnum{font-variant-numeric:tabular-nums}
+.body-sans{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.eyebrow{font:600 12px/1 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+h1{font-weight:600;font-size:clamp(30px,5vw,44px);line-height:1.04;letter-spacing:-.015em;margin:12px 0 10px;text-wrap:balance;max-width:22ch}
+.q{color:var(--dim);font-size:16px;max-width:60ch;text-wrap:pretty}
+.meta{margin-top:14px;font:500 12.5px/1 ui-monospace,Menlo,monospace;color:var(--faint)}
+.warn{background:rgba(176,106,44,.09);border:1px solid rgba(176,106,44,.32);border-left:3px solid #b06a2c;border-radius:13px;
+ padding:14px 16px;margin:26px 0 8px;font-size:13.5px;color:#5f4a2e;font-family:ui-sans-serif,system-ui,sans-serif}
+.sect{margin:46px 0 18px;display:flex;align-items:baseline;gap:14px}
+.sect .n{font-size:26px;color:var(--accent);line-height:1} .sect h2{font-weight:600;font-size:21px;margin:0;letter-spacing:-.01em}
+.sect .rule{flex:1;height:1px;background:var(--line)}
+.pcard{background:var(--card);border:1px solid var(--stroke);border-radius:20px;padding:22px 24px;margin:18px 0;position:relative;overflow:hidden;
+ box-shadow:0 1px 0 rgba(255,255,255,.7) inset,var(--shadow);transition:transform .28s cubic-bezier(.2,.7,.2,1),box-shadow .28s}
+.pcard:hover{transform:translateY(-3px);box-shadow:0 1px 0 rgba(255,255,255,.8) inset,32px 54px 30px rgba(60,48,28,.14)}
+.phead{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.pav{width:46px;height:46px;border-radius:14px;color:#fff;font-weight:600;font-size:20px;display:grid;place-items:center;flex:0 0 46px}
+.pname{font-size:19px;font-weight:600;letter-spacing:-.01em;text-transform:capitalize}
+.rankpill{font:600 11.5px/1 ui-monospace,Menlo,monospace;color:var(--dim);margin-left:6px}
+.blindtag{margin-left:auto;align-self:flex-start;font:600 11px/1 ui-monospace,Menlo,monospace;color:var(--ac);
+ border:1px solid var(--ac);border-radius:7px;padding:5px 9px}
+.ansbody{font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px}
+.ansbody p{margin:6px 0;color:#3a342c} ol.ans{margin:8px 0 2px;padding-left:0;list-style:none;counter-reset:a}
+ol.ans li{position:relative;padding-left:26px;margin-bottom:8px;line-height:1.55}
+ol.ans li::before{counter-increment:a;content:counter(a);position:absolute;left:0;top:1px;width:18px;height:18px;border-radius:6px;
+ background:var(--ac);color:#fff;font:700 11px/18px ui-monospace,Menlo,monospace;text-align:center}
+.tblwrap{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:rgba(255,253,249,.6);box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;font-size:13.5px;font-family:ui-sans-serif,system-ui,sans-serif}
+th,td{text-align:left;padding:12px 15px;border-bottom:1px solid var(--line)} tbody tr:last-child td{border-bottom:0}
+tbody tr{transition:background .18s} tbody tr:hover{background:rgba(138,109,47,.06)}
+th{color:var(--faint);font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.06em;background:rgba(60,52,40,.03)}
+.mono{font-family:ui-monospace,Menlo,monospace} .dim{color:var(--dim)}
+.chip{display:inline-flex;align-items:center;gap:6px;background:color-mix(in srgb,var(--c) 12%,var(--paper));
+ border:1px solid color-mix(in srgb,var(--c) 55%,transparent);color:var(--c);border-radius:9px;padding:5px 11px;margin:9px 8px 0 0;
+ font:600 12.5px/1 ui-sans-serif,system-ui,sans-serif;transition:transform .2s}
+.chip:hover{transform:translateY(-2px)} .chip::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c)}
+.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin:0 0 18px}
+@media(max-width:640px){.kpi{grid-template-columns:1fr}}
+.kpi div{background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:16px 18px;box-shadow:var(--shadow);transition:transform .26s}
+.kpi div:hover{transform:translateY(-3px)}
+.kpi b{display:block;font-size:22px;font-weight:600;margin:5px 0 3px;text-transform:capitalize}
+.kpi span{color:var(--faint);font:600 10.5px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.07em}
+.kpi em{font-style:normal;color:var(--dim);font-size:12px;font-family:ui-sans-serif,system-ui,sans-serif}
+.synth{background:linear-gradient(158deg,rgba(138,109,47,.10),rgba(63,125,116,.06));border:1px solid rgba(138,109,47,.26);
+ border-radius:20px;padding:24px 26px;margin-top:16px;box-shadow:var(--shadow)}
+.synth .lbl{font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.09em;color:var(--accent)}
+.synth p{margin:7px 0;font-size:13.5px;line-height:1.6;font-family:ui-sans-serif,system-ui,sans-serif}
+ul.synlist{margin:6px 0 10px;padding:0;list-style:none;counter-reset:s;font-family:ui-sans-serif,system-ui,sans-serif}
+ul.synlist li{position:relative;padding-left:26px;margin-bottom:8px;font-size:13.5px;line-height:1.55}
+ul.synlist li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:0;width:18px;height:18px;border-radius:6px;
+ background:var(--accent);color:#fff;font:700 11px/18px ui-monospace,Menlo,monospace;text-align:center}
+.reveal{margin-top:16px} .reveal .lbl{font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--faint)}
+footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);color:var(--faint);font-size:12.5px;text-align:center;
+ font-family:ui-sans-serif,system-ui,sans-serif}
+a:focus-visible,tr:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+</style></head><body><div class="wrap">
+<header>
+  <div class="eyebrow">🏛 Council · Stage-4</div>
+  <h1>Hội đồng chấm mù</h1>
+  
+  <div class="meta tabnum">seed 42 · council.py/1.0 · 3 giám khảo · 5 ghế</div>
+</header>
+
+<section><div class="sect"><span class="n tabnum">1</span><h2>Ý kiến hội đồng</h2><span class="rule"></span></div>
+    <article class="pcard" style="--ac:#4a6d99">
+      <div class="phead">
+        <div class="pav" style="background:#4a6d99">I</div>
+        <div><div class="pname">Ilya Sutskever <span class="rankpill tabnum">🥇 #1 · mean 1.0</span></div><div class="plens">Biên giới scaling &amp; an toàn AI</div></div>
+        <div class="blindtag">blind D</div>
+      </div>
+      <div class="ansbody"><p>Khi scale (nhieu agent ghi song song): wiki/ledger.jsonl khong co concurrency control - append dong thoi vao 1 file JSONL tu nhieu process khong an toan mac dinh (interleaved writes, partial lines), o quy mo lon la nguon corrupt am tham, chi phat hien khi R-rel-4 bao do hang loat - da qua muon de truy vet. Stale-propagation khong co can (bound): node trung tam sua 1 lan co the lan hang tram node; neu quan he co chu trinh (contradicts/depends-on) can khu chu trinh tuong minh - khong thay de cap. Room (Tier C) la diem lo nhat: khong noi ro co duoc mo room con hay khong, khong depth cap, khong token/turn budget, khong dieu kien dung de quy - dung pattern tu-goi-lai khong gioi han la vong khuech dai tiem an. Validator R-rel-1..3 chi validate cau truc, khong ngu nghia: mot trang gan {implements, to: adr-004} nhung noi dung mau thuan van PASS - false confidence nguy hiem nhat la tin xanh = dung trong khi no chi la toan ven tham chieu. Roadmap: dung huong &#x27;guardrail truoc capability&#x27; (buoc 1-3 truoc 4-5) nhung buoc 5 (/wiki-room) va buoc 4 (stale-propagation) nen tach them mot buoc 4.5 gioi han ro rang truoc khi thanh skill goi duoc cong khai. Danh gia tong: tu duy dung (guardrail truoc, tombstone thay xoa cung) nhung bo sot gioi han cung o dung 2 cho co the khuech dai khong kiem soat (ghi dong thoi, de quy room) - chua san sang cho &#x27;hang nghin trang, nhieu agent song song&#x27; nhu de bai gia dinh. 3 guardrail bat buoc them:</p><ol class='ans'><li>concurrency control cho ledger.jsonl (file lock hoac shard-per-agent + merge co thu tu) + test ghi song song truoc khi coi buoc 1 la xong;</li><li>depth cap=1 + token/node budget cung cho room, cam room mo room con, co circuit breaker;</li><li>can ro cho stale-propagation (so hop toi da) + khu chu trinh tuong minh. Diem manh that: danh gia hien trang bang khung 6 tieu chi truoc khi thiet ke, giu nen markdown/travel-ability, roadmap tach ro loi chat (1-3) khoi hien thi/tien ich (4-6).</li></ol></div>
+    </article>
+    <article class="pcard" style="--ac:#7a5c86">
+      <div class="phead">
+        <div class="pav" style="background:#7a5c86">N</div>
+        <div><div class="pname">Nassim Taleb <span class="rankpill tabnum">🥈 #2 · mean 2.0</span></div><div class="plens">Phản mong manh &amp; rủi ro đuôi</div></div>
+        <div class="blindtag">blind C</div>
+      </div>
+      <div class="ansbody"><p>Ledger phinh vo han, khong co nen/rotate/compact -&gt; chi phi doc/lan truyen tang phi tuyen tinh o quy mo lon (SPOF gion). Stale-propagation khong co giam chan/ban kinh gioi han -&gt; stale storm tu node hub lam mat y nghia tin hieu. Tombstone chong chat mai mai, khong bao gio don -&gt; validator phai quet rac lich su. Hook post_tool_use la SPOF ghi ledger: loi/bypass lam gay chuoi trace am tham, chi phat hien sau (CI R-rel-4), khong ngan truoc. Context 3 tang: room long nhau khong gioi han co the tao &#x27;lossy compounding&#x27; (nen sai chong nen sai) - chinh co che chong rot co the thanh nguon rot moi. Roadmap: migrate relations (buoc 2) truoc khi validator on dinh (buoc 3) se ghi hang loat quan he sai vao ledger append-only truoc khi co ai kiem tra - sua sau ton hon vi da lan vao lich su. Danh gia tong: triet ly dung (ledger+tombstone la ban nang antifragile hiem thay) nhung phan lan truyen thieu circuit breaker, chua san sang cho duoi phan phoi. 3 rui ro duoi + giam thieu:</p><ol class='ans'><li>stale storm tu hub -&gt; gioi han lan truyen N=1 buoc hoac TTL;</li><li>ledger tang vo han lam cham doc -&gt; ke hoach compact/rotate ngay tu buoc 1;</li><li>hook bi bypass/loi im lang -&gt; heartbeat tu xac nhan N thao tac = N dong ledger ngay luc dong phien, fail loud. Diem manh that: tombstone thay xoa cung + ghi qua hook tu dong (khong nho model tu giac) la hai quyet dinh khang-gion thuc su; bang cham 6 tieu chi trung thuc, khong to hong.</li></ol></div>
+    </article>
+    <article class="pcard" style="--ac:#3f7d74">
+      <div class="phead">
+        <div class="pav" style="background:#3f7d74">C</div>
+        <div><div class="pname">Charlie Munger <span class="rankpill tabnum">🌱 #3 · mean 3.333333</span></div><div class="plens">Đa mô hình &amp; nghịch đảo</div></div>
+        <div class="blindtag">blind B</div>
+      </div>
+      <div class="ansbody"><p>Nghich dao: cai gi chac chan giet proposal trong 6 thang - tra loi la chinh quy mo nguoi van hanh no (mot nguoi + AI agent, khong phai team). 4 lop moi deu co chi phi bien duong moi lan ghi wiki, mai mai; loi ich that chi hien hinh khi kho wiki du lon/cu de &#x27;quan he vo kieu&#x27; thuc su gay dau - o quy mo hien tai (~18 trang) chi phi xay co the vuot gia tri 6 thang toi, co dien over-engineering. Tam ly to chuc: khong co dong nghiep review, khong ap luc xa hoi duy tri chuan - relations: mo rong doi hoi ky luat cao hon [[wikilink]] hien tai, se bi ghi qua loa hoac sai kieu, tao ao giac tin cay con nguy hiem hon rac vo kieu. Ky thuat: vi pham chinh nguyen tac &#x27;Simplicity first&#x27; trong CLAUDE.md du an - &#x27;200 dong ma 50 du -&gt; viet lai&#x27;; 6 buoc la 6 he thong con moi cho mot wiki dang la markdown + hook don gian, 4 lop &#x27;mong&#x27; cong don la mot he quan tri tri thuc day du, khong mong chut nao khi tinh tong be mat bao tri. So sanh: relations co kieu + validator dangling-link + do thi hien thi = graph database tho tu viet bang YAML+JSONL+Python, trong khi git log --follow + grep da giai 80% bai toan; ledger.jsonl gan nhu trung chuc nang voi git log - nguy co hai nguon su that lech nhau chi doi tu &#x27;log.md vs git&#x27; sang &#x27;ledger.jsonl vs git&#x27;, chua chac giai quyet goc re. Danh gia tong: chan dung dung benh nhung ke don qua lieu so voi the trang mot-nguoi-mot-agent - nguy co chet vi nang hon suc nguoi dung duy tri, khong phai vi sai. 3 cach chac chan giet + cach ne:</p><ol class='ans'><li>ghi relations: bi bo qua dan -&gt; de agent tu dong suy ra/dien luc verify-before-commit, nguoi chi review;</li><li>ledger lech khoi git thanh nguon su that thu hai -&gt; khong tao ledger rieng, sinh tu git log + frontmatter, chi them state phai sinh;</li><li>6 buoc khong buoc nao hoan thanh vi moi buoc tu phinh -&gt; cat xuong 1 buoc toi thieu (chi relations: co kieu + 1 validator dangling-link), chay song 4-6 tuan, do co thuc su dung truoc khi build tiep. Diem manh that: phan danh gia (Phan 1) dung khung PROV/ontology/context-engineering co bang chung repo cu the, khong mo ho; nhan dien dung &#x27;van ban cho nguoi != su kien cho may&#x27; la insight that.</li></ol></div>
+    </article>
+    <article class="pcard" style="--ac:#b06a2c">
+      <div class="phead">
+        <div class="pav" style="background:#b06a2c">M</div>
+        <div><div class="pname">Marcus Aurelius <span class="rankpill tabnum">#4 #4 · mean 4.0</span></div><div class="plens">Bền bỉ &amp; minh định đạo đức</div></div>
+        <div class="blindtag">blind E</div>
+      </div>
+      <div class="ansbody"><p>Phan dinh kiem soat: buoc 1-3 (ledger append-only, id/relations frontmatter, 4 validator) la thu thuc su nam trong tam tay - cu phap, hook, CI, may tuan theo khong can nguoi nho. Roadmap dat chung len truoc la dung dao ly khac ky. Nhung buoc 5-6 la chuyen khac han ve ban chat: /wiki-room chi co tac dung neu co nguoi/agent chu dong goi khi context da rot - ma dung luc rot lai la luc kha nang &#x27;nho phai goi skill X&#x27; yeu nhat, nghich ly tu tham chieu: cong cu chong quen bi chinh trieu chung quen vo hieu hoa. Trang HTML wiki-graph chi co gia tri neu co nguoi mo xem - khong gi dam bao dieu do. Day la ao tuong kiem soat ro nhat: dong khung mot hanh vi con nguoi tuong lai nhu mot tinh nang se hoan thanh thay vi mot hy vong phai chap nhan rui ro khong xay ra. Ve ben bi: lop 1-3 song duoc vi tu-cuong-che (hook chan, CI doi chieu) - khong can ai nho bao tri, dung bai hoc da hoc tu R2 Origin. Lop 4-5 mong manh dung kieu meta-he-thong tham vong: quy uoc dat ten dep nhung khong co co che cuong che nao buoc tuan theo - song nho ky luat tu giac, chinh diem yeu chi mang cua he thong cu (log.md &#x27;van xuoi cho nguoi&#x27;, ung bien) ma Phan 1 da chi ra. Noi cach khac lop 4 tai tao dung loai that bai ma lop 1-3 vua sua, o tang khac. Ve thua nhan gioi han: proposal im lang ve hai gioi han that -</p><ol class='ans'><li>ghi dong thoi, ai thang khi 2 phien/agent cung sua/append ledger, khong mot dong nao nhac race condition;</li><li>quan he dung cu phap nhung sai ngu nghia - validator chi chan dangling/code-drift, khong chan gan nham loai quan he. Ve dao duc thuc dung: nhu cau that (loi chat + doc ra ngoai + traceability) duoc phuc vu dung muc o buoc 1-3, nhung &#x27;hien thi do thi quan he cho nguoi&#x27; (do thi bezier draggable, timeline click-de-xem) la cong suc lon cho nhu cau chua ai xac nhan cap thiet, trong khi ledger JSONL tho + grep da tra loi phan lon cau hoi truy vet. Danh gia tong: thiet ke dung o nua dau (kiem soat duoc, tu cuong che, ben) nhung tu lua minh khi xep nua sau vao cung roadmap nhu cung mot loai viec, trong khi nua sau phu thuoc hoan toan vao hanh vi con nguoi he thong khong the ra lenh. Nen chap nhan la gioi han thay vi co giai quyet ngay: viec con nguoi/agent co thuc su mo /wiki-room va trang wiki-graph hay khong - dung build 2.4/2.5 nhu dac ta xong-la-xong, hoac phai tu-cuong-che chung; cung nen chap nhan race condition va sai ngu nghia quan he nam ngoai pham vi 4 validator hien tai - ghi thang vao Notes thay vi ngam hieu da bao phu. Diem manh that: roadmap tach dung ranh gioi &#x27;loi tu cuong che&#x27; (1-3) khoi &#x27;lop doc-ra-ngoai phu thuoc hanh vi&#x27; (4-6), va cac co che chan (hook+CI, tombstone thay xoa cung) hoc dung bai hoc tu R2 - bien y dinh tot thanh thu may ep tuan theo chu khong nho ai nho.</li></ol></div>
+    </article>
+    <article class="pcard" style="--ac:#4a6d99">
+      <div class="phead">
+        <div class="pav" style="background:#4a6d99">D</div>
+        <div><div class="pname">Daniel Kahneman <span class="rankpill tabnum">#5 #5 · mean 4.666667</span></div><div class="plens">Thiên kiến nhận thức</div></div>
+        <div class="blindtag">blind A</div>
+      </div>
+      <div class="ansbody"><p>Toc do sinh van ban (mot luot duy nhat ra bang 6 tieu chi + 3 nguon chuan + 4 luat validator + ledger + 3-tang + HTML graph) la dau hieu System 1 gia trang System 2 - van phong bang bieu tao cam giac nghiem ngat nhung khong co buoc nao cho thay da can nhac va loai bo phuong an khac. Solution bias: van de goc &#x27;sua/xoa khong phat sinh su kien may doc duoc&#x27; co the giai bang mot dong log co cau truc don gian, nhung de xuat di thang den ledger JSONL + tombstone + stale-propagation + 4 validator + 3-tier + skill moi + HTML graph - quy mo giai phap doanh nghiep cho wiki ca nhan ~18 trang. Bang cham 6 tieu chi la noi confirmation bias lo ro nhat: tac gia tu chon khung, tu dat trong so (khong giai thich vi sao 6 khong phai 4/8), tu cham he thong minh dang van hanh trong chinh phien do; tieu chi duy nhat duoc uu tron ven (Provenance) lai chinh la thu &#x27;vua chan toi o R9/R16 trong chinh phien nay&#x27; - availability cascade, N=1 lam bang chung khach quan. Anchoring: moi thiet ke moi deu duoc dat ten/gan so theo dung quy uoc da co (R-rel an theo R2/R5/R9, so # an theo fdk-dev-strategy) - co the la ky luat tot nhung cung co the che khuat kha nang dat cau hoi nguoc lieu day co phai cach dung. Availability heuristic trong rui ro: liet ke dung nhung rui ro de hinh dung (xoa file, sua khac phien) nhung bo sot rui ro kho hinh dung hon:</p><ol class='ans'><li>race condition ghi dong thoi ledger.jsonl;</li><li>drift ngu nghia giua relations: khai bao va noi dung thuc - R-rel chi kiem tra ton tai, khong kiem tra dung nghia;</li><li>chi phi bao tri ledger tang tuyen tinh khong duoc dat cau hoi ai xoa/nen no. Danh gia tong: phan tich co chat luong that (dung khoang trong, dung thuat ngu) nhung quy mo giai phap bi thoi phong boi solution bias, bang cham bi nhiem confirmation bias vi tac gia vua danh gia vua thiet ke vua cham diem chinh he thong dang dung. 3 cho thien kien cao nhat:</li><li>dong &#x27;vua chan toi o R9/R16&#x27; dung lam bang chung cho Provenance - availability/self-serving;</li><li>toan bo Lop 2+3+4 de xuat dong loat cho wiki ~18 trang - solution bias;</li><li>roadmap tu phan loai chinh de xuat cua minh la &#x27;toi thieu&#x27; ma khong ai ngoai cuoc phan bien quy mo do. Diem manh that: chan doan goc re dung va cu the - &#x27;van ban cho nguoi, khong su kien cho may&#x27; la quan sat sac; nguyen tac &#x27;khong thay nen markdown, chi them lop mong&#x27; cho thay co y thuc kiem che, du thuc thi (4 lop cung luc) mau thuan voi chinh tinh than &#x27;mong&#x27; do tuyen bo.</li></ol></div>
+    </article></section>
+<section><div class="sect"><span class="n tabnum">2</span><h2>Bỏ phiếu kín</h2><span class="rule"></span></div>
+<div class="tblwrap"><table><thead><tr><th>Giám khảo</th><th>Ranking (nhãn ẩn)</th><th>Thứ tự trình bày · anchor guard</th></tr></thead><tbody><tr><td>seat-1</td><td class="mono">D › C › E › B › A</td><td class="mono dim">C → E → D → B → A</td></tr><tr><td>seat-2</td><td class="mono">D › C › B › A › E</td><td class="mono dim">B → D → A → C → E</td></tr><tr><td>seat-3</td><td class="mono">D › C › B › E › A</td><td class="mono dim">A → C → B → D → E</td></tr></tbody></table></div>
+<div class="reveal"><span class="lbl">Reveal map — chỉ lộ ở cuối</span><br><span class="chip" style="--c:#4a6d99">D = Ilya Sutskever</span><span class="chip" style="--c:#7a5c86">C = Nassim Taleb</span><span class="chip" style="--c:#3f7d74">B = Charlie Munger</span><span class="chip" style="--c:#b06a2c">E = Marcus Aurelius</span><span class="chip" style="--c:#4a6d99">A = Daniel Kahneman</span></div></section>
+<section><div class="sect"><span class="n tabnum">3</span><h2>Dashboard chốt</h2><span class="rule"></span></div>
+<div class="kpi">
+ <div><span>Winner</span><b>🥇 Ilya Sutskever</b><em class="tabnum">blind D · mean 1.0</em></div>
+ <div><span>Most contested</span><b>Marcus Aurelius</b><em class="tabnum">blind E · var 0.666667</em></div>
+ <div><span>Đồng thuận</span><b class="tabnum">3 GK</b><em>phân hoá</em></div>
+</div>
+<div class="tblwrap"><table><thead><tr><th>Blind</th><th>Ghế</th><th>Mean rank</th><th>Judge ranks</th></tr></thead><tbody><tr><td class="mono"><b>D</b></td><td>🥇 Ilya Sutskever</td><td class="mono tabnum">1.0</td><td class="mono dim tabnum">[1, 1, 1]</td></tr><tr><td class="mono"><b>C</b></td><td>🥈 Nassim Taleb</td><td class="mono tabnum">2.0</td><td class="mono dim tabnum">[2, 2, 2]</td></tr><tr><td class="mono"><b>B</b></td><td>🌱 Charlie Munger</td><td class="mono tabnum">3.333333</td><td class="mono dim tabnum">[4, 3, 3]</td></tr><tr><td class="mono"><b>E</b></td><td> Marcus Aurelius</td><td class="mono tabnum">4.0</td><td class="mono dim tabnum">[3, 5, 4]</td></tr><tr><td class="mono"><b>A</b></td><td> Daniel Kahneman</td><td class="mono tabnum">4.666667</td><td class="mono dim tabnum">[5, 4, 5]</td></tr></tbody></table></div>
+
+</section>
+<footer>Mọi số liệu từ council.transcript.json — report chỉ là lớp trình bày, không thêm phán xét mới.</footer>
+</div></body></html>

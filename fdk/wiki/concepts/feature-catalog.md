@@ -4,6 +4,7 @@ title: Feature Catalog — mọi năng lực framework & VÌ SAO cần nó
 status: active
 tags: [fdk, features, catalog, why, eval, council, loop, harness]
 timestamp: 2026-06-28
+id: feature-catalog
 ---
 
 # Feature Catalog — và VÌ SAO mỗi cái phải có

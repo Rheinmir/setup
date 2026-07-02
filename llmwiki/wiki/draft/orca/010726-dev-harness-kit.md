@@ -4,6 +4,7 @@ title: "Dev tự build harness riêng — thiết kế BNAL + council 18 ông"
 status: proposed
 tags: [build-now-adapt-later, council, harness-local, output-report]
 proposed: 2026-07-01
+id: 010726-dev-harness-kit
 ---
 
 # 010726-dev-harness-kit

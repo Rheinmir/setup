@@ -3,6 +3,7 @@ type: concept
 title: Architecture — setup repo
 tags: [orca, onboarding]
 timestamp: 2026-06-25
+id: architecture
 ---
 
 # Architecture — setup repo

@@ -4,6 +4,7 @@ title: Rule Registry — R1..R15 canonical
 status: active
 tags: [harness, policy, rules, registry, R11, R12, R13, R14, R15, drift]
 timestamp: 2026-07-02
+id: rule-registry
 ---
 
 # Rule Registry — R1..R15

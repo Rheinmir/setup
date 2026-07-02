@@ -4,6 +4,7 @@ title: "Boris Cherny — 5 archetype (Prototyper/Builder/Sweeper/Grower/Maintain
 status: implemented
 tags: [boris-cherny, archetypes, roles, product-lifecycle, claude-code, reference]
 timestamp: 2026-06-29
+id: boris-cherny-agent-roles
 ---
 
 # Boris Cherny — 5 archetype của người làm sản phẩm (deep-dive scope)

@@ -4,6 +4,7 @@ title: "ADR-015: áp 5 archetype Boris Cherny vào template — sweep-gate (nh�
 status: accepted
 tags: [adr, boris-cherny, archetypes, persona, sweep-gate, orca-workflow, build-now-adapt-later]
 timestamp: 2026-06-29
+id: ADR-015-boris-archetypes-into-template
 ---
 
 # ADR-015: áp 5 archetype Boris Cherny vào template

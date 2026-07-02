@@ -1,0 +1,378 @@
+{
+  "aggregate": [
+    {
+      "author": "ilya",
+      "consensus_rank": 1,
+      "label": "D",
+      "mean_rank": 1.0,
+      "ranks": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "author": "taleb",
+      "consensus_rank": 2,
+      "label": "C",
+      "mean_rank": 2.0,
+      "ranks": [
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "author": "munger",
+      "consensus_rank": 3,
+      "label": "B",
+      "mean_rank": 3.333333,
+      "ranks": [
+        4,
+        3,
+        3
+      ]
+    },
+    {
+      "author": "aurelius",
+      "consensus_rank": 4,
+      "label": "E",
+      "mean_rank": 4.0,
+      "ranks": [
+        3,
+        5,
+        4
+      ]
+    },
+    {
+      "author": "kahneman",
+      "consensus_rank": 5,
+      "label": "A",
+      "mean_rank": 4.666667,
+      "ranks": [
+        5,
+        4,
+        5
+      ]
+    }
+  ],
+  "anchor_guard": {
+    "note": "Each judge was shown the blind answers in this order (position-bias guard).",
+    "presentation_order": {
+      "seat-1": [
+        "C",
+        "E",
+        "D",
+        "B",
+        "A"
+      ],
+      "seat-2": [
+        "B",
+        "D",
+        "A",
+        "C",
+        "E"
+      ],
+      "seat-3": [
+        "A",
+        "C",
+        "B",
+        "D",
+        "E"
+      ]
+    },
+    "seed": 42
+  },
+  "anonymization": {
+    "label_to_author": {
+      "A": "kahneman",
+      "B": "munger",
+      "C": "taleb",
+      "D": "ilya",
+      "E": "aurelius"
+    },
+    "label_to_id": {
+      "A": "4",
+      "B": "3",
+      "C": "1",
+      "D": "2",
+      "E": "5"
+    }
+  },
+  "answers": [
+    {
+      "author": "kahneman",
+      "id": "4",
+      "label": "A",
+      "text": "Toc do sinh van ban (mot luot duy nhat ra bang 6 tieu chi + 3 nguon chuan + 4 luat validator + ledger + 3-tang + HTML graph) la dau hieu System 1 gia trang System 2 - van phong bang bieu tao cam giac nghiem ngat nhung khong co buoc nao cho thay da can nhac va loai bo phuong an khac. Solution bias: van de goc 'sua/xoa khong phat sinh su kien may doc duoc' co the giai bang mot dong log co cau truc don gian, nhung de xuat di thang den ledger JSONL + tombstone + stale-propagation + 4 validator + 3-tier + skill moi + HTML graph - quy mo giai phap doanh nghiep cho wiki ca nhan ~18 trang. Bang cham 6 tieu chi la noi confirmation bias lo ro nhat: tac gia tu chon khung, tu dat trong so (khong giai thich vi sao 6 khong phai 4/8), tu cham he thong minh dang van hanh trong chinh phien do; tieu chi duy nhat duoc uu tron ven (Provenance) lai chinh la thu 'vua chan toi o R9/R16 trong chinh phien nay' - availability cascade, N=1 lam bang chung khach quan. Anchoring: moi thiet ke moi deu duoc dat ten/gan so theo dung quy uoc da co (R-rel an theo R2/R5/R9, so # an theo fdk-dev-strategy) - co the la ky luat tot nhung cung co the che khuat kha nang dat cau hoi nguoc lieu day co phai cach dung. Availability heuristic trong rui ro: liet ke dung nhung rui ro de hinh dung (xoa file, sua khac phien) nhung bo sot rui ro kho hinh dung hon: (1) race condition ghi dong thoi ledger.jsonl; (2) drift ngu nghia giua relations: khai bao va noi dung thuc - R-rel chi kiem tra ton tai, khong kiem tra dung nghia; (3) chi phi bao tri ledger tang tuyen tinh khong duoc dat cau hoi ai xoa/nen no. Danh gia tong: phan tich co chat luong that (dung khoang trong, dung thuat ngu) nhung quy mo giai phap bi thoi phong boi solution bias, bang cham bi nhiem confirmation bias vi tac gia vua danh gia vua thiet ke vua cham diem chinh he thong dang dung. 3 cho thien kien cao nhat: (1) dong 'vua chan toi o R9/R16' dung lam bang chung cho Provenance - availability/self-serving; (2) toan bo Lop 2+3+4 de xuat dong loat cho wiki ~18 trang - solution bias; (3) roadmap tu phan loai chinh de xuat cua minh la 'toi thieu' ma khong ai ngoai cuoc phan bien quy mo do. Diem manh that: chan doan goc re dung va cu the - 'van ban cho nguoi, khong su kien cho may' la quan sat sac; nguyen tac 'khong thay nen markdown, chi them lop mong' cho thay co y thuc kiem che, du thuc thi (4 lop cung luc) mau thuan voi chinh tinh than 'mong' do tuyen bo."
+    },
+    {
+      "author": "munger",
+      "id": "3",
+      "label": "B",
+      "text": "Nghich dao: cai gi chac chan giet proposal trong 6 thang - tra loi la chinh quy mo nguoi van hanh no (mot nguoi + AI agent, khong phai team). 4 lop moi deu co chi phi bien duong moi lan ghi wiki, mai mai; loi ich that chi hien hinh khi kho wiki du lon/cu de 'quan he vo kieu' thuc su gay dau - o quy mo hien tai (~18 trang) chi phi xay co the vuot gia tri 6 thang toi, co dien over-engineering. Tam ly to chuc: khong co dong nghiep review, khong ap luc xa hoi duy tri chuan - relations: mo rong doi hoi ky luat cao hon [[wikilink]] hien tai, se bi ghi qua loa hoac sai kieu, tao ao giac tin cay con nguy hiem hon rac vo kieu. Ky thuat: vi pham chinh nguyen tac 'Simplicity first' trong CLAUDE.md du an - '200 dong ma 50 du -> viet lai'; 6 buoc la 6 he thong con moi cho mot wiki dang la markdown + hook don gian, 4 lop 'mong' cong don la mot he quan tri tri thuc day du, khong mong chut nao khi tinh tong be mat bao tri. So sanh: relations co kieu + validator dangling-link + do thi hien thi = graph database tho tu viet bang YAML+JSONL+Python, trong khi git log --follow + grep da giai 80% bai toan; ledger.jsonl gan nhu trung chuc nang voi git log - nguy co hai nguon su that lech nhau chi doi tu 'log.md vs git' sang 'ledger.jsonl vs git', chua chac giai quyet goc re. Danh gia tong: chan dung dung benh nhung ke don qua lieu so voi the trang mot-nguoi-mot-agent - nguy co chet vi nang hon suc nguoi dung duy tri, khong phai vi sai. 3 cach chac chan giet + cach ne: (1) ghi relations: bi bo qua dan -> de agent tu dong suy ra/dien luc verify-before-commit, nguoi chi review; (2) ledger lech khoi git thanh nguon su that thu hai -> khong tao ledger rieng, sinh tu git log + frontmatter, chi them state phai sinh; (3) 6 buoc khong buoc nao hoan thanh vi moi buoc tu phinh -> cat xuong 1 buoc toi thieu (chi relations: co kieu + 1 validator dangling-link), chay song 4-6 tuan, do co thuc su dung truoc khi build tiep. Diem manh that: phan danh gia (Phan 1) dung khung PROV/ontology/context-engineering co bang chung repo cu the, khong mo ho; nhan dien dung 'van ban cho nguoi != su kien cho may' la insight that."
+    },
+    {
+      "author": "taleb",
+      "id": "1",
+      "label": "C",
+      "text": "Ledger phinh vo han, khong co nen/rotate/compact -> chi phi doc/lan truyen tang phi tuyen tinh o quy mo lon (SPOF gion). Stale-propagation khong co giam chan/ban kinh gioi han -> stale storm tu node hub lam mat y nghia tin hieu. Tombstone chong chat mai mai, khong bao gio don -> validator phai quet rac lich su. Hook post_tool_use la SPOF ghi ledger: loi/bypass lam gay chuoi trace am tham, chi phat hien sau (CI R-rel-4), khong ngan truoc. Context 3 tang: room long nhau khong gioi han co the tao 'lossy compounding' (nen sai chong nen sai) - chinh co che chong rot co the thanh nguon rot moi. Roadmap: migrate relations (buoc 2) truoc khi validator on dinh (buoc 3) se ghi hang loat quan he sai vao ledger append-only truoc khi co ai kiem tra - sua sau ton hon vi da lan vao lich su. Danh gia tong: triet ly dung (ledger+tombstone la ban nang antifragile hiem thay) nhung phan lan truyen thieu circuit breaker, chua san sang cho duoi phan phoi. 3 rui ro duoi + giam thieu: (1) stale storm tu hub -> gioi han lan truyen N=1 buoc hoac TTL; (2) ledger tang vo han lam cham doc -> ke hoach compact/rotate ngay tu buoc 1; (3) hook bi bypass/loi im lang -> heartbeat tu xac nhan N thao tac = N dong ledger ngay luc dong phien, fail loud. Diem manh that: tombstone thay xoa cung + ghi qua hook tu dong (khong nho model tu giac) la hai quyet dinh khang-gion thuc su; bang cham 6 tieu chi trung thuc, khong to hong."
+    },
+    {
+      "author": "ilya",
+      "id": "2",
+      "label": "D",
+      "text": "Khi scale (nhieu agent ghi song song): wiki/ledger.jsonl khong co concurrency control - append dong thoi vao 1 file JSONL tu nhieu process khong an toan mac dinh (interleaved writes, partial lines), o quy mo lon la nguon corrupt am tham, chi phat hien khi R-rel-4 bao do hang loat - da qua muon de truy vet. Stale-propagation khong co can (bound): node trung tam sua 1 lan co the lan hang tram node; neu quan he co chu trinh (contradicts/depends-on) can khu chu trinh tuong minh - khong thay de cap. Room (Tier C) la diem lo nhat: khong noi ro co duoc mo room con hay khong, khong depth cap, khong token/turn budget, khong dieu kien dung de quy - dung pattern tu-goi-lai khong gioi han la vong khuech dai tiem an. Validator R-rel-1..3 chi validate cau truc, khong ngu nghia: mot trang gan {implements, to: adr-004} nhung noi dung mau thuan van PASS - false confidence nguy hiem nhat la tin xanh = dung trong khi no chi la toan ven tham chieu. Roadmap: dung huong 'guardrail truoc capability' (buoc 1-3 truoc 4-5) nhung buoc 5 (/wiki-room) va buoc 4 (stale-propagation) nen tach them mot buoc 4.5 gioi han ro rang truoc khi thanh skill goi duoc cong khai. Danh gia tong: tu duy dung (guardrail truoc, tombstone thay xoa cung) nhung bo sot gioi han cung o dung 2 cho co the khuech dai khong kiem soat (ghi dong thoi, de quy room) - chua san sang cho 'hang nghin trang, nhieu agent song song' nhu de bai gia dinh. 3 guardrail bat buoc them: (1) concurrency control cho ledger.jsonl (file lock hoac shard-per-agent + merge co thu tu) + test ghi song song truoc khi coi buoc 1 la xong; (2) depth cap=1 + token/node budget cung cho room, cam room mo room con, co circuit breaker; (3) can ro cho stale-propagation (so hop toi da) + khu chu trinh tuong minh. Diem manh that: danh gia hien trang bang khung 6 tieu chi truoc khi thiet ke, giu nen markdown/travel-ability, roadmap tach ro loi chat (1-3) khoi hien thi/tien ich (4-6)."
+    },
+    {
+      "author": "aurelius",
+      "id": "5",
+      "label": "E",
+      "text": "Phan dinh kiem soat: buoc 1-3 (ledger append-only, id/relations frontmatter, 4 validator) la thu thuc su nam trong tam tay - cu phap, hook, CI, may tuan theo khong can nguoi nho. Roadmap dat chung len truoc la dung dao ly khac ky. Nhung buoc 5-6 la chuyen khac han ve ban chat: /wiki-room chi co tac dung neu co nguoi/agent chu dong goi khi context da rot - ma dung luc rot lai la luc kha nang 'nho phai goi skill X' yeu nhat, nghich ly tu tham chieu: cong cu chong quen bi chinh trieu chung quen vo hieu hoa. Trang HTML wiki-graph chi co gia tri neu co nguoi mo xem - khong gi dam bao dieu do. Day la ao tuong kiem soat ro nhat: dong khung mot hanh vi con nguoi tuong lai nhu mot tinh nang se hoan thanh thay vi mot hy vong phai chap nhan rui ro khong xay ra. Ve ben bi: lop 1-3 song duoc vi tu-cuong-che (hook chan, CI doi chieu) - khong can ai nho bao tri, dung bai hoc da hoc tu R2 Origin. Lop 4-5 mong manh dung kieu meta-he-thong tham vong: quy uoc dat ten dep nhung khong co co che cuong che nao buoc tuan theo - song nho ky luat tu giac, chinh diem yeu chi mang cua he thong cu (log.md 'van xuoi cho nguoi', ung bien) ma Phan 1 da chi ra. Noi cach khac lop 4 tai tao dung loai that bai ma lop 1-3 vua sua, o tang khac. Ve thua nhan gioi han: proposal im lang ve hai gioi han that - (1) ghi dong thoi, ai thang khi 2 phien/agent cung sua/append ledger, khong mot dong nao nhac race condition; (2) quan he dung cu phap nhung sai ngu nghia - validator chi chan dangling/code-drift, khong chan gan nham loai quan he. Ve dao duc thuc dung: nhu cau that (loi chat + doc ra ngoai + traceability) duoc phuc vu dung muc o buoc 1-3, nhung 'hien thi do thi quan he cho nguoi' (do thi bezier draggable, timeline click-de-xem) la cong suc lon cho nhu cau chua ai xac nhan cap thiet, trong khi ledger JSONL tho + grep da tra loi phan lon cau hoi truy vet. Danh gia tong: thiet ke dung o nua dau (kiem soat duoc, tu cuong che, ben) nhung tu lua minh khi xep nua sau vao cung roadmap nhu cung mot loai viec, trong khi nua sau phu thuoc hoan toan vao hanh vi con nguoi he thong khong the ra lenh. Nen chap nhan la gioi han thay vi co giai quyet ngay: viec con nguoi/agent co thuc su mo /wiki-room va trang wiki-graph hay khong - dung build 2.4/2.5 nhu dac ta xong-la-xong, hoac phai tu-cuong-che chung; cung nen chap nhan race condition va sai ngu nghia quan he nam ngoai pham vi 4 validator hien tai - ghi thang vao Notes thay vi ngam hieu da bao phu. Diem manh that: roadmap tach dung ranh gioi 'loi tu cuong che' (1-3) khoi 'lop doc-ra-ngoai phu thuoc hanh vi' (4-6), va cac co che chan (hook+CI, tombstone thay xoa cung) hoc dung bai hoc tu R2 - bien y dinh tot thanh thu may ep tuan theo chu khong nho ai nho."
+    }
+  ],
+  "chairman_brief": {
+    "consensus_order": [
+      {
+        "author": "ilya",
+        "mean_rank": 1.0,
+        "rank": 1
+      },
+      {
+        "author": "taleb",
+        "mean_rank": 2.0,
+        "rank": 2
+      },
+      {
+        "author": "munger",
+        "mean_rank": 3.333333,
+        "rank": 3
+      },
+      {
+        "author": "aurelius",
+        "mean_rank": 4.0,
+        "rank": 4
+      },
+      {
+        "author": "kahneman",
+        "mean_rank": 4.666667,
+        "rank": 5
+      }
+    ],
+    "dissent_points": [
+      {
+        "author": "aurelius",
+        "ranks": [
+          3,
+          5,
+          4
+        ],
+        "variance": 0.666667
+      },
+      {
+        "author": "kahneman",
+        "ranks": [
+          5,
+          4,
+          5
+        ],
+        "variance": 0.222222
+      },
+      {
+        "author": "munger",
+        "ranks": [
+          4,
+          3,
+          3
+        ],
+        "variance": 0.222222
+      }
+    ],
+    "instruction": "Synthesize ONE final answer. Lead with the consensus winner, fold in unique correct points from the others, and explicitly resolve the contested answer(s) below rather than averaging them away."
+  },
+  "chairman_synthesis": null,
+  "config_provenance": {
+    "anchor_seed": 42,
+    "chairman": {
+      "model": "claude-opus-4"
+    },
+    "judges": [
+      {
+        "id": "seat-1",
+        "model": "claude-opus-4"
+      },
+      {
+        "id": "seat-2",
+        "model": "gpt-5"
+      },
+      {
+        "id": "seat-3",
+        "model": "gemini-2.5-pro"
+      }
+    ],
+    "note": "Adapter values (model identities). Provenance only -- the engine never branches on these.",
+    "seats": [
+      {
+        "id": "seat-1",
+        "model": "claude-opus-4",
+        "persona": "feynman"
+      },
+      {
+        "id": "seat-2",
+        "model": "gpt-5",
+        "persona": "taleb"
+      },
+      {
+        "id": "seat-3",
+        "model": "gemini-2.5-pro",
+        "persona": "rams"
+      }
+    ]
+  },
+  "dissent": [
+    {
+      "author": "aurelius",
+      "label": "E",
+      "max_rank": 5,
+      "min_rank": 3,
+      "range": 2,
+      "ranks": [
+        3,
+        5,
+        4
+      ],
+      "stdev": 0.816497,
+      "variance": 0.666667
+    },
+    {
+      "author": "kahneman",
+      "label": "A",
+      "max_rank": 5,
+      "min_rank": 4,
+      "range": 1,
+      "ranks": [
+        5,
+        4,
+        5
+      ],
+      "stdev": 0.471405,
+      "variance": 0.222222
+    },
+    {
+      "author": "munger",
+      "label": "B",
+      "max_rank": 4,
+      "min_rank": 3,
+      "range": 1,
+      "ranks": [
+        4,
+        3,
+        3
+      ],
+      "stdev": 0.471405,
+      "variance": 0.222222
+    },
+    {
+      "author": "taleb",
+      "label": "C",
+      "max_rank": 2,
+      "min_rank": 2,
+      "range": 0,
+      "ranks": [
+        2,
+        2,
+        2
+      ],
+      "stdev": 0.0,
+      "variance": 0.0
+    },
+    {
+      "author": "ilya",
+      "label": "D",
+      "max_rank": 1,
+      "min_rank": 1,
+      "range": 0,
+      "ranks": [
+        1,
+        1,
+        1
+      ],
+      "stdev": 0.0,
+      "variance": 0.0
+    }
+  ],
+  "generator": "council.py/1.0",
+  "judge_rankings": [
+    {
+      "judge": "seat-1",
+      "ranking_authors": [
+        "ilya",
+        "taleb",
+        "aurelius",
+        "munger",
+        "kahneman"
+      ],
+      "ranking_labels": [
+        "D",
+        "C",
+        "E",
+        "B",
+        "A"
+      ]
+    },
+    {
+      "judge": "seat-2",
+      "ranking_authors": [
+        "ilya",
+        "taleb",
+        "munger",
+        "kahneman",
+        "aurelius"
+      ],
+      "ranking_labels": [
+        "D",
+        "C",
+        "B",
+        "A",
+        "E"
+      ]
+    },
+    {
+      "judge": "seat-3",
+      "ranking_authors": [
+        "ilya",
+        "taleb",
+        "munger",
+        "aurelius",
+        "kahneman"
+      ],
+      "ranking_labels": [
+        "D",
+        "C",
+        "B",
+        "E",
+        "A"
+      ]
+    }
+  ],
+  "most_contested": {
+    "author": "aurelius",
+    "label": "E",
+    "ranks": [
+      3,
+      5,
+      4
+    ],
+    "variance": 0.666667
+  },
+  "pending_adapter_steps": [],
+  "question": "<the question put to the council>",
+  "seed": 42,
+  "stage": "1-2-3-complete",
+  "verified": true,
+  "winner": {
+    "author": "ilya",
+    "label": "D",
+    "mean_rank": 1.0
+  }
+}

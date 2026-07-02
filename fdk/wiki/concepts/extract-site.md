@@ -4,6 +4,7 @@ title: extract-site (skill)
 status: stub
 tags: [skill, extract-site, clone, design-system]
 timestamp: 2026-06-27
+id: extract-site
 ---
 
 # extract-site (skill)

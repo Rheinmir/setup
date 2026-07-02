@@ -1,0 +1,284 @@
+{
+  "aggregate": [
+    {
+      "author": "kahneman",
+      "consensus_rank": 1,
+      "label": "A",
+      "mean_rank": 1.333333,
+      "ranks": [
+        1,
+        2,
+        1
+      ]
+    },
+    {
+      "author": "taleb",
+      "consensus_rank": 2,
+      "label": "B",
+      "mean_rank": 2.0,
+      "ranks": [
+        2,
+        1,
+        3
+      ]
+    },
+    {
+      "author": "munger",
+      "consensus_rank": 3,
+      "label": "C",
+      "mean_rank": 2.666667,
+      "ranks": [
+        3,
+        3,
+        2
+      ]
+    }
+  ],
+  "anchor_guard": {
+    "note": "Each judge was shown the blind answers in this order (position-bias guard).",
+    "presentation_order": {
+      "seat-1": [
+        "B",
+        "C",
+        "A"
+      ],
+      "seat-2": [
+        "A",
+        "B",
+        "C"
+      ],
+      "seat-3": [
+        "A",
+        "B",
+        "C"
+      ]
+    },
+    "seed": 42
+  },
+  "anonymization": {
+    "label_to_author": {
+      "A": "kahneman",
+      "B": "taleb",
+      "C": "munger"
+    },
+    "label_to_id": {
+      "A": "a2",
+      "B": "a3",
+      "C": "a1"
+    }
+  },
+  "answers": [
+    {
+      "author": "kahneman",
+      "id": "a2",
+      "label": "A",
+      "text": "'ALWAYS render HTML' nhiều khả năng do effort-justification / IKEA effect — vừa xây docs-site-macos xong nên nhìn đâu cũng thấy đinh. Cộng planning-fallacy: mỗi run tốn thêm token+thời-gian. Nhưng phần blind-vote CÓ giá trị nhận thức thật: cho người đọc thấy phiếu ẩn danh A/B/C TRƯỚC khi reveal ai-là-ai = debias người đọc, đúng bài. Vấn đề là chữ 'ALWAYS' bỏ qua base-rate: đa số council là check nội bộ nhanh. Kết luận: section blind-vote-reveal đáng giữ; 'ALWAYS' mới là cái bias cần bỏ."
+    },
+    {
+      "author": "taleb",
+      "id": "a3",
+      "label": "B",
+      "text": "Optionality. Một bước HTML bắt buộc thêm fragility — thêm một thứ để hỏng (coupling docs-site), một dependency có thể mục. transcript.json mới là lõi robust; HTML là trang trí. Nhưng payoff lồi: debate-room chat có thể phơi bày một bất đồng thảm họa mà md phẳng giấu đi — dissent table làm cho thành visceral. Giữ lõi transcript deterministic là bất khả xâm phạm; để HTML là option rẻ, gỡ-được. KHÔNG BAO GIỜ ép trang trí thành bắt buộc. Kết luận: đáng giá khi opt-in, có hại khi 'ALWAYS'."
+    },
+    {
+      "author": "munger",
+      "id": "a1",
+      "label": "C",
+      "text": "Nghịch đảo: cái gì ĐẢM BẢO council thất bại? Không ai đọc output, hoặc không tin nó. HTML đẹp không sửa được lòng tin — transcript.md đã tồn tại và audit được. Rủi ro: 'ALWAYS render' biến docs-site-macos thành một dependency phải bảo trì, và là solution đi tìm problem. NHƯNG nếu debate thực sự được người ngoài kỹ thuật (stakeholder) tiêu thụ, một artifact đọc-được là chính đáng. Kết luận: CẦN chỉ khi output chia sẻ ra ngoài người vận hành; còn lại là over-engineering. Giữ optional, đừng ép ALWAYS."
+    }
+  ],
+  "chairman_brief": {
+    "consensus_order": [
+      {
+        "author": "kahneman",
+        "mean_rank": 1.333333,
+        "rank": 1
+      },
+      {
+        "author": "taleb",
+        "mean_rank": 2.0,
+        "rank": 2
+      },
+      {
+        "author": "munger",
+        "mean_rank": 2.666667,
+        "rank": 3
+      }
+    ],
+    "dissent_points": [
+      {
+        "author": "taleb",
+        "ranks": [
+          2,
+          1,
+          3
+        ],
+        "variance": 0.666667
+      },
+      {
+        "author": "kahneman",
+        "ranks": [
+          1,
+          2,
+          1
+        ],
+        "variance": 0.222222
+      },
+      {
+        "author": "munger",
+        "ranks": [
+          3,
+          3,
+          2
+        ],
+        "variance": 0.222222
+      }
+    ],
+    "instruction": "Synthesize ONE final answer. Lead with the consensus winner, fold in unique correct points from the others, and explicitly resolve the contested answer(s) below rather than averaging them away."
+  },
+  "chairman_synthesis": null,
+  "config_provenance": {
+    "anchor_seed": 42,
+    "chairman": {
+      "model": "claude-opus-4"
+    },
+    "judges": [
+      {
+        "id": "seat-1",
+        "model": "claude-opus-4"
+      },
+      {
+        "id": "seat-2",
+        "model": "gpt-5"
+      },
+      {
+        "id": "seat-3",
+        "model": "gemini-2.5-pro"
+      }
+    ],
+    "note": "Adapter values (model identities). Provenance only -- the engine never branches on these.",
+    "seats": [
+      {
+        "id": "seat-1",
+        "model": "claude-opus-4",
+        "persona": "feynman"
+      },
+      {
+        "id": "seat-2",
+        "model": "gpt-5",
+        "persona": "taleb"
+      },
+      {
+        "id": "seat-3",
+        "model": "gemini-2.5-pro",
+        "persona": "rams"
+      }
+    ]
+  },
+  "dissent": [
+    {
+      "author": "taleb",
+      "label": "B",
+      "max_rank": 3,
+      "min_rank": 1,
+      "range": 2,
+      "ranks": [
+        2,
+        1,
+        3
+      ],
+      "stdev": 0.816497,
+      "variance": 0.666667
+    },
+    {
+      "author": "kahneman",
+      "label": "A",
+      "max_rank": 2,
+      "min_rank": 1,
+      "range": 1,
+      "ranks": [
+        1,
+        2,
+        1
+      ],
+      "stdev": 0.471405,
+      "variance": 0.222222
+    },
+    {
+      "author": "munger",
+      "label": "C",
+      "max_rank": 3,
+      "min_rank": 2,
+      "range": 1,
+      "ranks": [
+        3,
+        3,
+        2
+      ],
+      "stdev": 0.471405,
+      "variance": 0.222222
+    }
+  ],
+  "generator": "council.py/1.0",
+  "judge_rankings": [
+    {
+      "judge": "seat-1",
+      "ranking_authors": [
+        "kahneman",
+        "taleb",
+        "munger"
+      ],
+      "ranking_labels": [
+        "A",
+        "B",
+        "C"
+      ]
+    },
+    {
+      "judge": "seat-2",
+      "ranking_authors": [
+        "taleb",
+        "kahneman",
+        "munger"
+      ],
+      "ranking_labels": [
+        "B",
+        "A",
+        "C"
+      ]
+    },
+    {
+      "judge": "seat-3",
+      "ranking_authors": [
+        "kahneman",
+        "munger",
+        "taleb"
+      ],
+      "ranking_labels": [
+        "A",
+        "C",
+        "B"
+      ]
+    }
+  ],
+  "most_contested": {
+    "author": "taleb",
+    "label": "B",
+    "ranks": [
+      2,
+      1,
+      3
+    ],
+    "variance": 0.666667
+  },
+  "pending_adapter_steps": [],
+  "question": "<the question put to the council>",
+  "seed": 42,
+  "stage": "1-2-3-complete",
+  "verified": true,
+  "winner": {
+    "author": "kahneman",
+    "label": "A",
+    "mean_rank": 1.333333
+  }
+}

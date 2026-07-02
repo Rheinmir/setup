@@ -4,6 +4,7 @@ title: "Audit + fix docs-site-macos design system"
 status: proposed
 tags: [redesign-existing-projects, output-report]
 proposed: 2026-06-30
+id: 300626-audit-fix-docs-site-macos
 ---
 
 # 300626-audit-fix-docs-site-macos

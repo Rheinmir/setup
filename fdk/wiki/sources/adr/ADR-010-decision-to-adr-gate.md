@@ -4,6 +4,7 @@ title: "ADR-010: gate decision→ADR (R13) — ép quyết định kiến trúc 
 status: accepted
 tags: [adr, gate, decision, lifecycle, r13, supersede]
 timestamp: 2026-06-28
+id: ADR-010-decision-to-adr-gate
 ---
 
 # ADR-010: gate decision→ADR (R13) với vòng đời edit + delete-when-superseded

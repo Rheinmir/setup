@@ -4,6 +4,7 @@ title: "ADR-002: R12 pull-before-change — git-level + orchestrator, không per
 status: accepted
 tags: [adr, harness, R12, pull-gate, multi-vendor, workspace, multi-repo]
 timestamp: 2026-06-27
+id: ADR-002-pull-before-change-gates
 ---
 
 # ADR-002: pull-before-change (R12) — đặt gate ở đâu dưới đa-vendor & đa-subrepo

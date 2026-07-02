@@ -1,6 +1,7 @@
 ---
 type: concept
 title: "Ví dụ concept (demo template)"
+id: example-concept
 ---
 
 # Ví dụ concept

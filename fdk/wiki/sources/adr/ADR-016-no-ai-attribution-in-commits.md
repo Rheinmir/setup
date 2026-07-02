@@ -4,6 +4,7 @@ title: "ADR-016: Không ghi công AI trong commit (R15 no-ai-attribution)"
 status: accepted
 tags: [adr, R15, no-ai-attribution, commit-msg, process-gate, harness, git-level]
 timestamp: 2026-07-02
+id: ADR-016-no-ai-attribution-in-commits
 ---
 
 # ADR-016: Không ghi công AI trong commit (R15)

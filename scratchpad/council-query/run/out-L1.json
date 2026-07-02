@@ -1,0 +1,302 @@
+{
+  "architecture": {
+    "pages": [
+      "ADR-006-blocking-stays-hook-mcp-for-tooling",
+      "ADR-007-wiki-scanner-skip-gitignored-at-lister",
+      "ADR-010-decision-to-adr-gate",
+      "decisions",
+      "fdk"
+    ],
+    "tokens": 9300
+  },
+  "blocking-layer": {
+    "pages": [
+      "ADR-002-pull-before-change-gates",
+      "ADR-005-logger-and-capabilities-travel-downstream",
+      "ADR-006-blocking-stays-hook-mcp-for-tooling",
+      "ADR-007-wiki-scanner-skip-gitignored-at-lister",
+      "ADR-009-session-orientation-autoindex-forcequery"
+    ],
+    "tokens": 7183
+  },
+  "bnal-adapter": {
+    "pages": [
+      "ADR-012-five-trend-features-bnal",
+      "ADR-013-five-more-trend-features-bnal",
+      "feature-catalog",
+      "ADR-014-protected-pattern-library",
+      "ADR-015-boris-archetypes-into-template"
+    ],
+    "tokens": 7544
+  },
+  "boris-roles": {
+    "pages": [
+      "ADR-015-boris-archetypes-into-template",
+      "boris-cherny-agent-roles",
+      "decisions",
+      "ADR-013-five-more-trend-features-bnal",
+      "ADR-014-protected-pattern-library"
+    ],
+    "tokens": 7474
+  },
+  "boris-template": {
+    "pages": [
+      "ADR-015-boris-archetypes-into-template",
+      "decisions",
+      "boris-cherny-agent-roles",
+      "ADR-003-skill-as-single-source-of-truth",
+      "ADR-002-pull-before-change-gates"
+    ],
+    "tokens": 8527
+  },
+  "decision-adr-gate": {
+    "pages": [
+      "fdk",
+      "ADR-006-blocking-stays-hook-mcp-for-tooling",
+      "ADR-012-five-trend-features-bnal",
+      "decisions",
+      "ADR-005-logger-and-capabilities-travel-downstream"
+    ],
+    "tokens": 11689
+  },
+  "docs-macos": {
+    "pages": [
+      "ADR-003-skill-as-single-source-of-truth",
+      "R10",
+      "cursor-explain-site",
+      "fdk",
+      "ADR-001-policy-as-source-of-truth"
+    ],
+    "tokens": 8709
+  },
+  "enforcement-floor": {
+    "pages": [
+      "ADR-002-pull-before-change-gates",
+      "ADR-011-project-local-harness",
+      "ADR-012-five-trend-features-bnal",
+      "ADR-014-protected-pattern-library",
+      "harness-enforcement-floor"
+    ],
+    "tokens": 6287
+  },
+  "explain-clone-site": {
+    "pages": [
+      "cursor-explain-site",
+      "extract-site",
+      "ADR-007-wiki-scanner-skip-gitignored-at-lister",
+      "decisions",
+      "docs-site-macos-skill"
+    ],
+    "tokens": 4470
+  },
+  "extract-site": {
+    "pages": [
+      "cursor-explain-site",
+      "ADR-003-skill-as-single-source-of-truth",
+      "R10",
+      "decisions",
+      "design-pattern-v2"
+    ],
+    "tokens": 7302
+  },
+  "fdk-optin": {
+    "pages": [
+      "ADR-004-framework-dev-context-opt-in",
+      "ADR-005-logger-and-capabilities-travel-downstream",
+      "ADR-009-session-orientation-autoindex-forcequery",
+      "decisions",
+      "fdk"
+    ],
+    "tokens": 11109
+  },
+  "fdk-what": {
+    "pages": [
+      "ADR-012-five-trend-features-bnal",
+      "fdk",
+      "ADR-001-policy-as-source-of-truth",
+      "ADR-002-pull-before-change-gates",
+      "ADR-004-framework-dev-context-opt-in"
+    ],
+    "tokens": 8234
+  },
+  "feature-catalog": {
+    "pages": [
+      "ADR-005-logger-and-capabilities-travel-downstream",
+      "ADR-011-project-local-harness",
+      "ADR-012-five-trend-features-bnal",
+      "ADR-013-five-more-trend-features-bnal",
+      "ADR-015-boris-archetypes-into-template"
+    ],
+    "tokens": 8033
+  },
+  "harness-local": {
+    "pages": [
+      "fdk",
+      "decisions",
+      "ADR-005-logger-and-capabilities-travel-downstream",
+      "ADR-001-policy-as-source-of-truth",
+      "ADR-002-pull-before-change-gates"
+    ],
+    "tokens": 11560
+  },
+  "logger-downstream": {
+    "pages": [
+      "ADR-005-logger-and-capabilities-travel-downstream",
+      "ADR-008-framework-wiki-lives-in-the-kit",
+      "decisions",
+      "fdk",
+      "feature-catalog"
+    ],
+    "tokens": 11360
+  },
+  "onboarding-tour": {
+    "pages": [
+      "ADR-007-wiki-scanner-skip-gitignored-at-lister",
+      "feature-catalog",
+      "ADR-001-policy-as-source-of-truth",
+      "ADR-004-framework-dev-context-opt-in",
+      "ADR-005-logger-and-capabilities-travel-downstream"
+    ],
+    "tokens": 9080
+  },
+  "orient-forcequery": {
+    "pages": [
+      "ADR-009-session-orientation-autoindex-forcequery",
+      "ADR-010-decision-to-adr-gate",
+      "decisions",
+      "feature-catalog",
+      "query-retrieval-eval"
+    ],
+    "tokens": 9097
+  },
+  "outer-eval": {
+    "pages": [
+      "feature-catalog",
+      "outer-harness-evaluation",
+      "query-retrieval-eval",
+      "ADR-005-logger-and-capabilities-travel-downstream",
+      "ADR-007-wiki-scanner-skip-gitignored-at-lister"
+    ],
+    "tokens": 10169
+  },
+  "policy-sot": {
+    "pages": [
+      "ADR-011-project-local-harness",
+      "ADR-013-five-more-trend-features-bnal",
+      "fdk",
+      "harness-local",
+      "ADR-003-skill-as-single-source-of-truth"
+    ],
+    "tokens": 10126
+  },
+  "project-local-rule": {
+    "pages": [
+      "ADR-011-project-local-harness",
+      "harness-local",
+      "decisions",
+      "fdk",
+      "ADR-005-logger-and-capabilities-travel-downstream"
+    ],
+    "tokens": 10480
+  },
+  "protected-lib": {
+    "pages": [
+      "ADR-014-protected-pattern-library",
+      "boris-cherny-agent-roles",
+      "decisions",
+      "ADR-003-skill-as-single-source-of-truth",
+      "ADR-004-framework-dev-context-opt-in"
+    ],
+    "tokens": 6571
+  },
+  "pull-gate": {
+    "pages": [
+      "fdk",
+      "decisions",
+      "ADR-002-pull-before-change-gates",
+      "ADR-003-skill-as-single-source-of-truth",
+      "rule-registry"
+    ],
+    "tokens": 9996
+  },
+  "query-eval": {
+    "pages": [
+      "query-retrieval-eval",
+      "feature-catalog",
+      "ADR-003-skill-as-single-source-of-truth",
+      "decisions",
+      "design-pattern-v2"
+    ],
+    "tokens": 8965
+  },
+  "r10": {
+    "pages": [
+      "fdk",
+      "ADR-015-boris-archetypes-into-template",
+      "R10",
+      "decisions",
+      "ADR-001-policy-as-source-of-truth"
+    ],
+    "tokens": 10781
+  },
+  "rule-registry": {
+    "pages": [
+      "ADR-004-framework-dev-context-opt-in",
+      "fdk",
+      "rule-registry",
+      "ADR-005-logger-and-capabilities-travel-downstream",
+      "feature-catalog"
+    ],
+    "tokens": 10453
+  },
+  "scanner-gitignore": {
+    "pages": [
+      "ADR-007-wiki-scanner-skip-gitignored-at-lister",
+      "decisions",
+      "ADR-013-five-more-trend-features-bnal",
+      "design-pattern-v2",
+      "ADR-003-skill-as-single-source-of-truth"
+    ],
+    "tokens": 9374
+  },
+  "skill-sot": {
+    "pages": [
+      "ADR-003-skill-as-single-source-of-truth",
+      "ADR-004-framework-dev-context-opt-in",
+      "ADR-015-boris-archetypes-into-template",
+      "fdk",
+      "decisions"
+    ],
+    "tokens": 10734
+  },
+  "trend-bnal-1": {
+    "pages": [
+      "ADR-012-five-trend-features-bnal",
+      "ADR-013-five-more-trend-features-bnal",
+      "ADR-014-protected-pattern-library",
+      "boris-cherny-agent-roles",
+      "feature-catalog"
+    ],
+    "tokens": 9546
+  },
+  "trend-bnal-2": {
+    "pages": [
+      "ADR-013-five-more-trend-features-bnal",
+      "decisions",
+      "fdk",
+      "ADR-012-five-trend-features-bnal",
+      "design-pattern-v2"
+    ],
+    "tokens": 10691
+  },
+  "wiki-in-kit": {
+    "pages": [
+      "ADR-001-policy-as-source-of-truth",
+      "ADR-005-logger-and-capabilities-travel-downstream",
+      "ADR-008-framework-wiki-lives-in-the-kit",
+      "ADR-011-project-local-harness",
+      "ADR-013-five-more-trend-features-bnal"
+    ],
+    "tokens": 9556
+  }
+}

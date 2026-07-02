@@ -4,6 +4,7 @@ title: "Harness enforcement floor — 3 lớp, vì sao CI mới là sàn thật"
 status: active
 tags: [harness, enforcement, ci, layers, vendor-neutral, policy]
 timestamp: 2026-06-28
+id: harness-enforcement-floor
 ---
 
 # Harness enforcement floor — vì sao CI mới là sàn thật

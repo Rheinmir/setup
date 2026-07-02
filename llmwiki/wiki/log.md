@@ -19,31 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-02 11:29:23 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=54b2142ad17e39220dbd97c24d45de663887ae9898b7bc87a7a2 |
-| 2026-07-02 11:29:34 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=c5b464ee96deef570497f11df30ca183c95432eafa874423aa1e |
-| 2026-07-02 11:29:40 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=dfe606961f1bc43e286baa88eff5b4e7cdd7abad6b6e68d43d5e |
-| 2026-07-02 11:29:41 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=aedfb9a5c74a40b598054e312bfcb32843c4264d9902b67d5f3c |
-| 2026-07-02 11:31:47 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=78998fff037735a08d9094ce4ea3f49cd832d2430182afa348d8 |
-| 2026-07-02 12:20:57 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=11be0ea1d274165734c150c354dda5a04898bf28553d1c620405 |
-| 2026-07-02 12:20:58 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=e37e37ceb5e9f881064dc984c0f22b38a3d94853a2429d5d03cc |
-| 2026-07-02 12:21:00 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=775c24408ac1ba8324168977b4057644cbbbbf224dde894c9f8a |
-| 2026-07-02 12:28:08 | `file.write` | skills/fdk/SKILL.md · tool=Edit · actor=agent · prev=0535039f1504c8361f14f7ab78f529e2a353ad63b5e67b47234fc58850283a08 ·  |
-| 2026-07-02 12:28:24 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=e14ba6d45be7b8cf5266c2aafe2d79e81c76e105840fe3d7aa5a |
-| 2026-07-02 12:28:35 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=da6d609bab34188489a569c564b2158667b14e0ecf258f199bd0 |
-| 2026-07-02 12:31:56 | `file.write` | skills/fdk/SKILL.md · tool=Edit · actor=agent · prev=cd2de553e39ea06455c166dfbadb94c11518681cb5385aa0bb56b6e5bfd982db ·  |
-| 2026-07-02 12:32:44 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=3f7ebd1728a7d2f7f684a848237ed863d5cd3f707198a05e6d32 |
-| 2026-07-02 12:32:52 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=17b4e2bef90d59d3dee1f0c83d3bcaef6c1d72aeccd1ea932d73 |
-| 2026-07-02 12:33:11 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=5cc575cdb03713d0916280a6bda8b5fb6a728b6fc85192775f59 |
-| 2026-07-02 12:33:26 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · actor=agent · prev=5cdd2622037eba60ce59c2eb8ea716e96219b80ec1ce7fc197f5 |
-| 2026-07-02 12:38:42 | `file.write` | skills/fdk/SKILL.md · tool=Edit · actor=agent · prev=00f03c8259bc083f97aa9139196957d6667c82f212edfc162b99aa924bed24cc ·  |
-| 2026-07-02 12:41:57 | `file.write` | llmwiki/wiki/sources/draft/020726-eval-report.md · tool=Write · actor=agent · prev=d02f0f8be1a6f04e765b0c9e120a62528b764 |
-| 2026-07-02 12:42:08 | `file.write` | llmwiki/wiki/sources/draft/020726-eval-report.md · tool=Edit · actor=agent · prev=023f472e9427e93895264e589a7a44df440253 |
-| 2026-07-02 12:45:36 | `file.write` | fdk/tools/sync-skill.sh · tool=Write · actor=agent · prev=9610569284b5c81703a5f5f69cd3f15947a57de3ec8bb652964095e7dc64f3 |
-| 2026-07-02 12:45:54 | `file.write` | skills/fdk/SKILL.md · tool=Edit · actor=agent · prev=c6570d74a2affb1877c7f90935080683c6193196dfed96374971bbf6574753fb ·  |
-| 2026-07-02 12:47:08 | `file.write` | harness/validators/report_show_path.py · tool=Write · actor=agent · prev=49e613de5b6d5c53f671b17154541b767298be35fe17059 |
-| 2026-07-02 12:47:20 | `file.write` | llmwiki/.claude/hooks/post_tool_use.py · tool=Edit · actor=agent · prev=38680a45436f5d289fe31eb6d2cde267ef2596947cadb075 |
-| 2026-07-02 12:47:41 | `file.write` | llmwiki/.claude/hooks/session_end.py · tool=Edit · actor=agent · prev=7f177268894fdf793918ca7950e0cf84c21df0755e384e6638 |
-| 2026-07-02 12:47:50 | `file.write` | llmwiki/.claude/hooks/session_end.py · tool=Edit · actor=agent · prev=5cdc2aaa13b69722754680e6c765b92a4a1f53550832db66df |
 | 2026-07-02 12:52:49 | `task.new` |  · task=T-260702-01 · title=orca-issue + ledger travel (p-02, p-04) · state=proposed · actor=agent · prev=4bcac2f15648c6 |
 | 2026-07-02 12:54:09 | `file.write` | llmwiki/wiki/sources/draft/020726-orca-issue-ledger-travel.md · tool=Write · actor=agent · prev=9ea9e5aa58d3004a97723c8d |
 | 2026-07-02 12:55:58 | `file.write` | llmwiki/html/020726-orca-issue-ledger-travel-seq.html · tool=Write · actor=agent · prev=75147860a8ddef8bcf2b278e0ba270d9 |
@@ -59,6 +34,31 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-02 13:12:14 | `file.write` | llmwiki/wiki/sources/draft/020726-ingest-fdk-strategy.md · tool=Write · actor=agent · prev=db449df58b1d38de5b5dc3699d3a6 |
 | 2026-07-02 13:12:21 | `file.write` | llmwiki/wiki/sources/draft/020726-ingest-fdk-strategy.md · tool=Edit · actor=agent · prev=9f395eae32637ad4301a5d875cbd5b |
 | 2026-07-02 13:12:29 | `file.write` | llmwiki/wiki/index.md · tool=Edit · actor=agent · prev=99d4dbb5c2defae7345e974963839bd369f9e2dc4fc0175a837f39a6480b8025  |
+| 2026-07-02 13:13:52 | `file.write` | harness/poc-vendor-neutral/bin/harness-events.py · tool=Edit · actor=agent · prev=9a5f42ddb7967dc1d6cc9ff20bf4b132c046d8 |
+| 2026-07-02 13:15:14 | `task.set` |  · task=T-260702-01 · state=done · note=49d2361 · actor=agent · prev=d294f254d7095a58c74637081a002c7874b953e41ac62930c39 |
+| 2026-07-02 13:30:24 | `file.write` | llmwiki/html/020726-fdk-dev-strategy.html · tool=Write · actor=agent · prev=4ae2d3dd2144be76d8f05cd00c169c797c0b5839a79b |
+| 2026-07-02 13:30:33 | `file.write` | llmwiki/html/020726-fdk-dev-strategy.html · tool=Edit · actor=agent · prev=7e92571df727bdfdbcc4e05dc472109035b44625bd59d |
+| 2026-07-02 13:30:58 | `file.write` | llmwiki/wiki/sources/draft/020726-docs-site-fdk-strategy.md · tool=Write · actor=agent · prev=1a2633417dc413acb3b777cb8d |
+| 2026-07-02 13:31:06 | `file.write` | llmwiki/wiki/sources/draft/020726-docs-site-fdk-strategy.md · tool=Edit · actor=agent · prev=588aac7f2da14ea845e3a304019 |
+| 2026-07-02 13:31:13 | `file.write` | llmwiki/wiki/index.md · tool=Edit · actor=agent · prev=213f5f4b9e739d2e9039f629c4a881144795ffe492c46c07bd58fe4ca1858955  |
+| 2026-07-02 13:34:24 | `file.write` | llmwiki/wiki/sources/draft/020726-audit-fdk-strategy.md · tool=Write · actor=agent · prev=9780f800dbb5a4e68c3dd568488e3d |
+| 2026-07-02 13:34:34 | `file.write` | llmwiki/wiki/index.md · tool=Edit · actor=agent · prev=955148f0f33ab3d0954928a3c01c15dafa439082d9cb745947d7af428607d771  |
+| 2026-07-02 13:54:02 | `file.write` | llmwiki/html/020726-audit-fdk-strategy.html · tool=Write · actor=agent · prev=d8187806152f9076d6be1c5fcf6ff808682b9d7511 |
+| 2026-07-02 13:54:17 | `file.write` | llmwiki/wiki/sources/draft/020726-audit-fdk-strategy.md · tool=Edit · actor=agent · prev=5383896908096b8ea65d2ecf25b59e1 |
+| 2026-07-02 14:08:46 | `file.write` | llmwiki/wiki/sources/draft/020726-wiki-core-relations.md · tool=Write · actor=agent · prev=9c699aedc79cd3e4e9dd10c5a4837 |
+| 2026-07-02 14:08:55 | `file.write` | llmwiki/wiki/index.md · tool=Edit · actor=agent · prev=b618051b7a9397ceded38944df4176da8b68c5c00a901894ae8bb4100ef29859  |
+| 2026-07-02 14:20:44 | `file.write` | llmwiki/wiki/sources/draft/020726-wiki-core-relations.md · tool=Edit · actor=agent · prev=79cec55afe3297105f6f693d3d5808 |
+| 2026-07-02 14:20:50 | `file.write` | llmwiki/wiki/index.md · tool=Edit · actor=agent · prev=79fcd8f033779f91117d617bb7139502a32ea1de6878d1eb23a8fd96bbcae840  |
+| 2026-07-02 14:37:41 | `file.write` | llmwiki/.claude/hooks/wiki_ledger.py · tool=Write · actor=agent · prev=46c31fdebe240d05052086626233bb2d37b387842a5e53ba0 |
+| 2026-07-02 14:38:12 | `file.write` | llmwiki/.claude/hooks/validators/rel_integrity.py · tool=Write · actor=agent · prev=95b06580f58867e39edec0ec2e91799d321a |
+| 2026-07-02 14:38:28 | `file.write` | llmwiki/.claude/hooks/post_tool_use.py · tool=Edit · actor=agent · prev=59b80bdf678d22f17ce6cd37b10fa41022501f7a8d59cfa8 |
+| 2026-07-02 14:38:32 | `file.write` | llmwiki/.claude/hooks/post_tool_use.py · tool=Edit · actor=agent · prev=635bbea5f36615f852b083f30731c96007caba1b3ee4c46f |
+| 2026-07-02 14:38:55 | `file.write` | fdk/tools/wiki-relations.py · tool=Write · actor=agent · prev=ddf4e677fc29f6f2beace27f9c033d835ef941015f49ba47fc3a7bc5ce |
+| 2026-07-02 14:39:18 | `file.write` | llmwiki/.claude/hooks/wiki_ledger.py · tool=Edit · actor=agent · prev=5e602c12b58f08f088a70e0111456046c71eb627da9322bc65 |
+| 2026-07-02 14:39:20 | `file.write` | fdk/tools/wiki-relations.py · tool=Edit · actor=agent · prev=c6b9a3e317a6ddac0e85f6deab55d08897d4f31d744ed641badc4e12f73 |
+| 2026-07-02 14:40:25 | `file.write` | llmwiki/.claude/hooks/validators/rel_integrity.py · tool=Edit · actor=agent · prev=f56a2d04e9ea6862a23412cb377851bfdd7be |
+| 2026-07-02 14:41:00 | `file.write` | llmwiki/wiki/sources/draft/020726-wiki-core-relations.md · tool=Edit · actor=agent · prev=f34a3f00a267a0a971c785164a4ec6 |
+| 2026-07-02 14:42:07 | `file.write` | llmwiki/wiki/sources/draft/020726-wiki-core-relations.md · tool=Edit · actor=agent · prev=a452d0087c8841ae02a3d5253d5b26 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -84,3 +84,24 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 - Draft report: `wiki/sources/draft/020726-ingest-fdk-strategy.md`
 
 ## 2026-07-02 — verify-before-commit — promoted 020726-orca-issue-ledger-travel (commit 49d2361, task T-260702-01 done, 20/20 test + drift 52/0)
+
+## 2026-07-02 — docs-site-macos — docs-site-fdk-strategy
+- Render `fdk/wiki/concepts/fdk-dev-strategy.md` → `llmwiki/html/020726-fdk-dev-strategy.html` (mind map + 6 section + 4 diagram kéo-thả); draft `sources/draft/020726-docs-site-fdk-strategy.md`.
+
+## 2026-07-02 — fdk — audit-fdk-strategy
+- Audit 3 trụ (harness/skills/llmwiki) theo kim chỉ nam fdk-dev-strategy, 3 agent song song
+- Draft report: `wiki/sources/draft/020726-audit-fdk-strategy.md`
+- Problem-tree: thêm 4 node p-07..p-10 (policy-not-drive, drift-che-version, mép đăng ký skill, nhịp ship wiki)
+
+## 2026-07-02 — docs-site-macos — audit-fdk-strategy-html
+- Render báo cáo audit thành `llmwiki/html/020726-audit-fdk-strategy.html` (liquid-glass, mind map, diagram kéo-thả)
+- Bổ sung tình báo multi-session vào draft audit; memory mới `framework-multi-session-dev`
+
+## 2026-07-02 — propose — wiki-core-relations
+- Đánh giá hệ thống wiki (6 tiêu chí PROV/KG/context-eng) + proposal wiki-core v2: `sources/draft/020726-wiki-core-relations.md` — chờ duyệt.
+
+## 2026-07-02 — council — wiki-core-relations
+- 5 seat (Taleb/Ilya/Munger/Kahneman/Aurelius) phan bien proposal 020726-wiki-core-relations; 3 judge blind-rank, winner Ilya (mean-rank 1.0). Chairman synthesis: thu hep pham vi + 7 guardrail bat buoc (concurrency ledger, depth-cap room, migrate//validator song song...) ghi vao Phan 3 cua draft. Transcript: sources/draft/020726-council-transcript-wiki-core.json; report: html/council/council-report-005-seed42.html.
+
+## 2026-07-02 — fdk — wiki-core v2 buoc 1+2&3
+- Ledger JSONL (wiki_ledger.py, flock G1, test 8-process pass) + tombstone; migrate id+relations 82 trang (fdk/tools/wiki-relations.py, idempotent); validator rel_integrity.py warn-only (G4/G7, full-scan 0 canh bao that). Problem-tree +p-11 (partial 2/3). Buoc 4-6 cho on dinh 4-6 tuan.

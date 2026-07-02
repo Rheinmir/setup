@@ -1,0 +1,33 @@
+fdk/tools/build-overstack-docs.py | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
+
+--- Changes ---
+
+fdk/tools/build-overstack-docs.py
+  @@ -808,13 +808,16 @@ def render(root: Path) -> str:
+  -               ("Tổng quan", ["what", "install"]),
+  +               ("Tổng quan", ["what", "reference", "install"]),
+                  ("3 nền tảng", ["wiki", "harness", "skills"]),
+                  ("Quy trình & điều phối", ["workflow", "orca"]),
+                  ("Đánh giá & truy vết", ["advanced", "awareness", "runtime"]),
+                  ("An toàn khi mở rộng", ["bnal"]),
+  -               ("Vận hành", ["maintain", "reference"]),
+  +               ("Vận hành", ["maintain"]),
+                  ("👷 Phát triển overstack", ["fdk", "newfeature"])]
+  +    # Thứ tự thân bài = thứ tự phẳng của `grouped` (nav ↔ thân luôn khớp, chống lệch khi chèn/di tab)
+  +    _flat = [sid for _g, ids in grouped for sid in ids]
+  +    S = sorted(S, key=lambda t: _flat.index(t[0]) if t[0] in _flat else len(_flat))
+       id2nav = {sid: navlabel for sid, navlabel, *_ in S}
+       idx = {sid: i for i, (sid, *_rest) in enumerate(S)}
+       ICON = {"quickstart": "🚀", "what": "📖", "install": "📦", "wiki": "📚", "harness": "🛡️",
+  @@ -847,7 +850,11 @@ def render(root: Path) -> str:
+  -    return "".join(html)
+  +    out = "".join(html)
+  +    # Resolve link nội bộ dạng #<sid> (vd #reference) → #s{idx} thật, chống gãy khi đổi thứ tự tab
+  +    out = re.sub(r'href="#([a-z][a-z0-9-]*)"',
+  +                 lambda m: f'href="#s{idx[m.group(1)]}"' if m.group(1) in idx else m.group(0), out)
+  +    return out
+   
+   
+   def main():
+  +10 -3

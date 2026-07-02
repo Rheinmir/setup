@@ -3,6 +3,7 @@ type: concept
 title: Onboarding Tour
 tags: [orca, onboarding]
 timestamp: 2026-06-25
+id: onboarding-tour
 ---
 
 # Onboarding Tour

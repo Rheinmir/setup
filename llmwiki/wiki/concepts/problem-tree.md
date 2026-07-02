@@ -4,6 +4,7 @@ title: "Problem-tree — sổ cây vấn đề xuyên session"
 status: active
 tags: [problem-tree, ledger, systems-thinking, harness, R16, R17]
 timestamp: 2026-07-02
+id: problem-tree
 ---
 
 # Problem-tree — sổ cây vấn đề xuyên session

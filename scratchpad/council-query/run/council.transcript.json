@@ -1,0 +1,396 @@
+{
+  "aggregate": [
+    {
+      "author": "karpathy",
+      "consensus_rank": 1,
+      "label": "E",
+      "mean_rank": 1.333333,
+      "ranks": [
+        1,
+        2,
+        1
+      ]
+    },
+    {
+      "author": "munger",
+      "consensus_rank": 2,
+      "label": "C",
+      "mean_rank": 2.333333,
+      "ranks": [
+        2,
+        3,
+        2
+      ]
+    },
+    {
+      "author": "taleb",
+      "consensus_rank": 3,
+      "label": "D",
+      "mean_rank": 3.333333,
+      "ranks": [
+        3,
+        4,
+        3
+      ]
+    },
+    {
+      "author": "linus",
+      "consensus_rank": 4,
+      "label": "A",
+      "mean_rank": 3.666667,
+      "ranks": [
+        5,
+        1,
+        5
+      ]
+    },
+    {
+      "author": "meadows",
+      "consensus_rank": 5,
+      "label": "B",
+      "mean_rank": 4.333333,
+      "ranks": [
+        4,
+        5,
+        4
+      ]
+    }
+  ],
+  "anchor_guard": {
+    "note": "Each judge was shown the blind answers in this order (position-bias guard).",
+    "presentation_order": {
+      "seat-1": [
+        "C",
+        "E",
+        "D",
+        "B",
+        "A"
+      ],
+      "seat-2": [
+        "B",
+        "D",
+        "A",
+        "C",
+        "E"
+      ],
+      "seat-3": [
+        "A",
+        "C",
+        "B",
+        "D",
+        "E"
+      ]
+    },
+    "seed": 42
+  },
+  "anonymization": {
+    "label_to_author": {
+      "A": "linus",
+      "B": "meadows",
+      "C": "munger",
+      "D": "taleb",
+      "E": "karpathy"
+    },
+    "label_to_id": {
+      "A": "a2",
+      "B": "a4",
+      "C": "a5",
+      "D": "a3",
+      "E": "a1"
+    }
+  },
+  "answers": [
+    {
+      "author": "linus",
+      "id": "a2",
+      "label": "A",
+      "text": "Cái 'skill' query là một file text KHÔNG LÀM GÌ. Đừng viết framework eval cho một tính năng chưa tồn tại. Viết cái tool đi: ripgrep trên index.md làm tầng-1, Read làm tầng-2, wikilinks làm tầng-3 — 50 dòng, hôm nay THẤY nó chạy. Nhân tiện nhét logging vào luôn (rẻ, thật, debug được). RỒI, khi đã có tool thật đẻ ra output thật, mới dựng eval chấm nó. Đo hơi nước là quan liêu. C là rác ma thuật — một hook nhồi context mọi lượt thì không click được, không debug được, phình mọi request. Thứ tự: B(+telemetry) trước, A sau khi đã có cái để đo."
+    },
+    {
+      "author": "meadows",
+      "id": "a4",
+      "label": "B",
+      "text": "Hệ thống KHÔNG có vòng phản hồi — đó mới là khiếm khuyết gốc, sâu hơn 'query chỉ là prose'. Bạn không thể lái một hệ open-loop; mọi thay đổi là phỏng đoán không bao giờ được hiệu chỉnh. Telemetry + baseline truy-hồi lắp đúng cái cảm biến đang thiếu và ĐÓNG vòng lặp — đòn bẩy cao nhất. Thêm một L1 tool bóng bẩy TRƯỚC khi vòng lặp tồn tại chỉ khiến một hệ mù chạy nhanh hơn. Đặt cảm biến trước (A + telemetry), RỒI cải tiến tool với vòng lặp đang quan sát. C dời can thiệp sang sai chỗ (thượng nguồn suy nghĩ của model) và thêm một chi phí vĩnh viễn. Thứ tự: A → B, vòng lặp trước."
+    },
+    {
+      "author": "munger",
+      "id": "a5",
+      "label": "C",
+      "text": "Nghịch đảo — cái gì ĐẢM BẢO thất bại? Hai đường. Một: ship retrieval bóng bẩy (B) không đồng hồ đo, thấy năng suất, âm thầm hồi quy, không bao giờ biết — chết vì drift không đo. Hai: mạ vàng eval thành dự án nghiên cứu, không bao giờ ship tool — chết vì tê liệt phân tích. Tránh cả hai: telemetry GẦN-NHƯ-FREE trước (một dòng log), một eval truy-hồi TỐI THIỂU (vài chục golden), RỒI L1. C thất bại kiểu thứ ba: nhồi context mọi lượt đảm bảo phình + ô nhiễm — nghịch đảo của 'để model tự hỏi cái nó cần'. Thứ tự: telemetry+eval-mỏng (A) → B; C bét bảng."
+    },
+    {
+      "author": "taleb",
+      "id": "a3",
+      "label": "D",
+      "text": "Via negativa. Nước đi rẻ nhất và bền nhất là CÁI CẢM BIẾN, không phải tính năng. Baseline + telemetry là bảo hiểm: đó là cách bạn PHÁT HIỆN một thay đổi 'khôn ngoan' đã âm thầm đầu độc recall. Xây mà không có nó thì mọi cải tiến là đức tin. C là bẫy mong manh: prefetch-inject trả thuế token MỌI lượt và ép content lên model dù model không hỏi — rủi ro đuôi đầu độc context, đúng mùi wholesale đã bị loại 3.89. Giết C. Nhưng cũng đừng xây eval quá béo — một eval mạ vàng tự nó là một mong manh khác. Baseline mỏng, rồi mới tool. Thứ tự: A(mỏng)→B, C không bao giờ."
+    },
+    {
+      "author": "karpathy",
+      "id": "a1",
+      "label": "E",
+      "text": "Trong ML không ai ship một tối ưu mà không có metric — nhưng ở đây metric RẺ và retrieval thì đúng nghĩa đang ở 0. Làm cả hai trong một vòng chặt: dựng eval truy-hồi TỐI THIỂU (20-30 cặp câu-hỏi→trang-đúng, chấm recall@k + token) VÀ nâng L1 tool, nhưng LAND eval trước để commit đầu tiên của tool đã có một con số. Bỏ L2: inject context mù là RAG thời tiền-attention, nó ĐÁNH NHAU với khả năng tự truy hồi của model. Telemetry là một phần của A — log mỗi query trúng trang nào + tốn token, đó chính là tín hiệu học. Đừng mạ vàng eval: 30 golden dogfood ăn đứt 300 golden lý thuyết. Thứ tự: A(mỏng) → B, đo B trên nền A."
+    }
+  ],
+  "chairman_brief": {
+    "consensus_order": [
+      {
+        "author": "karpathy",
+        "mean_rank": 1.333333,
+        "rank": 1
+      },
+      {
+        "author": "munger",
+        "mean_rank": 2.333333,
+        "rank": 2
+      },
+      {
+        "author": "taleb",
+        "mean_rank": 3.333333,
+        "rank": 3
+      },
+      {
+        "author": "linus",
+        "mean_rank": 3.666667,
+        "rank": 4
+      },
+      {
+        "author": "meadows",
+        "mean_rank": 4.333333,
+        "rank": 5
+      }
+    ],
+    "dissent_points": [
+      {
+        "author": "linus",
+        "ranks": [
+          5,
+          1,
+          5
+        ],
+        "variance": 3.555556
+      },
+      {
+        "author": "meadows",
+        "ranks": [
+          4,
+          5,
+          4
+        ],
+        "variance": 0.222222
+      },
+      {
+        "author": "munger",
+        "ranks": [
+          2,
+          3,
+          2
+        ],
+        "variance": 0.222222
+      },
+      {
+        "author": "taleb",
+        "ranks": [
+          3,
+          4,
+          3
+        ],
+        "variance": 0.222222
+      },
+      {
+        "author": "karpathy",
+        "ranks": [
+          1,
+          2,
+          1
+        ],
+        "variance": 0.222222
+      }
+    ],
+    "instruction": "Synthesize ONE final answer. Lead with the consensus winner, fold in unique correct points from the others, and explicitly resolve the contested answer(s) below rather than averaging them away."
+  },
+  "chairman_synthesis": null,
+  "config_provenance": {
+    "anchor_seed": 42,
+    "chairman": {
+      "model": "claude-opus-4"
+    },
+    "judges": [
+      {
+        "id": "seat-1",
+        "model": "claude-opus-4"
+      },
+      {
+        "id": "seat-2",
+        "model": "gpt-5"
+      },
+      {
+        "id": "seat-3",
+        "model": "gemini-2.5-pro"
+      }
+    ],
+    "note": "Adapter values (model identities). Provenance only -- the engine never branches on these.",
+    "seats": [
+      {
+        "id": "seat-1",
+        "model": "claude-opus-4",
+        "persona": "feynman"
+      },
+      {
+        "id": "seat-2",
+        "model": "gpt-5",
+        "persona": "taleb"
+      },
+      {
+        "id": "seat-3",
+        "model": "gemini-2.5-pro",
+        "persona": "rams"
+      }
+    ]
+  },
+  "dissent": [
+    {
+      "author": "linus",
+      "label": "A",
+      "max_rank": 5,
+      "min_rank": 1,
+      "range": 4,
+      "ranks": [
+        5,
+        1,
+        5
+      ],
+      "stdev": 1.885618,
+      "variance": 3.555556
+    },
+    {
+      "author": "meadows",
+      "label": "B",
+      "max_rank": 5,
+      "min_rank": 4,
+      "range": 1,
+      "ranks": [
+        4,
+        5,
+        4
+      ],
+      "stdev": 0.471405,
+      "variance": 0.222222
+    },
+    {
+      "author": "munger",
+      "label": "C",
+      "max_rank": 3,
+      "min_rank": 2,
+      "range": 1,
+      "ranks": [
+        2,
+        3,
+        2
+      ],
+      "stdev": 0.471405,
+      "variance": 0.222222
+    },
+    {
+      "author": "taleb",
+      "label": "D",
+      "max_rank": 4,
+      "min_rank": 3,
+      "range": 1,
+      "ranks": [
+        3,
+        4,
+        3
+      ],
+      "stdev": 0.471405,
+      "variance": 0.222222
+    },
+    {
+      "author": "karpathy",
+      "label": "E",
+      "max_rank": 2,
+      "min_rank": 1,
+      "range": 1,
+      "ranks": [
+        1,
+        2,
+        1
+      ],
+      "stdev": 0.471405,
+      "variance": 0.222222
+    }
+  ],
+  "generator": "council.py/1.0",
+  "judge_rankings": [
+    {
+      "judge": "seat-1",
+      "ranking_authors": [
+        "karpathy",
+        "munger",
+        "taleb",
+        "meadows",
+        "linus"
+      ],
+      "ranking_labels": [
+        "E",
+        "C",
+        "D",
+        "B",
+        "A"
+      ]
+    },
+    {
+      "judge": "seat-2",
+      "ranking_authors": [
+        "linus",
+        "karpathy",
+        "munger",
+        "taleb",
+        "meadows"
+      ],
+      "ranking_labels": [
+        "A",
+        "E",
+        "C",
+        "D",
+        "B"
+      ]
+    },
+    {
+      "judge": "seat-3",
+      "ranking_authors": [
+        "karpathy",
+        "munger",
+        "taleb",
+        "meadows",
+        "linus"
+      ],
+      "ranking_labels": [
+        "E",
+        "C",
+        "D",
+        "B",
+        "A"
+      ]
+    }
+  ],
+  "most_contested": {
+    "author": "linus",
+    "label": "A",
+    "ranks": [
+      5,
+      1,
+      5
+    ],
+    "variance": 3.555556
+  },
+  "pending_adapter_steps": [],
+  "question": "<the question put to the council>",
+  "seed": 42,
+  "stage": "1-2-3-complete",
+  "verified": true,
+  "winner": {
+    "author": "karpathy",
+    "label": "E",
+    "mean_rank": 1.333333
+  }
+}

@@ -4,6 +4,7 @@ title: "ADR-005: code-logger và bản đồ năng lực ĐI XUỐNG cùng dự 
 status: accepted
 tags: [adr, downstream, logger, capabilities, scope, travel, adr-004, council]
 timestamp: 2026-06-28
+id: ADR-005-logger-and-capabilities-travel-downstream
 ---
 
 # ADR-005: logger + capability-map đi xuống cùng dự án (scoped)

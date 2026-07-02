@@ -3,6 +3,7 @@ type: entity
 title: Project Structure
 tags: [orca, onboarding]
 timestamp: 2026-06-25
+id: project-structure
 ---
 
 # Project Structure

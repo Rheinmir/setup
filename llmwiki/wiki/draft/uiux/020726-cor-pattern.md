@@ -4,6 +4,7 @@ type: draft
 status: proposed
 tags: [build-now-adapt-later, fdk, council, output-report, cor]
 proposed: 2026-07-02
+id: 020726-cor-pattern
 ---
 
 # 020726-cor-pattern

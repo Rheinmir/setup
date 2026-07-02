@@ -4,6 +4,7 @@ title: "ADR-004: framework-dev context là opt-in (gọi /fdk), không auto-bơm
 status: accepted
 tags: [adr, fdk, session, hook, downstream, opt-in, anti-pattern]
 timestamp: 2026-06-27
+id: ADR-004-framework-dev-context-opt-in
 ---
 
 # ADR-004: framework-dev context là opt-in, không auto-bơm
