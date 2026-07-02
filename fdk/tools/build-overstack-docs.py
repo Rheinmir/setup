@@ -124,8 +124,9 @@ LOOP_GROUPS = {
     "dev-loop": (
         [("edit", "✏️ sửa code an toàn"), ("build", "🏗️ dựng & onboard"), ("eval", "📊 eval & vòng lặp")],
         {"propose": "edit", "impact-check": "edit", "safe-change": "edit", "verify-before-commit": "edit",
-         "new-project-setup": "build", "onboard-codebase": "build", "new-skill": "build", "tour-guide": "build",
-         "wikieval": "eval", "loop-runner": "eval", "failure-flywheel": "eval", "build-now-adapt-later": "eval"}),
+         "build-now-adapt-later": "edit",
+         "new-project-setup": "build", "onboard-codebase": "build", "new-skill": "build",
+         "wikieval": "eval", "loop-runner": "eval", "failure-flywheel": "eval"}),
     "orchestrate": (
         [("dispatch", "🐳 điều phối"), ("eval", "📊 đánh giá"), ("ops", "🚀 vận hành & deploy")],
         {"orca-workflow": "dispatch", "orca-onboard": "dispatch", "orchestration": "dispatch",
@@ -135,13 +136,15 @@ LOOP_GROUPS = {
     "utils": (
         [("docs", "📄 tài liệu & render"), ("taste", "🎨 thiết kế & style"), ("imagegen", "🖼️ image→code/gen"),
          ("caveman", "🦴 caveman"), ("fdk", "🛠️ framework-dev"), ("utility", "🔧 tiện ích khác")],
-        {"docs-site-macos": "docs", "extract-site": "docs", "md-to-html": "docs", "tour-guide-supademo": "docs",
+        {"docs-site-macos": "docs", "extract-site": "docs", "md-to-html": "docs",
          "web-crawl": "docs", "web-clone": "docs",
+         "tour-guide": "taste", "tour-guide-supademo": "taste",
          "brandkit": "taste", "design-taste-frontend": "taste", "design-taste-frontend-v1": "taste",
          "gpt-taste": "taste", "high-end-visual-design": "taste", "stitch-design-taste": "taste",
          "minimalist-ui": "taste", "industrial-brutalist-ui": "taste", "redesign-existing-projects": "taste",
+         "cursor-animated-sites": "docs",
          "image-to-code": "imagegen", "imagegen-frontend-mobile": "imagegen",
-         "imagegen-frontend-web": "imagegen", "cursor-animated-sites": "imagegen",
+         "imagegen-frontend-web": "imagegen",
          "cavecrew": "caveman", "caveman": "caveman", "caveman-commit": "caveman", "caveman-compress": "caveman",
          "caveman-help": "caveman", "caveman-review": "caveman", "caveman-stats": "caveman",
          "fdk": "fdk", "harness-tour": "fdk", "harness-update": "fdk", "health-check": "fdk",
@@ -251,6 +254,17 @@ footer{max-width:1080px;margin:0 auto;padding:26px 24px 60px;font-size:12px;colo
 .mm .g3 .nm{color:#1e8e3e}.mm .g3 .ct{background:#34c759}.mm .g3.node{border-color:rgba(52,199,89,.4)}
 .mm .g4 .nm{color:#c77f00}.mm .g4 .ct{background:#ff9500}.mm .g4.node{border-color:rgba(255,149,0,.42)}
 .mm .g5 .nm{color:#c81e4a}.mm .g5 .ct{background:#ff2d55}.mm .g5.node{border-color:rgba(255,45,85,.4)}
+/* ── redesign upgrades (a11y focus · orphan-fix · smooth-scroll · tabular số) ── */
+html{scroll-behavior:smooth}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+h1,h2,h3,.hero h1{text-wrap:balance}p,.lead,.hero p{text-wrap:pretty}
+.kpi .n,.mm .node .ct,th,td code{font-variant-numeric:tabular-nums}
+/* focus-visible: keyboard-only ring, không ăn vào hover chuột */
+a:focus-visible,button:focus-visible,nav a:focus-visible,.code-copy:focus-visible,.node:focus-visible{outline:2px solid #0a84ff;outline-offset:2px;border-radius:8px}
+:focus:not(:focus-visible){outline:none}
+/* active/pressed feedback nhất quán vật lý */
+nav a:active{transform:translateY(.5px)}
+.code-copy:active,.nav-toggle:active,.nav-close:active{transform:scale(.94)}
 """
 
 JS = r"""
@@ -414,7 +428,7 @@ def sections(root: Path):
                     + '<div class="children">' + "".join(branches) + '</div></div></div></div></div>')
 
     S = []
-    S.append(("quickstart", "★ Quickstart", "00 · Bắt đầu", "Quickstart — chạy được trong 2 phút", [
+    S.append(("quickstart", "Quickstart", "00 · Bắt đầu", "Quickstart — chạy được trong 2 phút", [
         "<p class=\"lead\">Bạn chỉ cần nhớ ba thứ: <b>cài</b>, <b>để agent làm việc</b>, và <b>khi muốn tính năng mới thì /propose trước</b>. Phần còn lại overstack lo (rào chắn tất định chặn agent làm bậy, 0 token).</p>",
         "<h3>1. Cài vào dự án của bạn (một dòng)</h3>",
         "<div class=\"grid\">"
@@ -484,7 +498,7 @@ def sections(root: Path):
         "<li>Tự bảo trì về sau: <code>/harness-update</code> (cập nhật + trả nợ + refresh bản đồ năng lực).</li></ul></div>",
     ]))
 
-    S.append(("wiki", "Nền 1 · Wiki", "03 · Tri thức", "Nền tảng 1 — Wiki (tri thức)", [
+    S.append(("wiki", "Wiki", "03 · Tri thức", "Nền tảng 1 — Wiki (tri thức)", [
         "<p class=\"lead\">Wiki là bộ nhớ dài hạn của dự án. overstack ép nó luôn truy được nguồn và không bao giờ lệch index — bằng rào chắn, không bằng kỷ luật con người.</p>",
         "<div class=\"grid\"><div class=\"card\"><h4>Luật vàng của wiki</h4><ul class=\"s\">"
         "<li>Mọi trang phải có <code>## Origin</code> — luôn truy được nguồn gốc (R2).</li>"
@@ -515,7 +529,7 @@ def sections(root: Path):
         if 1 <= _i <= 3:  # mỗi lớp gác có nhánh CHẶN
             _hsvg.append(f'<text x="{_x + 76}" y="124" text-anchor="middle" font-size="9" font-weight="600" fill="#ff2d55">✗ exit 2 → chặn</text>')
     _hsvg.append('</svg>')
-    S.append(("harness", "Nền 2 · Harness", "04 · Rào chắn", "Nền tảng 2 — Harness (rào chắn tất định)", [
+    S.append(("harness", "Harness", "04 · Rào chắn", "Nền tảng 2 — Harness (rào chắn tất định)", [
         "<p class=\"lead\">Harness là phần làm overstack khác mọi \"prompt pack\": luật là CODE chạy ở hook/CI, chặn được agent kể cả khi nó cố tình lờ. 0 token, không bypass được khi merge. Một thay đổi phải qua <b>3 lớp gác</b> mới vào main — vi phạm ở lớp nào thì <b>exit 2</b> chặn ngay lớp đó:</p>",
         '<div class="diagram-box">' + "".join(_hsvg) + '<div class="diagram-hint">✥ kéo từng ô · cuộn để zoom</div></div>',
         f"<p>Hiện có <b>{n_rules} rule</b> (R1–R{n_rules}), mỗi rule là một validator tất định; vi phạm bị chặn ở write-time (hook), commit (pre-commit), và merge (CI) — ba lớp. Bảng dưới giải thích <b>từng rule</b>. Các <b>cơ chế runtime + tự-gác</b> (auto-index, force-query, orientation, code-index, harness-lint…) là một nhánh <i>“cơ chế”</i> riêng — chia & giải thích từng cái trong <b>mind map</b> (mục Tham chiếu cuối trang).</p>",
@@ -531,13 +545,13 @@ def sections(root: Path):
         "<li><b>fdk-gate</b> — định-nghĩa-hoàn-thành: 14 bước phải xanh mới cho push.</li></ul></div></div>",
     ]))
 
-    S.append(("skills", "Nền 3 · Skills", "05 · Kỹ năng", "Nền tảng 3 — Skills (kỹ năng đóng gói)", [
+    S.append(("skills", "Skills", "05 · Kỹ năng", "Nền tảng 3 — Skills (kỹ năng đóng gói)", [
         f"<p class=\"lead\">Skill là một quy trình đóng gói thành file <code>SKILL.md</code>, gọi bằng <code>/tên</code>. Hiện có <b>{n_sk}</b> skill, chia theo \"loop\" (vòng công việc). Cài global qua <code>npx skills add</code> → dùng ở mọi dự án.</p>",
         "<div class=\"grid\"><div class=\"card\"><h4>wiki-loop</h4><ul class=\"s\"><li>nuôi tri thức: <code>/ingest</code>, <code>/query</code>, <code>/lint</code>.</li></ul></div>"
         "<div class=\"card\"><h4>dev-loop</h4><ul class=\"s\"><li>vòng phát triển: <code>/propose</code>, <code>/impact-check</code>, <code>/safe-change</code>, <code>/verify-before-commit</code>…</li></ul></div>"
         "<div class=\"card\"><h4>orchestrate (entry chính)</h4><ul class=\"s\"><li><b><code>/orca-workflow</code></b> · <b><code>/orca-onboard</code></b> — lệnh bạn gọi trực tiếp; chúng điều phối các skill dev-loop. Cùng nhóm: <code>/council</code>, <code>/trace-grader</code>.</li></ul></div>"
         "<div class=\"card\"><h4>utils</h4><ul class=\"s\"><li>tiện ích: <code>/fdk</code>, <code>/harness-update</code>, <code>/docs-site-macos</code>…</li></ul></div></div>",
-        "<p>Bảng đầy đủ luôn-mới ở tab <a href=\"#reference\">Tham chiếu</a>. Không chắc dùng skill nào? <code>find-skills \"&lt;việc&gt;\"</code>.</p>",
+        "<p>Bảng đầy đủ luôn-mới ở tab <a href=\"@reference\">Tham chiếu</a>. Không chắc dùng skill nào? <code>find-skills \"&lt;việc&gt;\"</code>.</p>",
     ]))
 
     _wf = [("propose", "#0a84ff", "draft + DỪNG duyệt", "proposed"),
@@ -755,7 +769,7 @@ def sections(root: Path):
         "<div class=\"note\"><h4>Dev framework TỪ một dự án khác → tự mở PR</h4><p style=\"margin:0\">Đang dở dự án khác mà cần chưng cất một skill vào overstack? Vì <code>fdk-gate</code>/<code>fdk/tools</code> không travel (ADR-004), <code>/fdk</code> dùng <code>fdk-kit.sh</code>: <b>pull</b> kit về sandbox <code>.overstack-kit/</code> → distill + <b>check</b> (fdk-gate) → <b>submit</b> = push branch + <code>gh pr create</code> tự mở PR vào <code>orca</code>. Một lệnh kéo về, một lệnh đẩy lên.</p></div>",
     ]))
 
-    S.append(("newfeature", "★ Dev cái mới cần update gì", "13 · Checklist", "★ Dev một cái mới — cần update gì cho HỢP LỆ", [
+    S.append(("newfeature", "Dev cái mới cần update gì", "13 · Checklist", "Dev một cái mới — cần update gì cho HỢP LỆ", [
         "<p class=\"lead\">👷 <i>(cho người phát triển overstack)</i> Khi thêm một tính năng/skill/rule mới cho overstack, đây là những chỗ phải đồng bộ để nó <b>hợp lệ</b> (bản máy-đọc = <code>fdk-gate</code>).</p>",
         "<ol class=\"ck\">"
         "<li><b>Code + test</b> — viết lõi tất định + self-test; ẩn số → nhốt sau MỘT adapter (<code>verified:false</code>).</li>"
@@ -792,9 +806,9 @@ def sections(root: Path):
                  '<p>Thêm tính năng còn ẩn số mà không liều: dựng phần chắc chắn now, nhốt ẩn số sau MỘT config adapter (verified:false → true), auto từ harness/*.config.yaml. Chi tiết + sơ đồ ở tab <b>An toàn khi mở rộng</b>.</p></div>')
     _b7html = '<h3 class="sub">7 nhánh mind map — giải thích chi tiết từng nhánh</h3>' + "".join(_secs)
     S.append(("reference", "Tham chiếu (mind map)", "14 · Tham chiếu", "Tham chiếu — mind map skill & rule (đếm từ đĩa)", [
-        f"<p class=\"lead\">Bản đồ tư duy (định dạng cheatsheet) toàn bộ đồ nghề, sinh từ đĩa nên luôn khớp: <b>{n_sk} skill</b> theo loop · <b>{n_rules} rule</b>. Mind map chia <b>7 nhánh</b> (4 loop skill + rules + cơ chế + BNAL) — giải thích từng nhánh ngay dưới. Mỗi nhánh <b>mặc định đóng — click để mở/đóng</b> (mũi tên ▸).</p>",
-        _b7html,
+        f"<p class=\"lead\">Bản đồ tư duy (định dạng cheatsheet) toàn bộ đồ nghề, sinh từ đĩa nên luôn khớp: <b>{n_sk} skill</b> theo loop · <b>{n_rules} rule</b>. Mind map chia <b>7 nhánh</b> (4 loop skill + rules + cơ chế + BNAL) — xem bản đồ trước, giải thích từng nhánh ngay dưới. Mỗi nhánh <b>mặc định đóng — click để mở/đóng</b> (mũi tên ▸).</p>",
         mindmap_html,
+        _b7html,
         "<h3 style=\"margin-top:26px\">Bảng chi tiết (mô tả đầy đủ)</h3>", skills_table, rules_table,
     ]))
     return S
@@ -808,13 +822,16 @@ def render(root: Path) -> str:
     nav = ['<div class="logo">overstack<small>tài liệu chính thức · sinh từ đĩa</small></div>',
            '<div class="grp">Bắt đầu</div>']
     grouped = [("Bắt đầu", ["quickstart"]),
-               ("Tổng quan", ["what", "install"]),
+               ("Tổng quan", ["what", "reference", "install"]),
                ("3 nền tảng", ["wiki", "harness", "skills"]),
                ("Quy trình & điều phối", ["workflow", "orca"]),
                ("Đánh giá & truy vết", ["advanced", "awareness", "runtime"]),
                ("An toàn khi mở rộng", ["bnal"]),
-               ("Vận hành", ["maintain", "reference"]),
+               ("Vận hành", ["maintain"]),
                ("👷 Phát triển overstack", ["fdk", "newfeature"])]
+    # Thứ tự thân bài = thứ tự phẳng của `grouped` (nav ↔ thân luôn khớp, chống lệch khi chèn/di tab)
+    _flat = [sid for _g, ids in grouped for sid in ids]
+    S = sorted(S, key=lambda t: _flat.index(t[0]) if t[0] in _flat else len(_flat))
     id2nav = {sid: navlabel for sid, navlabel, *_ in S}
     idx = {sid: i for i, (sid, *_rest) in enumerate(S)}
     ICON = {"quickstart": "🚀", "what": "📖", "install": "📦", "wiki": "📚", "harness": "🛡️",
@@ -847,7 +864,12 @@ def render(root: Path) -> str:
         "self-contained, offline-proof · travel cùng install.</footer>",
         "<script>", JS, "</script></body></html>",
     ]
-    return "".join(html)
+    out = "".join(html)
+    # Resolve link nội bộ dạng @<sid> (vd @reference) → #s{idx} thật, chống gãy khi đổi thứ tự tab.
+    # Dùng sentinel '@' (không phải '#') để KHÔNG bao giờ đè nhầm href="#..." trong ví dụ HTML ở <pre>/<code>.
+    out = re.sub(r'href="@([a-z][a-z0-9-]*)"',
+                 lambda m: f'href="#s{idx[m.group(1)]}"' if m.group(1) in idx else m.group(0), out)
+    return out
 
 
 def main():

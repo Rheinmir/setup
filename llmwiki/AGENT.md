@@ -90,7 +90,7 @@ Giảm lỗi LLM-coding phổ biến. Thiên về cẩn trọng hơn tốc độ
 | `redesign-existing-projects` | Upgrades existing websites and apps to premium quality. | `skills/utils/redesign-existing-projects.md` | utils |
 | `snapshot-push` | Push bonbon-ai outer repo as full snapshot, including be/ and fe/ content | `skills/utils/snapshot-push.md` | utils |
 | `stitch-design-taste` | Semantic Design System Skill for Google Stitch. | `skills/utils/stitch-design-taste.md` | utils |
-| `tour-guide` | Thêm một in-app product tour (spotlight onboarding overlay) tự viết, KHÔNG… | `skills/dev-loop/tour-guide.md` | dev-loop |
+| `tour-guide` | Thêm một in-app product tour (spotlight onboarding overlay) tự viết, KHÔNG… | `skills/utils/tour-guide.md` | utils |
 | `tour-guide-supademo` | Style thiết kế Supademo cho in-app product tour (dùng kèm skill tour-guide… | `skills/utils/tour-guide-supademo.md` | utils |
 | `uat-nonit-testcase` | Tạo bộ test case / checklist UAT cho người dùng nghiệp vụ NON-IT (C&B, kế… | `skills/utils/uat-nonit-testcase.md` | utils |
 

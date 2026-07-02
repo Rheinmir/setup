@@ -25,7 +25,7 @@ LLMWIKI = REPO / "llmwiki" / "skills"    # mirror (bundle llmwiki / sync-templat
 LOOP_MAP = {
     # dev-loop
     "impact-check": "dev-loop", "new-project-setup": "dev-loop", "onboard-codebase": "dev-loop",
-    "propose": "dev-loop", "safe-change": "dev-loop", "tour-guide": "dev-loop",
+    "propose": "dev-loop", "safe-change": "dev-loop",
     "verify-before-commit": "dev-loop", "build-now-adapt-later": "dev-loop",
     "new-skill": "dev-loop", "loop-runner": "dev-loop", "failure-flywheel": "dev-loop", "wikieval": "dev-loop",
     # orchestrate
@@ -51,6 +51,7 @@ LOOP_MAP = {
     "imagegen-frontend-web": "utils", "industrial-brutalist-ui": "utils", "join-project": "utils",
     "last30days": "utils", "minimalist-ui": "utils", "redesign-existing-projects": "utils",
     "snapshot-push": "utils", "stitch-design-taste": "utils", "tour-guide-supademo": "utils",
+    "tour-guide": "utils",
 }
 
 

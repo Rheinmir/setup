@@ -19,46 +19,46 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-01 19:41:16 | `file.write` | llmwiki/html/010726-21-quy-tac.html · tool=Write · actor=agent · prev=7048eaa7ea6f8ef86f3f6f31409e29b3419ebccf25514446b1 |
-| 2026-07-01 19:41:42 | `file.write` | llmwiki/wiki/sources/draft/010726-21-quy-tac-docs.md · tool=Write · actor=agent · prev=ece08cab0684b247193dd8946fd5b9ba9 |
-| 2026-07-01 19:41:47 | `file.write` | llmwiki/wiki/sources/draft/010726-21-quy-tac-docs.md · tool=Edit · actor=agent · prev=8a56aee52a8d8e5f9d308c9429dcb9b862 |
-| 2026-07-01 19:41:53 | `file.write` | llmwiki/wiki/index.md · tool=Edit · actor=agent · prev=b0d99b098e1a10667fdceec29e5e3f8eb711fdf53e421bcd144f4ead0815cdc2  |
-| 2026-07-01 19:41:57 | `file.write` | llmwiki/wiki/log.md · tool=Edit · actor=agent · prev=3b599d3a55166adc30bd1c04b2937d82d0fb3efa7e9dacef74cd34749c41c115 ·  |
-| 2026-07-01 23:16:12 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=1acea7dec95d2680b634ad1de17a67e2ea510ec70c734cd2196028fa28044c2 |
-| 2026-07-01 23:16:30 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=6f45ff140fca16864ebe32cd3947ecca2c7661baafdc49167e5aea967ce0ee9 |
-| 2026-07-01 23:27:16 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=fa364b187aa15097fdeb14c97106b790386bf6cefd462ce2620b1596f308ed1 |
-| 2026-07-01 23:27:28 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=b7fa950a8483e23edbf3ad225aff95b6c9dc1cf97222d22f48a711f386ab6e6 |
-| 2026-07-01 23:27:36 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=d66d662c887fb6d988f8d3db2567c501b42cfe03bf42844dab2d5ebc4f29f4e |
-| 2026-07-01 23:48:00 | `file.write` | llmwiki/wiki/draft/uiux/010726-council-report-redesign.md · tool=Write · actor=agent · prev=a55780a39c8189ce3c1180562acb |
-| 2026-07-01 23:48:06 | `file.write` | llmwiki/wiki/draft/uiux/010726-council-report-redesign.md · tool=Edit · actor=agent · prev=e0e014a23cf6bf82641a0ec904b3f |
-| 2026-07-01 23:50:27 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=c0daeab84d1ca972430698fb484e855f87636f06a9d24a2c72b001d12270 |
-| 2026-07-01 23:51:36 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=02de6f1f1aafa4cb1f1ef771b157f5792bcfcd780f7705c9293d64b7dbcf |
-| 2026-07-01 23:51:46 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=fc89373c4e61461901fc3b33053ab95274e20051bc888844e43a976f1518 |
-| 2026-07-01 23:53:23 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=39dce4ae5901e1736d5f85ffd37ff90cad9e3d36d1763651863ea4a3958210d |
-| 2026-07-01 23:53:51 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=950348c615b8539ef9506cf2a72f6426ed9465d0b697d2cc02beef8ab7ccb21 |
-| 2026-07-01 23:53:59 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=d34a03fb290cc414f84a703eddf428eed5eb13f389c047d73a92b799b77eb5d |
-| 2026-07-01 23:54:03 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=79db94e94f7bbb3c8c4e6a63c683c37d52617dee8940cb8413f441fce5b874c |
-| 2026-07-02 00:00:18 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=3f9c7ab6b60164c9080fc77818e0ecc6e7525c83f40888e8736cea07768d |
-| 2026-07-02 00:04:42 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=a37e5524efea770b6bf30d9868240e736345b5f387f9868b0c8818ebcf02 |
-| 2026-07-02 00:05:02 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=fd231af8e966141d73644c40757c751cdac68159cce6802bf48a7d796dad |
-| 2026-07-02 00:05:07 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=09d415e2843fc89bebbebbd374c890ab658ec983f31d2cac1d25daa2d1ea |
-| 2026-07-02 00:05:13 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=c68cac58931185df804c0fcc13d550367746cba1863b2abba1010bc2ce14 |
-| 2026-07-02 00:05:24 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=7875456ac3c6917b86e7e6ea4b577995c3faf08d67b5e2e69e77129a386a |
-| 2026-07-02 00:05:40 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=ff38e0f9d06c489573faf0a438a6cfdf69e53611f46244077275b5398f29 |
-| 2026-07-02 00:05:59 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=1863869afb81b40fd7c3915cd9651c659331a2c182d3707829f6ab632dac |
-| 2026-07-02 00:06:22 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=8db450f0ec5df6c36476f9b906e696a66a4b8a8c31cff33c708501a7dcd0 |
-| 2026-07-02 00:06:51 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=ce369980ffbe8a539a5f2160b2c874413b992a55d13b84e95cf7a71bf05c |
-| 2026-07-02 00:08:06 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=4822b5e49fa2a2349962e5f8c422b0bdf388c0a63ba6fa89e5d7216ea06d304 |
-| 2026-07-02 00:08:20 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=38f5760cb75f8946ab56d0445ab9f933ee243ba95acdae1acec6a65796a2cd1 |
-| 2026-07-02 00:08:26 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=44089e86890811b810be5dacb63f06080d354e2c5d32e87d4ef246b79dfbf9b |
-| 2026-07-02 00:08:35 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=fe7f03d663bbbf22b48ac6538ad6df3dd3be92492871a82f8996846d42021eb |
-| 2026-07-02 00:09:13 | `file.write` | skills/redesign-existing-projects/SKILL.md · tool=Edit · actor=agent · prev=aa704fa4127eadeca2566e8207cfdb286fa59d1ee8bd |
-| 2026-07-02 00:09:24 | `file.write` | llmwiki/skills/utils/redesign-existing-projects.md · tool=Edit · actor=agent · prev=30edb90bcf409463258bffa08a67e1e4c939 |
-| 2026-07-02 00:24:50 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=d43b183d235ca0ef60c61e004b82e187c063796aaa484ce6825914e90885 |
-| 2026-07-02 00:25:11 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=32469c57995c4de56ca098e49fe5057767a9d0055cfbdeabbe3d38e2a6bc |
-| 2026-07-02 00:25:27 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=f75eeeed115eb62cec7c4bdc07eeb27ea42c4eebf71cc06f274084c478c5 |
-| 2026-07-02 00:25:55 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=2249d551ea4ff0e740b43365d23f84da7a2a8e689b7e48dddbd92ab2eaaaa96 |
 | 2026-07-02 00:26:06 | `file.write` | skills/council/SKILL.md · tool=Edit · actor=agent · prev=6ba523971cb79da97ad8de8a06aa49e2edec4d57d5b0e4f3e7b1c9f62875aa0 |
+| 2026-07-02 01:02:37 | `file.write` | harness/scripts/lib/cor.py · tool=Write · actor=agent · prev=9669b9b645bc3cb616a439c1a8361d399fc4fffea464be57d2a1afaec4e |
+| 2026-07-02 01:02:54 | `file.write` | harness/scripts/lib/cor.py · tool=Edit · actor=agent · prev=e47e4e75ac9fa27482cc490b1c8d6b7e73cad69175395fffdc029842d84b |
+| 2026-07-02 01:03:19 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=2d25c886d8341771a80a7f1e91bfc978cad8f41eaa42d68dd77609a7efaa |
+| 2026-07-02 01:03:33 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=a1fc201b76bb0e59f20a429cbf4f8e664050d3b0fe400e71caeadbb66e95 |
+| 2026-07-02 01:04:09 | `file.write` | harness/scripts/lib/cor.py · tool=Edit · actor=agent · prev=107b186590c4b5625672595f17a607b8ac744d23f734f9c3a913f6f34023 |
+| 2026-07-02 01:04:51 | `file.write` | harness/docs/cor-guide.md · tool=Write · actor=agent · prev=8024b1f2ebe5a2914199bc469d74191210f3af51df5b1a3425e7c4c95b08 |
+| 2026-07-02 01:05:19 | `file.write` | llmwiki/wiki/draft/uiux/020726-cor-pattern.md · tool=Write · actor=agent · prev=e730addd20397acf79ea93f69b36e66a96e9b56f |
+| 2026-07-02 08:50:41 | `file.write` | skills/fdk/SKILL.md · tool=Edit · actor=agent · prev=8be3161168531ced87cbd154050e2309a90535549009449100a3299abf9c3a93 ·  |
+| 2026-07-02 09:02:44 | `file.write` | llmwiki/html/020726-openai-compat-endpoint-pools.html · tool=Write · actor=agent · prev=0b8ae75ca6c5367c6442706afbce2657 |
+| 2026-07-02 09:03:07 | `file.write` | llmwiki/wiki/sources/draft/020726-openai-compat-endpoint-pools.md · tool=Write · actor=agent · prev=e204bdabd76f2b2ad3a9 |
+| 2026-07-02 09:03:12 | `file.write` | llmwiki/wiki/sources/draft/020726-openai-compat-endpoint-pools.md · tool=Edit · actor=agent · prev=bf4397046029ab6961c25 |
+| 2026-07-02 09:05:26 | `file.write` | harness/validators/no_ai_attribution.py · tool=Write · actor=agent · prev=5b5aa6668091f84c52d95ae0d7ec5d9c3f94bac37503d3 |
+| 2026-07-02 09:05:42 | `file.write` | harness/poc-vendor-neutral/policy.yaml · tool=Edit · actor=agent · prev=e28ca387186623dd27ca2034ac335ab46e6f2940cde50366 |
+| 2026-07-02 09:06:12 | `file.write` | harness/policy.yaml · tool=Edit · actor=agent · prev=44adc464594b3d1dbd5e26040d000f241ab2406801b210d878251a12095e8307 ·  |
+| 2026-07-02 09:06:41 | `file.write` | harness/scripts/install-harness.sh · tool=Edit · actor=agent · prev=6ba22d8c2b40a29370fb939a6d7433f0f4a1ff2d58d8ba20ffd2 |
+| 2026-07-02 09:07:46 | `file.write` | fdk/wiki/sources/adr/ADR-016-no-ai-attribution-in-commits.md · tool=Write · actor=agent · prev=1229cedb9f0dce29b0f6f09b0 |
+| 2026-07-02 09:07:57 | `file.write` | fdk/wiki/sources/adr/ADR-016-no-ai-attribution-in-commits.md · tool=Edit · actor=agent · prev=1eff18fa30f6057e1b0571d346 |
+| 2026-07-02 09:08:15 | `file.write` | fdk/wiki/concepts/rule-registry.md · tool=Edit · actor=agent · prev=208a1731fee28365ad7add92996cc0905098fbf4c7460635a496 |
+| 2026-07-02 09:08:20 | `file.write` | fdk/wiki/concepts/rule-registry.md · tool=Edit · actor=agent · prev=850588aaedf205427f5a4bba3aa7fbdf0395bb7f67c70d7cabba |
+| 2026-07-02 09:08:27 | `file.write` | fdk/wiki/decisions.md · tool=Edit · actor=agent · prev=f2a29cc84a7074a32a1325c681723a10d11ded27f4183a81a4bda853b4145201  |
+| 2026-07-02 09:08:45 | `file.write` | fdk/wiki/log.md · tool=Edit · actor=agent · prev=1492b98f339169a551004429f6b93daaa44fa7dc226fab8843fdfa301859f2b3 · h=4f |
+| 2026-07-02 09:09:49 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=4f9f982a4cc1aa924551402a1f6996a47eb6d875a8868caced485 |
+| 2026-07-02 09:11:19 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=720ea0714b576a46887f5945f7d1062e5c3c78ec9e736784c9183 |
+| 2026-07-02 09:13:45 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=69084ef2014b21d0857f2156f183ea33d677f16e926361edcffa0 |
+| 2026-07-02 09:13:53 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=508211a83910553b6d7bc4c67e460e72ad8e314fe9b52ae1daaf4 |
+| 2026-07-02 09:14:58 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=831cc813f1558290b02507910f9fd988095a6a3f61e7d9d994f3b |
+| 2026-07-02 09:15:06 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=9cd295cb33704847739d4e9e28f7e99714cda4b068e62b7360b46 |
+| 2026-07-02 09:15:12 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=07cbd502c7f69450ffbd020c02fae95a16a36f80e5eef2cfa1276 |
+| 2026-07-02 09:16:56 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=d7c5d9fb8b2324fcf79f077b7a6bd398afb1671da49f5681ca1f9 |
+| 2026-07-02 09:17:21 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=d15982646498e4aeca6b97ca6e5dc1fa764ccc2b0451cbd9d5bbb |
+| 2026-07-02 09:17:39 | `file.write` | llmwiki/html/020726-adr-015-status.html · tool=Write · actor=agent · prev=14a15504770a699cc5721a8176409264a842f2c746bfc7 |
+| 2026-07-02 09:17:53 | `file.write` | llmwiki/wiki/draft/uiux/020726-overstack-docs-redesign.md · tool=Write · actor=agent · prev=28bc720c9f395cbc1260728c507f |
+| 2026-07-02 09:18:00 | `file.write` | llmwiki/wiki/sources/draft/020726-adr-015-status.md · tool=Write · actor=agent · prev=9dbd3d5d762297b41a38c25837ee0993ea |
+| 2026-07-02 09:18:08 | `file.write` | llmwiki/wiki/draft/uiux/020726-overstack-docs-redesign.md · tool=Edit · actor=agent · prev=a634fc26711b83854215c196eabce |
+| 2026-07-02 09:18:09 | `file.write` | llmwiki/wiki/sources/draft/020726-adr-015-status.md · tool=Edit · actor=agent · prev=d823ee3982dbb893c34ddc3f3e05d33cbbe |
+| 2026-07-02 09:28:37 | `file.write` | harness/scripts/sync-skills.py · tool=Edit · actor=agent · prev=f2a7b13cc8488a48f6f79edcbfdfcd61b7ee9829b803fc2f8cf2f03b |
+| 2026-07-02 09:28:42 | `file.write` | harness/scripts/sync-skills.py · tool=Edit · actor=agent · prev=58b6c6d0ddbda73a84230a7bbab20bc227c78c4f578fe0929d92934e |
+| 2026-07-02 09:28:48 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=93ebc2ac88f8ed37095d8a050e8bf9451e864531af8c0578e33a7 |
+| 2026-07-02 09:28:58 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=5aec3b12656708f5a428db927388a6e15fbb6fe9b76df18984e3f |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -67,3 +67,8 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 ## 2026-07-01 — redesign-existing-projects — council-report-redesign
 
 ## 2026-07-02 — build-now-adapt-later+fdk — cor-controlled-output-renderer (council verdict: khả thi/hẹp)
+## 2026-07-02 — docs-site-macos — openai-compat-endpoint-pools
+
+## 2026-07-02 — docs-site-macos — adr-015-status
+
+## 2026-07-02 — redesign-existing-projects — overstack-docs-redesign

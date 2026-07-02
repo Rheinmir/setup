@@ -10,7 +10,7 @@
 - **`/lint`** — Periodic wiki health check
 - **`/query`** — Synthesize answer from wiki; persist new insights as wiki entries
 
-### dev-loop (12)
+### dev-loop (11)
 - **`/build-now-adapt-later`** — When a task is blocked by missing or unverified information (an undocumented protocol, an …
 - **`/failure-flywheel`** — Capture each agent failure, bucket and count it deterministically, and when a failure clas…
 - **`/impact-check`** — Map all callers and dependents of a symbol before modifying shared code
@@ -20,7 +20,6 @@
 - **`/onboard-codebase`** — Deep codebase analysis
 - **`/propose`** — Plan a feature before coding
 - **`/safe-change`** — Modify shared code without breaking existing callers
-- **`/tour-guide`** — Thêm một in-app product tour (spotlight onboarding overlay) tự viết, KHÔNG cần thư viện (k…
 - **`/verify-before-commit`** — Gate every commit
 - **`/wikieval`** — Turn wiki golden pages into a CI-blocking eval suite with a cheap→expensive assertion casc…
 
@@ -36,7 +35,7 @@
 - **`/orchestration`** — Use Orca orchestration for structured multi-agent coordination: threaded messages, blockin…
 - **`/trace-grader`** — Score the PATH an agent took (tool choice, ordering, retries, repeatability)
 
-### utils (40)
+### utils (41)
 - **`/brandkit`** — Premium brand-kit image generation skill for creating high-end brand-guidelines boards, lo…
 - **`/cavecrew`** — Decision guide for delegating to caveman-style subagents
 - **`/caveman`** — Ultra-compressed communication mode
@@ -73,6 +72,7 @@
 - **`/snapshot-push`** — Push bonbon-ai outer repo as full snapshot, including be/ and fe/ content
 - **`/stitch-design-taste`** — Semantic Design System Skill for Google Stitch
 - **`/sync-template`** — Sync structural improvements between project and master template repo
+- **`/tour-guide`** — Thêm một in-app product tour (spotlight onboarding overlay) tự viết, KHÔNG cần thư viện (k…
 - **`/tour-guide-supademo`** — Style thiết kế Supademo cho in-app product tour (dùng kèm skill tour-guide
 - **`/uat-nonit-testcase`** — Tạo bộ test case / checklist UAT cho người dùng nghiệp vụ NON-IT (C&B, kế toán, vận hành)
 - **`/web-clone`** — Clone a website
