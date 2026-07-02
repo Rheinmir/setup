@@ -5,6 +5,8 @@ status: active
 tags: [fdk, features, catalog, why, eval, council, loop, harness]
 timestamp: 2026-06-28
 id: feature-catalog
+relations:
+  - {rel: touches, path: fdk/tools/build-capabilities.py}
 ---
 
 # Feature Catalog — và VÌ SAO mỗi cái phải có

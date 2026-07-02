@@ -5,6 +5,10 @@ tags: [strategy, dev-loop, fdk, pattern]
 timestamp: 2026-07-02
 id: fdk-dev-strategy
 relations:
+  - {rel: depends-on, to: fdk}
+  - {rel: depends-on, to: feature-catalog}
+  - {rel: depends-on, to: harness-enforcement-floor}
+  - {rel: depends-on, to: rule-registry}
   - {rel: derives-from, path: llmwiki/raw/fdk-stragegy.md}
 ---
 

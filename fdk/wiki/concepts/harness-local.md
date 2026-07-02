@@ -5,6 +5,8 @@ status: implemented
 tags: [harness, project-local, validator, namespace, sync-safe]
 timestamp: 2026-06-29
 id: harness-local
+relations:
+  - {rel: depends-on, to: harness-enforcement-floor}
 ---
 
 # harness-local — dự án tự phát triển rule riêng

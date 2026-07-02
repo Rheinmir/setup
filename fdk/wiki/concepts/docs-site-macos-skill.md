@@ -5,6 +5,8 @@ status: stub
 tags: [skill, docs-site-macos, glass, theme, R11]
 timestamp: 2026-06-27
 id: docs-site-macos-skill
+relations:
+  - {rel: depends-on, to: onboarding-tour}
 ---
 
 # docs-site-macos (skill)

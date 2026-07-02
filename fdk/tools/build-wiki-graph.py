@@ -24,12 +24,15 @@ REL_RE = re.compile(r"\{[ \t]*rel[ \t]*:[ \t]*([\w-]+)[ \t]*,[ \t]*(to|path)[ \t
 REL_COLORS = {
     "derives-from": "#30b0c7", "depends-on": "#5856d6", "implements": "#34c759",
     "supersedes": "#ff9500", "touches": "#8e8e93", "contradicts": "#ff2d55",
+    "wikilink": "#9aa4b2",
 }
 REL_VI = {
     "derives-from": "chưng cất từ (nguồn gốc)", "depends-on": "phụ thuộc vào",
     "implements": "hiện thực (quyết định/ADR)", "supersedes": "thay thế (bản cũ)",
     "touches": "chạm file code", "contradicts": "mâu thuẫn với",
+    "wikilink": "liên quan mềm ([[link]] trong thân bài, nét đứt)",
 }
+WIKILINK_RE = re.compile(r"\[\[([^\]\n|]+)\]\]")
 
 
 def scan(wiki: Path):
@@ -42,10 +45,10 @@ def scan(wiki: Path):
             if p.name in {"README.md", "_template.md"}:
                 continue
             try:
-                head = p.read_text(encoding="utf-8", errors="ignore")[:4096]
+                text = p.read_text(encoding="utf-8", errors="ignore")
             except OSError:
                 continue
-            m = FRONTMATTER_RE.match(head)
+            m = FRONTMATTER_RE.match(text)
             fm = m.group(1) if m else ""
             get = lambda k: (LINE_RE[k].search(fm).group(1).strip().strip("'\"") if LINE_RE[k].search(fm) else "")
             pid = get("id") or p.stem
@@ -54,6 +57,12 @@ def scan(wiki: Path):
                           "type": get("type") or "?", "title": get("title")[:90]})
             for rel, kind, tgt in REL_RE.findall(fm):
                 edges.append({"from": pid, "rel": rel, "to": tgt, "kind": kind})
+            # cạnh mềm: [[wikilink]] trong THÂN bài (ngoài frontmatter) — nét đứt, không giả ngữ nghĩa
+            typed_to = {t for _, _, t in REL_RE.findall(fm)}
+            for w in dict.fromkeys(WIKILINK_RE.findall(text[m.end():] if m else text)):
+                w = w.strip()
+                if w and w != pid and w not in typed_to:
+                    edges.append({"from": pid, "rel": "wikilink", "to": w, "kind": "to"})
     ledger, stale = [], {}
     lp = wiki / "ledger.jsonl"
     if lp.exists():
@@ -178,6 +187,7 @@ function draw(hl){{
     var p=document.createElementNS('http://www.w3.org/2000/svg','path');
     p.setAttribute('d','M'+x1+' '+y1+' C'+(x1+dx)+' '+y1+' '+(x2-dx)+' '+y2+' '+x2+' '+y2);
     p.setAttribute('stroke',D.relColors[e.rel]||'#9aa4b2');
+    if(e.rel==='wikilink'){{p.setAttribute('stroke-dasharray','4 4');p.setAttribute('opacity','.35')}}
     if(hl)p.setAttribute('stroke-width','2.6');
     svg.appendChild(p);
   }});

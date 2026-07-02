@@ -5,6 +5,8 @@ status: implemented
 tags: [query, retrieval, eval, telemetry, progressive-disclosure, measure-first]
 timestamp: 2026-07-01
 id: query-retrieval-eval
+relations:
+  - {rel: depends-on, to: outer-harness-evaluation}
 ---
 
 # query-retrieval-eval — đo truy hồi trước, cải tiến sau

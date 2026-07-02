@@ -19,12 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-02 12:54:09 | `file.write` | llmwiki/wiki/sources/draft/020726-orca-issue-ledger-travel.md · tool=Write · actor=agent · prev=9ea9e5aa58d3004a97723c8d |
-| 2026-07-02 12:55:58 | `file.write` | llmwiki/html/020726-orca-issue-ledger-travel-seq.html · tool=Write · actor=agent · prev=75147860a8ddef8bcf2b278e0ba270d9 |
-| 2026-07-02 13:00:05 | `file.write` | skills/orca-issue/SKILL.md · tool=Write · actor=agent · prev=574cf76fb1ec9fa6470a099f01331c2df640824b0e08372c6e2f825fa53 |
-| 2026-07-02 13:01:33 | `file.write` | skills/orca-workflow/SKILL.md · tool=Edit · actor=agent · prev=ed8a065a33fa318d277391471a0ecc4550a1cff7e24484f512996c90a |
-| 2026-07-02 13:02:23 | `file.write` | harness/poc-vendor-neutral/install.sh · tool=Edit · actor=agent · prev=804c4c309725acd2f4d5b08bfad9e28f98abaf5e7702f7fbd |
-| 2026-07-02 13:02:57 | `file.write` | llmwiki/.claude/hooks/session_end.py · tool=Edit · actor=agent · prev=8e1a1cec86179e0a9ad94b7325d7b91cf8ace44126efae76e4 |
 | 2026-07-02 13:03:05 | `file.write` | llmwiki/.claude/hooks/session_end.py · tool=Edit · actor=agent · prev=0fa2cd32cdb9a166b951eb749bb6f844d93fedff4b1c35b3e5 |
 | 2026-07-02 13:04:20 | `file.write` | llmwiki/wiki/concepts/problem-tree.md · tool=Write · actor=agent · prev=450e568a2caaa2b2fbd497ab07f13229cec02024715da5a7 |
 | 2026-07-02 13:11:09 | `file.write` | fdk/wiki/concepts/fdk-dev-strategy.md · tool=Write · actor=agent · prev=6ec512883c8c4e1d2c504a82c2774a815a888bc34760996f |
@@ -59,6 +53,12 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-02 14:41:00 | `file.write` | llmwiki/wiki/sources/draft/020726-wiki-core-relations.md · tool=Edit · actor=agent · prev=f34a3f00a267a0a971c785164a4ec6 |
 | 2026-07-02 14:42:07 | `file.write` | llmwiki/wiki/sources/draft/020726-wiki-core-relations.md · tool=Edit · actor=agent · prev=a452d0087c8841ae02a3d5253d5b26 |
 | 2026-07-02 14:59:56 | `file.write` | llmwiki/wiki/index.md · tool=Edit · actor=agent · prev=af7de97f1a74108f64ce2e0ea828b4e79c07e2b89edfc8cdbc8179690357f6c7  |
+| 2026-07-02 16:02:47 | `file.write` | llmwiki/.claude/hooks/wiki_ledger.py · tool=Edit · actor=agent · prev=19a4ebe7003abda5d7d716b5e81253fb3286528f3d9a6af4c4 |
+| 2026-07-02 16:02:55 | `file.write` | llmwiki/.claude/hooks/wiki_ledger.py · tool=Edit · actor=agent · prev=0e1cb48e4fb08ab3e866e2dc0c4e3dd6f69403078ed514885c |
+| 2026-07-02 16:02:59 | `file.write` | llmwiki/.claude/hooks/wiki_ledger.py · tool=Edit · actor=agent · prev=d77196543ebd2a8a7482b52a8088652ae267457042654e7fdb |
+| 2026-07-02 16:04:49 | `file.write` | skills/wiki-room/SKILL.md · tool=Write · actor=agent · prev=9c56048afcc55ec7e48462310803fa088f88dc1b9e6f1497f0ba61b48134 |
+| 2026-07-02 16:07:18 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Write · actor=agent · prev=b3f5d7921a94051d0dc562cb5812cb7ac18778a558afcb7058936ad7 |
+| 2026-07-02 16:08:44 | `file.write` | llmwiki/wiki/concepts/wiki-core-relations.md · tool=Edit · actor=agent · prev=5ebec1bb38b9c9b2d2c680ea0bff1d7f0c0fd7d0be |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -111,3 +111,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 ## 2026-07-02 — fdk — wiki-core v2 buoc 4-6 (day som theo quyet dinh user)
 - Stale-propagation cap=1 buoc (G2, test A-B-C + chu trinh + tuoi-lai; 9.8ms/lan ghi tren 63 trang). Skill /wiki-room (G3: depth cap=1, budget, circuit breaker) — register du marketplace/LOOP_MAP/AGENT/CLAUDE, skill-registry all agree. Wiki-graph HTML: build-wiki-graph.py (13ms) -> html/wiki-graph-fdk.html + wiki-graph-llmwiki.html. Problem-tree p-11 -> solved 3/3.
+
+## 2026-07-02 — fdk — wiki-graph het flat
+- build-wiki-graph.py ve them [[wikilink]] than bai = canh mem net dut (khong gia ngu nghia); them 12 relations co kieu that cho 6 trang loi (validator bat 1 cross-wiki dangling -> go). Demo stale: sua rule-registry -> fdk-dev-strategy stale (badge S trong graph). fdk 121 canh / llmwiki 18 canh, build 5ms/3ms.
