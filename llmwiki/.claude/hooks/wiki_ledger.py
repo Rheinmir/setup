@@ -60,6 +60,72 @@ def detect_action(root: str, fp: str) -> str:
         return "modify"
 
 
+ID_LINE_RE = re.compile(r"^id[ \t]*:[ \t]*(\S.*?)[ \t]*$", re.MULTILINE)
+REL_TO_RE = re.compile(r"\{[^}]*\brel[ \t]*:[ \t]*[\w-]+[^}]*\bto[ \t]*:[ \t]*([\w./-]+)[^}]*\}")
+
+
+def _page_id(text: str, stem: str) -> str:
+    m = FRONTMATTER_RE.match(text)
+    if m:
+        i = ID_LINE_RE.search(m.group(1))
+        if i:
+            return i.group(1).strip().strip("'\"")
+    return stem
+
+
+def propagate_stale(wiki_dir, rel, action, session_id=None) -> int:
+    """G2 (council 020726): lan truyền stale ĐÚNG 1 BƯỚC, không đệ quy.
+
+    Trang `rel` bị modify/delete → mọi trang có relations.to == id(rel) bị đánh
+    stale trong <wiki_dir>/stale.json (kèm by/ts). Chính trang vừa sửa được XÓA
+    cờ stale (nó vừa tươi lại). Không lan tiếp từ trang bị đánh dấu (cap=1 —
+    chống stale-storm, miễn nhiễm chu trình by construction). Trả số trang đánh dấu.
+    """
+    wiki_dir = pathlib.Path(wiki_dir)
+    target = pathlib.Path(wiki_dir) / rel
+    try:
+        tid = _page_id(target.read_text(encoding="utf-8", errors="ignore"), target.stem)
+    except OSError:
+        tid = target.stem
+    marked = []
+    if action in ("modify", "delete"):
+        for d in CONTENT_DIRS:
+            base = wiki_dir / d.rstrip("/")
+            if not base.is_dir():
+                continue
+            for p in base.rglob("*.md"):
+                prel = p.relative_to(wiki_dir).as_posix()
+                if prel == rel:
+                    continue
+                try:
+                    head = p.read_text(encoding="utf-8", errors="ignore")[:2000]
+                except OSError:
+                    continue
+                m = FRONTMATTER_RE.match(head)
+                if m and tid in {t for t in REL_TO_RE.findall(m.group(1))}:
+                    marked.append(prel)
+    stale_path = wiki_dir / "stale.json"
+    lock_path = wiki_dir / ".stale.lock"
+    with open(lock_path, "w") as lk:
+        if fcntl is not None:
+            fcntl.flock(lk.fileno(), fcntl.LOCK_EX)
+        try:
+            try:
+                stale = json.loads(stale_path.read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                stale = {}
+            stale.pop(rel, None)  # trang vừa ghi = tươi
+            ts = datetime.datetime.now().isoformat(timespec="seconds")
+            for prel in marked:
+                stale[prel] = {"by": rel, "action": action, "ts": ts,
+                               "session": (session_id or "")[:8] or None}
+            stale_path.write_text(json.dumps(stale, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+        finally:
+            if fcntl is not None:
+                fcntl.flock(lk.fileno(), fcntl.LOCK_UN)
+    return len(marked)
+
+
 def append_event(root: str, fp: str, tool: str, session_id=None) -> None:
     """Append 1 sự kiện vào <wiki_dir>/ledger.jsonl dưới flock. Fail-open."""
     try:
@@ -67,10 +133,11 @@ def append_event(root: str, fp: str, tool: str, session_id=None) -> None:
         if hit is None:
             return
         wiki_dir, rel = hit
+        action = detect_action(root, fp)
         rec = {
             "ts": datetime.datetime.now().isoformat(timespec="seconds"),
             "session": (session_id or "")[:8] or None,
-            "action": detect_action(root, fp),
+            "action": action,
             "target": rel,
             "tool": tool,
         }
@@ -87,5 +154,8 @@ def append_event(root: str, fp: str, tool: str, session_id=None) -> None:
             finally:
                 if fcntl is not None:
                     fcntl.flock(f.fileno(), fcntl.LOCK_UN)
+        n = propagate_stale(wiki_dir, rel, action, session_id)
+        if n:
+            print(f"[wiki-core] {n} trang trỏ tới '{rel}' đã đánh dấu stale (xem {wiki_dir}/stale.json)")
     except Exception:
         pass  # ledger không bao giờ làm gãy phiên

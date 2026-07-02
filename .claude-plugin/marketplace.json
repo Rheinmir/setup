@@ -32,7 +32,7 @@
       "skills": [
         "./skills/orca-dispatch-reference",
         "./skills/orca-onboard",
-      "./skills/orca-issue",
+        "./skills/orca-issue",
         "./skills/orca-sec-scans",
         "./skills/orca-workflow"
       ]
@@ -95,6 +95,7 @@
         "./skills/verify-before-commit",
         "./skills/web-clone",
         "./skills/web-crawl",
+        "./skills/wiki-room",
         "./skills/wikieval"
       ]
     }

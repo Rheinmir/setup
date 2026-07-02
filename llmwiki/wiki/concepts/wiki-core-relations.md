@@ -8,8 +8,8 @@ id: 020726-wiki-core-relations
 
 # 020726-wiki-core-relations — Từ "queue dữ liệu" thành lõi tri thức có quan hệ
 
-**Type:** draft
-**Status:** approved — bước 1 + 2&3 đã triển khai 2026-07-02 (ledger flock G1 test pass, migrate 82 trang, validator warn-only); bước 4-6 chờ ổn định 4-6 tuần
+**Type:** concept (promoted)
+**Status:** shipped — đủ 6 bước 2026-07-02. Bước 1+2&3: ledger flock (G1 test 8-process pass), migrate 82 trang, validator warn-only. Bước 4-6 (user quyết đẩy sớm, tiêu chí tốc độ): stale-propagation cap=1 (G2 — 9.8ms/lần ghi, chu trình an toàn), skill `/wiki-room` (G3 — depth cap=1, budget, circuit breaker), wiki-graph HTML (13ms build, `llmwiki/html/wiki-graph-{fdk,llmwiki}.html`)
 **Tags:** proposal, wiki-core, traceability, output-report
 **Proposed:** 2026-07-02
 

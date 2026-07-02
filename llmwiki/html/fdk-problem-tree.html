@@ -318,15 +318,12 @@
     "id": "p-11",
     "parent": "p-01",
     "title": "Wiki là queue dữ liệu — thiếu quan hệ, ledger, traceability máy-đọc-được",
-    "desc": "Mọi mắt xích wiki ghi văn bản cho người (log.md), không mắt xích nào ghi sự kiện có cấu trúc cho máy: sửa/xóa xuyên phiên không truy được, [[wikilink]] vô kiểu không validate. Giải bước 1+2+3 (đã qua council 5-phản-biện, guardrail G1-G7): ledger JSONL flock (khóa file — chống ghi song song, test 8-process pass), tombstone (bia mộ — đánh dấu xóa thay vì xóa cứng), id+relations frontmatter (82 trang migrate, chỉ suy từ tín hiệu khách quan), validator R-rel warn-only (chỉ cảnh báo, chưa chặn). Còn thiếu: stale-propagation giới hạn 1 bước, /wiki-room (đệ quy cap=1), wiki-graph HTML — chờ chạy ổn định 4-6 tuần rồi đánh giá lại.",
-    "status": "partial",
-    "scope": [
-      "harness",
-      "llmwiki"
-    ],
+    "desc": "Mọi mắt xích wiki ghi văn bản cho người (log.md), không mắt xích nào ghi sự kiện có cấu trúc cho máy: sửa/xóa xuyên phiên không truy được, [[wikilink]] vô kiểu không validate. Giải bước 1+2+3 (đã qua council 5-phản-biện, guardrail G1-G7): ledger JSONL flock (khóa file — chống ghi song song, test 8-process pass), tombstone (bia mộ — đánh dấu xóa thay vì xóa cứng), id+relations frontmatter (82 trang migrate, chỉ suy từ tín hiệu khách quan), validator R-rel warn-only (chỉ cảnh báo, chưa chặn). Bước 4-6 hoàn tất cùng ngày (tiêu chí tốc độ): stale-propagation cap=1 (9.8ms/lần ghi trên wiki 63 trang, test chu trình an toàn), skill /wiki-room (depth cap=1, budget cứng, circuit breaker — distribute qua wiki-loop), wiki-graph HTML (13ms build, đồ thị quan hệ + timeline ledger + cờ stale).",
+    "status": "solved",
+    "scope": "full",
     "date": "02/07/26",
     "session": "session 020726 — draft 020726-wiki-core-relations + council seed42",
-    "solvedBy": "wiki_ledger.py (hook post_tool_use, flock G1) + validators/rel_integrity.py (warn-only G4/G7) + fdk/tools/wiki-relations.py (migrate 82 trang, idempotent) — bước 4-6 chưa làm nên 2/3."
+    "solvedBy": "wiki_ledger.py (ledger flock + stale cap-1) + validators/rel_integrity.py + fdk/tools/wiki-relations.py + skill wiki-room (3 surface đủ) + fdk/tools/build-wiki-graph.py — đủ 3 trụ harness/skills/llmwiki."
   }
 ]
 </script>

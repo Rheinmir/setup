@@ -1,14 +1,15 @@
 <!-- SINH BẰNG CODE: build-capabilities.py — ĐỪNG sửa tay; chạy lại để cập nhật. -->
 # CAPABILITIES — toàn bộ đồ nghề (luôn-mới, đếm từ đĩa)
 
-**66 skill · 17 rule · 10 fdk-tool · 42 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
+**67 skill · 17 rule · 11 fdk-tool · 42 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
 
 ## Skills (gọi bằng `/<tên>`)
 
-### wiki-loop (3)
+### wiki-loop (4)
 - **`/ingest`** — Process new file in llmwiki/raw/ and distill into wiki pages
 - **`/lint`** — Periodic wiki health check
 - **`/query`** — Synthesize answer from wiki; persist new insights as wiki entries
+- **`/wiki-room`** — Mở room (subagent 1 tầng) nạp chi tiết wiki khi context phiên chính đã rot
 
 ### dev-loop (11)
 - **`/build-now-adapt-later`** — When a task is blocked by missing or unverified information (an undocumented protocol, an …
@@ -106,6 +107,7 @@
 - `build-health-dashboard.py`
 - `build-overstack-docs.py`
 - `build-skill-search.py`
+- `build-wiki-graph.py`
 - `docs-curate.py`
 - `new-skill.py`
 - `wiki-relations.py`

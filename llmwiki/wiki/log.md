@@ -19,7 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-02 12:52:49 | `task.new` |  · task=T-260702-01 · title=orca-issue + ledger travel (p-02, p-04) · state=proposed · actor=agent · prev=4bcac2f15648c6 |
 | 2026-07-02 12:54:09 | `file.write` | llmwiki/wiki/sources/draft/020726-orca-issue-ledger-travel.md · tool=Write · actor=agent · prev=9ea9e5aa58d3004a97723c8d |
 | 2026-07-02 12:55:58 | `file.write` | llmwiki/html/020726-orca-issue-ledger-travel-seq.html · tool=Write · actor=agent · prev=75147860a8ddef8bcf2b278e0ba270d9 |
 | 2026-07-02 13:00:05 | `file.write` | skills/orca-issue/SKILL.md · tool=Write · actor=agent · prev=574cf76fb1ec9fa6470a099f01331c2df640824b0e08372c6e2f825fa53 |
@@ -59,6 +58,7 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-02 14:40:25 | `file.write` | llmwiki/.claude/hooks/validators/rel_integrity.py · tool=Edit · actor=agent · prev=f56a2d04e9ea6862a23412cb377851bfdd7be |
 | 2026-07-02 14:41:00 | `file.write` | llmwiki/wiki/sources/draft/020726-wiki-core-relations.md · tool=Edit · actor=agent · prev=f34a3f00a267a0a971c785164a4ec6 |
 | 2026-07-02 14:42:07 | `file.write` | llmwiki/wiki/sources/draft/020726-wiki-core-relations.md · tool=Edit · actor=agent · prev=a452d0087c8841ae02a3d5253d5b26 |
+| 2026-07-02 14:59:56 | `file.write` | llmwiki/wiki/index.md · tool=Edit · actor=agent · prev=af7de97f1a74108f64ce2e0ea828b4e79c07e2b89edfc8cdbc8179690357f6c7  |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -108,3 +108,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 ## 2026-07-02 — verify-before-commit — promoted wiki-core-relations
 - Gate: py_compile OK, task_lifecycle OK (backfill T-260702-01), G1 test 400/400 pass, rel-scan 0 canh bao, patterns-guard OK. Commit d4d8b90. Draft -> concepts/wiki-core-relations.md, Origin dien commit.
+
+## 2026-07-02 — fdk — wiki-core v2 buoc 4-6 (day som theo quyet dinh user)
+- Stale-propagation cap=1 buoc (G2, test A-B-C + chu trinh + tuoi-lai; 9.8ms/lan ghi tren 63 trang). Skill /wiki-room (G3: depth cap=1, budget, circuit breaker) — register du marketplace/LOOP_MAP/AGENT/CLAUDE, skill-registry all agree. Wiki-graph HTML: build-wiki-graph.py (13ms) -> html/wiki-graph-fdk.html + wiki-graph-llmwiki.html. Problem-tree p-11 -> solved 3/3.

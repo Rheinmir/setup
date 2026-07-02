@@ -30,6 +30,7 @@ Giảm lỗi LLM-coding phổ biến. Thiên về cẩn trọng hơn tốc độ
 |-------|------------|------|------|
 | `ingest` | A new file appears in `raw/` | `skills/wiki-loop/ingest.md` | wiki-loop |
 | `query` | User asks a question requiring wiki synthesis | `skills/wiki-loop/query.md` | wiki-loop |
+| `wiki-room` | Context phiên chính rot — mở room 1 tầng nạp chi tiết wiki (budget cứng) | `skills/wiki-loop/wiki-room.md` | wiki-loop |
 | `lint` | After every 10 ingests, or wiki feels stale | `skills/wiki-loop/lint.md` | wiki-loop |
 | `propose` | Any new feature or change is requested | `skills/dev-loop/propose.md` | dev-loop |
 | `impact-check` | Before modifying any shared symbol | `skills/dev-loop/impact-check.md` | dev-loop |
