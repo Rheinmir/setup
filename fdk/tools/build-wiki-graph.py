@@ -171,9 +171,12 @@ def build_static(primary: str, out_abs: str, nodes, edges, ledger, stale):
         hov.append(f'.wb:has(#n{i}:hover) path.n{i}{{opacity:.95;stroke-width:3}}')
     hover_css = "\n".join(hov)
     # CSS lọc quan hệ (:has trên checkbox)
+    rel_count = {}
+    for e in adj:
+        rel_count[e["rel"]] = rel_count.get(e["rel"], 0) + 1
     filt_rows = "".join(
         f'<label class="lg"><input type="checkbox" class="filt" id="f-{r}">'
-        f'<span style="color:{c}">●</span> {REL_VI[r]}</label>' for r, c in REL_COLORS.items())
+        f'<span style="color:{c}">●</span> {REL_VI[r]} ({rel_count.get(r,0)})</label>' for r, c in REL_COLORS.items())
     filt_css = "\n".join(
         f'.page:has(#f-{r}:checked) path.rel-{r}{{display:inline}}' for r in REL_COLORS)
     return f"""<!DOCTYPE html><html lang="vi"><head>
@@ -232,8 +235,13 @@ def build_html(primary: str, out_abs: str, nodes, edges, ledger, stale):
                        "stale": stale, "relColors": REL_COLORS, "relVi": REL_VI,
                        "primary": primary}, ensure_ascii=False)
     n_typed = sum(1 for e in real_edges if e["rel"] != "wikilink")
+    rel_count = {}
+    for e in real_edges:
+        rel_count[e["rel"]] = rel_count.get(e["rel"], 0) + 1
     legend = "".join(
-        f'<label class="lg" data-rel="{r}"><input type="checkbox"><span style="color:{c}">●</span> {REL_VI[r]}</label>'
+        f'<label class="lg{" zero" if rel_count.get(r,0)==0 else ""}" data-rel="{r}">'
+        f'<input type="checkbox"><span style="color:{c}">●</span> {REL_VI[r]}'
+        f'<span class="cnt">{rel_count.get(r,0)}</span></label>'
         for r, c in REL_COLORS.items())
     wikis = sorted({n["wiki"] for n in nodes})
     return f"""<!DOCTYPE html><html lang="vi"><head>
@@ -302,6 +310,9 @@ background:rgba(10,132,255,.07);border:1px solid rgba(10,132,255,.1);border-radi
 background:rgba(255,255,255,.9);border:1px solid var(--border);border-radius:10px;padding:8px 11px;max-width:236px;line-height:1.6}}
 .legend .lg{{display:flex;gap:6px;align-items:center;cursor:pointer;padding:2px 0;user-select:none}}
 .legend .lg input{{margin:0;cursor:pointer}} .legend .lg:hover{{color:var(--ink)}}
+.legend .lg .cnt{{margin-left:auto;font-variant-numeric:tabular-nums;font-size:10px;font-weight:700;
+color:var(--ink2);background:rgba(30,90,170,.08);border-radius:999px;padding:0 6px;min-width:20px;text-align:center}}
+.legend .lg.zero{{opacity:.4}} .legend .lg.zero .cnt{{background:transparent}}
 .legend .lgfoot{{margin-top:6px;padding-top:6px;border-top:1px solid rgba(30,90,170,.1)}}
 .foot{{position:absolute;right:14px;bottom:12px;z-index:6;font-size:10px;color:var(--ink2);opacity:.7}}
 .foot code{{font-family:'SF Mono',ui-monospace,Menlo,monospace}}
