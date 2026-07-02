@@ -39,8 +39,14 @@ def wiki_dir_of(fp: str):
     return None
 
 
-def detect_action(root: str, fp: str) -> str:
-    """delete (tombstone) > add (git chưa theo dõi) > modify."""
+def detect_action(root: str, fp: str, wiki_dir=None, rel=None) -> str:
+    """delete (tombstone) > add (chưa từng thấy) > modify.
+
+    Nguồn chân lý ưu tiên là git (file đã theo dõi = modify, chưa = add). Nếu git KHÔNG
+    có mặt (vd container slim, máy không cài git) thì KHÔNG mù quáng trả 'modify' — fallback
+    tự chứa: quét ledger xem `rel` đã từng xuất hiện chưa (chưa = add). Bug này do stress
+    container bắt được (python:3.11-slim không có git) — xem break-task-stress T1-01.
+    """
     try:
         text = pathlib.Path(fp).read_text(encoding="utf-8", errors="ignore")
         m = FRONTMATTER_RE.match(text)
@@ -56,6 +62,19 @@ def detect_action(root: str, fp: str) -> str:
             capture_output=True, timeout=5,
         ).returncode
         return "modify" if rc == 0 else "add"
+    except FileNotFoundError:
+        # git không cài — fallback tự chứa: lần đầu thấy `rel` trong ledger = add
+        if wiki_dir is not None and rel is not None:
+            ledger = pathlib.Path(wiki_dir) / "ledger.jsonl"
+            try:
+                needle = json.dumps(rel, ensure_ascii=False)
+                for ln in ledger.read_text(encoding="utf-8").splitlines():
+                    if needle in ln:
+                        return "modify"
+            except OSError:
+                pass
+            return "add"
+        return "modify"
     except Exception:
         return "modify"
 
@@ -133,7 +152,7 @@ def append_event(root: str, fp: str, tool: str, session_id=None) -> None:
         if hit is None:
             return
         wiki_dir, rel = hit
-        action = detect_action(root, fp)
+        action = detect_action(root, fp, wiki_dir, rel)
         rec = {
             "ts": datetime.datetime.now().isoformat(timespec="seconds"),
             "session": (session_id or "")[:8] or None,
