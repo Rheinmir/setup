@@ -325,6 +325,8 @@ if command -v pre-commit >/dev/null 2>&1 && [ -e "$ROOT/.git" ]; then
   fi
   # R12 gate2: pull-before-push — version-controlled qua .pre-commit-config (stage pre-push)
   (cd "$ROOT" && pre-commit install --hook-type pre-push >/dev/null 2>&1) && log "pre-commit pre-push (R12 gate2): OK"
+  # R15 no-ai-attribution: commit message không ghi công AI (stage commit-msg)
+  (cd "$ROOT" && pre-commit install --hook-type commit-msg >/dev/null 2>&1) && log "pre-commit commit-msg (R15 no-ai-attribution): OK"
 else
   warn "pre-commit chưa cài hoặc không phải git repo → chạy sau: pipx install pre-commit && pre-commit install"
 fi

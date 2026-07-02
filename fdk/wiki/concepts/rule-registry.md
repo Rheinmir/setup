@@ -1,12 +1,12 @@
 ---
 type: concept
-title: Rule Registry — R1..R12 canonical
+title: Rule Registry — R1..R15 canonical
 status: active
-tags: [harness, policy, rules, registry, R11, R12, drift]
-timestamp: 2026-06-27
+tags: [harness, policy, rules, registry, R11, R12, R13, R14, R15, drift]
+timestamp: 2026-07-02
 ---
 
-# Rule Registry — R1..R12
+# Rule Registry — R1..R15
 
 > Lối vào tổng cho phát triển framework: [[fdk]]. Trang này là phần "danh sách rule" của bộ xương đó.
 
@@ -26,6 +26,12 @@ Một trang đọc-là-đủ. Nguồn chân lý máy-đọc là `harness/poc-ven
 | **R10** | docs-gate | `hook_event` (policy) · `harness-events.py docs` · UserPromptSubmit | session (report, không chặn) | session | active |
 | **R11** | seq-html-glass-style | `conditional_require` · **policy.yaml** | session (write seq html) | session | active |
 | **R12** | pull-before-change | `process_gate` · **policy.yaml** | (B) workflow Step 0 sweep · (C) git `pre-push` | session, repo | active |
+| **R13** | decision-to-adr | `content_check` · `validators/decision_adr.py` | pre-commit + CI repo-health | repo | active |
+| **R14** | patterns-protected | `deny_write` · `validators/patterns_guard.py` | PreToolUse (unlock env) | session | active |
+| **R15** | no-ai-attribution | `process_gate` · `validators/no_ai_attribution.py` | git `commit-msg` (pre-commit stage) | repo | active |
+
+## R15 — chi tiết
+Commit message KHÔNG được ghi công AI: `Co-Authored-By: Claude…`, `Generated with|by <AI>`, 🤖. Enforce ở git `commit-msg` hook (vendor-neutral, ADR-002) — fail-open nếu thiếu file message. Chỉ quét message (không quét nội dung file). Cài qua `install-harness.sh` (`pre-commit install --hook-type commit-msg`). Xem ADR-016. **Caveat**: repo chưa cài hook hoặc `git commit --no-verify` sẽ bypass — sàn cục bộ, chưa có CI job quét commit PR (follow-up).
 
 ## R11 — chi tiết
 Seq diagram HTML (`*-seq.html`) phải theo style `docs-site-macos` liquid-glass (marker: `backdrop-filter` + `linear-gradient(180deg,#f7fbff…` + edge-highlight). Chặn theme flat tự chế lúc write. enforce_at `[session]` — KHÔNG `[repo]` để không fail ~8 seq html cũ (bật repo sau khi migrate). Xem [[270626-framework-gap-backfill]].

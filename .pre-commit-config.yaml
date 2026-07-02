@@ -131,6 +131,14 @@ repos:
         always_run: true
         pass_filenames: false
 
+      - id: no-ai-attribution
+        name: "R15: commit message khong duoc ghi cong AI (Co-Authored-By/Generated-with/robot)"
+        entry: python3 harness/validators/no_ai_attribution.py --commit-msg
+        language: system
+        stages: [commit-msg]
+        always_run: true
+        pass_filenames: true
+
       - id: harness-pull-gate
         name: "R12 gate2: pull-before-push (chan push neu local SAU remote)"
         entry: bash harness/poc-vendor-neutral/bin/pull-gate.sh gate2

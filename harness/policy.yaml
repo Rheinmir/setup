@@ -112,3 +112,11 @@ rules:
     enforce_at: [session]
     applies_to: [write, bash]
     note: "PreToolUse guard; adapter harness/pattern-library.config.yaml (verified:false). Xem ADR-014."
+
+  - id: R15
+    name: no-ai-attribution
+    validator: no_ai_attribution.py
+    statement: "Commit message KHÔNG được ghi công cho AI (Co-Authored-By: Claude…, Generated with Claude Code, 🤖). Author/committer chỉ là danh tính người. Fail-open nếu thiếu file message."
+    enforce_at: [repo]
+    applies_to: [commit-msg]
+    note: "git commit-msg gate — pre-commit stage commit-msg (no-ai-attribution) + CI. Xem ADR-016."

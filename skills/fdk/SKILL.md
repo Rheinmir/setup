@@ -54,6 +54,7 @@ Các file dưới đây CHỈ có trong repo framework, KHÔNG distribute xuốn
 - `llmwiki/html/*-fdk-docs.html` — bản đọc HTML.
 
 ## Rules
+- **KHÔNG ghi công AI** — commit message / PR / code / wiki KHÔNG được chèn `Co-Authored-By: Claude…`, `Generated with Claude Code`, `🤖`, hay bất kỳ credit/attribution nào cho AI. Author & committer chỉ là danh tính người dùng. Nếu template/tool sinh sẵn trailer ghi công thì cắt bỏ trước khi commit.
 - **On-demand only** — không đăng ký hook auto-fire đầu phiên (ADR-004).
 - **Self-contained** — phần trên (pre-flight + distill + inventory) đủ chạy ở project khác; mục "bản đầy đủ" chỉ áp dụng KHI các file đó tồn tại. Không bao giờ giả định file repo-local có mặt.
 - Đếm số luôn LIVE; không hardcode (anti-drift).

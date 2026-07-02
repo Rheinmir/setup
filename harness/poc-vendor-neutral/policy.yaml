@@ -166,6 +166,16 @@ rules:
     handler: "harness/validators/decision_adr.py · pre-commit (decision-adr-link/adr-delete-guard) + CI repo-health"
     blocking: true
 
+  no_ai_attribution:
+    id: R15
+    name: no-ai-attribution
+    kind: process_gate                     # git commit-msg gate — KHÔNG content-check → llmwiki-validate bỏ qua. Enforce ở tầng git (mọi vendor).
+    statement: "Commit message KHÔNG được ghi công cho AI (Co-Authored-By: Claude…, Generated with Claude Code, 🤖). Author/committer chỉ là danh tính người. Fail-open nếu thiếu file message."
+    enforce_at: [repo]                     # repo = git commit-msg hook (pre-commit stage commit-msg) + CI
+    commitmsg_cmd: "python3 harness/validators/no_ai_attribution.py --commit-msg"   # documentary — pre-commit nối path COMMIT_MSG
+    handler: "harness/validators/no_ai_attribution.py · pre-commit stage commit-msg (no-ai-attribution). ADR-016."
+    blocking: true
+
   patterns_guard:
     id: R14
     name: patterns-protected
