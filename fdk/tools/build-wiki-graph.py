@@ -399,7 +399,7 @@ stage.addEventListener('wheel',function(ev){{ev.preventDefault();
   var ns=Math.min(3,Math.max(.15,sc*(ev.deltaY<0?1.1:.9)));
   tx=mx-(mx-tx)*(ns/sc);ty=my-(my-ty)*(ns/sc);sc=ns;apply();}},{{passive:false}});
 var pan=null;
-stage.addEventListener('pointerdown',function(ev){{if(ev.target.closest('.nd'))return;
+stage.addEventListener('pointerdown',function(ev){{if(ev.target.closest('.nd,.legend,#detail'))return;  // đừng cướp click của UI (legend/panel)
   pan={{x:ev.clientX-tx,y:ev.clientY-ty}};stage.classList.add('grab');stage.setPointerCapture(ev.pointerId);}});
 stage.addEventListener('pointermove',function(ev){{if(!pan)return;tx=ev.clientX-pan.x;ty=ev.clientY-pan.y;apply();}});
 stage.addEventListener('pointerup',function(){{pan=null;stage.classList.remove('grab');}});
