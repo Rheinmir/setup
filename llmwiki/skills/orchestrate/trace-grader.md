@@ -1,6 +1,6 @@
 ---
 name: trace-grader
-description: Score the PATH an agent took (tool choice, ordering, retries, repeatability) — not just its final answer — to catch "corrupt success" (right answer via a bad/unsafe path) and flakiness. Deterministic trace schema + pass^k repeatability + config-driven rule checks (forbidden tool, out-of-order, retry-storm, excessive steps). Trigger when the user says "grade the trajectory", "score the path not the answer", "did it cheat / take a bad path", "corrupt success", "is this flaky / does it repeat", "pass^k", "trace grader", or invokes /trace-grader.
+description: Score the PATH an agent took (tool choice, ordering, retries, repeatability, grounding) — not just its final answer — to catch "corrupt success" (right answer via a bad/unsafe path) and flakiness. Deterministic trace schema + pass^k repeatability + config-driven rule checks (forbidden tool, out-of-order, retry-storm, excessive steps, edited-without-read grounding). Parses canonical traces.json, hooklib.audit / code-logger events.jsonl, OR a full Claude Code session transcript (--transcript, richest source: recovers retrieval args + observation + per-step ok). Trigger when the user says "grade the trajectory", "score the path not the answer", "did it cheat / take a bad path", "did it look before it acted / grounding", "corrupt success", "is this flaky / does it repeat", "pass^k", "grade a session transcript", "trace grader", or invokes /trace-grader.
 ---
 
 # Skill: trace-grader
@@ -20,12 +20,18 @@ answer-only checker is blind to both; TraceGrader inspects the path.
 ## What it is (build-now vs adapter)
 Built now — deterministic, no unknowns:
 - **Trace schema (the contract):** a run = list of steps `{step, tool, args, observation, ok}`.
-- **Parsers:** canonical `traces.json`, OR the audit jsonl shape written by
-  `llmwiki/.claude/hooks/hooklib.audit()` (and code-logger `events.jsonl`).
+- **Parsers:** canonical `traces.json`; the audit jsonl shape written by
+  `llmwiki/.claude/hooks/hooklib.audit()` (and code-logger `events.jsonl`); OR a full
+  Claude Code **session transcript** (`--transcript`) — the richest source: it recovers
+  retrieval args (Grep `pattern`, Read `file_path`), `observation`, and per-step `ok`,
+  so grounding + outcome are observable. Sidechain (sub-agent) lines are skipped; a
+  transcript carries no task-verdict so its `run.ok` is forced True — trust the FLAGS.
 - **`pass^k`:** k runs of one task → require ALL k to deliver; report `pass^k`.
 - **Rule checks (config-driven):** `forbidden_tool` (high), `out_of_order` (medium,
   via `must_precede`), `retry_storm` (medium, >N consecutive same-tool failures),
-  `excessive_steps` (low, > budget).
+  `excessive_steps` (low, > budget), `edited_without_read` (medium — grounding proxy:
+  an Edit/MultiEdit to a file never Read/Grep'd/Write-authored first; gated by
+  `grounding.enabled`).
 - **Verdict per run:** `clean-pass` / `pass-with-warnings` / `corrupt-success`
   (delivered **and** a high-severity flag) / `fail` (not delivered).
 
@@ -43,9 +49,10 @@ Adapting later = edit that one file, never the engine.
 # bundled 3-case self-test (clean / corrupt / flaky)
 python3 harness/scripts/trace-grader.py --self-test
 
-# grade canonical traces, or an audit log; --json for machine output
+# grade canonical traces, an audit log, or a full session transcript; --json for machine output
 python3 harness/scripts/trace-grader.py --traces traces.json
 python3 harness/scripts/trace-grader.py --audit .claude/audit/<date>.jsonl --task my-task
+python3 harness/scripts/trace-grader.py --transcript ~/.claude/projects/<proj>/<session>.jsonl --task my-task
 ```
 Exit code is `3` if any run is `corrupt-success` or any task is flaky (so CI can gate).
 
