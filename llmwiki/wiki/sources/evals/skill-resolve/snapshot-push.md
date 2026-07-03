@@ -1,4 +1,5 @@
 ---
+type: eval
 id: snapshot-push
 query: "push snapshot bonbon outer repo gồm cả be và fe"
 expected: [snapshot-push]

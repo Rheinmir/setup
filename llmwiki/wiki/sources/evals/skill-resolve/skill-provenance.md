@@ -1,4 +1,5 @@
 ---
+type: eval
 id: skill-provenance
 query: "skill này từ đâu tới checksum audit nguồn skill supply-chain"
 expected: [skill-provenance]

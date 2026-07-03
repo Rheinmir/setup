@@ -1,4 +1,5 @@
 ---
+type: eval
 id: ship
 query: "release push ship mở PR checklist điều kiện trước push"
 expected: [ship]

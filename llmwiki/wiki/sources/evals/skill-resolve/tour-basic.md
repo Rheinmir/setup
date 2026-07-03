@@ -1,4 +1,5 @@
 ---
+type: eval
 id: tour-basic
 query: "thêm product tour spotlight onboarding overlay tự viết không cần thư viện joyride"
 expected: [tour-guide]

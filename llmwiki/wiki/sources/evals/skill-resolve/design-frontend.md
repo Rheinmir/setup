@@ -1,4 +1,5 @@
 ---
+type: eval
 id: design-frontend
 query: "anti-slop frontend landing page portfolio redesign với design system thật"
 expected: [design-taste-frontend]

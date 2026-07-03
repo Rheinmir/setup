@@ -1,4 +1,5 @@
 ---
+type: eval
 id: health-check
 query: "check pattern template có drift không cần sync template chưa"
 expected: [health-check]

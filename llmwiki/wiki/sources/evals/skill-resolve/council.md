@@ -1,4 +1,5 @@
 ---
+type: eval
 id: council
 query: "chạy hội đồng nhiều model blind peer-rank rồi chairman tổng hợp"
 expected: [council]

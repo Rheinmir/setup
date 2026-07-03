@@ -1,4 +1,5 @@
 ---
+type: eval
 id: medic
 query: "cổng sức khoẻ tổng chứng minh hệ còn khoẻ trước khi commit"
 expected: [medic]

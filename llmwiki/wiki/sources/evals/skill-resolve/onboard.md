@@ -1,4 +1,5 @@
 ---
+type: eval
 id: onboard
 query: "phân tích sâu codebase legacy điền wiki architecture concepts"
 expected: [onboard-codebase, orca-onboard]

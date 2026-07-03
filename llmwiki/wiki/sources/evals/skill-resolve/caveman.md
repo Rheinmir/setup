@@ -1,4 +1,5 @@
 ---
+type: eval
 id: caveman
 query: "nói kiểu caveman ít token be brief"
 expected: [caveman]

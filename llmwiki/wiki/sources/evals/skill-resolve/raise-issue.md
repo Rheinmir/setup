@@ -1,4 +1,5 @@
 ---
+type: eval
 id: raise-issue
 query: "raise một issue feature-gap vào ledger để dev khác pull về xử lý"
 expected: [raise-issue]

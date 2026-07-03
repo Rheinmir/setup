@@ -1,4 +1,5 @@
 ---
+type: eval
 id: frontier-scan
 query: "quét đối thủ chúng ta thua gì so với thế giới agent framework"
 expected: [frontier-scan]

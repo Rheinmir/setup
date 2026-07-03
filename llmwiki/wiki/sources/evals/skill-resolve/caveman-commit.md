@@ -1,4 +1,5 @@
 ---
+type: eval
 id: caveman-commit
 query: "sinh commit message ngắn conventional commit"
 expected: [caveman-commit]

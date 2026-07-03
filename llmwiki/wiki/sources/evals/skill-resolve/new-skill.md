@@ -1,4 +1,5 @@
 ---
+type: eval
 id: new-skill
 query: "scaffold tạo một skill mới vào cả hai cây publish"
 expected: [new-skill]

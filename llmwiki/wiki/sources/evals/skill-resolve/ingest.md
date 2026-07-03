@@ -1,4 +1,5 @@
 ---
+type: eval
 id: ingest
 query: "file mới xuất hiện trong raw distill vào wiki pages"
 expected: [ingest]

@@ -1,4 +1,5 @@
 ---
+type: eval
 id: design-v1
 query: "dùng design taste v1 bản gốc để backward compatibility exact behavior"
 expected: [design-taste-frontend-v1]

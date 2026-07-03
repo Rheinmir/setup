@@ -1,4 +1,5 @@
 ---
+type: eval
 id: orca-issue
 query: "bug regression repro-first fix red green rồi distill"
 expected: [orca-issue]

@@ -1,4 +1,5 @@
 ---
+type: eval
 id: tour-supademo
 query: "thêm product tour kiểu Supademo với blinker hotspot pulse và progress bar"
 expected: [tour-guide-supademo]
