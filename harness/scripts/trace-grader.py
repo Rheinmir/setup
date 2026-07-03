@@ -73,6 +73,7 @@ DEFAULT_CONFIG: Dict = {
     "retry_threshold": 3,
     "step_budget": 40,
     "order_constraints": {"must_precede": []},
+    "grounding": {"enabled": True},   # flag an Edit to a file never Read/Grep'd first
     "judge": {"enabled": False, "model": None, "rubric": []},
 }
 
@@ -88,6 +89,7 @@ def load_config(path: Optional[str]) -> Dict:
             # keep nested defaults if the file omitted sub-keys
             cfg["order_constraints"] = {**DEFAULT_CONFIG["order_constraints"],
                                         **(loaded.get("order_constraints") or {})}
+            cfg["grounding"] = {**DEFAULT_CONFIG["grounding"], **(loaded.get("grounding") or {})}
             cfg["judge"] = {**DEFAULT_CONFIG["judge"], **(loaded.get("judge") or {})}
         except Exception as e:  # pragma: no cover - fail-open, never crash a grade
             print(f"[trace-grader] config load failed ({e}); using defaults", file=sys.stderr)
@@ -188,8 +190,127 @@ def runs_from_audit(lines, task_hint: Optional[str] = None) -> List[Run]:
     return runs
 
 
+# Arg keys worth keeping from a rich tool call — retrieval (path/pattern/query/url)
+# AND action (file_path/command). This is what lets the grader observe DELIBERATION:
+# a Grep `pattern` / Read `file_path` is the "agent looked before it acted" signal that
+# the audit jsonl throws away (issue GH#4).
+_ARG_KEYS = ("file_path", "path", "pattern", "query", "command", "url", "prompt")
+
+
+def _tool_result_ok(block: dict) -> bool:
+    """A tool_result block failed iff is_error is truthy."""
+    return not bool(block.get("is_error"))
+
+
+def _result_text(block) -> str:
+    """Flatten a tool_result `content` (str, or list of {type,text}) to a short string."""
+    c = block.get("content") if isinstance(block, dict) else block
+    if isinstance(c, str):
+        return c
+    if isinstance(c, list):
+        return " ".join(str(p.get("text", "")) for p in c if isinstance(p, dict))
+    return ""
+
+
+def runs_from_transcript(lines, task_hint: Optional[str] = None) -> List[Run]:
+    """Parse a Claude Code session transcript JSONL into ONE run.
+
+    The transcript is the RICHEST trace source (issue GH#4): unlike the audit jsonl it
+    carries every tool's real args (Grep `pattern`, Read `file_path`, …) AND the tool
+    result — so retrieval, grounding and per-step outcome are all recoverable. Shape:
+      assistant line: {"type":"assistant","message":{"content":[{"type":"tool_use",
+                        "id","name","input":{...}}]}}
+      user line     : {"type":"user","message":{"content":[{"type":"tool_result",
+                        "tool_use_id","content","is_error"}]}}
+    tool_use blocks (in file order) become steps; the matching tool_result supplies
+    `observation` + `ok`. One transcript = one session = one run. Fail-open per line.
+
+    Sidechain lines (`isSidechain: true` — a spawned sub-agent's own tool calls) are
+    SKIPPED: they belong to a different trajectory and would corrupt step_budget /
+    order_constraints of the main run. Fail-open — a missing field means main chain.
+
+    LIMITATION (honest): a transcript carries no TASK-LEVEL verdict — it doesn't say
+    whether the session ultimately delivered. So `Run.ok` is forced True here (a single
+    failed tool_result — Grep no-match, a benign non-zero Bash — must NOT sink the whole
+    run; task success is not the AND of step success). Trust the FLAGS, not the
+    pass/fail verdict, on transcript-derived runs. Per-step `ok` is still faithful and
+    drives retry-storm.
+    """
+    results: Dict[str, dict] = {}   # tool_use_id → {ok, observation}
+    calls: List[dict] = []          # ordered {id, tool, args}
+    session = task_hint
+    for line in lines:
+        line = line.strip() if isinstance(line, str) else line
+        if not line:
+            continue
+        try:
+            o = json.loads(line) if isinstance(line, str) else line
+        except (ValueError, TypeError):
+            continue
+        if o.get("isSidechain"):        # sub-agent's own trace — not the main run
+            continue
+        session = session or o.get("sessionId") or o.get("session_id")
+        msg = o.get("message") or {}
+        content = msg.get("content")
+        if not isinstance(content, list):
+            continue
+        for b in content:
+            if not isinstance(b, dict):
+                continue
+            t = b.get("type")
+            if t == "tool_use":
+                inp = b.get("input") or {}
+                args = {k: inp[k] for k in _ARG_KEYS if inp.get(k)}
+                calls.append({"id": b.get("id"), "tool": str(b.get("name") or ""), "args": args})
+            elif t == "tool_result":
+                results[b.get("tool_use_id")] = {
+                    "ok": _tool_result_ok(b),
+                    "observation": _result_text(b)[:200],
+                }
+    steps: List[Step] = []
+    for i, c in enumerate(calls, 1):
+        r = results.get(c["id"], {})
+        steps.append(Step(step=i, tool=c["tool"], args=c["args"],
+                          observation=r.get("observation", ""), ok=bool(r.get("ok", True))))
+    sid = session or "transcript-session"
+    # ok forced True: transcript carries no task-level verdict (see docstring LIMITATION).
+    return [Run(task=task_hint or sid, run_id=sid, ok=True, steps=steps)] if steps else []
+
+
 # ───────────────────────────── RULE-BASED PATH CHECKS ────────────────────────
 # Each returns a list of flags: {check, severity, step, tool, detail}.
+_READ_TOOLS = ("Read", "Grep", "Glob")
+
+
+def _norm(p: str) -> str:
+    return os.path.normpath(str(p)) if p else ""
+
+
+def check_edited_without_read(run: Run, cfg: Dict) -> List[dict]:
+    """Grounding proxy (issue GH#4 Q2 — 'did the agent look before it acted?'): an
+    Edit/MultiEdit to a file the run never Read/Grep'd/Glob'd (nor just Wrote) first is
+    ungrounded. Write is NOT flagged — creating a new file needs no prior read. Only
+    fires when a step carries a resolvable file path. Config-gated (adapter)."""
+    if not (cfg.get("grounding") or {}).get("enabled", True):
+        return []
+    seen: set = set()          # paths the agent has looked at (or authored) so far
+    flags: List[dict] = []
+    for s in run.steps:
+        path = _norm(s.args.get("file_path") or s.args.get("path") or "")
+        if s.tool in _READ_TOOLS or s.tool == "Write":
+            if path:
+                seen.add(path)      # Write: agent authored it → knows its content
+        elif s.tool in ("Edit", "MultiEdit"):
+            if path and path not in seen:
+                flags.append({"check": "edited_without_read", "severity": "medium",
+                              "step": s.step, "tool": s.tool,
+                              "detail": f"'{s.tool}' edited '{path}' at step {s.step} "
+                                        f"without reading it first (ungrounded)"})
+            if path:
+                seen.add(path)      # subsequent edits to same file are now grounded
+    return flags
+
+
 def check_forbidden_tool(run: Run, cfg: Dict) -> List[dict]:
     forb = set(cfg.get("forbidden_tools") or [])
     return [{"check": "forbidden_tool", "severity": "high", "step": s.step,
@@ -247,7 +368,8 @@ def check_excessive_steps(run: Run, cfg: Dict) -> List[dict]:
 
 
 PATH_CHECKS = (check_forbidden_tool, check_out_of_order,
-               check_retry_storm, check_excessive_steps)
+               check_retry_storm, check_excessive_steps,
+               check_edited_without_read)
 
 
 # ───────────────────────────── GRADING + pass^k ──────────────────────────────
@@ -381,6 +503,45 @@ def self_test() -> int:
     checks.append(("(c) pass^3, 1 of 3 fails → pass^3 = fail",
                    pk["k"] == 3 and pk["pass_hat_k"] is False and pk["n_fail"] == 1))
 
+    # (d) transcript parser — retrieval args + per-step ok are recovered (issue GH#4)
+    transcript = [
+        {"type": "assistant", "sessionId": "S1", "message": {"content": [
+            {"type": "tool_use", "id": "u1", "name": "Grep", "input": {"pattern": "def record", "path": "harness"}}]}},
+        {"type": "user", "message": {"content": [
+            {"type": "tool_result", "tool_use_id": "u1", "content": "3 matches", "is_error": False}]}},
+        {"type": "assistant", "message": {"content": [
+            {"type": "tool_use", "id": "u2", "name": "Read", "input": {"file_path": "a.py"}}]}},
+        {"type": "user", "message": {"content": [
+            {"type": "tool_result", "tool_use_id": "u2", "content": "boom", "is_error": True}]}},
+        # sidechain line — a sub-agent's own tool call; MUST be skipped from the main run
+        {"type": "assistant", "isSidechain": True, "message": {"content": [
+            {"type": "tool_use", "id": "sc1", "name": "Bash", "input": {"command": "ls"}}]}},
+    ]
+    tr = runs_from_transcript(transcript)
+    d_ok = (len(tr) == 1 and tr[0].run_id == "S1" and len(tr[0].steps) == 2   # sidechain excluded
+            and tr[0].ok is True                                         # transcript run.ok forced True
+            and tr[0].steps[0].tool == "Grep"
+            and tr[0].steps[0].args.get("pattern") == "def record"   # retrieval query kept
+            and tr[0].steps[0].ok is True
+            and tr[0].steps[1].ok is False                            # per-step outcome recovered
+            and tr[0].steps[1].observation == "boom")
+    checks.append(("(d) transcript → retrieval args + per-step ok + sidechain skipped (GH#4)", d_ok))
+
+    # (e) grounding — Edit a file never read → flag; Read-then-Edit → clean (issue GH#4 Q2)
+    ungrounded = Run(task="g", run_id="g1", ok=True, steps=[
+        Step(1, "Edit", {"file_path": "x.py"}, "", True)])            # edit, never read x.py
+    grounded = Run(task="g", run_id="g2", ok=True, steps=[
+        Step(1, "Read", {"file_path": "x.py"}, "", True),
+        Step(2, "Edit", {"file_path": "x.py"}, "", True)])            # read then edit
+    new_file = Run(task="g", run_id="g3", ok=True, steps=[
+        Step(1, "Write", {"file_path": "n.py"}, "", True),
+        Step(2, "Edit", {"file_path": "n.py"}, "", True)])            # authored then edit → grounded
+    e_ok = (len(check_edited_without_read(ungrounded, cfg)) == 1
+            and check_edited_without_read(ungrounded, cfg)[0]["check"] == "edited_without_read"
+            and check_edited_without_read(grounded, cfg) == []
+            and check_edited_without_read(new_file, cfg) == [])
+    checks.append(("(e) grounding → edit-without-read flagged; read-first & write-first clean (GH#4)", e_ok))
+
     print("self-test assertions:")
     ok_all = True
     for label, ok in checks:
@@ -396,7 +557,8 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="TraceGrader — grade an agent's path, not just its answer.")
     ap.add_argument("--traces", help="canonical traces.json")
     ap.add_argument("--audit", help="audit jsonl (hooklib.audit / code-logger shape)")
-    ap.add_argument("--task", help="task id to attach to audit-derived runs")
+    ap.add_argument("--transcript", help="Claude Code session transcript jsonl (richest source)")
+    ap.add_argument("--task", help="task id to attach to audit/transcript-derived runs")
     ap.add_argument("--config", default=str(DEFAULT_CONFIG_PATH),
                     help="adapter config (default: harness/trace-grader.config.yaml)")
     ap.add_argument("--json", action="store_true", help="emit the report as JSON")
@@ -412,8 +574,11 @@ def main() -> int:
     elif args.audit:
         runs = runs_from_audit(Path(args.audit).read_text(encoding="utf-8").splitlines(),
                                task_hint=args.task)
+    elif args.transcript:
+        runs = runs_from_transcript(Path(args.transcript).read_text(encoding="utf-8").splitlines(),
+                                    task_hint=args.task)
     else:
-        ap.error("provide --traces, --audit, or --self-test")
+        ap.error("provide --traces, --audit, --transcript, or --self-test")
         return 2
 
     report = grade(runs, cfg)
