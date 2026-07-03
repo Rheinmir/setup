@@ -1,165 +1,165 @@
 {
   "schema": "retrieval-baseline/v1",
   "generated_by": "harness/scripts/retrieval-eval.py",
-  "generated_at": "2026-07-01",
+  "generated_at": "2026-07-03",
   "k": 5,
   "evals_dir": "llmwiki/wiki/sources/evals/retrieval",
   "summary": {
     "goldens": 30,
     "decided": 30,
     "hits": 22,
-    "total_tokens": 814587
+    "total_tokens": 757656
   },
   "goldens": {
     "architecture": {
       "hit": 0,
-      "recall": 1.0,
-      "tokens": 24476
+      "recall": 0.0,
+      "tokens": 15485
     },
     "blocking-layer": {
       "hit": 1,
       "recall": 1.0,
-      "tokens": 25373
+      "tokens": 10844
     },
     "bnal-adapter": {
       "hit": 1,
       "recall": 1.0,
-      "tokens": 20776
+      "tokens": 16221
     },
     "boris-roles": {
       "hit": 1,
       "recall": 1.0,
-      "tokens": 23342
+      "tokens": 15235
     },
     "boris-template": {
       "hit": 1,
       "recall": 1.0,
-      "tokens": 27126
+      "tokens": 16835
     },
     "decision-adr-gate": {
       "hit": 0,
-      "recall": 1.0,
-      "tokens": 31221
+      "recall": 0.0,
+      "tokens": 19399
     },
     "docs-macos": {
       "hit": 0,
-      "recall": 1.0,
-      "tokens": 30568
+      "recall": 0.0,
+      "tokens": 22725
     },
     "enforcement-floor": {
       "hit": 1,
-      "recall": 1.0,
-      "tokens": 26520
+      "recall": 0.5,
+      "tokens": 8213
     },
     "explain-clone-site": {
       "hit": 1,
       "recall": 1.0,
-      "tokens": 4906
+      "tokens": 71244
     },
     "extract-site": {
-      "hit": 0,
+      "hit": 1,
       "recall": 1.0,
-      "tokens": 30845
+      "tokens": 21142
     },
     "fdk-optin": {
       "hit": 1,
       "recall": 1.0,
-      "tokens": 25369
+      "tokens": 14808
     },
     "fdk-what": {
       "hit": 1,
-      "recall": 1.0,
-      "tokens": 21603
+      "recall": 0.5,
+      "tokens": 64016
     },
     "feature-catalog": {
       "hit": 0,
-      "recall": 1.0,
-      "tokens": 22937
+      "recall": 0.0,
+      "tokens": 9228
     },
     "harness-local": {
       "hit": 0,
-      "recall": 1.0,
-      "tokens": 30143
+      "recall": 0.0,
+      "tokens": 38775
     },
     "logger-downstream": {
       "hit": 1,
       "recall": 1.0,
-      "tokens": 30915
+      "tokens": 30873
     },
     "onboarding-tour": {
       "hit": 0,
-      "recall": 1.0,
-      "tokens": 29685
+      "recall": 0.0,
+      "tokens": 22240
     },
     "orient-forcequery": {
       "hit": 1,
       "recall": 1.0,
-      "tokens": 29954
+      "tokens": 22740
     },
     "outer-eval": {
       "hit": 1,
       "recall": 1.0,
-      "tokens": 26979
+      "tokens": 45492
     },
     "policy-sot": {
       "hit": 0,
-      "recall": 1.0,
-      "tokens": 29719
+      "recall": 0.0,
+      "tokens": 13473
     },
     "project-local-rule": {
       "hit": 1,
       "recall": 1.0,
-      "tokens": 29041
+      "tokens": 16723
     },
     "protected-lib": {
       "hit": 1,
       "recall": 0.5,
-      "tokens": 20288
+      "tokens": 9638
     },
     "pull-gate": {
-      "hit": 1,
-      "recall": 1.0,
-      "tokens": 25903
+      "hit": 0,
+      "recall": 0.0,
+      "tokens": 31262
     },
     "query-eval": {
       "hit": 1,
       "recall": 1.0,
-      "tokens": 27679
+      "tokens": 24901
     },
     "r10": {
       "hit": 1,
       "recall": 1.0,
-      "tokens": 31883
+      "tokens": 16004
     },
     "rule-registry": {
       "hit": 1,
       "recall": 1.0,
-      "tokens": 27832
+      "tokens": 28748
     },
     "scanner-gitignore": {
       "hit": 1,
       "recall": 1.0,
-      "tokens": 32241
+      "tokens": 25626
     },
     "skill-sot": {
       "hit": 1,
       "recall": 1.0,
-      "tokens": 30977
+      "tokens": 22897
     },
     "trend-bnal-1": {
       "hit": 1,
       "recall": 1.0,
-      "tokens": 32041
+      "tokens": 15167
     },
     "trend-bnal-2": {
       "hit": 1,
       "recall": 1.0,
-      "tokens": 32041
+      "tokens": 66951
     },
     "wiki-in-kit": {
       "hit": 1,
       "recall": 1.0,
-      "tokens": 32204
+      "tokens": 20751
     }
   }
 }

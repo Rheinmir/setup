@@ -66,3 +66,12 @@
 | [030726-multi-session-add-guard](sources/draft/030726-multi-session-add-guard.md) | draft | Đa-session chung working tree: git add -A trộn việc — cần guard quy-session |
 | [030726-orca-independence-planb](sources/draft/030726-orca-independence-planb.md) | draft | Orca-independence — tự-build orchestration optional làm Plan B |
 | [030726-skill-usage-dashboard](sources/draft/030726-skill-usage-dashboard.md) | draft | Thống kê skill-usage thực tế → dashboard HTML báo cáo hàng tuần |
+<!-- index:auto:start -->
+| [030726-memory-episodic-vector](sources/draft/030726-memory-episodic-vector.md) | issue | Issue: Memory — llmwiki mới có ~1.5/4 tầng nhớ |
+| [030726-observability-runtime](sources/draft/030726-observability-runtime.md) | issue | Issue: Thiếu observability/eval lúc chạy |
+| [030726-orchestration-scale](sources/draft/030726-orchestration-scale.md) | issue | Issue: Orchestration mới ở mức CHỚM về quy mô |
+| [030726-ralph-br-frame-production-line](sources/draft/030726-ralph-br-frame-production-line.md) | issue | Issue: Dây chuyền sản xuất ứng dụng khép kín (Ralph BR→frame→loop) chạy trên har |
+| [030726-self-evolving-skills](sources/draft/030726-self-evolving-skills.md) | issue | Issue: Skill chưa tự tiến hoá & thiếu eval-per-skill |
+| [030726-skill-resolve-supplychain](sources/draft/030726-skill-resolve-supplychain.md) | issue | Issue: Nhập nhằng skill + supply-chain chưa được đo/chặn |
+| [030726-retrieval-eval-baseline-rot](sources/draft/030726-retrieval-eval-baseline-rot.md) | issue | Issue: retrieval-eval baseline rot + guard-rail quá giòn |
+<!-- index:auto:end -->

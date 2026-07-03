@@ -2,6 +2,7 @@
 
 | File | Type | Summary |
 |------|------|---------|
+| [frontier-gap-scan](concepts/frontier-gap-scan.md) | concept | Quét đối thủ hàng tuần để overstack là frontier TOÀN DIỆN — baseline 03/07 + runbook scout + 5 issue gap |
 | [query-retrieval-eval](concepts/query-retrieval-eval.md) | concept | Đo TRUY HỒI của skill query (hit@k+token), telemetry + query 3-tầng L0→L1, −65% token giữ recall |
 | [design-pattern-v1](sources/design-pattern-v1.md) | source | Học Từ Thiền Phần 000 — System Design fundamentals · Phan Văn Ngọc Thắng |
 | [design-pattern-v2](sources/design-pattern-v2.md) | source | Học Từ Thiền Phần 001 — Data, APIs & Distributed Systems · Trần Hồng Gấm |
