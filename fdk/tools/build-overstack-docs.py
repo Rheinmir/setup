@@ -151,7 +151,7 @@ LOOP_GROUPS = {
          "snapshot-push": "fdk", "sync-template": "fdk", "docs-curate": "fdk",
          "check-approve": "utility", "computer-use": "utility", "find-skills": "utility",
          "full-output-enforcement": "utility", "join-project": "utility", "last30days": "utility",
-         "uat-nonit-testcase": "utility"}),
+         "raise-issue": "utility", "uat-nonit-testcase": "utility"}),
 }
 
 
