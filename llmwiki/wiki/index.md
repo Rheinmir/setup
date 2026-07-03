@@ -74,4 +74,5 @@
 | [030726-self-evolving-skills](sources/draft/030726-self-evolving-skills.md) | issue | Issue: Skill chưa tự tiến hoá & thiếu eval-per-skill |
 | [030726-skill-resolve-supplychain](sources/draft/030726-skill-resolve-supplychain.md) | issue | Issue: Nhập nhằng skill + supply-chain chưa được đo/chặn |
 | [030726-retrieval-eval-baseline-rot](sources/draft/030726-retrieval-eval-baseline-rot.md) | issue | Issue: retrieval-eval baseline rot + guard-rail quá giòn |
+| [040726-precommit-slow-fragile-on-commit](sources/draft/040726-precommit-slow-fragile-on-commit.md) | issue | Issue: pre-commit chậm + giòn khi bị ngắt |
 <!-- index:auto:end -->
