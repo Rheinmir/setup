@@ -21,7 +21,7 @@
 - **`/onboard-codebase`** — Deep codebase analysis
 - **`/propose`** — Plan a feature before coding
 - **`/safe-change`** — Modify shared code without breaking existing callers
-- **`/ship`** — Workflow chốt PUSH/RELEASE
+- **`/ship`** — Workflow chốt PUSH/RELEASE/PR/MR
 - **`/verify-before-commit`** — Gate every commit
 - **`/wikieval`** — Turn wiki golden pages into a CI-blocking eval suite with a cheap→expensive assertion casc…
 
