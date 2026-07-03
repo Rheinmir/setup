@@ -1,0 +1,45 @@
+{
+  "_note": "Seed EPISODES for the episodic retrieval eval — deterministic, no model. Each is a past 'session episode' (what a session did). mem-proxy.py loads these into a temp mem-rank store and runs kind_filter=episode retrieval for each golden question. Keep small (episodic goldens hard-capped at 30 too).",
+  "episodes": [
+    {
+      "id": "ep-episodic-wire",
+      "kind": "episode",
+      "ts": "2026-07-04T02:00:00+00:00",
+      "session": "issue-9",
+      "did": "wired episodic + vector retrieval + temporal into llmwiki memory layer",
+      "files": ["harness/scripts/mem-rank.py", "skills/query/SKILL.md", "skills/record-episode/SKILL.md"],
+      "outcome": "query now surfaces semantic episode hits, not just wikilinks; hit@k golden added",
+      "text": "wired episodic + vector retrieval + temporal into llmwiki memory layer. files: harness/scripts/mem-rank.py, skills/query/SKILL.md, skills/record-episode/SKILL.md. outcome: query now surfaces semantic episode hits, not just wikilinks; hit@k golden added"
+    },
+    {
+      "id": "ep-ci-tech-debt",
+      "kind": "episode",
+      "ts": "2026-07-03T09:00:00+00:00",
+      "session": "issue-16",
+      "did": "closed CI tech-debt issue 16 and documented what the harness check covers",
+      "files": [".github/workflows/harness.yml", "fdk/docs/ci"],
+      "outcome": "CI harness check documented; issue 16 closed via PR 17",
+      "text": "closed CI tech-debt issue 16 and documented what the harness check covers. files: .github/workflows/harness.yml, fdk/docs/ci. outcome: CI harness check documented; issue 16 closed via PR 17"
+    },
+    {
+      "id": "ep-council-persona",
+      "kind": "episode",
+      "ts": "2026-07-02T15:00:00+00:00",
+      "session": "council-18",
+      "did": "built the 18-persona LLM council blind peer-rank protocol and HTML report",
+      "files": ["harness/scripts/council.py", "llmwiki/html/council"],
+      "outcome": "council seats answer, blind-rank, chairman synthesizes; versioned HTML report renders offline",
+      "text": "built the 18-persona LLM council blind peer-rank protocol and HTML report. files: harness/scripts/council.py, llmwiki/html/council. outcome: council seats answer, blind-rank, chairman synthesizes; versioned HTML report renders offline"
+    },
+    {
+      "id": "ep-frontier-scan",
+      "kind": "episode",
+      "ts": "2026-07-03T07:00:00+00:00",
+      "session": "frontier-gap",
+      "did": "ran the frontier gap scan comparing overstack against Mem0 Letta Zep and raised memory gap issues",
+      "files": ["llmwiki/html/overstack-vs-world-30d.html", "skills/frontier-scan/SKILL.md"],
+      "outcome": "memory scored the worst-losing axis; raised issues GH#9 through GH#13",
+      "text": "ran the frontier gap scan comparing overstack against Mem0 Letta Zep and raised memory gap issues. files: llmwiki/html/overstack-vs-world-30d.html, skills/frontier-scan/SKILL.md. outcome: memory scored the worst-losing axis; raised issues GH#9 through GH#13"
+    }
+  ]
+}

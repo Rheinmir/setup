@@ -99,7 +99,8 @@
   <div id="stage"><svg id="wires"></svg></div>
   <footer>Data nằm trong <code>#tree-data</code> — mỗi lần /fdk chỉ append/sửa JSON, không đụng markup. Nguồn quy tắc: skill <code>fdk</code> § Problem-tree.<br>
   📄 File (canonical): <code>/Users/giatran/orca/setup/setup/llmwiki/html/fdk-problem-tree.html</code><br>
-  📄 File (worktree issue-16): <code>/Users/giatran/orca/workspaces/setup/issue-16-ci-tech-debt/llmwiki/html/fdk-problem-tree.html</code></footer>
+  📄 File (worktree issue-16): <code>/Users/giatran/orca/workspaces/setup/issue-16-ci-tech-debt/llmwiki/html/fdk-problem-tree.html</code><br>
+  📄 File (worktree issue-9): <code>/Users/giatran/orca/workspaces/setup/issue-9-episodic-vector/llmwiki/html/fdk-problem-tree.html</code></footer>
 </div>
 
 <script type="application/json" id="tree-data">[
@@ -425,6 +426,21 @@
     "date": "2026-07-04",
     "solvedBy": "skills/ship/SKILL.md thêm mức pr/mr/merge + sync-skill.sh + build-capabilities.py regen",
     "session": "orca-fdk issue-16"
+  },
+  {
+    "id": "p-17",
+    "parent": null,
+    "title": "Memory: llmwiki mới ~1.5/4 tầng nhớ — thiếu episodic + truy hồi ngữ nghĩa + temporal",
+    "desc": "Trục THUA #1 frontier-gap-scan (03/07/26): thế giới (Mem0/Letta/Zep) chuẩn 4 tầng nhớ + vector + temporal; overstack chỉ semantic (wiki) + procedural (skills), truy hồi CHỈ theo [[wikilink]]/grep — thiếu episodic (sự kiện phiên) và truy hồi theo NGHĨA. VÁ (issue #9): nền vector đã có sẵn (mem-rank.py — store + retrieve top-k, embedding adapter đã quarantine) nên chỉ NỐI DÂY, không dựng lại. (1) mem-rank.py thêm episode subcommand + temporal ts/supersedes + kind-filter; (2) skill mới /record-episode (on-demand, ADR-004) ghi session episode; (3) query + wiki-room thêm Tầng-0 gọi mem-rank retrieve — truy hồi episode theo nghĩa, không chỉ link; (4) golden episodic hit@k (mem-proxy.py sinh output tất định, không model) + baseline, gate vào medic p_eval. Wiki vẫn là nguồn chân lý, vector chỉ là lớp phụ, tất cả local/travel-được.",
+    "status": "solved",
+    "scope": [
+      "harness",
+      "skills",
+      "llmwiki"
+    ],
+    "date": "2026-07-04",
+    "solvedBy": "mem-rank.py (episode+temporal+kind-filter) · skills/record-episode · query/wiki-room Tầng-0 · mem-proxy.py + episodic golden + episodic-baseline.json gate qua medic p_eval",
+    "session": "orca-fdk issue-9"
   }
 ]</script>
 

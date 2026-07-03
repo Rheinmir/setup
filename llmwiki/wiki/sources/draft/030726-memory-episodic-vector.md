@@ -2,7 +2,7 @@
 type: issue
 kind: feature-gap
 title: "Memory: thêm tầng episodic + vector retrieval + temporal cho llmwiki (đạt 4/4 tầng nhớ)"
-status: open
+status: done
 assignee: "@Rheinmir"
 dispatch: Claude
 entry: /fdk
@@ -51,3 +51,8 @@ Thế giới 2026 chuẩn hoá 4 tầng nhớ (working/episodic/semantic/procedu
 
 ## Origin
 Raise bởi phiên frontier-gap-scan 2026-07-03. Bằng chứng: report overstack-vs-world-30d + [[frontier-gap-scan]].
+
+## Kết quả (2026-07-04 — done)
+- Đạt 4/4 tầng nhớ: episodic (`mem-rank episode`) + truy hồi ngữ nghĩa (query/wiki-room Tầng-0) + temporal (ts/supersedes).
+- DoD ✓: query trả kết quả ngữ nghĩa trên golden episodic; 1 golden hit@k (`episodic-baseline.json`) gate CI qua medic `p_eval`.
+- Không thay wiki bằng vector-DB; giữ local/travel; embedding adapter vẫn `verified:false` (token-overlap tất định đủ cho golden).
