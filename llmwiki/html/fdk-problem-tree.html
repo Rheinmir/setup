@@ -98,7 +98,8 @@
   </div>
   <div id="stage"><svg id="wires"></svg></div>
   <footer>Data nằm trong <code>#tree-data</code> — mỗi lần /fdk chỉ append/sửa JSON, không đụng markup. Nguồn quy tắc: skill <code>fdk</code> § Problem-tree.<br>
-  📄 File: <code>/Users/giatran/orca/setup/setup/llmwiki/html/fdk-problem-tree.html</code></footer>
+  📄 File (canonical): <code>/Users/giatran/orca/setup/setup/llmwiki/html/fdk-problem-tree.html</code><br>
+  📄 File (worktree issue-16): <code>/Users/giatran/orca/workspaces/setup/issue-16-ci-tech-debt/llmwiki/html/fdk-problem-tree.html</code></footer>
 </div>
 
 <script type="application/json" id="tree-data">[
@@ -397,6 +398,33 @@
     "date": "2026-07-03",
     "solvedBy": "council.py _load_persona_meta seat-index",
     "session": "orca"
+  },
+  {
+    "id": "p-15",
+    "parent": "p-12",
+    "title": "retrieval-eval giòn (TOKEN_EPS=0 spam) + pull-gate hit@1→0 bị nuốt khi re-baseline",
+    "desc": "Sau khi vá R3 index-sync, gate retrieval-eval lộ ra ĐỎ SẴN: TOKEN_EPS=0.0 (token phình bất kỳ = hồi quy) nên mọi lần wiki lớn lên đều fail → CI spam → buộc re-baseline thủ công. Re-baseline cứu CI lại NUỐT một regression thật: pull-gate hit@k 1→0 (trang đúng ADR-002 vẫn tồn tại nhưng bị các trang phình chiếm hết top-5). Gốc cấu trúc: (1) query-proxy retrieve_L1 xếp hạng bằng độ-phủ-term trên TOÀN VĂN — trái docstring 'tầng-1 xếp hạng bằng title+heading' — nên trang generic tình cờ chứa term (kể cả term tiếng Việt hoạt/động) đè trang ADR có tiêu đề khớp hẳn; (2) ngưỡng token tuyệt-đối-0 không phân biệt 'wiki lớn lên hợp lệ' với 'phình đột biến'. VÁ: query-proxy field-boost heading ×2 + thân ×1 (HEAD_BOOST) → ADR-002 quay về hạng 0, hit@5 22/30→30/30, không golden nào tụt; retrieval-eval đổi TOKEN_EPS tuyệt đối → TOKEN_REL_EPS=+15% tương đối (token trong ngưỡng = WARN note, phình >15% = hồi quy cứng, hit@k tụt vẫn cứng tuyệt đối). Chứng minh feedback loop còn cắn: thêm 1 trang wiki thường → 15 golden nhích token nhưng --check vẫn OK (chỉ note), không spam; baseline re-write hit=1 cho pull-gate. CÒN để full 3/3 trụ: chưa có skill bọc (trụ skills) + chưa promote guidance vào wiki concept (trụ llmwiki) — mới vá ở tầng harness.",
+    "status": "partial",
+    "scope": [
+      "harness"
+    ],
+    "date": "2026-07-04",
+    "solvedBy": "query-proxy.py HEAD_BOOST field-boost + retrieval-eval.py TOKEN_REL_EPS ngưỡng mềm; ledger 030726-retrieval-eval-baseline-rot; issue GH#16",
+    "session": "orca-fdk issue-16"
+  },
+  {
+    "id": "p-16",
+    "parent": null,
+    "title": "Skill /ship chỉ đẩy thẳng — thiếu mở PR/MR + gom PR về merge",
+    "desc": "/ship ban đầu chỉ 2 mức push (đẩy thẳng không tag) + release (đẩy + tag + notes) — đều đẩy THẲNG, không có đường review-then-merge, cũng không có đường DUYỆT PR/MR đến rồi merge. VÁ: thêm 3 mức. Outbound: 'ship pr' (GitHub gh pr create) + 'ship mr' (GitLab glab mr create) — dùng lại checklist bước 1-3, sản phẩm cuối = PR/MR body (giọng người-dùng + Known-limitations), tự chọn công cụ theo remote, DỪNG nếu chưa auth, không tự chèn Closes #N. Inbound: 'ship merge' — liệt kê PR/MR đang mở của repo (gh pr list / glab mr list), kéo từng nhánh về LOCAL (gh pr checkout / fetch mr ref), chạy medic --ci + test THẬT làm ĐIỀU KIỆN merge, xanh mới merge (một-tại-một, đỏ thì để nguyên cho tác giả). Sync canonical→mirror→installed + regen CAPABILITIES.",
+    "status": "solved",
+    "scope": [
+      "skills",
+      "llmwiki"
+    ],
+    "date": "2026-07-04",
+    "solvedBy": "skills/ship/SKILL.md thêm mức pr/mr/merge + sync-skill.sh + build-capabilities.py regen",
+    "session": "orca-fdk issue-16"
   }
 ]</script>
 

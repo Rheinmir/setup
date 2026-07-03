@@ -34,6 +34,7 @@ SKIP = {"README.md", "index.md", "log.md", "_template.md"}
 STOP = set("the and cho của là ở ra vào thế nào gì sao khi có không một với để và làm được ntn "
            "how what why is are do the a an of to in for".split())
 WORD = re.compile(r"[0-9A-Za-zÀ-ỹ]+", re.UNICODE)
+HEAD_BOOST = 2          # tầng-1: khớp term trong title+heading nặng gấp đôi khớp trong thân bài
 
 
 def _tokens(text: str) -> int:
@@ -103,9 +104,14 @@ def retrieve_L1(question, pages, topn):
     for pg in pages:
         hit_lines = sum(1 for ln in pg["full"].splitlines() if _score(terms, ln) > 0)
         scan_tokens += min(hit_lines, 12) * 20
-        ranked.append((pg, _score(terms, pg["full"])))   # cùng ranking L0, khác ở chỗ đọc full
+        # tầng-1 xếp hạng bằng CHỈ-MỤC RẺ (title+heading), boost ×2 so với thân bài — đúng
+        # docstring "tầng-1 quét title+heading để xếp hạng". Term khớp trong tiêu đề là tín hiệu
+        # MẠNH hơn khớp rải trong thân (một trang ADR có tiêu đề đúng đề tài phải thắng trang
+        # phình tình cờ chứa term). Thân bài (full) vẫn tính (×1) để không bỏ trang khớp-thân.
+        rank_score = HEAD_BOOST * _score(terms, pg["head"]) + _score(terms, pg["full"])
+        ranked.append((pg, rank_score, _score(terms, pg["full"])))
     ranked.sort(key=lambda x: (-x[1], x[0]["stem"]))
-    top = [pg for pg, s in ranked if s > 0][:topn]
+    top = [pg for pg, rs, fs in ranked if fs > 0][:topn]
     # tầng-2: chỉ đọc FULL top-N
     tokens = scan_tokens + sum(pg["tokens_full"] for pg in top)
     return {"pages": [pg["stem"] for pg in top], "tokens": tokens}
