@@ -27,3 +27,7 @@
 {"ts": "2026-07-03T20:09:50", "session": "b73d2c47", "action": "modify", "target": "sources/draft/030726-narrative-as-data.md", "tool": "Edit"}
 {"ts": "2026-07-03T20:09:57", "session": "b73d2c47", "action": "modify", "target": "sources/draft/030726-narrative-as-data.md", "tool": "Edit"}
 {"ts": "2026-07-03T20:10:07", "session": "b73d2c47", "action": "modify", "target": "sources/draft/030726-narrative-as-data.md", "tool": "Edit"}
+{"ts": "2026-07-04T01:26:59", "session": "d11b2db1", "action": "add", "target": "sources/draft/040726-episodic-vector-plan.md", "tool": "Write"}
+{"ts": "2026-07-04T01:35:59", "session": "d11b2db1", "action": "add", "target": "sources/evals/episodic/ep-episodic-wire.md", "tool": "Write"}
+{"ts": "2026-07-04T01:36:07", "session": "d11b2db1", "action": "add", "target": "sources/evals/episodic/ep-ci-tech-debt.md", "tool": "Write"}
+{"ts": "2026-07-04T01:39:59", "session": "d11b2db1", "action": "modify", "target": "sources/draft/030726-memory-episodic-vector.md", "tool": "Edit"}

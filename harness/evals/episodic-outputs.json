@@ -1,0 +1,17 @@
+{
+  "ep-ci-tech-debt": {
+    "pages": [
+      "ep-ci-tech-debt",
+      "ep-council-persona",
+      "ep-episodic-wire"
+    ],
+    "tokens": 168
+  },
+  "ep-episodic-wire": {
+    "pages": [
+      "ep-episodic-wire",
+      "ep-frontier-scan"
+    ],
+    "tokens": 127
+  }
+}
