@@ -2,7 +2,7 @@
 type: issue
 kind: tech-debt
 title: "retrieval-eval giòn (TOKEN_EPS=0 ⇒ spam mọi lần wiki lớn) + pull-gate hit@1→0 bị nuốt khi re-baseline"
-status: open
+status: done
 assignee: "@Rheinmir"
 dispatch: Claude
 entry: /fdk
