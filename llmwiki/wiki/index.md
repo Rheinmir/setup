@@ -58,3 +58,4 @@
 | [030726-milestone-v106-harden](sources/draft/030726-milestone-v106-harden.md) | draft | 2026-07-03 |
 | [030726-session-provenance](sources/030726-session-provenance.md) | source | 2026-07-03 |
 | [030726-secondary-memory](sources/draft/030726-secondary-memory.md) | draft | 2026-07-03 |
+| [030726-narrative-as-data](sources/draft/030726-narrative-as-data.md) | draft | 2026-07-03 |

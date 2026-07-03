@@ -19,11 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-03 13:39:04 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=61a92b60558561b56d57d6d852e1d0c54ef8660b54fb35b396847d993b8c |
-| 2026-07-03 13:39:13 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=1fc57dc02502bc229e13c7d99e2ca1658f7debcb36a025e785f9e0165de9 |
-| 2026-07-03 13:39:53 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=4a51eb8787b9830c6a77fed7f3a99e611114d8601abe92820a7130cccc1f |
-| 2026-07-03 13:48:09 | `file.write` | fdk/tools/whiteboard-skill-map.py · tool=Write · actor=agent · prev=0f886ecb13462c1c963ccf6651b459dc9980fbfb5bd893b56471 |
-| 2026-07-03 13:49:56 | `file.write` | skills/ship/SKILL.md · tool=Edit · actor=agent · prev=bb5ba5adc425c77b52cb0a35bdf91f26197e98408fe06bd53acad9096abb6467 · |
 | 2026-07-03 13:50:18 | `file.write` | harness/scripts/sync-skills.py · tool=Edit · actor=agent · prev=87dc91f41d48158a96253d898ab2a57af887c795acc69c02d9a98066 |
 | 2026-07-03 13:51:13 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=65d9cadcb90a728e6660c078636941f4d62f97f4dc780e2a7327962cbb43 |
 | 2026-07-03 13:51:35 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=c534cd2778a76eeb65a284d26f923fb367fb4d0909284d8d58568a33f847 |
@@ -59,6 +54,11 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-03 15:37:06 | `file.write` | harness/scripts/harness-doctor.py · tool=Edit · session=b73d2c47 · actor=agent · prev=58622ea51c33d59145d007425e6721b885 |
 | 2026-07-03 19:45:11 | `file.write` | llmwiki/.claude/hooks/stop.py · tool=Edit · session=b73d2c47 · actor=agent · prev=371a66404085cd69f1c2ff413ee99c833b349d |
 | 2026-07-03 19:45:19 | `file.write` | llmwiki/.claude/hooks/stop.py · tool=Edit · session=b73d2c47 · actor=agent · prev=4d90f11f5c58952b12543c606c14c232852b63 |
+| 2026-07-03 19:46:12 | `file.write` | llmwiki/wiki/sources/draft/030726-milestone-v106-harden.md · tool=Edit · session=b73d2c47 · actor=agent · prev=d7453926d |
+| 2026-07-03 19:46:26 | `file.write` | llmwiki/wiki/sources/draft/030726-milestone-v106-harden.md · tool=Edit · session=b73d2c47 · actor=agent · prev=1790d23be |
+| 2026-07-03 20:01:06 | `task.new` |  · task=T-260703-04 · title=narrative-as-data + medic narrative-drift probe · state=proposed · actor=agent · prev=ca665d |
+| 2026-07-03 20:02:48 | `file.write` | llmwiki/wiki/sources/draft/030726-narrative-as-data.md · tool=Write · session=b73d2c47 · actor=agent · prev=16bd316252a7 |
+| 2026-07-03 20:03:56 | `file.write` | llmwiki/html/030726-narrative-as-data-seq.html · tool=Write · session=b73d2c47 · actor=agent · prev=ece9c60ce41dfaa749d4 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -189,3 +189,5 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 ## 2026-07-03 — implement — secondary-memory T1+T4 (scratch-log)
 - harness/scripts/scratch-log.py: T1 note (append context vụn → scratch-log.jsonl TRACKED, git giữ vĩnh viễn, why optional) + T4 distill (gom scratch+ledger theo phiên → sources/DDMMYY-session-provenance.md, KHÔNG xoá thô). Test: ghi 3 why phiên này → distill ra 030726-session-provenance.md (auto thay bản tay; bản tay giàu vẫn trong git ff7c47e — chính nguyên tắc không-mất). CÒN: T2 (events.jsonl +session — cần hook truyền session-id), T3 (memory-map 2-zoom reuse build-wiki-graph). scratch-log.jsonl KHÔNG gitignore (khác events.jsonl).
+
+## 2026-07-03 — propose — narrative-as-data + medic narrative-drift probe

@@ -289,25 +289,27 @@ def accent_css(n: int) -> str:
 
 
 # ── sections (prose tay; bảng live tiêm vào) ──────────────────────────────────────────────
-# 12 cơ chế runtime + tự-gác (KHÔNG phải rule) — nguồn CHUNG cho mind map LẪN section chi tiết (DRY).
-MECHANISMS = [
-    ("orientation", "SessionStart in ngắn: nhắc agent query code-index + wiki để định vị nhanh (chống lơ ngơ) — ADR-009"),
-    ("auto-index", "Stop hook chạy index_sync --fix: thêm file wiki mới → index.md tự khớp; chiều xóa vẫn chặn"),
-    ("force-query", "/propose buộc query wiki + có '## Context' trước khi draft, không propose 'mù' (R7-f)"),
-    ("code-index", "code-graph --watch tự reindex khi code đổi; code_graph_keeper giữ bền qua restart"),
-    ("code-logger", "PostToolUse: ghi log thao tác BẰNG CODE vào log.md (block auto, không nhờ agent nhớ)"),
-    ("health-check", "SessionStart: báo pattern-sync lệch (version local↔remote↔disk) — không chặn"),
-    ("wiki→fdk", "wiki RIÊNG của framework ở fdk/wiki (the kit); llmwiki/wiki = khuôn per-project — ADR-008"),
-    ("harness-lint", "tự-gác: --scanners (mọi wiki-scanner lọc gitignored) + --copies (bản deployed==master) — ADR-007"),
-    ("harness-doctor", "chạy fixture sai/đúng qua từng validator — chứng minh rào còn cắn"),
-    ("fdk-gate", "định-nghĩa-hoàn-thành: mọi bước phải xanh mới cho push"),
-    ("harness-local", "dự án TỰ viết rule riêng (harness-local/, id P&lt;n&gt;≠R) chạy song song R1–R13; ngoài manifest nên sync không đụng; framework chạy trước (AND) — ADR-011"),
-    ("docs-gate 2 trụ", "R10 mỗi 5 prompt nhắc CẢ tài liệu (/docs-site-macos) LẪN đánh giá/eval (wikieval) — trụ nào thiếu nhắc nấy"),
-]
+# Cơ chế runtime + tự-gác (KHÔNG phải rule) — DERIVE từ harness/mechanisms.yaml (ADR-001,
+# council-025): trước đây là hằng-số CHÉP TAY ở đây → drift âm thầm mà "khớp đĩa ✓" không bắt.
+# Giờ là DATA: overstack.html sinh từ manifest, và medic probe `narrative` cắn khi cơ-chế LIVE
+# vắng khỏi trang. KHÔNG chép tay lại ở đây nữa (đó là gốc-rễ bệnh đã chữa).
+def load_mechanisms(root: Path):
+    """Đọc harness/mechanisms.yaml → list dict {id,name,kind,desc,surface,live_probe}.
+    Manifest lỗi/thiếu → [] + cảnh báo stderr (thà trống-thấy-được còn hơn sai-âm-thầm —
+    Taleb default-unknown; đừng chép tay lại để 'lành' giả)."""
+    p = root / "harness" / "mechanisms.yaml"
+    try:
+        import yaml
+        data = yaml.safe_load(p.read_text(encoding="utf-8")) or {}
+        return data.get("mechanisms", []) or []
+    except Exception as e:
+        sys.stderr.write(f"[build-overstack-docs] KHÔNG đọc được {p}: {e} — mục cơ-chế sẽ TRỐNG\n")
+        return []
 
 
 def sections(root: Path):
     by_loop, n_sk = skills_by_loop(root)
+    mechs = load_mechanisms(root)   # cơ-chế = DATA từ manifest (council-025), không chép tay
     rs = rules(root)
     n_rules = len(rs)
     n_scripts = len(list((root / "harness" / "scripts").glob("*.py"))) if (root / "harness" / "scripts").is_dir() else 0
@@ -378,9 +380,9 @@ def sections(root: Path):
                              [_row(_node("b-rule leaf", rid,
                                          (stmt[:74] + "…") if len(stmt) > 76 else (stmt or name)))
                               for rid, name, stmt in rs]))
-    # cơ chế runtime + tự-gác (KHÔNG phải rule) — data từ MECHANISMS (dùng chung với section chi tiết)
+    # cơ chế runtime + tự-gác (KHÔNG phải rule) — DERIVE từ manifest mechanisms.yaml (council-025)
     branches.append(_subtree("b-rule", "cơ chế", "hook runtime + harness tự-gác",
-                             [_row(_node("b-rule leaf", _m, _d)) for _m, _d in MECHANISMS]))
+                             [_row(_node("b-rule leaf", _x["name"], _x["desc"])) for _x in mechs]))
 
     # 5 trend 2026 → 5 chức năng qua build-now-adapt-later (core tất định now, adapter verified:false)
     # BNAL — AUTO từ harness/*.config.yaml (mỗi config = 1 adapter). KHÔNG hardcode → không drift (ADR-012/013/015).
@@ -746,14 +748,21 @@ def sections(root: Path):
         "<p class=\"lead\" style=\"margin-top:10px\">Mấu chốt: trục <b>phán-xử</b> (tab Đánh giá: council/wikieval) và trục <b>tất định</b> (Trụ 4 code-health, Trụ 5 audit-chain) tách bạch — cổng tất định chặn cả khi LLM bị lừa.</p>",
     ]))
 
+    _maint = [m for m in mechs if "maintain" in (m.get("surface") or [])]
+    _maint_html = ('<ul class="s">' + "".join(
+        f'<li><b>{esc(m["name"])}</b> — {esc(m["desc"])} <span style="color:#94a3b8">'
+        f'(<code>{esc(m["live_probe"])}</code>)</span></li>' for m in _maint) + '</ul>'
+    ) if _maint else '<p style="color:#b46a00">(manifest cơ-chế trống — xem <code>harness/mechanisms.yaml</code>)</p>'
     S.append(("maintain", "Tự bảo trì", "11 · Bảo trì", "Tự bảo trì overstack trên máy bạn", [
-        "<p class=\"lead\">overstack tự bảo trì được bằng một skill: cập nhật bản mới, trả nợ wiki cũ, refresh bản đồ năng lực, kiểm tra rào chắn — trong một lệnh.</p>",
-        "<pre class='code-block'><code>/harness-update      # hoặc: bash harness/scripts/install-harness.sh . --self-heal</code></pre>",
+        "<p class=\"lead\">Sức khoẻ overstack được gác bởi <b>một tuyến phòng thủ cuối</b> — <code>/medic</code>: một lệnh chứng minh hệ còn khoẻ (luật còn cắn · validator không lệch bản · docs khớp đĩa · code compile · eval không tụt). Xanh = yên tâm; đỏ = in đúng chỗ hở + lệnh sửa.</p>",
+        "<pre class='code-block'><code>python3 fdk/tools/medic.py --ci   # cổng sức-khoẻ tổng (chìa vạn năng)\n/harness-update                   # cập nhật bản mới + trả nợ wiki (self-heal)</code></pre>",
+        "<p class=\"lead\" style=\"margin-top:14px\">Các tuyến bảo trì hiện có (<b>derive từ <code>harness/mechanisms.yaml</code></b> — không chép tay; medic probe <code>narrative</code> cắn nếu một tuyến LIVE vắng khỏi trang này):</p>",
+        _maint_html,
         "<ol class=\"ck\">"
-        "<li><b>Update + self-heal</b> — cài bản mới, tự backfill nợ (Origin/index/OKF) trong một process.</li>"
-        "<li><b>Refresh bản đồ năng lực</b> — <code>build-capabilities --root .</code> để agent thấy đúng đồ nghề sau update.</li>"
-        "<li><b>Health-check</b> — xác nhận rào chắn còn cắn (<code>/health-check</code>).</li></ol>",
-        "<p>Đọc kết quả theo exit code: <code>0</code> sạch · <code>3</code> còn nợ cần xử tay một lần · khác = lỗi hạ tầng (dừng, báo nguyên văn).</p>",
+        "<li><b>medic gương-soi</b> — phiên đụng framework tự chạy <code>medic --ci</code> cuối lượt; dark-rail/docs-lệch lộ SỚM, không đợi commit-gate.</li>"
+        "<li><b>Update + self-heal</b> — <code>/harness-update</code> cài bản mới, tự backfill nợ (Origin/index/OKF) trong một process.</li>"
+        "<li><b>Refresh bản đồ năng lực</b> — <code>build-capabilities --root .</code> để agent thấy đúng đồ nghề sau update.</li></ol>",
+        "<p>Đọc kết quả medic theo verdict: <b>KHOẺ</b> (xanh) · <b>KHOẺ có cảnh báo</b> (vàng — nợ đã biết) · <b>FAIL</b> (đỏ — có rail đen/docs lệch/code vỡ, đừng push). <code>/harness-update</code> theo exit code: <code>0</code> sạch · <code>3</code> còn nợ xử tay một lần · khác = lỗi hạ tầng.</p>",
     ]))
 
     S.append(("fdk", "FDK · dev overstack", "12 · Mở rộng", "FDK — phát triển chính overstack", [
@@ -801,12 +810,12 @@ def sections(root: Path):
                  f'<p>{n_rules} rule (R1–R{n_rules}), mỗi rule = 1 validator tất định, gác 3 lớp: <b>hook</b> (write-time) · <b>pre-commit</b> · <b>CI</b> (merge — không bypass được). Bảng đầy đủ từng rule ở tab <b>Nền 2 · Harness</b>.</p></div>')
     _secs.append('<div class="card"><h4 style="color:#ff2d55">cơ chế — runtime tự-gác (không phải rule)</h4>'
                  '<p>Các hook + cơ chế chạy nền để harness tự vận hành và tự kiểm chính nó — không nhờ agent nhớ:</p><ul class="s">'
-                 + "".join(f'<li><b>{esc(_m)}</b> — {esc(_d)}</li>' for _m, _d in MECHANISMS) + '</ul></div>')
+                 + "".join(f'<li><b>{esc(_x["name"])}</b> — {esc(_x["desc"])}</li>' for _x in mechs) + '</ul></div>')
     _secs.append('<div class="card"><h4 style="color:#0a84ff">BNAL — build-now-adapt-later</h4>'
                  '<p>Thêm tính năng còn ẩn số mà không liều: dựng phần chắc chắn now, nhốt ẩn số sau MỘT config adapter (verified:false → true), auto từ harness/*.config.yaml. Chi tiết + sơ đồ ở tab <b>An toàn khi mở rộng</b>.</p></div>')
     _b7html = '<h3 class="sub">7 nhánh mind map — giải thích chi tiết từng nhánh</h3>' + "".join(_secs)
     S.append(("reference", "Tham chiếu (mind map)", "14 · Tham chiếu", "Tham chiếu — mind map skill & rule (đếm từ đĩa)", [
-        f"<p class=\"lead\">Bản đồ tư duy (định dạng cheatsheet) toàn bộ đồ nghề, sinh từ đĩa nên luôn khớp: <b>{n_sk} skill</b> theo loop · <b>{n_rules} rule</b>. Mind map chia <b>7 nhánh</b> (4 loop skill + rules + cơ chế + BNAL) — xem bản đồ trước, giải thích từng nhánh ngay dưới. Mỗi nhánh <b>mặc định đóng — click để mở/đóng</b> (mũi tên ▸).</p>",
+        f"<p class=\"lead\">Bản đồ tư duy (cheatsheet) toàn bộ đồ nghề: <b>{n_sk} skill</b> theo loop · <b>{n_rules} rule</b> · <b>{len(mechs)} cơ-chế</b> — <b>số liệu đếm từ đĩa</b>, còn <b>danh sách cơ-chế derive từ <code>harness/mechanisms.yaml</code> và gác bằng medic probe <code>narrative</code></b> (không chép tay). Mind map chia <b>7 nhánh</b> (4 loop skill + rules + cơ chế + BNAL) — xem bản đồ trước, giải thích từng nhánh ngay dưới. Mỗi nhánh <b>mặc định đóng — click để mở/đóng</b> (mũi tên ▸).</p>",
         mindmap_html,
         _b7html,
         "<h3 style=\"margin-top:26px\">Bảng chi tiết (mô tả đầy đủ)</h3>", skills_table, rules_table,

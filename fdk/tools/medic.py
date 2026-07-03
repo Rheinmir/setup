@@ -97,6 +97,47 @@ def p_docs():
     return "ok", f"{len(checks)} generator khớp đĩa", ""
 
 
+def p_narrative():
+    """Narrative overstack có TRUNG THỰC không (council-025) — KHÁC docs-probe (chỉ so
+    html==generator-output = tính TRUNG THÀNH bản sao). Probe này gác tính TRUNG THỰC bản gốc:
+      (b) mọi live_probe trong mechanisms.yaml phải TỒN TẠI (manifest không nói dối);
+      (a) mọi cơ-chế LIVE phải XUẤT HIỆN trong overstack.html (không narrative drift);
+      (c) canary: skill mô tả tuyến-phòng-thủ mà chưa vào manifest → warn.
+    Parse manifest bằng regex → medic vẫn stdlib-only; fail-open nếu không parse được."""
+    man = ROOT / "harness/mechanisms.yaml"
+    page = ROOT / "llmwiki/html/overstack.html"
+    if not (man.exists() and page.exists()):
+        return "skip", "thiếu mechanisms.yaml/overstack.html", ""
+    text = man.read_text(encoding="utf-8")
+    names = re.findall(r'^\s*name:\s*"?(.+?)"?\s*$', text, re.M)
+    probes = re.findall(r'^\s*live_probe:\s*(.+?)\s*$', text, re.M)
+    if not names or len(names) != len(probes):
+        return "skip", "manifest cơ-chế không parse được (regex)", ""
+    html = page.read_text(encoding="utf-8", errors="ignore")
+    lying = [p for p in probes if not (ROOT / p).exists()]
+    if lying:
+        return ("fail", f"manifest NÓI DỐI: {len(lying)} live_probe không tồn tại: {','.join(lying[:3])}",
+                "sửa harness/mechanisms.yaml — live_probe phải trỏ file/dir thật")
+    missing = [n for n, p in zip(names, probes) if n not in html]
+    if missing:
+        return ("fail", f"NARRATIVE DRIFT: {len(missing)} cơ-chế LIVE vắng overstack.html: {','.join(missing[:3])}",
+                "python3 fdk/tools/build-overstack-docs.py  # regen trang từ manifest")
+    KW = ("self-heal", "gương-soi", "tuyến phòng thủ", "narrative drift", "rào chắn còn cắn")
+    known = " ".join(names + probes).lower()
+    canary = []
+    skdir = ROOT / "skills"
+    if skdir.is_dir():
+        for sk in sorted(skdir.glob("*/SKILL.md")):
+            head = sk.read_text(encoding="utf-8", errors="ignore")[:600].lower()
+            nm = sk.parent.name
+            if any(k in head for k in KW) and nm not in known:
+                canary.append(nm)
+    if canary:
+        return ("warn", f"{len(names)} cơ-chế khớp trang; canary: skill phòng-thủ chưa vào manifest: {','.join(canary[:3])}",
+                "nếu là tuyến phòng thủ, thêm vào harness/mechanisms.yaml")
+    return "ok", f"{len(names)} cơ-chế LIVE đều có mặt + đúng bản gốc", ""
+
+
 def p_code():
     """Code lành — mọi .py trong harness/ + fdk/tools compile sạch (không rail gãy cú pháp)."""
     import py_compile
@@ -132,6 +173,7 @@ PROBES = [
     ("drift",    ["drift", "rules"],             lambda: p_rules()),  # drift lộ trong p_rules
     ("backstop", ["backstop", "git", "commit"],  p_backstop),
     ("docs",     ["docs", "capabilities"],       p_docs),
+    ("narrative", ["narrative", "docs", "drift"], p_narrative),
     ("code",     ["code", "health"],             p_code),
     ("eval",     ["eval", "baseline"],           p_eval),
 ]

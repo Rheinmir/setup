@@ -1,0 +1,130 @@
+# mechanisms.yaml — NGUỒN CHÂN LÝ cho "cơ chế runtime tự-gác" + "tuyến bảo trì" của overstack.
+#
+# Vì sao file này tồn tại (ADR-001 policy-as-source-of-truth, council-025):
+#   Trước đây danh sách cơ-chế nằm HARDCODE trong fdk/tools/build-overstack-docs.py (list
+#   MECHANISMS) + prose tab "Tự bảo trì" — bản CHÉP TAY đóng băng, drift âm thầm mà
+#   "khớp đĩa ✓" không bắt được. Rút ra đây → overstack.html DERIVE (không chép), và medic
+#   probe `narrative` CẮN khi một cơ-chế LIVE (live_probe tồn tại) mà vắng khỏi trang.
+#
+# Hợp đồng self-narration: một mục = một live_probe = một dòng truy được. live_probe là path
+# repo-relative PHẢI tồn tại (file/dir) — nếu không tồn tại, medic báo "manifest nói dối".
+#
+# kind: rule | hook | skill | tool   — loại cơ-chế (chỉ để render nhóm, không đổi logic gác).
+# surface: mechanism | maintain      — mục hiện ở list cơ-chế, ở tab Tự-bảo-trì, hoặc cả hai.
+
+version: 1
+
+mechanisms:
+  # ── 12 cơ-chế runtime đã có (backfill từ MECHANISMS cũ) ─────────────────────
+  - id: orientation
+    name: orientation
+    kind: hook
+    surface: [mechanism]
+    desc: "SessionStart in ngắn: nhắc agent query code-index + wiki để định vị nhanh (chống lơ ngơ) — ADR-009"
+    live_probe: llmwiki/.claude/hooks/session_start.py
+
+  - id: auto-index
+    name: auto-index
+    kind: hook
+    surface: [mechanism]
+    desc: "Stop hook chạy index_sync --fix: thêm file wiki mới → index.md tự khớp; chiều xóa vẫn chặn"
+    live_probe: harness/validators/index_sync.py
+
+  - id: force-query
+    name: force-query
+    kind: rule
+    surface: [mechanism]
+    desc: "/propose buộc query wiki + có '## Context' trước khi draft, không propose 'mù' (R7-f)"
+    live_probe: harness/validators/proposal_complete.py
+
+  - id: code-index
+    name: code-index
+    kind: tool
+    surface: [mechanism]
+    desc: "code-graph --watch tự reindex khi code đổi; SessionStart surface để định vị nhanh"
+    live_probe: llmwiki/.claude/hooks/session_start.py
+
+  - id: code-logger
+    name: code-logger
+    kind: hook
+    surface: [mechanism]
+    desc: "PostToolUse: ghi log thao tác BẰNG CODE vào log.md (block auto, không nhờ agent nhớ)"
+    live_probe: harness/scripts/code-logger.py
+
+  - id: health-check
+    name: health-check
+    kind: tool
+    surface: [mechanism, maintain]
+    desc: "SessionStart: báo pattern-sync lệch (version local↔remote↔disk) — không chặn"
+    live_probe: harness/scripts/health-check.py
+
+  - id: wiki-fdk
+    name: "wiki→fdk"
+    kind: tool
+    surface: [mechanism]
+    desc: "wiki RIÊNG của framework ở fdk/wiki (the kit); llmwiki/wiki = khuôn per-project — ADR-008"
+    live_probe: fdk/wiki
+
+  - id: harness-lint
+    name: harness-lint
+    kind: tool
+    surface: [mechanism]
+    desc: "tự-gác: --scanners (mọi wiki-scanner lọc gitignored) + --copies (bản deployed==master) — ADR-007"
+    live_probe: harness/scripts/harness-lint.py
+
+  - id: harness-doctor
+    name: harness-doctor
+    kind: tool
+    surface: [mechanism]
+    desc: "chạy fixture sai/đúng qua từng validator — chứng minh rào còn cắn (17/17 rule có bite-test)"
+    live_probe: harness/scripts/harness-doctor.py
+
+  - id: fdk-gate
+    name: fdk-gate
+    kind: tool
+    surface: [mechanism]
+    desc: "định-nghĩa-hoàn-thành: mọi bước phải xanh mới cho push"
+    live_probe: harness/scripts/fdk-gate.py
+
+  - id: harness-local
+    name: harness-local
+    kind: rule
+    surface: [mechanism]
+    desc: "dự án TỰ viết rule riêng (harness-local/, id P≠R) chạy song song R1–R17; framework chạy trước (AND) — ADR-011"
+    live_probe: harness-local
+
+  - id: docs-gate
+    name: "docs-gate 2 trụ"
+    kind: rule
+    surface: [mechanism]
+    desc: "R10 mỗi 5 prompt nhắc CẢ tài liệu (/docs-site-macos) LẪN đánh giá/eval (wikieval) — trụ nào thiếu nhắc nấy"
+    live_probe: llmwiki/.claude/hooks/user_prompt_submit.py
+
+  # ── 3 tuyến mới phiên 2026-07-03 (council-025: chúng vắng khỏi trang) ────────
+  - id: medic
+    name: medic
+    kind: skill
+    surface: [mechanism, maintain]
+    desc: "cổng sức-khoẻ tổng — 1 lệnh chứng minh hệ còn khoẻ (luật cắn/drift/docs/code/eval); tuyến phòng thủ cuối trước commit"
+    live_probe: fdk/tools/medic.py
+
+  - id: medic-mirror
+    name: "medic gương-soi"
+    kind: hook
+    surface: [mechanism, maintain]
+    desc: "Stop-hook: phiên đụng framework (fdk/harness/skills/llmwiki) tự chạy medic --ci cuối lượt; FAIL thật thì chặn dừng — bắt dark-rail SỚM (T2 milestone v1.0.6)"
+    live_probe: llmwiki/.claude/hooks/stop.py
+
+  - id: secondary-memory
+    name: "bộ nhớ thứ cấp"
+    kind: tool
+    surface: [mechanism, maintain]
+    desc: "scratch-log (RAW append-only, track git) + memory-map (view) + session-provenance (auto-distill) — bắt sửa/context VỤN, không mất gì, truy được ở phiên sau"
+    live_probe: harness/scripts/scratch-log.py
+
+  - id: harness-update
+    name: harness-update
+    kind: skill
+    surface: [maintain]
+    desc: "TỰ BẢO TRÌ: cài bản mới + self-heal (backfill Origin/index/OKF) + refresh bản đồ năng lực trong một lệnh"
+    live_probe: skills/harness-update/SKILL.md
