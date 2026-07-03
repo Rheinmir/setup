@@ -43,7 +43,10 @@ DEFAULT_BASELINE = REPO_ROOT / "harness" / "metrics" / "retrieval-baseline.json"
 SCHEMA = "retrieval-baseline/v1"
 HARD_CAP = 30            # case xấu #1: cấm phình eval — quá 30 golden thì từ chối
 DEFAULT_K = 5
-TOKEN_EPS = 0.0          # token phình bất kỳ so baseline = hồi quy
+TOKEN_REL_EPS = 0.15     # ngưỡng MỀM: token chỉ là hồi quy khi phình > +15% so baseline/golden.
+                         # Wiki lớn lên tự nhiên (thêm/sửa trang) nhích token vài % → KHÔNG spam;
+                         # phình đột biến (>15%, dấu hiệu context-bloat) mới đỏ. hit@k tụt vẫn là
+                         # hồi quy CỨNG tuyệt đối (không nới) — đó mới là mất khả năng truy hồi.
 SKIP_BASENAMES = {"README.md", "index.md", "_template.md", "log.md"}
 
 FRONTMATTER = "---"
@@ -144,7 +147,8 @@ def build_baseline(results, evals_dir, k):
 
 
 def diff_against_baseline(baseline, results):
-    """Hồi quy = hit@k tụt (1→0) HOẶC token phình so baseline. Token GIẢM = cải tiến (ok)."""
+    """Hồi quy CỨNG = hit@k tụt (1→0) HOẶC token phình > +TOKEN_REL_EPS so baseline. Token tăng
+    trong ngưỡng mềm chỉ WARN (wiki lớn lên hợp lệ, không đỏ CI). Token GIẢM = cải tiến (ok)."""
     cur = {r["id"]: r for r in results}
     base = baseline.get("goldens", {})
     regressions, notes = [], []
@@ -156,8 +160,13 @@ def diff_against_baseline(baseline, results):
         if b.get("hit") == 1 and c["hit"] != 1:
             regressions.append((gid, f"hit@k 1 -> {c['hit']} (không còn tìm ra trang đúng)"))
         bt, ct = b.get("tokens"), c["tokens"]
-        if isinstance(bt, int) and isinstance(ct, int) and ct > bt + TOKEN_EPS:
-            regressions.append((gid, f"token {bt} -> {ct} (phình {ct - bt})"))
+        if isinstance(bt, int) and isinstance(ct, int) and ct > bt:
+            limit = bt * (1 + TOKEN_REL_EPS)
+            pct = (ct - bt) / bt * 100 if bt else 0
+            if ct > limit:
+                regressions.append((gid, f"token {bt} -> {ct} (phình +{pct:.0f}% > +{TOKEN_REL_EPS*100:.0f}% mềm)"))
+            else:
+                notes.append((gid, f"token {bt} -> {ct} (+{pct:.0f}%, trong ngưỡng mềm — chỉ cảnh báo)"))
     for gid in sorted(cur):
         if gid not in base:
             notes.append((gid, "golden mới (chưa có trong baseline)"))

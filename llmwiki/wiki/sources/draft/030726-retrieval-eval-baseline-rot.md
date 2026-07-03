@@ -47,5 +47,13 @@ Gate `retrieval-eval --check` đặt `TOKEN_EPS=0.0` (mọi tăng token = regres
 ## Repo/paper tham khảo
 - Nội bộ: `skills/dev-loop/wikieval.md` (cùng khuôn baseline+diff), `fdk/wiki/concepts/query-retrieval-eval.md`.
 
+## Đã giải (2026-07-04, /fdk issue-16)
+- **Gốc**: `retrieve_L1` xếp hạng bằng độ-phủ-term trên TOÀN VĂN — trái docstring "tầng-1 xếp hạng bằng title+heading" — nên trang phình generic (tình cờ chứa cả term tiếng Việt "hoạt/động") đè ADR-002 có tiêu đề khớp hẳn xuống hạng 6, rớt top-5.
+- **Fix 1 — ranking (`query-proxy.py`)**: thêm `HEAD_BOOST=2`, khoá xếp hạng = `2×score(head) + score(full)`. ADR-002 quay về hạng 0; hit@5 22/30 → **30/30**, không golden nào tụt (heading-primary thuần gãy skill-sot; boost cân bằng thì không).
+- **Fix 2 — ngưỡng token (`retrieval-eval.py`)**: `TOKEN_EPS=0.0` tuyệt đối → `TOKEN_REL_EPS=0.15` tương đối. Token phình ≤ +15%/golden = WARN note (không đỏ); > +15% = hồi quy cứng; hit@k tụt vẫn cứng tuyệt đối.
+- **Baseline** re-write: pull-gate `hit=1` recall=1.0.
+- **Kiểm chứng feedback loop còn cắn**: thêm 1 trang wiki thường → 15 golden nhích token nhưng `--check` vẫn OK (chỉ note), hết spam; self-test 30/30 coherent.
+- **Còn nợ (để full 3/3 trụ)**: chưa bọc skill (trụ skills) + chưa promote guidance vào wiki concept `query-retrieval-eval` (trụ llmwiki) — mới vá tầng harness. Ghi ở problem-tree node p-15.
+
 ## Origin
 Raise bởi phiên fix-CI 2026-07-03. Bằng chứng: stash-test retrieval-eval trên HEAD sạch; harness/scripts/retrieval-eval.py:46; git run harness fail #28668773256.
