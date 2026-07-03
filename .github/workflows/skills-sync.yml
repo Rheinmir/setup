@@ -13,3 +13,9 @@ jobs:
         run: python3 harness/scripts/sync-skills.py --check
       - name: skill cross-surface (marketplace + AGENT + CLAUDE + LOOP_MAP không drift)
         run: python3 harness/scripts/skill-registry.py --check
+      - name: PyYAML (cho golden skill-resolve)
+        run: python3 -m pip install --quiet pyyaml
+      - name: skill-resolve golden retrieval (chặn regress nhập nhằng cùng-năng-lực, GH#13)
+        run: python3 harness/scripts/skill-resolve-eval.py --check
+      - name: skill provenance (checksum không lệch, không skill lạ, GH#13)
+        run: python3 fdk/tools/skill-provenance.py check --ci
