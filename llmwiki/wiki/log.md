@@ -19,8 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-03 13:00:18 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=228a4b5800e151633b98f0a777e7c24c878b45c5ae2e6b7ed2634 |
-| 2026-07-03 13:01:46 | `file.write` | llmwiki/html/030726-medic-cong-suc-khoe-tong-seq.html · tool=Write · actor=agent · prev=c98af670c780e4e7cd954ac53470c5d5 |
 | 2026-07-03 13:15:12 | `file.write` | fdk/tools/whiteboard-skill-map.py · tool=Write · actor=agent · prev=0c8a499bbe8cd8ce1b2dccb62b77b00e8a819e376560bc2aab40 |
 | 2026-07-03 13:15:59 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=967e308b15398a23f7321739daabd9718423f647a58cdad06fa7e |
 | 2026-07-03 13:21:39 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=f8d63f67f4669c9cf8990d14a5287e8c1f3d2eece041dfb684184db80c5a |
@@ -59,6 +57,8 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-03 14:54:44 | `task.new` |  · task=T-260703-03 · title=bộ nhớ thứ cấp 3-tầng — scratch-log auto + view session/feature + journal-distill (file-firs |
 | 2026-07-03 14:55:25 | `file.write` | llmwiki/wiki/sources/draft/030726-secondary-memory.md · tool=Write · actor=agent · prev=61877fb37d85b78c49341e858975abe0 |
 | 2026-07-03 14:56:12 | `file.write` | llmwiki/html/030726-secondary-memory-seq.html · tool=Write · actor=agent · prev=44b327d667e1acbdabfe3a82b37ee5a1b37cc712 |
+| 2026-07-03 15:03:36 | `file.write` | harness/scripts/scratch-log.py · tool=Write · actor=agent · prev=95cd91977ba1beca3406f49c78935e40ec6745f3485a546c349fa89 |
+| 2026-07-03 15:04:19 | `file.write` | harness/scripts/scratch-log.py · tool=Edit · actor=agent · prev=1ec9febb70673674fefb6719a5cc2c5527db07d97180d55daf96dfc5 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)

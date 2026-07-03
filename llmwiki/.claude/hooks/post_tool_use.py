@@ -20,7 +20,8 @@ def main() -> None:
     # code-logger: ghi MỌI thay đổi file framework BẰNG CODE (không nhờ agent nhớ log)
     rel = os.path.relpath(fp, root) if fp else ""
     if rel and not rel.startswith("..") and rel.startswith(("llmwiki/", "harness/", "skills/", "fdk/", ".github/")):
-        code_log(root, "--record", "file.write", f"path={rel}", f"tool={tool}")
+        code_log(root, "--record", "file.write", f"path={rel}", f"tool={tool}",
+                 f"session={(payload.get('session_id') or '')[:8]}")
 
     # wiki-core v2: ledger sự kiện wiki (add/modify/delete-tombstone), flock chống ghi song song (G1)
     if fp:
