@@ -17,6 +17,7 @@ id: issues-ledger
 |----|------|---------|--------|----------|-------|---------|
 | [030726-foundation-section](draft/030726-foundation-section.md) | foundation | Mọi wiki thiếu mục Foundation (bài toán · vì sao tồn tại · vì sao chọn công nghệ) | open | @Rheinmir | /fdk | [GH#6](https://github.com/Rheinmir/setup/issues/6) |
 | [030726-orca-independence-planb](draft/030726-orca-independence-planb.md) | architecture | Orca-independence: tự-build orchestration optional làm Plan B | open | @Rheinmir | /fdk | [GH#7](https://github.com/Rheinmir/setup/issues/7) |
+| [030726-skill-usage-dashboard](draft/030726-skill-usage-dashboard.md) | feature-gap | Thống kê skill-usage thực tế → dashboard HTML báo cáo hàng tuần | open | @Rheinmir | /fdk | [GH#8](https://github.com/Rheinmir/setup/issues/8) |
 
 ## Origin
 Tạo bởi skill `/raise-issue` (phiên 2026-07-03) như ledger tập trung cho issue local travel-được. Bắt nguồn từ phiên hỏi về vai trò YAML/Python → council-026 phát hiện gap nền tảng (thiếu Foundation) + đề xuất Orca-independence Plan B. Nguồn bằng chứng: `llmwiki/html/030726-yaml-vs-python.html`, `llmwiki/html/council/council-report-026-seed42.html`.
