@@ -101,7 +101,8 @@
   📄 File (canonical): <code>/Users/giatran/orca/setup/setup/llmwiki/html/fdk-problem-tree.html</code><br>
   📄 File (worktree issue-16): <code>/Users/giatran/orca/workspaces/setup/issue-16-ci-tech-debt/llmwiki/html/fdk-problem-tree.html</code><br>
   📄 File (worktree issue-4): <code>/Users/giatran/orca/workspaces/setup/issue-4-logger-c/llmwiki/html/fdk-problem-tree.html</code><br>
-  📄 File (worktree issue-9): <code>/Users/giatran/orca/workspaces/setup/issue-9-episodic-vector/llmwiki/html/fdk-problem-tree.html</code></footer>
+  📄 File (worktree issue-9): <code>/Users/giatran/orca/workspaces/setup/issue-9-episodic-vector/llmwiki/html/fdk-problem-tree.html</code><br>
+  📄 File (worktree issue-8): <code>/Users/giatran/orca/workspaces/setup/issue-8-feature-gap-th-ng/llmwiki/html/fdk-problem-tree.html</code></footer>
 </div>
 
 <script type="application/json" id="tree-data">[
@@ -468,6 +469,17 @@
     "date": "2026-07-04",
     "solvedBy": ".pre-commit-config.yaml trim 25→12 hook nhanh (file-đổi) · fire-drill nặng → CI repo-health + policy-converters-drift thêm vào harness.yml · đường cứu index-hỏng ghi trong config · căn cứ concept harness-enforcement-floor",
     "session": "orca-fdk issue-18"
+  },
+  {
+    "id": "p-20",
+    "parent": null,
+    "title": "skill-usage đếm HỤT: chỉ đọc 1 dir transcript, bỏ mọi phiên worktree (GH#8 follow-up)",
+    "desc": "Tool skill-usage.py (GH#8) hardcode 1 thư mục transcript của repo chính → mọi phiên chạy trong git-worktree (mỗi worktree = 1 dir transcript riêng do cwd-mã-hoá khác) bị bỏ đếm hoàn toàn, vi phạm chính tiêu chí 'khớp transcript thật'. Verify: repo có ~7 worktree-dir đều chứa Skill-call mà tool ngó lơ (40 vs 45 lời gọi, fdk 10 vs 14). Kèm bug phụ: timestamp UTC gom ISO-week không quy giờ địa phương (UTC+7) → call khuya gán nhầm tuần. Fix cấu trúc (Meadows: sửa nguồn, không vá số): suy MỌI worktree qua `git worktree list` (deterministic, chỉ repo này — privacy) + `.astimezone()` quy giờ địa phương trước khi gom tuần. Phát hiện bởi fable-planning pass.",
+    "status": "solved",
+    "scope": ["harness"],
+    "date": "2026-07-04",
+    "solvedBy": "fdk/tools/skill-usage.py: discover_transcript_dirs() qua git worktree list + parse_ts().astimezone(); fable-planning surfaced, /fdk gác",
+    "session": "orca-fdk issue-8 follow-up"
   }
 ]</script>
 

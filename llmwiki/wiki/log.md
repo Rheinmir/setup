@@ -44,6 +44,8 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-04 01:47:49 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · session=d11b2db1 · actor=agent · prev=c89ac4d6ac094a6e44aff049268466c77 |
 | 2026-07-04 01:48:19 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · session=d11b2db1 · actor=agent · prev=e3c1cfbb50f08aff49a7b4a6ab5be51f5 |
 | 2026-07-04 01:48:43 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · session=d11b2db1 · actor=agent · prev=fd9ca3e48cca9af528da90865b4d5fc3f |
+| 2026-07-04 01:50:35 | `file.write` | fdk/tools/skill-usage.py · tool=Write · session=3fb3a505 · actor=agent · prev=genesis · h=92cb9ad106af446049ded895bd3949 |
+| 2026-07-04 01:58:31 | `file.write` | harness/mechanisms.yaml · tool=Edit · session=3fb3a505 · actor=agent · prev=92cb9ad106af446049ded895bd39491e926f0f03d133 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
