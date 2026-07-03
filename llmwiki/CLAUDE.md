@@ -56,6 +56,7 @@ Giảm lỗi LLM-coding phổ biến. Thiên về cẩn trọng hơn tốc độ
 | `wikieval` | Bộ eval hồi quy từ wiki goldens (cascade assert + baseline, CI gate) | `skills/dev-loop/wikieval.md` | dev-loop |
 | `docs-curate` | Sắp xếp gọn kho docs local (html/draft phình to): promote bản chất→wiki, archive render, re-index | `skills/utils/docs-curate.md` | utils |
 | `raise-issue` | Raise issue đầy đủ bối cảnh vào ledger local (draft) để dev khác pull về xử lý qua /fdk — feature-gap/tech-debt/foundation (KHÁC orca-issue = bug repro-first) | `skills/utils/raise-issue.md` | utils |
+| `frontier-scan` | Quét đối thủ + đối chiếu overstack 8 trục (gọi instant) — "frontier scan", "chúng ta thua gì" | `skills/utils/frontier-scan.md` | utils |
 | `brandkit` | Premium brand-kit image generation skill for creating high-end… | `skills/utils/brandkit.md` | utils |
 | `build-now-adapt-later` | When a task is blocked by missing or unverified information (an… | `skills/dev-loop/build-now-adapt-later.md` | dev-loop |
 | `cavecrew` | Decision guide for delegating to caveman-style subagents. | `skills/utils/cavecrew.md` | utils |
