@@ -1,7 +1,7 @@
 <!-- SINH BẰNG CODE: build-capabilities.py — ĐỪNG sửa tay; chạy lại để cập nhật. -->
 # CAPABILITIES — toàn bộ đồ nghề (luôn-mới, đếm từ đĩa)
 
-**71 skill · 17 rule · 16 fdk-tool · 44 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
+**72 skill · 17 rule · 16 fdk-tool · 44 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
 
 ## Skills (gọi bằng `/<tên>`)
 
@@ -38,7 +38,7 @@
 - **`/orchestration`** — Use Orca orchestration for structured multi-agent coordination: threaded messages, blockin…
 - **`/trace-grader`** — Score the PATH an agent took (tool choice, ordering, retries, repeatability)
 
-### utils (44)
+### utils (45)
 - **`/brandkit`** — Premium brand-kit image generation skill for creating high-end brand-guidelines boards, lo…
 - **`/cavecrew`** — Decision guide for delegating to caveman-style subagents
 - **`/caveman`** — Ultra-compressed communication mode
@@ -57,6 +57,7 @@
 - **`/extract-site`** — Extract and convert a website or docs site into clean markdown
 - **`/fdk`** — Front-door on-demand cho phát triển framework HOẶC distill/author một skill
 - **`/find-skills`** — Helps users discover and install agent skills when they ask questions like "how do I do X"…
+- **`/frontier-scan`** — Quét biên giới agent-framework 30 ngày qua và đối chiếu overstack theo 8 trục (frontier-ga…
 - **`/full-output-enforcement`** — Overrides default LLM truncation behavior
 - **`/gpt-taste`** — Elite UX/UI & Advanced GSAP Motion Engineer
 - **`/harness-tour`** — Tour
