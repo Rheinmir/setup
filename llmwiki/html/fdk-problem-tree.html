@@ -459,6 +459,19 @@
   },
   {
     "id": "p-19",
+    "parent": "p-01",
+    "title": "pre-commit (17-rule fire-drill) chạy >2 phút mỗi commit — dễ timeout, kill giữa chừng làm hỏng index",
+    "desc": "Issue #18 (phát sinh ngay từ phiên issue-16 & issue-9): hook pre-commit L2 chạy TRỌN 25 hook (nhiều always_run + bash self-test) mỗi lần commit → stash toàn worktree + spawn 25 interpreter → >2 phút; bị kill giữa chừng để lại index hỏng (hàng trăm deletion ảo) + stash-patch chưa trả lại. Gốc (Meadows, không vá triệu chứng): L2 đang NHÂN BẢN trọn CI ngay lúc commit — thừa. Concept [[harness-enforcement-floor]] đã nói rõ CI (L4) mới là SÀN THẬT, L2 chỉ là tiện-nghi-chặn-sớm. VÁ: đưa L2 về đúng vai — chỉ content-validator NHANH theo file-đổi (25→12 hook, pre-commit run 0.16s vs >2ph); dời trọn fire-drill nặng sang CI job 'repo health' (đã có sẵn — không mất phủ) + thêm policy-converters-drift vào harness.yml (chưa có ở CI); ghi đường cứu ~/.cache/pre-commit/patch* vào comment config cho ca bị kill.",
+    "status": "solved",
+    "scope": [
+      "harness"
+    ],
+    "date": "2026-07-04",
+    "solvedBy": ".pre-commit-config.yaml trim 25→12 hook nhanh (file-đổi) · fire-drill nặng → CI repo-health + policy-converters-drift thêm vào harness.yml · đường cứu index-hỏng ghi trong config · căn cứ concept harness-enforcement-floor",
+    "session": "orca-fdk issue-18"
+  },
+  {
+    "id": "p-20",
     "parent": null,
     "title": "skill-usage đếm HỤT: chỉ đọc 1 dir transcript, bỏ mọi phiên worktree (GH#8 follow-up)",
     "desc": "Tool skill-usage.py (GH#8) hardcode 1 thư mục transcript của repo chính → mọi phiên chạy trong git-worktree (mỗi worktree = 1 dir transcript riêng do cwd-mã-hoá khác) bị bỏ đếm hoàn toàn, vi phạm chính tiêu chí 'khớp transcript thật'. Verify: repo có ~7 worktree-dir đều chứa Skill-call mà tool ngó lơ (40 vs 45 lời gọi, fdk 10 vs 14). Kèm bug phụ: timestamp UTC gom ISO-week không quy giờ địa phương (UTC+7) → call khuya gán nhầm tuần. Fix cấu trúc (Meadows: sửa nguồn, không vá số): suy MỌI worktree qua `git worktree list` (deterministic, chỉ repo này — privacy) + `.astimezone()` quy giờ địa phương trước khi gom tuần. Phát hiện bởi fable-planning pass.",
