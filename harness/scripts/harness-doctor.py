@@ -44,6 +44,7 @@ are advisory — they are reported but never change the exit code.
 import argparse
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -138,34 +139,70 @@ def fixture(bad_path, good_path, bad_content=None, good_content=None):
     }
 
 
+# ---------------------------------------------------------------------------
+# Tester result shape. Every build_rN(base) returns a dict:
+#   {green, kind, source, checks: [(label, actual, expected), ...], note}
+# `checks` is generic (str or int cells) so heterogeneous rule KINDS share one
+# board. `kind` names HOW the rail is proven (transparent, per fdk kim-chỉ-nam):
+#   block         — validator exits 2 on BAD / 0 on GOOD (argv + stdin contract)
+#   block-argv    — same but argv-only (no stdin contract)
+#   block-poc     — driven through the vendor-neutral poc (policy.yaml)
+#   block-git     — process-gate proven in a throwaway git repo
+#   side-effect   — non-blocking hook proven by its documented side-effect
+#   wiring        — aggregate/documentary gate proven present + referenced
+# A rule whose checks don't all match is a DARK RAIL (or a dead wire).
+# ---------------------------------------------------------------------------
+def _result(kind, source, checks, extra=""):
+    green = source not in (None, "UNRESOLVED", "ERR") and all(a == e for _, a, e in checks)
+    notes = ["%s=%s (want %s)" % (lbl, a, e) for lbl, a, e in checks if a != e]
+    if extra:
+        notes.append(extra)
+    return {"green": green, "kind": kind, "source": source, "checks": checks,
+            "note": "; ".join(notes)}
+
+
+def _dark(kind, why, checks=None):
+    return {"green": False, "kind": kind, "source": "UNRESOLVED",
+            "checks": checks or [("resolve", "missing", "found")], "note": why}
+
+
+def _content(fname, fx, kind="block"):
+    """Shared tester for content validators: argv + stdin, BAD->2 / GOOD->0."""
+    validator, src = resolve_validator(fname)
+    if validator is None:
+        return _dark(kind, "%s not found — find_validators() returns None, rail fails OPEN" % fname)
+    checks = [
+        ("argv:bad", run_argv(validator, fx["bad_argv"]), 2),
+        ("argv:good", run_argv(validator, fx["good_argv"]), 0),
+        ("stdin:bad", run_stdin(validator, fx["bad_event"]), 2),
+        ("stdin:good", run_stdin(validator, fx["good_event"]), 0),
+    ]
+    return _result(kind, src, checks)
+
+
+# ── Tier 1: content validators (argv + stdin) ───────────────────────────────
 def build_r1(base):
-    # R1: bad = a path inside raw/ (the human inbox); good = a normal path.
     bad = _w(base / "llmwiki" / "raw" / "inbox.md", "# dropped by a human\n")
     good = _w(base / "llmwiki" / "wiki" / "concepts" / "clean.md", "# normal path\n")
-    return fixture(bad, good)
+    return _content("no_write_raw.py", fixture(bad, good))
 
 
 def build_r2(base):
-    # R2: bad = wiki content file with no '## Origin'; good = the same with one.
     bad_c = "# Concept\n\nBody text but no origin section.\n"
-    good_c = ("# Concept\n\nBody text.\n\n## Origin\n\n"
-              "Distilled from raw/example.md (commit abc1234).\n")
+    good_c = "# Concept\n\nBody text.\n\n## Origin\n\nDistilled from raw/example.md (commit abc1234).\n"
     bad = _w(base / "wiki" / "concepts" / "no-origin.md", bad_c)
     good = _w(base / "wiki" / "concepts" / "with-origin.md", good_c)
-    return fixture(bad, good, bad_c, good_c)
+    return _content("origin_required.py", fixture(bad, good, bad_c, good_c))
 
 
 def build_r5(base):
-    # R5: bad = a .md loose at wiki/ root; good = the same under concepts/.
     bad = _w(base / "wiki" / "loose.md", "# wrong place\n")
     good = _w(base / "wiki" / "concepts" / "proper.md", "# right place\n")
-    return fixture(bad, good)
+    return _content("folder_structure.py", fixture(bad, good))
 
 
 def build_r7(base):
-    # R7: bad  = a proposed draft missing the Agent table and the sequence link.
-    #     good = a complete draft + a matching sequence html (one diagram with a
-    #            visible prose description per planned task).
+    # bad = proposed draft missing the Agent table + sequence link; good = complete.
     draft = base / "wiki" / "sources" / "draft"
     seq_html = (
         "<!doctype html><html><head><style>.msg{opacity:1}</style></head><body>\n"
@@ -177,112 +214,308 @@ def build_r7(base):
     )
     _w(draft / "feature-seq.html", seq_html)
     good_c = (
-        "---\ntype: draft\n---\n"
-        "# Feature X — proposal\n\n"
-        "**Status:** proposed\n\n"
-        "## Context\n"
-        "Da query wiki: lien quan [[rule-registry]] va ADR-008 ve the kit (force-query R7-f).\n\n"
-        "## Plan\n"
-        "- [ ] task one — distill raw\n"
-        "- [ ] task two — update index\n\n"
-        "## Agent Task Assignment\n"
-        "| Task | Agent | Notes |\n"
-        "|------|-------|-------|\n"
-        "| task one | claude | distill |\n"
-        "| task two | codex | index |\n\n"
+        "---\ntype: draft\n---\n# Feature X — proposal\n\n**Status:** proposed\n\n"
+        "## Context\nDa query wiki: lien quan [[rule-registry]] va ADR-008 ve the kit (force-query R7-f).\n\n"
+        "## Plan\n- [ ] task one — distill raw\n- [ ] task two — update index\n\n"
+        "## Agent Task Assignment\n| Task | Agent | Notes |\n|------|-------|-------|\n"
+        "| task one | claude | distill |\n| task two | codex | index |\n\n"
         "**Sequence diagram**: [seq](feature-seq.html)\n"
     )
-    bad_c = (
-        "---\ntype: draft\n---\n"
-        "# Feature Y — proposal\n\n"
-        "**Status:** proposed\n\n"
-        "## Plan\n"
-        "- [ ] only task\n"
-    )
+    bad_c = ("---\ntype: draft\n---\n# Feature Y — proposal\n\n**Status:** proposed\n\n"
+             "## Plan\n- [ ] only task\n")
     good = _w(draft / "feature.md", good_c)
     bad = _w(draft / "feature-bad.md", bad_c)
-    # R7 always reads from disk and ignores stdin `content`, so no inline content.
-    return fixture(bad, good)
+    return _content("proposal_complete.py", fixture(bad, good))  # reads disk; no inline content
 
 
 def build_r9(base):
-    # R9: bad = wiki concept with no YAML frontmatter; good = with `type:`.
     bad_c = "# Concept\n\nNo frontmatter block at the top.\n"
     good_c = "---\ntype: concept\n---\n\n# Concept\n\nHas frontmatter.\n"
     bad = _w(base / "wiki" / "concepts" / "no-fm.md", bad_c)
     good = _w(base / "wiki" / "concepts" / "with-fm.md", good_c)
-    return fixture(bad, good, bad_c, good_c)
+    return _content("okf_frontmatter.py", fixture(bad, good, bad_c, good_c))
 
 
 def build_r14(base):
-    # R14: bad = write vào kho pattern protected llmwiki/patterns/; good = write nơi khác.
     bad = _w(base / "llmwiki" / "patterns" / "core.md", "# protected pattern\n")
     good = _w(base / "llmwiki" / "wiki" / "concepts" / "ok.md", "# normal\n")
-    return fixture(bad, good)
+    return _content("patterns_guard.py", fixture(bad, good))
 
 
 def build_r16(base):
-    # R16: bad = html dưới llmwiki/html/ KHÔNG chứa path của chính nó; good = có path (footer).
     bad = base / "llmwiki" / "html" / "report-bad.html"
     good = base / "llmwiki" / "html" / "report-good.html"
     _w(bad, "<!doctype html><body><h1>report</h1><p>khong khai path</p></body>")
-    # nhúng CẢ path resolved lẫn path thô — validator có thể so bản .resolve() (macOS /var↔/private/var)
     _w(good, f"<!doctype html><body><h1>report</h1>"
              f"<footer>File: <code>{good.resolve()}</code> · <code>{good}</code></footer></body>")
-    return fixture(bad, good)
+    return _content("report_show_path.py", fixture(bad, good))
+
+
+# ── Tier 1b: argv-only / custom-flag content validators ─────────────────────
+def build_r13(base):
+    # R13: architecture row in decisions.md must reference an ADR-N (or (no-adr: …)).
+    v, src = resolve_validator("decision_adr.py")
+    if v is None:
+        return _dark("block-argv", "decision_adr.py not found")
+    # decision_adr parse cần 5 cột: Date | Decision | Type | Context | Outcome.
+    hdr = "| Date | Decision | Type | Context | Outcome |\n|------|----------|------|---------|---------|\n"
+    bad = _w(base / "bad" / "decisions.md", hdr + "| 2026-07-03 | chọn X | architecture | ctx | chưa quyết |\n")
+    good = _w(base / "good" / "decisions.md", hdr + "| 2026-07-03 | chọn X | architecture | ctx | ADR-1 |\n")
+    checks = [("argv:bad", run_argv(v, [str(bad)]), 2),
+              ("argv:good", run_argv(v, [str(good)]), 0)]
+    return _result("block-argv", src, checks)
+
+
+def build_r15(base):
+    # R15: commit message crediting AI must be blocked (--commit-msg <file>).
+    v, src = resolve_validator("no_ai_attribution.py")
+    if v is None:
+        return _dark("block-commitmsg", "no_ai_attribution.py not found")
+    bad = _w(base / "MSG_BAD", "feat: x\n\nCo-Authored-By: Claude <noreply@anthropic.com>\n")
+    good = _w(base / "MSG_GOOD", "feat: x\n\nmot commit sach\n")
+    checks = [("bad", run_argv(v, ["--commit-msg", str(bad)]), 2),
+              ("good", run_argv(v, ["--commit-msg", str(good)]), 0)]
+    return _result("block-commitmsg", src, checks)
+
+
+def build_r3(base):
+    # R3: wiki/index.md must list exactly the wiki content files (--wiki-dir <dir>).
+    v, src = resolve_validator("index_sync.py")
+    if v is None:
+        return _dark("block-dir", "index_sync.py not found")
+    fm = "---\ntype: concept\n---\n# foo\n\n## Origin\nx\n"
+    badw = base / "badwiki"
+    _w(badw / "concepts" / "foo.md", fm)
+    _w(badw / "index.md", "# Index\n")                       # foo.md missing → mismatch
+    goodw = base / "goodwiki"
+    _w(goodw / "concepts" / "foo.md", fm)
+    _w(goodw / "index.md", "# Index\n\n| [foo](concepts/foo.md) | concept |\n")
+    checks = [("dir:bad", run_argv(v, ["--wiki-dir", str(badw)]), 2),
+              ("dir:good", run_argv(v, ["--wiki-dir", str(goodw)]), 0)]
+    return _result("block-dir", src, checks)
+
+
+# ── Tier 2: vendor-neutral poc (policy.yaml-driven) ─────────────────────────
+def build_r11(base):
+    # R11: *-seq.html with diagram-box but no liquid-glass markers must be blocked.
+    poc = REPO / "harness" / "poc-vendor-neutral" / "bin" / "llmwiki-validate.py"
+    if not poc.is_file():
+        return _dark("block-poc", "llmwiki-validate.py (poc) not found")
+    try:
+        import yaml  # noqa: F401
+    except Exception:
+        return {"green": True, "kind": "block-poc-degraded", "source": "poc",
+                "checks": [("pyyaml", "absent", "absent")],
+                "note": "pyyaml absent → poc fail-open by design; R11 still gated at repo-tier CI"}
+    d = base / "llmwiki" / "html"
+    box = '<div class="diagram-box">step</div>'
+    bad = d / "x-seq.html"
+    _w(bad, f"<!doctype html><body>{box}<code>{bad}</code></body>")          # flat = violate
+    glass = ("<style>body{background:linear-gradient(180deg,#f7fbff,#eef);}"
+             ".c{backdrop-filter:blur(8px);box-shadow:inset 0 1px 0 rgba(255,255,255,.8);}</style>")
+    good = d / "y-seq.html"
+    _w(good, f"<!doctype html><head>{glass}</head><body>{box}<code>{good}</code></body>")
+    checks = [("path:bad", run_argv(poc, ["path", str(bad)]), 2),
+              ("path:good", run_argv(poc, ["path", str(good)]), 0)]
+    return _result("block-poc", "poc", checks)
+
+
+# ── Tier 3: process gate proven in a throwaway git repo ─────────────────────
+def _git(cwd, *args):
+    return subprocess.run(
+        ["git", "-c", "user.email=t@t", "-c", "user.name=t", "-c", "commit.gpgsign=false", *args],
+        cwd=str(cwd), capture_output=True, text=True,
+        env={**os.environ, "GIT_TERMINAL_PROMPT": "0"})
+
+
+def build_r12(base):
+    # R12: pull-gate gate2 must block when local is BEHIND remote, pass when up-to-date.
+    gate = REPO / "harness" / "poc-vendor-neutral" / "bin" / "pull-gate.sh"
+    if not gate.is_file():
+        return _dark("block-git", "pull-gate.sh not found")
+    base.mkdir(parents=True, exist_ok=True)
+    remote, behind, ahead = base / "remote.git", base / "behind", base / "ahead"
+    subprocess.run(["git", "init", "-q", "--bare", "-b", "main", str(remote)], capture_output=True)
+    _git(base, "clone", "-q", str(remote), str(behind))
+    _w(behind / "f.txt", "1")
+    _git(behind, "add", "."); _git(behind, "commit", "-q", "-m", "a"); _git(behind, "push", "-q", "origin", "main")
+    _git(base, "clone", "-q", str(remote), str(ahead))
+    _w(ahead / "f.txt", "2")
+    _git(ahead, "add", "."); _git(ahead, "commit", "-q", "-m", "b"); _git(ahead, "push", "-q", "origin", "main")
+    env = {**os.environ, "GIT_TERMINAL_PROMPT": "0", "PULL_GATE_FRESH_SECS": "0"}
+    bad = subprocess.run(["bash", str(gate), "gate2"], cwd=str(behind),
+                         capture_output=True, text=True, env=env).returncode
+    good = subprocess.run(["bash", str(gate), "gate2"], cwd=str(ahead),
+                          capture_output=True, text=True, env=env).returncode
+    return _result("block-git", "pull-gate.sh",
+                   [("behind:block", bad, 2), ("uptodate:pass", good, 0)])
+
+
+# ── Tier 4: non-blocking hooks proven by their documented side-effect ───────
+def build_r4(base):
+    # R4: audit() must append a machine log line for every tool event.
+    import importlib
+    if str(HOOKS_DIR) not in sys.path:
+        sys.path.insert(0, str(HOOKS_DIR))
+    try:
+        hooklib = importlib.import_module("hooklib")
+    except Exception as e:
+        return _dark("side-effect", "hooklib import failed: %s" % e)
+    proj = base / "proj"
+    proj.mkdir(parents=True, exist_ok=True)
+    saved = os.environ.pop("CLAUDE_PROJECT_DIR", None)   # else audit lands in the real repo
+    try:
+        hooklib.audit({"cwd": str(proj), "tool_name": "Write",
+                       "tool_input": {"file_path": "x.md"}, "session_id": "s1"}, "PostToolUse")
+    finally:
+        if saved is not None:
+            os.environ["CLAUDE_PROJECT_DIR"] = saved
+    import datetime as _dt
+    logf = proj / ".claude" / "audit" / (_dt.date.today().isoformat() + ".jsonl")
+    logged = "1" if (logf.is_file() and logf.read_text(encoding="utf-8").strip()) else "0"
+    control = "1" if (base / "ctrl" / ".claude" / "audit").exists() else "0"  # never created
+    return _result("side-effect", "hooks",
+                   [("event:logged", logged, "1"), ("no-event:silent", control, "0")])
+
+
+def build_r8(base):
+    # R8: SessionStart must emit its orientation/health signal in an oriented project.
+    hook = HOOKS_DIR / "session_start.py"
+    if not hook.is_file():
+        return _dark("side-effect", "session_start.py not found")
+    proj = base / "proj"
+    (proj / "fdk" / "wiki").mkdir(parents=True, exist_ok=True)
+    _w(proj / "fdk" / "CAPABILITIES.md", "# caps\n")
+    _w(proj / ".template-manifest.json", "{}\n")   # else main() exits before orient()
+    env = {k: v for k, v in os.environ.items() if k != "CLAUDE_PROJECT_DIR"}
+    p = subprocess.run([PY, str(hook)], input=json.dumps({"cwd": str(proj), "session_id": "s"}),
+                       capture_output=True, text=True, env=env, timeout=30)
+    fired = "1" if (p.returncode == 0 and "orientation" in p.stdout.lower()) else "0"
+    extra = "" if fired == "1" else "exit=%s stdout=%r" % (p.returncode, p.stdout[:80])
+    return _result("side-effect", "hooks", [("oriented:signal", fired, "1")], extra)
+
+
+def build_r10(base):
+    # R10: docs-gate must inject a directive when pillars are missing, stay silent when present.
+    hook = HOOKS_DIR / "user_prompt_submit.py"
+    if not hook.is_file():
+        return _dark("side-effect", "user_prompt_submit.py not found")
+    proj = base / "proj"
+    (proj / "llmwiki" / "wiki").mkdir(parents=True, exist_ok=True)
+    env = {k: v for k, v in os.environ.items() if k != "CLAUDE_PROJECT_DIR"}
+    env["LLMWIKI_DOCS_GATE_EVERY"] = "1"
+
+    def run(prompt, sid):
+        return subprocess.run(
+            [PY, str(hook)],
+            input=json.dumps({"cwd": str(proj), "session_id": sid, "prompt": prompt, "transcript_path": ""}),
+            capture_output=True, text=True, env=env, timeout=30)
+    miss = run("hello world khong tu khoa nao", "sA")
+    pres = run("da dung council va docs-site-macos roi", "sB")
+    b = "1" if "docs-gate" in miss.stdout.lower() else "0"
+    g = "1" if "docs-gate" in pres.stdout.lower() else "0"
+    return _result("side-effect", "hooks",
+                   [("missing:inject", b, "1"), ("present:silent", g, "0")])
+
+
+def build_r17(base):
+    # R17: SessionEnd flush must append a stub node when a framework surface was touched.
+    import importlib.util
+    if str(HOOKS_DIR) not in sys.path:
+        sys.path.insert(0, str(HOOKS_DIR))
+    hook = HOOKS_DIR / "session_end.py"
+    if not hook.is_file():
+        return _dark("side-effect", "session_end.py not found")
+    spec = importlib.util.spec_from_file_location("session_end_probe", hook)
+    m = importlib.util.module_from_spec(spec)
+    try:
+        spec.loader.exec_module(m)
+    except Exception as e:
+        return _dark("side-effect", "session_end import failed: %s" % e)
+
+    def mkrepo(name, touch_fw):
+        # Commit the tree + a skills/ placeholder FIRST so git reports later changes at
+        # FILE granularity — an all-new dir is collapsed to "skills/"/"llmwiki/" by
+        # `git status`, which would read as a framework touch in both repos.
+        r = base / name
+        r.mkdir(parents=True, exist_ok=True)
+        subprocess.run(["git", "init", "-q", str(r)], capture_output=True)
+        tree = r / "llmwiki" / "html" / "problem-tree.html"
+        _w(tree, '<script type="application/json" id="tree-data">[]</script>')
+        _w(r / "skills" / ".keep", "")
+        _git(r, "add", "-A"); _git(r, "commit", "-q", "-m", "init")
+        if touch_fw:
+            _w(r / "skills" / "x" / "SKILL.md", "# framework surface touched\n")  # untracked file, tracked dir
+        return r, tree
+
+    def count(tree):
+        mm = re.search(r'id="tree-data">\s*(\[.*?\])\s*</script>', tree.read_text(encoding="utf-8"), re.S)
+        return len(json.loads(mm.group(1))) if mm else -1
+
+    r1, t1 = mkrepo("fw", True)
+    n0 = count(t1); m.flush_problem_tree(r1, "sess1234"); n1 = count(t1)
+    r2, t2 = mkrepo("nofw", False)
+    m0 = count(t2); m.flush_problem_tree(r2, "sess1234"); m1 = count(t2)
+    return _result("side-effect", "hooks",
+                   [("fw-touch:node-added", "1" if n1 > n0 else "0", "1"),
+                    ("no-fw:no-node", "1" if m1 == m0 else "0", "1")])
+
+
+# ── Tier 5: aggregate / documentary gate (wiring present + referenced) ──────
+def build_r6(base):
+    # R6 = verify-before-commit is the COMPOSITE commit gate (pre-commit + CI). It has no
+    # single BAD fixture to block; its dark-rail is "the gate is not wired". Prove presence.
+    if not PRECOMMIT_CFG.is_file():
+        return {"green": False, "kind": "wiring", "source": "repo",
+                "checks": [("precommit-config", "missing", "present")],
+                "note": "no .pre-commit-config.yaml → R6 commit gate is absent"}
+    txt = PRECOMMIT_CFG.read_text(encoding="utf-8", errors="ignore")
+    refs = any(tok in txt for tok in
+               ("no_ai_attribution", "decision_adr", "llmwiki-validate", "validators", "harness"))
+    ci = (REPO / ".github" / "workflows" / "harness.yml").is_file()
+    return _result("wiring", "repo",
+                   [("precommit-refs-gate", "1" if refs else "0", "1"),
+                    ("ci-workflow", "1" if ci else "0", "1")])
 
 
 RULES = [
-    ("R1", "no_write_raw.py", "no-write-raw", build_r1),
-    ("R2", "origin_required.py", "origin-required", build_r2),
-    ("R5", "folder_structure.py", "folder-structure", build_r5),
-    ("R7", "proposal_complete.py", "proposal-complete", build_r7),
-    ("R9", "okf_frontmatter.py", "okf-frontmatter", build_r9),
-    ("R14", "patterns_guard.py", "patterns-protected", build_r14),
-    ("R16", "report_show_path.py", "report-show-path", build_r16),
+    ("R1", "no-write-raw", build_r1),
+    ("R2", "origin-required", build_r2),
+    ("R3", "index-sync", build_r3),
+    ("R4", "audit-log", build_r4),
+    ("R5", "folder-structure", build_r5),
+    ("R6", "verify-before-commit", build_r6),
+    ("R7", "proposal-complete", build_r7),
+    ("R8", "session-health", build_r8),
+    ("R9", "okf-frontmatter", build_r9),
+    ("R10", "docs-gate", build_r10),
+    ("R11", "seq-html-glass", build_r11),
+    ("R12", "pull-before-change", build_r12),
+    ("R13", "decision-to-adr", build_r13),
+    ("R14", "patterns-protected", build_r14),
+    ("R15", "no-ai-attribution", build_r15),
+    ("R16", "report-show-path", build_r16),
+    ("R17", "problem-tree-flush", build_r17),
 ]
 
 
 # ---------------------------------------------------------------------------
-# Run the bite-tests.
+# Run the bite-tests. Each build_rN gets its own temp subdir so fixtures never
+# collide, and returns the generic {green, kind, source, checks, note} shape.
 # ---------------------------------------------------------------------------
 def run_bite_tests(base):
     results = []
     resolved_src = None
-    for rid, fname, label, builder in RULES:
-        validator, src = resolve_validator(fname)
-        if resolved_src is None and src != "UNRESOLVED":
-            resolved_src = src
-        rule = {"id": rid, "validator": fname, "label": label, "source": src}
-        if validator is None:
-            rule.update({
-                "green": False,
-                "argv": {"bad": None, "good": None},
-                "stdin": {"bad": None, "good": None},
-                "note": "validator file not found — find_validators() would return "
-                        "None and the rail fails OPEN (dark rail).",
-            })
-            results.append(rule)
-            continue
-        fx = builder(base / rid)
-        argv_bad = run_argv(validator, fx["bad_argv"])
-        argv_good = run_argv(validator, fx["good_argv"])
-        stdin_bad = run_stdin(validator, fx["bad_event"])
-        stdin_good = run_stdin(validator, fx["good_event"])
-        rule["argv"] = {"bad": argv_bad, "good": argv_good}
-        rule["stdin"] = {"bad": stdin_bad, "good": stdin_good}
-        green = argv_bad == 2 and argv_good == 0 and stdin_bad == 2 and stdin_good == 0
-        rule["green"] = green
-        notes = []
-        if argv_bad != 2:
-            notes.append("argv BAD not blocked (exit %s, want 2)" % argv_bad)
-        if argv_good != 0:
-            notes.append("argv GOOD wrongly blocked (exit %s, want 0)" % argv_good)
-        if stdin_bad != 2:
-            notes.append("stdin BAD not blocked (exit %s, want 2)" % stdin_bad)
-        if stdin_good != 0:
-            notes.append("stdin GOOD wrongly blocked (exit %s, want 0)" % stdin_good)
-        rule["note"] = "; ".join(notes)
+    for rid, label, builder in RULES:
+        try:
+            rule = builder(base / rid)
+        except Exception as e:
+            rule = {"green": False, "kind": "error", "source": "ERR",
+                    "checks": [("exec", "raised", "clean")], "note": "tester crashed: %s" % e}
+        rule["id"] = rid
+        rule["label"] = label
+        if resolved_src is None and rule.get("source") not in (None, "UNRESOLVED", "ERR", "repo", "poc", "hooks", "pull-gate.sh"):
+            resolved_src = rule["source"]
         results.append(rule)
     return results, (resolved_src or "UNRESOLVED")
 
@@ -312,7 +545,10 @@ def probe_settings():
 
 
 def probe_validators_resolvable():
-    names = [fname for _, fname, _, _ in RULES] + ["index_sync.py"]
+    names = ["no_write_raw.py", "origin_required.py", "folder_structure.py",
+             "proposal_complete.py", "okf_frontmatter.py", "patterns_guard.py",
+             "report_show_path.py", "decision_adr.py", "no_ai_attribution.py",
+             "index_sync.py"]
     srcs = {}
     unresolved = []
     for n in names:
@@ -421,11 +657,9 @@ def print_board(rules, resolved_src, probes, c):
           + c("  (BAD must block -> exit 2 | GOOD must pass -> exit 0)", "dim"))
     for r in rules:
         icon = c("✓", "green") if r["green"] else c("✗", "red")
-        argv = "argv bad->%s good->%s" % (
-            fmt_cell(r["argv"]["bad"], 2, c), fmt_cell(r["argv"]["good"], 0, c))
-        std = "stdin bad->%s good->%s" % (
-            fmt_cell(r["stdin"]["bad"], 2, c), fmt_cell(r["stdin"]["good"], 0, c))
-        line = "  %s %-3s %-17s %s | %s" % (icon, r["id"], r["label"], argv, std)
+        cells = "  ".join("%s->%s" % (lbl, fmt_cell(a, e, c)) for lbl, a, e in r["checks"])
+        line = "  %s %-3s %-19s %s %s" % (
+            icon, r["id"], r["label"], c("[%-18s]" % r["kind"], "dim"), cells)
         print(line)
         if r["note"]:
             print(c("        ^ %s" % r["note"], "red" if not r["green"] else "dim"))

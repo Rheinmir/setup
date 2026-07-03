@@ -19,9 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-03 13:15:12 | `file.write` | fdk/tools/whiteboard-skill-map.py · tool=Write · actor=agent · prev=0c8a499bbe8cd8ce1b2dccb62b77b00e8a819e376560bc2aab40 |
-| 2026-07-03 13:15:59 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=967e308b15398a23f7321739daabd9718423f647a58cdad06fa7e |
-| 2026-07-03 13:21:39 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=f8d63f67f4669c9cf8990d14a5287e8c1f3d2eece041dfb684184db80c5a |
 | 2026-07-03 13:27:30 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=50e9a2ee3305cb6b2fa09356f89186531ef4ad0e9d265e803a557de335d2 |
 | 2026-07-03 13:27:41 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=fe3155961c842e050aaa38fb38adf6eb675b76ee9fdbf2a66a2e4baf5a21 |
 | 2026-07-03 13:28:05 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=8bec0ac3c15a930ea96c7e24585b65a7b635074a97de8892faf59b15fd27 |
@@ -59,6 +56,9 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-03 14:56:12 | `file.write` | llmwiki/html/030726-secondary-memory-seq.html · tool=Write · actor=agent · prev=44b327d667e1acbdabfe3a82b37ee5a1b37cc712 |
 | 2026-07-03 15:03:36 | `file.write` | harness/scripts/scratch-log.py · tool=Write · actor=agent · prev=95cd91977ba1beca3406f49c78935e40ec6745f3485a546c349fa89 |
 | 2026-07-03 15:04:19 | `file.write` | harness/scripts/scratch-log.py · tool=Edit · actor=agent · prev=1ec9febb70673674fefb6719a5cc2c5527db07d97180d55daf96dfc5 |
+| 2026-07-03 15:10:55 | `file.write` | llmwiki/.claude/hooks/post_tool_use.py · tool=Edit · session=b73d2c47 · actor=agent · prev=653b7c495131d63f31be8217add24 |
+| 2026-07-03 15:11:09 | `file.write` | test/x.py · tool=Edit · session=b73d2c47 · actor=agent · prev=84e72df3e4824c8ba67cd8a7b31ddae8876e129d33dd53d8a70dbc6857 |
+| 2026-07-03 15:11:49 | `file.write` | fdk/tools/memory-map.py · tool=Write · session=b73d2c47 · actor=agent · prev=f3d244f812aa97b3b4f3f5047be305d206886513479 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
