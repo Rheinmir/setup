@@ -128,3 +128,10 @@ mechanisms:
     surface: [maintain]
     desc: "TỰ BẢO TRÌ: cài bản mới + self-heal (backfill Origin/index/OKF) + refresh bản đồ năng lực trong một lệnh"
     live_probe: skills/harness-update/SKILL.md
+
+  - id: code-state
+    name: "code-state (tự tường thuật)"
+    kind: tool
+    surface: [mechanism]
+    desc: "overstack tự tường thuật trạng thái code: FACT có [nguồn]+lệnh tái tạo, tách FACT/OPINION (council-advisory); medic probe selfstate gác reproducibility"
+    live_probe: fdk/tools/code-state.py

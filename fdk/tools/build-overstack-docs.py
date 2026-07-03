@@ -765,6 +765,32 @@ def sections(root: Path):
         "<p>Đọc kết quả medic theo verdict: <b>KHOẺ</b> (xanh) · <b>KHOẺ có cảnh báo</b> (vàng — nợ đã biết) · <b>FAIL</b> (đỏ — có rail đen/docs lệch/code vỡ, đừng push). <code>/harness-update</code> theo exit code: <code>0</code> sạch · <code>3</code> còn nợ xử tay một lần · khác = lỗi hạ tầng.</p>",
     ]))
 
+    # ── code-state self-narration (Phase 2, hợp đồng cứng council-advisory 030726) ──
+    _n_val = len(list((root / "harness" / "validators").glob("*.py"))) if (root / "harness" / "validators").is_dir() else 0
+    _n_hook = len(list((root / "llmwiki" / ".claude" / "hooks").glob("*.py"))) if (root / "llmwiki" / ".claude" / "hooks").is_dir() else 0
+    _facts = [  # CHỈ FACT ỔN ĐỊNH (đổi thì regen cùng commit → docs-probe xanh); mỗi dòng có nguồn + lệnh
+        ("skill", n_sk, "đĩa", "ls skills/*/SKILL.md | wc -l"),
+        ("rule", n_rules, "policy", "grep -c 'id: R' harness/poc-vendor-neutral/policy.yaml"),
+        ("validator", _n_val, "đĩa", "ls harness/validators/*.py | wc -l"),
+        ("hook", _n_hook, "đĩa", "ls llmwiki/.claude/hooks/*.py | wc -l"),
+        ("cơ-chế phòng thủ", len(mechs), "manifest", "grep -c '- id:' harness/mechanisms.yaml"),
+        ("harness script", n_scripts, "đĩa", "ls harness/scripts/*.py | wc -l"),
+    ]
+    _fact_rows = "".join(
+        f'<tr><td><b>{esc(l)}</b></td><td><b>{v}</b></td>'
+        f'<td><span class="tag">{esc(s)}</span></td><td><code>{esc(c)}</code></td></tr>'
+        for l, v, s, c in _facts)
+    S.append(("codestate", "Trạng thái hiện thời", "12 · Trạng thái", "Trạng thái code hiện thời — tự tường thuật (FACT có nguồn)", [
+        "<p class=\"lead\">overstack <b>tự tường thuật</b> trạng thái của chính nó theo một hợp đồng cứng (council-advisory): <b>một dòng FACT = một nguồn máy-đọc = một lệnh tái tạo được</b>. Không có \"prose mồ côi\"; mọi con số dưới đây bạn tự chạy lệnh sẽ ra y hệt.</p>",
+        "<h3 class=\"sub\">FACT ổn định (đếm từ đĩa — bake trong trang này, gác bởi docs-probe + probe narrative)</h3>",
+        f"<table class=\"tbl\"><thead><tr><th>chỉ số</th><th>giá trị</th><th>nguồn</th><th>lệnh tái tạo</th></tr></thead><tbody>{_fact_rows}</tbody></table>",
+        "<div class=\"note\"><h4>FACT động (git HEAD · dirty · bộ nhớ · code-graph · verdict medic) — xem LIVE, KHÔNG bake</h4>"
+        "<p style=\"margin:0 0 8px\">Các chỉ số ĐỘNG (đổi mỗi commit) cố tình KHÔNG bake vào trang tĩnh này — bake cứng thì docs-probe sẽ đỏ vĩnh viễn sau mỗi commit (chicken-egg). Chạy lệnh để lấy trạng thái <b>hiện tại, luôn đúng</b>:</p>"
+        "<pre class='code-block'><code>python3 fdk/tools/code-state.py          # bảng FACT trạng thái code (LIVE)\npython3 fdk/tools/code-state.py --check  # chứng minh tái tạo được (render 2 lần, diff)</code></pre></div>",
+        "<div class=\"note\" style=\"border-color:#c9a227;background:rgba(255,193,7,.07)\"><h4>⚠ Ranh giới FACT ↔ OPINION</h4>"
+        "<p style=\"margin:0\">Bảng trên chỉ chứa <b>SỰ KIỆN đo được</b> (có nguồn + lệnh). Mọi câu <i>diễn giải</i> — \"code sạch\", \"kiến trúc tốt\", \"đã ổn định\" — là <b>Ý KIẾN của người</b>, không thuộc lớp FACT và không xuất hiện ở đây (Feynman: cái tái tạo-được-bởi-người-lạ mới là dữ liệu). Verdict sức khoẻ khách quan duy nhất: <code>python3 fdk/tools/medic.py</code>.</p></div>",
+    ]))
+
     S.append(("fdk", "FDK · dev overstack", "12 · Mở rộng", "FDK — phát triển chính overstack", [
         "<p style=\"font-size:12.5px;color:#b46a00;background:rgba(255,149,0,.1);border-radius:8px;padding:6px 12px;display:inline-block;margin:0 0 6px\">👷 Hai tab này (FDK + Dev cái mới) dành cho người <b>PHÁT TRIỂN chính overstack</b> — bỏ qua nếu bạn chỉ DÙNG overstack cho dự án của mình.</p>",
         "<p class=\"lead\">Khi bạn muốn sửa CHÍNH overstack (thêm skill/rule/validator/hook), gọi <code>/fdk</code> — front-door on-demand. KHÔNG auto-bơm mọi phiên (phần lớn phiên là dùng overstack cho DỰ ÁN KHÁC — ADR-004).</p>",
@@ -834,7 +860,7 @@ def render(root: Path) -> str:
                ("Tổng quan", ["what", "reference", "install"]),
                ("3 nền tảng", ["wiki", "harness", "skills"]),
                ("Quy trình & điều phối", ["workflow", "orca"]),
-               ("Đánh giá & truy vết", ["advanced", "awareness", "runtime"]),
+               ("Đánh giá & truy vết", ["advanced", "awareness", "runtime", "codestate"]),
                ("An toàn khi mở rộng", ["bnal"]),
                ("Vận hành", ["maintain"]),
                ("👷 Phát triển overstack", ["fdk", "newfeature"])]
@@ -846,7 +872,7 @@ def render(root: Path) -> str:
     ICON = {"quickstart": "🚀", "what": "📖", "install": "📦", "wiki": "📚", "harness": "🛡️",
             "skills": "🧰", "workflow": "🔄", "orca": "🐳", "advanced": "⚖️", "awareness": "🧭",
             "runtime": "📡", "bnal": "🧩", "maintain": "🔧", "reference": "🗺️", "fdk": "👷",
-            "newfeature": "✅"}
+            "newfeature": "✅", "codestate": "📊"}
     nav = ['<div class="logo">overstack<small>tài liệu chính thức · sinh từ đĩa</small></div>']
     for grp, ids in grouped:
         nav.append(f'<div class="grp">{grp}</div>')

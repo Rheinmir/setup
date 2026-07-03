@@ -138,6 +138,25 @@ def p_narrative():
     return "ok", f"{len(names)} cơ-chế LIVE đều có mặt + đúng bản gốc", ""
 
 
+def p_selfstate():
+    """code-state self-narration (Phase 2) còn TRUNG THỰC không (council-advisory):
+      - reproducibility (Feynman): code-state.py --check phải xanh (render 2 lần byte-identical);
+      - presence: overstack.html phải có section 'Trạng thái hiện thời'.
+    (Staleness của FACT ổn định do docs-probe lo — regen đổi html → docs FAIL nếu quên.)"""
+    cs = ROOT / "fdk/tools/code-state.py"
+    page = ROOT / "llmwiki/html/overstack.html"
+    if not cs.exists():
+        return "skip", "code-state.py chưa có", ""
+    rc, out = sh([PY, str(cs), "--check"], timeout=200)
+    if rc != 0:
+        return "fail", "code-state KHÔNG tái tạo được (render 2 lần lệch — nondeterminism)", \
+               "python3 fdk/tools/code-state.py --check"
+    if page.exists() and "Trạng thái hiện thời" not in page.read_text(encoding="utf-8", errors="ignore"):
+        return "fail", "overstack.html THIẾU section 'Trạng thái hiện thời'", \
+               "python3 fdk/tools/build-overstack-docs.py  # regen"
+    return "ok", "code-state tái tạo được + section có mặt", ""
+
+
 def p_code():
     """Code lành — mọi .py trong harness/ + fdk/tools compile sạch (không rail gãy cú pháp)."""
     import py_compile
@@ -174,6 +193,7 @@ PROBES = [
     ("backstop", ["backstop", "git", "commit"],  p_backstop),
     ("docs",     ["docs", "capabilities"],       p_docs),
     ("narrative", ["narrative", "docs", "drift"], p_narrative),
+    ("selfstate", ["selfstate", "state", "narrative"], p_selfstate),
     ("code",     ["code", "health"],             p_code),
     ("eval",     ["eval", "baseline"],           p_eval),
 ]
