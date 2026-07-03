@@ -19,46 +19,46 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-02 17:34:19 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=e2d94704de420fc5a11e7ee0c24b936ed54d584028a9cacf9bcd4964b |
-| 2026-07-02 17:34:30 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=f9a7930d2bf741ceb4ccd8a48f32eb0ca9526ce4bdf585934dfd17e7d |
-| 2026-07-02 17:34:37 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=6627569fd7c97400616897d1836b200244abca36fdd5f9e8c07d051f8 |
-| 2026-07-02 17:34:44 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=6700c11311fcd975fe9006f65a05553ed9661573c7fcae2af5fc87c49 |
-| 2026-07-02 17:34:55 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=9291895738b288c5001209cf88ceb9f27a22e5e737787237e61d4bdfb |
-| 2026-07-02 17:37:02 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=4583f0190f4fff1f5eec8f6614da258002f0f3bf52d95307af9f41c30 |
-| 2026-07-02 17:37:20 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=f0114d1a0d8fffc5ec373aba72787650ca483a7a59de1c8b206d96a21 |
-| 2026-07-02 17:37:31 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=bce5911aa0bcf0336bddcd14fd2e8ee88e186fe7ba56fa6f8f61538d9 |
-| 2026-07-02 17:38:04 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=312fa9ad4f6612c749a1f2ed254d9e97df711da46bc63a144d5ff453d |
-| 2026-07-02 17:38:14 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=9e23e5876bd116980258a390ad87970d85a10b9fdd1832554d9c6bc29 |
-| 2026-07-02 17:41:38 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=0b6b4cab08b5df84e25d5c5c16104de2123d17f44e02f3ac46e814957 |
-| 2026-07-02 17:41:46 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=9a7d8dccd71e13631d1119fda182dddaf0d24be53c4775287bcfec7c8 |
-| 2026-07-02 17:41:53 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=560aaf2b155cb4d7f6ce53c519e177e445d1db2a13f7f8e73ba3c01ab |
-| 2026-07-02 17:42:01 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=e9dd6bf5562d16bddcbc51778a60c500d3cb058f9f122dbed65a970e8 |
-| 2026-07-02 17:42:13 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=93d82377683589fb73d5a8a604770667ee6996c746e549ca420d7c91c |
-| 2026-07-02 17:42:36 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=a46e843c94e512804314f04bf66af519255664ff8dbb9dc175dc4bae2 |
-| 2026-07-02 17:44:51 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=eaf3b983f6a6a9bca3a90cf04639c169ee01b71197024b8994792c352 |
-| 2026-07-02 17:48:01 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=55943227977e7dbc0a77a88767596c7e09142cc8a009cf30724bddcc1 |
-| 2026-07-02 17:48:10 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=e898552d9d3189d583134a6faf28630efee29923085b584ac895ecd57 |
-| 2026-07-02 17:48:19 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=dce446c3eba956d23e19a62eb33e64a34a3bc004a7ebf8a729c130eb5 |
-| 2026-07-02 17:48:36 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=37721d293d52d2d2e589e54a5368bd59c956fb6b1a56936efe8586399 |
-| 2026-07-02 17:48:46 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=1eddebed3fe4e3a0e15e74132d881d82c9b239dd218dc83d5ef88341d |
-| 2026-07-02 17:49:02 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=ebb22bf5e4ba58ddfdcfa4a209c41329066978661fb76fa3b0b46b5b0 |
-| 2026-07-02 17:49:12 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=a35f67a6d4996f88dc34482cc2ece75625d8b6e9a0f1c85daa0f97bc6 |
-| 2026-07-02 17:53:14 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=6a58439487f92284363337555c5dc621be89eed3a7c921d8fb58bb3b3 |
-| 2026-07-02 17:53:21 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=f72f562315f752ecdae68a495ae3f3861c56943382e28c3b5c442c16a |
-| 2026-07-02 17:53:31 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=13572310291e1b12ef710faf0c085d800b29f618e933e026a6706cdb5 |
-| 2026-07-02 18:08:10 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=2d1c39e1baa7f27ab56848761eda52b69b9ee421baf692c1f917547d3 |
-| 2026-07-02 18:11:37 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=d30ad8dde8008887b8e02490288ce778c0cf9e7fe3c1f3fd4cdba408d |
-| 2026-07-02 18:13:33 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=7069753a922ddc14b81c81cfd764f0eef214c825ffd6a52fbae37faef |
-| 2026-07-02 18:13:41 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=e4e1b9b76e14d2986c52a7ac4c8bcc2a05a37ab2feb0ad1d852ca5933 |
-| 2026-07-02 18:13:52 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=c558957e2eaeca6a53d6e4b452df3f37e1d9768012924f6bbb8629f11 |
-| 2026-07-02 18:42:05 | `file.write` | llmwiki/.claude/hooks/wiki_ledger.py · tool=Edit · actor=agent · prev=76cffc74a17fc9146b84582a9f08a84c4244d74e9d9f32f0fa |
-| 2026-07-02 18:52:21 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=4a8d6532bc5470271a352f0da3ec142770ca0383f57578f1dbb34897f |
-| 2026-07-02 18:52:28 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=1bc0c978f6823a8cbee837655584666db4b056d374bbc657b28bdcf20 |
-| 2026-07-02 18:52:43 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=301423793d8c6074023a3c979dfce99ec0ecff3a0848d740747a1aa82 |
-| 2026-07-02 18:52:49 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=20709ffbcf6304e6e41ef925aa8fafe84a1c1377dcce4168b79ebefe0 |
-| 2026-07-02 18:52:59 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=09b597993a515d3a163661b703e59448e4c5f5ff3c96beb2405cee49c |
-| 2026-07-02 18:53:10 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=c0d5a3d4044b18fc67ccd316df52dd16deb9a41d37d7250906bad2bfc |
-| 2026-07-02 18:53:22 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=1c6f7dc31e87f5e1b2420c270e2e394da1a3f57ead3d171e85a484ed2 |
+| 2026-07-03 11:26:44 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=8b76ecf2195f4991cc14f949ed312680bbcf1f7816dbf6bd945726f13 |
+| 2026-07-03 11:39:00 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=77913c4f52b52be7de624b6deca01904967bb92c2b7068e2a7c24 |
+| 2026-07-03 12:52:17 | `file.write` | skills/fdk/SKILL.md · tool=Edit · actor=agent · prev=487914ac9e3d3aa8bdcd0a7d805e237dbdfb9b94ea6e6611116793bd6ebd9680 ·  |
+| 2026-07-03 12:54:08 | `file.write` | fdk/tools/medic.py · tool=Write · actor=agent · prev=b6a91f7cccd2342358c701c7331b47d38bb2da259aee7da95717f6dd81cbad67 ·  |
+| 2026-07-03 12:54:53 | `file.write` | fdk/tools/medic.py · tool=Edit · actor=agent · prev=2ee31c939fdc18e620e821c6da759c711c138cb9a52c0d19302175a94a2427a9 · h |
+| 2026-07-03 12:56:14 | `file.write` | fdk/tools/medic.py · tool=Edit · actor=agent · prev=5740e2dfd137ce8e9487e7deca3be83946085ba3159dc86b8aada9a0c5e3bc37 · h |
+| 2026-07-03 12:57:05 | `task.new` |  · task=T-260703-01 · title=medic — cổng sức khoẻ tổng / tuyến phòng thủ cuối · state=proposed · actor=agent · prev=74dc |
+| 2026-07-03 12:57:50 | `file.write` | llmwiki/wiki/sources/draft/030726-medic-cong-suc-khoe-tong.md · tool=Write · actor=agent · prev=df8f111b94ad46bc6147d784 |
+| 2026-07-03 12:59:32 | `file.write` | skills/medic/SKILL.md · tool=Write · actor=agent · prev=c98cc09d92fbd8451ee7430289db2bc575416730e7a92869f72f0d521136b628 |
+| 2026-07-03 12:59:50 | `file.write` | harness/scripts/sync-skills.py · tool=Edit · actor=agent · prev=6a80355b0f889972b03a5287256e7c5d7260e0af7c5eef51b9f34868 |
+| 2026-07-03 13:00:03 | `file.write` | llmwiki/AGENT.md · tool=Edit · actor=agent · prev=544fac160622aa0d9917599cedc7f3e98d682905510695377493bb282848c21d · h=d |
+| 2026-07-03 13:00:11 | `file.write` | llmwiki/CLAUDE.md · tool=Edit · actor=agent · prev=dcea32827dfd37aa2a1d8b101e3519f2749858b4b70fa895c0525fc51da6eecb · h= |
+| 2026-07-03 13:00:18 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=228a4b5800e151633b98f0a777e7c24c878b45c5ae2e6b7ed2634 |
+| 2026-07-03 13:01:46 | `file.write` | llmwiki/html/030726-medic-cong-suc-khoe-tong-seq.html · tool=Write · actor=agent · prev=c98af670c780e4e7cd954ac53470c5d5 |
+| 2026-07-03 13:15:12 | `file.write` | fdk/tools/whiteboard-skill-map.py · tool=Write · actor=agent · prev=0c8a499bbe8cd8ce1b2dccb62b77b00e8a819e376560bc2aab40 |
+| 2026-07-03 13:15:59 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=967e308b15398a23f7321739daabd9718423f647a58cdad06fa7e |
+| 2026-07-03 13:21:39 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=f8d63f67f4669c9cf8990d14a5287e8c1f3d2eece041dfb684184db80c5a |
+| 2026-07-03 13:27:30 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=50e9a2ee3305cb6b2fa09356f89186531ef4ad0e9d265e803a557de335d2 |
+| 2026-07-03 13:27:41 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=fe3155961c842e050aaa38fb38adf6eb675b76ee9fdbf2a66a2e4baf5a21 |
+| 2026-07-03 13:28:05 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=8bec0ac3c15a930ea96c7e24585b65a7b635074a97de8892faf59b15fd27 |
+| 2026-07-03 13:34:16 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=8a1f7c16e4803ffa5445dd7c1e092c89f58c0c57a3b532d7a8e34cd178c8 |
+| 2026-07-03 13:34:30 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=304c87579507919850b224ff3181fbd79b07577200e9acaa9d7ffaaef1d6 |
+| 2026-07-03 13:34:37 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=2e5e2f5f0b4ac3999e5824014bc95de40a79e4d7b5516857232d4b1c89ac |
+| 2026-07-03 13:37:40 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=acd738a9367cb1e733ea966af38c08b09b9e37f227dc7c1287dde803fb96 |
+| 2026-07-03 13:37:55 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=203a7ad28cb46197f2a124dcbe5279473214ab4c3eb7aaab418cccfb8fca |
+| 2026-07-03 13:38:50 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=c880d27a2bd87037854f1ff808b6b5a1ac3d0d3a53aec1f3d89760a9f00c |
+| 2026-07-03 13:39:04 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=61a92b60558561b56d57d6d852e1d0c54ef8660b54fb35b396847d993b8c |
+| 2026-07-03 13:39:13 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=1fc57dc02502bc229e13c7d99e2ca1658f7debcb36a025e785f9e0165de9 |
+| 2026-07-03 13:39:53 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=4a51eb8787b9830c6a77fed7f3a99e611114d8601abe92820a7130cccc1f |
+| 2026-07-03 13:48:09 | `file.write` | fdk/tools/whiteboard-skill-map.py · tool=Write · actor=agent · prev=0f886ecb13462c1c963ccf6651b459dc9980fbfb5bd893b56471 |
+| 2026-07-03 13:49:56 | `file.write` | skills/ship/SKILL.md · tool=Edit · actor=agent · prev=bb5ba5adc425c77b52cb0a35bdf91f26197e98408fe06bd53acad9096abb6467 · |
+| 2026-07-03 13:50:18 | `file.write` | harness/scripts/sync-skills.py · tool=Edit · actor=agent · prev=87dc91f41d48158a96253d898ab2a57af887c795acc69c02d9a98066 |
+| 2026-07-03 13:51:13 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=65d9cadcb90a728e6660c078636941f4d62f97f4dc780e2a7327962cbb43 |
+| 2026-07-03 13:51:35 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=c534cd2778a76eeb65a284d26f923fb367fb4d0909284d8d58568a33f847 |
+| 2026-07-03 13:51:43 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=ecbd53d3b9580eeb842ca03182f438667ce596851c4cce1057693bc5f27f |
+| 2026-07-03 13:51:54 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=8497679e37688ea5c5767785712fbd4c63d0e02ceb5ada344ea3cbd661bb |
+| 2026-07-03 13:52:01 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=4058a6674ace42fc30e513d7599c207a82f80f978c73f0e85903eefb57d5 |
+| 2026-07-03 13:56:03 | `file.write` | llmwiki/wiki/draft/orca/030726-eval-report.md · tool=Write · actor=agent · prev=63a614fc971e5e5f95e82e1fef063fa3f42f4925 |
+| 2026-07-03 13:56:17 | `file.write` | llmwiki/wiki/draft/orca/030726-eval-report.md · tool=Edit · actor=agent · prev=edc706edb8832a37f4b6b90e453b31dca2c26c2ed |
+| 2026-07-03 14:01:58 | `file.write` | llmwiki/wiki/draft/orca/030726-eval-report.md · tool=Edit · actor=agent · prev=cb1d71ab3923d02d30b5f532e24b65a11f6f7ca6f |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -114,3 +114,63 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 ## 2026-07-02 — fdk — wiki-graph het flat
 - build-wiki-graph.py ve them [[wikilink]] than bai = canh mem net dut (khong gia ngu nghia); them 12 relations co kieu that cho 6 trang loi (validator bat 1 cross-wiki dangling -> go). Demo stale: sua rule-registry -> fdk-dev-strategy stale (badge S trong graph). fdk 121 canh / llmwiki 18 canh, build 5ms/3ms.
+
+## 2026-07-02 — propose — council-chon-de-thi-self-index
+- Draft: dung app mau NGOAI mau + harass 8 loai vector, de COUNCIL tu chon de thi (chong ludic fallacy ma council seed42 vua neu). T-260702-02. Pair md+seq.html (5 task). Derives-from [[020726-wiki-core-relations]] + [[010726-query-retrieval-eval]].
+
+## 2026-07-03 — council — T1 chọn đề thi self-index
+- Council seed42 (roster risk: taleb/ilya/munger/kahneman/aurelius) blind peer-rank → winner Munger (TS plugin-host ~150 file). Đề thi chốt: 10 đòn harass 8 vector + đòn âm tính (chống bịa cạnh) + ca để-trống (đo giới hạn suy-ngầm), ground-truth niêm phong chống ludic fallacy. Report council-report-010-seed42.html. T-260702-02 T1 done.
+
+## 2026-07-03 — last30days+apply — benchmark self-index
+- /last30days: cơ chế benchmark chuẩn = gold-edge interval-overlap P/R/F1 (ContextBench), triplet-F1 + hallucination/omission-rate per-triple + held-out fixed-seed (Unified-KG-Benchmark), MRR/Hits@k, LLM-judge-calibrate-với-người. Áp vào scorer plugin-host/score.py (edge P/R/F1 + hallucination-rate + negative-control + limit tách riêng, verdict gate F1>=0.7 & neg=PASS & halluc<=0.15). Kiểm chứng: engine-tốt giả→PASS 1.0, xấu→FAIL. App mẫu T2 42 file reseal hash 65f51295. T-260702-02 T2 done, T5 scorer ready.
+
+## 2026-07-03 — T3/T4 — chạy engine thật self-index
+- adapter.py onboard app→wiki-shape, gọi build-wiki-graph.py THẬT (scan+enrich_code), map→engine-edges.json. score.py chấm mù (seal verified): core F1 0.842 (P .889/R .8), hallucination .125, negative PASS. Per-capability: MẠNH đọc 5/5 quan hệ frontmatter khai tường minh + không bịa cạnh negative + không đối-xứng-hóa contradicts; MÙ imports/touches code TS (enrich_code chỉ .py); thiếu cờ cycle/quarantine trong graph-builder; trích [[NotALink]] từ code-fence (1 false-pos). Xác nhận council seed42: robust ở mặt thiết kế, giòn ở đuôi ngoài-mẫu → chưa anti-fragile. 3 defect chờ đẩy failure-flywheel (T5). T-260702-02 T3+T4 done.
+
+## 2026-07-03 — T5 — distill benchmark self-index
+- Report HTML 030726-self-index-benchmark-report.html (glass, KPI + bảng năng lực + 3 defect + kết luận robust-chưa-anti-fragile + phạm vi no-silent-cap). 3 defect vào failure-flywheel (coverage-gap ×2: mù code-TS, thiếu cờ cycle/quarantine; hallucination ×1: wikilink không strip code-fence). Cập nhật concept wiki-core-relations mục "Kiểm chứng NGOÀI-MẪU". T-260702-02 T5 done → proposal 5/5 task xong.
+
+## 2026-07-03 — plan Mảnh A-C — engine tự-index self-contained
+- Vá 3 defect benchmark KHÔNG phụ thuộc SW ngoài. Mảnh A: fdk/tools/code_imports.py (stdlib-only, EXTRACTORS TS/JS/Go/Rust + Python-ast, resolve relative+tsconfig-alias, dynamic→unresolved không bịa) thay vai code-graph MCP; wire vào enrich_code đa-ngôn-ngữ. Mảnh B: strip code-fence/inline trước WIKILINK_RE. Mảnh C: detect_cycles DFS + _frontmatter_ok quarantine. Chấm lại: recall 1.0 (11/11), provably-false 0, negative PASS, 9/10 đòn full-pass (đòn 8 touches chờ Mảnh D). Đòn 1 1/3→3/3, 2 1/2→2/2, 3 forbid pass, 4 3/4→4/4, 7 2/3→3/3. Smoke graph thật OK 129 node. Grep: 0 dependency ngoài. Scorer sửa: precision không tính từ gold-thưa (import thật vắng gold ≠ bịa); đo recall + provably-false.
+
+## 2026-07-03 — plan Mảnh D — impact touches self-contained
+- impact_reverse(target,edges,rel=imports,cap=1) trong build-wiki-graph.py: touches lan-truyền = reverse-imports 1-hop trên import-graph (cùng cap=1 propagate_stale, self-contained, không hook/tool ngoài). Đòn 8 0→1/1 (khớp 3 dependents thật: di/container, index barrel, wiring). Chấm CUỐI: 22/22 check, 10/10 đòn full-pass, recall 1.0, provably-false 0, negative PASS, seal verified. Smoke graph thật OK 129 node 177ms. plan.md A-D done. Ground-truth sửa 2 lần (setup.md link prose không backtick; đòn8 thêm index.ts barrel là dependent thật) — engine đúng, gold thiếu.
+
+## 2026-07-03 — full 1 luồng + graph HTML
+- run.sh gói full pipeline: generate → adapter (engine thật scan+enrich_code đa-ngôn-ngữ + cycle + quarantine + impact + RENDER build_static) → score. Graph HTML thật llmwiki/html/030726-plugin-host-graph.html (34 node, đủ 7 loại vector: imports/derives-from/supersedes/contradicts/implements/depends-on/wikilink, offline 0-JS, self-path R16). Chấm: 22/22, 10/10 đòn, recall 1.0, provably-false 0, VERDICT PASS. Link graph vào report 030726-self-index-benchmark-report.html.
+
+## 2026-07-03 — sửa kỷ luật: graph qua CLI thật (như overstack vào project)
+- Phá kỷ luật trước đó (hand-render build_static ra doc dated 030726-plugin-host-graph.html) → XOÁ. Thêm 2 flag CLI THẬT vào build-wiki-graph.py: --code-root (seed node code từ thư mục → dựng import-graph đầy đủ, opt-in default OFF nên graph framework không đổi) + --json (dump nodes/edges/cycles cho eval). run.sh giờ: generate → onboard (wiki-shape như overstack) → CHẠY CLI THẬT build-wiki-graph.py sinh plugin-host/wiki-graph.html chuẩn + graph.json → map_score. Vẫn 22/22, 10/10, recall 1.0, VERDICT PASS. Refresh canonical llmwiki/html/wiki-graph.html + wiki-graph-static.html qua CLI (129 node, engine backward-compat). Harness (score.py) tách khỏi plugin-host/ (app pure, tách-1-bản sạch).
+
+## 2026-07-03 — fdk — ràng buộc rồi đo (feedback loop self-index)
+- Meadows: biến fix Mảnh A-D từ vá-một-phát thành vòng phản hồi bound+measured. ĐO: baseline.json đóng băng (recall 1.0, provably_false 0, 10/10 đòn, verdict PASS). RÀNG BUỘC: check.py regress bất kỳ chiều (recall↓/provably-false↑/full-pass↓/negative FAIL/seal vỡ) → exit≠0. run.sh xoá result.json+graph.json cũ đầu run (chống gate đọc stale → false-green — lỗ hổng đã phát hiện & vá). CHỨNG MINH cắn thật: bỏ code_imports.py → engine degrade mượt recall 0.8 → check ❌ REGRESS. Vá guard build-wiki-graph --code-root (if code_root and code_imports) cho fail-open đúng. problem-tree p-12 (con p-11) partial 2/3 trụ. CÒN full: promote eval khỏi scratchpad + wire fdk-gate/CI (cần duyệt) + skill bọc.
+
+## 2026-07-03 — fdk — rà rule "có cắn không" + overstack generator
+- Câu hỏi "rà tất cả luật có cắn chính xác không": harness-doctor.py ĐÃ tồn tại (fire-drill BAD/GOOD fixture per validator) nhưng chỉ phủ 5/17 rule (R1/R2/R5/R7/R9). 12 rule chưa chứng minh cắn (hook_event/process_gate/repo_gate/deny_write/vài content_check). Chạy NGAY lộ 2 live: proposal_complete.py DRIFT (hooks-copy vs harness-src), pre-commit chưa cài. → problem-tree p-13 (open). overstack.html: build-overstack-docs.py ĐÃ live-from-disk + wired stop.py; fix orca-issue vào LOOP_GROUPS.orchestrate.ops → regen, --check xanh (0 dẫm module cũ). Thiết kế mở rộng harness-doctor 4 tầng phủ 17/17 — chờ duyệt để build.
+
+## 2026-07-03 — fdk — medic (cổng sức khoẻ tổng) + kim chỉ nam hub
+- Kim chỉ nam 2 (hub 1-tên/mô-tả-phạm-vi/TL;DR+recap/transparent) ghi vào skills/fdk/SKILL.md (travel, cạnh Meadows) + sync. medic: fdk/tools/medic.py (stdlib, 6 probe compose harness-doctor/build-*.py --check/compileall/policy-live, scope-arg, --ci, --list, output có recap+use-case+cấu-trúc). Gõ toàn cục ~/.local/bin/medic + /medic slash skill (new-skill scaffold → SKILL.md thin → register LOOP_MAP/marketplace/AGENT/CLAUDE/LOOP_GROUPS.fdk → sync-skills+registry ✓ → regen overstack/capabilities). medic tự bắt & tôi sửa: capabilities stale, validator drift; medic bắt cú SYNC SAI HƯỚNG của tôi (R7 rail-đen 4/5) → khôi phục hooks-copy. Verdict KHOẺ (2 warn nợ: coverage 5/17, pre-commit off). Proposal 030726-medic (T1-2 done, T3-5 pending) pair md+seq.html. problem-tree p-13 partial 2/3 trụ. Memory: fdk-hub-ux-principles + medic-last-line-of-defense.
+
+## 2026-07-03 — council — whiteboard skill: embed vs tách (UX)
+- Council design roster (rams/ada/linus/taleb/laozi) đánh giá "whiteboard quan hệ skill vào overstack.html hay tách". Winner Linus (embed-block-tự-chứa 1.33), á quân Taleb (tách). Chairman hoà giải: cả hai đồng thuận whiteboard = ARTIFACT TỰ CHỨA sinh từ registry (không nhét logic vào build-overstack-docs). CHỐT: TÁCH file riêng skill-whiteboard.html + link mỏng từ overstack; bắt đầu TỐI GIẢN (sơ đồ tĩnh, cỡ theo cấu trúc/số-skill-con, KHÔNG bịa usage); tái dùng build-wiki-graph.py + LOOP_GROUPS + build-skill-search metadata; nâng tương tác sau khi có log thật (Laozi). Report council-report-012-seed42.html.
+
+## 2026-07-03 — build — skill-whiteboard (bản đồ quan hệ skill, tĩnh)
+- Thực thi quyết định council 012: fdk/tools/whiteboard-skill-map.py → llmwiki/html/skill-whiteboard.html (tĩnh, self-contained, 68 skill / 4 loop-hub, cỡ hub theo CẤU TRÚC số-skill-con KHÔNG bịa usage, ◆ đánh dấu skill bao trùm, mô tả phạm vi từ SKILL.md frontmatter LIVE, có --check anti-drift). Link mỏng "🗺️ Xem bản đồ quan hệ skill đầy đủ →" thêm vào overstack qua generator (không hand-edit). Tương tác (tìm/lọc/route) để sau khi có nhu cầu+log (Laozi). Bắt đầu tối giản đúng chốt.
+
+## 2026-07-03 — fix(council) — report hiện tên uỷ viên thay vì seat-N
+- Bug: render map author→tên bằng persona-id nhưng author=seat-id → rơi 'seat-N', mất lens (phong cách). Vá gốc council.py _load_persona_meta: index thêm theo seat-id từ config.seats[].persona. selftest OK. Re-render → council-report-013-seed42.html hiện Dieter Rams/Ada Lovelace/Linus/Nassim Taleb/Lão Tử + lens. problem-tree p-14 solved (harness). Mọi report tương lai tự đúng.
+
+## 2026-07-03 — redesign(council-report) + council(release) + patch note v1.0.5
+- Redesign template render_report_html (council.py): font Việt-an-toàn (bỏ Iowan/Palatino vỡ dấu → Georgia/Cambria), .plens có style riêng (italic accent, sans Việt), lead nổi bật + border-left accent per-card chống wall-of-text. selftest OK. Re-render → council-report-014-seed42.html.
+- Council release (roster taleb/linus/munger/kahneman/rams): đồng thuận GATE = gitignore scratchpad + patch note trung thực (medic 5/17 KHÔNG suy toàn hệ, benchmark N nhỏ) TRƯỚC rồi push. 2 push-after / 3 hoãn-until = cùng gate. .gitignore += scratchpad/ (co-council đã track → cần git rm --cached lúc tag). RELEASE-v1.0.5.md (v1.0.4+1) với Known-limitations thẳng.
+
+## 2026-07-03 — whiteboard-graph + skill /ship + council i18n
+- skill-whiteboard: dựng LẠI thành ĐỒ THỊ qua chính engine build-wiki-graph (build_html JS force-layout) thay layout thẻ tĩnh — user muốn giống wiki-graph. Node loop-hub + skill, cạnh contains(loop→skill) + orchestrates(skill-bao-trùm→con), rel màu nhét in-memory. 42KB, 72 node, SVG cạnh.
+- skill /ship (dev-loop): workflow chốt push/release — checklist medic-gate/git-sạch/selftest/version-x.x.x+1/patch-note-trung-thực; 2 mức push|release; STOP chờ duyệt trước side-effect. Register đủ mặt (sync-skills+registry ✓).
+- council report i18n: KPI "Winner/Most contested"→"Quán quân/Gây tranh cãi nhất"; bảng "Blind/Mean rank/Judge ranks"→"Nhãn ẩn/Điểm hạng TB/Hạng từng GK"; "Reveal map"→"Bản lộ danh"; blindtag/mc/winner cells→Việt. (council.py đang được refactor sang module cor song song.)
+
+## 2026-07-03 — orca-eval — distill phiên phân mảnh làm stress-test /fdk
+- Scan session hiện tại (30 prompt, 8 chủ đề, 6 vòng design). Report draft/orca/030726-eval-report.md: 5 best-practice (fix-at-engine, medic-last-line, điểm-trung-thực, council-chọn-đề, kim-chỉ-nam-travel) + 8 friction (F1 hand-author, F2 reinvent, F3 regression, F4 sync-sai-hướng, F5 quên-regen, F6 lẫn-ngôn-ngữ, F7 over-design, F8 quên-verify) + 7 action A1-A7. Council (linus/taleb/munger/rams/laozi) đánh giá: winner Lão Tử — đòn bẩy = medic-GƯƠNG-SOI-cuối-phiên (khi đụng framework), giữ 2 cổng tự-cắn A1+A7, gộp A4/A5, hấp thụ A3 vào A7-coverage, A2/A6 thành phụ lục, KHÔNG 7 luật rời. report council-report-020-seed42.html. Bước tiếp: propose hook framework-touch-detector + mở rộng medic 17/17.
+
+## 2026-07-03 — council(tư vấn) — hạ tầng retrieval có hữu ích nếu agent không query?
+- Nghi vấn: agent ít gọi /query (31% edit "mù", cận dưới vì grep không đếm) → hạ tầng vô dụng? Council (kahneman/taleb/munger/ada/linus). Chốt: query-rate là ĐO NHẦM (vanity/Goodhart). Tách 3 lớp: wiki-content=tiền-đề (grep trúng nhờ nó tồn tại) GIỮ; code-graph/quan-hệ-phi-cục-bộ = giá trị BỀN grep-không-thay GIỮ+đầu-tư; /query-skill = lớp-bọc → HẠ xuống optional. ĐO reinvent-rate + cross-break + harm-when-missing + retro-test; BỎ query-rate; KHÔNG ép query (theater). Hành động: retro-test 31% mù trước; code-graph entrypoint rẻ 1-lệnh; retrieval tự-surface (hook pre-edit cảnh báo cross-break). report council-report-022-seed42.html.

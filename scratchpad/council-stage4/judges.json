@@ -1,5 +1,0 @@
-[
-  {"judge": "seat-1", "ranking": ["A", "B", "C"], "rationale": "A chỉ đúng cơ chế bias (IKEA effect) VÀ tách được phần đáng giữ (blind-vote) khỏi phần sai (ALWAYS) — actionable nhất. B nguyên tắc mạnh nhưng trừu tượng hơn. C gate theo audience đúng nhưng ít sắc."},
-  {"judge": "seat-2", "ranking": ["B", "A", "C"], "rationale": "B 'không bao giờ ép trang trí thành bắt buộc' + optionality là nguyên tắc thiết kế bền nhất, áp được cho mọi feature tương lai. A sát ngay sau. C hơi hẹp."},
-  {"judge": "seat-3", "ranking": ["A", "C", "B"], "rationale": "A cân bằng: vừa giữ giá trị thật vừa chỉ mặt bias. C tiêu chí 'chia sẻ ra ngoài mới cần' rất cụ thể để quyết. B đúng nhưng lặp ý optionality."}
-]

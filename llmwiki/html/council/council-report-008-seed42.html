@@ -1,0 +1,131 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Council Stage-4 report — blind peer-rank. Deterministic từ council.transcript.json.">
+<title>Council · báo cáo Stage-4</title><link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23232028'/><path d='M8 22h16M16 7l7 5H9z' stroke='%23c9a24b' stroke-width='2' fill='none' stroke-linejoin='round'/></svg>">
+<style>
+:root{--paper:#f4f1ea;--ink:#26221c;--dim:#7a7266;--faint:#a79e90;--line:rgba(60,52,40,.13);
+ --card:rgba(255,253,249,.74);--stroke:rgba(255,255,255,.9);--accent:#8a6d2f;--shadow:24px 40px 24px rgba(60,48,28,.10)}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;font:15px/1.6 "Iowan Old Style","Palatino",Georgia,ui-serif,serif;color:var(--ink);background:var(--paper);
+ background-image:radial-gradient(120% 80% at 15% -5%,rgba(214,198,160,.35),transparent 55%),radial-gradient(90% 70% at 100% 0%,rgba(150,168,178,.22),transparent 50%);
+ min-height:100dvh;-webkit-font-smoothing:antialiased}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:99;opacity:.5;mix-blend-mode:multiply;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.045'/%3E%3C/svg%3E")}
+.wrap{max-width:940px;margin:0 auto;padding:56px 22px 90px}
+.tabnum{font-variant-numeric:tabular-nums}
+.body-sans{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.eyebrow{font:600 12px/1 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+h1{font-weight:600;font-size:clamp(30px,5vw,44px);line-height:1.04;letter-spacing:-.015em;margin:12px 0 10px;text-wrap:balance;max-width:22ch}
+.q{color:var(--dim);font-size:16px;max-width:60ch;text-wrap:pretty}
+.meta{margin-top:14px;font:500 12.5px/1 ui-monospace,Menlo,monospace;color:var(--faint)}
+.warn{background:rgba(176,106,44,.09);border:1px solid rgba(176,106,44,.32);border-left:3px solid #b06a2c;border-radius:13px;
+ padding:14px 16px;margin:26px 0 8px;font-size:13.5px;color:#5f4a2e;font-family:ui-sans-serif,system-ui,sans-serif}
+.sect{margin:46px 0 18px;display:flex;align-items:baseline;gap:14px}
+.sect .n{font-size:26px;color:var(--accent);line-height:1} .sect h2{font-weight:600;font-size:21px;margin:0;letter-spacing:-.01em}
+.sect .rule{flex:1;height:1px;background:var(--line)}
+.pcard{background:var(--card);border:1px solid var(--stroke);border-radius:20px;padding:22px 24px;margin:18px 0;position:relative;overflow:hidden;
+ box-shadow:0 1px 0 rgba(255,255,255,.7) inset,var(--shadow);transition:transform .28s cubic-bezier(.2,.7,.2,1),box-shadow .28s}
+.pcard:hover{transform:translateY(-3px);box-shadow:0 1px 0 rgba(255,255,255,.8) inset,32px 54px 30px rgba(60,48,28,.14)}
+.phead{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.pav{width:46px;height:46px;border-radius:14px;color:#fff;font-weight:600;font-size:20px;display:grid;place-items:center;flex:0 0 46px}
+.pname{font-size:19px;font-weight:600;letter-spacing:-.01em;text-transform:capitalize}
+.rankpill{font:600 11.5px/1 ui-monospace,Menlo,monospace;color:var(--dim);margin-left:6px}
+.blindtag{margin-left:auto;align-self:flex-start;font:600 11px/1 ui-monospace,Menlo,monospace;color:var(--ac);
+ border:1px solid var(--ac);border-radius:7px;padding:5px 9px}
+.ansbody{font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px}
+.ansbody p{margin:6px 0;color:#3a342c} ol.ans{margin:8px 0 2px;padding-left:0;list-style:none;counter-reset:a}
+ol.ans li{position:relative;padding-left:26px;margin-bottom:8px;line-height:1.55}
+ol.ans li::before{counter-increment:a;content:counter(a);position:absolute;left:0;top:1px;width:18px;height:18px;border-radius:6px;
+ background:var(--ac);color:#fff;font:700 11px/18px ui-monospace,Menlo,monospace;text-align:center}
+.tblwrap{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:rgba(255,253,249,.6);box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;font-size:13.5px;font-family:ui-sans-serif,system-ui,sans-serif}
+th,td{text-align:left;padding:12px 15px;border-bottom:1px solid var(--line)} tbody tr:last-child td{border-bottom:0}
+tbody tr{transition:background .18s} tbody tr:hover{background:rgba(138,109,47,.06)}
+th{color:var(--faint);font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.06em;background:rgba(60,52,40,.03)}
+.mono{font-family:ui-monospace,Menlo,monospace} .dim{color:var(--dim)}
+.chip{display:inline-flex;align-items:center;gap:6px;background:color-mix(in srgb,var(--c) 12%,var(--paper));
+ border:1px solid color-mix(in srgb,var(--c) 55%,transparent);color:var(--c);border-radius:9px;padding:5px 11px;margin:9px 8px 0 0;
+ font:600 12.5px/1 ui-sans-serif,system-ui,sans-serif;transition:transform .2s}
+.chip:hover{transform:translateY(-2px)} .chip::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c)}
+.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin:0 0 18px}
+@media(max-width:640px){.kpi{grid-template-columns:1fr}}
+.kpi div{background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:16px 18px;box-shadow:var(--shadow);transition:transform .26s}
+.kpi div:hover{transform:translateY(-3px)}
+.kpi b{display:block;font-size:22px;font-weight:600;margin:5px 0 3px;text-transform:capitalize}
+.kpi span{color:var(--faint);font:600 10.5px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.07em}
+.kpi em{font-style:normal;color:var(--dim);font-size:12px;font-family:ui-sans-serif,system-ui,sans-serif}
+.synth{background:linear-gradient(158deg,rgba(138,109,47,.10),rgba(63,125,116,.06));border:1px solid rgba(138,109,47,.26);
+ border-radius:20px;padding:24px 26px;margin-top:16px;box-shadow:var(--shadow)}
+.synth .lbl{font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.09em;color:var(--accent)}
+.synth p{margin:7px 0;font-size:13.5px;line-height:1.6;font-family:ui-sans-serif,system-ui,sans-serif}
+ul.synlist{margin:6px 0 10px;padding:0;list-style:none;counter-reset:s;font-family:ui-sans-serif,system-ui,sans-serif}
+ul.synlist li{position:relative;padding-left:26px;margin-bottom:8px;font-size:13.5px;line-height:1.55}
+ul.synlist li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:0;width:18px;height:18px;border-radius:6px;
+ background:var(--accent);color:#fff;font:700 11px/18px ui-monospace,Menlo,monospace;text-align:center}
+.reveal{margin-top:16px} .reveal .lbl{font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--faint)}
+footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);color:var(--faint);font-size:12.5px;text-align:center;
+ font-family:ui-sans-serif,system-ui,sans-serif}
+a:focus-visible,tr:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+</style></head><body><div class="wrap">
+<header>
+  <div class="eyebrow">🏛 Council · Stage-4</div>
+  <h1>Hội đồng chấm mù</h1>
+  <p class="q">Bộ bằng chứng robustness của framework (determinism 3× cùng delta, fail-open 7/7, flock giữ 200 ghi song song, cap=1 chặn chu trình, ledger tách state/history, rebuild graph ~211ms/7000 bài) có THỰC SỰ chứng minh kháng-giòn (anti-fragile) không? Chỗ nào tự lừa mình? Nên bổ sung bằng chứng gì?</p>
+  <div class="meta tabnum">seed 42 · council.py/1.0 · 3 giám khảo · 5 ghế</div>
+</header>
+
+<section><div class="sect"><span class="n tabnum">1</span><h2>Ý kiến hội đồng</h2><span class="rule"></span></div>
+    <article class="pcard" style="--ac:#7a5c86">
+      <div class="phead">
+        <div class="pav" style="background:#7a5c86">S</div>
+        <div><div class="pname">seat-5 <span class="rankpill tabnum">🥇 #1 · mean 1.333333</span></div></div>
+        <div class="blindtag">blind C</div>
+      </div>
+      <div class="ansbody"><ol class='ans'><li>Trục bằng chứng của các bạn KHÔNG trực giao — đang trộn hai phạm trù mà Babbage hẳn sẽ tách bằng thước kẻ: một là tính đúng đắn cơ-giới (determinism, flock, cap=1, ledger, 211ms — đều là thuộc tính hàm thuần: cùng đầu vào → cùng đầu ra, hoàn toàn hình thức hoá và kiểm chứng bằng đặc tả), hai là khả năng chịu nhiễu loạn (fail-open 7/7 dưới harass — thuộc tính thống kê trên phân phối tấn công). Gộp chúng dưới một nhãn &quot;anti-fragile&quot; là nguỵ biện trục.</li><li>Chỗ tự lừa mình sâu nhất: cả sáu bằng chứng chỉ chứng minh robustness (bất biến dưới nhiễu), chứ chưa chạm tới anti-fragility theo nghĩa Taleb — hệ mạnh lên nhờ stressor. Determinism và flock giữ nguyên trạng dưới áp lực; đó là tính bền, là hằng số, chứ không phải đạo hàm dương ∂(năng-lực)/∂(stress) &gt; 0. Một hàm hằng thì d/dx = 0: bạn đang chứng minh f không đổi, rồi gọi nó là f tăng.</li><li>&quot;7/7&quot;, &quot;200 ghi&quot;, &quot;cap=1&quot; là các điểm rời rạc, không phải hàm liên tục — chúng chứng minh tồn tại một trạng thái tốt, không chứng minh biên (đường cong xuống cấp: fail-open ở tải 7×, 70×, 700× ra sao? flock ở 200 hay 20.000 process?). Cơ-giới-hoá được cái đo được là hàm suy biến graceful-degradation(load), không phải một cái tick nhị phân.</li><li>Bổ sung: (a) định nghĩa anti-fragility như một hàm khả kiểm — sau mỗi failure, tập guardrail có tăng không? (failure-flywheel chính là ứng viên: đếm lớp lỗi, vượt ngưỡng → sinh rule); (b) đo đạo hàm chứ đo mức — đường cong xuống cấp thay vì điểm pass; (c) adversary tự-thích-nghi thay harass ngẫu nhiên, vì robustness thật lộ ra ở đối thủ học được từ phòng thủ của bạn. Cái gì cơ-giới-hoá được thì hãy phát biểu thành hàm và lấy đạo hàm; cái còn lại — &quot;hệ này có thực sự học từ đau đớn không&quot; — vẫn là mệnh đề cần chứng minh, chưa phải dữ kiện đã có.</li></ol></div>
+    </article>
+    <article class="pcard" style="--ac:#3f7d74">
+      <div class="phead">
+        <div class="pav" style="background:#3f7d74">S</div>
+        <div><div class="pname">seat-4 <span class="rankpill tabnum">🥈 #2 · mean 2.0</span></div></div>
+        <div class="blindtag">blind B</div>
+      </div>
+      <div class="ansbody"><ol class='ans'><li>Robust ≠ anti-fragile, và bộ bằng chứng của bạn toàn là bằng chứng robust: determinism, flock, fail-open, cap=1 — tất cả đều chứng minh hệ &quot;chịu được&quot; stress đã biết và giữ nguyên trạng. Không có gì cho thấy hệ MẠNH LÊN nhờ stress — mà đó mới là anti-fragile. Một cái két sắt chịu được búa không phải là anti-fragile; nó chỉ cứng.</li><li>Chỗ tự lừa mình lớn nhất là bạn đo cái mình đã tưởng tượng ra được: 200 ghi song song, 7/7 harass, 3× cùng file. Đây là &quot;ludic fallacy&quot; — sân khấu sòng bạc với luật đã biết. Rủi ro đuôi không nằm ở 200 mà ở kịch bản bạn CHƯA nghĩ ra: clock skew giữa node, flock trên NFS/mount không tôn trọng khóa, đĩa đầy giữa lúc ghi ledger, corruption im lặng (silent bit-rot) mà checksum không bắt, hoặc một schema-migration làm hỏng cả history. 7/7 và 200/200 là con số đẹp đến mức đáng ngờ — anti-fragile không sống ở nơi mọi test đều xanh.</li><li>&quot;Rebuild toàn bộ graph ~211ms trên 7000 bài&quot; là bằng chứng NGƯỢC hướng: nó khoe trung bình, không khoe đuôi. Hỏi đúng: ở 700.000 bài thì sao — tuyến tính hay nổ bậc hai? p99.9 khi I/O ngáp là bao nhiêu? Một hệ tối ưu cho mean thường mong manh ở tail.</li><li>Bổ sung bằng chứng đúng-loại: (a) fuzzing/chaos ngẫu nhiên (kill -9 giữa fsync, inject lỗi mount, adversary tạo input độc) thay vì kịch bản dàn dựng; (b) bằng chứng PHỤC HỒI, không chỉ chịu đựng — hệ tự phát hiện corruption và tái dựng từ ledger được không, đó là tiệm cận anti-fragile; (c) đo tính TUYẾN TÍNH của cost theo tải để loại bỏ nổ tổ hợp ở đuôi; (d) và mạnh nhất: mỗi lần một failure lọt lưới, nó có tự sinh ra một guardrail/test mới không — vòng lặp &quot;sai lầm biến thành miễn dịch&quot; (failure-flywheel) MỚI là anti-fragile thật sự: hệ dùng chính cú sốc để mọc thêm da thịt. Còn lại chỉ là robust được đóng gói khéo.</li></ol></div>
+    </article>
+    <article class="pcard" style="--ac:#5f7a3f">
+      <div class="phead">
+        <div class="pav" style="background:#5f7a3f">S</div>
+        <div><div class="pname">seat-2 <span class="rankpill tabnum">🌱 #3 · mean 2.666667</span></div></div>
+        <div class="blindtag">blind A</div>
+      </div>
+      <div class="ansbody"><ol class='ans'><li>Bộ bằng chứng này chứng minh &quot;kháng-nhiễu&quot; (robust) chứ chưa phải &quot;kháng-giòn&quot; (anti-fragile): tất cả các bài test đều đo hệ THẤT BẠI-DUYÊN-DÁNG dưới stress đã-biết — flock, cap=1, fail-open — nhưng anti-fragile theo nghĩa Taleb đòi hỏi hệ MẠNH LÊN nhờ biến động, tức mỗi cú harass phải để lại một guardrail mới, còn ở đây stress chỉ được sống-sót chứ không được hấp-thụ thành năng lực.</li><li>Chỗ tự lừa mình lớn nhất là determinism đang được trưng bày như bằng chứng an toàn, nhưng cùng-input-cùng-output chỉ chứng minh tính tái-lập, không chứng minh tính ĐÚNG — một hàm sai hằng số cũng deterministic hoàn hảo; và &quot;7/7 fail-open&quot; là mẫu quá nhỏ với adversary do chính bạn thiết kế, tức bạn đang test được-mình-đã-nghĩ-tới, không test được cái mình mù.</li><li>Rebuild 211ms/7000 bài là chỉ số hiệu-năng bị mạo-danh chỉ số an-toàn: khi năng lực (tốc độ, tự-động-hoá graph) tăng, đúng lúc đó chi phí một lỗi im-lặng lan khắp graph cũng tăng theo — đây chính là ngưỡng &quot;năng lực thành rủi ro&quot;.</li><li>Nên bổ sung: fault-injection ngẫu-nhiên chứ không kịch-bản (chaos/property-based với input do máy sinh), một tập adversary do bên-thứ-ba viết, bằng chứng phát-hiện-sai (corruption detection) chứ chỉ là bằng chứng không-crash, và một phép đo cho thấy hệ TỰ-SINH ràng-buộc mới sau mỗi sự-cố — chỉ khi đó mới được phép nói chữ &quot;anti-fragile&quot;.</li></ol></div>
+    </article>
+    <article class="pcard" style="--ac:#7a5c86">
+      <div class="phead">
+        <div class="pav" style="background:#7a5c86">S</div>
+        <div><div class="pname">seat-3 <span class="rankpill tabnum">#4 #4 · mean 4.333333</span></div></div>
+        <div class="blindtag">blind D</div>
+      </div>
+      <div class="ansbody"><ol class='ans'><li>Chưa — vì các bạn đang đo &quot;độ bền&quot; (robustness) rồi dán nhãn &quot;kháng-giòn&quot; (anti-fragile). Định nghĩa trước khi ăn mừng: bền là &quot;chịu cú đấm mà không vỡ&quot;; kháng-giòn là &quot;bị đấm xong MẠNH LÊN&quot;. Cả sáu bằng chứng — determinism, fail-open 7/7, flock 200 ghi, cap=1, ledger, rebuild 211ms — đều chỉ chứng minh hệ KHÔNG TỆ ĐI dưới áp lực. Không có cái nào cho thấy hệ HỌC được từ cú sốc và lần sau đỡ giòn hơn. Đó là thép tốt, không phải cơ bắp.</li><li>Chỗ tự lừa mình rõ nhất: các bạn tự chọn đề thi. Determinism đo trên &quot;cùng 1 file&quot;, flock đo trên ghi đồng nhất, harass là 7 cú các bạn tự nghĩ ra — hệ chỉ mạnh trước những cú các bạn đã tưởng tượng nổi. Rebuild 211ms/7000 bài là con số marketing tới khi biết nó cong thế nào ở 700k bài và ai nuốt phần khác-biệt khi rebuild đang chạy. Và &quot;fail-open&quot; tự nó là con dao hai lưỡi: mở cửa khi hỏng là an toàn cho luồng, nhưng là mù cho tính đúng — bạn đang đếm số lần sống sót mà không đếm số lần âm thầm cho ra kết quả sai.</li><li>Bổ sung bằng chứng theo đúng nghĩa: chaos/adversarial do BÊN NGOÀI thiết kế (kill -9 giữa lúc ghi ledger, đĩa đầy, đồng hồ nhảy lùi, flock chết nửa chừng) để đo phục hồi, không phải chịu đựng; đường cong rebuild ở nhiều bậc độ lớn để thấy điểm gãy; và — nếu thật sự muốn từ &quot;anti-fragile&quot; — một vòng lặp nơi mỗi lần fail-open được ghi lại thành một test/guard mới, để bằng chứng cho thấy tỉ lệ giòn GIẢM theo thời gian. Không có đường cong đi xuống đó, hãy gọi nó là &quot;robust&quot; và tự hào về điều đó — đừng gọi tên to hơn cái mình đo được.</li></ol></div>
+    </article>
+    <article class="pcard" style="--ac:#7a5c86">
+      <div class="phead">
+        <div class="pav" style="background:#7a5c86">S</div>
+        <div><div class="pname">seat-1 <span class="rankpill tabnum">#5 #5 · mean 4.666667</span></div></div>
+        <div class="blindtag">blind E</div>
+      </div>
+      <div class="ansbody"><ol class='ans'><li>Bằng chứng của bạn chứng minh &quot;tính tất định dưới stress&quot; (determinism, flock, cap=1, fail-open) — đó là robustness, tức là chịu tải mà không hỏng. Nhưng anti-fragile nghĩa là hệ mạnh lên nhờ cú sốc, và không có mẩu số liệu nào cho thấy framework tự học từ lần vấp: 7/7 fail-open chỉ nói &quot;không sập&quot;, không nói &quot;lần sau chặn sớm hơn&quot;. Đó là chỗ đang tự lừa mình — bạn đang đổi tên robustness thành anti-fragility.</li><li>Theo trực giác mạng nơ-ron: bạn đang test trên phân phối bạn tự chọn (200 ghi song song, 7000 bài lành). Model chỉ thật sự lộ điểm giòn ở đuôi phân phối — input dị dạng, ledger hỏng một nửa, đồng hồ nhảy lùi, file cycle tự-tham-chiếu, UTF rác, race lúc crash giữa write. 211ms/7000 bài là số đẹp nhưng vô nghĩa nếu chưa biết đường cong scale (O(n)? O(n²)? gãy ở đâu?) và tail latency p99, không phải mean.</li><li>Nên bổ sung: fuzz/property-based + fault-injection (kill -9 giữa flock, disk full, ledger corrupt) để đo recovery, chứ không chỉ survival; một regression corpus những ca từng làm gãy, để mỗi lần vấp biến thành test vĩnh viễn (đây mới là vòng anti-fragile thật — hệ mạnh lên sau mỗi cú sốc); và đường cong scale + p99 thay cho một điểm mean. Quy tắc của tôi: nếu bạn không giải thích nổi tại sao nó sống sót ca xấu nhất, thì bạn chưa biết nó sống sót — bạn mới chỉ chưa gặp ca đó.</li></ol></div>
+    </article></section>
+<section><div class="sect"><span class="n tabnum">2</span><h2>Bỏ phiếu kín</h2><span class="rule"></span></div>
+<div class="tblwrap"><table><thead><tr><th>Giám khảo</th><th>Ranking (nhãn ẩn)</th><th>Thứ tự trình bày · anchor guard</th></tr></thead><tbody><tr><td>seat-1</td><td class="mono">C › B › A › E › D</td><td class="mono dim">C → E → D → B → A</td></tr><tr><td>seat-3</td><td class="mono">C › A › B › D › E</td><td class="mono dim">A → C → B → D → E</td></tr><tr><td>seat-4</td><td class="mono">B › C › A › D › E</td><td class="mono dim">C → A → B → E → D</td></tr></tbody></table></div>
+<div class="reveal"><span class="lbl">Reveal map — chỉ lộ ở cuối</span><br><span class="chip" style="--c:#7a5c86">C = seat-5</span><span class="chip" style="--c:#3f7d74">B = seat-4</span><span class="chip" style="--c:#5f7a3f">A = seat-2</span><span class="chip" style="--c:#7a5c86">D = seat-3</span><span class="chip" style="--c:#7a5c86">E = seat-1</span></div></section>
+<section><div class="sect"><span class="n tabnum">3</span><h2>Dashboard chốt</h2><span class="rule"></span></div>
+<div class="kpi">
+ <div><span>Winner</span><b>🥇 seat-5</b><em class="tabnum">blind C · mean 1.333333</em></div>
+ <div><span>Most contested</span><b>seat-4</b><em class="tabnum">blind B · var 0.666667</em></div>
+ <div><span>Đồng thuận</span><b class="tabnum">3 GK</b><em>phân hoá</em></div>
+</div>
+<div class="tblwrap"><table><thead><tr><th>Blind</th><th>Ghế</th><th>Mean rank</th><th>Judge ranks</th></tr></thead><tbody><tr><td class="mono"><b>C</b></td><td>🥇 seat-5</td><td class="mono tabnum">1.333333</td><td class="mono dim tabnum">[1, 1, 2]</td></tr><tr><td class="mono"><b>B</b></td><td>🥈 seat-4</td><td class="mono tabnum">2.0</td><td class="mono dim tabnum">[2, 3, 1]</td></tr><tr><td class="mono"><b>A</b></td><td>🌱 seat-2</td><td class="mono tabnum">2.666667</td><td class="mono dim tabnum">[3, 2, 3]</td></tr><tr><td class="mono"><b>D</b></td><td> seat-3</td><td class="mono tabnum">4.333333</td><td class="mono dim tabnum">[5, 4, 4]</td></tr><tr><td class="mono"><b>E</b></td><td> seat-1</td><td class="mono tabnum">4.666667</td><td class="mono dim tabnum">[4, 5, 5]</td></tr></tbody></table></div>
+<div class='synth'><span class='lbl'>Chairman synthesis — câu trả lời chốt</span><p>Các bằng chứng bạn đang có (determinism 3× cùng delta, fail-open 7/7, flock giữ 200 ghi song song, cap=1 chặn chu trình, ledger tách state/history, rebuild ~211ms/7000 bài) chứng minh hệ thống ROBUST — tức bền vững, hành vi không đổi dưới nhiễu — nhưng KHÔNG chứng minh ANTI-FRAGILE, và trộn hai trục này là nguỵ biện: như Ada chỉ ra, robust là hàm hằng có đạo hàm d/dx≈0 (đầu vào biến động, đầu ra ổn định), còn kháng-giòn đòi hỏi đạo hàm DƯƠNG dưới stress — hệ phải mạnh LÊN nhờ sự cố, thứ mà không phép đo nào trong bộ này chạm tới. Từng trục bằng chứng còn tự lừa mình theo cách riêng: fail-open 7/7 (Feynman) chỉ chứng minh hệ không sập, nó MÙ với tính đúng — một fallback trả kết quả sai vẫn &quot;pass&quot;; determinism 3× (Ilya) chứng minh tính TÁI-LẬP chứ không phải tính đúng, và cùng một lỗi tái lập hoàn hảo vẫn là lỗi; benchmark 211ms và flock 200-ghi (Karpathy) đo trên phân phối tải do chính ta chọn, thiếu đường cong scale và đuôi p99 nên chỉ nói về trường hợp trung bình ở điểm vận hành thoải mái. Về điểm phân hoá của Taleb (judges xếp rank 2/3/1): góc rủi-ro-đuôi của ông MẠNH vì nó đặt đúng tên cho lỗ hổng gốc — ta đang ăn mừng sự vắng mặt của lỗi trong vùng đã test (ludic fallacy) mà im lặng về sự cố hiếm, tương quan, ngoài mẫu nơi thiệt hại thực sự nằm; nhưng nó GÂY TRANH CÃI vì trừu tượng và khó phản chứng — &quot;thiên nga đen&quot; không chỉ ra được thí nghiệm cụ thể để chạy, dễ thành lời tiên tri không thể sai. Vì vậy tôi GIỮ lõi bất đối xứng đuôi của Taleb (đo mất-mát ở kịch bản xấu, không chỉ ở trung vị) nhưng LƯỢC phần tu từ không thao tác hoá được, quy nó về các phép đo khả thi. Kết lại: bộ bằng chứng hiện tại đủ để tuyên bố ROBUST một cách trung thực, và chỉ nên tuyên bố đúng chừng đó. Để tiến tới bằng chứng kháng-giòn, nên bổ sung theo thứ tự khả thi: (1) fault-injection/chaos có kiểm soát — chủ động giết tiến trình, hỏng khoá, đầy đĩa — và ĐO thời gian phục hồi (MTTR) cùng tính đúng sau phục hồi, không chỉ &quot;không sập&quot;; (2) đường cong scale đầy đủ với p50/p95/p99/p99.9 tới điểm gãy, để thấy hình dạng đuôi thay vì một con số trung bình; (3) corruption detection — checksum/verify trên ledger và graph để bắt lỗi im lặng mà fail-open đang che; (4) và quan trọng nhất cho trục anti-fragile: một failure-flywheel biến MỖI sự cố thành một guardrail/test hồi quy mới, để đo được đạo hàm dương — hệ mắc lỗi càng nhiều thì bề mặt lỗi càng thu hẹp theo thời gian. Chỉ khi flywheel đó cho thấy tần suất tái phạm giảm dần, bạn mới có quyền nói &quot;kháng-giòn&quot; thay vì chỉ &quot;bền&quot;.</p></div>
+</section>
+<footer>Mọi số liệu từ council.transcript.json — report chỉ là lớp trình bày, không thêm phán xét mới.</footer>
+</div></body></html>

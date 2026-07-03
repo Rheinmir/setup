@@ -438,20 +438,46 @@ def _hue_for(name: str) -> str:
     return _PALETTE[h % len(_PALETTE)]
 
 
+def _emph_labels(s: str) -> str:
+    """Bold NHẸ nhãn trước dấu ':' khi nó là lead-in ngắn ở đầu mệnh đề (điểm cần chú ý).
+    Chỉ khớp nhãn bắt đầu bằng CHỮ → tránh nhầm tỉ lệ 10:10 / giờ 3:00 / cap=1."""
+    import re
+    pat = r"(^|[.;:!?]\s+|—\s+|–\s+)([A-Za-zÀ-Ỹà-ỹ][^:<>\n.]{1,38}?):(?=\s)"
+    return re.sub(pat, lambda m: f'{m.group(1)}<b class="pt">{m.group(2)}</b>:', s)
+
+
 def _fmt_answer(text: str) -> str:
     """Turn a raw seat answer into tidy HTML: split '(1)/(2)' or '1.' enumerations
     into <li>, keep the rest as <p>. Pure presentation, adds no new content."""
     import re
-    esc = _html.escape
+    esc = lambda s: _emph_labels(_html.escape(s))
+    def sentences(t):
+        # tách câu (kết bằng . ! ? theo sau bởi khoảng trắng) — gom ~2 câu/đoạn cho dễ đọc
+        raw = re.split(r"(?<=[.!?])\s+(?=[A-ZĐÀ-Ỹ0-9(])", t.strip())
+        raw = [s.strip() for s in raw if s.strip()]
+        paras, i = [], 0
+        while i < len(raw):
+            paras.append(" ".join(raw[i:i + 2]))
+            i += 2
+        return paras
+
     parts = re.split(r"(?:(?<=[.\s])|^)\((\d+)\)\s*", text)
-    if len(parts) >= 3:  # had (1) (2) ... markers
-        lead = esc(parts[0].strip())
-        items = []
-        for i in range(1, len(parts) - 1, 2):
-            items.append(f"<li>{esc(parts[i + 1].strip())}</li>")
-        body = (f"<p>{lead}</p>" if lead else "") + f"<ol class='ans'>{''.join(items)}</ol>"
-        return body
-    return "".join(f"<p>{esc(s.strip())}</p>" for s in text.split("\n") if s.strip())
+    if len(parts) >= 3:  # had (1) (2) ... markers → câu dẫn ngắn + list đánh số
+        lead = parts[0].strip()
+        items = [f"<li>{esc(parts[i + 1].strip())}</li>" for i in range(1, len(parts) - 1, 2)]
+        # chỉ coi là 'lead' (nhấn nhẹ) khi câu dẫn NGẮN — dài thì để thường, tránh khối in đậm
+        lead_html = ""
+        if lead and len(lead) <= 160:
+            lead_html = f"<p class='lead'>{esc(lead)}</p>"
+        elif lead:                                    # lead dài → chunk theo câu, không 1 khối
+            lead_html = "".join(f"<p>{esc(p)}</p>" for p in sentences(lead))
+        return lead_html + f"<ol class='ans'>{''.join(items)}</ol>"
+    # không có (1)(2)(3): chunk thành đoạn ~2 câu (KHÔNG in đậm cả khối)
+    src = "\n".join(s for s in text.split("\n") if s.strip()) or text
+    paras = []
+    for block in src.split("\n"):
+        paras += sentences(block)
+    return "".join(f"<p>{esc(p)}</p>" for p in paras) if paras else f"<p>{esc(text.strip())}</p>"
 
 
 _MEDAL = {1: "\U0001F947", 2: "\U0001F948", 3: "\U0001F331"}
@@ -471,6 +497,13 @@ def _load_persona_meta(config) -> dict:
         out = {}
         for pid, meta in (data.get("personas") or {}).items():
             out[str(pid).lower()] = {"name": meta.get("name", pid), "lens": meta.get("lens", "")}
+        # Cũng index theo SEAT-id (author trong transcript thường là seat-1..N, không phải persona-id):
+        # map seat→persona lấy từ config.seats[].persona → render hiện TÊN uỷ viên thay vì 'seat-N'.
+        for seat in (config or {}).get("seats") or []:
+            sid = str(seat.get("id", "")).lower()
+            per = str(seat.get("persona", "")).lower()
+            if sid and per in out:
+                out[sid] = out[per]
         return out
     except Exception:
         return {}
@@ -509,7 +542,7 @@ def render_report_html(t, personas=None) -> str:
       <div class="phead">
         <div class="pav" style="background:{ac}">{e(pname(author)[:1].upper())}</div>
         <div><div class="pname">{e(pname(author))} <span class="rankpill tabnum">{medal} #{e(crank)} · mean {e(mean)}</span></div>{lens_html}</div>
-        <div class="blindtag">blind {e(label)}</div>
+        <div class="blindtag">nhãn {e(label)}</div>
       </div>
       <div class="ansbody">{_fmt_answer(answers[author]["text"])}</div>
     </article>'''
@@ -525,26 +558,13 @@ def render_report_html(t, personas=None) -> str:
         for a, l, m, rk, cr in order)
     unan = all(j["ranking_labels"] == jr[0]["ranking_labels"] for j in jr) if jr else False
 
-    syn = ""
-    if synth:
-        for ln in synth.split("\n"):
-            ln = ln.strip()
-            if not ln:
-                continue
-            if ln[:2] in ("1.", "2.", "3.", "4.", "5.", "6."):
-                if "<ul" not in syn.rsplit("<p", 1)[-1]:
-                    pass
-                syn += f'<li>{e(ln[2:].strip())}</li>'
-            else:
-                syn += f'<p>{e(ln)}</p>'
-    syn = syn.replace("<li>", "<ul class='synlist'><li>", 1)
-    if "<li>" in syn:
-        syn = syn[::-1].replace(">il/<", ">lu/<>il/<", 1)[::-1]
+    # synthesis chạy qua CÙNG formatter với thẻ ý kiến: chunk câu, đánh số (1)(2)(3), bold nhãn:
+    syn = _fmt_answer(synth) if synth else ""
     warn = "" if verified else (
         '<div class="warn"><b>⚠️ verified: false</b> — model identities đã quarantine trong '
         'council.config.yaml. Đây là <b>consensus mean-rank</b>, không phải chân lý.</div>')
-    mc_cell = (f'<b>{e(pname(mc["author"]))}</b><em class="tabnum">blind {e(mc["label"])} · var {e(mc["variance"])}</em>'
-               if mc else "<b>—</b><em>n/a</em>")
+    mc_cell = (f'<b>{e(pname(mc["author"]))}</b><em class="tabnum">nhãn {e(mc["label"])} · phân tán {e(mc["variance"])}</em>'
+               if mc else "<b>—</b><em>không có</em>")
 
     fav = ("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'>"
            "<rect width='32' height='32' rx='7' fill='%23232028'/>"
@@ -558,7 +578,7 @@ def render_report_html(t, personas=None) -> str:
 :root{{--paper:#f4f1ea;--ink:#26221c;--dim:#7a7266;--faint:#a79e90;--line:rgba(60,52,40,.13);
  --card:rgba(255,253,249,.74);--stroke:rgba(255,255,255,.9);--accent:#8a6d2f;--shadow:24px 40px 24px rgba(60,48,28,.10)}}
 *{{box-sizing:border-box}} html{{scroll-behavior:smooth}}
-body{{margin:0;font:15px/1.6 "Iowan Old Style","Palatino",Georgia,ui-serif,serif;color:var(--ink);background:var(--paper);
+body{{margin:0;font:15px/1.6 Georgia,Cambria,"Times New Roman",ui-serif,serif;color:var(--ink);background:var(--paper);
  background-image:radial-gradient(120% 80% at 15% -5%,rgba(214,198,160,.35),transparent 55%),radial-gradient(90% 70% at 100% 0%,rgba(150,168,178,.22),transparent 50%);
  min-height:100dvh;-webkit-font-smoothing:antialiased}}
 body::after{{content:"";position:fixed;inset:0;pointer-events:none;z-index:99;opacity:.5;mix-blend-mode:multiply;
@@ -578,15 +598,21 @@ h1{{font-weight:600;font-size:clamp(30px,5vw,44px);line-height:1.04;letter-spaci
 .pcard{{background:var(--card);border:1px solid var(--stroke);border-radius:20px;padding:22px 24px;margin:18px 0;position:relative;overflow:hidden;
  box-shadow:0 1px 0 rgba(255,255,255,.7) inset,var(--shadow);transition:transform .28s cubic-bezier(.2,.7,.2,1),box-shadow .28s}}
 .pcard:hover{{transform:translateY(-3px);box-shadow:0 1px 0 rgba(255,255,255,.8) inset,32px 54px 30px rgba(60,48,28,.14)}}
-.phead{{display:flex;align-items:center;gap:14px;margin-bottom:12px}}
-.pav{{width:46px;height:46px;border-radius:14px;color:#fff;font-weight:600;font-size:20px;display:grid;place-items:center;flex:0 0 46px}}
-.pname{{font-size:19px;font-weight:600;letter-spacing:-.01em;text-transform:capitalize}}
+.phead{{display:flex;align-items:center;gap:14px;margin-bottom:14px}}
+.pav{{width:46px;height:46px;border-radius:14px;color:#fff;font-weight:600;font-size:20px;display:grid;place-items:center;flex:0 0 46px;font-family:ui-sans-serif,system-ui,sans-serif}}
+.pname{{font-size:19px;font-weight:700;letter-spacing:-.01em;font-family:ui-sans-serif,system-ui,-apple-system,sans-serif}}
+.plens{{margin-top:3px;font:italic 500 13px/1.35 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+ color:var(--ac);opacity:.92}}
 .rankpill{{font:600 11.5px/1 ui-monospace,Menlo,monospace;color:var(--dim);margin-left:6px}}
 .blindtag{{margin-left:auto;align-self:flex-start;font:600 11px/1 ui-monospace,Menlo,monospace;color:var(--ac);
  border:1px solid var(--ac);border-radius:7px;padding:5px 9px}}
-.ansbody{{font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px}}
-.ansbody p{{margin:6px 0;color:#3a342c}} ol.ans{{margin:8px 0 2px;padding-left:0;list-style:none;counter-reset:a}}
-ol.ans li{{position:relative;padding-left:26px;margin-bottom:8px;line-height:1.55}}
+.ansbody{{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:14px;line-height:1.66;max-width:66ch}}
+.ansbody p{{margin:9px 0;color:#3a342c}}
+.ansbody .lead{{font-size:14px;font-weight:600;color:var(--ink);margin:0 0 9px}}
+.ansbody b.pt{{font-weight:600;color:var(--ink)}} .lead b.pt{{font-weight:700}}
+.ansbody p:first-child{{margin-top:0}}
+ol.ans{{margin:10px 0 2px;padding-left:0;list-style:none;counter-reset:a}}
+ol.ans li{{position:relative;padding-left:30px;margin-bottom:11px;line-height:1.62}}
 ol.ans li::before{{counter-increment:a;content:counter(a);position:absolute;left:0;top:1px;width:18px;height:18px;border-radius:6px;
  background:var(--ac);color:#fff;font:700 11px/18px ui-monospace,Menlo,monospace;text-align:center}}
 .tblwrap{{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:rgba(255,253,249,.6);box-shadow:var(--shadow)}}
@@ -628,16 +654,16 @@ a:focus-visible,tr:focus-visible{{outline:2px solid var(--accent);outline-offset
 {warn}
 <section><div class="sect"><span class="n tabnum">1</span><h2>Ý kiến hội đồng</h2><span class="rule"></span></div>{cards}</section>
 <section><div class="sect"><span class="n tabnum">2</span><h2>Bỏ phiếu kín</h2><span class="rule"></span></div>
-<div class="tblwrap"><table><thead><tr><th>Giám khảo</th><th>Ranking (nhãn ẩn)</th><th>Thứ tự trình bày · anchor guard</th></tr></thead><tbody>{vote_rows}</tbody></table></div>
-<div class="reveal"><span class="lbl">Reveal map — chỉ lộ ở cuối</span><br>{reveal}</div></section>
+<div class="tblwrap"><table><thead><tr><th>Giám khảo</th><th>Xếp hạng (nhãn ẩn)</th><th>Thứ tự trình bày · chống thiên vị vị trí</th></tr></thead><tbody>{vote_rows}</tbody></table></div>
+<div class="reveal"><span class="lbl">Bản lộ danh — chỉ lộ ở cuối</span><br>{reveal}</div></section>
 <section><div class="sect"><span class="n tabnum">3</span><h2>Dashboard chốt</h2><span class="rule"></span></div>
 <div class="kpi">
- <div><span>Winner</span><b>{_MEDAL[1]} {e(pname(w["author"]))}</b><em class="tabnum">blind {e(w["label"])} · mean {e(w["mean_rank"])}</em></div>
- <div><span>Most contested</span>{mc_cell}</div>
+ <div><span>Quán quân</span><b>{_MEDAL[1]} {e(pname(w["author"]))}</b><em class="tabnum">nhãn {e(w["label"])} · điểm TB {e(w["mean_rank"])}</em></div>
+ <div><span>Gây tranh cãi nhất</span>{mc_cell}</div>
  <div><span>Đồng thuận</span><b class="tabnum">{len(jr)} GK</b><em>{"nhất trí tuyệt đối ✓" if unan else "phân hoá"}</em></div>
 </div>
-<div class="tblwrap"><table><thead><tr><th>Blind</th><th>Ghế</th><th>Mean rank</th><th>Judge ranks</th></tr></thead><tbody>{dash}</tbody></table></div>
-{"<div class='synth'><span class='lbl'>Chairman synthesis — câu trả lời chốt</span>" + syn + "</div>" if synth else ""}
+<div class="tblwrap"><table><thead><tr><th>Nhãn ẩn</th><th>Uỷ viên</th><th>Điểm hạng TB</th><th>Hạng từng GK</th></tr></thead><tbody>{dash}</tbody></table></div>
+{"<div class='synth' style='--ac:var(--accent)'><span class='lbl'>Chairman synthesis — câu trả lời chốt</span>" + syn + "</div>" if synth else ""}
 </section>
 <footer>Mọi số liệu từ council.transcript.json — report chỉ là lớp trình bày, không thêm phán xét mới.</footer>
 </div></body></html>'''

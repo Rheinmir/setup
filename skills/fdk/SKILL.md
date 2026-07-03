@@ -14,6 +14,14 @@ Mọi việc framework đi qua lens tư duy hệ thống & vòng phản hồi (s
 - **Nuôi vòng phản hồi, đừng chỉ bắn một phát**: mỗi thay đổi phải có đường tín hiệu quay về (verify tất định, ledger, log, eval) để hệ tự thấy mình lệch. Thay đổi không có feedback loop = thay đổi mù.
 - **Tôn trọng độ trễ (delay)**: hiệu ứng của rule/skill mới chỉ lộ sau nhiều phiên — đừng kết luận sớm, cũng đừng chồng thêm fix khi fix trước chưa kịp phát tác; ghi ngày vào ledger để đo.
 
+## Kim chỉ nam thứ 2 — Hub & trình bày (UX cho user, feedback 2026-07-03)
+Cạnh tư duy Meadows, mọi tool/skill/hub framework tuân nguyên tắc dùng-được-và-an-toàn của user:
+- **Hub 1-tên, mô tả-phạm-vi — đừng bắt nhớ nhiều lệnh con.** Một hub làm HẾT việc liên quan; user chỉ mô tả *phạm vi* (all > 1 phần / phần tương đương / mức độ), không phải nhớ subcommand. Tên lệnh phải NGẮN, gõ được bằng cơ-bắp (user quen `curl`; tên khó nhớ = không bao giờ được gọi → vô dụng). Vd `medic` (cổng sức khoẻ tổng) thay tên dài.
+- **TL;DR — phần user đọc cô đọng + ĐỦ ý, không dè sẻn.** User có thói quen "too long didn't read": ngắn nhưng không cụt, không ki bo giải thích.
+- **Model tư duy minh bạch** — user đọc phần *think* để kiểm hướng đi. Đừng giấu suy luận.
+- **Cuối output: inject recap + dạy dùng thụ động** — nhắc lại tinh gọn tool này làm gì + hint use-case tiêu biểu VÀ bất ngờ (user không ngờ cũng dùng được) → user học cách dùng mà không phải hỏi.
+- **Minh bạch = an toàn; usage > performance.** Cho user ĐỌC ĐƯỢC cấu trúc thư mục + under-the-hood, không chỉ tối ưu cho query. Đã hiển thị thì transparent → user thấy an toàn khi dùng hệ. Ưu tiên tính-dùng-được hơn tối ưu ngầm.
+
 ## Khi nào dùng
 - Đang sửa CHÍNH framework (skill / rule / validator / hook / wiki), HOẶC
 - Đang distill / author một skill trong phiên của project bất kỳ.

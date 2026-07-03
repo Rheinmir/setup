@@ -180,6 +180,8 @@ def build_r7(base):
         "---\ntype: draft\n---\n"
         "# Feature X — proposal\n\n"
         "**Status:** proposed\n\n"
+        "## Context\n"
+        "Da query wiki: lien quan [[rule-registry]] va ADR-008 ve the kit (force-query R7-f).\n\n"
         "## Plan\n"
         "- [ ] task one — distill raw\n"
         "- [ ] task two — update index\n\n"

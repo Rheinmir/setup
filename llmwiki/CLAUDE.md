@@ -35,6 +35,7 @@ Giảm lỗi LLM-coding phổ biến. Thiên về cẩn trọng hơn tốc độ
 | `impact-check` | Before modifying any shared symbol | `skills/dev-loop/impact-check.md` | dev-loop |
 | `safe-change` | Editing code called from more than one place | `skills/dev-loop/safe-change.md` | dev-loop |
 | `verify-before-commit` | Before every commit | `skills/dev-loop/verify-before-commit.md` | dev-loop |
+| `ship` | User nhắc release/push/ship — checklist điều kiện trước push & release (medic gate/git sạch/version x.x.x+1/patch note trung thực) | `skills/dev-loop/ship.md` | dev-loop |
 | `orca-workflow` | Daily propose → gate → dispatch with Orca | `skills/orchestrate/orca-workflow.md` | orchestrate |
 | `orca-onboard` | Parallel codebase onboarding with Orca | `skills/orchestrate/orca-onboard.md` | orchestrate |
 | `orca-issue` | Sự cố/bug/regression — vòng repro-first → fix red→green → distill kép | `skills/orchestrate/orca-issue.md` | orchestrate |
@@ -45,6 +46,7 @@ Giảm lỗi LLM-coding phổ biến. Thiên về cẩn trọng hơn tốc độ
 | `web-crawl` | Crawl/scrape a URL or site into LLM-ready markdown | `skills/utils/web-crawl.md` | utils |
 | `web-clone` | Clone a page's exact UI as one self-contained offline HTML | `skills/utils/web-clone.md` | utils |
 | `fdk` | Đang phát triển CHÍNH framework (skill/rule/validator/hook/wiki) | `skills/utils/fdk.md` | utils |
+| `medic` | Cổng sức khoẻ tổng — 1 lệnh chứng minh hệ còn khoẻ (luật cắn/drift/docs/code/eval); trước commit, sau pull, nghi rule không chặn | `skills/utils/medic.md` | utils |
 | `new-skill` | Scaffold một skill mới (canonical+mirror+lệnh register) | `skills/dev-loop/new-skill.md` | dev-loop |
 | `loop-runner` | Vòng lặp agent có guardrail (propose→verify→revise, termination) | `skills/dev-loop/loop-runner.md` | dev-loop |
 | `failure-flywheel` | Gom lỗi lặp → đề xuất rule/skill mới (error-analysis) | `skills/dev-loop/failure-flywheel.md` | dev-loop |

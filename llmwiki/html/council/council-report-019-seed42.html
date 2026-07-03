@@ -1,0 +1,137 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Council Stage-4 report — blind peer-rank. Deterministic từ council.transcript.json.">
+<title>Council · báo cáo Stage-4</title><link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23232028'/><path d='M8 22h16M16 7l7 5H9z' stroke='%23c9a24b' stroke-width='2' fill='none' stroke-linejoin='round'/></svg>">
+<style>
+:root{--paper:#f4f1ea;--ink:#26221c;--dim:#7a7266;--faint:#a79e90;--line:rgba(60,52,40,.13);
+ --card:rgba(255,253,249,.74);--stroke:rgba(255,255,255,.9);--accent:#8a6d2f;--shadow:24px 40px 24px rgba(60,48,28,.10)}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;font:15px/1.6 Georgia,Cambria,"Times New Roman",ui-serif,serif;color:var(--ink);background:var(--paper);
+ background-image:radial-gradient(120% 80% at 15% -5%,rgba(214,198,160,.35),transparent 55%),radial-gradient(90% 70% at 100% 0%,rgba(150,168,178,.22),transparent 50%);
+ min-height:100dvh;-webkit-font-smoothing:antialiased}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:99;opacity:.5;mix-blend-mode:multiply;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.045'/%3E%3C/svg%3E")}
+.wrap{max-width:940px;margin:0 auto;padding:56px 22px 90px}
+.tabnum{font-variant-numeric:tabular-nums}
+.body-sans{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.eyebrow{font:600 12px/1 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+h1{font-weight:600;font-size:clamp(30px,5vw,44px);line-height:1.04;letter-spacing:-.015em;margin:12px 0 10px;text-wrap:balance;max-width:22ch}
+.q{color:var(--dim);font-size:16px;max-width:60ch;text-wrap:pretty}
+.meta{margin-top:14px;font:500 12.5px/1 ui-monospace,Menlo,monospace;color:var(--faint)}
+.warn{background:rgba(176,106,44,.09);border:1px solid rgba(176,106,44,.32);border-left:3px solid #b06a2c;border-radius:13px;
+ padding:14px 16px;margin:26px 0 8px;font-size:13.5px;color:#5f4a2e;font-family:ui-sans-serif,system-ui,sans-serif}
+.sect{margin:46px 0 18px;display:flex;align-items:baseline;gap:14px}
+.sect .n{font-size:26px;color:var(--accent);line-height:1} .sect h2{font-weight:600;font-size:21px;margin:0;letter-spacing:-.01em}
+.sect .rule{flex:1;height:1px;background:var(--line)}
+.pcard{background:var(--card);border:1px solid var(--stroke);border-radius:20px;padding:22px 24px;margin:18px 0;position:relative;overflow:hidden;
+ box-shadow:0 1px 0 rgba(255,255,255,.7) inset,var(--shadow);transition:transform .28s cubic-bezier(.2,.7,.2,1),box-shadow .28s}
+.pcard:hover{transform:translateY(-3px);box-shadow:0 1px 0 rgba(255,255,255,.8) inset,32px 54px 30px rgba(60,48,28,.14)}
+.phead{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.pav{width:46px;height:46px;border-radius:14px;color:#fff;font-weight:600;font-size:20px;display:grid;place-items:center;flex:0 0 46px;font-family:ui-sans-serif,system-ui,sans-serif}
+.pname{font-size:19px;font-weight:700;letter-spacing:-.01em;font-family:ui-sans-serif,system-ui,-apple-system,sans-serif}
+.plens{margin-top:3px;font:italic 500 13px/1.35 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+ color:var(--ac);opacity:.92}
+.rankpill{font:600 11.5px/1 ui-monospace,Menlo,monospace;color:var(--dim);margin-left:6px}
+.blindtag{margin-left:auto;align-self:flex-start;font:600 11px/1 ui-monospace,Menlo,monospace;color:var(--ac);
+ border:1px solid var(--ac);border-radius:7px;padding:5px 9px}
+.ansbody{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:14px;line-height:1.66;max-width:66ch}
+.ansbody p{margin:9px 0;color:#3a342c}
+.ansbody .lead{font-size:14px;font-weight:600;color:var(--ink);margin:0 0 9px}
+.ansbody b.pt{font-weight:600;color:var(--ink)} .lead b.pt{font-weight:700}
+.ansbody p:first-child{margin-top:0}
+ol.ans{margin:10px 0 2px;padding-left:0;list-style:none;counter-reset:a}
+ol.ans li{position:relative;padding-left:30px;margin-bottom:11px;line-height:1.62}
+ol.ans li::before{counter-increment:a;content:counter(a);position:absolute;left:0;top:1px;width:18px;height:18px;border-radius:6px;
+ background:var(--ac);color:#fff;font:700 11px/18px ui-monospace,Menlo,monospace;text-align:center}
+.tblwrap{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:rgba(255,253,249,.6);box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;font-size:13.5px;font-family:ui-sans-serif,system-ui,sans-serif}
+th,td{text-align:left;padding:12px 15px;border-bottom:1px solid var(--line)} tbody tr:last-child td{border-bottom:0}
+tbody tr{transition:background .18s} tbody tr:hover{background:rgba(138,109,47,.06)}
+th{color:var(--faint);font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.06em;background:rgba(60,52,40,.03)}
+.mono{font-family:ui-monospace,Menlo,monospace} .dim{color:var(--dim)}
+.chip{display:inline-flex;align-items:center;gap:6px;background:color-mix(in srgb,var(--c) 12%,var(--paper));
+ border:1px solid color-mix(in srgb,var(--c) 55%,transparent);color:var(--c);border-radius:9px;padding:5px 11px;margin:9px 8px 0 0;
+ font:600 12.5px/1 ui-sans-serif,system-ui,sans-serif;transition:transform .2s}
+.chip:hover{transform:translateY(-2px)} .chip::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c)}
+.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin:0 0 18px}
+@media(max-width:640px){.kpi{grid-template-columns:1fr}}
+.kpi div{background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:16px 18px;box-shadow:var(--shadow);transition:transform .26s}
+.kpi div:hover{transform:translateY(-3px)}
+.kpi b{display:block;font-size:22px;font-weight:600;margin:5px 0 3px;text-transform:capitalize}
+.kpi span{color:var(--faint);font:600 10.5px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.07em}
+.kpi em{font-style:normal;color:var(--dim);font-size:12px;font-family:ui-sans-serif,system-ui,sans-serif}
+.synth{background:linear-gradient(158deg,rgba(138,109,47,.10),rgba(63,125,116,.06));border:1px solid rgba(138,109,47,.26);
+ border-radius:20px;padding:24px 26px;margin-top:16px;box-shadow:var(--shadow)}
+.synth .lbl{font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.09em;color:var(--accent)}
+.synth p{margin:7px 0;font-size:13.5px;line-height:1.6;font-family:ui-sans-serif,system-ui,sans-serif}
+ul.synlist{margin:6px 0 10px;padding:0;list-style:none;counter-reset:s;font-family:ui-sans-serif,system-ui,sans-serif}
+ul.synlist li{position:relative;padding-left:26px;margin-bottom:8px;font-size:13.5px;line-height:1.55}
+ul.synlist li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:0;width:18px;height:18px;border-radius:6px;
+ background:var(--accent);color:#fff;font:700 11px/18px ui-monospace,Menlo,monospace;text-align:center}
+.reveal{margin-top:16px} .reveal .lbl{font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--faint)}
+footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);color:var(--faint);font-size:12.5px;text-align:center;
+ font-family:ui-sans-serif,system-ui,sans-serif}
+a:focus-visible,tr:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+</style></head><body><div class="wrap">
+<header>
+  <div class="eyebrow">🏛 Council · Stage-4</div>
+  <h1>Hội đồng chấm mù</h1>
+  <p class="q">7 hardening /fdk từ stress-test phiên phân mảnh — làm cái nào, bỏ cái nào?</p>
+  <div class="meta tabnum">seed 42 · council.py/1.0 · 3 giám khảo · 5 ghế</div>
+</header>
+
+<section><div class="sect"><span class="n tabnum">1</span><h2>Ý kiến hội đồng</h2><span class="rule"></span></div>
+    <article class="pcard" style="--ac:#7a5c86">
+      <div class="phead">
+        <div class="pav" style="background:#7a5c86">L</div>
+        <div><div class="pname">Lão Tử <span class="rankpill tabnum">🥇 #1 · mean 1.666667</span></div><div class="plens">Vô vi &amp; để tự nhiên nảy</div></div>
+        <div class="blindtag">nhãn C</div>
+      </div>
+      <div class="ansbody"><p>[LAOZI vô vi] Bảy luật = bảy hàng rào quanh vườn đã có người làm — cưỡng chế, mỗi rule một điểm phải nhớ/bảo trì/không-quên-bật. <b class="pt">Ba thói quen quên quy về MỘT gốc</b>: agent không tự nhìn lại việc mình vừa làm trước khi coi là xong.</p><p>Nếu medic là HÀNH-VI-MẶC-ĐỊNH-CUỐI-PHIÊN (tự chạy, không cần nhớ gọi), nó là GƯƠNG SOI — A1/A4/A5 tự lộ trong gương, không cần luật riêng. <b class="pt">Đó là vô vi</b>: không thêm luật cấm hành-vi-sai, mà thêm một điểm-cuối soi lại để cái sai tự hiện.</p><p><b class="pt">Đòn bẩy cao nhất</b>: gắn medic cuối phiên như phản xạ (rửa tay trước khi ra khỏi bếp), không phải rule &#x27;phải chạy medic&#x27; (rule ép cũng dễ quên y hệt). A7 bồi đắp gương → làm cùng.</p><p>A2/A3/A6 KHOAN — biến-thể của &#x27;không tự soi&#x27;, tự khắc bị medic tốt bắt; thêm giờ là luật chồng triệu chứng.</p></div>
+    </article>
+    <article class="pcard" style="--ac:#7a5c86">
+      <div class="phead">
+        <div class="pav" style="background:#7a5c86">C</div>
+        <div><div class="pname">Charlie Munger <span class="rankpill tabnum">🥈 #2 · mean 2.333333</span></div><div class="plens">Đa mô hình &amp; nghịch đảo</div></div>
+        <div class="blindtag">nhãn D</div>
+      </div>
+      <div class="ansbody"><p>[MUNGER nghịch đảo] 7 đề xuất dễ chết vì LẠM PHÁT CỔNG — agent nhớ 7 luật rời, áp lực lên thì tặc lưỡi bỏ, medic nằm cuối chuỗi dài không ai chạy. A2/A6 chỉ văn bản nhắc, không tự-cắn → quên trước tiên → BỎ hoặc nuốt vào A1 như câu trong template.</p><p>A4/A5 TRÙNG lõi (&#x27;sửa core → bước cuối bắt buộc medic&#x27;) → GỘP làm một: &#x27;medic luôn là bước cuối mặc định, không lựa chọn khác&#x27;, xoá nhánh auto-regen riêng. A3 nhập vào A7 (đều là &#x27;medic phải bắt lỗi thật&#x27;).</p><p><b class="pt">Giữ đúng HAI cổng tự-cắn</b>: A1 (generator ép buộc) + A7 mở rộng (medic full-coverage chạy sau mọi thay đổi core). A2/A3/A4/A5/A6 co thành phụ lục trong hai cổng đó — thứ không tự-động-cắn sớm muộn cũng chỉ là giấy.</p></div>
+    </article>
+    <article class="pcard" style="--ac:#3f7d74">
+      <div class="phead">
+        <div class="pav" style="background:#3f7d74">D</div>
+        <div><div class="pname">Dieter Rams <span class="rankpill tabnum">🌱 #3 · mean 3.333333</span></div><div class="plens">Thiết kế lấy người dùng</div></div>
+        <div class="blindtag">nhãn B</div>
+      </div>
+      <div class="ansbody"><p>[RAMS less-but-better] Giữ 3: A1 (rule sinh-qua-generator + probe — gốc rễ của cả hand-author lẫn quên-verify; không có A1 mọi thứ khác là lời nhắc suông không răng). A5 (sửa engine → selftest+medic — instance cụ thể nhất của quên-verify, neo A1 vào điểm chạm thật).</p><p>A2 (reuse-engine-trước — giải trực tiếp reinvent, thứ A1 không chạm). <b class="pt">BỎ</b>: A4/A6 là trường hợp riêng của A5 (gộp vào), kẻo luật chồng luật; A3 không giải 1 trong 3 thói quen gốc, để dành khi có triệu chứng; A7 coverage là hệ quả tự nhiên của A1 nghiêm túc, không phải mục tiêu riêng (&#x27;medic đúng chỗ hiểm &gt; medic phủ hết&#x27;).</p><p>A1 khung xương, A5 khớp nối, A2 cơ bắp chống reinvent — ba cái đủ khép kín 3 thói quen.</p></div>
+    </article>
+    <article class="pcard" style="--ac:#5f7a3f">
+      <div class="phead">
+        <div class="pav" style="background:#5f7a3f">N</div>
+        <div><div class="pname">Nassim Taleb <span class="rankpill tabnum">#4 #4 · mean 3.666667</span></div><div class="plens">Phản mong manh &amp; rủi ro đuôi</div></div>
+        <div class="blindtag">nhãn A</div>
+      </div>
+      <div class="ansbody"><p>[TALEB] Ưu tiên A3 &gt; A1 &gt; A7 &gt; A5 &gt; A4 &gt; A6 &gt; A2. A3 (chỉ bản đang-cắn trước khi sync) là BẢO HIỂM RẺ NHẤT chống lỗi-đuôi bất khả nghịch — sync sai hướng ghi đè xoá công sức thật, không lùi được; cắn tự động, blast-radius một câu hỏi.</p><p>A1 (rule+medic probe khớp-generator) rẻ, cắn tự động, vá hand-author, chi phí cận biên ~0 vì tận dụng medic. A7 (giữ anti-fragile + coverage 5/17→17/17) mở rộng phòng thủ không thêm tầng mới.</p><p>A5 gate thủ tục hữu ích nhưng chỉ vá thói quen (c). A4 tốt nhưng scope hẹp theo loại thay đổi, đừng regen mù.</p><p>A6 phạm vi hẹp (lỗi hiển thị, không bất khả nghịch). A2 over-engineer nhất — chỉ văn bản nhắc, không tự-cắn, dựa trí nhớ agent (đúng thứ đã chứng minh không đáng tin); gộp vào một probe medic thay vì rule đạo đức.</p></div>
+    </article>
+    <article class="pcard" style="--ac:#7a5c86">
+      <div class="phead">
+        <div class="pav" style="background:#7a5c86">L</div>
+        <div><div class="pname">Linus Torvalds <span class="rankpill tabnum">#5 #5 · mean 4.0</span></div><div class="plens">Kỹ thuật thực dụng</div></div>
+        <div class="blindtag">nhãn E</div>
+      </div>
+      <div class="ansbody"><p>[LINUS] Làm ngay: A1 (artifact-phải-sinh-qua-generator, kỷ luật gốc) + A5 (sửa engine → bắt buộc selftest+medic, gate rẻ khoá cửa có sẵn). A7 giữ nguyên (đúng model, tăng coverage medic là việc kỹ thuật thuần).</p><p>A4 chọn nhánh HOOK auto-regen, KHÔNG phải &#x27;medic mặc định cuối MỌI phiên&#x27; (process-theater, agent sẽ lờ). A3 hợp lý nhưng chỉ cần 1 dòng nguyên tắc trong quy trình sync, không dựng guard riêng.</p><p><b class="pt">A2 và A6 để sau/cắt</b>: A2 biên mờ (&#x27;giống X&#x27; bao xa?), ép thành rule cứng thì dùng sai; A6 gộp vào /verify. <b class="pt">Tóm</b>: 2 rule cứng A1/A5, giữ A7, hook A4, A3 thành câu; A2/A6/medic-mọi-phiên là theater.</p></div>
+    </article></section>
+<section><div class="sect"><span class="n tabnum">2</span><h2>Bỏ phiếu kín</h2><span class="rule"></span></div>
+<div class="tblwrap"><table><thead><tr><th>Giám khảo</th><th>Xếp hạng (nhãn ẩn)</th><th>Thứ tự trình bày · chống thiên vị vị trí</th></tr></thead><tbody><tr><td>seat-1</td><td class="mono">C › D › E › B › A</td><td class="mono dim">C → E → D → B → A</td></tr><tr><td>seat-3</td><td class="mono">A › D › C › B › E</td><td class="mono dim">A → C → B → D → E</td></tr><tr><td>seat-4</td><td class="mono">C › B › D › E › A</td><td class="mono dim">C → A → B → E → D</td></tr></tbody></table></div>
+<div class="reveal"><span class="lbl">Bản lộ danh — chỉ lộ ở cuối</span><br><span class="chip" style="--c:#7a5c86">C = Lão Tử</span><span class="chip" style="--c:#7a5c86">D = Charlie Munger</span><span class="chip" style="--c:#3f7d74">B = Dieter Rams</span><span class="chip" style="--c:#5f7a3f">A = Nassim Taleb</span><span class="chip" style="--c:#7a5c86">E = Linus Torvalds</span></div></section>
+<section><div class="sect"><span class="n tabnum">3</span><h2>Dashboard chốt</h2><span class="rule"></span></div>
+<div class="kpi">
+ <div><span>Quán quân</span><b>🥇 Lão Tử</b><em class="tabnum">nhãn C · điểm TB 1.666667</em></div>
+ <div><span>Gây tranh cãi nhất</span><b>Nassim Taleb</b><em class="tabnum">nhãn A · phân tán 3.555556</em></div>
+ <div><span>Đồng thuận</span><b class="tabnum">3 GK</b><em>phân hoá</em></div>
+</div>
+<div class="tblwrap"><table><thead><tr><th>Nhãn ẩn</th><th>Uỷ viên</th><th>Điểm hạng TB</th><th>Hạng từng GK</th></tr></thead><tbody><tr><td class="mono"><b>C</b></td><td>🥇 Lão Tử</td><td class="mono tabnum">1.666667</td><td class="mono dim tabnum">[1, 3, 1]</td></tr><tr><td class="mono"><b>D</b></td><td>🥈 Charlie Munger</td><td class="mono tabnum">2.333333</td><td class="mono dim tabnum">[2, 2, 3]</td></tr><tr><td class="mono"><b>B</b></td><td>🌱 Dieter Rams</td><td class="mono tabnum">3.333333</td><td class="mono dim tabnum">[4, 4, 2]</td></tr><tr><td class="mono"><b>A</b></td><td> Nassim Taleb</td><td class="mono tabnum">3.666667</td><td class="mono dim tabnum">[5, 1, 5]</td></tr><tr><td class="mono"><b>E</b></td><td> Linus Torvalds</td><td class="mono tabnum">4.0</td><td class="mono dim tabnum">[3, 5, 4]</td></tr></tbody></table></div>
+
+</section>
+<footer>Mọi số liệu từ council.transcript.json — report chỉ là lớp trình bày, không thêm phán xét mới.</footer>
+</div></body></html>

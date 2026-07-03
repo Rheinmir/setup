@@ -221,6 +221,15 @@ Transcript đầy đủ (5 câu trả lời gốc, thứ tự trình bày chốn
 - Đây là **proposal + đánh giá**, chưa code — theo rule dev-loop: dừng chờ duyệt trước khi hiện thực.
 - Liên quan: [[fdk-dev-strategy]] (#3/#4/#7 ăn lãi kép), [[harness-enforcement-floor]], [[rule-registry]], [[query-retrieval-eval]].
 
+## Kiểm chứng NGOÀI-MẪU (2026-07-03 — benchmark self-index)
+Council seed42 chê bộ test cũ "tự chọn đề thi (ludic fallacy)". Đáp lại: để **council ra đề** → dựng app **ngoài-mẫu** (TS plugin-host, ground-truth niêm phong hash) → chạy **engine thật** `build-wiki-graph.py` → chấm mù bằng cơ chế benchmark chuẩn ngành (edge P/R/F1 + hallucination/omission-rate + negative-control; áp từ ContextBench/Unified-KG-Benchmark qua `/last30days`).
+
+**Kết quả (graph-builder đơn lẻ):** semantic-relation F1 **0.842** (P .889/R .8), hallucination .125, negative PASS. Phân tích năng lực:
+- ✅ **Mạnh:** đọc đúng 5/5 quan hệ khai tường minh (derives-from/supersedes/contradicts/implements/depends-on); **không** đối-xứng-hóa contradicts; **không** bịa cạnh negative; **không** bịa implements cho YAML hỏng.
+- ❌ **Giòn (3 defect → [[failure-flywheel]]):** (1) `enrich_code` chỉ parse `.py` → **mù imports/touches code TS**; (2) graph-builder thiếu cờ chu trình + không quarantine YAML hỏng; (3) `WIKILINK_RE` không strip code-fence → false-positive `[[NotALink]]`.
+
+**Kết luận:** xác nhận engine **robust ở mặt thiết kế, chưa anti-fragile** ở đuôi ngoài-mẫu. ⚠️ Phạm vi: mới test `build-wiki-graph.py` đơn lẻ; hook auto-touches + validator `rel_integrity` + code-graph MCP **chưa exercise** — cần run tích hợp mới kết luận toàn hệ. Report: `llmwiki/html/030726-self-index-benchmark-report.html`. Đề: `council-report-010-seed42.html`. Proposal: [[020726-council-chon-de-thi-self-index]].
+
 ## Origin
 - **Source:** yêu cầu user 2026-07-02 (/goal — đánh giá hệ thống, lõi wiki quan hệ + traceability + chống context rot) + khảo sát repo (hooks, validators, fdk/tools, wiki structure)
 - **Draft:** `wiki/sources/draft/020726-wiki-core-relations.md`

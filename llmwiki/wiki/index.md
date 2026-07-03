@@ -53,3 +53,5 @@
 | [020726-overstack-docs-redesign](draft/uiux/020726-overstack-docs-redesign.md) | draft | 2026-07-02 |
 | [020726-ingest-fdk-strategy](sources/draft/020726-ingest-fdk-strategy.md) | draft | Ingest fdk-stragegy.md → pattern 8 nguyên tắc "Mongol" cho dev fdk (ghi vào fdk/wiki) |
 | [020726-audit-fdk-strategy](sources/draft/020726-audit-fdk-strategy.md) | draft | Audit 3 trụ theo 8 nguyên tắc Mongol pattern — nợ lớn nhất ở #3 (policy chưa drive, drift che) |
+| [020726-council-chon-de-thi-self-index](sources/draft/020726-council-chon-de-thi-self-index.md) | draft | 2026-07-02 |
+| [030726-eval-report](draft/orca/030726-eval-report.md) | draft | 2026-07-03 |

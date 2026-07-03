@@ -1,7 +1,7 @@
 <!-- SINH BẰNG CODE: build-capabilities.py — ĐỪNG sửa tay; chạy lại để cập nhật. -->
 # CAPABILITIES — toàn bộ đồ nghề (luôn-mới, đếm từ đĩa)
 
-**67 skill · 17 rule · 11 fdk-tool · 42 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
+**69 skill · 17 rule · 14 fdk-tool · 42 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
 
 ## Skills (gọi bằng `/<tên>`)
 
@@ -11,7 +11,7 @@
 - **`/query`** — Synthesize answer from wiki; persist new insights as wiki entries
 - **`/wiki-room`** — Mở room (subagent 1 tầng) nạp chi tiết wiki khi context phiên chính đã rot
 
-### dev-loop (11)
+### dev-loop (12)
 - **`/build-now-adapt-later`** — When a task is blocked by missing or unverified information (an undocumented protocol, an …
 - **`/failure-flywheel`** — Capture each agent failure, bucket and count it deterministically, and when a failure clas…
 - **`/impact-check`** — Map all callers and dependents of a symbol before modifying shared code
@@ -21,6 +21,7 @@
 - **`/onboard-codebase`** — Deep codebase analysis
 - **`/propose`** — Plan a feature before coding
 - **`/safe-change`** — Modify shared code without breaking existing callers
+- **`/ship`** — Workflow chốt PUSH/RELEASE
 - **`/verify-before-commit`** — Gate every commit
 - **`/wikieval`** — Turn wiki golden pages into a CI-blocking eval suite with a cheap→expensive assertion casc…
 
@@ -37,7 +38,7 @@
 - **`/orchestration`** — Use Orca orchestration for structured multi-agent coordination: threaded messages, blockin…
 - **`/trace-grader`** — Score the PATH an agent took (tool choice, ordering, retries, repeatability)
 
-### utils (41)
+### utils (42)
 - **`/brandkit`** — Premium brand-kit image generation skill for creating high-end brand-guidelines boards, lo…
 - **`/cavecrew`** — Decision guide for delegating to caveman-style subagents
 - **`/caveman`** — Ultra-compressed communication mode
@@ -69,6 +70,7 @@
 - **`/join-project`** — Orient nhanh vào dự án đang chạy đã có llmwiki
 - **`/last30days`** — Research what people actually say about any topic in the last 30 days
 - **`/md-to-html`** — Render Markdown thành standalone HTML
+- **`/medic`** — Cổng sức khoẻ tổng / tuyến phòng thủ cuối của framework overstack
 - **`/minimalist-ui`** — Clean editorial-style interfaces
 - **`/redesign-existing-projects`** — Upgrades existing websites and apps to premium quality
 - **`/snapshot-push`** — Push bonbon-ai outer repo as full snapshot, including be/ and fe/ content
@@ -108,8 +110,11 @@
 - `build-overstack-docs.py`
 - `build-skill-search.py`
 - `build-wiki-graph.py`
+- `code_imports.py`
 - `docs-curate.py`
+- `medic.py`
 - `new-skill.py`
+- `whiteboard-skill-map.py`
 - `wiki-relations.py`
 
 ## Harness scripts (`python3 harness/scripts/<x>`)

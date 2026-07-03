@@ -1,0 +1,137 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Council Stage-4 report — blind peer-rank. Deterministic từ council.transcript.json.">
+<title>Council · báo cáo Stage-4</title><link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23232028'/><path d='M8 22h16M16 7l7 5H9z' stroke='%23c9a24b' stroke-width='2' fill='none' stroke-linejoin='round'/></svg>">
+<style>
+:root{--paper:#f4f1ea;--ink:#26221c;--dim:#7a7266;--faint:#a79e90;--line:rgba(60,52,40,.13);
+ --card:rgba(255,253,249,.74);--stroke:rgba(255,255,255,.9);--accent:#8a6d2f;--shadow:24px 40px 24px rgba(60,48,28,.10)}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;font:15px/1.6 Georgia,Cambria,"Times New Roman",ui-serif,serif;color:var(--ink);background:var(--paper);
+ background-image:radial-gradient(120% 80% at 15% -5%,rgba(214,198,160,.35),transparent 55%),radial-gradient(90% 70% at 100% 0%,rgba(150,168,178,.22),transparent 50%);
+ min-height:100dvh;-webkit-font-smoothing:antialiased}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:99;opacity:.5;mix-blend-mode:multiply;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.045'/%3E%3C/svg%3E")}
+.wrap{max-width:940px;margin:0 auto;padding:56px 22px 90px}
+.tabnum{font-variant-numeric:tabular-nums}
+.body-sans{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.eyebrow{font:600 12px/1 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+h1{font-weight:600;font-size:clamp(30px,5vw,44px);line-height:1.04;letter-spacing:-.015em;margin:12px 0 10px;text-wrap:balance;max-width:22ch}
+.q{color:var(--dim);font-size:16px;max-width:60ch;text-wrap:pretty}
+.meta{margin-top:14px;font:500 12.5px/1 ui-monospace,Menlo,monospace;color:var(--faint)}
+.warn{background:rgba(176,106,44,.09);border:1px solid rgba(176,106,44,.32);border-left:3px solid #b06a2c;border-radius:13px;
+ padding:14px 16px;margin:26px 0 8px;font-size:13.5px;color:#5f4a2e;font-family:ui-sans-serif,system-ui,sans-serif}
+.sect{margin:46px 0 18px;display:flex;align-items:baseline;gap:14px}
+.sect .n{font-size:26px;color:var(--accent);line-height:1} .sect h2{font-weight:600;font-size:21px;margin:0;letter-spacing:-.01em}
+.sect .rule{flex:1;height:1px;background:var(--line)}
+.pcard{background:var(--card);border:1px solid var(--stroke);border-radius:20px;padding:22px 24px;margin:18px 0;position:relative;overflow:hidden;
+ box-shadow:0 1px 0 rgba(255,255,255,.7) inset,var(--shadow);transition:transform .28s cubic-bezier(.2,.7,.2,1),box-shadow .28s}
+.pcard:hover{transform:translateY(-3px);box-shadow:0 1px 0 rgba(255,255,255,.8) inset,32px 54px 30px rgba(60,48,28,.14)}
+.phead{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.pav{width:46px;height:46px;border-radius:14px;color:#fff;font-weight:600;font-size:20px;display:grid;place-items:center;flex:0 0 46px;font-family:ui-sans-serif,system-ui,sans-serif}
+.pname{font-size:19px;font-weight:700;letter-spacing:-.01em;font-family:ui-sans-serif,system-ui,-apple-system,sans-serif}
+.plens{margin-top:3px;font:italic 500 13px/1.35 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+ color:var(--ac);opacity:.92}
+.rankpill{font:600 11.5px/1 ui-monospace,Menlo,monospace;color:var(--dim);margin-left:6px}
+.blindtag{margin-left:auto;align-self:flex-start;font:600 11px/1 ui-monospace,Menlo,monospace;color:var(--ac);
+ border:1px solid var(--ac);border-radius:7px;padding:5px 9px}
+.ansbody{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:14px;line-height:1.66;max-width:66ch}
+.ansbody p{margin:9px 0;color:#3a342c}
+.ansbody .lead{font-size:14px;font-weight:600;color:var(--ink);margin:0 0 9px}
+.ansbody b.pt{font-weight:600;color:var(--ink)} .lead b.pt{font-weight:700}
+.ansbody p:first-child{margin-top:0}
+ol.ans{margin:10px 0 2px;padding-left:0;list-style:none;counter-reset:a}
+ol.ans li{position:relative;padding-left:30px;margin-bottom:11px;line-height:1.62}
+ol.ans li::before{counter-increment:a;content:counter(a);position:absolute;left:0;top:1px;width:18px;height:18px;border-radius:6px;
+ background:var(--ac);color:#fff;font:700 11px/18px ui-monospace,Menlo,monospace;text-align:center}
+.tblwrap{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:rgba(255,253,249,.6);box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;font-size:13.5px;font-family:ui-sans-serif,system-ui,sans-serif}
+th,td{text-align:left;padding:12px 15px;border-bottom:1px solid var(--line)} tbody tr:last-child td{border-bottom:0}
+tbody tr{transition:background .18s} tbody tr:hover{background:rgba(138,109,47,.06)}
+th{color:var(--faint);font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.06em;background:rgba(60,52,40,.03)}
+.mono{font-family:ui-monospace,Menlo,monospace} .dim{color:var(--dim)}
+.chip{display:inline-flex;align-items:center;gap:6px;background:color-mix(in srgb,var(--c) 12%,var(--paper));
+ border:1px solid color-mix(in srgb,var(--c) 55%,transparent);color:var(--c);border-radius:9px;padding:5px 11px;margin:9px 8px 0 0;
+ font:600 12.5px/1 ui-sans-serif,system-ui,sans-serif;transition:transform .2s}
+.chip:hover{transform:translateY(-2px)} .chip::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c)}
+.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin:0 0 18px}
+@media(max-width:640px){.kpi{grid-template-columns:1fr}}
+.kpi div{background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:16px 18px;box-shadow:var(--shadow);transition:transform .26s}
+.kpi div:hover{transform:translateY(-3px)}
+.kpi b{display:block;font-size:22px;font-weight:600;margin:5px 0 3px;text-transform:capitalize}
+.kpi span{color:var(--faint);font:600 10.5px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.07em}
+.kpi em{font-style:normal;color:var(--dim);font-size:12px;font-family:ui-sans-serif,system-ui,sans-serif}
+.synth{background:linear-gradient(158deg,rgba(138,109,47,.10),rgba(63,125,116,.06));border:1px solid rgba(138,109,47,.26);
+ border-radius:20px;padding:24px 26px;margin-top:16px;box-shadow:var(--shadow)}
+.synth .lbl{font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.09em;color:var(--accent)}
+.synth p{margin:7px 0;font-size:13.5px;line-height:1.6;font-family:ui-sans-serif,system-ui,sans-serif}
+ul.synlist{margin:6px 0 10px;padding:0;list-style:none;counter-reset:s;font-family:ui-sans-serif,system-ui,sans-serif}
+ul.synlist li{position:relative;padding-left:26px;margin-bottom:8px;font-size:13.5px;line-height:1.55}
+ul.synlist li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:0;width:18px;height:18px;border-radius:6px;
+ background:var(--accent);color:#fff;font:700 11px/18px ui-monospace,Menlo,monospace;text-align:center}
+.reveal{margin-top:16px} .reveal .lbl{font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--faint)}
+footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);color:var(--faint);font-size:12.5px;text-align:center;
+ font-family:ui-sans-serif,system-ui,sans-serif}
+a:focus-visible,tr:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+</style></head><body><div class="wrap">
+<header>
+  <div class="eyebrow">🏛 Council · Stage-4</div>
+  <h1>Hội đồng chấm mù</h1>
+  <p class="q">Nếu agent không query, hạ tầng retrieval có hữu ích? Đo/ép/sửa gì?</p>
+  <div class="meta tabnum">seed 42 · council.py/1.0 · 3 giám khảo · 5 ghế</div>
+</header>
+
+<section><div class="sect"><span class="n tabnum">1</span><h2>Ý kiến hội đồng</h2><span class="rule"></span></div>
+    <article class="pcard" style="--ac:#3f7d74">
+      <div class="phead">
+        <div class="pav" style="background:#3f7d74">A</div>
+        <div><div class="pname">Ada Lovelace <span class="rankpill tabnum">🥇 #1 · mean 1.666667</span></div><div class="plens">Hệ hình thức &amp; trừu tượng</div></div>
+        <div class="blindtag">nhãn B</div>
+      </div>
+      <div class="ansbody"><p>[ADA] Hàm giá trị = V = P(đúng|có bối cảnh) − P(đúng|không) × P(bối cảnh THỰC SỰ cần). Phần lớn edit CỤC BỘ (sửa hàm, thêm log, đổi string) grep+Read đã đạt P gần trần vì thông tin nằm ngay file đang mở — retrieval không cộng gì; nên 31% &#x27;làm mù&#x27; đo bằng query-rate không phải bệnh, mà là dấu hiệu hạ tầng đang được dùng-đúng-chỗ-nó-vô-dụng.</p><p>Retrieval STRICTLY tốt hơn CHỈ khi quan hệ PHI CỤC BỘ: A đổi kéo B sai (dependency ẩn, decision nơi khác, convention xuyên file) — grep không thấy vì không biết từ khoá, Read không thấy vì file ngoài tầm mắt. Phép đo đúng = 2 outcome:</p><ol class='ans'><li>REINVENT-rate (viết lại thứ đã có vì không biết nó tồn tại);</li><li>cross-break-rate (sửa A gãy B mà graph đáng lẽ cảnh báo). <b class="pt">Hai số này định giá GRAPH riêng</b>: thấp dù query-rate thấp = graph làm đúng việc âm thầm. Cao mà agent không gọi = UX/trigger sai HOẶC lớp đó chỉ mô phỏng grep (đáng bỏ). <b class="pt">Kết luận</b>: đừng Goodhart-hoá query-rate; đo reinvent+cross-break, giữ code-graph/quan-hệ-phi-cục-bộ, cắt phần chỉ bọc grep.</li></ol></div>
+    </article>
+    <article class="pcard" style="--ac:#7a5c86">
+      <div class="phead">
+        <div class="pav" style="background:#7a5c86">L</div>
+        <div><div class="pname">Linus Torvalds <span class="rankpill tabnum">🥈 #2 · mean 1.666667</span></div><div class="plens">Kỹ thuật thực dụng</div></div>
+        <div class="blindtag">nhãn C</div>
+      </div>
+      <div class="ansbody"><p>[LINUS] GIỮ: code-graph relations — quan hệ phi-cục-bộ (touches/derives-from/imports code↔code) grep không tái tạo được (đòi truy vết lịch sử/nhiều file); giá trị thật, không trang trí. <b class="pt">BỎ/HẠ</b>: skill /query nếu 69% việc hợp lệ đã giải bằng grep/Read — đừng ép gọi /query &#x27;cho đủ metric&#x27; (process-theater).</p><p><b class="pt">Đo ĐÚNG</b>: không phải số-lần-gọi mà REINVENT-rate — agent viết lại/tra lại thứ đã có vì không biết đã có (như 2 lần hand-author phiên này) = chi phí thật; call-count chỉ vanity. <b class="pt">Cũng đo</b>: khi cần quan hệ phi-cục-bộ (ai touch file này, module derive từ đâu) agent có tự tìm code-graph không hay mò grep ra kết quả sai.</p><p><b class="pt">Sửa</b>: hạ /query thành lối-tắt-tuỳ-chọn cho câu hỏi tổng-hợp-lớn (không phải tra-điểm); code-graph cần ENTRYPOINT RẺ (một lệnh, không phải skill 3 tầng) để chạm dễ như gõ grep. <b class="pt">Kết luận</b>: giữ graph (làm việc grep không làm được), hạ /query (lớp bọc), đo reinvent-rate thay call-count.</p></div>
+    </article>
+    <article class="pcard" style="--ac:#5f7a3f">
+      <div class="phead">
+        <div class="pav" style="background:#5f7a3f">N</div>
+        <div><div class="pname">Nassim Taleb <span class="rankpill tabnum">🌱 #3 · mean 2.666667</span></div><div class="plens">Phản mong manh &amp; rủi ro đuôi</div></div>
+        <div class="blindtag">nhãn A</div>
+      </div>
+      <div class="ansbody"><p>[TALEB] Hạ tầng = OPTIONALITY: chi phí xây đã trả, cái cần đo là &#x27;khi cần có cứu được không&#x27;, không phải &#x27;dùng bao nhiêu %&#x27;. 31% edit-mù là số hù doạ sai câu hỏi: nếu grep đủ đúng thì agent chọn công cụ rẻ hợp lý (convexity), không phải hạ tầng vô dụng.</p><p><b class="pt">Vấn đề thật ở ĐUÔI</b>: context-rot, phiên-mới, quyết định xuyên nhiều file mà grep không thấy quan hệ ẩn (derives-from, rationale lịch sử) → thiếu wiki/graph gây HỎNG IM LẶNG. Ép agent gọi /query mỗi phiên = nhầm bảo hiểm với nghĩa vụ (mua bảo hiểm rồi bắt dùng hàng ngày phá chính lý do nó tồn tại).</p><p>Đừng đo &#x27;% gọi /query&#x27; (Goodhart). <b class="pt">Đo</b>: (a) trong case KHÔNG retrieval, tỉ lệ sau phải sửa/revert do thiếu context (hại thực); (b) retrieval CÓ đổi quyết định không (counterfactual, không phải tần suất); (c) drift wiki/graph khỏi code (premium bảo hiểm thật).</p><p>Nếu (a) thấp và (c) cao = dead weight thật → cắt/tự-heal. <b class="pt">Kết luận</b>: đừng ép query, làm retrieval RẺ-đến-vô-thức lúc cần (tự surface) và đo bằng thiệt-hại-khi-thiếu.</p></div>
+    </article>
+    <article class="pcard" style="--ac:#7a5c86">
+      <div class="phead">
+        <div class="pav" style="background:#7a5c86">D</div>
+        <div><div class="pname">Daniel Kahneman <span class="rankpill tabnum">#4 #4 · mean 4.0</span></div><div class="plens">Thiên kiến nhận thức</div></div>
+        <div class="blindtag">nhãn E</div>
+      </div>
+      <div class="ansbody"><p>[KAHNEMAN] &#x27;31% edit thiếu retrieval&#x27; + &#x27;agent hiếm gọi /query&#x27; bị gộp thành &#x27;hạ tầng vô dụng&#x27; — nhảy từ metric hẹp (call-count một skill) sang phán xét cả hệ tri thức; metric đó đo hành-vi-gọi-công-cụ, không đo thông tin có tới agent không. grep/Read vào wiki-content VẪN là retrieval, chỉ không qua /query mà bộ đếm nhận ra; nhầm &#x27;không gọi skill X&#x27; với &#x27;không lấy thông tin&#x27; = availability bias (đếm cái dễ đếm). <b class="pt">Cảnh giác cả hai chiều</b>: đừng vì IKEA-effect mà bênh, cũng đừng vì một số mà phủ nhận sạch.</p><p>Giá trị wiki KHÔNG ở tần suất /query mà ở: bộ nhớ chống context-rot XUYÊN PHIÊN, người đọc (onboarding/review), và làm NGUỒN cho grep có thứ đúng để tìm (wiki là tiền đề ẩn của grep, không phải đối thủ). Đo lại 3 trục:</p><ol class='ans'><li>% edit có BẤT KỲ retrieval (kể cả grep vào path wiki);</li><li>content-hit (grep trúng nội dung wiki tạo);</li><li>cross-session reuse. <b class="pt">Kết luận</b>: số này KHÔNG chứng minh hạ tầng vô dụng — nó chứng minh GIAO DIỆN /query ma-sát cao hơn grep quen (vấn đề UX một component), không phải phá sản cả hệ.</li></ol></div>
+    </article>
+    <article class="pcard" style="--ac:#7a5c86">
+      <div class="phead">
+        <div class="pav" style="background:#7a5c86">C</div>
+        <div><div class="pname">Charlie Munger <span class="rankpill tabnum">#5 #5 · mean 5.0</span></div><div class="plens">Đa mô hình &amp; nghịch đảo</div></div>
+        <div class="blindtag">nhãn D</div>
+      </div>
+      <div class="ansbody"><p>[MUNGER nghịch đảo] Hạ tầng vô dụng khi: /query chậm/đắt hơn grep cho câu hỏi cụ-thể-file; wiki lệch thực tế không ai cập nhật (sai còn nguy hơn không trả); /query mơ hồ thiếu trỏ-file, agent phải verify lại bằng grep (tốn gấp đôi). Nếu ba cái đúng thì 31% &#x27;làm mù&#x27; là DẤU HIỆU KHOẺ — agent tối ưu đúng.</p><p>Ca ngược (bỏ query là DẠI) chỉ lộ downstream: sửa trùng logic đã có, phá invariant trong ADR cũ, quay lại sửa lần hai. Phân biệt không đo được từ tỉ-lệ-gọi; <b class="pt">phải đo downstream</b>: trong edit &#x27;làm mù&#x27;, bao nhiêu dẫn tới revert/patch cùng phiên hoặc phiên sau, và RETRO-TEST (chạy /query trên câu hỏi tương ứng xem có trả đúng context bị bỏ lỡ).</p><p>Nếu /query cứu phần lớn case rework → ép+cải query có giá; nếu /query trả rác/chậm trên chính nhóm đó → sửa /query (index/path/latency), không ép agent. <b class="pt">Kết luận</b>: đo rework/lỗi nhóm &#x27;làm mù&#x27; + phản-thực /query — /query cứu được thì đầu tư, không thì CẮT và tin agent chọn đúng.</p></div>
+    </article></section>
+<section><div class="sect"><span class="n tabnum">2</span><h2>Bỏ phiếu kín</h2><span class="rule"></span></div>
+<div class="tblwrap"><table><thead><tr><th>Giám khảo</th><th>Xếp hạng (nhãn ẩn)</th><th>Thứ tự trình bày · chống thiên vị vị trí</th></tr></thead><tbody><tr><td>seat-2</td><td class="mono">B › A › C › E › D</td><td class="mono dim">B → D → A → C → E</td></tr><tr><td>seat-3</td><td class="mono">C › B › A › E › D</td><td class="mono dim">A → C → B → D → E</td></tr><tr><td>seat-4</td><td class="mono">C › B › A › E › D</td><td class="mono dim">C → A → B → E → D</td></tr></tbody></table></div>
+<div class="reveal"><span class="lbl">Bản lộ danh — chỉ lộ ở cuối</span><br><span class="chip" style="--c:#3f7d74">B = Ada Lovelace</span><span class="chip" style="--c:#7a5c86">C = Linus Torvalds</span><span class="chip" style="--c:#5f7a3f">A = Nassim Taleb</span><span class="chip" style="--c:#7a5c86">E = Daniel Kahneman</span><span class="chip" style="--c:#7a5c86">D = Charlie Munger</span></div></section>
+<section><div class="sect"><span class="n tabnum">3</span><h2>Dashboard chốt</h2><span class="rule"></span></div>
+<div class="kpi">
+ <div><span>Quán quân</span><b>🥇 Ada Lovelace</b><em class="tabnum">nhãn B · điểm TB 1.666667</em></div>
+ <div><span>Gây tranh cãi nhất</span><b>Linus Torvalds</b><em class="tabnum">nhãn C · phân tán 0.888889</em></div>
+ <div><span>Đồng thuận</span><b class="tabnum">3 GK</b><em>phân hoá</em></div>
+</div>
+<div class="tblwrap"><table><thead><tr><th>Nhãn ẩn</th><th>Uỷ viên</th><th>Điểm hạng TB</th><th>Hạng từng GK</th></tr></thead><tbody><tr><td class="mono"><b>B</b></td><td>🥇 Ada Lovelace</td><td class="mono tabnum">1.666667</td><td class="mono dim tabnum">[1, 2, 2]</td></tr><tr><td class="mono"><b>C</b></td><td>🥈 Linus Torvalds</td><td class="mono tabnum">1.666667</td><td class="mono dim tabnum">[3, 1, 1]</td></tr><tr><td class="mono"><b>A</b></td><td>🌱 Nassim Taleb</td><td class="mono tabnum">2.666667</td><td class="mono dim tabnum">[2, 3, 3]</td></tr><tr><td class="mono"><b>E</b></td><td> Daniel Kahneman</td><td class="mono tabnum">4.0</td><td class="mono dim tabnum">[4, 4, 4]</td></tr><tr><td class="mono"><b>D</b></td><td> Charlie Munger</td><td class="mono tabnum">5.0</td><td class="mono dim tabnum">[5, 5, 5]</td></tr></tbody></table></div>
+
+</section>
+<footer>Mọi số liệu từ council.transcript.json — report chỉ là lớp trình bày, không thêm phán xét mới.</footer>
+</div></body></html>

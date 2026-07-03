@@ -26,7 +26,7 @@ LOOP_MAP = {
     # dev-loop
     "impact-check": "dev-loop", "new-project-setup": "dev-loop", "onboard-codebase": "dev-loop",
     "propose": "dev-loop", "safe-change": "dev-loop",
-    "verify-before-commit": "dev-loop", "build-now-adapt-later": "dev-loop",
+    "verify-before-commit": "dev-loop", "build-now-adapt-later": "dev-loop", "ship": "dev-loop",
     "new-skill": "dev-loop", "loop-runner": "dev-loop", "failure-flywheel": "dev-loop", "wikieval": "dev-loop",
     # orchestrate
     "orca-dispatch-reference": "orchestrate", "orca-onboard": "orchestrate", "orca-issue": "orchestrate",
@@ -38,7 +38,7 @@ LOOP_MAP = {
     "cavecrew": "utils", "caveman": "utils", "caveman-commit": "utils", "caveman-compress": "utils",
     "caveman-help": "utils", "caveman-review": "utils", "caveman-stats": "utils",
     "extract-site": "utils", "harness-tour": "utils",
-    "harness-update": "utils", "health-check": "utils", "fdk": "utils", "md-to-html": "utils",
+    "harness-update": "utils", "health-check": "utils", "fdk": "utils", "medic": "utils", "md-to-html": "utils",
     "docs-curate": "utils",
     "sync-template": "utils", "uat-nonit-testcase": "utils", "cursor-animated-sites": "utils",
     # publish 260626 — skill trước LOCAL-ONLY (đẩy vào repo để không mất khi cài máy/dự án khác)

@@ -58,6 +58,13 @@ def check(path):
 
     problems = []
 
+    # (f) FORCE-QUERY grounding (R7-f, ADR-009): draft proposed có Plan PHẢI có '## Context'
+    #     có nội dung (>=20 ký tự) — tóm tắt wiki liên quan đã query. Chống propose "mù".
+    ctx = section(text, "Context")
+    if ctx is None or len(ctx.strip()) < 20:
+        problems.append("(f) thieu '## Context' co noi dung (>=20 ky tu) — force-query grounding (R7-f): "
+                        "phai tom tat wiki/ADR/decision lien quan da query truoc khi propose")
+
     # (a) Agent Task Assignment
     agent_sec = section(text, "Agent Task Assignment")
     if agent_sec is None:

@@ -101,8 +101,7 @@
   📄 File: <code>/Users/giatran/orca/setup/setup/llmwiki/html/fdk-problem-tree.html</code></footer>
 </div>
 
-<script type="application/json" id="tree-data">
-[
+<script type="application/json" id="tree-data">[
   {
     "id": "p-01",
     "parent": null,
@@ -335,9 +334,71 @@
     "date": "02/07/26",
     "session": "a6ded00e",
     "pending": true
+  },
+  {
+    "id": "p-auto-10",
+    "parent": null,
+    "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
+    "desc": "Bề mặt bị chạm: llmwiki/html/council/council-report-006-seed42.html, llmwiki/wiki/log.md. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát); lần /fdk kế tiếp sẽ chưng lọc về đúng nhánh.",
+    "status": "open",
+    "scope": [],
+    "date": "02/07/26",
+    "session": "c0fd85d2",
+    "pending": true
+  },
+  {
+    "id": "p-auto-11",
+    "parent": null,
+    "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
+    "desc": "Bề mặt bị chạm: llmwiki/html/council/council-report-006-seed42.html, llmwiki/wiki/log.md. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát); lần /fdk kế tiếp sẽ chưng lọc về đúng nhánh.",
+    "status": "open",
+    "scope": [],
+    "date": "02/07/26",
+    "session": "a1833594",
+    "pending": true
+  },
+  {
+    "id": "p-12",
+    "parent": "p-11",
+    "title": "Engine tự-index mù code non-Python + thiếu cờ toàn vẹn/impact",
+    "desc": "Benchmark ngoài-mẫu (council seed42 ra đề, app TS plugin-host, chấm mù) lộ: enrich_code chỉ parse .py (mù imports/touches TS/JS/Go/Rust); graph-builder thiếu cờ chu trình (cycle) + không quarantine frontmatter YAML hỏng; WIKILINK_RE không strip code-fence (bịa [[link]] trong code). Muốn tốt trục code phải dựa code-graph MCP (phần mềm ngoài). Vá SELF-CONTAINED: code_imports.py (stdlib-only, EXTRACTORS đa-ngôn-ngữ, resolve alias/relative, dynamic→unresolved), Mảnh B strip code-fence, Mảnh C detect_cycles + _frontmatter_ok, Mảnh D impact_reverse (reverse-imports cap=1). CLI thêm --code-root/--json. Chấm lại: 10/10 đòn, recall 1.0, provably-false 0. CÒN: chưa có RÀNG BUỘC (gate) + ĐO (baseline) để chống tái sinh — đó là bước kế 'cần ràng buộc rồi đo'. [2026-07-03 ràng-buộc-rồi-đo] ĐÃ dựng feedback loop: baseline.json đóng băng (recall 1.0, provably_false 0, 10/10 đòn, PASS) + check.py (regress recall/provably-false/full-pass/negative/seal → exit≠0). CHỨNG MINH cắn: bỏ code_imports → recall 0.8 → gate REGRESS. run.sh xoá result cũ trước (chống false-green). CÒN để full 3/3 trụ: promote eval khỏi scratchpad + wire vào fdk-gate/CI (đổi luật chơi — cần duyệt) + skill bọc (trụ skills).",
+    "status": "partial",
+    "scope": [
+      "harness",
+      "llmwiki"
+    ],
+    "date": "2026-07-03",
+    "solvedBy": "code_imports.py + build-wiki-graph.py (Mảnh A-D) + benchmark council-app; proposal 020726-council-chon-de-thi ; baseline.json + check.py (gate regress)",
+    "session": "orca-fdk"
+  },
+  {
+    "id": "p-13",
+    "parent": null,
+    "title": "Rà luật 'có cắn không' mới phủ 5/17 — 12 rule chưa chứng minh + drift validator",
+    "desc": "harness-doctor.py (fire-drill: mỗi rule 1 fixture BAD+GOOD, chạy validator thật, BAD phải bị chặn) ĐÃ có nhưng chỉ bite-test 5/17 rule (R1/R2/R5/R7/R9 — content-validator). 12 rule KHÔNG được chứng minh cắn: hook_event R3/R4/R8/R10/R17, process_gate R12/R15, repo_gate R6, deny_write R14, content_check R11/R13/R16 → an-tâm-giả. Chạy NGAY còn lộ 2 vấn đề LIVE: (1) proposal_complete.py DRIFT (hooks-copy khác harness-src, 1 bản cũ — chính R7); (2) pre-commit chưa cài .git/hooks (backstop L2 tắt). Thiết kế: mở rộng harness-doctor 4 tầng phủ 17/17 (A content-validator mở rộng, B hook_event feed synthetic event, C process_gate temp-git BAD-state, D documentary presence-check) + --ci fail nếu có dark-rail HOẶC rule non-documentary chưa có bite-test. overstack.html: generator build-overstack-docs.py đã live+wired stop.py; fix orca-issue phân nhóm → --check xanh. [DONE T1-T2] medic dựng: fdk/tools/medic.py (6 probe compose harness-doctor + build-*.py --check + compileall + policy live), gõ toàn cục (~/.local/bin/medic) + /medic slash skill (register đủ mặt, sync-skills+registry ✓). medic tự bắt ngay: capabilities stale (regen), validator proposal_complete drift, VÀ bắt cú sync SAI HƯỚNG làm R7 rail-đen → khôi phục 5/5. CÒN (proposal 030726-medic T3-T5): coverage 5/17→17/17, wire pre-commit/CI, promote eval + cài pre-commit.",
+    "status": "partial",
+    "scope": [
+      "harness",
+      "skills"
+    ],
+    "date": "2026-07-03",
+    "session": "orca-fdk",
+    "solvedBy": "fdk/tools/medic.py + /medic skill + proposal 030726-medic"
+  },
+  {
+    "id": "p-14",
+    "parent": null,
+    "title": "Council report hiện 'seat-N' thay vì tên uỷ viên (mất lens/phong cách)",
+    "desc": "render_report_html map author→tên bằng persona-id, nhưng author trong transcript là seat-id (seat-1..N) → không khớp → rơi về 'seat-N', mất cả lens. Bản gốc 006 dùng persona-id làm author nên đúng; runs seat-id thì hỏng. VÁ GỐC: _load_persona_meta index thêm theo seat-id lấy map seat→persona từ config.seats[].persona → hiện đúng TÊN + lens. selftest OK. Re-render 013 hiện Dieter Rams/Ada/Linus/Taleb/Lão Tử + phong cách.",
+    "status": "solved",
+    "scope": [
+      "harness"
+    ],
+    "date": "2026-07-03",
+    "solvedBy": "council.py _load_persona_meta seat-index",
+    "session": "orca"
   }
-]
-</script>
+]</script>
 
 <script>
 (function(){

@@ -1,0 +1,131 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Council Stage-4 report — blind peer-rank. Deterministic từ council.transcript.json.">
+<title>Council · báo cáo Stage-4</title><link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23232028'/><path d='M8 22h16M16 7l7 5H9z' stroke='%23c9a24b' stroke-width='2' fill='none' stroke-linejoin='round'/></svg>">
+<style>
+:root{--paper:#f4f1ea;--ink:#26221c;--dim:#7a7266;--faint:#a79e90;--line:rgba(60,52,40,.13);
+ --card:rgba(255,253,249,.74);--stroke:rgba(255,255,255,.9);--accent:#8a6d2f;--shadow:24px 40px 24px rgba(60,48,28,.10)}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;font:15px/1.6 "Iowan Old Style","Palatino",Georgia,ui-serif,serif;color:var(--ink);background:var(--paper);
+ background-image:radial-gradient(120% 80% at 15% -5%,rgba(214,198,160,.35),transparent 55%),radial-gradient(90% 70% at 100% 0%,rgba(150,168,178,.22),transparent 50%);
+ min-height:100dvh;-webkit-font-smoothing:antialiased}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:99;opacity:.5;mix-blend-mode:multiply;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.045'/%3E%3C/svg%3E")}
+.wrap{max-width:940px;margin:0 auto;padding:56px 22px 90px}
+.tabnum{font-variant-numeric:tabular-nums}
+.body-sans{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.eyebrow{font:600 12px/1 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+h1{font-weight:600;font-size:clamp(30px,5vw,44px);line-height:1.04;letter-spacing:-.015em;margin:12px 0 10px;text-wrap:balance;max-width:22ch}
+.q{color:var(--dim);font-size:16px;max-width:60ch;text-wrap:pretty}
+.meta{margin-top:14px;font:500 12.5px/1 ui-monospace,Menlo,monospace;color:var(--faint)}
+.warn{background:rgba(176,106,44,.09);border:1px solid rgba(176,106,44,.32);border-left:3px solid #b06a2c;border-radius:13px;
+ padding:14px 16px;margin:26px 0 8px;font-size:13.5px;color:#5f4a2e;font-family:ui-sans-serif,system-ui,sans-serif}
+.sect{margin:46px 0 18px;display:flex;align-items:baseline;gap:14px}
+.sect .n{font-size:26px;color:var(--accent);line-height:1} .sect h2{font-weight:600;font-size:21px;margin:0;letter-spacing:-.01em}
+.sect .rule{flex:1;height:1px;background:var(--line)}
+.pcard{background:var(--card);border:1px solid var(--stroke);border-radius:20px;padding:22px 24px;margin:18px 0;position:relative;overflow:hidden;
+ box-shadow:0 1px 0 rgba(255,255,255,.7) inset,var(--shadow);transition:transform .28s cubic-bezier(.2,.7,.2,1),box-shadow .28s}
+.pcard:hover{transform:translateY(-3px);box-shadow:0 1px 0 rgba(255,255,255,.8) inset,32px 54px 30px rgba(60,48,28,.14)}
+.phead{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.pav{width:46px;height:46px;border-radius:14px;color:#fff;font-weight:600;font-size:20px;display:grid;place-items:center;flex:0 0 46px}
+.pname{font-size:19px;font-weight:600;letter-spacing:-.01em;text-transform:capitalize}
+.rankpill{font:600 11.5px/1 ui-monospace,Menlo,monospace;color:var(--dim);margin-left:6px}
+.blindtag{margin-left:auto;align-self:flex-start;font:600 11px/1 ui-monospace,Menlo,monospace;color:var(--ac);
+ border:1px solid var(--ac);border-radius:7px;padding:5px 9px}
+.ansbody{font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px}
+.ansbody p{margin:6px 0;color:#3a342c} ol.ans{margin:8px 0 2px;padding-left:0;list-style:none;counter-reset:a}
+ol.ans li{position:relative;padding-left:26px;margin-bottom:8px;line-height:1.55}
+ol.ans li::before{counter-increment:a;content:counter(a);position:absolute;left:0;top:1px;width:18px;height:18px;border-radius:6px;
+ background:var(--ac);color:#fff;font:700 11px/18px ui-monospace,Menlo,monospace;text-align:center}
+.tblwrap{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:rgba(255,253,249,.6);box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;font-size:13.5px;font-family:ui-sans-serif,system-ui,sans-serif}
+th,td{text-align:left;padding:12px 15px;border-bottom:1px solid var(--line)} tbody tr:last-child td{border-bottom:0}
+tbody tr{transition:background .18s} tbody tr:hover{background:rgba(138,109,47,.06)}
+th{color:var(--faint);font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.06em;background:rgba(60,52,40,.03)}
+.mono{font-family:ui-monospace,Menlo,monospace} .dim{color:var(--dim)}
+.chip{display:inline-flex;align-items:center;gap:6px;background:color-mix(in srgb,var(--c) 12%,var(--paper));
+ border:1px solid color-mix(in srgb,var(--c) 55%,transparent);color:var(--c);border-radius:9px;padding:5px 11px;margin:9px 8px 0 0;
+ font:600 12.5px/1 ui-sans-serif,system-ui,sans-serif;transition:transform .2s}
+.chip:hover{transform:translateY(-2px)} .chip::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c)}
+.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin:0 0 18px}
+@media(max-width:640px){.kpi{grid-template-columns:1fr}}
+.kpi div{background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:16px 18px;box-shadow:var(--shadow);transition:transform .26s}
+.kpi div:hover{transform:translateY(-3px)}
+.kpi b{display:block;font-size:22px;font-weight:600;margin:5px 0 3px;text-transform:capitalize}
+.kpi span{color:var(--faint);font:600 10.5px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.07em}
+.kpi em{font-style:normal;color:var(--dim);font-size:12px;font-family:ui-sans-serif,system-ui,sans-serif}
+.synth{background:linear-gradient(158deg,rgba(138,109,47,.10),rgba(63,125,116,.06));border:1px solid rgba(138,109,47,.26);
+ border-radius:20px;padding:24px 26px;margin-top:16px;box-shadow:var(--shadow)}
+.synth .lbl{font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.09em;color:var(--accent)}
+.synth p{margin:7px 0;font-size:13.5px;line-height:1.6;font-family:ui-sans-serif,system-ui,sans-serif}
+ul.synlist{margin:6px 0 10px;padding:0;list-style:none;counter-reset:s;font-family:ui-sans-serif,system-ui,sans-serif}
+ul.synlist li{position:relative;padding-left:26px;margin-bottom:8px;font-size:13.5px;line-height:1.55}
+ul.synlist li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:0;width:18px;height:18px;border-radius:6px;
+ background:var(--accent);color:#fff;font:700 11px/18px ui-monospace,Menlo,monospace;text-align:center}
+.reveal{margin-top:16px} .reveal .lbl{font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--faint)}
+footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);color:var(--faint);font-size:12.5px;text-align:center;
+ font-family:ui-sans-serif,system-ui,sans-serif}
+a:focus-visible,tr:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+</style></head><body><div class="wrap">
+<header>
+  <div class="eyebrow">🏛 Council · Stage-4</div>
+  <h1>Hội đồng chấm mù</h1>
+  <p class="q">Chọn app mẫu ngoài-mẫu + bộ harass để test tối đa khả năng framework tự áp 8 loại vector quan hệ (khó nhất, lộ điểm giòn nhất).</p>
+  <div class="meta tabnum">seed 42 · council.py/1.0 · 3 giám khảo · 5 ghế</div>
+</header>
+
+<section><div class="sect"><span class="n tabnum">1</span><h2>Ý kiến hội đồng</h2><span class="rule"></span></div>
+    <article class="pcard" style="--ac:#7a5c86">
+      <div class="phead">
+        <div class="pav" style="background:#7a5c86">S</div>
+        <div><div class="pname">seat-3 <span class="rankpill tabnum">🥇 #1 · mean 1.333333</span></div></div>
+        <div class="blindtag">blind D</div>
+      </div>
+      <div class="ansbody"><p>Nghịch đảo trước: muốn engine self-index sai chắc chắn nhất, chọn app mà tín hiệu cú pháp (import path, wikilink, tên file) BỘI ƯỚC với sự thật ngữ nghĩa — cái trông giống liên kết không phải liên kết, cái liên kết thật lại vô hình với parser. App mẫu: monorepo TypeScript &#x27;plugin host&#x27; cỡ vừa (~120–200 file, đa package qua path-alias @core/*, có DI container, re-export barrel index.ts, lớp adapter nạp plugin bằng chuỗi động import(name)) — khó vì import thật ẩn sau alias và runtime string, barrel tạo cạnh giả hàng loạt. Tám đòn:</p><ol class='ans'><li>imports alias vs runtime: trộn import từ @core/db (giải qua tsconfig paths) với await import(pluginId) (động không giải) và require trong comment — nối cạnh 1, KHÔNG nối 3, đánh dấu 2 bất định.</li><li>imports barrel giả cạnh: index.ts re-export 30 module; phân biệt đi-xuyên-barrel với phụ thuộc thật.</li><li>wikilink treo + đồng danh: hai [[Auth]] hai thư mục + một [[Auth]] trỏ file đã xoá.</li><li>derives-from chu trình: A→B→C→A frontmatter; phải BÁO chu trình không im lặng.</li><li>supersedes vs contradicts rename lan truyền: payments.md→billing.md trong khi ba trang còn supersedes payments.md.</li><li>contradicts bất đối xứng: X contradicts Y nhưng Y depends-on X.</li><li>implements corrupt frontmatter: YAML hỏng ở implements; phải quarantine trang đó, KHÔNG bỏ 7 vector còn lại.</li><li>touches sửa lan truyền im lặng: sửa 1 file lõi mà 5 file phụ thuộc đổi hành vi nhưng không đổi frontmatter. Nguyên tắc Munger: bài test chỉ có giá trị khi có thể LÀM engine trượt — mỗi đòn phải có đáp án đúng niêm phong trước (ground-truth) để chấm mù, nếu không lại rơi đúng ludic fallacy.</li></ol></div>
+    </article>
+    <article class="pcard" style="--ac:#7a5c86">
+      <div class="phead">
+        <div class="pav" style="background:#7a5c86">S</div>
+        <div><div class="pname">seat-5 <span class="rankpill tabnum">🥈 #2 · mean 1.666667</span></div></div>
+        <div class="blindtag">blind C</div>
+      </div>
+      <div class="ansbody"><p>App mẫu: CLI quản lý gói/phụ thuộc thực dụng cỡ vừa — pkg-mgr bằng Python (~30-45 file: resolver/, lockfile/, registry_client/, cache/, cli/, tests/), có lịch sử git thật, có refactor và deprecate — vì nó ép engine phân biệt import thật với quan hệ ngữ nghĩa khai báo, đúng công việc kỹ sư hằng ngày, không phô diễn. Bộ harass tối thiểu-mà-đủ, mỗi đòn một tiêu chí đúng/sai sắc:</p><ol class='ans'><li>imports re-export: cli/__init__.py re-export resolver.core qua from ..resolver import *, không gọi trực tiếp — pass nếu nối cli/__init__→resolver/core bằng imports mà KHÔNG bịa touches; fail nếu bỏ sót hoặc gán nhầm wikilink.</li><li>touches vs derives-from rename: commit đổi tên lockfile/v1.py→lockfile/v2.py kèm sửa nội dung — pass nếu v2 nhận derives-from:v1 song song touches của commit, fail nếu gộp một mối hoặc mất dấu tổ tiên.</li><li>supersedes vs contradicts gần-giống: ADR-B supersedes ADR-A (thay trật tự), ADR-C contradicts ADR-A (mâu thuẫn cùng tồn tại) — pass nếu giữ đúng hai hướng, fail nếu quy về một loại.</li><li>depends-on vs implements trừu tượng→cụ thể: registry_client depends-on cache-interface còn redis_cache.py implements cache-interface — pass nếu không hoán đổi chiều, fail nếu đảo.</li><li>wikilink nhiễu: [[cache]] trong khối code và [[cache]] trong văn xuôi — pass nếu chỉ link cái ngoài code.</li><li>code↔code imports vòng: resolver import lockfile, lockfile import resolver — pass nếu ghi hai cạnh imports không treo/nhân đôi vô hạn.</li><li>âm tính cám dỗ: hai file cùng tên hàm resolve() nhưng không import nhau — pass nếu KHÔNG bịa vector. Chấm: mỗi đòn nhị phân đúng/sai trên cạnh và nhãn loại; qua khi ≥6/7 và tuyệt đối không dương-tính-giả ở đòn 5 và 7.</li></ol></div>
+    </article>
+    <article class="pcard" style="--ac:#3f7d74">
+      <div class="phead">
+        <div class="pav" style="background:#3f7d74">S</div>
+        <div><div class="pname">seat-4 <span class="rankpill tabnum">🌱 #3 · mean 3.0</span></div></div>
+        <div class="blindtag">blind B</div>
+      </div>
+      <div class="ansbody"><p>App mẫu: CLI ETL nhỏ-vừa bằng Python (~25–40 file) kiểu pipeline nhập liệu→chuẩn hoá→xuất báo cáo, có 3 phần dễ đánh lừa người ra đề —</p><ol class='ans'><li>hai module tính thuế tax_v1.py và tax_v2.py cùng interface nhưng v2 âm thầm thay công thức,</li><li>legacy_adapter.py bọc core/normalizer.py mà KHÔNG import trực tiếp (gọi qua reflection/registry),</li><li>cặp schema.md và schema_draft.md mâu thuẫn về đơn vị tiền tệ — tất cả CỐ TÌNH không khai frontmatter. Chỗ WYSIATI của người ra đề: chỉ kiểm được cái họ tự dán nhãn; harass phải bắt engine SUY quan hệ không có sẵn.</li><li>supersedes ngầm: tax_v2 thay tax_v1 không ai khai; suy từ tên+trùng-signature+git-timeline — bẫy: chỉ đọc frontmatter thì mù, suy ẩu thì gán mọi cặp *_v1/*_v2.</li><li>contradicts giá trị: schema.md VND-integer, schema_draft.md USD-float — mâu thuẫn NGỮ NGHĨA không từ khoá; phải đọc nội dung.</li><li>imports reflection: legacy_adapter phụ thuộc normalizer qua registry string, không import tĩnh.</li><li>depends-on vs imports: phụ thuộc THỜI-GIAN-CHẠY qua biến môi trường/config chung.</li><li>derives-from copy-lặng: report_pretty.py bê 80% thuật toán từ report_core.py bằng copy-paste đổi tên biến — nhận dẫn xuất qua tương đồng cấu trúc.</li><li>implements interface ngầm: class hiện thực Protocol/ABC file khác nhưng KHÔNG kế thừa tường minh (duck typing).</li><li>wikilink/touches nhiễu: rải tên file trong comment/docstring &#x27;see normalizer.py&#x27; đo dương-tính-giả.</li><li>Bẫy đối chứng âm tính: 2 file cùng tên chủ đề nhưng ĐỘC LẬP — điểm liệt nếu engine bịa vector; chốt chống ludic fallacy, đo cả precision không chỉ recall.</li></ol></div>
+    </article>
+    <article class="pcard" style="--ac:#5f7a3f">
+      <div class="phead">
+        <div class="pav" style="background:#5f7a3f">S</div>
+        <div><div class="pname">seat-2 <span class="rankpill tabnum">#4 #4 · mean 4.333333</span></div></div>
+        <div class="blindtag">blind A</div>
+      </div>
+      <div class="ansbody"><p>App mẫu: monorepo thương mại điện tử cỡ vừa-lớn (~1.500–3.000 file, ví dụ Medusa/Saleor tự-host) — nhiều package chéo (core, payments, inventory, storefront, admin), vòng import lẫn nhau, tài liệu ADR mâu thuẫn theo thời gian; chọn vì mật độ liên kết chéo tăng siêu tuyến tính nên mọi sai số self-index bị khuếch đại. Đòn 1 (imports): chu trình A→B→C→A cộng re-export barrel index.ts và alias tsconfig @core/* — đuôi: phân biệt cạnh có hướng thật với alias ảo, không gộp thành wikilink. Đòn 2 (touches): commit refactor chạm 400 file chỉ đổi format/whitespace — đuôi: hook phải KHÔNG bơm 400 cạnh touches giả, scaling giết tín hiệu bằng nhiễu. Đòn 3 (derives-from vs implements): interface PaymentProvider + ba adapter, frontmatter cố ý khai lẫn implements↔derives-from — đuôi: engine tự cảnh báo khi khai báo người mâu thuẫn cấu trúc code thật hay ngoan ngoãn tin frontmatter. Đòn 4 (contradicts): hai ADR đảo chiều (ADR-012 REST, ADR-041 gRPC) chỉ khai supersedes, bỏ trống contradicts — đuôi: suy ra mâu thuẫn tiềm ẩn. Đòn 5 (wikilink nhiễu): nhắc tên trang Inventory trong câu phủ định hoặc code-block — tách link thật khỏi trùng-chuỗi. Đòn 6 (depends-on ẩn runtime): phụ thuộc qua DI/biến môi trường không import tĩnh — điểm giòn lớn nhất, engine nhìn text không thấy cạnh. Rủi ro không phải thiếu cạnh mà mạ vàng graph bằng cạnh sai với độ tin cậy cao — chấm bằng precision trên cạnh-khai-man và recall trên phụ-thuộc-ẩn, đừng khen tổng số cạnh.</p></div>
+    </article>
+    <article class="pcard" style="--ac:#7a5c86">
+      <div class="phead">
+        <div class="pav" style="background:#7a5c86">S</div>
+        <div><div class="pname">seat-1 <span class="rankpill tabnum">#5 #5 · mean 4.666667</span></div></div>
+        <div class="blindtag">blind E</div>
+      </div>
+      <div class="ansbody"><p>App mẫu: Homebrew (kho homebrew-core) — vài chục nghìn công thức Ruby .rb, mỗi cái khai depends_on, kèm patch, alias, lịch sử git mv dày đặc. Khó cho self-index vì quan hệ THẬT nằm rải ở ba tầng không đồng nhất: require_relative/Formula.include (imports), depends_on (depends-on), alias/rename qua lịch sử Git (supersedes) — không có frontmatter sạch, engine phải suy ra từ mã sống. Ngoài mẫu: không phải wiki, không tự-mô-tả, quy mô đủ lớn để lỗi đuôi hiện ra. Harass:</p><ol class='ans'><li>Rename lan truyền (touches+supersedes): git mv openssl.rb→openssl@3.rb rồi để 200 công thức vẫn depends_on openssl — supersede hay 200 link treo; ledger touches phải sống qua rename.</li><li>Chu trình depends-on: A→B→C→A vòng dài 7 nút.</li><li>Corrupt ledger giữa chừng: cắt cụt một dòng UTF-8 lửng — fail-open hay nuốt lỗi im lặng rồi báo graph khoẻ.</li><li>imports nguỵ trang: import động const_get/tên ghép chuỗi runtime — đọc tĩnh bỏ sót; require trong comment/heredoc phải KHÔNG bị tính.</li><li>contradicts cài bẫy: hai công thức cùng provides python loại trừ nhau — tự phát hiện mâu thuẫn ngầm khi không ai khai contradicts.</li><li>Unicode/đồng-danh: tên trùng sau NFC/NFD hoặc symlink vòng. Đòn đắt nhất là 3 và 5: cái tôi truy không phải link engine tô sai, mà link engine tự tin tô ĐÚNG trong khi dữ liệu đã hỏng — anti-fragile là hệ phải LỘ ra &#x27;tôi không biết&#x27;, không khâu vá để vẫn xanh.</li></ol></div>
+    </article></section>
+<section><div class="sect"><span class="n tabnum">2</span><h2>Bỏ phiếu kín</h2><span class="rule"></span></div>
+<div class="tblwrap"><table><thead><tr><th>Giám khảo</th><th>Ranking (nhãn ẩn)</th><th>Thứ tự trình bày · anchor guard</th></tr></thead><tbody><tr><td>seat-1</td><td class="mono">D › C › B › E › A</td><td class="mono dim">C → E → D → B → A</td></tr><tr><td>seat-3</td><td class="mono">D › C › B › A › E</td><td class="mono dim">A → C → B → D → E</td></tr><tr><td>seat-4</td><td class="mono">C › D › B › A › E</td><td class="mono dim">C → A → B → E → D</td></tr></tbody></table></div>
+<div class="reveal"><span class="lbl">Reveal map — chỉ lộ ở cuối</span><br><span class="chip" style="--c:#7a5c86">D = seat-3</span><span class="chip" style="--c:#7a5c86">C = seat-5</span><span class="chip" style="--c:#3f7d74">B = seat-4</span><span class="chip" style="--c:#5f7a3f">A = seat-2</span><span class="chip" style="--c:#7a5c86">E = seat-1</span></div></section>
+<section><div class="sect"><span class="n tabnum">3</span><h2>Dashboard chốt</h2><span class="rule"></span></div>
+<div class="kpi">
+ <div><span>Winner</span><b>🥇 seat-3</b><em class="tabnum">blind D · mean 1.333333</em></div>
+ <div><span>Most contested</span><b>seat-2</b><em class="tabnum">blind A · var 0.222222</em></div>
+ <div><span>Đồng thuận</span><b class="tabnum">3 GK</b><em>phân hoá</em></div>
+</div>
+<div class="tblwrap"><table><thead><tr><th>Blind</th><th>Ghế</th><th>Mean rank</th><th>Judge ranks</th></tr></thead><tbody><tr><td class="mono"><b>D</b></td><td>🥇 seat-3</td><td class="mono tabnum">1.333333</td><td class="mono dim tabnum">[1, 1, 2]</td></tr><tr><td class="mono"><b>C</b></td><td>🥈 seat-5</td><td class="mono tabnum">1.666667</td><td class="mono dim tabnum">[2, 2, 1]</td></tr><tr><td class="mono"><b>B</b></td><td>🌱 seat-4</td><td class="mono tabnum">3.0</td><td class="mono dim tabnum">[3, 3, 3]</td></tr><tr><td class="mono"><b>A</b></td><td> seat-2</td><td class="mono tabnum">4.333333</td><td class="mono dim tabnum">[5, 4, 4]</td></tr><tr><td class="mono"><b>E</b></td><td> seat-1</td><td class="mono tabnum">4.666667</td><td class="mono dim tabnum">[4, 5, 5]</td></tr></tbody></table></div>
+<div class='synth'><span class='lbl'>Chairman synthesis — câu trả lời chốt</span><p>BẢN CHỐT ĐỀ THI — LLM-COUNCIL / TỰ-INDEX 8 VECTOR QUAN HỆ</p><p>(1) APP MẪU: chọn winner — monorepo TypeScript &quot;plugin-host&quot;, quy mô VỪA ~150 file (đóng khung 120–200), cấu trúc packages/core/ (alias @core/*, DI container, barrel index.ts re-export), packages/plugins/* (mỗi plugin có frontmatter + code, một số nạp động qua import(name)), packages/host/, docs/ (trang wiki có [[wikilink]]), và ground-truth/ NIÊM PHONG (không cho engine đọc khi chấm).</p><p>(2) Vì sao quy mô vừa chứ không khổng lồ: đề e-commerce (~1.500–3.000 file) và Homebrew bị loại không phải vì kém giá trị mà vì BẤT KHẢ niêm phong ground-truth thủ công — không có nhãn vàng thì mọi &quot;khuếch đại lỗi khi scale&quot; chỉ là cảm tính, rơi lại đúng ludic fallacy mà đề này muốn tránh; ~30–200 file là ngưỡng vừa đủ lớn để sinh ca đuôi thật (chu trình, đồng danh, alias-vs-runtime) mà vẫn CHẤM MÙ được từng cạnh một.</p><p>(3) Đề lai: dẫn đầu bằng 8 đòn của winner, GRAFT tiêu chí pass/fail nhị phân + đòn âm tính của á quân, và ghép ca &quot;để trống frontmatter&quot; của hạng 3 để đo giới hạn suy-ngầm.</p><p>(4) LƯU Ý NĂNG LỰC ENGINE (bất biến khi ra đề): engine hiện chỉ TỰ SINH được touches, imports, wikilink; còn derives-from, depends-on, implements, supersedes, contradicts được ĐỌC từ frontmatter — nên mỗi loại &quot;đọc-frontmatter&quot; phải có ca KHAI TƯỜNG MINH (đo đọc-đúng, đây là tiêu chí PASS chính) VÀ có thể kèm ca ĐỂ TRỐNG (đo giới hạn suy-ngầm, ghi rõ FAIL ở ca này là GIỚI HẠN ĐÃ BIẾT, không tính là bug).</p><p>(5) DANH SÁCH 10 ĐÒN HARASS (mỗi đòn: vector · ca đuôi · PASS/FAIL):</p><p>Đòn 1 — imports · alias-vs-runtime: file dùng @core/x (tĩnh) lẫn import(pluginName) (động). PASS: engine ghi cạnh import tĩnh tới đích đã giải-alias; động ghi &quot;unresolved&quot; chứ KHÔNG bịa đích. FAIL: bịa đích cho import động.</p><p>Đòn 2 — imports · barrel giả cạnh: index.ts re-export 12 symbol nhưng file X chỉ nhập 1. PASS: cạnh X→(module nguồn thật của symbol đó) HOẶC X→barrel, KHÔNG nở 12 cạnh tới mọi module sau barrel. FAIL: fan-out toàn barrel.</p><p>Đòn 3 — wikilink · treo + đồng danh: [[Setup]] trỏ trang không tồn tại, và hai trang cùng tên ở thư mục khác. PASS: link treo đánh dấu dangling; đồng danh giải theo đường dẫn gần nhất và ghi cảnh báo nhập nhằng. FAIL: tự nối bừa vào một trang.</p><p>Đòn 4 — derives-from · chu trình: A derives B, B derives C, C derives A (khai frontmatter). PASS: giữ đủ 3 cạnh, phát hiện &amp; cờ chu trình, không vòng lặp vô hạn. FAIL: nuốt cạnh hoặc treo.</p><p>Đòn 5 — supersedes · rename lan truyền: module cũ authV1 bị authV2 supersede, tên đổi lan sang 4 chỗ tham chiếu. PASS: cạnh supersede đọc đúng + touches lan tới đúng 4 file. FAIL: sót chỗ tham chiếu hoặc đảo hướng supersede.</p><p>Đòn 6 — contradicts · bất đối xứng: X khai contradicts: Y nhưng Y KHÔNG khai ngược. PASS: ghi cạnh có hướng X→Y đúng như khai, KHÔNG tự thêm Y→X. FAIL: tự đối xứng hóa.</p><p>Đòn 7 — implements · corrupt-YAML-quarantine: một plugin có frontmatter YAML hỏng. PASS: cách ly file lỗi, báo lỗi parse, phần còn lại của graph vẫn dựng. FAIL: crash toàn cục hoặc bịa cạnh implements.</p><p>Đòn 8 — touches · lan truyền im lặng: sửa nội dung một util KHÔNG đổi import. PASS: touches chạm đúng tập phụ thuộc trực tiếp, không nở ra toàn repo. FAIL: bùng nổ hoặc bỏ sót.</p><p>Đòn 9 (âm tính) — CHỐNG BỊA CẠNH: hai file trùng tên hàm parse() nhưng KHÔNG import nhau và KHÔNG khai quan hệ. PASS: engine sinh ZERO cạnh giữa chúng. FAIL: bịa bất kỳ vector nào (đây là bẫy precision).</p><p>Đòn 10 (suy-ngầm) — depends-on ĐỂ TRỐNG frontmatter dù có phụ thuộc thực qua DI container. GHI RÕ: đây đo GIỚI HẠN; PASS-mở nếu suy đúng, nhưng FAIL ở đây KHÔNG trừ điểm năng lực lõi, chỉ ghi nhận &quot;giới hạn đã biết: depends-on cần khai tường minh&quot;.</p><p>(6) CÁCH CHẤM: mỗi đòn có nhãn vàng niêm phong = tập cạnh KỲ VỌNG (đúng hướng, đúng đích). Tính RECALL = cạnh-đúng-tìm-được / cạnh-vàng; PRECISION = cạnh-đúng / tổng-cạnh-engine-sinh. Đòn âm tính (9) chấm nhị phân: bất kỳ cạnh nào = FAIL tuyệt đối cho đòn đó. Đòn để-trống (10) chấm riêng ở &quot;bảng giới hạn&quot;, không trộn vào điểm lõi.</p><p>(7) Điểm tổng = trung bình recall (8 đòn frontmatter/tự-sinh) × hệ số precision (phạt bịa cạnh), báo cáo tách bạch 3 con số: recall lõi, precision lõi, kết-quả-âm-tính.</p><p>(8) NGUYÊN TẮC CHỐNG LUDIC FALLACY: (a) ground-truth NIÊM PHONG &amp; băm hash TRƯỚC khi engine chạy, không sửa nhãn sau khi thấy output; (b) engine KHÔNG được đọc thư mục ground-truth/; (c) chấm MÙ từng-cạnh bằng script so khớp máy, người chỉ phân xử ca nhập nhằng; (d) phân biệt rạch ròi &quot;đọc-đúng-frontmatter&quot; (đo năng lực) với &quot;suy-ngầm-khi-để-trống&quot; (đo giới hạn) — không quy giới hạn kiến trúc thành bug.</p><p>(9) Bàn giao T2: dựng app theo mục (1), gieo đúng 10 ca đuôi ở mục (5), sinh file nhãn vàng niêm phong + script chấm recall/precision/âm-tính trước khi cho engine index.</p></div>
+</section>
+<footer>Mọi số liệu từ council.transcript.json — report chỉ là lớp trình bày, không thêm phán xét mới.</footer>
+</div></body></html>

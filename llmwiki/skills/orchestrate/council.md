@@ -81,7 +81,14 @@ Roster + lý do bốc (case, cặp tension) **ghi vào transcript** để audita
 ## Protocol (maps each stage to an orca dispatch)
 
 ### Stage 1 — First Opinions (orchestration generates)
-Dispatch one worker per seat in `council.config.yaml`, same question to each:
+Dispatch one worker per seat in `council.config.yaml`, same question to each.
+
+> **NGÔN NGỮ (bắt buộc):** mọi seat/judge/chairman PHẢI trả lời bằng **tiếng Việt
+> CÓ DẤU đầy đủ** (đúng chính tả, đủ dấu thanh + dấu mũ). TUYỆT ĐỐI không viết
+> tiếng Việt không dấu (ASCII). `council.py` render trung thực text đầu vào
+> (`ensure_ascii=False`, không normalize) — nếu seat trả lời mất dấu thì report
+> cũng mất dấu. Chèn câu này vào MỌI prompt Stage-1/Stage-2/Stage-3.
+
 
 ```bash
 orca orchestration task-create --spec "Answer: <question>" --json

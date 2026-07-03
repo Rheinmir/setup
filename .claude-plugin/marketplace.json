@@ -61,6 +61,8 @@
         "./skills/harness-tour",
         "./skills/harness-update",
         "./skills/health-check",
+        "./skills/medic",
+        "./skills/ship",
         "./skills/high-end-visual-design",
         "./skills/image-to-code",
         "./skills/imagegen-frontend-mobile",

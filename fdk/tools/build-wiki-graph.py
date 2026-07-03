@@ -12,12 +12,73 @@ Usage:
 """
 import argparse
 import ast
+import importlib.util
 import json
 import re
 import subprocess
 import sys
 import time
 from pathlib import Path
+
+# --- Mảnh A: bộ trích imports language-agnostic self-contained (vendored cạnh file này) ---
+_ci_spec = importlib.util.spec_from_file_location("code_imports", Path(__file__).with_name("code_imports.py"))
+code_imports = importlib.util.module_from_spec(_ci_spec)
+try:
+    _ci_spec.loader.exec_module(code_imports)
+except Exception:
+    code_imports = None   # fail-open: thiếu module → im lặng bỏ enrich imports đa-ngôn-ngữ
+
+# --- Mảnh B: bỏ code-fence + inline-code trước khi bắt [[wikilink]] (chống false-positive) ---
+_FENCE_RE = re.compile(r"```.*?```", re.DOTALL)
+_INLINE_RE = re.compile(r"`[^`\n]*`")
+
+
+def _strip_code(text: str) -> str:
+    return _INLINE_RE.sub(" ", _FENCE_RE.sub(" ", text))
+
+
+# --- Mảnh C: kiểm frontmatter YAML "hỏng" ở mức cấu trúc (self-contained, không cần lib yaml) ---
+def _frontmatter_ok(fm: str) -> bool:
+    """Cân bằng {} [] và số nháy chẵn trên mỗi dòng non-comment → phát hiện YAML hỏng thô."""
+    if fm.count("{") != fm.count("}") or fm.count("[") != fm.count("]"):
+        return False
+    for ln in fm.splitlines():
+        if ln.count('"') % 2 or ln.count("'") % 2:
+            return False
+    return True
+
+
+def detect_cycles(nodes, edges, rels=("derives-from", "depends-on")):
+    """DFS tìm chu trình trên cạnh rels; gắn cờ node + trả list các chu trình (theo id)."""
+    id_of = {}
+    for n in nodes:
+        id_of[n["id"]] = n["id"]
+    adj = {}
+    for e in edges:
+        if e["rel"] in rels:
+            adj.setdefault(e["from"], []).append(e["to"])
+    cycles, color, stack = [], {}, []
+
+    def dfs(u):
+        color[u] = 1
+        stack.append(u)
+        for v in adj.get(u, []):
+            if color.get(v) == 1 and v in stack:
+                i = stack.index(v)
+                cycles.append(stack[i:] + [v])
+            elif color.get(v, 0) == 0:
+                dfs(v)
+        stack.pop()
+        color[u] = 2
+
+    for n in list(adj.keys()):
+        if color.get(n, 0) == 0:
+            dfs(n)
+    incycle = {x for c in cycles for x in c}
+    for n in nodes:
+        if n["id"] in incycle:
+            n["in_cycle"] = True
+    return cycles
 
 CONTENT_DIRS = ("concepts", "entities", "sources", "draft", "architecture", "tours")
 FRONTMATTER_RE = re.compile(r"^---[ \t]*\n(.*?)\n---", re.DOTALL)
@@ -54,12 +115,19 @@ def scan(wiki: Path, tag: str, nodes, edges, ledger, stale):
             fm = m.group(1) if m else ""
             get = lambda k: (LINE_RE[k].search(fm).group(1).strip().strip("'\"") if LINE_RE[k].search(fm) else "")
             pid = get("id") or p.stem
-            nodes.append({"id": pid, "path": p.relative_to(wiki).as_posix(), "group": d,
-                          "type": get("type") or "?", "title": get("title")[:90], "wiki": tag})
+            node = {"id": pid, "path": p.relative_to(wiki).as_posix(), "group": d,
+                    "type": get("type") or "?", "title": get("title")[:90], "wiki": tag}
+            # Mảnh C: frontmatter hỏng → quarantine, KHÔNG sinh cạnh từ nó (không crash, không bịa)
+            if fm and not _frontmatter_ok(fm):
+                node["quarantined"] = True
+                nodes.append(node)
+                continue
+            nodes.append(node)
             for rel, kind, tgt in REL_RE.findall(fm):
                 edges.append({"from": pid, "rel": rel, "to": tgt, "kind": kind})
             typed_to = {t for _, _, t in REL_RE.findall(fm)}
-            for w in dict.fromkeys(WIKILINK_RE.findall(text[m.end():] if m else text)):
+            body = _strip_code(text[m.end():] if m else text)   # Mảnh B: bỏ code-fence/inline
+            for w in dict.fromkeys(WIKILINK_RE.findall(body)):
                 w = w.strip()
                 if w and w != pid and w not in typed_to:
                     edges.append({"from": pid, "rel": "wikilink", "to": w, "kind": "to"})
@@ -269,22 +337,27 @@ def enrich_code(nodes, edges, repo_root):
     - làm giàu: mỗi node code gắn symbols (def/class) + commit gần nhất.
     """
     root = Path(repo_root)
-    # index basename .py → relpath (bỏ .git, node_modules, .overstack-kit)
-    pyindex = {}
+    # index basename module → relpath (dùng cho Python/Go/Rust theo module-name; bỏ .git/node_modules...)
+    modindex = {}
     for p in root.rglob("*.py"):
         rel = p.relative_to(root).as_posix()
         if any(seg in rel for seg in (".git/", "node_modules/", ".overstack-kit/", "workspaces/")):
             continue
-        pyindex.setdefault(p.stem, rel)
+        modindex.setdefault(p.stem, rel)
+    tsp = code_imports.load_tsconfig_paths(root) if code_imports else {}
     ids = {n["id"] for n in nodes}
-    # 1 hop: từ node code touches → thêm cạnh imports + node code mới
-    for cn in [n for n in nodes if n["wiki"] == "code" and n["path"].endswith(".py")]:
+    # 1 hop: từ node code (BẤT KỲ ngôn ngữ hỗ trợ) → cạnh imports + node code mới
+    for cn in [n for n in nodes if n["wiki"] == "code"]:
         ap = root / cn["path"]
-        if not ap.exists():
+        if not ap.exists() or not code_imports:
             continue
-        _, mods = _py_facts(ap)
-        for m in mods:
-            tgt = pyindex.get(m)
+        info = code_imports.extract(str(ap), str(root), tsp)
+        targets = list(info.get("resolved", []))                 # TS/JS đã resolve về path
+        for m in info.get("_modspecs", []):                       # Python/Go/Rust: resolve qua modindex
+            t = modindex.get(m if isinstance(m, str) else "")
+            if t:
+                targets.append(t)
+        for tgt in targets:
             if tgt and tgt != cn["path"]:
                 if tgt not in ids:
                     nodes.append(_mk_code_node(tgt)); ids.add(tgt)
@@ -292,15 +365,33 @@ def enrich_code(nodes, edges, repo_root):
     # làm giàu MỌI node code hiện có (gồm cả mới thêm)
     for cn in [n for n in nodes if n["wiki"] == "code"]:
         ap = root / cn["path"]
-        if cn["path"].endswith(".py") and ap.exists():
-            syms, _ = _py_facts(ap)
-            cn["symbols"] = syms[:20]
+        if code_imports and ap.exists():
+            cn["symbols"] = code_imports.extract(str(ap), str(root), tsp).get("symbols", [])[:20]
         try:
             r = subprocess.run(["git", "-C", str(root), "log", "-1", "--format=%h %s", "--", cn["path"]],
                                capture_output=True, text=True, timeout=5)
             cn["commit"] = r.stdout.strip()[:80]
         except Exception:
             pass
+
+
+def impact_reverse(target, edges, rel="imports", cap=1):
+    """Mảnh D: sửa `target` → tập bị ảnh hưởng = trang/file TRỎ TỚI target qua `rel`,
+    lan ĐÚNG cap bước (mặc định 1 — cùng kỷ luật cap=1 của propagate_stale, chống storm/chu trình).
+    Đây là impact trên import-graph (reverse-imports) — self-contained, không hook/tool ngoài."""
+    rev = {}
+    for e in edges:
+        if e["rel"] == rel:
+            rev.setdefault(e["to"], set()).add(e["from"])
+    seen, frontier = set(), {target}
+    for _ in range(cap):
+        nxt = set()
+        for t in frontier:
+            nxt |= rev.get(t, set())
+        nxt -= seen | {target}
+        seen |= nxt
+        frontier = nxt
+    return sorted(seen)
 
 
 def build_html(primary: str, out_abs: str, nodes, edges, ledger, stale):
@@ -638,6 +729,8 @@ def main() -> None:
     ap.add_argument("primary", help="wiki dir chính (mặc định sáng)")
     ap.add_argument("--also", nargs="*", default=[], help="wiki dir phụ (hiện mờ)")
     ap.add_argument("--static", action="store_true", help="xuất HTML/CSS thuần (0 JavaScript)")
+    ap.add_argument("--code-root", help="seed node code từ thư mục này → dựng import-graph đầy đủ (opt-in)")
+    ap.add_argument("--json", help="dump nodes/edges/cycles ra JSON (cho eval/scoring)")
     ap.add_argument("-o", "--out")
     a = ap.parse_args()
     t0 = time.perf_counter()
@@ -652,16 +745,34 @@ def main() -> None:
         if o.is_dir():
             scan(o, o.parent.name if o.name == "wiki" else o.name, nodes, edges, ledger, stale)
     add_code_nodes(nodes, edges)   # node lá cho touches → cạnh wiki→code hiện ra
-    # repo root = cha của primary wiki (…/wiki → repo). Tìm .git đi lên.
-    rr = prim
-    while rr.parent != rr and not (rr / ".git").exists():
-        rr = rr.parent
-    enrich_code(nodes, edges, rr)  # opt1 imports + opt3 symbols/commit (ast thuần)
+    # --code-root: seed node code từ thư mục code (opt-in) → dựng import-graph đầy đủ.
+    # Default OFF → graph framework không đổi (chỉ code vào qua touches như cũ).
+    if a.code_root and code_imports:
+        croot = Path(a.code_root).resolve()
+        ids = {n["id"] for n in nodes}
+        for p in sorted(croot.rglob("*")):
+            rel = p.relative_to(croot).as_posix()
+            if (p.is_file() and p.suffix.lower() in code_imports.SUPPORTED_EXTS
+                    and not any(s in rel for s in (".git/", "node_modules/", "ground-truth/"))
+                    and rel not in ids):
+                nodes.append(_mk_code_node(rel)); ids.add(rel)
+        enrich_root = croot
+    else:
+        # repo root = cha của primary wiki (…/wiki → repo). Tìm .git đi lên.
+        enrich_root = prim
+        while enrich_root.parent != enrich_root and not (enrich_root / ".git").exists():
+            enrich_root = enrich_root.parent
+    enrich_code(nodes, edges, enrich_root)  # imports (đa ngôn ngữ) + symbols
     default_name = "wiki-graph-static.html" if a.static else "wiki-graph.html"
     out = Path(a.out).resolve() if a.out else Path("llmwiki/html").resolve() / default_name
     out.parent.mkdir(parents=True, exist_ok=True)
     render = build_static if a.static else build_html
     out.write_text(render(ptag, str(out), nodes, edges, ledger, stale), encoding="utf-8")
+    if a.json:                     # dump nodes/edges thô cho eval/scoring (cùng dữ liệu graph vừa vẽ)
+        Path(a.json).resolve().write_text(
+            json.dumps({"nodes": nodes, "edges": edges,
+                        "cycles": detect_cycles(nodes, edges)}, ensure_ascii=False, indent=1),
+            encoding="utf-8")
     dt = (time.perf_counter() - t0) * 1000
     kind = "HTML thuần" if a.static else "JS"
     print(f"✓ {out} — {len(nodes)} node, {len(edges)} canh, primary={ptag}, {kind} ({dt:.0f} ms)")

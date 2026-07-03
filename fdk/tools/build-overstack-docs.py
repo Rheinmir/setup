@@ -126,13 +126,13 @@ LOOP_GROUPS = {
         {"propose": "edit", "impact-check": "edit", "safe-change": "edit", "verify-before-commit": "edit",
          "build-now-adapt-later": "edit",
          "new-project-setup": "build", "onboard-codebase": "build", "new-skill": "build",
-         "wikieval": "eval", "loop-runner": "eval", "failure-flywheel": "eval"}),
+         "wikieval": "eval", "ship": "eval", "loop-runner": "eval", "failure-flywheel": "eval"}),
     "orchestrate": (
         [("dispatch", "🐳 điều phối"), ("eval", "📊 đánh giá"), ("ops", "🚀 vận hành & deploy")],
         {"orca-workflow": "dispatch", "orca-onboard": "dispatch", "orchestration": "dispatch",
          "orca-cli": "dispatch", "orca-dispatch-reference": "dispatch",
          "council": "eval", "trace-grader": "eval", "orca-eval": "eval",
-         "orca-sec-scans": "ops", "jenkins-agent-l3-deploy": "ops"}),
+         "orca-sec-scans": "ops", "jenkins-agent-l3-deploy": "ops", "orca-issue": "ops"}),
     "utils": (
         [("docs", "📄 tài liệu & render"), ("taste", "🎨 thiết kế & style"), ("imagegen", "🖼️ image→code/gen"),
          ("caveman", "🦴 caveman"), ("fdk", "🛠️ framework-dev"), ("utility", "🔧 tiện ích khác")],
@@ -147,7 +147,7 @@ LOOP_GROUPS = {
          "imagegen-frontend-web": "imagegen",
          "cavecrew": "caveman", "caveman": "caveman", "caveman-commit": "caveman", "caveman-compress": "caveman",
          "caveman-help": "caveman", "caveman-review": "caveman", "caveman-stats": "caveman",
-         "fdk": "fdk", "harness-tour": "fdk", "harness-update": "fdk", "health-check": "fdk",
+         "fdk": "fdk", "medic": "fdk", "harness-tour": "fdk", "harness-update": "fdk", "health-check": "fdk",
          "snapshot-push": "fdk", "sync-template": "fdk", "docs-curate": "fdk",
          "check-approve": "utility", "computer-use": "utility", "find-skills": "utility",
          "full-output-enforcement": "utility", "join-project": "utility", "last30days": "utility",
@@ -546,7 +546,7 @@ def sections(root: Path):
     ]))
 
     S.append(("skills", "Skills", "05 · Kỹ năng", "Nền tảng 3 — Skills (kỹ năng đóng gói)", [
-        f"<p class=\"lead\">Skill là một quy trình đóng gói thành file <code>SKILL.md</code>, gọi bằng <code>/tên</code>. Hiện có <b>{n_sk}</b> skill, chia theo \"loop\" (vòng công việc). Cài global qua <code>npx skills add</code> → dùng ở mọi dự án.</p>",
+        f"<p class=\"lead\">Skill là một quy trình đóng gói thành file <code>SKILL.md</code>, gọi bằng <code>/tên</code>. Hiện có <b>{n_sk}</b> skill, chia theo \"loop\" (vòng công việc). Cài global qua <code>npx skills add</code> → dùng ở mọi dự án. &nbsp;<a href=\"skill-whiteboard.html\">🗺️ Xem bản đồ quan hệ skill đầy đủ →</a></p>",
         "<div class=\"grid\"><div class=\"card\"><h4>wiki-loop</h4><ul class=\"s\"><li>nuôi tri thức: <code>/ingest</code>, <code>/query</code>, <code>/lint</code>.</li></ul></div>"
         "<div class=\"card\"><h4>dev-loop</h4><ul class=\"s\"><li>vòng phát triển: <code>/propose</code>, <code>/impact-check</code>, <code>/safe-change</code>, <code>/verify-before-commit</code>…</li></ul></div>"
         "<div class=\"card\"><h4>orchestrate (entry chính)</h4><ul class=\"s\"><li><b><code>/orca-workflow</code></b> · <b><code>/orca-onboard</code></b> — lệnh bạn gọi trực tiếp; chúng điều phối các skill dev-loop. Cùng nhóm: <code>/council</code>, <code>/trace-grader</code>.</li></ul></div>"

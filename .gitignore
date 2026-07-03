@@ -38,3 +38,6 @@ harness/metrics/query-log.jsonl
 
 # sweep-gate baseline (local)
 harness/metrics/sweep-marker.json
+
+# ephemeral — không push (council 2026-07-03)
+scratchpad/
