@@ -22,3 +22,4 @@ id: issues-ledger
 ## Origin
 Tạo bởi skill `/raise-issue` (phiên 2026-07-03) như ledger tập trung cho issue local travel-được. Bắt nguồn từ phiên hỏi về vai trò YAML/Python → council-026 phát hiện gap nền tảng (thiếu Foundation) + đề xuất Orca-independence Plan B. Nguồn bằng chứng: `llmwiki/html/030726-yaml-vs-python.html`, `llmwiki/html/council/council-report-026-seed42.html`.
 
+| [030726-multi-session-add-guard](draft/030726-multi-session-add-guard.md) | process | Đa-session chung working tree: git add -A trộn việc — cần guard quy-session | open | @Rheinmir | /fdk | _(ledger-only)_ |
