@@ -55,3 +55,6 @@
 | [020726-audit-fdk-strategy](sources/draft/020726-audit-fdk-strategy.md) | draft | Audit 3 trụ theo 8 nguyên tắc Mongol pattern — nợ lớn nhất ở #3 (policy chưa drive, drift che) |
 | [020726-council-chon-de-thi-self-index](sources/draft/020726-council-chon-de-thi-self-index.md) | draft | 2026-07-02 |
 | [030726-eval-report](draft/orca/030726-eval-report.md) | draft | 2026-07-03 |
+| [030726-milestone-v106-harden](sources/draft/030726-milestone-v106-harden.md) | draft | 2026-07-03 |
+| [030726-session-provenance](sources/030726-session-provenance.md) | source | 2026-07-03 |
+| [030726-secondary-memory](sources/draft/030726-secondary-memory.md) | draft | 2026-07-03 |

@@ -214,12 +214,32 @@ def build_r9(base):
     return fixture(bad, good, bad_c, good_c)
 
 
+def build_r14(base):
+    # R14: bad = write vào kho pattern protected llmwiki/patterns/; good = write nơi khác.
+    bad = _w(base / "llmwiki" / "patterns" / "core.md", "# protected pattern\n")
+    good = _w(base / "llmwiki" / "wiki" / "concepts" / "ok.md", "# normal\n")
+    return fixture(bad, good)
+
+
+def build_r16(base):
+    # R16: bad = html dưới llmwiki/html/ KHÔNG chứa path của chính nó; good = có path (footer).
+    bad = base / "llmwiki" / "html" / "report-bad.html"
+    good = base / "llmwiki" / "html" / "report-good.html"
+    _w(bad, "<!doctype html><body><h1>report</h1><p>khong khai path</p></body>")
+    # nhúng CẢ path resolved lẫn path thô — validator có thể so bản .resolve() (macOS /var↔/private/var)
+    _w(good, f"<!doctype html><body><h1>report</h1>"
+             f"<footer>File: <code>{good.resolve()}</code> · <code>{good}</code></footer></body>")
+    return fixture(bad, good)
+
+
 RULES = [
     ("R1", "no_write_raw.py", "no-write-raw", build_r1),
     ("R2", "origin_required.py", "origin-required", build_r2),
     ("R5", "folder_structure.py", "folder-structure", build_r5),
     ("R7", "proposal_complete.py", "proposal-complete", build_r7),
     ("R9", "okf_frontmatter.py", "okf-frontmatter", build_r9),
+    ("R14", "patterns_guard.py", "patterns-protected", build_r14),
+    ("R16", "report_show_path.py", "report-show-path", build_r16),
 ]
 
 

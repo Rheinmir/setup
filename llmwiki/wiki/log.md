@@ -19,18 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-03 11:26:44 | `file.write` | fdk/tools/build-wiki-graph.py · tool=Edit · actor=agent · prev=8b76ecf2195f4991cc14f949ed312680bbcf1f7816dbf6bd945726f13 |
-| 2026-07-03 11:39:00 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=77913c4f52b52be7de624b6deca01904967bb92c2b7068e2a7c24 |
-| 2026-07-03 12:52:17 | `file.write` | skills/fdk/SKILL.md · tool=Edit · actor=agent · prev=487914ac9e3d3aa8bdcd0a7d805e237dbdfb9b94ea6e6611116793bd6ebd9680 ·  |
-| 2026-07-03 12:54:08 | `file.write` | fdk/tools/medic.py · tool=Write · actor=agent · prev=b6a91f7cccd2342358c701c7331b47d38bb2da259aee7da95717f6dd81cbad67 ·  |
-| 2026-07-03 12:54:53 | `file.write` | fdk/tools/medic.py · tool=Edit · actor=agent · prev=2ee31c939fdc18e620e821c6da759c711c138cb9a52c0d19302175a94a2427a9 · h |
-| 2026-07-03 12:56:14 | `file.write` | fdk/tools/medic.py · tool=Edit · actor=agent · prev=5740e2dfd137ce8e9487e7deca3be83946085ba3159dc86b8aada9a0c5e3bc37 · h |
-| 2026-07-03 12:57:05 | `task.new` |  · task=T-260703-01 · title=medic — cổng sức khoẻ tổng / tuyến phòng thủ cuối · state=proposed · actor=agent · prev=74dc |
-| 2026-07-03 12:57:50 | `file.write` | llmwiki/wiki/sources/draft/030726-medic-cong-suc-khoe-tong.md · tool=Write · actor=agent · prev=df8f111b94ad46bc6147d784 |
-| 2026-07-03 12:59:32 | `file.write` | skills/medic/SKILL.md · tool=Write · actor=agent · prev=c98cc09d92fbd8451ee7430289db2bc575416730e7a92869f72f0d521136b628 |
-| 2026-07-03 12:59:50 | `file.write` | harness/scripts/sync-skills.py · tool=Edit · actor=agent · prev=6a80355b0f889972b03a5287256e7c5d7260e0af7c5eef51b9f34868 |
-| 2026-07-03 13:00:03 | `file.write` | llmwiki/AGENT.md · tool=Edit · actor=agent · prev=544fac160622aa0d9917599cedc7f3e98d682905510695377493bb282848c21d · h=d |
-| 2026-07-03 13:00:11 | `file.write` | llmwiki/CLAUDE.md · tool=Edit · actor=agent · prev=dcea32827dfd37aa2a1d8b101e3519f2749858b4b70fa895c0525fc51da6eecb · h= |
 | 2026-07-03 13:00:18 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · actor=agent · prev=228a4b5800e151633b98f0a777e7c24c878b45c5ae2e6b7ed2634 |
 | 2026-07-03 13:01:46 | `file.write` | llmwiki/html/030726-medic-cong-suc-khoe-tong-seq.html · tool=Write · actor=agent · prev=c98af670c780e4e7cd954ac53470c5d5 |
 | 2026-07-03 13:15:12 | `file.write` | fdk/tools/whiteboard-skill-map.py · tool=Write · actor=agent · prev=0c8a499bbe8cd8ce1b2dccb62b77b00e8a819e376560bc2aab40 |
@@ -59,6 +47,18 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-03 13:56:03 | `file.write` | llmwiki/wiki/draft/orca/030726-eval-report.md · tool=Write · actor=agent · prev=63a614fc971e5e5f95e82e1fef063fa3f42f4925 |
 | 2026-07-03 13:56:17 | `file.write` | llmwiki/wiki/draft/orca/030726-eval-report.md · tool=Edit · actor=agent · prev=edc706edb8832a37f4b6b90e453b31dca2c26c2ed |
 | 2026-07-03 14:01:58 | `file.write` | llmwiki/wiki/draft/orca/030726-eval-report.md · tool=Edit · actor=agent · prev=cb1d71ab3923d02d30b5f532e24b65a11f6f7ca6f |
+| 2026-07-03 14:29:48 | `file.write` | harness/validators/proposal_complete.py · tool=Edit · actor=agent · prev=26269a69222e8d3cb99dba3b25b34bc4c394d57032ac603 |
+| 2026-07-03 14:30:29 | `file.write` | harness/scripts/harness-doctor.py · tool=Edit · actor=agent · prev=debe7118ccac98d33df6bf098ca13a0e870f7de219198dfc4c01c |
+| 2026-07-03 14:33:46 | `task.new` |  · task=T-260703-02 · title=milestone v1.0.6 — harden (medic 17/17 + framework-touch hook) + query-implement · state=pro |
+| 2026-07-03 14:34:30 | `file.write` | llmwiki/wiki/sources/draft/030726-milestone-v106-harden.md · tool=Write · actor=agent · prev=75d33bf9f5becc290dbd8445654 |
+| 2026-07-03 14:35:33 | `file.write` | llmwiki/html/030726-milestone-v106-harden-seq.html · tool=Write · actor=agent · prev=6ce5f7cac2e2c8ebd9217363bb0a9308d63 |
+| 2026-07-03 14:39:16 | `file.write` | harness/scripts/harness-doctor.py · tool=Edit · actor=agent · prev=2f8ea64a1049fa1943bc02d9caae9de77d081264035dabdbd6148 |
+| 2026-07-03 14:40:04 | `file.write` | harness/scripts/harness-doctor.py · tool=Edit · actor=agent · prev=bee81a14d88633586e7e9433c3f0eecc194128d7bf7601de57bfd |
+| 2026-07-03 14:43:46 | `file.write` | llmwiki/wiki/sources/030726-session-provenance.md · tool=Write · actor=agent · prev=80ca46fd72818b69c068f4dd2ed37f4526fe |
+| 2026-07-03 14:44:38 | `file.write` | llmwiki/html/030726-milestone-v106-harden-seq.html · tool=Edit · actor=agent · prev=fc0a72228ba84f368de1d9ada218dc64b7e7 |
+| 2026-07-03 14:54:44 | `task.new` |  · task=T-260703-03 · title=bộ nhớ thứ cấp 3-tầng — scratch-log auto + view session/feature + journal-distill (file-firs |
+| 2026-07-03 14:55:25 | `file.write` | llmwiki/wiki/sources/draft/030726-secondary-memory.md · tool=Write · actor=agent · prev=61877fb37d85b78c49341e858975abe0 |
+| 2026-07-03 14:56:12 | `file.write` | llmwiki/html/030726-secondary-memory-seq.html · tool=Write · actor=agent · prev=44b327d667e1acbdabfe3a82b37ee5a1b37cc712 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -174,3 +174,15 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 ## 2026-07-03 — council(tư vấn) — hạ tầng retrieval có hữu ích nếu agent không query?
 - Nghi vấn: agent ít gọi /query (31% edit "mù", cận dưới vì grep không đếm) → hạ tầng vô dụng? Council (kahneman/taleb/munger/ada/linus). Chốt: query-rate là ĐO NHẦM (vanity/Goodhart). Tách 3 lớp: wiki-content=tiền-đề (grep trúng nhờ nó tồn tại) GIỮ; code-graph/quan-hệ-phi-cục-bộ = giá trị BỀN grep-không-thay GIỮ+đầu-tư; /query-skill = lớp-bọc → HẠ xuống optional. ĐO reinvent-rate + cross-break + harm-when-missing + retro-test; BỎ query-rate; KHÔNG ép query (theater). Hành động: retro-test 31% mù trước; code-graph entrypoint rẻ 1-lệnh; retrieval tự-surface (hook pre-edit cảnh báo cross-break). report council-report-022-seed42.html.
+
+## 2026-07-03 — propose — milestone v1.0.6 (mở nợ sau release)
+- Sau release v1.0.5, mở milestone sau: proposal 030726-milestone-v106-harden (T-260703-02) gộp 4 nợ thành roadmap 6 task. Context = council-020 (medic gương-soi + A1/A7 + hấp thụ A3) + council-022 (query: đừng ép, đo reinvent/cross-break, hạ /query, code-graph rẻ, tự-surface) + issue #4 (logger). Tasks: T1 medic 17/17, T2 framework-touch hook, T3 A1 generator-probe, T4 code-graph entrypoint rẻ, T5 retrieval tự-surface (pre-edit cross-break), T6 đo reinvent/cross-break (không query-rate) + rà issue #4. Cặp md+seq.html (6 diagram). Bằng chứng cấp thiết: bug R7-f dark-rail vừa lọt medic 5/17 ở release. DỪNG chờ duyệt.
+
+## 2026-07-03 — provenance — bản ghi phiên b73d2c47
+- User lo: session mới không tra được chức năng sinh từ phiên nào + context gì. Trace hiện HỞ: ledger.jsonl ghi session cho WIKI-file nhưng code (events.jsonl) KHÔNG có session, không neo context. Giải: sources/030726-session-provenance.md — neo session-id → 7 chức năng → context (council report + proposal) → commit f71e17f. Queryable: query medic → tới đây. Systematic auto-capture = thêm T7 vào milestone v1.0.6.
+
+## 2026-07-03 — last30days+council — bộ nhớ thứ cấp (context vụn)
+- Issue #5: wiki chỉ lưu proposal, sửa+context vụn mất. /last30days: cộng đồng dùng markdown-first (AGENTS.md 60k), event-sourced journal (PROJECTMEM), ADR/MADR immutable, bỏ RAG. Council (ada/taleb/linus/rams/munger): kiến trúc 3 tầng THÔ(auto scratch-log.jsonl tách ledger, append-only, vì-sao optional, ngưỡng commit/save) → JOURNAL-DISTILL(markdown-ngày, người promote) → WIKI(curated). Mâu thuẫn rotate-vs-không-mất giải bằng GIT (rotate view, history bất biến). 3 khe Linus: events.jsonl +session, VIEW gom session/feature reuse problem-tree/wiki-graph 2-zoom, chỗ ghi 1-dòng vì-sao. Reuse KHÔNG RAG/SQLite. Judgment-at-READ. report council-report-024-seed42.html.
+
+## 2026-07-03 — propose — bộ nhớ thứ cấp 3-tầng (issue #5)
+- Proposal 030726-secondary-memory (T-260703-03) từ council-024 + /last30days + issue #5. 4 task: T1 hook auto scratch-log.jsonl (append-only, why optional, tách ledger), T2 events.jsonl +session, T3 VIEW memory-map 2-zoom reuse build-wiki-graph (không RAG), T4 distill auto session-provenance (hấp thụ T7 v1.0.6, không xoá thô). Nguyên tắc: git=lưới an toàn không-mất, judgment-at-read, reuse không SQLite/RAG. Cặp md+seq.html (4 diagram). DỪNG chờ duyệt.
