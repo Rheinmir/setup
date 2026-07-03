@@ -1,7 +1,7 @@
 <!-- SINH BẰNG CODE: build-capabilities.py — ĐỪNG sửa tay; chạy lại để cập nhật. -->
 # CAPABILITIES — toàn bộ đồ nghề (luôn-mới, đếm từ đĩa)
 
-**73 skill · 17 rule · 16 fdk-tool · 45 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
+**74 skill · 17 rule · 17 fdk-tool · 46 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
 
 ## Skills (gọi bằng `/<tên>`)
 
@@ -12,7 +12,7 @@
 - **`/record-episode`** — Ghi một SESSION EPISODE có cấu trúc (tầng nhớ episodic) vào memory store để phiên sau truy…
 - **`/wiki-room`** — Mở room (subagent 1 tầng) nạp chi tiết wiki khi context phiên chính đã rot
 
-### dev-loop (12)
+### dev-loop (13)
 - **`/build-now-adapt-later`** — When a task is blocked by missing or unverified information (an undocumented protocol, an …
 - **`/failure-flywheel`** — Capture each agent failure, bucket and count it deterministically, and when a failure clas…
 - **`/impact-check`** — Map all callers and dependents of a symbol before modifying shared code
@@ -23,6 +23,7 @@
 - **`/propose`** — Plan a feature before coding
 - **`/safe-change`** — Modify shared code without breaking existing callers
 - **`/ship`** — Workflow chốt PUSH/RELEASE/PR/MR
+- **`/skill-provenance`** — Ghi và kiểm provenance (nguồn + sha256 checksum) cho skill
 - **`/verify-before-commit`** — Gate every commit
 - **`/wikieval`** — Turn wiki golden pages into a CI-blocking eval suite with a cheap→expensive assertion casc…
 
@@ -120,6 +121,7 @@
 - `medic.py`
 - `memory-map.py`
 - `new-skill.py`
+- `skill-provenance.py`
 - `whiteboard-skill-map.py`
 - `wiki-relations.py`
 
@@ -156,6 +158,7 @@
 - `scoped-hooks.py`
 - `scratch-log.py`
 - `skill-registry.py`
+- `skill-resolve-eval.py`
 - `spec-gate.py`
 - `success-flywheel.py`
 - `sweep-gate.py`

@@ -79,4 +79,22 @@
 | [040726-episodic-vector-plan](sources/draft/040726-episodic-vector-plan.md) | draft | Draft: đạt 4/4 tầng nhớ cho llmwiki (issue #9) |
 | [ep-ci-tech-debt](sources/evals/episodic/ep-ci-tech-debt.md) | eval | Episodic golden: đóng tech-debt CI |
 | [ep-episodic-wire](sources/evals/episodic/ep-episodic-wire.md) | eval | Episodic golden: nối episodic + vector retrieval |
+| [caveman-commit](sources/evals/skill-resolve/caveman-commit.md) | auto | skill-resolve golden: caveman-commit |
+| [caveman](sources/evals/skill-resolve/caveman.md) | auto | skill-resolve golden: caveman |
+| [council](sources/evals/skill-resolve/council.md) | auto | skill-resolve golden: council |
+| [design-frontend](sources/evals/skill-resolve/design-frontend.md) | auto | skill-resolve golden: design-frontend |
+| [design-v1](sources/evals/skill-resolve/design-v1.md) | auto | skill-resolve golden: design-v1 |
+| [frontier-scan](sources/evals/skill-resolve/frontier-scan.md) | auto | skill-resolve golden: frontier-scan |
+| [health-check](sources/evals/skill-resolve/health-check.md) | auto | skill-resolve golden: health-check |
+| [ingest](sources/evals/skill-resolve/ingest.md) | auto | skill-resolve golden: ingest |
+| [medic](sources/evals/skill-resolve/medic.md) | auto | skill-resolve golden: medic |
+| [new-skill](sources/evals/skill-resolve/new-skill.md) | auto | skill-resolve golden: new-skill |
+| [onboard](sources/evals/skill-resolve/onboard.md) | auto | skill-resolve golden: onboard |
+| [orca-issue](sources/evals/skill-resolve/orca-issue.md) | auto | skill-resolve golden: orca-issue |
+| [raise-issue](sources/evals/skill-resolve/raise-issue.md) | auto | skill-resolve golden: raise-issue |
+| [ship](sources/evals/skill-resolve/ship.md) | auto | skill-resolve golden: ship |
+| [skill-provenance](sources/evals/skill-resolve/skill-provenance.md) | auto | skill-resolve golden: skill-provenance |
+| [snapshot-push](sources/evals/skill-resolve/snapshot-push.md) | auto | skill-resolve golden: snapshot-push |
+| [tour-basic](sources/evals/skill-resolve/tour-basic.md) | auto | skill-resolve golden: tour-basic |
+| [tour-supademo](sources/evals/skill-resolve/tour-supademo.md) | auto | skill-resolve golden: tour-supademo |
 <!-- index:auto:end -->
