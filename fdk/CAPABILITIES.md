@@ -1,7 +1,7 @@
 <!-- SINH BẰNG CODE: build-capabilities.py — ĐỪNG sửa tay; chạy lại để cập nhật. -->
 # CAPABILITIES — toàn bộ đồ nghề (luôn-mới, đếm từ đĩa)
 
-**69 skill · 17 rule · 16 fdk-tool · 43 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
+**71 skill · 17 rule · 17 fdk-tool · 43 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
 
 ## Skills (gọi bằng `/<tên>`)
 
@@ -38,7 +38,7 @@
 - **`/orchestration`** — Use Orca orchestration for structured multi-agent coordination: threaded messages, blockin…
 - **`/trace-grader`** — Score the PATH an agent took (tool choice, ordering, retries, repeatability)
 
-### utils (42)
+### utils (44)
 - **`/brandkit`** — Premium brand-kit image generation skill for creating high-end brand-guidelines boards, lo…
 - **`/cavecrew`** — Decision guide for delegating to caveman-style subagents
 - **`/caveman`** — Ultra-compressed communication mode
@@ -72,6 +72,8 @@
 - **`/md-to-html`** — Render Markdown thành standalone HTML
 - **`/medic`** — Cổng sức khoẻ tổng / tuyến phòng thủ cuối của framework overstack
 - **`/minimalist-ui`** — Clean editorial-style interfaces
+- **`/ovs-notes`** — Viewer release-notes overstack TỨC THÌ (kiểu /release-notes của Claude CLI)
+- **`/raise-issue`** — Raise một ISSUE đầy đủ bối cảnh vào ledger local (draft) để dev khác pull về xử lý ở BẤT K…
 - **`/redesign-existing-projects`** — Upgrades existing websites and apps to premium quality
 - **`/snapshot-push`** — Push bonbon-ai outer repo as full snapshot, including be/ and fe/ content
 - **`/stitch-design-taste`** — Semantic Design System Skill for Google Stitch
@@ -116,6 +118,7 @@
 - `medic.py`
 - `memory-map.py`
 - `new-skill.py`
+- `ovs-notes.py`
 - `whiteboard-skill-map.py`
 - `wiki-relations.py`
 
