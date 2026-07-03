@@ -455,6 +455,19 @@
     "date": "2026-07-04",
     "solvedBy": "mem-rank.py (episode+temporal+kind-filter) · skills/record-episode · query/wiki-room Tầng-0 · mem-proxy.py + episodic golden + episodic-baseline.json gate qua medic p_eval",
     "session": "orca-fdk issue-9"
+  },
+  {
+    "id": "p-19",
+    "parent": "p-01",
+    "title": "pre-commit (17-rule fire-drill) chạy >2 phút mỗi commit — dễ timeout, kill giữa chừng làm hỏng index",
+    "desc": "Issue #18 (phát sinh ngay từ phiên issue-16 & issue-9): hook pre-commit L2 chạy TRỌN 25 hook (nhiều always_run + bash self-test) mỗi lần commit → stash toàn worktree + spawn 25 interpreter → >2 phút; bị kill giữa chừng để lại index hỏng (hàng trăm deletion ảo) + stash-patch chưa trả lại. Gốc (Meadows, không vá triệu chứng): L2 đang NHÂN BẢN trọn CI ngay lúc commit — thừa. Concept [[harness-enforcement-floor]] đã nói rõ CI (L4) mới là SÀN THẬT, L2 chỉ là tiện-nghi-chặn-sớm. VÁ: đưa L2 về đúng vai — chỉ content-validator NHANH theo file-đổi (25→12 hook, pre-commit run 0.16s vs >2ph); dời trọn fire-drill nặng sang CI job 'repo health' (đã có sẵn — không mất phủ) + thêm policy-converters-drift vào harness.yml (chưa có ở CI); ghi đường cứu ~/.cache/pre-commit/patch* vào comment config cho ca bị kill.",
+    "status": "solved",
+    "scope": [
+      "harness"
+    ],
+    "date": "2026-07-04",
+    "solvedBy": ".pre-commit-config.yaml trim 25→12 hook nhanh (file-đổi) · fire-drill nặng → CI repo-health + policy-converters-drift thêm vào harness.yml · đường cứu index-hỏng ghi trong config · căn cứ concept harness-enforcement-floor",
+    "session": "orca-fdk issue-18"
   }
 ]</script>
 
