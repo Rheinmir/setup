@@ -135,3 +135,10 @@ mechanisms:
     surface: [mechanism]
     desc: "overstack tự tường thuật trạng thái code: FACT có [nguồn]+lệnh tái tạo, tách FACT/OPINION (council-advisory); medic probe selfstate gác reproducibility"
     live_probe: fdk/tools/code-state.py
+
+  - id: skill-usage
+    name: "skill-usage (đo tần suất)"
+    kind: tool
+    surface: [mechanism]
+    desc: "đọc transcript phiên → đếm lời gọi Skill-tool theo skill + tuần ISO; xếp hạng dùng nhiều + skill chết + so tuần trước → dashboard weekly-<ISOweek>.html self-contained; local-only, deterministic, không telemetry (GH#8)"
+    live_probe: fdk/tools/skill-usage.py
