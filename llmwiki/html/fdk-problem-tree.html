@@ -100,7 +100,8 @@
   <footer>Data nằm trong <code>#tree-data</code> — mỗi lần /fdk chỉ append/sửa JSON, không đụng markup. Nguồn quy tắc: skill <code>fdk</code> § Problem-tree.<br>
   📄 File (canonical): <code>/Users/giatran/orca/setup/setup/llmwiki/html/fdk-problem-tree.html</code><br>
   📄 File (worktree issue-16): <code>/Users/giatran/orca/workspaces/setup/issue-16-ci-tech-debt/llmwiki/html/fdk-problem-tree.html</code><br>
-  📄 File (worktree issue-4): <code>/Users/giatran/orca/workspaces/setup/issue-4-logger-c/llmwiki/html/fdk-problem-tree.html</code></footer>
+  📄 File (worktree issue-4): <code>/Users/giatran/orca/workspaces/setup/issue-4-logger-c/llmwiki/html/fdk-problem-tree.html</code><br>
+  📄 File (worktree issue-9): <code>/Users/giatran/orca/workspaces/setup/issue-9-episodic-vector/llmwiki/html/fdk-problem-tree.html</code></footer>
 </div>
 
 <script type="application/json" id="tree-data">[
@@ -439,6 +440,21 @@
     "date": "2026-07-04",
     "solvedBy": "trace-grader.py: (A) runs_from_transcript() + CLI --transcript — thu hồi retrieval args (Grep pattern/Read file_path) + observation + per-step ok từ transcript phiên (nguồn giàu nhất, sẵn dữ liệu). (B1) sửa run.ok transcript KHÔNG còn AND-steps (trace dài ≥1 lỗi vặt không còn chấm FAIL oan) — task-verdict không suy từ step, chỉ tin flags. (B2) lọc sidechain (isSidechain:true) khỏi run chính. (B3) check_edited_without_read — grounding proxy trả lời Q2 issue 'agent có nhìn trước khi làm?': Edit file chưa từng Read/Grep/Write → flag medium. self-test 5/5 (a-e). Verify 5 phiên 2026-07-02: hết FAIL oan, grounding flag đúng & không spam (≤1/phiên). Trả lời issue: Q1 retrieval=CÓ (parser), Q2 grounding=CÓ (check mới), Q3 outcome=per-step ok/retry-storm, Q4 chạy được trên log 5 phiên cũ. CÒN (trụ skills): C = reinvent-rate/cross-break/harm-when-missing xuyên phiên cần định nghĩa metric qua council riêng.",
     "session": "orca-fdk issue-4"
+  },
+  {
+    "id": "p-18",
+    "parent": null,
+    "title": "Memory: llmwiki mới ~1.5/4 tầng nhớ — thiếu episodic + truy hồi ngữ nghĩa + temporal",
+    "desc": "Trục THUA #1 frontier-gap-scan (03/07/26): thế giới (Mem0/Letta/Zep) chuẩn 4 tầng nhớ + vector + temporal; overstack chỉ semantic (wiki) + procedural (skills), truy hồi CHỈ theo [[wikilink]]/grep — thiếu episodic (sự kiện phiên) và truy hồi theo NGHĨA. VÁ (issue #9): nền vector đã có sẵn (mem-rank.py — store + retrieve top-k, embedding adapter đã quarantine) nên chỉ NỐI DÂY, không dựng lại. (1) mem-rank.py thêm episode subcommand + temporal ts/supersedes + kind-filter; (2) skill mới /record-episode (on-demand, ADR-004) ghi session episode; (3) query + wiki-room thêm Tầng-0 gọi mem-rank retrieve — truy hồi episode theo nghĩa, không chỉ link; (4) golden episodic hit@k (mem-proxy.py sinh output tất định, không model) + baseline, gate vào medic p_eval. Wiki vẫn là nguồn chân lý, vector chỉ là lớp phụ, tất cả local/travel-được.",
+    "status": "solved",
+    "scope": [
+      "harness",
+      "skills",
+      "llmwiki"
+    ],
+    "date": "2026-07-04",
+    "solvedBy": "mem-rank.py (episode+temporal+kind-filter) · skills/record-episode · query/wiki-room Tầng-0 · mem-proxy.py + episodic golden + episodic-baseline.json gate qua medic p_eval",
+    "session": "orca-fdk issue-9"
   }
 ]</script>
 

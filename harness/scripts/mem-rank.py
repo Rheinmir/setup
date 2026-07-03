@@ -6,10 +6,18 @@ The harness already has the wiki (curated knowledge) + .claude/memory (flat fact
 the missing piece: a queryable store you write to by code and retrieve top-k from by relevance.
 
   add "<text>" [--kind k] [--id ID]   append/replace a memory (ADD/UPDATE).
+  episode "<did>" [--files a,b] [--outcome o] [--session s] [--supersedes ID] [--id ID]
+                                      record a structured SESSION EPISODE (kind=episode) — the
+                                      EPISODIC memory layer (what a past session did), retrievable.
   delete ID                           remove a memory (DELETE).
   retrieve "<query>" [--k N]          top-N memories by relevance (NOOP if nothing relevant).
+  --kind-filter K                     with retrieve: only rank memories of kind K (e.g. episode).
   --report                            list stored memories + count.
   --self-test                         deterministic add->retrieve ranking in a temp store.
+
+TEMPORAL: every record carries `ts` (ISO time). UPDATE (same id) or `episode --supersedes ID`
+records a `supersedes` link so you can answer "which fact was true when" — the store keeps the
+newer record and points back at what it replaced.
 
 The ONE adapter = harness/mem-rank.config.yaml (relevance.scorer, embedding_model, eviction;
 flagged verified=false). The token-overlap ranker + store + ops are deterministic, built now.
@@ -20,6 +28,7 @@ import os
 import re
 import sys
 import tempfile
+from datetime import datetime, timezone
 from pathlib import Path
 
 import bnal_config
@@ -89,17 +98,51 @@ def _next_id(mems):
     return f"m{n + 1}"
 
 
-def add(root, text, kind=None, mid=None):
-    """ADD (new id) or UPDATE (existing id). Evicts per policy if over cap."""
+def _now_iso(ts=None):
+    if ts:
+        return ts
+    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+
+def add(root, text, kind=None, mid=None, meta=None, ts=None, supersedes=None):
+    """ADD (new id) or UPDATE (existing id). Evicts per policy if over cap.
+
+    TEMPORAL: stamps `ts`. If `mid` names an existing record (UPDATE) or `supersedes` is given,
+    the new record links `supersedes` to the id it replaced — the append-only history signal."""
     root = Path(root)
     cfg = load_config(root)
     mems = _read(root)
-    rec = {"id": mid or _next_id(mems), "text": (text or "").strip(), "kind": kind or "note"}
+    rid = mid or _next_id(mems)
+    replaced = next((m for m in mems if m.get("id") == rid), None)
+    rec = {"id": rid, "text": (text or "").strip(), "kind": kind or "note", "ts": _now_iso(ts)}
+    sup = supersedes or (replaced.get("id") if replaced else None)
+    if sup:
+        rec["supersedes"] = sup
+    if meta:
+        for key, val in meta.items():
+            if val not in (None, "", [], {}):
+                rec[key] = val
     mems = [m for m in mems if m.get("id") != rec["id"]]   # UPDATE = replace same id
     mems.append(rec)
     mems = _evict(mems, cfg)
     _write_all(root, mems)
     return rec
+
+
+def episode(root, did, files=None, outcome=None, session=None, ts=None, supersedes=None, mid=None):
+    """Record a SESSION EPISODE — the episodic memory layer. Composes a retrievable `text` from
+    the structured fields (so token-overlap retrieval works) and keeps the fields as metadata."""
+    files = files or []
+    if isinstance(files, str):
+        files = [f.strip() for f in files.split(",") if f.strip()]
+    parts = [(did or "").strip()]
+    if files:
+        parts.append("files: " + ", ".join(files))
+    if outcome:
+        parts.append("outcome: " + outcome.strip())
+    text = ". ".join(p for p in parts if p)
+    meta = {"did": (did or "").strip(), "files": files, "outcome": outcome, "session": session}
+    return add(root, text, kind="episode", mid=mid, meta=meta, ts=ts, supersedes=supersedes)
 
 
 def delete(root, mid) -> int:
@@ -121,10 +164,14 @@ def _overlap(query, text):
     return len(q & t) / len(q | t)            # Jaccard — deterministic
 
 
-def retrieve(root, query, k=5):
-    """Top-k by relevance. NOOP (empty) if nothing overlaps — don't return noise."""
+def retrieve(root, query, k=5, kind_filter=None):
+    """Top-k by relevance. NOOP (empty) if nothing overlaps — don't return noise.
+    `kind_filter` restricts ranking to one memory kind (e.g. 'episode' for episodic recall)."""
     root = Path(root)
-    scored = [(m, _overlap(query, m.get("text", ""))) for m in _read(root)]
+    mems = _read(root)
+    if kind_filter:
+        mems = [m for m in mems if m.get("kind") == kind_filter]
+    scored = [(m, _overlap(query, m.get("text", ""))) for m in mems]
     scored = [(m, s) for m, s in scored if s > 0]
     scored.sort(key=lambda ms: (-ms[1], ms[0].get("id", "")))
     return scored[:max(1, int(k))]
@@ -160,7 +207,23 @@ def self_test() -> int:
         none_ok = retrieve(root, "completely unrelated zebra", k=2) == []   # NOOP
         add(root, "third memory triggers eviction (cap 2)", "note")          # cap=2 evicts oldest
         evict_ok = len(_read(root)) == 2
-        ok = bool(top_ok) and none_ok and evict_ok
+    # ── episodic + temporal slice (own store, no eviction) ──
+    with tempfile.TemporaryDirectory() as d:
+        root = Path(d)
+        (root / "harness").mkdir()
+        _config_file(root).write_text("verified: false\neviction:\n  policy: none\n", encoding="utf-8")
+        e1 = episode(root, "wired episodic retrieval into query skill",
+                     files=["skills/query/SKILL.md"], outcome="query surfaces episodes", session="s1", mid="ep1")
+        ep_stamped = bool(e1.get("ts")) and e1.get("kind") == "episode" and e1.get("files") == ["skills/query/SKILL.md"]
+        ep_hits = retrieve(root, "how did query get episodic retrieval", k=3, kind_filter="episode")
+        ep_hit_ok = bool(ep_hits) and ep_hits[0][0]["id"] == "ep1"
+        add(root, "a plain note that must NOT show under episode filter", "note")
+        filter_ok = [m for m, _ in retrieve(root, "note", k=5, kind_filter="episode")] == []
+        # temporal supersede: newer episode replaces ep1, links back
+        e2 = episode(root, "revised episodic recall to filter by kind", mid="ep1", supersedes="ep1")
+        temporal_ok = e2.get("supersedes") == "ep1" and len(_read(root)) == 2  # ep1 replaced, note kept
+        ep_ok = ep_stamped and ep_hit_ok and filter_ok and temporal_ok
+    ok = bool(top_ok) and none_ok and evict_ok and ep_ok
     print("mem-rank self-test:", "PASS" if ok else "FAIL")
     return 0 if ok else 1
 
@@ -182,6 +245,11 @@ def main() -> None:
         root = Path(r)
     kind = _opt(args, "--kind")
     mid = _opt(args, "--id")
+    files = _opt(args, "--files")
+    outcome = _opt(args, "--outcome")
+    session = _opt(args, "--session")
+    supersedes = _opt(args, "--supersedes")
+    kind_filter = _opt(args, "--kind-filter")
     k = _opt(args, "--k") or 5
     if "--self-test" in args:
         sys.exit(self_test())
@@ -190,19 +258,29 @@ def main() -> None:
     if args and args[0] == "add":
         if len(args) < 2:
             print('usage: mem-rank.py add "<text>" [--kind k]', file=sys.stderr); sys.exit(2)
-        rec = add(root, args[1], kind, mid); print(f"added {rec['id']}: {rec['text'][:60]}"); return
+        rec = add(root, args[1], kind, mid, supersedes=supersedes)
+        print(f"added {rec['id']}: {rec['text'][:60]}"); return
+    if args and args[0] == "episode":
+        if len(args) < 2:
+            print('usage: mem-rank.py episode "<did>" [--files a,b] [--outcome o] [--session s] [--supersedes ID]',
+                  file=sys.stderr); sys.exit(2)
+        rec = episode(root, args[1], files=files, outcome=outcome, session=session,
+                      supersedes=supersedes, mid=mid)
+        sup = f" (supersedes {rec['supersedes']})" if rec.get("supersedes") else ""
+        print(f"episode {rec['id']} @ {rec['ts']}{sup}: {rec['text'][:60]}"); return
     if args and args[0] == "delete":
         if len(args) < 2:
             print("usage: mem-rank.py delete ID", file=sys.stderr); sys.exit(2)
         n = delete(root, args[1]); print(f"deleted {n}"); return
     if args and args[0] == "retrieve":
         if len(args) < 2:
-            print('usage: mem-rank.py retrieve "<query>" [--k N]', file=sys.stderr); sys.exit(2)
-        hits = retrieve(root, args[1], k)
+            print('usage: mem-rank.py retrieve "<query>" [--k N] [--kind-filter K]', file=sys.stderr); sys.exit(2)
+        hits = retrieve(root, args[1], k, kind_filter=kind_filter)
         if not hits:
             print("(NOOP — no relevant memory)"); return
         for m, s in hits:
-            print(f"  {s:.2f}  {m.get('id')}  {m.get('text','')[:70]}")
+            tag = f"[{m.get('kind','')}] " if m.get("kind") else ""
+            print(f"  {s:.2f}  {m.get('id')}  {tag}{m.get('text','')[:70]}")
         return
     print(__doc__)
 

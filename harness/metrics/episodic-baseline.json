@@ -1,0 +1,25 @@
+{
+  "schema": "retrieval-baseline/v1",
+  "generated_by": "harness/scripts/retrieval-eval.py",
+  "generated_at": "2026-07-04",
+  "k": 5,
+  "evals_dir": "llmwiki/wiki/sources/evals/episodic",
+  "summary": {
+    "goldens": 2,
+    "decided": 2,
+    "hits": 2,
+    "total_tokens": 295
+  },
+  "goldens": {
+    "ep-ci-tech-debt": {
+      "hit": 1,
+      "recall": 1.0,
+      "tokens": 168
+    },
+    "ep-episodic-wire": {
+      "hit": 1,
+      "recall": 1.0,
+      "tokens": 127
+    }
+  }
+}
