@@ -19,46 +19,31 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-03 20:48:03 | `file.write` | llmwiki/wiki/sources/draft/030726-foundation-section.md · tool=Edit · session=d1bd9518 · actor=agent · prev=d3f6de94901a |
-| 2026-07-03 20:48:48 | `file.write` | llmwiki/wiki/sources/draft/030726-orca-independence-planb.md · tool=Write · session=d1bd9518 · actor=agent · prev=c28281 |
-| 2026-07-03 20:49:10 | `file.write` | skills/raise-issue/SKILL.md · tool=Edit · session=d1bd9518 · actor=agent · prev=ab16ec46372eb1f58c751090ccd20923c939bd97 |
-| 2026-07-03 20:49:23 | `file.write` | skills/raise-issue/SKILL.md · tool=Edit · session=d1bd9518 · actor=agent · prev=19758f754bd8d5f5f2e89e2f26885592524aaf80 |
-| 2026-07-03 20:53:11 | `file.write` | skills/ship/SKILL.md · tool=Edit · session=b73d2c47 · actor=agent · prev=6dce4966d4582feb0507a62d9f0028462da903f0e7b281e |
-| 2026-07-03 20:57:47 | `file.write` | fdk/tools/ovs-notes.py · tool=Write · session=b73d2c47 · actor=agent · prev=cd9ccf9076654373a77eb0d1ca4de8f94c1204e124db |
-| 2026-07-03 20:59:05 | `file.write` | skills/ovs-notes/SKILL.md · tool=Write · session=b73d2c47 · actor=agent · prev=fff6ac3928a325cad2f58a6db1189cfef411aaa28 |
-| 2026-07-03 20:59:25 | `file.write` | harness/scripts/sync-skills.py · tool=Edit · session=b73d2c47 · actor=agent · prev=11ac1cccd5ae3424d493d09efd4052e13fdcc |
-| 2026-07-03 21:20:02 | `file.write` | skills/raise-issue/SKILL.md · tool=Edit · session=d1bd9518 · actor=agent · prev=ca4cd4953b156547a91d53bcc6eacf9274640396 |
-| 2026-07-03 21:22:07 | `file.write` | harness/scripts/ovs-notes.py · tool=Write · session=b73d2c47 · actor=agent · prev=666ca65bc13e6365ce3d1437fa25fa7d945b13 |
-| 2026-07-03 21:22:53 | `file.write` | skills/ovs-notes/SKILL.md · tool=Write · session=b73d2c47 · actor=agent · prev=683bbaa646bfdba8b6a7284f2d27045b55c07a681 |
-| 2026-07-03 21:33:59 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=d1bd9518 · actor=agent · prev=86ef389a43932a05531b11cb27c90b2122ddd |
-| 2026-07-03 21:34:19 | `file.write` | skills/raise-issue/SKILL.md · tool=Edit · session=d1bd9518 · actor=agent · prev=c8beb830ba4173f3cf4c9b4d266d712ac0f9fc63 |
-| 2026-07-03 21:34:30 | `file.write` | skills/raise-issue/SKILL.md · tool=Edit · session=d1bd9518 · actor=agent · prev=d324a105ff3a0b1b733a2afc1e4ca588ed2eec43 |
-| 2026-07-03 21:34:46 | `file.write` | skills/raise-issue/SKILL.md · tool=Edit · session=d1bd9518 · actor=agent · prev=88b3fc75283084eaeed96d1ddadd2a3a5f138345 |
-| 2026-07-03 22:01:04 | `file.write` | llmwiki/wiki/sources/draft/030726-skill-usage-dashboard.md · tool=Write · session=d1bd9518 · actor=agent · prev=33c7e9cd |
-| 2026-07-03 22:01:13 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=d1bd9518 · actor=agent · prev=6dd88d0e4e21de699e458dfe92d64060b4c7a |
-| 2026-07-03 22:01:39 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=d1bd9518 · actor=agent · prev=a3596b3dc26fa71e2269d25006a7576d7d6b6 |
-| 2026-07-03 22:05:32 | `file.write` | llmwiki/wiki/sources/draft/030726-multi-session-add-guard.md · tool=Write · session=b73d2c47 · actor=agent · prev=ee125a |
-| 2026-07-03 22:19:40 | `file.write` | fdk/wiki/concepts/frontier-gap-scan.md · tool=Write · session=ebbf4b4b · actor=agent · prev=664f8e23ff87ff2d05bc4bd91cf3 |
-| 2026-07-03 22:20:05 | `file.write` | llmwiki/wiki/sources/draft/030726-memory-episodic-vector.md · tool=Write · session=ebbf4b4b · actor=agent · prev=38598ac |
-| 2026-07-03 22:20:26 | `file.write` | llmwiki/wiki/sources/draft/030726-self-evolving-skills.md · tool=Write · session=ebbf4b4b · actor=agent · prev=767d6a9fd |
-| 2026-07-03 22:20:43 | `file.write` | llmwiki/wiki/sources/draft/030726-observability-runtime.md · tool=Write · session=ebbf4b4b · actor=agent · prev=61051a5d |
-| 2026-07-03 22:21:02 | `file.write` | llmwiki/wiki/sources/draft/030726-orchestration-scale.md · tool=Write · session=ebbf4b4b · actor=agent · prev=c61c77f02f |
-| 2026-07-03 22:21:22 | `file.write` | llmwiki/wiki/sources/draft/030726-skill-resolve-supplychain.md · tool=Write · session=ebbf4b4b · actor=agent · prev=7e91 |
-| 2026-07-03 22:22:04 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=ebbf4b4b · actor=agent · prev=47d6784db2c3952c04acb390e2e1995461c3c |
-| 2026-07-03 22:22:13 | `file.write` | llmwiki/wiki/sources/draft/030726-overstack-html-audit.md · tool=Write · session=3f2abe13 · actor=agent · prev=3c74b2afa |
-| 2026-07-03 22:22:31 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=3f2abe13 · actor=agent · prev=f193869be98b83cd182b2dde47c2f300354eb |
-| 2026-07-03 22:23:07 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=3f2abe13 · actor=agent · prev=4decfeed29c0a7f4f5be746941949648a2320 |
-| 2026-07-03 22:23:53 | `file.write` | llmwiki/wiki/sources/draft/030726-memory-episodic-vector.md · tool=Edit · session=ebbf4b4b · actor=agent · prev=67df30b4 |
-| 2026-07-03 22:24:01 | `file.write` | llmwiki/wiki/sources/draft/030726-self-evolving-skills.md · tool=Edit · session=ebbf4b4b · actor=agent · prev=716d22af07 |
-| 2026-07-03 22:24:09 | `file.write` | llmwiki/wiki/sources/draft/030726-observability-runtime.md · tool=Edit · session=ebbf4b4b · actor=agent · prev=b1a28e09f |
-| 2026-07-03 22:24:18 | `file.write` | llmwiki/wiki/sources/draft/030726-orchestration-scale.md · tool=Edit · session=ebbf4b4b · actor=agent · prev=b72d391b9d3 |
-| 2026-07-03 22:24:27 | `file.write` | llmwiki/wiki/sources/draft/030726-skill-resolve-supplychain.md · tool=Edit · session=ebbf4b4b · actor=agent · prev=c2003 |
-| 2026-07-03 23:07:10 | `file.write` | llmwiki/wiki/sources/draft/030726-ralph-br-frame-production-line.md · tool=Write · session=ebbf4b4b · actor=agent · prev |
-| 2026-07-03 23:07:45 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=ebbf4b4b · actor=agent · prev=c32871b0477153fcb6f80a68df5874fc66820 |
-| 2026-07-03 23:08:51 | `file.write` | skills/frontier-scan/SKILL.md · tool=Write · session=ebbf4b4b · actor=agent · prev=a55e5d7bba17617e67ecb74e81cab59646c0a |
-| 2026-07-03 23:34:20 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=3f2abe13 · actor=agent · prev=9299ccb5e3f03759e152f211684ae945562d7fcc9904f8 |
-| 2026-07-03 23:35:50 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=3f2abe13 · actor=agent · prev=c97a7af6ac4eb83de950e2754f5228209d4dfb53a28f2c |
-| 2026-07-03 23:51:39 | `file.write` | llmwiki/wiki/sources/draft/030726-retrieval-eval-baseline-rot.md · tool=Write · session=ebbf4b4b · actor=agent · prev=e6 |
+| 2026-07-04 01:26:59 | `file.write` | llmwiki/wiki/sources/draft/040726-episodic-vector-plan.md · tool=Write · session=d11b2db1 · actor=agent · prev=genesis · |
+| 2026-07-04 01:33:58 | `file.write` | harness/scripts/mem-rank.py · tool=Edit · session=d11b2db1 · actor=agent · prev=cb249d56127d1972f2b6168c416b7f77a9b4f5ee |
+| 2026-07-04 01:34:11 | `file.write` | harness/scripts/mem-rank.py · tool=Edit · session=d11b2db1 · actor=agent · prev=a496fba6a0d029702f56982195b3c0caf629438a |
+| 2026-07-04 01:34:19 | `file.write` | harness/scripts/mem-rank.py · tool=Edit · session=d11b2db1 · actor=agent · prev=d6a9cec875db98ae5508952c97d968494c97d6ba |
+| 2026-07-04 01:34:33 | `file.write` | harness/scripts/mem-rank.py · tool=Edit · session=d11b2db1 · actor=agent · prev=ce87e686a9d6dd8b52b45b8ff89726cf74156303 |
+| 2026-07-04 01:34:48 | `file.write` | harness/scripts/mem-rank.py · tool=Edit · session=d11b2db1 · actor=agent · prev=3af293a42147aa9dabf028460597dfef450f10a5 |
+| 2026-07-04 01:35:20 | `file.write` | harness/evals/episodic-fixtures.json · tool=Write · session=d11b2db1 · actor=agent · prev=4e2c60f6a6a52a187e4c7cd022cf95 |
+| 2026-07-04 01:35:44 | `file.write` | harness/scripts/mem-proxy.py · tool=Write · session=d11b2db1 · actor=agent · prev=9d2429301b538876242a9b3a8dd745ae638d31 |
+| 2026-07-04 01:35:59 | `file.write` | llmwiki/wiki/sources/evals/episodic/ep-episodic-wire.md · tool=Write · session=d11b2db1 · actor=agent · prev=3802ab83ac6 |
+| 2026-07-04 01:36:07 | `file.write` | llmwiki/wiki/sources/evals/episodic/ep-ci-tech-debt.md · tool=Write · session=d11b2db1 · actor=agent · prev=439faaf839df |
+| 2026-07-04 01:36:46 | `file.write` | skills/query/SKILL.md · tool=Edit · session=d11b2db1 · actor=agent · prev=d9dcd9d58864218ed9b64613e96465eb3453c4383aaf98 |
+| 2026-07-04 01:37:20 | `file.write` | skills/record-episode/SKILL.md · tool=Write · session=d11b2db1 · actor=agent · prev=273d2ae3ec47369043452ee255983604bfcd |
+| 2026-07-04 01:37:31 | `file.write` | skills/wiki-room/SKILL.md · tool=Edit · session=d11b2db1 · actor=agent · prev=3fc974fb56b7c778125c4f55b20cd627d56ea78768 |
+| 2026-07-04 01:37:36 | `file.write` | harness/scripts/sync-skills.py · tool=Edit · session=d11b2db1 · actor=agent · prev=bc119cfe0cda53b9204aa465278ba78c6e1a8 |
+| 2026-07-04 01:37:58 | `file.write` | fdk/CAPABILITIES.md · tool=Edit · session=d11b2db1 · actor=agent · prev=c42f64b8a87afe4592e628865f1be3ecb60b3a02892b7de9 |
+| 2026-07-04 01:38:10 | `file.write` | llmwiki/AGENT.md · tool=Edit · session=d11b2db1 · actor=agent · prev=39a43a77052bc7afaa160969c9a38f52a4dd5b5ee7e17fdd344 |
+| 2026-07-04 01:38:17 | `file.write` | llmwiki/CLAUDE.md · tool=Edit · session=d11b2db1 · actor=agent · prev=53916672ce9377e29e16ed9e1fcabb6faadd2650961e607c0f |
+| 2026-07-04 01:38:30 | `file.write` | fdk/tools/medic.py · tool=Edit · session=d11b2db1 · actor=agent · prev=4e3c26c831af7653f32809d8818fc2c759bf9b8e7c34e02b3 |
+| 2026-07-04 01:39:25 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · session=d11b2db1 · actor=agent · prev=f268e57f9d3febd4bcf43b02669094b2f |
+| 2026-07-04 01:39:36 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · session=d11b2db1 · actor=agent · prev=3a72e98e78acbcfd9ae803f5c6e17ae72 |
+| 2026-07-04 01:39:54 | `file.write` | llmwiki/wiki/log.md · tool=Edit · session=d11b2db1 · actor=agent · prev=68e9da25a9d366c2f3926913d47bd9663d0afdf00969422e |
+| 2026-07-04 01:39:58 | `file.write` | llmwiki/wiki/sources/draft/030726-memory-episodic-vector.md · tool=Edit · session=d11b2db1 · actor=agent · prev=43fcec6e |
+| 2026-07-04 01:47:49 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · session=d11b2db1 · actor=agent · prev=c89ac4d6ac094a6e44aff049268466c77 |
+| 2026-07-04 01:48:19 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · session=d11b2db1 · actor=agent · prev=e3c1cfbb50f08aff49a7b4a6ab5be51f5 |
+| 2026-07-04 01:48:43 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · session=d11b2db1 · actor=agent · prev=fd9ca3e48cca9af528da90865b4d5fc3f |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -201,3 +186,9 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 - Skill mới `record-episode` (wiki-loop) ghi session episode; wire Tầng-0 truy hồi ngữ nghĩa vào `query` + `wiki-room`.
 - Eval: `mem-proxy.py` (sinh output episodic tất định, không model) + fixtures + 2 golden episodic + `episodic-baseline.json`, gate qua medic `p_eval`. hit@k 2/2.
 - Đăng ký: sync-skills mirror, CAPABILITIES, bảng AGENT/CLAUDE. Problem-tree node p-17 (solved 3/3 trụ).
+
+## 2026-07-04 — fdk issue#18 — pre-commit chậm >2ph → tách tầng L2/CI
+
+- Gốc (Meadows): 25 hook nhân bản trọn CI mỗi commit → stash + spawn nặng. Đưa L2 về đúng vai (concept enforcement-floor): chỉ content-validator theo file-đổi.
+- `.pre-commit-config.yaml`: 25→12 hook nhanh; `pre-commit run` 0.16s (trước >2ph). Fire-drill nặng dời sang CI "repo health" (đã có) + thêm `policy-converters-drift` vào harness.yml (chưa có → không mất phủ).
+- Đường cứu index-hỏng-khi-kill ghi vào comment config. Ledger done, problem-tree.

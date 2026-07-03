@@ -2,7 +2,7 @@
 type: issue
 kind: tech-debt
 title: "pre-commit (17-rule fire-drill) chạy >2 phút khi commit — dễ timeout, ngắt giữa chừng làm hỏng index"
-status: open
+status: done
 assignee: "@Rheinmir"
 dispatch: Claude
 entry: /fdk
@@ -48,3 +48,9 @@ Hook `pre-commit` (bộ fire-drill 17 rule) chạy quá 2 phút cho một lần 
 
 ## Origin
 Raise bởi phiên orca-fdk issue-16 (2026-07-04). Bằng chứng: log pre-commit `patch1783099903-61068`; `git status` 621 D ảo; khôi phục bằng reset+apply; PR #17 merge qua `--no-verify`.
+
+## Kết quả (2026-07-04 — done)
+- Đo lại: bộ 25 hook chạy mỗi commit trước đây → nay **12 hook nhanh** theo file-đổi; `pre-commit run` = **0.16s** (trước >2 phút). DoD #1 ✓ (<15s).
+- Dời TRỌN fire-drill nặng (arch-scan · index-sync · wiki-health · harness-lint · duplicate-basename · 2 ADR test · decision-adr-gate-test · adr-delete-guard · capabilities · adapt-registry · harness-local-check) sang CI job "repo health" (đã có sẵn) — **không mất phủ**. `policy-converters-drift` chưa có ở CI → thêm mới vào harness.yml.
+- Cửa sổ interrupt còn sub-second ⇒ gần như loại index-hỏng-khi-kill (DoD #2); thêm đường cứu `~/.cache/pre-commit/patch*` vào comment config.
+- Căn cứ ADR: concept [[harness-enforcement-floor]] — "CI là sàn thật, pre-commit chỉ chặn-sớm"; đổi này đưa L2 về đúng vai.
