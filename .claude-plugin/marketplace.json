@@ -86,6 +86,7 @@
         "./skills/orchestration",
         "./skills/propose",
         "./skills/query",
+        "./skills/record-episode",
         "./skills/raise-issue",
         "./skills/frontier-scan",
         "./skills/redesign-existing-projects",
