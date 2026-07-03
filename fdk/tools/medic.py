@@ -176,13 +176,29 @@ def p_code():
 
 
 def p_eval():
-    """Eval lõi không regress — self-index gate (nếu đã promote khỏi scratchpad)."""
+    """Eval lõi không regress — self-index gate + episodic retrieval hit@k (nếu có baseline)."""
     gate = ROOT / "harness/evals/self-index/check.py"
+    if gate.exists():
+        rc, out = sh([PY, str(gate)])
+        if rc != 0:
+            return "fail", "eval self-index REGRESS", "xem harness/evals/self-index"
+    # episodic retrieval (tầng nhớ episodic, issue #9): sinh output tất định rồi --check hit@k
+    ep_base = ROOT / "harness/metrics/episodic-baseline.json"
+    ep_dir = ROOT / "llmwiki/wiki/sources/evals/episodic"
+    if ep_base.exists() and ep_dir.is_dir():
+        import tempfile as _tf
+        out_f = Path(_tf.gettempdir()) / "medic-ep-out.json"
+        rc, _ = sh([PY, str(ROOT / "harness/scripts/mem-proxy.py"), "--out", str(out_f)])
+        if rc != 0:
+            return "fail", "episodic mem-proxy GÃY", "python3 harness/scripts/mem-proxy.py --self-test"
+        rc, _ = sh([PY, str(ROOT / "harness/scripts/retrieval-eval.py"),
+                    "--evals-dir", str(ep_dir), "--outputs", str(out_f),
+                    "--baseline", str(ep_base), "--check"])
+        if rc != 0:
+            return "fail", "episodic retrieval hit@k REGRESS", "xem harness/metrics/episodic-baseline.json"
+        return "ok", "eval không regress (self-index + episodic hit@k)", ""
     if not gate.exists():
-        return "skip", "self-index eval chưa promote vào harness/evals (còn ở scratchpad)", ""
-    rc, out = sh([PY, str(gate)])
-    if rc != 0:
-        return "fail", "eval self-index REGRESS", "xem harness/evals/self-index"
+        return "skip", "self-index eval chưa promote; chưa có episodic baseline", ""
     return "ok", "eval self-index không regress", ""
 
 

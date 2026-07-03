@@ -17,6 +17,9 @@ kết luận nén. Phiên chính giữ bản đồ (Tier A), chi tiết sống t
 ## Steps
 1. **Lập brief Tier A (phiên chính, rẻ):** thu list id trang cần đào — từ câu hỏi + `wiki/index.md`
    + `wiki/stale.json` (trang stale liên quan phải nêu rõ trong brief là "có thể lỗi thời").
+   Mồi thêm bằng truy hồi NGỮ NGHĨA episodic: `python3 harness/scripts/mem-rank.py retrieve
+   "<câu hỏi>" --kind-filter episode` — bắt "phiên trước làm gì" mà không cần `[[wikilink]]`;
+   đưa các file/episode nổi lên vào brief cho room.
 2. **Chốt budget TRƯỚC khi mở:** tối đa B trang Tier B (mặc định 12) + hàng xóm quan hệ 1 bước
    (đọc `relations:` frontmatter của các trang trong list — cũng tính vào B).
 3. **Mở ĐÚNG MỘT room:** spawn 1 subagent Explore/general-purpose với prompt gồm: câu hỏi, list id,

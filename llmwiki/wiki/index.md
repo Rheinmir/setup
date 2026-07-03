@@ -76,4 +76,7 @@
 | [030726-skill-resolve-supplychain](sources/draft/030726-skill-resolve-supplychain.md) | issue | Issue: Nhập nhằng skill + supply-chain chưa được đo/chặn |
 | [030726-retrieval-eval-baseline-rot](sources/draft/030726-retrieval-eval-baseline-rot.md) | issue | Issue: retrieval-eval baseline rot + guard-rail quá giòn |
 | [040726-precommit-slow-fragile-on-commit](sources/draft/040726-precommit-slow-fragile-on-commit.md) | issue | Issue: pre-commit chậm + giòn khi bị ngắt |
+| [040726-episodic-vector-plan](sources/draft/040726-episodic-vector-plan.md) | draft | Draft: đạt 4/4 tầng nhớ cho llmwiki (issue #9) |
+| [ep-ci-tech-debt](sources/evals/episodic/ep-ci-tech-debt.md) | eval | Episodic golden: đóng tech-debt CI |
+| [ep-episodic-wire](sources/evals/episodic/ep-episodic-wire.md) | eval | Episodic golden: nối episodic + vector retrieval |
 <!-- index:auto:end -->

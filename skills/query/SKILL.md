@@ -16,6 +16,13 @@ When user asks question requiring synthesis across multiple wiki pages or raw so
 > `wiki/sources/evals/retrieval/` cho thấy cách này giữ nguyên recall mà cắt ~65% token so với
 > "đọc mọi trang khớp" (baseline L0). Kiểm chứng: `retrieval-eval.py --check`.
 
+0. **Tầng 0 — truy hồi NGỮ NGHĨA (episodic + memory), KHÔNG chỉ theo link:** trước khi quét wiki,
+   hỏi tầng nhớ episodic xem *phiên trước* đã đụng câu hỏi này chưa:
+   `python3 harness/scripts/mem-rank.py retrieve "<câu hỏi>" --k 5` (thêm `--kind-filter episode`
+   để chỉ lấy sự kiện phiên). Trả về top-k memory/episode liên quan theo **nghĩa** (token-overlap,
+   sẽ là embedding khi adapter `mem-rank.config.yaml` được wire) — bắt được trang KHÔNG có
+   `[[wikilink]]` trỏ tới. NOOP (rỗng) thì bỏ qua, không nhồi nhiễu. Dùng kết quả này để mồi
+   danh sách trang cho Tầng 1 + biết "việc này từng làm ở phiên nào".
 1. **Tầng 1 — quét, KHÔNG mở full trang nào:** `ripgrep` câu hỏi trên `wiki/index.md` + nội dung wiki (`rg -c '<term>' wiki/` để đếm khớp), xếp hạng trang theo **độ phủ term** (trang chứa nhiều term của câu hỏi nhất). Câu hỏi về code → dùng code-graph MCP (`search_symbols`) thay `rg`. Kết quả tầng này = danh sách slug + dòng khớp; chưa `Read` full trang nào.
 2. **Tầng 2 — khoan:** chỉ `Read` FULL **top-N trang cao điểm nhất** (mặc định ~5). Bỏ phần đuôi bảng xếp hạng — không đọc cho "chắc".
 3. **Tầng 3 — bối cảnh:** nếu câu trả lời cần mạch liên quan, lần theo `[[wikilinks]]` của các trang vừa đọc (tương đương timeline/related của engram) — vẫn chỉ mở trang được trỏ tới, không mở tất cả.
