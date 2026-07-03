@@ -34,8 +34,8 @@ Milestone v1.0.6: hiện thực các NỢ đã ghi ở v1.0.5 — biến 2 verdi
 | skill `/query` | hạ mô tả xuống optional (không xoá) |
 
 ## Plan
-- [ ] **T1 — medic coverage 5/17 → 17/17.** Mở `harness-doctor build_rN` 4 tầng: content-validator mở rộng (R11/R13/R14/R16 + validator lẻ), hook_event (R3/R4/R8/R10/R17 feed synthetic-event), process_gate (R12/R15 temp-git BAD-state), documentary (R6 presence). Hấp thụ **A3 sync-direction-check** (so bản đang-cắn 2 chiều trước sync).
-- [ ] **T2 — hook framework-touch-detector → medic-cuối-phiên.** Stop-hook: nếu phiên đụng `fdk/` hoặc core `llmwiki/` → tự chạy `medic --ci` (gương-soi). KHÔNG chạy cho phiên dev project thường (chống theater).
+- [x] **T1 — medic coverage 5/17 → 17/17.** ✅ (commit ef12c4a) — fire-drill tổng quát hoá theo KIND: block/block-argv/-dir/-commitmsg/-poc/-git/side-effect/wiring. Mở `harness-doctor build_rN` 4 tầng: content-validator mở rộng (R11/R13/R14/R16 + validator lẻ), hook_event (R3/R4/R8/R10/R17 feed synthetic-event), process_gate (R12/R15 temp-git BAD-state), documentary (R6 presence). Hấp thụ **A3 sync-direction-check** (so bản đang-cắn 2 chiều trước sync).
+- [x] **T2 — hook framework-touch-detector → medic-cuối-phiên.** ✅ — `stop.py::framework_medic_mirror`: chỉ repo framework (có `fdk/tools/medic.py`) + git-status thật chạm `fdk/|harness/|skills/|llmwiki/` → tự chạy `medic --ci` cuối lượt. Khoẻ (kể cả warn) → 1 dòng khẽ báo; FAIL thật (exit≠0) → **chặn dừng (exit 2)** in chỗ hở để sửa sớm (guard `stop_hook_active` chống lặp). Fail-open tuyệt đối.
 - [ ] **T3 — A1 generator-only probe.** medic probe: artifact có generator (overstack/capabilities/skill-whiteboard…) mà bị sửa tay (hash lệch nguồn sinh) → cảnh báo.
 - [ ] **T4 — code-graph entrypoint rẻ + hạ /query.** Một lệnh `graph <symbol>` → callers/callees/derives phi-cục-bộ ngay terminal (không skill 3 tầng). Sửa mô tả `/query` xuống optional-shortcut.
 - [ ] **T5 — retrieval tự-surface.** Hook pre-edit: nếu code-graph phát hiện file sắp sửa có quan hệ phi-cục-bộ agent chưa chạm → chèn cảnh báo cross-break (bảo hiểm không cần yêu cầu).

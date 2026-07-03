@@ -19,15 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-03 13:27:30 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=50e9a2ee3305cb6b2fa09356f89186531ef4ad0e9d265e803a557de335d2 |
-| 2026-07-03 13:27:41 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=fe3155961c842e050aaa38fb38adf6eb675b76ee9fdbf2a66a2e4baf5a21 |
-| 2026-07-03 13:28:05 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=8bec0ac3c15a930ea96c7e24585b65a7b635074a97de8892faf59b15fd27 |
-| 2026-07-03 13:34:16 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=8a1f7c16e4803ffa5445dd7c1e092c89f58c0c57a3b532d7a8e34cd178c8 |
-| 2026-07-03 13:34:30 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=304c87579507919850b224ff3181fbd79b07577200e9acaa9d7ffaaef1d6 |
-| 2026-07-03 13:34:37 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=2e5e2f5f0b4ac3999e5824014bc95de40a79e4d7b5516857232d4b1c89ac |
-| 2026-07-03 13:37:40 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=acd738a9367cb1e733ea966af38c08b09b9e37f227dc7c1287dde803fb96 |
-| 2026-07-03 13:37:55 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=203a7ad28cb46197f2a124dcbe5279473214ab4c3eb7aaab418cccfb8fca |
-| 2026-07-03 13:38:50 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=c880d27a2bd87037854f1ff808b6b5a1ac3d0d3a53aec1f3d89760a9f00c |
 | 2026-07-03 13:39:04 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=61a92b60558561b56d57d6d852e1d0c54ef8660b54fb35b396847d993b8c |
 | 2026-07-03 13:39:13 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=1fc57dc02502bc229e13c7d99e2ca1658f7debcb36a025e785f9e0165de9 |
 | 2026-07-03 13:39:53 | `file.write` | harness/scripts/council.py · tool=Edit · actor=agent · prev=4a51eb8787b9830c6a77fed7f3a99e611114d8601abe92820a7130cccc1f |
@@ -59,6 +50,15 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-03 15:10:55 | `file.write` | llmwiki/.claude/hooks/post_tool_use.py · tool=Edit · session=b73d2c47 · actor=agent · prev=653b7c495131d63f31be8217add24 |
 | 2026-07-03 15:11:09 | `file.write` | test/x.py · tool=Edit · session=b73d2c47 · actor=agent · prev=84e72df3e4824c8ba67cd8a7b31ddae8876e129d33dd53d8a70dbc6857 |
 | 2026-07-03 15:11:49 | `file.write` | fdk/tools/memory-map.py · tool=Write · session=b73d2c47 · actor=agent · prev=f3d244f812aa97b3b4f3f5047be305d206886513479 |
+| 2026-07-03 15:35:26 | `file.write` | harness/scripts/harness-doctor.py · tool=Edit · session=b73d2c47 · actor=agent · prev=61492d70d5a9a5a0caaa3713216e53de19 |
+| 2026-07-03 15:35:31 | `file.write` | harness/scripts/harness-doctor.py · tool=Edit · session=b73d2c47 · actor=agent · prev=616d72995eb6bf3da064e17147c4dc1b89 |
+| 2026-07-03 15:35:39 | `file.write` | harness/scripts/harness-doctor.py · tool=Edit · session=b73d2c47 · actor=agent · prev=8b6a306c30a66575c8b544795d3ab71c47 |
+| 2026-07-03 15:35:57 | `file.write` | harness/scripts/harness-doctor.py · tool=Edit · session=b73d2c47 · actor=agent · prev=ceffd29773eb5ede56e9a5ac78f0413d22 |
+| 2026-07-03 15:36:16 | `file.write` | harness/scripts/harness-doctor.py · tool=Edit · session=b73d2c47 · actor=agent · prev=b66aafd8fdd96f27fb967988489de8a8c3 |
+| 2026-07-03 15:36:23 | `file.write` | harness/scripts/harness-doctor.py · tool=Edit · session=b73d2c47 · actor=agent · prev=7073655fa312dfc36ba964335bcdf5d33c |
+| 2026-07-03 15:37:06 | `file.write` | harness/scripts/harness-doctor.py · tool=Edit · session=b73d2c47 · actor=agent · prev=58622ea51c33d59145d007425e6721b885 |
+| 2026-07-03 19:45:11 | `file.write` | llmwiki/.claude/hooks/stop.py · tool=Edit · session=b73d2c47 · actor=agent · prev=371a66404085cd69f1c2ff413ee99c833b349d |
+| 2026-07-03 19:45:19 | `file.write` | llmwiki/.claude/hooks/stop.py · tool=Edit · session=b73d2c47 · actor=agent · prev=4d90f11f5c58952b12543c606c14c232852b63 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)

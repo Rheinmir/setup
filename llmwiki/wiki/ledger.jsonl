@@ -20,3 +20,5 @@
 {"ts": "2026-07-03T14:34:30", "session": "b73d2c47", "action": "add", "target": "sources/draft/030726-milestone-v106-harden.md", "tool": "Write"}
 {"ts": "2026-07-03T14:43:46", "session": "b73d2c47", "action": "add", "target": "sources/030726-session-provenance.md", "tool": "Write"}
 {"ts": "2026-07-03T14:55:25", "session": "b73d2c47", "action": "add", "target": "sources/draft/030726-secondary-memory.md", "tool": "Write"}
+{"ts": "2026-07-03T19:46:12", "session": "b73d2c47", "action": "modify", "target": "sources/draft/030726-milestone-v106-harden.md", "tool": "Edit"}
+{"ts": "2026-07-03T19:46:26", "session": "b73d2c47", "action": "modify", "target": "sources/draft/030726-milestone-v106-harden.md", "tool": "Edit"}

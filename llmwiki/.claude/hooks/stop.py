@@ -33,6 +33,50 @@ def regen_docs(root: str) -> None:
         pass
 
 
+_ANSI = re.compile(r"\033\[[0-9;]*m")
+FW_SURFACES = ("fdk/", "harness/", "skills/", "llmwiki/")
+
+
+def _strip(s: str) -> str:
+    return _ANSI.sub("", s).rstrip()
+
+
+def framework_medic_mirror(root: str) -> int:
+    """T2 gương-soi cuối phiên: phiên có ĐỤNG bề mặt framework (fdk/ harness/ skills/
+    llmwiki/) → tự chạy `medic --ci` NGAY trước khi kết thúc lượt, để dark-rail/docs-lệch/
+    code-vỡ lộ SỚM (không đợi tới commit-gate — bài học R7-f v1.0.5).
+
+    Phạm vi (chống theater): CHỈ repo framework (có fdk/tools/medic.py) — phiên dev PROJECT
+    thường không có medic.py nên bỏ qua hoàn toàn; và chỉ khi git-status thật sự chạm surface.
+    Khoẻ (warn cũng tính khoẻ) → 1 dòng khẽ báo đã soi. FAIL thật (medic --ci exit≠0, chỉ khi
+    có fail) → trả 2 để CHẶN dừng, in chỗ hở cho agent sửa (guard stop_hook_active chống lặp).
+    Fail-open tuyệt đối: thiếu medic/git lỗi/timeout → 0, không bao giờ làm gãy phiên."""
+    medic = os.path.join(root, "fdk", "tools", "medic.py")
+    if not os.path.isfile(medic):
+        return 0  # không phải repo framework → không soi
+    try:
+        st = subprocess.run(["git", "status", "--porcelain"], cwd=root,
+                            capture_output=True, text=True, timeout=8).stdout
+    except Exception:
+        return 0
+    if not any(ln[3:].startswith(FW_SURFACES) for ln in st.splitlines() if len(ln) > 3):
+        return 0  # phiên không chạm framework → im lặng (chống theater)
+    try:
+        p = subprocess.run([sys.executable, medic, "--ci"], cwd=root,
+                           capture_output=True, text=True, timeout=120)
+    except Exception:
+        return 0  # medic lỗi/timeout không được chặn người dùng
+    if p.returncode == 0:
+        head = next((_strip(ln) for ln in p.stdout.splitlines() if "▉" in ln), "medic KHOẺ")
+        print(f"🩺 [medic gương-soi] phiên đụng framework → đã tự soi: {head}", file=sys.stderr)
+        return 0
+    fails = [_strip(ln) for ln in p.stdout.splitlines() if "✗" in ln or "▉ FAIL" in ln]
+    print("🩺 [medic gương-soi] phiên ĐỤNG framework mà medic --ci CÓ FAIL — sửa trước khi kết thúc:\n"
+          + "\n".join(fails[:10])
+          + "\n  → xem đầy đủ: `python3 fdk/tools/medic.py`", file=sys.stderr)
+    return 2
+
+
 def wiki_changed(root: str) -> bool:
     try:
         out = subprocess.run(
@@ -57,6 +101,8 @@ def main() -> None:
     if tp:
         code_log(root, "--run-cost", f"--transcript={tp}", f"--session={payload.get('session_id') or ''}")
     regen_docs(root)               # overstack.html + CAPABILITIES tự cập nhật khi skill/rule đổi (repo framework)
+    if framework_medic_mirror(root) == 2:  # T2: đụng framework → soi medic; FAIL thật thì chặn dừng
+        sys.exit(2)
     if not wiki_changed(root):
         sys.exit(0)  # phiên không đụng wiki → không can thiệp
 
