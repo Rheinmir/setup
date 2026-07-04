@@ -29,11 +29,11 @@ G="$(mktemp -d)"
 ( cd "$G"; git init -q; git config user.email t@t; git config user.name t
   mkdir -p fdk/wiki/sources/adr
   printf -- '---\ntype: decision\n---\n# ADR-001\n## Status\nAccepted\n' > fdk/wiki/sources/adr/ADR-001-live.md
-  git add -A; git commit -qm init; git rm -q fdk/wiki/sources/adr/ADR-001-live.md ) >/dev/null 2>&1
+  git add -A; git -c core.hooksPath=/dev/null commit --no-verify -qm init; git rm -q fdk/wiki/sources/adr/ADR-001-live.md ) >/dev/null 2>&1
 CLAUDE_PROJECT_DIR="$G" python3 "$V" --guard-deletions >/dev/null 2>&1; [ $? -eq 2 ] && ok "CHẶN xóa ADR còn LIVE" || bad "không chặn xóa ADR live"
 ( cd "$G"; git reset -q --hard HEAD   # khôi phục ADR-001
   printf -- '---\ntype: decision\n---\n# ADR-002\n## Status\nAccepted\n\nsupersedes ADR-001.\n' > fdk/wiki/sources/adr/ADR-002-new.md
-  git add -A; git commit -qm adr2; git rm -q fdk/wiki/sources/adr/ADR-001-live.md ) >/dev/null 2>&1
+  git add -A; git -c core.hooksPath=/dev/null commit --no-verify -qm adr2; git rm -q fdk/wiki/sources/adr/ADR-001-live.md ) >/dev/null 2>&1
 CLAUDE_PROJECT_DIR="$G" python3 "$V" --guard-deletions >/dev/null 2>&1; [ $? -eq 0 ] && ok "CHO xóa ADR khi đã bị đè (ADR-002 supersedes)" || bad "chặn nhầm khi đã bị đè"
 rm -rf "$G"
 
