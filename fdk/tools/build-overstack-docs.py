@@ -307,9 +307,24 @@ def load_mechanisms(root: Path):
         return []
 
 
+def load_foundation(root: Path):
+    """Đọc harness/foundation.yaml → dict {problem, why-exists, tech-choices[...]}.
+    Manifest lỗi/thiếu → {} + cảnh báo stderr (thà trống-thấy-được còn hơn sai-âm-thầm —
+    council-026/GH#6; mục Nền tảng DERIVE từ đây, không chép tay)."""
+    p = root / "harness" / "foundation.yaml"
+    try:
+        import yaml
+        data = yaml.safe_load(p.read_text(encoding="utf-8")) or {}
+        return data.get("foundation", {}) or {}
+    except Exception as e:
+        sys.stderr.write(f"[build-overstack-docs] KHÔNG đọc được {p}: {e} — mục Nền tảng sẽ TRỐNG\n")
+        return {}
+
+
 def sections(root: Path):
     by_loop, n_sk = skills_by_loop(root)
     mechs = load_mechanisms(root)   # cơ-chế = DATA từ manifest (council-025), không chép tay
+    fnd = load_foundation(root)     # Nền tảng = DATA từ foundation.yaml (GH#6), không chép tay
     rs = rules(root)
     n_rules = len(rs)
     n_scripts = len(list((root / "harness" / "scripts").glob("*.py"))) if (root / "harness" / "scripts").is_dir() else 0
@@ -472,6 +487,48 @@ def sections(root: Path):
         "<li><b>Build-now-adapt-later</b> — dựng phần chắc chắn ngay, nhốt ẩn số sau MỘT adapter để chỉnh sau.</li>"
         "<li><b>Travel-with-project</b> — cái gì phục vụ dự án thì đi theo khi cài; đồ nghề dev framework ở lại.</li></ul></div></div>",
     ]))
+
+    # ── Nền tảng — DERIVE từ harness/foundation.yaml (GH#6), KHÔNG chép tay ─────────
+    def _evi(item):
+        s = str(item).strip()
+        if s.startswith("[[") and s.endswith("]]"):   # wikilink → nguyên văn (R-validator wiki lo)
+            return esc(s)
+        return "<code>%s</code>" % esc(s)              # path repo-relative → code
+
+    _tc = fnd.get("tech-choices") or []
+    if not fnd or not (fnd.get("problem") or _tc):
+        _fnd_blocks = ["<p class=\"lead\">Mục Nền tảng chưa điền. Tạo/điền <code>harness/foundation.yaml</code> "
+                       "rồi chạy <code>python3 fdk/tools/build-overstack-docs.py</code> để trang này derive tự động.</p>"]
+    else:
+        _fnd_blocks = [
+            "<p class=\"lead\">Ba câu gốc mà người mới (và agent) đọc <b>đầu tiên</b>: dự án giải quyết "
+            "<b>bài toán gì</b>, <b>vì sao nó tồn tại</b>, và <b>vì sao chọn các công nghệ này</b>. "
+            "Toàn bộ mục này <b>derive</b> từ <code>harness/foundation.yaml</code> — sửa nguồn rồi regen, "
+            "không chép tay (chống drift, ADR-001).</p>",
+            "<div class=\"grid\">"
+            "<div class=\"card\"><h4>Bài toán</h4><p style=\"margin:0\">%s</p></div>"
+            "<div class=\"card\"><h4>Vì sao tồn tại</h4><p style=\"margin:0\">%s</p></div></div>"
+            % (esc(str(fnd.get("problem", "—")).strip()), esc(str(fnd.get("why-exists", "—")).strip())),
+        ]
+        if _tc:
+            _rows = []
+            for _c in _tc:
+                _alts = _c.get("alternatives-rejected") or []
+                _alt_html = "".join(
+                    "<li><b>%s</b> — %s</li>" % (esc(str(_a.get("alt", "")).strip()), esc(str(_a.get("reason", "")).strip()))
+                    for _a in _alts) or "<li>—</li>"
+                _evis = _c.get("evidence-link") or []
+                _evi_html = " ".join(_evi(_e) for _e in _evis) or "—"
+                _rows.append(
+                    "<tr><td><b>%s</b></td><td>%s</td><td>%s</td><td><ul class=\"s\" style=\"margin:0;padding-left:16px\">%s</ul></td><td>%s</td></tr>"
+                    % (esc(str(_c.get("tech", "")).strip()), esc(str(_c.get("role", "")).strip()),
+                       esc(str(_c.get("why", "")).strip()), _alt_html, _evi_html))
+            _fnd_blocks.append(
+                "<h3>Vì sao chọn các công nghệ này</h3>"
+                "<table><tr><th>Công nghệ</th><th>Vai trò</th><th>Vì sao</th>"
+                "<th>Đã loại (vì sao)</th><th>Bằng chứng</th></tr>" + "".join(_rows) + "</table>")
+    S.append(("foundation", "Nền tảng", "01 · Nền tảng",
+              "Nền tảng — bài toán · vì sao tồn tại · vì sao chọn công nghệ", _fnd_blocks))
 
     S.append(("install", "Cài đặt", "02 · Cài đặt", "Cài đặt — global vs per-project", [
         "<p class=\"lead\">overstack cài bằng một dòng bootstrap. Có hai chế độ, dùng cả hai là tốt nhất.</p>",

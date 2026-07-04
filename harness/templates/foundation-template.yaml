@@ -1,0 +1,34 @@
+# foundation.yaml — NGUỒN CHÂN LÝ cho mục "Nền tảng" của wiki dự án BẠN.
+#
+# Điền ba câu gốc để người mới (và agent) đọc ĐẦU TIÊN hiểu vì-sao của dự án:
+#   1. problem     — dự án giải quyết bài toán gì
+#   2. why-exists  — vì sao nó tồn tại (không dùng cái có sẵn?)
+#   3. tech-choices — vì sao chọn các công nghệ này (mỗi mục kèm why + cái đã loại + bằng chứng)
+#
+# overstack.html DERIVE mục Nền tảng từ file này (không chép tay). Sau khi điền, chạy
+# `python3 fdk/tools/build-overstack-docs.py` để trang cập nhật.
+#
+# evidence-link là path repo-relative TỚI file/dir CÓ THẬT (ADR, report, commit-doc) HOẶC
+# wikilink [[Tên]]. medic probe `foundation` cắn nếu path khai mà không tồn tại, hoặc nếu
+# một tech khai ở đây mà vắng trong overstack.html (chống drift).
+#
+# Còn nguyên TODO thì medic chỉ WARN (không đỏ) — điền dần khi dự án rõ hơn.
+
+version: 1
+
+foundation:
+  problem: >-
+    TODO: một đoạn ngắn — dự án này giải quyết bài toán gì cho ai.
+
+  why-exists: >-
+    TODO: vì sao dự án tồn tại — vì sao không dùng giải pháp có sẵn, điều gì buộc phải tự làm.
+
+  tech-choices:
+    - tech: "TODO: công nghệ chính (vd ngôn ngữ/framework/hạ tầng)"
+      role: "TODO: nó đảm nhiệm phần nào của hệ"
+      why: "TODO: vì sao chọn nó"
+      alternatives-rejected:
+        - alt: "TODO: lựa chọn đã cân nhắc rồi loại"
+          reason: "TODO: vì sao loại"
+      evidence-link:
+        - "TODO: link ADR/report/commit làm bằng chứng (path repo-relative hoặc [[wikilink]])"
