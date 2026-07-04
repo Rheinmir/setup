@@ -480,6 +480,19 @@
     "date": "2026-07-04",
     "solvedBy": "fdk/tools/skill-usage.py: discover_transcript_dirs() qua git worktree list + parse_ts().astimezone(); fable-planning surfaced, /fdk gác",
     "session": "orca-fdk issue-8 follow-up"
+  },
+  {
+    "id": "p-21",
+    "parent": null,
+    "title": "overstack.html (docs chính) mang mâu thuẫn nội tại + lỗi thời + thiếu UX nền",
+    "desc": "Issue #14: trang docs chính xác số liệu (bake từ đĩa) nhưng 4 mâu thuẫn CAO (3 vs 4 lớp gác + L3 ma; 'mỗi rule=1 validator' vs FACT 17 rule/14 validator; R10 hai kiểu; nhãn BNAL 20 vs 15+5), lỗi thời (thiếu GH#8 skill-usage), thiếu dark mode / a11y / overflow-x; mọi fix phải ở generator build-overstack-docs.py (sửa tay HTML bị --check bắt drift). VÁ đợt 1 (sự thật, chống-drift): sửa 4 mâu thuẫn khớp FACT + bảng rule render 1 lần (bỏ lặp ×2) + LOOP_GROUPS phân loại nốt (ovs-notes/frontier-scan) + GH#8 auto-derive từ mechanisms.yaml. Đợt 2 (UX): dark mode qua prefers-color-scheme, .table-wrap overflow-x (class trước dùng mà KHÔNG có CSS), mind-map keyboard a11y (tabindex/role/aria-expanded/Enter-Space), skip-link + nav aria-label. --check pass. Đợt 3 biên tập (glossary/tách giọng) defer — ngoài DoD.",
+    "status": "solved",
+    "scope": [
+      "llmwiki"
+    ],
+    "date": "2026-07-04",
+    "solvedBy": "fdk/tools/build-overstack-docs.py: sửa mâu thuẫn khớp FACT · dedup bảng rule · LOOP_GROUPS · dark mode + table-wrap CSS + mind-map a11y + skip-link · --check xanh",
+    "session": "orca-fdk issue-14"
   }
 ]</script>
 
