@@ -33,3 +33,6 @@
 {"ts": "2026-07-04T01:39:59", "session": "d11b2db1", "action": "modify", "target": "sources/draft/030726-memory-episodic-vector.md", "tool": "Edit"}
 {"ts": "2026-07-04T02:07:07", "session": "e02a8367", "action": "modify", "target": "sources/draft/030726-skill-resolve-supplychain.md", "tool": "Edit"}
 {"ts": "2026-07-04T02:07:23", "session": "e02a8367", "action": "modify", "target": "sources/draft/030726-skill-resolve-supplychain.md", "tool": "Edit"}
+{"ts": "2026-07-04T12:58:03", "session": "3fb3a505", "action": "add", "target": "sources/draft/040726-selftest-nested-commit-unguarded.md", "tool": "Write"}
+{"ts": "2026-07-04T12:58:12", "session": "3fb3a505", "action": "modify", "target": "sources/ISSUES.md", "tool": "Edit"}
+{"ts": "2026-07-04T12:58:35", "session": "3fb3a505", "action": "modify", "target": "sources/ISSUES.md", "tool": "Edit"}

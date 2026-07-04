@@ -21,7 +21,7 @@ seed_debt() {
   printf '# Beta\n\n**Type:** concept\n\nNoi dung beta bold-meta.\n' > "$d/llmwiki/wiki/concepts/beta.md"
   printf '# Wiki Index\n\n| File | Type | Summary |\n|------|------|---------|\n' > "$d/llmwiki/wiki/index.md"
   printf '# Operation Log\n' > "$d/llmwiki/wiki/log.md"
-  ( cd "$d" && git init -q && git config user.email t@t.t && git config user.name t && git add -A && git commit -qm seed >/dev/null )
+  ( cd "$d" && git init -q && git config user.email t@t.t && git config user.name t && git add -A && git -c core.hooksPath=/dev/null commit --no-verify -qm seed >/dev/null )
 }
 timed() { python3 -c 'import subprocess,sys,time; t=time.time(); p=subprocess.run(sys.argv[1:],capture_output=True,text=True); sys.stderr.write(p.stdout+p.stderr); print("%.3f %d"%(time.time()-t,p.returncode))' "$@"; }
 
@@ -99,7 +99,7 @@ D6="$WORK/s6"; mkdir -p "$D6/llmwiki/wiki/concepts"
 printf '# Gamma\n\n**Type:** concept\n\nBody gamma.\n\n## Origin\n- seed\n' > "$D6/llmwiki/wiki/concepts/gamma.md"
 printf '# Wiki Index\n\n| File | Type | Summary |\n|------|------|---------|\n| [gamma](concepts/gamma.md) | concept | Gamma |\n' > "$D6/llmwiki/wiki/index.md"
 printf '# Operation Log\n' > "$D6/llmwiki/wiki/log.md"
-( cd "$D6" && git init -q && git config user.email t@t.t && git config user.name t && git add -A && git commit -qm seed >/dev/null )
+( cd "$D6" && git init -q && git config user.email t@t.t && git config user.name t && git add -A && git -c core.hooksPath=/dev/null commit --no-verify -qm seed >/dev/null )
 read t6 rc6 < <(timed bash "$INST" "$D6" --self-heal 2>"$D6/.out")
 [ "$rc6" = "0" ] && ok "OKF-only: self-heal → rc=0 sạch" || bad "okf-only rc" "rc=$rc6"
 grep -q "Origin:0 index:0 OKF:1" "$D6/.out" && ok "OKF-only: chỉ migrate OKF (Origin:0 index:0 OKF:1)" || bad "okf-only count" "$(grep 'backfill xong' "$D6/.out")"
