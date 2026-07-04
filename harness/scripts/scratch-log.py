@@ -19,6 +19,7 @@ CLI:
 """
 import argparse
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -75,6 +76,44 @@ def show(args):
         print(f"  [{r.get('session','?')[:8]}] {r.get('action','')} {r.get('file','-')}"
               + (f"  ← {why}" if why else ""))
     print(f"({len(rows)} entry" + (f", session {args.session[:8]}" if args.session else "") + ")")
+    return 0
+
+
+def _git(root, *argv):
+    """Chạy git, trả stdout đã strip (rỗng nếu lỗi/thiếu git). Fail-open."""
+    try:
+        p = subprocess.run(["git", "-C", str(root), *argv],
+                           capture_output=True, text=True, timeout=8)
+        return p.stdout.strip() if p.returncode == 0 else ""
+    except Exception:
+        return ""
+
+
+def auto(args):
+    """Chốt 2 (council-030, fail-closed MỀM): nếu phiên có SỬA thật (git dirty hoặc vừa commit)
+    mà scratch-log CHƯA có `why` thủ công nào cho phiên → TỰ trích một `why` từ git
+    (subject commit gần nhất + file đổi nhiều nhất) rồi append 1 note. Đường tự-động vì thế
+    KHÔNG BAO GIỜ rỗng why ở đuôi (agent lười/quên). KHÔNG đè lên why thủ công — tôn trọng con người.
+    Fail-open tuyệt đối: thiếu git / không mutation → không ghi gì, trả 0."""
+    sess = args.session
+    have = [r for r in _read(LOG)
+            if (not sess or r.get("session") == sess) and (r.get("why") or "").strip()]
+    if have:
+        return 0  # phiên đã có why thủ công → không đụng
+    root = args.root or str(ROOT)
+    dirty = _git(root, "status", "--porcelain")
+    subject = _git(root, "log", "-1", "--format=%s")
+    changed = [ln[3:] for ln in dirty.splitlines() if len(ln) > 3]
+    if not dirty and not subject:
+        return 0  # không mutation, không lịch sử → không bịa why
+    top = changed[0] if changed else ""
+    why = f"auto: {subject or '(chưa commit)'} — trích từ git ({len(changed)} file dirty); agent chưa ghi why thủ công"
+    rec = {"ts": args.ts or _now_iso(), "session": sess or "",
+           "action": "auto", "file": top, "why": why}
+    LOG.parent.mkdir(parents=True, exist_ok=True)
+    with open(LOG, "a", encoding="utf-8") as f:
+        f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+    print(f"scratch-auto: điền why từ git (session={rec['session'][:8] or '?'}, {len(changed)} file dirty)")
     return 0
 
 
@@ -136,8 +175,12 @@ def main():
     d = sub.add_parser("distill")
     d.add_argument("--session", default="")
     d.add_argument("--date", default="")
+    au = sub.add_parser("auto")
+    au.add_argument("--session", default="")
+    au.add_argument("--root", default="")
+    au.add_argument("--ts", default="")
     a = ap.parse_args()
-    return {"note": note, "show": show, "distill": distill}[a.cmd](a)
+    return {"note": note, "show": show, "distill": distill, "auto": auto}[a.cmd](a)
 
 
 if __name__ == "__main__":

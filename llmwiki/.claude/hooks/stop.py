@@ -92,6 +92,38 @@ def regen_docs(root: str) -> None:
         pass
 
 
+def secondary_memory(root: str, session: str) -> None:
+    """Chốt 1+2 (council-030, issue #5): nối bộ-nhớ-thứ-cấp vào chính Stop-hook đang ghi ledger,
+    để context/sửa-vụn được lưu durable + visualizable mà KHÔNG cần agent nhớ gõ tay (leverage
+    Meadows #6 — cấu trúc luồng thông tin, không phải kỷ luật người). Mỗi lần dừng, khi phiên có
+    SỬA thật (git dirty): (a) `scratch-log auto` tự điền why từ git nếu phiên chưa có why thủ công;
+    (b) `scratch-log distill` gom → sources/DDMMYY-session-provenance.md; (c) `memory-map` regenerate
+    llmwiki/html/memory-map.html. CHỈ repo có harness/scripts/scratch-log.py (framework — ADR-004);
+    fail-open tuyệt đối: thiếu script / lỗi / timeout → im lặng, không bao giờ làm gãy lượt."""
+    sl = os.path.join(root, "harness", "scripts", "scratch-log.py")
+    if not os.path.isfile(sl):
+        return  # không phải repo framework → bỏ (scratch-log/memory-map là repo-only)
+    try:
+        dirty = subprocess.run(["git", "status", "--porcelain"], cwd=root,
+                               capture_output=True, text=True, timeout=8).stdout
+    except Exception:
+        return
+    if not dirty.strip():
+        return  # phiên không sửa gì → khỏi ghi provenance rỗng
+    import datetime
+    today = datetime.date.today().isoformat()
+    try:
+        subprocess.run([sys.executable, sl, "auto", "--session", session, "--root", root],
+                       capture_output=True, timeout=20)
+        subprocess.run([sys.executable, sl, "distill", "--session", session, "--date", today],
+                       capture_output=True, timeout=20)
+        mm = os.path.join(root, "fdk", "tools", "memory-map.py")
+        if os.path.isfile(mm):
+            subprocess.run([sys.executable, mm], capture_output=True, timeout=40)
+    except Exception:
+        pass
+
+
 _ANSI = re.compile(r"\033\[[0-9;]*m")
 FW_SURFACES = ("fdk/", "harness/", "skills/", "llmwiki/")
 
@@ -160,6 +192,7 @@ def main() -> None:
     if tp:
         code_log(root, "--run-cost", f"--transcript={tp}", f"--session={payload.get('session_id') or ''}")
     regen_docs(root)               # overstack.html + CAPABILITIES tự cập nhật khi skill/rule đổi (repo framework)
+    secondary_memory(root, (payload.get("session_id") or ""))  # issue #5: bộ-nhớ-thứ-cấp tự lưu context vụn cuối lượt
     if framework_medic_mirror(root) == 2:  # T2: đụng framework → soi medic; FAIL thật thì chặn dừng
         sys.exit(2)
     if not wiki_changed(root):
