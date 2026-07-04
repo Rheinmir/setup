@@ -138,6 +138,47 @@ def p_narrative():
     return "ok", f"{len(names)} cơ-chế LIVE đều có mặt + đúng bản gốc", ""
 
 
+def p_foundation():
+    """Mục Nền tảng (foundation.yaml, GH#6) có TRUNG THỰC không — cùng khuôn narrative-as-data:
+      (b) mọi evidence-link dạng PATH phải TỒN TẠI (manifest không nói dối);
+      (a) mọi tech khai phải XUẤT HIỆN trong overstack.html (không foundation drift);
+      (c) toàn giá trị TODO (chưa điền) → warn, không fail (dự án mới bootstrap không bị đỏ).
+    Parse bằng regex → medic vẫn stdlib-only; fail-open (skip) nếu không parse được.
+    LƯU Ý: regex dưới KHÔNG phải YAML parser thật — chỉ nhận list dạng plain-quoted scalar
+    (`- "value"`); format lạ (flow-style [a,b], multi-line, key trong bullet) sẽ bị bỏ qua
+    (fail-open), KHÔNG robust hơn thực tế. So drift phải escape chuỗi cho khớp html đã esc()."""
+    import html as _htmlmod
+    man = ROOT / "harness/foundation.yaml"
+    page = ROOT / "llmwiki/html/overstack.html"
+    if not (man.exists() and page.exists()):
+        return "skip", "thiếu foundation.yaml/overstack.html (dự án chưa opt-in)", ""
+    text = man.read_text(encoding="utf-8")
+    techs = re.findall(r'^\s*-\s*tech:\s*"?(.+?)"?\s*$', text, re.M)
+    if not techs:
+        return "skip", "foundation.yaml không parse được tech-choices (regex)", ""
+    # (c) toàn placeholder TODO → chưa điền
+    if all("TODO" in t for t in techs):
+        return "warn", "foundation.yaml còn nguyên placeholder TODO — chưa điền", \
+            "điền harness/foundation.yaml (problem/why-exists/tech-choices) rồi regen"
+    # (b) evidence-link dạng path (không phải [[wikilink]]) phải tồn tại
+    evis = re.findall(r'^\s*-\s*"?([^"\n]+?)"?\s*$', text, re.M)
+    paths = [e.strip() for e in evis if "/" in e and not e.strip().startswith("[[") and "TODO" not in e]
+    lying = [p for p in paths if not (ROOT / p).exists()]
+    if lying:
+        return ("fail", f"manifest NÓI DỐI: {len(lying)} evidence-link không tồn tại: {','.join(lying[:3])}",
+                "sửa harness/foundation.yaml — evidence-link phải trỏ file/dir thật")
+    # (a) tech khai mà vắng overstack.html = foundation drift.
+    # Generator escape mọi giá trị qua esc() nên PHẢI so bản đã-escape (chống false-fail
+    # khi tech-name chứa & < > " — Ada council-027), không so chuỗi thô.
+    html = page.read_text(encoding="utf-8", errors="ignore")
+    # khớp CHÍNH XÁC esc() của generator (chỉ & < >, KHÔNG escape quotes) → quote=False
+    missing = [t for t in techs if "TODO" not in t and _htmlmod.escape(t, quote=False) not in html]
+    if missing:
+        return ("fail", f"FOUNDATION DRIFT: {len(missing)} tech-choice vắng overstack.html: {','.join(missing[:3])}",
+                "python3 fdk/tools/build-overstack-docs.py  # regen trang từ foundation.yaml")
+    return "ok", f"{len(techs)} tech-choice khớp trang + bằng chứng tồn tại", ""
+
+
 def p_selfstate():
     """code-state self-narration (Phase 2) còn TRUNG THỰC không (council-advisory):
       - reproducibility (Feynman): code-state.py --check phải xanh (render 2 lần byte-identical);
@@ -209,6 +250,7 @@ PROBES = [
     ("backstop", ["backstop", "git", "commit"],  p_backstop),
     ("docs",     ["docs", "capabilities"],       p_docs),
     ("narrative", ["narrative", "docs", "drift"], p_narrative),
+    ("foundation", ["foundation", "docs", "drift"], p_foundation),
     ("selfstate", ["selfstate", "state", "narrative"], p_selfstate),
     ("code",     ["code", "health"],             p_code),
     ("eval",     ["eval", "baseline"],           p_eval),

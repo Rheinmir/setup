@@ -63,6 +63,7 @@
 | [030726-overstack-html-audit](sources/draft/030726-overstack-html-audit.md) | draft | 2026-07-03 |
 | [ISSUES](sources/ISSUES.md) | index | Issues — ledger local |
 | [030726-foundation-section](sources/draft/030726-foundation-section.md) | draft | Mọi wiki thiếu mục Foundation — bài toán · vì sao tồn tại · vì sao chọn công nghệ |
+| [030726-foundation-section-PLAN](sources/draft/030726-foundation-section-PLAN.md) | plan | Kế hoạch triển khai issue #6 Foundation section (foundation.yaml → generator → medic probe) |
 | [030726-medic-cong-suc-khoe-tong](sources/draft/030726-medic-cong-suc-khoe-tong.md) | draft | medic — cổng sức khoẻ tổng / tuyến phòng thủ cuối của framework |
 | [030726-multi-session-add-guard](sources/draft/030726-multi-session-add-guard.md) | draft | Đa-session chung working tree: git add -A trộn việc — cần guard quy-session |
 | [030726-orca-independence-planb](sources/draft/030726-orca-independence-planb.md) | draft | Orca-independence — tự-build orchestration optional làm Plan B |

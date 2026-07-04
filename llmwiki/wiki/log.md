@@ -19,28 +19,18 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-04 01:50:35 | `file.write` | fdk/tools/skill-usage.py · tool=Write · session=3fb3a505 · actor=agent · prev=genesis · h=92cb9ad106af446049ded895bd3949 |
-| 2026-07-04 01:58:31 | `file.write` | harness/mechanisms.yaml · tool=Edit · session=3fb3a505 · actor=agent · prev=92cb9ad106af446049ded895bd39491e926f0f03d133 |
-| 2026-07-04 02:08:07 | `file.write` | fdk/tools/skill-usage.py · tool=Edit · session=3fb3a505 · actor=agent · prev=bf3cedad07aa6ea089f4bbffe6cbf3d10b3721abdca |
-| 2026-07-04 02:08:15 | `file.write` | fdk/tools/skill-usage.py · tool=Edit · session=3fb3a505 · actor=agent · prev=2f5b9b2244b9ff93a19ccc8084266cd28323b62220f |
-| 2026-07-04 02:08:39 | `file.write` | fdk/tools/skill-usage.py · tool=Edit · session=3fb3a505 · actor=agent · prev=ee89a43897cbfb378f72242a660e089389bf08f4b80 |
-| 2026-07-04 02:09:52 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · session=3fb3a505 · actor=agent · prev=fca5e987b13a1c02b518d5c5f97f51078 |
-| 2026-07-04 02:10:16 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · session=3fb3a505 · actor=agent · prev=83c1665a91ca77bd5124e01382b317de9 |
-| 2026-07-04 02:12:43 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · session=3fb3a505 · actor=agent · prev=372c438f740a52d66c50912f2325a8c6e |
-| 2026-07-04 02:13:01 | `file.write` | llmwiki/wiki/log.md · tool=Edit · session=3fb3a505 · actor=agent · prev=a7d41001ed770b5f5f05b7bfd2f62a616a156a84777a2463 |
-| 2026-07-04 02:13:08 | `file.write` | llmwiki/wiki/log.md · tool=Edit · session=3fb3a505 · actor=agent · prev=270c32b24ed39976ac8fa624eafc82bcc33ba41fedd67f8a |
-| 2026-07-04 12:55:28 | `file.write` | harness/tests/decision-adr-gate-test.sh · tool=Edit · session=3fb3a505 · actor=agent · prev=0f92f150c5752a36b44cca9937f0 |
-| 2026-07-04 12:55:32 | `file.write` | harness/tests/decision-adr-gate-test.sh · tool=Edit · session=3fb3a505 · actor=agent · prev=309c4af2154e616f2de88073968e |
-| 2026-07-04 12:58:03 | `file.write` | llmwiki/wiki/sources/draft/040726-selftest-nested-commit-unguarded.md · tool=Write · session=3fb3a505 · actor=agent · pr |
-| 2026-07-04 12:58:12 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=3fb3a505 · actor=agent · prev=37f78216e682a8cd7ce730877ffe0b6a5474b |
-| 2026-07-04 12:58:35 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=3fb3a505 · actor=agent · prev=c4c80d9e49dc6076cb3e638bd9da97bfd3110 |
-| 2026-07-04 12:59:05 | `file.write` | llmwiki/wiki/ledger.jsonl · tool=Edit · session=3fb3a505 · actor=agent · prev=b5678a23ba18d19d9bc48125e9157adb6dd40e763f |
-| 2026-07-04 12:59:27 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=0 · prev=991c10759e28ec5cf8eb3d9b6696f958ee2a9a1c09eb42350e5dd38befbbaafd · h=4608 |
-| 2026-07-04 12:59:27 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=2 · human=['harness/tests/r12-v3-workspace-test.sh', 'harness/tests/harness-update |
-| 2026-07-04 13:02:26 | `file.write` | harness/tests/hook-guard-invariant-test.sh · tool=Write · session=3fb3a505 · actor=agent · prev=72572f11c0757bb727758585 |
-| 2026-07-04 13:03:18 | `file.write` | llmwiki/wiki/sources/draft/040726-selftest-nested-commit-unguarded.md · tool=Edit · session=3fb3a505 · actor=agent · pre |
-| 2026-07-04 13:03:49 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=1 · human=['harness/tests/r12-v3-workspace-test.sh'] · prev=552a52f2c625f0fbdead90 |
-| 2026-07-04 13:36:55 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/index.md'] · prev=6f32ebe2370c89bfbd4620f5e8af57614667b79 |
+| 2026-07-04 02:04:20 | `file.write` | llmwiki/wiki/sources/draft/030726-foundation-section-PLAN.md · tool=Write · session=fff3ffeb · actor=agent · prev=genesi |
+| 2026-07-04 02:05:11 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=fff3ffeb · actor=agent · prev=fb83df6317d31efa5797b25b1b0af8498900c742181f69 |
+| 2026-07-04 13:46:13 | `file.write` | harness/foundation.yaml · tool=Write · session=fff3ffeb · actor=agent · prev=710817b60ca9474b385d495fc5165d9199af1e8dd6b |
+| 2026-07-04 13:46:31 | `file.write` | harness/templates/foundation-template.yaml · tool=Write · session=fff3ffeb · actor=agent · prev=bd3f07169183f305bd119d5b |
+| 2026-07-04 13:46:41 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=fff3ffeb · actor=agent · prev=5a07113693ca27c6f79c9e4c52a9d0f972 |
+| 2026-07-04 13:47:09 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=fff3ffeb · actor=agent · prev=602b56fedd3237de6e98e643e3f78ddb4f |
+| 2026-07-04 13:47:42 | `file.write` | fdk/tools/medic.py · tool=Edit · session=fff3ffeb · actor=agent · prev=78180dee3614b3e076a3fe14b715d1f24444bf010138cc7d7 |
+| 2026-07-04 13:47:46 | `file.write` | fdk/tools/medic.py · tool=Edit · session=fff3ffeb · actor=agent · prev=21759df208a18dd2d0e533a209ca341caabf6fa337d41656e |
+| 2026-07-04 13:48:19 | `file.write` | harness/scripts/install-harness.sh · tool=Edit · session=fff3ffeb · actor=agent · prev=37b1fdc349e7ea68875a6c5b7cbdb572b |
+| 2026-07-04 13:48:28 | `file.write` | harness/poc-vendor-neutral/install.sh · tool=Edit · session=fff3ffeb · actor=agent · prev=e45236cc2942af75e79fde396b5e53 |
+| 2026-07-04 13:49:38 | `file.write` | llmwiki/wiki/sources/draft/030726-foundation-section.md · tool=Edit · session=fff3ffeb · actor=agent · prev=6c75c09f91bd |
+| 2026-07-04 13:49:54 | `file.write` | llmwiki/wiki/sources/draft/030726-foundation-section.md · tool=Edit · session=fff3ffeb · actor=agent · prev=3f2a69f977a0 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -184,6 +174,8 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 - Eval: `mem-proxy.py` (sinh output episodic tất định, không model) + fixtures + 2 golden episodic + `episodic-baseline.json`, gate qua medic `p_eval`. hit@k 2/2.
 - Đăng ký: sync-skills mirror, CAPABILITIES, bảng AGENT/CLAUDE. Problem-tree node p-17 (solved 3/3 trụ).
 
+- 2026-07-04 — plan cho issue #6 Foundation: ghi `030726-foundation-section-PLAN.md` (fable), index-sync.
+- 2026-07-04 — GH#6 Foundation: tạo harness/foundation.yaml + template seed; generator tab "Nền tảng" derive; medic probe p_foundation; seed 2 installer; regen overstack.html. Ledger status→done.
 ## 2026-07-04 — fdk (GH#13) — skill-resolve ambiguity + supply-chain
 Giải issue `030726-skill-resolve-supplychain` (trục #5 frontier-gap-scan, Chớm→có cơ chế). 3 cơ chế:
 - `new-skill.py`: cảnh báo TRÙNG NĂNG LỰC lúc scaffold — tái dùng BM25 của `build-skill-search.py`, ngưỡng 12.0 (calibrate: biến thể trùng ≈26–44, skill lạ ≈7); flag `--strict` chặn cho CI. Chỉ cảnh báo, không chặn biến thể hợp lệ.

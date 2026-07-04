@@ -173,6 +173,15 @@ if [ "$WITH_WIKI" = 1 ]; then
     else
       warn "  overstack.html chưa tải được (mạng?) → lấy tay: $REPO_RAW/llmwiki/html/overstack.html"
     fi
+    # foundation.yaml — nguồn mục "Nền tảng" (GH#6): seed CHỈ khi chưa có, không đè bản đã điền
+    if [ ! -f "$ROOT/harness/foundation.yaml" ]; then
+      mkdir -p "$ROOT/harness"
+      if curl -fsSL "$REPO_RAW/harness/templates/foundation-template.yaml" -o "$ROOT/harness/foundation.yaml" 2>/dev/null; then
+        log "  ✓ harness/foundation.yaml (nguồn mục Nền tảng — điền rồi regen overstack.html; medic probe foundation gác drift)"
+      else
+        warn "  foundation-template chưa tải được (mạng?) — điền tay: $REPO_RAW/harness/templates/foundation-template.yaml"
+      fi
+    fi
     # sổ cây vấn đề (problem-tree) — seed CHỈ khi chưa có, không bao giờ ghi đè sổ đang dùng
     if [ ! -f "$ROOT/llmwiki/html/problem-tree.html" ] && [ ! -f "$ROOT/llmwiki/html/fdk-problem-tree.html" ]; then
       if curl -fsSL "$REPO_RAW/harness/templates/problem-tree-template.html" -o "$ROOT/llmwiki/html/problem-tree.html" 2>/dev/null; then

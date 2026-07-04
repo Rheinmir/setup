@@ -229,6 +229,10 @@ if [ ! -d "$ROOT/harness-local" ] && [ -d "$SRC/harness-local" ]; then
   cp "$SRC/harness-local/validators/_template.py" "$ROOT/harness-local/validators/" 2>/dev/null || true
   printf '\033[1;32m[harness]\033[0m %s\n' "harness-local/ — scaffold rule riêng dự án (P-namespace; sync-template không đụng)"
 fi
+# foundation.yaml — nguồn mục "Nền tảng" (GH#6): SEED từ template CHỈ khi chưa có, KHÔNG đè bản dự án đã điền
+[ -f "$ROOT/harness/foundation.yaml" ] || cp "$SRC/harness/templates/foundation-template.yaml" "$ROOT/harness/foundation.yaml" 2>/dev/null \
+  || cp "${TMP_SYNC:-/nonexistent}/harness/templates/foundation-template.yaml" "$ROOT/harness/foundation.yaml" 2>/dev/null || true
+
 # overstack docs user — TRAVEL cùng install (Phase D): trang tài liệu chính thức về cho dự án
 mkdir -p "$ROOT/llmwiki/html"
 cp "$SRC/llmwiki/html/overstack.html" "$ROOT/llmwiki/html/overstack.html" 2>/dev/null \

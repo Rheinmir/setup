@@ -1,0 +1,75 @@
+# foundation.yaml — NGUỒN CHÂN LÝ cho mục "Nền tảng" của wiki/overstack.html.
+#
+# Vì sao file này tồn tại (issue GH#6, council-026 blind peer-rank):
+#   Mọi wiki dựng bằng overstack thiếu một chỗ CANONICAL trả lời ba câu gốc —
+#   dự án giải quyết bài toán gì, vì sao nó tồn tại, vì sao chọn các công nghệ này.
+#   Tri-thức "vì sao" trước đây rải rác trong ADR/commit/đầu người, phải HỎI mới ra.
+#   Rút ra đây → overstack.html DERIVE (không chép tay), và medic probe `foundation`
+#   CẮN khi một mục khai ở đây mà vắng khỏi trang (giống narrative-as-data, ADR-001).
+#
+# Hợp đồng self-narration: mỗi tech-choice khai evidence-link là path repo-relative
+# (file/dir) PHẢI tồn tại — nếu không, medic báo "manifest nói dối". Wikilink [[...]]
+# do R-validator wiki lo, probe bỏ qua khi check path.
+#
+# Template seed cho dự án mới: harness/templates/foundation-template.yaml (giá trị TODO).
+# Probe SKIP/WARN khi toàn TODO → dự án mới bootstrap không bị đỏ ngay (fail-open).
+
+version: 1
+
+foundation:
+  # câu 1 — dự án giải quyết bài toán gì
+  problem: >-
+    AI agent viết code nhanh nhưng vô kỷ luật: quên bối cảnh giữa các phiên, làm bậy
+    ngoài phạm vi, không truy được nguồn quyết định, và không ai đo được nó tốn bao
+    nhiêu hay làm đúng không. overstack biến agent thành một kỹ sư có kỷ luật — có trí
+    nhớ (wiki), luật không phá được (harness), kỹ năng đóng sẵn (skills), biết điều
+    phối nhiều agent (Orca), và tự đo & kiểm việc mình làm lúc chạy.
+
+  # câu 2 — vì sao nó tồn tại (không dùng cái có sẵn?)
+  why-exists: >-
+    "Prompt pack" và system-prompt chỉ DẶN agent cư xử tốt — agent vẫn có thể lờ đi,
+    và không có tín hiệu tất định nào bắt lỗi. overstack tồn tại vì kỷ luật phải là
+    CODE gác được ở hook/CI (0 token, không bypass được khi merge), không phải lời
+    khuyên. Nó cũng tồn tại để travel: cài một dòng là cả ba nền tảng đi theo dự án,
+    tri-thức "vì sao" sống sót khi người rời đi (bus-factor 1 -> 0).
+
+  # câu 3 — vì sao chọn các công nghệ này
+  tech-choices:
+    - tech: "YAML (policy-as-data)"
+      role: >-
+        Nguồn khai báo cho luật/cơ-chế/persona/foundation: rule harness, mechanisms,
+        và chính mục này khai bằng data, tách khỏi engine enforcement.
+      why: >-
+        Diff-được, review-được; agent sửa DATA không cần sửa CODE enforcement. Thêm một
+        luật = thêm một entry policy.yaml, mọi vendor đồng bộ qua regen (thick policy,
+        thin adapter).
+      alternatives-rejected:
+        - alt: "Hardcode list trong Python"
+          reason: >-
+            Bản chép tay đóng băng, drift âm thầm mà "khớp đĩa" không bắt được
+            (council-025) — chính lỗi narrative-drift đã phải rút ra manifest để chữa.
+      evidence-link:
+        - "[[ADR-001]]"
+        - "fdk/wiki/sources/adr/ADR-001-policy-as-source-of-truth.md"
+        - "llmwiki/html/council/council-report-026-seed42.html"
+
+    - tech: "Python (chỉ stdlib)"
+      role: >-
+        Engine tất định của harness: validator, generator (build-overstack-docs),
+        và probe sức khoẻ (medic) — phần chạy 0-token, không cần LLM.
+      why: >-
+        Có sẵn mọi nơi agent chạy, không thêm dependency phải cài; đủ mạnh cho parse +
+        gen + check tất định. Giữ hợp đồng "medic stdlib-only" nên probe không bao giờ
+        vỡ vì thiếu thư viện.
+      alternatives-rejected:
+        - alt: "Node/TS cho toàn bộ harness"
+          reason: >-
+            Buộc mọi dự án downstream có toolchain JS chỉ để chạy rào chắn; nặng và kém
+            phổ quát hơn stdlib Python cho việc gác tất định.
+        - alt: "Thư viện YAML/validation bên thứ ba trong probe"
+          reason: >-
+            Thêm điểm gãy khi thiếu package; medic parse bằng regex thuần để luôn chạy
+            được ở mọi máy.
+      evidence-link:
+        - "fdk/tools/medic.py"
+        - "fdk/tools/build-overstack-docs.py"
