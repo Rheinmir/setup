@@ -97,4 +97,5 @@
 | [snapshot-push](sources/evals/skill-resolve/snapshot-push.md) | auto | skill-resolve golden: snapshot-push |
 | [tour-basic](sources/evals/skill-resolve/tour-basic.md) | auto | skill-resolve golden: tour-basic |
 | [tour-supademo](sources/evals/skill-resolve/tour-supademo.md) | auto | skill-resolve golden: tour-supademo |
+| [040726-selftest-nested-commit-unguarded](sources/draft/040726-selftest-nested-commit-unguarded.md) | issue | Issue: Self-test harness chạy `git commit` lồng không tắt hook |
 <!-- index:auto:end -->
