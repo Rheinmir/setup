@@ -29,6 +29,18 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-04 02:12:43 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · session=3fb3a505 · actor=agent · prev=372c438f740a52d66c50912f2325a8c6e |
 | 2026-07-04 02:13:01 | `file.write` | llmwiki/wiki/log.md · tool=Edit · session=3fb3a505 · actor=agent · prev=a7d41001ed770b5f5f05b7bfd2f62a616a156a84777a2463 |
 | 2026-07-04 02:13:08 | `file.write` | llmwiki/wiki/log.md · tool=Edit · session=3fb3a505 · actor=agent · prev=270c32b24ed39976ac8fa624eafc82bcc33ba41fedd67f8a |
+| 2026-07-04 12:55:28 | `file.write` | harness/tests/decision-adr-gate-test.sh · tool=Edit · session=3fb3a505 · actor=agent · prev=0f92f150c5752a36b44cca9937f0 |
+| 2026-07-04 12:55:32 | `file.write` | harness/tests/decision-adr-gate-test.sh · tool=Edit · session=3fb3a505 · actor=agent · prev=309c4af2154e616f2de88073968e |
+| 2026-07-04 12:58:03 | `file.write` | llmwiki/wiki/sources/draft/040726-selftest-nested-commit-unguarded.md · tool=Write · session=3fb3a505 · actor=agent · pr |
+| 2026-07-04 12:58:12 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=3fb3a505 · actor=agent · prev=37f78216e682a8cd7ce730877ffe0b6a5474b |
+| 2026-07-04 12:58:35 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=3fb3a505 · actor=agent · prev=c4c80d9e49dc6076cb3e638bd9da97bfd3110 |
+| 2026-07-04 12:59:05 | `file.write` | llmwiki/wiki/ledger.jsonl · tool=Edit · session=3fb3a505 · actor=agent · prev=b5678a23ba18d19d9bc48125e9157adb6dd40e763f |
+| 2026-07-04 12:59:27 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=0 · prev=991c10759e28ec5cf8eb3d9b6696f958ee2a9a1c09eb42350e5dd38befbbaafd · h=4608 |
+| 2026-07-04 12:59:27 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=2 · human=['harness/tests/r12-v3-workspace-test.sh', 'harness/tests/harness-update |
+| 2026-07-04 13:02:26 | `file.write` | harness/tests/hook-guard-invariant-test.sh · tool=Write · session=3fb3a505 · actor=agent · prev=72572f11c0757bb727758585 |
+| 2026-07-04 13:03:18 | `file.write` | llmwiki/wiki/sources/draft/040726-selftest-nested-commit-unguarded.md · tool=Edit · session=3fb3a505 · actor=agent · pre |
+| 2026-07-04 13:03:49 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=1 · human=['harness/tests/r12-v3-workspace-test.sh'] · prev=552a52f2c625f0fbdead90 |
+| 2026-07-04 13:36:55 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/index.md'] · prev=6f32ebe2370c89bfbd4620f5e8af57614667b79 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
