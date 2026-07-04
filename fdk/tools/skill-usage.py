@@ -26,13 +26,45 @@ import datetime as dt
 import glob
 import html
 import json
+import subprocess
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 HTML_DIR = ROOT / "llmwiki" / "html"
-# Nguồn transcript của CHÍNH project repo này (ledger 030726 nêu đích danh).
-DEFAULT_TRANSCRIPTS = Path.home() / ".claude" / "projects" / "-Users-giatran-orca-setup-setup"
+PROJECTS_DIR = Path.home() / ".claude" / "projects"
+# Fallback khi không suy được worktree (git vắng): dir transcript của repo chính.
+FALLBACK_TRANSCRIPTS = PROJECTS_DIR / "-Users-giatran-orca-setup-setup"
+
+
+def encode_project_dir(path: Path) -> str:
+    """Claude Code mã hoá cwd → tên thư mục transcript: mọi '/' và '.' thành '-'."""
+    s = str(path.resolve())
+    return "".join("-" if c in "/." else c for c in s)
+
+
+def discover_transcript_dirs(root: Path):
+    """Suy MỌI dir transcript thuộc CHÍNH repo này (privacy: chỉ repo này).
+
+    Mỗi worktree phiên chạy ghi transcript vào dir riêng theo cwd-mã-hoá → chỉ đọc
+    1 dir = bỏ sót phần lớn usage. `git worktree list` cho mọi cwo hợp lệ của repo.
+    """
+    dirs = []
+    try:
+        out = subprocess.run(
+            ["git", "-C", str(root), "worktree", "list", "--porcelain"],
+            capture_output=True, text=True, timeout=15,
+        ).stdout
+    except (OSError, subprocess.SubprocessError):
+        out = ""
+    for line in out.splitlines():
+        if line.startswith("worktree "):
+            d = PROJECTS_DIR / encode_project_dir(Path(line[len("worktree "):]))
+            if d.is_dir() and d not in dirs:
+                dirs.append(d)
+    if FALLBACK_TRANSCRIPTS.is_dir() and FALLBACK_TRANSCRIPTS not in dirs:
+        dirs.append(FALLBACK_TRANSCRIPTS)
+    return dirs
 
 
 def iso_week(ts: dt.datetime) -> str:
@@ -44,15 +76,17 @@ def parse_ts(s):
     if not s:
         return None
     try:
-        return dt.datetime.fromisoformat(s.replace("Z", "+00:00"))
+        # Transcript ghi UTC (…Z). Quy về giờ ĐỊA PHƯƠNG trước khi gom ISO-week —
+        # nếu không, call khuya giờ VN (UTC+7) bị gán nhầm sang tuần trước.
+        return dt.datetime.fromisoformat(s.replace("Z", "+00:00")).astimezone()
     except ValueError:
         return None
 
 
-def collect(transcripts: Path):
-    """Trả list event {skill, ts(datetime), week, session} từ mọi .jsonl."""
+def collect(transcript_dirs):
+    """Trả list event {skill, ts(datetime), week, session} từ mọi .jsonl trong mọi dir."""
     events = []
-    files = sorted(glob.glob(str(transcripts / "*.jsonl")))
+    files = sorted(f for d in transcript_dirs for f in glob.glob(str(d / "*.jsonl")))
     for f in files:
         try:
             fh = open(f, encoding="utf-8")
@@ -318,19 +352,25 @@ def main():
     ap.add_argument("--week", help="tuần ISO YYYY-Www (mặc định: tuần mới nhất có dữ liệu)")
     ap.add_argument("--top", type=int, default=15, help="top-N skill (mặc định 15)")
     ap.add_argument("--dead-weeks", type=int, default=4, help="skill chết = idle >= N tuần")
-    ap.add_argument("--transcripts", type=Path, default=DEFAULT_TRANSCRIPTS)
+    ap.add_argument("--transcripts", type=Path, action="append",
+                    help="ép 1 dir transcript cụ thể (lặp lại cho nhiều dir); "
+                         "mặc định: TỰ suy mọi worktree của repo qua git")
     ap.add_argument("--json", action="store_true", help="in JSON thô")
     ap.add_argument("--no-html", action="store_true", help="không ghi file HTML")
     args = ap.parse_args()
 
-    if not args.transcripts.is_dir():
-        print(f"⚠️  Không thấy thư mục transcript: {args.transcripts}", file=sys.stderr)
+    dirs = args.transcripts or discover_transcript_dirs(ROOT)
+    dirs = [d for d in dirs if d.is_dir()]
+    if not dirs:
+        print("⚠️  Không thấy thư mục transcript nào (repo chưa có phiên?).", file=sys.stderr)
         return 2
 
-    events = collect(args.transcripts)
+    events = collect(dirs)
     if not events:
         print("⚠️  Không tìm thấy lời gọi Skill nào trong transcript.", file=sys.stderr)
         return 1
+    print(f"· nguồn: {len(dirs)} dir transcript (worktree) · {len(events)} lời gọi Skill",
+          file=sys.stderr)
 
     _, all_weeks = aggregate(events)
     target = args.week or all_weeks[-1]

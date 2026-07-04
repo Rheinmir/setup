@@ -44,6 +44,8 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-04 01:47:49 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · session=d11b2db1 · actor=agent · prev=c89ac4d6ac094a6e44aff049268466c77 |
 | 2026-07-04 01:48:19 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · session=d11b2db1 · actor=agent · prev=e3c1cfbb50f08aff49a7b4a6ab5be51f5 |
 | 2026-07-04 01:48:43 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · session=d11b2db1 · actor=agent · prev=fd9ca3e48cca9af528da90865b4d5fc3f |
+| 2026-07-04 01:50:35 | `file.write` | fdk/tools/skill-usage.py · tool=Write · session=3fb3a505 · actor=agent · prev=genesis · h=92cb9ad106af446049ded895bd3949 |
+| 2026-07-04 01:58:31 | `file.write` | harness/mechanisms.yaml · tool=Edit · session=3fb3a505 · actor=agent · prev=92cb9ad106af446049ded895bd39491e926f0f03d133 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -186,6 +188,13 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 - Skill mới `record-episode` (wiki-loop) ghi session episode; wire Tầng-0 truy hồi ngữ nghĩa vào `query` + `wiki-room`.
 - Eval: `mem-proxy.py` (sinh output episodic tất định, không model) + fixtures + 2 golden episodic + `episodic-baseline.json`, gate qua medic `p_eval`. hit@k 2/2.
 - Đăng ký: sync-skills mirror, CAPABILITIES, bảng AGENT/CLAUDE. Problem-tree node p-17 (solved 3/3 trụ).
+
+## 2026-07-04 — fdk (GH#13) — skill-resolve ambiguity + supply-chain
+Giải issue `030726-skill-resolve-supplychain` (trục #5 frontier-gap-scan, Chớm→có cơ chế). 3 cơ chế:
+- `new-skill.py`: cảnh báo TRÙNG NĂNG LỰC lúc scaffold — tái dùng BM25 của `build-skill-search.py`, ngưỡng 12.0 (calibrate: biến thể trùng ≈26–44, skill lạ ≈7); flag `--strict` chặn cho CI. Chỉ cảnh báo, không chặn biến thể hợp lệ.
+- Golden `skill-resolve-eval.py` + 18 case `sources/evals/skill-resolve/` (cặp nhập nhằng thật) — hit@1 18/18, baseline chốt, `--check` exit 2 khi regress; gắn CI `skills-sync.yml`.
+- Skill+tool `skill-provenance` (`fdk/tools/skill-provenance.py`, store `fdk/skills.provenance.json`) — ghi nguồn+sha256, `check --ci` chặn MODIFIED/UNTRACKED; backfill 74 skill = local-authored. Bổ trợ orca-sec-scans.
+Đăng ký: LOOP_MAP + marketplace + AGENT/CLAUDE + LOOP_GROUPS mind-map; regen overstack.html + skills.search.json + CAPABILITIES. Ledger status→resolved, index +18, concept trục #5 cập nhật.
 
 ## 2026-07-04 — fdk issue#18 — pre-commit chậm >2ph → tách tầng L2/CI
 
