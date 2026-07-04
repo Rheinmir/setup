@@ -36,3 +36,4 @@
 {"ts": "2026-07-04T12:58:03", "session": "3fb3a505", "action": "add", "target": "sources/draft/040726-selftest-nested-commit-unguarded.md", "tool": "Write"}
 {"ts": "2026-07-04T12:58:12", "session": "3fb3a505", "action": "modify", "target": "sources/ISSUES.md", "tool": "Edit"}
 {"ts": "2026-07-04T12:58:35", "session": "3fb3a505", "action": "modify", "target": "sources/ISSUES.md", "tool": "Edit"}
+{"ts": "2026-07-04T13:03:18", "session": "3fb3a505", "action": "modify", "target": "sources/draft/040726-selftest-nested-commit-unguarded.md", "tool": "Edit"}

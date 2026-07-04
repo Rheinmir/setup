@@ -40,7 +40,11 @@ Ba self-test của harness (`decision-adr-gate-test.sh`, `r12-v3-workspace-test.
 1. Mọi `git commit` lồng trong `harness/tests/*.sh` đều tắt hook (`--no-verify` + `core.hooksPath=/dev/null`).
 2. Cả 3 self-test vẫn PASS như cũ (decision-adr-gate, r12-v3-workspace, harness-update).
 3. Không còn khả năng tự-kích đệ quy dù self-test được nối lại vào commit-time hook.
-4. (Tuỳ) grep-guard chống tái phát: commit lồng mới không guard → fail.
+4. grep-guard chống tái phát: git-op sinh-hook mới không guard → fail. **(ĐÃ LÀM — council report-028 chốt là bắt buộc, không tuỳ)**
+5. Phủ CẢ `git push` (không chỉ commit) — cùng lớp nguy cơ `pre-push`. **(ĐÃ LÀM: r12:31,37 guarded)**
+
+## Council (report-027/028) — đánh giá trước merge
+Hội đồng feynman·linus·kahneman (case debug, cặp tension feynman↔linus). Winner **feynman**: fix đúng-gốc nhưng ban đầu chưa đủ (`git push` trần). Đồng thuận cả 3 ghế → **MERGE sau khi hoàn tất trong CHÍNH PR**: (a) guard 2 push, (b) thêm `harness/tests/hook-guard-invariant-test.sh` (rào tự-cắn, đã kiểm negative). Bất đồng duy nhất merge-now↔followup được giải: làm ngay tại chỗ, không PR-con.
 
 ## Assign & lý do
 - **assignee @Rheinmir · dispatch Claude · entry /fdk**: sửa harness test (framework core), cần hiểu cơ chế hook + git worktree.
