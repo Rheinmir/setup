@@ -151,7 +151,8 @@ LOOP_GROUPS = {
          "snapshot-push": "fdk", "sync-template": "fdk", "docs-curate": "fdk",
          "check-approve": "utility", "computer-use": "utility", "find-skills": "utility",
          "full-output-enforcement": "utility", "join-project": "utility", "last30days": "utility",
-         "raise-issue": "utility", "uat-nonit-testcase": "utility"}),
+         "raise-issue": "utility", "ovs-notes": "utility", "frontier-scan": "utility",
+         "uat-nonit-testcase": "utility"}),
 }
 
 
@@ -218,6 +219,8 @@ ul.s li b{color:var(--t1)}
 .kpi .n{font-size:25px;font-weight:800;letter-spacing:-.02em;line-height:1}.kpi .l{font-size:11px;color:var(--t2);margin-top:4px}
 .chip{display:inline-block;font-size:11.5px;font-weight:600;font-family:var(--mono);background:rgba(10,132,255,.08);color:#0a5ec7;padding:2px 8px;border-radius:6px;margin:3px 4px 0 0}
 ol.ck{margin:12px 0 0;padding-left:20px}ol.ck li{font-size:13.5px;color:var(--t2);margin:6px 0}ol.ck li b{color:var(--t1)}
+.skip{position:fixed;top:-60px;left:12px;z-index:200;padding:8px 14px;background:#0a84ff;color:#fff;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;transition:top .18s}.skip:focus{top:12px}
+.table-wrap{overflow-x:auto;margin:14px 0;-webkit-overflow-scrolling:touch}.table-wrap table{margin:0}
 table{width:100%;border-collapse:collapse;margin:14px 0;background:var(--glass3);backdrop-filter:blur(4px);border:1px solid var(--border);border-radius:12px;overflow:hidden;font-size:13px;box-shadow:var(--edge),0 4px 18px rgba(0,0,0,.05)}
 th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}th{font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--t2);background:rgba(10,132,255,.05)}tr:last-child td{border-bottom:none}td code{white-space:nowrap}
 .note{background:rgba(255,149,0,.08);border:1px solid rgba(255,149,0,.25);border-radius:14px;padding:16px 18px;margin-top:14px}
@@ -265,13 +268,26 @@ a:focus-visible,button:focus-visible,nav a:focus-visible,.code-copy:focus-visibl
 /* active/pressed feedback nhất quán vật lý */
 nav a:active{transform:translateY(.5px)}
 .code-copy:active,.nav-toggle:active,.nav-close:active{transform:scale(.94)}
-"""
+
+/* ── Dark mode (issue #14) — theo prefers-color-scheme; token-hoá + override surface hardcoded ── */
+@media (prefers-color-scheme: dark){
+  :root{--glass2:rgba(30,34,44,.72);--glass3:rgba(36,40,52,.9);
+    --edge:inset 0 1px 0 rgba(255,255,255,.06);--border:rgba(120,160,220,.18);--t1:#e7e9ee;--t2:#9aa2b1;}
+  html{background:#0c0f16;scrollbar-color:transparent transparent}
+  body{color:var(--t1);background:radial-gradient(900px 500px at 12% -10%,rgba(10,132,255,.14),transparent 60%),radial-gradient(700px 420px at 95% 12%,rgba(88,86,214,.12),transparent 55%),linear-gradient(180deg,#0d1017,#0a0d13)}
+  h1,h2,h3,h4{color:#f2f4f8}
+  nav{background:rgba(18,21,28,.82)}
+  table th,table td{border-color:var(--border)}
+  table th{background:rgba(255,255,255,.04)}
+  .card,.note,.kpi .b,.mm .node,.diagram-box{background:var(--glass2)}
+  a{color:#5fa8ff}
+}"""
 
 JS = r"""
-(function(){const n=document.querySelector('nav');if(!n)return;const o=document.createElement('button');o.className='nav-toggle';o.textContent='☰';document.body.appendChild(o);const c=document.createElement('button');c.className='nav-close';c.textContent='✕';n.appendChild(c);o.onclick=function(){document.body.classList.remove('nav-collapsed')};c.onclick=function(){document.body.classList.add('nav-collapsed')};if(matchMedia('(max-width:640px)').matches)document.body.classList.add('nav-collapsed')})();
+(function(){const n=document.querySelector('nav');if(!n)return;const o=document.createElement('button');o.className='nav-toggle';o.textContent='☰';o.setAttribute('aria-label','Mở menu điều hướng');document.body.appendChild(o);const c=document.createElement('button');c.className='nav-close';c.textContent='✕';c.setAttribute('aria-label','Đóng menu điều hướng');n.appendChild(c);o.onclick=function(){document.body.classList.remove('nav-collapsed')};c.onclick=function(){document.body.classList.add('nav-collapsed')};if(matchMedia('(max-width:640px)').matches)document.body.classList.add('nav-collapsed')})();
 (function(){var ls=[].slice.call(document.querySelectorAll('nav a')),ss=[].slice.call(document.querySelectorAll('section[id]'));var ob=new IntersectionObserver(function(es){var a='';es.forEach(function(e){if(e.isIntersecting)a=e.target.id});if(a)ls.forEach(function(l){l.classList.toggle('active',l.getAttribute('href')==='#'+a)})},{rootMargin:'-40% 0px -55% 0px'});ss.forEach(function(s){ob.observe(s)})})();
 (function(){var t;addEventListener('scroll',function(){document.documentElement.classList.add('scrolling');clearTimeout(t);t=setTimeout(function(){document.documentElement.classList.remove('scrolling')},900)},{passive:true})})();
-(function(){var mm=document.querySelector('.mm');if(!mm)return;var NS='http://www.w3.org/2000/svg';function colorOf(n){return n.classList.contains('b-wiki')?'#30b0c7':n.classList.contains('b-dev')?'#5856d6':n.classList.contains('b-orch')?'#ff9500':n.classList.contains('b-utils')?'#34c759':n.classList.contains('b-rule')?'#ff2d55':n.classList.contains('g0')?'#0a84ff':n.classList.contains('g1')?'#30b0c7':n.classList.contains('g2')?'#5856d6':n.classList.contains('g3')?'#34c759':n.classList.contains('g4')?'#ff9500':n.classList.contains('g5')?'#ff2d55':'#9aa4b2';}function draw(){var canvas=mm.querySelector('.mm-canvas'),svg=mm.querySelector('.mm-links');if(!canvas||!svg)return;var w=canvas.offsetWidth,h=canvas.offsetHeight;svg.setAttribute('width',w);svg.setAttribute('height',h);svg.setAttribute('viewBox','0 0 '+w+' '+h);while(svg.firstChild)svg.removeChild(svg.firstChild);var cR=canvas.getBoundingClientRect();[].slice.call(canvas.querySelectorAll('.node.has-children')).forEach(function(p){var row=p.parentElement,kids=null,ch=row.children;for(var i=0;i<ch.length;i++){if(ch[i].classList.contains('children'))kids=ch[i];}if(!kids||kids.classList.contains('collapsed'))return;var pr=p.getBoundingClientRect(),px=pr.right-cR.left,py=pr.top+pr.height/2-cR.top;[].slice.call(kids.children).forEach(function(crow){var cn=crow.querySelector(':scope > .node');if(!cn)return;var rr=cn.getBoundingClientRect(),cx=rr.left-cR.left,cy=rr.top+rr.height/2-cR.top,dx=Math.max(22,(cx-px)*0.55);var pa=document.createElementNS(NS,'path');pa.setAttribute('d','M'+px+' '+py+' C'+(px+dx)+' '+py+' '+(cx-dx)+' '+cy+' '+cx+' '+cy);pa.setAttribute('stroke',colorOf(cn));svg.appendChild(pa);});});}[].slice.call(mm.querySelectorAll('.node.has-children')).forEach(function(n){var row=n.parentElement,kids=null,c=row.children;for(var i=0;i<c.length;i++){if(c[i].classList.contains('children'))kids=c[i];}if(!kids)return;if(n.classList.contains('cat')){kids.classList.add('collapsed');n.classList.add('collapsed-parent');}n.addEventListener('click',function(e){e.stopPropagation();var open=kids.classList.toggle('collapsed');n.classList.toggle('collapsed-parent',open);draw();});});draw();addEventListener('load',function(){setTimeout(draw,60);});addEventListener('resize',function(){clearTimeout(window.__mmt);window.__mmt=setTimeout(draw,120);},{passive:true});})();
+(function(){var mm=document.querySelector('.mm');if(!mm)return;var NS='http://www.w3.org/2000/svg';function colorOf(n){return n.classList.contains('b-wiki')?'#30b0c7':n.classList.contains('b-dev')?'#5856d6':n.classList.contains('b-orch')?'#ff9500':n.classList.contains('b-utils')?'#34c759':n.classList.contains('b-rule')?'#ff2d55':n.classList.contains('g0')?'#0a84ff':n.classList.contains('g1')?'#30b0c7':n.classList.contains('g2')?'#5856d6':n.classList.contains('g3')?'#34c759':n.classList.contains('g4')?'#ff9500':n.classList.contains('g5')?'#ff2d55':'#9aa4b2';}function draw(){var canvas=mm.querySelector('.mm-canvas'),svg=mm.querySelector('.mm-links');if(!canvas||!svg)return;var w=canvas.offsetWidth,h=canvas.offsetHeight;svg.setAttribute('width',w);svg.setAttribute('height',h);svg.setAttribute('viewBox','0 0 '+w+' '+h);while(svg.firstChild)svg.removeChild(svg.firstChild);var cR=canvas.getBoundingClientRect();[].slice.call(canvas.querySelectorAll('.node.has-children')).forEach(function(p){var row=p.parentElement,kids=null,ch=row.children;for(var i=0;i<ch.length;i++){if(ch[i].classList.contains('children'))kids=ch[i];}if(!kids||kids.classList.contains('collapsed'))return;var pr=p.getBoundingClientRect(),px=pr.right-cR.left,py=pr.top+pr.height/2-cR.top;[].slice.call(kids.children).forEach(function(crow){var cn=crow.querySelector(':scope > .node');if(!cn)return;var rr=cn.getBoundingClientRect(),cx=rr.left-cR.left,cy=rr.top+rr.height/2-cR.top,dx=Math.max(22,(cx-px)*0.55);var pa=document.createElementNS(NS,'path');pa.setAttribute('d','M'+px+' '+py+' C'+(px+dx)+' '+py+' '+(cx-dx)+' '+cy+' '+cx+' '+cy);pa.setAttribute('stroke',colorOf(cn));svg.appendChild(pa);});});}[].slice.call(mm.querySelectorAll('.node.has-children')).forEach(function(n){var row=n.parentElement,kids=null,c=row.children;for(var i=0;i<c.length;i++){if(c[i].classList.contains('children'))kids=c[i];}if(!kids)return;if(n.classList.contains('cat')){kids.classList.add('collapsed');n.classList.add('collapsed-parent');}n.setAttribute('tabindex','0');n.setAttribute('role','button');n.setAttribute('aria-expanded',String(!kids.classList.contains('collapsed')));var _tog=function(e){e.stopPropagation();if(e.preventDefault)e.preventDefault();var collapsed=kids.classList.toggle('collapsed');n.classList.toggle('collapsed-parent',collapsed);n.setAttribute('aria-expanded',String(!collapsed));draw();};n.addEventListener('click',_tog);n.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '||e.key==='Spacebar')_tog(e);});});draw();addEventListener('load',function(){setTimeout(draw,60);});addEventListener('resize',function(){clearTimeout(window.__mmt);window.__mmt=setTimeout(draw,120);},{passive:true});})();
 (function(){var C='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',K='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';document.querySelectorAll('pre.code-block').forEach(function(pre){if(pre.dataset.copy)return;pre.dataset.copy='1';var code=pre.textContent;var w=document.createElement('div');w.className='code-wrap';pre.parentNode.insertBefore(w,pre);w.appendChild(pre);var b=document.createElement('button');b.className='code-copy';b.title='Copy';b.setAttribute('aria-label','Copy');b.innerHTML=C;w.appendChild(b);b.addEventListener('click',function(){var done=function(){b.innerHTML=K;b.classList.add('copied');setTimeout(function(){b.innerHTML=C;b.classList.remove('copied');},1500);};if(navigator.clipboard){navigator.clipboard.writeText(code).then(done,done);}else{var ta=document.createElement('textarea');ta.value=code;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');}catch(e){}ta.remove();done();}});});})();
 (function(){function attach(el){el.addEventListener('pointerdown',function(e){var r=el.getBoundingClientRect();var x=e.clientX-r.left,y=e.clientY-r.top;var rad=Math.hypot(Math.max(x,r.width-x),Math.max(y,r.height-y));var ink=document.createElement('span');ink.className='ripple-ink';ink.style.width=ink.style.height=rad*2+'px';ink.style.left=(x-rad)+'px';ink.style.top=(y-rad)+'px';el.appendChild(ink);ink.addEventListener('animationend',function(){ink.remove()});});}document.querySelectorAll('nav a, .nav-toggle, .nav-close').forEach(function(el){el.dataset.noRipple='1';attach(el);});})();
 (function(){document.addEventListener('pointerdown',function(e){var el=e.target.closest('button, .nav-link, .collapse-toggle, .checklist label');if(!el||el.dataset.noRipple)return;var r=el.getBoundingClientRect();var d=Math.max(r.width,r.height)*1.2;var s=document.createElement('span');s.className='ripple';s.style.cssText='width:'+d+'px;height:'+d+'px;left:'+(e.clientX-r.left-d/2)+'px;top:'+(e.clientY-r.top-d/2)+'px';if(getComputedStyle(el).position==='static')el.style.position='relative';el.style.overflow='hidden';el.appendChild(s);s.addEventListener('animationend',function(){s.remove()});});})();
@@ -321,10 +337,10 @@ def sections(root: Path):
             gk = group_key(loop, name)
             lp = (loop + " / " + gk) if gk else loop
             skill_rows.append(f"<tr><td><code>/{esc(name)}</code></td><td>{esc(lp)}</td><td>{esc(desc)}</td></tr>")
-    skills_table = ("<table><tr><th>Skill</th><th>Loop</th><th>Dùng khi</th></tr>"
-                    + "".join(skill_rows) + "</table>")
+    skills_table = ("<div class=\"table-wrap\"><table><tr><th>Skill</th><th>Loop</th><th>Dùng khi</th></tr>"
+                    + "".join(skill_rows) + "</table></div>")
     rule_rows = "".join(f"<tr><td><code>{rid}</code></td><td><b>{esc(name)}</b>{(' — ' + esc(stmt)) if stmt else ''}</td></tr>" for rid, name, stmt in rs)
-    rules_table = f"<table><tr><th>Rule</th><th>Chặn / đảm bảo điều gì</th></tr>{rule_rows}</table>"
+    rules_table = f"<div class=\"table-wrap\"><table><tr><th>Rule</th><th>Chặn / đảm bảo điều gì</th></tr>{rule_rows}</table></div>"
 
     # ── mind map (cheatsheet bezier; loop >~8 skill chia nhánh con theo CHỨC NĂNG) ──
     loop_cls = {"wiki-loop": "b-wiki", "dev-loop": "b-dev", "orchestrate": "b-orch", "utils": "b-utils"}
@@ -376,7 +392,7 @@ def sections(root: Path):
             branches.append(_subtree(parent_cls, loop, loop_ds.get(loop, ""), subs, count=len(items)))
         else:
             branches.append(_subtree(parent_cls, loop, loop_ds.get(loop, ""), [_leaf(parent_cls, n, d) for n, d in items]))
-    branches.append(_subtree("b-rule", "rules", "harness gác (mỗi rule = 1 validator tất định)",
+    branches.append(_subtree("b-rule", "rules", "harness gác (rule enforce bởi validator + hook)",
                              [_row(_node("b-rule leaf", rid,
                                          (stmt[:74] + "…") if len(stmt) > 76 else (stmt or name)))
                               for rid, name, stmt in rs]))
@@ -419,7 +435,7 @@ def sections(root: Path):
             _ver = False
         _leafrow = _row(_node("b-rule leaf", _nm, _BDESC.get(_nm, "BNAL adapter (1 config quarantine)")))
         (_bt if _ver else _bf).append(_leafrow)
-    branches.append(_subtree("b-rule", "BNAL", "build-now-adapt-later: core tất định now + 1 config adapter. AUTO từ harness/*.config.yaml — ADR-012/013/015",
+    branches.append(_subtree("b-rule", "BNAL", f"build-now-adapt-later: {len(_bf) + len(_bt)} adapter = {len(_bf)} chờ hiệu chỉnh (verified:false) + {len(_bt)} đã chốt (verified:true). AUTO từ harness/*.config.yaml — ADR-012/013/015",
         [_subtree("b-rule", "verified:false — chờ hiệu chỉnh", "guess best-effort; finalize = sửa 1 config", _bf, count=len(_bf)),
          _subtree("b-rule", "verified:true — đã chốt", "đã verify; self-test giữ trung thực", _bt, count=len(_bt))],
         count=len(_bf) + len(_bt)))
@@ -534,13 +550,14 @@ def sections(root: Path):
     S.append(("harness", "Harness", "04 · Rào chắn", "Nền tảng 2 — Harness (rào chắn tất định)", [
         "<p class=\"lead\">Harness là phần làm overstack khác mọi \"prompt pack\": luật là CODE chạy ở hook/CI, chặn được agent kể cả khi nó cố tình lờ. 0 token, không bypass được khi merge. Một thay đổi phải qua <b>3 lớp gác</b> mới vào main — vi phạm ở lớp nào thì <b>exit 2</b> chặn ngay lớp đó:</p>",
         '<div class="diagram-box">' + "".join(_hsvg) + '<div class="diagram-hint">✥ kéo từng ô · cuộn để zoom</div></div>',
-        f"<p>Hiện có <b>{n_rules} rule</b> (R1–R{n_rules}), mỗi rule là một validator tất định; vi phạm bị chặn ở write-time (hook), commit (pre-commit), và merge (CI) — ba lớp. Bảng dưới giải thích <b>từng rule</b>. Các <b>cơ chế runtime + tự-gác</b> (auto-index, force-query, orientation, code-index, harness-lint…) là một nhánh <i>“cơ chế”</i> riêng — chia & giải thích từng cái trong <b>mind map</b> (mục Tham chiếu cuối trang).</p>",
+        f"<p>Hiện có <b>{n_rules} rule</b> (R1–R{n_rules}), mỗi rule enforce bởi validator tất định + hook (một số rule chặn qua hook, không có file validator riêng — nên số validator ít hơn số rule); vi phạm bị chặn ở write-time (hook), commit (pre-commit), và merge (CI) — ba lớp. Bảng dưới giải thích <b>từng rule</b>. Các <b>cơ chế runtime + tự-gác</b> (auto-index, force-query, orientation, code-index, harness-lint…) là một nhánh <i>“cơ chế”</i> riêng — chia & giải thích từng cái trong <b>mind map</b> (mục Tham chiếu cuối trang).</p>",
         rules_table,
-        "<div class=\"grid\"><div class=\"card\"><h4>Bốn lớp gác (L0–L4)</h4><ul class=\"s\">"
+        "<div class=\"grid\"><div class=\"card\"><h4>Ba lớp CHẶN (hook · pre-commit · CI)</h4><ul class=\"s\">"
         "<li><b>L0 hook</b> — chặn ngay lúc agent định ghi (PreToolUse).</li>"
-        "<li><b>L1 settings</b> — wiring policy→agent.</li>"
-        "<li><b>L2 pre-commit</b> — chặn lúc commit.</li>"
-        "<li><b>L4 CI</b> — chặn lúc merge, nơi không agent nào bypass được.</li></ul></div>"
+        "<li><b>L1 settings</b> — wiring policy→agent (thuộc lớp hook, không phải điểm chặn riêng).</li>"
+        "<li><b>L2 pre-commit</b> — chặn lúc commit (content-validator theo file-đổi; xem issue #18).</li>"
+        "<li><b>L4 CI</b> — chặn lúc merge, nơi không agent nào bypass được (SÀN THẬT).</li></ul>"
+        "<p class=\"s\" style=\"margin:6px 0 0;color:var(--t2)\">Nhãn nhảy L0/L1/L2→L4: <b>L3 để trống có chủ đích</b> (không có lớp giữa pre-commit và CI). Ba <i>điểm chặn</i> thật = hook · pre-commit · CI (concept harness-enforcement-floor).</p></div>"
         "<div class=\"card\"><h4>Harness tự gác chính nó</h4><ul class=\"s\">"
         "<li><b>harness-lint</b> — bắt hằng-số-lệch giữa các script.</li>"
         "<li><b>harness-doctor</b> — chạy fixture sai/đúng qua từng validator, chứng minh rào còn cắn.</li>"
@@ -783,7 +800,7 @@ def sections(root: Path):
     S.append(("codestate", "Trạng thái hiện thời", "12 · Trạng thái", "Trạng thái code hiện thời — tự tường thuật (FACT có nguồn)", [
         "<p class=\"lead\">overstack <b>tự tường thuật</b> trạng thái của chính nó theo một hợp đồng cứng (council-advisory): <b>một dòng FACT = một nguồn máy-đọc = một lệnh tái tạo được</b>. Không có \"prose mồ côi\"; mọi con số dưới đây bạn tự chạy lệnh sẽ ra y hệt.</p>",
         "<h3 class=\"sub\">FACT ổn định (đếm từ đĩa — bake trong trang này, gác bởi docs-probe + probe narrative)</h3>",
-        f"<table class=\"tbl\"><thead><tr><th>chỉ số</th><th>giá trị</th><th>nguồn</th><th>lệnh tái tạo</th></tr></thead><tbody>{_fact_rows}</tbody></table>",
+        f"<div class=\"table-wrap\"><table class=\"tbl\"><thead><tr><th>chỉ số</th><th>giá trị</th><th>nguồn</th><th>lệnh tái tạo</th></tr></thead><tbody>{_fact_rows}</tbody></table></div>",
         "<div class=\"note\"><h4>FACT động (git HEAD · dirty · bộ nhớ · code-graph · verdict medic) — xem LIVE, KHÔNG bake</h4>"
         "<p style=\"margin:0 0 8px\">Các chỉ số ĐỘNG (đổi mỗi commit) cố tình KHÔNG bake vào trang tĩnh này — bake cứng thì docs-probe sẽ đỏ vĩnh viễn sau mỗi commit (chicken-egg). Chạy lệnh để lấy trạng thái <b>hiện tại, luôn đúng</b>:</p>"
         "<pre class='code-block'><code>python3 fdk/tools/code-state.py          # bảng FACT trạng thái code (LIVE)\npython3 fdk/tools/code-state.py --check  # chứng minh tái tạo được (render 2 lần, diff)</code></pre></div>",
@@ -833,7 +850,7 @@ def sections(root: Path):
         _c, _t, _intro = _loop_meta[_lp]
         _secs.append(f'<div class="card"><h4 style="color:{_c}">{_lp} — {_t}</h4><p>{_intro}</p>{_skitems(_lp)}</div>')
     _secs.append(f'<div class="card"><h4 style="color:#e0264b">rules — luật harness</h4>'
-                 f'<p>{n_rules} rule (R1–R{n_rules}), mỗi rule = 1 validator tất định, gác 3 lớp: <b>hook</b> (write-time) · <b>pre-commit</b> · <b>CI</b> (merge — không bypass được). Bảng đầy đủ từng rule ở tab <b>Nền 2 · Harness</b>.</p></div>')
+                 f'<p>{n_rules} rule (R1–R{n_rules}), enforce bởi validator tất định + hook, gác 3 lớp: <b>hook</b> (write-time) · <b>pre-commit</b> · <b>CI</b> (merge — không bypass được). Bảng đầy đủ từng rule ở tab <b>Nền 2 · Harness</b>.</p></div>')
     _secs.append('<div class="card"><h4 style="color:#ff2d55">cơ chế — runtime tự-gác (không phải rule)</h4>'
                  '<p>Các hook + cơ chế chạy nền để harness tự vận hành và tự kiểm chính nó — không nhờ agent nhớ:</p><ul class="s">'
                  + "".join(f'<li><b>{esc(_x["name"])}</b> — {esc(_x["desc"])}</li>' for _x in mechs) + '</ul></div>')
@@ -844,7 +861,10 @@ def sections(root: Path):
         f"<p class=\"lead\">Bản đồ tư duy (cheatsheet) toàn bộ đồ nghề: <b>{n_sk} skill</b> theo loop · <b>{n_rules} rule</b> · <b>{len(mechs)} cơ-chế</b> — <b>số liệu đếm từ đĩa</b>, còn <b>danh sách cơ-chế derive từ <code>harness/mechanisms.yaml</code> và gác bằng medic probe <code>narrative</code></b> (không chép tay). Mind map chia <b>7 nhánh</b> (4 loop skill + rules + cơ chế + BNAL) — xem bản đồ trước, giải thích từng nhánh ngay dưới. Mỗi nhánh <b>mặc định đóng — click để mở/đóng</b> (mũi tên ▸).</p>",
         mindmap_html,
         _b7html,
-        "<h3 style=\"margin-top:26px\">Bảng chi tiết (mô tả đầy đủ)</h3>", skills_table, rules_table,
+        "<h3 style=\"margin-top:26px\">Bảng chi tiết (mô tả đầy đủ)</h3>"
+        "<p class=\"s\" style=\"color:var(--t2)\">Để tránh lặp (mỗi bảng render MỘT lần — chống drift): "
+        "bảng <b>từng rule</b> ở tab <a href=\"@harness\">Nền 2 · Harness</a>; bảng <b>từng skill</b> ở tab "
+        "<a href=\"@skills\">Skill</a>. Mind map trên là bản tra cứu nhanh; bảng đầy đủ nằm đúng tab chủ đề.</p>",
     ]))
     return S
 
@@ -889,6 +909,7 @@ def render(root: Path) -> str:
         '<meta name="viewport" content="width=device-width, initial-scale=1">',
         "<title>overstack — tài liệu chính thức</title>",
         "<style>", CSS_BASE, accent_css(len(S)), "</style></head><body>",
+        '<a class="skip" href="#s0">Bỏ qua tới nội dung chính</a>',
         "<nav>", "".join(nav), "</nav>",
         '<header class="hero"><span class="eyebrow">Tài liệu chính thức · cho người đọc</span>',
         "<h1>overstack</h1>",

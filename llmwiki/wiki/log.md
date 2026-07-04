@@ -192,3 +192,10 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 - Gốc (Meadows): 25 hook nhân bản trọn CI mỗi commit → stash + spawn nặng. Đưa L2 về đúng vai (concept enforcement-floor): chỉ content-validator theo file-đổi.
 - `.pre-commit-config.yaml`: 25→12 hook nhanh; `pre-commit run` 0.16s (trước >2ph). Fire-drill nặng dời sang CI "repo health" (đã có) + thêm `policy-converters-drift` vào harness.yml (chưa có → không mất phủ).
 - Đường cứu index-hỏng-khi-kill ghi vào comment config. Ledger done, problem-tree.
+
+## 2026-07-04 — fdk issue#14 — overstack.html audit (đợt 1+2)
+
+- Mọi fix ở generator build-overstack-docs.py (không sửa tay HTML), --check pass.
+- Đợt 1 sự thật: "Bốn lớp"→"Ba lớp CHẶN"+giải thích L3 trống; slogan validator khớp FACT (rule enforce bởi validator+hook); BNAL nhãn tự khớp; bảng rule render 1 lần (bỏ lặp ×2); LOOP_GROUPS +ovs-notes/frontier-scan; GH#8 skill-usage auto-derive.
+- Đợt 2 UX: dark mode (prefers-color-scheme), .table-wrap overflow-x (class trước KHÔNG có CSS), mind-map keyboard a11y, skip-link + nav aria-label.
+- Problem-tree p-20. Đợt 3 biên tập defer (ngoài DoD).
