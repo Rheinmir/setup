@@ -10,25 +10,33 @@ from hooklib import audit, code_log, find_validators, find_wiki_dir, project_dir
 
 
 def regen_docs(root: str) -> None:
-    """Auto-fresh derived docs (overstack.html + CAPABILITIES + skill-search) NGAY khi skill/rule/
-    generator đổi — CHỈ trong repo framework (có fdk/tools), fail-open. Để overstack.html (đặc biệt
-    mind map) luôn TỰ cập nhật, không phải regen tay. Gác bằng git-status nên không đụng = không tốn."""
+    """Auto-fresh derived docs NGAY khi nguồn của chúng đổi — CHỈ trong repo framework (có
+    fdk/tools), fail-open, gác bằng git-status nên không đụng = không tốn. Hai nhóm độc lập:
+    (A) overstack.html + CAPABILITIES + skill-search khi skill/rule/generator đổi;
+    (B) wiki-graph.html (whiteboard quan hệ cho NGƯỜI xem) khi nội dung wiki hoặc engine đổi —
+        trước nay file này gitignore + không ai regen tự động nên stale dần; nay tự tươi như (A)."""
     td = os.path.join(root, "fdk", "tools")
     if not os.path.isfile(os.path.join(td, "build-overstack-docs.py")):
-        return  # không phải repo framework → bỏ (overstack.html là repo-only)
+        return  # không phải repo framework → bỏ (các derived doc này là repo-only)
     try:
         st = subprocess.run(["git", "status", "--porcelain"], cwd=root,
                             capture_output=True, text=True, timeout=8).stdout
-        if not re.search(r"(skills/.*SKILL\.md|llmwiki/skills/|policy\.yaml|"
-                         r"build-overstack-docs\.py|build-capabilities\.py|sync-skills\.py)", st):
-            return  # phiên không đụng skill/rule/generator → khỏi regen
-        # mirror parity TRƯỚC: sửa canonical skills/<name>/SKILL.md → sinh lại llmwiki/skills/ y hệt
-        # NGAY cuối lượt, để 2 cây không stale tạm thời (trước đây phải cp tay → gate mới bắt).
-        ss = os.path.join(root, "harness", "scripts", "sync-skills.py")
-        if os.path.isfile(ss):
-            subprocess.run([sys.executable, ss], capture_output=True, timeout=40)
-        for t in ("build-capabilities.py", "build-overstack-docs.py", "build-skill-search.py"):
-            subprocess.run([sys.executable, os.path.join(td, t)], capture_output=True, timeout=40)
+        # (A) skill/rule/generator đổi → overstack + CAPABILITIES + skill-search
+        if re.search(r"(skills/.*SKILL\.md|llmwiki/skills/|policy\.yaml|"
+                     r"build-overstack-docs\.py|build-capabilities\.py|sync-skills\.py)", st):
+            # mirror parity TRƯỚC: sửa canonical skills/<name>/SKILL.md → sinh lại llmwiki/skills/ y hệt
+            # NGAY cuối lượt, để 2 cây không stale tạm thời (trước đây phải cp tay → gate mới bắt).
+            ss = os.path.join(root, "harness", "scripts", "sync-skills.py")
+            if os.path.isfile(ss):
+                subprocess.run([sys.executable, ss], capture_output=True, timeout=40)
+            for t in ("build-capabilities.py", "build-overstack-docs.py", "build-skill-search.py"):
+                subprocess.run([sys.executable, os.path.join(td, t)], capture_output=True, timeout=40)
+        # (B) nội dung wiki (llmwiki/wiki, fdk/wiki) hoặc engine đổi → wiki-graph.html
+        # cwd=root vì generator resolve output "llmwiki/html/wiki-graph.html" theo cwd.
+        wg = os.path.join(td, "build-wiki-graph.py")
+        if os.path.isfile(wg) and re.search(r"(wiki/|build-wiki-graph\.py)", st):
+            subprocess.run([sys.executable, wg, "llmwiki/wiki", "--also", "fdk/wiki"],
+                           cwd=root, capture_output=True, timeout=60)
     except Exception:
         pass
 
