@@ -1,0 +1,529 @@
+{
+  "schema": "skill-provenance/v1",
+  "skills": {
+    "brandkit": {
+      "files": {
+        "SKILL.md": "35b9e557a8b6a301032be3aea2fea39f2901acb3210a93a675d192c671c0c27f"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "build-now-adapt-later": {
+      "files": {
+        "SKILL.md": "a1b047ed729cb12cd8059b3487b930bd45138811780814eb3999226323fb6b2c"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "cavecrew": {
+      "files": {
+        "SKILL.md": "47b23a366ba68c7277dfb1952b408d280ef591ab40c174559e1a001e2dc69a67"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "caveman": {
+      "files": {
+        "SKILL.md": "02522ac596157e429c493ff97a0d438369c825c77cae918094bec59254470b54"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "caveman-commit": {
+      "files": {
+        "SKILL.md": "23fceebe1ffe278b79f425995c225818aefbb82384c937c1bf338e0a0e59f2f1"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "caveman-compress": {
+      "files": {
+        "SKILL.md": "b5b2e46ccad05a1cef891bd05aeeac419ba3e0a559a93281206df733084b1068"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "caveman-help": {
+      "files": {
+        "SKILL.md": "d3e9ab19099eb10b387588b5f04fce2cd057594e3e7bd6a471aed30fc8443713"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "caveman-review": {
+      "files": {
+        "SKILL.md": "3e4e1359fb7d0bda9c174809ea852bf473dd34cf64e28f3c2d3cd8169573e49c"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "caveman-stats": {
+      "files": {
+        "SKILL.md": "13c335e90d6377ada50e02314b25c1cf1cec5e19a8bce704afa0d45925646f19"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "check-approve": {
+      "files": {
+        "SKILL.md": "c9c0069166bffdfa81703e4b4903c2ca0053357b1b9c5d26155f3dd9253219c5"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "computer-use": {
+      "files": {
+        "SKILL.md": "7f5a7bbe8b2fb51a9637e8df71cd1dca1a84b213ffe5bf56dcdd3417d7fb1601"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "council": {
+      "files": {
+        "SKILL.md": "f7be8acca5aaa8eacd6c5c06cff7b6d4fd6ac38baf2af6f333db889e87375a9b"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "cursor-animated-sites": {
+      "files": {
+        "SKILL.md": "71c0664c53e5f518a6987bed814d7e87d7fcdce4e20f36e82538a62ea559b02a"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "design-taste-frontend": {
+      "files": {
+        "SKILL.md": "afd5bd2a0c2b97168ec11f98c04f37a549a4fd8ac70c0f491d6fa90efc1dbf27"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "design-taste-frontend-v1": {
+      "files": {
+        "SKILL.md": "c975d963844f0bf4179afcbe36d00f40e0a022dd0d0c657e33a52368d2330e53"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "docs-curate": {
+      "files": {
+        "SKILL.md": "4cdbb29c9744d7d8e62ed7781d743ab26551b9dcbdbf209d72bc8945f670e9fb"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "docs-site-macos": {
+      "files": {
+        "SKILL.md": "de6e38c1701a0d8f22468ed4a260e271e46f352db7daccd3b0523df3916c2519"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "extract-site": {
+      "files": {
+        "SKILL.md": "8750e59cfca77d0e818270e806988a8d9e218576c1263ebc7c0531171d1843f1",
+        "assets/component-spec-template.md": "842e43cbbd90fd9aea1a6b3d722c87d1ca42016ff0bd5de170a630c8db4b2dec",
+        "assets/enumerate-assets.js": "6030e3113e88775661a260f7945ce7219358ceaca111404649b7f8f5906e3427",
+        "assets/extract-component-styles.js": "38d3497304b8a721f169cbf7da4851eb74270b1e0e47fadaa9b7a043d19162b0",
+        "assets/inspection-checklist.md": "e8d338a962a8d8ad6f3fdf1f80e190b697e903b96f9d8a93077dd9ea2ab7d439"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "failure-flywheel": {
+      "files": {
+        "SKILL.md": "c29797b3765b1313b0c130f865c3e005c150a0cbaf2d847969f1ff7f87192059"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "fdk": {
+      "files": {
+        "SKILL.md": "86eeec99cffe99c9302d12e26ea51ea86059810f9f43cb7d65abdb5f88b5fe18"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "find-skills": {
+      "files": {
+        "SKILL.md": "3944913e5b8b98db3cca800204be86d156476ece5d2aef0bb90dc054390c6535"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "frontier-scan": {
+      "files": {
+        "SKILL.md": "81e983eda236f09d34bc35d2cc1b159c96a055fb7783bcd44f5a16cf321294c4"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "full-output-enforcement": {
+      "files": {
+        "SKILL.md": "80adcd02a4a94a6a6fe45a0cc6f851acc8e03b28972862bbe071bcfdbb2a0f55"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "gpt-taste": {
+      "files": {
+        "SKILL.md": "bc0da6b8c5d19a26c7135086b000864550058e3464c42c5b95c0102361858a20"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "harness-tour": {
+      "files": {
+        "SKILL.md": "f8644009e79dc953129653f82f0ce87397212d6c6ba1b51f70a4b0d66f655ba7"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "harness-update": {
+      "files": {
+        "SKILL.md": "6e3694a8f2b9b892daa3a16e1a0fd14cd0c99a7191cbf37d4533e6fa34b32a37"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "health-check": {
+      "files": {
+        "SKILL.md": "0f9b64b7f38b7707807d41134d95f86a82867fa14a2e43f7a4950f8c6292f064"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "high-end-visual-design": {
+      "files": {
+        "SKILL.md": "b8bf4039dfe6cf70212d925db750ade92aea5f631960bb8a6da1572e10618c5a"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "image-to-code": {
+      "files": {
+        "SKILL.md": "4eff3048ddf6987538ab204cd23eb9eddb22e29c47f8493f91c6f2210279758a"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "imagegen-frontend-mobile": {
+      "files": {
+        "SKILL.md": "72daf8861cc45b288c62006dbe870d0896565a90c3dd8ad2182b9d472a3df4dc"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "imagegen-frontend-web": {
+      "files": {
+        "SKILL.md": "5e2645b1dd7b36ed01637f0b11dd92c6ed0d443552bf338781ff47aceeba09e1"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "impact-check": {
+      "files": {
+        "SKILL.md": "653a585055019facac38ebbf0f726ebcfb3fe6565a3fcc4bb2af01dca1d64797"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "industrial-brutalist-ui": {
+      "files": {
+        "SKILL.md": "661f96c976193203465db987785cd0ee753ecb3293d0464bd7976a70747a76c2"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "ingest": {
+      "files": {
+        "SKILL.md": "f90bc225fd8e5be7d66439c4a73b34c5a56899ff512ec436a0f49878ecfd4d86"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "jenkins-agent-l3-deploy": {
+      "files": {
+        "SKILL.md": "b6b299d50d96a2ca2b6691c9f37797508461f8561b6c265d57e9f33ba252fca0"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "join-project": {
+      "files": {
+        "SKILL.md": "05c654f01ee6e83ad29595124007438179df9b5081fc066da60d20a641770996"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "last30days": {
+      "files": {
+        "SKILL.md": "bee461995acc5faf1a9608d2f8c6ea82017995dc7b2bcf525f845331392cd5cf"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "lint": {
+      "files": {
+        "SKILL.md": "ccba84aeaf3ad7cd783850ad064b88f398d8d6feb9cb81f540e329f2858ba36d"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "loop-runner": {
+      "files": {
+        "SKILL.md": "5a002bb52694f1e9b3da3c1cd386e1419ba928d326732a0732cd5c2529b8095a"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "md-to-html": {
+      "files": {
+        "SKILL.md": "80a534a2249c86c5ea76ef9cb28899c3369a9bab4f222233457bc31d4726809f"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "medic": {
+      "files": {
+        "SKILL.md": "8ddaa08efea5038bf0d12cfe313994b7b1ac95185649aca27487f6f838e86fd6"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "minimalist-ui": {
+      "files": {
+        "SKILL.md": "215ee4c4c0cd91d30aba032271f09bbbf0b0fdddee70d64fcce0f9ffb991c5c8"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "new-project-setup": {
+      "files": {
+        "SKILL.md": "445be0cb1ed4eeb92f5337ccb65824320320e72a9e1b16f8b86ec39f13728dbd"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "new-skill": {
+      "files": {
+        "SKILL.md": "c23e676c05e117cb81ec68caad4041477b60144c76b7ffbc93b458bd5dc1e46d"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "onboard-codebase": {
+      "files": {
+        "SKILL.md": "b1605b889aa26ef9af35fc1f182fd28d73bf20197d02da71e3c28f5d26eda626"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "orca-cli": {
+      "files": {
+        "SKILL.md": "74c9559cc2826358a57eb4c4d117325ff413be05c7bcb181f017f474ebc07ecb"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "orca-dispatch-reference": {
+      "files": {
+        "SKILL.md": "e9686c010280619826dd6aea52df2039155593dd5e8c465c77ce18811705e75a"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "orca-eval": {
+      "files": {
+        "SKILL.md": "77d0280cf5c98860097096fa1cc7df0aff37abd7438f4a2fde808ea109b93c6d",
+        "assets/orca-eval-scan.sh": "8bf1fce55e52376a86eec146a81e2915364418d6394bc376d811d44bc5cc4153"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "orca-issue": {
+      "files": {
+        "SKILL.md": "420980c05bdee7370b5ec7fb1951d516ec6ebfc48ae505484bf82661e9c4946d"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "orca-onboard": {
+      "files": {
+        "SKILL.md": "728e5514460132f6b763b9a2bf159c3525ad7e521b4f42091feac19b86d5fb0f",
+        "assets/docs-site-skeleton.html": "7a031c6a9d4940775b684a1a2d6dcb09c9a339ac796ea6d315ba930b94ba6113"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "orca-sec-scans": {
+      "files": {
+        "SKILL.md": "4e43d35d003a57737dd0730a09828432df4cb18425d3ef29d24066982ed68835"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "orca-workflow": {
+      "files": {
+        "SKILL.md": "5ac5b9de9caa328138e59cdf5397569b212dee39d0b3472b51b3b95c92a49d6b"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "orchestration": {
+      "files": {
+        "SKILL.md": "d33b879e6682a61357401c3d3c1a688460278380fe09c24783fcb770e59b513c"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "ovs-notes": {
+      "files": {
+        "SKILL.md": "698e95532cd7092891060aa78967c314c4c295f623282af1f5f416f1b756cd07"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "propose": {
+      "files": {
+        "SKILL.md": "00920c2d2308be1b57eb31323be29e0de68fde03291ad4bc700627db9f4b9597"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "query": {
+      "files": {
+        "SKILL.md": "11b4960276688475fc8abe3de5fd114b09853641e77a468d714e0797db52d5eb"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "raise-issue": {
+      "files": {
+        "SKILL.md": "3b987ae25e569347b9847f78f770256571a9f568dd8828bcd55474342ca3f468"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "record-episode": {
+      "files": {
+        "SKILL.md": "bc29ffc800e3d36e81b6d803a4e6d4be0a090b469cc848f3283a0abb7cd7b5e1"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "redesign-existing-projects": {
+      "files": {
+        "SKILL.md": "b79a71239c262adec000a60de84d9b3f21d99359d5da4d13dab55f28a6db9861"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "safe-change": {
+      "files": {
+        "SKILL.md": "60888526031f8c92a9b3105e9bfd6da6f1bb3cd0436858f69ecc59840f4423de"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "ship": {
+      "files": {
+        "SKILL.md": "d24a7e12e92d883c7092d0921353691337af72e8e71258949654c4c71f8761a9"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "skill-provenance": {
+      "files": {
+        "SKILL.md": "061c887a6adfa19d0acefd3028f16751359d788af4f27e43150eb82616417f07"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "snapshot-push": {
+      "files": {
+        "SKILL.md": "4167de90cee9367a2058418c856f4584705b84a70161a9fc4163887f00ecccd2"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "stitch-design-taste": {
+      "files": {
+        "SKILL.md": "7d03299958df0a3c57d9716c18121a6cd55e355532ebdab57cbc0a02c377f3e3"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "sync-template": {
+      "files": {
+        "SKILL.md": "69bac94015845e71771f436d0c71cf5f27eb0d8570e3f66d348f0af277975cd1"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "tour-guide": {
+      "files": {
+        "SKILL.md": "a130e5d60e021888430ccb159811550b4fb599f84ee9fe3363431a6527866ca2"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "tour-guide-supademo": {
+      "files": {
+        "SKILL.md": "388deba7806200c995a18c59717a58bf3903512b026e7a13678eff0d1e515639"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "trace-grader": {
+      "files": {
+        "SKILL.md": "cf1b4f17810b9d6d8838f6d05826e40268580a11540a5553189860e925740be8"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "uat-nonit-testcase": {
+      "files": {
+        "SKILL.md": "89ff05025cb84f55a36335f01014b2283bc7d821fc60115ccf241860318b8cd0"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "verify-before-commit": {
+      "files": {
+        "SKILL.md": "05049ce1916ef1cb2ab940553e2eac09ce297e0cfeff8b3b0ff26cfcdfdc08a9"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "web-clone": {
+      "files": {
+        "SKILL.md": "9b2072bbab4c864d5e9789861ccb8906ba3a03afd30d2348898580373d5c4136"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "web-crawl": {
+      "files": {
+        "SKILL.md": "1397c5e7d212be9ec002177a8c52c7420f6e49a3c95ff89361dbc40e076f6c44"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "wiki-room": {
+      "files": {
+        "SKILL.md": "7550aaa5e819bad1e83daeec9b568e0ec8b8558606e88289bc23cbceb6b201f9"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    },
+    "wikieval": {
+      "files": {
+        "SKILL.md": "524b19b541cf682f8c27f044b04e15f176865d1c2bd21c6e8cf820fba581f3d1"
+      },
+      "recorded": "2026-07-04",
+      "source": "local-authored"
+    }
+  }
+}

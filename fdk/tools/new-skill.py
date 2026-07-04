@@ -20,6 +20,7 @@ Usage:
     --dry-run  print what WOULD be created (full file body + next steps); write nothing
 """
 import argparse
+import importlib.util
 import re
 import sys
 from pathlib import Path
@@ -27,6 +28,15 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 SKILLS = REPO / "skills"                  # canonical (npx publish set)
 LLMWIKI = REPO / "llmwiki" / "skills"     # mirror (bundle llmwiki / sync-template)
+
+# SkillResolve — cảnh báo khi skill mới TRÙNG NĂNG LỰC với skill hiện có (GH#13).
+# Tái dùng nguyên engine BM25 của build-skill-search.py (đừng viết lại). Ngưỡng
+# calibrate thực nghiệm 2026-07-04 bằng find-skill: skill mới THẬT-SỰ-trùng (query =
+# name+desc của một biến thể như tour-guide-supademo, design-taste) cho top-1 ≈ 26–44;
+# skill mới LẠ (vd skill-provenance) top-1 ≈ 7. Ngưỡng 12.0 tách sạch hai vùng —
+# cảnh báo biến thể trùng mà không báo động giả cho skill mới hợp lệ.
+WARN_THRESHOLD = 12.0
+_SEARCH_PY = Path(__file__).resolve().parent / "build-skill-search.py"
 
 # Loop folders that exist under llmwiki/skills/ — keep in sync with sync-skills.py groups.
 KNOWN_LOOPS = ("dev-loop", "orchestrate", "wiki-loop", "utils")
@@ -79,6 +89,48 @@ def rel(p: Path) -> str:
     return str(p.relative_to(REPO))
 
 
+def _load_search():
+    """importlib-load build-skill-search.py (tên có dấu `-` nên không import thẳng).
+    Fail-open: bất kỳ lỗi nào → trả None, gọi bên ngoài chỉ bỏ qua check, KHÔNG chặn."""
+    try:
+        spec = importlib.util.spec_from_file_location("skill_search", _SEARCH_PY)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        return mod
+    except Exception:
+        return None
+
+
+def similarity_hits(name: str, desc: str, k: int = 3):
+    """Top-k skill hiện có gần nhất với (name+desc) của skill sắp tạo, dùng BM25.
+    Trả [] khi không build được index (fail-open) hoặc chưa có skill nào."""
+    mod = _load_search()
+    if mod is None:
+        return None  # phân biệt "skip được" với "không trùng gì"
+    try:
+        index = mod.build_index(str(SKILLS))
+        query = name.replace("-", " ") + " " + desc
+        # bỏ chính nó khỏi kết quả (khi chạy lại trên skill đã tồn tại)
+        return [h for h in mod.score_query(index, query, k + 1) if h[0] != name][:k]
+    except Exception:
+        return None
+
+
+def print_similarity_warning(hits) -> bool:
+    """In block cảnh báo nếu top-1 vượt ngưỡng. Trả True nếu ĐÃ cảnh báo."""
+    if not hits or hits[0][1] < WARN_THRESHOLD:
+        return False
+    print("\n⚠  TRÙNG NĂNG LỰC? — skill mới gần với skill đã có (BM25 SkillResolve):")
+    for nm, score, desc in hits:
+        flag = "  ← trên ngưỡng" if score >= WARN_THRESHOLD else ""
+        print(f"     {score:6.2f}  {nm}{flag}")
+        print(f"             {desc[:72]}")
+    print("   → Nếu ĐÚNG là biến thể hợp lệ: đặt tên `<base>-<tên>` và làm `description`\n"
+          "     khác biệt rõ (nêu điểm KHÁC, không lặp trigger của skill gốc).\n"
+          "   → Nếu là trùng thật: sửa skill hiện có thay vì tạo mới.")
+    return True
+
+
 def next_steps(name: str, loop: str) -> str:
     """The three CURATED surfaces this tool deliberately does NOT touch (policy:
     registry surfaces are user-curated). Exact copy-paste lines + a verify command."""
@@ -123,6 +175,8 @@ def main() -> None:
                     help="one-line description WITH trigger phrases (drives router matching)")
     ap.add_argument("--dry-run", action="store_true",
                     help="print what would be created (incl. full body); write nothing")
+    ap.add_argument("--strict", action="store_true",
+                    help="exit 1 (không scaffold) nếu trùng năng lực trên ngưỡng — cho CI/agent")
     args = ap.parse_args()
 
     name = args.name.strip()
@@ -136,6 +190,12 @@ def main() -> None:
     if skill_dir.exists():
         sys.exit(f"✗ skills/{name}/ already exists — refusing to overwrite. "
                  f"Edit {rel(skill_md)} directly, or pick another name.")
+
+    # SkillResolve (GH#13): cảnh báo TRƯỚC khi ghi. --strict → chặn; mặc định chỉ cảnh báo
+    # (biến thể style hợp lệ như tour-guide-<tên> không bị chặn cứng — đúng phạm vi issue).
+    warned = print_similarity_warning(similarity_hits(name, args.desc))
+    if warned and args.strict:
+        sys.exit("✗ --strict: trùng năng lực trên ngưỡng — phân biệt description rồi chạy lại.")
 
     body = render(name, args.desc)
     tag = "[dry-run] would create" if args.dry_run else "✓ created"

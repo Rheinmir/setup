@@ -91,6 +91,7 @@
         "./skills/frontier-scan",
         "./skills/redesign-existing-projects",
         "./skills/safe-change",
+        "./skills/skill-provenance",
         "./skills/snapshot-push",
         "./skills/stitch-design-taste",
         "./skills/sync-template",

@@ -1,0 +1,83 @@
+{
+  "k": 3,
+  "per": {
+    "caveman": {
+      "hit1": 1,
+      "hit3": 1
+    },
+    "caveman-commit": {
+      "hit1": 1,
+      "hit3": 1
+    },
+    "council": {
+      "hit1": 1,
+      "hit3": 1
+    },
+    "design-frontend": {
+      "hit1": 1,
+      "hit3": 1
+    },
+    "design-v1": {
+      "hit1": 1,
+      "hit3": 1
+    },
+    "frontier-scan": {
+      "hit1": 1,
+      "hit3": 1
+    },
+    "health-check": {
+      "hit1": 1,
+      "hit3": 1
+    },
+    "ingest": {
+      "hit1": 1,
+      "hit3": 1
+    },
+    "medic": {
+      "hit1": 1,
+      "hit3": 1
+    },
+    "new-skill": {
+      "hit1": 1,
+      "hit3": 1
+    },
+    "onboard": {
+      "hit1": 1,
+      "hit3": 1
+    },
+    "orca-issue": {
+      "hit1": 1,
+      "hit3": 1
+    },
+    "raise-issue": {
+      "hit1": 1,
+      "hit3": 1
+    },
+    "ship": {
+      "hit1": 1,
+      "hit3": 1
+    },
+    "skill-provenance": {
+      "hit1": 1,
+      "hit3": 1
+    },
+    "snapshot-push": {
+      "hit1": 1,
+      "hit3": 1
+    },
+    "tour-basic": {
+      "hit1": 1,
+      "hit3": 1
+    },
+    "tour-supademo": {
+      "hit1": 1,
+      "hit3": 1
+    }
+  },
+  "schema": "skill-resolve-baseline/v1",
+  "totals": {
+    "hit1": 18,
+    "hit3": 18,
+    "n": 18
+  }
+}

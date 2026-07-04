@@ -25,16 +25,16 @@ mkrepo(){ # mkrepo <name> <behind 0|1>
     mkdir -p harness/poc-vendor-neutral/bin
     cp "$REAL_BIN/pull-gate.sh" harness/poc-vendor-neutral/bin/
     chmod +x harness/poc-vendor-neutral/bin/pull-gate.sh
-    git add -A; git commit -qm init
+    git add -A; git -c core.hooksPath=/dev/null commit --no-verify -qm init
     git remote add origin "$bare"
     br="$(git rev-parse --abbrev-ref HEAD)"
-    git push -q origin "$br"
+    git -c core.hooksPath=/dev/null push --no-verify -q origin "$br"
     git branch --set-upstream-to="origin/$br" >/dev/null 2>&1
   )
   if [ "$behind" = "1" ]; then
     local adv="$WS/$name.adv"
     git clone -q "$bare" "$adv"
-    ( cd "$adv"; git config user.email t@t; git config user.name t; echo x >> f; git add -A; git commit -qm adv; git push -q )
+    ( cd "$adv"; git config user.email t@t; git config user.name t; echo x >> f; git add -A; git -c core.hooksPath=/dev/null commit --no-verify -qm adv; git -c core.hooksPath=/dev/null push --no-verify -q )
     rm -rf "$adv"
     ( cd "$work"; git fetch -q origin )   # remote-tracking tiến → local behind 1
   fi

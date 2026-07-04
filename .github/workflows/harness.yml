@@ -97,6 +97,8 @@ jobs:
         run: bash harness/tests/auto-index-and-grounding-test.sh .
       - name: R13 decision→ADR gate (link + edit/delete-when-superseded)
         run: bash harness/tests/decision-adr-gate-test.sh .
+      - name: T5 policy↔converters drift (adapter khớp rule) — dời từ pre-commit (issue #18)
+        run: bash harness/tests/policy-converters-drift-test.sh
       - name: harness-local — rule RIÊNG dự án (P-namespace, sync-safe, không giẫm R)
         run: bash harness/tests/harness-local-test.sh .
       - name: R14 patterns-protected — kho pattern chỉ sửa khi user cho phép (unlock env)

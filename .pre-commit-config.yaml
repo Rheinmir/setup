@@ -2,9 +2,22 @@
 # Cài: pipx install pre-commit && pre-commit install
 # Lưu ý: file này nằm ở repo root (pre-commit yêu cầu). Khi deploy llmwiki vào
 # project khác, copy sang root của project đó và sửa prefix đường dẫn (xem harness/recipe.md).
+#
+# NGUYÊN TẮC TẦNG (issue #18, concept [[harness-enforcement-floor]]): CI (L4) mới là SÀN THẬT —
+# nó đã chạy TRỌN bộ fire-drill 17-rule (job "repo health" trong .github/workflows/harness.yml).
+# Nên L2 pre-commit CHỈ là tiện-nghi-chặn-sớm: chạy content-validator NHANH trên FILE ĐỔI, KHÔNG
+# nhân bản cả CI ở mỗi commit. Trước đây 25 hook (nhiều cái always_run + bash self-test) chạy mỗi
+# commit → stash toàn worktree + spawn 25 interpreter → >2 phút, dễ timeout, kill giữa chừng để
+# lại index hỏng. Bộ fire-drill đầy đủ đã dời hẳn sang CI + `medic --ci` (không mất độ phủ).
+#
+# NẾU commit bị KILL giữa chừng và git status báo hàng loạt "D" (deletion) ảo dù file vẫn còn:
+# đó là stash-patch của pre-commit chưa trả lại. Cứu (KHÔNG mất việc): bản sao nằm ở
+# ~/.cache/pre-commit/patch*  →  `git reset` (index về HEAD, không đụng file) rồi
+# `git stash list` / `git apply ~/.cache/pre-commit/patch<...>` để phục hồi thay đổi chưa-staged.
 repos:
   - repo: local
     hooks:
+      # ── L2 = content-validator theo FILE ĐỔI (nhanh, giây) ──────────────────────────────
       - id: wiki-origin-required
         name: "R2: wiki file phai co '## Origin'"
         entry: python3 harness/validators/origin_required.py
@@ -29,60 +42,11 @@ repos:
         language: system
         files: ^(fdk|llmwiki)/wiki/(draft|sources/draft)/.*\.md$
 
-      - id: arch-scan
-        name: "arch-scan: van ban skill/doc khop luat R1-R7"
-        entry: python3 harness/scripts/arch-scan.py --root .
-        language: system
-        always_run: true
-        pass_filenames: false
-
-      - id: wiki-index-sync
-        name: "R3: index.md khop tap file wiki"
-        entry: python3 harness/validators/index_sync.py --wiki-dir fdk/wiki
-        language: system
-        always_run: true
-        pass_filenames: false
-
-      - id: wiki-health
-        name: "L4: wiki health (broken wikilink = fail)"
-        entry: python3 harness/scripts/wiki-health.py --wiki-dir fdk/wiki --fail-on broken
-        language: system
-        always_run: true
-        pass_filenames: false
-
-      - id: harness-lint
-        name: "meta-drift: hằng số content-dir + wiring policy→settings"
-        entry: python3 harness/scripts/harness-lint.py --check
-        language: system
-        always_run: true
-        pass_filenames: false
-
       - id: agent-claude-parity
         name: "AGENT.md ↔ CLAUDE.md bảng skill phải khớp"
         entry: python3 harness/validators/agent_claude_parity.py
         language: system
         files: ^llmwiki/(AGENT|CLAUDE)\.md$
-
-      - id: wiki-duplicate-basename
-        name: "không có basename .md trùng ở ≥2 thư mục wiki/ (diverging-dup guard)"
-        entry: python3 harness/validators/duplicate_basename.py --wiki-dir fdk/wiki
-        language: system
-        always_run: true
-        pass_filenames: false
-
-      - id: adr-normal-user
-        name: "ADR first-class trong khuôn per-project (skeleton + functional)"
-        entry: bash harness/tests/adr-normal-user-test.sh .
-        language: system
-        always_run: true
-        pass_filenames: false
-
-      - id: auto-index-grounding
-        name: "auto-index khi wiki đổi + force-query grounding khi propose"
-        entry: bash harness/tests/auto-index-and-grounding-test.sh .
-        language: system
-        always_run: true
-        pass_filenames: false
 
       - id: decision-adr-link
         name: "R13: quyết định architecture trong decisions.md phải ref ADR"
@@ -90,47 +54,26 @@ repos:
         language: system
         files: 'decisions\.md$'
 
-      - id: adr-delete-guard
-        name: "R13: xóa ADR chỉ khi đã bị đè (Superseded by / supersedes)"
-        entry: python3 harness/validators/decision_adr.py --guard-deletions
-        language: system
-        always_run: true
-        pass_filenames: false
-
-      - id: decision-adr-gate-test
-        name: "R13 gate self-test (decision→ADR + edit/delete-when-superseded)"
-        entry: bash harness/tests/decision-adr-gate-test.sh .
-        language: system
-        always_run: true
-        pass_filenames: false
-
-      - id: capabilities-current
-        name: "fdk/CAPABILITIES.md khớp đĩa (agent biết đúng đồ nghề)"
-        entry: python3 fdk/tools/build-capabilities.py --check
-        language: system
-        always_run: true
-        pass_filenames: false
-
-      - id: adapt-registry-leak
-        name: "adapt-registry: ẩn số quarantine không rò qua adapter (BNAL Step 7)"
-        entry: python3 harness/scripts/adapt-registry.py --check
-        language: system
-        always_run: true
-        pass_filenames: false
-
       - id: seq-html-glass
         name: "R11: seq html phai glass docs-site-macos (repo-tier)"
         entry: python3 harness/poc-vendor-neutral/bin/llmwiki-validate.py files
         language: system
         files: '.*-seq\.html$'
 
-      - id: policy-converters-drift
-        name: "T5: drift gen-converters <-> policy.yaml (adapter khop rule)"
-        entry: bash harness/tests/policy-converters-drift-test.sh
+      - id: harness-local
+        name: "harness-local: rule RIÊNG của dự án (P-namespace, sync-safe)"
+        entry: bash -c 'test -f harness-local/run.py && python3 harness-local/run.py files "$@" || true' --
         language: system
-        always_run: true
-        pass_filenames: false
+        pass_filenames: true
 
+      - id: audit-reconcile
+        name: "Tru 5: quy actor agent/nguoi vao audit chain tai chot git (fail-open)"
+        entry: bash -c 'python3 harness/scripts/code-logger.py --reconcile "$@" || true' --
+        language: system
+        files: '^(llmwiki/|harness/|skills/|fdk/|\.github/)'
+        pass_filenames: true
+
+      # ── commit-msg stage (nhanh, bắt buộc) ──────────────────────────────────────────────
       - id: no-ai-attribution
         name: "R15: commit message khong duoc ghi cong AI (Co-Authored-By/Generated-with/robot)"
         entry: python3 harness/validators/no_ai_attribution.py --commit-msg
@@ -139,6 +82,7 @@ repos:
         always_run: true
         pass_filenames: true
 
+      # ── pre-push stage (chỉ khi push, không phải mỗi commit) ─────────────────────────────
       - id: harness-pull-gate
         name: "R12 gate2: pull-before-push (chan push neu local SAU remote)"
         entry: bash harness/poc-vendor-neutral/bin/pull-gate.sh gate2
@@ -155,31 +99,19 @@ repos:
         always_run: true
         pass_filenames: false
 
-      - id: harness-local
-        name: "harness-local: rule RIÊNG của dự án (P-namespace, sync-safe)"
-        entry: bash -c 'test -f harness-local/run.py && python3 harness-local/run.py files "$@" || true' --
-        language: system
-        pass_filenames: true
-
-      - id: harness-local-check
-        name: "harness-local: self-test (id P<n> không đụng R + validator compile)"
-        entry: bash -c 'test -f harness-local/run.py && python3 harness-local/run.py check || true'
-        language: system
-        always_run: true
-        pass_filenames: false
-
-      - id: audit-reconcile
-        name: "Tru 5: quy actor agent/nguoi vao audit chain tai chot git (fail-open)"
-        entry: bash -c 'python3 harness/scripts/code-logger.py --reconcile "$@" || true' --
-        language: system
-        files: '^(llmwiki/|harness/|skills/|fdk/|\.github/)'
-        pass_filenames: true
-
-  # Tùy chọn — bật khi đã cài binary (brew install lychee):
-  # - repo: local
-  #   hooks:
-  #     - id: lychee-offline
-  #       name: "link check offline"
-  #       entry: lychee --offline --no-progress llmwiki/wiki
-  #       language: system
-  #       pass_filenames: false
+# ── ĐÃ DỜI SANG CI (job "repo health" trong .github/workflows/harness.yml) + `medic --ci` ──
+#   Bộ fire-drill đầy đủ KHÔNG chạy mỗi commit nữa (issue #18) — CI là sàn đảm bảo:
+#     arch-scan · R3 index-sync · L4 wiki-health · meta-drift(harness-lint) · duplicate-basename
+#     · ADR-normal-user · auto-index+grounding · R13 gate self-test · adr-delete-guard
+#     · capabilities-current · adapt-registry-leak · policy-converters-drift · harness-local-check
+#     · harness-doctor --ci (fire-drill mọi rail)
+#   Muốn chạy TẤT CẢ tại máy trước khi push: `python3 fdk/tools/medic.py` (cổng sức khoẻ tổng).
+#
+# Tùy chọn — bật khi đã cài binary (brew install lychee):
+# - repo: local
+#   hooks:
+#     - id: lychee-offline
+#       name: "link check offline"
+#       entry: lychee --offline --no-progress llmwiki/wiki
+#       language: system
+#       pass_filenames: false
