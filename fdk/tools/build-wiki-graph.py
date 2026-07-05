@@ -337,13 +337,20 @@ def enrich_code(nodes, edges, repo_root):
     - làm giàu: mỗi node code gắn symbols (def/class) + commit gần nhất.
     """
     root = Path(repo_root)
-    # index basename module → relpath (dùng cho Python/Go/Rust theo module-name; bỏ .git/node_modules...)
+    # index module-name → relpath (Python/Go/Rust). GH#43: index CẢ basename (import phẳng) LẪN
+    # dotted-path-from-root (import qualified theo package: `from app.core import` → app/core.py) +
+    # key package cho __init__.py (`import app` → app/__init__.py). setdefault: file quét trước thắng.
     modindex = {}
     for p in root.rglob("*.py"):
         rel = p.relative_to(root).as_posix()
         if any(seg in rel for seg in (".git/", "node_modules/", ".overstack-kit/", "workspaces/")):
             continue
-        modindex.setdefault(p.stem, rel)
+        modindex.setdefault(p.stem, rel)                       # basename: from store import
+        modindex.setdefault(rel[:-3].replace("/", "."), rel)   # dotted-from-root: app.core → app/core.py
+        if p.name == "__init__.py":                            # package: app → app/__init__.py
+            pkg = rel[: -len("/__init__.py")].replace("/", ".")
+            if pkg:
+                modindex.setdefault(pkg, rel)
     tsp = code_imports.load_tsconfig_paths(root) if code_imports else {}
     ids = {n["id"] for n in nodes}
     # 1 hop: từ node code (BẤT KỲ ngôn ngữ hỗ trợ) → cạnh imports + node code mới

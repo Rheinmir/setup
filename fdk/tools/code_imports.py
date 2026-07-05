@@ -40,10 +40,12 @@ def _py(abs_path, repo_root, _tsp):
     for n in ast.walk(tree):
         if isinstance(n, ast.Import):
             for a in n.names:
-                mods.add(a.name.split(".")[0])
+                mods.add(a.name)                      # dotted đầy đủ (app.core / os); import phẳng = 1 segment
         elif isinstance(n, ast.ImportFrom) and n.module:
-            mods.add(n.module.split(".")[0])
-    # Python resolve theo module-basename để lại cho caller (khác cơ chế path) → trả 'mods' như specifier
+            mods.add(n.module)                        # module dotted (app.core) hoặc phẳng (store)
+            for a in n.names:                         # from pkg import sub → pkg.sub (sub có thể là module)
+                mods.add(n.module + "." + a.name)
+    # Python resolve theo module-name để lại cho caller (khác cơ chế path); nay cả dotted-path lẫn basename
     return syms, {("mod", m) for m in mods}, 0
 
 
