@@ -104,4 +104,5 @@
 | [050726-wikigraph-dangling-wikilink](sources/draft/050726-wikigraph-dangling-wikilink.md) | issue | Issue: broken wikilink đẻ cạnh dangling trong graph data |
 | [050726-explicit-index-scope-yaml](sources/draft/050726-explicit-index-scope-yaml.md) | issue | Issue: khai báo scope index tường minh qua .overstack.yaml |
 | [050726-unify-install-manifest](sources/draft/050726-unify-install-manifest.md) | issue | Issue: thống nhất install path qua manifest |
+| [050726-reachability-sweep-skill-tools](sources/draft/050726-reachability-sweep-skill-tools.md) | issue | Issue: reachability sweep skill→tool (GH#54) |
 <!-- index:auto:end -->

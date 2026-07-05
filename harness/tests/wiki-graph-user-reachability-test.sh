@@ -32,6 +32,34 @@ grep -q 'llmwiki/.claude/hooks/%s.py\|llmwiki/.claude/hooks/' "$IS" 2>/dev/null 
   && ok "install.sh wire llmwiki hooks vào ROOT .claude/settings.json" \
   || bad "install.sh không wire root settings" "hook tới nơi nhưng không fire (Claude đọc root)"
 
+hdr "C — SKILL→TOOL reachability (GH#54): skill-shipped trỏ .py nào thì .py đó phải ship"
+# Bẫy AP-1 lớp 2: skill SHIP xuống user (llmwiki/skills/**) hướng dẫn chạy harness/scripts/X.py
+# hoặc fdk/tools/X.py, nhưng tool đó framework-only → user gọi skill là lỗi (vd GH#9: query.md
+# trỏ mem-rank.py không ship). Quét mọi skill trong manifest, trích tham chiếu .py, assert có ship.
+python3 - "$MAN" <<'PY'
+import json, re, sys, os
+man = sys.argv[1]
+inc = set(json.load(open(man)).get("includes", []))
+skills = [f for f in inc if f.startswith("llmwiki/skills/") and f.endswith(".md")]
+# CHỈ bắt dạng LỆNH CHẠY `python3 …X.py` (user/agent thật sự gọi) — bỏ qua nhắc-tên mô tả
+# ("xem X.py", "anh em cùng tầng X.py") vì đó không phải reachability-vỡ.
+REF = re.compile(r"python3\s+(harness/scripts/[\w./-]+\.py|fdk/tools/[\w./-]+\.py)")
+bad = 0
+for s in skills:
+    if not os.path.isfile(s):
+        continue
+    for ref in sorted(set(REF.findall(open(s, encoding="utf-8", errors="ignore").read()))):
+        if ref in inc:
+            print("  \033[1;32m✓\033[0m %s → %s (ship)" % (os.path.basename(s), ref))
+        else:
+            print("  \033[1;31m✗\033[0m %s trỏ %s — KHÔNG ship (AP-1: user gọi skill sẽ lỗi)" % (os.path.basename(s), ref))
+            bad += 1
+if bad == 0:
+    print("  \033[1;32m✓\033[0m mọi tool .py mà skill-shipped tham chiếu đều có trong manifest")
+sys.exit(1 if bad else 0)
+PY
+if [ $? -eq 0 ]; then pass=$((pass+1)); else fail=$((fail+1)); fi
+
 hdr "B — FUNCTIONAL: dự án USER vừa cài → hook tự regen wiki-graph, tôn trọng scope"
 FX="$(mktemp -d)"; trap 'rm -rf "$FX"' EXIT
 mkdir -p "$FX/pkg" "$FX/tests" "$FX/llmwiki/wiki/concepts" "$FX/llmwiki/html" "$FX/.claude" "$FX/fdk/tools" "$FX/llmwiki/.claude"
