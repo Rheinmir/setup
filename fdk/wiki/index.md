@@ -60,6 +60,7 @@
 | [270626-wiki-sync-structure](sources/draft/archive/proposals/270626-wiki-sync-structure.md) | draft | 270626-wiki-sync-structure |
 | [280626-merge-docs-site-macos-dup](sources/draft/archive/proposals/280626-merge-docs-site-macos-dup.md) | draft | Hợp nhất 2 skill docs-site-macos trùng tên |
 | [ADR-016-no-ai-attribution-in-commits](sources/adr/ADR-016-no-ai-attribution-in-commits.md) | decision | ADR-016: Không ghi công AI trong commit (R15) |
+| [framework-dev-antipatterns](concepts/framework-dev-antipatterns.md) | concept | Framework-dev anti-patterns |
 <!-- index:auto:end -->
 | [harness-local](concepts/harness-local.md) | concept | harness-local — harness RIÊNG của dự án |
 | [ADR-011-project-local-harness](sources/adr/ADR-011-project-local-harness.md) | source | "ADR-011: project-local harness — dự án tự phát triển rule riêng (P-namespace, sandbox-safe)" |
