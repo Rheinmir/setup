@@ -99,5 +99,6 @@
 | [tour-basic](sources/evals/skill-resolve/tour-basic.md) | auto | skill-resolve golden: tour-basic |
 | [tour-supademo](sources/evals/skill-resolve/tour-supademo.md) | auto | skill-resolve golden: tour-supademo |
 | [040726-selftest-nested-commit-unguarded](sources/draft/040726-selftest-nested-commit-unguarded.md) | issue | Issue: Self-test harness chạy `git commit` lồng không tắt hook |
+| [050726-ship-selfindex-engine-downstream](sources/draft/050726-ship-selfindex-engine-downstream.md) | issue | Issue: Ship self-index engine (wiki-graph + retrieval) xuống downstream |
 | [050726-wikigraph-package-import-resolver](sources/draft/050726-wikigraph-package-import-resolver.md) | issue | Issue: resolver Python của wiki-graph chỉ khớp basename 1-segment |
 <!-- index:auto:end -->
