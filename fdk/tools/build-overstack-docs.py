@@ -495,6 +495,7 @@ def sections(root: Path):
         "<div class=\"b\"><div class=\"n\" style=\"color:#30b0c7\">3</div><div class=\"l\">nền tảng + Orca</div></div></div>",
         "<div class=\"grid\"><div class=\"card\"><h4>3 nền tảng + lớp điều phối</h4><ul class=\"s\">"
         "<li><b>Nền 1 · Wiki (tri thức)</b> — nơi dự án nhớ: concept, entity, nguồn, ADR, draft; mỗi trang truy được nguồn.</li>"
+        "<li><b>Wiki-graph (đồ thị tri thức + code)</b> — engine tất định (không RAG) tự dựng <code>wiki-graph.html</code>: node = trang wiki + file code, cạnh = quan hệ (wikilink, import code→code đa ngôn ngữ). Tự tươi cuối phiên khi wiki/code đổi. Nay <b>ship xuống downstream</b> (opt-in <code>OVERSTACK_WIKIGRAPH=1</code>, fail-open) nên dự án của bạn tự vẽ được đồ thị của chính nó, không chỉ repo framework.</li>"
         "<li><b>Nền 2 · Harness (rào chắn)</b> — luật tất định bằng code chặn agent làm bậy, không tốn token, không bypass được khi merge.</li>"
         "<li><b>Nền 3 · Skills (kỹ năng)</b> — quy trình đóng gói, gọi bằng <code>/tên</code>, cài global dùng mọi dự án.</li>"
         "<li><b>Orca (điều phối)</b> — KHÔNG phải nền tảng mà là LỚP chạy nhiều agent trên 3 nền đó: propose → gate → dispatch → verify. (Lưu ý: \"5 trụ runtime\" lại là khái niệm khác — đo lường &amp; gác LÚC CHẠY.)</li></ul></div>"
