@@ -26,6 +26,8 @@ jobs:
         run: bash harness/poc-vendor-neutral/demo.sh
       - name: test-broad.sh (54 assertion)
         run: bash harness/poc-vendor-neutral/test-broad.sh
+      - name: wiki-graph user-reachability (chặn AP-1 dev-only trap)
+        run: bash harness/tests/wiki-graph-user-reachability-test.sh .
 
   validate-content:
     name: validate file .md đổi (layer=repo)
