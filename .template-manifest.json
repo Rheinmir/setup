@@ -64,7 +64,17 @@
     "llmwiki/.claude/hooks/user_prompt_submit.py",
     "llmwiki/.claude/settings.json",
     "fdk/tools/build-wiki-graph.py",
-    "fdk/tools/code_imports.py"
+    "fdk/tools/code_imports.py",
+    "harness/scripts/mem-rank.py",
+    "harness/scripts/bnal_config.py",
+    "harness/mem-rank.config.yaml",
+    "fdk/tools/skill-usage.py",
+    "harness/scripts/health-check.py",
+    "harness/scripts/okf-check.py",
+    "harness/scripts/sync-template.py",
+    "harness/scripts/archetype.py",
+    "harness/scripts/query-log.py",
+    "harness/scripts/code-logger.py"
   ],
   "excludes": [
     ".env",
