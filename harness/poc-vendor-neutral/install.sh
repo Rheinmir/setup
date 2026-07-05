@@ -190,6 +190,52 @@ if [ "$WITH_WIKI" = 1 ]; then
         warn "  problem-tree template chưa tải được (mạng?) — hook R17 sẽ fail-open tới khi có sổ"
       fi
     fi
+    # GH#51: THỐNG NHẤT với sync-template — kéo file-list từ .template-manifest.json (nguồn chân lý)
+    # để bootstrap CŨNG ship engine wiki-graph + llmwiki hooks (trước đây chỉ sync-template có →
+    # engine không tới qua one-liner). Infra (fdk/tools, llmwiki/.claude) luôn refresh; còn lại chỉ
+    # kéo khi thiếu (không đè nội dung user). Rồi wire llmwiki hooks vào ROOT .claude/settings.json.
+    MANI="$(mktemp)"
+    if curl -fsSL "$REPO_RAW/.template-manifest.json" -o "$MANI" 2>/dev/null; then
+      while IFS= read -r f; do
+        [ -z "$f" ] && continue
+        case "$f" in
+          fdk/tools/*|llmwiki/.claude/*) : ;;              # infra: luôn refresh bản mới
+          *) [ -e "$ROOT/$f" ] && continue ;;              # còn lại: chỉ khi thiếu (idempotent, không đè)
+        esac
+        mkdir -p "$ROOT/$(dirname "$f")"
+        curl -fsSL "$REPO_RAW/$f" -o "$ROOT/$f" 2>/dev/null || true
+      done < <(python3 -c "import json;[print(x) for x in json.load(open('$MANI')).get('includes',[])]" 2>/dev/null)
+      rm -f "$MANI"
+      log "  ✓ engine wiki-graph + llmwiki hooks (kéo từ manifest — nguồn chân lý)"
+      # wire llmwiki hooks vào ROOT .claude/settings.json (Claude Code CHỈ đọc root này, không đọc
+      # llmwiki/.claude/settings.json) — dạng $CLAUDE_PROJECT_DIR/llmwiki/.claude/hooks/<ev>.py như
+      # framework repo. Idempotent (bỏ qua nếu đã có), fail-open (lỗi → không chặn install).
+      python3 - "$ROOT" <<'PYEOF' || warn "  wire llmwiki hooks vào root settings lỗi — thêm tay nếu cần"
+import json, os, sys
+root = sys.argv[1]
+sp = os.path.join(root, ".claude", "settings.json")
+try:
+    s = json.load(open(sp)) if os.path.isfile(sp) else {}
+except Exception:
+    s = {}
+hooks = s.setdefault("hooks", {})
+EV = {"UserPromptSubmit": "user_prompt_submit", "PreToolUse": "pre_tool_use",
+      "PostToolUse": "post_tool_use", "Stop": "stop",
+      "SessionEnd": "session_end", "SessionStart": "session_start"}
+added = 0
+for ev, fn in EV.items():
+    p = "$CLAUDE_PROJECT_DIR/llmwiki/.claude/hooks/%s.py" % fn
+    cmd = 'if [ -f "%s" ]; then python3 "%s"; fi' % (p, p)
+    arr = hooks.setdefault(ev, [])
+    if any(p in hk.get("command", "") for grp in arr for hk in grp.get("hooks", [])):
+        continue
+    arr.append({"hooks": [{"type": "command", "command": cmd}]})
+    added += 1
+os.makedirs(os.path.dirname(sp), exist_ok=True)
+json.dump(s, open(sp, "w"), indent=2, ensure_ascii=False)
+print("  wired %d llmwiki hook event(s) vào root settings" % added)
+PYEOF
+    fi
   fi
 fi
 

@@ -103,4 +103,5 @@
 | [050726-wikigraph-package-import-resolver](sources/draft/050726-wikigraph-package-import-resolver.md) | issue | Issue: resolver Python của wiki-graph chỉ khớp basename 1-segment |
 | [050726-wikigraph-dangling-wikilink](sources/draft/050726-wikigraph-dangling-wikilink.md) | issue | Issue: broken wikilink đẻ cạnh dangling trong graph data |
 | [050726-explicit-index-scope-yaml](sources/draft/050726-explicit-index-scope-yaml.md) | issue | Issue: khai báo scope index tường minh qua .overstack.yaml |
+| [050726-unify-install-manifest](sources/draft/050726-unify-install-manifest.md) | issue | Issue: thống nhất install path qua manifest |
 <!-- index:auto:end -->
