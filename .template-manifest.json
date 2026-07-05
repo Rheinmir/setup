@@ -62,7 +62,9 @@
     "llmwiki/.claude/hooks/session_start.py",
     "llmwiki/.claude/hooks/stop.py",
     "llmwiki/.claude/hooks/user_prompt_submit.py",
-    "llmwiki/.claude/settings.json"
+    "llmwiki/.claude/settings.json",
+    "fdk/tools/build-wiki-graph.py",
+    "fdk/tools/code_imports.py"
   ],
   "excludes": [
     ".env",
