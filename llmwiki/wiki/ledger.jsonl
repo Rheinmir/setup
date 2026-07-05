@@ -41,3 +41,4 @@
 {"ts": "2026-07-04T12:58:35", "session": "3fb3a505", "action": "modify", "target": "sources/ISSUES.md", "tool": "Edit"}
 {"ts": "2026-07-04T13:03:18", "session": "3fb3a505", "action": "modify", "target": "sources/draft/040726-selftest-nested-commit-unguarded.md", "tool": "Edit"}
 {"ts": "2026-07-05T20:17:34", "session": "62b41f4c", "action": "add", "target": "sources/draft/050726-ship-selfindex-engine-downstream.md", "tool": "Write"}
+{"ts": "2026-07-05T20:40:00", "session": "62b41f4c", "action": "add", "target": "sources/draft/050726-wikigraph-package-import-resolver.md", "tool": "Write"}
