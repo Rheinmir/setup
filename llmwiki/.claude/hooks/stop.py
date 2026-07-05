@@ -14,6 +14,32 @@ from hooklib import audit, code_log, find_validators, find_wiki_dir, project_dir
 _CODE_RE = re.compile(r"\.(py|js|jsx|ts|tsx|mjs|cjs|go|rs|java|rb|php|c|h|cpp|cc|sh)$", re.M)
 
 
+def _scope_config(root: str):
+    """GH#49: khai báo scope index TƯỜNG MINH qua .overstack.yaml tại root dự án — thay vì
+    ngầm-định code-root=repo-root. Parser tối giản (không thêm dep pyyaml), chỉ 2 khoá scalar:
+        wiki_dir: llmwiki/wiki        # wiki chính để dựng graph
+        code_root: src               # vùng code để index (relocate/thu hẹp được)
+    Fallback = hành vi cũ (llmwiki/wiki + '.') nếu thiếu file/khoá → KHÔNG hồi quy. Fail-open."""
+    wiki_dir, code_root = "llmwiki/wiki", "."
+    cfg = os.path.join(root, ".overstack.yaml")
+    if not os.path.isfile(cfg):
+        return wiki_dir, code_root
+    try:
+        for ln in open(cfg, encoding="utf-8"):
+            ln = ln.split("#", 1)[0].rstrip()
+            if ":" not in ln:
+                continue
+            k, v = ln.split(":", 1)
+            k, v = k.strip(), v.strip().strip("'\"")
+            if k == "wiki_dir" and v:
+                wiki_dir = v
+            elif k == "code_root" and v:
+                code_root = v
+    except Exception:
+        pass  # config hỏng → dùng mặc định, không chặn phiên
+    return wiki_dir, code_root
+
+
 def regen_docs(root: str) -> None:
     """Auto-fresh derived docs NGAY khi nguồn của chúng đổi, fail-open, gác bằng git-status nên
     không đụng = không tốn. Hai nhóm ĐỘC LẬP, phạm vi KHÁC nhau:
@@ -44,12 +70,13 @@ def regen_docs(root: str) -> None:
             for t in ("build-capabilities.py", "build-overstack-docs.py", "build-skill-search.py"):
                 subprocess.run([sys.executable, os.path.join(td, t)], capture_output=True, timeout=40)
         # (B) wiki-graph.html: nội dung wiki, engine, HOẶC file code đổi → dựng lại.
-        # --code-root=root: seed toàn repo làm node code + import-graph → graph phản ánh cả code dự án
-        # → gate bắt cả thay đổi code (_CODE_RE). cwd=root vì generator resolve output + --code-root
-        # theo cwd. --also fdk/wiki chỉ khi tồn tại (downstream không có fdk/wiki). Whole-repo ~2s/lần.
+        # GH#49: scope KHAI TƯỜNG MINH qua .overstack.yaml (wiki_dir + code_root) — relocate/thu hẹp
+        # vùng index, tách được mẹ/con; thiếu config → mặc định cũ (llmwiki/wiki + root). cwd=root vì
+        # generator resolve output + code_root theo cwd. --also fdk/wiki chỉ khi tồn tại.
         if wikigraph_on and (re.search(r"(wiki/|build-wiki-graph\.py)", st) or _CODE_RE.search(st)):
+            wiki_dir, code_root = _scope_config(root)
             also = ["--also", "fdk/wiki"] if os.path.isdir(os.path.join(root, "fdk", "wiki")) else []
-            subprocess.run([sys.executable, wg, "llmwiki/wiki", *also, "--code-root", root],
+            subprocess.run([sys.executable, wg, wiki_dir, *also, "--code-root", code_root],
                            cwd=root, capture_output=True, timeout=90)
     except Exception:
         pass
