@@ -108,6 +108,18 @@ if [ "${1:-}" = "--global" ]; then
   cp "$SRC/fdk/tools/build-capabilities.py" "$GH/hooks/build-capabilities.py"
   log "GLOBAL: hooks + validators + health-check + code-logger + build-capabilities → $GH/hooks/"
 
+  # GLOBAL-SHARED engine + tools (council-036 · travel-policy v2 tầng global_shared): mirror cấu trúc
+  # repo (fdk/tools, harness/scripts, harness/validators) để hooklib.resolve_tool + find_validators
+  # tìm được engine ở ~/.claude/harness/<rel>. Mọi project được gác dùng CHUNG — cài 1 lần, update 1 chỗ,
+  # KHÔNG copy vào từng repo. code_imports.py đi cùng build-wiki-graph.py (copy nguyên thư mục).
+  mkdir -p "$GH/fdk/tools" "$GH/harness/scripts" "$GH/harness/validators"
+  cp "$SRC/fdk/tools/"*.py         "$GH/fdk/tools/"        2>/dev/null || true
+  cp "$SRC/harness/scripts/"*.py   "$GH/harness/scripts/"  2>/dev/null || true
+  cp "$SRC/harness/validators/"*.py "$GH/harness/validators/" 2>/dev/null || true
+  cp "$SRC/harness/"*.yaml         "$GH/harness/"          2>/dev/null || true
+  cp "$SRC/harness/version.json"   "$GH/version.json"      2>/dev/null || true
+  log "GLOBAL-SHARED engine: fdk/tools + harness/scripts + validators + *.yaml + version.json → $GH/ (mọi project dùng chung)"
+
   SETTINGS="$HOME/.claude/settings.json"
   [ -f "$SETTINGS" ] && cp "$SETTINGS" "$SETTINGS.bak.$(date +%s)" || echo '{}' > "$SETTINGS"
   python3 - << 'PYEOF'
