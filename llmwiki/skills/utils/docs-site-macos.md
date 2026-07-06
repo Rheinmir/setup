@@ -802,14 +802,28 @@ Sinh trang bằng script? Giữ MỘT danh sách rule rồi emit 2 khối với 
 if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}})();</script>
 ```
 
-**3. Nút toggle** — chip glass cố định góc phải trên (`position:fixed;top:12px;right:12px`, đừng đè nút ☰ nav bên trái), icon ☀️/🌙 theo trạng thái hiện tại, có `aria-label` tiếng Việt, click = set `data-theme` + lưu `localStorage`:
-```js
-(function(){var K='<tên-trang>-theme',d=document.documentElement;
-function isDark(){var t=d.getAttribute('data-theme');return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches}
-var b=document.createElement('button');b.id='theme-toggle';b.className='theme-toggle';document.body.appendChild(b);
-function paint(){var dk=isDark();b.textContent=dk?'☀️':'🌙';b.setAttribute('aria-label',dk?'Chuyển sang giao diện sáng':'Chuyển sang giao diện tối')}
-b.onclick=function(){var n=isDark()?'light':'dark';d.setAttribute('data-theme',n);try{localStorage.setItem(K,n)}catch(e){}paint()};paint()})();
+**3. NÚT GẠT (switch), KHÔNG phải chip icon rải góc** (feedback lần 3: chip 2 góc "không giống ai") — hàng footer **dính đáy sidebar/nav**: nhãn "Giao diện" bên trái + switch bên phải, vách ngăn mảnh phía trên. Track pill 50×26 có ☀️/🌙 hai đầu, knob trượt; `role="switch"` + `aria-checked` + Enter/Space toggle:
+```css
+.theme-row{position:sticky;bottom:-<pad-nav>;margin-top:auto;display:flex;align-items:center;justify-content:space-between;
+  padding:11px 16px;border-top:1px solid rgba(30,90,170,.14);background:…glass…;backdrop-filter:blur(14px)}
+.theme-switch .track{position:relative;width:50px;height:26px;border-radius:999px;…}
+.theme-switch .track::before{content:'☀️';left:6px;…} .theme-switch .track::after{content:'🌙';right:6px;…}
+.theme-switch .knob{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .18s}
+.theme-switch.on .knob{left:26px} .theme-switch.on .track{background:…dark…}
 ```
+```js
+(function(){var K='<tên-trang>-theme',d=document.documentElement,nav=document.querySelector('nav');if(!nav)return;
+function isDark(){var t=d.getAttribute('data-theme');return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches}
+var sw=document.createElement('div');sw.className='theme-switch';sw.setAttribute('role','switch');sw.setAttribute('tabindex','0');
+sw.innerHTML='<span class="track"><span class="knob"></span></span>';
+var row=document.createElement('div');row.className='theme-row';
+var lb=document.createElement('span');lb.className='lbl';lb.textContent='Giao diện';row.appendChild(lb);row.appendChild(sw);nav.appendChild(row);
+function paint(){var dk=isDark();sw.classList.toggle('on',dk);sw.setAttribute('aria-checked',dk?'true':'false');
+  sw.setAttribute('aria-label',dk?'Nút gạt giao diện: đang tối — gạt sang sáng':'Nút gạt giao diện: đang sáng — gạt sang tối')}
+function flip(){var n=isDark()?'light':'dark';d.setAttribute('data-theme',n);try{localStorage.setItem(K,n)}catch(e){}paint()}
+sw.addEventListener('click',flip);sw.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();flip()}});paint()})();
+```
+Trang không có sidebar (landing một cột)? Đặt cùng hàng footer của trang, vẫn là NÚT GẠT có nhãn — tuyệt đối không quay lại chip icon trôi nổi ở góc.
 
 ## Accessibility & Document Head (REQUIRED)
 

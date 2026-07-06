@@ -270,9 +270,17 @@ a:focus-visible,button:focus-visible,nav a:focus-visible,.code-copy:focus-visibl
 nav a:active{transform:translateY(.5px)}
 .code-copy:active,.nav-toggle:active,.nav-close:active{transform:scale(.94)}
 
-/* theme-toggle chip (feedback 2026-07-06: user CHỌN sáng/tối, không ép theo hệ) */
-.theme-toggle{position:fixed;top:12px;right:12px;z-index:120;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;background:linear-gradient(165deg,rgba(255,255,255,.5),rgba(255,255,255,.24));backdrop-filter:blur(24px) saturate(1.7);-webkit-backdrop-filter:blur(24px) saturate(1.7);border:1px solid transparent;box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 0 0 1px rgba(30,90,170,.08),0 2px 10px rgba(30,90,170,.12)}
-.theme-toggle:active{transform:scale(.94)}"""
+/* theme-switch — NÚT GẠT sáng/tối, hàng footer dính ĐÁY sidebar (feedback 2026-07-06: đừng rải 2 góc, đừng chen dưới logo) */
+.theme-row{position:sticky;bottom:-18px;margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:8px;margin-left:-12px;margin-right:-12px;margin-bottom:-18px;padding:11px 16px;border-top:1px solid rgba(30,90,170,.14);background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(240,248,255,.65));backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4)}
+.theme-row .lbl{font-size:11px;font-weight:600;letter-spacing:.02em;color:var(--t2)}
+.theme-switch{display:inline-flex;align-items:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.theme-switch .track{position:relative;width:50px;height:26px;border-radius:999px;background:linear-gradient(165deg,rgba(255,255,255,.6),rgba(255,255,255,.3));border:1px solid rgba(30,90,170,.2);box-shadow:inset 0 1px 3px rgba(30,90,170,.14);transition:background .2s,border-color .2s}
+.theme-switch .track::before{content:'☀️';position:absolute;left:6px;top:50%;transform:translateY(-50%);font-size:11px}
+.theme-switch .track::after{content:'🌙';position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:11px}
+.theme-switch .knob{position:absolute;z-index:1;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(20,40,90,.3);transition:left .18s ease}
+.theme-switch.on .knob{left:26px}
+.theme-switch.on .track{background:linear-gradient(165deg,#2b3040,#191d27);border-color:rgba(120,160,220,.3)}
+.theme-switch:active .knob{transform:scale(.92)}"""
 
 # ── Dark mode (issue #14) + toggle sáng/tối (feedback 2026-07-06) ──────────────
 # MỘT nguồn _DARK_RULES sinh RA HAI khối CSS (chống drift giữa 2 bản):
@@ -292,7 +300,7 @@ _DARK_RULES = [
     ("& table th", "background:rgba(255,255,255,.04)"),
     ("& .card,& .note,& .kpi .b,& .mm .node,& .diagram-box", "background:var(--glass2)"),
     ("& a", "color:#5fa8ff"),
-    ("& .theme-toggle", "background:rgba(30,34,44,.8);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 2px 10px rgba(0,0,0,.4)"),
+    ("& .theme-row", "border-top-color:var(--border);background:linear-gradient(180deg,rgba(24,28,38,.7),rgba(16,20,28,.85))"),
 ]
 
 
@@ -306,7 +314,13 @@ def _theme_css() -> str:
 CSS_BASE += _theme_css()
 
 JS = r"""
-(function(){var K='overstack-theme',d=document.documentElement;function isDark(){var t=d.getAttribute('data-theme');return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches}function paint(){var b=document.getElementById('theme-toggle');if(!b)return;var dk=isDark();b.textContent=dk?'☀️':'🌙';b.setAttribute('aria-label',dk?'Chuyển sang giao diện sáng':'Chuyển sang giao diện tối');b.title=b.getAttribute('aria-label')}var b=document.createElement('button');b.id='theme-toggle';b.className='theme-toggle';b.dataset.noRipple='1';document.body.appendChild(b);paint();b.onclick=function(){var next=isDark()?'light':'dark';d.setAttribute('data-theme',next);try{localStorage.setItem(K,next)}catch(e){}paint()};try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',paint)}catch(e){}})();
+(function(){var K='overstack-theme',d=document.documentElement,nav=document.querySelector('nav');if(!nav)return;function isDark(){var t=d.getAttribute('data-theme');return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches}
+var sw=document.createElement('div');sw.className='theme-switch';sw.id='theme-toggle';sw.dataset.noRipple='1';sw.setAttribute('role','switch');sw.setAttribute('tabindex','0');sw.innerHTML='<span class="track"><span class="knob"></span></span>';
+var row=document.createElement('div');row.className='theme-row';var lb=document.createElement('span');lb.className='lbl';lb.textContent='Giao diện';row.appendChild(lb);row.appendChild(sw);nav.appendChild(row);
+function paint(){var dk=isDark();sw.classList.toggle('on',dk);sw.setAttribute('aria-checked',dk?'true':'false');sw.setAttribute('aria-label',dk?'Nút gạt giao diện: đang tối — gạt sang sáng':'Nút gạt giao diện: đang sáng — gạt sang tối');sw.title=sw.getAttribute('aria-label')}
+function flip(){var next=isDark()?'light':'dark';d.setAttribute('data-theme',next);try{localStorage.setItem(K,next)}catch(e){}paint()}
+sw.addEventListener('click',flip);sw.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '||e.key==='Spacebar'){e.preventDefault();flip()}});
+try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',paint)}catch(e){}paint()})();
 (function(){const n=document.querySelector('nav');if(!n)return;const o=document.createElement('button');o.className='nav-toggle';o.textContent='☰';o.setAttribute('aria-label','Mở menu điều hướng');document.body.appendChild(o);const c=document.createElement('button');c.className='nav-close';c.textContent='✕';c.setAttribute('aria-label','Đóng menu điều hướng');n.appendChild(c);o.onclick=function(){document.body.classList.remove('nav-collapsed')};c.onclick=function(){document.body.classList.add('nav-collapsed')};if(matchMedia('(max-width:640px)').matches)document.body.classList.add('nav-collapsed')})();
 (function(){var ls=[].slice.call(document.querySelectorAll('nav a')),ss=[].slice.call(document.querySelectorAll('section[id]'));var ob=new IntersectionObserver(function(es){var a='';es.forEach(function(e){if(e.isIntersecting)a=e.target.id});if(a)ls.forEach(function(l){l.classList.toggle('active',l.getAttribute('href')==='#'+a)})},{rootMargin:'-40% 0px -55% 0px'});ss.forEach(function(s){ob.observe(s)})})();
 (function(){var t;addEventListener('scroll',function(){document.documentElement.classList.add('scrolling');clearTimeout(t);t=setTimeout(function(){document.documentElement.classList.remove('scrolling')},900)},{passive:true})})();
