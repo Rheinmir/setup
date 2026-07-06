@@ -18,8 +18,13 @@ mọi project nên có sẵn. Council-036 chốt: đặt engine 1 bản ở glob
 ## Quyết định
 **Engine = GLOBAL-SHARED; chỉ DỮ LIỆU travel theo repo.** (khung 3 tầng — xem `harness/travel-policy.yaml` v2)
 1. **`~/.claude/harness/`** (cài 1 lần qua `install-harness --global`, bootstrap tự gọi nếu thiếu): hooks +
-   validators + `fdk/tools/*` + `harness/scripts/*` + `*.yaml` + `version.json`, **mirror cấu trúc repo**.
+   ENGINE (`fdk/tools/*`, `harness/scripts/*`) + `*.yaml` + `version.json`, **mirror cấu trúc repo**.
    Mọi project được gác dùng CHUNG; update 1 chỗ, mọi project hưởng.
+   **ĐÍNH CHÍNH (test 2026-07-06):** RÀO CHẮN CI/pre-commit (`harness/poc-vendor-neutral/`, `harness/validators/`,
+   `.github/workflows`, `.pre-commit-config.yaml`) **KHÔNG global** — chúng travel-in-repo (tầng 2). Lý do: GitHub-CI
+   runner checkout repo (không có `~/.claude`); pre-commit chạy máy team (commit vào repo mới bảo vệ team). Bản đầu
+   ADR này gộp `validators` vào global là SAI. `install-harness --global` copy validators xuống global CHỈ để hooks
+   runtime fallback (find_validators), KHÔNG thay vai trò travel-in-repo cho CI/pre-commit.
 2. **Repo (travel theo git)**: CHỈ `llmwiki/` (wiki-data, nguồn chân lý) + `.overstack.yaml` + `.harness-stamp`
    `{guarded_by: vX}` + hooks-wiring. Engine KHÔNG copy vào repo.
 3. **Resolution** `hooklib.resolve_tool(root, rel)`: REPO-LOCAL (`root/rel`) → GLOBAL (`~/.claude/harness/rel`).
@@ -35,9 +40,13 @@ mọi project nên có sẵn. Council-036 chốt: đặt engine 1 bản ở glob
 - ⚠️ Version-skew: máy có global vY, repo stamp vX → `session_start` phải cảnh báo lệch major (stamp = hợp đồng,
   không tự ép chuẩn mới lên repo cũ — Taleb blast-radius).
 
-## Kiểm chứng (test cô lập, HOME giả)
-`install-harness --global` vào HOME giả → 5 repo tối giản **KHÔNG chứa engine** vẫn vẽ được `wiki-graph.html`
-qua engine global (5/5). Fail-open: xoá engine global → `regen_docs` không crash. Node code (`src/a.py`) đúng.
+## Kiểm chứng (test airtight trên 5 repo THẬT, 2026-07-06)
+- **Tầng 1 engine → global (5 repo Orca thật, xoá HẲN engine local):** POSITIVE 5/5 (vẽ được qua global) ·
+  NEGATIVE-CONTROL 5/5 (xoá engine global → KHÔNG vẽ → chứng minh gọi từ global, không ẩn local) · RESTORE 5/5.
+  Global cô lập qua `OVERSTACK_HARNESS_HOME` (không đụng `~/.claude` thật). Giới hạn: chưa test chuỗi
+  settings.json→hook-fire live-session (chạy `regen_docs` qua sys.path).
+- **Tầng 2 poc → travel-in-repo:** poc local (`harness/poc-vendor-neutral/bin/llmwiki-validate.py` TRONG repo)
+  chặn vi phạm R2 (thiếu `## Origin`) exit 1; file hợp lệ exit 0 → rào chắn hoạt động từ repo, CI/pre-commit đọc được.
 
 ## Origin
 - Chốt bởi council-036 (`llmwiki/html/council/council-report-036-seed42.html`) + phản biện user 2026-07-06.

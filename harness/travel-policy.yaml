@@ -12,14 +12,15 @@
 #   travel_in_repo : đi theo git — DỮ LIỆU riêng dự án, phải sống sót clone.
 #   framework_only : CHỈ chạy ở repo framework (dev/maintain the-kit) — không global, không travel.
 
-version: 2
+version: 3   # v3: tách rào-chắn CI/pre-commit (poc + validators) khỏi global_shared → travel-in-repo
+             # (test 2026-07-06 lộ: harness/poc-vendor-neutral PHẢI ở repo cho CI+pre-commit; đính chính v2).
 
-# ── TẦNG 1 · GLOBAL-SHARED — năng lực nền, ~/.claude/harness/, mọi project dùng chung ──
-# Cài qua install-harness --global (bootstrap tự gọi nếu thiếu). Resolution: hook tìm global-first.
+# ── TẦNG 1 · GLOBAL-SHARED — ENGINE agent DÙNG lúc chạy, ~/.claude/harness/, mọi project dùng chung ──
+# Cài qua install-harness --global (bootstrap tự gọi nếu thiếu). Resolution: hooklib.resolve_tool global-first.
+# CHỈ engine llmwiki (build/query/memory) + hooks. KHÔNG gồm rào-chắn CI/pre-commit (xem tầng 2).
 global_shared:
   engine_core:
     - "llmwiki/.claude/hooks/*.py — 8 hook (stop/pre-post_tool_use/session_*/user_prompt_submit)"
-    - "harness/validators/*.py — 14 validator ép R1-R17"
     - "harness/scripts/bnal_config.py + bnal_guard.py + bnal_metrics.py — dep chung"
   memory_query:
     - "harness/scripts/mem-rank.py + mem-rank.config.yaml — episodic retrieval"
@@ -43,8 +44,13 @@ global_shared:
     - "fdk/tools/build-skill-search.py + skill-usage.py + docs-curate.py + artifacts.py"
     - "harness/scripts/web-clone.py + web-crawl.py"
 
-# ── TẦNG 2 · TRAVEL-IN-REPO — dữ liệu riêng dự án, đi theo git, sống sót clone ──
+# ── TẦNG 2 · TRAVEL-IN-REPO — RÀO-CHẮN CI/pre-commit + dữ liệu riêng, đi theo git, sống sót clone ──
+# BẮT BUỘC ở repo (KHÔNG global): CI chạy trên GitHub-runner (không có ~/.claude); pre-commit chạy máy team
+# (commit vào repo mới bảo vệ cả team). Test 2026-07-06: poc local chặn R2 đúng (exit 1), chạy từ file TRONG repo.
 travel_in_repo:
+  - "harness/poc-vendor-neutral/** — RÀO CHẮN R1-R17 (bin/llmwiki-validate.py, policy.yaml, gen-converters) → CI + pre-commit"
+  - "harness/validators/*.py — 14 validator ép R1-R17 (CI/pre-commit dùng; hooks runtime cũng fallback global qua find_validators)"
+  - ".github/workflows/harness.yml + .pre-commit-config.yaml — wiring rào chắn"
   - "llmwiki/wiki/** — tri thức (nguồn chân lý): semantic + episodic-source"
   - "llmwiki/wiki/ledger.jsonl + llmwiki/.claude/settings.json (wiring)"
   - ".overstack.yaml — scope config (GH#49)"
