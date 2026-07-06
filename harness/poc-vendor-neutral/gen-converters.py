@@ -130,9 +130,16 @@ alwaysApply: true
           f"> Kiro steering hay bị bỏ qua → NHẮC thôi. Đảm bảo thật ở CI.\n")
 
     # ---- 5. SÀN: CI (gọi CLI files mode = layer repo) ----
+    # v4 (GH#63 Phase 3): repo downstream KHÔNG mang engine — runner TỰ CÀI harness global
+    # (install-harness --global từ clone pin theo HARNESS_REF) rồi validate từ ~/.claude/harness/
+    # (giải U8 version-skew: đổi HARNESS_REF sang tag/commit để pin cứng). Đây là SÀN đảm bảo —
+    # không fail-open: clone/cài lỗi thì CI đỏ đúng nghĩa (mất sàn phải thấy được).
     ci = f"""# {GEN.lstrip('# ')}
 name: harness
 on: [pull_request, push]
+env:
+  HARNESS_REPO: https://github.com/Rheinmir/setup.git
+  HARNESS_REF: orca            # pin phiên bản harness: nhánh / tag / commit SHA
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -142,12 +149,16 @@ jobs:
       - uses: actions/setup-python@v5
         with: {{ python-version: '3.x' }}
       - run: pip install pyyaml
-      - name: harness validator (layer=repo) trên file .md đổi
+      - name: self-install harness global trên runner (v4 — repo không mang engine)
+        run: |
+          git clone --depth 1 -b "$HARNESS_REF" "$HARNESS_REPO" "$RUNNER_TEMP/harness-src"
+          bash "$RUNNER_TEMP/harness-src/harness/scripts/install-harness.sh" --global
+      - name: harness validator (layer=repo, từ global) trên file .md đổi
         run: |
           base="${{{{ github.event.pull_request.base.sha || github.event.before }}}}"
           files=$(git diff --name-only "$base" HEAD 2>/dev/null | grep -E '\\.md$' || true)
           [ -z "$files" ] && {{ echo "no changed .md"; exit 0; }}
-          python3 {CLI} files $files
+          python3 "$HOME/.claude/harness/{CLI}" files $files
 """
     write("ci/harness.yml", ci)
 

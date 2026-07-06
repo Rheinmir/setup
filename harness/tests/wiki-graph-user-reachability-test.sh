@@ -52,6 +52,13 @@ grep -q 'rm -rf "\$ROOT/\${d:?}"' "$IS" 2>/dev/null \
 grep -q 'fdk/wiki' "$IS" 2>/dev/null \
   && ok "gỡ engine có guard fdk/wiki (không bao giờ dọn repo framework)" \
   || bad "thiếu guard repo framework" "chạy nhầm trong repo framework sẽ xóa engine nguồn"
+GC="harness/poc-vendor-neutral/gen-converters.py"
+grep -q 'install-harness.sh" --global' "$GC" 2>/dev/null \
+  && ok "CI downstream template: runner TỰ CÀI harness global (Phase 3, pin HARNESS_REF — U8)" \
+  || bad "CI template không self-install global" "repo v4 sạch không có engine → CI downstream mất sàn"
+grep -q '\$HOME/.claude/harness/{CLI}' "$GC" 2>/dev/null \
+  && ok "CI downstream template: validate chạy từ ~/.claude/harness (không cần engine in-repo)" \
+  || bad "CI template còn gọi CLI in-repo" "repo v4 sạch sẽ đỏ CI vì thiếu harness/poc-vendor-neutral"
 
 hdr "C — SKILL→TOOL reachability (GH#54): skill-shipped trỏ .py nào thì .py đó phải ship"
 # Bẫy AP-1 lớp 2: skill SHIP xuống user (llmwiki/skills/**) hướng dẫn chạy harness/scripts/X.py
