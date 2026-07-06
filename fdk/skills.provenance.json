@@ -115,9 +115,9 @@
     },
     "docs-site-macos": {
       "files": {
-        "SKILL.md": "de6e38c1701a0d8f22468ed4a260e271e46f352db7daccd3b0523df3916c2519"
+        "SKILL.md": "9ed929b5a2a43d5c11d064255a59cf3e2056164c0bb8c0f403b26b7a06bff282"
       },
-      "recorded": "2026-07-04",
+      "recorded": "2026-07-06",
       "source": "local-authored"
     },
     "extract-site": {
@@ -140,9 +140,9 @@
     },
     "fdk": {
       "files": {
-        "SKILL.md": "86eeec99cffe99c9302d12e26ea51ea86059810f9f43cb7d65abdb5f88b5fe18"
+        "SKILL.md": "d5901e35b4adacd02eafee8c33c463c2be9328585636577c12cd99ff81673864"
       },
-      "recorded": "2026-07-04",
+      "recorded": "2026-07-06",
       "source": "local-authored"
     },
     "find-skills": {

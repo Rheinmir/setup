@@ -19,24 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-03 22:22:04 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=ebbf4b4b · actor=agent · prev=47d6784db2c3952c04acb390e2e1995461c3c |
-| 2026-07-03 22:22:13 | `file.write` | llmwiki/wiki/sources/draft/030726-overstack-html-audit.md · tool=Write · session=3f2abe13 · actor=agent · prev=3c74b2afa |
-| 2026-07-03 22:22:31 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=3f2abe13 · actor=agent · prev=f193869be98b83cd182b2dde47c2f300354eb |
-| 2026-07-03 22:23:07 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=3f2abe13 · actor=agent · prev=4decfeed29c0a7f4f5be746941949648a2320 |
-| 2026-07-03 22:23:53 | `file.write` | llmwiki/wiki/sources/draft/030726-memory-episodic-vector.md · tool=Edit · session=ebbf4b4b · actor=agent · prev=67df30b4 |
-| 2026-07-03 22:24:01 | `file.write` | llmwiki/wiki/sources/draft/030726-self-evolving-skills.md · tool=Edit · session=ebbf4b4b · actor=agent · prev=716d22af07 |
-| 2026-07-03 22:24:09 | `file.write` | llmwiki/wiki/sources/draft/030726-observability-runtime.md · tool=Edit · session=ebbf4b4b · actor=agent · prev=b1a28e09f |
-| 2026-07-03 22:24:18 | `file.write` | llmwiki/wiki/sources/draft/030726-orchestration-scale.md · tool=Edit · session=ebbf4b4b · actor=agent · prev=b72d391b9d3 |
-| 2026-07-03 22:24:27 | `file.write` | llmwiki/wiki/sources/draft/030726-skill-resolve-supplychain.md · tool=Edit · session=ebbf4b4b · actor=agent · prev=c2003 |
-| 2026-07-03 23:07:10 | `file.write` | llmwiki/wiki/sources/draft/030726-ralph-br-frame-production-line.md · tool=Write · session=ebbf4b4b · actor=agent · prev |
-| 2026-07-03 23:07:45 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=ebbf4b4b · actor=agent · prev=c32871b0477153fcb6f80a68df5874fc66820 |
-| 2026-07-03 23:08:51 | `file.write` | skills/frontier-scan/SKILL.md · tool=Write · session=ebbf4b4b · actor=agent · prev=a55e5d7bba17617e67ecb74e81cab59646c0a |
-| 2026-07-03 23:34:20 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=3f2abe13 · actor=agent · prev=9299ccb5e3f03759e152f211684ae945562d7fcc9904f8 |
-| 2026-07-03 23:35:50 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=3f2abe13 · actor=agent · prev=c97a7af6ac4eb83de950e2754f5228209d4dfb53a28f2c |
-| 2026-07-03 23:51:39 | `file.write` | llmwiki/wiki/sources/draft/030726-retrieval-eval-baseline-rot.md · tool=Write · session=ebbf4b4b · actor=agent · prev=e6 |
-| 2026-07-04 13:05:57 | `file.write` | llmwiki/html/overstack-vs-world-30d.html · tool=Edit · session=2540a8eb · actor=agent · prev=bd9919721ef09e48fab77d0ccab |
-| 2026-07-04 13:06:11 | `file.write` | llmwiki/html/overstack-vs-world-30d.html · tool=Edit · session=2540a8eb · actor=agent · prev=16ab4bb0116ed3a8643dd0ca199 |
-| 2026-07-05 00:26:25 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=6d935094 · actor=agent · prev=720cfb5a970401fb917d12d9a20f4e3504 |
 | 2026-07-05 00:26:33 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=6d935094 · actor=agent · prev=88c93c42340ca03b0d22821c9d308c86df |
 | 2026-07-05 08:31:38 | `file.write` | llmwiki/wiki/sources/draft/050726-map-not-territory-fable5-unknowns.md · tool=Write · session=2e819614 · actor=agent · p |
 | 2026-07-05 08:31:45 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=2e819614 · actor=agent · prev=04009b17e8ce54b2b8a5a8211bf092a1e23f2 |
@@ -59,6 +41,24 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-06 14:21:43 | `file.write` | harness/travel-policy.yaml · tool=Edit · session=49ec06f0 · actor=agent · prev=9f8555bbcef971c97ab6308b301c66f83320d5b68 |
 | 2026-07-06 14:21:53 | `file.write` | harness/travel-policy.yaml · tool=Edit · session=49ec06f0 · actor=agent · prev=680892dd6875a35b2b4e2c341dd7415f129f2002a |
 | 2026-07-06 14:22:08 | `file.write` | harness/travel-policy.yaml · tool=Edit · session=49ec06f0 · actor=agent · prev=b4f915b3e74efbf97034ac3da93cc72a48e9e9bf3 |
+| 2026-07-06 22:03:53 | `file.write` | harness/scripts/wiki-sync.py · tool=Write · session=ba6458f2 · actor=agent · prev=d31ef112069ef8fe3866ad262a53545262808d |
+| 2026-07-06 22:04:16 | `file.write` | harness/tests/wiki-sync-test.sh · tool=Write · session=ba6458f2 · actor=agent · prev=419036bd597c18b225f72513fb057ae456f |
+| 2026-07-06 22:04:58 | `file.write` | harness/scripts/wiki-sync.py · tool=Edit · session=ba6458f2 · actor=agent · prev=8d16b01d40773a85f9fe491ec307e5c73b81e34 |
+| 2026-07-06 22:04:59 | `file.write` | harness/scripts/wiki-sync.py · tool=Edit · session=ba6458f2 · actor=agent · prev=ff6a04b48b713568d6535ad4e935243fb4c2b99 |
+| 2026-07-06 22:05:01 | `file.write` | harness/scripts/wiki-sync.py · tool=Edit · session=ba6458f2 · actor=agent · prev=5488d16531602e9e5e0b1ec96956ce31e4909a8 |
+| 2026-07-06 22:05:54 | `file.write` | harness/scripts/wiki-sync.py · tool=Edit · session=ba6458f2 · actor=agent · prev=0f3df853572e491d12103efc4f98bf13280bda7 |
+| 2026-07-06 22:05:57 | `file.write` | harness/scripts/wiki-sync.py · tool=Edit · session=ba6458f2 · actor=agent · prev=a5fb25f4d3ec0cfad26854f96a8a01de9dd9c2f |
+| 2026-07-06 22:06:22 | `file.write` | harness/tests/wiki-sync-test.sh · tool=Edit · session=ba6458f2 · actor=agent · prev=4d41bebf7a22c7eb8a9ee8133ebdc787f221 |
+| 2026-07-06 22:06:24 | `file.write` | harness/tests/wiki-sync-test.sh · tool=Edit · session=ba6458f2 · actor=agent · prev=4bf23a5d1a5d16c7d34fe58a651138c8d3d4 |
+| 2026-07-06 22:06:42 | `file.write` | llmwiki/.claude/hooks/session_start.py · tool=Edit · session=ba6458f2 · actor=agent · prev=048bd538e6b76ed702f30e4cd11ef |
+| 2026-07-06 22:06:45 | `file.write` | llmwiki/.claude/hooks/session_start.py · tool=Edit · session=ba6458f2 · actor=agent · prev=c4a82b56616b4e08a31c181114dc3 |
+| 2026-07-06 22:08:01 | `file.write` | skills/lint/SKILL.md · tool=Edit · session=ba6458f2 · actor=agent · prev=ab208a5aae6e04b13e6d108b2fe7c08b85eb7a23a37ba72 |
+| 2026-07-06 22:08:11 | `file.write` | skills/lint/SKILL.md · tool=Edit · session=ba6458f2 · actor=agent · prev=9d90a3072f5a813856a244b2c0c76db947459fbfe6c15e9 |
+| 2026-07-06 22:08:27 | `file.write` | skills/ingest/SKILL.md · tool=Edit · session=ba6458f2 · actor=agent · prev=c7f1fc4ca650ab91e1f5305043597d6b6bf196b6e88bc |
+| 2026-07-06 22:08:32 | `file.write` | skills/ingest/SKILL.md · tool=Edit · session=ba6458f2 · actor=agent · prev=f4e01e32a34fbef259c2fb1abde28bbed0fe85c40189d |
+| 2026-07-06 22:09:40 | `file.write` | harness/poc-vendor-neutral/gen-converters.py · tool=Edit · session=ba6458f2 · actor=agent · prev=2de7ea106f2a147df103eaa |
+| 2026-07-06 22:11:24 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=ba6458f2 · actor=agent · prev=25de675fa8550d1a509ab964f5bbfa09fa |
+| 2026-07-06 22:13:29 | `file.write` | llmwiki/wiki/sources/draft/060726-wiki-sync-openwiki-distill.md · tool=Write · session=ba6458f2 · actor=agent · prev=453 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -232,3 +232,9 @@ Giải issue `030726-skill-resolve-supplychain` (trục #5 frontier-gap-scan, Ch
 - gen-converters sinh ci/wiki-refresh.yml (cron→PR, degrade tử tế khi không key); wiki-sync.py vào template-manifest.
 - overstack.html mục Wiki viết lại đầy đủ + đối chiếu thẳng thắn openwiki (kèm giới hạn). Problem-tree p-22 (solved 3/3 trụ).
 - Draft: sources/draft/060726-wiki-sync-openwiki-distill.md. Điều kiện ship: test 5 project qua orca-cli trước commit.
+
+## 2026-07-06 — fdk — theme toggle sáng/tối cho HTML (feedback nhắc lần 2)
+
+- build-overstack-docs.py: _DARK_RULES một-nguồn emit 2 khối (@media guard :not([data-theme=light]) + [data-theme=dark]), chip toggle ☀️/🌙 góc phải + localStorage + script chống FOUC trong head; regen overstack.html, verify click thật trên Safari (dark→light OK).
+- Mã hoá thành LUẬT: docs-site-macos § "Theme Toggle sáng/tối (REQUIRED)" (snippet chuẩn 3 mảnh), /fdk § Rules (HTML cho người xem phải có toggle). Sync canonical+mirror+bản cài; provenance re-record.
+- Memory feedback html-theme-toggle-required (user nhắc 2 lần — không tái phạm).

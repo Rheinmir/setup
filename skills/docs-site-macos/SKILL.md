@@ -779,6 +779,38 @@ pre.code-block,.foot-tree{font-family:var(--font-mono)}
 - Roboto/Segoe UI là fallback hệ (Android/Linux/Windows có sẵn) — KHÔNG tải webfont để giữ self-contained.
 - Mono luôn đi qua `ui-monospace` trước Menlo để bắt SF Mono trên macOS mới.
 
+## Theme Toggle sáng/tối (REQUIRED — feedback user 2026-07-06, KHÔNG được ép một mode)
+
+Mọi trang sinh ra phải cho user TỰ CHỌN sáng/tối bằng một nút toggle — `prefers-color-scheme` chỉ là **mặc định ban đầu**, không phải quyết định cuối. Ép cứng dark (hoặc light) là vi phạm. Ba mảnh bắt buộc, không mảnh nào được thiếu:
+
+**1. CSS — dark là override theo token, viết MỘT lần dùng cho cả 2 ngả** (theo-hệ *khi user chưa chọn light*, và user-chọn-dark tường minh; light = base CSS nên không cần khối riêng):
+```css
+/* mặc định theo hệ — chỉ khi user CHƯA chọn light */
+@media (prefers-color-scheme: dark){
+  html:not([data-theme=light]){ --glass2:…; --border:…; --t1:…; --t2:…; background:#0c0f16 }
+  html:not([data-theme=light]) body{ … } /* prefix từng selector */
+}
+/* user bấm toggle chọn dark tường minh */
+html[data-theme=dark]{ /* CÙNG token như trên */ }
+html[data-theme=dark] body{ … }
+```
+Sinh trang bằng script? Giữ MỘT danh sách rule rồi emit 2 khối với 2 prefix (xem `_DARK_RULES` trong `fdk/tools/build-overstack-docs.py`) — chép tay 2 bản là mầm drift.
+
+**2. `<head>` — chống FOUC** (áp lựa chọn đã lưu TRƯỚC khi CSS render):
+```html
+<script>(function(){try{var t=localStorage.getItem("<tên-trang>-theme");
+if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}})();</script>
+```
+
+**3. Nút toggle** — chip glass cố định góc phải trên (`position:fixed;top:12px;right:12px`, đừng đè nút ☰ nav bên trái), icon ☀️/🌙 theo trạng thái hiện tại, có `aria-label` tiếng Việt, click = set `data-theme` + lưu `localStorage`:
+```js
+(function(){var K='<tên-trang>-theme',d=document.documentElement;
+function isDark(){var t=d.getAttribute('data-theme');return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches}
+var b=document.createElement('button');b.id='theme-toggle';b.className='theme-toggle';document.body.appendChild(b);
+function paint(){var dk=isDark();b.textContent=dk?'☀️':'🌙';b.setAttribute('aria-label',dk?'Chuyển sang giao diện sáng':'Chuyển sang giao diện tối')}
+b.onclick=function(){var n=isDark()?'light':'dark';d.setAttribute('data-theme',n);try{localStorage.setItem(K,n)}catch(e){}paint()};paint()})();
+```
+
 ## Accessibility & Document Head (REQUIRED)
 
 These are easy to forget and break silently — wire all of them on every page.

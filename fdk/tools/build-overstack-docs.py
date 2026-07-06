@@ -270,21 +270,43 @@ a:focus-visible,button:focus-visible,nav a:focus-visible,.code-copy:focus-visibl
 nav a:active{transform:translateY(.5px)}
 .code-copy:active,.nav-toggle:active,.nav-close:active{transform:scale(.94)}
 
-/* ── Dark mode (issue #14) — theo prefers-color-scheme; token-hoá + override surface hardcoded ── */
-@media (prefers-color-scheme: dark){
-  :root{--glass2:rgba(30,34,44,.72);--glass3:rgba(36,40,52,.9);
-    --edge:inset 0 1px 0 rgba(255,255,255,.06);--border:rgba(120,160,220,.18);--t1:#e7e9ee;--t2:#9aa2b1;}
-  html{background:#0c0f16;scrollbar-color:transparent transparent}
-  body{color:var(--t1);background:radial-gradient(900px 500px at 12% -10%,rgba(10,132,255,.14),transparent 60%),radial-gradient(700px 420px at 95% 12%,rgba(88,86,214,.12),transparent 55%),linear-gradient(180deg,#0d1017,#0a0d13)}
-  h1,h2,h3,h4{color:#f2f4f8}
-  nav{background:rgba(18,21,28,.82)}
-  table th,table td{border-color:var(--border)}
-  table th{background:rgba(255,255,255,.04)}
-  .card,.note,.kpi .b,.mm .node,.diagram-box{background:var(--glass2)}
-  a{color:#5fa8ff}
-}"""
+/* theme-toggle chip (feedback 2026-07-06: user CHỌN sáng/tối, không ép theo hệ) */
+.theme-toggle{position:fixed;top:12px;right:12px;z-index:120;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;background:linear-gradient(165deg,rgba(255,255,255,.5),rgba(255,255,255,.24));backdrop-filter:blur(24px) saturate(1.7);-webkit-backdrop-filter:blur(24px) saturate(1.7);border:1px solid transparent;box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 0 0 1px rgba(30,90,170,.08),0 2px 10px rgba(30,90,170,.12)}
+.theme-toggle:active{transform:scale(.94)}"""
+
+# ── Dark mode (issue #14) + toggle sáng/tối (feedback 2026-07-06) ──────────────
+# MỘT nguồn _DARK_RULES sinh RA HAI khối CSS (chống drift giữa 2 bản):
+#   (a) @media prefers-color-scheme — mặc định theo hệ, CHỈ khi user chưa chọn light
+#   (b) html[data-theme=dark]      — user bấm toggle chọn dark tường minh (localStorage)
+# Selector dùng "&" làm placeholder cho <html>; light = base CSS nên không cần khối riêng.
+_DARK_RULES = [
+    ("&", "--glass2:rgba(30,34,44,.72);--glass3:rgba(36,40,52,.9);"
+          "--edge:inset 0 1px 0 rgba(255,255,255,.06);--border:rgba(120,160,220,.18);"
+          "--t1:#e7e9ee;--t2:#9aa2b1;background:#0c0f16;scrollbar-color:transparent transparent"),
+    ("& body", "color:var(--t1);background:radial-gradient(900px 500px at 12% -10%,rgba(10,132,255,.14),transparent 60%),"
+               "radial-gradient(700px 420px at 95% 12%,rgba(88,86,214,.12),transparent 55%),"
+               "linear-gradient(180deg,#0d1017,#0a0d13)"),
+    ("& h1,& h2,& h3,& h4", "color:#f2f4f8"),
+    ("& nav", "background:rgba(18,21,28,.82)"),
+    ("& table th,& table td", "border-color:var(--border)"),
+    ("& table th", "background:rgba(255,255,255,.04)"),
+    ("& .card,& .note,& .kpi .b,& .mm .node,& .diagram-box", "background:var(--glass2)"),
+    ("& a", "color:#5fa8ff"),
+    ("& .theme-toggle", "background:rgba(30,34,44,.8);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 2px 10px rgba(0,0,0,.4)"),
+]
+
+
+def _theme_css() -> str:
+    def block(prefix):
+        return "\n".join(sel.replace("&", prefix) + "{" + body + "}" for sel, body in _DARK_RULES)
+    return ("\n@media (prefers-color-scheme: dark){\n" + block("html:not([data-theme=light])") + "\n}\n"
+            + block("html[data-theme=dark]") + "\n")
+
+
+CSS_BASE += _theme_css()
 
 JS = r"""
+(function(){var K='overstack-theme',d=document.documentElement;function isDark(){var t=d.getAttribute('data-theme');return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches}function paint(){var b=document.getElementById('theme-toggle');if(!b)return;var dk=isDark();b.textContent=dk?'☀️':'🌙';b.setAttribute('aria-label',dk?'Chuyển sang giao diện sáng':'Chuyển sang giao diện tối');b.title=b.getAttribute('aria-label')}var b=document.createElement('button');b.id='theme-toggle';b.className='theme-toggle';b.dataset.noRipple='1';document.body.appendChild(b);paint();b.onclick=function(){var next=isDark()?'light':'dark';d.setAttribute('data-theme',next);try{localStorage.setItem(K,next)}catch(e){}paint()};try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',paint)}catch(e){}})();
 (function(){const n=document.querySelector('nav');if(!n)return;const o=document.createElement('button');o.className='nav-toggle';o.textContent='☰';o.setAttribute('aria-label','Mở menu điều hướng');document.body.appendChild(o);const c=document.createElement('button');c.className='nav-close';c.textContent='✕';c.setAttribute('aria-label','Đóng menu điều hướng');n.appendChild(c);o.onclick=function(){document.body.classList.remove('nav-collapsed')};c.onclick=function(){document.body.classList.add('nav-collapsed')};if(matchMedia('(max-width:640px)').matches)document.body.classList.add('nav-collapsed')})();
 (function(){var ls=[].slice.call(document.querySelectorAll('nav a')),ss=[].slice.call(document.querySelectorAll('section[id]'));var ob=new IntersectionObserver(function(es){var a='';es.forEach(function(e){if(e.isIntersecting)a=e.target.id});if(a)ls.forEach(function(l){l.classList.toggle('active',l.getAttribute('href')==='#'+a)})},{rootMargin:'-40% 0px -55% 0px'});ss.forEach(function(s){ob.observe(s)})})();
 (function(){var t;addEventListener('scroll',function(){document.documentElement.classList.add('scrolling');clearTimeout(t);t=setTimeout(function(){document.documentElement.classList.remove('scrolling')},900)},{passive:true})})();
@@ -1004,6 +1026,9 @@ def render(root: Path) -> str:
         body.append(f'<section id="s{i}" class="sec s{i}"><div class="inner">{"".join(inner)}</div></section>')
     html = [
         '<!DOCTYPE html><html lang="vi"><head><meta charset="utf-8">',
+        # chống FOUC: áp theme user đã chọn TRƯỚC khi CSS render (đọc localStorage ngay trong head)
+        '<script>(function(){try{var t=localStorage.getItem("overstack-theme");'
+        'if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}})();</script>',
         '<meta name="viewport" content="width=device-width, initial-scale=1">',
         "<title>overstack — tài liệu chính thức</title>",
         "<style>", CSS_BASE, accent_css(len(S)), "</style></head><body>",
