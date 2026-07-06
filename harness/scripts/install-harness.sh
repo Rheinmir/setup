@@ -137,7 +137,13 @@ cur = json.load(open(path))
 HOOKS_DIR = '$HOME/.claude/harness/hooks'
 def cmd(script):
     # if-guard (KHÔNG dùng `&& ... || true` — nó nuốt exit 2, mất khả năng chặn)
-    return f'if [ -d "${{CLAUDE_PROJECT_DIR:-.}}/llmwiki" ]; then python3 "{HOOKS_DIR}/{script}"; fi'
+    # v4 (GH#63 Phase 2): gate theo .harness-stamp (hợp đồng install ghi ra, travel theo git)
+    # thay vì [ -d llmwiki ] — repo chưa curl-bootstrap thì hook global KHÔNG fire (opt-in tường minh).
+    return f'if [ -f "${{CLAUDE_PROJECT_DIR:-.}}/llmwiki/.harness-stamp" ]; then python3 "{HOOKS_DIR}/{script}"; fi'
+# dọn entry harness-global đời cũ (guard [ -d llmwiki ] hoặc format khác) trước khi thêm bản mới —
+# idempotent qua các lần đổi format, không để hook fire đôi; hook KHÁC của user giữ nguyên.
+def _is_stale(c):
+    return HOOKS_DIR in (c or "") and '/llmwiki/.harness-stamp" ]' not in (c or "")
 tpl = {
     "PreToolUse":  [{"matcher": "Write|Edit|MultiEdit|NotebookEdit|Bash", "script": "pre_tool_use.py"},
                     {"matcher": "Bash", "script": "orca_guard.py"}],
@@ -153,6 +159,16 @@ for d in ["Write(./llmwiki/raw/**)", "Edit(./llmwiki/raw/**)", "MultiEdit(./llmw
     if d not in cur["permissions"]["deny"]:
         cur["permissions"]["deny"].append(d)
 cur.setdefault("hooks", {})
+for event, defs in list(cur["hooks"].items()):
+    nd = []
+    for d in defs:
+        d["hooks"] = [h for h in (d.get("hooks") or []) if not _is_stale(h.get("command"))]
+        if d.get("hooks"):
+            nd.append(d)
+    if nd:
+        cur["hooks"][event] = nd
+    else:
+        cur["hooks"].pop(event, None)
 for event, spec in tpl.items():
     defs = cur["hooks"].setdefault(event, [])
     for s in (spec if isinstance(spec, list) else [spec]):
