@@ -190,51 +190,35 @@ if [ "$WITH_WIKI" = 1 ]; then
         warn "  problem-tree template chưa tải được (mạng?) — hook R17 sẽ fail-open tới khi có sổ"
       fi
     fi
-    # GH#51: THỐNG NHẤT với sync-template — kéo file-list từ .template-manifest.json (nguồn chân lý)
-    # để bootstrap CŨNG ship engine wiki-graph + llmwiki hooks (trước đây chỉ sync-template có →
-    # engine không tới qua one-liner). Infra (fdk/tools, llmwiki/.claude) luôn refresh; còn lại chỉ
-    # kéo khi thiếu (không đè nội dung user). Rồi wire llmwiki hooks vào ROOT .claude/settings.json.
-    MANI="$(mktemp)"
-    if curl -fsSL "$REPO_RAW/.template-manifest.json" -o "$MANI" 2>/dev/null; then
-      while IFS= read -r f; do
-        [ -z "$f" ] && continue
-        case "$f" in
-          fdk/tools/*|llmwiki/.claude/*) : ;;              # infra: luôn refresh bản mới
-          *) [ -e "$ROOT/$f" ] && continue ;;              # còn lại: chỉ khi thiếu (idempotent, không đè)
-        esac
-        mkdir -p "$ROOT/$(dirname "$f")"
-        curl -fsSL "$REPO_RAW/$f" -o "$ROOT/$f" 2>/dev/null || true
-      done < <(python3 -c "import json;[print(x) for x in json.load(open('$MANI')).get('includes',[])]" 2>/dev/null)
-      rm -f "$MANI"
-      log "  ✓ engine wiki-graph + llmwiki hooks (kéo từ manifest — nguồn chân lý)"
-      # wire llmwiki hooks vào ROOT .claude/settings.json (Claude Code CHỈ đọc root này, không đọc
-      # llmwiki/.claude/settings.json) — dạng $CLAUDE_PROJECT_DIR/llmwiki/.claude/hooks/<ev>.py như
-      # framework repo. Idempotent (bỏ qua nếu đã có), fail-open (lỗi → không chặn install).
-      python3 - "$ROOT" <<'PYEOF' || warn "  wire llmwiki hooks vào root settings lỗi — thêm tay nếu cần"
-import json, os, sys
-root = sys.argv[1]
-sp = os.path.join(root, ".claude", "settings.json")
-try:
-    s = json.load(open(sp)) if os.path.isfile(sp) else {}
-except Exception:
-    s = {}
-hooks = s.setdefault("hooks", {})
-EV = {"UserPromptSubmit": "user_prompt_submit", "PreToolUse": "pre_tool_use",
-      "PostToolUse": "post_tool_use", "Stop": "stop",
-      "SessionEnd": "session_end", "SessionStart": "session_start"}
-added = 0
-for ev, fn in EV.items():
-    p = "$CLAUDE_PROJECT_DIR/llmwiki/.claude/hooks/%s.py" % fn
-    cmd = 'if [ -f "%s" ]; then python3 "%s"; fi' % (p, p)
-    arr = hooks.setdefault(ev, [])
-    if any(p in hk.get("command", "") for grp in arr for hk in grp.get("hooks", [])):
-        continue
-    arr.append({"hooks": [{"type": "command", "command": cmd}]})
-    added += 1
-os.makedirs(os.path.dirname(sp), exist_ok=True)
-json.dump(s, open(sp, "w"), indent=2, ensure_ascii=False)
-print("  wired %d llmwiki hook event(s) vào root settings" % added)
-PYEOF
+    # v4 ĐẢO GH#51 (council-038, GH#63 Phase 2): engine KHÔNG travel vào repo nữa — GLOBAL-SHARED
+    # ~/.claude/harness là source-of-truth (U10). Repo chỉ giữ llmwiki (data) + .harness-stamp.
+    # Hooks fire từ GLOBAL ~/.claude/settings.json (install-harness --global wire, guard theo stamp).
+    GH_HOME="${OVERSTACK_HARNESS_HOME:-$HOME/.claude/harness}"
+    # 1) đảm bảo global harness có mặt — thiếu → cài (ưu tiên bundle cạnh SRC, fallback curl)
+    if [ ! -f "$GH_HOME/version.json" ]; then
+      log "  global harness chưa có ($GH_HOME) → cài install-harness.sh --global"
+      IH="$SRC/../scripts/install-harness.sh"
+      if [ ! -f "$IH" ]; then
+        IH="$(mktemp)"
+        curl -fsSL "$REPO_RAW/harness/scripts/install-harness.sh" -o "$IH" 2>/dev/null || IH=""
+      fi
+      if [ -n "$IH" ] && [ -f "$IH" ]; then
+        bash "$IH" --global || warn "  cài global lỗi — chạy tay: install-harness.sh --global (fail-open, không chặn install)"
+      else
+        warn "  không tải được install-harness.sh (mạng?) — cài tay: $REPO_RAW/harness/scripts/install-harness.sh --global"
+      fi
+    fi
+    # 2) stamp — hợp đồng travel "repo này được gác bản vX" (session_start so với global → warn skew, U11)
+    TV="$(python3 -c "import json,sys;print(json.load(open(sys.argv[1])).get('template_version','0'))" "$GH_HOME/version.json" 2>/dev/null || echo 0)"
+    printf '{"schema": 1, "guarded_by": "%s"}\n' "${TV:-0}" > "$ROOT/llmwiki/.harness-stamp"
+    log "  ✓ llmwiki/.harness-stamp (guarded_by: ${TV:-0})"
+    # 3) U10: gỡ engine bản GH#51 từng copy vào repo (fdk/tools, harness/scripts) — global thay thế.
+    #    KHÔNG đụng repo framework (nhận diện: có fdk/wiki — framework_only, downstream không có).
+    if [ ! -d "$ROOT/fdk/wiki" ]; then
+      for d in fdk/tools harness/scripts; do
+        if [ -d "$ROOT/$d" ]; then rm -rf "$ROOT/${d:?}" && log "  ✓ gỡ $d khỏi repo (engine dùng bản global — U10)"; fi
+      done
+      rmdir "$ROOT/fdk" 2>/dev/null || true
     fi
   fi
 fi
