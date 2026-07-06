@@ -19,46 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-06 14:15:41 | `file.write` | harness/poc-vendor-neutral/gen-converters.py · tool=Edit · session=49ec06f0 · actor=agent · prev=f6e9517d209458da1eb919b |
-| 2026-07-06 14:17:05 | `file.write` | harness/tests/wiki-graph-user-reachability-test.sh · tool=Edit · session=49ec06f0 · actor=agent · prev=3736c0ad00782ece8 |
-| 2026-07-06 14:18:38 | `file.write` | llmwiki/.claude/hooks/session_start.py · tool=Edit · session=49ec06f0 · actor=agent · prev=26184ebadcf20dd523e95d75c5d3e |
-| 2026-07-06 14:18:53 | `file.write` | llmwiki/.claude/hooks/session_start.py · tool=Edit · session=49ec06f0 · actor=agent · prev=451bbd3ee32a303e01ca283926592 |
-| 2026-07-06 14:19:01 | `file.write` | llmwiki/.claude/hooks/session_start.py · tool=Edit · session=49ec06f0 · actor=agent · prev=a9c84d2a8e5ab89020127ef964539 |
-| 2026-07-06 14:19:29 | `file.write` | harness/tests/harness-integrity-test.sh · tool=Write · session=49ec06f0 · actor=agent · prev=70797e5fbd30678c3eb61d544fc |
-| 2026-07-06 14:19:43 | `file.write` | .github/workflows/harness.yml · tool=Edit · session=49ec06f0 · actor=agent · prev=e7ce484c33d52f26f5841d4723b1b359ae39b1 |
-| 2026-07-06 14:21:43 | `file.write` | harness/travel-policy.yaml · tool=Edit · session=49ec06f0 · actor=agent · prev=9f8555bbcef971c97ab6308b301c66f83320d5b68 |
-| 2026-07-06 14:21:53 | `file.write` | harness/travel-policy.yaml · tool=Edit · session=49ec06f0 · actor=agent · prev=680892dd6875a35b2b4e2c341dd7415f129f2002a |
-| 2026-07-06 14:22:08 | `file.write` | harness/travel-policy.yaml · tool=Edit · session=49ec06f0 · actor=agent · prev=b4f915b3e74efbf97034ac3da93cc72a48e9e9bf3 |
-| 2026-07-06 22:03:53 | `file.write` | harness/scripts/wiki-sync.py · tool=Write · session=ba6458f2 · actor=agent · prev=d31ef112069ef8fe3866ad262a53545262808d |
-| 2026-07-06 22:04:16 | `file.write` | harness/tests/wiki-sync-test.sh · tool=Write · session=ba6458f2 · actor=agent · prev=419036bd597c18b225f72513fb057ae456f |
-| 2026-07-06 22:04:58 | `file.write` | harness/scripts/wiki-sync.py · tool=Edit · session=ba6458f2 · actor=agent · prev=8d16b01d40773a85f9fe491ec307e5c73b81e34 |
-| 2026-07-06 22:04:59 | `file.write` | harness/scripts/wiki-sync.py · tool=Edit · session=ba6458f2 · actor=agent · prev=ff6a04b48b713568d6535ad4e935243fb4c2b99 |
-| 2026-07-06 22:05:01 | `file.write` | harness/scripts/wiki-sync.py · tool=Edit · session=ba6458f2 · actor=agent · prev=5488d16531602e9e5e0b1ec96956ce31e4909a8 |
-| 2026-07-06 22:05:54 | `file.write` | harness/scripts/wiki-sync.py · tool=Edit · session=ba6458f2 · actor=agent · prev=0f3df853572e491d12103efc4f98bf13280bda7 |
-| 2026-07-06 22:05:57 | `file.write` | harness/scripts/wiki-sync.py · tool=Edit · session=ba6458f2 · actor=agent · prev=a5fb25f4d3ec0cfad26854f96a8a01de9dd9c2f |
-| 2026-07-06 22:06:22 | `file.write` | harness/tests/wiki-sync-test.sh · tool=Edit · session=ba6458f2 · actor=agent · prev=4d41bebf7a22c7eb8a9ee8133ebdc787f221 |
-| 2026-07-06 22:06:24 | `file.write` | harness/tests/wiki-sync-test.sh · tool=Edit · session=ba6458f2 · actor=agent · prev=4bf23a5d1a5d16c7d34fe58a651138c8d3d4 |
-| 2026-07-06 22:06:42 | `file.write` | llmwiki/.claude/hooks/session_start.py · tool=Edit · session=ba6458f2 · actor=agent · prev=048bd538e6b76ed702f30e4cd11ef |
-| 2026-07-06 22:06:45 | `file.write` | llmwiki/.claude/hooks/session_start.py · tool=Edit · session=ba6458f2 · actor=agent · prev=c4a82b56616b4e08a31c181114dc3 |
-| 2026-07-06 22:08:01 | `file.write` | skills/lint/SKILL.md · tool=Edit · session=ba6458f2 · actor=agent · prev=ab208a5aae6e04b13e6d108b2fe7c08b85eb7a23a37ba72 |
-| 2026-07-06 22:08:11 | `file.write` | skills/lint/SKILL.md · tool=Edit · session=ba6458f2 · actor=agent · prev=9d90a3072f5a813856a244b2c0c76db947459fbfe6c15e9 |
-| 2026-07-06 22:08:27 | `file.write` | skills/ingest/SKILL.md · tool=Edit · session=ba6458f2 · actor=agent · prev=c7f1fc4ca650ab91e1f5305043597d6b6bf196b6e88bc |
-| 2026-07-06 22:08:32 | `file.write` | skills/ingest/SKILL.md · tool=Edit · session=ba6458f2 · actor=agent · prev=f4e01e32a34fbef259c2fb1abde28bbed0fe85c40189d |
-| 2026-07-06 22:09:40 | `file.write` | harness/poc-vendor-neutral/gen-converters.py · tool=Edit · session=ba6458f2 · actor=agent · prev=2de7ea106f2a147df103eaa |
-| 2026-07-06 22:11:24 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=ba6458f2 · actor=agent · prev=25de675fa8550d1a509ab964f5bbfa09fa |
-| 2026-07-06 22:13:29 | `file.write` | llmwiki/wiki/sources/draft/060726-wiki-sync-openwiki-distill.md · tool=Write · session=ba6458f2 · actor=agent · prev=453 |
-| 2026-07-06 22:45:30 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=ba6458f2 · actor=agent · prev=89906c64dfcb950ca51016e06aa94f4f71 |
-| 2026-07-06 22:45:52 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=ba6458f2 · actor=agent · prev=25c69fef5e2a859823a54bb0c6c67bddd6 |
-| 2026-07-06 22:45:55 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=ba6458f2 · actor=agent · prev=831010c68e2c1341da75905928dad28be8 |
-| 2026-07-06 22:46:51 | `file.write` | skills/docs-site-macos/SKILL.md · tool=Edit · session=ba6458f2 · actor=agent · prev=b04b0105e4f91d53a1cdcff78bdca49164ab |
-| 2026-07-06 22:51:14 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=ba6458f2 · actor=agent · prev=ccc5a6d0079a6080a2ca6ff0cecd2e7093 |
-| 2026-07-06 22:51:15 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=ba6458f2 · actor=agent · prev=8ab681b31e71157fc830052f984bd9320a |
-| 2026-07-06 22:51:34 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=ba6458f2 · actor=agent · prev=e8da16bb5ae5305e190fa1a4fe5c9d7fe0 |
-| 2026-07-06 22:53:40 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=ba6458f2 · actor=agent · prev=db21f688df2527fc90cd79467c536208a6 |
-| 2026-07-06 22:53:43 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=ba6458f2 · actor=agent · prev=e9ec3d56544eb579695ec6f6a2f7c94c18 |
-| 2026-07-06 22:53:47 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=ba6458f2 · actor=agent · prev=12fa427775f78cfc7ef23385564833425d |
-| 2026-07-06 22:55:21 | `file.write` | skills/docs-site-macos/SKILL.md · tool=Edit · session=ba6458f2 · actor=agent · prev=f223cc96260439fcd47c54a118a2b32fa6da |
-| 2026-07-06 23:11:27 | `file.write` | skills/docs-site-macos/SKILL.md · tool=Edit · session=ba6458f2 · actor=agent · prev=29c01dacc3b69d2e26692b36337ab908227a |
 | 2026-07-06 10:34:59 | `file.write` | skills/br/SKILL.md · tool=Edit · session=db4de305 · actor=agent · prev=ee50e74b8ac4bd75e43d3fb1325e0a4bfa2b8330770ab4c9a |
 | 2026-07-06 10:35:11 | `file.write` | skills/br/SKILL.md · tool=Edit · session=db4de305 · actor=agent · prev=4e42f36626dd8cb7216f0a19483b3198619f0a45871bce7f0 |
 | 2026-07-06 11:47:43 | `file.write` | fdk/tools/br-prompts.py · tool=Write · session=db4de305 · actor=agent · prev=fafaba2525040f400cd72d4937683999d386f82c21d |
@@ -366,3 +326,8 @@ Giải issue `030726-skill-resolve-supplychain` (trục #5 frontier-gap-scan, Ch
 - Kéo trọn 28 commit; sau merge: ngang upstream (behind 0, ahead 3). 6 xung đột giải: harness.yml/foundation ← upstream; ledger/log union 2 bên; CAPABILITIES+overstack regen; problem-tree lấy upstream + node Ralph đổi p-22→p-23 (đụng p-22 wiki-sync upstream); bỏ dead-link council-report ephemeral (upstream gitignore council).
 - Kéo về hữu ích: wiki-sync (code→wiki drift), wiki-graph.html, travel-policy v4 + global-shared engine (ADR-017), feature-inventory, reachability guard skill→tool, theme-toggle+font-floor rule.
 - GH#15 giữ nguyên: br + checkpoint-trace + upstream-drift còn đăng ký; 10/10 tool selftest xanh; medic 0 fail. Test-project dirs (br/dream-demo, br/dream-40, br/harass) gitignored, không track.
+
+## 2026-07-07 — Adapt checkpoint-trace (SHEPHERD) vào /br run: per-frame checkpoint + tier-gate
+- Chọn kiểu adapt: wire vào /br run per-frame (standalone không ai nhớ gọi; per-iteration thừa vì loop đã có revert/sweep). Nguyên tắc: KHÔNG double-commit — checkpoint.py thêm mode `record` (ghi sổ trỏ commit CÓ SẴN) + rollback theo LABEL (frame_id, không cần nhớ seq/hash). Selftest checkpoint 7→9.
+- br-run: (0) TIER-GATE — frame khai `tier: compensable|irreversible` bị chặn (exit 3) tới khi người `--ack-tier` (SHEPHERD gate-before-materialize); (7) sau run record mốc vào .checkpoints.jsonl + commit sổ ngay (né bài học tree-bẩn harass). Selftest br-run 13→17 (ledger có mốc, tree sạch, gate chặn, ack cho qua).
+- Demo dream-demo: record không commit mới; `checkpoint.py rollback frame-001` quay pipeline theo TÊN frame. SKILL br + checkpoint-trace cập nhật; medic 0 fail.

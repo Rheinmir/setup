@@ -82,6 +82,27 @@ def save(root, label, tier="reversible", effect=""):
     return 0
 
 
+def record(root, label, tier="reversible", effect="", commit_hash=None):
+    """Ghi một entry sổ trỏ vào COMMIT CÓ SẴN (không tạo commit mới) — dùng khi một
+    pipeline khác (vd br-run) đã tự commit và chỉ cần checkpoint-trace làm sổ tier/rollback.
+    Tránh double-commit khi wire vào /br run."""
+    root = Path(root)
+    if tier not in TIERS:
+        print(f"[checkpoint] tier không hợp lệ: {tier}", file=sys.stderr)
+        return 2
+    h = commit_hash or git(["rev-parse", "HEAD"], root).stdout.strip()
+    if git(["cat-file", "-e", h], root).returncode != 0:
+        print(f"[checkpoint] commit không tồn tại: {h}", file=sys.stderr)
+        return 1
+    ledger = _read_ledger(root)
+    seq = (ledger[-1]["seq"] + 1) if ledger else 1
+    rec = {"seq": seq, "hash": h, "label": label, "tier": tier, "effect": effect}
+    with _ledger_path(root).open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps(rec, ensure_ascii=False) + "\n")
+    print(f"[checkpoint] #{seq} '{label}' [{tier}] @ {h[:8]} (record — không commit mới)")
+    return 0
+
+
 def list_cmd(root):
     ledger = _read_ledger(root)
     if not ledger:
@@ -101,12 +122,17 @@ def rollback(root, target):
     if not ledger:
         print("[checkpoint] không có trace để rollback.", file=sys.stderr)
         return 1
-    # tìm checkpoint đích theo seq hoặc hash-prefix
+    # tìm checkpoint đích theo seq, hash-prefix, hoặc label (vd frame_id) — lấy mốc MỚI NHẤT khớp label
     tgt = None
     for r in ledger:
         if str(r["seq"]) == str(target) or r["hash"].startswith(str(target)):
             tgt = r
             break
+    if not tgt:
+        for r in reversed(ledger):
+            if str(target) in r["label"]:
+                tgt = r
+                break
     if not tgt:
         print(f"[checkpoint] không tìm thấy checkpoint '{target}'.", file=sys.stderr)
         return 1
@@ -190,6 +216,22 @@ def selftest():
         g_ok = (run(tier_gate, "reversible")[0] == 0 and run(tier_gate, "compensable")[0] == 3
                 and run(tier_gate, "irreversible")[0] == 4)
 
+        # record: trỏ vào commit CÓ SẴN, không tạo commit mới (wire /br run không double-commit)
+        n_before = len(git(["log", "--oneline"], root).stdout.splitlines())
+        (root / "app.py").write_text("v = 9\n")
+        git(["add", "-A"], root); git(["commit", "-q", "--no-verify", "-m", "frame(frame-x): lam x"], root)
+        fx_hash = git(["rev-parse", "HEAD"], root).stdout.strip()
+        run(record, str(root), "frame(frame-x) SUCCESS", "reversible", "app.py", fx_hash)
+        n_after = len(git(["log", "--oneline"], root).stdout.splitlines())
+        led2 = _read_ledger(root)
+        c_record = (led2[-1]["label"] == "frame(frame-x) SUCCESS" and led2[-1]["hash"] == fx_hash
+                    and n_after == n_before + 1)  # +1 là commit frame, record KHÔNG thêm commit
+        # rollback theo LABEL (frame_id) — không cần nhớ seq/hash
+        (root / "app.py").write_text("v = 10\n")
+        run(save, str(root), "b-sau", "reversible", "")
+        rc3, _ = run(rollback, str(root), "frame-x")
+        c_label_rb = (root / "app.py").read_text().strip() == "v = 9"
+
     checks = [
         ("save ghi trace tuần tự (seq 1,2,3)", c_seq),
         ("tier ghi đúng vào sổ", c_tier),
@@ -198,6 +240,8 @@ def selftest():
         ("lịch sử GIỮ (state v4 vẫn reachable)", c_hist),
         ("rollback về BẤT KỲ hash (v4)", c_anyhash),
         ("tier-gate 3 mức exit đúng (0/3/4)", g_ok),
+        ("record trỏ commit sẵn, KHÔNG double-commit", c_record),
+        ("rollback theo LABEL (frame_id)", c_label_rb),
     ]
     print("checkpoint self-test — reversible trace (SHEPHERD distill trên git)\n" + "-" * 60)
     for name, good in checks:
@@ -215,6 +259,10 @@ def build_parser():
     s.add_argument("--label", required=True); s.add_argument("--tier", default="reversible", choices=TIERS)
     s.add_argument("--effect", default=""); s.add_argument("--root", default=".")
     s.set_defaults(func=lambda a: save(a.root, a.label, a.tier, a.effect))
+    rc = sub.add_parser("record", help="ghi entry sổ trỏ vào commit CÓ SẴN (không commit mới — cho pipeline đã tự commit)")
+    rc.add_argument("--label", required=True); rc.add_argument("--tier", default="reversible", choices=TIERS)
+    rc.add_argument("--effect", default=""); rc.add_argument("--hash", default=None); rc.add_argument("--root", default=".")
+    rc.set_defaults(func=lambda a: record(a.root, a.label, a.tier, a.effect, a.hash))
     l = sub.add_parser("list", help="xem trace + tier"); l.add_argument("--root", default=".")
     l.set_defaults(func=lambda a: list_cmd(a.root))
     r = sub.add_parser("rollback", help="khôi phục cây về BẤT KỲ checkpoint (giữ lịch sử)")

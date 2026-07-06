@@ -34,6 +34,12 @@ Ta không có substrate Python của SHEPHERD — **substrate của ta là GIT**
 ## Đồ nghề (đã build + selftest)
 `fdk/tools/checkpoint.py` — `selftest` 7 check. Sổ trace tự-mô-tả ở `.checkpoints.jsonl` (append-only, đi cùng commit).
 
+## Đã WIRE vào /br run (cách dùng chính — không cần gọi tay)
+Mỗi `br-run.py run` (in-place) TỰ: tier-gate frame khai `tier:` không-đảo (chặn tới khi
+`--ack-tier`) + `record` một mốc vào `.checkpoints.jsonl` trỏ commit frame (không double-commit).
+→ `checkpoint.py list` = timeline cả dây chuyền · `checkpoint.py rollback <frame_id>` = quay
+cả pipeline về frame bất kỳ theo TÊN. Gọi tay các verb dưới chỉ khi chạy NGOÀI dây chuyền /br.
+
 ## Steps
 1. **Trước mỗi bước có rủi ro**, phân loại effect và GATE nếu cần:
    ```

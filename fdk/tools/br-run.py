@@ -42,6 +42,12 @@ LOOP_RUNNER = _REPO / "harness" / "scripts" / "loop-runner.py"
 BR_REVISE = _REPO / "fdk" / "tools" / "br-revise.py"
 DEFAULT_TEMPLATE = _REPO / "skills" / "br" / "assets" / "revise-prompt.md"
 
+# checkpoint-trace (distill SHEPHERD): mỗi frame-run = 1 checkpoint trong sổ trace của
+# dây chuyền → rollback cả pipeline về frame bất kỳ + tier-gate trước effect không-đảo.
+_cp_spec = importlib.util.spec_from_file_location("checkpoint", _HERE.with_name("checkpoint.py"))
+_checkpoint = importlib.util.module_from_spec(_cp_spec)
+_cp_spec.loader.exec_module(_checkpoint)
+
 
 def _git(args, cwd):
     return subprocess.run(["git", *args], cwd=str(cwd), capture_output=True, text=True)
@@ -117,7 +123,7 @@ def _set_run_log_ref(frame_path, ref):
 
 
 def run(frame_path, root=".", baseline=None, keep_worktree=True, revise_cmd=None,
-        template=None, print_prompt=False, use_worktree=True):
+        template=None, print_prompt=False, use_worktree=True, ack_tier=False):
     root = Path(root).resolve()
     frame_path = Path(frame_path)
     fm = parse_frontmatter(frame_path.read_text(encoding="utf-8"))
@@ -139,7 +145,18 @@ def run(frame_path, root=".", baseline=None, keep_worktree=True, revise_cmd=None
                         "--print"])
         return 0
 
-    # 2. clean tree required — in-place mode NEEDS this even more: the frame's commit
+    # 2. TIER-GATE (SHEPHERD "gate before materialize"): a frame whose effects are not
+    # plain-reversible (declared `tier: compensable|irreversible` in its frontmatter —
+    # e.g. it hits an external API, sends mail, writes a DB) must be ACKNOWLEDGED by a
+    # human before the loop is allowed to run. Rolling back code will NOT undo it.
+    frame_tier = str(fm.get("tier", "reversible"))
+    if frame_tier != "reversible" and not ack_tier:
+        print(f"[br-run] TIER-GATE: frame {fid} khai tier={frame_tier} — effect sẽ KHÔNG "
+              f"undo được bằng rollback code. Người xác nhận rồi chạy lại với --ack-tier.",
+              file=sys.stderr)
+        return 3
+
+    # 3. clean tree required — in-place mode NEEDS this even more: the frame's commit
     # must contain ONLY the frame's work, and a dirty tree would pollute changed_files.
     if not worktree_clean(root):
         print("[br-run] REFUSING: working tree not clean. Commit/stash first.", file=sys.stderr)
@@ -185,6 +202,19 @@ def run(frame_path, root=".", baseline=None, keep_worktree=True, revise_cmd=None
         # frame files may live outside br/frames (custom layout) — commit the ref change too
         _git(["add", str(frame_path)], root)
         _git(["commit", "-q", "--no-verify", "-m", f"chore({fid}): run_log_ref"], root)
+        # CHECKPOINT (SHEPHERD trace): mỗi frame-run = 1 mốc trong sổ .checkpoints.jsonl —
+        # trỏ vào commit sẵn có (record, không double-commit). Rollback cả dây chuyền:
+        #   python3 fdk/tools/checkpoint.py rollback <frame_id|seq|hash>
+        if not use_worktree:
+            try:
+                _checkpoint.record(
+                    str(root), f"frame({fid}) {result.get('verdict')}",
+                    tier=frame_tier, effect=str(fm.get("muc_tieu", "")))
+            except Exception as e:  # sổ trace không được phép giết run
+                print(f"[br-run] (warn) checkpoint record lỗi: {e}", file=sys.stderr)
+            # sổ vừa ghi làm tree bẩn → chặn frame kế (bài học harass) — commit sổ ngay
+            _git(["add", ".checkpoints.jsonl"], root)
+            _git(["commit", "-q", "--no-verify", "-m", f"chore({fid}): checkpoint ledger"], root)
         verdict = result.get("verdict")
         changed = result.get("changed_files") or []
         print("\n──────── /br run — TÓM TẮT ────────")
@@ -260,6 +290,25 @@ def selftest():
             ("in-place: frame commit on CURRENT branch", "frame(frame-x):" in recent),
             ("in-place: tree clean after run (bookkeeping committed)", worktree_clean(root)),
         ]
+        # CHECKPOINT wire: sổ trace có mốc frame + tree vẫn sạch (sổ đã được commit)
+        led = (root / ".checkpoints.jsonl")
+        checks += [
+            ("checkpoint ledger có mốc frame(frame-x)", led.exists() and "frame(frame-x)" in led.read_text(encoding="utf-8")),
+            ("ledger đã commit (tree sạch cho frame kế)", worktree_clean(root)),
+        ]
+        # TIER-GATE: frame khai tier irreversible → br-run DỪNG (exit 3) khi chưa --ack-tier
+        frame_ir = root / "br" / "frames" / "frame-mail.md"
+        frame_ir.write_text(frame.read_text(encoding="utf-8")
+                            .replace("frame_id: frame-x", "frame_id: frame-mail")
+                            .replace("---\n# frame-x", "tier: irreversible\n---\n# frame-mail"),
+                            encoding="utf-8")
+        _git(["add", "-A"], root); _git(["commit", "-q", "--no-verify", "-m", "add frame-mail"], root)
+        rc4 = run(str(frame_ir), root=str(root), baseline="HEAD", revise_cmd=stub, use_worktree=False)
+        rc5 = run(str(frame_ir), root=str(root), baseline="HEAD", revise_cmd=stub, use_worktree=False, ack_tier=True)
+        checks += [
+            ("tier-gate CHẶN frame irreversible (exit 3)", rc4 == 3),
+            ("--ack-tier cho chạy sau khi người xác nhận", rc5 in (0, 2)),
+        ]
 
     print("br-run self-test — worktree + wired revise (stub, no model)\n" + "-" * 58)
     for name, good in checks:
@@ -286,8 +335,11 @@ def build_parser():
     r.add_argument("--revise-cmd", default=None, help="override the revise command (default: wired to br-revise.py)")
     r.add_argument("--template", default=None)
     r.add_argument("--print-prompt", action="store_true")
+    r.add_argument("--ack-tier", action="store_true",
+                   help="người XÁC NHẬN cho frame tier compensable/irreversible chạy (SHEPHERD tier-gate)")
     r.set_defaults(func=lambda a: run(a.frame, a.root, a.baseline, a.keep_worktree,
-                                      a.revise_cmd, a.template, a.print_prompt, a.use_worktree))
+                                      a.revise_cmd, a.template, a.print_prompt, a.use_worktree,
+                                      a.ack_tier))
     s = sub.add_parser("selftest", help="end-to-end worktree run with a deterministic stub revise")
     s.set_defaults(func=lambda a: selftest())
     return p
