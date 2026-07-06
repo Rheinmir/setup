@@ -118,6 +118,14 @@ if [ "${1:-}" = "--global" ]; then
   cp "$SRC/harness/validators/"*.py "$GH/harness/validators/" 2>/dev/null || true
   cp "$SRC/harness/"*.yaml         "$GH/harness/"          2>/dev/null || true
   cp "$SRC/harness/version.json"   "$GH/version.json"      2>/dev/null || true
+  # Phase 1 v4 (council-038): poc-vendor-neutral (RÀO CHẮN R1-R17: bin/llmwiki-validate.py, policy.yaml,
+  # gen-converters) → global. CI downstream (Phase 3) sẽ curl bootstrap → cài poc global → validate từ global;
+  # pre-commit downstream trỏ ~/.claude/harness/... . Mirror cấu trúc để llmwiki-validate.py đọc policy.yaml cạnh nó.
+  if [ -d "$SRC/harness/poc-vendor-neutral" ]; then
+    mkdir -p "$GH/harness/poc-vendor-neutral"
+    cp -R "$SRC/harness/poc-vendor-neutral/." "$GH/harness/poc-vendor-neutral/" 2>/dev/null || true
+    log "GLOBAL-SHARED rào chắn: poc-vendor-neutral (validate + policy + converters) → $GH/harness/poc-vendor-neutral/"
+  fi
   log "GLOBAL-SHARED engine: fdk/tools + harness/scripts + validators + *.yaml + version.json → $GH/ (mọi project dùng chung)"
 
   SETTINGS="$HOME/.claude/settings.json"
