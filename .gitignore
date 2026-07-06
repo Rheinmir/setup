@@ -6,7 +6,11 @@
 # Files stay on disk; index.md rows kept so local index_sync (R3) still passes.
 llmwiki/html/*.html
 !llmwiki/html/overstack.html
+# v4: ARTIFACT travel — đồ thị wiki+code của dự án đi theo git (user coi được)
+!llmwiki/html/wiki-graph.html
 llmwiki/html/archive/
+# v4: council report = dev-artifact của dự án NÀY, ignore (ship user sạch)
+llmwiki/html/council/
 # framework's OWN wiki now lives in the kit (fdk/wiki); llmwiki/wiki is the per-project template demo
 fdk/wiki/sources/draft/*.md
 !fdk/wiki/sources/draft/README.md
