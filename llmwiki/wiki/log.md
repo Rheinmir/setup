@@ -19,8 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-06 10:33:02 | `file.write` | fdk/tools/frame-lint.py · tool=Edit · session=db4de305 · actor=agent · prev=d7a29be7dda3c9009ebc1bc61c5b09eb55ccded7b44f |
-| 2026-07-06 10:34:29 | `file.write` | fdk/tools/frame-lint.py · tool=Edit · session=db4de305 · actor=agent · prev=45233856bb1e30fb25b514ff61fe3afcdce68ca2d37f |
 | 2026-07-06 10:34:59 | `file.write` | skills/br/SKILL.md · tool=Edit · session=db4de305 · actor=agent · prev=ee50e74b8ac4bd75e43d3fb1325e0a4bfa2b8330770ab4c9a |
 | 2026-07-06 10:35:11 | `file.write` | skills/br/SKILL.md · tool=Edit · session=db4de305 · actor=agent · prev=4e42f36626dd8cb7216f0a19483b3198619f0a45871bce7f0 |
 | 2026-07-06 11:47:43 | `file.write` | fdk/tools/br-prompts.py · tool=Write · session=db4de305 · actor=agent · prev=fafaba2525040f400cd72d4937683999d386f82c21d |
@@ -59,6 +57,8 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-07 00:40:30 | `file.write` | fdk/tools/checkpoint.py · tool=Write · session=db4de305 · actor=agent · prev=8d590c403a73fb80aa7addf0226c8b81feed3858108 |
 | 2026-07-07 00:41:22 | `file.write` | fdk/tools/checkpoint.py · tool=Edit · session=db4de305 · actor=agent · prev=ffe505f70e734a72b4ddf1c013c52a208f6fc9cad679 |
 | 2026-07-07 00:42:19 | `file.write` | skills/checkpoint-trace/SKILL.md · tool=Write · session=db4de305 · actor=agent · prev=3e8c914417710751469498c6b969b93f09 |
+| 2026-07-07 00:59:12 | `file.write` | fdk/tools/upstream-drift.py · tool=Write · session=db4de305 · actor=agent · prev=fdd8e2876e7ee01925068a9b0fb878d060b8c19 |
+| 2026-07-07 00:59:59 | `file.write` | fdk/tools/upstream-drift.py · tool=Edit · session=db4de305 · actor=agent · prev=74831d2ea17c2fbc2c8a85774268fccc36dcb091 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -286,3 +286,8 @@ Giải issue `030726-skill-resolve-supplychain` (trục #5 frontier-gap-scan, Ch
 - Nguồn: SHEPHERD "Reversible Agentic Execution Traces" (arxiv 2605.10913, shepherd-agents.ai) — agent-run = git-like trace, mọi state reachable, effect phân 3 reversibility tier, work là held-proposal (fork→merge/discard). Substrate của ta = git.
 - fdk/tools/checkpoint.py (selftest 7 check): save (checkpoint + tier vào .checkpoints.jsonl append-only) · list · rollback <seq|hash> về BẤT KỲ mốc (giữ lịch sử, ghi rollback thành step mới) · tier-gate (reversible→0/compensable→3/irreversible→4, gate trước materialize). Bug tự bắt khi làm: checkout cuốn sổ về quá khứ → fix giữ sổ chỉ-tăng.
 - skills/checkpoint-trace/SKILL.md — distill self-contained, ghi công nguồn, KHÁC /br (per-frame) và loop-runner (per-iteration): rollback TOÀN LƯỢT + kỷ luật tier. Đăng ký 6 mặt, regen CAPABILITIES/overstack, medic 0 fail. Demo: trace 3 mốc → rollback #1 khôi phục cây + cảnh báo email irreversible.
+
+## 2026-07-07 — Cứu công việc GH#15 + tool upstream-drift (visibility repo gốc)
+- Commit 6082a8f: rescue toàn bộ GH#15 (br pipeline + checkpoint-trace + harass fixes + docs), 48 file, medic --ci gate. Branch trước đó UNCOMMITTED trên nền chậm 28 commit sau origin/orca.
+- fdk/tools/upstream-drift.py (selftest 6 check): MỘT lệnh thấy local vs repo gốc — behind/ahead, commit gom theo type (feat/fix ⭐), + cờ ĐỤNG file mình đang sửa (upstream-changed ∩ local committed/dirty) = xung đột merge. Không tự pull.
+- Chạy thật: chậm 28 (11 feat + 5 fix), đụng 9 file (build-overstack-docs.py, overstack.html, index/log...). Phát hiện: đã build lệch upstream — theme-toggle upstream đã luật-hoá trong docs-site SKILL, ta tự chế trong build-line-status.py; wiki-sync/travel-policy v4/wiki-graph hữu ích chưa kéo.
