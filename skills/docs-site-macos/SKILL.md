@@ -936,6 +936,7 @@ Keep the chrome (traffic-light header), the system-font stack (`var(--font-text)
 
 ## Best Practices
 
+- **SÀN CỠ CHỮ — đừng co component nhỏ quá mức (feedback user 2026-07-06):** text đọc chính (body `p`, nav link, list item, cell bảng) **≥ 14px**; phụ đề/nhãn/caption **≥ 11px**; tuyệt đối không dưới 10px trừ badge đếm số. Nav link kèm padding dọc ≥ 7px (hit-target thoáng). 12.5px cho nav / 13.5px cho body từng bị user report là "co nhỏ quá mức" — đừng lặp lại.
 - ALWAYS inline SVG directly in the HTML (not external files)
 - ALWAYS use `clamp()` for hero heading size: `font-size: clamp(32px,5vw,56px)`
 - NEVER use `☐` Unicode for checklists — ALWAYS use real `<input type="checkbox">` with `<label for="...">` so items are clickable. Add this CSS for every checklist:

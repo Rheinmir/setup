@@ -19,17 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-05 00:26:33 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=6d935094 · actor=agent · prev=88c93c42340ca03b0d22821c9d308c86df |
-| 2026-07-05 08:31:38 | `file.write` | llmwiki/wiki/sources/draft/050726-map-not-territory-fable5-unknowns.md · tool=Write · session=2e819614 · actor=agent · p |
-| 2026-07-05 08:31:45 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=2e819614 · actor=agent · prev=04009b17e8ce54b2b8a5a8211bf092a1e23f2 |
-| 2026-07-05 08:32:11 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=2e819614 · actor=agent · prev=a8ef4066e6b15f7aed1275a2a5fb7ca15b07e |
-| 2026-07-05 08:32:45 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=2e819614 · actor=agent · prev=17e83747d06c7c128c5348cdcdb0ccb23af0ddbff4a0c8 |
-| 2026-07-05 23:16:51 | `file.write` | fdk/FEATURE-INVENTORY.md · tool=Write · session=62b41f4c · actor=agent · prev=dddba2eb8f53af93234a1ce5f5b584fec8972a7d18 |
-| 2026-07-06 14:07:01 | `file.write` | harness/poc-vendor-neutral/install.sh · tool=Edit · session=49ec06f0 · actor=agent · prev=276a87a261cbed670fa7dc88e4830a |
-| 2026-07-06 14:07:20 | `file.write` | harness/scripts/install-harness.sh · tool=Edit · session=49ec06f0 · actor=agent · prev=56226ea5db0e9796f298deb1a7da73165 |
-| 2026-07-06 14:07:27 | `file.write` | harness/scripts/install-harness.sh · tool=Edit · session=49ec06f0 · actor=agent · prev=ad30e0f77a7bcd9e12db947c67d1aa3c0 |
-| 2026-07-06 14:08:38 | `file.write` | harness/tests/wiki-graph-user-reachability-test.sh · tool=Write · session=49ec06f0 · actor=agent · prev=31b9ff6ab5b08b23 |
-| 2026-07-06 14:11:30 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=49ec06f0 · actor=agent · prev=bd75d93f97732ed0c30e33fb7db7eefaa73b2 |
 | 2026-07-06 14:11:33 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=49ec06f0 · actor=agent · prev=9ac3477cdc04d24f5739cc30a833e5471a9771d2da961d |
 | 2026-07-06 14:15:41 | `file.write` | harness/poc-vendor-neutral/gen-converters.py · tool=Edit · session=49ec06f0 · actor=agent · prev=f6e9517d209458da1eb919b |
 | 2026-07-06 14:17:05 | `file.write` | harness/tests/wiki-graph-user-reachability-test.sh · tool=Edit · session=49ec06f0 · actor=agent · prev=3736c0ad00782ece8 |
@@ -59,6 +48,17 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-06 22:09:40 | `file.write` | harness/poc-vendor-neutral/gen-converters.py · tool=Edit · session=ba6458f2 · actor=agent · prev=2de7ea106f2a147df103eaa |
 | 2026-07-06 22:11:24 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=ba6458f2 · actor=agent · prev=25de675fa8550d1a509ab964f5bbfa09fa |
 | 2026-07-06 22:13:29 | `file.write` | llmwiki/wiki/sources/draft/060726-wiki-sync-openwiki-distill.md · tool=Write · session=ba6458f2 · actor=agent · prev=453 |
+| 2026-07-06 22:45:30 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=ba6458f2 · actor=agent · prev=89906c64dfcb950ca51016e06aa94f4f71 |
+| 2026-07-06 22:45:52 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=ba6458f2 · actor=agent · prev=25c69fef5e2a859823a54bb0c6c67bddd6 |
+| 2026-07-06 22:45:55 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=ba6458f2 · actor=agent · prev=831010c68e2c1341da75905928dad28be8 |
+| 2026-07-06 22:46:51 | `file.write` | skills/docs-site-macos/SKILL.md · tool=Edit · session=ba6458f2 · actor=agent · prev=b04b0105e4f91d53a1cdcff78bdca49164ab |
+| 2026-07-06 22:51:14 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=ba6458f2 · actor=agent · prev=ccc5a6d0079a6080a2ca6ff0cecd2e7093 |
+| 2026-07-06 22:51:15 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=ba6458f2 · actor=agent · prev=8ab681b31e71157fc830052f984bd9320a |
+| 2026-07-06 22:51:34 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=ba6458f2 · actor=agent · prev=e8da16bb5ae5305e190fa1a4fe5c9d7fe0 |
+| 2026-07-06 22:53:40 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=ba6458f2 · actor=agent · prev=db21f688df2527fc90cd79467c536208a6 |
+| 2026-07-06 22:53:43 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=ba6458f2 · actor=agent · prev=e9ec3d56544eb579695ec6f6a2f7c94c18 |
+| 2026-07-06 22:53:47 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=ba6458f2 · actor=agent · prev=12fa427775f78cfc7ef23385564833425d |
+| 2026-07-06 22:55:21 | `file.write` | skills/docs-site-macos/SKILL.md · tool=Edit · session=ba6458f2 · actor=agent · prev=f223cc96260439fcd47c54a118a2b32fa6da |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -244,3 +244,8 @@ Giải issue `030726-skill-resolve-supplychain` (trục #5 frontier-gap-scan, Ch
 - Bỏ chip icon 2 góc → NÚT GẠT track 50×26 (☀️/🌙 hai đầu, knob trượt, role=switch + keyboard), hàng "Giao diện" sticky đáy sidebar, vách ngăn mảnh, glass cả 2 mode.
 - Snippet chuẩn trong docs-site-macos viết lại theo dạng gạt-trong-sidebar; /fdk rule + memory ghi rõ "không chip trôi nổi rải góc, không chen dưới logo".
 - Verify click thật Safari: light↔dark mượt, persist localStorage. medic XANH.
+
+## 2026-07-06 — fdk — nâng thang cỡ chữ overstack.html (feedback "co nhỏ quá mức")
+
+- 16 cỡ chữ nâng trong build-overstack-docs.py: nav 12.5→14px (padding 5.5→7px), p 14.5→15.5, ul.s 13.5→14.5, .grp/.logo small/.lbl/chip/kpi/pcard/th đều +1px; regen + verify Safari.
+- Luật hoá SÀN CỠ CHỮ: docs-site-macos § Best Practices (≥14px text chính, ≥11px nhãn, cấm <10px trừ badge) + /fdk Rules; memory cập nhật.
