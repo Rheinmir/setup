@@ -477,7 +477,9 @@
     "title": "skill-usage đếm HỤT: chỉ đọc 1 dir transcript, bỏ mọi phiên worktree (GH#8 follow-up)",
     "desc": "Tool skill-usage.py (GH#8) hardcode 1 thư mục transcript của repo chính → mọi phiên chạy trong git-worktree (mỗi worktree = 1 dir transcript riêng do cwd-mã-hoá khác) bị bỏ đếm hoàn toàn, vi phạm chính tiêu chí 'khớp transcript thật'. Verify: repo có ~7 worktree-dir đều chứa Skill-call mà tool ngó lơ (40 vs 45 lời gọi, fdk 10 vs 14). Kèm bug phụ: timestamp UTC gom ISO-week không quy giờ địa phương (UTC+7) → call khuya gán nhầm tuần. Fix cấu trúc (Meadows: sửa nguồn, không vá số): suy MỌI worktree qua `git worktree list` (deterministic, chỉ repo này — privacy) + `.astimezone()` quy giờ địa phương trước khi gom tuần. Phát hiện bởi fable-planning pass.",
     "status": "solved",
-    "scope": ["harness"],
+    "scope": [
+      "harness"
+    ],
     "date": "2026-07-04",
     "solvedBy": "fdk/tools/skill-usage.py: discover_transcript_dirs() qua git worktree list + parse_ts().astimezone(); fable-planning surfaced, /fdk gác",
     "session": "orca-fdk issue-8 follow-up"
@@ -496,12 +498,37 @@
     "session": "orca-fdk issue-14"
   },
   {
+    "id": "p-auto-12",
+    "parent": null,
+    "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
+    "desc": "Bề mặt bị chạm: llmwiki/html/wiki-graph.html, llmwiki/wiki/log.md. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát); lần /fdk kế tiếp sẽ chưng lọc về đúng nhánh.",
+    "status": "open",
+    "scope": [],
+    "date": "06/07/26",
+    "session": "dd7fe6bc",
+    "pending": true
+  },
+  {
     "id": "p-22",
+    "parent": null,
+    "title": "Code→wiki drift không ai phát hiện: code đổi ngoài phiên có kỷ luật wiki thì wiki lệch im lặng",
+    "desc": "stale.json của wiki_ledger chỉ lan cờ stale (lệch thời) WIKI→WIKI; nếu code đổi mà phiên quên cập nhật wiki, hoặc người/tool khác sửa code ngoài phiên Claude, thì không cơ chế nào phát hiện — wiki nói dối cho tới lần ai đó tình cờ đọc lại. Lộ ra khi đối chiếu openwiki (LangChain 07/2026): họ có neo gitHead + cổng no-op tất định. Fix cấu trúc (Meadows: thêm vòng phản hồi thiếu, không dặn agent nhớ): distill rồi nấu lại — (1) harness/scripts/wiki-sync.py giữ neo .last-sync.json (commit + content-hash), --check là cổng no-op 0 token, có drift thì map file-đổi→trang-nhắc-tới và cờ code-drift vào stale.json (flock, cùng schema wiki_ledger); (2) session_start nhắc 1 dòng đầu phiên khi HEAD vượt neo (fail-open); (3) /lint bước 0 đọc cờ + kỷ luật surgical (docs-impact-plan, soft diff budget, cấm formatting-only, canonical-home, no-op hợp lệ), bước 9 chốt neo; (4) gen-converters sinh ci/wiki-refresh.yml cron→PR cho downstream (không key vẫn cờ tất định); (5) wiki-sync.py vào template-manifest → downstream nhận qua bộ cài sẵn có. Test: harness/tests/wiki-sync-test.sh 8/8.",
+    "status": "solved",
+    "scope": "full",
+    "date": "2026-07-06",
+    "solvedBy": "wiki-sync.py + session_start wiki_drift + /lint b0/b9 + /ingest impact-plan + ci/wiki-refresh.yml",
+    "session": "openwiki-distill"
+  },
+  {
+    "id": "p-23",
     "parent": null,
     "title": "Dây chuyền Ralph (GH#15): plan thin-slice một-frame đã qua council, chưa thi công",
     "desc": "Planning cho GH#15 (BR-kỹ → frames gắn-chặt-code → mỗi frame là loop có harness). Council 031/032 (Rams·Ada·Linus·Taleb·Lão Tử, 3 judge chấm kín, winner Taleb mean-rank 1.0 tuyệt đối): plan v0 ĐẠT CÓ ĐIỀU KIỆN với 6 sửa bắt buộc trước khi chạy — (1) chống xanh-giả: tách scope_test khỏi scope_code + hash test file trước/sau (fail-closed); (2) diff-jail tất định: git diff --name-only so glob scope_code, tràn scope → revert + no_progress (đề cử guard thứ 5 của loop-runner); (3) jail mức OS: chạy trong worktree riêng, quyền tối thiểu, scope không đụng harness/hook/CI; (4) định nghĩa trước điều kiện KILL thí nghiệm (via negativa); (5) working-tree sạch trước khi loop; (6) cắt thừa (bỏ monitor HTML/slicer khỏi bước 5). Đồng thuận 5/5: BR mẫu = task THẬT trong repo overstack (không app đồ chơi); prompt-dặn KHÔNG đủ làm scope-jail. Frame schema thêm: schema_version, scope_test, depends_on, parent_br+clause_id+parent_br_hash, created_by, env/setup_cmd, baseline_ref, run_log_ref+outcome. Report: llmwiki/html/council/council-report-032-seed42.html. [05/07] Planning HOÀN CHỈNH 4 step theo mẫu user: 4 cặp proposal .md+.html — (1) Interview (/br interview: raw→spec S1–S10→hỏi bù HTML+MD, lens-fill assumed), (2) Slice (frame schema v0 + frame-lint 5 luật + registry truy ngược, người duyệt từng lát), (3) Loop+Gate (6 phanh: +diff-jail +test-hash fail-closed, jail 3 tầng, KILL via-negativa, dry-run), (4) Monitor (build-line-status.py + /br status, lớp đọc tất định chống Goodhart). Hub slash MỘT tên /br. [05/07 THI CÔNG] Đã dựng đồ nghề tất định cả 4 step + selftest xanh: frame-lint.py (5 luật, 6 fixture BAD/GOOD) · loop-runner.py +2 phanh (diff-jail guard5 + test-hash guard6 PROTECT_VIOLATION exit6, selftest 5→7) · build-line-status.py (monitor 5 trạng thái + traceback + --check) · spec-template S1–S10 · hub skill /br đăng ký 6 mặt. Docs site 050726-ralph-pipeline-docs.html (mind map + 5 diagram kéo-thả + wiki + nhật ký deviation). medic --ci 0 fail. Deviation: frame-lint fnmatch, diff-jail tận dụng no-progress sẵn có (scope==state), monitor đọc BR.clauses.json, đăng ký cần 6 mặt. CÒN: end-to-end 1 BR THẬT (cần user chọn tài liệu vào raw/) + wire adapter claude -p (verified:false) + demo phá-scope trên đường thật.",
     "status": "partial",
-    "scope": ["harness", "skills"],
+    "scope": [
+      "harness",
+      "skills"
+    ],
     "date": "2026-07-05",
     "solvedBy": "frame-lint.py + loop-runner.py guard5/6 + build-line-status.py + skills/br + docs 050726-ralph-pipeline-docs.html; council-report-032",
     "session": "orca-fdk issue-15 build"

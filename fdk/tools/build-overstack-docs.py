@@ -183,9 +183,9 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;bac
 ::-webkit-scrollbar{width:11px;height:11px;background:transparent}::-webkit-scrollbar-thumb{background:transparent;border-radius:8px;border:3px solid transparent;background-clip:content-box;transition:background-color .25s}html.scrolling::-webkit-scrollbar-thumb,::-webkit-scrollbar-thumb:hover{background-color:rgba(10,132,255,.32)}
 nav{position:fixed;top:0;left:0;bottom:0;width:232px;z-index:100;overflow-y:auto;display:flex;flex-direction:column;gap:1px;padding:18px 12px;background:linear-gradient(165deg,rgba(255,255,255,.46),rgba(255,255,255,.22) 48%,rgba(240,248,255,.34));backdrop-filter:blur(24px) saturate(1.7);-webkit-backdrop-filter:blur(24px) saturate(1.7);border-right:1px solid rgba(255,255,255,.55);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),4px 0 24px rgba(30,90,170,.08);transition:transform .28s}
 nav::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(220px 160px at 18% 4%,rgba(255,255,255,.55),transparent 70%)}nav>*{position:relative}
-nav .logo{margin:0 0 8px;padding:6px 10px;font-weight:800;font-size:17px;letter-spacing:-.03em;background:linear-gradient(135deg,#0a84ff,#5856d6);-webkit-background-clip:text;background-clip:text;color:transparent}
+nav .logo{margin:0 0 8px;padding:6px 10px;font-weight:800;font-size:16px;letter-spacing:-.03em;background:linear-gradient(135deg,#0a84ff,#5856d6);-webkit-background-clip:text;background-clip:text;color:transparent}
 nav .logo small{display:block;font-size:10px;font-weight:600;color:var(--t2);-webkit-text-fill-color:var(--t2);letter-spacing:0}
-nav a{position:relative;overflow:hidden;padding:5.5px 12px;border-radius:9px;font-size:12.5px;color:var(--t2);text-decoration:none;transition:background .15s,color .15s}nav a:hover{background:rgba(10,132,255,.06);color:#0a84ff}nav a.active{color:#0a84ff;background:rgba(10,132,255,.08);font-weight:600}
+nav a{position:relative;overflow:hidden;padding:5px 11px;border-radius:9px;font-size:12px;color:var(--t2);text-decoration:none;transition:background .15s,color .15s}nav a:hover{background:rgba(10,132,255,.06);color:#0a84ff}nav a.active{color:#0a84ff;background:rgba(10,132,255,.08);font-weight:600}
 nav a .ic{display:inline-block;width:17px;margin-right:6px;text-align:center;opacity:.95}
 nav .grp{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#9aa4b2;margin:12px 12px 2px}
 .nav-close{position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--t2);cursor:pointer;background:rgba(0,0,0,.05);border:none;overflow:hidden}.nav-close:hover{color:#0a84ff;background:rgba(10,132,255,.1)}
@@ -195,36 +195,36 @@ nav .grp{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppe
 .ripple{position:absolute;border-radius:50%;pointer-events:none;transform:scale(0);opacity:.9;background:radial-gradient(circle,rgba(255,255,255,.6) 0%,rgba(10,132,255,.22) 35%,transparent 70%);box-shadow:0 0 0 1px rgba(255,255,255,.45);animation:rippleWave .65s cubic-bezier(.2,.6,.3,1) forwards}
 @keyframes rippleWave{to{transform:scale(2.8);opacity:0}}
 .hero{max-width:1080px;margin:0 auto;padding:74px 24px 8px}.hero .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#5856d6;background:rgba(88,86,214,.1);padding:4px 12px;border-radius:999px;margin-bottom:14px}
-.hero h1{font-size:clamp(30px,4.6vw,50px);line-height:1.06;letter-spacing:-.03em;margin:0 0 12px;background:linear-gradient(135deg,#0a84ff,#5856d6,#cfe3fb);-webkit-background-clip:text;background-clip:text;color:transparent}
-.hero p{font-size:16px;color:var(--t2);max-width:780px;margin:0}
+.hero h1{font-size:clamp(26px,4vw,40px);line-height:1.06;letter-spacing:-.03em;margin:0 0 12px;background:linear-gradient(135deg,#0a84ff,#5856d6,#cfe3fb);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{font-size:13.5px;color:var(--t2);max-width:780px;margin:0}
 section{position:relative}.sec::before{content:'';position:absolute;top:0;bottom:0;left:50%;width:100vw;transform:translateX(-50%);pointer-events:none}
 .inner{position:relative;max-width:1080px;margin:0 auto;padding:40px 24px 44px}
 .tag{display:inline-block;font-size:12px;font-weight:700;padding:4px 12px;border-radius:999px;margin-bottom:10px}
-h2{font-size:25px;letter-spacing:-.02em;color:#1d1d1f;margin:0 0 6px}.lead{font-size:15px;color:var(--t2);max-width:840px;margin:0 0 8px}
-h3{font-size:15.5px;margin:20px 0 6px;color:#1d1d1f}
-p{margin:10px 0;max-width:860px;font-size:14.5px}
+h2{font-size:21px;letter-spacing:-.02em;color:#1d1d1f;margin:0 0 6px}.lead{font-size:14px;color:var(--t2);max-width:840px;margin:0 0 8px}
+h3{font-size:14px;margin:20px 0 6px;color:#1d1d1f}
+p{margin:10px 0;max-width:860px;font-size:13.5px}
 .card{background:var(--glass2);backdrop-filter:blur(8px) saturate(1.1);-webkit-backdrop-filter:blur(8px) saturate(1.1);border:1px solid var(--border);border-radius:16px;box-shadow:var(--edge),0 4px 20px rgba(0,0,0,.06);padding:18px 20px;margin-top:14px}
-.card h4{margin:0 0 9px;font-size:14px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}.grid3{grid-template-columns:1fr 1fr 1fr}@media(max-width:780px){.grid,.grid3{grid-template-columns:1fr}}
+.card h4{margin:0 0 9px;font-size:13.5px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}.grid3{grid-template-columns:1fr 1fr 1fr}@media(max-width:780px){.grid,.grid3{grid-template-columns:1fr}}
 .pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin-top:12px}
 .pcard{display:flex;gap:10px;align-items:flex-start;background:var(--glass2);border:1px solid var(--border);border-radius:12px;padding:10px 11px}
-.pcard .pav{width:36px;height:36px;flex-shrink:0}.pcard .pn{font-size:12.5px;font-weight:700;color:var(--t1)}
-.pcard .pl{font-size:10.5px;font-weight:600}.pcard .ps{font-size:10px;color:var(--t2);margin-top:2px;line-height:1.35}
+.pcard .pav{width:36px;height:36px;flex-shrink:0}.pcard .pn{font-size:12px;font-weight:700;color:var(--t1)}
+.pcard .pl{font-size:10px;font-weight:600}.pcard .ps{font-size:10px;color:var(--t2);margin-top:2px;line-height:1.35}
 code{font-family:var(--mono);font-size:.85em;background:rgba(10,132,255,.08);padding:1px 5px;border-radius:5px;color:#0a5ec7}
 .code-wrap{position:relative;margin:12px 0}
 pre{background:rgba(13,24,40,.92);color:#e6edf6;border-radius:12px;padding:14px 46px 14px 16px;white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere;font-family:var(--mono);font-size:12.5px;line-height:1.55;margin:0;box-shadow:var(--edge),0 4px 20px rgba(0,0,0,.12)}pre code{background:none;color:inherit;padding:0;white-space:inherit}
 .code-copy{position:absolute;top:7px;right:7px;z-index:2;width:28px;height:26px;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,.12);color:#cbd5e1;border:1px solid rgba(255,255,255,.18);border-radius:7px;cursor:pointer;opacity:0;transition:opacity .15s,background .15s,color .15s}.code-copy svg{width:14px;height:14px;display:block}
 .code-wrap:hover .code-copy{opacity:1}.code-copy:hover{background:rgba(255,255,255,.22);color:#fff}.code-copy.copied{background:rgba(16,185,129,.28);color:#6ee7b7;border-color:rgba(16,185,129,.5);opacity:1}
 @media(max-width:640px){.code-copy{opacity:1}}
-ul.s{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}ul.s li{position:relative;padding-left:18px;font-size:13.5px;color:var(--t2)}ul.s li::before{content:'›';position:absolute;left:2px;font-weight:700;color:#5856d6}
+ul.s{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}ul.s li{position:relative;padding-left:18px;font-size:12.5px;color:var(--t2)}ul.s li::before{content:'›';position:absolute;left:2px;font-weight:700;color:#5856d6}
 ul.s li b{color:var(--t1)}
 .kpi{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}.kpi .b{flex:1;min-width:92px;background:var(--glass2);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:14px;box-shadow:var(--edge),0 4px 18px rgba(0,0,0,.05);padding:13px 15px}
-.kpi .n{font-size:25px;font-weight:800;letter-spacing:-.02em;line-height:1}.kpi .l{font-size:11px;color:var(--t2);margin-top:4px}
-.chip{display:inline-block;font-size:11.5px;font-weight:600;font-family:var(--mono);background:rgba(10,132,255,.08);color:#0a5ec7;padding:2px 8px;border-radius:6px;margin:3px 4px 0 0}
-ol.ck{margin:12px 0 0;padding-left:20px}ol.ck li{font-size:13.5px;color:var(--t2);margin:6px 0}ol.ck li b{color:var(--t1)}
+.kpi .n{font-size:22px;font-weight:800;letter-spacing:-.02em;line-height:1}.kpi .l{font-size:10.5px;color:var(--t2);margin-top:4px}
+.chip{display:inline-block;font-size:11px;font-weight:600;font-family:var(--mono);background:rgba(10,132,255,.08);color:#0a5ec7;padding:2px 8px;border-radius:6px;margin:3px 4px 0 0}
+ol.ck{margin:12px 0 0;padding-left:20px}ol.ck li{font-size:12.5px;color:var(--t2);margin:6px 0}ol.ck li b{color:var(--t1)}
 .skip{position:fixed;top:-60px;left:12px;z-index:200;padding:8px 14px;background:#0a84ff;color:#fff;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;transition:top .18s}.skip:focus{top:12px}
 .table-wrap{overflow-x:auto;margin:14px 0;-webkit-overflow-scrolling:touch}.table-wrap table{margin:0}
-table{width:100%;border-collapse:collapse;margin:14px 0;background:var(--glass3);backdrop-filter:blur(4px);border:1px solid var(--border);border-radius:12px;overflow:hidden;font-size:13px;box-shadow:var(--edge),0 4px 18px rgba(0,0,0,.05)}
-th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}th{font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--t2);background:rgba(10,132,255,.05)}tr:last-child td{border-bottom:none}td code{white-space:nowrap}
+table{width:100%;border-collapse:collapse;margin:14px 0;background:var(--glass3);backdrop-filter:blur(4px);border:1px solid var(--border);border-radius:12px;overflow:hidden;font-size:12.5px;box-shadow:var(--edge),0 4px 18px rgba(0,0,0,.05)}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}th{font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--t2);background:rgba(10,132,255,.05)}tr:last-child td{border-bottom:none}td code{white-space:nowrap}
 .note{background:rgba(255,149,0,.08);border:1px solid rgba(255,149,0,.25);border-radius:14px;padding:16px 18px;margin-top:14px}
 .note h4{margin:0 0 8px;color:#b46a00}
 footer{max-width:1080px;margin:0 auto;padding:26px 24px 60px;font-size:12px;color:var(--t2);border-top:1px solid var(--border)}
@@ -271,21 +271,57 @@ a:focus-visible,button:focus-visible,nav a:focus-visible,.code-copy:focus-visibl
 nav a:active{transform:translateY(.5px)}
 .code-copy:active,.nav-toggle:active,.nav-close:active{transform:scale(.94)}
 
-/* ── Dark mode (issue #14) — theo prefers-color-scheme; token-hoá + override surface hardcoded ── */
-@media (prefers-color-scheme: dark){
-  :root{--glass2:rgba(30,34,44,.72);--glass3:rgba(36,40,52,.9);
-    --edge:inset 0 1px 0 rgba(255,255,255,.06);--border:rgba(120,160,220,.18);--t1:#e7e9ee;--t2:#9aa2b1;}
-  html{background:#0c0f16;scrollbar-color:transparent transparent}
-  body{color:var(--t1);background:radial-gradient(900px 500px at 12% -10%,rgba(10,132,255,.14),transparent 60%),radial-gradient(700px 420px at 95% 12%,rgba(88,86,214,.12),transparent 55%),linear-gradient(180deg,#0d1017,#0a0d13)}
-  h1,h2,h3,h4{color:#f2f4f8}
-  nav{background:rgba(18,21,28,.82)}
-  table th,table td{border-color:var(--border)}
-  table th{background:rgba(255,255,255,.04)}
-  .card,.note,.kpi .b,.mm .node,.diagram-box{background:var(--glass2)}
-  a{color:#5fa8ff}
-}"""
+/* theme-switch — NÚT GẠT sáng/tối, hàng footer dính ĐÁY sidebar (feedback 2026-07-06: đừng rải 2 góc, đừng chen dưới logo) */
+.theme-row{position:sticky;bottom:-18px;margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:8px;margin-left:-12px;margin-right:-12px;margin-bottom:-18px;padding:11px 16px;border-top:1px solid rgba(30,90,170,.14);background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(240,248,255,.65));backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4)}
+.theme-row .lbl{font-size:10.5px;font-weight:600;letter-spacing:.02em;color:var(--t2)}
+.theme-switch{display:inline-flex;align-items:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.theme-switch .track{position:relative;width:50px;height:26px;border-radius:999px;background:linear-gradient(165deg,rgba(255,255,255,.6),rgba(255,255,255,.3));border:1px solid rgba(30,90,170,.2);box-shadow:inset 0 1px 3px rgba(30,90,170,.14);transition:background .2s,border-color .2s}
+.theme-switch .track::before{content:'☀️';position:absolute;left:6px;top:50%;transform:translateY(-50%);font-size:11px}
+.theme-switch .track::after{content:'🌙';position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:11px}
+.theme-switch .knob{position:absolute;z-index:1;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(20,40,90,.3);transition:left .18s ease}
+.theme-switch.on .knob{left:26px}
+.theme-switch.on .track{background:linear-gradient(165deg,#2b3040,#191d27);border-color:rgba(120,160,220,.3)}
+.theme-switch:active .knob{transform:scale(.92)}"""
+
+# ── Dark mode (issue #14) + toggle sáng/tối (feedback 2026-07-06) ──────────────
+# MỘT nguồn _DARK_RULES sinh RA HAI khối CSS (chống drift giữa 2 bản):
+#   (a) @media prefers-color-scheme — mặc định theo hệ, CHỈ khi user chưa chọn light
+#   (b) html[data-theme=dark]      — user bấm toggle chọn dark tường minh (localStorage)
+# Selector dùng "&" làm placeholder cho <html>; light = base CSS nên không cần khối riêng.
+_DARK_RULES = [
+    ("&", "--glass2:rgba(30,34,44,.72);--glass3:rgba(36,40,52,.9);"
+          "--edge:inset 0 1px 0 rgba(255,255,255,.06);--border:rgba(120,160,220,.18);"
+          "--t1:#e7e9ee;--t2:#9aa2b1;background:#0c0f16;scrollbar-color:transparent transparent"),
+    ("& body", "color:var(--t1);background:radial-gradient(900px 500px at 12% -10%,rgba(10,132,255,.14),transparent 60%),"
+               "radial-gradient(700px 420px at 95% 12%,rgba(88,86,214,.12),transparent 55%),"
+               "linear-gradient(180deg,#0d1017,#0a0d13)"),
+    ("& h1,& h2,& h3,& h4", "color:#f2f4f8"),
+    ("& nav", "background:rgba(18,21,28,.82)"),
+    ("& table th,& table td", "border-color:var(--border)"),
+    ("& table th", "background:rgba(255,255,255,.04)"),
+    ("& .card,& .note,& .kpi .b,& .mm .node,& .diagram-box", "background:var(--glass2)"),
+    ("& a", "color:#5fa8ff"),
+    ("& .theme-row", "border-top-color:var(--border);background:linear-gradient(180deg,rgba(24,28,38,.7),rgba(16,20,28,.85))"),
+]
+
+
+def _theme_css() -> str:
+    def block(prefix):
+        return "\n".join(sel.replace("&", prefix) + "{" + body + "}" for sel, body in _DARK_RULES)
+    return ("\n@media (prefers-color-scheme: dark){\n" + block("html:not([data-theme=light])") + "\n}\n"
+            + block("html[data-theme=dark]") + "\n")
+
+
+CSS_BASE += _theme_css()
 
 JS = r"""
+(function(){var K='overstack-theme',d=document.documentElement,nav=document.querySelector('nav');if(!nav)return;function isDark(){var t=d.getAttribute('data-theme');return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches}
+var sw=document.createElement('div');sw.className='theme-switch';sw.id='theme-toggle';sw.dataset.noRipple='1';sw.setAttribute('role','switch');sw.setAttribute('tabindex','0');sw.innerHTML='<span class="track"><span class="knob"></span></span>';
+var row=document.createElement('div');row.className='theme-row';var lb=document.createElement('span');lb.className='lbl';lb.textContent='Giao diện';row.appendChild(lb);row.appendChild(sw);nav.appendChild(row);
+function paint(){var dk=isDark();sw.classList.toggle('on',dk);sw.setAttribute('aria-checked',dk?'true':'false');sw.setAttribute('aria-label',dk?'Nút gạt giao diện: đang tối — gạt sang sáng':'Nút gạt giao diện: đang sáng — gạt sang tối');sw.title=sw.getAttribute('aria-label')}
+function flip(){var next=isDark()?'light':'dark';d.setAttribute('data-theme',next);try{localStorage.setItem(K,next)}catch(e){}paint()}
+sw.addEventListener('click',flip);sw.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '||e.key==='Spacebar'){e.preventDefault();flip()}});
+try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',paint)}catch(e){}paint()})();
 (function(){const n=document.querySelector('nav');if(!n)return;const o=document.createElement('button');o.className='nav-toggle';o.textContent='☰';o.setAttribute('aria-label','Mở menu điều hướng');document.body.appendChild(o);const c=document.createElement('button');c.className='nav-close';c.textContent='✕';c.setAttribute('aria-label','Đóng menu điều hướng');n.appendChild(c);o.onclick=function(){document.body.classList.remove('nav-collapsed')};c.onclick=function(){document.body.classList.add('nav-collapsed')};if(matchMedia('(max-width:640px)').matches)document.body.classList.add('nav-collapsed')})();
 (function(){var ls=[].slice.call(document.querySelectorAll('nav a')),ss=[].slice.call(document.querySelectorAll('section[id]'));var ob=new IntersectionObserver(function(es){var a='';es.forEach(function(e){if(e.isIntersecting)a=e.target.id});if(a)ls.forEach(function(l){l.classList.toggle('active',l.getAttribute('href')==='#'+a)})},{rootMargin:'-40% 0px -55% 0px'});ss.forEach(function(s){ob.observe(s)})})();
 (function(){var t;addEventListener('scroll',function(){document.documentElement.classList.add('scrolling');clearTimeout(t);t=setTimeout(function(){document.documentElement.classList.remove('scrolling')},900)},{passive:true})})();
@@ -496,6 +532,7 @@ def sections(root: Path):
         "<div class=\"b\"><div class=\"n\" style=\"color:#30b0c7\">3</div><div class=\"l\">nền tảng + Orca</div></div></div>",
         "<div class=\"grid\"><div class=\"card\"><h4>3 nền tảng + lớp điều phối</h4><ul class=\"s\">"
         "<li><b>Nền 1 · Wiki (tri thức)</b> — nơi dự án nhớ: concept, entity, nguồn, ADR, draft; mỗi trang truy được nguồn.</li>"
+        "<li><b>Wiki-graph (đồ thị tri thức + code)</b> — engine tất định (không RAG) tự dựng <code>wiki-graph.html</code>: node = trang wiki + file code, cạnh = quan hệ (wikilink, import code→code đa ngôn ngữ). Tự tươi cuối phiên khi wiki/code đổi. Nay <b>ship xuống downstream</b> (opt-in <code>OVERSTACK_WIKIGRAPH=1</code>, fail-open) nên dự án của bạn tự vẽ được đồ thị của chính nó, không chỉ repo framework.</li>"
         "<li><b>Nền 2 · Harness (rào chắn)</b> — luật tất định bằng code chặn agent làm bậy, không tốn token, không bypass được khi merge.</li>"
         "<li><b>Nền 3 · Skills (kỹ năng)</b> — quy trình đóng gói, gọi bằng <code>/tên</code>, cài global dùng mọi dự án.</li>"
         "<li><b>Orca (điều phối)</b> — KHÔNG phải nền tảng mà là LỚP chạy nhiều agent trên 3 nền đó: propose → gate → dispatch → verify. (Lưu ý: \"5 trụ runtime\" lại là khái niệm khác — đo lường &amp; gác LÚC CHẠY.)</li></ul></div>"
@@ -576,7 +613,7 @@ def sections(root: Path):
     ]))
 
     S.append(("wiki", "Wiki", "03 · Tri thức", "Nền tảng 1 — Wiki (tri thức)", [
-        "<p class=\"lead\">Wiki là bộ nhớ dài hạn của dự án. overstack ép nó luôn truy được nguồn và không bao giờ lệch index — bằng rào chắn, không bằng kỷ luật con người.</p>",
+        "<p class=\"lead\">Wiki là bộ nhớ dài hạn của dự án. overstack ép nó luôn truy được nguồn, không bao giờ lệch index, và — từ 07/2026 — tự phát hiện khi code đã đổi mà wiki chưa theo kịp. Tất cả bằng rào chắn tất định (code chạy ở hook/CI, không tốn token), không bằng kỷ luật con người.</p>",
         "<div class=\"grid\"><div class=\"card\"><h4>Luật vàng của wiki</h4><ul class=\"s\">"
         "<li>Mọi trang phải có <code>## Origin</code> — luôn truy được nguồn gốc (R2).</li>"
         "<li>Thêm/xoá trang phải cập nhật <code>wiki/index.md</code> (R3) — overstack có <code>--fix</code> tự thêm.</li>"
@@ -587,6 +624,45 @@ def sections(root: Path):
         "<li><code>architecture/</code>, <code>tours/</code> — kiến trúc & tour. File wiki KHÔNG nằm ở gốc <code>wiki/</code> (R5).</li>"
         "<li>Frontmatter OKF v0.1 (<code>type:</code>…) — máy đọc được (R9).</li>"
         "<li>Liên kết chéo bằng <code>[[wikilink]]</code>; trang chỉ tạo SAU khi code đã commit.</li></ul></div></div>",
+        "<div class=\"grid\"><div class=\"card\"><h4>Tự phát hiện lệch (staleness) — HAI chiều</h4><ul class=\"s\">"
+        "<li><b>Wiki→wiki</b>: mỗi lần ghi trang, hook <b>wiki_ledger</b> append sự kiện vào <code>ledger.jsonl</code> "
+        "(khoá <code>flock</code> — nhiều phiên ghi song song không giẫm dòng nhau) và lan cờ stale (lệch thời) "
+        "<i>đúng 1 bước</i> sang các trang trỏ tới nó (<code>stale.json</code> — cap 1 bước nên miễn nhiễm bão-stale/chu trình).</li>"
+        "<li><b>Code→wiki</b> <i>(mới 07/2026, distill từ openwiki của LangChain rồi nấu lại)</i>: <b>wiki-sync</b> giữ một "
+        "NEO <code>.last-sync.json</code> (commit + content-hash của wiki lần rà cuối). <code>--check</code> là "
+        "<b>cổng no-op tất định 0 token</b>: code không đổi kể từ neo → trả lời \"wiki current\" mà không cần gọi LLM; "
+        "có đổi → tự map file-code-đổi → trang wiki nhắc tới file đó và cờ <code>code-drift</code>.</li>"
+        "<li>Đầu mỗi phiên, <b>session_start</b> nhắc 1 dòng nếu code đã đổi N commit kể từ neo — realtime hơn cron "
+        "(openwiki không có khái niệm phiên để nhắc kiểu này).</li>"
+        "<li><i>Giới hạn thật</i>: map code→trang là heuristic nhắc-tên-file (thiên về bắt-thừa); <code>/lint</code> "
+        "vẫn là người phán xử cuối trước khi sửa.</li></ul></div>"
+        "<div class=\"card\"><h4>Vận hành không người trông</h4><ul class=\"s\">"
+        "<li>CI cron <code>wiki-refresh.yml</code> (sinh từ policy bằng gen-converters): mỗi ngày chạy cổng no-op "
+        "trước — <b>không drift thì kết thúc miễn phí</b> (0 token).</li>"
+        "<li>Có drift + có <code>ANTHROPIC_API_KEY</code>: LLM chạy <code>/lint</code> sửa <i>surgical</i> rồi chốt neo; "
+        "mở PR <b>chỉ diff wiki</b> cho người review.</li>"
+        "<li>Không có key: vẫn mở PR mang cờ <code>code-drift</code> tất định để phiên làm việc kế rà — degrade tử tế, "
+        "không im lặng bỏ qua.</li>"
+        "<li>Neo chỉ được ghi khi nội dung wiki <i>thực sự</i> đổi (content-hash) — cron chạy lại không tự sinh diff rác.</li></ul></div></div>",
+        "<div class=\"grid\"><div class=\"card\"><h4>Kỷ luật cập nhật surgical (phẫu thuật — chạm đúng chỗ)</h4><ul class=\"s\">"
+        "<li><b>Docs-impact-plan</b> trước khi sửa: <code>code đổi → trang → sửa gì → vì sao</code>; trang không truy được về một thay đổi cụ thể thì không đụng.</li>"
+        "<li><b>Soft diff budget</b>: ít file code đổi thì chỉ sửa 1–2 trang; muốn sửa rộng hơn phải tự vấn trước.</li>"
+        "<li><b>Cấm formatting-only edit</b> — diff nhiễu là nợ cho người review; <b>canonical home</b> — mỗi concept một trang chính chủ, nơi khác chỉ <code>[[wikilink]]</code>.</li>"
+        "<li><b>No-op hợp lệ</b>: \"wiki đã current, không sửa gì\" là kết quả tốt — không sửa lấy có.</li></ul></div>"
+        "<div class=\"card\"><h4>Truy hồi &amp; trí nhớ nhiều tầng</h4><ul class=\"s\">"
+        "<li><b>wiki-graph</b> — đồ thị tri thức + code sinh tất định (không RAG), truy wiki↔code hai chiều.</li>"
+        "<li><b>mem-rank / record-episode</b> — tầng nhớ episodic (theo phiên): phiên sau hỏi \"phiên trước làm gì\" theo nghĩa.</li>"
+        "<li><b>wiki-room</b> — context phiên chính mục rữa thì mở room 1 tầng nạp chi tiết wiki với budget cứng.</li>"
+        "<li><b>retrieval-eval</b> chạy trong CI — chất lượng truy hồi không được tụt dưới sàn (tất định, không LLM).</li></ul></div></div>",
+        "<div class=\"note\"><h4>Đối chiếu thẳng thắn với openwiki (LangChain, 07/2026)</h4><ul class=\"s\">"
+        "<li>4 trục openwiki từng hơn — <b>phát hiện code→wiki drift</b>, <b>cổng no-op 0 token + content-hash</b>, "
+        "<b>cron→PR không người trông</b>, <b>chi phí nhập cuộc thấp</b> — nay đều đã phủ (wiki-sync đi cùng bộ cài, "
+        "downstream nhận qua <code>install-harness.sh</code>/<code>/sync-template</code>, không thêm bước cài riêng).</li>"
+        "<li>Các trục overstack vốn hơn và giữ nguyên: <b>provenance</b> (Origin + ledger + log — openwiki không truy được nguồn claim), "
+        "<b>nhất quán nội-wiki bằng validator</b> (openwiki chỉ dặn trong prompt), <b>độ tươi trong phiên</b> (openwiki trễ tới 24h giữa 2 cron), "
+        "<b>đa phiên an toàn</b> (flock), và wiki gắn thẳng vào dev-loop (propose→verify→ship, ADR, eval).</li>"
+        "<li>Có sao nói vậy: phần cron→PR của overstack cần secret <code>ANTHROPIC_API_KEY</code> mới tự sửa được bằng LLM "
+        "(openwiki cũng cần key của provider họ); không key thì mức tự động dừng ở cờ tất định.</li></ul></div>",
     ]))
 
     _flow = [("agent định ghi", "#9aa4b2", ""), ("L0 · hook", "#0a84ff", "PreToolUse"),
@@ -965,6 +1041,9 @@ def render(root: Path) -> str:
         body.append(f'<section id="s{i}" class="sec s{i}"><div class="inner">{"".join(inner)}</div></section>')
     html = [
         '<!DOCTYPE html><html lang="vi"><head><meta charset="utf-8">',
+        # chống FOUC: áp theme user đã chọn TRƯỚC khi CSS render (đọc localStorage ngay trong head)
+        '<script>(function(){try{var t=localStorage.getItem("overstack-theme");'
+        'if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}})();</script>',
         '<meta name="viewport" content="width=device-width, initial-scale=1">',
         "<title>overstack — tài liệu chính thức</title>",
         "<style>", CSS_BASE, accent_css(len(S)), "</style></head><body>",

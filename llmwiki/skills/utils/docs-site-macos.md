@@ -779,6 +779,52 @@ pre.code-block,.foot-tree{font-family:var(--font-mono)}
 - Roboto/Segoe UI là fallback hệ (Android/Linux/Windows có sẵn) — KHÔNG tải webfont để giữ self-contained.
 - Mono luôn đi qua `ui-monospace` trước Menlo để bắt SF Mono trên macOS mới.
 
+## Theme Toggle sáng/tối (REQUIRED — feedback user 2026-07-06, KHÔNG được ép một mode)
+
+Mọi trang sinh ra phải cho user TỰ CHỌN sáng/tối bằng một nút toggle — `prefers-color-scheme` chỉ là **mặc định ban đầu**, không phải quyết định cuối. Ép cứng dark (hoặc light) là vi phạm. Ba mảnh bắt buộc, không mảnh nào được thiếu:
+
+**1. CSS — dark là override theo token, viết MỘT lần dùng cho cả 2 ngả** (theo-hệ *khi user chưa chọn light*, và user-chọn-dark tường minh; light = base CSS nên không cần khối riêng):
+```css
+/* mặc định theo hệ — chỉ khi user CHƯA chọn light */
+@media (prefers-color-scheme: dark){
+  html:not([data-theme=light]){ --glass2:…; --border:…; --t1:…; --t2:…; background:#0c0f16 }
+  html:not([data-theme=light]) body{ … } /* prefix từng selector */
+}
+/* user bấm toggle chọn dark tường minh */
+html[data-theme=dark]{ /* CÙNG token như trên */ }
+html[data-theme=dark] body{ … }
+```
+Sinh trang bằng script? Giữ MỘT danh sách rule rồi emit 2 khối với 2 prefix (xem `_DARK_RULES` trong `fdk/tools/build-overstack-docs.py`) — chép tay 2 bản là mầm drift.
+
+**2. `<head>` — chống FOUC** (áp lựa chọn đã lưu TRƯỚC khi CSS render):
+```html
+<script>(function(){try{var t=localStorage.getItem("<tên-trang>-theme");
+if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}})();</script>
+```
+
+**3. NÚT GẠT (switch), KHÔNG phải chip icon rải góc** (feedback lần 3: chip 2 góc "không giống ai") — hàng footer **dính đáy sidebar/nav**: nhãn "Giao diện" bên trái + switch bên phải, vách ngăn mảnh phía trên. Track pill 50×26 có ☀️/🌙 hai đầu, knob trượt; `role="switch"` + `aria-checked` + Enter/Space toggle:
+```css
+.theme-row{position:sticky;bottom:-<pad-nav>;margin-top:auto;display:flex;align-items:center;justify-content:space-between;
+  padding:11px 16px;border-top:1px solid rgba(30,90,170,.14);background:…glass…;backdrop-filter:blur(14px)}
+.theme-switch .track{position:relative;width:50px;height:26px;border-radius:999px;…}
+.theme-switch .track::before{content:'☀️';left:6px;…} .theme-switch .track::after{content:'🌙';right:6px;…}
+.theme-switch .knob{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .18s}
+.theme-switch.on .knob{left:26px} .theme-switch.on .track{background:…dark…}
+```
+```js
+(function(){var K='<tên-trang>-theme',d=document.documentElement,nav=document.querySelector('nav');if(!nav)return;
+function isDark(){var t=d.getAttribute('data-theme');return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches}
+var sw=document.createElement('div');sw.className='theme-switch';sw.setAttribute('role','switch');sw.setAttribute('tabindex','0');
+sw.innerHTML='<span class="track"><span class="knob"></span></span>';
+var row=document.createElement('div');row.className='theme-row';
+var lb=document.createElement('span');lb.className='lbl';lb.textContent='Giao diện';row.appendChild(lb);row.appendChild(sw);nav.appendChild(row);
+function paint(){var dk=isDark();sw.classList.toggle('on',dk);sw.setAttribute('aria-checked',dk?'true':'false');
+  sw.setAttribute('aria-label',dk?'Nút gạt giao diện: đang tối — gạt sang sáng':'Nút gạt giao diện: đang sáng — gạt sang tối')}
+function flip(){var n=isDark()?'light':'dark';d.setAttribute('data-theme',n);try{localStorage.setItem(K,n)}catch(e){}paint()}
+sw.addEventListener('click',flip);sw.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();flip()}});paint()})();
+```
+Trang không có sidebar (landing một cột)? Đặt cùng hàng footer của trang, vẫn là NÚT GẠT có nhãn — tuyệt đối không quay lại chip icon trôi nổi ở góc.
+
 ## Accessibility & Document Head (REQUIRED)
 
 These are easy to forget and break silently — wire all of them on every page.
@@ -890,6 +936,7 @@ Keep the chrome (traffic-light header), the system-font stack (`var(--font-text)
 
 ## Best Practices
 
+- **THANG CỠ CHỮ COMPACT — tối ưu màn laptop 13″ (feedback user 2026-07-06, đã đảo chiều một lần — KHÔNG tăng size):** GIẢM chứ đừng tăng: body `p` 13–13.5px, `.lead` 14px, nav link 12px (padding dọc ~5px), list/bảng 12.5px, nhãn/caption 10–10.5px, `h2` ~21px, hero `clamp(26px,4vw,40px)`. Tăng cỡ chữ để "dễ đọc" là SAI trên 13″ — ít nội dung lọt màn hình, wrap chật, nhìn tệ hơn; muốn dễ đọc thì chỉnh line-height/contrast, không chỉnh size. Badge đếm số được phép <10px.
 - ALWAYS inline SVG directly in the HTML (not external files)
 - ALWAYS use `clamp()` for hero heading size: `font-size: clamp(32px,5vw,56px)`
 - NEVER use `☐` Unicode for checklists — ALWAYS use real `<input type="checkbox">` with `<label for="...">` so items are clickable. Add this CSS for every checklist:

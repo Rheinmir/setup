@@ -108,6 +108,26 @@ if [ "${1:-}" = "--global" ]; then
   cp "$SRC/fdk/tools/build-capabilities.py" "$GH/hooks/build-capabilities.py"
   log "GLOBAL: hooks + validators + health-check + code-logger + build-capabilities → $GH/hooks/"
 
+  # GLOBAL-SHARED engine + tools (council-036 · travel-policy v2 tầng global_shared): mirror cấu trúc
+  # repo (fdk/tools, harness/scripts, harness/validators) để hooklib.resolve_tool + find_validators
+  # tìm được engine ở ~/.claude/harness/<rel>. Mọi project được gác dùng CHUNG — cài 1 lần, update 1 chỗ,
+  # KHÔNG copy vào từng repo. code_imports.py đi cùng build-wiki-graph.py (copy nguyên thư mục).
+  mkdir -p "$GH/fdk/tools" "$GH/harness/scripts" "$GH/harness/validators"
+  cp "$SRC/fdk/tools/"*.py         "$GH/fdk/tools/"        2>/dev/null || true
+  cp "$SRC/harness/scripts/"*.py   "$GH/harness/scripts/"  2>/dev/null || true
+  cp "$SRC/harness/validators/"*.py "$GH/harness/validators/" 2>/dev/null || true
+  cp "$SRC/harness/"*.yaml         "$GH/harness/"          2>/dev/null || true
+  cp "$SRC/harness/version.json"   "$GH/version.json"      2>/dev/null || true
+  # Phase 1 v4 (council-038): poc-vendor-neutral (RÀO CHẮN R1-R17: bin/llmwiki-validate.py, policy.yaml,
+  # gen-converters) → global. CI downstream (Phase 3) sẽ curl bootstrap → cài poc global → validate từ global;
+  # pre-commit downstream trỏ ~/.claude/harness/... . Mirror cấu trúc để llmwiki-validate.py đọc policy.yaml cạnh nó.
+  if [ -d "$SRC/harness/poc-vendor-neutral" ]; then
+    mkdir -p "$GH/harness/poc-vendor-neutral"
+    cp -R "$SRC/harness/poc-vendor-neutral/." "$GH/harness/poc-vendor-neutral/" 2>/dev/null || true
+    log "GLOBAL-SHARED rào chắn: poc-vendor-neutral (validate + policy + converters) → $GH/harness/poc-vendor-neutral/"
+  fi
+  log "GLOBAL-SHARED engine: fdk/tools + harness/scripts + validators + *.yaml + version.json → $GH/ (mọi project dùng chung)"
+
   SETTINGS="$HOME/.claude/settings.json"
   [ -f "$SETTINGS" ] && cp "$SETTINGS" "$SETTINGS.bak.$(date +%s)" || echo '{}' > "$SETTINGS"
   python3 - << 'PYEOF'
@@ -117,7 +137,13 @@ cur = json.load(open(path))
 HOOKS_DIR = '$HOME/.claude/harness/hooks'
 def cmd(script):
     # if-guard (KHÔNG dùng `&& ... || true` — nó nuốt exit 2, mất khả năng chặn)
-    return f'if [ -d "${{CLAUDE_PROJECT_DIR:-.}}/llmwiki" ]; then python3 "{HOOKS_DIR}/{script}"; fi'
+    # v4 (GH#63 Phase 2): gate theo .harness-stamp (hợp đồng install ghi ra, travel theo git)
+    # thay vì [ -d llmwiki ] — repo chưa curl-bootstrap thì hook global KHÔNG fire (opt-in tường minh).
+    return f'if [ -f "${{CLAUDE_PROJECT_DIR:-.}}/llmwiki/.harness-stamp" ]; then python3 "{HOOKS_DIR}/{script}"; fi'
+# dọn entry harness-global đời cũ (guard [ -d llmwiki ] hoặc format khác) trước khi thêm bản mới —
+# idempotent qua các lần đổi format, không để hook fire đôi; hook KHÁC của user giữ nguyên.
+def _is_stale(c):
+    return HOOKS_DIR in (c or "") and '/llmwiki/.harness-stamp" ]' not in (c or "")
 tpl = {
     "PreToolUse":  [{"matcher": "Write|Edit|MultiEdit|NotebookEdit|Bash", "script": "pre_tool_use.py"},
                     {"matcher": "Bash", "script": "orca_guard.py"}],
@@ -133,6 +159,16 @@ for d in ["Write(./llmwiki/raw/**)", "Edit(./llmwiki/raw/**)", "MultiEdit(./llmw
     if d not in cur["permissions"]["deny"]:
         cur["permissions"]["deny"].append(d)
 cur.setdefault("hooks", {})
+for event, defs in list(cur["hooks"].items()):
+    nd = []
+    for d in defs:
+        d["hooks"] = [h for h in (d.get("hooks") or []) if not _is_stale(h.get("command"))]
+        if d.get("hooks"):
+            nd.append(d)
+    if nd:
+        cur["hooks"][event] = nd
+    else:
+        cur["hooks"].pop(event, None)
 for event, spec in tpl.items():
     defs = cur["hooks"].setdefault(event, [])
     for s in (spec if isinstance(spec, list) else [spec]):

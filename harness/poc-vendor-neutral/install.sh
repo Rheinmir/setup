@@ -190,6 +190,36 @@ if [ "$WITH_WIKI" = 1 ]; then
         warn "  problem-tree template chưa tải được (mạng?) — hook R17 sẽ fail-open tới khi có sổ"
       fi
     fi
+    # v4 ĐẢO GH#51 (council-038, GH#63 Phase 2): engine KHÔNG travel vào repo nữa — GLOBAL-SHARED
+    # ~/.claude/harness là source-of-truth (U10). Repo chỉ giữ llmwiki (data) + .harness-stamp.
+    # Hooks fire từ GLOBAL ~/.claude/settings.json (install-harness --global wire, guard theo stamp).
+    GH_HOME="${OVERSTACK_HARNESS_HOME:-$HOME/.claude/harness}"
+    # 1) đảm bảo global harness có mặt — thiếu → cài (ưu tiên bundle cạnh SRC, fallback curl)
+    if [ ! -f "$GH_HOME/version.json" ]; then
+      log "  global harness chưa có ($GH_HOME) → cài install-harness.sh --global"
+      IH="$SRC/../scripts/install-harness.sh"
+      if [ ! -f "$IH" ]; then
+        IH="$(mktemp)"
+        curl -fsSL "$REPO_RAW/harness/scripts/install-harness.sh" -o "$IH" 2>/dev/null || IH=""
+      fi
+      if [ -n "$IH" ] && [ -f "$IH" ]; then
+        bash "$IH" --global || warn "  cài global lỗi — chạy tay: install-harness.sh --global (fail-open, không chặn install)"
+      else
+        warn "  không tải được install-harness.sh (mạng?) — cài tay: $REPO_RAW/harness/scripts/install-harness.sh --global"
+      fi
+    fi
+    # 2) stamp — hợp đồng travel "repo này được gác bản vX" (session_start so với global → warn skew, U11)
+    TV="$(python3 -c "import json,sys;print(json.load(open(sys.argv[1])).get('template_version','0'))" "$GH_HOME/version.json" 2>/dev/null || echo 0)"
+    printf '{"schema": 1, "guarded_by": "%s"}\n' "${TV:-0}" > "$ROOT/llmwiki/.harness-stamp"
+    log "  ✓ llmwiki/.harness-stamp (guarded_by: ${TV:-0})"
+    # 3) U10: gỡ engine bản GH#51 từng copy vào repo (fdk/tools, harness/scripts) — global thay thế.
+    #    KHÔNG đụng repo framework (nhận diện: có fdk/wiki — framework_only, downstream không có).
+    if [ ! -d "$ROOT/fdk/wiki" ]; then
+      for d in fdk/tools harness/scripts; do
+        if [ -d "$ROOT/$d" ]; then rm -rf "$ROOT/${d:?}" && log "  ✓ gỡ $d khỏi repo (engine dùng bản global — U10)"; fi
+      done
+      rmdir "$ROOT/fdk" 2>/dev/null || true
+    fi
   fi
 fi
 

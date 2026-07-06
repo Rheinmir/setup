@@ -6,29 +6,81 @@ import re
 import subprocess
 import sys
 
-from hooklib import audit, code_log, find_validators, find_wiki_dir, project_dir, read_payload, run_validator
+from hooklib import audit, code_log, find_validators, find_wiki_dir, project_dir, read_payload, resolve_tool, run_validator
+
+
+# file code (đa ngôn ngữ) trong git-status → trigger regen phần code-graph của wiki-graph.
+# `$` + re.M vì mỗi dòng porcelain kết ở đường dẫn; khớp SUPPORTED_EXTS của code_imports.
+_CODE_RE = re.compile(r"\.(py|js|jsx|ts|tsx|mjs|cjs|go|rs|java|rb|php|c|h|cpp|cc|sh)$", re.M)
+
+
+def _scope_config(root: str):
+    """GH#49: khai báo scope index TƯỜNG MINH qua .overstack.yaml tại root dự án — thay vì
+    ngầm-định code-root=repo-root. Parser tối giản (không thêm dep pyyaml), chỉ 2 khoá scalar:
+        wiki_dir: llmwiki/wiki        # wiki chính để dựng graph
+        code_root: src               # vùng code để index (relocate/thu hẹp được)
+    Fallback = hành vi cũ (llmwiki/wiki + '.') nếu thiếu file/khoá → KHÔNG hồi quy. Fail-open."""
+    wiki_dir, code_root = "llmwiki/wiki", "."
+    cfg = os.path.join(root, ".overstack.yaml")
+    if not os.path.isfile(cfg):
+        return wiki_dir, code_root
+    try:
+        for ln in open(cfg, encoding="utf-8"):
+            ln = ln.split("#", 1)[0].rstrip()
+            if ":" not in ln:
+                continue
+            k, v = ln.split(":", 1)
+            k, v = k.strip(), v.strip().strip("'\"")
+            if k == "wiki_dir" and v:
+                wiki_dir = v
+            elif k == "code_root" and v:
+                code_root = v
+    except Exception:
+        pass  # config hỏng → dùng mặc định, không chặn phiên
+    return wiki_dir, code_root
 
 
 def regen_docs(root: str) -> None:
-    """Auto-fresh derived docs (overstack.html + CAPABILITIES + skill-search) NGAY khi skill/rule/
-    generator đổi — CHỈ trong repo framework (có fdk/tools), fail-open. Để overstack.html (đặc biệt
-    mind map) luôn TỰ cập nhật, không phải regen tay. Gác bằng git-status nên không đụng = không tốn."""
+    """Auto-fresh derived docs NGAY khi nguồn của chúng đổi, fail-open, gác bằng git-status nên
+    không đụng = không tốn. Hai nhóm ĐỘC LẬP, phạm vi KHÁC nhau:
+    (A) overstack.html + CAPABILITIES + skill-search — CHỈ repo framework (có build-overstack-docs.py),
+        khi skill/rule/generator đổi.
+    (B) wiki-graph.html (whiteboard quan hệ + code-graph cho NGƯỜI xem) — chạy khi có engine
+        build-wiki-graph.py, ở CẢ downstream (GH#41 phương án B): repo framework luôn bật; downstream
+        bật qua opt-in OVERSTACK_WIKIGRAPH=1 (Taleb: engine chạy trên máy người khác → không auto-on).
+        MỘT codepath duy nhất — cùng engine, khác môi trường, không đẻ hook riêng (Munger)."""
     td = os.path.join(root, "fdk", "tools")
-    if not os.path.isfile(os.path.join(td, "build-overstack-docs.py")):
-        return  # không phải repo framework → bỏ (overstack.html là repo-only)
+    is_framework = os.path.isfile(os.path.join(td, "build-overstack-docs.py"))
+    # GLOBAL-SHARED (council-036): engine wiki-graph tìm REPO-LOCAL → GLOBAL ~/.claude/harness/.
+    # Downstream KHÔNG copy engine vào repo — dùng bản global (cài 1 lần). resolve_tool trả None nếu
+    # thiếu cả hai → wikigraph_on False → bỏ (fail-open).
+    wg = resolve_tool(root, "fdk/tools/build-wiki-graph.py")
+    # (B) chạy khi CÓ engine (local/global) và (repo framework HOẶC downstream bật opt-in).
+    wikigraph_on = bool(wg) and (is_framework or os.environ.get("OVERSTACK_WIKIGRAPH") == "1")
+    if not is_framework and not wikigraph_on:
+        return  # không phải framework và cũng không bật wiki-graph downstream → bỏ hẳn (rẻ)
     try:
         st = subprocess.run(["git", "status", "--porcelain"], cwd=root,
                             capture_output=True, text=True, timeout=8).stdout
-        if not re.search(r"(skills/.*SKILL\.md|llmwiki/skills/|policy\.yaml|"
-                         r"build-overstack-docs\.py|build-capabilities\.py|sync-skills\.py)", st):
-            return  # phiên không đụng skill/rule/generator → khỏi regen
-        # mirror parity TRƯỚC: sửa canonical skills/<name>/SKILL.md → sinh lại llmwiki/skills/ y hệt
-        # NGAY cuối lượt, để 2 cây không stale tạm thời (trước đây phải cp tay → gate mới bắt).
-        ss = os.path.join(root, "harness", "scripts", "sync-skills.py")
-        if os.path.isfile(ss):
-            subprocess.run([sys.executable, ss], capture_output=True, timeout=40)
-        for t in ("build-capabilities.py", "build-overstack-docs.py", "build-skill-search.py"):
-            subprocess.run([sys.executable, os.path.join(td, t)], capture_output=True, timeout=40)
+        # (A) chỉ repo framework: skill/rule/generator đổi → overstack + CAPABILITIES + skill-search
+        if is_framework and re.search(r"(skills/.*SKILL\.md|llmwiki/skills/|policy\.yaml|"
+                     r"build-overstack-docs\.py|build-capabilities\.py|sync-skills\.py)", st):
+            # mirror parity TRƯỚC: sửa canonical skills/<name>/SKILL.md → sinh lại llmwiki/skills/ y hệt
+            # NGAY cuối lượt, để 2 cây không stale tạm thời (trước đây phải cp tay → gate mới bắt).
+            ss = os.path.join(root, "harness", "scripts", "sync-skills.py")
+            if os.path.isfile(ss):
+                subprocess.run([sys.executable, ss], capture_output=True, timeout=40)
+            for t in ("build-capabilities.py", "build-overstack-docs.py", "build-skill-search.py"):
+                subprocess.run([sys.executable, os.path.join(td, t)], capture_output=True, timeout=40)
+        # (B) wiki-graph.html: nội dung wiki, engine, HOẶC file code đổi → dựng lại.
+        # GH#49: scope KHAI TƯỜNG MINH qua .overstack.yaml (wiki_dir + code_root) — relocate/thu hẹp
+        # vùng index, tách được mẹ/con; thiếu config → mặc định cũ (llmwiki/wiki + root). cwd=root vì
+        # generator resolve output + code_root theo cwd. --also fdk/wiki chỉ khi tồn tại.
+        if wikigraph_on and (re.search(r"(wiki/|build-wiki-graph\.py)", st) or _CODE_RE.search(st)):
+            wiki_dir, code_root = _scope_config(root)
+            also = ["--also", "fdk/wiki"] if os.path.isdir(os.path.join(root, "fdk", "wiki")) else []
+            subprocess.run([sys.executable, wg, wiki_dir, *also, "--code-root", code_root],
+                           cwd=root, capture_output=True, timeout=90)
     except Exception:
         pass
 

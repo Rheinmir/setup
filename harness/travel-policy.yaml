@@ -1,0 +1,96 @@
+# travel-policy.yaml — nguồn chân lý: năng lực framework NẰM Ở ĐÂU để phục vụ mọi dự án.
+#
+# KHUNG 3 TẦNG (hợp nhất council-034 + council-036 + phản biện user 2026-07-06):
+#   - Council-034 lo "ship 30 tool = bloat MỖI repo" — nhưng đó là giả định COPY-PER-REPO.
+#   - Council-036 chọn GLOBAL-SHARED: engine 1 bản ở ~/.claude/harness, mọi project dùng chung.
+#   - User đúng: 30 tool KHÔNG phải feature mới cần "chứng minh consumer" — chúng là NĂNG LỰC NỀN;
+#     global-install đưa hết xuống 1 lần → mọi project có sẵn, 0 bloat per-repo, không pending.
+#
+# => 3 tầng, KHÔNG còn "pending":
+#   global_shared  : ~/.claude/harness/ — cài 1 lần (install-harness --global / bootstrap tự cài nếu thiếu),
+#                    MỌI project được gác đều dùng chung. Update 1 chỗ. KHÔNG copy vào từng repo.
+#   travel_in_repo : đi theo git — DỮ LIỆU riêng dự án, phải sống sót clone.
+#   framework_only : CHỈ chạy ở repo framework (dev/maintain the-kit) — không global, không travel.
+#
+# v4 (GH#63, council-038 — ĐÃ SHIP): harness 100% global. Phase 1 = poc-vendor-neutral (rào chắn
+# R1-R17) cũng vào global; Phase 2 = ĐẢO GH#51 (bootstrap KHÔNG copy engine vào repo nữa, ghi
+# .harness-stamp, dọn engine-in-repo đời cũ — U10); Phase 3 = CI downstream self-install global
+# trên runner (pin HARNESS_REF — U8); Phase 5 = session_start so stamp↔global (U11).
+
+version: 4
+
+# ── TẦNG 1 · GLOBAL-SHARED — năng lực nền, ~/.claude/harness/, mọi project dùng chung ──
+# Cài qua install-harness --global (bootstrap tự gọi nếu thiếu). Resolution: hook tìm global-first.
+global_shared:
+  engine_core:
+    - "llmwiki/.claude/hooks/*.py — 8 hook (stop/pre-post_tool_use/session_*/user_prompt_submit)"
+    - "harness/validators/*.py — 14 validator ép R1-R17"
+    - "harness/scripts/bnal_config.py + bnal_guard.py + bnal_metrics.py — dep chung"
+    - "harness/poc-vendor-neutral/** — rào chắn R1-R17 (llmwiki-validate + policy.yaml + gen-converters); CI downstream validate từ đây (Phase 1+3 v4)"
+  memory_query:
+    - "harness/scripts/mem-rank.py + mem-rank.config.yaml — episodic retrieval"
+    - "harness/scripts/scratch-log.py — episodic RAW"
+    - "harness/scripts/wiki-graph.py — query đồ thị 0-token (backlinks/neighbors/broken)"
+    - "harness/scripts/wiki-health.py — broken-link/orphan/stale"
+    - "harness/scripts/retrieval-eval.py — hit@k crossover-metric"
+    - "harness/scripts/query-log.py + query-proxy.py"
+    - "fdk/tools/build-wiki-graph.py + code_imports.py — vẽ graph wiki+code"
+    - "fdk/tools/memory-map.py + wiki-relations.py"
+  guard_governor_loop:
+    - "harness/scripts/loop-runner.py + claim-receipts.py + inject-scan.py + egress-guard.py"
+    - "harness/scripts/token-budget.py + cor.py + prospect-critic.py + spec-gate.py"
+    - "harness/scripts/sweep-gate.py + scoped-hooks.py"
+  observ_eval:
+    - "harness/scripts/trace-grader.py + trace-otel.py + council.py + wikieval.py"
+    - "harness/scripts/flywheel.py + failure-flywheel.py + success-flywheel.py"
+    - "harness/scripts/code-logger.py + archetype.py"
+  util_maintain:
+    - "harness/scripts/health-check.py + okf-check.py + sync-template.py — downstream tự-update"
+    - "fdk/tools/build-skill-search.py + skill-usage.py + docs-curate.py + artifacts.py"
+    - "harness/scripts/web-clone.py + web-crawl.py"
+
+# ── TẦNG 2 · TRAVEL-IN-REPO — dữ liệu riêng dự án, đi theo git, sống sót clone ──
+travel_in_repo:
+  - "llmwiki/wiki/** — tri thức (nguồn chân lý): semantic + episodic-source"
+  - "llmwiki/wiki/ledger.jsonl + llmwiki/.claude/settings.json (wiring)"
+  - ".overstack.yaml — scope config (GH#49)"
+  - "llmwiki/.harness-stamp — {guarded_by: vX} nguồn chân lý 'repo gác vX' (council-036)"
+  - "harness/scratch-log.jsonl + harness/metrics/events.jsonl — episodic data (memory.jsonl=cache, gitignore)"
+
+# ── TẦNG 3 · FRAMEWORK-ONLY — chỉ chạy ở repo framework (dev/maintain kit) ──
+framework_only:
+  fdk/tools/build-overstack-docs.py:   "sinh overstack.html của framework (output travel, generator ở lại)"
+  fdk/tools/build-capabilities.py:     "bản đồ năng lực framework"
+  fdk/tools/build-cheatsheet.py:       "cheatsheet skill (dev)"
+  fdk/tools/build-docs-index.py:       "dashboard llmwiki (dev)"
+  fdk/tools/build-health-dashboard.py: "dashboard sức khỏe framework"
+  fdk/tools/whiteboard-skill-map.py:   "bản đồ skill (dev)"
+  fdk/tools/new-skill.py:              "scaffold skill vào publish tree (dev)"
+  fdk/tools/medic.py:                  "cổng sức khoẻ framework (stop.py gọi có guard fail-open ở downstream)"
+  harness/scripts/harness-lint.py:     "harness tự gác chính nó"
+  harness/scripts/harness-doctor.py:   "fire-drill rule (dev)"
+  harness/scripts/fdk-gate.py:         "cổng push khi dev framework"
+  harness/scripts/sync-skills.py:      "đồng bộ 2 cây skill của kit"
+  harness/scripts/skill-registry.py:   "danh tính skill của kit"
+  harness/scripts/bnal-selftest.py:    "meta-gate chống drift self-test"
+  harness/scripts/adapt-registry.py:   "trạng thái unverified của kit"
+  harness/scripts/arch-scan.py:        "quét xung đột văn bản-vs-luật"
+  harness/scripts/audit.py:            "backfill nợ wiki của kit"
+  harness/scripts/dispatch-verify.py:  "hậu-kiểm proposal"
+
+# ── INSTALL-FLOW (council-036 → v4 ĐÃ SHIP, GH#63) — UX giữ 1 lệnh curl ──
+#   cd <repo> && curl -fsSL .../bootstrap.sh | bash
+#   1. Harness global chưa cài (check ~/.claude/harness/version.json)? → install.sh tự chạy
+#      install-harness --global (bundle-first, curl fallback, fail-open). [Phase 2]
+#   2. Ghi llmwiki/.harness-stamp {guarded_by: <template_version>} (travel; KHÔNG registry global). [Phase 2]
+#   3. Travel vào repo: CHỈ tầng 2. Engine (tầng 1) KHÔNG copy — dùng global; engine-in-repo
+#      đời GH#51 (fdk/tools, harness/scripts) bị GỠ, guard fdk/wiki bảo vệ repo framework (U10). [Phase 2]
+#   4. Guard: [ -f $CLAUDE_PROJECT_DIR/llmwiki/.harness-stamp ] (thay [ -d llmwiki ]). [Phase 2]
+#   5. session_start.harness_integrity(): so stamp-repo vs global-installed; LỆCH MAJOR → cảnh báo TO
+#      (stamp=hợp đồng, không tự ép); global thiếu mà stamp có → cảnh báo dark-rail. [Phase 5]
+#   6. CI downstream (template gen-converters sinh): runner tự clone Rheinmir/setup@HARNESS_REF →
+#      install-harness --global → validate từ ~/.claude/harness/... (pin ref = giải U8). [Phase 3]
+#
+# ── ĐIỀU KIỆN PASS (user chốt) ──
+# Test THẬT: XÓA sạch cài harness cũ ở 5 dự án + cài mới global-shared → verify 5/5 hook fire +
+# tool resolve từ global + stamp đúng + fail-open + version-skew warn. Không 5/5 = chưa xong.
