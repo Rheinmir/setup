@@ -361,3 +361,8 @@ Giải issue `030726-skill-resolve-supplychain` (trục #5 frontier-gap-scan, Ch
 - Commit 6082a8f: rescue toàn bộ GH#15 (br pipeline + checkpoint-trace + harass fixes + docs), 48 file, medic --ci gate. Branch trước đó UNCOMMITTED trên nền chậm 28 commit sau origin/orca.
 - fdk/tools/upstream-drift.py (selftest 6 check): MỘT lệnh thấy local vs repo gốc — behind/ahead, commit gom theo type (feat/fix ⭐), + cờ ĐỤNG file mình đang sửa (upstream-changed ∩ local committed/dirty) = xung đột merge. Không tự pull.
 - Chạy thật: chậm 28 (11 feat + 5 fix), đụng 9 file (build-overstack-docs.py, overstack.html, index/log...). Phát hiện: đã build lệch upstream — theme-toggle upstream đã luật-hoá trong docs-site SKILL, ta tự chế trong build-line-status.py; wiki-sync/travel-policy v4/wiki-graph hữu ích chưa kéo.
+
+## 2026-07-07 — Merge origin/orca (28 commit upstream) vào branch, ưu tiên upstream
+- Kéo trọn 28 commit; sau merge: ngang upstream (behind 0, ahead 3). 6 xung đột giải: harness.yml/foundation ← upstream; ledger/log union 2 bên; CAPABILITIES+overstack regen; problem-tree lấy upstream + node Ralph đổi p-22→p-23 (đụng p-22 wiki-sync upstream); bỏ dead-link council-report ephemeral (upstream gitignore council).
+- Kéo về hữu ích: wiki-sync (code→wiki drift), wiki-graph.html, travel-policy v4 + global-shared engine (ADR-017), feature-inventory, reachability guard skill→tool, theme-toggle+font-floor rule.
+- GH#15 giữ nguyên: br + checkpoint-trace + upstream-drift còn đăng ký; 10/10 tool selftest xanh; medic 0 fail. Test-project dirs (br/dream-demo, br/dream-40, br/harass) gitignored, không track.
