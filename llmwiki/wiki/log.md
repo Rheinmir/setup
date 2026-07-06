@@ -19,11 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-06 14:15:41 | `file.write` | harness/poc-vendor-neutral/gen-converters.py · tool=Edit · session=49ec06f0 · actor=agent · prev=f6e9517d209458da1eb919b |
-| 2026-07-06 14:17:05 | `file.write` | harness/tests/wiki-graph-user-reachability-test.sh · tool=Edit · session=49ec06f0 · actor=agent · prev=3736c0ad00782ece8 |
-| 2026-07-06 14:18:38 | `file.write` | llmwiki/.claude/hooks/session_start.py · tool=Edit · session=49ec06f0 · actor=agent · prev=26184ebadcf20dd523e95d75c5d3e |
-| 2026-07-06 14:18:53 | `file.write` | llmwiki/.claude/hooks/session_start.py · tool=Edit · session=49ec06f0 · actor=agent · prev=451bbd3ee32a303e01ca283926592 |
-| 2026-07-06 14:19:01 | `file.write` | llmwiki/.claude/hooks/session_start.py · tool=Edit · session=49ec06f0 · actor=agent · prev=a9c84d2a8e5ab89020127ef964539 |
 | 2026-07-06 14:19:29 | `file.write` | harness/tests/harness-integrity-test.sh · tool=Write · session=49ec06f0 · actor=agent · prev=70797e5fbd30678c3eb61d544fc |
 | 2026-07-06 14:19:43 | `file.write` | .github/workflows/harness.yml · tool=Edit · session=49ec06f0 · actor=agent · prev=e7ce484c33d52f26f5841d4723b1b359ae39b1 |
 | 2026-07-06 14:21:43 | `file.write` | harness/travel-policy.yaml · tool=Edit · session=49ec06f0 · actor=agent · prev=9f8555bbcef971c97ab6308b301c66f83320d5b68 |
@@ -59,6 +54,11 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-06 22:53:47 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=ba6458f2 · actor=agent · prev=12fa427775f78cfc7ef23385564833425d |
 | 2026-07-06 22:55:21 | `file.write` | skills/docs-site-macos/SKILL.md · tool=Edit · session=ba6458f2 · actor=agent · prev=f223cc96260439fcd47c54a118a2b32fa6da |
 | 2026-07-06 23:11:27 | `file.write` | skills/docs-site-macos/SKILL.md · tool=Edit · session=ba6458f2 · actor=agent · prev=29c01dacc3b69d2e26692b36337ab908227a |
+| 2026-07-06 23:36:21 | `file.write` | llmwiki/wiki/sources/draft/060726-design-standard-ai-elite-PLAN.md · tool=Write · session=e2bc1e44 · actor=agent · prev= |
+| 2026-07-06 23:36:27 | `file.write` | llmwiki/wiki/sources/draft/060726-design-standard-ai-elite-PLAN.md · tool=Edit · session=e2bc1e44 · actor=agent · prev=7 |
+| 2026-07-06 23:36:45 | `file.write` | llmwiki/wiki/sources/draft/060726-design-standard-ai-elite-PLAN.md · tool=Edit · session=e2bc1e44 · actor=agent · prev=1 |
+| 2026-07-06 23:38:17 | `file.write` | llmwiki/html/060726-design-standard-ai-elite-PLAN.html · tool=Write · session=e2bc1e44 · actor=agent · prev=bd153c0813ee |
+| 2026-07-06 23:39:19 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=e2bc1e44 · actor=agent · prev=531977ac44d28610e2a8b2015b0e0d74ade1348336d82e |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -254,3 +254,14 @@ Giải issue `030726-skill-resolve-supplychain` (trục #5 frontier-gap-scan, Ch
 
 - Hiểu ngược feedback trước (đã tăng size) → user chỉnh: phải GIẢM. Hạ 22 cỡ dưới cả mức gốc: nav 12px, body 13.5, lead 14, list/bảng 12.5, nhãn 10–10.5, h2 21, hero clamp(26,4vw,40).
 - Luật trong docs-site-macos + /fdk + memory VIẾT LẠI đúng chiều: THANG COMPACT 13″, "dễ đọc = line-height/contrast, không phải font to", ghi chú đã-đảo-chiều-một-lần để không lặp.
+
+## 2026-07-06 — Proposal: nền chuẩn thiết kế AI-elite chống AI-slop
+- Distill `raw/design-tip-of-someone-on-internet.md` → bảng 13 tip (3 trục: ĐO ĐƯỢC/QUY TRÌNH/PHÁN ĐOÁN).
+- `/last30days`: engine binary thiếu (chỉ SKILL.md) → dùng WebSearch thay; agent nền `a5a9a19` đào 8 nguồn design-agent (taste-skill, avoid-ai-design, Anthropic frontend-design, Emil Kowalski motion, high-end-visual-design, Refactoring UI, claude-design-auditor, Meta Astryx) → corpus có nguồn.
+- User chốt: gác CẢ HAI đầu ra (HTML framework + skill design) bằng 1 nền chung; 2 tầng nhưng chốt-sửa thì kill 1-shot.
+- Ra draft cặp: `sources/draft/060726-design-standard-ai-elite-PLAN.md` + `html/060726-design-standard-ai-elite-PLAN.html`. Index cập nhật. Problem-tree +node p-23 (open, 0/3 trụ). CHỜ DUYỆT — chưa build.
+
+## 2026-07-07 — fdk — sidebar cuộn-không-nén, scrollbar ẩn (feedback)
+
+- Bệnh gốc "co nhỏ quá mức" = flex-shrink nén item khi thiếu chỗ. Fix: nav>*{flex-shrink:0} + overflow-y:auto + ẩn scrollbar hoàn toàn (scrollbar-width:none, ::-webkit-scrollbar display:none).
+- Luật vào docs-site-macos § Best Practices ("SIDEBAR: CUỘN chứ không NÉN") + memory; verify Safari.

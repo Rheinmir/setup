@@ -115,9 +115,9 @@
     },
     "docs-site-macos": {
       "files": {
-        "SKILL.md": "0c3283ca7875faacb941b84e7d4f686cc154ce2013f2e11a30ae9ca4eae3d643"
+        "SKILL.md": "2290cb2913300f58516e0bdb1a13d7757d8db8572e6b76830d66d81fa858674a"
       },
-      "recorded": "2026-07-06",
+      "recorded": "2026-07-07",
       "source": "local-authored"
     },
     "extract-site": {

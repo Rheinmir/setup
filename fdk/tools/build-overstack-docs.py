@@ -182,7 +182,11 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;bac
 ::-webkit-scrollbar{width:11px;height:11px;background:transparent}::-webkit-scrollbar-thumb{background:transparent;border-radius:8px;border:3px solid transparent;background-clip:content-box;transition:background-color .25s}html.scrolling::-webkit-scrollbar-thumb,::-webkit-scrollbar-thumb:hover{background-color:rgba(10,132,255,.32)}
 nav{position:fixed;top:0;left:0;bottom:0;width:232px;z-index:100;overflow-y:auto;display:flex;flex-direction:column;gap:1px;padding:18px 12px;background:linear-gradient(165deg,rgba(255,255,255,.46),rgba(255,255,255,.22) 48%,rgba(240,248,255,.34));backdrop-filter:blur(24px) saturate(1.7);-webkit-backdrop-filter:blur(24px) saturate(1.7);border-right:1px solid rgba(255,255,255,.55);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),4px 0 24px rgba(30,90,170,.08);transition:transform .28s}
 nav::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(220px 160px at 18% 4%,rgba(255,255,255,.55),transparent 70%)}nav>*{position:relative}
-nav .logo{margin:0 0 8px;padding:6px 10px;font-weight:800;font-size:16px;letter-spacing:-.03em;background:linear-gradient(135deg,#0a84ff,#5856d6);-webkit-background-clip:text;background-clip:text;color:transparent}
+nav /* sidebar: stack KHÔNG bị nén (feedback 2026-07-07) — thiếu chỗ thì CUỘN, scrollbar ẩn hoàn toàn */
+nav>*{flex-shrink:0}
+nav{scrollbar-width:none;-ms-overflow-style:none}
+nav::-webkit-scrollbar{width:0;height:0;display:none}
+.logo{margin:0 0 8px;padding:6px 10px;font-weight:800;font-size:16px;letter-spacing:-.03em;background:linear-gradient(135deg,#0a84ff,#5856d6);-webkit-background-clip:text;background-clip:text;color:transparent}
 nav .logo small{display:block;font-size:10px;font-weight:600;color:var(--t2);-webkit-text-fill-color:var(--t2);letter-spacing:0}
 nav a{position:relative;overflow:hidden;padding:5px 11px;border-radius:9px;font-size:12px;color:var(--t2);text-decoration:none;transition:background .15s,color .15s}nav a:hover{background:rgba(10,132,255,.06);color:#0a84ff}nav a.active{color:#0a84ff;background:rgba(10,132,255,.08);font-weight:600}
 nav a .ic{display:inline-block;width:17px;margin-right:6px;text-align:center;opacity:.95}
