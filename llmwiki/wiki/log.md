@@ -19,7 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-06 14:11:33 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=49ec06f0 · actor=agent · prev=9ac3477cdc04d24f5739cc30a833e5471a9771d2da961d |
 | 2026-07-06 14:15:41 | `file.write` | harness/poc-vendor-neutral/gen-converters.py · tool=Edit · session=49ec06f0 · actor=agent · prev=f6e9517d209458da1eb919b |
 | 2026-07-06 14:17:05 | `file.write` | harness/tests/wiki-graph-user-reachability-test.sh · tool=Edit · session=49ec06f0 · actor=agent · prev=3736c0ad00782ece8 |
 | 2026-07-06 14:18:38 | `file.write` | llmwiki/.claude/hooks/session_start.py · tool=Edit · session=49ec06f0 · actor=agent · prev=26184ebadcf20dd523e95d75c5d3e |
@@ -59,6 +58,7 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-06 22:53:43 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=ba6458f2 · actor=agent · prev=e9ec3d56544eb579695ec6f6a2f7c94c18 |
 | 2026-07-06 22:53:47 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=ba6458f2 · actor=agent · prev=12fa427775f78cfc7ef23385564833425d |
 | 2026-07-06 22:55:21 | `file.write` | skills/docs-site-macos/SKILL.md · tool=Edit · session=ba6458f2 · actor=agent · prev=f223cc96260439fcd47c54a118a2b32fa6da |
+| 2026-07-06 23:11:27 | `file.write` | skills/docs-site-macos/SKILL.md · tool=Edit · session=ba6458f2 · actor=agent · prev=29c01dacc3b69d2e26692b36337ab908227a |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -249,3 +249,8 @@ Giải issue `030726-skill-resolve-supplychain` (trục #5 frontier-gap-scan, Ch
 
 - 16 cỡ chữ nâng trong build-overstack-docs.py: nav 12.5→14px (padding 5.5→7px), p 14.5→15.5, ul.s 13.5→14.5, .grp/.logo small/.lbl/chip/kpi/pcard/th đều +1px; regen + verify Safari.
 - Luật hoá SÀN CỠ CHỮ: docs-site-macos § Best Practices (≥14px text chính, ≥11px nhãn, cấm <10px trừ badge) + /fdk Rules; memory cập nhật.
+
+## 2026-07-06 — fdk — ĐẢO chiều thang cỡ chữ: compact cho màn 13″ (feedback đúng ý)
+
+- Hiểu ngược feedback trước (đã tăng size) → user chỉnh: phải GIẢM. Hạ 22 cỡ dưới cả mức gốc: nav 12px, body 13.5, lead 14, list/bảng 12.5, nhãn 10–10.5, h2 21, hero clamp(26,4vw,40).
+- Luật trong docs-site-macos + /fdk + memory VIẾT LẠI đúng chiều: THANG COMPACT 13″, "dễ đọc = line-height/contrast, không phải font to", ghi chú đã-đảo-chiều-một-lần để không lặp.
