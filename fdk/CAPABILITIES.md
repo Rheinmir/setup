@@ -1,7 +1,7 @@
 <!-- SINH BẰNG CODE: build-capabilities.py — ĐỪNG sửa tay; chạy lại để cập nhật. -->
 # CAPABILITIES — toàn bộ đồ nghề (luôn-mới, đếm từ đĩa)
 
-**74 skill · 17 rule · 18 fdk-tool · 46 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
+**76 skill · 17 rule · 26 fdk-tool · 46 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
 
 ## Skills (gọi bằng `/<tên>`)
 
@@ -12,8 +12,10 @@
 - **`/record-episode`** — Ghi một SESSION EPISODE có cấu trúc (tầng nhớ episodic) vào memory store để phiên sau truy…
 - **`/wiki-room`** — Mở room (subagent 1 tầng) nạp chi tiết wiki khi context phiên chính đã rot
 
-### dev-loop (13)
+### dev-loop (15)
+- **`/br`** — Hub MỘT TÊN cho dây chuyền sản xuất kiểu Ralph (GH#15): biến tài liệu thô của user thành s…
 - **`/build-now-adapt-later`** — When a task is blocked by missing or unverified information (an undocumented protocol, an …
+- **`/checkpoint-trace`** — Cỗ máy thời gian cho một lượt chạy agent trên codebase
 - **`/failure-flywheel`** — Capture each agent failure, bucket and count it deterministically, and when a failure clas…
 - **`/impact-check`** — Map all callers and dependents of a symbol before modifying shared code
 - **`/loop-runner`** — Deterministic guardrailed agent-loop driver
@@ -108,16 +110,24 @@
 
 ## FDK tools (`python3 fdk/tools/<x>`)
 - `artifacts.py`
+- `br-find.py`
+- `br-prompts.py`
+- `br-queue.py`
+- `br-revise.py`
+- `br-run.py`
 - `build-capabilities.py`
 - `build-cheatsheet.py`
 - `build-docs-index.py`
 - `build-health-dashboard.py`
+- `build-line-status.py`
 - `build-overstack-docs.py`
 - `build-skill-search.py`
 - `build-wiki-graph.py`
+- `checkpoint.py`
 - `code-state.py`
 - `code_imports.py`
 - `docs-curate.py`
+- `frame-lint.py`
 - `medic.py`
 - `memory-map.py`
 - `new-skill.py`

@@ -78,6 +78,13 @@
 | [030726-retrieval-eval-baseline-rot](sources/draft/030726-retrieval-eval-baseline-rot.md) | issue | Issue: retrieval-eval baseline rot + guard-rail quá giòn |
 | [040726-precommit-slow-fragile-on-commit](sources/draft/040726-precommit-slow-fragile-on-commit.md) | issue | Issue: pre-commit chậm + giòn khi bị ngắt |
 | [040726-episodic-vector-plan](sources/draft/040726-episodic-vector-plan.md) | draft | Draft: đạt 4/4 tầng nhớ cho llmwiki (issue #9) |
+| [050726-ralph-interview-pipeline](sources/draft/050726-ralph-interview-pipeline.md) | draft | Draft: entity map dây chuyền Ralph + step Interview (/br, GH#15) |
+| [050726-ralph-slice-frames](sources/draft/050726-ralph-slice-frames.md) | draft | Draft: step 2 Slice — BR → frames + frame-lint + registry truy ngược (GH#15) |
+| [050726-ralph-loop-gate](sources/draft/050726-ralph-loop-gate.md) | draft | Draft: step 3 Loop+Gate — 6 phanh (2 mới: diff-jail, test-hash), dry-run, người gác (GH#15) |
+| [050726-ralph-monitor](sources/draft/050726-ralph-monitor.md) | draft | Draft: step 4 Monitor — build-line-status.py + /br status, lớp đọc tất định (GH#15·#11) |
+| [050726-ralph-pipeline-build](sources/draft/050726-ralph-pipeline-build.md) | draft | Build-report: thi công đồ nghề step 1–4 + docs site (GH#15), selftest xanh |
+| [060726-br-test-harness-plan](sources/draft/060726-br-test-harness-plan.md) | draft | Plan test/harass moi vấn đề dây chuyền /br — council 033, 3 bug fixed (GH#15) |
+| [050726-br-huong-dan-nguoi-moi](sources/draft/050726-br-huong-dan-nguoi-moi.md) | draft | Docs: hướng dẫn /br cho người mới, có ảnh chụp mockup (GH#15) |
 | [ep-ci-tech-debt](sources/evals/episodic/ep-ci-tech-debt.md) | eval | Episodic golden: đóng tech-debt CI |
 | [ep-episodic-wire](sources/evals/episodic/ep-episodic-wire.md) | eval | Episodic golden: nối episodic + vector retrieval |
 | [caveman-commit](sources/evals/skill-resolve/caveman-commit.md) | auto | skill-resolve golden: caveman-commit |

@@ -44,6 +44,8 @@
       "strict": false,
       "skills": [
         "./skills/brandkit",
+        "./skills/br",
+        "./skills/checkpoint-trace",
         "./skills/build-now-adapt-later",
         "./skills/check-approve",
         "./skills/computer-use",

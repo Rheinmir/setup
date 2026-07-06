@@ -102,7 +102,8 @@
   📄 File (worktree issue-16): <code>/Users/giatran/orca/workspaces/setup/issue-16-ci-tech-debt/llmwiki/html/fdk-problem-tree.html</code><br>
   📄 File (worktree issue-4): <code>/Users/giatran/orca/workspaces/setup/issue-4-logger-c/llmwiki/html/fdk-problem-tree.html</code><br>
   📄 File (worktree issue-9): <code>/Users/giatran/orca/workspaces/setup/issue-9-episodic-vector/llmwiki/html/fdk-problem-tree.html</code><br>
-  📄 File (worktree issue-8): <code>/Users/giatran/orca/workspaces/setup/issue-8-feature-gap-th-ng/llmwiki/html/fdk-problem-tree.html</code></footer>
+  📄 File (worktree issue-8): <code>/Users/giatran/orca/workspaces/setup/issue-8-feature-gap-th-ng/llmwiki/html/fdk-problem-tree.html</code><br>
+  📄 File (worktree issue-15): <code>/Users/giatran/orca/workspaces/setup/issue-15-br-k/llmwiki/html/fdk-problem-tree.html</code></footer>
 </div>
 
 <script type="application/json" id="tree-data">[
@@ -493,6 +494,17 @@
     "date": "2026-07-04",
     "solvedBy": "fdk/tools/build-overstack-docs.py: sửa mâu thuẫn khớp FACT · dedup bảng rule · LOOP_GROUPS · dark mode + table-wrap CSS + mind-map a11y + skip-link · --check xanh",
     "session": "orca-fdk issue-14"
+  },
+  {
+    "id": "p-22",
+    "parent": null,
+    "title": "Dây chuyền Ralph (GH#15): plan thin-slice một-frame đã qua council, chưa thi công",
+    "desc": "Planning cho GH#15 (BR-kỹ → frames gắn-chặt-code → mỗi frame là loop có harness). Council 031/032 (Rams·Ada·Linus·Taleb·Lão Tử, 3 judge chấm kín, winner Taleb mean-rank 1.0 tuyệt đối): plan v0 ĐẠT CÓ ĐIỀU KIỆN với 6 sửa bắt buộc trước khi chạy — (1) chống xanh-giả: tách scope_test khỏi scope_code + hash test file trước/sau (fail-closed); (2) diff-jail tất định: git diff --name-only so glob scope_code, tràn scope → revert + no_progress (đề cử guard thứ 5 của loop-runner); (3) jail mức OS: chạy trong worktree riêng, quyền tối thiểu, scope không đụng harness/hook/CI; (4) định nghĩa trước điều kiện KILL thí nghiệm (via negativa); (5) working-tree sạch trước khi loop; (6) cắt thừa (bỏ monitor HTML/slicer khỏi bước 5). Đồng thuận 5/5: BR mẫu = task THẬT trong repo overstack (không app đồ chơi); prompt-dặn KHÔNG đủ làm scope-jail. Frame schema thêm: schema_version, scope_test, depends_on, parent_br+clause_id+parent_br_hash, created_by, env/setup_cmd, baseline_ref, run_log_ref+outcome. Report: llmwiki/html/council/council-report-032-seed42.html. [05/07] Planning HOÀN CHỈNH 4 step theo mẫu user: 4 cặp proposal .md+.html — (1) Interview (/br interview: raw→spec S1–S10→hỏi bù HTML+MD, lens-fill assumed), (2) Slice (frame schema v0 + frame-lint 5 luật + registry truy ngược, người duyệt từng lát), (3) Loop+Gate (6 phanh: +diff-jail +test-hash fail-closed, jail 3 tầng, KILL via-negativa, dry-run), (4) Monitor (build-line-status.py + /br status, lớp đọc tất định chống Goodhart). Hub slash MỘT tên /br. [05/07 THI CÔNG] Đã dựng đồ nghề tất định cả 4 step + selftest xanh: frame-lint.py (5 luật, 6 fixture BAD/GOOD) · loop-runner.py +2 phanh (diff-jail guard5 + test-hash guard6 PROTECT_VIOLATION exit6, selftest 5→7) · build-line-status.py (monitor 5 trạng thái + traceback + --check) · spec-template S1–S10 · hub skill /br đăng ký 6 mặt. Docs site 050726-ralph-pipeline-docs.html (mind map + 5 diagram kéo-thả + wiki + nhật ký deviation). medic --ci 0 fail. Deviation: frame-lint fnmatch, diff-jail tận dụng no-progress sẵn có (scope==state), monitor đọc BR.clauses.json, đăng ký cần 6 mặt. CÒN: end-to-end 1 BR THẬT (cần user chọn tài liệu vào raw/) + wire adapter claude -p (verified:false) + demo phá-scope trên đường thật.",
+    "status": "partial",
+    "scope": ["harness", "skills"],
+    "date": "2026-07-05",
+    "solvedBy": "frame-lint.py + loop-runner.py guard5/6 + build-line-status.py + skills/br + docs 050726-ralph-pipeline-docs.html; council-report-032",
+    "session": "orca-fdk issue-15 build"
   }
 ]</script>
 

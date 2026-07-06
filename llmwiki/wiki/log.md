@@ -19,18 +19,46 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-04 02:04:20 | `file.write` | llmwiki/wiki/sources/draft/030726-foundation-section-PLAN.md · tool=Write · session=fff3ffeb · actor=agent · prev=genesi |
-| 2026-07-04 02:05:11 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=fff3ffeb · actor=agent · prev=fb83df6317d31efa5797b25b1b0af8498900c742181f69 |
-| 2026-07-04 13:46:13 | `file.write` | harness/foundation.yaml · tool=Write · session=fff3ffeb · actor=agent · prev=710817b60ca9474b385d495fc5165d9199af1e8dd6b |
-| 2026-07-04 13:46:31 | `file.write` | harness/templates/foundation-template.yaml · tool=Write · session=fff3ffeb · actor=agent · prev=bd3f07169183f305bd119d5b |
-| 2026-07-04 13:46:41 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=fff3ffeb · actor=agent · prev=5a07113693ca27c6f79c9e4c52a9d0f972 |
-| 2026-07-04 13:47:09 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=fff3ffeb · actor=agent · prev=602b56fedd3237de6e98e643e3f78ddb4f |
-| 2026-07-04 13:47:42 | `file.write` | fdk/tools/medic.py · tool=Edit · session=fff3ffeb · actor=agent · prev=78180dee3614b3e076a3fe14b715d1f24444bf010138cc7d7 |
-| 2026-07-04 13:47:46 | `file.write` | fdk/tools/medic.py · tool=Edit · session=fff3ffeb · actor=agent · prev=21759df208a18dd2d0e533a209ca341caabf6fa337d41656e |
-| 2026-07-04 13:48:19 | `file.write` | harness/scripts/install-harness.sh · tool=Edit · session=fff3ffeb · actor=agent · prev=37b1fdc349e7ea68875a6c5b7cbdb572b |
-| 2026-07-04 13:48:28 | `file.write` | harness/poc-vendor-neutral/install.sh · tool=Edit · session=fff3ffeb · actor=agent · prev=e45236cc2942af75e79fde396b5e53 |
-| 2026-07-04 13:49:38 | `file.write` | llmwiki/wiki/sources/draft/030726-foundation-section.md · tool=Edit · session=fff3ffeb · actor=agent · prev=6c75c09f91bd |
-| 2026-07-04 13:49:54 | `file.write` | llmwiki/wiki/sources/draft/030726-foundation-section.md · tool=Edit · session=fff3ffeb · actor=agent · prev=3f2a69f977a0 |
+| 2026-07-06 10:33:02 | `file.write` | fdk/tools/frame-lint.py · tool=Edit · session=db4de305 · actor=agent · prev=d7a29be7dda3c9009ebc1bc61c5b09eb55ccded7b44f |
+| 2026-07-06 10:34:29 | `file.write` | fdk/tools/frame-lint.py · tool=Edit · session=db4de305 · actor=agent · prev=45233856bb1e30fb25b514ff61fe3afcdce68ca2d37f |
+| 2026-07-06 10:34:59 | `file.write` | skills/br/SKILL.md · tool=Edit · session=db4de305 · actor=agent · prev=ee50e74b8ac4bd75e43d3fb1325e0a4bfa2b8330770ab4c9a |
+| 2026-07-06 10:35:11 | `file.write` | skills/br/SKILL.md · tool=Edit · session=db4de305 · actor=agent · prev=4e42f36626dd8cb7216f0a19483b3198619f0a45871bce7f0 |
+| 2026-07-06 11:47:43 | `file.write` | fdk/tools/br-prompts.py · tool=Write · session=db4de305 · actor=agent · prev=fafaba2525040f400cd72d4937683999d386f82c21d |
+| 2026-07-06 11:48:03 | `file.write` | fdk/tools/br-revise.py · tool=Edit · session=db4de305 · actor=agent · prev=0421e192881b7377cac2b29d26cc12047db53fa5b63bf |
+| 2026-07-06 11:48:13 | `file.write` | fdk/tools/br-revise.py · tool=Edit · session=db4de305 · actor=agent · prev=10378163735aec008fbe102390f5719c71e29c0af8b94 |
+| 2026-07-06 11:48:23 | `file.write` | fdk/tools/br-revise.py · tool=Edit · session=db4de305 · actor=agent · prev=0d370995078549aeaf4319494c01fd583250bd4a506bc |
+| 2026-07-06 11:48:33 | `file.write` | fdk/tools/br-revise.py · tool=Edit · session=db4de305 · actor=agent · prev=d002c80d3d99b30148d7f76c0bb3aed53e00951529c71 |
+| 2026-07-06 11:48:50 | `file.write` | fdk/tools/br-find.py · tool=Edit · session=db4de305 · actor=agent · prev=1510ff1556598564a616be831fe3c960d66648b5d552ddf |
+| 2026-07-06 11:48:58 | `file.write` | fdk/tools/br-find.py · tool=Edit · session=db4de305 · actor=agent · prev=e436631b95816e6df2ff9e4a8358fb45d735dbee2045775 |
+| 2026-07-06 11:49:05 | `file.write` | fdk/tools/br-find.py · tool=Edit · session=db4de305 · actor=agent · prev=ed4ce2f72789fb4e9df38af2036b2d3f92eee537a69a5c8 |
+| 2026-07-06 11:49:42 | `file.write` | fdk/tools/br-prompts.py · tool=Edit · session=db4de305 · actor=agent · prev=ec7ae3be6473046a538fea1b413e52e7d4bd4c970a99 |
+| 2026-07-06 11:58:35 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=c512a2041da90ed04fc76cccc17473995de050042895c03d |
+| 2026-07-06 22:45:16 | `file.write` | fdk/tools/br-queue.py · tool=Edit · session=db4de305 · actor=agent · prev=b255841b84b03cf23390aa972bf150c3e27504cdc8c758 |
+| 2026-07-06 22:48:06 | `file.write` | fdk/tools/br-queue.py · tool=Edit · session=db4de305 · actor=agent · prev=aa0de13092c3cb2b6564ceb28ce16c38f851c8d4259054 |
+| 2026-07-06 22:49:41 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=c73a5edca83bf20dd689c809f4106d27b2616b4bd945f977 |
+| 2026-07-06 22:49:49 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=7a0c3ad993b40b2638bb99aa56113a365259027c49ed4e76 |
+| 2026-07-06 22:50:34 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=2d447a720caaf94ad7ecbcc7a0d286329ef110a9ff82bffe |
+| 2026-07-06 22:51:31 | `file.write` | fdk/tools/build-line-status.py · tool=Edit · session=db4de305 · actor=agent · prev=07bd56e456033e1ffc4ca20de08bd16366261 |
+| 2026-07-06 22:51:50 | `file.write` | fdk/tools/build-line-status.py · tool=Edit · session=db4de305 · actor=agent · prev=8ad1abf572f0ca3b134387f55815a9646e20e |
+| 2026-07-06 23:39:14 | `file.write` | harness/scripts/loop-runner.py · tool=Edit · session=db4de305 · actor=agent · prev=d69d032c3c51dbab93d309cae48b44eae11c2 |
+| 2026-07-06 23:39:27 | `file.write` | harness/scripts/loop-runner.py · tool=Edit · session=db4de305 · actor=agent · prev=bc74e75c65a9045d7937d789110b7fa91e192 |
+| 2026-07-06 23:39:47 | `file.write` | fdk/tools/frame-lint.py · tool=Edit · session=db4de305 · actor=agent · prev=062adafc2a22872b0a55c071b3f2e23ace1cb138e5aa |
+| 2026-07-06 23:40:52 | `file.write` | harness/scripts/loop-runner.py · tool=Edit · session=db4de305 · actor=agent · prev=02d09ba8d3ff842003c533214ac44851ed179 |
+| 2026-07-06 23:41:03 | `file.write` | harness/scripts/loop-runner.py · tool=Edit · session=db4de305 · actor=agent · prev=dda1d18d2251acf7b86ac1713d5cceb978ca5 |
+| 2026-07-06 23:48:11 | `file.write` | harness/scripts/loop-runner.py · tool=Edit · session=db4de305 · actor=agent · prev=4e483fff17f5528d41dd34446d012cbe38e0c |
+| 2026-07-06 23:48:19 | `file.write` | harness/scripts/loop-runner.py · tool=Edit · session=db4de305 · actor=agent · prev=4e4d7db0d414e85310d7a72e8073ba9a7d541 |
+| 2026-07-06 23:48:34 | `file.write` | harness/scripts/loop-runner.py · tool=Edit · session=db4de305 · actor=agent · prev=9fb2829c7bf424ff2085cfa627dc8decac8af |
+| 2026-07-06 23:48:44 | `file.write` | harness/scripts/loop-runner.py · tool=Edit · session=db4de305 · actor=agent · prev=e1305df19d06de2bec7ef493a0a44ae2d258a |
+| 2026-07-06 23:48:51 | `file.write` | harness/scripts/loop-runner.py · tool=Edit · session=db4de305 · actor=agent · prev=1a5b2a896c9cd8bb353bac9812e6147788382 |
+| 2026-07-06 23:49:01 | `file.write` | harness/scripts/loop-runner.py · tool=Edit · session=db4de305 · actor=agent · prev=477d0830e91f58970e42cc8a16c40daef8137 |
+| 2026-07-06 23:49:10 | `file.write` | harness/scripts/loop-runner.py · tool=Edit · session=db4de305 · actor=agent · prev=f63878e5b895c9f21b85cc57e3bdbe720b014 |
+| 2026-07-06 23:49:20 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=090ebbbc617ada742198ca1cba3d01f9387cd8af60adcfdb |
+| 2026-07-06 23:55:04 | `file.write` | llmwiki/wiki/sources/draft/060726-br-test-harness-plan.md · tool=Write · session=db4de305 · actor=agent · prev=03c6568f6 |
+| 2026-07-06 23:56:21 | `file.write` | llmwiki/wiki/sources/draft/060726-br-test-harness-plan.md · tool=Edit · session=db4de305 · actor=agent · prev=bbbe54f966 |
+| 2026-07-06 23:56:37 | `file.write` | llmwiki/wiki/sources/draft/060726-br-test-harness-plan.md · tool=Edit · session=db4de305 · actor=agent · prev=546cb110ec |
+| 2026-07-07 00:40:30 | `file.write` | fdk/tools/checkpoint.py · tool=Write · session=db4de305 · actor=agent · prev=8d590c403a73fb80aa7addf0226c8b81feed3858108 |
+| 2026-07-07 00:41:22 | `file.write` | fdk/tools/checkpoint.py · tool=Edit · session=db4de305 · actor=agent · prev=ffe505f70e734a72b4ddf1c013c52a208f6fc9cad679 |
+| 2026-07-07 00:42:19 | `file.write` | skills/checkpoint-trace/SKILL.md · tool=Write · session=db4de305 · actor=agent · prev=3e8c914417710751469498c6b969b93f09 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -195,3 +223,66 @@ Giải issue `030726-skill-resolve-supplychain` (trục #5 frontier-gap-scan, Ch
 - Đợt 1 sự thật: "Bốn lớp"→"Ba lớp CHẶN"+giải thích L3 trống; slogan validator khớp FACT (rule enforce bởi validator+hook); BNAL nhãn tự khớp; bảng rule render 1 lần (bỏ lặp ×2); LOOP_GROUPS +ovs-notes/frontier-scan; GH#8 skill-usage auto-derive.
 - Đợt 2 UX: dark mode (prefers-color-scheme), .table-wrap overflow-x (class trước KHÔNG có CSS), mind-map keyboard a11y, skip-link + nav aria-label.
 - Problem-tree p-20. Đợt 3 biên tập defer (ngoài DoD).
+
+## 2026-07-05 — planning GH#15 đợt 2: entity map + step Interview (phiên issue-15-br-k)
+- Proposal cặp mới: `sources/draft/050726-ralph-interview-pipeline.md` + `html/050726-ralph-interview-pipeline.html` — 9 entity dây chuyền (RAW→SPEC→QUESTIONNAIRE→ANSWERS→BR→FRAMES→LOOP→MONITOR), khung specs chuẩn S1–S10, hub slash `/br` (interview/compile đợt 1), lens-fill đóng dấu assumed + bảng "Giả định đang gánh" (fail-fast). Chờ user duyệt qua /propose.
+- Trước đó cùng phiên: council 031/032 (winner Taleb 1.0) duyệt-có-điều-kiện plan loop thin-slice; problem-tree p-22.
+
+## 2026-07-05 — planning GH#15 đợt 3: đủ 4 step dây chuyền (phiên issue-15-br-k)
+- 3 cặp proposal mới theo mẫu step-1: `050726-ralph-slice-frames` (frame schema v0 + frame-lint 5 luật + registry truy ngược, slicer người-trong-vòng-lặp), `050726-ralph-loop-gate` (6 phanh: 4 sẵn + diff-jail + test-hash fail-closed; jail 3 tầng cho claude -p; KILL viết trước; dry-run người gác), `050726-ralph-monitor` (build-line-status.py + /br status — lớp đọc tất định, chống Goodhart). Mỗi cặp .md (máy) + .html (người review). Chờ duyệt qua /propose theo thứ tự phụ thuộc 1→2→3→4.
+
+## 2026-07-05 — THI CÔNG GH#15 step 1–4 + docs site (phiên issue-15-br-k)
+- Đồ nghề tất định (selftest xanh): frame-lint.py (5 luật, 6 fixture) · loop-runner.py +2 phanh (diff-jail guard5 + test-hash guard6/PROTECT_VIOLATION exit6, selftest 5→7) · build-line-status.py (monitor 5 trạng thái + --check) · spec-template.md S1–S10.
+- Hub skill /br (interview·compile·slice·run·status) đăng ký 6 mặt (mirror·marketplace·AGENT·CLAUDE·LOOP_MAP·LOOP_GROUPS) + regen CAPABILITIES/overstack. medic --ci 0 fail.
+- Docs site /docs-site-macos: llmwiki/html/050726-ralph-pipeline-docs.html (mind map + 5 diagram kéo-thả + wiki content + nhật ký deviation). Build-report: sources/draft/050726-ralph-pipeline-build.md.
+- Deviation: frame-lint fnmatch (không pathlib **); diff-jail tận dụng no-progress (scope==state); monitor đọc BR.clauses.json; đăng ký cần 6 mặt. Việc kế: end-to-end 1 BR thật + wire adapter claude -p.
+
+## 2026-07-05 — docs-site-macos — br-huong-dan-nguoi-moi
+- llmwiki/html/050726-br-huong-dan-nguoi-moi.html: hướng dẫn /br cho NGƯỜI MỚI (6 section, mind map, 4 "ảnh chụp" mockup macOS Terminal+browser dựng từ output thật, FAQ collapse, checklist). Bổ trợ bản kỹ thuật 050726-ralph-pipeline-docs.html.
+
+## 2026-07-05 — GH#15: truy vết frame→code (A+B, theo yêu cầu user)
+- loop-runner.py: thêm changed_files (file THẬT frame đổi), commit-on-success gắn frame_id vào WORKTREE branch (không main), baseline_ref; hậu-kiểm scope_clean + FINAL SCOPE SWEEP (mọi termination revert sạch file ngoài scope → changed_files LUÔN ⊆ scope_code) + attempted_out_of_scope (lưu vết ghi lậu). Selftest 7→8 (COMMIT_ON_SUCCESS) + bằng chứng scope_clean. E2E chứng minh: frame tham lam ghi other/config.py+test → PROTECT_VIOLATION, sweep revert về gốc, changed_files=['src/auth.py'], commit=None; ca sạch → commit 'frame(...): [S4.1]'.
+- build-line-status.py: cột "file thật đã đổi @commit" + badge ✓/⚠ scope; traceback thêm changed/commit/scope_clean.
+- SKILL /br run + docs cập nhật. medic --ci 0 fail.
+
+## 2026-07-05 — GH#15: prompt file + queue resumable (theo yêu cầu user)
+- skills/br/assets/revise-prompt.md: FILE PROMPT edit được (template placeholder). fdk/tools/br-revise.py: adapter render template → claude -p (tools bó hẹp); --print xem prompt; selftest tất định (không gọi model).
+- br/queue.yaml (mẫu skills/br/assets/queue.example.yaml): danh sách frame, mỗi mục prompt_file HOẶC prompt inline. fdk/tools/br-queue.py: chạy tuần tự, ghi status back sau mỗi mục → chạy lại = bỏ qua done, chạy tiếp (resume). selftest chứng minh resume + inline-vs-file. claude -p là ranh giới verified:false (BNAL).
+- SKILL /br run cập nhật. medic --ci 0 fail.
+
+## 2026-07-05 — GH#15: /br run tất định (worktree + revise wired)
+- fdk/tools/br-run.py: driver /br run — frame-lint → kiểm tree sạch → tạo git worktree branch br-run/<id> từ baseline → loop-runner với revise TRỎ tới br-revise.py → commit-on-success vào branch (không main) → tóm tắt 1 dòng → ghi run_log_ref vào frame. selftest end-to-end 9/9 (stub revise, không cần model): worktree tạo, changed_files ⊆ scope, scope_clean, commit branch gắn frame message, MAIN không đụng.
+- harness/loop-runner.config.yaml revise: comment wiring trỏ br-revise (cmd giữ null = no-op an toàn cho raw run; br-run override per-frame). verified:false chỉ còn ở cú gọi claude -p.
+- Mắt xích cuối đã nối: chỉ cần `claude` CLI là bấm chạy thật. medic --ci 0 fail; 6 selftest xanh.
+
+## 2026-07-05 — GH#15 PIVOT theo feedback user: in-place là mặc định, bỏ worktree-per-frame
+- Lý do (user): N frame = N worktree = N folder ma; luồng người thường = bật app rà lỗi → trỏ khúc lỗi → tìm frame/prompt phụ trách → sửa prompt → chạy lại frame. Kiểm soát không-phạm-scope bằng HARNESS, không bằng cô lập thư mục.
+- br-run.py: default IN-PLACE (một cây duy nhất, app thấy ngay; frame xanh → commit nhánh hiện tại gắn frame_id — mốc revert/blame); --worktree thành opt-in. Selftest 12/12 (thêm 3 case in-place).
+- br-find.py MỚI: trỏ file/từ khoá → frame + clause + vị trí prompt (inline queue / prompt_file / template) + lệnh re-run. Selftest 5/5.
+- frame-lint R6 exclusive-scope MỚI: 2 frame giẫm cùng file thật → FAIL (đảm bảo "1 lỗi → đúng 1 frame"). Selftest 8 fixture xanh.
+- SKILL /br: mode run in-place + mode find. Mọi selftest + medic 0 fail.
+
+## 2026-07-05 — GH#15: SỔ PROMPT tổng br/prompts.md (user sửa tay, không qua model)
+- fdk/tools/br-prompts.py: MỘT file br/prompts.md, mỗi frame một mục `## <frame_id>` — user mở, tìm, sửa/thêm nội dung prompt bằng tay. `sync` thêm mục cho frame mới, KHÔNG đè mục đã sửa (selftest chứng minh hand-edit sống sót); mồ côi báo không xoá; heading template demote ### để `##` chỉ còn là frame.
+- Ưu tiên runtime (br-revise): sổ prompt > queue inline > prompt_file > template mặc định — selftest "sổ thắng template" xanh. br-find giờ trỏ thẳng vào mục sổ. 8/8 tool selftest xanh.
+
+## 2026-07-06 — GH#15 DREAM-RUN: test trọn luồng bằng bản interview "trong mơ"
+- br/dream-demo/ (git riêng, gitignored): app Điểm Danh — docs thô → spec-filled S1–S10 đủ (S7.2 lens-assumed) → interview 001 (questions.html + answers điền) → BR.md + clauses.json (bảng Giả định) → slice 3 frame scope độc lập (frame-lint 6 luật xanh, test-first ĐỎ) → prompts.md (user sửa tay 2 mục) → run.
+- Kịch bản chạy: frame-001 SUCCESS (2 vòng, commit gắn frame) · frame-002 stub lởm+tham lam → diff-jail revert docs/hack.txt + ESCALATE 3 vòng → NGƯỜI br-find → sửa sổ prompt → re-run SUCCESS · frame-003 SUCCESS. Nghiệm thu S10.1: 6/6 test xanh. git log mỗi frame 1 commit.
+- Gap lộ ra & vá: run-log + run_log_ref sinh SAU commit của loop → tree bẩn chặn frame kế → br-run thêm bookkeeping commit (chore(frame): run-log). R1 chặn agent ghi raw/ đúng luật → demo dùng docs/.
+- Trang xem: llmwiki/html/060726-dream-line-status.html.
+
+## 2026-07-06 — GH#15 STRESS-TEST 40 STEP: mini-POS 40 frame chạy trọn dây chuyền
+- br/dream-40 (git riêng, gitignored): 40 nghiệp vụ POS, 40 frame scope độc lập, frame-lint 40/40 xanh (1.8s, R6 pairwise 780 cặp). Queue 3 hồi: hồi 1 kẹt f13 (kịch bản) → user br-find + sửa → hồi 2 lộ f15 kẹt THẬT (bug banker's rounding trong solution) + gap nghẽn dòng → hồi 3 chạy nốt: 40/40 done, 40 test xanh, 40 commit frame(fNN), ~18s tổng runtime queue.
+- 3 GAP QUY MÔ phát hiện & vá (selftest lại xanh): (1) queue write-back làm bẩn tree chặn frame kế → br-queue commit chore(queue) sau mỗi mục; (2) frame FAIL để diff dở → nghẽn 27 frame sau → br-run lưu .failed.patch + revert scope cho dòng chảy tiếp; (3) br-queue trước gọi loop-runner thẳng (thiếu gate/bookkeeping) → giờ delegate br-run.
+- build-line-status thêm toggle sáng/tối + localStorage + chống FOUC (feedback html-theme-toggle-required). Trang: llmwiki/html/060726-dream40-line-status.html.
+
+## 2026-07-06 — GH#15 HARASS-TEST 5×30 frame + council test-plan
+- Harass: 5 dự án × 30 frame (~150 frame-run) với 11 kiểu revise xấu + cổng bad-frame + resume. Runner harass_gen/harass_run (scratchpad) soi false-green/tree-dirty/tool-crash không thoả hiệp.
+- 3 BUG THẬT fixed + regression selftest: (1) stale .pyc → false verdict → PYTHONDONTWRITEBYTECODE trong loop-runner+frame-lint (selftest stale-pyc guard); (2) tree bẩn cộng dồn (1 kẹt chặn 27) → .failed.patch + revert + bookkeeping; (3) FLAKY/false-green "SUCCESS changed_files rỗng" → guard 7 CONFIRM (br-run --confirm 2, verdict FLAKY exit 7, selftest FLAKY_CONFIRM). loop-runner selftest 7→10, tất cả xanh, medic 0 fail.
+- Council 033 (Feynman senior-tester · Linus · Socrates, đồng thuận C>B>A): rủi ro #1 = false-GREEN qua oracle non-hermetic. KIỂM CHỨNG GAP test-hash-transitive của council → đã bịt bởi diff-jail blanket-revert (test thật: revise tamper conftest bắc cầu → revert → NO_PROGRESS). Plan /propose: sources/draft/060726-br-test-harness-plan.md (CI 3 tầng, property/mutation/cassette/chaos, test-independence).
+
+## 2026-07-07 — Distill skill checkpoint-trace từ SHEPHERD (reversible traces)
+- Nguồn: SHEPHERD "Reversible Agentic Execution Traces" (arxiv 2605.10913, shepherd-agents.ai) — agent-run = git-like trace, mọi state reachable, effect phân 3 reversibility tier, work là held-proposal (fork→merge/discard). Substrate của ta = git.
+- fdk/tools/checkpoint.py (selftest 7 check): save (checkpoint + tier vào .checkpoints.jsonl append-only) · list · rollback <seq|hash> về BẤT KỲ mốc (giữ lịch sử, ghi rollback thành step mới) · tier-gate (reversible→0/compensable→3/irreversible→4, gate trước materialize). Bug tự bắt khi làm: checkout cuốn sổ về quá khứ → fix giữ sổ chỉ-tăng.
+- skills/checkpoint-trace/SKILL.md — distill self-contained, ghi công nguồn, KHÁC /br (per-frame) và loop-runner (per-iteration): rollback TOÀN LƯỢT + kỷ luật tier. Đăng ký 6 mặt, regen CAPABILITIES/overstack, medic 0 fail. Demo: trace 3 mốc → rollback #1 khôi phục cây + cảnh báo email irreversible.

@@ -40,3 +40,12 @@
 {"ts": "2026-07-04T12:58:12", "session": "3fb3a505", "action": "modify", "target": "sources/ISSUES.md", "tool": "Edit"}
 {"ts": "2026-07-04T12:58:35", "session": "3fb3a505", "action": "modify", "target": "sources/ISSUES.md", "tool": "Edit"}
 {"ts": "2026-07-04T13:03:18", "session": "3fb3a505", "action": "modify", "target": "sources/draft/040726-selftest-nested-commit-unguarded.md", "tool": "Edit"}
+{"ts": "2026-07-05T00:11:44", "session": "db4de305", "action": "add", "target": "sources/draft/050726-ralph-interview-pipeline.md", "tool": "Write"}
+{"ts": "2026-07-05T00:35:18", "session": "db4de305", "action": "add", "target": "sources/draft/050726-ralph-slice-frames.md", "tool": "Write"}
+{"ts": "2026-07-05T00:36:11", "session": "db4de305", "action": "add", "target": "sources/draft/050726-ralph-loop-gate.md", "tool": "Write"}
+{"ts": "2026-07-05T00:36:58", "session": "db4de305", "action": "add", "target": "sources/draft/050726-ralph-monitor.md", "tool": "Write"}
+{"ts": "2026-07-05T08:34:50", "session": "db4de305", "action": "add", "target": "sources/draft/050726-ralph-pipeline-build.md", "tool": "Write"}
+{"ts": "2026-07-06T09:20:18", "session": "db4de305", "action": "add", "target": "sources/draft/050726-br-huong-dan-nguoi-moi.md", "tool": "Write"}
+{"ts": "2026-07-06T23:55:04", "session": "db4de305", "action": "add", "target": "sources/draft/060726-br-test-harness-plan.md", "tool": "Write"}
+{"ts": "2026-07-06T23:56:21", "session": "db4de305", "action": "modify", "target": "sources/draft/060726-br-test-harness-plan.md", "tool": "Edit"}
+{"ts": "2026-07-06T23:56:37", "session": "db4de305", "action": "modify", "target": "sources/draft/060726-br-test-harness-plan.md", "tool": "Edit"}
