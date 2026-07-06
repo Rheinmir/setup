@@ -105,6 +105,8 @@ jobs:
         run: bash harness/tests/harness-local-test.sh .
       - name: R14 patterns-protected — kho pattern chỉ sửa khi user cho phép (unlock env)
         run: bash harness/tests/patterns-guard-test.sh .
+      - name: U11 self-integrity — stamp repo ↔ global version-skew (GH#63 Phase 5)
+        run: bash harness/tests/harness-integrity-test.sh .
       - name: harness-doctor — fire-drill (mọi rail còn cắn?)
         run: python3 harness/scripts/harness-doctor.py --ci
       - name: capabilities current (fdk/CAPABILITIES.md khớp đĩa)

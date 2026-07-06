@@ -10,7 +10,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from hooklib import audit, project_dir, read_payload
+from hooklib import HARNESS_HOME, audit, project_dir, read_payload
 
 
 def find_health_check(root: Path):
@@ -22,6 +22,36 @@ def find_health_check(root: Path):
         if cand.is_file():
             return cand
     return None
+
+
+def harness_integrity(root: Path) -> None:
+    """U11 (GH#63 Phase 5): self-integrity — so llmwiki/.harness-stamp (hợp đồng install,
+    travel theo git) vs ~/.claude/harness/version.json (global đang cài trên máy).
+    LỆCH MAJOR → cảnh báo TO; stamp là HỢP ĐỒNG, không tự ép/tự sửa gì.
+    Chạy TRƯỚC early-exit template-manifest (downstream v4 không có manifest).
+    Fail-open tuyệt đối: thiếu file / JSON hỏng → im lặng, không bao giờ gãy phiên."""
+    try:
+        stamp_p = root / "llmwiki" / ".harness-stamp"
+        if not stamp_p.is_file():
+            return  # repo chưa bootstrap v4 → không có hợp đồng để so
+        gv_p = HARNESS_HOME / "version.json"
+        if not gv_p.is_file():
+            print("⚠️ [harness-integrity] repo có llmwiki/.harness-stamp nhưng GLOBAL "
+                  "~/.claude/harness CHƯA cài trên máy này — engine/validator global không chạy. "
+                  "Cài: bash harness/scripts/install-harness.sh --global (hoặc re-curl bootstrap).")
+            return
+        want = str(json.loads(stamp_p.read_text()).get("guarded_by", "0"))
+        have = str(json.loads(gv_p.read_text()).get("template_version", "0"))
+        if want.split(".")[0] != have.split(".")[0]:
+            print(f"🚨 [harness-integrity] LỆCH MAJOR: repo khai được gác bản v{want} "
+                  f"(llmwiki/.harness-stamp) nhưng global đang cài v{have}. Stamp là hợp đồng — "
+                  f"KHÔNG tự ép. Đồng bộ: re-curl bootstrap (cập nhật stamp) hoặc "
+                  f"install-harness.sh --global (cập nhật global).")
+        elif want != have:
+            print(f"⟳ [harness-integrity] stamp v{want} ≠ global v{have} (cùng MAJOR — vẫn chạy "
+                  f"bình thường; re-curl bootstrap khi tiện để khớp).")
+    except Exception:
+        pass
 
 
 def orient(root: Path) -> None:
@@ -58,6 +88,7 @@ def main() -> None:
     audit(payload, "SessionStart")
 
     root = Path(project_dir(payload))
+    harness_integrity(root)  # U11: so stamp↔global TRƯỚC early-exit (downstream v4 không có manifest)
     if not (root / ".template-manifest.json").is_file():
         sys.exit(0)  # không phải project dùng template → bỏ qua
 
