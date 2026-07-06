@@ -106,4 +106,5 @@
 | [050726-unify-install-manifest](sources/draft/050726-unify-install-manifest.md) | issue | Issue: thống nhất install path qua manifest |
 | [050726-reachability-sweep-skill-tools](sources/draft/050726-reachability-sweep-skill-tools.md) | issue | Issue: reachability sweep skill→tool (GH#54) |
 | [050726-map-not-territory-fable5-unknowns](sources/draft/050726-map-not-territory-fable5-unknowns.md) | issue | Issue: Map-is-not-Territory — tìm unknowns đối chiếu & vá overstack (GH#40) |
+| [060726-wiki-sync-openwiki-distill](sources/draft/060726-wiki-sync-openwiki-distill.md) | draft | 060726-wiki-sync-openwiki-distill |
 <!-- index:auto:end -->

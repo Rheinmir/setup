@@ -54,6 +54,31 @@ def harness_integrity(root: Path) -> None:
         pass
 
 
+def wiki_drift(root: Path) -> None:
+    """Nhắc code→wiki drift đầu phiên (distill openwiki 2026-07-06): wiki có neo
+    .last-sync.json (do harness/scripts/wiki-sync.py --mark-synced chốt) mà code đã
+    đổi kể từ neo → in 1 dòng nhắc /lint. Phục vụ dự án hiện tại (hợp ADR-004);
+    tất định, 0 token, fail-open tuyệt đối."""
+    try:
+        for wd in (root / "llmwiki" / "wiki", root / "wiki"):
+            anchor = wd / ".last-sync.json"
+            if not anchor.is_file():
+                continue
+            head = json.loads(anchor.read_text(encoding="utf-8")).get("gitHead", "")
+            if not head:
+                return
+            n = subprocess.run(["git", "rev-list", "--count", f"{head}..HEAD"],
+                               cwd=root, capture_output=True, text=True, timeout=4)
+            cnt = int(n.stdout.strip() or 0) if n.returncode == 0 else 0
+            if cnt:
+                print(f"⟳ [wiki-sync] code đã đổi {cnt} commit kể từ lần sync wiki "
+                      f"(neo {head[:10]}) — chạy /lint để rà; chi tiết: "
+                      f"wiki-sync.py --check.")
+            return
+    except Exception:
+        pass
+
+
 def orient(root: Path) -> None:
     """SessionStart orientation: in NGẮN để agent BIẾT project có code-index + wiki + capabilities,
     và NHẮC query chúng để định vị nhanh (đừng grep/đọc mù). Project-relevant — KHÔNG phải FDK
@@ -89,6 +114,7 @@ def main() -> None:
 
     root = Path(project_dir(payload))
     harness_integrity(root)  # U11: so stamp↔global TRƯỚC early-exit (downstream v4 không có manifest)
+    wiki_drift(root)         # code→wiki drift — cũng TRƯỚC early-exit (downstream v4 là đích chính)
     if not (root / ".template-manifest.json").is_file():
         sys.exit(0)  # không phải project dùng template → bỏ qua
 

@@ -162,6 +162,72 @@ jobs:
 """
     write("ci/harness.yml", ci)
 
+    # ---- 5b. CRON: wiki-refresh (distill openwiki 2026-07-06) ----
+    # Giữ wiki khớp code KHÔNG cần người trông: cổng no-op TẤT ĐỊNH (wiki-sync.py,
+    # 0 token) chạy trước — không drift thì kết thúc miễn phí; có drift thì (tuỳ chọn,
+    # cần secret ANTHROPIC_API_KEY) gọi LLM sửa surgical, rồi mở PR CHỈ diff wiki cho
+    # người review. Không có key vẫn hữu ích: PR mang cờ code-drift trong stale.json
+    # để phiên làm việc kế tiếp rà (degrade tử tế, không fail-open im lặng).
+    wr = f"""# {GEN.lstrip('# ')}
+name: wiki-refresh
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 1 * * *"        # 08:00 VN hằng ngày — chỉnh theo nhịp dự án
+permissions:
+  contents: write
+  pull-requests: write
+env:
+  HARNESS_REPO: https://github.com/Rheinmir/setup.git
+  HARNESS_REF: orca            # pin phiên bản harness: nhánh / tag / commit SHA
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    env:
+      ANTHROPIC_API_KEY: ${{{{ secrets.ANTHROPIC_API_KEY }}}}   # không đặt secret → bước LLM tự bỏ qua
+    steps:
+      - uses: actions/checkout@v4
+        with: {{ fetch-depth: 0 }}
+      - uses: actions/setup-python@v5
+        with: {{ python-version: '3.x' }}
+      - name: self-install harness global trên runner (v4 — repo không mang engine)
+        run: |
+          git clone --depth 1 -b "$HARNESS_REF" "$HARNESS_REPO" "$RUNNER_TEMP/harness-src"
+          bash "$RUNNER_TEMP/harness-src/harness/scripts/install-harness.sh" --global
+      - name: cổng no-op tất định (0 token) — code có đổi kể từ neo wiki?
+        id: drift
+        run: |
+          set +e
+          python3 "$HOME/.claude/harness/harness/scripts/wiki-sync.py" --check --json --root .
+          rc=$?
+          set -e
+          case "$rc" in
+            0) echo "status=current" >> "$GITHUB_OUTPUT" ;;
+            2|3) echo "status=drift" >> "$GITHUB_OUTPUT" ;;
+            *) exit "$rc" ;;
+          esac
+      - name: LLM sửa wiki surgical (/lint) — chỉ chạy khi có drift VÀ có key
+        if: steps.drift.outputs.status == 'drift' && env.ANTHROPIC_API_KEY != ''
+        run: |
+          npm install -g @anthropic-ai/claude-code
+          claude -p "Chạy skill /lint: bước 0 wiki-sync đã cờ code-drift trong llmwiki/wiki/stale.json. Lập docs-impact-plan rồi sửa SURGICAL đúng trang bị ảnh hưởng (soft diff budget, cấm formatting-only). Xong chạy: python3 ~/.claude/harness/harness/scripts/wiki-sync.py --mark-synced --root ." \\
+            --allowedTools "Read,Write,Edit,Bash,Grep,Glob"
+      - name: mở PR chỉ diff wiki (người review là chốt cuối)
+        if: steps.drift.outputs.status == 'drift'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          add-paths: llmwiki/wiki
+          branch: wiki-refresh/update
+          commit-message: "docs(wiki): wiki-refresh tự động (neo wiki-sync)"
+          title: "docs(wiki): wiki-refresh — đồng bộ wiki với code"
+          body: |
+            PR tự động từ workflow wiki-refresh.
+            - Có `ANTHROPIC_API_KEY`: wiki đã được LLM rà + sửa surgical, neo đã chốt.
+            - Không có key: PR chỉ mang cờ `code-drift` trong `stale.json` — mở phiên
+              Claude local chạy /lint để rà, hoặc thêm secret để tự động hoá trọn.
+"""
+    write("ci/wiki-refresh.yml", wr)
+
     # ---- 6. SÀN: pre-commit (gọi CLI files mode) ----
     pc = f"""# {GEN.lstrip('# ')}
 # Thêm vào .pre-commit-config.yaml của project:

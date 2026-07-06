@@ -19,18 +19,46 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-04 02:04:20 | `file.write` | llmwiki/wiki/sources/draft/030726-foundation-section-PLAN.md · tool=Write · session=fff3ffeb · actor=agent · prev=genesi |
-| 2026-07-04 02:05:11 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=fff3ffeb · actor=agent · prev=fb83df6317d31efa5797b25b1b0af8498900c742181f69 |
-| 2026-07-04 13:46:13 | `file.write` | harness/foundation.yaml · tool=Write · session=fff3ffeb · actor=agent · prev=710817b60ca9474b385d495fc5165d9199af1e8dd6b |
-| 2026-07-04 13:46:31 | `file.write` | harness/templates/foundation-template.yaml · tool=Write · session=fff3ffeb · actor=agent · prev=bd3f07169183f305bd119d5b |
-| 2026-07-04 13:46:41 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=fff3ffeb · actor=agent · prev=5a07113693ca27c6f79c9e4c52a9d0f972 |
-| 2026-07-04 13:47:09 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=fff3ffeb · actor=agent · prev=602b56fedd3237de6e98e643e3f78ddb4f |
-| 2026-07-04 13:47:42 | `file.write` | fdk/tools/medic.py · tool=Edit · session=fff3ffeb · actor=agent · prev=78180dee3614b3e076a3fe14b715d1f24444bf010138cc7d7 |
-| 2026-07-04 13:47:46 | `file.write` | fdk/tools/medic.py · tool=Edit · session=fff3ffeb · actor=agent · prev=21759df208a18dd2d0e533a209ca341caabf6fa337d41656e |
-| 2026-07-04 13:48:19 | `file.write` | harness/scripts/install-harness.sh · tool=Edit · session=fff3ffeb · actor=agent · prev=37b1fdc349e7ea68875a6c5b7cbdb572b |
-| 2026-07-04 13:48:28 | `file.write` | harness/poc-vendor-neutral/install.sh · tool=Edit · session=fff3ffeb · actor=agent · prev=e45236cc2942af75e79fde396b5e53 |
-| 2026-07-04 13:49:38 | `file.write` | llmwiki/wiki/sources/draft/030726-foundation-section.md · tool=Edit · session=fff3ffeb · actor=agent · prev=6c75c09f91bd |
-| 2026-07-04 13:49:54 | `file.write` | llmwiki/wiki/sources/draft/030726-foundation-section.md · tool=Edit · session=fff3ffeb · actor=agent · prev=3f2a69f977a0 |
+| 2026-07-03 22:22:04 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=ebbf4b4b · actor=agent · prev=47d6784db2c3952c04acb390e2e1995461c3c |
+| 2026-07-03 22:22:13 | `file.write` | llmwiki/wiki/sources/draft/030726-overstack-html-audit.md · tool=Write · session=3f2abe13 · actor=agent · prev=3c74b2afa |
+| 2026-07-03 22:22:31 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=3f2abe13 · actor=agent · prev=f193869be98b83cd182b2dde47c2f300354eb |
+| 2026-07-03 22:23:07 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=3f2abe13 · actor=agent · prev=4decfeed29c0a7f4f5be746941949648a2320 |
+| 2026-07-03 22:23:53 | `file.write` | llmwiki/wiki/sources/draft/030726-memory-episodic-vector.md · tool=Edit · session=ebbf4b4b · actor=agent · prev=67df30b4 |
+| 2026-07-03 22:24:01 | `file.write` | llmwiki/wiki/sources/draft/030726-self-evolving-skills.md · tool=Edit · session=ebbf4b4b · actor=agent · prev=716d22af07 |
+| 2026-07-03 22:24:09 | `file.write` | llmwiki/wiki/sources/draft/030726-observability-runtime.md · tool=Edit · session=ebbf4b4b · actor=agent · prev=b1a28e09f |
+| 2026-07-03 22:24:18 | `file.write` | llmwiki/wiki/sources/draft/030726-orchestration-scale.md · tool=Edit · session=ebbf4b4b · actor=agent · prev=b72d391b9d3 |
+| 2026-07-03 22:24:27 | `file.write` | llmwiki/wiki/sources/draft/030726-skill-resolve-supplychain.md · tool=Edit · session=ebbf4b4b · actor=agent · prev=c2003 |
+| 2026-07-03 23:07:10 | `file.write` | llmwiki/wiki/sources/draft/030726-ralph-br-frame-production-line.md · tool=Write · session=ebbf4b4b · actor=agent · prev |
+| 2026-07-03 23:07:45 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=ebbf4b4b · actor=agent · prev=c32871b0477153fcb6f80a68df5874fc66820 |
+| 2026-07-03 23:08:51 | `file.write` | skills/frontier-scan/SKILL.md · tool=Write · session=ebbf4b4b · actor=agent · prev=a55e5d7bba17617e67ecb74e81cab59646c0a |
+| 2026-07-03 23:34:20 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=3f2abe13 · actor=agent · prev=9299ccb5e3f03759e152f211684ae945562d7fcc9904f8 |
+| 2026-07-03 23:35:50 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=3f2abe13 · actor=agent · prev=c97a7af6ac4eb83de950e2754f5228209d4dfb53a28f2c |
+| 2026-07-03 23:51:39 | `file.write` | llmwiki/wiki/sources/draft/030726-retrieval-eval-baseline-rot.md · tool=Write · session=ebbf4b4b · actor=agent · prev=e6 |
+| 2026-07-04 13:05:57 | `file.write` | llmwiki/html/overstack-vs-world-30d.html · tool=Edit · session=2540a8eb · actor=agent · prev=bd9919721ef09e48fab77d0ccab |
+| 2026-07-04 13:06:11 | `file.write` | llmwiki/html/overstack-vs-world-30d.html · tool=Edit · session=2540a8eb · actor=agent · prev=16ab4bb0116ed3a8643dd0ca199 |
+| 2026-07-05 00:26:25 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=6d935094 · actor=agent · prev=720cfb5a970401fb917d12d9a20f4e3504 |
+| 2026-07-05 00:26:33 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=6d935094 · actor=agent · prev=88c93c42340ca03b0d22821c9d308c86df |
+| 2026-07-05 08:31:38 | `file.write` | llmwiki/wiki/sources/draft/050726-map-not-territory-fable5-unknowns.md · tool=Write · session=2e819614 · actor=agent · p |
+| 2026-07-05 08:31:45 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=2e819614 · actor=agent · prev=04009b17e8ce54b2b8a5a8211bf092a1e23f2 |
+| 2026-07-05 08:32:11 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=2e819614 · actor=agent · prev=a8ef4066e6b15f7aed1275a2a5fb7ca15b07e |
+| 2026-07-05 08:32:45 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=2e819614 · actor=agent · prev=17e83747d06c7c128c5348cdcdb0ccb23af0ddbff4a0c8 |
+| 2026-07-05 23:16:51 | `file.write` | fdk/FEATURE-INVENTORY.md · tool=Write · session=62b41f4c · actor=agent · prev=dddba2eb8f53af93234a1ce5f5b584fec8972a7d18 |
+| 2026-07-06 14:07:01 | `file.write` | harness/poc-vendor-neutral/install.sh · tool=Edit · session=49ec06f0 · actor=agent · prev=276a87a261cbed670fa7dc88e4830a |
+| 2026-07-06 14:07:20 | `file.write` | harness/scripts/install-harness.sh · tool=Edit · session=49ec06f0 · actor=agent · prev=56226ea5db0e9796f298deb1a7da73165 |
+| 2026-07-06 14:07:27 | `file.write` | harness/scripts/install-harness.sh · tool=Edit · session=49ec06f0 · actor=agent · prev=ad30e0f77a7bcd9e12db947c67d1aa3c0 |
+| 2026-07-06 14:08:38 | `file.write` | harness/tests/wiki-graph-user-reachability-test.sh · tool=Write · session=49ec06f0 · actor=agent · prev=31b9ff6ab5b08b23 |
+| 2026-07-06 14:11:30 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=49ec06f0 · actor=agent · prev=bd75d93f97732ed0c30e33fb7db7eefaa73b2 |
+| 2026-07-06 14:11:33 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=49ec06f0 · actor=agent · prev=9ac3477cdc04d24f5739cc30a833e5471a9771d2da961d |
+| 2026-07-06 14:15:41 | `file.write` | harness/poc-vendor-neutral/gen-converters.py · tool=Edit · session=49ec06f0 · actor=agent · prev=f6e9517d209458da1eb919b |
+| 2026-07-06 14:17:05 | `file.write` | harness/tests/wiki-graph-user-reachability-test.sh · tool=Edit · session=49ec06f0 · actor=agent · prev=3736c0ad00782ece8 |
+| 2026-07-06 14:18:38 | `file.write` | llmwiki/.claude/hooks/session_start.py · tool=Edit · session=49ec06f0 · actor=agent · prev=26184ebadcf20dd523e95d75c5d3e |
+| 2026-07-06 14:18:53 | `file.write` | llmwiki/.claude/hooks/session_start.py · tool=Edit · session=49ec06f0 · actor=agent · prev=451bbd3ee32a303e01ca283926592 |
+| 2026-07-06 14:19:01 | `file.write` | llmwiki/.claude/hooks/session_start.py · tool=Edit · session=49ec06f0 · actor=agent · prev=a9c84d2a8e5ab89020127ef964539 |
+| 2026-07-06 14:19:29 | `file.write` | harness/tests/harness-integrity-test.sh · tool=Write · session=49ec06f0 · actor=agent · prev=70797e5fbd30678c3eb61d544fc |
+| 2026-07-06 14:19:43 | `file.write` | .github/workflows/harness.yml · tool=Edit · session=49ec06f0 · actor=agent · prev=e7ce484c33d52f26f5841d4723b1b359ae39b1 |
+| 2026-07-06 14:21:43 | `file.write` | harness/travel-policy.yaml · tool=Edit · session=49ec06f0 · actor=agent · prev=9f8555bbcef971c97ab6308b301c66f83320d5b68 |
+| 2026-07-06 14:21:53 | `file.write` | harness/travel-policy.yaml · tool=Edit · session=49ec06f0 · actor=agent · prev=680892dd6875a35b2b4e2c341dd7415f129f2002a |
+| 2026-07-06 14:22:08 | `file.write` | harness/travel-policy.yaml · tool=Edit · session=49ec06f0 · actor=agent · prev=b4f915b3e74efbf97034ac3da93cc72a48e9e9bf3 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -195,3 +223,12 @@ Giải issue `030726-skill-resolve-supplychain` (trục #5 frontier-gap-scan, Ch
 - Đợt 1 sự thật: "Bốn lớp"→"Ba lớp CHẶN"+giải thích L3 trống; slogan validator khớp FACT (rule enforce bởi validator+hook); BNAL nhãn tự khớp; bảng rule render 1 lần (bỏ lặp ×2); LOOP_GROUPS +ovs-notes/frontier-scan; GH#8 skill-usage auto-derive.
 - Đợt 2 UX: dark mode (prefers-color-scheme), .table-wrap overflow-x (class trước KHÔNG có CSS), mind-map keyboard a11y, skip-link + nav aria-label.
 - Problem-tree p-20. Đợt 3 biên tập defer (ngoài DoD).
+
+## 2026-07-06 — fdk — wiki-sync distill openwiki (code→wiki drift)
+
+- Đối chiếu openwiki (langchain-ai): distill 3 cái hay, nấu lại — 4 trục họ hơn nay phủ đủ.
+- Mới: harness/scripts/wiki-sync.py (neo .last-sync.json, --check no-op 0 token, cờ code-drift vào stale.json flock; --mark-synced content-hash chống churn) + wiki-sync-test.sh 8/8.
+- session_start.wiki_drift nhắc đầu phiên (trước early-exit — downstream v4 nhận); /lint bước 0+9 + kỷ luật surgical; /ingest docs-impact-plan; sync 3 bản.
+- gen-converters sinh ci/wiki-refresh.yml (cron→PR, degrade tử tế khi không key); wiki-sync.py vào template-manifest.
+- overstack.html mục Wiki viết lại đầy đủ + đối chiếu thẳng thắn openwiki (kèm giới hạn). Problem-tree p-22 (solved 3/3 trụ).
+- Draft: sources/draft/060726-wiki-sync-openwiki-distill.md. Điều kiện ship: test 5 project qua orca-cli trước commit.

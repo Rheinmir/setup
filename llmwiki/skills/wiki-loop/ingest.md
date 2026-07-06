@@ -14,6 +14,7 @@ Automatically when new file appears in `raw/`.
 ## Steps
 1. Read source file in `raw/` completely. No premature summarizing.
 2. Extract key takeaways: facts, decisions, entities, concepts from source.
+   Rồi lập **docs-impact-plan** trước khi ghi (distill openwiki 060726): `điểm mới trong nguồn → trang bị ảnh hưởng → sửa/tạo gì → vì sao`. Trang không truy được về một điểm cụ thể trong nguồn thì KHÔNG đụng.
 3. For each entity or concept:
    - Has wiki page: open it, add/revise relevant info.
    - No page: create in `wiki/concepts/` or `wiki/entities/`.
@@ -27,6 +28,8 @@ Automatically when new file appears in `raw/`.
 - Never modify file in `raw/`. Read only.
 - No wiki page unless source actually introduces that entity or concept.
 - Prefer updating existing page over creating duplicate.
+- **Canonical home**: mỗi concept một trang chính chủ — chi tiết nằm ở đó, trang khác chỉ nhắc ngắn + `[[wikilink]]`; đừng nhân bản cùng giải thích ra nhiều trang.
+- **Surgical trên trang có sẵn**: cập nhật = thay đúng câu lỗi thời, không viết lại phần còn đúng; cấm edit formatting-only (reformat bảng/dòng trống/wording khi nội dung không sai).
 
 ---
 

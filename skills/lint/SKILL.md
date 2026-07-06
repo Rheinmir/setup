@@ -1,14 +1,19 @@
 ---
 name: lint
-description: Periodic wiki health check — orphans, missing links, contradictions, stale, index gaps
+description: Periodic wiki health check — orphans, missing links, contradictions, stale (wiki→wiki VÀ code→wiki drift), index gaps. Bước 0 là cổng no-op tất định (wiki-sync, 0 token) — code không đổi kể từ neo thì kết luận "wiki current" và dừng sớm hợp lệ.
 ---
 
 # Skill: lint
 
 ## When to invoke
-After every 10 ingests, or when wiki stale/inconsistent.
+After every 10 ingests, or when wiki stale/inconsistent, hoặc session_start báo `[wiki-sync] code đã đổi N commit`.
 
 ## Steps
+
+0. **Code-drift gate (0 token)** — `RUN: python3 harness/scripts/wiki-sync.py --check` (downstream không có harness/ trong repo thì dùng bản global: `python3 ~/.claude/harness/harness/scripts/wiki-sync.py --check --root .`).
+   - Exit 0 (`current`): code không đổi kể từ neo → nếu mục đích lượt lint này là "wiki có khớp code không" thì **dừng tại đây, trả lời "wiki đã current"** — no-op là kết quả tốt, đừng bịa việc. Vẫn muốn quét sức khoẻ nội-wiki (orphan/index/origin) thì đi tiếp bước 1.
+   - Exit 3 (`drift`): các trang nghi stale đã được cờ `code-drift` trong `stale.json` kèm file code gây ra. **Lập docs-impact-plan TRƯỚC khi sửa**: mỗi trang định sửa phải truy về một thay-đổi-code cụ thể (`code đổi → trang → sửa gì → vì sao`); trang không truy được về thay đổi nào thì KHÔNG đụng.
+   - Exit 2 (chưa có neo / neo mất hiệu lực): làm trọn lint rồi chốt neo ở bước 9.
 
 1. **Orphans** — `RUN: grep -rL "wiki/" --include="*.md" llmwiki/wiki/concepts/ llmwiki/wiki/entities/` → files not referenced anywhere. Flag each.
 
@@ -26,9 +31,16 @@ After every 10 ingests, or when wiki stale/inconsistent.
 
 8. Append to `llmwiki/wiki/log.md`: `## YYYY-MM-DD — lint` with issues found/fixed vs flagged.
 
+9. **Chốt neo** — `RUN: python3 harness/scripts/wiki-sync.py --mark-synced` (hoặc bản global như bước 0). Chỉ ghi khi nội dung wiki thực sự đổi (content-hash); tự xoá cờ `code-drift` đã rà. Vòng phản hồi phải khép: không chốt neo = lần check sau báo drift giả.
+
 ## Rules
 - Fix automatically: missing links (step 2), index gaps (step 5).
 - Flag, not resolve: contradictions, orphans, empty pages — need human decision.
+- **Surgical update** (distill openwiki 060726): sửa trang stale = thay đúng câu sai, KHÔNG viết lại trang còn đúng; ưu tiên sửa 1 câu hơn thêm 1 đoạn.
+- **Soft diff budget**: <5 file code đổi → sửa tối đa 1–2 trang wiki; thấy cần sửa >3 trang → dừng lại tự vấn vì sao trước khi sửa rộng.
+- **Cấm formatting-only edit**: không reformat bảng, không chuẩn hoá dòng trống/wording khi nội dung xung quanh không sai — diff nhiễu là nợ cho reviewer.
+- **Canonical home**: mỗi concept một trang chính chủ; trang khác chỉ nhắc ngắn + `[[wikilink]]`, không nhân bản giải thích.
+- **No-op hợp lệ**: "wiki đã current, không sửa gì" là một kết quả lint thành công — ghi log rồi dừng, đừng sửa lấy có.
 
 ---
 

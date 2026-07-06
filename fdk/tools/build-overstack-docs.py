@@ -576,7 +576,7 @@ def sections(root: Path):
     ]))
 
     S.append(("wiki", "Wiki", "03 · Tri thức", "Nền tảng 1 — Wiki (tri thức)", [
-        "<p class=\"lead\">Wiki là bộ nhớ dài hạn của dự án. overstack ép nó luôn truy được nguồn và không bao giờ lệch index — bằng rào chắn, không bằng kỷ luật con người.</p>",
+        "<p class=\"lead\">Wiki là bộ nhớ dài hạn của dự án. overstack ép nó luôn truy được nguồn, không bao giờ lệch index, và — từ 07/2026 — tự phát hiện khi code đã đổi mà wiki chưa theo kịp. Tất cả bằng rào chắn tất định (code chạy ở hook/CI, không tốn token), không bằng kỷ luật con người.</p>",
         "<div class=\"grid\"><div class=\"card\"><h4>Luật vàng của wiki</h4><ul class=\"s\">"
         "<li>Mọi trang phải có <code>## Origin</code> — luôn truy được nguồn gốc (R2).</li>"
         "<li>Thêm/xoá trang phải cập nhật <code>wiki/index.md</code> (R3) — overstack có <code>--fix</code> tự thêm.</li>"
@@ -587,6 +587,45 @@ def sections(root: Path):
         "<li><code>architecture/</code>, <code>tours/</code> — kiến trúc & tour. File wiki KHÔNG nằm ở gốc <code>wiki/</code> (R5).</li>"
         "<li>Frontmatter OKF v0.1 (<code>type:</code>…) — máy đọc được (R9).</li>"
         "<li>Liên kết chéo bằng <code>[[wikilink]]</code>; trang chỉ tạo SAU khi code đã commit.</li></ul></div></div>",
+        "<div class=\"grid\"><div class=\"card\"><h4>Tự phát hiện lệch (staleness) — HAI chiều</h4><ul class=\"s\">"
+        "<li><b>Wiki→wiki</b>: mỗi lần ghi trang, hook <b>wiki_ledger</b> append sự kiện vào <code>ledger.jsonl</code> "
+        "(khoá <code>flock</code> — nhiều phiên ghi song song không giẫm dòng nhau) và lan cờ stale (lệch thời) "
+        "<i>đúng 1 bước</i> sang các trang trỏ tới nó (<code>stale.json</code> — cap 1 bước nên miễn nhiễm bão-stale/chu trình).</li>"
+        "<li><b>Code→wiki</b> <i>(mới 07/2026, distill từ openwiki của LangChain rồi nấu lại)</i>: <b>wiki-sync</b> giữ một "
+        "NEO <code>.last-sync.json</code> (commit + content-hash của wiki lần rà cuối). <code>--check</code> là "
+        "<b>cổng no-op tất định 0 token</b>: code không đổi kể từ neo → trả lời \"wiki current\" mà không cần gọi LLM; "
+        "có đổi → tự map file-code-đổi → trang wiki nhắc tới file đó và cờ <code>code-drift</code>.</li>"
+        "<li>Đầu mỗi phiên, <b>session_start</b> nhắc 1 dòng nếu code đã đổi N commit kể từ neo — realtime hơn cron "
+        "(openwiki không có khái niệm phiên để nhắc kiểu này).</li>"
+        "<li><i>Giới hạn thật</i>: map code→trang là heuristic nhắc-tên-file (thiên về bắt-thừa); <code>/lint</code> "
+        "vẫn là người phán xử cuối trước khi sửa.</li></ul></div>"
+        "<div class=\"card\"><h4>Vận hành không người trông</h4><ul class=\"s\">"
+        "<li>CI cron <code>wiki-refresh.yml</code> (sinh từ policy bằng gen-converters): mỗi ngày chạy cổng no-op "
+        "trước — <b>không drift thì kết thúc miễn phí</b> (0 token).</li>"
+        "<li>Có drift + có <code>ANTHROPIC_API_KEY</code>: LLM chạy <code>/lint</code> sửa <i>surgical</i> rồi chốt neo; "
+        "mở PR <b>chỉ diff wiki</b> cho người review.</li>"
+        "<li>Không có key: vẫn mở PR mang cờ <code>code-drift</code> tất định để phiên làm việc kế rà — degrade tử tế, "
+        "không im lặng bỏ qua.</li>"
+        "<li>Neo chỉ được ghi khi nội dung wiki <i>thực sự</i> đổi (content-hash) — cron chạy lại không tự sinh diff rác.</li></ul></div></div>",
+        "<div class=\"grid\"><div class=\"card\"><h4>Kỷ luật cập nhật surgical (phẫu thuật — chạm đúng chỗ)</h4><ul class=\"s\">"
+        "<li><b>Docs-impact-plan</b> trước khi sửa: <code>code đổi → trang → sửa gì → vì sao</code>; trang không truy được về một thay đổi cụ thể thì không đụng.</li>"
+        "<li><b>Soft diff budget</b>: ít file code đổi thì chỉ sửa 1–2 trang; muốn sửa rộng hơn phải tự vấn trước.</li>"
+        "<li><b>Cấm formatting-only edit</b> — diff nhiễu là nợ cho người review; <b>canonical home</b> — mỗi concept một trang chính chủ, nơi khác chỉ <code>[[wikilink]]</code>.</li>"
+        "<li><b>No-op hợp lệ</b>: \"wiki đã current, không sửa gì\" là kết quả tốt — không sửa lấy có.</li></ul></div>"
+        "<div class=\"card\"><h4>Truy hồi &amp; trí nhớ nhiều tầng</h4><ul class=\"s\">"
+        "<li><b>wiki-graph</b> — đồ thị tri thức + code sinh tất định (không RAG), truy wiki↔code hai chiều.</li>"
+        "<li><b>mem-rank / record-episode</b> — tầng nhớ episodic (theo phiên): phiên sau hỏi \"phiên trước làm gì\" theo nghĩa.</li>"
+        "<li><b>wiki-room</b> — context phiên chính mục rữa thì mở room 1 tầng nạp chi tiết wiki với budget cứng.</li>"
+        "<li><b>retrieval-eval</b> chạy trong CI — chất lượng truy hồi không được tụt dưới sàn (tất định, không LLM).</li></ul></div></div>",
+        "<div class=\"note\"><h4>Đối chiếu thẳng thắn với openwiki (LangChain, 07/2026)</h4><ul class=\"s\">"
+        "<li>4 trục openwiki từng hơn — <b>phát hiện code→wiki drift</b>, <b>cổng no-op 0 token + content-hash</b>, "
+        "<b>cron→PR không người trông</b>, <b>chi phí nhập cuộc thấp</b> — nay đều đã phủ (wiki-sync đi cùng bộ cài, "
+        "downstream nhận qua <code>install-harness.sh</code>/<code>/sync-template</code>, không thêm bước cài riêng).</li>"
+        "<li>Các trục overstack vốn hơn và giữ nguyên: <b>provenance</b> (Origin + ledger + log — openwiki không truy được nguồn claim), "
+        "<b>nhất quán nội-wiki bằng validator</b> (openwiki chỉ dặn trong prompt), <b>độ tươi trong phiên</b> (openwiki trễ tới 24h giữa 2 cron), "
+        "<b>đa phiên an toàn</b> (flock), và wiki gắn thẳng vào dev-loop (propose→verify→ship, ADR, eval).</li>"
+        "<li>Có sao nói vậy: phần cron→PR của overstack cần secret <code>ANTHROPIC_API_KEY</code> mới tự sửa được bằng LLM "
+        "(openwiki cũng cần key của provider họ); không key thì mức tự động dừng ở cờ tất định.</li></ul></div>",
     ]))
 
     _flow = [("agent định ghi", "#9aa4b2", ""), ("L0 · hook", "#0a84ff", "PreToolUse"),
