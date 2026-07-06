@@ -21,8 +21,29 @@ def project_dir(payload: dict) -> str:
     return os.environ.get("CLAUDE_PROJECT_DIR") or payload.get("cwd") or os.getcwd()
 
 
+HARNESS_HOME = pathlib.Path(
+    os.environ.get("OVERSTACK_HARNESS_HOME") or (pathlib.Path.home() / ".claude" / "harness")
+)
+
+
+def resolve_tool(root: str, rel: str):
+    """GLOBAL-SHARED (council-036): tìm engine/tool theo thứ tự REPO-LOCAL → GLOBAL.
+      1. root/rel                          (repo framework hoặc repo có copy riêng)
+      2. ~/.claude/harness/rel             (global-shared — cài 1 lần, mọi project dùng chung)
+    `rel` giữ nguyên cấu trúc con, vd 'fdk/tools/build-wiki-graph.py', 'harness/scripts/mem-rank.py'.
+    Trả path str hoặc None (fail-open: không tìm thấy → caller bỏ qua, không chặn phiên)."""
+    p = pathlib.Path(root) / rel
+    if p.is_file():
+        return str(p)
+    g = HARNESS_HOME / rel
+    if g.is_file():
+        return str(g)
+    return None
+
+
 def find_validators(start: str):
-    """Thứ tự: env LLMWIKI_VALIDATORS → bản copy cạnh hooks → harness/validators ở repo cha."""
+    """Thứ tự: env LLMWIKI_VALIDATORS → bản copy cạnh hooks → harness/validators ở repo cha
+    → GLOBAL ~/.claude/harness/harness/validators (global-shared)."""
     env = os.environ.get("LLMWIKI_VALIDATORS")
     if env and os.path.isdir(env):
         return pathlib.Path(env)
@@ -34,6 +55,9 @@ def find_validators(start: str):
         cand = parent / "harness" / "validators"
         if cand.is_dir():
             return cand
+    gv = HARNESS_HOME / "harness" / "validators"        # global-shared fallback
+    if gv.is_dir():
+        return gv
     return None
 
 

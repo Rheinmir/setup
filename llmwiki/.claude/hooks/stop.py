@@ -6,7 +6,7 @@ import re
 import subprocess
 import sys
 
-from hooklib import audit, code_log, find_validators, find_wiki_dir, project_dir, read_payload, run_validator
+from hooklib import audit, code_log, find_validators, find_wiki_dir, project_dir, read_payload, resolve_tool, run_validator
 
 
 # file code (đa ngôn ngữ) trong git-status → trigger regen phần code-graph của wiki-graph.
@@ -51,9 +51,12 @@ def regen_docs(root: str) -> None:
         MỘT codepath duy nhất — cùng engine, khác môi trường, không đẻ hook riêng (Munger)."""
     td = os.path.join(root, "fdk", "tools")
     is_framework = os.path.isfile(os.path.join(td, "build-overstack-docs.py"))
-    wg = os.path.join(td, "build-wiki-graph.py")
-    # (B) chạy khi CÓ engine và (repo framework HOẶC downstream bật opt-in). Không engine → không B.
-    wikigraph_on = os.path.isfile(wg) and (is_framework or os.environ.get("OVERSTACK_WIKIGRAPH") == "1")
+    # GLOBAL-SHARED (council-036): engine wiki-graph tìm REPO-LOCAL → GLOBAL ~/.claude/harness/.
+    # Downstream KHÔNG copy engine vào repo — dùng bản global (cài 1 lần). resolve_tool trả None nếu
+    # thiếu cả hai → wikigraph_on False → bỏ (fail-open).
+    wg = resolve_tool(root, "fdk/tools/build-wiki-graph.py")
+    # (B) chạy khi CÓ engine (local/global) và (repo framework HOẶC downstream bật opt-in).
+    wikigraph_on = bool(wg) and (is_framework or os.environ.get("OVERSTACK_WIKIGRAPH") == "1")
     if not is_framework and not wikigraph_on:
         return  # không phải framework và cũng không bật wiki-graph downstream → bỏ hẳn (rẻ)
     try:
