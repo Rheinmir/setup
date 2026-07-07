@@ -28,6 +28,7 @@ description: >-
 |------|------|----------|
 | `skills/br/assets/spec-template.md` | bộ specs chuẩn S1–S10 (khung tham chiếu mọi project) | — |
 | `skills/br/assets/frame-template.md` | template TẤT ĐỊNH cho mọi frame (frontmatter + 4 section body người-đọc-hiểu) | — |
+| `skills/br/assets/design-template.md` | template thiết kế tái dùng (khung Google design-doc + design system nạp từ `/high-end-visual-design`) → copy thành `br/DESIGN.md` | — |
 | `fdk/tools/frame-lint.py` | gác frame 7 luật (schema · scope · test-first · freshness · DAG · exclusive-scope · **content**) | `frame-lint.py selftest` |
 | `harness/scripts/loop-runner.py` | loop 6 phanh (max_iter·budget·no_progress·escalate·**diff-jail**·**test-hash**) | `loop-runner.py selftest` |
 | `fdk/tools/build-line-status.py` | monitor tất định (frame·run-log·BR → json+html, `--check`) | `build-line-status.py selftest` |
@@ -48,6 +49,7 @@ Runtime artifacts sống ở `br/` tại gốc project (không phải trong skil
 ## Mode 2 — `/br compile`
 1. Đọc `br/spec-filled.md` + `br/interview/*-answers.md` đã điền.
 2. Sinh `br/BR.md`: mỗi điều khoản có `clause_id` (kế thừa field-id, vd `S4.2`) + provenance (`raw|user|lens:<tên>`). Đầu file là bảng **"Giả định đang gánh"** liệt kê mọi clause `lens`/`assumed` (fail-fast: nhìn một phát biết đang cược gì).
+   - **Sản phẩm có UI (S7.5)**: chốt một clause NFR (vd `N01 giao-diện`) TRỎ tới `br/DESIGN.md`, KHÔNG chép luật design vào BR. Đồng thời copy `skills/br/assets/design-template.md` → `br/DESIGN.md` và điền §1/§2/§4/§6/§7 cho sản phẩm (giữ nguyên §3/§5 kế thừa). BR = *phải có theme/design*; DESIGN.md = *design trông ra sao*.
 3. Sinh `br/BR.clauses.json`: `{clause_id: {provenance, assumed: bool}}` — monitor (`/br status`) đọc file này để tô cam clause assumed.
 
 ## Mode 3 — `/br slice`

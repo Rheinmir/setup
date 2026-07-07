@@ -51,6 +51,7 @@ Mỗi field khi được điền mang 4 thuộc tính: `required` (bắt buộc 
 - `S7.2` (required) Bảo mật & phân quyền (ai thấy/sửa được gì).
 - `S7.3` (optional) Khối lượng dữ liệu / tải đỉnh.
 - `S7.4` (optional) Khả dụng / sao lưu / phục hồi.
+- `S7.5` (required) Giao diện & design system — sản phẩm có UI thì BẮT BUỘC theo `skills/br/assets/design-template.md` (khung Google design-doc + design system kế thừa `/high-end-visual-design`): chọn Vibe/Layout archetype, dark/light toggle + localStorage + chống FOUC. BR chốt một clause NFR trỏ tới `br/DESIGN.md`; KHÔNG chép luật vào BR.
 
 ## S8 · Ràng buộc (required)
 - `S8.1` (required) Công nghệ bắt buộc / cấm (stack, hạ tầng).
