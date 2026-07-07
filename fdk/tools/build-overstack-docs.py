@@ -506,14 +506,8 @@ def sections(root: Path):
     S.append(("quickstart", "Quickstart", "00 · Bắt đầu", "Quickstart — chạy được trong 2 phút", [
         "<p class=\"lead\">Bạn chỉ cần nhớ ba thứ: <b>cài</b>, <b>để agent làm việc</b>, và <b>khi muốn tính năng mới thì /propose trước</b>. Phần còn lại overstack lo (rào chắn tất định chặn agent làm bậy, 0 token).</p>",
         "<h3>1. Cài vào dự án của bạn (một dòng)</h3>",
-        "<div class=\"grid\">"
-        "<div class=\"card\"><h4>Cách 1 — dán cho Agent</h4>"
-        "<p style=\"margin:0 0 8px\">Agent tự cài rồi tự kiểm tra mọi thứ đã đúng chỗ:</p>"
-        "<pre class='code-block'><code>curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash</code></pre></div>"
-        "<div class=\"card\"><h4>Cách 2 — terminal</h4>"
-        "<p style=\"margin:0 0 8px\">Chạy thẳng một dòng:</p>"
-        "<pre class='code-block'><code>curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash</code></pre></div>"
-        "</div>",
+        "<p>Dán cho <b>Agent</b> (nó tự cài rồi tự kiểm mọi thứ đã đúng chỗ) — hoặc chạy thẳng trong <b>terminal</b>. Cùng một lệnh:</p>"
+        "<pre class='code-block'><code>curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash</code></pre>",
         "<p>Lệnh này kéo cả <b>3 nền tảng</b> — <b>harness</b> (rào chắn), <b>skills</b> (kỹ năng), <b>llmwiki</b> (nền tri thức) — và bật guardrail ngay. Dự án cũ đã có wiki? Gọi <code>/harness-update</code> để migrate + tự trả nợ.</p>",
         "<h3>2. Cứ làm việc bình thường với agent</h3>",
         "<p>Agent (Claude Code, Cursor, opencode…) giờ bị overstack gác: không ghi bậy vào <code>raw/</code>, mọi trang wiki buộc có nguồn gốc (<code>## Origin</code>), index/log tự cập-nhật-bằng-code. Bạn không phải nhớ luật — hàng rào tự cắn.</p>",
@@ -592,14 +586,8 @@ def sections(root: Path):
     S.append(("install", "Cài đặt", "02 · Cài đặt", "Cài đặt — global vs per-project", [
         "<p class=\"lead\">overstack cài bằng một dòng bootstrap. Có hai chế độ, dùng cả hai là tốt nhất.</p>",
         "<h3>Bootstrap (mặc định — cả 3 nền tảng)</h3>",
-        "<div class=\"grid\">"
-        "<div class=\"card\"><h4>Cách 1 — dán cho Agent</h4>"
-        "<p style=\"margin:0 0 8px\">Agent tự cài + tự kiểm tra mọi thứ đã đúng chỗ:</p>"
-        "<pre class='code-block'><code>curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash</code></pre></div>"
-        "<div class=\"card\"><h4>Cách 2 — terminal</h4>"
-        "<p style=\"margin:0 0 8px\">Chạy thẳng một dòng:</p>"
-        "<pre class='code-block'><code>curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash</code></pre></div>"
-        "</div>",
+        "<p>Dán cho <b>Agent</b> (nó tự cài rồi tự kiểm mọi thứ đã đúng chỗ) — hoặc chạy thẳng trong <b>terminal</b>. Cùng một lệnh:</p>"
+        "<pre class='code-block'><code>curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash</code></pre>",
         "<p>Kéo harness + skills + llmwiki và bật chặn ngay. Opt-out: <code>--harness-only</code>.</p>",
         "<div class=\"note\"><h4>Dự án MỚI từ đầu (chưa có code)?</h4><p style=\"margin:0\">Không cần cài tay rồi feed từng file — chỉ <b>dán nội dung <code>00-New-Project.md</code></b> cho agent. Nó tự cài overstack → kickoff (hỏi 3 câu) → dựng knowledge base → scaffold MVP, dừng hỏi đúng lúc. Chi tiết: <code>setup.md</code>.</p></div>",
         "<div class=\"grid\"><div class=\"card\"><h4>Per-project (cho team)</h4><ul class=\"s\">"

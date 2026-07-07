@@ -97,6 +97,20 @@ def p_docs():
     return "ok", f"{len(checks)} generator khớp đĩa", ""
 
 
+def p_frontend():
+    """Anti-pattern FRONTEND ở HTML sinh (ligature code, prose lọt code block) — p_docs không bắt."""
+    chk = ROOT / "fdk/tools/frontend-antipattern.py"
+    if not chk.exists():
+        return "skip", "chưa có frontend-antipattern.py", ""
+    rc, out = sh([PY, str(chk)], timeout=30)
+    tail = next((ln.strip() for ln in reversed(out.splitlines()) if ln.strip()), "")
+    if rc == 1:
+        return "fail", tail or "có anti-pattern frontend", "python3 fdk/tools/frontend-antipattern.py  # xem chi tiết"
+    if rc == 2:
+        return "warn", tail or "có cảnh báo frontend", "python3 fdk/tools/frontend-antipattern.py"
+    return "ok", "HTML sinh sạch anti-pattern frontend", ""
+
+
 def p_narrative():
     """Narrative overstack có TRUNG THỰC không (council-025) — KHÁC docs-probe (chỉ so
     html==generator-output = tính TRUNG THÀNH bản sao). Probe này gác tính TRUNG THỰC bản gốc:
@@ -249,6 +263,7 @@ PROBES = [
     ("drift",    ["drift", "rules"],             lambda: p_rules()),  # drift lộ trong p_rules
     ("backstop", ["backstop", "git", "commit"],  p_backstop),
     ("docs",     ["docs", "capabilities"],       p_docs),
+    ("frontend", ["frontend", "docs", "html"],    p_frontend),
     ("narrative", ["narrative", "docs", "drift"], p_narrative),
     ("foundation", ["foundation", "docs", "drift"], p_foundation),
     ("selfstate", ["selfstate", "state", "narrative"], p_selfstate),
