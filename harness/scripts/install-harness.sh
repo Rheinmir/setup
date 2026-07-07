@@ -349,6 +349,26 @@ PY
 grep -q "audit/" "$ROOT/.claude/.gitignore" 2>/dev/null || printf 'audit/\nsettings.json.bak.*\n' >> "$ROOT/.claude/.gitignore"
 log "settings.json ở ROOT: OK (session mở tại root sẽ load hooks)"
 
+# ---------- 4c. Seed-once wiki-graph.html: artifact vector TỒN TẠI ngay, khỏi chờ Stop có diff ----------
+# Diệt pain "cài xong không thấy vector": Stop hook chỉ regen khi git-status có diff ở wiki/ hay code →
+# project vừa cài ngồi im thì vector KHÔNG bao giờ xuất hiện. Seed 1 lần NẾU wiki đã có nội dung; project
+# code-only (wiki rỗng) → bỏ qua, để orca-onboard đẻ wiki rồi tự vẽ (STEP C của skill). Fail-open: seed lỗi
+# KHÔNG chặn install (tách `|| true` khỏi set -e). Engine: repo-local → global (cùng thứ tự hook resolve).
+WG_SEED=""
+[ -f "$ROOT/fdk/tools/build-wiki-graph.py" ] && WG_SEED="$ROOT/fdk/tools/build-wiki-graph.py"
+[ -z "$WG_SEED" ] && [ -f "$HOME/.claude/harness/fdk/tools/build-wiki-graph.py" ] && WG_SEED="$HOME/.claude/harness/fdk/tools/build-wiki-graph.py"
+if [ -n "$WG_SEED" ] && [ -d "$ROOT/llmwiki/wiki" ] \
+   && [ -n "$(find "$ROOT/llmwiki/wiki" -name '*.md' ! -name index.md ! -name log.md -print -quit 2>/dev/null)" ]; then
+  ALSO_SEED=""; [ -d "$ROOT/fdk/wiki" ] && ALSO_SEED="--also fdk/wiki"
+  if ( cd "$ROOT" && python3 "$WG_SEED" llmwiki/wiki $ALSO_SEED --code-root . >/dev/null 2>&1 ); then
+    log "wiki-graph.html: seed-once OK (vector vẽ ngay, khỏi chờ Stop có diff)"
+  else
+    warn "wiki-graph.html: seed-once lỗi — bỏ qua (không chặn install; Stop sẽ vẽ khi wiki/code đổi)"
+  fi
+else
+  log "wiki-graph.html: bỏ seed-once (wiki chưa có nội dung — orca-onboard sẽ đẻ wiki rồi tự vẽ)"
+fi
+
 # ---------- 5. L2 pre-commit ----------
 if [ ! -f "$ROOT/.pre-commit-config.yaml" ]; then
   cp "$SRC/.pre-commit-config.yaml" "$ROOT/.pre-commit-config.yaml"

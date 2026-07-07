@@ -6,11 +6,12 @@ in 1 đoạn ngắn vào context để agent biết cần /sync-template. Fail-o
 thiếu script / mạng chậm / lỗi gì cũng exit 0, không bao giờ làm gãy phiên.
 """
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
 
-from hooklib import HARNESS_HOME, audit, project_dir, read_payload
+from hooklib import HARNESS_HOME, audit, project_dir, read_payload, resolve_tool
 
 
 def find_health_check(root: Path):
@@ -108,6 +109,36 @@ def orient(root: Path) -> None:
         pass
 
 
+def wikigraph_reminder(root: Path) -> None:
+    """Cờ auto-draw BẬT mà artifact vector thiếu/cũ → nhắc 1 dòng kèm đúng lệnh vẽ.
+    Diệt pain im-lặng: Stop hook chỉ regen khi git-status có diff ở wiki/ hay code — project
+    vừa cài/onboard xong ngồi im thì vector không xuất hiện VÀ không có gì báo. KHÔNG auto-chạy
+    generator (tốn ~5s/phiên) — chỉ LỘ DIỆN. Chỉ khi opt-in (tôn trọng Taleb: không nag project
+    chưa bật cờ). Fail-open tuyệt đối; TRƯỚC early-exit manifest nên downstream v4 cũng nhận."""
+    try:
+        if os.environ.get("OVERSTACK_WIKIGRAPH") != "1":
+            return
+        wiki = root / "llmwiki" / "wiki"
+        if not wiki.is_dir():
+            return
+        mds = [p for p in wiki.rglob("*.md") if p.name not in ("index.md", "log.md")]
+        if not mds:
+            return  # wiki rỗng → chưa có gì để vẽ (chạy orca-onboard trước)
+        graph = root / "llmwiki" / "html" / "wiki-graph.html"
+        newest = max(p.stat().st_mtime for p in mds)
+        if graph.is_file() and graph.stat().st_mtime >= newest:
+            return  # vector đã vẽ & mới hơn wiki → im
+        wg = resolve_tool(str(root), "fdk/tools/build-wiki-graph.py")
+        if not wg:
+            return  # engine không tới được → gợi lệnh cũng vô ích (harness-integrity lo)
+        why = "chưa vẽ" if not graph.is_file() else "cũ hơn wiki"
+        print(f"🕸️ [wiki-graph] vector quan hệ {why} — vẽ ngay: "
+              f"python3 {wg} llmwiki/wiki --code-root .  "
+              f"(hoặc để Stop tự vẽ khi có diff ở wiki/ hay code)")
+    except Exception:
+        pass
+
+
 def main() -> None:
     payload = read_payload()
     audit(payload, "SessionStart")
@@ -115,6 +146,7 @@ def main() -> None:
     root = Path(project_dir(payload))
     harness_integrity(root)  # U11: so stamp↔global TRƯỚC early-exit (downstream v4 không có manifest)
     wiki_drift(root)         # code→wiki drift — cũng TRƯỚC early-exit (downstream v4 là đích chính)
+    wikigraph_reminder(root) # C: cờ bật mà vector thiếu/cũ → nhắc 1 dòng (trước early-exit, downstream primary)
     if not (root / ".template-manifest.json").is_file():
         sys.exit(0)  # không phải project dùng template → bỏ qua
 
