@@ -318,7 +318,7 @@ def h(script, matcher=None):
     d = {"hooks": [{"type": "command", "command": f'python3 "{hooks_dir}/{script}"'}]}
     if matcher: d["matcher"] = matcher
     return d
-tpl = {"permissions": {"deny": deny}, "hooks": {
+tpl = {"permissions": {"deny": deny}, "env": {"OVERSTACK_WIKIGRAPH": "1"}, "hooks": {
     "PreToolUse":  [h("pre_tool_use.py",  "Write|Edit|MultiEdit|NotebookEdit|Bash"), h("orca_guard.py", "Bash")],
     "PostToolUse": [h("post_tool_use.py", "Write|Edit|MultiEdit")],
     "Stop":        [h("stop.py")],
@@ -334,6 +334,8 @@ cur.setdefault("permissions", {}).setdefault("deny", [])
 for d in tpl["permissions"]["deny"]:
     if d not in cur["permissions"]["deny"]:
         cur["permissions"]["deny"].append(d)
+# env: bật auto-draw wiki-graph.html downstream (opt-in Taleb) — setdefault không đè giá trị user đã đặt
+cur.setdefault("env", {}).setdefault("OVERSTACK_WIKIGRAPH", "1")
 cur.setdefault("hooks", {})
 for event, defs in tpl["hooks"].items():
     cur_defs = cur["hooks"].setdefault(event, [])
