@@ -19,20 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-06 10:34:59 | `file.write` | skills/br/SKILL.md · tool=Edit · session=db4de305 · actor=agent · prev=ee50e74b8ac4bd75e43d3fb1325e0a4bfa2b8330770ab4c9a |
-| 2026-07-06 10:35:11 | `file.write` | skills/br/SKILL.md · tool=Edit · session=db4de305 · actor=agent · prev=4e42f36626dd8cb7216f0a19483b3198619f0a45871bce7f0 |
-| 2026-07-06 11:47:43 | `file.write` | fdk/tools/br-prompts.py · tool=Write · session=db4de305 · actor=agent · prev=fafaba2525040f400cd72d4937683999d386f82c21d |
-| 2026-07-06 11:48:03 | `file.write` | fdk/tools/br-revise.py · tool=Edit · session=db4de305 · actor=agent · prev=0421e192881b7377cac2b29d26cc12047db53fa5b63bf |
-| 2026-07-06 11:48:13 | `file.write` | fdk/tools/br-revise.py · tool=Edit · session=db4de305 · actor=agent · prev=10378163735aec008fbe102390f5719c71e29c0af8b94 |
-| 2026-07-06 11:48:23 | `file.write` | fdk/tools/br-revise.py · tool=Edit · session=db4de305 · actor=agent · prev=0d370995078549aeaf4319494c01fd583250bd4a506bc |
-| 2026-07-06 11:48:33 | `file.write` | fdk/tools/br-revise.py · tool=Edit · session=db4de305 · actor=agent · prev=d002c80d3d99b30148d7f76c0bb3aed53e00951529c71 |
-| 2026-07-06 11:48:50 | `file.write` | fdk/tools/br-find.py · tool=Edit · session=db4de305 · actor=agent · prev=1510ff1556598564a616be831fe3c960d66648b5d552ddf |
-| 2026-07-06 11:48:58 | `file.write` | fdk/tools/br-find.py · tool=Edit · session=db4de305 · actor=agent · prev=e436631b95816e6df2ff9e4a8358fb45d735dbee2045775 |
-| 2026-07-06 11:49:05 | `file.write` | fdk/tools/br-find.py · tool=Edit · session=db4de305 · actor=agent · prev=ed4ce2f72789fb4e9df38af2036b2d3f92eee537a69a5c8 |
-| 2026-07-06 11:49:42 | `file.write` | fdk/tools/br-prompts.py · tool=Edit · session=db4de305 · actor=agent · prev=ec7ae3be6473046a538fea1b413e52e7d4bd4c970a99 |
-| 2026-07-06 11:58:35 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=c512a2041da90ed04fc76cccc17473995de050042895c03d |
-| 2026-07-06 22:45:16 | `file.write` | fdk/tools/br-queue.py · tool=Edit · session=db4de305 · actor=agent · prev=b255841b84b03cf23390aa972bf150c3e27504cdc8c758 |
-| 2026-07-06 22:48:06 | `file.write` | fdk/tools/br-queue.py · tool=Edit · session=db4de305 · actor=agent · prev=aa0de13092c3cb2b6564ceb28ce16c38f851c8d4259054 |
 | 2026-07-06 22:49:41 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=c73a5edca83bf20dd689c809f4106d27b2616b4bd945f977 |
 | 2026-07-06 22:49:49 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=7a0c3ad993b40b2638bb99aa56113a365259027c49ed4e76 |
 | 2026-07-06 22:50:34 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=2d447a720caaf94ad7ecbcc7a0d286329ef110a9ff82bffe |
@@ -59,6 +45,20 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-07 00:42:19 | `file.write` | skills/checkpoint-trace/SKILL.md · tool=Write · session=db4de305 · actor=agent · prev=3e8c914417710751469498c6b969b93f09 |
 | 2026-07-07 00:59:12 | `file.write` | fdk/tools/upstream-drift.py · tool=Write · session=db4de305 · actor=agent · prev=fdd8e2876e7ee01925068a9b0fb878d060b8c19 |
 | 2026-07-07 00:59:59 | `file.write` | fdk/tools/upstream-drift.py · tool=Edit · session=db4de305 · actor=agent · prev=74831d2ea17c2fbc2c8a85774268fccc36dcb091 |
+| 2026-07-07 01:20:54 | `file.write` | fdk/tools/checkpoint.py · tool=Edit · session=db4de305 · actor=agent · prev=c04d099b8d54b078e8148ea52c61e5d4447c6d03d9f9 |
+| 2026-07-07 01:21:07 | `file.write` | fdk/tools/checkpoint.py · tool=Edit · session=db4de305 · actor=agent · prev=97aa5383461879de0eb95a983738ac1792b9213c676b |
+| 2026-07-07 01:21:19 | `file.write` | fdk/tools/checkpoint.py · tool=Edit · session=db4de305 · actor=agent · prev=bb7f45368c3485663b8e3fe1b124927e9ea867635808 |
+| 2026-07-07 01:21:34 | `file.write` | fdk/tools/checkpoint.py · tool=Edit · session=db4de305 · actor=agent · prev=53d62f88dcba9c44fb3f7625c562c489a70e15583932 |
+| 2026-07-07 01:21:45 | `file.write` | fdk/tools/checkpoint.py · tool=Edit · session=db4de305 · actor=agent · prev=4c1bd517381ba72929dba93014fb2ccf8162c2d5dd27 |
+| 2026-07-07 01:22:11 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=c165f7f457038a54264ac8a0332906c2dd73353825929a95 |
+| 2026-07-07 01:22:24 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=e4ae13ab7832fdc14ff128d9ef9ba7f83174e7c8ac922351 |
+| 2026-07-07 01:22:33 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=897fa2376720b2ae2392bda9d42a0c97bc052c3c63e7ee83 |
+| 2026-07-07 01:22:50 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=5466d24dbad76e3768b8ec9e29aea08510e4c1e49b4894b3 |
+| 2026-07-07 01:23:05 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=5f8d482c68e11de6e3493f140ca4fa7db2b0f21c04354178 |
+| 2026-07-07 01:23:15 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=80276855147e55818dee7b22068e3307691a468a7ac2178b |
+| 2026-07-07 01:23:37 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=9f9a5abfdfa35d158ef97940ced7135f79ac67f850c2b771 |
+| 2026-07-07 01:32:16 | `file.write` | llmwiki/html/070726-huong-dan-repo-files.html · tool=Write · session=db4de305 · actor=agent · prev=a748b3c294c57e22a9ec7 |
+| 2026-07-07 01:33:40 | `file.write` | llmwiki/wiki/sources/draft/070726-huong-dan-repo-files.md · tool=Write · session=db4de305 · actor=agent · prev=f8f99dcdb |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -331,3 +331,24 @@ Giải issue `030726-skill-resolve-supplychain` (trục #5 frontier-gap-scan, Ch
 - Chọn kiểu adapt: wire vào /br run per-frame (standalone không ai nhớ gọi; per-iteration thừa vì loop đã có revert/sweep). Nguyên tắc: KHÔNG double-commit — checkpoint.py thêm mode `record` (ghi sổ trỏ commit CÓ SẴN) + rollback theo LABEL (frame_id, không cần nhớ seq/hash). Selftest checkpoint 7→9.
 - br-run: (0) TIER-GATE — frame khai `tier: compensable|irreversible` bị chặn (exit 3) tới khi người `--ack-tier` (SHEPHERD gate-before-materialize); (7) sau run record mốc vào .checkpoints.jsonl + commit sổ ngay (né bài học tree-bẩn harass). Selftest br-run 13→17 (ledger có mốc, tree sạch, gate chặn, ack cho qua).
 - Demo dream-demo: record không commit mới; `checkpoint.py rollback frame-001` quay pipeline theo TÊN frame. SKILL br + checkpoint-trace cập nhật; medic 0 fail.
+
+## 2026-07-07 — docs-site-macos — huong-dan-repo-files
+- llmwiki/html/070726-huong-dan-repo-files.html: bản đồ tương tác file repo (file NGƯỜI sửa / MÁY sinh / sổ append-only + trace, bảng lệnh↔file, luật hàng rào, checklist). Lần đầu áp spec theme NÚT GẠT + font compact từ upstream. Output-report: sources/draft/070726-huong-dan-repo-files.md.
+
+## 2026-07-07 — Chạy APP THẬT từ frames để test chất lượng (dream-demo) — vòng khép kín trọn vẹn
+- run_demo.py: mô phỏng 1 buổi sáng điểm danh (login, khoá 5 lần sai, check-in, báo cáo trễ). BẮT ĐƯỢC lỗi chất lượng THẬT ngoài unit test: bấm nhầm check-in 2 lần → ghi 2 bản, vi phạm S5.2 (clause có trong BR nhưng chưa được test).
+- Vòng khép kín diễn đúng thiết kế: chạy app thấy lỗi → br-find "check-in" → frame-002 + mục sổ prompt → NGƯỜI thêm acceptance test S5.2 (đỏ, commit) → re-run frame-002 (stub vai claude, 2 vòng + 2 confirm, scope sạch, commit 233dfd5) → chạy lại app: 1 bản ghi/ngày ✓ ĐẠT, 7/7 test xanh. Checkpoint trace ghi mốc #3.
+- Finding #2 ghi backlog BR (không lặng lẽ bỏ): S3.3 khoá "15 phút" thực tế khoá VĨNH VIỄN — cần frame-004-unlock + test thời gian.
+- Gotcha lộ ra: test main-block nằm GIỮA file → test thêm sau không chạy ("OK 2 test" giả) — main-block phải ở CUỐI; đáng đưa vào spec-template ghi chú viết test.
+
+## 2026-07-07 — Fix app dream-demo tới CHUẨN PRODUCT (goal-driven autonomous loop)
+- Audit app Điểm Danh vs BR → 6 finding (br/dream-demo/br/FINDINGS.md): F-01 khoá vĩnh viễn thay 15' (S3.3), F-02 mật khẩu plaintext (S7.2), F-03 thiếu login log, F-04 input validation crash, F-05 data model thiếu ten/phong_ban (S5.1), F-06 boundary is_late chưa test.
+- Fix theo dây chuyền (R6 exclusive-scope: auth→frame-001, checkin→frame-002, report→frame-003): mỗi finding = người viết acceptance test (đỏ) → re-run frame (stub vai claude, 2 vòng + confirm hermeticity, scope sạch) → xanh. 6/6 FIXED.
+- Nghiệm thu S10.1: 18 unit test xanh (8 auth + 6 checkin + 4 report) + run_demo.py smoke test 11 invariant chất lượng xanh (hash không plaintext, tự mở khoá 15', input bẩn không sập, dedup ngày, báo cáo đúng, data model đủ).
+- Gotcha pipeline lộ ra: sửa BR.md (thêm findings) → R4 orphan mọi frame → phải re-anchor parent_br_hash (BR tiến hoá là hợp lệ; findings nên ở FINDINGS.md riêng, không trong BR đã hash). Known-limitation ghi trung thực: in-memory không thread-safe (trong scope demo S8.1).
+
+## 2026-07-07 — Đưa UI vào dây chuyền: frame-004-ui (trả lời "UI xấu vô frame nào sửa")
+- Phát hiện gap: serve.py (UI) là ORPHAN — br-find "serve.py" ra "không frame nào khớp" vì UI dựng làm demo-harness NGOÀI dây chuyền, không có kỷ luật/test.
+- Fix đúng cách (không sửa lụi): thêm clause S4.4 (màn hình web, chuẩn UI: token/app-bar/responsive/toggle/a11y) vào BR → slice frame-004-ui (scope serve.py, test tests/test_ui.py, R6 không đè frame nào) → re-anchor.
+- Người viết test_ui.py chuẩn UI (8 assert: viewport, design-token ≥8 --var, app-bar thương hiệu, @media max-width, data-theme toggle, aria a11y, 3 flow, status pill) → ĐỎ. Re-run frame-004-ui: iter1 escalate (viewport thiếu nháy) → sửa 1 chỗ → SUCCESS 2 vòng + confirm, scope sạch. UI mới: liquid-glass light-blue, app-bar, thẻ, toggle sáng/tối localStorage, responsive.
+- Giờ br-find "serve.py" → frame-004-ui. 4/4 file test xanh (auth/checkin/report/ui). App chạy http://localhost:8790 với UI đạt chuẩn.
