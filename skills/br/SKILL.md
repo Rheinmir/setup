@@ -27,7 +27,8 @@ description: >-
 | Tool | Việc | selftest |
 |------|------|----------|
 | `skills/br/assets/spec-template.md` | bộ specs chuẩn S1–S10 (khung tham chiếu mọi project) | — |
-| `fdk/tools/frame-lint.py` | gác frame 6 luật (schema · scope · test-first · freshness · DAG · exclusive-scope) | `frame-lint.py selftest` |
+| `skills/br/assets/frame-template.md` | template TẤT ĐỊNH cho mọi frame (frontmatter + 4 section body người-đọc-hiểu) | — |
+| `fdk/tools/frame-lint.py` | gác frame 7 luật (schema · scope · test-first · freshness · DAG · exclusive-scope · **content**) | `frame-lint.py selftest` |
 | `harness/scripts/loop-runner.py` | loop 6 phanh (max_iter·budget·no_progress·escalate·**diff-jail**·**test-hash**) | `loop-runner.py selftest` |
 | `fdk/tools/build-line-status.py` | monitor tất định (frame·run-log·BR → json+html, `--check`) | `build-line-status.py selftest` |
 
@@ -51,7 +52,7 @@ Runtime artifacts sống ở `br/` tại gốc project (không phải trong skil
 
 ## Mode 3 — `/br slice`
 1. Đọc `br/BR.md`. ĐỀ XUẤT danh sách lát cắt: mỗi lát = {clause_ids, scope_code dự kiến (≤3 file), scope_test, acceptance_test}. **STOP cho user duyệt/sửa/gộp/tách TỪNG lát** (người-trong-vòng-lặp — chốt chặn lỗi tương quan slicer). Lô đầu ≤ 3–5 frame.
-2. Ghi `br/frames/frame-NNN-<slug>.md` (schema v0 — xem frame-lint REQUIRED_FIELDS) + `parent_br_hash = sha256(br/BR.md)`.
+2. Ghi `br/frames/frame-NNN-<slug>.md` **THEO TEMPLATE `skills/br/assets/frame-template.md`** (schema v0 + 4 section body bắt buộc: Nghiệp vụ · Input/Output · Tiêu chí nghiệm thu · Ngoài phạm vi — viết cho NGƯỜI VỀ SAU đọc-hiểu, frame-lint R7 gác cứng: frame_id phải có slug nghiệp vụ, muc_tieu không được generic, section không được rỗng) + `parent_br_hash = sha256(br/BR.md)`.
 3. Sinh registry `br/frames/index.md` (bảng frame_id · clause_ids · scope_code · status · run_log_ref) từ frontmatter các frame.
 4. Gác: `python3 fdk/tools/frame-lint.py check br/frames --root . ` — xanh hết mới coi là slice xong (gồm R6 exclusive-scope: 2 frame không được giẫm cùng file).
 5. `python3 fdk/tools/br-prompts.py sync` — bổ sung mục prompt cho các frame mới vào sổ `br/prompts.md` (user sửa tay được ngay).

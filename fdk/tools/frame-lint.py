@@ -18,6 +18,11 @@ The 5 rules (all deterministic, exit-code contract):
   4. Freshness — parent_br_hash matches sha256 of the parent BR file (detects an
               ORPHAN frame after the BR changed underneath it).
   5. DAG    — depends_on across the frame set has no cycle.
+  7. Content — the frame must be READABLE BY A HUMAN LATER: muc_tieu is a real
+              business sentence (not "F10 nghiệp vụ"), and the body has the 4
+              template sections (Nghiệp vụ · Input/Output · Tiêu chí nghiệm thu ·
+              Ngoài phạm vi), each non-trivially filled.
+              Template: skills/br/assets/frame-template.md.
 
 Rules 1-4 are per-frame; rule 5 needs the whole set (run `check` on a directory).
 
@@ -30,6 +35,7 @@ Exit: 0 = all frames pass · 1 = at least one rule failed · 2 = usage error.
 import argparse
 import fnmatch
 import hashlib
+import re
 import subprocess
 import sys
 import tempfile
@@ -45,6 +51,12 @@ REQUIRED_FIELDS = [
     "schema_version", "frame_id", "created_by", "parent_br", "clause_ids",
     "parent_br_hash", "muc_tieu", "scope_code", "scope_test", "acceptance_test",
 ]
+# R7 content — a frame is documentation for the human who comes back later.
+REQUIRED_BODY_SECTIONS = ["## Nghiệp vụ", "## Input", "## Tiêu chí nghiệm thu", "## Ngoài phạm vi"]
+MIN_MUC_TIEU_LEN = 20
+MIN_SECTION_LEN = 30
+# generic slop: "F10 nghiệp vụ", "frame-f10", bare ids…
+_GENERIC_MUC_TIEU = re.compile(r"^(frame[-_ ]?\w+|[fs]?\d+(\.\d+)?)([ :–-]*(nghiệp vụ|nghiep vu|feature|logic))?$", re.I)
 # scope_code MUST NOT be able to edit the brakes of the system itself.
 FORBIDDEN_SCOPE_SEGMENTS = {"harness", ".github", ".git"}
 FORBIDDEN_SCOPE_SUBSTR = ("hook",)
@@ -238,6 +250,33 @@ def rule_exclusive_scope(frame_scopes, root):
     return fails
 
 
+def rule_content(fm, text):
+    """R7: frame phải đọc-hiểu-được bởi người về sau — muc_tieu là câu nghiệp vụ
+    thật + body đủ 4 section template, mỗi section có nội dung thật."""
+    fails = []
+    fid = str(fm.get("frame_id") or "")
+    tokens = re.split(r"[-_]", fid.removeprefix("frame").lstrip("-_"))
+    if not any(sum(c.isalpha() for c in t) >= 3 for t in tokens):
+        fails.append(f"R7 content: frame_id {fid!r} chỉ là mã số — phải có slug nói lên nghiệp vụ "
+                     f"(vd frame-010-ean13-checksum; template: skills/br/assets/frame-template.md)")
+    mt = str(fm.get("muc_tieu") or "").strip()
+    if len(mt) < MIN_MUC_TIEU_LEN or _GENERIC_MUC_TIEU.match(mt):
+        fails.append(f"R7 content: muc_tieu {mt!r} chung chung/quá ngắn — phải là MỘT câu nghiệp vụ "
+                     f"người-đọc-hiểu (≥{MIN_MUC_TIEU_LEN} ký tự; template: skills/br/assets/frame-template.md)")
+    parts = text.split("---", 2)  # ["", frontmatter, body] — file bắt đầu bằng ---
+    body = parts[2] if len(parts) >= 3 else ""
+    for sec in REQUIRED_BODY_SECTIONS:
+        idx = body.find(sec)
+        if idx < 0:
+            fails.append(f"R7 content: thiếu section `{sec}` trong thân frame (template: skills/br/assets/frame-template.md)")
+            continue
+        nxt = body.find("\n## ", idx + len(sec))
+        chunk = body[idx + len(sec): nxt if nxt >= 0 else len(body)].strip()
+        if len(chunk) < MIN_SECTION_LEN:
+            fails.append(f"R7 content: section `{sec}` rỗng/sơ sài (<{MIN_SECTION_LEN} ký tự) — viết cho người về sau đọc")
+    return fails
+
+
 def rule_dag(frames):
     """frames: list of (frame_id, depends_on-list). Return failures if any cycle."""
     graph = {fid: list(deps or []) for fid, deps in frames}
@@ -265,9 +304,11 @@ def rule_dag(frames):
 # ── Orchestration ───────────────────────────────────────────────────────────
 def lint_frame(path, root, skip_verify=False):
     """Lint one frame file (rules 1-4). Returns (frame_id, depends_on, failures)."""
-    fm = parse_frontmatter(Path(path).read_text(encoding="utf-8"))
+    text = Path(path).read_text(encoding="utf-8")
+    fm = parse_frontmatter(text)
     fails = []
     fails += rule_schema(fm)
+    fails += rule_content(fm, text)
     # only run scope/freshness/test rules if schema gave us the fields
     if not any(f.startswith("R1 schema: missing") for f in fails):
         fails += rule_scope(fm, root)
@@ -317,12 +358,12 @@ def check(target, root, skip_verify=False):
 # ── Self-test: BAD + GOOD fixtures for each rule ─────────────────────────────
 _GOOD_FRAME = """---
 schema_version: 0
-frame_id: {fid}
+frame_id: {fid}-luu-so-cai
 created_by: human
 parent_br: BR.md
 clause_ids: [S4.1]
 parent_br_hash: {brhash}
-muc_tieu: "làm cho tính năng X chạy"
+muc_tieu: "Người dùng nhập X thì hệ thống tính và lưu kết quả Y vào sổ"
 scope_code: ["src/**"]
 scope_test: ["tests/**"]
 depends_on: [{deps}]
@@ -334,6 +375,20 @@ guards:
   escalate_after_iter: 2
 ---
 # frame {fid}
+
+## Nghiệp vụ
+Người dùng nhập X trên màn hình nhập liệu; hệ thống tính Y và ghi vào sổ để đối chiếu cuối ngày.
+
+## Input / Output
+- Input: giá trị X (số nguyên dương, nhập tay)
+- Output: Y = f(X), ghi kèm timestamp vào sổ
+
+## Tiêu chí nghiệm thu
+- X hợp lệ thì Y được tính đúng và lưu thành công
+- X âm hoặc rỗng thì báo lỗi, không ghi sổ
+
+## Ngoài phạm vi
+Không làm phần báo cáo tổng hợp cuối tháng (frame khác phụ trách).
 """
 
 
@@ -403,9 +458,18 @@ def selftest():
 
         # BAD R5 — dependency cycle f5a <-> f5b
         b5 = root / "bad5"; b5.mkdir()
-        _write_frame(b5, "a.md", fid="f5a", brhash=brhash, deps="f5b", atest=red)
-        _write_frame(b5, "b.md", fid="f5b", brhash=brhash, deps="f5a", atest=red)
+        _write_frame(b5, "a.md", fid="f5a", brhash=brhash, deps="f5b-luu-so-cai", atest=red)
+        _write_frame(b5, "b.md", fid="f5b", brhash=brhash, deps="f5a-luu-so-cai", atest=red)
         record("BAD R5 cycle", "cycle", True, b5, root, skip=True)
+
+        # BAD R7 — muc_tieu generic + body 1 dòng (frame vô nghĩa với người đọc)
+        b7 = root / "bad7"; b7.mkdir()
+        f7 = _GOOD_FRAME.format(fid="f7", brhash=brhash, deps="", atest=red)
+        f7 = f7.replace('muc_tieu: "Người dùng nhập X thì hệ thống tính và lưu kết quả Y vào sổ"',
+                        'muc_tieu: "F10 nghiệp vụ"')
+        f7 = f7.split("\n## Nghiệp vụ")[0] + "\n"  # cắt sạch body sections
+        (b7 / "frame.md").write_text(f7)
+        record("BAD R7 content", "R7 content", True, b7, root, skip=True)
 
         # BAD R6 — two frames own the SAME file (scope not exclusive)
         b6 = root / "bad6"; b6.mkdir()
