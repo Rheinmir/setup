@@ -84,6 +84,7 @@
 | [050726-ralph-monitor](sources/draft/050726-ralph-monitor.md) | draft | Draft: step 4 Monitor — build-line-status.py + /br status, lớp đọc tất định (GH#15·#11) |
 | [050726-ralph-pipeline-build](sources/draft/050726-ralph-pipeline-build.md) | draft | Build-report: thi công đồ nghề step 1–4 + docs site (GH#15), selftest xanh |
 | [060726-br-test-harness-plan](sources/draft/060726-br-test-harness-plan.md) | draft | Plan test/harass moi vấn đề dây chuyền /br — council 033, 3 bug fixed (GH#15) |
+| [070726-huong-dan-repo-files](sources/draft/070726-huong-dan-repo-files.md) | draft | Docs: hướng dẫn tương tác file trong repo (người/máy/sổ sách + lệnh↔file) |
 | [050726-br-huong-dan-nguoi-moi](sources/draft/050726-br-huong-dan-nguoi-moi.md) | draft | Docs: hướng dẫn /br cho người mới, có ảnh chụp mockup (GH#15) |
 | [ep-ci-tech-debt](sources/evals/episodic/ep-ci-tech-debt.md) | eval | Episodic golden: đóng tech-debt CI |
 | [ep-episodic-wire](sources/evals/episodic/ep-episodic-wire.md) | eval | Episodic golden: nối episodic + vector retrieval |
