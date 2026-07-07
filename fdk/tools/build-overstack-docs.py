@@ -184,8 +184,8 @@ body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;bac
 nav>*{flex-shrink:0}
 nav{scrollbar-width:none;-ms-overflow-style:none}
 nav::-webkit-scrollbar{width:0;height:0;display:none}
-nav{position:fixed;top:0;left:0;bottom:0;width:232px;z-index:100;overflow-y:auto;display:flex;flex-direction:column;gap:1px;padding:18px 12px;background:linear-gradient(165deg,rgba(255,255,255,.46),rgba(255,255,255,.22) 48%,rgba(240,248,255,.34));backdrop-filter:blur(24px) saturate(1.7);-webkit-backdrop-filter:blur(24px) saturate(1.7);border-right:1px solid rgba(255,255,255,.55);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),4px 0 24px rgba(30,90,170,.08);transition:transform .28s}
-nav::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(220px 160px at 18% 4%,rgba(255,255,255,.55),transparent 70%)}nav>*{position:relative}
+nav{position:fixed;top:0;left:0;bottom:0;width:232px;z-index:100;overflow-y:auto;display:flex;flex-direction:column;gap:1px;padding:18px 12px;background:linear-gradient(165deg,rgba(255,255,255,.30),rgba(255,255,255,.20) 48%,rgba(240,248,255,.32));backdrop-filter:blur(24px) saturate(1.7);-webkit-backdrop-filter:blur(24px) saturate(1.7);border-right:1px solid rgba(30,90,170,.12);box-shadow:inset -1px 0 0 rgba(30,90,170,.10),4px 0 24px rgba(30,90,170,.08);transition:transform .28s}
+nav::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(220px 160px at 18% 4%,rgba(255,255,255,.34),transparent 70%)}nav>*{position:relative}
 nav
 .logo{margin:0 0 8px;padding:6px 10px;font-weight:800;font-size:16px;letter-spacing:-.03em;background:linear-gradient(135deg,#0a84ff,#5856d6);-webkit-background-clip:text;background-clip:text;color:transparent}
 nav .logo small{display:block;font-size:10px;font-weight:600;color:var(--t2);-webkit-text-fill-color:var(--t2);letter-spacing:0}
@@ -213,9 +213,9 @@ p{margin:10px 0;max-width:860px;font-size:13.5px}
 .pcard{display:flex;gap:10px;align-items:flex-start;background:var(--glass2);border:1px solid var(--border);border-radius:12px;padding:10px 11px}
 .pcard .pav{width:36px;height:36px;flex-shrink:0}.pcard .pn{font-size:12px;font-weight:700;color:var(--t1)}
 .pcard .pl{font-size:10px;font-weight:600}.pcard .ps{font-size:10px;color:var(--t2);margin-top:2px;line-height:1.35}
-code{font-family:var(--mono);font-size:.85em;background:rgba(10,132,255,.08);padding:1px 5px;border-radius:5px;color:#0a5ec7}
+code{font-family:var(--mono);font-variant-ligatures:none;font-feature-settings:"liga" 0,"calt" 0;font-size:.85em;background:rgba(10,132,255,.08);padding:1px 5px;border-radius:5px;color:#0a5ec7}
 .code-wrap{position:relative;margin:12px 0}
-pre{background:rgba(13,24,40,.92);color:#e6edf6;border-radius:12px;padding:14px 46px 14px 16px;white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere;font-family:var(--mono);font-size:12.5px;line-height:1.55;margin:0;box-shadow:var(--edge),0 4px 20px rgba(0,0,0,.12)}pre code{background:none;color:inherit;padding:0;white-space:inherit}
+pre{background:rgba(13,24,40,.92);color:#e6edf6;border-radius:12px;padding:14px 46px 14px 16px;white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere;font-family:var(--mono);font-variant-ligatures:none;font-feature-settings:"liga" 0,"calt" 0;font-size:12.5px;line-height:1.55;margin:0;box-shadow:var(--edge),0 4px 20px rgba(0,0,0,.12)}pre code{background:none;color:inherit;padding:0;white-space:inherit}
 .code-copy{position:absolute;top:7px;right:7px;z-index:2;width:28px;height:26px;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,.12);color:#cbd5e1;border:1px solid rgba(255,255,255,.18);border-radius:7px;cursor:pointer;opacity:0;transition:opacity .15s,background .15s,color .15s}.code-copy svg{width:14px;height:14px;display:block}
 .code-wrap:hover .code-copy{opacity:1}.code-copy:hover{background:rgba(255,255,255,.22);color:#fff}.code-copy.copied{background:rgba(16,185,129,.28);color:#6ee7b7;border-color:rgba(16,185,129,.5);opacity:1}
 @media(max-width:640px){.code-copy{opacity:1}}
@@ -509,7 +509,7 @@ def sections(root: Path):
         "<div class=\"grid\">"
         "<div class=\"card\"><h4>Cách 1 — dán cho Agent</h4>"
         "<p style=\"margin:0 0 8px\">Agent tự cài rồi tự kiểm tra mọi thứ đã đúng chỗ:</p>"
-        "<pre class='code-block'><code>chạy curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash và kiểm tra xem mọi thứ đã ở đúng chỗ chưa</code></pre></div>"
+        "<pre class='code-block'><code>curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash</code></pre></div>"
         "<div class=\"card\"><h4>Cách 2 — terminal</h4>"
         "<p style=\"margin:0 0 8px\">Chạy thẳng một dòng:</p>"
         "<pre class='code-block'><code>curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash</code></pre></div>"
@@ -595,7 +595,7 @@ def sections(root: Path):
         "<div class=\"grid\">"
         "<div class=\"card\"><h4>Cách 1 — dán cho Agent</h4>"
         "<p style=\"margin:0 0 8px\">Agent tự cài + tự kiểm tra mọi thứ đã đúng chỗ:</p>"
-        "<pre class='code-block'><code>chạy curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash và kiểm tra xem mọi thứ đã ở đúng chỗ chưa</code></pre></div>"
+        "<pre class='code-block'><code>curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash</code></pre></div>"
         "<div class=\"card\"><h4>Cách 2 — terminal</h4>"
         "<p style=\"margin:0 0 8px\">Chạy thẳng một dòng:</p>"
         "<pre class='code-block'><code>curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash</code></pre></div>"
@@ -1005,14 +1005,15 @@ def render(root: Path) -> str:
     n_rules = len(rules(root))
     nav = ['<div class="logo">overstack<small>tài liệu chính thức · sinh từ đĩa</small></div>',
            '<div class="grp">Bắt đầu</div>']
-    grouped = [("Bắt đầu", ["quickstart"]),
-               ("Tổng quan", ["what", "reference", "install"]),
+    # Gom nhóm theo HÀNH TRÌNH người mới (feedback 2026-07-07), không theo kiến trúc nội bộ:
+    # người zero-context nghĩ theo câu hỏi "là gì / cài sao / dùng hằng ngày / đo kiểm / tra cứu".
+    grouped = [("Mới bắt đầu", ["quickstart", "what", "install"]),
                ("3 nền tảng", ["wiki", "harness", "skills"]),
-               ("Quy trình & điều phối", ["workflow", "orca"]),
-               ("Đánh giá & truy vết", ["advanced", "awareness", "runtime", "codestate"]),
-               ("An toàn khi mở rộng", ["bnal"]),
+               ("Dùng hằng ngày", ["workflow", "orca", "bnal"]),
+               ("Đo & kiểm khi chạy", ["advanced", "runtime", "awareness", "codestate"]),
+               ("Tra cứu", ["reference"]),
                ("Vận hành", ["maintain"]),
-               ("👷 Phát triển overstack", ["fdk", "newfeature"])]
+               ("👷 Cho người phát triển overstack", ["fdk", "newfeature"])]
     # Thứ tự thân bài = thứ tự phẳng của `grouped` (nav ↔ thân luôn khớp, chống lệch khi chèn/di tab)
     _flat = [sid for _g, ids in grouped for sid in ids]
     S = sorted(S, key=lambda t: _flat.index(t[0]) if t[0] in _flat else len(_flat))
@@ -1022,11 +1023,19 @@ def render(root: Path) -> str:
             "skills": "🧰", "workflow": "🔄", "orca": "🐳", "advanced": "⚖️", "awareness": "🧭",
             "runtime": "📡", "bnal": "🧩", "maintain": "🔧", "reference": "🗺️", "fdk": "👷",
             "newfeature": "✅", "codestate": "📊"}
+    # Nhãn sidebar tiếng-Việt-trước, jargon-trong-ngoặc (feedback 2026-07-07 — người mới không đọc
+    # được FDK/BNAL/AgentOps trần). CHỈ đổi text sidebar; H2 + nội dung section giữ nguyên.
+    NAV_OVERRIDE = {"quickstart": "Chạy thử 2 phút", "wiki": "Wiki (trí nhớ)",
+                    "harness": "Harness (luật)", "skills": "Skills (kỹ năng)",
+                    "workflow": "Quy trình làm việc", "orca": "Chạy nhiều agent (Orca)",
+                    "bnal": "Thêm tính năng có ẩn số", "advanced": "Đánh giá chất lượng",
+                    "runtime": "5 trụ vận hành (AgentOps)", "awareness": "Năng lực & dấu vết",
+                    "reference": "Mind map skill & rule"}
     nav = ['<div class="logo">overstack<small>tài liệu chính thức · sinh từ đĩa</small></div>']
     for grp, ids in grouped:
         nav.append(f'<div class="grp">{grp}</div>')
         for sid in ids:
-            nav.append(f'<a href="#s{idx[sid]}"><span class="ic">{ICON.get(sid, "•")}</span>{id2nav[sid]}</a>')
+            nav.append(f'<a href="#s{idx[sid]}"><span class="ic">{ICON.get(sid, "•")}</span>{NAV_OVERRIDE.get(sid, id2nav[sid])}</a>')
     body = []
     for i, (sid, navlabel, tag, title, blocks) in enumerate(S):
         tag = re.sub(r'^\s*\d+\s*·\s*', f'{i:02d} · ', tag)   # auto-số eyebrow theo thứ tự (chống trùng khi chèn tab)
