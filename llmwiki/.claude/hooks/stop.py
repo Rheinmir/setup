@@ -16,11 +16,12 @@ _CODE_RE = re.compile(r"\.(py|js|jsx|ts|tsx|mjs|cjs|go|rs|java|rb|php|c|h|cpp|cc
 
 def _scope_config(root: str):
     """GH#49: khai báo scope index TƯỜNG MINH qua .overstack.yaml tại root dự án — thay vì
-    ngầm-định code-root=repo-root. Parser tối giản (không thêm dep pyyaml), chỉ 2 khoá scalar:
-        wiki_dir: llmwiki/wiki        # wiki chính để dựng graph
-        code_root: src               # vùng code để index (relocate/thu hẹp được)
-    Fallback = hành vi cũ (llmwiki/wiki + '.') nếu thiếu file/khoá → KHÔNG hồi quy. Fail-open."""
-    wiki_dir, code_root = "llmwiki/wiki", "."
+    ngầm-định code-root=repo-root. Parser tối giản (không thêm dep pyyaml), 2 khoá:
+        wiki_dir: llmwiki/wiki                       # wiki chính để dựng graph (scalar)
+        code_root: payroll-backend-prd, payroll-frontend-prd  # vùng code (GH#69: ĐA repo, ngăn dấu phẩy)
+    code_root trả LIST (>=1 phần tử) để quét full code đa sub-repo downstream; scalar '.' vẫn hợp lệ.
+    Fallback = hành vi cũ (llmwiki/wiki + ['.']) nếu thiếu file/khoá → KHÔNG hồi quy. Fail-open."""
+    wiki_dir, code_root = "llmwiki/wiki", ["."]
     cfg = os.path.join(root, ".overstack.yaml")
     if not os.path.isfile(cfg):
         return wiki_dir, code_root
@@ -34,7 +35,9 @@ def _scope_config(root: str):
             if k == "wiki_dir" and v:
                 wiki_dir = v
             elif k == "code_root" and v:
-                code_root = v
+                roots = [r.strip().strip("'\"") for r in v.split(",") if r.strip()]
+                if roots:
+                    code_root = roots
     except Exception:
         pass  # config hỏng → dùng mặc định, không chặn phiên
     return wiki_dir, code_root
@@ -79,7 +82,7 @@ def regen_docs(root: str) -> None:
         if wikigraph_on and (re.search(r"(wiki/|build-wiki-graph\.py)", st) or _CODE_RE.search(st)):
             wiki_dir, code_root = _scope_config(root)
             also = ["--also", "fdk/wiki"] if os.path.isdir(os.path.join(root, "fdk", "wiki")) else []
-            subprocess.run([sys.executable, wg, wiki_dir, *also, "--code-root", code_root],
+            subprocess.run([sys.executable, wg, wiki_dir, *also, "--code-root", *code_root],
                            cwd=root, capture_output=True, timeout=90)
     except Exception:
         pass

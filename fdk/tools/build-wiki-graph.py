@@ -736,7 +736,10 @@ def main() -> None:
     ap.add_argument("primary", help="wiki dir chính (mặc định sáng)")
     ap.add_argument("--also", nargs="*", default=[], help="wiki dir phụ (hiện mờ)")
     ap.add_argument("--static", action="store_true", help="xuất HTML/CSS thuần (0 JavaScript)")
-    ap.add_argument("--code-root", help="seed node code từ thư mục này → dựng import-graph đầy đủ (opt-in)")
+    ap.add_argument("--code-root", nargs="+", metavar="DIR",
+                    help="seed node code từ MỘT HAY NHIỀU thư mục code (đa sub-repo downstream) → "
+                         "dựng import-graph đầy đủ (opt-in). Mỗi DIR phải nằm trong cwd; id node = "
+                         "path tương-đối-cwd nên khớp `touches` và không đụng nhau giữa các repo.")
     ap.add_argument("--json", help="dump nodes/edges/cycles ra JSON (cho eval/scoring)")
     ap.add_argument("-o", "--out")
     a = ap.parse_args()
@@ -752,18 +755,29 @@ def main() -> None:
         if o.is_dir():
             scan(o, o.parent.name if o.name == "wiki" else o.name, nodes, edges, ledger, stale)
     add_code_nodes(nodes, edges)   # node lá cho touches → cạnh wiki→code hiện ra
-    # --code-root: seed node code từ thư mục code (opt-in) → dựng import-graph đầy đủ.
-    # Default OFF → graph framework không đổi (chỉ code vào qua touches như cũ).
+    # --code-root: seed node code từ MỘT/NHIỀU thư mục code (opt-in) → dựng import-graph đầy đủ.
+    # Default OFF → graph framework không đổi (chỉ code vào qua touches như cũ). GH#69: đa sub-repo
+    # downstream — id node = path tương-đối-CWD (không phải tương-đối-croot) nên (a) khớp `touches`
+    # do wiki ghi theo repo-root, (b) không đụng nhau khi 2 sub-repo cùng có app/main.py. enrich chạy
+    # 1 lần với base=CWD: modindex gộp mọi sub-repo, `base/cn.path` resolve đúng cho mọi node.
     if a.code_root and code_imports:
-        croot = Path(a.code_root).resolve()
+        cwd = Path.cwd().resolve()
         ids = {n["id"] for n in nodes}
-        for p in sorted(croot.rglob("*")):
-            rel = p.relative_to(croot).as_posix()
-            if (p.is_file() and p.suffix.lower() in code_imports.SUPPORTED_EXTS
-                    and not any(s in rel for s in (".git/", "node_modules/", "ground-truth/"))
-                    and rel not in ids):
-                nodes.append(_mk_code_node(rel)); ids.add(rel)
-        enrich_root = croot
+        for cr in a.code_root:
+            croot = Path(cr).resolve()
+            if not croot.is_dir():
+                print(f"⚠ code-root bỏ qua (không phải thư mục): {cr}", file=sys.stderr); continue
+            try:
+                croot.relative_to(cwd)   # phải nằm TRONG cwd để id tương-đối-cwd hợp lệ
+            except ValueError:
+                print(f"⚠ code-root bỏ qua (ngoài cwd): {cr}", file=sys.stderr); continue
+            for p in sorted(croot.rglob("*")):
+                rel = p.relative_to(cwd).as_posix()
+                if (p.is_file() and p.suffix.lower() in code_imports.SUPPORTED_EXTS
+                        and not any(s in rel for s in (".git/", "node_modules/", "ground-truth/"))
+                        and rel not in ids):
+                    nodes.append(_mk_code_node(rel)); ids.add(rel)
+        enrich_root = cwd
     else:
         # repo root = cha của primary wiki (…/wiki → repo). Tìm .git đi lên.
         enrich_root = prim

@@ -9,7 +9,16 @@ import json
 import re
 import subprocess
 import sys
+import unicodedata
 from pathlib import Path
+
+
+def _nfc(s: str) -> str:
+    """NFC-normalize để so tập file nhất quán: macOS rglob trả NFD ('viethoá' tách dấu),
+    còn link trong index.md do người/agent gõ là NFC → so byte lệch nhầm. Normalize cả 2
+    phía trước khi diff (R3 NFC/NFD, GH#69). APFS normalization-insensitive nên path NFC
+    vẫn đọc/ignore được file trên đĩa → an toàn cho _row/gitignored."""
+    return unicodedata.normalize("NFC", s)
 
 SKIP_BASENAMES = {"README.md", "_template.md"}
 _IGN_CACHE: dict[str, bool] = {}
@@ -48,7 +57,7 @@ def content_files(wiki: Path) -> set[str]:
         for f in base.rglob("*.md"):
             rel = f.relative_to(wiki).as_posix()
             if f.name not in SKIP_BASENAMES and not gitignored(rel, wiki):
-                out.add(rel)
+                out.add(_nfc(rel))
     return out
 
 
@@ -57,9 +66,9 @@ def indexed_files(wiki: Path) -> set[str]:
     if not idx.is_file():
         return set()
     text = idx.read_text(encoding="utf-8")
-    refs = {m.lstrip("./") for m in LINK_RE.findall(text)}
+    refs = {_nfc(m.lstrip("./")) for m in LINK_RE.findall(text)}
     # wikilink trong index: [[name]] → khớp theo basename không đuôi
-    names = {m.strip() for m in WIKILINK_RE.findall(text)}
+    names = {_nfc(m.strip()) for m in WIKILINK_RE.findall(text)}
     if names:
         for f in content_files(wiki):
             if Path(f).stem in names:

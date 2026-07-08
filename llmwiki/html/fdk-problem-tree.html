@@ -106,418 +106,429 @@
 </div>
 
 <script type="application/json" id="tree-data">[
- {
-  "id": "p-01",
-  "parent": null,
-  "title": "Kỷ luật agent tất định (overstack core)",
-  "desc": "Làm sao để agent LLM làm việc lâu dài trên dự án mà không phá kỷ luật tri thức, và con người không phải nhớ luật: cài 1 dòng, hàng rào 0-token tự cắn, một entry point /orca-workflow.",
-  "status": "solved",
-  "scope": "full",
-  "date": "trước 02/07/26",
-  "solvedBy": "bootstrap.sh 1 dòng + harness rule R1–R15 + /orca-workflow (xem overstack.html#s0)",
-  "session": "tích luỹ nhiều session"
- },
- {
-  "id": "p-02",
-  "parent": "p-01",
-  "title": "Vòng xử lý ISSUE first-class",
-  "desc": "Khi issue xảy ra: triage → tái hiện (repro-first gate) → khoanh vùng (code-graph/bisect) → fix qua safe-change → verify red→green → distill kép (wiki incident + failure-flywheel). Mảnh rời đã có (failure-flywheel, loop-runner, trace-grader) nhưng chưa có skill điều phối /orca-issue.",
-  "status": "solved",
-  "scope": [
-   "skills"
-  ],
-  "date": "02/07/26",
-  "session": "session 020726 — proposal T-260702-01 duyệt & implement",
-  "solvedBy": "skill orca-issue (5 chốt, repro-first + red→green) + orca-workflow rẽ nhánh sự cố — T-260702-01. Chưa có: rào harness cưỡng chế gate repro (mới là quy trình trong skill), nên 1/3."
- },
- {
-  "id": "p-03",
-  "parent": "p-01",
-  "title": "Theo dõi vấn đề XUYÊN session",
-  "desc": "Không có nơi nhìn thấy toàn cảnh các bài toán đã gặp và trạng thái giải quyết — mỗi session tri thức về 'đang vướng gì' bị bay hơi.",
-  "status": "solved",
-  "scope": [
-   "harness",
-   "skills",
-   "llmwiki"
-  ],
-  "date": "02/07/26",
-  "solvedBy": "skill fdk §Problem-tree + orca-workflow convention + R17 flush (SessionEnd, test 3 ca + downstream pass) + concept wiki problem-tree.md — đủ 3 trụ, node xanh thứ hai sau p-01.",
-  "session": "session 020726"
- },
- {
-  "id": "p-04",
-  "parent": "p-03",
-  "title": "Ledger không travel theo dự án cá nhân",
-  "desc": "Quy tắc problem-tree nằm trong skill fdk — mà fdk cố ý KHÔNG distribute (ADR-004), chỉ đi theo máy user qua ~/.claude. Dự án cá nhân cài bootstrap sẽ không biết convention này. Cần convention đi theo một trụ được distribute (skill loop như orca-workflow/propose, hoặc rule harness), fdk chỉ còn là người gác ở repo framework.",
-  "status": "solved",
-  "scope": [
-   "harness",
-   "skills",
-   "llmwiki"
-  ],
-  "date": "02/07/26",
-  "session": "session 020726 — proposal T-260702-01 duyệt & implement",
-  "solvedBy": "convention vào orca-workflow (skill distribute) + install.sh seed template sổ + session_end.py fallback problem-tree.html (harness travel, test sandbox pass) + concept wiki problem-tree.md — T-260702-01."
- },
- {
-  "id": "p-auto-01",
-  "parent": "p-03",
-  "title": "Thẻ ghi-tạm tự động (đã chưng lọc xong) — bằng chứng cơ chế chạy được",
-  "desc": "Thẻ này do script kiểm thử flush_problem_tree.py tự sinh ra khi test cơ chế 'flush' (xả sổ — tự ghi vấn đề còn nợ vào cây ngay lúc phiên làm việc kết thúc, bằng code thuần, không cần AI). Vì nội dung trùng với p-03/p-04 nên đã được 'distill' (chưng lọc — viết lại cho gọn và gộp về đúng nhánh p-03). Giữ thẻ lại làm bằng chứng: chuỗi 'tự ghi tạm → chưng lọc sau' hoạt động trọn vòng. Bài học kỹ thuật rút ra: khi kiểm tra 'cây đã được cập nhật chưa', phải xét cả file mới chưa từng đưa vào git ('untracked' — git chưa theo dõi), chứ không chỉ xét file đã sửa (git diff).",
-  "status": "solved",
-  "scope": [
-   "skills"
-  ],
-  "date": "02/07/26",
-  "solvedBy": "lần gọi /fdk kế tiếp đã chưng lọc thẻ này về nhánh p-03 — đúng luồng thiết kế: hook ghi tạm → người/AI chưng lọc sau",
-  "session": "session-020726"
- },
- {
-  "id": "p-05",
-  "parent": "p-03",
-  "title": "HTML report không cho biết nó nằm đâu",
-  "desc": "File HTML visualization/report mở lên không show đường dẫn — người xem không biết file ở đâu để mở lại/sửa (đã vấp thật trong session 020726: phải hỏi 'file đâu').",
-  "status": "solved",
-  "scope": [
-   "harness",
-   "skills"
-  ],
-  "date": "02/07/26",
-  "solvedBy": "rule trong skill fdk + validator R16 report-show-path (PostToolUse tự chặn HTML mới thiếu path — test pass/fail 02/07/26). Còn thiếu: HTML cũ chưa retrofit (trụ llmwiki).",
-  "session": "session-020726"
- },
- {
-  "id": "p-06",
-  "parent": "p-01",
-  "title": "Sync 3 bản SKILL.md bằng tay — nguồn drift",
-  "desc": "Mỗi lần sửa skill phải copy tay ra 3 nơi (bản gốc trong repo, bản mirror llmwiki, bản cài ~/.claude) — trong 1 phiên lặp 3 lần, quên 1 lần là các bản lệch nhau (drift). Phát hiện bởi /orca-eval 020726 (finding #2).",
-  "status": "solved",
-  "scope": [
-   "skills"
-  ],
-  "date": "02/07/26",
-  "solvedBy": "tool fdk/tools/sync-skill.sh — 1 lệnh đồng bộ cả 3 bản + tự kiểm tra giống nhau (verify parity); skill fdk đã ghi luật 'đừng cp tay'. Chưa có: hook tự chạy khi SKILL.md đổi (trụ harness).",
-  "session": "session 020726"
- },
- {
-  "id": "p-auto-02",
-  "parent": null,
-  "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
-  "desc": "Bề mặt bị chạm: fdk/CAPABILITIES.md, fdk/skills.search.json, fdk/tools/sync-skill.sh, fdk/wiki/log.md, harness/poc-vendor-neutral/install.sh, harness/poc-vendor-neutral/policy.yaml, harness/scripts/sync-skills.py, harness/templates/ …. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát); lần /fdk kế tiếp sẽ chưng lọc về đúng nhánh.",
-  "status": "open",
-  "scope": [],
-  "date": "02/07/26",
-  "session": "bf38cf4e",
-  "pending": true
- },
- {
-  "id": "p-auto-03",
-  "parent": null,
-  "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
-  "desc": "Bề mặt bị chạm: fdk/CAPABILITIES.md, fdk/skills.search.json, fdk/tools/sync-skill.sh, fdk/wiki/log.md, harness/poc-vendor-neutral/install.sh, harness/poc-vendor-neutral/policy.yaml, harness/scripts/sync-skills.py, harness/templates/ …. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát); lần /fdk kế tiếp sẽ chưng lọc về đúng nhánh.",
-  "status": "open",
-  "scope": [],
-  "date": "02/07/26",
-  "session": "e0735bac",
-  "pending": true
- },
- {
-  "id": "p-auto-04",
-  "parent": null,
-  "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
-  "desc": "Bề mặt bị chạm: fdk/CAPABILITIES.md, fdk/skills.search.json, fdk/tools/sync-skill.sh, fdk/wiki/log.md, harness/poc-vendor-neutral/install.sh, harness/poc-vendor-neutral/policy.yaml, harness/scripts/sync-skills.py, harness/templates/ …. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát); lần /fdk kế tiếp sẽ chưng lọc về đúng nhánh.",
-  "status": "open",
-  "scope": [],
-  "date": "02/07/26",
-  "session": "7c68668a",
-  "pending": true
- },
- {
-  "id": "p-auto-05",
-  "parent": null,
-  "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
-  "desc": "Bề mặt bị chạm: fdk/CAPABILITIES.md, fdk/skills.search.json, fdk/tools/sync-skill.sh, fdk/wiki/log.md, harness/poc-vendor-neutral/install.sh, harness/poc-vendor-neutral/policy.yaml, harness/scripts/sync-skills.py, harness/templates/ …. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát); lần /fdk kế tiếp sẽ chưng lọc về đúng nhánh.",
-  "status": "open",
-  "scope": [],
-  "date": "02/07/26",
-  "session": "4aaab8ea",
-  "pending": true
- },
- {
-  "id": "p-auto-06",
-  "parent": null,
-  "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
-  "desc": "Bề mặt bị chạm: fdk/CAPABILITIES.md, fdk/skills.search.json, fdk/tools/sync-skill.sh, fdk/wiki/log.md, harness/poc-vendor-neutral/install.sh, harness/poc-vendor-neutral/policy.yaml, harness/scripts/sync-skills.py, harness/templates/ …. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát); lần /fdk kế tiếp sẽ chưng lọc về đúng nhánh.",
-  "status": "open",
-  "scope": [],
-  "date": "02/07/26",
-  "session": "aea1a0d5",
-  "pending": true
- },
- {
-  "id": "p-auto-07",
-  "parent": null,
-  "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
-  "desc": "Bề mặt bị chạm: fdk/CAPABILITIES.md, fdk/skills.search.json, fdk/tools/sync-skill.sh, fdk/wiki/log.md, harness/poc-vendor-neutral/install.sh, harness/poc-vendor-neutral/policy.yaml, harness/scripts/sync-skills.py, harness/templates/ …. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát); lần /fdk kế tiếp sẽ chưng lọc về đúng nhánh.",
-  "status": "open",
-  "scope": [],
-  "date": "02/07/26",
-  "session": "7aba727b",
-  "pending": true
- },
- {
-  "id": "p-auto-08",
-  "parent": null,
-  "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
-  "desc": "Bề mặt bị chạm: fdk/wiki/concepts/fdk-dev-strategy.md, fdk/wiki/log.md, fdk/wiki/sources/mongol-ai-strategy.md, llmwiki/html/overstack.html, llmwiki/raw/fdk-stragegy.md, llmwiki/wiki/log.md, llmwiki/wiki/sources/draft/020726-adr-015-status.md, llmwiki/wiki/sources/draft/020726-ingest-fdk-strategy.md …. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát); lần /fdk kế tiếp sẽ chưng lọc về đúng nhánh.",
-  "status": "open",
-  "scope": [],
-  "date": "02/07/26",
-  "session": "d123a203",
-  "pending": true
- },
- {
-  "id": "p-07",
-  "parent": "p-01",
-  "title": "Policy chưa DRIVE enforcement — wiring hardcode",
-  "desc": "Audit 02/07 (kim chỉ nam fdk-dev-strategy #3): hook pre_tool_use hardcode danh sách validator (pre_tool_use.py:44) thay vì đọc policy.yaml; policy tự thú nhận wiring thật nằm ở gen-converters.py. Policy (nguồn chân lý — ADR-001) mới LIỆT KÊ chứ chưa điều khiển. Kèm theo: validator mồ côi task_lifecycle.py không được wire ở đâu; code_health/agent_claude_parity/duplicate_basename chạy ở CI nhưng không có rule R* trong policy.",
-  "status": "open",
-  "scope": [],
-  "date": "2026-07-02",
-  "session": "audit-fdk-strategy"
- },
- {
-  "id": "p-08",
-  "parent": "p-01",
-  "title": "Drift 15 pattern bị che bởi version tĩnh",
-  "desc": "health-check báo drift 15 file (5 hook + 6 skill + AGENT/CLAUDE.md + overstack.html) nhưng version.json local = remote = 1.3.6 nên hệ tưởng đồng bộ. Cần buộc bump version khi pattern đổi (vòng phản hồi #7 — drift không được im lặng). Liên đới: bản cài ~/.claude/skills/query lệch repo canonical (ADR-003).",
-  "status": "open",
-  "scope": [],
-  "date": "2026-07-02",
-  "session": "audit-fdk-strategy"
- },
- {
-  "id": "p-09",
-  "parent": "p-01",
-  "title": "Mép đăng ký skill hụt + mô tả sai trigger",
-  "desc": "Audit trụ skills: parity canonical↔mirror 66/66 hoàn hảo, nhưng (a) skill fdk thiếu trong marketplace.json (65/66); (b) extract-site có description sai bản chất (khai 'site→markdown' nhưng body là design-token extraction) → dẫm chân web-crawl, cần merge/deprecate; (c) ingest/propose/query bị đăng ký 2 lần trong runtime list.",
-  "status": "open",
-  "scope": [],
-  "date": "2026-07-02",
-  "session": "audit-fdk-strategy"
- },
- {
-  "id": "p-10",
-  "parent": "p-03",
-  "title": "Nhịp ship wiki: 15 draft tồn + flywheel gần rỗng",
-  "desc": "Nguyên tắc #8: 15 draft status proposed chưa promote (cũ nhất 25/06), 2 draft done chưa archive, 1 raw chưa ingest (tech-pattern). Vòng phản hồi #7 chưa chảy: events.jsonl 712 dòng nhưng failures.jsonl chỉ 3; 7 node ghi-tạm p-auto-02..08 trong chính cây này còn open rỗng chưa distill. Fix hệ thống: chạy /docs-curate + /lint định kỳ, và cơ chế flush p-auto phải kèm distill.",
-  "status": "open",
-  "scope": [],
-  "date": "2026-07-02",
-  "session": "audit-fdk-strategy"
- },
- {
-  "id": "p-11",
-  "parent": "p-01",
-  "title": "Wiki là queue dữ liệu — thiếu quan hệ, ledger, traceability máy-đọc-được",
-  "desc": "Mọi mắt xích wiki ghi văn bản cho người (log.md), không mắt xích nào ghi sự kiện có cấu trúc cho máy: sửa/xóa xuyên phiên không truy được, [[wikilink]] vô kiểu không validate. Giải bước 1+2+3 (đã qua council 5-phản-biện, guardrail G1-G7): ledger JSONL flock (khóa file — chống ghi song song, test 8-process pass), tombstone (bia mộ — đánh dấu xóa thay vì xóa cứng), id+relations frontmatter (82 trang migrate, chỉ suy từ tín hiệu khách quan), validator R-rel warn-only (chỉ cảnh báo, chưa chặn). Bước 4-6 hoàn tất cùng ngày (tiêu chí tốc độ): stale-propagation cap=1 (9.8ms/lần ghi trên wiki 63 trang, test chu trình an toàn), skill /wiki-room (depth cap=1, budget cứng, circuit breaker — distribute qua wiki-loop), wiki-graph HTML (13ms build, đồ thị quan hệ + timeline ledger + cờ stale).",
-  "status": "solved",
-  "scope": "full",
-  "date": "02/07/26",
-  "session": "session 020726 — draft 020726-wiki-core-relations + council seed42",
-  "solvedBy": "wiki_ledger.py (ledger flock + stale cap-1) + validators/rel_integrity.py + fdk/tools/wiki-relations.py + skill wiki-room (3 surface đủ) + fdk/tools/build-wiki-graph.py — đủ 3 trụ harness/skills/llmwiki."
- },
- {
-  "id": "p-auto-09",
-  "parent": null,
-  "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
-  "desc": "Bề mặt bị chạm: llmwiki/wiki/log.md. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát); lần /fdk kế tiếp sẽ chưng lọc về đúng nhánh.",
-  "status": "open",
-  "scope": [],
-  "date": "02/07/26",
-  "session": "a6ded00e",
-  "pending": true
- },
- {
-  "id": "p-auto-10",
-  "parent": null,
-  "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
-  "desc": "Bề mặt bị chạm: llmwiki/html/council/council-report-006-seed42.html, llmwiki/wiki/log.md. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát); lần /fdk kế tiếp sẽ chưng lọc về đúng nhánh.",
-  "status": "open",
-  "scope": [],
-  "date": "02/07/26",
-  "session": "c0fd85d2",
-  "pending": true
- },
- {
-  "id": "p-auto-11",
-  "parent": null,
-  "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
-  "desc": "Bề mặt bị chạm: llmwiki/html/council/council-report-006-seed42.html, llmwiki/wiki/log.md. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát); lần /fdk kế tiếp sẽ chưng lọc về đúng nhánh.",
-  "status": "open",
-  "scope": [],
-  "date": "02/07/26",
-  "session": "a1833594",
-  "pending": true
- },
- {
-  "id": "p-12",
-  "parent": "p-11",
-  "title": "Engine tự-index mù code non-Python + thiếu cờ toàn vẹn/impact",
-  "desc": "Benchmark ngoài-mẫu (council seed42 ra đề, app TS plugin-host, chấm mù) lộ: enrich_code chỉ parse .py (mù imports/touches TS/JS/Go/Rust); graph-builder thiếu cờ chu trình (cycle) + không quarantine frontmatter YAML hỏng; WIKILINK_RE không strip code-fence (bịa [[link]] trong code). Muốn tốt trục code phải dựa code-graph MCP (phần mềm ngoài). Vá SELF-CONTAINED: code_imports.py (stdlib-only, EXTRACTORS đa-ngôn-ngữ, resolve alias/relative, dynamic→unresolved), Mảnh B strip code-fence, Mảnh C detect_cycles + _frontmatter_ok, Mảnh D impact_reverse (reverse-imports cap=1). CLI thêm --code-root/--json. Chấm lại: 10/10 đòn, recall 1.0, provably-false 0. CÒN: chưa có RÀNG BUỘC (gate) + ĐO (baseline) để chống tái sinh — đó là bước kế 'cần ràng buộc rồi đo'. [2026-07-03 ràng-buộc-rồi-đo] ĐÃ dựng feedback loop: baseline.json đóng băng (recall 1.0, provably_false 0, 10/10 đòn, PASS) + check.py (regress recall/provably-false/full-pass/negative/seal → exit≠0). CHỨNG MINH cắn: bỏ code_imports → recall 0.8 → gate REGRESS. run.sh xoá result cũ trước (chống false-green). CÒN để full 3/3 trụ: promote eval khỏi scratchpad + wire vào fdk-gate/CI (đổi luật chơi — cần duyệt) + skill bọc (trụ skills).",
-  "status": "partial",
-  "scope": [
-   "harness",
-   "llmwiki"
-  ],
-  "date": "2026-07-03",
-  "solvedBy": "code_imports.py + build-wiki-graph.py (Mảnh A-D) + benchmark council-app; proposal 020726-council-chon-de-thi ; baseline.json + check.py (gate regress)",
-  "session": "orca-fdk"
- },
- {
-  "id": "p-13",
-  "parent": null,
-  "title": "Rà luật 'có cắn không' mới phủ 5/17 — 12 rule chưa chứng minh + drift validator",
-  "desc": "harness-doctor.py (fire-drill: mỗi rule 1 fixture BAD+GOOD, chạy validator thật, BAD phải bị chặn) ĐÃ có nhưng chỉ bite-test 5/17 rule (R1/R2/R5/R7/R9 — content-validator). 12 rule KHÔNG được chứng minh cắn: hook_event R3/R4/R8/R10/R17, process_gate R12/R15, repo_gate R6, deny_write R14, content_check R11/R13/R16 → an-tâm-giả. Chạy NGAY còn lộ 2 vấn đề LIVE: (1) proposal_complete.py DRIFT (hooks-copy khác harness-src, 1 bản cũ — chính R7); (2) pre-commit chưa cài .git/hooks (backstop L2 tắt). Thiết kế: mở rộng harness-doctor 4 tầng phủ 17/17 (A content-validator mở rộng, B hook_event feed synthetic event, C process_gate temp-git BAD-state, D documentary presence-check) + --ci fail nếu có dark-rail HOẶC rule non-documentary chưa có bite-test. overstack.html: generator build-overstack-docs.py đã live+wired stop.py; fix orca-issue phân nhóm → --check xanh. [DONE T1-T2] medic dựng: fdk/tools/medic.py (6 probe compose harness-doctor + build-*.py --check + compileall + policy live), gõ toàn cục (~/.local/bin/medic) + /medic slash skill (register đủ mặt, sync-skills+registry ✓). medic tự bắt ngay: capabilities stale (regen), validator proposal_complete drift, VÀ bắt cú sync SAI HƯỚNG làm R7 rail-đen → khôi phục 5/5. CÒN (proposal 030726-medic T3-T5): coverage 5/17→17/17, wire pre-commit/CI, promote eval + cài pre-commit.",
-  "status": "partial",
-  "scope": [
-   "harness",
-   "skills"
-  ],
-  "date": "2026-07-03",
-  "session": "orca-fdk",
-  "solvedBy": "fdk/tools/medic.py + /medic skill + proposal 030726-medic"
- },
- {
-  "id": "p-14",
-  "parent": null,
-  "title": "Council report hiện 'seat-N' thay vì tên uỷ viên (mất lens/phong cách)",
-  "desc": "render_report_html map author→tên bằng persona-id, nhưng author trong transcript là seat-id (seat-1..N) → không khớp → rơi về 'seat-N', mất cả lens. Bản gốc 006 dùng persona-id làm author nên đúng; runs seat-id thì hỏng. VÁ GỐC: _load_persona_meta index thêm theo seat-id lấy map seat→persona từ config.seats[].persona → hiện đúng TÊN + lens. selftest OK. Re-render 013 hiện Dieter Rams/Ada/Linus/Taleb/Lão Tử + phong cách.",
-  "status": "solved",
-  "scope": [
-   "harness"
-  ],
-  "date": "2026-07-03",
-  "solvedBy": "council.py _load_persona_meta seat-index",
-  "session": "orca"
- },
- {
-  "id": "p-15",
-  "parent": "p-12",
-  "title": "retrieval-eval giòn (TOKEN_EPS=0 spam) + pull-gate hit@1→0 bị nuốt khi re-baseline",
-  "desc": "Sau khi vá R3 index-sync, gate retrieval-eval lộ ra ĐỎ SẴN: TOKEN_EPS=0.0 (token phình bất kỳ = hồi quy) nên mọi lần wiki lớn lên đều fail → CI spam → buộc re-baseline thủ công. Re-baseline cứu CI lại NUỐT một regression thật: pull-gate hit@k 1→0 (trang đúng ADR-002 vẫn tồn tại nhưng bị các trang phình chiếm hết top-5). Gốc cấu trúc: (1) query-proxy retrieve_L1 xếp hạng bằng độ-phủ-term trên TOÀN VĂN — trái docstring 'tầng-1 xếp hạng bằng title+heading' — nên trang generic tình cờ chứa term (kể cả term tiếng Việt hoạt/động) đè trang ADR có tiêu đề khớp hẳn; (2) ngưỡng token tuyệt-đối-0 không phân biệt 'wiki lớn lên hợp lệ' với 'phình đột biến'. VÁ: query-proxy field-boost heading ×2 + thân ×1 (HEAD_BOOST) → ADR-002 quay về hạng 0, hit@5 22/30→30/30, không golden nào tụt; retrieval-eval đổi TOKEN_EPS tuyệt đối → TOKEN_REL_EPS=+15% tương đối (token trong ngưỡng = WARN note, phình >15% = hồi quy cứng, hit@k tụt vẫn cứng tuyệt đối). Chứng minh feedback loop còn cắn: thêm 1 trang wiki thường → 15 golden nhích token nhưng --check vẫn OK (chỉ note), không spam; baseline re-write hit=1 cho pull-gate. CÒN để full 3/3 trụ: chưa có skill bọc (trụ skills) + chưa promote guidance vào wiki concept (trụ llmwiki) — mới vá ở tầng harness.",
-  "status": "partial",
-  "scope": [
-   "harness"
-  ],
-  "date": "2026-07-04",
-  "solvedBy": "query-proxy.py HEAD_BOOST field-boost + retrieval-eval.py TOKEN_REL_EPS ngưỡng mềm; ledger 030726-retrieval-eval-baseline-rot; issue GH#16",
-  "session": "orca-fdk issue-16"
- },
- {
-  "id": "p-16",
-  "parent": null,
-  "title": "Skill /ship chỉ đẩy thẳng — thiếu mở PR/MR + gom PR về merge",
-  "desc": "/ship ban đầu chỉ 2 mức push (đẩy thẳng không tag) + release (đẩy + tag + notes) — đều đẩy THẲNG, không có đường review-then-merge, cũng không có đường DUYỆT PR/MR đến rồi merge. VÁ: thêm 3 mức. Outbound: 'ship pr' (GitHub gh pr create) + 'ship mr' (GitLab glab mr create) — dùng lại checklist bước 1-3, sản phẩm cuối = PR/MR body (giọng người-dùng + Known-limitations), tự chọn công cụ theo remote, DỪNG nếu chưa auth, không tự chèn Closes #N. Inbound: 'ship merge' — liệt kê PR/MR đang mở của repo (gh pr list / glab mr list), kéo từng nhánh về LOCAL (gh pr checkout / fetch mr ref), chạy medic --ci + test THẬT làm ĐIỀU KIỆN merge, xanh mới merge (một-tại-một, đỏ thì để nguyên cho tác giả). Sync canonical→mirror→installed + regen CAPABILITIES.",
-  "status": "solved",
-  "scope": [
-   "skills",
-   "llmwiki"
-  ],
-  "date": "2026-07-04",
-  "solvedBy": "skills/ship/SKILL.md thêm mức pr/mr/merge + sync-skill.sh + build-capabilities.py regen",
-  "session": "orca-fdk issue-16"
- },
- {
-  "id": "p-17",
-  "parent": null,
-  "title": "Logger không đủ dấu vết để chấm trace xuyên phiên (GH#4)",
-  "desc": "Sổ cái framework events.jsonl (code-logger) gần như CHỈ ghi file.write (856 dòng) — thiếu tín hiệu để trace-grade (chấm ĐƯỜNG ĐI của agent). Rà 3 nguồn: (1) events.jsonl = NGHÈO, chỉ file.write file framework → không có retrieval (Read/Grep/query), không grounding (hành động có tham chiếu cái vừa truy hồi?), không outcome (reinvent/cross-break/rework) → KHÔNG đủ để trace-grade. (2) audit/*.jsonl (hooklib.audit) = có tool_name MỌI tool kể cả Read/Grep → biết agent 'có nhìn trước khi làm', NHƯNG chỉ giữ file_path+command → query của Grep/Glob (pattern) MẤT; không có observation/ok → không biết truy hồi trả về gì; không link Read↔Write để đo grounding; gitignored per-day, không gom xuyên phiên. (3) transcript phiên (~/.claude/projects) = nguồn GIÀU nhất (đủ tool+args+result) nhưng trace-grader.py CHƯA có parser transcript (mới có runs_from_traces + runs_from_audit). Council 030726: đừng đo query-rate (Goodhart), đo reinvent-rate + cross-break + harm-when-missing; deliberation phải để lại dấu vết mới chấm được. Đòn bẩy Meadows: KHÔNG phình sổ cái với đủ loại event (bậc thấp, dễ Goodhart); điểm cao/rẻ nhất = thêm 1 parser transcript→traces cho trace-grader (dữ liệu đã đầy đủ, chỉ chưa đọc được) + mở audit ghi thêm retrieval args (Grep pattern/path) làm kênh code-logged xuyên phiên. KHÔNG blocker milestone v1.0.5 — issue SAU.",
-  "status": "partial",
-  "scope": [
-   "harness"
-  ],
-  "date": "2026-07-04",
-  "solvedBy": "trace-grader.py: (A) runs_from_transcript() + CLI --transcript — thu hồi retrieval args (Grep pattern/Read file_path) + observation + per-step ok từ transcript phiên (nguồn giàu nhất, sẵn dữ liệu). (B1) sửa run.ok transcript KHÔNG còn AND-steps (trace dài ≥1 lỗi vặt không còn chấm FAIL oan) — task-verdict không suy từ step, chỉ tin flags. (B2) lọc sidechain (isSidechain:true) khỏi run chính. (B3) check_edited_without_read — grounding proxy trả lời Q2 issue 'agent có nhìn trước khi làm?': Edit file chưa từng Read/Grep/Write → flag medium. self-test 5/5 (a-e). Verify 5 phiên 2026-07-02: hết FAIL oan, grounding flag đúng & không spam (≤1/phiên). Trả lời issue: Q1 retrieval=CÓ (parser), Q2 grounding=CÓ (check mới), Q3 outcome=per-step ok/retry-storm, Q4 chạy được trên log 5 phiên cũ. CÒN (trụ skills): C = reinvent-rate/cross-break/harm-when-missing xuyên phiên cần định nghĩa metric qua council riêng.",
-  "session": "orca-fdk issue-4"
- },
- {
-  "id": "p-18",
-  "parent": null,
-  "title": "Memory: llmwiki mới ~1.5/4 tầng nhớ — thiếu episodic + truy hồi ngữ nghĩa + temporal",
-  "desc": "Trục THUA #1 frontier-gap-scan (03/07/26): thế giới (Mem0/Letta/Zep) chuẩn 4 tầng nhớ + vector + temporal; overstack chỉ semantic (wiki) + procedural (skills), truy hồi CHỈ theo [[wikilink]]/grep — thiếu episodic (sự kiện phiên) và truy hồi theo NGHĨA. VÁ (issue #9): nền vector đã có sẵn (mem-rank.py — store + retrieve top-k, embedding adapter đã quarantine) nên chỉ NỐI DÂY, không dựng lại. (1) mem-rank.py thêm episode subcommand + temporal ts/supersedes + kind-filter; (2) skill mới /record-episode (on-demand, ADR-004) ghi session episode; (3) query + wiki-room thêm Tầng-0 gọi mem-rank retrieve — truy hồi episode theo nghĩa, không chỉ link; (4) golden episodic hit@k (mem-proxy.py sinh output tất định, không model) + baseline, gate vào medic p_eval. Wiki vẫn là nguồn chân lý, vector chỉ là lớp phụ, tất cả local/travel-được.",
-  "status": "solved",
-  "scope": [
-   "harness",
-   "skills",
-   "llmwiki"
-  ],
-  "date": "2026-07-04",
-  "solvedBy": "mem-rank.py (episode+temporal+kind-filter) · skills/record-episode · query/wiki-room Tầng-0 · mem-proxy.py + episodic golden + episodic-baseline.json gate qua medic p_eval",
-  "session": "orca-fdk issue-9"
- },
- {
-  "id": "p-19",
-  "parent": "p-01",
-  "title": "pre-commit (17-rule fire-drill) chạy >2 phút mỗi commit — dễ timeout, kill giữa chừng làm hỏng index",
-  "desc": "Issue #18 (phát sinh ngay từ phiên issue-16 & issue-9): hook pre-commit L2 chạy TRỌN 25 hook (nhiều always_run + bash self-test) mỗi lần commit → stash toàn worktree + spawn 25 interpreter → >2 phút; bị kill giữa chừng để lại index hỏng (hàng trăm deletion ảo) + stash-patch chưa trả lại. Gốc (Meadows, không vá triệu chứng): L2 đang NHÂN BẢN trọn CI ngay lúc commit — thừa. Concept [[harness-enforcement-floor]] đã nói rõ CI (L4) mới là SÀN THẬT, L2 chỉ là tiện-nghi-chặn-sớm. VÁ: đưa L2 về đúng vai — chỉ content-validator NHANH theo file-đổi (25→12 hook, pre-commit run 0.16s vs >2ph); dời trọn fire-drill nặng sang CI job 'repo health' (đã có sẵn — không mất phủ) + thêm policy-converters-drift vào harness.yml (chưa có ở CI); ghi đường cứu ~/.cache/pre-commit/patch* vào comment config cho ca bị kill.",
-  "status": "solved",
-  "scope": [
-   "harness"
-  ],
-  "date": "2026-07-04",
-  "solvedBy": ".pre-commit-config.yaml trim 25→12 hook nhanh (file-đổi) · fire-drill nặng → CI repo-health + policy-converters-drift thêm vào harness.yml · đường cứu index-hỏng ghi trong config · căn cứ concept harness-enforcement-floor",
-  "session": "orca-fdk issue-18"
- },
- {
-  "id": "p-20",
-  "parent": null,
-  "title": "skill-usage đếm HỤT: chỉ đọc 1 dir transcript, bỏ mọi phiên worktree (GH#8 follow-up)",
-  "desc": "Tool skill-usage.py (GH#8) hardcode 1 thư mục transcript của repo chính → mọi phiên chạy trong git-worktree (mỗi worktree = 1 dir transcript riêng do cwd-mã-hoá khác) bị bỏ đếm hoàn toàn, vi phạm chính tiêu chí 'khớp transcript thật'. Verify: repo có ~7 worktree-dir đều chứa Skill-call mà tool ngó lơ (40 vs 45 lời gọi, fdk 10 vs 14). Kèm bug phụ: timestamp UTC gom ISO-week không quy giờ địa phương (UTC+7) → call khuya gán nhầm tuần. Fix cấu trúc (Meadows: sửa nguồn, không vá số): suy MỌI worktree qua `git worktree list` (deterministic, chỉ repo này — privacy) + `.astimezone()` quy giờ địa phương trước khi gom tuần. Phát hiện bởi fable-planning pass.",
-  "status": "solved",
-  "scope": [
-   "harness"
-  ],
-  "date": "2026-07-04",
-  "solvedBy": "fdk/tools/skill-usage.py: discover_transcript_dirs() qua git worktree list + parse_ts().astimezone(); fable-planning surfaced, /fdk gác",
-  "session": "orca-fdk issue-8 follow-up"
- },
- {
-  "id": "p-21",
-  "parent": null,
-  "title": "overstack.html (docs chính) mang mâu thuẫn nội tại + lỗi thời + thiếu UX nền",
-  "desc": "Issue #14: trang docs chính xác số liệu (bake từ đĩa) nhưng 4 mâu thuẫn CAO (3 vs 4 lớp gác + L3 ma; 'mỗi rule=1 validator' vs FACT 17 rule/14 validator; R10 hai kiểu; nhãn BNAL 20 vs 15+5), lỗi thời (thiếu GH#8 skill-usage), thiếu dark mode / a11y / overflow-x; mọi fix phải ở generator build-overstack-docs.py (sửa tay HTML bị --check bắt drift). VÁ đợt 1 (sự thật, chống-drift): sửa 4 mâu thuẫn khớp FACT + bảng rule render 1 lần (bỏ lặp ×2) + LOOP_GROUPS phân loại nốt (ovs-notes/frontier-scan) + GH#8 auto-derive từ mechanisms.yaml. Đợt 2 (UX): dark mode qua prefers-color-scheme, .table-wrap overflow-x (class trước dùng mà KHÔNG có CSS), mind-map keyboard a11y (tabindex/role/aria-expanded/Enter-Space), skip-link + nav aria-label. --check pass. Đợt 3 biên tập (glossary/tách giọng) defer — ngoài DoD.",
-  "status": "solved",
-  "scope": [
-   "llmwiki"
-  ],
-  "date": "2026-07-04",
-  "solvedBy": "fdk/tools/build-overstack-docs.py: sửa mâu thuẫn khớp FACT · dedup bảng rule · LOOP_GROUPS · dark mode + table-wrap CSS + mind-map a11y + skip-link · --check xanh",
-  "session": "orca-fdk issue-14"
- },
- {
-  "id": "p-auto-12",
-  "parent": null,
-  "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
-  "desc": "Bề mặt bị chạm: llmwiki/html/wiki-graph.html, llmwiki/wiki/log.md. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát); lần /fdk kế tiếp sẽ chưng lọc về đúng nhánh.",
-  "status": "open",
-  "scope": [],
-  "date": "06/07/26",
-  "session": "dd7fe6bc",
-  "pending": true
- },
- {
-  "id": "p-22",
-  "parent": null,
-  "title": "Code→wiki drift không ai phát hiện: code đổi ngoài phiên có kỷ luật wiki thì wiki lệch im lặng",
-  "desc": "stale.json của wiki_ledger chỉ lan cờ stale (lệch thời) WIKI→WIKI; nếu code đổi mà phiên quên cập nhật wiki, hoặc người/tool khác sửa code ngoài phiên Claude, thì không cơ chế nào phát hiện — wiki nói dối cho tới lần ai đó tình cờ đọc lại. Lộ ra khi đối chiếu openwiki (LangChain 07/2026): họ có neo gitHead + cổng no-op tất định. Fix cấu trúc (Meadows: thêm vòng phản hồi thiếu, không dặn agent nhớ): distill rồi nấu lại — (1) harness/scripts/wiki-sync.py giữ neo .last-sync.json (commit + content-hash), --check là cổng no-op 0 token, có drift thì map file-đổi→trang-nhắc-tới và cờ code-drift vào stale.json (flock, cùng schema wiki_ledger); (2) session_start nhắc 1 dòng đầu phiên khi HEAD vượt neo (fail-open); (3) /lint bước 0 đọc cờ + kỷ luật surgical (docs-impact-plan, soft diff budget, cấm formatting-only, canonical-home, no-op hợp lệ), bước 9 chốt neo; (4) gen-converters sinh ci/wiki-refresh.yml cron→PR cho downstream (không key vẫn cờ tất định); (5) wiki-sync.py vào template-manifest → downstream nhận qua bộ cài sẵn có. Test: harness/tests/wiki-sync-test.sh 8/8.",
-  "status": "solved",
-  "scope": "full",
-  "date": "2026-07-06",
-  "solvedBy": "wiki-sync.py + session_start wiki_drift + /lint b0/b9 + /ingest impact-plan + ci/wiki-refresh.yml",
-  "session": "openwiki-distill"
- }
+  {
+    "id": "p-01",
+    "parent": null,
+    "title": "Kỷ luật agent tất định (overstack core)",
+    "desc": "Làm sao để agent LLM làm việc lâu dài trên dự án mà không phá kỷ luật tri thức, và con người không phải nhớ luật: cài 1 dòng, hàng rào 0-token tự cắn, một entry point /orca-workflow.",
+    "status": "solved",
+    "scope": "full",
+    "date": "trước 02/07/26",
+    "solvedBy": "bootstrap.sh 1 dòng + harness rule R1–R15 + /orca-workflow (xem overstack.html#s0)",
+    "session": "tích luỹ nhiều session"
+  },
+  {
+    "id": "p-02",
+    "parent": "p-01",
+    "title": "Vòng xử lý ISSUE first-class",
+    "desc": "Khi issue xảy ra: triage → tái hiện (repro-first gate) → khoanh vùng (code-graph/bisect) → fix qua safe-change → verify red→green → distill kép (wiki incident + failure-flywheel). Mảnh rời đã có (failure-flywheel, loop-runner, trace-grader) nhưng chưa có skill điều phối /orca-issue.",
+    "status": "solved",
+    "scope": [
+      "skills"
+    ],
+    "date": "02/07/26",
+    "session": "session 020726 — proposal T-260702-01 duyệt & implement",
+    "solvedBy": "skill orca-issue (5 chốt, repro-first + red→green) + orca-workflow rẽ nhánh sự cố — T-260702-01. Chưa có: rào harness cưỡng chế gate repro (mới là quy trình trong skill), nên 1/3."
+  },
+  {
+    "id": "p-03",
+    "parent": "p-01",
+    "title": "Theo dõi vấn đề XUYÊN session",
+    "desc": "Không có nơi nhìn thấy toàn cảnh các bài toán đã gặp và trạng thái giải quyết — mỗi session tri thức về 'đang vướng gì' bị bay hơi.",
+    "status": "solved",
+    "scope": [
+      "harness",
+      "skills",
+      "llmwiki"
+    ],
+    "date": "02/07/26",
+    "solvedBy": "skill fdk §Problem-tree + orca-workflow convention + R17 flush (SessionEnd, test 3 ca + downstream pass) + concept wiki problem-tree.md — đủ 3 trụ, node xanh thứ hai sau p-01.",
+    "session": "session 020726"
+  },
+  {
+    "id": "p-04",
+    "parent": "p-03",
+    "title": "Ledger không travel theo dự án cá nhân",
+    "desc": "Quy tắc problem-tree nằm trong skill fdk — mà fdk cố ý KHÔNG distribute (ADR-004), chỉ đi theo máy user qua ~/.claude. Dự án cá nhân cài bootstrap sẽ không biết convention này. Cần convention đi theo một trụ được distribute (skill loop như orca-workflow/propose, hoặc rule harness), fdk chỉ còn là người gác ở repo framework.",
+    "status": "solved",
+    "scope": [
+      "harness",
+      "skills",
+      "llmwiki"
+    ],
+    "date": "02/07/26",
+    "session": "session 020726 — proposal T-260702-01 duyệt & implement",
+    "solvedBy": "convention vào orca-workflow (skill distribute) + install.sh seed template sổ + session_end.py fallback problem-tree.html (harness travel, test sandbox pass) + concept wiki problem-tree.md — T-260702-01."
+  },
+  {
+    "id": "p-auto-01",
+    "parent": "p-03",
+    "title": "Thẻ ghi-tạm tự động (đã chưng lọc xong) — bằng chứng cơ chế chạy được",
+    "desc": "Thẻ này do script kiểm thử flush_problem_tree.py tự sinh ra khi test cơ chế 'flush' (xả sổ — tự ghi vấn đề còn nợ vào cây ngay lúc phiên làm việc kết thúc, bằng code thuần, không cần AI). Vì nội dung trùng với p-03/p-04 nên đã được 'distill' (chưng lọc — viết lại cho gọn và gộp về đúng nhánh p-03). Giữ thẻ lại làm bằng chứng: chuỗi 'tự ghi tạm → chưng lọc sau' hoạt động trọn vòng. Bài học kỹ thuật rút ra: khi kiểm tra 'cây đã được cập nhật chưa', phải xét cả file mới chưa từng đưa vào git ('untracked' — git chưa theo dõi), chứ không chỉ xét file đã sửa (git diff).",
+    "status": "solved",
+    "scope": [
+      "skills"
+    ],
+    "date": "02/07/26",
+    "solvedBy": "lần gọi /fdk kế tiếp đã chưng lọc thẻ này về nhánh p-03 — đúng luồng thiết kế: hook ghi tạm → người/AI chưng lọc sau",
+    "session": "session-020726"
+  },
+  {
+    "id": "p-05",
+    "parent": "p-03",
+    "title": "HTML report không cho biết nó nằm đâu",
+    "desc": "File HTML visualization/report mở lên không show đường dẫn — người xem không biết file ở đâu để mở lại/sửa (đã vấp thật trong session 020726: phải hỏi 'file đâu').",
+    "status": "solved",
+    "scope": [
+      "harness",
+      "skills"
+    ],
+    "date": "02/07/26",
+    "solvedBy": "rule trong skill fdk + validator R16 report-show-path (PostToolUse tự chặn HTML mới thiếu path — test pass/fail 02/07/26). Còn thiếu: HTML cũ chưa retrofit (trụ llmwiki).",
+    "session": "session-020726"
+  },
+  {
+    "id": "p-06",
+    "parent": "p-01",
+    "title": "Sync 3 bản SKILL.md bằng tay — nguồn drift",
+    "desc": "Mỗi lần sửa skill phải copy tay ra 3 nơi (bản gốc trong repo, bản mirror llmwiki, bản cài ~/.claude) — trong 1 phiên lặp 3 lần, quên 1 lần là các bản lệch nhau (drift). Phát hiện bởi /orca-eval 020726 (finding #2).",
+    "status": "solved",
+    "scope": [
+      "skills"
+    ],
+    "date": "02/07/26",
+    "solvedBy": "tool fdk/tools/sync-skill.sh — 1 lệnh đồng bộ cả 3 bản + tự kiểm tra giống nhau (verify parity); skill fdk đã ghi luật 'đừng cp tay'. Chưa có: hook tự chạy khi SKILL.md đổi (trụ harness).",
+    "session": "session 020726"
+  },
+  {
+    "id": "p-auto-02",
+    "parent": null,
+    "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
+    "desc": "Bề mặt bị chạm: fdk/CAPABILITIES.md, fdk/skills.search.json, fdk/tools/sync-skill.sh, fdk/wiki/log.md, harness/poc-vendor-neutral/install.sh, harness/poc-vendor-neutral/policy.yaml, harness/scripts/sync-skills.py, harness/templates/ …. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát); lần /fdk kế tiếp sẽ chưng lọc về đúng nhánh.",
+    "status": "open",
+    "scope": [],
+    "date": "02/07/26",
+    "session": "bf38cf4e",
+    "pending": true
+  },
+  {
+    "id": "p-auto-03",
+    "parent": null,
+    "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
+    "desc": "Bề mặt bị chạm: fdk/CAPABILITIES.md, fdk/skills.search.json, fdk/tools/sync-skill.sh, fdk/wiki/log.md, harness/poc-vendor-neutral/install.sh, harness/poc-vendor-neutral/policy.yaml, harness/scripts/sync-skills.py, harness/templates/ …. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát); lần /fdk kế tiếp sẽ chưng lọc về đúng nhánh.",
+    "status": "open",
+    "scope": [],
+    "date": "02/07/26",
+    "session": "e0735bac",
+    "pending": true
+  },
+  {
+    "id": "p-auto-04",
+    "parent": null,
+    "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
+    "desc": "Bề mặt bị chạm: fdk/CAPABILITIES.md, fdk/skills.search.json, fdk/tools/sync-skill.sh, fdk/wiki/log.md, harness/poc-vendor-neutral/install.sh, harness/poc-vendor-neutral/policy.yaml, harness/scripts/sync-skills.py, harness/templates/ …. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát); lần /fdk kế tiếp sẽ chưng lọc về đúng nhánh.",
+    "status": "open",
+    "scope": [],
+    "date": "02/07/26",
+    "session": "7c68668a",
+    "pending": true
+  },
+  {
+    "id": "p-auto-05",
+    "parent": null,
+    "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
+    "desc": "Bề mặt bị chạm: fdk/CAPABILITIES.md, fdk/skills.search.json, fdk/tools/sync-skill.sh, fdk/wiki/log.md, harness/poc-vendor-neutral/install.sh, harness/poc-vendor-neutral/policy.yaml, harness/scripts/sync-skills.py, harness/templates/ …. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát); lần /fdk kế tiếp sẽ chưng lọc về đúng nhánh.",
+    "status": "open",
+    "scope": [],
+    "date": "02/07/26",
+    "session": "4aaab8ea",
+    "pending": true
+  },
+  {
+    "id": "p-auto-06",
+    "parent": null,
+    "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
+    "desc": "Bề mặt bị chạm: fdk/CAPABILITIES.md, fdk/skills.search.json, fdk/tools/sync-skill.sh, fdk/wiki/log.md, harness/poc-vendor-neutral/install.sh, harness/poc-vendor-neutral/policy.yaml, harness/scripts/sync-skills.py, harness/templates/ …. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát); lần /fdk kế tiếp sẽ chưng lọc về đúng nhánh.",
+    "status": "open",
+    "scope": [],
+    "date": "02/07/26",
+    "session": "aea1a0d5",
+    "pending": true
+  },
+  {
+    "id": "p-auto-07",
+    "parent": null,
+    "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
+    "desc": "Bề mặt bị chạm: fdk/CAPABILITIES.md, fdk/skills.search.json, fdk/tools/sync-skill.sh, fdk/wiki/log.md, harness/poc-vendor-neutral/install.sh, harness/poc-vendor-neutral/policy.yaml, harness/scripts/sync-skills.py, harness/templates/ …. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát); lần /fdk kế tiếp sẽ chưng lọc về đúng nhánh.",
+    "status": "open",
+    "scope": [],
+    "date": "02/07/26",
+    "session": "7aba727b",
+    "pending": true
+  },
+  {
+    "id": "p-auto-08",
+    "parent": null,
+    "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
+    "desc": "Bề mặt bị chạm: fdk/wiki/concepts/fdk-dev-strategy.md, fdk/wiki/log.md, fdk/wiki/sources/mongol-ai-strategy.md, llmwiki/html/overstack.html, llmwiki/raw/fdk-stragegy.md, llmwiki/wiki/log.md, llmwiki/wiki/sources/draft/020726-adr-015-status.md, llmwiki/wiki/sources/draft/020726-ingest-fdk-strategy.md …. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát); lần /fdk kế tiếp sẽ chưng lọc về đúng nhánh.",
+    "status": "open",
+    "scope": [],
+    "date": "02/07/26",
+    "session": "d123a203",
+    "pending": true
+  },
+  {
+    "id": "p-07",
+    "parent": "p-01",
+    "title": "Policy chưa DRIVE enforcement — wiring hardcode",
+    "desc": "Audit 02/07 (kim chỉ nam fdk-dev-strategy #3): hook pre_tool_use hardcode danh sách validator (pre_tool_use.py:44) thay vì đọc policy.yaml; policy tự thú nhận wiring thật nằm ở gen-converters.py. Policy (nguồn chân lý — ADR-001) mới LIỆT KÊ chứ chưa điều khiển. Kèm theo: validator mồ côi task_lifecycle.py không được wire ở đâu; code_health/agent_claude_parity/duplicate_basename chạy ở CI nhưng không có rule R* trong policy.",
+    "status": "open",
+    "scope": [],
+    "date": "2026-07-02",
+    "session": "audit-fdk-strategy"
+  },
+  {
+    "id": "p-08",
+    "parent": "p-01",
+    "title": "Drift 15 pattern bị che bởi version tĩnh",
+    "desc": "health-check báo drift 15 file (5 hook + 6 skill + AGENT/CLAUDE.md + overstack.html) nhưng version.json local = remote = 1.3.6 nên hệ tưởng đồng bộ. Cần buộc bump version khi pattern đổi (vòng phản hồi #7 — drift không được im lặng). Liên đới: bản cài ~/.claude/skills/query lệch repo canonical (ADR-003).",
+    "status": "open",
+    "scope": [],
+    "date": "2026-07-02",
+    "session": "audit-fdk-strategy"
+  },
+  {
+    "id": "p-09",
+    "parent": "p-01",
+    "title": "Mép đăng ký skill hụt + mô tả sai trigger",
+    "desc": "Audit trụ skills: parity canonical↔mirror 66/66 hoàn hảo, nhưng (a) skill fdk thiếu trong marketplace.json (65/66); (b) extract-site có description sai bản chất (khai 'site→markdown' nhưng body là design-token extraction) → dẫm chân web-crawl, cần merge/deprecate; (c) ingest/propose/query bị đăng ký 2 lần trong runtime list.",
+    "status": "open",
+    "scope": [],
+    "date": "2026-07-02",
+    "session": "audit-fdk-strategy"
+  },
+  {
+    "id": "p-10",
+    "parent": "p-03",
+    "title": "Nhịp ship wiki: 15 draft tồn + flywheel gần rỗng",
+    "desc": "Nguyên tắc #8: 15 draft status proposed chưa promote (cũ nhất 25/06), 2 draft done chưa archive, 1 raw chưa ingest (tech-pattern). Vòng phản hồi #7 chưa chảy: events.jsonl 712 dòng nhưng failures.jsonl chỉ 3; 7 node ghi-tạm p-auto-02..08 trong chính cây này còn open rỗng chưa distill. Fix hệ thống: chạy /docs-curate + /lint định kỳ, và cơ chế flush p-auto phải kèm distill.",
+    "status": "open",
+    "scope": [],
+    "date": "2026-07-02",
+    "session": "audit-fdk-strategy"
+  },
+  {
+    "id": "p-11",
+    "parent": "p-01",
+    "title": "Wiki là queue dữ liệu — thiếu quan hệ, ledger, traceability máy-đọc-được",
+    "desc": "Mọi mắt xích wiki ghi văn bản cho người (log.md), không mắt xích nào ghi sự kiện có cấu trúc cho máy: sửa/xóa xuyên phiên không truy được, [[wikilink]] vô kiểu không validate. Giải bước 1+2+3 (đã qua council 5-phản-biện, guardrail G1-G7): ledger JSONL flock (khóa file — chống ghi song song, test 8-process pass), tombstone (bia mộ — đánh dấu xóa thay vì xóa cứng), id+relations frontmatter (82 trang migrate, chỉ suy từ tín hiệu khách quan), validator R-rel warn-only (chỉ cảnh báo, chưa chặn). Bước 4-6 hoàn tất cùng ngày (tiêu chí tốc độ): stale-propagation cap=1 (9.8ms/lần ghi trên wiki 63 trang, test chu trình an toàn), skill /wiki-room (depth cap=1, budget cứng, circuit breaker — distribute qua wiki-loop), wiki-graph HTML (13ms build, đồ thị quan hệ + timeline ledger + cờ stale).",
+    "status": "solved",
+    "scope": "full",
+    "date": "02/07/26",
+    "session": "session 020726 — draft 020726-wiki-core-relations + council seed42",
+    "solvedBy": "wiki_ledger.py (ledger flock + stale cap-1) + validators/rel_integrity.py + fdk/tools/wiki-relations.py + skill wiki-room (3 surface đủ) + fdk/tools/build-wiki-graph.py — đủ 3 trụ harness/skills/llmwiki."
+  },
+  {
+    "id": "p-auto-09",
+    "parent": null,
+    "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
+    "desc": "Bề mặt bị chạm: llmwiki/wiki/log.md. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát); lần /fdk kế tiếp sẽ chưng lọc về đúng nhánh.",
+    "status": "open",
+    "scope": [],
+    "date": "02/07/26",
+    "session": "a6ded00e",
+    "pending": true
+  },
+  {
+    "id": "p-auto-10",
+    "parent": null,
+    "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
+    "desc": "Bề mặt bị chạm: llmwiki/html/council/council-report-006-seed42.html, llmwiki/wiki/log.md. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát); lần /fdk kế tiếp sẽ chưng lọc về đúng nhánh.",
+    "status": "open",
+    "scope": [],
+    "date": "02/07/26",
+    "session": "c0fd85d2",
+    "pending": true
+  },
+  {
+    "id": "p-auto-11",
+    "parent": null,
+    "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
+    "desc": "Bề mặt bị chạm: llmwiki/html/council/council-report-006-seed42.html, llmwiki/wiki/log.md. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát); lần /fdk kế tiếp sẽ chưng lọc về đúng nhánh.",
+    "status": "open",
+    "scope": [],
+    "date": "02/07/26",
+    "session": "a1833594",
+    "pending": true
+  },
+  {
+    "id": "p-12",
+    "parent": "p-11",
+    "title": "Engine tự-index mù code non-Python + thiếu cờ toàn vẹn/impact",
+    "desc": "Benchmark ngoài-mẫu (council seed42 ra đề, app TS plugin-host, chấm mù) lộ: enrich_code chỉ parse .py (mù imports/touches TS/JS/Go/Rust); graph-builder thiếu cờ chu trình (cycle) + không quarantine frontmatter YAML hỏng; WIKILINK_RE không strip code-fence (bịa [[link]] trong code). Muốn tốt trục code phải dựa code-graph MCP (phần mềm ngoài). Vá SELF-CONTAINED: code_imports.py (stdlib-only, EXTRACTORS đa-ngôn-ngữ, resolve alias/relative, dynamic→unresolved), Mảnh B strip code-fence, Mảnh C detect_cycles + _frontmatter_ok, Mảnh D impact_reverse (reverse-imports cap=1). CLI thêm --code-root/--json. Chấm lại: 10/10 đòn, recall 1.0, provably-false 0. CÒN: chưa có RÀNG BUỘC (gate) + ĐO (baseline) để chống tái sinh — đó là bước kế 'cần ràng buộc rồi đo'. [2026-07-03 ràng-buộc-rồi-đo] ĐÃ dựng feedback loop: baseline.json đóng băng (recall 1.0, provably_false 0, 10/10 đòn, PASS) + check.py (regress recall/provably-false/full-pass/negative/seal → exit≠0). CHỨNG MINH cắn: bỏ code_imports → recall 0.8 → gate REGRESS. run.sh xoá result cũ trước (chống false-green). CÒN để full 3/3 trụ: promote eval khỏi scratchpad + wire vào fdk-gate/CI (đổi luật chơi — cần duyệt) + skill bọc (trụ skills).",
+    "status": "partial",
+    "scope": [
+      "harness",
+      "llmwiki"
+    ],
+    "date": "2026-07-03",
+    "solvedBy": "code_imports.py + build-wiki-graph.py (Mảnh A-D) + benchmark council-app; proposal 020726-council-chon-de-thi ; baseline.json + check.py (gate regress)",
+    "session": "orca-fdk"
+  },
+  {
+    "id": "p-13",
+    "parent": null,
+    "title": "Rà luật 'có cắn không' mới phủ 5/17 — 12 rule chưa chứng minh + drift validator",
+    "desc": "harness-doctor.py (fire-drill: mỗi rule 1 fixture BAD+GOOD, chạy validator thật, BAD phải bị chặn) ĐÃ có nhưng chỉ bite-test 5/17 rule (R1/R2/R5/R7/R9 — content-validator). 12 rule KHÔNG được chứng minh cắn: hook_event R3/R4/R8/R10/R17, process_gate R12/R15, repo_gate R6, deny_write R14, content_check R11/R13/R16 → an-tâm-giả. Chạy NGAY còn lộ 2 vấn đề LIVE: (1) proposal_complete.py DRIFT (hooks-copy khác harness-src, 1 bản cũ — chính R7); (2) pre-commit chưa cài .git/hooks (backstop L2 tắt). Thiết kế: mở rộng harness-doctor 4 tầng phủ 17/17 (A content-validator mở rộng, B hook_event feed synthetic event, C process_gate temp-git BAD-state, D documentary presence-check) + --ci fail nếu có dark-rail HOẶC rule non-documentary chưa có bite-test. overstack.html: generator build-overstack-docs.py đã live+wired stop.py; fix orca-issue phân nhóm → --check xanh. [DONE T1-T2] medic dựng: fdk/tools/medic.py (6 probe compose harness-doctor + build-*.py --check + compileall + policy live), gõ toàn cục (~/.local/bin/medic) + /medic slash skill (register đủ mặt, sync-skills+registry ✓). medic tự bắt ngay: capabilities stale (regen), validator proposal_complete drift, VÀ bắt cú sync SAI HƯỚNG làm R7 rail-đen → khôi phục 5/5. CÒN (proposal 030726-medic T3-T5): coverage 5/17→17/17, wire pre-commit/CI, promote eval + cài pre-commit.",
+    "status": "partial",
+    "scope": [
+      "harness",
+      "skills"
+    ],
+    "date": "2026-07-03",
+    "session": "orca-fdk",
+    "solvedBy": "fdk/tools/medic.py + /medic skill + proposal 030726-medic"
+  },
+  {
+    "id": "p-14",
+    "parent": null,
+    "title": "Council report hiện 'seat-N' thay vì tên uỷ viên (mất lens/phong cách)",
+    "desc": "render_report_html map author→tên bằng persona-id, nhưng author trong transcript là seat-id (seat-1..N) → không khớp → rơi về 'seat-N', mất cả lens. Bản gốc 006 dùng persona-id làm author nên đúng; runs seat-id thì hỏng. VÁ GỐC: _load_persona_meta index thêm theo seat-id lấy map seat→persona từ config.seats[].persona → hiện đúng TÊN + lens. selftest OK. Re-render 013 hiện Dieter Rams/Ada/Linus/Taleb/Lão Tử + phong cách.",
+    "status": "solved",
+    "scope": [
+      "harness"
+    ],
+    "date": "2026-07-03",
+    "solvedBy": "council.py _load_persona_meta seat-index",
+    "session": "orca"
+  },
+  {
+    "id": "p-15",
+    "parent": "p-12",
+    "title": "retrieval-eval giòn (TOKEN_EPS=0 spam) + pull-gate hit@1→0 bị nuốt khi re-baseline",
+    "desc": "Sau khi vá R3 index-sync, gate retrieval-eval lộ ra ĐỎ SẴN: TOKEN_EPS=0.0 (token phình bất kỳ = hồi quy) nên mọi lần wiki lớn lên đều fail → CI spam → buộc re-baseline thủ công. Re-baseline cứu CI lại NUỐT một regression thật: pull-gate hit@k 1→0 (trang đúng ADR-002 vẫn tồn tại nhưng bị các trang phình chiếm hết top-5). Gốc cấu trúc: (1) query-proxy retrieve_L1 xếp hạng bằng độ-phủ-term trên TOÀN VĂN — trái docstring 'tầng-1 xếp hạng bằng title+heading' — nên trang generic tình cờ chứa term (kể cả term tiếng Việt hoạt/động) đè trang ADR có tiêu đề khớp hẳn; (2) ngưỡng token tuyệt-đối-0 không phân biệt 'wiki lớn lên hợp lệ' với 'phình đột biến'. VÁ: query-proxy field-boost heading ×2 + thân ×1 (HEAD_BOOST) → ADR-002 quay về hạng 0, hit@5 22/30→30/30, không golden nào tụt; retrieval-eval đổi TOKEN_EPS tuyệt đối → TOKEN_REL_EPS=+15% tương đối (token trong ngưỡng = WARN note, phình >15% = hồi quy cứng, hit@k tụt vẫn cứng tuyệt đối). Chứng minh feedback loop còn cắn: thêm 1 trang wiki thường → 15 golden nhích token nhưng --check vẫn OK (chỉ note), không spam; baseline re-write hit=1 cho pull-gate. CÒN để full 3/3 trụ: chưa có skill bọc (trụ skills) + chưa promote guidance vào wiki concept (trụ llmwiki) — mới vá ở tầng harness.",
+    "status": "partial",
+    "scope": [
+      "harness"
+    ],
+    "date": "2026-07-04",
+    "solvedBy": "query-proxy.py HEAD_BOOST field-boost + retrieval-eval.py TOKEN_REL_EPS ngưỡng mềm; ledger 030726-retrieval-eval-baseline-rot; issue GH#16",
+    "session": "orca-fdk issue-16"
+  },
+  {
+    "id": "p-16",
+    "parent": null,
+    "title": "Skill /ship chỉ đẩy thẳng — thiếu mở PR/MR + gom PR về merge",
+    "desc": "/ship ban đầu chỉ 2 mức push (đẩy thẳng không tag) + release (đẩy + tag + notes) — đều đẩy THẲNG, không có đường review-then-merge, cũng không có đường DUYỆT PR/MR đến rồi merge. VÁ: thêm 3 mức. Outbound: 'ship pr' (GitHub gh pr create) + 'ship mr' (GitLab glab mr create) — dùng lại checklist bước 1-3, sản phẩm cuối = PR/MR body (giọng người-dùng + Known-limitations), tự chọn công cụ theo remote, DỪNG nếu chưa auth, không tự chèn Closes #N. Inbound: 'ship merge' — liệt kê PR/MR đang mở của repo (gh pr list / glab mr list), kéo từng nhánh về LOCAL (gh pr checkout / fetch mr ref), chạy medic --ci + test THẬT làm ĐIỀU KIỆN merge, xanh mới merge (một-tại-một, đỏ thì để nguyên cho tác giả). Sync canonical→mirror→installed + regen CAPABILITIES.",
+    "status": "solved",
+    "scope": [
+      "skills",
+      "llmwiki"
+    ],
+    "date": "2026-07-04",
+    "solvedBy": "skills/ship/SKILL.md thêm mức pr/mr/merge + sync-skill.sh + build-capabilities.py regen",
+    "session": "orca-fdk issue-16"
+  },
+  {
+    "id": "p-17",
+    "parent": null,
+    "title": "Logger không đủ dấu vết để chấm trace xuyên phiên (GH#4)",
+    "desc": "Sổ cái framework events.jsonl (code-logger) gần như CHỈ ghi file.write (856 dòng) — thiếu tín hiệu để trace-grade (chấm ĐƯỜNG ĐI của agent). Rà 3 nguồn: (1) events.jsonl = NGHÈO, chỉ file.write file framework → không có retrieval (Read/Grep/query), không grounding (hành động có tham chiếu cái vừa truy hồi?), không outcome (reinvent/cross-break/rework) → KHÔNG đủ để trace-grade. (2) audit/*.jsonl (hooklib.audit) = có tool_name MỌI tool kể cả Read/Grep → biết agent 'có nhìn trước khi làm', NHƯNG chỉ giữ file_path+command → query của Grep/Glob (pattern) MẤT; không có observation/ok → không biết truy hồi trả về gì; không link Read↔Write để đo grounding; gitignored per-day, không gom xuyên phiên. (3) transcript phiên (~/.claude/projects) = nguồn GIÀU nhất (đủ tool+args+result) nhưng trace-grader.py CHƯA có parser transcript (mới có runs_from_traces + runs_from_audit). Council 030726: đừng đo query-rate (Goodhart), đo reinvent-rate + cross-break + harm-when-missing; deliberation phải để lại dấu vết mới chấm được. Đòn bẩy Meadows: KHÔNG phình sổ cái với đủ loại event (bậc thấp, dễ Goodhart); điểm cao/rẻ nhất = thêm 1 parser transcript→traces cho trace-grader (dữ liệu đã đầy đủ, chỉ chưa đọc được) + mở audit ghi thêm retrieval args (Grep pattern/path) làm kênh code-logged xuyên phiên. KHÔNG blocker milestone v1.0.5 — issue SAU.",
+    "status": "partial",
+    "scope": [
+      "harness"
+    ],
+    "date": "2026-07-04",
+    "solvedBy": "trace-grader.py: (A) runs_from_transcript() + CLI --transcript — thu hồi retrieval args (Grep pattern/Read file_path) + observation + per-step ok từ transcript phiên (nguồn giàu nhất, sẵn dữ liệu). (B1) sửa run.ok transcript KHÔNG còn AND-steps (trace dài ≥1 lỗi vặt không còn chấm FAIL oan) — task-verdict không suy từ step, chỉ tin flags. (B2) lọc sidechain (isSidechain:true) khỏi run chính. (B3) check_edited_without_read — grounding proxy trả lời Q2 issue 'agent có nhìn trước khi làm?': Edit file chưa từng Read/Grep/Write → flag medium. self-test 5/5 (a-e). Verify 5 phiên 2026-07-02: hết FAIL oan, grounding flag đúng & không spam (≤1/phiên). Trả lời issue: Q1 retrieval=CÓ (parser), Q2 grounding=CÓ (check mới), Q3 outcome=per-step ok/retry-storm, Q4 chạy được trên log 5 phiên cũ. CÒN (trụ skills): C = reinvent-rate/cross-break/harm-when-missing xuyên phiên cần định nghĩa metric qua council riêng.",
+    "session": "orca-fdk issue-4"
+  },
+  {
+    "id": "p-18",
+    "parent": null,
+    "title": "Memory: llmwiki mới ~1.5/4 tầng nhớ — thiếu episodic + truy hồi ngữ nghĩa + temporal",
+    "desc": "Trục THUA #1 frontier-gap-scan (03/07/26): thế giới (Mem0/Letta/Zep) chuẩn 4 tầng nhớ + vector + temporal; overstack chỉ semantic (wiki) + procedural (skills), truy hồi CHỈ theo [[wikilink]]/grep — thiếu episodic (sự kiện phiên) và truy hồi theo NGHĨA. VÁ (issue #9): nền vector đã có sẵn (mem-rank.py — store + retrieve top-k, embedding adapter đã quarantine) nên chỉ NỐI DÂY, không dựng lại. (1) mem-rank.py thêm episode subcommand + temporal ts/supersedes + kind-filter; (2) skill mới /record-episode (on-demand, ADR-004) ghi session episode; (3) query + wiki-room thêm Tầng-0 gọi mem-rank retrieve — truy hồi episode theo nghĩa, không chỉ link; (4) golden episodic hit@k (mem-proxy.py sinh output tất định, không model) + baseline, gate vào medic p_eval. Wiki vẫn là nguồn chân lý, vector chỉ là lớp phụ, tất cả local/travel-được.",
+    "status": "solved",
+    "scope": [
+      "harness",
+      "skills",
+      "llmwiki"
+    ],
+    "date": "2026-07-04",
+    "solvedBy": "mem-rank.py (episode+temporal+kind-filter) · skills/record-episode · query/wiki-room Tầng-0 · mem-proxy.py + episodic golden + episodic-baseline.json gate qua medic p_eval",
+    "session": "orca-fdk issue-9"
+  },
+  {
+    "id": "p-19",
+    "parent": "p-01",
+    "title": "pre-commit (17-rule fire-drill) chạy >2 phút mỗi commit — dễ timeout, kill giữa chừng làm hỏng index",
+    "desc": "Issue #18 (phát sinh ngay từ phiên issue-16 & issue-9): hook pre-commit L2 chạy TRỌN 25 hook (nhiều always_run + bash self-test) mỗi lần commit → stash toàn worktree + spawn 25 interpreter → >2 phút; bị kill giữa chừng để lại index hỏng (hàng trăm deletion ảo) + stash-patch chưa trả lại. Gốc (Meadows, không vá triệu chứng): L2 đang NHÂN BẢN trọn CI ngay lúc commit — thừa. Concept [[harness-enforcement-floor]] đã nói rõ CI (L4) mới là SÀN THẬT, L2 chỉ là tiện-nghi-chặn-sớm. VÁ: đưa L2 về đúng vai — chỉ content-validator NHANH theo file-đổi (25→12 hook, pre-commit run 0.16s vs >2ph); dời trọn fire-drill nặng sang CI job 'repo health' (đã có sẵn — không mất phủ) + thêm policy-converters-drift vào harness.yml (chưa có ở CI); ghi đường cứu ~/.cache/pre-commit/patch* vào comment config cho ca bị kill.",
+    "status": "solved",
+    "scope": [
+      "harness"
+    ],
+    "date": "2026-07-04",
+    "solvedBy": ".pre-commit-config.yaml trim 25→12 hook nhanh (file-đổi) · fire-drill nặng → CI repo-health + policy-converters-drift thêm vào harness.yml · đường cứu index-hỏng ghi trong config · căn cứ concept harness-enforcement-floor",
+    "session": "orca-fdk issue-18"
+  },
+  {
+    "id": "p-20",
+    "parent": null,
+    "title": "skill-usage đếm HỤT: chỉ đọc 1 dir transcript, bỏ mọi phiên worktree (GH#8 follow-up)",
+    "desc": "Tool skill-usage.py (GH#8) hardcode 1 thư mục transcript của repo chính → mọi phiên chạy trong git-worktree (mỗi worktree = 1 dir transcript riêng do cwd-mã-hoá khác) bị bỏ đếm hoàn toàn, vi phạm chính tiêu chí 'khớp transcript thật'. Verify: repo có ~7 worktree-dir đều chứa Skill-call mà tool ngó lơ (40 vs 45 lời gọi, fdk 10 vs 14). Kèm bug phụ: timestamp UTC gom ISO-week không quy giờ địa phương (UTC+7) → call khuya gán nhầm tuần. Fix cấu trúc (Meadows: sửa nguồn, không vá số): suy MỌI worktree qua `git worktree list` (deterministic, chỉ repo này — privacy) + `.astimezone()` quy giờ địa phương trước khi gom tuần. Phát hiện bởi fable-planning pass.",
+    "status": "solved",
+    "scope": [
+      "harness"
+    ],
+    "date": "2026-07-04",
+    "solvedBy": "fdk/tools/skill-usage.py: discover_transcript_dirs() qua git worktree list + parse_ts().astimezone(); fable-planning surfaced, /fdk gác",
+    "session": "orca-fdk issue-8 follow-up"
+  },
+  {
+    "id": "p-21",
+    "parent": null,
+    "title": "overstack.html (docs chính) mang mâu thuẫn nội tại + lỗi thời + thiếu UX nền",
+    "desc": "Issue #14: trang docs chính xác số liệu (bake từ đĩa) nhưng 4 mâu thuẫn CAO (3 vs 4 lớp gác + L3 ma; 'mỗi rule=1 validator' vs FACT 17 rule/14 validator; R10 hai kiểu; nhãn BNAL 20 vs 15+5), lỗi thời (thiếu GH#8 skill-usage), thiếu dark mode / a11y / overflow-x; mọi fix phải ở generator build-overstack-docs.py (sửa tay HTML bị --check bắt drift). VÁ đợt 1 (sự thật, chống-drift): sửa 4 mâu thuẫn khớp FACT + bảng rule render 1 lần (bỏ lặp ×2) + LOOP_GROUPS phân loại nốt (ovs-notes/frontier-scan) + GH#8 auto-derive từ mechanisms.yaml. Đợt 2 (UX): dark mode qua prefers-color-scheme, .table-wrap overflow-x (class trước dùng mà KHÔNG có CSS), mind-map keyboard a11y (tabindex/role/aria-expanded/Enter-Space), skip-link + nav aria-label. --check pass. Đợt 3 biên tập (glossary/tách giọng) defer — ngoài DoD.",
+    "status": "solved",
+    "scope": [
+      "llmwiki"
+    ],
+    "date": "2026-07-04",
+    "solvedBy": "fdk/tools/build-overstack-docs.py: sửa mâu thuẫn khớp FACT · dedup bảng rule · LOOP_GROUPS · dark mode + table-wrap CSS + mind-map a11y + skip-link · --check xanh",
+    "session": "orca-fdk issue-14"
+  },
+  {
+    "id": "p-auto-12",
+    "parent": null,
+    "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
+    "desc": "Bề mặt bị chạm: llmwiki/html/wiki-graph.html, llmwiki/wiki/log.md. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát); lần /fdk kế tiếp sẽ chưng lọc về đúng nhánh.",
+    "status": "open",
+    "scope": [],
+    "date": "06/07/26",
+    "session": "dd7fe6bc",
+    "pending": true
+  },
+  {
+    "id": "p-22",
+    "parent": null,
+    "title": "Code→wiki drift không ai phát hiện: code đổi ngoài phiên có kỷ luật wiki thì wiki lệch im lặng",
+    "desc": "stale.json của wiki_ledger chỉ lan cờ stale (lệch thời) WIKI→WIKI; nếu code đổi mà phiên quên cập nhật wiki, hoặc người/tool khác sửa code ngoài phiên Claude, thì không cơ chế nào phát hiện — wiki nói dối cho tới lần ai đó tình cờ đọc lại. Lộ ra khi đối chiếu openwiki (LangChain 07/2026): họ có neo gitHead + cổng no-op tất định. Fix cấu trúc (Meadows: thêm vòng phản hồi thiếu, không dặn agent nhớ): distill rồi nấu lại — (1) harness/scripts/wiki-sync.py giữ neo .last-sync.json (commit + content-hash), --check là cổng no-op 0 token, có drift thì map file-đổi→trang-nhắc-tới và cờ code-drift vào stale.json (flock, cùng schema wiki_ledger); (2) session_start nhắc 1 dòng đầu phiên khi HEAD vượt neo (fail-open); (3) /lint bước 0 đọc cờ + kỷ luật surgical (docs-impact-plan, soft diff budget, cấm formatting-only, canonical-home, no-op hợp lệ), bước 9 chốt neo; (4) gen-converters sinh ci/wiki-refresh.yml cron→PR cho downstream (không key vẫn cờ tất định); (5) wiki-sync.py vào template-manifest → downstream nhận qua bộ cài sẵn có. Test: harness/tests/wiki-sync-test.sh 8/8.",
+    "status": "solved",
+    "scope": "full",
+    "date": "2026-07-06",
+    "solvedBy": "wiki-sync.py + session_start wiki_drift + /lint b0/b9 + /ingest impact-plan + ci/wiki-refresh.yml",
+    "session": "openwiki-distill"
+  },
+  {
+    "id": "p-auto-13",
+    "parent": null,
+    "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
+    "desc": "Bề mặt bị chạm: fdk/tools/build-wiki-graph.py, harness/foundation.yaml, harness/recipe.md, harness/scripts/install-harness.sh, harness/validators/index_sync.py, llmwiki/.claude/hooks/stop.py, llmwiki/.claude/hooks/validators/index_sync.py, llmwiki/html/overstack.html …. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát); lần /fdk kế tiếp sẽ chưng lọc về đúng nhánh.",
+    "status": "open",
+    "scope": [],
+    "date": "08/07/26",
+    "session": "d35997cc",
+    "pending": true
+  }
 ]</script>
 
 <script>

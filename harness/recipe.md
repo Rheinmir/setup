@@ -99,6 +99,28 @@ validator thì cho qua) — L2 vẫn đỡ, và phiên làm việc không bao gi
 
 Nguyên tắc: thứ gì chạy thường xuyên phải là 0 token; LLM chỉ xuất hiện ở eval định kỳ tắt được.
 
+## 6b. wiki-graph downstream — opt-in & scope code (GH#69)
+
+`llmwiki/html/wiki-graph.html` là bản đồ quan hệ wiki + code-graph cho người xem. Ở repo framework nó luôn
+tự sinh; ở dự án **downstream** nó chỉ chạy khi bật opt-in (triết lý Taleb: engine chạy trên máy người khác
+thì không tự-bật ngầm). `install-harness.sh` lo sẵn cả hai điều kiện nên **không cần set tay**:
+
+- **Bật opt-in.** Ghi `env.OVERSTACK_WIKIGRAPH="1"` vào `.claude/settings.json` ở root dự án (dùng
+  `setdefault` nên không đè giá trị bạn đã đặt). Tắt lại: đổi thành `"0"` hoặc xoá khoá.
+- **Khai vùng quét code.** Sinh `.overstack.yaml` ở root với hai khoá:
+
+  ```yaml
+  wiki_dir: llmwiki/wiki
+  # code_root: MỘT hay NHIỀU vùng code, ngăn bằng dấu phẩy (đa sub-repo downstream)
+  code_root: payroll-backend-prd, payroll-frontend-prd, syncservice-develop
+  ```
+
+  Autodetect lúc cài = các thư mục con NGAY dưới root có `.git` lồng (sub-repo clone); không thấy → `code_root: .`.
+  Mỗi vùng phải **nằm trong** cwd — id node = path tương-đối-cwd nên khớp quan hệ `touches` (wiki ghi theo
+  repo-root) và không đụng nhau khi hai sub-repo cùng có `app/main.py`. Sửa file này để thu hẹp/relocate.
+- **Khi nào vẽ.** Stop hook regen wiki-graph khi git-status có đổi ở `wiki/`, engine, hoặc file code; ngoài ra
+  `install-harness` seed-once ngay lúc cài (nếu wiki đã có nội dung) để vector tồn tại mà không phải chờ diff.
+
 ## 7. Nguồn (crawl verified 2026-06-10)
 
 - [ai-boost/awesome-harness-engineering](https://github.com/ai-boost/awesome-harness-engineering) (1.8k★) — khung 12 primitive

@@ -51,7 +51,8 @@ foundation:
       evidence-link:
         - "[[ADR-001]]"
         - "fdk/wiki/sources/adr/ADR-001-policy-as-source-of-truth.md"
-        - "llmwiki/html/council/council-report-026-seed42.html"
+        # council-report HTML là artifact ephemeral (gitignored từ #62 "ship user sạch") — gỡ khỏi
+        # evidence-link vì manifest yêu cầu path khớp đĩa; provenance đã đủ qua ADR-001 ở trên.
 
     - tech: "Python (chỉ stdlib)"
       role: >-

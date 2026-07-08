@@ -349,6 +349,26 @@ PY
 grep -q "audit/" "$ROOT/.claude/.gitignore" 2>/dev/null || printf 'audit/\nsettings.json.bak.*\n' >> "$ROOT/.claude/.gitignore"
 log "settings.json ở ROOT: OK (session mở tại root sẽ load hooks)"
 
+# ---------- 4b'. .overstack.yaml — khai scope wiki-graph (GH#69: code_root đa sub-repo) ----------
+# Stop hook + seed dựng wiki-graph theo code_root này. Downstream đa repo (payroll-backend-prd,
+# payroll-frontend-prd, …) mà mặc định '.' vẫn quét được vì rglob đi vào subdir; nhưng khai TƯỜNG MINH
+# giúp: (a) recipe/doc thấy rõ vùng quét, (b) thu hẹp/relocate khi cần. Autodetect = các subdir NGAY dưới
+# root có .git lồng (sub-repo clone). Không đè file người đã viết. Fail-open (tách khỏi set -e).
+OVS_YAML="$ROOT/.overstack.yaml"
+if [ ! -f "$OVS_YAML" ]; then
+  ROOTS=$(cd "$ROOT" && for d in */; do [ -e "$d/.git" ] && printf '%s, ' "${d%/}"; done)
+  ROOTS="${ROOTS%, }"; [ -z "$ROOTS" ] && ROOTS="."
+  {
+    printf '# Scope wiki-graph (đọc bởi Stop hook + seed). Xem harness/recipe.md.\n'
+    printf 'wiki_dir: llmwiki/wiki\n'
+    printf '# code_root: MỘT hay NHIỀU vùng code (ngăn dấu phẩy) để quét full import-graph.\n'
+    printf 'code_root: %s\n' "$ROOTS"
+  } > "$OVS_YAML"
+  log ".overstack.yaml: cài mới (code_root: $ROOTS)"
+else
+  log ".overstack.yaml: đã tồn tại — không đè"
+fi
+
 # ---------- 4c. Seed-once wiki-graph.html: artifact vector TỒN TẠI ngay, khỏi chờ Stop có diff ----------
 # Diệt pain "cài xong không thấy vector": Stop hook chỉ regen khi git-status có diff ở wiki/ hay code →
 # project vừa cài ngồi im thì vector KHÔNG bao giờ xuất hiện. Seed 1 lần NẾU wiki đã có nội dung; project
@@ -360,7 +380,10 @@ WG_SEED=""
 if [ -n "$WG_SEED" ] && [ -d "$ROOT/llmwiki/wiki" ] \
    && [ -n "$(find "$ROOT/llmwiki/wiki" -name '*.md' ! -name index.md ! -name log.md -print -quit 2>/dev/null)" ]; then
   ALSO_SEED=""; [ -d "$ROOT/fdk/wiki" ] && ALSO_SEED="--also fdk/wiki"
-  if ( cd "$ROOT" && python3 "$WG_SEED" llmwiki/wiki $ALSO_SEED --code-root . >/dev/null 2>&1 ); then
+  # code_root cho seed = đọc từ .overstack.yaml (khớp Stop hook); thiếu → '.'
+  SEED_ROOTS=$(sed -n 's/^code_root:[[:space:]]*//p' "$OVS_YAML" 2>/dev/null | head -1 | tr ',' ' ')
+  [ -z "$SEED_ROOTS" ] && SEED_ROOTS="."
+  if ( cd "$ROOT" && python3 "$WG_SEED" llmwiki/wiki $ALSO_SEED --code-root $SEED_ROOTS >/dev/null 2>&1 ); then
     log "wiki-graph.html: seed-once OK (vector vẽ ngay, khỏi chờ Stop có diff)"
   else
     warn "wiki-graph.html: seed-once lỗi — bỏ qua (không chặn install; Stop sẽ vẽ khi wiki/code đổi)"
