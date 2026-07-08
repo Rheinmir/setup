@@ -112,8 +112,10 @@ cp llmwiki/.claude/hooks/*.py "$FXHOME/hooks/" 2>/dev/null
 { [ ! -d "$FXREPO/fdk" ] && [ ! -d "$FXREPO/harness" ]; } \
   && ok "repo user sạch (0 fdk/ 0 harness/ — engine chỉ ở global)" \
   || bad "fixture bẩn" "repo user còn engine in-repo, test không chứng minh được global-path"
-# gọi regen_docs như hook Stop thật (chạy từ bản hooks GLOBAL, opt-in downstream)
-OVERSTACK_WIKIGRAPH=1 OVERSTACK_HARNESS_HOME="$FXHOME" python3 - "$FXREPO" "$FXHOME" <<'PY'
+# gọi regen_docs như hook Stop thật (chạy từ bản hooks GLOBAL). GH#70: KHÔNG set OVERSTACK_WIKIGRAPH —
+# chứng minh điều kiện downstream THẬT (chỉ có llmwiki/.harness-stamp, không env, không is_framework)
+# đã đủ bật auto-draw. Set env ở đây từng che lấp bug: test xanh nhờ tín hiệu mà production không có.
+OVERSTACK_HARNESS_HOME="$FXHOME" python3 - "$FXREPO" "$FXHOME" <<'PY'
 import sys, os
 fxrepo, fxhome = sys.argv[1], sys.argv[2]
 sys.path.insert(0, os.path.join(fxhome, "hooks"))   # hook chạy từ bản GLOBAL, không phải repo
@@ -131,9 +133,22 @@ if [ -f "$G" ]; then
     && bad "scope sai" "kéo tests/ dù .overstack.yaml code_root=pkg" \
     || ok "tôn trọng scope .overstack.yaml (bỏ tests/ ngoài code_root)"
 fi
+# STAMP negative-control (GH#70): repo KHÔNG có .harness-stamp + KHÔNG env → KHÔNG vẽ (giữ opt-in Taleb:
+# chỉ repo đã cố ý bootstrap mới auto-draw, không phải repo bất kỳ). Xóa stamp, giữ engine global.
+rm -f "$G"; mv "$FXREPO/llmwiki/.harness-stamp" "$FXREPO/llmwiki/.harness-stamp.off"
+OVERSTACK_HARNESS_HOME="$FXHOME" python3 - "$FXREPO" "$FXHOME" <<'PY'
+import sys, os
+fxrepo, fxhome = sys.argv[1], sys.argv[2]
+sys.path.insert(0, os.path.join(fxhome, "hooks"))
+import stop
+stop.regen_docs(fxrepo)
+PY
+[ -f "$G" ] && bad "STAMP-control fail" "repo không stamp mà vẫn vẽ — opt-in downstream bị bỏ qua" \
+            || ok "STAMP-control: không .harness-stamp + không env → không vẽ (opt-in giữ nguyên)"
+mv "$FXREPO/llmwiki/.harness-stamp.off" "$FXREPO/llmwiki/.harness-stamp"
 # NEGATIVE-control: xóa engine global → graph KHÔNG sinh (chứng minh graph ở trên đến từ global thật)
 rm -f "$G" "$FXHOME/fdk/tools/build-wiki-graph.py"
-OVERSTACK_WIKIGRAPH=1 OVERSTACK_HARNESS_HOME="$FXHOME" python3 - "$FXREPO" "$FXHOME" <<'PY'
+OVERSTACK_HARNESS_HOME="$FXHOME" python3 - "$FXREPO" "$FXHOME" <<'PY'
 import sys, os, importlib
 fxrepo, fxhome = sys.argv[1], sys.argv[2]
 sys.path.insert(0, os.path.join(fxhome, "hooks"))

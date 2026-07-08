@@ -102,7 +102,8 @@
   📄 File (worktree issue-16): <code>/Users/giatran/orca/workspaces/setup/issue-16-ci-tech-debt/llmwiki/html/fdk-problem-tree.html</code><br>
   📄 File (worktree issue-4): <code>/Users/giatran/orca/workspaces/setup/issue-4-logger-c/llmwiki/html/fdk-problem-tree.html</code><br>
   📄 File (worktree issue-9): <code>/Users/giatran/orca/workspaces/setup/issue-9-episodic-vector/llmwiki/html/fdk-problem-tree.html</code><br>
-  📄 File (worktree issue-8): <code>/Users/giatran/orca/workspaces/setup/issue-8-feature-gap-th-ng/llmwiki/html/fdk-problem-tree.html</code></footer>
+  📄 File (worktree issue-8): <code>/Users/giatran/orca/workspaces/setup/issue-8-feature-gap-th-ng/llmwiki/html/fdk-problem-tree.html</code><br>
+  📄 File (worktree issue-70): <code>/Users/giatran/orca/workspaces/setup/issue-70-bonbon-ai-wiki/llmwiki/html/fdk-problem-tree.html</code></footer>
 </div>
 
 <script type="application/json" id="tree-data">[
@@ -199,6 +200,20 @@
   "date": "02/07/26",
   "solvedBy": "tool fdk/tools/sync-skill.sh — 1 lệnh đồng bộ cả 3 bản + tự kiểm tra giống nhau (verify parity); skill fdk đã ghi luật 'đừng cp tay'. Chưa có: hook tự chạy khi SKILL.md đổi (trụ harness).",
   "session": "session 020726"
+ },
+ {
+  "id": "p-07",
+  "parent": "p-01",
+  "title": "wiki-graph tự-lệch downstream: split-brain enablement (GH#70)",
+  "desc": "Downstream (bonbon-ai) đổi code/wiki mà đồ thị KHÔNG tự cập nhật. Gốc: cờ bật auto-draw OVERSTACK_WIKIGRAPH=1 chỉ set ở section 4b per-repo của install-harness.sh, nhưng đường cài thật bootstrap→install.sh --full→install-harness.sh --global exit TRƯỚC 4b → không repo downstream nào có cờ → stop.py wikigraph_on=False → im lặng tắt. Migration v4 dời engine sang global nhưng tín hiệu bật không dời theo (anti-pattern AP-5). Test cũ tự set OVERSTACK_WIKIGRAPH=1 nên xanh giả, che bug (AP-6).",
+  "status": "partial",
+  "scope": [
+   "harness",
+   "llmwiki"
+  ],
+  "date": "08/07/26",
+  "session": "session 080726 — issue-70-bonbon-ai-wiki",
+  "solvedBy": "stop.py: khoá enablement vào llmwiki/.harness-stamp (cùng tín hiệu đã gate hook global) thay env-var song song — vòng tự-nhất-quán. Test reachability bỏ OVERSTACK_WIKIGRAPH=1 mồi + thêm STAMP-control (18/18 pass, không cần env). Distill AP-5/AP-6 vào framework-dev-antipatterns.md. CÒN THIẾU (chưa full): (1) bonbon-ai phải harness-update để nhận stop.py global mới — chưa giao tới user (AP-1); (2) tiêu chí 3 của #70 (code-graph MCP no such table) là bug MCP-server riêng, chưa đụng."
  },
  {
   "id": "p-auto-02",

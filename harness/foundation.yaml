@@ -51,7 +51,6 @@ foundation:
       evidence-link:
         - "[[ADR-001]]"
         - "fdk/wiki/sources/adr/ADR-001-policy-as-source-of-truth.md"
-        - "llmwiki/html/council/council-report-026-seed42.html"
 
     - tech: "Python (chỉ stdlib)"
       role: >-

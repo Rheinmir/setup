@@ -2,3 +2,4 @@
 {"ts": "2026-07-04T02:06:39", "session": "e02a8367", "action": "modify", "target": "concepts/frontier-gap-scan.md", "tool": "Edit"}
 {"ts": "2026-07-05T22:12:53", "session": "62b41f4c", "action": "add", "target": "concepts/framework-dev-antipatterns.md", "tool": "Write"}
 {"ts": "2026-07-06T09:37:32", "session": "62b41f4c", "action": "add", "target": "sources/adr/ADR-017-global-shared-engine-repo-data-travel.md", "tool": "Write"}
+{"ts": "2026-07-08T17:04:55", "session": "ab0659cb", "action": "modify", "target": "concepts/framework-dev-antipatterns.md", "tool": "Edit"}

@@ -55,8 +55,15 @@ def regen_docs(root: str) -> None:
     # Downstream KHÔNG copy engine vào repo — dùng bản global (cài 1 lần). resolve_tool trả None nếu
     # thiếu cả hai → wikigraph_on False → bỏ (fail-open).
     wg = resolve_tool(root, "fdk/tools/build-wiki-graph.py")
-    # (B) chạy khi CÓ engine (local/global) và (repo framework HOẶC downstream bật opt-in).
-    wikigraph_on = bool(wg) and (is_framework or os.environ.get("OVERSTACK_WIKIGRAPH") == "1")
+    # (B) chạy khi CÓ engine (local/global) và (repo framework HOẶC downstream đã bootstrap overstack).
+    # OPT-IN downstream = sự tồn tại của llmwiki/.harness-stamp — CÙNG tín hiệu đã gate hook global fire
+    # (install-harness.sh: `if [ -f .../llmwiki/.harness-stamp ]`). Trước đây opt-in dựa env
+    # OVERSTACK_WIKIGRAPH=1, nhưng env đó CHỈ được set ở section 4b per-repo của install-harness.sh —
+    # nhánh `--global` (đường bootstrap thật) exit TRƯỚC 4b nên không repo downstream nào có → graph
+    # không bao giờ regen (GH#70). Khoá enablement vào chính stamp (đã gate hook) làm vòng tự-nhất-quán:
+    # tín hiệu bật hook = tín hiệu bật wiki-graph. Giữ env cũ làm override tương thích ngược.
+    has_stamp = os.path.isfile(os.path.join(root, "llmwiki", ".harness-stamp"))
+    wikigraph_on = bool(wg) and (is_framework or has_stamp or os.environ.get("OVERSTACK_WIKIGRAPH") == "1")
     if not is_framework and not wikigraph_on:
         return  # không phải framework và cũng không bật wiki-graph downstream → bỏ hẳn (rẻ)
     try:

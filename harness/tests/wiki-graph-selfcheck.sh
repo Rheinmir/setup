@@ -28,13 +28,14 @@ if   [ -f fdk/tools/build-wiki-graph.py ];      then WG="fdk/tools/build-wiki-gr
 elif [ -f "$GH/fdk/tools/build-wiki-graph.py" ]; then WG="$GH/fdk/tools/build-wiki-graph.py"; g "global: $WG"
 else r "KHÔNG thấy engine ở repo-local lẫn global"; setv "A"; fi
 
-h "[B] cờ opt-in OVERSTACK_WIKIGRAPH=1?"
+h "[B] opt-in downstream: is_framework HOẶC .harness-stamp HOẶC env OVERSTACK_WIKIGRAPH=1?"
+# GH#70: enablement khoá vào .harness-stamp (cùng tín hiệu gate hook global), không còn env-only.
 IS_FW=0; [ -f fdk/tools/build-overstack-docs.py ] && IS_FW=1 && g "repo FRAMEWORK → auto-on, không cần cờ"
 FLAG="$(grep -h "OVERSTACK_WIKIGRAPH" .claude/settings.json "$HOME/.claude/settings.json" 2>/dev/null | grep -o '"[01]"' | head -1)"
 if [ "$IS_FW" = 1 ]; then :
-elif echo "$FLAG" | grep -q '"1"'; then g "settings.json env OVERSTACK_WIKIGRAPH=1"
-elif [ -n "$FLAG" ]; then r "cờ = $FLAG (KHÁC 1) → downstream return sớm, không vẽ"; setv "B"
-else r "chưa set ở đâu → downstream return sớm, không vẽ"; setv "B"; fi
+elif [ -f llmwiki/.harness-stamp ]; then g "llmwiki/.harness-stamp có → downstream auto-on (v4)"
+elif echo "$FLAG" | grep -q '"1"'; then g "settings.json env OVERSTACK_WIKIGRAPH=1 (override)"
+else r "không .harness-stamp, không env=1 → downstream return sớm, không vẽ (chạy install-harness ghi stamp)"; setv "B"; fi
 
 h "[C] Stop hook wired?"
 grep -q "stop.py" .claude/settings.json 2>/dev/null && g "Stop → stop.py có trong .claude/settings.json" \
@@ -64,9 +65,9 @@ h "════ VERDICT ════"
 case "${verdict:-OK}" in
   A) echo "  ✗ ENGINE CHƯA CÀI. Sửa:"
      echo "     bash <repo-framework>/harness/scripts/install-harness.sh --global" ;;
-  B) echo "  ✗ THIẾU CỜ OPT-IN — engine chạy được nhưng hook return sớm ở downstream. Sửa:"
-     echo "     thêm vào .claude/settings.json:   \"env\": { \"OVERSTACK_WIKIGRAPH\": \"1\" }"
-     echo "     (hoặc chạy lại install-harness.sh bản mới — tự ghi cờ này)" ;;
+  B) echo "  ✗ THIẾU OPT-IN — engine chạy được nhưng hook return sớm ở downstream. Sửa:"
+     echo "     chạy install.sh --with-wiki (bootstrap.sh) — ghi llmwiki/.harness-stamp → auto-on (v4/GH#70)"
+     echo "     (override tạm: \"env\": { \"OVERSTACK_WIKIGRAPH\": \"1\" } trong .claude/settings.json)" ;;
   C) echo "  ✗ STOP HOOK CHƯA WIRE — chạy install-harness.sh vào repo." ;;
   D) echo "  ✗ THIẾU .harness-stamp — chạy install-harness.sh (ghi stamp)." ;;
   F) echo "  ✗ LỖI ENGINE THẬT (không phải trigger). Dán output [F] + \`cat .overstack.yaml\` để soi scope." ;;
