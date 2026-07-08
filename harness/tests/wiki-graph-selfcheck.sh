@@ -52,7 +52,7 @@ h "[F] ÉP chạy generator (tách lỗi-engine vs lỗi-trigger)"
 NODES=0
 if [ -n "$WG" ]; then
   also=(); [ -d fdk/wiki ] && also=(--also fdk/wiki)
-  OUT="$(python3 "$WG" llmwiki/wiki "${also[@]}" --code-root . 2>&1 | tail -3)"; echo "$OUT"
+  OUT="$(python3 "$WG" llmwiki/wiki ${also[@]+"${also[@]}"} --code-root . 2>&1 | tail -3)"; echo "$OUT"
   echo "$OUT" | grep -q "✓" && g "generator OK" || { r "generator LỖI (xem trên) — lỗi engine THẬT, không phải trigger"; setv "F"; }
   NODES="$(grep -c "nodes" llmwiki/html/wiki-graph.html 2>/dev/null || echo 0)"
   [ "$NODES" -gt 0 ] && g "HTML có data blob → vẽ được" || r "HTML thiếu data blob"
