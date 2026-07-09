@@ -25,9 +25,9 @@
   verdict: SUCCESS
   commit: 3d00968753396d687300b4adeff92c03ab0395f7
 - frame: br/frames/frame-p07-parser-ky-hieu.md
-  status: failed
-  verdict: ERROR
-  commit: null
+  status: done
+  verdict: SUCCESS
+  commit: 0beed79201f644a2743025f79c3f68278c493e86
 - frame: br/frames/frame-p08-tach-thu-viec.md
   status: failed
   verdict: ERROR
