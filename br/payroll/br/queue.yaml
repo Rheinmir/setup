@@ -37,9 +37,9 @@
   verdict: SUCCESS
   commit: ebbe0bd2a282b829035f0b6c412809abafdfd6c7
 - frame: br/frames/frame-p10-tach-dieu-dong.md
-  status: failed
-  verdict: ERROR
-  commit: null
+  status: done
+  verdict: SUCCESS
+  commit: 4b0991817d5138a965e90db86510ed570c0ae1e7
 - frame: br/frames/frame-p11-bhxh-hai-truc.md
   status: failed
   verdict: ERROR
