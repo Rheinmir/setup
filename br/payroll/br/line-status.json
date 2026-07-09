@@ -583,7 +583,7 @@
     {
       "frame_id": "frame-p22-khoa-ky",
       "file": "frame-p22-khoa-ky.md",
-      "status": "pending",
+      "status": "green-pending-review",
       "clause_ids": [
         "C4.3"
       ],
@@ -591,7 +591,19 @@
         "app/p22_khoaky.py"
       ],
       "muc_tieu": "Khóa kỳ manual lock (tier: compensable): HR khóa → ngừng sync API tháng đó, chặn mọi biến động; đơn muộn/sửa công sau chốt không cập nhật và KHÔNG truy thu tháng sau",
-      "run": null,
+      "run": {
+        "verdict": "SUCCESS",
+        "iterations_run": 2,
+        "reason": "verify passed on iteration 2 (+2 confirm)",
+        "scope_reverted": true,
+        "protect_violation": false,
+        "changed_files": [
+          "app/p22_khoaky.py"
+        ],
+        "commit": "f58b9168c0c6475d54743cd5b1f02420876e6a7b",
+        "scope_clean": true,
+        "out_of_scope_files": []
+      },
       "assumed_clauses": []
     },
     {
@@ -758,8 +770,8 @@
   "counts": {
     "killed": 0,
     "stalled": 0,
-    "pending": 1,
-    "green-pending-review": 27,
+    "pending": 0,
+    "green-pending-review": 28,
     "merged": 0
   },
   "total_frames": 28,
