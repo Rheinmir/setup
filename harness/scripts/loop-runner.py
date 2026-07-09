@@ -165,6 +165,37 @@ def _hash_paths(globs, cwd):
     return out
 
 
+def _git_root_prefix(cwd):
+    """cwd's path relative to the repo top-level, posix, no trailing slash ('' if cwd IS
+    the repo root). git always reports changed-file paths relative to the repo TOP-LEVEL,
+    even when invoked from a subdirectory — so when --root is a subdir nested inside a
+    bigger repo (e.g. br/payroll inside issue-15-br-k), every git-reported path must be
+    re-based to cwd before comparing against scope_globs, or ALL files (even in-scope
+    ones) look "out of scope" and never get committed (bug found running the payroll
+    pipeline, GH#15)."""
+    proc = subprocess.run("git rev-parse --show-toplevel", shell=True, cwd=str(cwd),
+                          capture_output=True, text=True)
+    if proc.returncode != 0:
+        return ""
+    top = Path(proc.stdout.strip())
+    try:
+        rel = Path(cwd).resolve().relative_to(top.resolve()).as_posix()
+    except ValueError:
+        return ""
+    return "" if rel == "." else rel
+
+
+def _rebase_to_cwd(paths, cwd):
+    """Strip cwd's repo-root prefix from each git-reported path. Paths outside cwd
+    (e.g. a dirty file elsewhere in the repo) are left as-is — they SHOULD show as
+    out-of-scope, that part of the bug report is correct behavior."""
+    prefix = _git_root_prefix(cwd)
+    if not prefix:
+        return paths
+    p = prefix + "/"
+    return [f[len(p):] if f.startswith(p) else f for f in paths]
+
+
 def git_changed_files(cwd):
     """Default diff source: tracked-modified + untracked files, as rel posix paths.
     Fail-safe: if git is unavailable, return [] (guard becomes a no-op rather than
@@ -181,7 +212,7 @@ def git_changed_files(cwd):
         if " -> " in path:  # rename
             path = path.split(" -> ", 1)[1]
         files.append(path.strip('"'))
-    return files
+    return _rebase_to_cwd(files, cwd)
 
 
 def git_changed_vs(baseline, cwd):
@@ -193,7 +224,8 @@ def git_changed_vs(baseline, cwd):
         proc = subprocess.run(f"git diff --name-only {baseline}", shell=True, cwd=str(cwd),
                               capture_output=True, text=True)
         if proc.returncode == 0:
-            files |= {ln.strip() for ln in proc.stdout.splitlines() if ln.strip()}
+            files |= set(_rebase_to_cwd(
+                [ln.strip() for ln in proc.stdout.splitlines() if ln.strip()], cwd))
     return sorted(files)
 
 
