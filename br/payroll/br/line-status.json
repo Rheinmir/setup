@@ -1,0 +1,525 @@
+{
+  "schema_version": 0,
+  "frames": [
+    {
+      "frame_id": "frame-p01-lich-ky-cong",
+      "file": "frame-p01-lich-ky-cong.md",
+      "status": "pending",
+      "clause_ids": [
+        "C4.1"
+      ],
+      "scope_code": [
+        "app/p01_lichky.py"
+      ],
+      "muc_tieu": "Sinh lịch kỳ công 21–20 và kỳ BHXH 01–cuối tháng chạy song song, tính ngày công chuẩn VP (trừ CN + chiều T7) và CT (trừ CN) cho từng kỳ",
+      "run": null,
+      "assumed_clauses": []
+    },
+    {
+      "frame_id": "frame-p02-master-data-store",
+      "file": "frame-p02-master-data-store.md",
+      "status": "pending",
+      "clause_ids": [
+        "C7"
+      ],
+      "scope_code": [
+        "app/p02_masterdata.py"
+      ],
+      "muc_tieu": "Nạp và tra cứu 3 danh mục nền từ CSV: DM Bộ phận (→tỉnh/khối/vùng có ngày hiệu lực), DM Nơi cư trú, DM Khoảng cách (cặp nơi tuyển–tỉnh → dải)",
+      "run": null,
+      "assumed_clauses": []
+    },
+    {
+      "frame_id": "frame-p03-bang-dinh-muc",
+      "file": "frame-p03-bang-dinh-muc.md",
+      "status": "pending",
+      "clause_ids": [
+        "C5.3.2",
+        "C5.3.4",
+        "C5.3.5",
+        "C5.3.6"
+      ],
+      "scope_code": [
+        "app/p03_dinhmuc.py"
+      ],
+      "muc_tieu": "Kho định mức 4 bảng: điện thoại (ngạch×VP/CT), đi lại (dải×4 nhóm đối tượng), CT+công tác xa (khối×dải×2 đối tượng), CT xa theo dự án×chức danh",
+      "run": null,
+      "assumed_clauses": []
+    },
+    {
+      "frame_id": "frame-p04-to-trinh-override",
+      "file": "frame-p04-to-trinh-override.md",
+      "status": "pending",
+      "clause_ids": [
+        "C5.2",
+        "C5.3.3",
+        "C5.3.7"
+      ],
+      "scope_code": [
+        "app/p04_totrinh.py"
+      ],
+      "muc_tieu": "Danh sách Tờ trình duyệt riêng ghi đè định mức chung theo MSNV/nhóm/dự án kể từ ngày hiệu lực; GĐDA bị loại khỏi PC công trường/đi lại chung",
+      "run": null,
+      "assumed_clauses": []
+    },
+    {
+      "frame_id": "frame-p05-quy-dinh-nghi",
+      "file": "frame-p05-quy-dinh-nghi.md",
+      "status": "pending",
+      "clause_ids": [
+        "C7"
+      ],
+      "scope_code": [
+        "app/p05_nghiphep.py"
+      ],
+      "muc_tieu": "Quy định ngày nghỉ: phép năm 12 ngày +1/5 năm thâm niên, tháng đạt ≥50% công chuẩn mới tính phép, phép tồn dùng đến 31/12 năm kế, ốm Cty 3 ngày/năm",
+      "run": null,
+      "assumed_clauses": []
+    },
+    {
+      "frame_id": "frame-p06-workday-adapter",
+      "file": "frame-p06-workday-adapter.md",
+      "status": "pending",
+      "clause_ids": [
+        "C4.2"
+      ],
+      "scope_code": [
+        "app/p06_workday.py"
+      ],
+      "muc_tieu": "Adapter Workday mock (ranh giới BNAL verified:false): đọc bảng công thô ngày×NV + hồ sơ + EmployeeType + ngày kết thúc thử việc từ CSV thay cho API thật",
+      "run": null,
+      "assumed_clauses": []
+    },
+    {
+      "frame_id": "frame-p07-parser-ky-hieu",
+      "file": "frame-p07-parser-ky-hieu.md",
+      "status": "pending",
+      "clause_ids": [
+        "C4.2"
+      ],
+      "scope_code": [
+        "app/p07_kyhieu.py"
+      ],
+      "muc_tieu": "Parser ký hiệu công: phân loại 15+ ký hiệu (x, x1, OL, P/F, R/Fo, L, NB, Ts/TS, TSN, ON/OD, TN, Ro, TC100/200/300, ?P) thành thuộc tính máy hiểu",
+      "run": null,
+      "assumed_clauses": []
+    },
+    {
+      "frame_id": "frame-p08-tach-thu-viec",
+      "file": "frame-p08-tach-thu-viec.md",
+      "status": "pending",
+      "clause_ids": [
+        "C5.1.1"
+      ],
+      "scope_code": [
+        "app/p08_thuviec.py"
+      ],
+      "muc_tieu": "Đếm tách ngày công giai đoạn thử việc / sau thử việc theo 'Ngày kết thúc thử việc', gồm cả ngày nghỉ hưởng lương của từng giai đoạn — nền tính lương 85%/100%",
+      "run": null,
+      "assumed_clauses": []
+    },
+    {
+      "frame_id": "frame-p09-tach-bo-nhiem",
+      "file": "frame-p09-tach-bo-nhiem.md",
+      "status": "pending",
+      "clause_ids": [
+        "C5.1.2"
+      ],
+      "scope_code": [
+        "app/p09_bonhiem.py"
+      ],
+      "muc_tieu": "Tách 2 giai đoạn trước/sau bổ nhiệm khi có thay đổi lương hoặc PC trách nhiệm giữa kỳ; PC trách nhiệm = ngày hưởng × (định mức / công chuẩn) theo từng giai đoạn",
+      "run": null,
+      "assumed_clauses": []
+    },
+    {
+      "frame_id": "frame-p10-tach-dieu-dong",
+      "file": "frame-p10-tach-dieu-dong.md",
+      "status": "pending",
+      "clause_ids": [
+        "C5.1.3"
+      ],
+      "scope_code": [
+        "app/p10_dieudong.py"
+      ],
+      "muc_tieu": "Đếm ngày công tại TỪNG bộ phận khi điều động giữa kỳ, tách theo loại ngày (làm việc/lễ/phép/nghỉ hưởng lương/không lương) tại mỗi nơi, kèm ngày điều động",
+      "run": null,
+      "assumed_clauses": []
+    },
+    {
+      "frame_id": "frame-p11-bhxh-hai-truc",
+      "file": "frame-p11-bhxh-hai-truc.md",
+      "status": "pending",
+      "clause_ids": [
+        "C5.1.4"
+      ],
+      "scope_code": [
+        "app/p11_bhxh.py"
+      ],
+      "muc_tieu": "Quy đổi kỳ công 21–20 sang tháng dương lịch để đếm ngày tính/không tính đóng BHXH, xác định diện đóng, và tính các khoản trích NV 8/1.5/1 + Cty 17/0.5/3/1 + 2% KPCĐ",
+      "run": null,
+      "assumed_clauses": []
+    },
+    {
+      "frame_id": "frame-p12-suat-an",
+      "file": "frame-p12-suat-an.md",
+      "status": "pending",
+      "clause_ids": [
+        "C5.1.5",
+        "C5.3.1",
+        "C5.4"
+      ],
+      "scope_code": [
+        "app/p12_suatan.py"
+      ],
+      "muc_tieu": "Tổng hợp suất ăn theo từng bộ phận: quy tắc bữa (VP 1 · CT<30km 2 · CT≥30km 3 · ≤4h 0), cộng cơm TC đêm + CN/lễ thư ký chấm + cơm bổ sung tháng trước — phải tái lập đúng Ví dụ 1 = 65 suất",
+      "run": null,
+      "assumed_clauses": []
+    },
+    {
+      "frame_id": "frame-p13-prorata-engine",
+      "file": "frame-p13-prorata-engine.md",
+      "status": "pending",
+      "clause_ids": [
+        "C5.2",
+        "C5.4"
+      ],
+      "scope_code": [
+        "app/p13_prorata.py"
+      ],
+      "muc_tieu": "Engine pro-rata dùng chung: (định mức/công chuẩn)×ngày hưởng; tự kích hoạt quy tắc <14 ngày (ngày hưởng = LV thực tế + lễ) và chia theo bộ phận với định mức từng nơi — tái lập đúng Ví dụ 2 PRD",
+      "run": null,
+      "assumed_clauses": []
+    },
+    {
+      "frame_id": "frame-p14-pc-com",
+      "file": "frame-p14-pc-com.md",
+      "status": "pending",
+      "clause_ids": [
+        "C5.3.1"
+      ],
+      "scope_code": [
+        "app/p14_pccom.py"
+      ],
+      "muc_tieu": "PC cơm = tổng suất ăn × đơn giá 45.000 (cấu hình); tách Non-tax ≤730.000 đ/tháng, phần vượt vào Taxable",
+      "run": null,
+      "assumed_clauses": []
+    },
+    {
+      "frame_id": "frame-p15-pc-dien-thoai",
+      "file": "frame-p15-pc-dien-thoai.md",
+      "status": "pending",
+      "clause_ids": [
+        "C5.3.2"
+      ],
+      "scope_code": [
+        "app/p15_pcdienthoai.py"
+      ],
+      "muc_tieu": "PC điện thoại: tra bảng ngạch × VP/CT (kể cả thử việc VP=0, CT=300k), áp engine pro-rata + <14 ngày + chia bộ phận theo định mức từng nơi",
+      "run": null,
+      "assumed_clauses": []
+    },
+    {
+      "frame_id": "frame-p16-pc-xang",
+      "file": "frame-p16-pc-xang.md",
+      "status": "pending",
+      "clause_ids": [
+        "C5.3.3"
+      ],
+      "scope_code": [
+        "app/p16_pcxang.py"
+      ],
+      "muc_tieu": "PC nhiên liệu/xăng/ô tô: CT chuẩn 1.000.000 cho L2–L6; VP không mức chung — chỉ qua tờ trình (kể cả 02 tài xế HN đích danh, GĐDA, Ban TGĐ); pro-rata + <14 ngày",
+      "run": null,
+      "assumed_clauses": []
+    },
+    {
+      "frame_id": "frame-p17-pc-di-lai",
+      "file": "frame-p17-pc-di-lai.md",
+      "status": "pending",
+      "clause_ids": [
+        "C5.3.4"
+      ],
+      "scope_code": [
+        "app/p17_pcdilai.py"
+      ],
+      "muc_tieu": "PC đi lại: xác định nhóm đối tượng (CHT/CHT ME · ĐH+ · CĐ/TC/Nghề · NV.02), tra nơi tuyển dụng × tỉnh bộ phận → dải khoảng cách → định mức; pro-rata + <14 ngày + chia bộ phận",
+      "run": null,
+      "assumed_clauses": []
+    },
+    {
+      "frame_id": "frame-p18-pc-ct-ctx",
+      "file": "frame-p18-pc-ct-ctx.md",
+      "status": "pending",
+      "clause_ids": [
+        "C5.3.5"
+      ],
+      "scope_code": [
+        "app/p18_pcctctx.py"
+      ],
+      "muc_tieu": "PC công trường + công tác xa: bảng khối (CT/VP) × dải khoảng cách × 2 đối tượng (ĐH+ / CĐ-TC-Nghề); pro-rata + <14 ngày + chia bộ phận",
+      "run": null,
+      "assumed_clauses": []
+    },
+    {
+      "frame_id": "frame-p19-pc-ctxa-duan-dacthu",
+      "file": "frame-p19-pc-ctxa-duan-dacthu.md",
+      "status": "pending",
+      "clause_ids": [
+        "C5.3.6",
+        "C5.3.7"
+      ],
+      "scope_code": [
+        "app/p19_pcctxa.py"
+      ],
+      "muc_tieu": "PC công trường xa/khó khăn theo dự án đặc thù × chức danh (Quan Lạn, Chingluh) + PC khó khăn Làng Tây – Hòn Thơm theo tờ trình dự án; cộng PC khác (7) từ danh sách duyệt riêng",
+      "run": null,
+      "assumed_clauses": []
+    },
+    {
+      "frame_id": "frame-p20-truy-thu-truy-linh",
+      "file": "frame-p20-truy-thu-truy-linh.md",
+      "status": "pending",
+      "clause_ids": [
+        "C4.3"
+      ],
+      "scope_code": [
+        "app/p20_truythu.py"
+      ],
+      "muc_tieu": "Truy thu/truy lĩnh trong kỳ CHƯA khóa: định mức đổi hồi tố (trình độ, nơi tuyển, chức danh, tờ trình mới) → chênh = (mới − cũ) × ngày công tương ứng, cột riêng (3) kèm lý do",
+      "run": null,
+      "assumed_clauses": []
+    },
+    {
+      "frame_id": "frame-p21-ot-engine",
+      "file": "frame-p21-ot-engine.md",
+      "status": "pending",
+      "clause_ids": [
+        "C5.5"
+      ],
+      "scope_code": [
+        "app/p21_ot.py"
+      ],
+      "muc_tieu": "OT engine: multiplier cấu hình tách Chính thức/Mắt Bão (CN 200%, lễ luật +100% & +2 nghỉ bù/ngày, danh sách 300%, truyền thống +1 nghỉ bù), tách OT thuế/không thuế",
+      "run": null,
+      "assumed_clauses": []
+    },
+    {
+      "frame_id": "frame-p22-khoa-ky",
+      "file": "frame-p22-khoa-ky.md",
+      "status": "pending",
+      "clause_ids": [
+        "C4.3"
+      ],
+      "scope_code": [
+        "app/p22_khoaky.py"
+      ],
+      "muc_tieu": "Khóa kỳ manual lock (tier: compensable): HR khóa → ngừng sync API tháng đó, chặn mọi biến động; đơn muộn/sửa công sau chốt không cập nhật và KHÔNG truy thu tháng sau",
+      "run": null,
+      "assumed_clauses": []
+    },
+    {
+      "frame_id": "frame-p23-mat-bao",
+      "file": "frame-p23-mat-bao.md",
+      "status": "pending",
+      "clause_ids": [
+        "C6.1"
+      ],
+      "scope_code": [
+        "app/p23_matbao.py"
+      ],
+      "muc_tieu": "Nhánh Mắt Bão: nhận diện EmployeeType từ adapter, áp lịch chốt công sớm (assumed ngày 15), lấy định mức từ grid riêng trên Payroll thay vì bảng chung",
+      "run": null,
+      "assumed_clauses": []
+    },
+    {
+      "frame_id": "frame-p24-phe-duyet-audit",
+      "file": "frame-p24-phe-duyet-audit.md",
+      "status": "pending",
+      "clause_ids": [
+        "C6.2"
+      ],
+      "scope_code": [
+        "app/p24_pheduyet.py"
+      ],
+      "muc_tieu": "Vòng phê duyệt: đơn ?P không cộng công; HR Override có lý do bắt buộc; sync-back trạng thái 'Đã duyệt' về Workday (mock); audit log bất biến cũ→mới+người+lúc+lý do",
+      "run": null,
+      "assumed_clauses": []
+    },
+    {
+      "frame_id": "frame-p25-template0-trinh-ky",
+      "file": "frame-p25-template0-trinh-ky.md",
+      "status": "pending",
+      "clause_ids": [
+        "C6.3"
+      ],
+      "scope_code": [
+        "app/p25_template0.py"
+      ],
+      "muc_tieu": "Template 0 trình ký: định dạng chung Chính thức + Mắt Bão; NV điều động gộp TOÀN BỘ công tháng vào bảng của dự án nơi làm việc ngày 20 để CHT tại đó ký",
+      "run": null,
+      "assumed_clauses": []
+    },
+    {
+      "frame_id": "frame-p26-template2-master",
+      "file": "frame-p26-template2-master.md",
+      "status": "pending",
+      "clause_ids": [
+        "C6.3"
+      ],
+      "scope_code": [
+        "app/p26_template2.py"
+      ],
+      "muc_tieu": "Template 2 Payroll Master: file phẳng đầy đủ cho kế toán — ngày công các loại, lương TV 85%/CT 100%/PC trách nhiệm, 8 cột phụ cấp tách Taxable/Non-tax, OT, BHXH 2 phía, thuế TNCN, thực nhận, Profit/Cost Center-WBS",
+      "run": null,
+      "assumed_clauses": []
+    },
+    {
+      "frame_id": "frame-p27-bao-cao-hr-treo",
+      "file": "frame-p27-bao-cao-hr-treo.md",
+      "status": "pending",
+      "clause_ids": [
+        "C6.4",
+        "C6.5"
+      ],
+      "scope_code": [
+        "app/p27_baocao_hr.py"
+      ],
+      "muc_tieu": "Bộ báo cáo bảo mật HR C&B (ma trận công 21–20, bảng cơm P1/P2, tổng hợp PC (1)–(8) + cột (2)(3), danh sách duyệt riêng so kỳ) + báo cáo đơn treo lãnh đạo tại cut-off; MỌI lượt xuất ghi log",
+      "run": null,
+      "assumed_clauses": []
+    },
+    {
+      "frame_id": "frame-p28-ui-serve",
+      "file": "frame-p28-ui-serve.md",
+      "status": "pending",
+      "clause_ids": [
+        "C3",
+        "C8"
+      ],
+      "scope_code": [
+        "app/p28_ui.py",
+        "serve.py",
+        "app/__init__.py"
+      ],
+      "muc_tieu": "Web UI stdlib theo mockup.html: 10 màn hình (dashboard, bảng công, suất ăn, phụ cấp, OT, master data, tờ trình, khóa kỳ 2 bước, báo cáo, đơn treo), role-based ẩn TIỀN với thư ký/CHT, dark/light toggle",
+      "run": null,
+      "assumed_clauses": []
+    }
+  ],
+  "counts": {
+    "killed": 0,
+    "stalled": 0,
+    "pending": 28,
+    "green-pending-review": 0,
+    "merged": 0
+  },
+  "total_frames": 28,
+  "clauses": {
+    "C3": {
+      "provenance": "raw",
+      "assumed": false
+    },
+    "C4.1": {
+      "provenance": "raw",
+      "assumed": false
+    },
+    "C4.2": {
+      "provenance": "raw",
+      "assumed": false
+    },
+    "C4.3": {
+      "provenance": "raw",
+      "assumed": false
+    },
+    "C5.1.1": {
+      "provenance": "raw",
+      "assumed": false
+    },
+    "C5.1.2": {
+      "provenance": "raw",
+      "assumed": false
+    },
+    "C5.1.3": {
+      "provenance": "raw",
+      "assumed": false
+    },
+    "C5.1.4": {
+      "provenance": "raw+lens",
+      "assumed": true
+    },
+    "C5.1.5": {
+      "provenance": "raw",
+      "assumed": false
+    },
+    "C5.2": {
+      "provenance": "raw",
+      "assumed": false
+    },
+    "C5.3.1": {
+      "provenance": "raw+lens",
+      "assumed": true
+    },
+    "C5.3.2": {
+      "provenance": "raw",
+      "assumed": false
+    },
+    "C5.3.3": {
+      "provenance": "raw+lens",
+      "assumed": true
+    },
+    "C5.3.4": {
+      "provenance": "raw+lens",
+      "assumed": true
+    },
+    "C5.3.5": {
+      "provenance": "raw",
+      "assumed": false
+    },
+    "C5.3.6": {
+      "provenance": "raw+lens",
+      "assumed": true
+    },
+    "C5.3.7": {
+      "provenance": "raw",
+      "assumed": false
+    },
+    "C5.4": {
+      "provenance": "raw",
+      "assumed": false
+    },
+    "C5.5": {
+      "provenance": "raw+lens",
+      "assumed": true
+    },
+    "C6.1": {
+      "provenance": "raw+lens",
+      "assumed": true
+    },
+    "C6.2": {
+      "provenance": "raw+lens",
+      "assumed": true
+    },
+    "C6.3": {
+      "provenance": "raw",
+      "assumed": false
+    },
+    "C6.4": {
+      "provenance": "raw",
+      "assumed": false
+    },
+    "C6.5": {
+      "provenance": "raw",
+      "assumed": false
+    },
+    "C7": {
+      "provenance": "raw",
+      "assumed": false
+    },
+    "C8": {
+      "provenance": "raw",
+      "assumed": false
+    }
+  },
+  "assumed_clause_count": 0
+}

@@ -1,0 +1,2 @@
+{"seq": 1, "hash": "daabdb8cf2f3c4f79603bdc88550b30fe1a63b2e", "label": "frame(frame-p01-lich-ky-cong) SUCCESS", "tier": "reversible", "effect": "Sinh lịch kỳ công 21–20 và kỳ BHXH 01–cuối tháng chạy song song, tính ngày công chuẩn VP (trừ CN + chiều T7) và CT (trừ CN) cho từng kỳ"}
+{"seq": 2, "hash": "daabdb8cf2f3c4f79603bdc88550b30fe1a63b2e", "label": "frame(frame-p02-master-data-store) SUCCESS", "tier": "reversible", "effect": "Nạp và tra cứu 3 danh mục nền từ CSV: DM Bộ phận (→tỉnh/khối/vùng có ngày hiệu lực), DM Nơi cư trú, DM Khoảng cách (cặp nơi tuyển–tỉnh → dải)"}

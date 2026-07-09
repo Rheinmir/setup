@@ -1,0 +1,4 @@
+ngach_hoac_chuc_danh,com_bua_ngay,dien_thoai_d_thang,xang_d_thang,ghi_chu
+Admin CT,theo quy tắc bữa như chính thức,200000,0,ASSUMED toàn bộ grid — PRD 6.1 chỉ nói "Admin thiết lập grid trên Payroll" không cho số
+GS thuê ngoài,theo quy tắc bữa,300000,500000,ASSUMED
+Bảo vệ thuê ngoài,theo quy tắc bữa,100000,0,ASSUMED

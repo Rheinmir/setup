@@ -1,0 +1,25 @@
+msnv,ngay,ky_hieu,bo_phan_trong_ngay,so_gio,nguon
+NV001,2026-06-21,x,VP HCM,8,workday
+NV001,2026-06-22,x,VP HCM,8,workday
+NV001,2026-06-23,x,VP HCM,8,workday
+NV001,2026-06-24,x,VP HCM,8,workday
+NV001,2026-06-25,x,VP HCM,8,workday
+NV001,2026-06-26,x,VP HCM,8,workday
+NV001,2026-06-28,x,VP HCM,8,workday
+NV001,2026-06-29,x,VP HCM,8,workday
+NV001,2026-06-30,x,VP HCM,8,workday
+NV001,2026-07-01,x,VP HCM,8,workday
+NV001,2026-07-05,x,CT Quan Lạn,8,workday
+NV001,2026-07-06,x,CT Quan Lạn,8,workday
+NV001,2026-07-07,x,CT Quan Lạn,8,workday
+NV001,2026-07-08,x,CT Quan Lạn,8,workday
+NV004,2026-06-21,x,CT Long An,8,workday
+NV004,2026-06-22,x,CT Long An,8,workday
+NV004,2026-07-08,x,CT Long An,3.5,workday — ≤4h KHÔNG tính suất ăn
+NV009,2026-06-21,x,VP HCM,8,workday
+NV009,2026-06-24,P,VP HCM,0,workday
+NV009,2026-07-05,Ro,CT Long An,0,workday
+NV009,2026-07-07,R,CT Long An,0,workday
+NV010,2026-06-21,Ts,VP HCM,0,workday
+NV008,2026-06-28,TC200,CT Quan Lạn,8,thư ký import — đi làm CN
+NV012,2026-07-12,?P,CT Làng Tây – Hòn Thơm,8,đăng ký đi làm CN — CHỜ DUYỆT không cộng công

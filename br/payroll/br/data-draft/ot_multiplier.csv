@@ -1,0 +1,5 @@
+loai_ngay,chinh_thuc_pct,mat_bao_pct,nghi_bu_ngay,tach_thue,nguon
+chu_nhat,200,200,0,taxable_phan_vuot,PRD 5.5
+le_tet_luat,100_cong_them,100_cong_them,2,taxable_phan_vuot,PRD 5.5 — trả thêm 100% + 2 ngày nghỉ bù
+le_tet_ds_300,300,300,0,taxable_phan_vuot,PRD 5.5 — "một số trường hợp 300% theo danh sách" (danh sách ASSUMED rỗng chờ HR)
+truyen_thong_bo_sung,100,100,1,non_tax,ASSUMED cách tách thuế — PRD chỉ nói "tách OT chịu thuế/không"

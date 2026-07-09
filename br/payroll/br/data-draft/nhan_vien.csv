@@ -1,0 +1,13 @@
+msnv,ho_ten,ngach,trinh_do,chuc_danh,employee_type,bo_phan_hien_tai,noi_tuyen_dung,noi_cu_tru,ngay_vao,ngay_ket_thuc_thu_viec,luong_co_ban_thang(ASSUMED),ghi_chu
+NV001,Nguyễn Văn An,QL.02,Đại học,CHT,Official,CT Quan Lạn,TP.HCM,TP.HCM,2021-03-01,2021-05-01,30000000,điều động VP HCM→Quan Lạn 2026-07-05
+NV002,Trần Thị Bình,NV.01,Đại học,Kế toán,Official,VP HCM,TP.HCM,TP.HCM,2022-08-15,2022-10-15,15000000,
+NV003,Lê Hoàng Cường,CV.01,Cao đẳng,GS,Official,CT Bình Dương,TP.HCM,Bình Dương,2023-01-10,2023-03-10,17000000,bổ nhiệm GS chính 2026-07-01 — 2 mức PC trách nhiệm
+NV004,Phạm Minh Dũng,NV.01,Đại học,KS QS,Official,CT Long An,TP.HCM,Long An,2026-05-10,2026-07-10,14000000,thử việc kết thúc GIỮA KỲ → tách 85%/100%
+NV005,Võ Thị Em,NV.03,Trung cấp,Admin CT,MatBao,CT Quan Lạn,Quảng Ninh,Quảng Ninh,2025-11-01,,9000000,Mắt Bão — định mức grid riêng + chốt sớm
+NV006,Đỗ Quốc Phong,NV.02,Nghề,Tài xế,Official,VP Hà Nội,Hà Nội,Hà Nội,2020-06-01,2020-08-01,12000000,1 trong 02 tài xế HN — tờ trình đích danh TT-2026/031
+NV007,Bùi Thu Giang,QL.01,Đại học,GĐDA,Official,DA Metro HCM,TP.HCM,TP.HCM,2019-02-01,2019-04-01,60000000,GĐDA — không PC công trường/đi lại chung
+NV008,Hồ Văn Hải,NV.03,Nghề,Thủ kho,Official,CT Quan Lạn,Hải Phòng,Hải Phòng,2022-04-01,2022-06-01,11000000,dự án đặc thù Quan Lạn + tờ trình thủ kho
+NV009,Lý Thu Hà,NV.02,Cao đẳng,NV hành chính,Official,CT Long An,TP.HCM,TP.HCM,2023-06-01,2023-08-01,10000000,kỳ này 6 ngày LV thực tế <14 → quy tắc tỷ lệ
+NV010,Ngô Thị Kim,NV.01,Đại học,NV nhân sự,Official,VP HCM,TP.HCM,TP.HCM,2021-09-01,2021-11-01,16000000,thai sản cả kỳ — không tính đóng BHXH
+NV011,Vũ Đình Lâm,NV.02,Nghề,Tài xế,Official,VP Hà Nội,Hà Nội,Hà Nội,2021-01-15,2021-03-15,12000000,tài xế HN thứ 2 — TT-2026/031
+NV012,Trịnh Văn Long,CV.02,Đại học,GS ME,Official,CT Làng Tây – Hòn Thơm,TP.HCM,TP.HCM,2024-03-01,2024-05-01,18000000,gói 2B-6BL — PC khó khăn 2tr TT-2026/044
