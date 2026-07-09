@@ -1,41 +1,42 @@
-"""p16_pcxang — PC nhiên liệu/xăng/ô tô: CT chuẩn 1.000.000 cho L2–L6; VP không mức
-chung (chỉ qua tờ trình, kể cả tài xế HN đích danh, GĐDA, Ban TGĐ); pro-rata + <14 ngày (C5.3.3)."""
+"""p16_pcxang — PC nhiên liệu/xăng/ô tô: CT chuẩn 1.000.000 (mọi bộ phận khối CT);
+VP không mức chung (chỉ qua tờ trình — tài xế HN đích danh, GĐDA, Ban TGĐ); pro-rata
+theo bộ phận thật (C5.3.3). Tờ trình LUÔN ưu tiên và ghi đè mức chuẩn (p04)."""
+
+import csv
+import os
 
 from app.p04_totrinh import dinh_muc_cuoi
+from app.p10_dieudong import tach_dieu_dong
 from app.p13_prorata import tinh_prorata
 
 CONG_CHUAN = 26
 CT_CHUAN = 1_000_000
-HANG_CT_CHUAN = {"L2", "L3", "L4", "L5", "L6"}
 NGAY = "2026-07-09"
-
-_HO_SO = {
-    "NV_ct_l3_khong_tt": {"khoi": "CT", "hang": "L3", "lam_viec": 26, "le": 0},
-    "NV002": {"khoi": "VP", "hang": "L3", "lam_viec": 26, "le": 0},
-    "NV006": {"khoi": "VP", "hang": None, "lam_viec": 26, "le": 0},
-    "NV007": {"khoi": "VP", "hang": None, "lam_viec": 26, "le": 0},
-}
+_DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "br", "data-draft")
 
 
-def _dinh_muc_chung(khoi, hang):
-    if khoi == "CT" and hang in HANG_CT_CHUAN:
-        return CT_CHUAN
-    return 0
+def _khoi_theo_bo_phan():
+    with open(os.path.join(_DATA_DIR, "dm_bo_phan.csv"), newline="", encoding="utf-8") as f:
+        return {r["bo_phan"]: r["khoi"] for r in csv.DictReader(f)}
 
 
-def tinh_pc_xang(ma_nv):
-    hs = _HO_SO[ma_nv]
-    tien_tt, nguon = dinh_muc_cuoi("xang_xe", ma_nv, NGAY)
-
+def tinh_pc_xang(msnv, thang="2026-07"):
+    tien_tt, nguon = dinh_muc_cuoi("xang_xe", msnv, NGAY)
     if nguon != "QĐ chung":
-        dinh_muc_val = tien_tt
-    else:
-        dinh_muc_val = _dinh_muc_chung(hs["khoi"], hs["hang"])
+        # Tờ trình đích danh MSNV ghi đè hoàn toàn, không chia theo bộ phận.
+        bp_split = {k: v for k, v in tach_dieu_dong(msnv, thang).items() if k != "ngay_dieu_dong"}
+        tong_ngay = sum(d["lam_viec"] + d["le"] for d in bp_split.values()) or CONG_CHUAN
+        kq = tinh_prorata({msnv: {"lam_viec": tong_ngay}}, CONG_CHUAN, lambda t: tien_tt)
+        return {"tong": kq["tong"], "trace": {**kq["trace"], "nguồn": nguon}}
 
-    bo_phan_input = {ma_nv: {"lam_viec": hs["lam_viec"], "le": hs.get("le", 0)}}
-    kq = tinh_prorata(bo_phan_input, CONG_CHUAN, lambda ten, dm=dinh_muc_val: dm)
+    khoi_map = _khoi_theo_bo_phan()
+    bp_split = {k: v for k, v in tach_dieu_dong(msnv, thang).items() if k != "ngay_dieu_dong"}
+    theo_bo_phan = {}
+    tong = 0
+    for ten, d in bp_split.items():
+        dinh_muc_val = CT_CHUAN if khoi_map.get(ten) == "CT" else 0
+        kq = tinh_prorata({ten: d}, CONG_CHUAN, lambda t, dm=dinh_muc_val: dm)
+        theo_bo_phan[ten] = kq["tong"]
+        tong += kq["tong"]
 
-    trace = dict(kq["trace"])
-    trace["nguồn"] = nguon
-
-    return {"tong": kq["tong"], "trace": trace}
+    return {"tong": tong, "trace": {**theo_bo_phan, "nguồn": nguon}}
