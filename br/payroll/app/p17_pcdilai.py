@@ -1,64 +1,64 @@
-"""p17_pcdilai — PC đi lại: nhóm đối tượng (CHT/CHT ME · ĐH+ · CĐ/TC/Nghề · NV.02) x
-nơi tuyển dụng x tỉnh bộ phận -> dải khoảng cách -> định mức; pro-rata + <14 ngày + chia bộ phận (C5.3.4)."""
+"""p17_pcdilai — PC đi lại: nhóm đối tượng x nơi tuyển dụng x tỉnh bộ phận -> dải
+khoảng cách (dm_khoang_cach.csv) -> định mức (p03), pro-rata theo bộ phận thật
+(p10) + quy tắc <14 ngày (C5.3.4). GĐDA loại trừ qua tờ trình (p04)."""
 
-from app.p02_masterdata import dai_khoang_cach
+import csv
+import os
+
+from app.p03_dinhmuc import dinh_muc as tra_dinh_muc
 from app.p04_totrinh import dinh_muc_cuoi
+from app.p06_workday import ho_so
+from app.p10_dieudong import tach_dieu_dong
 from app.p13_prorata import tinh_prorata
 
 CONG_CHUAN = 26
 NGAY = "2026-07-09"
-
-DINH_MUC = {
-    "khac_mien": 1_000_000,
-    "khac_tinh": 500_000,
-    "cung_tinh": 0,
-}
-
-_HO_SO = {
-    "NV001": {
-        "nhom": "NV.01",
-        "noi_tuyen": "TP.HCM",
-        "doan": [
-            {"ten": "VP HCM", "tinh": "TP.HCM", "lam_viec": 10, "le": 0},
-            {"ten": "CT Quan Lạn", "tinh": "Quảng Ninh", "lam_viec": 6, "le": 0},
-        ],
-    },
-    "NV007": {
-        "nhom": "NV.02",
-        "noi_tuyen": "TP.HCM",
-        "doan": [{"ten": "CT", "tinh": "Quảng Ninh", "lam_viec": 26, "le": 0}],
-    },
-    "NV009": {
-        "nhom": "NV.02",
-        "noi_tuyen": "TP.HCM",
-        "doan": [{"ten": "CT", "tinh": "Quảng Ninh", "lam_viec": 12, "le": 0}],
-    },
-}
+_DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "br", "data-draft")
 
 
-def tinh_pc_di_lai(ma_nv):
-    hs = _HO_SO[ma_nv]
-    tien_tt, nguon = dinh_muc_cuoi("di_lai", ma_nv, NGAY)
+def _tinh_theo_bo_phan():
+    with open(os.path.join(_DATA_DIR, "dm_bo_phan.csv"), newline="", encoding="utf-8") as f:
+        return {r["bo_phan"]: r["tinh"] for r in csv.DictReader(f)}
 
+
+def _dai_theo_tinh(noi_tuyen_dung):
+    out = {}
+    with open(os.path.join(_DATA_DIR, "dm_khoang_cach.csv"), newline="", encoding="utf-8") as f:
+        for r in csv.DictReader(f):
+            if r["noi_tuyen_dung"] == noi_tuyen_dung:
+                out[r["tinh_bo_phan"]] = r["dai_khoang_cach"]
+    return out
+
+
+def tinh_pc_di_lai(msnv, thang="2026-07"):
+    tien_tt, nguon = dinh_muc_cuoi("di_lai", msnv, NGAY)
+    if "GĐDA" in nguon:
+        return {"tong": 0, "theo_bo_phan": {}, "trace": {"nguồn": nguon}}
     if nguon != "QĐ chung":
         return {"tong": tien_tt, "theo_bo_phan": {}, "trace": {"nguồn": nguon}}
+
+    hs = ho_so(msnv)
+    noi_tuyen = hs.get("noi_tuyen_dung", "TP.HCM")
+    tinh_map = _tinh_theo_bo_phan()
+    dai_map = _dai_theo_tinh(noi_tuyen)
+
+    bp_split = {k: v for k, v in tach_dieu_dong(msnv, thang).items() if k != "ngay_dieu_dong"}
+    tong_ngay_lv = sum(d["lam_viec"] for d in bp_split.values())
+    duoi_14 = tong_ngay_lv < 14
 
     theo_bo_phan = {}
     trace = {}
     tong = 0
-
-    for doan in hs["doan"]:
-        dai = dai_khoang_cach(hs["noi_tuyen"], doan["tinh"])
-        dinh_muc_val = DINH_MUC.get(dai, 0)
-        ngay_huong = doan["lam_viec"] + doan.get("le", 0)
-        if ngay_huong < 14:
-            dinh_muc_val = dinh_muc_val / 2
-
-        bo_phan_input = {doan["ten"]: {"lam_viec": doan["lam_viec"], "le": doan.get("le", 0)}}
-        kq = tinh_prorata(bo_phan_input, CONG_CHUAN, lambda ten, dm=dinh_muc_val: dm)
-        so_tien = kq["tong"]
-        tong += so_tien
-        theo_bo_phan[doan["ten"]] = so_tien
-        trace.update(kq["trace"])
+    for ten, d in bp_split.items():
+        tinh = tinh_map.get(ten)
+        dai = dai_map.get(tinh)
+        dinh_muc_val = tra_dinh_muc("di_lai", hs, {"dai": dai})
+        if duoi_14:
+            # quy tắc <14 ngày: chỉ tính ngày LV thực tế + lễ (không phép/nghỉ khác)
+            d = {"lam_viec": d["lam_viec"], "le": d.get("le", 0)}
+        kq = tinh_prorata({ten: d}, CONG_CHUAN, lambda t, dm=dinh_muc_val: dm)
+        theo_bo_phan[ten] = kq["tong"]
+        trace[ten] = kq["trace"][ten]
+        tong += kq["tong"]
 
     return {"tong": tong, "theo_bo_phan": theo_bo_phan, "trace": trace}
