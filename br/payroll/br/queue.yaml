@@ -101,9 +101,9 @@
   verdict: SUCCESS
   commit: 220ae827a8eb938708f6cf93e96424a190eecb39
 - frame: br/frames/frame-p26-template2-master.md
-  status: failed
-  verdict: ERROR
-  commit: null
+  status: done
+  verdict: SUCCESS
+  commit: 653b0c105021706e39b236af95c80b105ac53bb5
 - frame: br/frames/frame-p27-bao-cao-hr-treo.md
   status: failed
   verdict: ERROR
