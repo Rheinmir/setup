@@ -9,8 +9,8 @@
   verdict: SUCCESS
   commit: null
 - frame: br/frames/frame-p03-bang-dinh-muc.md
-  status: failed
-  verdict: ERROR
+  status: done
+  verdict: SUCCESS
   commit: null
 - frame: br/frames/frame-p04-to-trinh-override.md
   status: failed
