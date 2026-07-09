@@ -33,9 +33,9 @@
   verdict: TIMEOUT
   commit: null
 - frame: br/frames/frame-p09-tach-bo-nhiem.md
-  status: failed
-  verdict: ERROR
-  commit: null
+  status: done
+  verdict: SUCCESS
+  commit: ebbe0bd2a282b829035f0b6c412809abafdfd6c7
 - frame: br/frames/frame-p10-tach-dieu-dong.md
   status: failed
   verdict: ERROR
