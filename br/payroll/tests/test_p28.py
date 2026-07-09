@@ -37,8 +37,12 @@ class TestUIServe(unittest.TestCase):
     def test_vai_thu_ky_khong_thay_tien(self):
         status, body = self._get("/pc?role=thuky")
         self.assertEqual(status, 200)
+        # Chỉ kiểm vùng NỘI DUNG <main>, không phải cả trang — sidebar có menu
+        # "Công thức lương" chứa chữ "lương" hợp lệ, không liên quan tới việc ẩn
+        # số tiền của NV (bug test cũ quá rộng, phát hiện khi thêm menu mới).
+        main_content = body.split("<main>")[1].split("</main>")[0]
         for kw in (" đ", "VNĐ", "lương"):
-            self.assertNotIn(kw, body)
+            self.assertNotIn(kw, main_content)
 
     def test_toggle_theme_that_khong_chi_data_theme_tinh(self):
         # Test cũ chỉ kiểm "data-theme" xuất hiện — hard-code data-theme="light" cũng

@@ -15,9 +15,11 @@ from app.p25_template0 import bang_trinh_ky, _toan_bo_msnv
 from app.p26_template2 import payroll_master
 from app.p27_baocao_hr import don_treo
 from app.p29_import import validate_and_import
+from app.p30_formula_engine import FIELDS, bang_luong_day_du
 
 MENU_ROUTES = (
     ("/", "Dashboard"),
+    ("/cong-thuc", "Công thức lương"),
     ("/bang-cong", "Bảng công"),
     ("/suat-an", "Suất ăn"),
     ("/pc", "Phụ cấp"),
@@ -259,6 +261,95 @@ def _render_don_treo(role):
 """, "/don-treo")
 
 
+# ── Công thức lương (C9) — mỗi TAB = 1 công thức cuối, hiển thị luồng đi (trace) ──
+# Nguồn: Excel bàn giao Payroll, sheet "Payroll structure". Mỗi tab gọi
+# compute(FIELD_CUOI, inputs) — trace trả về theo ĐÚNG thứ tự tính (dependency
+# trước, field phụ thuộc sau) = luồng đi thật của công thức, không phải thứ tự
+# liệt kê tay.
+FORMULA_TABS = (
+    ("NET_PAY_HOME", "💰 Lương thực chi (cuối)"),
+    ("GROSS", "📥 Tổng thu nhập (GROSS)"),
+    ("TOTAL_INS", "🏥 BHXH nhân viên"),
+    ("PIT", "🧾 Thuế TNCN"),
+    ("TOTAL_CTY_COST", "🏢 Chi phí công ty"),
+)
+
+_INPUT_FIELDS = (
+    ("BASIC_SAL", "Lương chính thức (100%)", 20_000_000),
+    ("STD_DAYS", "Công chuẩn", 26),
+    ("ACTUAL_DAYS", "Ngày công thực tế", 26),
+    ("PROB_DAYS", "Ngày công thử việc", 0),
+    ("RESPONSIBILITY_ALLOW", "PC trách nhiệm (HĐLĐ)", 0),
+    ("MEALS_TOTAL", "Tổng bữa cơm", 26),
+    ("PHONE_ALLOW", "PC điện thoại", 300_000),
+    ("FUEL_ALLOW", "PC nhiên liệu/xăng", 0),
+    ("TRANSPORT_ALLOW", "PC đi lại (chuẩn)", 0),
+    ("DEPENDENT_CNT", "Số người phụ thuộc", 0),
+    ("BONUS_KPI", "Thưởng KPI", 0),
+)
+
+
+def _render_cong_thuc(role, qs):
+    tab = qs.get("tab", ["NET_PAY_HOME"])[0]
+    if tab not in dict(FORMULA_TABS):
+        tab = "NET_PAY_HOME"
+
+    inputs = {}
+    for code, ten, mac_dinh in _INPUT_FIELDS:
+        raw = qs.get(code, [str(mac_dinh)])[0]
+        try:
+            inputs[code] = float(raw)
+        except ValueError:
+            inputs[code] = mac_dinh
+
+    from app.p30_formula_engine import compute
+    trace = {}
+    ket_qua = compute(tab, inputs, {}, trace)
+
+    tabs_html = "".join(
+        f'<a class="ftab{" on" if t == tab else ""}" href="/cong-thuc?tab={t}&'
+        + "&".join(f"{c}={inputs[c]:g}" for c, _, _ in _INPUT_FIELDS)
+        + f'">{ten}</a>'
+        for t, ten in FORMULA_TABS
+    )
+
+    form_fields = "".join(
+        f'<label>{ten}<input type="text" name="{code}" value="{inputs[code]:g}"></label>'
+        for code, ten, _ in _INPUT_FIELDS
+    )
+
+    rows = ""
+    for i, (code, (ten, formula, val)) in enumerate(trace.items(), 1):
+        cong_thuc_hien = formula if formula not in ("(input)",) else "<em>(bạn nhập ở trên)</em>"
+        highlight = ' style="background:rgba(10,132,255,.08);font-weight:700"' if code == tab else ""
+        rows += (f"<tr{highlight}><td>{i}</td><td><code>{code}</code></td><td>{ten}</td>"
+                 f"<td><code style=\"font-size:11px\">{cong_thuc_hien}</code></td>"
+                 f"<td>{val:,.0f}</td></tr>")
+
+    return _layout("Công thức lương", f"""
+<h2>Công thức lương — chạy thử trước khi ghi nhận (C9)</h2>
+<p>Nguồn: Excel bàn giao Payroll (sheet "Payroll structure"). Mỗi tab bên dưới
+là MỘT công thức cuối — chọn tab để xem luồng tính từ input thô đến kết quả đó.
+Sửa số ở form rồi bấm "Chạy thử" để xem lại — <b>chưa ghi vào đâu cả</b>, chỉ tính
+thử (dashboard test).</p>
+
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin:12px 0">{tabs_html}</div>
+
+<form method="get" action="/cong-thuc">
+  <input type="hidden" name="tab" value="{tab}">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 16px">{form_fields}</div>
+  <button type="submit">▶ Chạy thử công thức</button>
+</form>
+
+<h3 style="margin-top:20px">Kết quả: {dict(FORMULA_TABS)[tab]} = <span style="color:var(--accent)">{ket_qua:,.0f} đ</span></h3>
+<p style="font-size:12px;color:var(--sub,#888)">Luồng đi (đúng thứ tự tính — phụ thuộc trước, kết quả sau):</p>
+<table><tr><th>#</th><th>Code</th><th>Tên</th><th>Công thức gốc (Excel)</th><th>Giá trị</th></tr>{rows}</table>
+<style>.ftab{{padding:6px 12px;border-radius:8px;background:var(--th);text-decoration:none;color:inherit;font-size:12px}}.ftab.on{{background:var(--accent);color:#fff}}
+form label{{display:flex;flex-direction:column;font-size:11px;gap:2px}}
+form input{{margin-top:2px}}</style>
+""", "/cong-thuc")
+
+
 _ROUTES = {
     "/": _render_dashboard,
     "/bang-cong": _render_bang_cong,
@@ -283,6 +374,8 @@ class _Handler(BaseHTTPRequestHandler):
 
         if parsed.path == "/khoa-ky":
             body = _render_khoa_ky(role, qs)
+        elif parsed.path == "/cong-thuc":
+            body = _render_cong_thuc(role, qs)
         elif parsed.path in _ROUTES:
             body = _ROUTES[parsed.path](role)
         else:

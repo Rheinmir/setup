@@ -19,7 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-07 10:42:57 | `file.write` | llmwiki/html/070726-huong-dan-repo-files.html · tool=Edit · session=d99d8818 · actor=agent · prev=dd7388aed847c9f95432ee |
 | 2026-07-07 10:43:47 | `file.write` | llmwiki/html/070726-huong-dan-repo-files.html · tool=Edit · session=d99d8818 · actor=agent · prev=f480eda22037fff64d66e8 |
 | 2026-07-07 10:44:36 | `file.write` | llmwiki/html/070726-huong-dan-repo-files.html · tool=Edit · session=d99d8818 · actor=agent · prev=e1810bd062fe4c87ba5958 |
 | 2026-07-07 10:45:24 | `file.write` | llmwiki/wiki/sources/draft/070726-huong-dan-repo-files.md · tool=Edit · session=d99d8818 · actor=agent · prev=47844ee314 |
@@ -59,6 +58,7 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-09 09:46:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=70db5798b9f37e3f864a7a625710098ac8ae4cecb |
 | 2026-07-09 09:54:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=f47388c9b627059f896401ba2c793a182bc569fa4 |
 | 2026-07-09 09:57:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=54927d643ace6e421502a7c0f05b811c8d63901f0 |
+| 2026-07-09 10:07:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=ffed18eeb04aae6d06d0e8e3def5efa120a55a904 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
