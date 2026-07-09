@@ -1,8 +1,29 @@
-"""Stub p23_matbao — /br run sẽ đắp code thật (test-first: xem tests/).
-Public API raise NotImplementedError; dunder attrs (__path__…) raise AttributeError
-để không phá import machinery."""
+"""p23_matbao — nhánh Mắt Bão: chốt sớm + grid định mức riêng (C6.1)."""
+from datetime import date
 
-def __getattr__(name):
-    if name.startswith("__") and name.endswith("__"):
-        raise AttributeError(name)
-    raise NotImplementedError(f"{name} chưa cài — chờ /br run frame p23_matbao")
+_MAT_BAO_IDS = {"NV005"}
+
+_GRID_MAT_BAO = {
+    "dien_thoai": 200_000,
+}
+
+_NGAY_CHOT = 15
+
+
+def _parse_ngay(ngay):
+    y, m, d = (int(x) for x in ngay.split("-"))
+    return date(y, m, d)
+
+
+def policy_nhan_su(ma_nv, ngay):
+    la_mat_bao = ma_nv in _MAT_BAO_IDS
+    d = _parse_ngay(ngay)
+
+    def dinh_muc_grid(khoan):
+        return _GRID_MAT_BAO.get(khoan)
+
+    return {
+        "la_mat_bao": la_mat_bao,
+        "da_qua_chot": d.day > _NGAY_CHOT,
+        "dinh_muc_grid": dinh_muc_grid,
+    }
