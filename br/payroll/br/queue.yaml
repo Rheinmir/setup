@@ -61,9 +61,9 @@
   verdict: SUCCESS
   commit: 8f89c52924b16dfd1883022cab7acfa49c729585
 - frame: br/frames/frame-p16-pc-xang.md
-  status: failed
-  verdict: ERROR
-  commit: null
+  status: done
+  verdict: SUCCESS
+  commit: 45dc51d29859cfdf72212cf659b0808a5b0b8474
 - frame: br/frames/frame-p17-pc-di-lai.md
   status: failed
   verdict: ERROR
