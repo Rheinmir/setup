@@ -97,9 +97,9 @@
   verdict: SUCCESS
   commit: 3c16d1eb40423022528b38d3ab1eb17ddf912359
 - frame: br/frames/frame-p25-template0-trinh-ky.md
-  status: failed
-  verdict: ERROR
-  commit: null
+  status: done
+  verdict: SUCCESS
+  commit: 220ae827a8eb938708f6cf93e96424a190eecb39
 - frame: br/frames/frame-p26-template2-master.md
   status: failed
   verdict: ERROR
