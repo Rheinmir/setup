@@ -49,9 +49,9 @@
   verdict: SUCCESS
   commit: bb1250de8ac1a5472ec1048bdb48d83dadd1c4d6
 - frame: br/frames/frame-p13-prorata-engine.md
-  status: failed
-  verdict: ERROR
-  commit: null
+  status: done
+  verdict: SUCCESS
+  commit: c52c997d1a822fe674d9f241cc808da129c49277
 - frame: br/frames/frame-p14-pc-com.md
   status: failed
   verdict: ERROR
