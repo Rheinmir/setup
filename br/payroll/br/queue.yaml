@@ -77,9 +77,9 @@
   verdict: SUCCESS
   commit: 30ad83414c38cc1796b42fdb1a525180cbb2da1c
 - frame: br/frames/frame-p20-truy-thu-truy-linh.md
-  status: failed
-  verdict: ERROR
-  commit: null
+  status: done
+  verdict: SUCCESS
+  commit: dcd58f8459243f877c88fa40078bc2ef5e37bb6f
 - frame: br/frames/frame-p21-ot-engine.md
   status: failed
   verdict: ERROR
