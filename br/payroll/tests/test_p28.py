@@ -40,9 +40,15 @@ class TestUIServe(unittest.TestCase):
         for kw in (" đ", "VNĐ", "lương"):
             self.assertNotIn(kw, body)
 
-    def test_data_theme_hook(self):
+    def test_toggle_theme_that_khong_chi_data_theme_tinh(self):
+        # Test cũ chỉ kiểm "data-theme" xuất hiện — hard-code data-theme="light" cũng
+        # pass được mà không cần toggle thật (bug lọt qua, feedback user 09/07).
+        # Kiểm chặt hơn: có script chống FOUC + nút gạt thật + ghi localStorage.
         status, body = self._get("/")
-        self.assertIn("data-theme", body)
+        self.assertIn("localStorage.getItem(\"payroll-theme\")", body)  # chống FOUC
+        self.assertIn('id="theme-switch"', body)  # nút gạt thật, không phải chữ tĩnh
+        self.assertIn("localStorage.setItem(", body)  # đổi theme có lưu lại
+        self.assertNotIn('data-theme="light">', body)  # KHÔNG còn hard-code cứng
 
 
 if __name__ == "__main__":

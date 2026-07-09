@@ -45,32 +45,52 @@ def _layout(title, content, path="/"):
         for p, ten in MENU_ROUTES
     )
     return f"""<!DOCTYPE html>
-<html data-theme="light">
+<html>
 <head><meta charset="utf-8"><title>{title}</title>
+<script>(function(){{try{{var t=localStorage.getItem("payroll-theme");
+if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}}catch(e){{}}}})();</script>
 <style>
-body{{font-family:-apple-system,sans-serif;margin:0;display:flex}}
-#sidebar{{list-style:none;padding:12px;margin:0;width:170px;background:#f0f4fa;min-height:100vh}}
+:root{{--bg:#fff;--ink:#223;--side:#f0f4fa;--border:#ddd;--th:#eaf2fd;--accent:#0a84ff}}
+html[data-theme=dark]{{--bg:#12181f;--ink:#e3e8ee;--side:#1a2129;--border:#2b3440;--th:#1c2833}}
+@media(prefers-color-scheme:dark){{html:not([data-theme=light]){{--bg:#12181f;--ink:#e3e8ee;--side:#1a2129;--border:#2b3440;--th:#1c2833}}}}
+body{{font-family:-apple-system,sans-serif;margin:0;display:flex;background:var(--bg);color:var(--ink)}}
+#sidebar{{list-style:none;padding:12px;margin:0;width:170px;background:var(--side);min-height:100vh;display:flex;flex-direction:column}}
 #sidebar li{{padding:2px 0}}
-#sidebar a{{display:block;padding:6px 8px;font-size:13px;color:#334;text-decoration:none;border-radius:6px}}
-#sidebar a:hover{{background:#dde8fa}}
-#sidebar a.on{{background:#0a84ff;color:#fff}}
+#sidebar a{{display:block;padding:6px 8px;font-size:13px;color:inherit;text-decoration:none;border-radius:6px}}
+#sidebar a:hover{{background:rgba(10,132,255,.12)}}
+#sidebar a.on{{background:var(--accent);color:#fff}}
+.theme-row{{margin-top:auto;padding-top:12px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-size:12px}}
+.theme-switch{{width:36px;height:20px;border-radius:99px;background:var(--border);cursor:pointer;position:relative;border:0}}
+.theme-switch .knob{{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .18s}}
+.theme-switch.on{{background:var(--accent)}}
+.theme-switch.on .knob{{left:18px}}
 main{{padding:20px;flex:1;max-width:900px}}
 table{{border-collapse:collapse;width:100%;font-size:13px;margin-top:10px}}
-th,td{{padding:6px 10px;border:1px solid #ddd;text-align:right}}
+th,td{{padding:6px 10px;border:1px solid var(--border);text-align:right}}
 th:first-child,td:first-child{{text-align:left}}
-th{{background:#eaf2fd}}
+th{{background:var(--th)}}
 .badge{{display:inline-block;padding:2px 8px;border-radius:99px;font-size:11px}}
 .badge.ok{{background:#dcf5e3;color:#1a7a34}}
 .badge.warn{{background:#fdf0d5;color:#a16207}}
-form{{margin-top:14px;padding:14px;border:1px solid #ddd;border-radius:8px;max-width:360px}}
+form{{margin-top:14px;padding:14px;border:1px solid var(--border);border-radius:8px;max-width:360px}}
 label{{display:block;margin:8px 0 3px;font-size:12px}}
 input,button{{font:inherit;padding:6px}}
-input[type=text]{{width:100%}}
-button{{margin-top:10px;background:#0a84ff;color:#fff;border:0;border-radius:6px;padding:8px 14px}}
+input[type=text]{{width:100%;background:var(--bg);color:var(--ink);border:1px solid var(--border)}}
+button{{margin-top:10px;background:var(--accent);color:#fff;border:0;border-radius:6px;padding:8px 14px}}
 </style></head>
 <body>
-<ul id="sidebar">{items}</ul>
+<ul id="sidebar">{items}<li class="theme-row"><span>Giao diện</span>
+<button class="theme-switch" id="theme-switch" role="switch" aria-label="Đổi sáng/tối"><span class="knob"></span></button>
+</li></ul>
 <main>{content}</main>
+<script>
+(function(){{var K="payroll-theme",d=document.documentElement,sw=document.getElementById("theme-switch");
+function isDark(){{var t=d.getAttribute("data-theme");return t?t==="dark":matchMedia("(prefers-color-scheme: dark)").matches}}
+function paint(){{var dk=isDark();sw.classList.toggle("on",dk);sw.setAttribute("aria-checked",dk?"true":"false")}}
+sw.addEventListener("click",function(){{var n=isDark()?"light":"dark";d.setAttribute("data-theme",n);try{{localStorage.setItem(K,n)}}catch(e){{}}paint()}});
+paint();
+}})();
+</script>
 </body>
 </html>"""
 
