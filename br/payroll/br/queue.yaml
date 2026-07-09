@@ -73,9 +73,9 @@
   verdict: SUCCESS
   commit: c61078b0017af382cd78bbba5bf49eba2db1be2c
 - frame: br/frames/frame-p19-pc-ctxa-duan-dacthu.md
-  status: failed
-  verdict: ERROR
-  commit: null
+  status: done
+  verdict: SUCCESS
+  commit: 30ad83414c38cc1796b42fdb1a525180cbb2da1c
 - frame: br/frames/frame-p20-truy-thu-truy-linh.md
   status: failed
   verdict: ERROR
