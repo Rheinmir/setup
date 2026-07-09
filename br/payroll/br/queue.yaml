@@ -89,9 +89,9 @@
   verdict: ERROR
   commit: null
 - frame: br/frames/frame-p23-mat-bao.md
-  status: failed
-  verdict: ERROR
-  commit: null
+  status: done
+  verdict: SUCCESS
+  commit: d329c3f615e2282d5677350f11a26fede9751643
 - frame: br/frames/frame-p24-phe-duyet-audit.md
   status: failed
   verdict: ERROR
