@@ -791,16 +791,31 @@
         "out_of_scope_files": []
       },
       "assumed_clauses": []
+    },
+    {
+      "frame_id": "frame-p30-formula-engine",
+      "file": "frame-p30-formula-engine.md",
+      "status": "pending",
+      "clause_ids": [
+        "C9.1",
+        "C9.2"
+      ],
+      "scope_code": [
+        "app/p30_formula_engine.py"
+      ],
+      "muc_tieu": "Engine công thức lương THẬT trích từ Excel bàn giao — dependency graph 40 field từ ngày công tới NET_PAY_HOME, chạy 1 lần compute() ra cả chuỗi kèm trace, thuế TNCN 7 bậc lũy tiến đúng NĐ 65/2013",
+      "run": null,
+      "assumed_clauses": []
     }
   ],
   "counts": {
     "killed": 0,
     "stalled": 0,
-    "pending": 0,
+    "pending": 1,
     "green-pending-review": 29,
     "merged": 0
   },
-  "total_frames": 29,
+  "total_frames": 30,
   "clauses": {
     "C3": {
       "provenance": "raw",
@@ -909,6 +924,22 @@
     "C7.1": {
       "provenance": "user",
       "assumed": true
+    },
+    "C9.1": {
+      "provenance": "raw",
+      "assumed": false
+    },
+    "C9.2": {
+      "provenance": "raw",
+      "assumed": false
+    },
+    "C9.3": {
+      "provenance": "raw",
+      "assumed": false
+    },
+    "C9.4": {
+      "provenance": "raw",
+      "assumed": false
     }
   },
   "assumed_clause_count": 0
