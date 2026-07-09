@@ -17,8 +17,8 @@
   verdict: SUCCESS
   commit: null
 - frame: br/frames/frame-p05-quy-dinh-nghi.md
-  status: failed
-  verdict: ERROR
+  status: done
+  verdict: SUCCESS
   commit: null
 - frame: br/frames/frame-p06-workday-adapter.md
   status: failed
