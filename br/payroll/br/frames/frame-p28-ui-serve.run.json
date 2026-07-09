@@ -1,13 +1,15 @@
 {
   "tool": "loop-runner",
-  "verdict": "NO_PROGRESS",
-  "reason": "state-hash unchanged for 2 consecutive iterations",
-  "iterations_run": 3,
-  "changed_files": [],
+  "verdict": "SUCCESS",
+  "reason": "verify passed on iteration 2 (+2 confirm)",
+  "iterations_run": 2,
+  "changed_files": [
+    "app/p28_ui.py"
+  ],
   "scope_clean": true,
   "out_of_scope_files": [],
   "attempted_out_of_scope": [],
-  "commit": null,
+  "commit": "2dfe15535d498de25725952a12ab61352d2bbc66",
   "verify_cmd": "python3 -m tests.test_p28",
   "revise_cmd": "python3 \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/fdk/tools/br-revise.py\" run --frame \"br/frames/frame-p28-ui-serve.md\" --template \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/skills/br/assets/revise-prompt.md\" --verify \"python3 -m tests.test_p28\" --verify-output \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/.frame-p28-ui-serve.verify.out\" --cwd \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll\"",
   "guards": {
@@ -16,55 +18,50 @@
     "no_progress_k": 2,
     "escalate_after_iter": 4,
     "scope_globs": [
-      "app/p28_ui.py,serve.py,app/__init__.py"
+      "app/p28_ui.py",
+      "serve.py",
+      "app/__init__.py"
     ],
     "protect_globs": [
       "tests/test_p28.py"
     ]
   },
   "state_paths": [
-    "app/p28_ui.py,serve.py,app/__init__.py"
+    "app/p28_ui.py",
+    "serve.py",
+    "app/__init__.py"
   ],
-  "started_at": "2026-07-09T01:39:25Z",
-  "ended_at": "2026-07-09T01:40:32Z",
-  "elapsed_s": 66.8887,
+  "started_at": "2026-07-09T01:42:15Z",
+  "ended_at": "2026-07-09T01:42:49Z",
+  "elapsed_s": 33.8169,
   "iterations": [
     {
       "iter": 1,
-      "ts": "2026-07-09T01:39:25Z",
+      "ts": "2026-07-09T01:42:15Z",
       "verify_exit": 1,
-      "duration_s": 0.0625,
+      "duration_s": 0.16,
       "verify_output_tail": "ode, main_globals, None,\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/runpy.py\", line 87, in _run_code\n    exec(code, run_globals)\n  File \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/tests/test_p28.py\", line 6, in <module>\n    from app.p28_ui import build_server\n  File \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/app/p28_ui.py\", line 8, in __getattr__\n    raise NotImplementedError(f\"{name} chưa cài — chờ /br run frame p28_ui\")\nNotImplementedError: build_server chưa cài — chờ /br run frame p28_ui\n",
-      "state_hash": "f45290856413526b2c3f1581fa3914477554e925615f5f5c88af99b990dfc571",
+      "state_hash": "5ea5533a3f7d4fb2ab23b9c1549fe3d0716903d095ddc00adc356975fcff5388",
       "unchanged_streak": 0,
       "revise_exit": 0,
-      "revise_output_tail": "Xanh. Đã cài `build_server` trong `app/p28_ui.py`: serve trang chủ có đủ 10 mục sidebar + `data-theme`, route `/pc?role=thuky` ẩn thông tin tiền.\nPermission deny rule \"MultiEdit(./llmwiki/raw/**)\" matches no known tool — check for typos.\n",
+      "revise_output_tail": "Xanh. `build_server` đã được cài trong `app/p28_ui.py`, cả 3 test pass, exit 0.\nPermission deny rule \"MultiEdit(./llmwiki/raw/**)\" matches no known tool — check for typos.\n",
       "scope_reverted": [
-        "app/p28_ui.py"
+        "llmwiki/html/wiki-graph.html",
+        "llmwiki/wiki/log.md"
       ]
     },
     {
       "iter": 2,
-      "ts": "2026-07-09T01:39:53Z",
-      "verify_exit": 1,
-      "duration_s": 0.0467,
-      "verify_output_tail": "ode, main_globals, None,\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/runpy.py\", line 87, in _run_code\n    exec(code, run_globals)\n  File \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/tests/test_p28.py\", line 6, in <module>\n    from app.p28_ui import build_server\n  File \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/app/p28_ui.py\", line 8, in __getattr__\n    raise NotImplementedError(f\"{name} chưa cài — chờ /br run frame p28_ui\")\nNotImplementedError: build_server chưa cài — chờ /br run frame p28_ui\n",
-      "state_hash": "f45290856413526b2c3f1581fa3914477554e925615f5f5c88af99b990dfc571",
-      "unchanged_streak": 1,
-      "revise_exit": 0,
-      "revise_output_tail": "Bài kiểm tra đã XANH (3/3 pass).\nPermission deny rule \"MultiEdit(./llmwiki/raw/**)\" matches no known tool — check for typos.\n",
-      "scope_reverted": [
-        "app/p28_ui.py"
+      "ts": "2026-07-09T01:42:47Z",
+      "verify_exit": 0,
+      "duration_s": 0.7795,
+      "verify_output_tail": "...\n----------------------------------------------------------------------\nRan 3 tests in 0.712s\n\nOK\n",
+      "state_hash": null,
+      "unchanged_streak": 0,
+      "confirm_exits": [
+        0,
+        0
       ]
-    },
-    {
-      "iter": 3,
-      "ts": "2026-07-09T01:40:32Z",
-      "verify_exit": 1,
-      "duration_s": 0.041,
-      "verify_output_tail": "ode, main_globals, None,\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/runpy.py\", line 87, in _run_code\n    exec(code, run_globals)\n  File \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/tests/test_p28.py\", line 6, in <module>\n    from app.p28_ui import build_server\n  File \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/app/p28_ui.py\", line 8, in __getattr__\n    raise NotImplementedError(f\"{name} chưa cài — chờ /br run frame p28_ui\")\nNotImplementedError: build_server chưa cài — chờ /br run frame p28_ui\n",
-      "state_hash": "f45290856413526b2c3f1581fa3914477554e925615f5f5c88af99b990dfc571",
-      "unchanged_streak": 2
     }
   ]
 }
