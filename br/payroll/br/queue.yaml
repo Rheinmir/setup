@@ -21,9 +21,9 @@
   verdict: SUCCESS
   commit: null
 - frame: br/frames/frame-p06-workday-adapter.md
-  status: failed
-  verdict: ERROR
-  commit: null
+  status: done
+  verdict: SUCCESS
+  commit: 3d00968753396d687300b4adeff92c03ab0395f7
 - frame: br/frames/frame-p07-parser-ky-hieu.md
   status: failed
   verdict: ERROR
