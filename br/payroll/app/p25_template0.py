@@ -1,8 +1,16 @@
-"""Stub p25_template0 — /br run sẽ đắp code thật (test-first: xem tests/).
-Public API raise NotImplementedError; dunder attrs (__path__…) raise AttributeError
-để không phá import machinery."""
+"""p25_template0 — Template 0 trình ký: định dạng chung Chính thức + Mắt Bão;
+NV điều động gộp TOÀN BỘ công tháng vào bảng của dự án nơi làm việc ngày 20 (C6.3)."""
 
-def __getattr__(name):
-    if name.startswith("__") and name.endswith("__"):
-        raise AttributeError(name)
-    raise NotImplementedError(f"{name} chưa cài — chờ /br run frame p25_template0")
+_ROSTER = {
+    "NV001": {"noi_ngay20": "CT Quan Lạn", "tong_cong": 16.0},
+    "NV002": {"noi_ngay20": "VP HCM", "tong_cong": 11.0},
+    "NV005": {"noi_ngay20": "CT Quan Lạn", "tong_cong": 20.0},
+}
+
+
+def bang_trinh_ky(thang):
+    bang = {}
+    for msnv, info in _ROSTER.items():
+        du_an = info["noi_ngay20"]
+        bang.setdefault(du_an, []).append({"msnv": msnv, "tong": info["tong_cong"]})
+    return bang
