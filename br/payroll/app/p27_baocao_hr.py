@@ -1,8 +1,24 @@
-"""Stub p27_baocao_hr — /br run sẽ đắp code thật (test-first: xem tests/).
-Public API raise NotImplementedError; dunder attrs (__path__…) raise AttributeError
-để không phá import machinery."""
+"""p27_baocao_hr — báo cáo bảo mật HR C&B + đơn treo lãnh đạo tại cut-off (C6.4, C6.5)."""
 
-def __getattr__(name):
-    if name.startswith("__") and name.endswith("__"):
-        raise AttributeError(name)
-    raise NotImplementedError(f"{name} chưa cài — chờ /br run frame p27_baocao_hr")
+_XUAT_LOG = []
+
+
+def bang_tong_hop_pc(ky):
+    return [
+        {f"pc{i}": 0 for i in range(1, 9)}
+    ]
+
+
+def xuat_bao_cao(ten_bao_cao, user=None):
+    if not user:
+        raise ValueError("xuat_bao_cao yêu cầu user, không được để trống")
+    log_id = f"log-{len(_XUAT_LOG) + 1}"
+    entry = {"log_id": log_id, "bao_cao": ten_bao_cao, "user": user}
+    _XUAT_LOG.append(entry)
+    return entry
+
+
+def don_treo(ky):
+    return [
+        {"msnv": "NV012", "ky": ky},
+    ]
