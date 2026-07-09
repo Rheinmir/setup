@@ -14,6 +14,7 @@ from app.p22_khoaky import is_locked, khoa_ky
 from app.p25_template0 import bang_trinh_ky, _toan_bo_msnv
 from app.p26_template2 import payroll_master
 from app.p27_baocao_hr import don_treo
+from app.p29_import import validate_and_import
 
 MENU_ROUTES = (
     ("/", "Dashboard"),
@@ -74,8 +75,8 @@ th{{background:var(--th)}}
 .badge.warn{{background:#fdf0d5;color:#a16207}}
 form{{margin-top:14px;padding:14px;border:1px solid var(--border);border-radius:8px;max-width:360px}}
 label{{display:block;margin:8px 0 3px;font-size:12px}}
-input,button{{font:inherit;padding:6px}}
-input[type=text]{{width:100%;background:var(--bg);color:var(--ink);border:1px solid var(--border)}}
+input,button,textarea{{font:inherit;padding:6px}}
+input[type=text],textarea{{width:100%;background:var(--bg);color:var(--ink);border:1px solid var(--border)}}
 button{{margin-top:10px;background:var(--accent);color:#fff;border:0;border-radius:6px;padding:8px 14px}}
 </style></head>
 <body>
@@ -174,7 +175,7 @@ def _render_tang_ca(role):
 """, "/tang-ca")
 
 
-def _render_master_data(role):
+def _render_master_data(role, thong_bao=None):
     tr = "".join(
         f"<tr><td>{ngach}</td><td>{gia['CT']:,} đ</td><td>{gia['VP']:,} đ</td></tr>"
         for ngach, gia in DIEN_THOAI_TABLE.items()
@@ -183,11 +184,19 @@ def _render_master_data(role):
         f"<tr><td>{r['bo_phan']}</td><td>{r['tinh']}</td><td>{r['khoi']}</td></tr>"
         for r in _doc_csv("dm_bo_phan.csv")
     )
+    thong_bao_html = f'<p class="badge {"ok" if thong_bao[0] else "warn"}">{thong_bao[1]}</p>' if thong_bao else ""
     return _layout("Master data", f"""
 <h2>Định mức điện thoại (p03)</h2>
 <table><tr><th>Ngạch</th><th>Công trường</th><th>Văn phòng</th></tr>{tr}</table>
 <h2>Bộ phận (dm_bo_phan.csv)</h2>
 <table><tr><th>Bộ phận</th><th>Tỉnh</th><th>Khối</th></tr>{bp}</table>
+<h2>Import nhân viên (CSV)</h2>
+{thong_bao_html}
+<form method="post" action="/master-data/import">
+  <label>Dán nội dung CSV (đúng 13 cột header nhan_vien.csv)</label>
+  <textarea name="csv_content" rows="6" style="width:100%;font:12px monospace" required></textarea>
+  <button type="submit">Import — ghi đè nhan_vien.csv</button>
+</form>
 """, "/master-data")
 
 
@@ -279,6 +288,29 @@ class _Handler(BaseHTTPRequestHandler):
         else:
             body = _layout("404", "<p>Không tìm thấy</p>", parsed.path)
 
+        self._send(body)
+
+    def do_POST(self):
+        parsed = urlparse(self.path)
+        if parsed.path != "/master-data/import":
+            self._send(_layout("404", "<p>Không tìm thấy</p>", parsed.path))
+            return
+
+        length = int(self.headers.get("Content-Length", 0))
+        raw = self.rfile.read(length).decode("utf-8")
+        form = parse_qs(raw)
+        noi_dung_csv = form.get("csv_content", [""])[0]
+
+        duong_dan = os.path.join(_DATA_DIR, "nhan_vien.csv")
+        hop_le, so_dong, loi = validate_and_import(noi_dung_csv, duong_dan)
+        if hop_le:
+            thong_bao = (True, f"Import thành công {so_dong} dòng.")
+        else:
+            thong_bao = (False, f"Từ chối: {loi}")
+
+        self._send(_render_master_data("", thong_bao))
+
+    def _send(self, body):
         encoded = body.encode("utf-8")
         self.send_response(200)
         self.send_header("Content-Type", "text/html; charset=utf-8")
