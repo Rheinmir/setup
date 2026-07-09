@@ -105,9 +105,9 @@
   verdict: SUCCESS
   commit: 653b0c105021706e39b236af95c80b105ac53bb5
 - frame: br/frames/frame-p27-bao-cao-hr-treo.md
-  status: failed
-  verdict: ERROR
-  commit: null
+  status: done
+  verdict: SUCCESS
+  commit: 64dcfa0ebab96445b4387a45f2560467b3af2fd2
 - frame: br/frames/frame-p28-ui-serve.md
   status: failed
   verdict: ERROR
