@@ -93,9 +93,9 @@
   verdict: SUCCESS
   commit: d329c3f615e2282d5677350f11a26fede9751643
 - frame: br/frames/frame-p24-phe-duyet-audit.md
-  status: failed
-  verdict: ERROR
-  commit: null
+  status: done
+  verdict: SUCCESS
+  commit: 3c16d1eb40423022528b38d3ab1eb17ddf912359
 - frame: br/frames/frame-p25-template0-trinh-ky.md
   status: failed
   verdict: ERROR
