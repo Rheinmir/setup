@@ -1,0 +1,63 @@
+{
+  "tool": "loop-runner",
+  "verdict": "SUCCESS",
+  "reason": "verify passed on iteration 2 (+2 confirm)",
+  "iterations_run": 2,
+  "changed_files": [
+    "app/p07_kyhieu.py"
+  ],
+  "scope_clean": true,
+  "out_of_scope_files": [],
+  "attempted_out_of_scope": [],
+  "commit": "0beed79201f644a2743025f79c3f68278c493e86",
+  "verify_cmd": "python3 -m tests.test_p07",
+  "revise_cmd": "python3 \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/fdk/tools/br-revise.py\" run --frame \"br/frames/frame-p07-parser-ky-hieu.md\" --template \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/skills/br/assets/revise-prompt.md\" --verify \"python3 -m tests.test_p07\" --verify-output \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/.frame-p07-parser-ky-hieu.verify.out\" --cwd \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll\"",
+  "guards": {
+    "max_iter": 4,
+    "budget_seconds": 120.0,
+    "no_progress_k": 2,
+    "escalate_after_iter": 4,
+    "scope_globs": [
+      "app/p07_kyhieu.py"
+    ],
+    "protect_globs": [
+      "tests/test_p07.py"
+    ]
+  },
+  "state_paths": [
+    "app/p07_kyhieu.py"
+  ],
+  "started_at": "2026-07-09T01:20:09Z",
+  "ended_at": "2026-07-09T01:20:44Z",
+  "elapsed_s": 34.9586,
+  "iterations": [
+    {
+      "iter": 1,
+      "ts": "2026-07-09T01:20:09Z",
+      "verify_exit": 1,
+      "duration_s": 0.0348,
+      "verify_output_tail": "globals, None,\n  File \"/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/runpy.py\", line 87, in _run_code\n    exec(code, run_globals)\n  File \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/tests/test_p07.py\", line 3, in <module>\n    from app.p07_kyhieu import phan_loai\n  File \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/app/p07_kyhieu.py\", line 8, in __getattr__\n    raise NotImplementedError(f\"{name} chưa cài — chờ /br run frame p07_kyhieu\")\nNotImplementedError: phan_loai chưa cài — chờ /br run frame p07_kyhieu\n",
+      "state_hash": "c190e5c296154f50da641662e3ce40f2eac319d8f88312028d947164e5aec80e",
+      "unchanged_streak": 0,
+      "revise_exit": 0,
+      "revise_output_tail": "Test đã xanh (6/6 pass). Đã cài `phan_loai()` trong `app/p07_kyhieu.py` với bảng ánh xạ 15+ ký hiệu và xử lý riêng cho họ TC100/200/300 (`he_so_tc`), ký hiệu không hợp lệ raise `ValueError`.\nPermission deny rule \"MultiEdit(./llmwiki/raw/**)\" matches no known tool — check for typos.\n",
+      "scope_reverted": [
+        "llmwiki/html/wiki-graph.html",
+        "llmwiki/wiki/log.md"
+      ]
+    },
+    {
+      "iter": 2,
+      "ts": "2026-07-09T01:20:44Z",
+      "verify_exit": 0,
+      "duration_s": 0.0313,
+      "verify_output_tail": "......\n----------------------------------------------------------------------\nRan 6 tests in 0.000s\n\nOK\n",
+      "state_hash": null,
+      "unchanged_streak": 0,
+      "confirm_exits": [
+        0,
+        0
+      ]
+    }
+  ]
+}
