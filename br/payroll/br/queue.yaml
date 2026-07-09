@@ -65,9 +65,9 @@
   verdict: SUCCESS
   commit: 45dc51d29859cfdf72212cf659b0808a5b0b8474
 - frame: br/frames/frame-p17-pc-di-lai.md
-  status: failed
-  verdict: ERROR
-  commit: null
+  status: done
+  verdict: SUCCESS
+  commit: 8687016099cb9df34cb345916f880f27bf6a96c0
 - frame: br/frames/frame-p18-pc-ct-ctx.md
   status: failed
   verdict: ERROR
