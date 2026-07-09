@@ -57,9 +57,9 @@
   verdict: SUCCESS
   commit: d3f64f57b73c3aa15908fb47fa6903c12ab0e1e3
 - frame: br/frames/frame-p15-pc-dien-thoai.md
-  status: failed
-  verdict: ERROR
-  commit: null
+  status: done
+  verdict: SUCCESS
+  commit: 8f89c52924b16dfd1883022cab7acfa49c729585
 - frame: br/frames/frame-p16-pc-xang.md
   status: failed
   verdict: ERROR
