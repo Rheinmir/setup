@@ -20,6 +20,12 @@ chạy curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/
 curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash
 ```
 
+hoặc
+
+
+```
+HARNESS_BASE="https://cdn.jsdelivr.net/gh/Rheinmir/setup@orca/harness/poc-vendor-neutral" bash /tmp/bootstrap.sh
+```
 Mặc định cài/update **cả 3 trụ**: **Harness** (validator tất định vendor-neutral — chặn ghi `raw/`, ép wiki có `## Origin`… qua hook native + CI làm sàn) · **Skills** (global `~/.claude/skills`) · **llmwiki** (khung wiki). Cuối lần chạy in **bảng trạng thái 3 trụ**. Cờ: `--harness-only` · `--clean` · `uninstall`.
 
 Tự bảo trì về sau (cập nhật + trả nợ wiki + refresh bản đồ năng lực + health-check trong một lệnh): gọi skill **`/harness-update`**.
