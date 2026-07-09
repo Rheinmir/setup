@@ -19,9 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-07 01:22:11 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=c165f7f457038a54264ac8a0332906c2dd73353825929a95 |
-| 2026-07-07 01:22:24 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=e4ae13ab7832fdc14ff128d9ef9ba7f83174e7c8ac922351 |
-| 2026-07-07 01:22:33 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=897fa2376720b2ae2392bda9d42a0c97bc052c3c63e7ee83 |
 | 2026-07-07 01:22:50 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=5466d24dbad76e3768b8ec9e29aea08510e4c1e49b4894b3 |
 | 2026-07-07 01:23:05 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=5f8d482c68e11de6e3493f140ca4fa7db2b0f21c04354178 |
 | 2026-07-07 01:23:15 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=80276855147e55818dee7b22068e3307691a468a7ac2178b |
@@ -59,6 +56,9 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-09 07:37:04 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=e9cb7301443d40c0c80a22405d5d5dc4b57bbd61d |
 | 2026-07-09 07:37:04 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=0 · prev=e9cb7301443d40c0c80a22405d5d5dc4b57bbd61d179badc406a64569ecf3442 · h=1bb0 |
 | 2026-07-09 08:07:13 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=1bb0d89229093de847dfed8c5f4498a1d67004eff |
+| 2026-07-09 08:11:34 | `file.write` | harness/scripts/loop-runner.py · tool=Edit · session=d99d8818 · actor=agent · prev=0ccfc0ac5555fda80845f2816cc5c76e3dbf0 |
+| 2026-07-09 08:12:01 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=0 · prev=9220bd8ca7c8fdab58bebdb339516426bad74632808522b535eb7a1f26b87202 · h=a44f |
+| 2026-07-09 08:12:07 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=a44f0f212c8568d75fb669441f32f6ad86fca9da9 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
