@@ -29,9 +29,9 @@
   verdict: SUCCESS
   commit: 0beed79201f644a2743025f79c3f68278c493e86
 - frame: br/frames/frame-p08-tach-thu-viec.md
-  status: failed
-  verdict: TIMEOUT
-  commit: null
+  status: done
+  verdict: SUCCESS
+  commit: 8dd723559a6d0bfe808c563a72e04a84bed5c94d
 - frame: br/frames/frame-p09-tach-bo-nhiem.md
   status: done
   verdict: SUCCESS
