@@ -127,7 +127,16 @@ def run_queue(queue_path, root=".", stop_on_fail=False, dry_run=False, runner_fn
             save_queue(queue_path, entries)     # write-back after EACH entry → resumable
             # bookkeeping: the write-back dirties the tree, which would make br-run REFUSE
             # the next frame (clean-tree gate). Commit the queue state right away.
-            if (Path(root) / ".git").exists():
+            # NOTE: `(root/".git").exists()` only holds when --root IS the repo top-level;
+            # for a nested --root (e.g. br/payroll inside a bigger repo, no .git of its
+            # own) this was always False and the commit silently never ran, leaving
+            # queue.yaml dirty forever after the first frame (bug found running the
+            # payroll pipeline, GH#15 — same "assume root == repo root" class as the
+            # loop-runner path-prefix bugs).
+            in_repo = subprocess.run(["git", "rev-parse", "--is-inside-work-tree"],
+                                     cwd=str(root), capture_output=True, text=True
+                                     ).stdout.strip() == "true"
+            if in_repo:
                 subprocess.run(["git", "add", str(Path(queue_path).resolve())], cwd=str(root),
                                capture_output=True, text=True)
                 subprocess.run(["git", "commit", "-q", "--no-verify", "-m",
