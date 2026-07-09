@@ -19,34 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-06 22:49:41 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=c73a5edca83bf20dd689c809f4106d27b2616b4bd945f977 |
-| 2026-07-06 22:49:49 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=7a0c3ad993b40b2638bb99aa56113a365259027c49ed4e76 |
-| 2026-07-06 22:50:34 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=2d447a720caaf94ad7ecbcc7a0d286329ef110a9ff82bffe |
-| 2026-07-06 22:51:31 | `file.write` | fdk/tools/build-line-status.py · tool=Edit · session=db4de305 · actor=agent · prev=07bd56e456033e1ffc4ca20de08bd16366261 |
-| 2026-07-06 22:51:50 | `file.write` | fdk/tools/build-line-status.py · tool=Edit · session=db4de305 · actor=agent · prev=8ad1abf572f0ca3b134387f55815a9646e20e |
-| 2026-07-06 23:39:14 | `file.write` | harness/scripts/loop-runner.py · tool=Edit · session=db4de305 · actor=agent · prev=d69d032c3c51dbab93d309cae48b44eae11c2 |
-| 2026-07-06 23:39:27 | `file.write` | harness/scripts/loop-runner.py · tool=Edit · session=db4de305 · actor=agent · prev=bc74e75c65a9045d7937d789110b7fa91e192 |
-| 2026-07-06 23:39:47 | `file.write` | fdk/tools/frame-lint.py · tool=Edit · session=db4de305 · actor=agent · prev=062adafc2a22872b0a55c071b3f2e23ace1cb138e5aa |
-| 2026-07-06 23:40:52 | `file.write` | harness/scripts/loop-runner.py · tool=Edit · session=db4de305 · actor=agent · prev=02d09ba8d3ff842003c533214ac44851ed179 |
-| 2026-07-06 23:41:03 | `file.write` | harness/scripts/loop-runner.py · tool=Edit · session=db4de305 · actor=agent · prev=dda1d18d2251acf7b86ac1713d5cceb978ca5 |
-| 2026-07-06 23:48:11 | `file.write` | harness/scripts/loop-runner.py · tool=Edit · session=db4de305 · actor=agent · prev=4e483fff17f5528d41dd34446d012cbe38e0c |
-| 2026-07-06 23:48:19 | `file.write` | harness/scripts/loop-runner.py · tool=Edit · session=db4de305 · actor=agent · prev=4e4d7db0d414e85310d7a72e8073ba9a7d541 |
-| 2026-07-06 23:48:34 | `file.write` | harness/scripts/loop-runner.py · tool=Edit · session=db4de305 · actor=agent · prev=9fb2829c7bf424ff2085cfa627dc8decac8af |
-| 2026-07-06 23:48:44 | `file.write` | harness/scripts/loop-runner.py · tool=Edit · session=db4de305 · actor=agent · prev=e1305df19d06de2bec7ef493a0a44ae2d258a |
-| 2026-07-06 23:48:51 | `file.write` | harness/scripts/loop-runner.py · tool=Edit · session=db4de305 · actor=agent · prev=1a5b2a896c9cd8bb353bac9812e6147788382 |
-| 2026-07-06 23:49:01 | `file.write` | harness/scripts/loop-runner.py · tool=Edit · session=db4de305 · actor=agent · prev=477d0830e91f58970e42cc8a16c40daef8137 |
-| 2026-07-06 23:49:10 | `file.write` | harness/scripts/loop-runner.py · tool=Edit · session=db4de305 · actor=agent · prev=f63878e5b895c9f21b85cc57e3bdbe720b014 |
-| 2026-07-06 23:49:20 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=090ebbbc617ada742198ca1cba3d01f9387cd8af60adcfdb |
-| 2026-07-06 23:55:04 | `file.write` | llmwiki/wiki/sources/draft/060726-br-test-harness-plan.md · tool=Write · session=db4de305 · actor=agent · prev=03c6568f6 |
-| 2026-07-06 23:56:21 | `file.write` | llmwiki/wiki/sources/draft/060726-br-test-harness-plan.md · tool=Edit · session=db4de305 · actor=agent · prev=bbbe54f966 |
-| 2026-07-06 23:56:37 | `file.write` | llmwiki/wiki/sources/draft/060726-br-test-harness-plan.md · tool=Edit · session=db4de305 · actor=agent · prev=546cb110ec |
-| 2026-07-07 00:40:30 | `file.write` | fdk/tools/checkpoint.py · tool=Write · session=db4de305 · actor=agent · prev=8d590c403a73fb80aa7addf0226c8b81feed3858108 |
-| 2026-07-07 00:41:22 | `file.write` | fdk/tools/checkpoint.py · tool=Edit · session=db4de305 · actor=agent · prev=ffe505f70e734a72b4ddf1c013c52a208f6fc9cad679 |
-| 2026-07-07 00:42:19 | `file.write` | skills/checkpoint-trace/SKILL.md · tool=Write · session=db4de305 · actor=agent · prev=3e8c914417710751469498c6b969b93f09 |
-| 2026-07-07 00:59:12 | `file.write` | fdk/tools/upstream-drift.py · tool=Write · session=db4de305 · actor=agent · prev=fdd8e2876e7ee01925068a9b0fb878d060b8c19 |
-| 2026-07-07 00:59:59 | `file.write` | fdk/tools/upstream-drift.py · tool=Edit · session=db4de305 · actor=agent · prev=74831d2ea17c2fbc2c8a85774268fccc36dcb091 |
-| 2026-07-07 01:20:54 | `file.write` | fdk/tools/checkpoint.py · tool=Edit · session=db4de305 · actor=agent · prev=c04d099b8d54b078e8148ea52c61e5d4447c6d03d9f9 |
-| 2026-07-07 01:21:07 | `file.write` | fdk/tools/checkpoint.py · tool=Edit · session=db4de305 · actor=agent · prev=97aa5383461879de0eb95a983738ac1792b9213c676b |
 | 2026-07-07 01:21:19 | `file.write` | fdk/tools/checkpoint.py · tool=Edit · session=db4de305 · actor=agent · prev=bb7f45368c3485663b8e3fe1b124927e9ea867635808 |
 | 2026-07-07 01:21:34 | `file.write` | fdk/tools/checkpoint.py · tool=Edit · session=db4de305 · actor=agent · prev=53d62f88dcba9c44fb3f7625c562c489a70e15583932 |
 | 2026-07-07 01:21:45 | `file.write` | fdk/tools/checkpoint.py · tool=Edit · session=db4de305 · actor=agent · prev=4c1bd517381ba72929dba93014fb2ccf8162c2d5dd27 |
@@ -59,6 +31,34 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-07 01:23:37 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=9f9a5abfdfa35d158ef97940ced7135f79ac67f850c2b771 |
 | 2026-07-07 01:32:16 | `file.write` | llmwiki/html/070726-huong-dan-repo-files.html · tool=Write · session=db4de305 · actor=agent · prev=a748b3c294c57e22a9ec7 |
 | 2026-07-07 01:33:40 | `file.write` | llmwiki/wiki/sources/draft/070726-huong-dan-repo-files.md · tool=Write · session=db4de305 · actor=agent · prev=f8f99dcdb |
+| 2026-07-07 10:37:33 | `file.write` | llmwiki/html/070726-huong-dan-repo-files.html · tool=Edit · session=d99d8818 · actor=agent · prev=b70cf18a553ee950047a08 |
+| 2026-07-07 10:37:50 | `file.write` | llmwiki/html/070726-huong-dan-repo-files.html · tool=Edit · session=d99d8818 · actor=agent · prev=6bba6b04be86d6247b86ae |
+| 2026-07-07 10:38:38 | `file.write` | llmwiki/html/070726-huong-dan-repo-files.html · tool=Edit · session=d99d8818 · actor=agent · prev=397231673c1147f3e35757 |
+| 2026-07-07 10:39:41 | `file.write` | llmwiki/html/070726-huong-dan-repo-files.html · tool=Edit · session=d99d8818 · actor=agent · prev=515833d06be98d95c27c70 |
+| 2026-07-07 10:39:51 | `file.write` | llmwiki/html/070726-huong-dan-repo-files.html · tool=Edit · session=d99d8818 · actor=agent · prev=058afd7b60038ab706b04f |
+| 2026-07-07 10:40:41 | `file.write` | llmwiki/html/070726-huong-dan-repo-files.html · tool=Edit · session=d99d8818 · actor=agent · prev=d0fb7e144de2983ca0512b |
+| 2026-07-07 10:42:15 | `file.write` | llmwiki/html/070726-huong-dan-repo-files.html · tool=Edit · session=d99d8818 · actor=agent · prev=e319bb72ac07a07ad59ce7 |
+| 2026-07-07 10:42:57 | `file.write` | llmwiki/html/070726-huong-dan-repo-files.html · tool=Edit · session=d99d8818 · actor=agent · prev=dd7388aed847c9f95432ee |
+| 2026-07-07 10:43:47 | `file.write` | llmwiki/html/070726-huong-dan-repo-files.html · tool=Edit · session=d99d8818 · actor=agent · prev=f480eda22037fff64d66e8 |
+| 2026-07-07 10:44:36 | `file.write` | llmwiki/html/070726-huong-dan-repo-files.html · tool=Edit · session=d99d8818 · actor=agent · prev=e1810bd062fe4c87ba5958 |
+| 2026-07-07 10:45:24 | `file.write` | llmwiki/wiki/sources/draft/070726-huong-dan-repo-files.md · tool=Edit · session=d99d8818 · actor=agent · prev=47844ee314 |
+| 2026-07-07 13:26:38 | `file.write` | skills/br/assets/frame-template.md · tool=Write · session=c610b991 · actor=agent · prev=61f8ec0a89dfedc22320d54f3f85f975 |
+| 2026-07-07 13:26:59 | `file.write` | fdk/tools/frame-lint.py · tool=Edit · session=c610b991 · actor=agent · prev=aecd2ab33b101dcf4b9daf382ebc1529982c824cb532 |
+| 2026-07-07 13:27:02 | `file.write` | fdk/tools/frame-lint.py · tool=Edit · session=c610b991 · actor=agent · prev=a1d7cff62f322af0798b487bc6553fde384002e02599 |
+| 2026-07-07 13:27:12 | `file.write` | fdk/tools/frame-lint.py · tool=Edit · session=c610b991 · actor=agent · prev=e870d5d04d1bcf85624722135c10194944d8a4d6cc43 |
+| 2026-07-07 13:27:22 | `file.write` | fdk/tools/frame-lint.py · tool=Edit · session=c610b991 · actor=agent · prev=99fe61eca2df54820ff889a379085f76214ec26b5f47 |
+| 2026-07-07 13:27:35 | `file.write` | fdk/tools/frame-lint.py · tool=Edit · session=c610b991 · actor=agent · prev=f741b6823aef162f31109a7c0ecf8939e9d9797b67e3 |
+| 2026-07-07 13:27:39 | `file.write` | fdk/tools/frame-lint.py · tool=Edit · session=c610b991 · actor=agent · prev=73e5187e0823047319fdb6bf4daa8596ffa6a6083338 |
+| 2026-07-07 13:27:54 | `file.write` | fdk/tools/frame-lint.py · tool=Edit · session=c610b991 · actor=agent · prev=4fd51d724df71e519384d7d700451ae9b7a6b4def00e |
+| 2026-07-07 13:28:05 | `file.write` | fdk/tools/frame-lint.py · tool=Edit · session=c610b991 · actor=agent · prev=845997d4b709b8be114e36e63bd4e338600c79049868 |
+| 2026-07-07 13:28:44 | `file.write` | fdk/tools/frame-lint.py · tool=Edit · session=c610b991 · actor=agent · prev=f05e5ab35c2152a59d4e279d3ececc1b32a2f01b4ebd |
+| 2026-07-07 13:28:45 | `file.write` | fdk/tools/frame-lint.py · tool=Edit · session=c610b991 · actor=agent · prev=6462c8aee9a02c3b9dfc83ed735ac2acf189f87b1f4d |
+| 2026-07-07 13:29:15 | `file.write` | skills/br/SKILL.md · tool=Edit · session=c610b991 · actor=agent · prev=9cf6db226f8d8c02e3f5e55aa8719cc664dce9c1e83c77581 |
+| 2026-07-07 13:29:20 | `file.write` | skills/br/SKILL.md · tool=Edit · session=c610b991 · actor=agent · prev=4d15eb3bbe40d0281cb72f23aeac26a7d79f2ff0dce61f846 |
+| 2026-07-07 23:42:39 | `file.write` | skills/br/assets/design-template.md · tool=Write · session=c610b991 · actor=agent · prev=129f347b07c5ce12945561a9a2c8f7a |
+| 2026-07-07 23:42:55 | `file.write` | skills/br/assets/spec-template.md · tool=Edit · session=c610b991 · actor=agent · prev=d9ce80fbdd6da063fa96a8c942557f86ba |
+| 2026-07-07 23:43:01 | `file.write` | skills/br/SKILL.md · tool=Edit · session=c610b991 · actor=agent · prev=242fb578350d058b7682b2307a8534d2bc083b32af8b8852e |
+| 2026-07-07 23:43:08 | `file.write` | skills/br/SKILL.md · tool=Edit · session=c610b991 · actor=agent · prev=13ffa526d0a956012287ca29da38b09cc863cbb19db825b0d |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -352,3 +352,5 @@ Giải issue `030726-skill-resolve-supplychain` (trục #5 frontier-gap-scan, Ch
 - Fix đúng cách (không sửa lụi): thêm clause S4.4 (màn hình web, chuẩn UI: token/app-bar/responsive/toggle/a11y) vào BR → slice frame-004-ui (scope serve.py, test tests/test_ui.py, R6 không đè frame nào) → re-anchor.
 - Người viết test_ui.py chuẩn UI (8 assert: viewport, design-token ≥8 --var, app-bar thương hiệu, @media max-width, data-theme toggle, aria a11y, 3 flow, status pill) → ĐỎ. Re-run frame-004-ui: iter1 escalate (viewport thiếu nháy) → sửa 1 chỗ → SUCCESS 2 vòng + confirm, scope sạch. UI mới: liquid-glass light-blue, app-bar, thẻ, toggle sáng/tối localStorage, responsive.
 - Giờ br-find "serve.py" → frame-004-ui. 4/4 file test xanh (auth/checkin/report/ui). App chạy http://localhost:8790 với UI đạt chuẩn.
+- Re-scope trang `llmwiki/html/070726-huong-dan-repo-files.html` (ghi đè): từ guide "5 vùng repo" tổng quát → THUẦN dây chuyền loop-engineering (feedback user "cái dây chuyền ấy"). 6 section mới: bản đồ dây chuyền (diagram raw→interview→compile→slice→run→status+checkpoint) · 5 mode /br · loop-runner 6 phanh · checkpoint & 3 tier khả-đảo · file runtime br/ & lệnh · 6 luật dây chuyền + checklist. Giữ nguyên khung theme (nút gạt dark/light, mindmap, draggable diagram). Cập nhật draft provenance khớp.
+- Dây chuyền MỚI `br/payroll/` (PRD Payroll & Timesheet Unicons v2.1 từ raw/): PLANNING xong, CHƯA run. Sản phẩm: mockup.html (10 màn hình, data draft nhúng), 15 CSV data-draft (định mức/DM/tờ trình/bảng công mẫu — gap tự bù đánh dấu ASSUMED), BR.md 26 clause + bảng 10 Giả định đang gánh, 28 frame CỠ NGHIỆP VỤ (frame-lint ALL PASS, p22 khóa-kỳ khai tier compensable), queue 28 pending + prompts.md + line-status. Khác att40 (40 frame = 40 hàm stress-test): payroll slice theo nghiệp vụ trọn vẹn. Điều kiện run: HR xác nhận 10 giả định + viết test thật thay stub đỏ.
