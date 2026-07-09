@@ -244,14 +244,25 @@ def git_commit_all(message, cwd):
 
 
 def git_revert(paths, cwd):
-    """Revert out-of-scope changes: `git checkout --` tracked files, delete untracked."""
+    """Revert out-of-scope changes: `git checkout --` tracked files, delete untracked.
+    `paths` from git_changed_files/git_changed_vs are a MIX: cwd-relative for files
+    inside --root (rebased), repo-root-relative for files outside it (e.g. an unrelated
+    dirty file elsewhere in a bigger repo) — see _rebase_to_cwd. A single `cwd` cannot
+    resolve both forms correctly (git pathspecs are cwd-relative, not repo-root-relative),
+    so every git call here runs from the repo TOP-LEVEL with the path re-based back to
+    repo-root-relative first — resolves regardless of how deep --root is nested."""
+    prefix = _git_root_prefix(cwd)
+    proc = subprocess.run("git rev-parse --show-toplevel", shell=True, cwd=str(cwd),
+                          capture_output=True, text=True)
+    top = proc.stdout.strip() if proc.returncode == 0 else str(cwd)
     base = Path(cwd)
     for rel in paths:
         f = base / rel
-        r = subprocess.run(f"git ls-files --error-unmatch -- {rel}",
-                           shell=True, cwd=str(cwd), capture_output=True, text=True)
+        root_rel = f"{prefix}/{rel}" if prefix and not rel.startswith(prefix + "/") else rel
+        r = subprocess.run(f"git ls-files --error-unmatch -- {root_rel}",
+                           shell=True, cwd=top, capture_output=True, text=True)
         if r.returncode == 0:
-            subprocess.run(f"git checkout -- {rel}", shell=True, cwd=str(cwd),
+            subprocess.run(f"git checkout -- {root_rel}", shell=True, cwd=top,
                            capture_output=True, text=True)
         elif f.exists():
             try:
