@@ -1,8 +1,14 @@
-"""Stub p22_khoaky — /br run sẽ đắp code thật (test-first: xem tests/).
-Public API raise NotImplementedError; dunder attrs (__path__…) raise AttributeError
-để không phá import machinery."""
+"""p22_khoaky — khóa kỳ manual lock (tier: compensable, BR C4.3)."""
 
-def __getattr__(name):
-    if name.startswith("__") and name.endswith("__"):
-        raise AttributeError(name)
-    raise NotImplementedError(f"{name} chưa cài — chờ /br run frame p22_khoaky")
+_locked_ky = {}
+
+
+def khoa_ky(ky, nguoi, ly_do):
+    if not ly_do:
+        raise ValueError("ly_do khóa kỳ không được rỗng")
+    if ky not in _locked_ky:
+        _locked_ky[ky] = {"nguoi": nguoi, "ly_do": ly_do}
+
+
+def is_locked(ky):
+    return ky in _locked_ky
