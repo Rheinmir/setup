@@ -4,7 +4,7 @@ frame_id: frame-p28-ui-serve
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C3, C8]
-parent_br_hash: 19d405e59625a1192e74e53a7e1bc00778cbf92f9fe223f000d8d40994ab610e
+parent_br_hash: 06f8501d7472387c48709eed1947a0118c170e31ddc23c5b4e4282caca8bb9de
 muc_tieu: "Web UI stdlib theo mockup.html: 10 màn hình (dashboard, bảng công, suất ăn, phụ cấp, OT, master data, tờ trình, khóa kỳ 2 bước, báo cáo, đơn treo), role-based ẩn TIỀN với thư ký/CHT, dark/light toggle"
 scope_code: ["app/p28_ui.py", "serve.py", "app/__init__.py"]
 scope_test: ["tests/test_p28.py"]

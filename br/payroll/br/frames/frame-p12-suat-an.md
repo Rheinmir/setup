@@ -4,7 +4,7 @@ frame_id: frame-p12-suat-an
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C5.1.5, C5.3.1, C5.4]
-parent_br_hash: 19d405e59625a1192e74e53a7e1bc00778cbf92f9fe223f000d8d40994ab610e
+parent_br_hash: 06f8501d7472387c48709eed1947a0118c170e31ddc23c5b4e4282caca8bb9de
 muc_tieu: "Tổng hợp suất ăn theo từng bộ phận: quy tắc bữa (VP 1 · CT<30km 2 · CT≥30km 3 · ≤4h 0), cộng cơm TC đêm + CN/lễ thư ký chấm + cơm bổ sung tháng trước — phải tái lập đúng Ví dụ 1 = 65 suất"
 scope_code: ["app/p12_suatan.py"]
 scope_test: ["tests/test_p12.py"]

@@ -4,7 +4,7 @@ frame_id: frame-p22-khoa-ky
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C4.3]
-parent_br_hash: 19d405e59625a1192e74e53a7e1bc00778cbf92f9fe223f000d8d40994ab610e
+parent_br_hash: 06f8501d7472387c48709eed1947a0118c170e31ddc23c5b4e4282caca8bb9de
 muc_tieu: "Khóa kỳ manual lock (tier: compensable): HR khóa → ngừng sync API tháng đó, chặn mọi biến động; đơn muộn/sửa công sau chốt không cập nhật và KHÔNG truy thu tháng sau"
 scope_code: ["app/p22_khoaky.py"]
 scope_test: ["tests/test_p22.py"]

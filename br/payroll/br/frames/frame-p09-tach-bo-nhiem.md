@@ -4,7 +4,7 @@ frame_id: frame-p09-tach-bo-nhiem
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C5.1.2]
-parent_br_hash: 19d405e59625a1192e74e53a7e1bc00778cbf92f9fe223f000d8d40994ab610e
+parent_br_hash: 06f8501d7472387c48709eed1947a0118c170e31ddc23c5b4e4282caca8bb9de
 muc_tieu: "Tách 2 giai đoạn trước/sau bổ nhiệm khi có thay đổi lương hoặc PC trách nhiệm giữa kỳ; PC trách nhiệm = ngày hưởng × (định mức / công chuẩn) theo từng giai đoạn"
 scope_code: ["app/p09_bonhiem.py"]
 scope_test: ["tests/test_p09.py"]

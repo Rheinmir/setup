@@ -4,7 +4,7 @@ frame_id: frame-p16-pc-xang
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C5.3.3]
-parent_br_hash: 19d405e59625a1192e74e53a7e1bc00778cbf92f9fe223f000d8d40994ab610e
+parent_br_hash: 06f8501d7472387c48709eed1947a0118c170e31ddc23c5b4e4282caca8bb9de
 muc_tieu: "PC nhiên liệu/xăng/ô tô: CT chuẩn 1.000.000 cho L2–L6; VP không mức chung — chỉ qua tờ trình (kể cả 02 tài xế HN đích danh, GĐDA, Ban TGĐ); pro-rata + <14 ngày"
 scope_code: ["app/p16_pcxang.py"]
 scope_test: ["tests/test_p16.py"]

@@ -4,7 +4,7 @@ frame_id: frame-p11-bhxh-hai-truc
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C5.1.4]
-parent_br_hash: 19d405e59625a1192e74e53a7e1bc00778cbf92f9fe223f000d8d40994ab610e
+parent_br_hash: 06f8501d7472387c48709eed1947a0118c170e31ddc23c5b4e4282caca8bb9de
 muc_tieu: "Quy đổi kỳ công 21–20 sang tháng dương lịch để đếm ngày tính/không tính đóng BHXH, xác định diện đóng, và tính các khoản trích NV 8/1.5/1 + Cty 17/0.5/3/1 + 2% KPCĐ"
 scope_code: ["app/p11_bhxh.py"]
 scope_test: ["tests/test_p11.py"]

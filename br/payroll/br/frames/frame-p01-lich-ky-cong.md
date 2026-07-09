@@ -4,7 +4,7 @@ frame_id: frame-p01-lich-ky-cong
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C4.1]
-parent_br_hash: 19d405e59625a1192e74e53a7e1bc00778cbf92f9fe223f000d8d40994ab610e
+parent_br_hash: 06f8501d7472387c48709eed1947a0118c170e31ddc23c5b4e4282caca8bb9de
 muc_tieu: "Sinh lịch kỳ công 21–20 và kỳ BHXH 01–cuối tháng chạy song song, tính ngày công chuẩn VP (trừ CN + chiều T7) và CT (trừ CN) cho từng kỳ"
 scope_code: ["app/p01_lichky.py"]
 scope_test: ["tests/test_p01.py"]

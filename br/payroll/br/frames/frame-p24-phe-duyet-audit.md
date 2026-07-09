@@ -4,7 +4,7 @@ frame_id: frame-p24-phe-duyet-audit
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C6.2]
-parent_br_hash: 19d405e59625a1192e74e53a7e1bc00778cbf92f9fe223f000d8d40994ab610e
+parent_br_hash: 06f8501d7472387c48709eed1947a0118c170e31ddc23c5b4e4282caca8bb9de
 muc_tieu: "Vòng phê duyệt: đơn ?P không cộng công; HR Override có lý do bắt buộc; sync-back trạng thái 'Đã duyệt' về Workday (mock); audit log bất biến cũ→mới+người+lúc+lý do"
 scope_code: ["app/p24_pheduyet.py"]
 scope_test: ["tests/test_p24.py"]

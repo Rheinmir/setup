@@ -4,7 +4,7 @@ frame_id: frame-p15-pc-dien-thoai
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C5.3.2]
-parent_br_hash: 19d405e59625a1192e74e53a7e1bc00778cbf92f9fe223f000d8d40994ab610e
+parent_br_hash: 06f8501d7472387c48709eed1947a0118c170e31ddc23c5b4e4282caca8bb9de
 muc_tieu: "PC điện thoại: tra bảng ngạch × VP/CT (kể cả thử việc VP=0, CT=300k), áp engine pro-rata + <14 ngày + chia bộ phận theo định mức từng nơi"
 scope_code: ["app/p15_pcdienthoai.py"]
 scope_test: ["tests/test_p15.py"]

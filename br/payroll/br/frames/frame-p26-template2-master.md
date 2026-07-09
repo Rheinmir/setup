@@ -4,7 +4,7 @@ frame_id: frame-p26-template2-master
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C6.3]
-parent_br_hash: 19d405e59625a1192e74e53a7e1bc00778cbf92f9fe223f000d8d40994ab610e
+parent_br_hash: 06f8501d7472387c48709eed1947a0118c170e31ddc23c5b4e4282caca8bb9de
 muc_tieu: "Template 2 Payroll Master: file phẳng đầy đủ cho kế toán — ngày công các loại, lương TV 85%/CT 100%/PC trách nhiệm, 8 cột phụ cấp tách Taxable/Non-tax, OT, BHXH 2 phía, thuế TNCN, thực nhận, Profit/Cost Center-WBS"
 scope_code: ["app/p26_template2.py"]
 scope_test: ["tests/test_p26.py"]

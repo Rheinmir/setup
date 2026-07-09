@@ -4,7 +4,7 @@ frame_id: frame-p06-workday-adapter
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C4.2]
-parent_br_hash: 19d405e59625a1192e74e53a7e1bc00778cbf92f9fe223f000d8d40994ab610e
+parent_br_hash: 06f8501d7472387c48709eed1947a0118c170e31ddc23c5b4e4282caca8bb9de
 muc_tieu: "Adapter Workday mock (ranh giới BNAL verified:false): đọc bảng công thô ngày×NV + hồ sơ + EmployeeType + ngày kết thúc thử việc từ CSV thay cho API thật"
 scope_code: ["app/p06_workday.py"]
 scope_test: ["tests/test_p06.py"]

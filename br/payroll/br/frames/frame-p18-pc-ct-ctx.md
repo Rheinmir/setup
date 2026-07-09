@@ -4,7 +4,7 @@ frame_id: frame-p18-pc-ct-ctx
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C5.3.5]
-parent_br_hash: 19d405e59625a1192e74e53a7e1bc00778cbf92f9fe223f000d8d40994ab610e
+parent_br_hash: 06f8501d7472387c48709eed1947a0118c170e31ddc23c5b4e4282caca8bb9de
 muc_tieu: "PC công trường + công tác xa: bảng khối (CT/VP) × dải khoảng cách × 2 đối tượng (ĐH+ / CĐ-TC-Nghề); pro-rata + <14 ngày + chia bộ phận"
 scope_code: ["app/p18_pcctctx.py"]
 scope_test: ["tests/test_p18.py"]

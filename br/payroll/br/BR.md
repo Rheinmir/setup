@@ -18,6 +18,7 @@
 | G8 | C-DATA | Thang lương cơ bản của 12 NV mẫu là số bịa để demo (PRD không kèm thang lương) | Chỉ ảnh hưởng demo |
 | G9 | C5.3.1 | "Điều kiện an ninh theo quy định" của mức 2 bữa <30km: bỏ qua ở v0, coi mọi CT <30km đạt | Thừa suất ăn ở CT không đạt an ninh |
 | G10 | C5.5 | OT ngày truyền thống tách thuế = non-tax toàn phần | Sai cột thuế — trung bình |
+| G11 | C7.1 | Import chỉ ghi đè `nhan_vien.csv`, chưa hỗ trợ `bang_cong_tho.csv`/các CSV khác qua UI | Vẫn phải sửa tay các file còn lại — không rủi ro sai số |
 
 ## C4 — Tích hợp & chốt dữ liệu
 
@@ -55,6 +56,7 @@
 
 - **C3** (raw) Azure AD SSO. Phân quyền granular (xem/sửa/xuất/khóa kỳ/duyệt thay). Thư ký/CHT chỉ thấy NGÀY CÔNG không thấy TIỀN. Báo cáo 6.4 giới hạn HR C&B + log xuất.
 - **C7** (raw) Master data: DM Bộ phận (→tỉnh/khối/vùng, ngày hiệu lực), DM Nơi cư trú, DM Khoảng cách, bảng định mức các loại, danh sách Tờ trình, danh mục lễ (tự động hằng năm), quy định ngày nghỉ (phép 12+thâm niên, ≥50% công chuẩn, tồn đến 31/12 năm sau, ốm Cty 3 ngày…).
+- **C7.1** (user, gap-mới) Import Excel/CSV qua UI: trang "Master data" có form upload thay thế 1 file dữ liệu công ty (`nhan_vien.csv`) — validate header đúng schema TRƯỚC khi ghi đè, từ chối nếu thiếu/thừa cột hoặc file rỗng; ghi đè xong redirect về Master data với thông báo số dòng đã nhập. PRD gốc KHÔNG đặc tả màn hình này (chỉ nói "dữ liệu đầu vào" ở mức luồng, không mức UI) — user yêu cầu bổ sung 2026-07-09 sau khi phát hiện UI không có chỗ nhập dữ liệu ngoài sửa CSV bằng tay.
 - **C8** (raw) Phi chức năng: hàng ngàn NV xử lý <5 phút; tin Workday tuyệt đối trừ HR Override; MỌI con số truy vết được về công thức + ngày + định mức + nguồn; bảo mật báo cáo + log xem/xuất; tương thích Microsoft 365.
 
 ## Origin
