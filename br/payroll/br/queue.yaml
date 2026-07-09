@@ -41,9 +41,9 @@
   verdict: SUCCESS
   commit: 4b0991817d5138a965e90db86510ed570c0ae1e7
 - frame: br/frames/frame-p11-bhxh-hai-truc.md
-  status: failed
-  verdict: ERROR
-  commit: null
+  status: done
+  verdict: SUCCESS
+  commit: ac7b8d9f9da1ce176ea7ff8b3a782558d0c8c358
 - frame: br/frames/frame-p12-suat-an.md
   status: failed
   verdict: ERROR
