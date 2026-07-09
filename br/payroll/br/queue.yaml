@@ -109,6 +109,6 @@
   verdict: SUCCESS
   commit: 64dcfa0ebab96445b4387a45f2560467b3af2fd2
 - frame: br/frames/frame-p28-ui-serve.md
-  status: failed
-  verdict: NO_PROGRESS
-  commit: null
+  status: done
+  verdict: SUCCESS
+  commit: 2dfe15535d498de25725952a12ab61352d2bbc66
