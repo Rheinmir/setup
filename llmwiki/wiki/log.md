@@ -19,15 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-07 01:22:50 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=5466d24dbad76e3768b8ec9e29aea08510e4c1e49b4894b3 |
-| 2026-07-07 01:23:05 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=5f8d482c68e11de6e3493f140ca4fa7db2b0f21c04354178 |
-| 2026-07-07 01:23:15 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=80276855147e55818dee7b22068e3307691a468a7ac2178b |
-| 2026-07-07 01:23:37 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=db4de305 · actor=agent · prev=9f9a5abfdfa35d158ef97940ced7135f79ac67f850c2b771 |
-| 2026-07-07 01:32:16 | `file.write` | llmwiki/html/070726-huong-dan-repo-files.html · tool=Write · session=db4de305 · actor=agent · prev=a748b3c294c57e22a9ec7 |
-| 2026-07-07 01:33:40 | `file.write` | llmwiki/wiki/sources/draft/070726-huong-dan-repo-files.md · tool=Write · session=db4de305 · actor=agent · prev=f8f99dcdb |
-| 2026-07-07 10:37:33 | `file.write` | llmwiki/html/070726-huong-dan-repo-files.html · tool=Edit · session=d99d8818 · actor=agent · prev=b70cf18a553ee950047a08 |
-| 2026-07-07 10:37:50 | `file.write` | llmwiki/html/070726-huong-dan-repo-files.html · tool=Edit · session=d99d8818 · actor=agent · prev=6bba6b04be86d6247b86ae |
-| 2026-07-07 10:38:38 | `file.write` | llmwiki/html/070726-huong-dan-repo-files.html · tool=Edit · session=d99d8818 · actor=agent · prev=397231673c1147f3e35757 |
 | 2026-07-07 10:39:41 | `file.write` | llmwiki/html/070726-huong-dan-repo-files.html · tool=Edit · session=d99d8818 · actor=agent · prev=515833d06be98d95c27c70 |
 | 2026-07-07 10:39:51 | `file.write` | llmwiki/html/070726-huong-dan-repo-files.html · tool=Edit · session=d99d8818 · actor=agent · prev=058afd7b60038ab706b04f |
 | 2026-07-07 10:40:41 | `file.write` | llmwiki/html/070726-huong-dan-repo-files.html · tool=Edit · session=d99d8818 · actor=agent · prev=d0fb7e144de2983ca0512b |
@@ -59,6 +50,15 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-09 08:11:34 | `file.write` | harness/scripts/loop-runner.py · tool=Edit · session=d99d8818 · actor=agent · prev=0ccfc0ac5555fda80845f2816cc5c76e3dbf0 |
 | 2026-07-09 08:12:01 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=0 · prev=9220bd8ca7c8fdab58bebdb339516426bad74632808522b535eb7a1f26b87202 · h=a44f |
 | 2026-07-09 08:12:07 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=a44f0f212c8568d75fb669441f32f6ad86fca9da9 |
+| 2026-07-09 08:14:56 | `file.write` | harness/scripts/loop-runner.py · tool=Edit · session=d99d8818 · actor=agent · prev=5607d328e7d195db3e582d0c52e6a38c0006b |
+| 2026-07-09 08:15:17 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=0 · prev=aaf55fc682846a0ee5c04c8bcaed34be4198b96c34e6d15f248295dd336d8db9 · h=e71f |
+| 2026-07-09 08:15:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=e71f23bf704f4ee2ae92e20eee10cdf281da532eb |
+| 2026-07-09 08:17:17 | `file.write` | harness/scripts/loop-runner.py · tool=Edit · session=d99d8818 · actor=agent · prev=3bd0254d8b8e741ad572ef7bd968f22847b08 |
+| 2026-07-09 08:17:43 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=0 · prev=8ca768cf1cd367e7723247883343e466e95ac813a74c1c2f02de7a60799841f8 · h=0833 |
+| 2026-07-09 08:19:44 | `file.write` | fdk/tools/br-queue.py · tool=Edit · session=d99d8818 · actor=agent · prev=083374fd6c3cc216e849ce0a52d5cee685726501a7f971 |
+| 2026-07-09 08:19:58 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=0 · prev=a14c386e5bd66ec6d23eb70af96d000cef492aa0829309b8ef4c5d1049751a8b · h=d92d |
+| 2026-07-09 08:41:47 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=d99d8818 · actor=agent · prev=d92d2bba48506a8582bf5a22e383f180e9260797d77845dd |
+| 2026-07-09 08:42:09 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=0 · prev=009dcb09f6f8c312882caa625c436367d0e06d497f2c5e1648ac44a7909eec0e · h=0e53 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
