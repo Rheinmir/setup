@@ -258,7 +258,12 @@ def git_revert(paths, cwd):
     base = Path(cwd)
     for rel in paths:
         f = base / rel
-        root_rel = f"{prefix}/{rel}" if prefix and not rel.startswith(prefix + "/") else rel
+        # `rel` may already be repo-root-relative (outside --root) OR cwd-relative
+        # (inside --root, stripped by _rebase_to_cwd) — the string alone can't tell
+        # which, so resolve by what actually exists on disk at the repo top-level.
+        root_rel = rel
+        if prefix and not (Path(top) / rel).exists() and f.exists():
+            root_rel = f"{prefix}/{rel}"
         r = subprocess.run(f"git ls-files --error-unmatch -- {root_rel}",
                            shell=True, cwd=top, capture_output=True, text=True)
         if r.returncode == 0:
