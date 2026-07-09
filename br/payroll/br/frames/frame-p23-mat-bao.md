@@ -4,7 +4,7 @@ frame_id: frame-p23-mat-bao
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C6.1]
-parent_br_hash: 06f8501d7472387c48709eed1947a0118c170e31ddc23c5b4e4282caca8bb9de
+parent_br_hash: bd8b0c1092b3518507e218bdafbdb5dc39535405ea63f7a591e410a3c114e81d
 muc_tieu: "Nhánh Mắt Bão: nhận diện EmployeeType từ adapter, áp lịch chốt công sớm (assumed ngày 15), lấy định mức từ grid riêng trên Payroll thay vì bảng chung"
 scope_code: ["app/p23_matbao.py"]
 scope_test: ["tests/test_p23.py"]

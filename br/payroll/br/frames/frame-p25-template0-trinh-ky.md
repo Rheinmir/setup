@@ -4,7 +4,7 @@ frame_id: frame-p25-template0-trinh-ky
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C6.3]
-parent_br_hash: 06f8501d7472387c48709eed1947a0118c170e31ddc23c5b4e4282caca8bb9de
+parent_br_hash: bd8b0c1092b3518507e218bdafbdb5dc39535405ea63f7a591e410a3c114e81d
 muc_tieu: "Template 0 trình ký: định dạng chung Chính thức + Mắt Bão; NV điều động gộp TOÀN BỘ công tháng vào bảng của dự án nơi làm việc ngày 20 để CHT tại đó ký"
 scope_code: ["app/p25_template0.py"]
 scope_test: ["tests/test_p25.py"]

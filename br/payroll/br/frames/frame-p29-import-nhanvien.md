@@ -4,7 +4,7 @@ frame_id: frame-p29-import-nhanvien
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C7.1]
-parent_br_hash: 06f8501d7472387c48709eed1947a0118c170e31ddc23c5b4e4282caca8bb9de
+parent_br_hash: bd8b0c1092b3518507e218bdafbdb5dc39535405ea63f7a591e410a3c114e81d
 muc_tieu: "Validate + import file CSV nhân viên upload từ UI — kiểm header đúng schema, từ chối file thiếu/thừa cột hoặc rỗng, chỉ ghi đè khi hợp lệ"
 scope_code: ["app/p29_import.py"]
 scope_test: ["tests/test_p29.py"]

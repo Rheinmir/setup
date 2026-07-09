@@ -4,7 +4,7 @@ frame_id: frame-p19-pc-ctxa-duan-dacthu
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C5.3.6, C5.3.7]
-parent_br_hash: 06f8501d7472387c48709eed1947a0118c170e31ddc23c5b4e4282caca8bb9de
+parent_br_hash: bd8b0c1092b3518507e218bdafbdb5dc39535405ea63f7a591e410a3c114e81d
 muc_tieu: "PC công trường xa/khó khăn theo dự án đặc thù × chức danh (Quan Lạn, Chingluh) + PC khó khăn Làng Tây – Hòn Thơm theo tờ trình dự án; cộng PC khác (7) từ danh sách duyệt riêng"
 scope_code: ["app/p19_pcctxa.py"]
 scope_test: ["tests/test_p19.py"]

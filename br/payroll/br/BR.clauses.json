@@ -106,5 +106,21 @@
  "C7.1": {
   "provenance": "user",
   "assumed": true
+ },
+ "C9.1": {
+  "provenance": "raw",
+  "assumed": false
+ },
+ "C9.2": {
+  "provenance": "raw",
+  "assumed": false
+ },
+ "C9.3": {
+  "provenance": "raw",
+  "assumed": false
+ },
+ "C9.4": {
+  "provenance": "raw",
+  "assumed": false
  }
 }

@@ -4,7 +4,7 @@ frame_id: frame-p27-bao-cao-hr-treo
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C6.4, C6.5]
-parent_br_hash: 06f8501d7472387c48709eed1947a0118c170e31ddc23c5b4e4282caca8bb9de
+parent_br_hash: bd8b0c1092b3518507e218bdafbdb5dc39535405ea63f7a591e410a3c114e81d
 muc_tieu: "Bộ báo cáo bảo mật HR C&B (ma trận công 21–20, bảng cơm P1/P2, tổng hợp PC (1)–(8) + cột (2)(3), danh sách duyệt riêng so kỳ) + báo cáo đơn treo lãnh đạo tại cut-off; MỌI lượt xuất ghi log"
 scope_code: ["app/p27_baocao_hr.py"]
 scope_test: ["tests/test_p27.py"]

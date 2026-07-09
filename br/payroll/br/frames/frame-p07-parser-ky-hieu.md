@@ -4,7 +4,7 @@ frame_id: frame-p07-parser-ky-hieu
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C4.2]
-parent_br_hash: 06f8501d7472387c48709eed1947a0118c170e31ddc23c5b4e4282caca8bb9de
+parent_br_hash: bd8b0c1092b3518507e218bdafbdb5dc39535405ea63f7a591e410a3c114e81d
 muc_tieu: "Parser ký hiệu công: phân loại 15+ ký hiệu (x, x1, OL, P/F, R/Fo, L, NB, Ts/TS, TSN, ON/OD, TN, Ro, TC100/200/300, ?P) thành thuộc tính máy hiểu"
 scope_code: ["app/p07_kyhieu.py"]
 scope_test: ["tests/test_p07.py"]

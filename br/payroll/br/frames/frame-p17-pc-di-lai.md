@@ -4,7 +4,7 @@ frame_id: frame-p17-pc-di-lai
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C5.3.4]
-parent_br_hash: 06f8501d7472387c48709eed1947a0118c170e31ddc23c5b4e4282caca8bb9de
+parent_br_hash: bd8b0c1092b3518507e218bdafbdb5dc39535405ea63f7a591e410a3c114e81d
 muc_tieu: "PC đi lại: xác định nhóm đối tượng (CHT/CHT ME · ĐH+ · CĐ/TC/Nghề · NV.02), tra nơi tuyển dụng × tỉnh bộ phận → dải khoảng cách → định mức; pro-rata + <14 ngày + chia bộ phận"
 scope_code: ["app/p17_pcdilai.py"]
 scope_test: ["tests/test_p17.py"]

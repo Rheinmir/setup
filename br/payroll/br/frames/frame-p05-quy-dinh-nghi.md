@@ -4,7 +4,7 @@ frame_id: frame-p05-quy-dinh-nghi
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C7]
-parent_br_hash: 06f8501d7472387c48709eed1947a0118c170e31ddc23c5b4e4282caca8bb9de
+parent_br_hash: bd8b0c1092b3518507e218bdafbdb5dc39535405ea63f7a591e410a3c114e81d
 muc_tieu: "Quy định ngày nghỉ: phép năm 12 ngày +1/5 năm thâm niên, tháng đạt ≥50% công chuẩn mới tính phép, phép tồn dùng đến 31/12 năm kế, ốm Cty 3 ngày/năm"
 scope_code: ["app/p05_nghiphep.py"]
 scope_test: ["tests/test_p05.py"]

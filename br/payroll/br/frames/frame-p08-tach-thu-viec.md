@@ -4,7 +4,7 @@ frame_id: frame-p08-tach-thu-viec
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C5.1.1]
-parent_br_hash: 06f8501d7472387c48709eed1947a0118c170e31ddc23c5b4e4282caca8bb9de
+parent_br_hash: bd8b0c1092b3518507e218bdafbdb5dc39535405ea63f7a591e410a3c114e81d
 muc_tieu: "Đếm tách ngày công giai đoạn thử việc / sau thử việc theo 'Ngày kết thúc thử việc', gồm cả ngày nghỉ hưởng lương của từng giai đoạn — nền tính lương 85%/100%"
 scope_code: ["app/p08_thuviec.py"]
 scope_test: ["tests/test_p08.py"]

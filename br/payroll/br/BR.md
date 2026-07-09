@@ -59,5 +59,45 @@
 - **C7.1** (user, gap-mới) Import Excel/CSV qua UI: trang "Master data" có form upload thay thế 1 file dữ liệu công ty (`nhan_vien.csv`) — validate header đúng schema TRƯỚC khi ghi đè, từ chối nếu thiếu/thừa cột hoặc file rỗng; ghi đè xong redirect về Master data với thông báo số dòng đã nhập. PRD gốc KHÔNG đặc tả màn hình này (chỉ nói "dữ liệu đầu vào" ở mức luồng, không mức UI) — user yêu cầu bổ sung 2026-07-09 sau khi phát hiện UI không có chỗ nhập dữ liệu ngoài sửa CSV bằng tay.
 - **C8** (raw) Phi chức năng: hàng ngàn NV xử lý <5 phút; tin Workday tuyệt đối trừ HR Override; MỌI con số truy vết được về công thức + ngày + định mức + nguồn; bảo mật báo cáo + log xem/xuất; tương thích Microsoft 365.
 
+## C9 — Công thức lương THẬT (nguồn: Excel bàn giao Payroll, không phải PRD)
+
+> Nguồn: `llmwiki/raw/(Confidential) Payroll Handover Assessment (1) - inferred.xlsx`,
+> sheet **"Payroll structure"** (127 field: code · tên · loại input/formula · công
+> thức Excel gốc cột I) + sheet **"References"** (bảng thuế TNCN lũy tiến) + sheet
+> **"Allowance Rule + Except"** (định mức theo Level 1-8) + sheet **"Time Tracking
+> Rule"** (quy tắc chấm công). Đây là **công thức HR/Payroll team thật đang dùng**,
+> khác — và chính xác hơn — các công thức tôi tự suy ra từ PRD ở C5.x phía trên.
+> User cung cấp 2026-07-09/10 sau khi phát hiện dây chuyền cũ (C5.x) chưa có công
+> thức ra "lương thực nhận" cuối cùng.
+
+- **C9.1** (raw, nguồn Excel) Chuỗi công thức đầy đủ 40 field từ ngày công thô đến
+  lương thực chi: `PAID_DAYS` (tổng ngày hưởng lương) → `EARNED_SAL` (lương thực tế:
+  thử việc + chính thức + trách nhiệm, chia theo `STD_DAYS`) → `GROSS` (cộng dồn mọi
+  PC/thưởng/trợ cấp/điều chỉnh, tách rạch taxable/non-taxable từng khoản) →
+  `TAXABLE_GROSS` (trừ các khoản không chịu thuế) → `TOTAL_INS` (BHXH+BHYT+BHTN NV,
+  8%/1.5%/1% trên lương **CÓ TRẦN** 46.800.000đ (BHXH/BHYT) và 106.200.000đ (BHTN)) →
+  `TAXABLE_INC` (trừ giảm trừ bản thân 15.500.000đ + 6.200.000đ/người phụ thuộc) →
+  `PIT` (thuế TNCN lũy tiến 7 bậc, NĐ 65/2013) → `NET_PAY` → `NET_PAY_HOME` (làm tròn,
+  = lương thực chi cuối cùng). Song song phía công ty: `TOTAL_INS_CTY` (17%/0.5%/3%/1%
+  cùng trần) + `KPCD_CTY` (2%) → `TOTAL_CTY_COST`. Toàn bộ implement tại
+  `app/p30_formula_engine.py` — engine dependency-graph, `compute(code, inputs)` resolve
+  đệ quy 1 lần ra mọi field phụ thuộc, không cần biết thứ tự tay.
+- **C9.2** (raw, nguồn Excel References) Thuế TNCN lũy tiến từng phần 7 bậc chuẩn
+  NĐ 65/2013 (0-5tr 5% · 5-10tr 10%/trừ 250k · 10-18tr 15%/trừ 750k · 18-32tr
+  20%/trừ 1.65tr · 32-52tr 25%/trừ 3.25tr · 52-80tr 30%/trừ 5.85tr · >80tr 35%/trừ
+  9.85tr). Sheet chỉ đọc được 3/7 dòng do merge cell (5%,10%,30% khớp đúng NĐ chuẩn) —
+  4 dòng còn lại lấy theo bảng luật công khai, không phải suy đoán riêng.
+- **C9.3** (raw, nguồn Excel Allowance Rule) Định mức phụ cấp theo 8 cấp bậc (Level
+  1-8, KHÁC hệ ngạch QL/CV/NV ở C5.3.x): điện thoại 300k→1tr, xe hơi (BOD/không-BOD),
+  xăng theo site/non-site, trách nhiệm theo chức danh cụ thể (Trưởng/Phó nhóm bảo
+  vệ, Q.Trưởng/Trưởng dự án…), đi lại theo dải km × trung tâm/không-trung-tâm, cơm
+  (bảo vệ 2 suất · non-project 1 suất · dự án <30km 2 suất · ≥30km 3 suất — khớp
+  quy tắc đã cài ở p12). **CHƯA nối vào engine** (C9.1 mới dùng input thô cho các
+  trường PC, chưa tự tra bảng Level) — việc kế tiếp nếu cần chính xác tuyệt đối.
+- **C9.4** (raw, nguồn Excel Time Tracking Rule) Xác nhận lại các quy tắc đã cài ở
+  C4.1/C7 (kỳ công 21-20, công chuẩn VP trừ CN+chiều T7, phép 12+1/5 năm, phép tồn
+  hết hạn 31/12 năm kế, ốm Cty 3 ngày/năm không cộng dồn) — không có sai khác với
+  C5.x, chỉ xác nhận nguồn.
+
 ## Origin
-Biên dịch 2026-07-09 từ `llmwiki/raw/PRD__Payroll_System_v2.1.docx` (user cung cấp 09/07). Gap tự bù theo yêu cầu user "tự bổ sung gap" — tất cả đánh dấu bảng Giả định, chờ HR xác nhận trước khi run.
+Biên dịch 2026-07-09 từ `llmwiki/raw/PRD__Payroll_System_v2.1.docx` (user cung cấp 09/07). Gap tự bù theo yêu cầu user "tự bổ sung gap" — tất cả đánh dấu bảng Giả định, chờ HR xác nhận trước khi run. C9 bổ sung 2026-07-10 từ Excel bàn giao Payroll thật — thay thế công thức tự suy đoán ở C5.x cho phần tính GROSS→NET_PAY.
