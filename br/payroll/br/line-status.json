@@ -765,16 +765,42 @@
         "out_of_scope_files": []
       },
       "assumed_clauses": []
+    },
+    {
+      "frame_id": "frame-p29-import-nhanvien",
+      "file": "frame-p29-import-nhanvien.md",
+      "status": "green-pending-review",
+      "clause_ids": [
+        "C7.1"
+      ],
+      "scope_code": [
+        "app/p29_import.py"
+      ],
+      "muc_tieu": "Validate + import file CSV nhân viên upload từ UI — kiểm header đúng schema, từ chối file thiếu/thừa cột hoặc rỗng, chỉ ghi đè khi hợp lệ",
+      "run": {
+        "verdict": "SUCCESS",
+        "iterations_run": 2,
+        "reason": "verify passed on iteration 2 (+2 confirm)",
+        "scope_reverted": true,
+        "protect_violation": false,
+        "changed_files": [
+          "app/p29_import.py"
+        ],
+        "commit": "3e6a28bdae42d2f901dc093e18d0d5d32164020f",
+        "scope_clean": true,
+        "out_of_scope_files": []
+      },
+      "assumed_clauses": []
     }
   ],
   "counts": {
     "killed": 0,
     "stalled": 0,
     "pending": 0,
-    "green-pending-review": 28,
+    "green-pending-review": 29,
     "merged": 0
   },
-  "total_frames": 28,
+  "total_frames": 29,
   "clauses": {
     "C3": {
       "provenance": "raw",
@@ -879,6 +905,10 @@
     "C8": {
       "provenance": "raw",
       "assumed": false
+    },
+    "C7.1": {
+      "provenance": "user",
+      "assumed": true
     }
   },
   "assumed_clause_count": 0
