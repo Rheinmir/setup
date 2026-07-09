@@ -84,15 +84,25 @@ def default_revise_cmd(frame_path, atest, vout, cwd, template):
 def build_loop_command(frame_fm, cwd, baseline, revise_cmd, log_path, vout):
     fid = frame_fm.get("frame_id", "frame")
     atest = frame_fm.get("acceptance_test", "false")
-    scope = ",".join(frame_fm.get("scope_code") or [])
-    protect = ",".join(frame_fm.get("scope_test") or [])
+    scope_list = frame_fm.get("scope_code") or []
+    protect_list = frame_fm.get("scope_test") or []
     clauses = ",".join(frame_fm.get("clause_ids") or [])
     guards = frame_fm.get("guards") or {}
+    # --state/--scope/--protect are `action="append"` in loop-runner (repeatable, one
+    # glob per flag) — a frame with >1 scope file (e.g. ["a.py","b.py","c.py"]) must pass
+    # THREE flags, not one comma-joined string. Joining silently made every glob compare
+    # a real path like "a.py" against the literal pattern "a.py,b.py,c.py" — never
+    # matches, so diff-jail reverted the agent's own in-scope edits every iteration
+    # (looked like NO_PROGRESS). Found running frame-p28-ui-serve (3-file scope), payroll
+    # pipeline GH#15.
+    scope_flags = [x for f in scope_list for x in ("--state", f)] + \
+                  [x for f in scope_list for x in ("--scope", f)]
+    protect_flags = [x for f in protect_list for x in ("--protect", f)]
     cmd = [
         "python3", str(LOOP_RUNNER), "run",
         "--verify", atest,
         "--revise", revise_cmd,
-        "--state", scope, "--scope", scope, "--protect", protect,
+        *scope_flags, *protect_flags,
         "--baseline", baseline, "--commit-on-success",
         "--commit-message", f"frame({fid}): {frame_fm.get('muc_tieu','')} [{clauses}]",
         "--confirm", "2",   # hermeticity: a frame's green must reproduce (council 2026-07-06)
