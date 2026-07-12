@@ -35,6 +35,7 @@ Exit: 0 = all frames pass · 1 = at least one rule failed · 2 = usage error.
 import argparse
 import fnmatch
 import hashlib
+import json
 import re
 import subprocess
 import sys
@@ -250,6 +251,46 @@ def rule_exclusive_scope(frame_scopes, root):
     return fails
 
 
+def rule_assemble_scope(frame_records, root):
+    """R8 (T2): a frame with `kind: assemble` is the ASSEMBLER, not a fixer. It may only
+    own its own thin composition layer (app/pipeline.py + outputs) — never a component
+    file owned by a real frame. So an assemble frame whose scope_code resolves to any
+    file that a non-assemble frame owns is BLOCKED. This turns 'agent tổng đụng component
+    rồi lan' into a lint failure, before runtime."""
+    fails = []
+    comp_files = set()
+    for fid, kind, globs in frame_records:
+        if kind != "assemble":
+            comp_files |= _matches(globs, root)
+    for fid, kind, globs in frame_records:
+        if kind != "assemble":
+            continue
+        overlap = _matches(globs, root) & comp_files
+        if overlap:
+            rel = sorted(str(p.relative_to(root)) for p in list(overlap)[:5])
+            fails.append(f"R8 assemble-scope: assemble frame `{fid}` claims component file(s) owned by "
+                         f"another frame: {rel} — assemble chỉ được lắp (app/pipeline.py + output), không sửa component")
+    return fails
+
+
+def rule_assumptions(fm, ship):
+    """R9 (T3): 'Giả định đang gánh' as a hard gate. On the ship path (--ship), a frame
+    that still carries an UNVERIFIED assumption of blocking severity may not be called
+    done. Structured `assumptions:` only — old frames without the block pass (fail-open).
+    Each assumption: {id, text, verified: bool, severity: block|warn}."""
+    if not ship:
+        return []
+    fails = []
+    for a in fm.get("assumptions") or []:
+        if not isinstance(a, dict):
+            continue
+        if not a.get("verified", False) and a.get("severity", "block") != "warn":
+            aid = a.get("id", "?")
+            fails.append(f"R9 assumption-gate: ship blocked — assumption `{aid}` chưa verified "
+                         f"({a.get('text','')!r}) còn gánh trên đường giao hàng")
+    return fails
+
+
 def rule_content(fm, text):
     """R7: frame phải đọc-hiểu-được bởi người về sau — muc_tieu là câu nghiệp vụ
     thật + body đủ 4 section template, mỗi section có nội dung thật."""
@@ -302,13 +343,17 @@ def rule_dag(frames):
 
 
 # ── Orchestration ───────────────────────────────────────────────────────────
-def lint_frame(path, root, skip_verify=False):
-    """Lint one frame file (rules 1-4). Returns (frame_id, depends_on, failures)."""
+def lint_frame(path, root, skip_verify=False, ship=False, soft_off=False):
+    """Lint one frame file (rules 1-4). Returns (frame_id, depends_on, failures).
+    soft_off (Rail off/skip): bỏ GATE MỀM (R7 content + assumption-gate) — phanh cứng/cấu
+    trúc (R1-R6) VẪN chạy. Bảo mật/liêm-chính không đi qua đây."""
     text = Path(path).read_text(encoding="utf-8")
     fm = parse_frontmatter(text)
     fails = []
     fails += rule_schema(fm)
-    fails += rule_content(fm, text)
+    if not soft_off:
+        fails += rule_content(fm, text)
+        fails += rule_assumptions(fm, ship)
     # only run scope/freshness/test rules if schema gave us the fields
     if not any(f.startswith("R1 schema: missing") for f in fails):
         fails += rule_scope(fm, root)
@@ -318,7 +363,7 @@ def lint_frame(path, root, skip_verify=False):
     return fm.get("frame_id"), (fm.get("depends_on") or []), fails, fm
 
 
-def check(target, root, skip_verify=False):
+def check(target, root, skip_verify=False, ship=False, soft_off=False):
     root = Path(root).resolve()
     target = Path(target)
     files = sorted(target.glob("*.md")) if target.is_dir() else [target]
@@ -329,15 +374,17 @@ def check(target, root, skip_verify=False):
     all_ok = True
     frames_for_dag = []
     frame_scopes = []
+    frame_records = []
     for f in files:
         try:
-            fid, deps, fails, fm = lint_frame(f, root, skip_verify)
+            fid, deps, fails, fm = lint_frame(f, root, skip_verify, ship, soft_off)
         except (ValueError, OSError) as e:
             print(f"  [FAIL] {f.name}: cannot parse — {e}")
             all_ok = False
             continue
         frames_for_dag.append((fid, deps))
         frame_scopes.append((fid, fm.get("scope_code") or []))
+        frame_records.append((fid, fm.get("kind") or "frame", fm.get("scope_code") or []))
         if fails:
             all_ok = False
             print(f"  [FAIL] {f.name} ({fid}):")
@@ -345,7 +392,8 @@ def check(target, root, skip_verify=False):
                 print(f"          - {x}")
         else:
             print(f"  [ok]   {f.name} ({fid})")
-    dag_fails = rule_dag(frames_for_dag) + rule_exclusive_scope(frame_scopes, root)
+    dag_fails = (rule_dag(frames_for_dag) + rule_exclusive_scope(frame_scopes, root)
+                 + rule_assemble_scope(frame_records, root))
     if dag_fails:
         all_ok = False
         for x in dag_fails:
@@ -353,6 +401,47 @@ def check(target, root, skip_verify=False):
     print("-" * 60)
     print(f"  frame-lint: {'ALL PASS' if all_ok else 'FAILURES PRESENT'}  ({len(files)} frame(s))")
     return 0 if all_ok else 1
+
+
+# ── T1 provenance manifest — the spine every traceback reads ─────────────────
+def build_manifest(target, root):
+    """Emit `file → {frame_id, clause_ids}` PURELY from frame frontmatter (never hand-
+    written). 1-file-1-owner is already enforced deterministically by R6
+    (rule_exclusive_scope); here we ALSO refuse to write a manifest that still has a
+    collision, so a mis-cut slice can never produce a spine that points a bug→frame
+    traceback at the wrong owner. Returns (manifest_dict, collisions)."""
+    root = Path(root).resolve()
+    target = Path(target)
+    files = sorted(target.glob("*.md")) if target.is_dir() else [target]
+    files = [f for f in files if f.name != "index.md"]
+    manifest, collisions = {}, []
+    for f in files:
+        fm = parse_frontmatter(f.read_text(encoding="utf-8"))
+        fid = fm.get("frame_id")
+        clauses = fm.get("clause_ids") or []
+        for p in sorted(_matches(fm.get("scope_code") or [], root)):
+            rel = p.relative_to(root).as_posix()
+            owner = manifest.get(rel)
+            if owner and owner["frame_id"] != fid:
+                collisions.append((rel, owner["frame_id"], fid))
+                continue
+            manifest[rel] = {"frame_id": fid, "clause_ids": clauses}
+    return manifest, collisions
+
+
+def cmd_manifest(target, root, out):
+    manifest, collisions = build_manifest(target, root)
+    if collisions:
+        for rel, a, b in collisions:
+            print(f"  [FAIL] manifest: file `{rel}` claimed by both `{a}` and `{b}` "
+                  f"— 1-file-1-chủ vỡ (sửa lát cắt trước, xem R6)")
+        print(f"  manifest: NOT written ({len(collisions)} collision) — spine sai thì truy vết lan")
+        return 1
+    outp = Path(out) if out else (Path(target) / "_manifest.json")
+    outp.write_text(json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+                    encoding="utf-8")
+    print(f"  manifest: {len(manifest)} file→frame mapping → {outp}")
+    return 0
 
 
 # ── Self-test: BAD + GOOD fixtures for each rule ─────────────────────────────
@@ -403,13 +492,13 @@ def selftest():
     ok = True
     results = []
 
-    def record(label, want_fail_substr, exit_expected_fail, dir_target, root, skip=False):
+    def record(label, want_fail_substr, exit_expected_fail, dir_target, root, skip=False, ship=False):
         nonlocal ok
         import io
         import contextlib
         buf = io.StringIO()
         with contextlib.redirect_stdout(buf):
-            rc = check(dir_target, root, skip_verify=skip)
+            rc = check(dir_target, root, skip_verify=skip, ship=ship)
         out = buf.getvalue()
         failed = rc != 0
         hit = (want_fail_substr in out) if want_fail_substr else True
@@ -486,6 +575,45 @@ def selftest():
         (g6 / "b.md").write_text(f_b)
         record("GOOD R6 disjoint", "ALL PASS", False, g6, root, skip=True)
 
+        # T1 manifest — disjoint frames produce a clean spine; overlap refuses to write
+        m_ok, m_col = build_manifest(g6, root)
+        man_good = (not m_col) and any(v["frame_id"] == "g6a-luu-so-cai" for v in m_ok.values()) \
+            and any(v["frame_id"] == "g6b-luu-so-cai" for v in m_ok.values())
+        results.append(("T1 manifest disjoint", "PASS" if man_good else "FAIL", 0, "clean spine"))
+        ok = ok and man_good
+        _, b_col = build_manifest(b6, root)
+        man_bad = bool(b_col)  # overlapping scopes must surface a collision, not a silent spine
+        results.append(("T1 manifest collision", "PASS" if man_bad else "FAIL", 0, "collision caught"))
+        ok = ok and man_bad
+
+        # BAD R8 (T2) — assemble frame claims a component file (owned by another frame)
+        b8 = root / "bad8"; b8.mkdir()
+        _write_frame(b8, "comp.md", fid="c8", brhash=brhash, deps="", atest=red)  # owns src/**
+        asm = _GOOD_FRAME.format(fid="a8", brhash=brhash, deps="", atest=red).replace(
+            "created_by: human", "created_by: human\nkind: assemble")
+        (b8 / "asm.md").write_text(asm)  # also src/** → claims a component file
+        record("BAD R8 assemble-scope", "assemble-scope", True, b8, root, skip=True)
+
+        # GOOD R8 — assemble owns a DISJOINT composition file, not a component
+        g8 = root / "good8"; g8.mkdir()
+        (root / "app2").mkdir(); (root / "app2" / "pipeline.py").write_text("p = 1\n")
+        _write_frame(g8, "comp.md", fid="c8b", brhash=brhash, deps="", atest=red)  # src/**
+        asm2 = _GOOD_FRAME.format(fid="a8b", brhash=brhash, deps="", atest=red).replace(
+            "created_by: human", "created_by: human\nkind: assemble").replace(
+            'scope_code: ["src/**"]', 'scope_code: ["app2/**"]')
+        (g8 / "asm.md").write_text(asm2)
+        record("GOOD R8 assemble disjoint", "ALL PASS", False, g8, root, skip=True)
+
+        # BAD R9 (T3) — unverified blocking assumption blocks ship (--ship)
+        b9 = root / "bad9"; b9.mkdir()
+        a9 = _GOOD_FRAME.format(fid="a9", brhash=brhash, deps="", atest=red).replace(
+            "created_by: human",
+            "created_by: human\nassumptions:\n  - {id: G1, text: chờ HR, verified: false, severity: block}")
+        (b9 / "frame.md").write_text(a9)
+        record("BAD R9 ship-gate", "assumption-gate", True, b9, root, skip=True, ship=True)
+        # same frame is fine when NOT on the ship path (gate is opt-in)
+        record("GOOD R9 gate-off", "ALL PASS", False, b9, root, skip=True, ship=False)
+
     print("frame-lint self-test — BAD/GOOD fixtures per rule\n" + "-" * 60)
     for label, tag, rc, sub in results:
         print(f"  [{tag}] {label:<20} rc={rc}")
@@ -501,7 +629,14 @@ def build_parser():
     c.add_argument("target", help="frame .md file OR directory of frames")
     c.add_argument("--root", default=".", help="project root that scope globs resolve against")
     c.add_argument("--skip-verify", action="store_true", help="skip rule 3 (do not run acceptance_test)")
-    c.set_defaults(func=lambda a: check(a.target, a.root, a.skip_verify))
+    c.add_argument("--ship", action="store_true", help="enable R9 assumption-gate (block ship while unverified assumptions carry)")
+    c.add_argument("--soft-off", action="store_true", help="Rail off/skip: bỏ gate MỀM (R7 content + assumption); phanh cứng/cấu trúc R1-R6 vẫn chạy")
+    c.set_defaults(func=lambda a: check(a.target, a.root, a.skip_verify, a.ship, a.soft_off))
+    m = sub.add_parser("manifest", help="emit _manifest.json (file→frame_id→clause_ids) from frontmatter (T1 spine)")
+    m.add_argument("target", help="directory of frames (or one frame .md)")
+    m.add_argument("--root", default=".", help="project root that scope globs resolve against")
+    m.add_argument("--out", default=None, help="output path (default: <target>/_manifest.json)")
+    m.set_defaults(func=lambda a: cmd_manifest(a.target, a.root, a.out))
     s = sub.add_parser("selftest", help="BAD/GOOD fixtures for every rule (temp dirs)")
     s.set_defaults(func=lambda a: selftest())
     return p

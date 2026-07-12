@@ -104,6 +104,8 @@ Giảm lỗi LLM-coding phổ biến. Thiên về cẩn trọng hơn tốc độ
 | `tour-guide` | Thêm một in-app product tour (spotlight onboarding overlay) tự viết, KHÔNG… | `skills/utils/tour-guide.md` | utils |
 | `tour-guide-supademo` | Style thiết kế Supademo cho in-app product tour (dùng kèm skill tour-guide… | `skills/utils/tour-guide-supademo.md` | utils |
 | `uat-nonit-testcase` | Tạo bộ test case / checklist UAT cho người dùng nghiệp vụ NON-IT (C&B, kế… | `skills/utils/uat-nonit-testcase.md` | utils |
+| `visual-qa` | QA thị giác: chụp headless từng route SPA local → FINDINGS.md tự bật vòng sửa (khi extension lỗi localhost / sau đổi theme) | `skills/utils/visual-qa.md` | utils |
+| `unknown` | Bắt+làm rõ+lưu chỗ mơ hồ làm think rối (mọi project); phỏng vấn → ledger jsonl → surface qua MEMORY.md chống-quên → promote memory/wiki | `skills/utils/unknown.md` | utils |
 
 ## Invocation rules
 - New file in `raw/` → invoke `ingest` immediately

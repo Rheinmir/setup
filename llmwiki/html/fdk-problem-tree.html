@@ -554,6 +554,32 @@
     "date": "09/07/26",
     "session": "c6d85432",
     "pending": true
+  },
+  {
+    "id": "p-visual-qa",
+    "parent": null,
+    "title": "Không nghiệm thu được UI app local (extension MCP lỗi 'error page' trên localhost)",
+    "desc": "Khi rebuild giao diện app do /br sinh (memos→Lume), Chrome-extension MCP không chụp được localhost nên agent sửa UI mù, ra kết quả 'xấu'. Giải: skill visual-qa — luồng headless (playwright-core + Chrome hệ thống) login rồi chụp từng route → agent đọc ảnh → FINDINGS.md tự bật vòng sửa.",
+    "status": "solved",
+    "scope": [
+      "skills"
+    ],
+    "date": "13/07/26",
+    "solvedBy": "skill visual-qa (route-shots.mjs) + FINDINGS.md loop",
+    "session": "goal-memos"
+  },
+  {
+    "id": "p-unknown",
+    "parent": null,
+    "title": "Unknown/mơ hồ làm reasoning('think') rối nhưng không được bắt & dễ quên",
+    "desc": "Chỗ chưa chắc trong phiên khiến model đoán bừa → sai lan (vd UI khai pass chưa nhìn; chỗ lưu chưa rõ). Không có cơ chế bắt+làm rõ+lưu, phiên sau quên. Giải: skill /unknown — bắt → phỏng vấn (AskUserQuestion) → ledger jsonl per-project (~/.claude/unknowns) → surface qua MEMORY.md mỗi phiên (chống-quên đi ké recall memory) → promote cố ý memory/wiki. Universal mọi project, không /br/wiki.",
+    "status": "solved",
+    "scope": [
+      "skills"
+    ],
+    "date": "13/07/26",
+    "solvedBy": "skill /unknown (unknown.py ledger)",
+    "session": "fdk-unknown"
   }
 ]</script>
 

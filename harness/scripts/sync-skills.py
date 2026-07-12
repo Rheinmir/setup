@@ -23,6 +23,8 @@ LLMWIKI = REPO / "llmwiki" / "skills"    # mirror (bundle llmwiki / sync-templat
 
 # name → loop (thư mục trong llmwiki/skills/). Skill mới không khai → 'utils'.
 LOOP_MAP = {
+    "unknown": "utils",
+    "visual-qa": "utils",
     # dev-loop
     "impact-check": "dev-loop", "new-project-setup": "dev-loop", "onboard-codebase": "dev-loop",
     "propose": "dev-loop", "safe-change": "dev-loop",

@@ -1,7 +1,7 @@
 <!-- SINH BẰNG CODE: build-capabilities.py — ĐỪNG sửa tay; chạy lại để cập nhật. -->
 # CAPABILITIES — toàn bộ đồ nghề (luôn-mới, đếm từ đĩa)
 
-**76 skill · 17 rule · 27 fdk-tool · 47 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
+**78 skill · 17 rule · 32 fdk-tool · 47 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
 
 ## Skills (gọi bằng `/<tên>`)
 
@@ -42,7 +42,7 @@
 - **`/orchestration`** — Use Orca orchestration for structured multi-agent coordination: threaded messages, blockin…
 - **`/trace-grader`** — Score the PATH an agent took (tool choice, ordering, retries, repeatability, grounding)
 
-### utils (45)
+### utils (47)
 - **`/brandkit`** — Premium brand-kit image generation skill for creating high-end brand-guidelines boards, lo…
 - **`/cavecrew`** — Decision guide for delegating to caveman-style subagents
 - **`/caveman`** — Ultra-compressed communication mode
@@ -86,6 +86,8 @@
 - **`/tour-guide`** — Thêm một in-app product tour (spotlight onboarding overlay) tự viết, KHÔNG cần thư viện (k…
 - **`/tour-guide-supademo`** — Style thiết kế Supademo cho in-app product tour (dùng kèm skill tour-guide
 - **`/uat-nonit-testcase`** — Tạo bộ test case / checklist UAT cho người dùng nghiệp vụ NON-IT (C&B, kế toán, vận hành)
+- **`/unknown`** — Bắt + làm rõ + lưu UNKNOWN (chỗ mơ hồ làm reasoning/"think" rối) cho MỌI project (không cầ…
+- **`/visual-qa`** — Luồng QA thị giác tự động cho SPA local (app do dây chuyền /br sinh ra, hoặc bất kỳ web ap…
 - **`/web-clone`** — Clone a website
 - **`/web-crawl`** — Crawl/scrape a website or single page into clean LLM-ready MARKDOWN
 
@@ -110,11 +112,14 @@
 
 ## FDK tools (`python3 fdk/tools/<x>`)
 - `artifacts.py`
+- `br-contract.py`
 - `br-find.py`
 - `br-prompts.py`
 - `br-queue.py`
+- `br-rail.py`
 - `br-revise.py`
 - `br-run.py`
+- `br-sync.py`
 - `build-capabilities.py`
 - `build-cheatsheet.py`
 - `build-docs-index.py`
@@ -128,11 +133,13 @@
 - `code_imports.py`
 - `docs-curate.py`
 - `frame-lint.py`
+- `loop-cost.py`
 - `medic.py`
 - `memory-map.py`
 - `new-skill.py`
 - `skill-provenance.py`
 - `skill-usage.py`
+- `unknown.py`
 - `upstream-drift.py`
 - `whiteboard-skill-map.py`
 - `wiki-relations.py`

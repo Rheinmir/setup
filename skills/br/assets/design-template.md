@@ -48,7 +48,13 @@ có phải single-file không.}}
 - **Motion cấm:** transition `linear`/`ease-in-out`; đổi trạng thái tức thì không nội suy.
 
 ### 3.2 Creative Variance Engine — chọn 1 Vibe + 1 Layout mỗi sản phẩm
+> **MẶC ĐỊNH DÂY CHUYỀN = Neumorphism (Vibe 0).** Mọi app /br sinh ra dùng
+> Neumorphism trừ khi BR/DESIGN của sản phẩm nêu lý do đổi (vd cần OLED-dark cho AI
+> tool → chọn Ethereal Glass). Đổi Vibe phải ghi lý do ở §6. Chi tiết công thức
+> Neumorphism ở §3.6.
+
 **Vibe (texture)**
+0. **Neumorphism (MẶC ĐỊNH)** (app nghiệp vụ/dashboard/form nội bộ như Payroll): một mặt phẳng đơn sắc nhạt, component "đùn" ra hoặc "lõm" vào CÙNG màu nền bằng CẶP bóng mềm (sáng trên-trái + tối dưới-phải) — KHÔNG viền, KHÔNG đổi màu nền card. Tương phản bề mặt thấp, sang & tĩnh. Xem §3.6.
 1. **Ethereal Glass** (SaaS/AI): OLED đen `#050505`, mesh gradient phát sáng nhẹ, card vantablack `backdrop-blur-2xl`, hairline `white/10`, chữ Grotesk hình học rộng.
 2. **Editorial Luxury** (lifestyle/agency): kem ấm `#FDFBF7`, sage/espresso, serif biến thiên tương phản cao, phủ noise film-grain `opacity-[.03]`.
 3. **Soft Structuralism** (consumer/health/portfolio): nền trắng/xám bạc, Grotesk đậm cỡ lớn, component nổi với bóng khuếch tán rất mềm.
@@ -77,26 +83,56 @@ có phải single-file không.}}
 - Noise overlay: pseudo-element `position:fixed; inset:0; pointer-events-none; z-index:50`.
 - Z-index kỷ luật theo tầng hệ thống (nav/modal/overlay/tooltip), không `z-[9999]` tuỳ tiện.
 
+### 3.6 Neumorphism recipe (Vibe mặc định — công thức bắt buộc)
+Neumorphism = "đùn từ chất liệu": card/nút KHÔNG nổi TRÊN nền mà mọc RA TỪ nền, cùng
+một màu, phân biệt chỉ bằng ánh sáng. Bốn luật cứng:
+
+- **Một mặt đơn sắc:** nền và mọi surface CÙNG màu gốc (light `#e0e5ec`, dark `#2a2d32`). KHÔNG viền, KHÔNG màu card khác nền. Chiều sâu do bóng, không do màu.
+- **Cặp bóng đối xứng (extrude/outset):** mỗi khối nổi có ĐÚNG 2 bóng — sáng góc trên-trái + tối góc dưới-phải, cùng offset/blur:
+  ```css
+  /* light: nguồn sáng trên-trái */
+  box-shadow: -6px -6px 12px rgba(255,255,255,.75), 6px 6px 12px rgba(163,177,198,.55);
+  /* dark */
+  box-shadow: -6px -6px 12px rgba(255,255,255,.04), 6px 6px 12px rgba(0,0,0,.55);
+  border-radius: 16px;  /* neumorphism cần bo tròn để bóng đọc được */
+  ```
+- **Trạng thái lõm (inset/pressed):** input, toggle bật, nút đang nhấn → ĐẢO bóng vào trong (`inset`), giữ nguyên cặp sáng/tối. Đây là cách DUY NHẤT thể hiện active/pressed:
+  ```css
+  box-shadow: inset -4px -4px 8px rgba(255,255,255,.7), inset 4px 4px 8px rgba(163,177,198,.6);
+  ```
+- **Không xung đột §3.1:** cặp bóng mềm này KHÁC bóng cấm — cấm là bóng tối gắt đơn (`rgba(0,0,0,.3)` một hướng) + viền `1px solid gray`. Neumorphism không viền, bóng khuếch tán, hợp lệ.
+
+**Accent tiết chế:** neumorphism dễ "chìm" — dùng accent bão hoà CHỈ cho CTA chính + trạng thái (đỏ/xanh), phần còn lại đơn sắc. CTA có thể là pill accent đặc (không neumorphic) để nổi bật khỏi mặt phẳng.
+
+**Cảnh báo A11y (knob bắt buộc chỉnh):** tương phản BỀ MẶT thấp là bản chất neumorphism, nhưng CHỮ và ICON vẫn PHẢI đạt WCAG AA (≥4.5:1 với nền) — ink light `#3a4252`, dark `#c8ccd4`. Không hạ contrast chữ để "cho mềm". Focus ring vẫn phải thấy rõ (dùng ring accent, không dựa vào bóng).
+
 ---
 
 ## 4. Theme & Design tokens (điền cho sản phẩm)
 > Ràng buộc bắt buộc của repo: **có toggle dark/light, nhớ localStorage, chống FOUC**
 > (đặt script set `data-theme` trong `<head>` TRƯỚC khi body render).
 
+> Mặc định dưới đây là **palette Neumorphism** (Vibe 0). Đổi Vibe thì thay cả bảng.
+
 | Token | Light | Dark |
 |---|---|---|
-| `--bg` | {{}} | {{}} |
-| `--card` | {{}} | {{}} |
-| `--ink` | {{}} | {{}} |
-| `--accent` | {{}} | {{}} |
+| `--bg` (= `--card`, cùng màu) | `#e0e5ec` | `#2a2d32` |
+| `--ink` (chữ, đạt AA) | `#3a4252` | `#c8ccd4` |
+| `--accent` (CTA/trạng thái) | `#4a6cf7` | `#5d7bf9` |
+| `--sh-light` (bóng sáng) | `rgba(255,255,255,.75)` | `rgba(255,255,255,.04)` |
+| `--sh-dark` (bóng tối) | `rgba(163,177,198,.55)` | `rgba(0,0,0,.55)` |
 
+- **Không có `--card` riêng:** neumorphism dùng chung màu nền cho card (§3.6). Chiều sâu = cặp bóng `--sh-light`/`--sh-dark`, không phải màu.
 - **Cơ chế:** `:root[data-theme=dark]{…}` + `@media(prefers-color-scheme:dark){:root:not([data-theme=light]){…}}`.
 - **Toggle:** nút `role="switch"`, ghi `localStorage`, đọc lại lúc load.
 - **Chống FOUC:** inline `<script>` đọc localStorage → set `data-theme` ngay đầu `<head>`.
 
 ## 5. Pre-output checklist (cổng chốt — copy nguyên)
 - [ ] Không dính font/icon/viền/bóng/layout/motion cấm ở §3.1
-- [ ] Đã chọn 1 Vibe + 1 Layout archetype (§3.2) và áp nhất quán
+- [ ] Đã chọn 1 Vibe + 1 Layout archetype (§3.2) và áp nhất quán — **mặc định Neumorphism (Vibe 0), đổi thì ghi lý do §6**
+- [ ] **(Neumorphism §3.6)** Surface đơn sắc cùng màu nền, KHÔNG viền/không màu card khác
+- [ ] **(Neumorphism §3.6)** Mọi khối nổi dùng CẶP bóng sáng+tối đối xứng; active/input dùng `inset`
+- [ ] **(Neumorphism §3.6)** Chữ/icon đạt WCAG AA dù bề mặt low-contrast; focus ring bằng accent, không dựa bóng
 - [ ] Mọi card lớn dùng Double-Bezel (vỏ ngoài + lõi trong)
 - [ ] CTA dùng Button-in-Button khi có icon
 - [ ] Section tối thiểu `py-24` — bố cục "thở"

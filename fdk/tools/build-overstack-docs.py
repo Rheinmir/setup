@@ -154,7 +154,7 @@ LOOP_GROUPS = {
          "check-approve": "utility", "computer-use": "utility", "find-skills": "utility",
          "full-output-enforcement": "utility", "join-project": "utility", "last30days": "utility",
          "raise-issue": "utility", "ovs-notes": "utility", "frontier-scan": "utility",
-         "uat-nonit-testcase": "utility"}),
+         "uat-nonit-testcase": "utility", "visual-qa": "utility", "unknown": "utility"}),
 }
 
 
