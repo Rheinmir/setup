@@ -98,11 +98,17 @@ def secondary_memory(root: str, session: str) -> None:
     Meadows #6 — cấu trúc luồng thông tin, không phải kỷ luật người). Mỗi lần dừng, khi phiên có
     SỬA thật (git dirty): (a) `scratch-log auto` tự điền why từ git nếu phiên chưa có why thủ công;
     (b) `scratch-log distill` gom → sources/DDMMYY-session-provenance.md; (c) `memory-map` regenerate
-    llmwiki/html/memory-map.html. CHỈ repo có harness/scripts/scratch-log.py (framework — ADR-004);
-    fail-open tuyệt đối: thiếu script / lỗi / timeout → im lặng, không bao giờ làm gãy lượt."""
-    sl = os.path.join(root, "harness", "scripts", "scratch-log.py")
-    if not os.path.isfile(sl):
-        return  # không phải repo framework → bỏ (scratch-log/memory-map là repo-only)
+    llmwiki/html/memory-map.html. ĐỐI XỨNG wiki-graph: engine resolve REPO-LOCAL → GLOBAL
+    ~/.claude/harness/ (downstream KHÔNG copy engine vào repo), enablement bật MẶC ĐỊNH downstream qua
+    llmwiki/.harness-stamp (cùng tín hiệu đã gate hook global) — không cần setting tay. cwd=root nên engine
+    global vẫn đọc/ghi ĐÚNG project. Fail-open tuyệt đối: thiếu engine / lỗi / timeout → im lặng."""
+    sl = resolve_tool(root, "harness/scripts/scratch-log.py")
+    if not sl:
+        return  # thiếu engine (local+global) → bỏ (fail-open)
+    is_framework = os.path.isfile(os.path.join(root, "fdk", "tools", "build-overstack-docs.py"))
+    has_stamp = os.path.isfile(os.path.join(root, "llmwiki", ".harness-stamp"))
+    if not (is_framework or has_stamp or os.environ.get("OVERSTACK_WIKIGRAPH") == "1"):
+        return  # downstream chưa bootstrap (không stamp) → bỏ
     try:
         dirty = subprocess.run(["git", "status", "--porcelain"], cwd=root,
                                capture_output=True, text=True, timeout=8).stdout
@@ -112,14 +118,14 @@ def secondary_memory(root: str, session: str) -> None:
         return  # phiên không sửa gì → khỏi ghi provenance rỗng
     import datetime
     today = datetime.date.today().isoformat()
+    mm = resolve_tool(root, "fdk/tools/memory-map.py")
     try:
         subprocess.run([sys.executable, sl, "auto", "--session", session, "--root", root],
-                       capture_output=True, timeout=20)
+                       cwd=root, capture_output=True, timeout=20)
         subprocess.run([sys.executable, sl, "distill", "--session", session, "--date", today],
-                       capture_output=True, timeout=20)
-        mm = os.path.join(root, "fdk", "tools", "memory-map.py")
-        if os.path.isfile(mm):
-            subprocess.run([sys.executable, mm], capture_output=True, timeout=40)
+                       cwd=root, capture_output=True, timeout=20)
+        if mm:
+            subprocess.run([sys.executable, mm], cwd=root, capture_output=True, timeout=40)
     except Exception:
         pass
 

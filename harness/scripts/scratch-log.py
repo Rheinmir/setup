@@ -25,11 +25,16 @@ from pathlib import Path
 
 
 def repo_root() -> Path:
+    # Ưu tiên cwd: Stop-hook chạy engine (có thể ở GLOBAL ~/.claude/harness) với cwd=project root
+    # → data/ledger ghi đúng project downstream, không phải thư mục engine global.
+    cwd = Path.cwd()
+    if (cwd / "llmwiki").is_dir() or (cwd / ".git").is_dir():
+        return cwd
     p = Path(__file__).resolve()
     for up in p.parents:
         if (up / "llmwiki").is_dir() or (up / ".git").is_dir():
             return up
-    return Path.cwd()
+    return cwd
 
 
 ROOT = repo_root()
