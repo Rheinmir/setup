@@ -33,9 +33,9 @@
   verdict: SUCCESS
   commit: 11a44815d1f08eb39d48db9f077705c05e6d90b4
 - frame: br/frames/frame-f09-bao-hiem.md
-  status: failed
-  verdict: ERROR
-  commit: null
+  status: done
+  verdict: SUCCESS
+  commit: 8330ce7c7f57eb22259fa0ab295a3aa13cac21e5
 - frame: br/frames/frame-f10-thue-tncn.md
   status: failed
   verdict: ERROR
