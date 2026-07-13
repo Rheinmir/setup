@@ -5,7 +5,9 @@
   verdict: SUCCESS
   commit: c13917ad9c2730f5da168b04811ef8e98f9a994b
 - frame: br/frames/frame-f02-lich-ky-cong.md
-  status: pending
+  status: done
+  verdict: SUCCESS
+  commit: cac6405a4cd709da5b5c765bb0436ce596b66470
 - frame: br/frames/frame-f03-cham-cong.md
   status: pending
 - frame: br/frames/frame-f04-luong-chinh.md
