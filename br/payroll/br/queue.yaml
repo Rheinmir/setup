@@ -53,7 +53,9 @@
   verdict: ERROR
   commit: null
 - frame: br/frames/frame-f14-snapshot-diff.md
-  status: pending
+  status: failed
+  verdict: ERROR
+  commit: null
 - frame: br/frames/frame-f15-man-hinh-hr.md
   status: pending
 - frame: br/frames/frame-f99-lap-rap.md
