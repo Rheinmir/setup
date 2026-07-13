@@ -49,9 +49,9 @@
   verdict: SUCCESS
   commit: b4ced940eaae61700727d0c02381d47df9dee353
 - frame: br/frames/frame-f13-adapters.md
-  status: failed
-  verdict: ERROR
-  commit: null
+  status: done
+  verdict: SUCCESS
+  commit: 400df44d5c03c40d48d4f8ee669bf0bf96f22ad6
 - frame: br/frames/frame-f14-snapshot-diff.md
   status: failed
   verdict: ERROR
