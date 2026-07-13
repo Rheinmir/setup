@@ -37,9 +37,9 @@
   verdict: SUCCESS
   commit: 8330ce7c7f57eb22259fa0ab295a3aa13cac21e5
 - frame: br/frames/frame-f10-thue-tncn.md
-  status: failed
-  verdict: ERROR
-  commit: null
+  status: done
+  verdict: SUCCESS
+  commit: 13db8cadbf169d4041af7fe6de94172828626e3c
 - frame: br/frames/frame-f11-tong-hop.md
   status: failed
   verdict: ERROR
