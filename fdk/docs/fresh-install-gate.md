@@ -36,17 +36,23 @@ python3 fdk/tools/medic.py freshinstall   # chỉ chạy probe này
 python3 fdk/tools/medic.py --ci           # toàn cổng (gồm freshinstall)
 ```
 
-## Hợp đồng downstream — chặn "xanh trong repo, vắng ở downstream"
+## Hợp đồng downstream — chặn "xanh trong repo, hỏng ở downstream"
 
-`harness/downstream-contract.yaml` khai thứ một dự án **cài mới BẮT BUỘC** phải có; smoke assert từng dòng (`must_exist` · `must_bite` · `must_reach_skills` · `rule_parity`).
+`harness/downstream-contract.yaml` khai thứ một dự án **cài mới BẮT BUỘC** phải có; smoke assert từng dòng: `must_exist` · `must_bite` · `must_reach_skills` · **`must_reach_global_engines`** · `rule_parity`.
 
-**Vì sao cần:** installer **hardcode** danh sách file. Bạn có thể dev xong một tính năng trong repo framework, test xanh hết, mà installer không ship file đó → **người dùng downstream không hề có nó**. "Xanh trong repo" ≠ "đúng ở downstream".
+### Kiến trúc — ĐỌC TRƯỚC KHI "SỬA"
 
-**Luật dùng:** dev một tính năng *hướng downstream* → **thêm vào hợp đồng TRƯỚC**. Gate sẽ đỏ cho tới khi installer thật sự ship được. Không phải "nhớ kiểm tra" — mà là **bị chặn**.
+Engine **không** sống trong project. Chúng sống ở **global harness home** (`$OVERSTACK_HARNESS_HOME`, mặc định `~/.claude/harness/` — gồm `hooks/`, `harness/`, `fdk/`, `version.json`). `install.sh` còn **chủ động xoá** bản engine per-project (khối **U10**) vì bản global mới là bản dùng. Skill global trỏ tới `~/.claude/harness/…` là **đúng thiết kế**, không phải "quên ship".
 
-Đã negative-test để chắc cổng biết cắn: khai `harness/scripts/council.py` (thứ fdk có, installer không ship) → gate **FAIL** đúng như thiết kế, kèm gợi ý sửa `install.sh`/`bootstrap.sh`.
+> Đây là cái bẫy dễ hiểu sai nhất trong installer: thấy `harness/scripts/*` vắng mặt trong dự án cài mới rồi kết luận "installer quên ship" — rồi đi "sửa" bằng cách ship engine vào project, để chính U10 xoá lại. Nếu bạn định chạm vào chỗ này: đọc U10 trước.
 
-**Nợ đã biết (khai thẳng, không allowlist ngầm):** `harness/scripts/*` (council, claim-receipts, mem-rank…) và `CAPABILITIES.md` **chưa** được ship xuống downstream — dù `llmwiki/CLAUDE.md` có nhắc downstream sẽ có `CAPABILITIES.md`. Cố ý *chưa* đưa vào `must_exist` vì fix đúng là **install theo manifest (GH#51)** + **ship engine downstream (GH#41)**, không phải vá danh sách. Hai issue đó xong → nâng các dòng nợ lên `must_exist`.
+### Gap thật mà gate gác
+
+`install.sh` gọi `install-harness.sh --global` ở chế độ **FAIL-OPEN** (cố ý: lỗi global không chặn install project). Hệ quả: bước đó hỏng thì project vẫn báo **"cài thành công"**, nhưng **mọi engine của skill biến mất** — người dùng nhận một overstack **rỗng ruột** mà không ai báo.
+
+`must_reach_global_engines` bịt đúng lỗ đó: sau fresh install, các engine chủ chốt phải reachable trong global harness, không thì gate **ĐỎ** kèm lệnh sửa (`install-harness.sh --global`).
+
+**Đã negative-test cả hai chiều:** trỏ `OVERSTACK_HARNESS_HOME` vào thư mục rỗng → gate **FAIL** đúng như thiết kế; khai một `must_exist` không được ship → gate cũng **FAIL**. Cổng biết cắn, không phải đồ trang trí.
 
 ## Ceiling (giới hạn cố ý)
 

@@ -100,6 +100,15 @@ if [ -f "$CONTRACT" ]; then
     if ( cd "$TARGET" && eval "$cmd" ) >/dev/null 2>&1; then ok "must_bite: $cmd"
     else bad "must_bite ĐỎ downstream: $cmd"; fi
   done <<< "$(contract_list must_bite)"
+  # ENGINE GLOBAL: tool của skill sống ở global harness home (KHÔNG per-project — U10 xoá bản
+  # per-project có chủ đích). install.sh cài global ở chế độ FAIL-OPEN → bước đó hỏng thì project
+  # "cài thành công" nhưng rỗng ruột engine. Đây là chỗ gate phải gác.
+  GH_HOME="${OVERSTACK_HARNESS_HOME:-$HOME/.claude/harness}"
+  for e in $(contract_list must_reach_global_engines); do
+    [ -e "$GH_HOME/$e" ] && ok "engine global: $e" \
+      || bad "engine global THIẾU: $e  (global harness rỗng → skill gãy; sửa: bash harness/scripts/install-harness.sh --global)"
+  done
+
   # rule parity: mọi R\d+ của policy REPO phải có trong policy DOWNSTREAM
   if grep -q '^rule_parity:[[:space:]]*true' "$CONTRACT"; then
     RP="$ROOT/harness/poc-vendor-neutral/policy.yaml"; DP="$TARGET/harness/poc-vendor-neutral/policy.yaml"

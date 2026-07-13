@@ -36,9 +36,21 @@ must_reach_skills:
 # Tự động, không cần bảo trì: thêm rule ở fdk mà không tới được downstream → gate đỏ.
 rule_parity: true
 
-# ── NỢ ĐÃ BIẾT (khai thẳng, KHÔNG allowlist ngầm) ─────────────────────────────────────────
-# Những thứ dưới đây framework CÓ nhưng installer CHƯA ship xuống downstream. Cố ý chưa đưa vào
-# must_exist vì fix thật là "install theo manifest" (GH#51) + "ship engine downstream" (GH#41),
-# không phải vá danh sách. Khi hai issue đó xong → chuyển các dòng này lên must_exist.
-#   - harness/scripts/*        (council.py, claim-receipts.py, mem-rank.py, fresh-install-smoke.sh …)
-#   - CAPABILITIES.md          (llmwiki/CLAUDE.md HỨA downstream có, nhưng fresh install KHÔNG có)
+# ── ENGINE GLOBAL — nơi tool của skill THẬT SỰ nằm ────────────────────────────────────────
+# KIẾN TRÚC (đọc kỹ trước khi "sửa"): engine KHÔNG sống trong project. Chúng sống ở GLOBAL
+# HARNESS HOME ($OVERSTACK_HARNESS_HOME, mặc định ~/.claude/harness). install.sh còn CHỦ ĐỘNG
+# xoá bản engine per-project (U10) vì bản global mới là bản dùng. Skill global trỏ tới
+# ~/.claude/harness/... — đúng thiết kế, KHÔNG phải "quên ship".
+#
+# GAP THẬT (đây mới là cái gate phải gác): install.sh gọi `install-harness.sh --global` ở chế độ
+# FAIL-OPEN — bước đó hỏng thì project vẫn báo "cài thành công", nhưng MỌI engine của skill biến
+# mất. Người dùng có một overstack rỗng ruột mà không ai báo. Nên: sau fresh install, các engine
+# dưới đây PHẢI reachable trong global harness, nếu không → gate ĐỎ.
+# Đường dẫn tương đối so với GLOBAL HARNESS HOME.
+must_reach_global_engines:
+  - version.json
+  - hooks/pre_tool_use.py
+  - hooks/build-capabilities.py
+  - hooks/health-check.py
+  - harness/scripts/council.py
+  - fdk/tools/medic.py
