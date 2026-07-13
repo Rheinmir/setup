@@ -1,0 +1,63 @@
+{
+  "tool": "loop-runner",
+  "verdict": "SUCCESS",
+  "reason": "verify passed on iteration 2 (+2 confirm)",
+  "iterations_run": 2,
+  "changed_files": [
+    "app/thue.py"
+  ],
+  "scope_clean": true,
+  "out_of_scope_files": [],
+  "attempted_out_of_scope": [],
+  "commit": "13db8cadbf169d4041af7fe6de94172828626e3c",
+  "verify_cmd": "python3 -m tests.test_f10",
+  "revise_cmd": "python3 \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/fdk/tools/br-revise.py\" run --frame \"br/frames/frame-f10-thue-tncn.md\" --template \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/skills/br/assets/revise-prompt.md\" --verify \"python3 -m tests.test_f10\" --verify-output \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/.frame-f10-thue-tncn.verify.out\" --cwd \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll\"",
+  "guards": {
+    "max_iter": 4,
+    "budget_seconds": 300.0,
+    "no_progress_k": 2,
+    "escalate_after_iter": 4,
+    "scope_globs": [
+      "app/thue.py"
+    ],
+    "protect_globs": [
+      "tests/test_f10.py"
+    ]
+  },
+  "state_paths": [
+    "app/thue.py"
+  ],
+  "started_at": "2026-07-13T18:19:26Z",
+  "ended_at": "2026-07-13T18:20:29Z",
+  "elapsed_s": 62.952,
+  "iterations": [
+    {
+      "iter": 1,
+      "ts": "2026-07-13T18:19:26Z",
+      "verify_exit": 1,
+      "duration_s": 0.2161,
+      "verify_output_tail": "RROR: test_thu_viec_viet_nam_tu_2tr_tro_len_chiu_10_phan_tram (__main__.TestThue)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/tests/test_f10.py\", line 47, in test_thu_viec_viet_nam_tu_2tr_tro_len_chiu_10_phan_tram\n    self.assertEqual(thue.pit(Decimal(5_000_000), rec, self.p), Decimal(500_000))\nAttributeError: module 'app.thue' has no attribute 'pit'\n\n----------------------------------------------------------------------\nRan 14 tests in 0.001s\n\nFAILED (errors=14)\n",
+      "state_hash": "4eded467d27e7a5509f407898e7a1b2b7a58e5f4d2f2eb6dfd71cb1f9598070e",
+      "unchanged_streak": 0,
+      "revise_exit": 0,
+      "revise_output_tail": "XANH — 14/14 test, exit 0.\n\n`app/thue.py`: `taxable_inc` (MAX 0), `total_ded` (bản thân + NPT, thử việc = 0), `pit` (5 bậc rút gọn từ `pit_brackets`, thử việc VN 10% ngưỡng 2tr / nước ngoài 20%). Dùng `Decimal` + `round0` (ROUND_HALF_UP) và hằng số từ `data/params.json`; import lại `_dec/round0/CHINH_THUC` từ `app.luong`, `NUOC_NGOAI` từ `app.baohiem`.\n\nBỏ qua: quyết toán năm, lũy kế nhiều kỳ, quy tắc NPT ngày 15 (C12.3) — ngoài phạm vi frame.\nPermission deny rule \"MultiEdit(./llmwiki/raw/**)\" matches no known tool — check for typos.\n",
+      "scope_reverted": [
+        "br/memos/qa-gate/MANIFEST.json",
+        "skills/visual-qa/assets/route-shots.mjs"
+      ]
+    },
+    {
+      "iter": 2,
+      "ts": "2026-07-13T18:20:29Z",
+      "verify_exit": 0,
+      "duration_s": 0.0545,
+      "verify_output_tail": "..............\n----------------------------------------------------------------------\nRan 14 tests in 0.001s\n\nOK\n",
+      "state_hash": null,
+      "unchanged_streak": 0,
+      "confirm_exits": [
+        0,
+        0
+      ]
+    }
+  ]
+}
