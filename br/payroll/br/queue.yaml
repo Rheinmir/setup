@@ -21,7 +21,9 @@
   verdict: SUCCESS
   commit: a51af7856ed7fffa38ccc5d6ce7333fff78e9d2c
 - frame: br/frames/frame-f06-phu-cap.md
-  status: pending
+  status: done
+  verdict: SUCCESS
+  commit: null
 - frame: br/frames/frame-f07-tang-ca.md
   status: pending
 - frame: br/frames/frame-f08-thuong-trich-quy.md
