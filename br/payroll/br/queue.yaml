@@ -53,9 +53,9 @@
   verdict: SUCCESS
   commit: 400df44d5c03c40d48d4f8ee669bf0bf96f22ad6
 - frame: br/frames/frame-f14-snapshot-diff.md
-  status: failed
-  verdict: ERROR
-  commit: null
+  status: done
+  verdict: SUCCESS
+  commit: 92fd9c5c7e948cd4adbc5c309aaac34c08967cb3
 - frame: br/frames/frame-f15-man-hinh-hr.md
   status: failed
   verdict: ERROR
