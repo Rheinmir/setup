@@ -17,7 +17,9 @@
   verdict: SUCCESS
   commit: 295f45dd3ed8f9a9db1383a0eadf34a0373b1f01
 - frame: br/frames/frame-f05-suat-an.md
-  status: pending
+  status: done
+  verdict: SUCCESS
+  commit: a51af7856ed7fffa38ccc5d6ce7333fff78e9d2c
 - frame: br/frames/frame-f06-phu-cap.md
   status: pending
 - frame: br/frames/frame-f07-tang-ca.md
