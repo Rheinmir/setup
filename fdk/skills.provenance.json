@@ -351,10 +351,10 @@
     },
     "orca-onboard": {
       "files": {
-        "SKILL.md": "728e5514460132f6b763b9a2bf159c3525ad7e521b4f42091feac19b86d5fb0f",
+        "SKILL.md": "a864a970a6a10b2079e0b9666c03b891f739db13310aea0bfdc7b96d46d792cf",
         "assets/docs-site-skeleton.html": "7a031c6a9d4940775b684a1a2d6dcb09c9a339ac796ea6d315ba930b94ba6113"
       },
-      "recorded": "2026-07-04",
+      "recorded": "2026-07-13",
       "source": "local-authored"
     },
     "orca-sec-scans": {

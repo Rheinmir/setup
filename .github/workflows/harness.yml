@@ -28,6 +28,8 @@ jobs:
         run: bash harness/poc-vendor-neutral/test-broad.sh
       - name: wiki-graph user-reachability (chặn AP-1 dev-only trap)
         run: bash harness/tests/wiki-graph-user-reachability-test.sh .
+      - name: memory-map user-reachability (bộ-nhớ-thứ-cấp tự chạy downstream)
+        run: bash harness/tests/memory-map-user-reachability-test.sh .
 
   validate-content:
     name: validate file .md đổi (layer=repo)

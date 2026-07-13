@@ -40,8 +40,10 @@
 {"ts": "2026-07-04T12:58:12", "session": "3fb3a505", "action": "modify", "target": "sources/ISSUES.md", "tool": "Edit"}
 {"ts": "2026-07-04T12:58:35", "session": "3fb3a505", "action": "modify", "target": "sources/ISSUES.md", "tool": "Edit"}
 {"ts": "2026-07-04T13:03:18", "session": "3fb3a505", "action": "modify", "target": "sources/draft/040726-selftest-nested-commit-unguarded.md", "tool": "Edit"}
+{"ts": "2026-07-05T00:15:21", "session": "8b8c5c36", "action": "modify", "target": "sources/ISSUES.md", "tool": "Edit"}
 {"ts": "2026-07-05T20:17:34", "session": "62b41f4c", "action": "add", "target": "sources/draft/050726-ship-selfindex-engine-downstream.md", "tool": "Write"}
 {"ts": "2026-07-05T20:40:00", "session": "62b41f4c", "action": "add", "target": "sources/draft/050726-wikigraph-package-import-resolver.md", "tool": "Write"}
 {"ts": "2026-07-05T21:34:49", "session": "62b41f4c", "action": "add", "target": "sources/draft/050726-wikigraph-dangling-wikilink.md", "tool": "Write"}
 {"ts": "2026-07-06T14:11:30", "session": "49ec06f0", "action": "modify", "target": "sources/ISSUES.md", "tool": "Edit"}
 {"ts": "2026-07-06T22:13:29", "session": "ba6458f2", "action": "add", "target": "sources/draft/060726-wiki-sync-openwiki-distill.md", "tool": "Write"}
+{"ts": "2026-07-11T20:51:00", "session": "cacb3b15", "action": "modify", "target": "sources/ISSUES.md", "tool": "Edit"}

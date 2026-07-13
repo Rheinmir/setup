@@ -15,12 +15,17 @@ import json
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
+# ENGINE = nơi chứa fdk/tools/*.py (repo-local khi framework; GLOBAL ~/.claude/harness khi downstream).
+# ROOT  = project để đọc metrics + ghi html — ưu tiên cwd (Stop-hook đặt cwd=project root) nên engine
+# global vẫn vẽ ĐÚNG project downstream, không cần copy engine vào từng repo (đối xứng build-wiki-graph).
+ENGINE = Path(__file__).resolve().parents[2]
+_cwd = Path.cwd()
+ROOT = _cwd if ((_cwd / "llmwiki").is_dir() or (_cwd / ".git").is_dir()) else ENGINE
 OUT = ROOT / "llmwiki" / "html" / "memory-map.html"
 
 
 def _load(modpath, name):
-    spec = importlib.util.spec_from_file_location(name, ROOT / modpath)
+    spec = importlib.util.spec_from_file_location(name, ENGINE / modpath)
     m = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(m)
     return m
