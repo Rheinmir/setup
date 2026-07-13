@@ -17,6 +17,7 @@ guards:
   budget_seconds: 300
   no_progress_k: 2
   escalate_after_iter: 4
+run_log_ref: br/frames/frame-f99-lap-rap.run.json
 ---
 # frame-f99-lap-rap
 
