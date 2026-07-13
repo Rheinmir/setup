@@ -1,103 +1,271 @@
-# BR — Hệ thống Payroll & Timesheet tự động (Unicons/Coteccons)
+# BR — Payroll CTD/Unicons
 
-> Biên dịch từ `llmwiki/raw/PRD__Payroll_System_v2.1.docx` (PRD 2.1, phê duyệt 08/07/2026).
-> Mỗi điều khoản có `clause_id` kế thừa số mục PRD. Provenance: `raw` = PRD ghi rõ ·
-> `lens` = tự bù gap (verified: false, chờ HR xác nhận).
+> `schema_version: 0` · compile từ `br/spec-filled.md` + `br/interview/001-answers.md` · 13/07/2026
+> Mỗi điều khoản có `clause_id` (kế thừa field-id S1–S10) + provenance. Frame truy ngược về đây; code truy ngược về frame.
+> Nguồn chân lý chi tiết: `br/sources/ANALYSIS-excel-params.md` · `br/sources/ANALYSIS-docx-specs.md`
 
-## ⚠️ GIẢ ĐỊNH ĐANG GÁNH (tự bù gap — tất cả `verified: false`)
+---
 
-| # | Clause | Giả định | Rủi ro nếu sai |
-|---|--------|----------|----------------|
-| G1 | C5.3.3 | Mức xăng 02 tài xế HN = 2.600.000 đ (PRD không ghi số, chỉ nói "duyệt riêng") | Sai tiền 2 người — thấp |
-| G2 | C5.3.6 | Chingluh nội suy CHP 1.5tr, GS 1tr (PRD chỉ ghi 2 đầu mút CHT 2tr → BV 500k) | Sai tiền theo chức danh — trung bình |
-| G3 | C5.3.4 | Dải 400–1000 km dùng cùng mức "trên 100 km" (PRD bảng gộp) | Thiếu bậc định mức — trung bình |
-| G4 | C6.1 | Lịch chốt Mắt Bão = ngày 15 hằng tháng; grid định mức Mắt Bão tự dựng 3 dòng mẫu | Sai lịch/mức outsource — cao |
-| G5 | C5.5 | Danh sách trường hợp lễ 300% = rỗng (PRD nói "theo danh sách" nhưng không kèm) | Trả thiếu OT lễ — cao |
-| G6 | C5.1.4 | Thứ tự tỷ lệ trích Cty "17%/0.5%/3%/1%" = BHXH/BHYT/BHTN/TNLĐ | Hạch toán sai đầu mục — thấp (tổng đúng) |
-| G7 | C6.2 | Tần suất nhắc Teams mặc định 2 lần/ngày (09:00, 15:00) | Chỉ là default — không rủi ro tiền |
-| G8 | C-DATA | Thang lương cơ bản của 12 NV mẫu là số bịa để demo (PRD không kèm thang lương) | Chỉ ảnh hưởng demo |
-| G9 | C5.3.1 | "Điều kiện an ninh theo quy định" của mức 2 bữa <30km: bỏ qua ở v0, coi mọi CT <30km đạt | Thừa suất ăn ở CT không đạt an ninh |
-| G10 | C5.5 | OT ngày truyền thống tách thuế = non-tax toàn phần | Sai cột thuế — trung bình |
-| G11 | C7.1 | Import chỉ ghi đè `nhan_vien.csv`, chưa hỗ trợ `bang_cong_tho.csv`/các CSV khác qua UI | Vẫn phải sửa tay các file còn lại — không rủi ro sai số |
+## ⚠️ BẢNG "GIẢ ĐỊNH ĐANG GÁNH" — nhìn một phát biết đang cược gì
 
-## C4 — Tích hợp & chốt dữ liệu
+| # | Giả định | Nếu sai thì sao | Nguồn | Cách hạ rủi ro |
+|---|---|---|---|---|
+| **A1** | **Base tính bảo hiểm = `CONTRACT_TOTAL`** (lương HĐ = cơ bản + PC trách nhiệm), không phải `BASIC_SAL` | Mọi NV **có phụ cấp trách nhiệm** sẽ sai BHXH/BHYT/KPCĐ/công đoàn | as-is `U9`/`V9`. Ground-truth dòng 9 **không phân biệt được** vì `RESP_SAL = 0` → BASIC = CONTRACT | Hỏi HR. Đổi 1 dòng trong `params.json` → `ins_base` |
+| **A2** | **Trần BH 46,8tr và cơm miễn thuế 730k là mức ĐANG CHẠY**; 50,6tr / 1,2tr trong sheet tham số là mức **mới chưa tới ngày hiệu lực** (chưa công thức nào tiêu thụ) | Chạy sai kỳ tương lai; hoặc đang sai kỳ hiện tại | Dòng 9 khớp 46,8tr ở **7 công thức độc lập**; payslip khớp 730k bằng số học (78×45k − 730k = 2.780.000) | `effective_from` bắt buộc trên mọi tham số. Hỏi HR: "50,6tr / 1,2tr áp từ kỳ nào?" |
+| **A3** | **Hệ số OT ngày thường / ban đêm / danh sách 300% không tồn tại** → OT vào engine là **số tiền input**, không tự chế công thức giờ→tiền | Nếu HR thật ra có hệ số → engine thiếu 1 nguồn thu nhập | Excel: `OT_TAX`/`OT_NONTAX` type = `input`, "KHÔNG CÓ TRONG EXCEL công thức tính tiền OT từ giờ". Giờ OT thật (`Get_Calculated_Time_Blocks`) **đang bị chặn quyền** | `params.ot_multipliers` để sẵn (`sunday: 2.0` ✓, `weekday: null`, `night_extra: null`) + cờ `ot_from_hours: false` |
+| **A4** | **"Trả thêm 100%" ngày Lễ/Tết** = cộng thêm 100%, không phải tổng 200% | Sai tiền OT ngày lễ | [HR-QT] văn bản mập mờ | Hỏi HR (câu 1 dòng) |
+| **A5** | Bảng định mức phụ cấp theo **Level 1–8** trong Excel: số trần trụi (`300`, `800`) = **nghìn đồng** | Sai phụ cấp điện thoại/xăng 1000× | Excel không ghi đơn vị; `1tr`/`2tr5` thì ghi rõ | Đối chiếu với bảng ngạch QL/CV/NV của PRD v2.1 (có đơn vị đồng đầy đủ) |
+| **A6** | **Tech stack Python 3 stdlib-only**, không DB, không network | Không sai nghiệp vụ; chỉ là ràng buộc thi công | Raw **MISSING** hoàn toàn phần công nghệ | Engine tách khỏi HTTP/DB → thay `_run_app.py` + `adapters.py` là chuyển stack được |
+| **A7** | **Lô đầu 1 vai HR C&B, không auth, không tích hợp** (Workday/SAP/Bank/Teams/Azure AD hoãn) | Chưa dùng được ở production | 3 API Workday sống còn đang 🔴 **Blocked** (giờ OT, ngày nghỉ) | Adapter 4 hàm (`C18.1`) — nối lại không đụng engine |
+| **A8** | Bộ test **SYN-1..6** (thử việc, expat, biên bậc thuế, miễn BHXH ≥14 ngày) đúng theo công thức sống — nhưng **chưa ai đối chiếu số thật** | Engine "xanh" mà vẫn sai ở nhánh không có trong dòng 9 | Chỉ có **1** dòng nhân viên thật trong toàn bộ file bàn giao | Xin HR 10–20 dòng thật đã ẩn danh phủ các nhánh này |
+| **A9** | Roster 4.179 người **không có trong repo** → chạy trên 1 dòng thật + case tổng hợp | Chưa chứng minh được ở quy mô thật | `Get_Workers` = 4.179 rows ở Workday | Test `PERF` nhân bản 4.179 dòng để đo < 5 phút |
 
-- **C4.1** (raw) Kỳ công = 21 tháng trước → 20 tháng này. Kỳ BHXH = 01 → cuối tháng. Theo dõi SONG SONG 2 trục. Công chuẩn VP trừ CN + chiều T7; công chuẩn CT chỉ trừ CN; lưu riêng từng kỳ.
-- **C4.2** (raw) Nguồn tích hợp duy nhất: API Workday (công thô theo ngày + hồ sơ + ngày kết thúc thử việc + EmployeeType + loại giờ OT). SAP cho cost allocation. Workday KHÔNG tổng hợp — Payroll tự tổng hợp toàn bộ. Ký hiệu công tối thiểu: x, x1, OL, P/F, R/Fo, L, NB, Ts/TS, TSN, ON/OD, TN, Ro, TC100/200/300, ?P.
-- **C4.3** (raw) Khóa kỳ manual bởi HR: ngừng sync tháng đó; đơn muộn/sửa công sau chốt KHÔNG cập nhật/truy thu tháng sau. Trước khóa: định mức đổi hồi tố → tự tính truy thu/truy lĩnh = (mới − cũ) × ngày công tương ứng, cột riêng (3), kèm lý do.
+**Ba câu phải hỏi HR trước khi khoá BR:** (1) base bảo hiểm là `CONTRACT_TOTAL` hay `BASIC_SAL`? (2) 50,6tr / 1,2tr áp từ kỳ nào? (3) "trả thêm 100%" ngày lễ = tổng 200% hay +100%?
 
-## C5 — Tổng hợp công & tính phụ cấp
+---
 
-- **C5.1.1** (raw) Đếm tách ngày thử việc / sau thử việc theo "Ngày kết thúc thử việc". Lương TV = ngày TV × 85%; chính thức × 100%.
-- **C5.1.2** (raw) Bổ nhiệm/điều chỉnh giữa kỳ → tách 2 giai đoạn theo ngày hiệu lực. PC trách nhiệm = ngày hưởng × (định mức / công chuẩn).
-- **C5.1.3** (raw) Điều động giữa kỳ → đếm ngày công TỪNG bộ phận, tách theo loại ngày, kèm ngày điều động. PC gắn địa điểm tính + bổ chi phí theo từng bộ phận.
-- **C5.1.4** (raw) Quy đổi kỳ công ↔ tháng dương lịch để xác định diện đóng BHXH. Ngày không tính đóng (TV, Ro, Ts, ốm BHXH…) đếm riêng. Trích NV 8/1.5/1; Cty 17/0.5/3/1 + 2% KPCĐ; cột Đ/C khi truy đóng/hoàn.
-- **C5.1.5** (raw) Suất ăn theo bộ phận: cơm thường + TC đêm + CN/lễ (thư ký chấm bổ sung) + cơm bổ sung tháng trước. Ngày ≤4h: 0 suất.
-- **C5.2** (raw) Pro-rata: (định mức / công chuẩn) × ngày hưởng. Quy tắc <14 ngày LV thực tế: ngày hưởng = LV thực tế + lễ (không phép/nghỉ hưởng lương khác/không lương); điều động chia theo bộ phận với định mức từng nơi. Tờ trình ghi đè định mức chung từ ngày hiệu lực. Mỗi PC tách Taxable/Non-tax.
-- **C5.3.1** (raw) Cơm: VP 1 bữa · CT <30km 2 bữa (kèm điều kiện an ninh) · CT ≥30km 3 bữa · ≤4h 0 bữa. Đơn giá 45.000 đ cấu hình được. Miễn thuế ≤730.000 đ/tháng.
-- **C5.3.2** (raw) Điện thoại theo ngạch × VP/CT (bảng 14 dòng — xem `data-draft/dinh_muc_dien_thoai.csv`). Pro-rata + <14 ngày + chia bộ phận.
-- **C5.3.3** (raw+lens G1) Xăng: CT chuẩn 1.000.000 cho L2–L6. VP KHÔNG định mức chung — theo tờ trình (DVKH… 800k; GĐDA 10tr; TGĐ ô tô 25–35tr). 02 tài xế HN đích danh MSNV.
-- **C5.3.4** (raw+lens G3) Đi lại: (nơi tuyển dụng × tỉnh bộ phận) → DM Khoảng cách → dải → định mức theo dải × 4 nhóm đối tượng (CHT/CHT ME · ĐH+ · CĐ/TC/Nghề · NV.02). 3 danh mục nền phải quản trị được.
-- **C5.3.5** (raw) CT + công tác xa: bảng Khối (CT/VP) × dải khoảng cách × 2 đối tượng (ĐH+ / CĐ-TC-Nghề).
-- **C5.3.6** (raw+lens G2) CT xa/khó khăn theo dự án đặc thù × chức danh (Quan Lạn, Chingluh, Làng Tây – Hòn Thơm 2tr theo TT).
-- **C5.3.7** (raw) PC khác duyệt riêng: danh sách "Theo dõi duyệt riêng" (MSNV, bộ phận, chức danh, PC (2)–(7), ghi chú, tổng) thay định mức chung. GĐDA không hưởng PC công trường/đi lại chung.
-- **C5.4** (raw) 2 ví dụ CHỐT làm acceptance: VD1 suất ăn điều động 5×1+20×3=65; VD2 <14 ngày: PC = (3+1)/chuẩn×ĐM_A + (3+2)/chuẩn×ĐM_B.
-- **C5.5** (raw+lens G5,G10) OT: multiplier tách Chính thức/Mắt Bão. CN 200%; lễ luật +100% & +2 nghỉ bù/ngày (một số 300% theo danh sách); truyền thống/bổ sung +1 nghỉ bù. Tách OT thuế/không. Đăng ký đi làm lễ: NLĐ/thư ký import → trưởng BP duyệt → HR; danh mục lễ tự động hằng năm.
+## C1 · Tầm nhìn & phạm vi
 
-## C6 — Mắt Bão, phê duyệt & báo cáo
+**C1.1** — Sản phẩm là **lõi tính lương (Payroll Engine)** cho HR/C&B Coteccons/Unicons: nhận dữ liệu nhân sự + chấm công, tính toàn bộ chuỗi lương → phụ cấp → thưởng → BHXH → thuế TNCN → **lương thực nhận**, thay các sheet Excel thủ công. `provenance: raw:PRD v2.1 §1`
 
-- **C6.1** (raw+lens G4) Mắt Bão: nhận diện EmployeeType từ API; lịch chốt sớm hơn; grid định mức thiết lập trên Payroll.
-- **C6.2** (raw+lens G7) ?P không cộng công. Teams Bot nhắc theo cấu hình HR. HR Override duyệt thay; sync-back Workday = "Đã duyệt". Audit log bắt buộc: cũ → mới, người, thời gian, lý do.
-- **C6.3** (raw) Template 0 trình ký: chung định dạng CT/Mắt Bão; điều động gộp về dự án nơi làm ngày 20. Template 2 Payroll Master: file phẳng đầy đủ (nhân sự-HĐ, các loại ngày công, lương TV/CT/PC trách nhiệm/phép tồn, PC tax/non-tax, OT, thưởng, BHXH 2 phía, giảm trừ, TNCN, sau thuế, thực nhận, chi phí Cty, Profit/Cost Center, WBS, Funds Center).
-- **C6.4** (raw) Bộ báo cáo bảng công chi tiết theo file HR C&B (BẢO MẬT — chỉ HR C&B, log mọi lượt xuất): ma trận công 21–20; bảng cơm P1/P2/TC đêm/CN; bảng tổng hợp PC cột (1)–(8) + PC bộ phận trước (2) + truy thu (3); danh sách duyệt riêng & truy lĩnh có so sánh kỳ.
-- **C6.5** (raw) Đơn treo: tổng hợp gửi Email/Teams cho lãnh đạo tại cut-off; dashboard realtime; HR xuất tay được.
+**C1.2** — Tiêu chí "thành công" là **kiểm-chứng-được**, không phải cảm tính: engine chạy trên dòng dữ liệu thật của HR phải ra **đúng từng đồng** `NET_PAY = 189.930.161`. `provenance: raw:xlsx "Payroll Mar 2026" dòng 9`
 
-## C3/C7/C8 — Nền tảng
+**C1.3** — Nguyên tắc cắt phạm vi lô đầu: **cái gì hôm nay chứng minh được là đúng bằng máy thì làm; cái gì không chứng minh được thì hoãn**. `provenance: user (Q7)`
 
-- **C3** (raw) Azure AD SSO. Phân quyền granular (xem/sửa/xuất/khóa kỳ/duyệt thay). Thư ký/CHT chỉ thấy NGÀY CÔNG không thấy TIỀN. Báo cáo 6.4 giới hạn HR C&B + log xuất.
-- **C7** (raw) Master data: DM Bộ phận (→tỉnh/khối/vùng, ngày hiệu lực), DM Nơi cư trú, DM Khoảng cách, bảng định mức các loại, danh sách Tờ trình, danh mục lễ (tự động hằng năm), quy định ngày nghỉ (phép 12+thâm niên, ≥50% công chuẩn, tồn đến 31/12 năm sau, ốm Cty 3 ngày…).
-- **C7.1** (user, gap-mới) Import Excel/CSV qua UI: trang "Master data" có form upload thay thế 1 file dữ liệu công ty (`nhan_vien.csv`) — validate header đúng schema TRƯỚC khi ghi đè, từ chối nếu thiếu/thừa cột hoặc file rỗng; ghi đè xong redirect về Master data với thông báo số dòng đã nhập. PRD gốc KHÔNG đặc tả màn hình này (chỉ nói "dữ liệu đầu vào" ở mức luồng, không mức UI) — user yêu cầu bổ sung 2026-07-09 sau khi phát hiện UI không có chỗ nhập dữ liệu ngoài sửa CSV bằng tay.
-- **C8** (raw) Phi chức năng: hàng ngàn NV xử lý <5 phút; tin Workday tuyệt đối trừ HR Override; MỌI con số truy vết được về công thức + ngày + định mức + nguồn; bảo mật báo cáo + log xem/xuất; tương thích Microsoft 365.
+---
 
-## C9 — Công thức lương THẬT (nguồn: Excel bàn giao Payroll, không phải PRD)
+## C2 · Người dùng & quyền
 
-> Nguồn: `llmwiki/raw/(Confidential) Payroll Handover Assessment (1) - inferred.xlsx`,
-> sheet **"Payroll structure"** (127 field: code · tên · loại input/formula · công
-> thức Excel gốc cột I) + sheet **"References"** (bảng thuế TNCN lũy tiến) + sheet
-> **"Allowance Rule + Except"** (định mức theo Level 1-8) + sheet **"Time Tracking
-> Rule"** (quy tắc chấm công). Đây là **công thức HR/Payroll team thật đang dùng**,
-> khác — và chính xác hơn — các công thức tôi tự suy ra từ PRD ở C5.x phía trên.
-> User cung cấp 2026-07-09/10 sau khi phát hiện dây chuyền cũ (C5.x) chưa có công
-> thức ra "lương thực nhận" cuối cùng.
+**C2.1** — Lô đầu: **một vai duy nhất HR C&B**, không đăng nhập (chạy local). Model quyền đặt sẵn **một chỗ** (`app/auth.py`, enum theo PRD v2.1 §3: `view · edit · export · lock_period · approve_on_behalf · mask_money`), mọi handler đi qua `require(perm)` — nối Azure AD sau chỉ thay `current_user()`. `provenance: raw:PRD v3.0 §3 · assumed (A7)`
 
-- **C9.1** (raw, nguồn Excel) Chuỗi công thức đầy đủ 40 field từ ngày công thô đến
-  lương thực chi: `PAID_DAYS` (tổng ngày hưởng lương) → `EARNED_SAL` (lương thực tế:
-  thử việc + chính thức + trách nhiệm, chia theo `STD_DAYS`) → `GROSS` (cộng dồn mọi
-  PC/thưởng/trợ cấp/điều chỉnh, tách rạch taxable/non-taxable từng khoản) →
-  `TAXABLE_GROSS` (trừ các khoản không chịu thuế) → `TOTAL_INS` (BHXH+BHYT+BHTN NV,
-  8%/1.5%/1% trên lương **CÓ TRẦN** 46.800.000đ (BHXH/BHYT) và 106.200.000đ (BHTN)) →
-  `TAXABLE_INC` (trừ giảm trừ bản thân 15.500.000đ + 6.200.000đ/người phụ thuộc) →
-  `PIT` (thuế TNCN lũy tiến 7 bậc, NĐ 65/2013) → `NET_PAY` → `NET_PAY_HOME` (làm tròn,
-  = lương thực chi cuối cùng). Song song phía công ty: `TOTAL_INS_CTY` (17%/0.5%/3%/1%
-  cùng trần) + `KPCD_CTY` (2%) → `TOTAL_CTY_COST`. Toàn bộ implement tại
-  `app/p30_formula_engine.py` — engine dependency-graph, `compute(code, inputs)` resolve
-  đệ quy 1 lần ra mọi field phụ thuộc, không cần biết thứ tự tay.
-- **C9.2** (raw, nguồn Excel References) Thuế TNCN lũy tiến từng phần 7 bậc chuẩn
-  NĐ 65/2013 (0-5tr 5% · 5-10tr 10%/trừ 250k · 10-18tr 15%/trừ 750k · 18-32tr
-  20%/trừ 1.65tr · 32-52tr 25%/trừ 3.25tr · 52-80tr 30%/trừ 5.85tr · >80tr 35%/trừ
-  9.85tr). Sheet chỉ đọc được 3/7 dòng do merge cell (5%,10%,30% khớp đúng NĐ chuẩn) —
-  4 dòng còn lại lấy theo bảng luật công khai, không phải suy đoán riêng.
-- **C9.3** (raw, nguồn Excel Allowance Rule) Định mức phụ cấp theo 8 cấp bậc (Level
-  1-8, KHÁC hệ ngạch QL/CV/NV ở C5.3.x): điện thoại 300k→1tr, xe hơi (BOD/không-BOD),
-  xăng theo site/non-site, trách nhiệm theo chức danh cụ thể (Trưởng/Phó nhóm bảo
-  vệ, Q.Trưởng/Trưởng dự án…), đi lại theo dải km × trung tâm/không-trung-tâm, cơm
-  (bảo vệ 2 suất · non-project 1 suất · dự án <30km 2 suất · ≥30km 3 suất — khớp
-  quy tắc đã cài ở p12). **CHƯA nối vào engine** (C9.1 mới dùng input thô cho các
-  trường PC, chưa tự tra bảng Level) — việc kế tiếp nếu cần chính xác tuyệt đối.
-- **C9.4** (raw, nguồn Excel Time Tracking Rule) Xác nhận lại các quy tắc đã cài ở
-  C4.1/C7 (kỳ công 21-20, công chuẩn VP trừ CN+chiều T7, phép 12+1/5 năm, phép tồn
-  hết hạn 31/12 năm kế, ốm Cty 3 ngày/năm không cộng dồn) — không có sai khác với
-  C5.x, chỉ xác nhận nguồn.
+**C2.2** — Ràng buộc bảo mật giữ nguyên trong model quyền kể cả khi chưa bật auth: thư ký/CHT **tuyệt đối không thấy số tiền** (`mask_money`); mọi lượt xuất báo cáo nhạy cảm phải ghi log. `provenance: raw:PRD v2.1 §3, §6.4`
 
-## Origin
-Biên dịch 2026-07-09 từ `llmwiki/raw/PRD__Payroll_System_v2.1.docx` (user cung cấp 09/07). Gap tự bù theo yêu cầu user "tự bổ sung gap" — tất cả đánh dấu bảng Giả định, chờ HR xác nhận trước khi run. C9 bổ sung 2026-07-10 từ Excel bàn giao Payroll thật — thay thế công thức tự suy đoán ở C5.x cho phần tính GROSS→NET_PAY.
+---
+
+## C3 · Nguồn chân lý & lớp công thức ⭐ điều khoản gốc
+
+**C3.1** — Excel bàn giao chứa **2 lớp công thức mâu thuẫn**: `to-be` (sheet `Payroll structure`) và `as-is` (công thức Excel **sống** trong `Payroll Mar 2026`). HR đã tự chấm **10 field lệch** (`Matched? = N`). **Engine bám lớp `as-is`** — vì đó là lớp duy nhất kiểm chứng được bằng máy hôm nay, và là số nhân viên **thực sự nhận được**. `provenance: raw:xlsx cột M "Matched?" · user (Q1)`
+
+**C3.2** — Mọi field lệch phải ghi vào `docs/DELTA-as-is-vs-to-be.md` để HR ký. Lớp to-be giữ sau cờ `params.formula_layer` (`"as_is"` | `"to_be"`) — đổi **một dòng** là chạy lớp kia. `provenance: user (Q1)`
+
+**C3.3** — Chốt từng field lệch (engine dùng cột trái):
+
+| CODE | Engine (as-is) | Bỏ (to-be) |
+|---|---|---|
+| `PAID_DAYS` | `IF(chính thức, OFFICIAL_DAYS, PROB_DAYS) + PAID_LEAVE + HOLIDAY + COMP + PAID_OTHER + BEREAVE` — **không** cộng `SI_DAYS`, `ADJ_DAYS` | bản cộng `SI_DAYS` + `ADJ_DAYS` |
+| `CONTRACT_TOTAL` | `IF(chính thức, BASIC_SAL + RESP_SAL, PROB_SAL)` | `BASIC_SAL + [RESPONSIBILITY_ALLOW]` (mã không tồn tại) |
+| `INS_SAL_BH` | `IF(chính thức, MIN(CONTRACT_TOTAL, 46.800.000), 0)` | `MIN(BASIC_SAL, 50.600.000)` |
+| `EARNED_SAL` | `ROUND(PROB_EARNED + OFFICIAL_EARNED + RESP_EARNED + EARNED_PAID_LEAVE, 0)` — **4 thành phần** | 3 thành phần |
+| `GROSS` | `ADJ_MINUS` được **CỘNG** (HR nhập số âm để trừ) | `… + ADJ_PLUS − ADJ_MINUS` |
+| `TAXABLE_GROSS` | **có** trừ `CHARITY_DED` và `EARNED_PAID_LEAVE` | không trừ |
+| `UNION_FEE` | `MIN(INS_SAL_BH × 0,5%, 253.000)` → 234.000 ✓ | `BASIC_SAL × 0,5%` → 1.000.000 ✗ |
+| `KPCD_CTY` | `INS_SAL_BH × 2%` → 936.000 ✓ | `BASIC_SAL × 2%` → 4.000.000 ✗ |
+| `TNLD_CTY` | `INS_SAL_BH × 0,5%` (trần **BH**, không phải trần BHTN) → 234.000 ✓ | `MIN(BASIC_SAL, 106,2tr) × 0,5%` → 531.000 ✗ |
+| `TOTAL_CTY_COST` | `NET_PAY + TOTAL_INS_CTY + KPCD_CTY` → 201.522.161 ✓ | `GROSS + …` → 236.602.000 ✗ |
+| `PIT` | biểu **5 bậc** (5/10/20/30/35%) | bảng 7 bậc cũ ở sheet `References` — **vứt** |
+
+Hai thứ **to-be đúng hơn** và được giữ (ground-truth xác nhận): `PERSONAL_DED = 15.500.000`, `DEPENDENT_DED = 6.200.000`/người.
+
+---
+
+## C4 · Tham số hệ thống — MỘT chỗ duy nhất
+
+**C4.1** — Toàn bộ tham số nằm ở `data/params.json`, **mỗi tham số có `effective_from`**. Đổi số không được sửa code. Lý do bắt buộc (không phải nice-to-have): payslip mẫu là kỳ cũ (giảm trừ 11tr) trong khi bảng lương hiện hành là 15,5tr → cùng một engine phải chạy đúng **cả hai kỳ**. `provenance: user (Q9/Q10/Q11)`
+
+**C4.2** — ⚠️ **HAI TRẦN CÙNG TỒN TẠI — engine phải giữ cả hai, không được quy về một:**
+- `ins_cap_bh_display = 50.600.000` — trần **hiển thị** ở cột `INS_SAL_BH` (U9 = 50.600.000).
+- `ins_cap_bh = 46.800.000` — trần **tính thật**, mọi công thức BHXH/BHYT/KPCĐ/công đoàn đều ăn trần này. Khớp đồng thời **7 công thức độc lập** của dòng 9: `SI_EMP` 3.744.000 · `HI_EMP` 702.000 · `SI_CTY` 7.956.000 · `HI_CTY` 1.404.000 · `TNLD_CTY` 234.000 · `KPCD_CTY` 936.000 · `UNION_FEE` 234.000.
+
+Chính Excel tự tố cáo mâu thuẫn này bằng ô tự-kiểm của nó: `U2 = U9 × 17% = 8.602.000`, nhưng `SI_CTY` thật `= 7.956.000`. Nếu engine quy về một trần thì **hoặc** sai cột U **hoặc** sai toàn bộ tiền bảo hiểm.
+Trần **BHTN = 106.200.000** dùng chung cho cả hiển thị lẫn tính (`UI_EMP` 1.062.000 ✓). `provenance: raw:xlsx dòng 9 + ô check U2 · verified`
+
+**C4.3** — **Cơm: đơn giá 45.000/suất; miễn thuế 730.000/tháng** (không phải 1,2tr). Bằng chứng số học từ payslip thật: 78 suất × 45.000 = 3.510.000; 3.510.000 − 730.000 = 2.780.000 = đúng cột chịu thuế. `provenance: raw:xlsx Payslip template · raw:PRD v2.1 §5.3.1 · verified`
+
+**C4.4** — **Giảm trừ bản thân 15.500.000; NPT 6.200.000/người.** Ground-truth dòng 9 xác nhận trực tiếp cả chuỗi (`TOTAL_DED` 34.100.000 → `TAXABLE_INC` 185.392.000 → `PIT` 50.387.200 → `NET_PAY` 189.930.161). Thử việc → `PERSONAL_DED = 0`. `provenance: raw:xlsx dòng 9 · verified`
+
+**C4.5** — Tỷ lệ đóng: **NLĐ** BHXH 8% · BHYT 1,5% · BHTN 1% (**tổng 10,5%**). **Công ty** BHXH 17% · TNLĐ-BNN 0,5% · BHYT 3% · BHTN 1% (**tổng 21,5%**) + **KPCĐ 2%**. Phí công đoàn NLĐ **0,5%, trần 253.000**. `provenance: raw:HR-QT §V.2 · raw:xlsx §5.1 · verified`
+
+**C4.6** — **Biểu thuế TNCN 5 bậc lũy tiến** (dùng công thức sống, **vứt** bảng 7 bậc cũ ở sheet `References`):
+
+| Bậc | Thu nhập tính thuế | Suất | Rút gọn |
+|---|---|---|---|
+| 1 | ≤ 10tr | 5% | `× 5%` |
+| 2 | ≤ 30tr | 10% | `× 10% − 500.000` |
+| 3 | ≤ 60tr | 20% | `× 20% − 3.500.000` |
+| 4 | ≤ 100tr | 30% | `× 30% − 9.500.000` |
+| 5 | > 100tr | 35% | `× 35% − 14.500.000` |
+
+`provenance: raw:xlsx CK9 + ô tự-kiểm EX9 (IF ≡ SUMPRODUCT = TRUE) · verified`
+
+---
+
+## C5 · Lịch & kỳ
+
+**C5.1** — **Kỳ công (kỳ lương) = 21 tháng trước → 20 tháng này.** Ví dụ kỳ 03/2026 = 21/02/2026 – 20/03/2026. `provenance: raw:PRD v2.1 §4.1 · raw:HR-QT §V.1 · raw:xlsx Time Tracking Rule · verified`
+
+**C5.2** — **Công chuẩn**: Văn phòng = trừ Chủ nhật **và chiều thứ 7** (thứ 7 tính **½ ngày**); Công trường = **chỉ** trừ Chủ nhật. Lưu riêng từng kỳ. `provenance: raw:xlsx F1/F2 (NETWORKDAYS.INTL) · raw:PRD v2.1 §4.1 · verified`
+
+**C5.3** — **Kỳ BHXH = 01 → cuối tháng dương lịch**, **lệch trục** với kỳ công → engine đếm **song song hai trục thời gian**. `provenance: raw:PRD v2.1 §5.1.4 · verified`
+
+**C5.4** — Danh mục ngày lễ tự động hằng năm: `01/01` · 5 ngày Tết Âm lịch · `30/04` · `01/05` · `02/09 (+1 ngày)` · Giỗ Tổ `10/03` ÂL. HR chỉnh được. `provenance: raw:PRD v2.1 §7 · raw:xlsx Time Tracking Rule`
+
+---
+
+## C6 · Chấm công
+
+**C6.1** — Bộ ký hiệu công tối thiểu: `x` (làm việc) · `x1` (lương thời gian) · `OL` (ốm hưởng lương Cty) · `P`/`F` (phép năm) · `R`/`Fo` (việc riêng có lương) · `L` (lễ) · `NB` (nghỉ bù) · `Ts`/`TSN` (thai sản) · `ON`/`OD` (ốm BHXH) · `TN` (tai nạn) · `Ro` (không lương) · `?P` (chờ duyệt). `provenance: raw:PRD v2.1 §4.2 · verified`
+
+**C6.2** — Đơn trạng thái **`?P` (chờ duyệt) KHÔNG được cộng** vào công hưởng lương. `provenance: raw:PRD v2.1 §6.2 · verified`
+
+**C6.3** — `PAID_DAYS` theo as-is (xem C3.3). Hai loại ngày trong bảng lương thật **chưa có mã** được cấp mã mới: `PAID_OTHER_DAYS` (nghỉ có hưởng lương), `BEREAVE_DAYS` (ma chay/hiếu hỉ). `provenance: raw:xlsx AC/AD · user (Q1)`
+
+---
+
+## C7 · Lương chính & pro-rata
+
+**C7.1** — `PROB_EARNED = ROUND(PROB_SAL / STD_DAYS × PAID_DAYS, 0)` khi HĐ = thử việc, ngược lại 0. `OFFICIAL_EARNED = ROUND(BASIC_SAL / STD_DAYS × PAID_DAYS, 0)` khi HĐ = chính thức, ngược lại 0. Đơn giá thử việc = **85%** lương chính thức. `provenance: raw:xlsx AJ9/AK9 · raw:PRD v2.1 §5.1.1 · verified`
+
+**C7.2** — `RESP_EARNED = ROUND(RESP_SAL / STD_DAYS × PAID_DAYS, 0)` — phụ cấp trách nhiệm cũng pro-rata theo ngày, tách theo ngày hiệu lực nếu bổ nhiệm giữa kỳ. `provenance: raw:xlsx AL9 · raw:PRD v2.1 §5.1.2 · verified`
+
+**C7.3** — `EARNED_PAID_LEAVE` (lương phép tồn) = `ngày phép tồn / STD_DAYS × mức lương` — **chỉ NV chính thức**. Cộng vào `EARNED_SAL` (thành phần thứ 4). `provenance: raw:xlsx K25 · verified`
+
+**C7.4** — **Tách giai đoạn**: thử việc → chính thức, trước → sau bổ nhiệm, điều động giữa các bộ phận đều tính theo **ngày phát sinh thực tế**, hệ thống **tự tách dòng, không nhập tay**. `provenance: raw:HR-QT §V.4 · raw:PRD v2.1 §5.2 · verified`
+
+---
+
+## C8 · Phụ cấp
+
+**C8.1** — **Suất ăn**: Văn phòng **1 bữa/ngày** · công trường/dự án **< 30 km: 2 bữa** · **≥ 30 km: 3 bữa** · ngày làm **≤ 4 tiếng: 0 bữa**. `MEAL_ALLOW = tổng_suất × 45.000`. `provenance: raw:PRD v2.1 §5.3.1 · verified`
+
+**C8.2** — Mọi phụ cấp **tách 2 cột Taxable / Non-tax**. Cơm: `MEAL_NONTAX = MIN(MEAL_ALLOW, 730.000)`, `MEAL_TAX = MAX(0, MEAL_ALLOW − 730.000)`. `provenance: raw:PRD v2.1 §5.2 · verified`
+
+**C8.3** — **Pro-rata chung**: `phụ_cấp = định_mức / công_chuẩn × số_ngày_hưởng`. `provenance: raw:HR-QT §V.3 · verified`
+
+**C8.4** — ⭐ **Luật <14 ngày**: nếu **ngày làm việc thực tế** trong kỳ **< 14**, số ngày hưởng = **(ngày làm việc thực tế + ngày lễ)** — **không** tính phép, nghỉ hưởng lương khác, không lương. Áp cho: điện thoại, xăng/nhiên liệu, đi lại, công trường, và các phụ cấp cố định theo tháng. `provenance: raw:PRD v2.1 §5.2 · raw:HR-QT §V.3 · raw:xlsx note AQ10 · verified`
+
+**C8.5** — ⭐ **Điều động**: số ngày hưởng chia **thực tế theo từng bộ phận**, áp **định mức của từng bộ phận**. Suất ăn cũng tổng hợp riêng theo bộ phận với quy tắc bữa của từng nơi. `provenance: raw:PRD v2.1 §5.2, §5.4 · verified`
+
+**C8.6** — **Tờ trình duyệt riêng ghi đè** định mức chung kể từ **ngày hiệu lực** (từ ngày – đến ngày), **vẫn chịu** pro-rata + luật <14 ngày. Khối Văn phòng **không** áp định mức chung phụ cấp xăng (chỉ theo tờ trình). GĐDA **không** áp PC công trường/đi lại bảng chung. `provenance: raw:PRD v2.1 §5.2, §5.3.3, §5.3.7 · verified`
+
+**C8.7** — Bảng định mức: điện thoại theo ngạch × VP/CT (QL.01 1tr … NV.03-05 200k/300k, thử việc 0/300k); đi lại theo dải khoảng cách × nhóm đối tượng; công trường + công tác xa theo khoảng cách × trình độ. `provenance: raw:PRD v2.1 §5.3.2, §5.3.4, §5.3.5 · assumed (A5: đơn vị bảng Level 1–8 trong Excel)`
+
+---
+
+## C9 · Tăng ca (OT)
+
+**C9.1** — OT vào engine là **SỐ TIỀN INPUT** (`OT_TAX`, `OT_NONTAX`). **Không tự chế** công thức giờ → tiền: Excel khai OT `type = input`, và nguồn giờ OT thật (`Get_Calculated_Time_Blocks`) **đang bị chặn quyền**. `provenance: raw:xlsx §1.6 · verified`
+
+**C9.2** — `params.ot_multipliers` để sẵn, **chỉ điền cái tài liệu nói thẳng**: `sunday: 2.0` ✓ · `holiday_extra: 1.0` (⚠ A4) · `holiday_300: null` (danh sách không tồn tại) · `weekday: null` · `night_extra: null`. Cờ `ot_from_hours: false` (mặc định TẮT). Nhóm Mắt Bão có nhánh hệ số riêng. `provenance: raw:PRD v2.1 §5.5 · assumed (A3)`
+
+**C9.3** — Ghi nhận **ngày nghỉ bù** (không phải tiền kỳ này, là input `COMP_DAYS` kỳ sau): làm ngày Lễ/Tết → **+2 ngày**; Coteccons Day / nghỉ bổ sung / bù trùng ngày nghỉ tuần → **+1 ngày**. `provenance: raw:HR-QT §V.4 · verified`
+
+---
+
+## C10 · Thưởng & trích quỹ
+
+**C10.1** — 13 khoản thưởng đều là **input** (`BONUS_TET`, `BONUS_13M`, `BONUS_KPI`, …); `BONUS_TOTAL` = tổng. Điều kiện loại trừ: NV nghỉ việc/có kế hoạch nghỉ; nghỉ thai sản/ốm dài/không lương **lũy kế ≥ 10 ngày** → không tính vào thời gian xét thưởng. `provenance: raw:HR-QT §V.4 · verified`
+
+**C10.2** — **Trích thưởng hàng tháng** (có ground-truth, phải khớp): `BONUS_SAVE_TRAVEL = 6.000.000/12 = 500.000` · `BONUS_SAVE_KPI = CONTRACT_TOTAL/4` · `BONUS_SAVE_13M = CONTRACT_TOTAL/12` · `BONUS_SAVE_TET = MIN(CONTRACT_TOTAL/12, 15.000.000/12)`. Điều kiện: có ngày hưởng lương > 0 **và không có ngày nghỉ việc**. `BUDGET_SAVE = GROSS + TOTAL_INS_CTY + KPCD_CTY + các khoản trích`. `provenance: raw:xlsx §1.17 + dòng 9 (BUDGET_SAVE 305.018.667) · verified`
+
+---
+
+## C11 · BHXH / BHYT / BHTN
+
+**C11.1** — `INS_SAL_BH = IF(chính thức, MIN(CONTRACT_TOTAL, 46.800.000), 0)` · `INS_SAL_UI = IF(chính thức, MIN(CONTRACT_TOTAL, 106.200.000), 0)`. Base = `CONTRACT_TOTAL` (⚠ **A1**). `provenance: raw:xlsx U9/V9 · assumed (A1)`
+
+**C11.2** — `SI_EMP/HI_EMP/SI_CTY/HI_CTY/TNLD_CTY/KPCD_CTY/UNION_FEE` **đều** ăn `INS_SAL_BH`. `UI_EMP/UI_CTY` ăn `INS_SAL_UI`. `provenance: raw:xlsx dòng 9 · verified`
+
+**C11.3** — ⭐ **Luật 14 ngày**: trong **tháng dương lịch** (01 → cuối tháng), nếu tổng (ngày thử việc + không lương + thai sản + ốm dài) **≥ 14 ngày** → **KHÔNG trích đóng BHXH** tháng đó. `provenance: raw:HR-QT §V.2 · raw:xlsx note BY10 · verified`
+
+**C11.4** — **Người nước ngoài**: `UI_EMP = 0` (không đóng BHTN). NV có **hợp đồng 2 nơi** → không đóng BHXH/BHYT/BHTN (cờ tay `no_insurance`, Workday chưa quản lý). `provenance: raw:xlsx Q19/Q20 · raw:HR-QT §V.2 · verified`
+
+---
+
+## C12 · Thuế TNCN
+
+**C12.1** — `TAXABLE_INC = MAX(0, TAXABLE_GROSS − TOTAL_INS − TOTAL_DED)`. `provenance: raw:xlsx CJ9 · verified`
+
+**C12.2** — `PIT` theo biểu **5 bậc** (C4.6). **Case đặc biệt**: thử việc + Việt Nam + `TAXABLE_INC ≥ 2tr` → **10%**; `< 2tr` → **0**. Thử việc + nước ngoài → **20%**. Nước ngoài không work-permit → 20%. `provenance: raw:xlsx CK9 · verified`
+
+**C12.3** — NPT: hồ sơ gửi **trước ngày 15** → tính kỳ đó; **sau 15** → kỳ sau. `provenance: raw:HR-QT §V.4 · verified`
+
+---
+
+## C13 · Tổng hợp → lương thực nhận
+
+**C13.1** — `GROSS = EARNED_SAL + mọi phụ cấp (tax + non-tax) + OT + BONUS_TOTAL + TOTAL_SUPPORT + ADJ_PLUS + ADJ_MINUS` (⚠ `ADJ_MINUS` được **cộng** — HR nhập số âm để trừ, xem C3.3). `provenance: raw:xlsx BW9 · verified`
+
+**C13.2** — `TAXABLE_GROSS = GROSS − (mọi khoản non-tax) − SEVER_ALLOW − SI_BENEFIT − BONUS_TRAVEL − CHARITY_DED − EARNED_PAID_LEAVE`. `provenance: raw:xlsx BX9 · verified`
+
+**C13.3** — ⭐ `NET_PAY = GROSS − TOTAL_INS − TOTAL_PIT − TOTAL_POST_DED + TOTAL_POST_ADD` · `NET_PAY_HOME = ROUND(NET_PAY, 0)`. `provenance: raw:xlsx CZ9/DB9 · verified`
+
+**C13.4** — `TOTAL_CTY_COST = NET_PAY + TOTAL_INS_CTY + KPCD_CTY` (as-is — **không** phải GROSS). `provenance: raw:xlsx DN9 · verified`
+
+**C13.5** — **Tiền dùng `Decimal` + `ROUND_HALF_UP`.** Excel `ROUND(x,0)` là half-up; `round()` của Python là half-even → lệch 1 đồng và HR sẽ bắt ngay. `provenance: lens:payroll-expert · verified`
+
+---
+
+## C14 · Truy vết (lý do dự án tồn tại)
+
+**C14.1** — ⭐ Mọi con số phải **truy vết được về `công thức + số ngày + định mức + nguồn định mức`**. Engine trả `trace` cho mỗi CODE: công thức nguyên văn → giá trị từng biến (đệ quy xuống được) → tham số đã dùng (kèm giá trị + `effective_from`) → `clause_id` trong BR này → dòng Excel gốc. `provenance: raw:PRD v2.1 §8 (NFR) · verified`
+
+**C14.2** — **Audit log** (khi có sửa tay): giá-trị-cũ → giá-trị-mới · người · thời gian · **lý do bắt buộc**. Trả lời gap #9 của chính HR: *"When payroll output is wrong, how does anyone know?"* `provenance: raw:PRD v2.1 §6.2 · raw:xlsx Gap Analysis #9`
+
+---
+
+## C15 · Giao diện
+
+**C15.1** — **3 màn hình**: `/` bảng lương (grid theo nhóm cột Excel thật, dòng TỔNG, ô lệch ground-truth tô đỏ) · `/payslip/<msnv>` phiếu lương (đúng layout thật: kỳ "Từ 21/[M-1] đến 20/[M]", khối A–E, đánh số `[0]`–`[67]`, in được) · `/trace/<msnv>/<CODE>` cây trace công thức. `provenance: raw:xlsx Payslip template · user (Q6)`
+
+**C15.2** — Số tiền: `tabular-nums`, căn phải, phân cách kiểu VN. **Bắt buộc toggle dark/light** (`prefers-color-scheme` mặc định + nút toggle + `localStorage` + script chống FOUC trong `<head>`) — không ép mode. `provenance: user (Q6)`
+
+---
+
+## C16 · Snapshot & đối chiếu
+
+**C16.1** — Mỗi lần chạy engine ghi **snapshot bất biến** `data/out/<period>/run-<ts>/`, **không ghi đè**. Chạy lại kỳ cũ với param-set cũ phải ra **đúng số cũ**. `provenance: user (Q8)`
+
+**C16.2** — `python3 -m app.diff <run_a> <run_b>` → in NV nào lệch, CODE nào lệch, bao nhiêu đồng. Đây chính là **parallel-run so với Excel** mà tài liệu ghi là MISSING — thứ duy nhất cho phép HR dám cắt Excel. `provenance: user (Q8) · raw:S10.1 (parallel run MISSING)`
+
+---
+
+## C17 · Nghiệm thu
+
+**C17.1** — ⭐ **GT-1**: dòng 9 Excel → engine ra **chính xác từng đồng** 25 cột kết quả: `GROSS 225.010.000` · `TAXABLE_GROSS 225.000.000` · `TOTAL_INS 5.508.000` · `TOTAL_DED 34.100.000` · `TAXABLE_INC 185.392.000` · `PIT 50.387.200` · `NET_INCOME 169.114.800` · **`NET_PAY 189.930.161`** · `TOTAL_INS_CTY 10.656.000` · `KPCD_CTY 936.000` · `TOTAL_CTY_COST 201.522.161` · `BUDGET_SAVE 305.018.667`. `provenance: raw:xlsx dòng 9 · verified`
+
+**C17.2** — **GT-1b**: hai ô **tự-kiểm của chính Excel** phải xanh — `EF9`: cân sổ = 0; `EX9`: hai cách tính thuế (thang IF ≡ SUMPRODUCT) cho **cùng** kết quả. `provenance: raw:xlsx EF9/EX9 · verified`
+
+**C17.3** — **GT-2 (effective_from)**: cùng input dòng 9, chạy với **param-set kỳ cũ** (giảm trừ bản thân 11tr, NPT 4,4tr) → `TOTAL_DED = 24.200.000` → `TAXABLE_INC = 195.292.000` → `PIT = 53.852.200`. Cùng một engine, hai bộ tham số, hai kết quả đều đúng → chứng minh `effective_from` là thật, không phải khẩu hiệu. `provenance: user (Q11) · verified`
+
+> ⛔ **Payslip mẫu (Lê Văn Biên) KHÔNG dùng làm fixture** — đã kiểm và nó **không cân số học** ở 3 chỗ độc lập: BHXH in 3.744.000 trên lương 20tr (đúng phải là 1.600.000 — con số đó là của dòng 9, bị dán nhầm); `TAXABLE_INC` in 3.880.000 nhưng tính lại ra 8.326.000; `PIT` in 572.000 nhưng bậc 1 (5%) chỉ ra 194.000. Đó là **template trình bày**, không phải chứng từ đã tính đúng. Dùng nó làm test = ép engine sai theo. `provenance: kiểm tay 13/07/2026`
+
+**C17.4** — **AC-1 / AC-2** (biên bản họp 23/03/2026, kiểm-chứng-được bằng máy):
+- **AC-1**: VP A 5 ngày (1 bữa) + dự án B ≥30km 20 ngày (3 bữa) → **65 suất**.
+- **AC-2**: BP A (3 làm việc + 1 lễ), BP B (3 làm việc + 2 lễ) → tổng làm việc 6 < 14 → `PC = (3+1)/CC × ĐM_A + (3+2)/CC × ĐM_B`.
+
+`provenance: raw:PRD v2.1 §5.4 · verified`
+
+**C17.5** — **SYN-1..6** (⚠ **A8**, chưa đối chiếu số thật): thử việc VN `<2tr` → PIT 0 · thử việc VN `≥2tr` → 10% · thử việc nước ngoài → 20% · expat → `UI_EMP = 0` · 5 biên bậc thuế (10/30/60/100tr) · miễn BHXH khi nghỉ ≥14 ngày. `provenance: lens:payroll-expert`
+
+**C17.6** — **PERF**: 4.179 bản sao dòng 9 → chạy **< 5 phút** (NFR). `provenance: raw:PRD v2.1 §8 · raw:xlsx Get_Workers 4.179 rows`
+
+---
+
+## C18 · Ranh giới adapter (build-now-adapt-later)
+
+**C18.1** — Mọi I/O ngoài đi qua **một file, bốn hàm** (`app/adapters.py`):
+```
+fetch_employees(period)   -> list[dict]   # nay: JSON | sau: Workday Get_Workers
+fetch_timesheet(period)   -> list[dict]   # nay: JSON | sau: Monthly_Attendance (🟡 stale) + Calculated_Time_Blocks (🔴 blocked)
+push_payslip(period, rows)-> None         # nay: ghi HTML/JSON | sau: SFTP → Workday
+export_bank_file(period, rows) -> Path    # nay: CSV | sau: template HSBC/Citibank
+```
+Engine **không gọi gì khác**. Thứ tự nối lại khi có credential: Workday inbound → Payslip outbound → Bank → SAP. `provenance: user (Q3) · assumed (A7)`
+
+---
+
+## C19 · Out-of-scope lô đầu (ghi `docs/DEFERRED.md`, kèm lý do chặn)
+
+Workday API (FE-01) · SAP (FE-27) · file ngân hàng HSBC/Citibank (FE-25) · push Payslip API (FE-26) · Teams Bot + Override + Sync-back (FE-16) · Azure AD SSO (FE-32) · multi-tenant (FE-28) · Dashboard lãnh đạo (FE-22) · Mắt Bão (FE-18) · truy thu/thoái thu BHXH + lãi nộp chậm (FE-12) · báo cáo động (FE-29) · khoá kỳ UI (FE-15) · màn nhập Tờ trình (FE-05 phần UI).
+
+**Không** làm: truy thu **công** sau khoá kỳ · Payroll tự sinh dữ liệu gốc · tích hợp hệ HR nào ngoài Workday. `provenance: raw:PRD v2.1 §4.3, §8 · user (Q7)`

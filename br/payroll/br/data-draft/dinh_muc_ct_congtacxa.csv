@@ -1,9 +1,0 @@
-khoi,dai_khoang_cach,doi_tuong_1_dh,doi_tuong_2_cd_tc_nghe,nguon
-CT,<30,1000000,500000,PRD 5.3.5
-CT,30-100,2000000,1200000,PRD 5.3.5
-CT,>100_phu_quoc,2500000,1500000,PRD 5.3.5
-CT,khac_mien_mien_trung,3000000,2000000,PRD 5.3.5
-VP,<30,0,0,PRD 5.3.5
-VP,30-100,1000000,700000,PRD 5.3.5
-VP,>100_phu_quoc,1500000,1000000,PRD 5.3.5
-VP,khac_mien_mien_trung,2000000,1500000,PRD 5.3.5

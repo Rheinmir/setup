@@ -1,0 +1,119 @@
+{
+  "_doc": "GROUND-TRUTH GT-1 (BR C17.1) — dòng 9 sheet 'Payroll Mar 2026', file bàn giao HR (đã ẩn danh).",
+  "_verified": "Toàn chuỗi đã tái lập tay và khớp từng đồng tới NET_PAY = 189.930.161 (13/07/2026).",
+  "_warning": "KHÔNG được sửa file này để làm test xanh. Đây là sự thật gốc — engine phải chạy đúng nó, không phải ngược lại.",
+
+  "period": "2026-03",
+  "employee_id": "GT-ROW9",
+
+  "inputs": {
+    "CONTRACT_TYPE": "Chính thức",
+    "NATIONALITY": "Việt Nam",
+
+    "STD_DAYS": 22,
+    "PROB_DAYS": 0,
+    "OFFICIAL_DAYS": 19.5,
+    "PAID_LEAVE_DAYS": 0,
+    "HOLIDAY_DAYS": 2.5,
+    "COMP_DAYS": 0,
+    "PAID_OTHER_DAYS": 0,
+    "BEREAVE_DAYS": 0,
+    "UNPAID_DAYS": 0,
+    "SI_DAYS": 0,
+    "ADJ_DAYS": 0,
+
+    "PROB_SAL": 0,
+    "BASIC_SAL": 200000000,
+    "RESP_SAL": 0,
+
+    "MEAL_TAX": 0,
+    "PHONE_ALLOW": 0,
+    "FUEL_ALLOW": 25000000,
+    "TRANSPORT_TAX": 0,
+    "LIVING_ALLOW": 0,
+    "OTHER_ALLOW_TAX": 0,
+    "MEAL_NONTAX": -990000,
+    "PHONE_NONTAX": 1000000,
+    "FUEL_NONTAX": 0,
+    "TRANSPORT_NONTAX": 0,
+    "LIVING_NONTAX": 0,
+    "OTHER_ALLOW_NONTAX": 0,
+
+    "OT_TAX": 0,
+    "OT_NONTAX": 0,
+    "EARNED_PAID_LEAVE": 0,
+
+    "ADJ_PLUS": 0,
+    "ADJ_MINUS": 0,
+    "CHARITY_DED": 0,
+
+    "DEPENDENT_CNT": 3,
+    "PIT_ADJ": 0,
+    "PIT_SETTLE": 21049361,
+
+    "SI_ADJ": 0,
+    "HI_ADJ": 0,
+    "UI_ADJ": 0,
+    "SI_CTY_ADJ": 0,
+    "TNLD_CTY_ADJ": 0,
+    "HI_CTY_ADJ": 0,
+    "UI_CTY_ADJ": 0,
+
+    "TERMINATION_DATE": null
+  },
+
+  "expected": {
+    "CONTRACT_TOTAL": 200000000,
+    "INS_SAL_BH": 50600000,
+    "INS_SAL_UI": 106200000,
+    "PAID_DAYS": 22,
+    "OFFICIAL_EARNED": 200000000,
+    "PROB_EARNED": 0,
+    "RESP_EARNED": 0,
+    "EARNED_SAL": 200000000,
+
+    "GROSS": 225010000,
+    "TAXABLE_GROSS": 225000000,
+
+    "SI_EMP": 3744000,
+    "HI_EMP": 702000,
+    "UI_EMP": 1062000,
+    "TOTAL_INS": 5508000,
+
+    "PERSONAL_DED": 15500000,
+    "DEPENDENT_DED": 18600000,
+    "TOTAL_DED": 34100000,
+    "TAXABLE_INC": 185392000,
+    "PIT": 50387200,
+    "TOTAL_PIT": 50387200,
+    "NET_INCOME": 169114800,
+
+    "UNION_FEE": 234000,
+    "TOTAL_POST_DED": 234000,
+    "TOTAL_POST_ADD": 21049361,
+
+    "NET_PAY": 189930161,
+    "NET_PAY_HOME": 189930161,
+
+    "SI_CTY": 7956000,
+    "TNLD_CTY": 234000,
+    "HI_CTY": 1404000,
+    "UI_CTY": 1062000,
+    "TOTAL_INS_CTY": 10656000,
+    "KPCD_CTY": 936000,
+    "TOTAL_CTY_COST": 201522161,
+
+    "BONUS_SAVE_TRAVEL": 500000,
+    "BONUS_SAVE_KPI": 50000000,
+    "BONUS_SAVE_13M": 16666667,
+    "BONUS_SAVE_TET": 1250000,
+    "BUDGET_SAVE": 305018667
+  },
+
+  "_notes": {
+    "INS_SAL_BH": "Cột U HIỂN THỊ trần 50,6tr, nhưng mọi công thức BH/KPCĐ/công đoàn lại ăn trần 46,8tr. Hai trần cùng tồn tại — engine phải giữ CẢ HAI (params: ins_cap_bh_display vs ins_cap_bh). Chính Excel tự tố cáo: ô check U2 = U9 x 17% = 8.602.000, nhưng SI_CTY thật = 7.956.000.",
+    "MEAL_NONTAX": "Số ÂM (−990.000) vì HR nhập tay bù trừ — cột cơm/đi lại/PC trong bảng lương thật là INPUT, không có công thức.",
+    "GROSS": "as-is: ADJ_MINUS được CỘNG (SUM AN:BU), HR nhập số âm khi muốn trừ.",
+    "TOTAL_CTY_COST": "as-is: NET_PAY + BH công ty + KPCĐ (KHÔNG phải GROSS)."
+  }
+}

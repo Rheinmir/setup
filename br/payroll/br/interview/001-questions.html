@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phỏng vấn yêu cầu 001 — Payroll CTD/Unicons</title>
+<script>
+  // chống FOUC: đặt theme TRƯỚC khi render
+  (function () {
+    var t = localStorage.getItem('br-theme');
+    if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.dataset.theme = t;
+  })();
+</script>
+<style>
+  :root {
+    --bg: #f6f7f9; --panel: #fff; --ink: #16181d; --muted: #5d6470; --line: #e3e6ea;
+    --accent: #1f6feb; --warn-bg: #fff4e5; --warn-line: #f0b429; --warn-ink: #7a4b00;
+    --code-bg: #f0f2f5; --ok: #1a7f37;
+  }
+  :root[data-theme="dark"] {
+    --bg: #0d1117; --panel: #161b22; --ink: #e6edf3; --muted: #9198a1; --line: #2a313c;
+    --accent: #58a6ff; --warn-bg: #2b2110; --warn-line: #9e6a03; --warn-ink: #f0c674;
+    --code-bg: #1f242c; --ok: #3fb950;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.65 -apple-system, "Segoe UI", system-ui, sans-serif;
+  }
+  .wrap { max-width: 940px; margin: 0 auto; padding: 32px 20px 80px; }
+  header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+  h1 { font-size: 26px; margin: 0 0 6px; letter-spacing: -.01em; }
+  .sub { color: var(--muted); font-size: 14px; margin: 0; }
+  .path { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px;
+          background: var(--code-bg); padding: 2px 6px; border-radius: 5px; word-break: break-all; }
+  #theme { border: 1px solid var(--line); background: var(--panel); color: var(--ink);
+           border-radius: 8px; padding: 8px 12px; cursor: pointer; font-size: 14px; white-space: nowrap; }
+  .files { margin: 20px 0 8px; padding: 14px 16px; background: var(--panel);
+           border: 1px solid var(--line); border-radius: 10px; font-size: 14px; }
+  .files h2 { font-size: 14px; margin: 0 0 8px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  .files ul { margin: 0; padding-left: 18px; }
+  .files li { margin: 3px 0; }
+  .lead { margin: 22px 0; padding: 14px 16px; border-left: 3px solid var(--warn-line);
+          background: var(--warn-bg); color: var(--warn-ink); border-radius: 0 10px 10px 0; font-size: 14.5px; }
+  .q { background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+       padding: 20px 22px; margin: 16px 0; }
+  .q h3 { margin: 0 0 4px; font-size: 18px; }
+  .fid { font-family: ui-monospace, monospace; font-size: 12px; color: var(--muted); }
+  .why { color: var(--muted); font-size: 14.5px; margin: 10px 0 12px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; margin: 10px 0; }
+  th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { background: var(--code-bg); font-weight: 600; }
+  code { font-family: ui-monospace, monospace; font-size: 13px; background: var(--code-bg);
+         padding: 1px 5px; border-radius: 4px; }
+  .term { border-bottom: 1px dotted var(--muted); cursor: help; }
+  .gloss { margin-top: 40px; }
+  .gloss dt { font-weight: 600; margin-top: 12px; }
+  .gloss dd { margin: 2px 0 0 0; color: var(--muted); font-size: 14.5px; }
+  .tag { display: inline-block; font-size: 11.5px; padding: 2px 8px; border-radius: 20px;
+         border: 1px solid var(--line); color: var(--muted); margin-left: 6px; vertical-align: middle; }
+  .tag.blocker { border-color: var(--warn-line); color: var(--warn-ink); background: var(--warn-bg); }
+  @media (max-width: 600px) { .wrap { padding: 20px 14px 60px; } table { font-size: 13px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div>
+    <h1>Phỏng vấn yêu cầu 001 — Payroll CTD/Unicons</h1>
+    <p class="sub">12 câu hỏi hỏi-bù · sinh bởi <code>/br interview</code> · 13/07/2026</p>
+  </div>
+  <button id="theme" type="button">◐ Đổi nền</button>
+</header>
+
+<div class="files">
+  <h2>Đường dẫn đầy đủ (mở bằng trình soạn thảo)</h2>
+  <ul>
+    <li>Điền câu trả lời vào: <span class="path">/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/br/interview/001-answers.md</span></li>
+    <li>Bản đối chiếu specs: <span class="path">/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/br/spec-filled.md</span></li>
+    <li>Nguồn đã bóc — Excel: <span class="path">/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/br/sources/ANALYSIS-excel-params.md</span></li>
+    <li>Nguồn đã bóc — 3 docx: <span class="path">/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/br/sources/ANALYSIS-docx-specs.md</span></li>
+    <li>Tài liệu gốc (chỉ-đọc): <span class="path">/Users/giatran/orca/workspaces/setup/issue-15-br-k/llmwiki/raw/payroll requirement/</span></li>
+  </ul>
+</div>
+
+<div class="lead">
+  <strong>Phát hiện then chốt — đọc trước khi trả lời.</strong> File Excel bàn giao chứa <strong>hai lớp công thức mâu thuẫn nhau</strong>:
+  lớp <em>“to-be”</em> (sheet <code>Payroll structure</code> — cái team <em>định</em> code) và lớp <em>“as-is”</em>
+  (công thức Excel <strong>sống</strong> trong sheet <code>Payroll Mar 2026</code> — cái <em>đang chạy thật</em> để trả lương).
+  Chính HR đã tự chấm cột <code>Matched? (Y/N)</code> và đánh <strong>N (lệch)</strong> cho 10 field, trong đó có
+  <code>PAID_DAYS</code>, <code>TAXABLE_INC</code>, <code>UNION_FEE</code>, <code>TOTAL_CTY_COST</code>.
+  Chọn lớp nào (câu Q1) sẽ đổi <strong>mọi</strong> con số lương — nên Q1, Q9, Q10, Q11 phải trả lời <em>nhất quán với nhau</em>.
+</div>
+
+<div class="q">
+  <h3>Q1 · Lớp công thức nào là chuẩn? <span class="fid">S5.2</span><span class="tag blocker">chặn mọi thứ</span></h3>
+  <p class="why">Hai lớp lệch nhau ở 10 field. Engine phải chọn một để bám.</p>
+  <table>
+    <tr><th>Field</th><th>“to-be” (Payroll structure)</th><th>“as-is” (công thức sống, dòng 9)</th></tr>
+    <tr><td><code>SI_EMP</code> (BHXH 8%)</td><td><code>MIN(BASIC_SAL, 46,8tr) × 8%</code></td><td><code>MIN(CONTRACT_TOTAL, 46,8tr) × 8%</code></td></tr>
+    <tr><td><code>PAID_DAYS</code></td><td>có cộng <code>SI_DAYS</code> + <code>ADJ_DAYS</code></td><td><strong>không</strong> cộng; thay bằng 2 cột chưa có mã</td></tr>
+    <tr><td><code>UNION_FEE</code> (phí công đoàn)</td><td><code>BASIC_SAL × 0,5%</code>, không trần</td><td><code>INS_SAL_BH × 0,5%</code>, <strong>trần 253.000</strong></td></tr>
+    <tr><td><code>TOTAL_CTY_COST</code></td><td><code>GROSS + BH_cty + KPCĐ</code></td><td><code>NET_PAY + BH_cty + KPCĐ</code></td></tr>
+    <tr><td><code>GROSS</code></td><td><code>… + ADJ_PLUS − ADJ_MINUS</code></td><td><code>SUM(AN:BU)</code> → <strong>“điều chỉnh trừ” đang bị CỘNG</strong></td></tr>
+  </table>
+</div>
+
+<div class="q">
+  <h3>Q2 · Tập người dùng lô đầu <span class="fid">S2.1</span></h3>
+  <p class="why">Hai bản PRD nói ngược nhau.</p>
+  <table>
+    <tr><th>PRD v2.1 (08/07/2026, “Approved for Dev”)</th><th>PRD v3.0 (không ghi ngày)</th></tr>
+    <tr><td>6 nhóm: Admin · HR C&amp;B · thư ký công trường · chỉ huy trưởng · trưởng bộ phận (duyệt qua Teams) · lãnh đạo (dashboard riêng)</td>
+        <td>“Hệ thống <strong>chỉ</strong> dành cho HR Admin và C&amp;B Staff. <strong>Không có tài khoản</strong> cho nhân viên hay trưởng bộ phận.”</td></tr>
+  </table>
+</div>
+
+<div class="q">
+  <h3>Q3 · Phạm vi tích hợp lô đầu <span class="fid">S6.1</span></h3>
+  <p class="why">v2.1: <strong>chỉ</strong> <span class="term" title="Hệ thống nhân sự SaaS của Workday Inc., đang là nguồn dữ liệu gốc">Workday</span>.
+  v3.0: Workday + <span class="term" title="Phần mềm kế toán/ERP — nơi nhận chi phí lương đã hạch toán">SAP</span> + file chuyển khoản ngân hàng (HSBC, Citibank).
+  Thực trạng trong chính file bàn giao: 3 API Workday quan trọng nhất đang <strong>bị chặn quyền</strong> —
+  <code>Get_Calculated_Time_Blocks</code> (<em>“would give OT actual hours”</em>) và <code>All_Worker_Time_Off</code> (<em>“would give leave data”</em>).</p>
+</div>
+
+<div class="q">
+  <h3>Q4 · Hệ số tăng ca &amp; công thức giờ → tiền <span class="fid">S4.1</span><span class="tag blocker">không nguồn nào có</span></h3>
+  <p class="why">Đang có: Chủ nhật <strong>200%</strong>; Lễ/Tết “trả thêm <strong>100%</strong> + bố trí 2 ngày nghỉ bù”; “một số trường hợp <strong>300%</strong> theo danh sách” — nhưng <em>không có danh sách</em>.
+  Đang thiếu hẳn: hệ số OT ngày thường (luật là 150%), OT ban đêm (+30%), và công thức quy số giờ OT ra tiền.
+  Trong Excel, tăng ca vào hệ thống dưới dạng <strong>số tiền nhập tay</strong>, không tính từ giờ.</p>
+</div>
+
+<div class="q">
+  <h3>Q5 · Công nghệ <span class="fid">S8.1</span></h3>
+  <p class="why">Raw không chỉ định ngôn ngữ / framework / cơ sở dữ liệu / nơi chạy. Ràng buộc duy nhất nêu được: Azure AD SSO, Teams Bot, tương thích Microsoft 365, và (bản v3.0) <span class="term" title="Một hệ thống phục vụ nhiều pháp nhân/công ty con, dữ liệu tách riêng">multi-tenant</span>.</p>
+</div>
+
+<div class="q">
+  <h3>Q6 · Giao diện &amp; design system <span class="fid">S7.5</span></h3>
+  <p class="why">Raw chỉ nêu <em>tên</em> màn hình (dashboard lãnh đạo, khoá kỳ, cấu hình, nhập tờ trình, chấm công nhanh). Không có wireframe, style guide, hay quy định sáng/tối.</p>
+</div>
+
+<div class="q">
+  <h3>Q7 · Ưu tiên — lô đầu làm gì, hoãn gì <span class="fid">S4.3</span></h3>
+  <p class="why">32 feature, không tài liệu nào gán <span class="term" title="Must / Should / Could / Won't — cách xếp ưu tiên">MoSCoW</span>.</p>
+</div>
+
+<div class="q">
+  <h3>Q8 · Môi trường &amp; sao lưu <span class="fid">S7.4</span></h3>
+  <p class="why">HR tự nhận trong file bàn giao: <em>“No staging/UAT environment — payroll <strong>cannot</strong> be tested in production”</em>, và gọi staging là <strong>non-negotiable</strong>. Không có SLA/backup/DR.</p>
+</div>
+
+<div class="q">
+  <h3>Q9 · Trần lương đóng BHXH/BHYT: 50,6tr hay 46,8tr? <span class="fid">S5.4</span></h3>
+  <p class="why">Bảng tham số khai <code>INS_SAL_BH = MIN(BASIC_SAL, 50.600.000)</code>, nhưng công thức tính lại dùng trần <strong>46.800.000</strong> —
+  và <strong>số thật trên bảng lương đang dùng 46,8tr</strong> (<code>SI_EMP = 3.744.000 = 46,8tr × 8%</code>).
+  Chính Excel cũng lộ mâu thuẫn: ô tự-kiểm <code>U2 = 8.602.000</code> ≠ giá trị thật <code>DD9 = 7.956.000</code>.</p>
+</div>
+
+<div class="q">
+  <h3>Q10 · Cơm miễn thuế: 1.200.000 hay 730.000? <span class="fid">S4.2</span></h3>
+  <p class="why">Bảng tham số: <strong>1.200.000</strong>. Phiếu lương thật + ghi chú bảng lương + PRD v2.1 §5.3.1: <strong>730.000</strong>.</p>
+</div>
+
+<div class="q">
+  <h3>Q11 · Giảm trừ bản thân: 15,5tr hay 11tr? <span class="fid">S5.2</span></h3>
+  <p class="why">Bảng tham số: <strong>15.500.000</strong> (mức mới) + <strong>6.200.000</strong>/người phụ thuộc. Phiếu lương mẫu: <strong>11.000.000</strong> (mức cũ).
+  Giá trị thật dòng 9 dùng <strong>15,5tr</strong> và <strong>6,2tr × 3 người = 18,6tr</strong>.</p>
+</div>
+
+<div class="q">
+  <h3>Q12 · Nghiệm thu engine trên dữ liệu nào? <span class="fid">S10.2</span></h3>
+  <p class="why">Roster thật <strong>4.179 người nằm ở Workday</strong>, không có trong repo. Excel bàn giao chỉ có
+  <strong>1 dòng nhân viên thật đã ẩn danh (dòng 9)</strong> — nhưng dòng đó có <em>đủ</em> cột kết quả để đối chiếu
+  (<code>NET_PAY = 189.930.161</code>), cộng 2 ô tự-kiểm sẵn có (<code>EF9 = 0</code>, <code>EX9 = TRUE</code>).</p>
+</div>
+
+<div class="gloss">
+  <h2>Giải nghĩa thuật ngữ</h2>
+  <dl>
+    <dt>to-be / as-is</dt>
+    <dd><em>to-be</em> = công thức team <strong>định</strong> làm (sheet <code>Payroll structure</code>). <em>as-is</em> = công thức Excel <strong>đang chạy thật</strong> để trả lương tháng này. Khi hai cái lệch nhau, cái “as-is” là cái nhân viên thực sự nhận được tiền.</dd>
+    <dt>ground-truth</dt>
+    <dd>“Sự thật gốc” — bộ số đã biết chắc là đúng, dùng làm thước đo. Ở đây là dòng 9 của bảng lương thật: cho engine cùng đầu vào, engine phải ra đúng con số đó.</dd>
+    <dt>pro-rata</dt>
+    <dd>Chia theo tỷ lệ. Ví dụ phụ cấp tháng 1.000.000đ mà chỉ làm 11/22 ngày công chuẩn → hưởng 500.000đ.</dd>
+    <dt>luật &lt;14 ngày</dt>
+    <dd>Nếu <em>ngày làm việc thực tế</em> trong kỳ dưới 14 ngày, phụ cấp không chia theo ngày công hưởng lương bình thường nữa, mà chỉ chia theo <em>(ngày làm việc thực tế + ngày lễ)</em> — phép và nghỉ không lương không được tính.</dd>
+    <dt>luật 14 ngày BHXH</dt>
+    <dd>Khác cái trên. Nếu trong <em>tháng dương lịch</em> (mùng 1 → cuối tháng) tổng ngày thử việc + nghỉ không lương + thai sản + ốm dài ≥ 14 ngày thì tháng đó <strong>không trích đóng BHXH</strong>.</dd>
+    <dt>kỳ công 21 → 20</dt>
+    <dd>Kỳ tính lương tháng 3 = từ 21/02 đến 20/03. Lệch với kỳ BHXH (mùng 1 → cuối tháng) — nên hệ thống phải đếm song song <strong>hai trục thời gian</strong>.</dd>
+    <dt>clause_id (mã điều khoản)</dt>
+    <dd>Mã gắn cho từng điều khoản trong tài liệu yêu cầu (BR), kế thừa mã field ở đây (ví dụ <code>S5.4</code>). Mọi dòng code sau này truy ngược được về đúng điều khoản đã chốt.</dd>
+    <dt>giả định đang gánh</dt>
+    <dd>Điều chưa ai xác nhận nhưng hệ thống vẫn phải chọn một cách để chạy được. Được liệt kê ở đầu BR để nhìn một phát biết mình đang cược vào cái gì.</dd>
+  </dl>
+</div>
+
+</div>
+<script>
+  document.getElementById('theme').onclick = function () {
+    var r = document.documentElement;
+    var next = r.dataset.theme === 'dark' ? 'light' : 'dark';
+    r.dataset.theme = next;
+    localStorage.setItem('br-theme', next);
+  };
+</script>
+</body>
+</html>

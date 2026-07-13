@@ -1,0 +1,121 @@
+{
+  "_doc": "Tham số hệ thống — MỘT chỗ duy nhất (BR C4.1). Mỗi bộ có effective_from. Engine chọn bộ có effective_from lớn nhất mà <= kỳ đang tính.",
+  "_clause": "C4.1",
+  "param_sets": [
+    {
+      "effective_from": "2020-01-01",
+      "_note": "Bộ tham số CŨ — payslip mẫu Lê Văn Biên chạy bộ này (BR C17.3 / GT-2). Giữ để chứng minh effective_from hoạt động thật.",
+      "formula_layer": "as_is",
+
+      "ins_base": "CONTRACT_TOTAL",
+      "ins_cap_bh_display": 50600000,
+      "ins_cap_bh": 46800000,
+      "ins_cap_ui": 106200000,
+      "si_emp": 0.08,
+      "hi_emp": 0.015,
+      "ui_emp": 0.01,
+      "si_cty": 0.17,
+      "tnld_cty": 0.005,
+      "hi_cty": 0.03,
+      "ui_cty": 0.01,
+      "kpcd_cty": 0.02,
+      "union_fee_rate": 0.005,
+      "union_fee_cap": 253000,
+      "insurance_exempt_days": 14,
+
+      "meal_unit_price": 45000,
+      "meal_tax_free": 730000,
+
+      "personal_ded": 11000000,
+      "dependent_ded": 4400000,
+
+      "pit_brackets": [
+        [10000000, 0.05, 0],
+        [30000000, 0.10, 500000],
+        [60000000, 0.20, 3500000],
+        [100000000, 0.30, 9500000],
+        [null, 0.35, 14500000]
+      ],
+      "pit_probation_vn_rate": 0.10,
+      "pit_probation_vn_threshold": 2000000,
+      "pit_probation_foreign_rate": 0.20,
+
+      "prob_salary_ratio": 0.85,
+      "allowance_min_days_rule": 14,
+      "meal_min_hours": 4,
+
+      "ot_from_hours": false,
+      "ot_multipliers": {
+        "sunday": 2.0,
+        "holiday_extra": 1.0,
+        "holiday_300": null,
+        "weekday": null,
+        "night_extra": null
+      },
+      "ot_multipliers_matbao": {},
+
+      "bonus_save_travel_base": 6000000,
+      "bonus_save_tet_cap": 15000000
+    },
+    {
+      "effective_from": "2026-01-01",
+      "_note": "Bộ tham số HIỆN HÀNH — bảng lương Mar 2026 (dòng 9 ground-truth) chạy bộ này. Khác bộ cũ ĐÚNG 2 số: giảm trừ bản thân + NPT.",
+      "formula_layer": "as_is",
+
+      "ins_base": "CONTRACT_TOTAL",
+      "ins_cap_bh_display": 50600000,
+      "ins_cap_bh": 46800000,
+      "ins_cap_ui": 106200000,
+      "si_emp": 0.08,
+      "hi_emp": 0.015,
+      "ui_emp": 0.01,
+      "si_cty": 0.17,
+      "tnld_cty": 0.005,
+      "hi_cty": 0.03,
+      "ui_cty": 0.01,
+      "kpcd_cty": 0.02,
+      "union_fee_rate": 0.005,
+      "union_fee_cap": 253000,
+      "insurance_exempt_days": 14,
+
+      "meal_unit_price": 45000,
+      "meal_tax_free": 730000,
+
+      "personal_ded": 15500000,
+      "dependent_ded": 6200000,
+
+      "pit_brackets": [
+        [10000000, 0.05, 0],
+        [30000000, 0.10, 500000],
+        [60000000, 0.20, 3500000],
+        [100000000, 0.30, 9500000],
+        [null, 0.35, 14500000]
+      ],
+      "pit_probation_vn_rate": 0.10,
+      "pit_probation_vn_threshold": 2000000,
+      "pit_probation_foreign_rate": 0.20,
+
+      "prob_salary_ratio": 0.85,
+      "allowance_min_days_rule": 14,
+      "meal_min_hours": 4,
+
+      "ot_from_hours": false,
+      "ot_multipliers": {
+        "sunday": 2.0,
+        "holiday_extra": 1.0,
+        "holiday_300": null,
+        "weekday": null,
+        "night_extra": null
+      },
+      "ot_multipliers_matbao": {},
+
+      "bonus_save_travel_base": 6000000,
+      "bonus_save_tet_cap": 15000000
+    }
+  ],
+  "_pending_hr": {
+    "_note": "Số ĐÃ nằm trong sheet tham số của HR nhưng CHƯA công thức nào tiêu thụ (BR A2). Không dùng cho tới khi HR cho ngày hiệu lực.",
+    "ins_cap_bh_new": 50600000,
+    "meal_tax_free_new": 1200000
+  }
+}

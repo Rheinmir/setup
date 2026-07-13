@@ -1,114 +1,50 @@
-# QUEUE prompt cho /br run — driver: fdk/tools/br-queue.py (resumable).
-# status: pending|done|failed do driver TỰ cập nhật. Chạy lại = bỏ qua done, chạy tiếp.
-- frame: br/frames/frame-p01-lich-ky-cong.md
-  status: done
-  verdict: SUCCESS
-  commit: null
-- frame: br/frames/frame-p02-master-data-store.md
-  status: done
-  verdict: SUCCESS
-  commit: null
-- frame: br/frames/frame-p03-bang-dinh-muc.md
-  status: done
-  verdict: SUCCESS
-  commit: null
-- frame: br/frames/frame-p04-to-trinh-override.md
-  status: done
-  verdict: SUCCESS
-  commit: null
-- frame: br/frames/frame-p05-quy-dinh-nghi.md
-  status: done
-  verdict: SUCCESS
-  commit: null
-- frame: br/frames/frame-p06-workday-adapter.md
-  status: done
-  verdict: SUCCESS
-  commit: 3d00968753396d687300b4adeff92c03ab0395f7
-- frame: br/frames/frame-p07-parser-ky-hieu.md
-  status: done
-  verdict: SUCCESS
-  commit: 0beed79201f644a2743025f79c3f68278c493e86
-- frame: br/frames/frame-p08-tach-thu-viec.md
-  status: done
-  verdict: SUCCESS
-  commit: 8dd723559a6d0bfe808c563a72e04a84bed5c94d
-- frame: br/frames/frame-p09-tach-bo-nhiem.md
-  status: done
-  verdict: SUCCESS
-  commit: ebbe0bd2a282b829035f0b6c412809abafdfd6c7
-- frame: br/frames/frame-p10-tach-dieu-dong.md
-  status: done
-  verdict: SUCCESS
-  commit: 4b0991817d5138a965e90db86510ed570c0ae1e7
-- frame: br/frames/frame-p11-bhxh-hai-truc.md
-  status: done
-  verdict: SUCCESS
-  commit: ac7b8d9f9da1ce176ea7ff8b3a782558d0c8c358
-- frame: br/frames/frame-p12-suat-an.md
-  status: done
-  verdict: SUCCESS
-  commit: bb1250de8ac1a5472ec1048bdb48d83dadd1c4d6
-- frame: br/frames/frame-p13-prorata-engine.md
-  status: done
-  verdict: SUCCESS
-  commit: c52c997d1a822fe674d9f241cc808da129c49277
-- frame: br/frames/frame-p14-pc-com.md
-  status: done
-  verdict: SUCCESS
-  commit: d3f64f57b73c3aa15908fb47fa6903c12ab0e1e3
-- frame: br/frames/frame-p15-pc-dien-thoai.md
-  status: done
-  verdict: SUCCESS
-  commit: 8f89c52924b16dfd1883022cab7acfa49c729585
-- frame: br/frames/frame-p16-pc-xang.md
-  status: done
-  verdict: SUCCESS
-  commit: 45dc51d29859cfdf72212cf659b0808a5b0b8474
-- frame: br/frames/frame-p17-pc-di-lai.md
-  status: done
-  verdict: SUCCESS
-  commit: 8687016099cb9df34cb345916f880f27bf6a96c0
-- frame: br/frames/frame-p18-pc-ct-ctx.md
-  status: done
-  verdict: SUCCESS
-  commit: c61078b0017af382cd78bbba5bf49eba2db1be2c
-- frame: br/frames/frame-p19-pc-ctxa-duan-dacthu.md
-  status: done
-  verdict: SUCCESS
-  commit: 30ad83414c38cc1796b42fdb1a525180cbb2da1c
-- frame: br/frames/frame-p20-truy-thu-truy-linh.md
-  status: done
-  verdict: SUCCESS
-  commit: dcd58f8459243f877c88fa40078bc2ef5e37bb6f
-- frame: br/frames/frame-p21-ot-engine.md
-  status: done
-  verdict: SUCCESS
-  commit: 3f0002b850394d571224011c0c4b88e9d9013f7f
-- frame: br/frames/frame-p22-khoa-ky.md
-  status: failed
-  verdict: ERROR
-  commit: null
-- frame: br/frames/frame-p23-mat-bao.md
-  status: done
-  verdict: SUCCESS
-  commit: d329c3f615e2282d5677350f11a26fede9751643
-- frame: br/frames/frame-p24-phe-duyet-audit.md
-  status: done
-  verdict: SUCCESS
-  commit: 3c16d1eb40423022528b38d3ab1eb17ddf912359
-- frame: br/frames/frame-p25-template0-trinh-ky.md
-  status: done
-  verdict: SUCCESS
-  commit: 220ae827a8eb938708f6cf93e96424a190eecb39
-- frame: br/frames/frame-p26-template2-master.md
-  status: done
-  verdict: SUCCESS
-  commit: 653b0c105021706e39b236af95c80b105ac53bb5
-- frame: br/frames/frame-p27-bao-cao-hr-treo.md
-  status: done
-  verdict: SUCCESS
-  commit: 64dcfa0ebab96445b4387a45f2560467b3af2fd2
-- frame: br/frames/frame-p28-ui-serve.md
-  status: done
-  verdict: SUCCESS
-  commit: 2dfe15535d498de25725952a12ab61352d2bbc66
+# Queue /br run — chạy tuần tự theo DAG phụ thuộc. Resume: chạy lại bỏ qua status: done.
+# python3 ../../fdk/tools/br-queue.py run --queue br/queue.yaml
+
+- frame: br/frames/frame-f01-params.md
+  status: pending
+
+- frame: br/frames/frame-f02-lich-ky-cong.md
+  status: pending
+
+- frame: br/frames/frame-f03-cham-cong.md
+  status: pending
+
+- frame: br/frames/frame-f04-luong-chinh.md
+  status: pending
+
+- frame: br/frames/frame-f05-suat-an.md
+  status: pending
+
+- frame: br/frames/frame-f06-phu-cap.md
+  status: pending
+
+- frame: br/frames/frame-f07-tang-ca.md
+  status: pending
+
+- frame: br/frames/frame-f08-thuong-trich-quy.md
+  status: pending
+
+- frame: br/frames/frame-f09-bao-hiem.md
+  status: pending
+
+- frame: br/frames/frame-f10-thue-tncn.md
+  status: pending
+
+- frame: br/frames/frame-f11-tong-hop.md
+  status: pending
+
+- frame: br/frames/frame-f12-engine-dag.md
+  status: pending
+
+- frame: br/frames/frame-f13-adapters.md
+  status: pending
+
+- frame: br/frames/frame-f14-snapshot-diff.md
+  status: pending
+
+- frame: br/frames/frame-f15-man-hinh-hr.md
+  status: pending
+
+- frame: br/frames/frame-f99-lap-rap.md
+  status: pending

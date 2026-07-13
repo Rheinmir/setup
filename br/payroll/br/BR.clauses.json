@@ -1,126 +1,65 @@
 {
- "C3": {
-  "provenance": "raw",
-  "assumed": false
- },
- "C4.1": {
-  "provenance": "raw",
-  "assumed": false
- },
- "C4.2": {
-  "provenance": "raw",
-  "assumed": false
- },
- "C4.3": {
-  "provenance": "raw",
-  "assumed": false
- },
- "C5.1.1": {
-  "provenance": "raw",
-  "assumed": false
- },
- "C5.1.2": {
-  "provenance": "raw",
-  "assumed": false
- },
- "C5.1.3": {
-  "provenance": "raw",
-  "assumed": false
- },
- "C5.1.4": {
-  "provenance": "raw+lens",
-  "assumed": true
- },
- "C5.1.5": {
-  "provenance": "raw",
-  "assumed": false
- },
- "C5.2": {
-  "provenance": "raw",
-  "assumed": false
- },
- "C5.3.1": {
-  "provenance": "raw+lens",
-  "assumed": true
- },
- "C5.3.2": {
-  "provenance": "raw",
-  "assumed": false
- },
- "C5.3.3": {
-  "provenance": "raw+lens",
-  "assumed": true
- },
- "C5.3.4": {
-  "provenance": "raw+lens",
-  "assumed": true
- },
- "C5.3.5": {
-  "provenance": "raw",
-  "assumed": false
- },
- "C5.3.6": {
-  "provenance": "raw+lens",
-  "assumed": true
- },
- "C5.3.7": {
-  "provenance": "raw",
-  "assumed": false
- },
- "C5.4": {
-  "provenance": "raw",
-  "assumed": false
- },
- "C5.5": {
-  "provenance": "raw+lens",
-  "assumed": true
- },
- "C6.1": {
-  "provenance": "raw+lens",
-  "assumed": true
- },
- "C6.2": {
-  "provenance": "raw+lens",
-  "assumed": true
- },
- "C6.3": {
-  "provenance": "raw",
-  "assumed": false
- },
- "C6.4": {
-  "provenance": "raw",
-  "assumed": false
- },
- "C6.5": {
-  "provenance": "raw",
-  "assumed": false
- },
- "C7": {
-  "provenance": "raw",
-  "assumed": false
- },
- "C8": {
-  "provenance": "raw",
-  "assumed": false
- },
- "C7.1": {
-  "provenance": "user",
-  "assumed": true
- },
- "C9.1": {
-  "provenance": "raw",
-  "assumed": false
- },
- "C9.2": {
-  "provenance": "raw",
-  "assumed": false
- },
- "C9.3": {
-  "provenance": "raw",
-  "assumed": false
- },
- "C9.4": {
-  "provenance": "raw",
-  "assumed": false
- }
+  "C1.1": {"provenance": "raw", "assumed": false},
+  "C1.2": {"provenance": "raw", "assumed": false},
+  "C1.3": {"provenance": "user", "assumed": false},
+  "C2.1": {"provenance": "raw", "assumed": true},
+  "C2.2": {"provenance": "raw", "assumed": false},
+  "C3.1": {"provenance": "raw", "assumed": false},
+  "C3.2": {"provenance": "user", "assumed": false},
+  "C3.3": {"provenance": "raw", "assumed": false},
+  "C4.1": {"provenance": "user", "assumed": false},
+  "C4.2": {"provenance": "raw", "assumed": false},
+  "C4.3": {"provenance": "raw", "assumed": false},
+  "C4.4": {"provenance": "raw", "assumed": false},
+  "C4.5": {"provenance": "raw", "assumed": false},
+  "C4.6": {"provenance": "raw", "assumed": false},
+  "C5.1": {"provenance": "raw", "assumed": false},
+  "C5.2": {"provenance": "raw", "assumed": false},
+  "C5.3": {"provenance": "raw", "assumed": false},
+  "C5.4": {"provenance": "raw", "assumed": false},
+  "C6.1": {"provenance": "raw", "assumed": false},
+  "C6.2": {"provenance": "raw", "assumed": false},
+  "C6.3": {"provenance": "raw", "assumed": false},
+  "C7.1": {"provenance": "raw", "assumed": false},
+  "C7.2": {"provenance": "raw", "assumed": false},
+  "C7.3": {"provenance": "raw", "assumed": false},
+  "C7.4": {"provenance": "raw", "assumed": false},
+  "C8.1": {"provenance": "raw", "assumed": false},
+  "C8.2": {"provenance": "raw", "assumed": false},
+  "C8.3": {"provenance": "raw", "assumed": false},
+  "C8.4": {"provenance": "raw", "assumed": false},
+  "C8.5": {"provenance": "raw", "assumed": false},
+  "C8.6": {"provenance": "raw", "assumed": false},
+  "C8.7": {"provenance": "raw", "assumed": true},
+  "C9.1": {"provenance": "raw", "assumed": false},
+  "C9.2": {"provenance": "raw", "assumed": true},
+  "C9.3": {"provenance": "raw", "assumed": false},
+  "C10.1": {"provenance": "raw", "assumed": false},
+  "C10.2": {"provenance": "raw", "assumed": false},
+  "C11.1": {"provenance": "raw", "assumed": true},
+  "C11.2": {"provenance": "raw", "assumed": false},
+  "C11.3": {"provenance": "raw", "assumed": false},
+  "C11.4": {"provenance": "raw", "assumed": false},
+  "C12.1": {"provenance": "raw", "assumed": false},
+  "C12.2": {"provenance": "raw", "assumed": false},
+  "C12.3": {"provenance": "raw", "assumed": false},
+  "C13.1": {"provenance": "raw", "assumed": false},
+  "C13.2": {"provenance": "raw", "assumed": false},
+  "C13.3": {"provenance": "raw", "assumed": false},
+  "C13.4": {"provenance": "raw", "assumed": false},
+  "C13.5": {"provenance": "lens:payroll-expert", "assumed": false},
+  "C14.1": {"provenance": "raw", "assumed": false},
+  "C14.2": {"provenance": "raw", "assumed": false},
+  "C15.1": {"provenance": "user", "assumed": true},
+  "C15.2": {"provenance": "user", "assumed": true},
+  "C16.1": {"provenance": "user", "assumed": true},
+  "C16.2": {"provenance": "user", "assumed": true},
+  "C17.1": {"provenance": "raw", "assumed": false},
+  "C17.2": {"provenance": "raw", "assumed": false},
+  "C17.3": {"provenance": "raw", "assumed": false},
+  "C17.4": {"provenance": "raw", "assumed": false},
+  "C17.5": {"provenance": "lens:payroll-expert", "assumed": true},
+  "C17.6": {"provenance": "raw", "assumed": false},
+  "C18.1": {"provenance": "user", "assumed": true},
+  "C19": {"provenance": "user", "assumed": false}
 }
