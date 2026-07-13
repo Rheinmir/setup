@@ -19,46 +19,46 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-07 10:43:47 | `file.write` | llmwiki/html/070726-huong-dan-repo-files.html · tool=Edit · session=d99d8818 · actor=agent · prev=f480eda22037fff64d66e8 |
-| 2026-07-07 10:44:36 | `file.write` | llmwiki/html/070726-huong-dan-repo-files.html · tool=Edit · session=d99d8818 · actor=agent · prev=e1810bd062fe4c87ba5958 |
-| 2026-07-07 10:45:24 | `file.write` | llmwiki/wiki/sources/draft/070726-huong-dan-repo-files.md · tool=Edit · session=d99d8818 · actor=agent · prev=47844ee314 |
-| 2026-07-07 13:26:38 | `file.write` | skills/br/assets/frame-template.md · tool=Write · session=c610b991 · actor=agent · prev=61f8ec0a89dfedc22320d54f3f85f975 |
-| 2026-07-07 13:26:59 | `file.write` | fdk/tools/frame-lint.py · tool=Edit · session=c610b991 · actor=agent · prev=aecd2ab33b101dcf4b9daf382ebc1529982c824cb532 |
-| 2026-07-07 13:27:02 | `file.write` | fdk/tools/frame-lint.py · tool=Edit · session=c610b991 · actor=agent · prev=a1d7cff62f322af0798b487bc6553fde384002e02599 |
-| 2026-07-07 13:27:12 | `file.write` | fdk/tools/frame-lint.py · tool=Edit · session=c610b991 · actor=agent · prev=e870d5d04d1bcf85624722135c10194944d8a4d6cc43 |
-| 2026-07-07 13:27:22 | `file.write` | fdk/tools/frame-lint.py · tool=Edit · session=c610b991 · actor=agent · prev=99fe61eca2df54820ff889a379085f76214ec26b5f47 |
-| 2026-07-07 13:27:35 | `file.write` | fdk/tools/frame-lint.py · tool=Edit · session=c610b991 · actor=agent · prev=f741b6823aef162f31109a7c0ecf8939e9d9797b67e3 |
-| 2026-07-07 13:27:39 | `file.write` | fdk/tools/frame-lint.py · tool=Edit · session=c610b991 · actor=agent · prev=73e5187e0823047319fdb6bf4daa8596ffa6a6083338 |
-| 2026-07-07 13:27:54 | `file.write` | fdk/tools/frame-lint.py · tool=Edit · session=c610b991 · actor=agent · prev=4fd51d724df71e519384d7d700451ae9b7a6b4def00e |
-| 2026-07-07 13:28:05 | `file.write` | fdk/tools/frame-lint.py · tool=Edit · session=c610b991 · actor=agent · prev=845997d4b709b8be114e36e63bd4e338600c79049868 |
-| 2026-07-07 13:28:44 | `file.write` | fdk/tools/frame-lint.py · tool=Edit · session=c610b991 · actor=agent · prev=f05e5ab35c2152a59d4e279d3ececc1b32a2f01b4ebd |
-| 2026-07-07 13:28:45 | `file.write` | fdk/tools/frame-lint.py · tool=Edit · session=c610b991 · actor=agent · prev=6462c8aee9a02c3b9dfc83ed735ac2acf189f87b1f4d |
-| 2026-07-07 13:29:15 | `file.write` | skills/br/SKILL.md · tool=Edit · session=c610b991 · actor=agent · prev=9cf6db226f8d8c02e3f5e55aa8719cc664dce9c1e83c77581 |
-| 2026-07-07 13:29:20 | `file.write` | skills/br/SKILL.md · tool=Edit · session=c610b991 · actor=agent · prev=4d15eb3bbe40d0281cb72f23aeac26a7d79f2ff0dce61f846 |
-| 2026-07-07 23:42:39 | `file.write` | skills/br/assets/design-template.md · tool=Write · session=c610b991 · actor=agent · prev=129f347b07c5ce12945561a9a2c8f7a |
-| 2026-07-07 23:42:55 | `file.write` | skills/br/assets/spec-template.md · tool=Edit · session=c610b991 · actor=agent · prev=d9ce80fbdd6da063fa96a8c942557f86ba |
-| 2026-07-07 23:43:01 | `file.write` | skills/br/SKILL.md · tool=Edit · session=c610b991 · actor=agent · prev=242fb578350d058b7682b2307a8534d2bc083b32af8b8852e |
-| 2026-07-07 23:43:08 | `file.write` | skills/br/SKILL.md · tool=Edit · session=c610b991 · actor=agent · prev=13ffa526d0a956012287ca29da38b09cc863cbb19db825b0d |
-| 2026-07-09 07:37:04 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=e9cb7301443d40c0c80a22405d5d5dc4b57bbd61d |
-| 2026-07-09 07:37:04 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=0 · prev=e9cb7301443d40c0c80a22405d5d5dc4b57bbd61d179badc406a64569ecf3442 · h=1bb0 |
-| 2026-07-09 08:07:13 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=1bb0d89229093de847dfed8c5f4498a1d67004eff |
-| 2026-07-09 08:11:34 | `file.write` | harness/scripts/loop-runner.py · tool=Edit · session=d99d8818 · actor=agent · prev=0ccfc0ac5555fda80845f2816cc5c76e3dbf0 |
-| 2026-07-09 08:12:01 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=0 · prev=9220bd8ca7c8fdab58bebdb339516426bad74632808522b535eb7a1f26b87202 · h=a44f |
-| 2026-07-09 08:12:07 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=a44f0f212c8568d75fb669441f32f6ad86fca9da9 |
-| 2026-07-09 08:14:56 | `file.write` | harness/scripts/loop-runner.py · tool=Edit · session=d99d8818 · actor=agent · prev=5607d328e7d195db3e582d0c52e6a38c0006b |
-| 2026-07-09 08:15:17 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=0 · prev=aaf55fc682846a0ee5c04c8bcaed34be4198b96c34e6d15f248295dd336d8db9 · h=e71f |
-| 2026-07-09 08:15:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=e71f23bf704f4ee2ae92e20eee10cdf281da532eb |
-| 2026-07-09 08:17:17 | `file.write` | harness/scripts/loop-runner.py · tool=Edit · session=d99d8818 · actor=agent · prev=3bd0254d8b8e741ad572ef7bd968f22847b08 |
-| 2026-07-09 08:17:43 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=0 · prev=8ca768cf1cd367e7723247883343e466e95ac813a74c1c2f02de7a60799841f8 · h=0833 |
-| 2026-07-09 08:19:44 | `file.write` | fdk/tools/br-queue.py · tool=Edit · session=d99d8818 · actor=agent · prev=083374fd6c3cc216e849ce0a52d5cee685726501a7f971 |
-| 2026-07-09 08:19:58 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=0 · prev=a14c386e5bd66ec6d23eb70af96d000cef492aa0829309b8ef4c5d1049751a8b · h=d92d |
-| 2026-07-09 08:41:47 | `file.write` | fdk/tools/br-run.py · tool=Edit · session=d99d8818 · actor=agent · prev=d92d2bba48506a8582bf5a22e383f180e9260797d77845dd |
-| 2026-07-09 08:42:09 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=0 · prev=009dcb09f6f8c312882caa625c436367d0e06d497f2c5e1648ac44a7909eec0e · h=0e53 |
-| 2026-07-09 08:44:30 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=0e53d94b87667845ac4ed653c7ac4d136f6d58a27 |
-| 2026-07-09 09:46:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=70db5798b9f37e3f864a7a625710098ac8ae4cecb |
-| 2026-07-09 09:54:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=f47388c9b627059f896401ba2c793a182bc569fa4 |
-| 2026-07-09 09:57:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=54927d643ace6e421502a7c0f05b811c8d63901f0 |
-| 2026-07-09 10:07:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=ffed18eeb04aae6d06d0e8e3def5efa120a55a904 |
+| 2026-07-13 00:51:30 | `file.write` | fdk/tools/unknown.py · tool=Edit · session=90a00343 · actor=agent · prev=c8c9d13a68ff0255af77001a531e64062c9cb06ddaffd0d |
+| 2026-07-13 00:51:39 | `file.write` | fdk/tools/unknown.py · tool=Edit · session=90a00343 · actor=agent · prev=1b4fb0578c65dfe9168d4a04c35efad7fac66d067348384 |
+| 2026-07-13 00:51:51 | `file.write` | fdk/tools/unknown.py · tool=Edit · session=90a00343 · actor=agent · prev=1529881c1b6718d1476329696727b7a8a2516018d8eb163 |
+| 2026-07-13 00:52:02 | `file.write` | fdk/tools/unknown.py · tool=Edit · session=90a00343 · actor=agent · prev=7d11e1c61b408466568f596998779e8496bdccc3c07d31e |
+| 2026-07-13 00:52:31 | `file.write` | skills/unknown/SKILL.md · tool=Edit · session=90a00343 · actor=agent · prev=6ab37f31f7d0f858051a7bf8275ada608e8faf477ec9 |
+| 2026-07-13 08:41:28 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=ddab80ee22b81bb3f5e7e1d2ea54 |
+| 2026-07-13 08:41:46 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=ab6816cc99e28cad4bce9f3d37ec |
+| 2026-07-13 08:45:00 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=d6fbfbf10def9007fbcbc149dd5c |
+| 2026-07-13 08:45:57 | `file.write` | skills/visual-qa/SKILL.md · tool=Edit · session=90a00343 · actor=agent · prev=8f455c638c711d780c1ef7216ccb699688c21b18d2 |
+| 2026-07-13 08:46:21 | `file.write` | skills/visual-qa/SKILL.md · tool=Edit · session=90a00343 · actor=agent · prev=00188c3c0417d5bd2efbc85ec710441356334b0c8e |
+| 2026-07-13 08:46:43 | `file.write` | skills/br/assets/frame-template.md · tool=Edit · session=90a00343 · actor=agent · prev=060591abbd8049eac21b2f1e7e5e67b02 |
+| 2026-07-13 11:14:00 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=6bad8438789f5fcfd8d68e845a26 |
+| 2026-07-13 11:14:15 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=b8ac9edd68d0a1a15f44b7536344 |
+| 2026-07-13 11:14:30 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=5fecc9f44c58382c31e01d5424f5 |
+| 2026-07-13 11:14:44 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=d66b8424d176a5b91448f98d3703 |
+| 2026-07-13 11:17:51 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=5f9efe30b35e78c50e05f57b4042 |
+| 2026-07-13 11:25:20 | `file.write` | skills/visual-qa/SKILL.md · tool=Write · session=90a00343 · actor=agent · prev=21e0bced4a5c636c01ccd4f3de216ae0a68663148 |
+| 2026-07-13 11:40:08 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=844f6479dd1e16ed1f8d7ecb1af1 |
+| 2026-07-13 11:40:21 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=8ff3b35bf3766ec714127472fc81 |
+| 2026-07-13 11:40:30 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=acbf78337e0adf7c359d983eef7f |
+| 2026-07-13 11:42:16 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=e789047f65ac29e4abe867902b3f |
+| 2026-07-13 11:43:07 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=627f659a5f838217602f6c8d1161 |
+| 2026-07-13 11:43:17 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=e3f667802ebf69f785a1643b4325 |
+| 2026-07-13 11:46:22 | `file.write` | skills/visual-qa/SKILL.md · tool=Edit · session=90a00343 · actor=agent · prev=a232586432eb3c106638981c274ebc047d0818ed63 |
+| 2026-07-13 11:46:39 | `file.write` | skills/visual-qa/SKILL.md · tool=Edit · session=90a00343 · actor=agent · prev=20706093b03932c4623680ad8abdae52c478ba8e5f |
+| 2026-07-13 13:17:52 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=6460b294071463227b48f4a733f4 |
+| 2026-07-13 13:24:59 | `file.write` | skills/br/assets/design-template.md · tool=Edit · session=90a00343 · actor=agent · prev=b6f543894d2430179bdd0a45b4a8a297 |
+| 2026-07-13 16:45:32 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=ee87caa2ad31c142d1c312aeb685 |
+| 2026-07-13 16:45:51 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=246729a6cfb281ef764c67bcccaa |
+| 2026-07-13 16:45:57 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=a718f70af8e31ee8b700bae4cb4d |
+| 2026-07-13 16:49:56 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=2fb0ed2f39a74f4f86f56673862e |
+| 2026-07-13 16:50:02 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=49699ac5780eda28fe7b3e9fe4fe |
+| 2026-07-13 16:50:08 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=92510e05a7e08242b0f59b1edf63 |
+| 2026-07-13 16:50:16 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=227f1959ecc70db555fb4de142ab |
+| 2026-07-13 17:01:40 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=3e9c67e74f2eb3660ef55a2eb364 |
+| 2026-07-13 17:01:49 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=dfc9cfd93435418367f70c75f829 |
+| 2026-07-13 17:01:56 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=747cd2e8a9db343be54f24ad6bb4 |
+| 2026-07-13 17:05:49 | `file.write` | skills/visual-qa/SKILL.md · tool=Edit · session=90a00343 · actor=agent · prev=b69945795afee86ebe74cb595d1d2877d26453ffda |
+| 2026-07-13 17:06:04 | `file.write` | skills/visual-qa/SKILL.md · tool=Edit · session=90a00343 · actor=agent · prev=3909a77f918abff03c975a39c68bd6344b37c8d714 |
+| 2026-07-13 17:06:23 | `file.write` | skills/br/assets/design-template.md · tool=Edit · session=90a00343 · actor=agent · prev=546d931206b04d0d2d68a24046c80e1e |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -354,3 +354,34 @@ Giải issue `030726-skill-resolve-supplychain` (trục #5 frontier-gap-scan, Ch
 - Giờ br-find "serve.py" → frame-004-ui. 4/4 file test xanh (auth/checkin/report/ui). App chạy http://localhost:8790 với UI đạt chuẩn.
 - Re-scope trang `llmwiki/html/070726-huong-dan-repo-files.html` (ghi đè): từ guide "5 vùng repo" tổng quát → THUẦN dây chuyền loop-engineering (feedback user "cái dây chuyền ấy"). 6 section mới: bản đồ dây chuyền (diagram raw→interview→compile→slice→run→status+checkpoint) · 5 mode /br · loop-runner 6 phanh · checkpoint & 3 tier khả-đảo · file runtime br/ & lệnh · 6 luật dây chuyền + checklist. Giữ nguyên khung theme (nút gạt dark/light, mindmap, draggable diagram). Cập nhật draft provenance khớp.
 - Dây chuyền MỚI `br/payroll/` (PRD Payroll & Timesheet Unicons v2.1 từ raw/): PLANNING xong, CHƯA run. Sản phẩm: mockup.html (10 màn hình, data draft nhúng), 15 CSV data-draft (định mức/DM/tờ trình/bảng công mẫu — gap tự bù đánh dấu ASSUMED), BR.md 26 clause + bảng 10 Giả định đang gánh, 28 frame CỠ NGHIỆP VỤ (frame-lint ALL PASS, p22 khóa-kỳ khai tier compensable), queue 28 pending + prompts.md + line-status. Khác att40 (40 frame = 40 hàm stress-test): payroll slice theo nghiệp vụ trọn vẹn. Điều kiện run: HR xác nhận 10 giả định + viết test thật thay stub đỏ.
+
+## 2026-07-11 — propose — br-assembly-provenance-isolation
+Vá #40 ở tầng /br (assembly frame + provenance manifest + assumption-gate + localizer + paraphrase/adversarial); giữ truy vết bug→frame→clause + cô lập fix sau agent tổng.
+
+- 2026-07-11 T-260711-01 Mốc A (T1): thêm lệnh `frame-lint manifest` sinh `_manifest.json` thuần từ frontmatter (file→frame_id→clause_ids); 1-chủ đã do R6 gác, manifest từ chối ghi nếu còn va. Self-test +2 check (disjoint/collision) ALL PASS. Sinh thật br/payroll/br/frames/_manifest.json = 32 file. Proposal thêm Prior-art loop-engineering + T6/T7 + 3 Milestones.
+
+- 2026-07-12 T-260711-01 Mốc B+C (buildable): frame-lint +R8 assemble-scope (T2, assemble cấm sở hữu file component) +R9 assumption-gate (T3, --ship chặn khi assumption verified:false severity block); +kind/rollout/assumptions field. Tạo frame-p99-lap-rap (kind=assemble, RED sạch) + app/pipeline.py stub (RED, blocked ground-truth Excel). Tạo tool loop-cost.py (T7, ước token trước run, exit1 nếu vượt budget). Self-test: frame-lint 15/15, loop-cost 4/4 PASS. HOÃN (data/ceremony): assemble pipeline chạy thật (thiếu ground-truth), T4 localizer runtime, T5 adversarial, T6 rollout display ở build-line-status, đăng ký skill /loop-* chính thức.
+
+## 2026-07-12 — docs-site-macos — codebase-map-payroll
+Render CODEBASE-MAP.md → llmwiki/html/120726-codebase-map-payroll.html (6 section, giải thích ground-truth + bản đồ /br).
+
+## 2026-07-12 — br-sync + guide — ccpm distill
+Tool br-sync.py (frame ↔ GitHub sub-issue, distill ccpm) + Mode 6 trong br.md + cẩm nang HTML 120726-huong-dan-br-pipeline.html.
+
+## 2026-07-12 — ui-contract — form chuẩn frame/screen/route
+frTemplate +ui_role/ui_screen; br/ui-layout.yaml; br-contract.py (md+html, selftest); Mode 7 /br contract. Payroll: 31 frame·7 màn·7 route·0 lệch.
+
+## 2026-07-12 — clone-memos-flow — reference + gap analysis
+Docs-site luồng I→O clone Memos thành module/microservice; 3 gap lệnh tự phát hiện (G1 ingest-repo, G2 reverse BR, G3 modularize).
+
+## 2026-07-12 — nghiệm thu + council + friction
+App payroll chạy :8770; council 3 ghế (ĐẠT-CÓ-ĐIỀU-KIỆN); harass 17/17; fix ui-layout về route thật (11 route 0 lệch); raise 3 gap; friction log + nghiem-thu-output.
+
+## 2026-07-12 — memos pipeline run
+Chạy full /br trên memos: reverse-BR 13 clause + 12 frame + contract 0 lệch; build từ source & chạy standalone :5230; docs 120726-memos-pipeline-run.html.
+
+## 2026-07-12 — memos: neumorphism theme + file-first PoC
+BR +N03(theme)+N04(file-first); 14 frame (n03/n04); contract 0 lệch. Neumorphism build lại UI memos (live :5230, token override + dual-shadow). mdstore.py file-first PoC: export DB→md round-trip lossless (10 memo thật).
+
+## 2026-07-12 — Lume rebrand + neumorphism spec thật
+BR +N05; bỏ tên Memos+logo vẹt → Lume (logo SVG neumorphic); neumorphism.css viết lại theo spec superdesign (dual-shadow 9px/18px #bec3c9/#fff, inset, CTA phẳng #4d6bfe, focus-ring, AA) nhắm class thật .bg-card/[data-slot=button]/input. Rebuild+serve verify: title Lume, CSS markers đúng. Screenshot extension lỗi localhost (app serve 200 OK).

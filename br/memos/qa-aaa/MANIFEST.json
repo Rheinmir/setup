@@ -1,0 +1,86 @@
+{
+  "base": "http://localhost:5230",
+  "ts": 1783923613372,
+  "shots": [
+    {
+      "name": "signin",
+      "path": "/auth (chưa đăng nhập)",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-aaa/signin.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 29920,
+      "evidence": true
+    },
+    {
+      "name": "auth",
+      "path": "/auth",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-aaa/auth.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 46989,
+      "evidence": true
+    },
+    {
+      "name": "home",
+      "path": "/",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-aaa/home.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 46989,
+      "evidence": true
+    },
+    {
+      "name": "explore",
+      "path": "/explore",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-aaa/explore.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 36594,
+      "evidence": true
+    },
+    {
+      "name": "archived",
+      "path": "/archived",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-aaa/archived.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 40454,
+      "evidence": true
+    },
+    {
+      "name": "attachments",
+      "path": "/attachments",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-aaa/attachments.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 23872,
+      "evidence": true
+    },
+    {
+      "name": "inbox",
+      "path": "/inbox",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-aaa/inbox.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 23371,
+      "evidence": true
+    },
+    {
+      "name": "setting",
+      "path": "/setting",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-aaa/setting.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 94652,
+      "evidence": true
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "base": "http://localhost:5230",
+  "ts": 1783877184119,
+  "shots": [
+    {
+      "name": "auth",
+      "path": "/auth",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-verify/auth.png",
+      "bytes": 74406,
+      "evidence": true
+    },
+    {
+      "name": "home",
+      "path": "/",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-verify/home.png",
+      "bytes": 74406,
+      "evidence": true
+    },
+    {
+      "name": "explore",
+      "path": "/explore",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-verify/explore.png",
+      "bytes": 59635,
+      "evidence": true
+    },
+    {
+      "name": "archived",
+      "path": "/archived",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-verify/archived.png",
+      "bytes": 63972,
+      "evidence": true
+    },
+    {
+      "name": "attachments",
+      "path": "/attachments",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-verify/attachments.png",
+      "bytes": 25931,
+      "evidence": true
+    },
+    {
+      "name": "inbox",
+      "path": "/inbox",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-verify/inbox.png",
+      "bytes": 32194,
+      "evidence": true
+    },
+    {
+      "name": "setting",
+      "path": "/setting",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-verify/setting.png",
+      "bytes": 117507,
+      "evidence": true
+    }
+  ]
+}

@@ -116,3 +116,12 @@
 | [050726-map-not-territory-fable5-unknowns](sources/draft/050726-map-not-territory-fable5-unknowns.md) | issue | Issue: Map-is-not-Territory — tìm unknowns đối chiếu & vá overstack (GH#40) |
 | [060726-wiki-sync-openwiki-distill](sources/draft/060726-wiki-sync-openwiki-distill.md) | draft | 060726-wiki-sync-openwiki-distill |
 <!-- index:auto:end -->
+| [110726-br-assembly-provenance-isolation](sources/draft/110726-br-assembly-provenance-isolation.md) | draft | 2026-07-11 |
+| [120726-codebase-map-payroll](sources/draft/120726-codebase-map-payroll.md) | draft | 2026-07-12 |
+| [120726-br-sync-plus-guide](sources/draft/120726-br-sync-plus-guide.md) | draft | 2026-07-12 |
+| [120726-ui-contract](sources/draft/120726-ui-contract.md) | draft | 2026-07-12 |
+| [120726-clone-memos-flow](sources/draft/120726-clone-memos-flow.md) | draft | 2026-07-12 |
+| [120726-pipeline-gaps-raised](sources/draft/120726-pipeline-gaps-raised.md) | issue | 2026-07-12 |
+| [120726-pipeline-friction](sources/draft/120726-pipeline-friction.md) | draft | 2026-07-12 |
+| [120726-nghiem-thu-output](sources/draft/120726-nghiem-thu-output.md) | draft | 2026-07-12 |
+| [120726-memos-pipeline-run](sources/draft/120726-memos-pipeline-run.md) | draft | 2026-07-12 |

@@ -102,9 +102,17 @@ một màu, phân biệt chỉ bằng ánh sáng. Bốn luật cứng:
   ```
 - **Không xung đột §3.1:** cặp bóng mềm này KHÁC bóng cấm — cấm là bóng tối gắt đơn (`rgba(0,0,0,.3)` một hướng) + viền `1px solid gray`. Neumorphism không viền, bóng khuếch tán, hợp lệ.
 
-**Accent tiết chế:** neumorphism dễ "chìm" — dùng accent bão hoà CHỈ cho CTA chính + trạng thái (đỏ/xanh), phần còn lại đơn sắc. CTA có thể là pill accent đặc (không neumorphic) để nổi bật khỏi mặt phẳng.
+**Accent = NEAR-BLACK, không phải màu-rực** (bài học 13/07/26, sai 2 lần mới ra):
+- ❌ Accent **cùng họ màu với nền** (vd xanh `#4d6bfe` trên nền xanh-xám) → **hoà vào nền ⇒ "chìm"**, dù pass AA.
+- ❌ "Đối nghịch" **KHÔNG** có nghĩa là complementary hue. Chọn màu ấm (nâu/cam) để chọi nền lạnh → **lạc quẻ**, cãi nhau với bảng màu trung tính của neumorphism.
+- ✅ Đối nghịch đúng là đối nghịch **ĐỘ SÁNG**: accent = **họ trung tính quanh đen** (`#1c1f26`), CTA phẳng đen chữ trắng. Tương phản tối đa mà **không thêm hue mới** ⇒ AAA + cohesive + premium.
+- Màu rực chỉ dùng cho **semantic** (đỏ = destructive), KHÔNG làm accent chính.
+- ✅ **Accent LẬT theo theme.** Đối nghịch là đối nghịch với **MẶT ĐANG DÙNG**: mặt sáng → accent tối (`#1c1f26`, chữ trắng); mặt tối → accent **sáng** (`#eef1f5`, chữ đen). Một hằng số accent cho cả 2 theme là **sai từ định nghĩa** — bản dark hay bị bỏ quên vì gate không chụp dark (xem `/visual-qa` § theme là một trạng thái).
+- ❌ **Cấm hardcode màu chữ trên accent** (`color:#fff !important`): accent lật thì chữ phải lật ngược lại. Hardcode ⇒ theme kia thành **trắng-trên-trắng 1.13:1** (chữ tàng hình). Dùng token (`--primary-foreground`).
 
-**Cảnh báo A11y (knob bắt buộc chỉnh):** tương phản BỀ MẶT thấp là bản chất neumorphism, nhưng CHỮ và ICON vẫn PHẢI đạt WCAG AA (≥4.5:1 với nền) — ink light `#3a4252`, dark `#c8ccd4`. Không hạ contrast chữ để "cho mềm". Focus ring vẫn phải thấy rõ (dùng ring accent, không dựa vào bóng).
+**Cảnh báo A11y — BAR LÀ AAA (7:1), KHÔNG PHẢI AA:** tương phản BỀ MẶT thấp là bản chất neumorphism, nhưng CHỮ và ICON phải đạt **WCAG AAA ≥7:1** (chữ lớn ≥4.5:1). **Pass ở SÀN AA (4.5:1) vẫn ra giao diện "chìm"/nhợt — người dùng nhìn phát biết ngay.** Sàn a11y ≠ đủ tương phản để đọc thoải mái. Ink light `#14171c`, muted `#3a4049` (bản `#454b56` chỉ 6.93:1 → trượt AAA). Không hạ contrast chữ để "cho mềm". Focus ring phải thấy rõ (ring accent, không dựa vào bóng).
+
+**Tương phản là CON SỐ — bắt máy tính, cấm ước lượng bằng mắt.** Rubric ghi "chữ đạt AA" mà không cài assert ⇒ evaluator MÙ. Dùng `/visual-qa` (bất biến `contrast-aa`, FAIL cứng).
 
 ---
 

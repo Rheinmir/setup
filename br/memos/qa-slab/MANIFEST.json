@@ -1,0 +1,86 @@
+{
+  "base": "http://localhost:5230",
+  "ts": 1783935998511,
+  "shots": [
+    {
+      "name": "signin",
+      "path": "/auth (chưa đăng nhập)",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-slab/signin.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 29887,
+      "evidence": true
+    },
+    {
+      "name": "auth",
+      "path": "/auth",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-slab/auth.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 47129,
+      "evidence": true
+    },
+    {
+      "name": "home",
+      "path": "/",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-slab/home.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 47129,
+      "evidence": true
+    },
+    {
+      "name": "explore",
+      "path": "/explore",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-slab/explore.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 36730,
+      "evidence": true
+    },
+    {
+      "name": "archived",
+      "path": "/archived",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-slab/archived.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 40583,
+      "evidence": true
+    },
+    {
+      "name": "attachments",
+      "path": "/attachments",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-slab/attachments.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 23975,
+      "evidence": true
+    },
+    {
+      "name": "inbox",
+      "path": "/inbox",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-slab/inbox.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 23337,
+      "evidence": true
+    },
+    {
+      "name": "setting",
+      "path": "/setting",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-slab/setting.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 95098,
+      "evidence": true
+    }
+  ]
+}

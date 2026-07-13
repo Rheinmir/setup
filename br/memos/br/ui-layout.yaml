@@ -1,0 +1,36 @@
+# ui-layout.yaml — layout memos (route theo web/src/pages). nav_style memos = sidebar.
+nav_style: sidebar
+screens:
+  - id: home
+    title: "Home (memo list + editor)"
+    route: /
+    frames: [frame-m03-memo-crud, frame-m07-reaction]
+  - id: explore
+    title: "Explore (feed công khai)"
+    route: /explore
+    frames: [frame-m05-share-explore]
+  - id: archived
+    title: "Archived"
+    route: /archived
+    frames: [frame-m04-memo-organize]
+  - id: attachments
+    title: "Attachments"
+    route: /attachments
+    frames: [frame-m06-attachment]
+  - id: inbox
+    title: "Inbox"
+    route: /inbox
+    frames: [frame-m09-inbox]
+  - id: shortcuts
+    title: "Shortcuts"
+    route: /shortcuts
+    frames: [frame-m08-shortcut]
+  - id: settings
+    title: "Settings & Admin"
+    route: /setting
+    frames: [frame-m02-user-settings, frame-m11-instance-admin]
+  - id: auth
+    title: "Sign in / Sign up"
+    route: /auth
+    frames: [frame-m01-auth, frame-m10-sso-idp]
+# frame-n01-microservice-path: ui_role=action, không màn (cấu hình đóng gói).

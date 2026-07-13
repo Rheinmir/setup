@@ -46,11 +46,20 @@ vì sao cần. Viết như giải thích cho đồng nghiệp mới — không c
 - **Trạng thái:** rỗng / đang tải / lỗi / thành công (mỗi trạng thái hiển thị ra sao).
 - **Cùng màn với:** những frame khác chia sẻ ui_screen này (nếu biết).>
 
-<!-- VÒNG TỰ-KIỂM THỊ GIÁC (frame UI, ui_role≠none): acceptance_test NÊN gồm một bước
-     visual-qa chụp+kiểm route của ui_screen — bắt lỗi giao diện (theme/brand/empty-state)
-     mà unit-test không thấy. Ví dụ acceptance cho UI-frame:
-       node skills/visual-qa/assets/route-shots.mjs --base http://localhost:<port> \
-            --route <route của ui_screen> --assert --user <u> --pass <p> --out <dir>
-     `--assert` exit 1 nếu route không 200 / trang rỗng → frame ĐỎ tới khi UI render đúng.
-     Ảnh lưu lại để agent đọc (skill /visual-qa) sinh FINDINGS.md bật vòng sửa. -->
+<!-- ══ VÒNG TỰ-KIỂM THỊ GIÁC — BẮT BUỘC với frame UI (ui_role≠none) ══
+   Rút từ failure `ui-pass-without-full-visual-review` (13/07/26): frame theme từng khai
+   ui_role:none + acceptance rỗng → UI vỡ mà frame vẫn "xanh". Không tái phạm:
+
+   1) ui_role PHẢI đúng. Frame chạm theme/CSS/layout = UI, KHÔNG được khai `none`.
+   2) acceptance_test PHẢI HIT UI (không phải unit-test cạnh bên):
+        node skills/visual-qa/assets/route-shots.mjs --base http://localhost:<port> \
+             --route <route của ui_screen> --assert --user <u> --pass <p> --out <dir>
+      `--assert` FAIL khi: route không 200 · KHÔNG có ảnh bằng chứng · VI PHẠM BẤT BIẾN
+      (monochrome-surface: pane lệch màu nền). → chạy lại frame = tự re-verify UI.
+   3) Tiêu chí nghiệm thu của frame UI phải ghi RÕ (để người/agent chấm được, không cảm tính):
+        - coverage: đọc HẾT route trong MANIFEST, mỗi route một dòng kết luận;
+        - rubric: mặt đơn sắc · bóng không bị cắt · CTA phẳng accent · chữ AA · focus ring;
+        - sau khi sửa: chụp LẠI + đọc lại ảnh rồi mới cho green.
+   ══ -->
+
 

@@ -1,0 +1,86 @@
+{
+  "base": "http://localhost:5230",
+  "ts": 1783917952737,
+  "shots": [
+    {
+      "name": "signin",
+      "path": "/auth (chưa đăng nhập)",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-contrast/signin.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 29741,
+      "evidence": true
+    },
+    {
+      "name": "auth",
+      "path": "/auth",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-contrast/auth.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 46675,
+      "evidence": true
+    },
+    {
+      "name": "home",
+      "path": "/",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-contrast/home.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 46675,
+      "evidence": true
+    },
+    {
+      "name": "explore",
+      "path": "/explore",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-contrast/explore.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 36567,
+      "evidence": true
+    },
+    {
+      "name": "archived",
+      "path": "/archived",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-contrast/archived.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 40266,
+      "evidence": true
+    },
+    {
+      "name": "attachments",
+      "path": "/attachments",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-contrast/attachments.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 24071,
+      "evidence": true
+    },
+    {
+      "name": "inbox",
+      "path": "/inbox",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-contrast/inbox.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 23267,
+      "evidence": true
+    },
+    {
+      "name": "setting",
+      "path": "/setting",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-contrast/setting.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 94401,
+      "evidence": true
+    }
+  ]
+}
