@@ -1,0 +1,59 @@
+{
+  "tool": "loop-runner",
+  "verdict": "SUCCESS",
+  "reason": "verify passed on iteration 2 (+2 confirm)",
+  "iterations_run": 2,
+  "changed_files": [
+    "app/chamcong.py"
+  ],
+  "scope_clean": true,
+  "out_of_scope_files": [],
+  "attempted_out_of_scope": [],
+  "commit": "71f316383247fb75112aef1c78d3cc2571e7e1fa",
+  "verify_cmd": "python3 -m tests.test_f03",
+  "revise_cmd": "python3 \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/fdk/tools/br-revise.py\" run --frame \"br/frames/frame-f03-cham-cong.md\" --template \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/skills/br/assets/revise-prompt.md\" --verify \"python3 -m tests.test_f03\" --verify-output \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/.frame-f03-cham-cong.verify.out\" --cwd \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll\"",
+  "guards": {
+    "max_iter": 4,
+    "budget_seconds": 300.0,
+    "no_progress_k": 2,
+    "escalate_after_iter": 4,
+    "scope_globs": [
+      "app/chamcong.py"
+    ],
+    "protect_globs": [
+      "tests/test_f03.py"
+    ]
+  },
+  "state_paths": [
+    "app/chamcong.py"
+  ],
+  "started_at": "2026-07-13T18:10:35Z",
+  "ended_at": "2026-07-13T18:11:26Z",
+  "elapsed_s": 50.4858,
+  "iterations": [
+    {
+      "iter": 1,
+      "ts": "2026-07-13T18:10:35Z",
+      "verify_exit": 1,
+      "duration_s": 0.0399,
+      "verify_output_tail": "=========================================\nERROR: test_paid_days_thu_viec_dung_prob_days (__main__.TestChamCong)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/tests/test_f03.py\", line 38, in test_paid_days_thu_viec_dung_prob_days\n    self.assertEqual(chamcong.paid_days(rec), Decimal(\"18\"))\nAttributeError: module 'app.chamcong' has no attribute 'paid_days'\n\n----------------------------------------------------------------------\nRan 5 tests in 0.000s\n\nFAILED (errors=5)\n",
+      "state_hash": "352b5215bd535db30249c8705eea8b00be14ddc560fa98be6dd5cc9b163d4928",
+      "unchanged_streak": 0,
+      "revise_exit": 0,
+      "revise_output_tail": "XANH — `python3 -m tests.test_f03` exit 0, 5/5 pass.\n\n`app/chamcong.py`: bảng `KY_HIEU` (C6.1, `?P`/`ON`/`Ro`/`Ts`/`TN` = không cộng), `tinh_cong_huong_luong()` raise nếu ký hiệu lạ, `paid_days()` theo as-is C3.3 — `IF(chính thức, OFFICIAL, PROB) + PAID_LEAVE + HOLIDAY + COMP + PAID_OTHER + BEREAVE`, bỏ hẳn `SI_DAYS`/`ADJ_DAYS`, trả `Decimal`.\n\nBỏ qua: parse file chấm công thô, tính tiền — ngoài phạm vi frame.\nPermission deny rule \"MultiEdit(./llmwiki/raw/**)\" matches no known tool — check for typos.\n"
+    },
+    {
+      "iter": 2,
+      "ts": "2026-07-13T18:11:26Z",
+      "verify_exit": 0,
+      "duration_s": 0.0409,
+      "verify_output_tail": ".....\n----------------------------------------------------------------------\nRan 5 tests in 0.000s\n\nOK\n",
+      "state_hash": null,
+      "unchanged_streak": 0,
+      "confirm_exits": [
+        0,
+        0
+      ]
+    }
+  ]
+}
