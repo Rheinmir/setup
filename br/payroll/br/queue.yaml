@@ -25,9 +25,9 @@
   verdict: SUCCESS
   commit: null
 - frame: br/frames/frame-f07-tang-ca.md
-  status: failed
-  verdict: ERROR
-  commit: null
+  status: done
+  verdict: SUCCESS
+  commit: abe617865f6e8c1fac756889ce11ca4d9e68646e
 - frame: br/frames/frame-f08-thuong-trich-quy.md
   status: failed
   verdict: ERROR
