@@ -1,0 +1,59 @@
+{
+  "tool": "loop-runner",
+  "verdict": "SUCCESS",
+  "reason": "verify passed on iteration 2 (+2 confirm)",
+  "iterations_run": 2,
+  "changed_files": [
+    "app/adapters.py"
+  ],
+  "scope_clean": true,
+  "out_of_scope_files": [],
+  "attempted_out_of_scope": [],
+  "commit": "400df44d5c03c40d48d4f8ee669bf0bf96f22ad6",
+  "verify_cmd": "python3 -m tests.test_f13",
+  "revise_cmd": "python3 \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/fdk/tools/br-revise.py\" run --frame \"br/frames/frame-f13-adapters.md\" --template \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/skills/br/assets/revise-prompt.md\" --verify \"python3 -m tests.test_f13\" --verify-output \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/.frame-f13-adapters.verify.out\" --cwd \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll\"",
+  "guards": {
+    "max_iter": 4,
+    "budget_seconds": 300.0,
+    "no_progress_k": 2,
+    "escalate_after_iter": 4,
+    "scope_globs": [
+      "app/adapters.py"
+    ],
+    "protect_globs": [
+      "tests/test_f13.py"
+    ]
+  },
+  "state_paths": [
+    "app/adapters.py"
+  ],
+  "started_at": "2026-07-13T18:25:24Z",
+  "ended_at": "2026-07-13T18:26:16Z",
+  "elapsed_s": 51.8578,
+  "iterations": [
+    {
+      "iter": 1,
+      "ts": "2026-07-13T18:25:24Z",
+      "verify_exit": 1,
+      "duration_s": 0.055,
+      "verify_output_tail": "================================================\nFAIL: test_dung_4_ham_ranh_gioi (__main__.TestAdapters)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/tests/test_f13.py\", line 10, in test_dung_4_ham_ranh_gioi\n    self.assertTrue(callable(getattr(adapters, name, None)), f\"thiếu {name}\")\nAssertionError: False is not true : thiếu fetch_employees\n\n----------------------------------------------------------------------\nRan 4 tests in 0.000s\n\nFAILED (failures=1, errors=1)\n",
+      "state_hash": "950dbe202577b13caca3db7c7d2554cc4c92443073c2d4dcefda0fe1b11b13a5",
+      "unchanged_streak": 0,
+      "revise_exit": 0,
+      "revise_output_tail": "`python3 -m tests.test_f13` → 4/4 XANH, exit 0.\n\n`app/adapters.py`: bốn hàm ranh giới, JSON in / CSV+JSON out, mỗi hàm ghi rõ chỗ nối Workday ở lô sau. `fetch_timesheet` fallback về `employees.json` vì kỳ 2026-03 chưa có `timesheet.json` (cột ngày công nằm chung dòng).\n\n→ bỏ qua: client Workday, auth, SFTP, template ngân hàng thật — thêm khi có credential.\nPermission deny rule \"MultiEdit(./llmwiki/raw/**)\" matches no known tool — check for typos.\n"
+    },
+    {
+      "iter": 2,
+      "ts": "2026-07-13T18:26:16Z",
+      "verify_exit": 0,
+      "duration_s": 0.0558,
+      "verify_output_tail": "....\n----------------------------------------------------------------------\nRan 4 tests in 0.000s\n\nOK\n",
+      "state_hash": null,
+      "unchanged_streak": 0,
+      "confirm_exits": [
+        0,
+        0
+      ]
+    }
+  ]
+}
