@@ -13,7 +13,9 @@
   verdict: SUCCESS
   commit: 71f316383247fb75112aef1c78d3cc2571e7e1fa
 - frame: br/frames/frame-f04-luong-chinh.md
-  status: pending
+  status: done
+  verdict: SUCCESS
+  commit: 295f45dd3ed8f9a9db1383a0eadf34a0373b1f01
 - frame: br/frames/frame-f05-suat-an.md
   status: pending
 - frame: br/frames/frame-f06-phu-cap.md
