@@ -41,9 +41,9 @@
   verdict: SUCCESS
   commit: 13db8cadbf169d4041af7fe6de94172828626e3c
 - frame: br/frames/frame-f11-tong-hop.md
-  status: failed
-  verdict: ERROR
-  commit: null
+  status: done
+  verdict: SUCCESS
+  commit: 7931d4cd900d97eb6112ef994bcd5dcc5701948f
 - frame: br/frames/frame-f12-engine-dag.md
   status: failed
   verdict: ERROR
