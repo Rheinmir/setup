@@ -21,7 +21,15 @@ from pathlib import Path
 import bnal_config
 
 _FALLBACK = {"verified": False, "resolver": "filesystem", "strictness": "advisory",
-             "ref_extensions": ["py", "md", "yaml", "yml", "json", "sh", "js", "ts", "html", "txt", "toml", "cfg"]}
+             "ref_extensions": ["py", "md", "yaml", "yml", "json", "sh", "js", "ts", "html", "txt", "toml", "cfg"],
+             # observed-metric guard (distill: "cấm bịa số của NGƯỜI HỌC/thế-giới agent không đo được").
+             # A number ABOUT a subject, with a metric-noun nearby, and NO source marker → candidate fabrication.
+             "metric_subjects": ["user", "người dùng", "người học", "learner", "the learner", "customer", r"họ\b", "their", "the human"],
+             "metric_sources": ["said", "stated", "reported", "self-report", "khai", "nói", r"theo\b", "measured", r"đo\b",
+                                "observed", "from input", "tool result", "confidence:", "rated", "answered"],
+             "metric_nouns": ["confidence", "score", "điểm", "tỉ lệ", "tỷ lệ", "rate", "độ tự tin", "calibration",
+                              "accuracy", "mastery", "nắm", "retention", "satisfaction", "engagement"],
+             "metric_window": 60}
 
 
 def _config_file(root: Path) -> Path:
@@ -66,10 +74,39 @@ def resolve(ref, root: Path) -> bool:
     return False
 
 
+def extract_observed_metrics(text, cfg):
+    """Numbers stated ABOUT a subject (user/learner/họ…) with a metric-noun nearby but NO
+    source marker → the "cấm bịa số của người học" law: a measurement the agent could not
+    have observed (self-reported confidence, mastery %, etc.) asserted without a source.
+    ponytail: regex heuristic — the metric-noun + subject gate keeps it precise, but it
+    misses paraphrase and can false-positive; stays ADVISORY (never blocks) by config."""
+    if not text:
+        return []
+    subjects = cfg.get("metric_subjects", _FALLBACK["metric_subjects"])
+    sources = cfg.get("metric_sources", _FALLBACK["metric_sources"])
+    nouns = cfg.get("metric_nouns", _FALLBACK["metric_nouns"])
+    window = int(cfg.get("metric_window", 60))
+    subj_rx = re.compile("|".join(subjects), re.IGNORECASE)
+    src_rx = re.compile("|".join(sources), re.IGNORECASE)
+    noun_rx = re.compile("|".join(nouns), re.IGNORECASE)
+    num_rx = re.compile(r"(?<![\w.])(\d+(?:\.\d+)?\s*%?)")
+    seen, out = set(), []
+    for m in num_rx.finditer(text):
+        tok = m.group(1).strip()
+        s, e = m.start(), m.end()
+        ctx = text[max(0, s - window): min(len(text), e + window)]
+        is_metric = ("%" in tok) or ("." in tok) or bool(noun_rx.search(ctx))
+        if is_metric and subj_rx.search(ctx) and not src_rx.search(ctx):
+            if tok not in seen:
+                seen.add(tok); out.append(tok)
+    return out
+
+
 def check(text, root: Path, cfg: dict):
     refs = extract_refs(text, cfg.get("ref_extensions", _FALLBACK["ref_extensions"]))
     unresolved = [r for r in refs if not resolve(r, root)]
-    return refs, unresolved
+    metrics = extract_observed_metrics(text, cfg)
+    return refs, unresolved, metrics
 
 
 def self_test() -> int:
@@ -77,10 +114,18 @@ def self_test() -> int:
     cfg = json.loads(json.dumps(_FALLBACK))
     real = "see harness/policy.yaml and harness/scripts/fdk-gate.py for details"
     fake = "edited src/totally/made-up-nonexistent-file.py per the plan"
-    _, u_real = check(real, root, cfg)
-    _, u_fake = check(fake, root, cfg)
-    ok = not u_real and any("made-up-nonexistent" in r for r in u_fake)
-    print("claim-receipts self-test:", "PASS" if ok else "FAIL")
+    _, u_real, _ = check(real, root, cfg)
+    _, u_fake, _ = check(fake, root, cfg)
+    ok_ref = not u_real and any("made-up-nonexistent" in r for r in u_fake)
+    # observed-metric: a fabricated user confidence is flagged; a SOURCED one is not.
+    fab = "the learner's confidence is 87% on this concept, they clearly mastered it"
+    legit = "the learner said their confidence is 87%"
+    m_fab = extract_observed_metrics(fab, cfg)
+    m_legit = extract_observed_metrics(legit, cfg)
+    ok_metric = ("87%" in m_fab) and (not m_legit)
+    ok = ok_ref and ok_metric
+    print("claim-receipts self-test:", "PASS" if ok else "FAIL",
+          f"(ref={'ok' if ok_ref else 'FAIL'}, observed-metric={'ok' if ok_metric else 'FAIL'})")
     return 0 if ok else 1
 
 
@@ -104,11 +149,17 @@ def main() -> None:
                 text = p.read_text(encoding="utf-8", errors="replace")
         except Exception:
             pass
-        refs, unresolved = check(text, root, cfg)
+        refs, unresolved, metrics = check(text, root, cfg)
+        strict = str(cfg.get("strictness")).lower() == "strict" and cfg.get("verified") is True
+        if metrics:
+            mm = f"[claim-receipts] {len(metrics)} number(s) ABOUT a subject with no source — possible fabricated metric (bịa số của người học): " + ", ".join(metrics)
+            print(mm + ("  (strict)" if strict else "  (advisory)"), file=sys.stderr)
         if not unresolved:
-            print(f"[claim-receipts] {len(refs)} reference(s), all resolve ✓"); sys.exit(0)
+            if not metrics:
+                print(f"[claim-receipts] {len(refs)} reference(s), all resolve ✓")
+            sys.exit(2 if (metrics and strict) else 0)
         msg = f"[claim-receipts] {len(unresolved)}/{len(refs)} reference(s) DO NOT resolve (possible hallucination): " + ", ".join(unresolved)
-        if str(cfg.get("strictness")).lower() == "strict" and cfg.get("verified") is True:
+        if strict:
             print(msg + "  (strict)", file=sys.stderr); sys.exit(2)
         print(msg + "  (advisory — set strictness:strict + verified:true to enforce)", file=sys.stderr); sys.exit(0)
     print(__doc__)
