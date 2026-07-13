@@ -29,7 +29,9 @@
   verdict: ERROR
   commit: null
 - frame: br/frames/frame-f08-thuong-trich-quy.md
-  status: pending
+  status: failed
+  verdict: ERROR
+  commit: null
 - frame: br/frames/frame-f09-bao-hiem.md
   status: pending
 - frame: br/frames/frame-f10-thue-tncn.md
