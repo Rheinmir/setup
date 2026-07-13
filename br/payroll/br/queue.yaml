@@ -45,9 +45,9 @@
   verdict: SUCCESS
   commit: 7931d4cd900d97eb6112ef994bcd5dcc5701948f
 - frame: br/frames/frame-f12-engine-dag.md
-  status: failed
-  verdict: ERROR
-  commit: null
+  status: done
+  verdict: SUCCESS
+  commit: b4ced940eaae61700727d0c02381d47df9dee353
 - frame: br/frames/frame-f13-adapters.md
   status: failed
   verdict: ERROR
