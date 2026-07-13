@@ -16,6 +16,7 @@ guards:
   budget_seconds: 300
   no_progress_k: 2
   escalate_after_iter: 4
+run_log_ref: br/frames/frame-f02-lich-ky-cong.run.json
 ---
 # frame-f02-lich-ky-cong
 

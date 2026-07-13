@@ -1,0 +1,59 @@
+{
+  "tool": "loop-runner",
+  "verdict": "SUCCESS",
+  "reason": "verify passed on iteration 2 (+2 confirm)",
+  "iterations_run": 2,
+  "changed_files": [
+    "app/lichky.py"
+  ],
+  "scope_clean": true,
+  "out_of_scope_files": [],
+  "attempted_out_of_scope": [],
+  "commit": "cac6405a4cd709da5b5c765bb0436ce596b66470",
+  "verify_cmd": "python3 -m tests.test_f02",
+  "revise_cmd": "python3 \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/fdk/tools/br-revise.py\" run --frame \"br/frames/frame-f02-lich-ky-cong.md\" --template \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/skills/br/assets/revise-prompt.md\" --verify \"python3 -m tests.test_f02\" --verify-output \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/.frame-f02-lich-ky-cong.verify.out\" --cwd \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll\"",
+  "guards": {
+    "max_iter": 4,
+    "budget_seconds": 300.0,
+    "no_progress_k": 2,
+    "escalate_after_iter": 4,
+    "scope_globs": [
+      "app/lichky.py"
+    ],
+    "protect_globs": [
+      "tests/test_f02.py"
+    ]
+  },
+  "state_paths": [
+    "app/lichky.py"
+  ],
+  "started_at": "2026-07-13T18:09:30Z",
+  "ended_at": "2026-07-13T18:10:35Z",
+  "elapsed_s": 65.031,
+  "iterations": [
+    {
+      "iter": 1,
+      "ts": "2026-07-13T18:09:30Z",
+      "verify_exit": 1,
+      "duration_s": 0.0354,
+      "verify_output_tail": " attribute 'ky_cong'\n\n======================================================================\nERROR: test_ngay_le_co_dinh_duong_lich (__main__.TestLichKy)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/tests/test_f02.py\", line 34, in test_ngay_le_co_dinh_duong_lich\n    le = lichky.ngay_le(2026)\nAttributeError: module 'app.lichky' has no attribute 'ngay_le'\n\n----------------------------------------------------------------------\nRan 6 tests in 0.000s\n\nFAILED (errors=6)\n",
+      "state_hash": "d5c97f9bd197651d3e31ec829f0ab9e6024e9158c07757fa74ac3fb0f584a483",
+      "unchanged_streak": 0,
+      "revise_exit": 0,
+      "revise_output_tail": "XANH — 6/6 test qua, exit 0.\n\n`app/lichky.py`: `ky_cong` (21→20, bắt qua năm), `cong_chuan` (Decimal; CT trừ CN, VP trừ thêm 0.5 mỗi thứ 7), `ngay_le` (lễ dương lịch).\n\nBỏ qua: lễ âm lịch (ngoài phạm vi frame) và trừ lễ khỏi công chuẩn — BR C5.2 không yêu cầu, thêm khi frame chấm công cần.\nPermission deny rule \"MultiEdit(./llmwiki/raw/**)\" matches no known tool — check for typos.\n"
+    },
+    {
+      "iter": 2,
+      "ts": "2026-07-13T18:10:35Z",
+      "verify_exit": 0,
+      "duration_s": 0.0452,
+      "verify_output_tail": "......\n----------------------------------------------------------------------\nRan 6 tests in 0.000s\n\nOK\n",
+      "state_hash": null,
+      "unchanged_streak": 0,
+      "confirm_exits": [
+        0,
+        0
+      ]
+    }
+  ]
+}
