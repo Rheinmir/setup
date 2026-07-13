@@ -57,9 +57,9 @@
   verdict: SUCCESS
   commit: 92fd9c5c7e948cd4adbc5c309aaac34c08967cb3
 - frame: br/frames/frame-f15-man-hinh-hr.md
-  status: failed
-  verdict: ERROR
-  commit: null
+  status: done
+  verdict: SUCCESS
+  commit: ecf5f96adc30f159a16575082bd628019ddc8273
 - frame: br/frames/frame-f99-lap-rap.md
   status: failed
   verdict: ERROR
