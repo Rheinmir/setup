@@ -1,0 +1,59 @@
+{
+  "tool": "loop-runner",
+  "verdict": "SUCCESS",
+  "reason": "verify passed on iteration 2 (+2 confirm)",
+  "iterations_run": 2,
+  "changed_files": [
+    "app/com.py"
+  ],
+  "scope_clean": true,
+  "out_of_scope_files": [],
+  "attempted_out_of_scope": [],
+  "commit": "a51af7856ed7fffa38ccc5d6ce7333fff78e9d2c",
+  "verify_cmd": "python3 -m tests.test_f05",
+  "revise_cmd": "python3 \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/fdk/tools/br-revise.py\" run --frame \"br/frames/frame-f05-suat-an.md\" --template \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/skills/br/assets/revise-prompt.md\" --verify \"python3 -m tests.test_f05\" --verify-output \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/.frame-f05-suat-an.verify.out\" --cwd \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll\"",
+  "guards": {
+    "max_iter": 4,
+    "budget_seconds": 300.0,
+    "no_progress_k": 2,
+    "escalate_after_iter": 4,
+    "scope_globs": [
+      "app/com.py"
+    ],
+    "protect_globs": [
+      "tests/test_f05.py"
+    ]
+  },
+  "state_paths": [
+    "app/com.py"
+  ],
+  "started_at": "2026-07-13T18:12:12Z",
+  "ended_at": "2026-07-13T18:13:00Z",
+  "elapsed_s": 48.8452,
+  "iterations": [
+    {
+      "iter": 1,
+      "ts": "2026-07-13T18:12:12Z",
+      "verify_exit": 1,
+      "duration_s": 0.0544,
+      "verify_output_tail": "o_bua'\n\n======================================================================\nERROR: test_tach_thue_com_theo_nguong_730k (__main__.TestCom)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/tests/test_f05.py\", line 33, in test_tach_thue_com_theo_nguong_730k\n    allow = com.meal_allow(78, self.p)\nAttributeError: module 'app.com' has no attribute 'meal_allow'\n\n----------------------------------------------------------------------\nRan 6 tests in 0.001s\n\nFAILED (errors=6)\n",
+      "state_hash": "7d8f864987cd393e245c74d47109f1ed2fd4d57707fb4bf7929b863c04c45e65",
+      "unchanged_streak": 0,
+      "revise_exit": 0,
+      "revise_output_tail": "`python3 -m tests.test_f05` → **6/6 XANH, exit 0**.\n\n`app/com.py`: bảng `BUA_THEO_NOI` (VP=1, CT_GAN=2, CT_XA=3), `so_bua` chặn `gio <= meal_min_hours` → 0, `tong_suat_an` cộng theo ngày, `meal_allow/meal_nontax/meal_tax` dùng `Decimal` + `meal_unit_price`/`meal_tax_free` từ `params.json`.\n\nBỏ qua: cơm tăng ca đêm/CN, đọc chấm công tự động — ngoài phạm vi frame.\nPermission deny rule \"MultiEdit(./llmwiki/raw/**)\" matches no known tool — check for typos.\n"
+    },
+    {
+      "iter": 2,
+      "ts": "2026-07-13T18:13:00Z",
+      "verify_exit": 0,
+      "duration_s": 0.0534,
+      "verify_output_tail": "......\n----------------------------------------------------------------------\nRan 6 tests in 0.001s\n\nOK\n",
+      "state_hash": null,
+      "unchanged_streak": 0,
+      "confirm_exits": [
+        0,
+        0
+      ]
+    }
+  ]
+}
