@@ -61,4 +61,6 @@
   verdict: ERROR
   commit: null
 - frame: br/frames/frame-f99-lap-rap.md
-  status: pending
+  status: failed
+  verdict: ERROR
+  commit: null
