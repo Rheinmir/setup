@@ -293,6 +293,17 @@
   "pending": true
  },
  {
+  "id": "p-freshinstall",
+  "parent": "p-01",
+  "title": "Đường cài NGƯỜI-MỚI rot âm thầm — không ai gác /orchestration còn chạy được sau push",
+  "desc": "Distill từ một plugin học-tập cộng đồng: guard phải TỰ chạy, cái phải-nhớ-gọi sẽ bị bỏ đúng lúc cần nhất. Overstack có install (bootstrap/install.sh) + skills orchestration nhưng KHÔNG có cổng nào chứng minh 'người mới curl-cài vào dự án trống là /orchestration được ngay' — đường cài có thể hỏng mà mọi test khác vẫn xanh. Giải: harness/scripts/fresh-install-smoke.sh cài vào thư mục CÔ LẬP (mktemp ngoài repo) qua file:// working-tree (offline, tất định) + curl-github (--remote, acceptance), assert 3 trụ + harness cắn + orchestration-ready; wire thành probe medic 'freshinstall' nên medic --ci (mọi push qua /fdk & /ship) buộc phải xanh. Ceiling: cổng headless không drive được LLM+runtime → ping runtime nếu có, live /orchestration là acceptance tay.",
+  "status": "solved",
+  "scope": ["harness", "skills"],
+  "date": "2026-07-11",
+  "session": "distill-engram-fresh-install-gate",
+  "solvedBy": "harness/scripts/fresh-install-smoke.sh + medic probe freshinstall + ship SKILL §1"
+ },
+ {
   "id": "p-07",
   "parent": "p-01",
   "title": "Policy chưa DRIVE enforcement — wiring hardcode",
@@ -532,6 +543,42 @@
   "date": "2026-07-06",
   "solvedBy": "wiki-sync.py + session_start wiki_drift + /lint b0/b9 + /ingest impact-plan + ci/wiki-refresh.yml",
   "session": "openwiki-distill"
+ },
+ {
+  "id": "p-auto-13",
+  "parent": null,
+  "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
+  "desc": "Bề mặt bị chạm: llmwiki/html/wiki-graph.html, llmwiki/wiki/log.md, llmwiki/wiki/stale.json. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát); lần /fdk kế tiếp sẽ chưng lọc về đúng nhánh.",
+  "status": "open",
+  "scope": [],
+  "date": "06/07/26",
+  "session": "49ec06f0",
+  "pending": true
+ },
+ {
+  "id": "p-23",
+  "parent": null,
+  "title": "HTML framework sinh + skill design thiếu nền chuẩn chung chống AI-slop",
+  "desc": "~8 skill design mỗi cái tự mang luật, không nền chung; HTML do framework tự sinh (report/docs/council/tree) không bị soi cùng chuẩn. Đề xuất: design-standard (canon) + ai-slop-lint tất định 2 tầng + --fix kill-1-shot + design-review lens. Draft: sources/draft/060726-design-standard-ai-elite-PLAN.md (chờ duyệt).",
+  "status": "open",
+  "scope": [],
+  "date": "2026-07-06",
+  "solvedBy": "",
+  "session": "phiên distill design-tip + research 8 nguồn design-agent"
+ },
+ {
+  "id": "p-24",
+  "parent": "p-01",
+  "title": "Chống over-engineering chỉ là review SAU, thiếu kỷ luật khi ĐANG viết code",
+  "desc": "Overstack có /simplify + /code-review chấm sau khi viết, nhưng không có 'cái thang' YAGNI ép cân nhắc trước khi viết, không có convention marker nợ grep-được, khiến deferral không mục thành 'never'. Chưng cất ponytail (MIT): thêm khối luật luôn-nạp 'Cái thang chống over-engineering' (ladder 7 bậc + root-cause fix + carve-out an toàn + format review 1-dòng/tag/net:-N) vào AGENT.md+CLAUDE.md, và convention marker `shortcut: <trần>, <trigger>` cắn bởi 1 bước grep trong /lint. KHÔNG đẻ skill/hook/MCP song song (bao bì ponytail bỏ hết).",
+  "status": "solved",
+  "scope": [
+   "skills",
+   "llmwiki"
+  ],
+  "date": "2026-07-07",
+  "solvedBy": "AGENT.md+CLAUDE.md khối 'Cái thang'; /lint bước 8 grep marker nợ; nguồn 060726-ponytail-distill",
+  "session": "2026-07-07 ponytail-distill"
  }
 ]</script>
 

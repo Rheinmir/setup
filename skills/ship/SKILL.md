@@ -20,6 +20,7 @@ Mức `push/release/pr/mr` (ĐẨY ĐI) chạy bước 1-7 dưới. Mức `merge
 Bước 1-3 áp dụng cho MỌI mức. Bước 4 (version tag) CHỈ mức `release`. Bước 5 đổi tên "sản phẩm viết": `release`→`RELEASE-vX.Y.Z.md`; `pr`/`mr`→ **PR/MR body** (cùng giọng người-dùng, cùng luật Known-limitations). `push` không cần văn bản, chỉ commit msg. Mức `merge` không viết note (chỉ báo cáo kết quả test + quyết định merge/không).
 
 1. **CỔNG SỨC KHOẺ — `medic --ci`** (hoặc `python3 fdk/tools/medic.py --ci`). FAIL → **DỪNG**, in chỗ hở + lệnh sửa; không push khi đỏ. Warn (nợ đã biết) → cho qua nhưng LIỆT KÊ trong patch note.
+   - Gồm probe **`freshinstall`** (E2E): curl-cài overstack vào một dự án TRỐNG cô lập (mktemp ngoài repo) qua working-tree → assert 3 trụ + harness cắn + **orchestration-ready**. Đỏ = đường cài người-mới hỏng → KHÔNG push. Bản đầy đủ curl-github + acceptance live: `bash harness/scripts/fresh-install-smoke.sh --remote`.
 2. **Git sạch:** `git status --short`; đảm bảo rác ephemeral (`scratchpad/…`) đã `.gitignore` + `git rm -r --cached` nếu lỡ track. Rà không có file bí mật/tạm lọt vào.
 3. **Selftest/kiểm nhanh** các engine đụng tới (vd `council.py selftest`, test liên quan diff).
 4. **Version:** `git tag --sort=-v:refname | head -1` → tag gần nhất `vX.Y.Z` → đề xuất **`vX.Y.(Z+1)`** (patch) hoặc minor/major nếu diff xứng — hỏi user nếu không chắc bậc.

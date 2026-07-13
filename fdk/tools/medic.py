@@ -257,6 +257,22 @@ def p_eval():
     return "ok", "eval self-index không regress", ""
 
 
+def p_freshinstall():
+    """Đường cài NGƯỜI-MỚI còn sống không: curl-cài overstack vào một dự án TRỐNG,
+    CÔ LẬP (mktemp ngoài repo) qua file:// working-tree, rồi assert 3 trụ + harness
+    CẮN thật + orchestration-ready (skills reachable, runtime ping nếu có). Là cổng
+    required của push-qua-/fdk: người mới clone/curl phải /orchestration được ngay.
+    Bản --local OFFLINE tất định; live-run LLM /orchestration là acceptance tay (ceiling)."""
+    smoke = ROOT / "harness/scripts/fresh-install-smoke.sh"
+    if not smoke.exists():
+        return "skip", "fresh-install-smoke.sh chưa có", ""
+    rc, out = sh(["bash", str(smoke), "--local"], timeout=180)
+    if rc != 0:
+        return "fail", "fresh-install ĐỎ — người mới curl-cài KHÔNG orchestration-ready", \
+               "bash harness/scripts/fresh-install-smoke.sh --local   # xem dòng ✗"
+    return "ok", "người mới curl-cài → 3 trụ + orchestration-ready (isolated)", ""
+
+
 PROBES = [
     ("rules",    ["rules", "luật", "bite"],      p_rules),
     ("coverage", ["rules", "coverage", "luật"],  p_coverage),
@@ -269,6 +285,7 @@ PROBES = [
     ("selfstate", ["selfstate", "state", "narrative"], p_selfstate),
     ("code",     ["code", "health"],             p_code),
     ("eval",     ["eval", "baseline"],           p_eval),
+    ("freshinstall", ["freshinstall", "install", "orchestration", "e2e", "push"], p_freshinstall),
 ]
 # bỏ 'drift' probe trùng — drift đã báo trong rules:
 PROBES = [p for p in PROBES if p[0] != "drift"]
