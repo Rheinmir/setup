@@ -1,0 +1,70 @@
+{
+  "tool": "loop-runner",
+  "verdict": "SUCCESS",
+  "reason": "verify passed on iteration 2 (+2 confirm)",
+  "iterations_run": 2,
+  "changed_files": [
+    "app/baohiem.py"
+  ],
+  "scope_clean": true,
+  "out_of_scope_files": [],
+  "attempted_out_of_scope": [],
+  "commit": "8330ce7c7f57eb22259fa0ab295a3aa13cac21e5",
+  "verify_cmd": "python3 -m tests.test_f09",
+  "revise_cmd": "python3 \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/fdk/tools/br-revise.py\" run --frame \"br/frames/frame-f09-bao-hiem.md\" --template \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/skills/br/assets/revise-prompt.md\" --verify \"python3 -m tests.test_f09\" --verify-output \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/.frame-f09-bao-hiem.verify.out\" --cwd \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll\"",
+  "guards": {
+    "max_iter": 4,
+    "budget_seconds": 300.0,
+    "no_progress_k": 2,
+    "escalate_after_iter": 4,
+    "scope_globs": [
+      "app/baohiem.py"
+    ],
+    "protect_globs": [
+      "tests/test_f09.py"
+    ]
+  },
+  "state_paths": [
+    "app/baohiem.py"
+  ],
+  "started_at": "2026-07-13T18:17:36Z",
+  "ended_at": "2026-07-13T18:19:25Z",
+  "elapsed_s": 109.3076,
+  "iterations": [
+    {
+      "iter": 1,
+      "ts": "2026-07-13T18:17:36Z",
+      "verify_exit": 1,
+      "duration_s": 0.0434,
+      "verify_output_tail": "==================\nERROR: test_tnld_dung_tran_BH_khong_phai_tran_BHTN (__main__.TestBaoHiem)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/tests/test_f09.py\", line 38, in test_tnld_dung_tran_BH_khong_phai_tran_BHTN\n    self.assertEqual(baohiem.tnld_cty(self.rec, self.p), Decimal(234_000))\nAttributeError: module 'app.baohiem' has no attribute 'tnld_cty'\n\n----------------------------------------------------------------------\nRan 10 tests in 0.001s\n\nFAILED (errors=10)\n",
+      "state_hash": "323ed02a48a216d1a588c4cde456188adf33e315d6443d06c4751a8525c195e4",
+      "unchanged_streak": 0,
+      "revise_exit": 0,
+      "revise_output_tail": "3 -m tests.test_f09` exit 0, 10/10 test qua.\n\n`app/baohiem.py`: giữ hai trần riêng (`ins_sal_bh` hiển thị 50,6tr vs `ins_base_bh` tính thật 46,8tr), TNLĐ ăn trần BH chứ không trần BHTN, luật 14 ngày gộp PROB/UNPAID/MATERNITY/SI days chặn cả phần NLĐ lẫn công ty, nước ngoài BHTN = 0, phí công đoàn min với trần 253k. Mọi hằng số đọc từ `data/params.json`, tiền dùng `round0` half-up của `app/luong.py`.\n\nBỏ qua: cờ `no_insurance` chỉ đọc từ record (chưa có nguồn HR), truy thu/thoái thu ngoài phạm vi frame.\nPermission deny rule \"MultiEdit(./llmwiki/raw/**)\" matches no known tool — check for typos.\n",
+      "scope_reverted": [
+        "br/memos/qa-gate/archived.dark.png",
+        "br/memos/qa-gate/archived.png",
+        "br/memos/qa-gate/auth.dark.png",
+        "br/memos/qa-gate/auth.png",
+        "br/memos/qa-gate/explore.dark.png",
+        "br/memos/qa-gate/explore.png",
+        "br/memos/qa-gate/home.dark.png",
+        "br/memos/qa-gate/home.png",
+        "skills/visual-qa/assets/route-shots.mjs"
+      ]
+    },
+    {
+      "iter": 2,
+      "ts": "2026-07-13T18:19:25Z",
+      "verify_exit": 0,
+      "duration_s": 0.0536,
+      "verify_output_tail": "..........\n----------------------------------------------------------------------\nRan 10 tests in 0.002s\n\nOK\n",
+      "state_hash": null,
+      "unchanged_streak": 0,
+      "confirm_exits": [
+        0,
+        0
+      ]
+    }
+  ]
+}
