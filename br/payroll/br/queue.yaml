@@ -1,50 +1,36 @@
-# Queue /br run — chạy tuần tự theo DAG phụ thuộc. Resume: chạy lại bỏ qua status: done.
-# python3 ../../fdk/tools/br-queue.py run --queue br/queue.yaml
-
+# QUEUE prompt cho /br run — driver: fdk/tools/br-queue.py (resumable).
+# status: pending|done|failed do driver TỰ cập nhật. Chạy lại = bỏ qua done, chạy tiếp.
 - frame: br/frames/frame-f01-params.md
-  status: pending
-
+  status: done
+  verdict: SUCCESS
+  commit: c13917ad9c2730f5da168b04811ef8e98f9a994b
 - frame: br/frames/frame-f02-lich-ky-cong.md
   status: pending
-
 - frame: br/frames/frame-f03-cham-cong.md
   status: pending
-
 - frame: br/frames/frame-f04-luong-chinh.md
   status: pending
-
 - frame: br/frames/frame-f05-suat-an.md
   status: pending
-
 - frame: br/frames/frame-f06-phu-cap.md
   status: pending
-
 - frame: br/frames/frame-f07-tang-ca.md
   status: pending
-
 - frame: br/frames/frame-f08-thuong-trich-quy.md
   status: pending
-
 - frame: br/frames/frame-f09-bao-hiem.md
   status: pending
-
 - frame: br/frames/frame-f10-thue-tncn.md
   status: pending
-
 - frame: br/frames/frame-f11-tong-hop.md
   status: pending
-
 - frame: br/frames/frame-f12-engine-dag.md
   status: pending
-
 - frame: br/frames/frame-f13-adapters.md
   status: pending
-
 - frame: br/frames/frame-f14-snapshot-diff.md
   status: pending
-
 - frame: br/frames/frame-f15-man-hinh-hr.md
   status: pending
-
 - frame: br/frames/frame-f99-lap-rap.md
   status: pending
