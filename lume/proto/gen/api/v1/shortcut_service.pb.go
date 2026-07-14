@@ -423,8 +423,8 @@ const file_api_v1_shortcut_service_proto_rawDesc = "" +
 	"\vGetShortcut\x12 .memos.api.v1.GetShortcutRequest\x1a\x16.memos.api.v1.Shortcut\"1\xdaA\x04name\x82\xd3\xe4\x93\x02$\x12\"/api/v1/{name=users/*/shortcuts/*}\x12\x95\x01\n" +
 	"\x0eCreateShortcut\x12#.memos.api.v1.CreateShortcutRequest\x1a\x16.memos.api.v1.Shortcut\"F\xdaA\x0fparent,shortcut\x82\xd3\xe4\x93\x02.:\bshortcut\"\"/api/v1/{parent=users/*}/shortcuts\x12\xa3\x01\n" +
 	"\x0eUpdateShortcut\x12#.memos.api.v1.UpdateShortcutRequest\x1a\x16.memos.api.v1.Shortcut\"T\xdaA\x14shortcut,update_mask\x82\xd3\xe4\x93\x027:\bshortcut2+/api/v1/{shortcut.name=users/*/shortcuts/*}\x12\x80\x01\n" +
-	"\x0eDeleteShortcut\x12#.memos.api.v1.DeleteShortcutRequest\x1a\x16.google.protobuf.Empty\"1\xdaA\x04name\x82\xd3\xe4\x93\x02$*\"/api/v1/{name=users/*/shortcuts/*}B\xac\x01\n" +
-	"\x10com.memos.api.v1B\x14ShortcutServiceProtoP\x01Z0github.com/usememos/memos/proto/gen/api/v1;apiv1\xa2\x02\x03MAX\xaa\x02\fMemos.Api.V1\xca\x02\fMemos\\Api\\V1\xe2\x02\x18Memos\\Api\\V1\\GPBMetadata\xea\x02\x0eMemos::Api::V1b\x06proto3"
+	"\x0eDeleteShortcut\x12#.memos.api.v1.DeleteShortcutRequest\x1a\x16.google.protobuf.Empty\"1\xdaA\x04name\x82\xd3\xe4\x93\x02$*\"/api/v1/{name=users/*/shortcuts/*}B\xab\x01\n" +
+	"\x10com.memos.api.v1B\x14ShortcutServiceProtoP\x01Z/github.com/Rheinmir/lume/proto/gen/api/v1;apiv1\xa2\x02\x03MAX\xaa\x02\fMemos.Api.V1\xca\x02\fMemos\\Api\\V1\xe2\x02\x18Memos\\Api\\V1\\GPBMetadata\xea\x02\x0eMemos::Api::V1b\x06proto3"
 
 var (
 	file_api_v1_shortcut_service_proto_rawDescOnce sync.Once

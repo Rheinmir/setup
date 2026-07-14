@@ -718,8 +718,8 @@ const file_api_v1_idp_service_proto_rawDesc = "" +
 	"\x13GetIdentityProvider\x12(.memos.api.v1.GetIdentityProviderRequest\x1a\x1e.memos.api.v1.IdentityProvider\"2\xdaA\x04name\x82\xd3\xe4\x93\x02%\x12#/api/v1/{name=identity-providers/*}\x12\xb0\x01\n" +
 	"\x16CreateIdentityProvider\x12+.memos.api.v1.CreateIdentityProviderRequest\x1a\x1e.memos.api.v1.IdentityProvider\"I\xdaA\x11identity_provider\x82\xd3\xe4\x93\x02/:\x11identity_provider\"\x1a/api/v1/identity-providers\x12\xd7\x01\n" +
 	"\x16UpdateIdentityProvider\x12+.memos.api.v1.UpdateIdentityProviderRequest\x1a\x1e.memos.api.v1.IdentityProvider\"p\xdaA\x1didentity_provider,update_mask\x82\xd3\xe4\x93\x02J:\x11identity_provider25/api/v1/{identity_provider.name=identity-providers/*}\x12\x91\x01\n" +
-	"\x16DeleteIdentityProvider\x12+.memos.api.v1.DeleteIdentityProviderRequest\x1a\x16.google.protobuf.Empty\"2\xdaA\x04name\x82\xd3\xe4\x93\x02%*#/api/v1/{name=identity-providers/*}B\xa7\x01\n" +
-	"\x10com.memos.api.v1B\x0fIdpServiceProtoP\x01Z0github.com/usememos/memos/proto/gen/api/v1;apiv1\xa2\x02\x03MAX\xaa\x02\fMemos.Api.V1\xca\x02\fMemos\\Api\\V1\xe2\x02\x18Memos\\Api\\V1\\GPBMetadata\xea\x02\x0eMemos::Api::V1b\x06proto3"
+	"\x16DeleteIdentityProvider\x12+.memos.api.v1.DeleteIdentityProviderRequest\x1a\x16.google.protobuf.Empty\"2\xdaA\x04name\x82\xd3\xe4\x93\x02%*#/api/v1/{name=identity-providers/*}B\xa6\x01\n" +
+	"\x10com.memos.api.v1B\x0fIdpServiceProtoP\x01Z/github.com/Rheinmir/lume/proto/gen/api/v1;apiv1\xa2\x02\x03MAX\xaa\x02\fMemos.Api.V1\xca\x02\fMemos\\Api\\V1\xe2\x02\x18Memos\\Api\\V1\\GPBMetadata\xea\x02\x0eMemos::Api::V1b\x06proto3"
 
 var (
 	file_api_v1_idp_service_proto_rawDescOnce sync.Once

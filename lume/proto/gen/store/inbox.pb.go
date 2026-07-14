@@ -286,9 +286,9 @@ const file_store_inbox_proto_rawDesc = "" +
 	"\x10TYPE_UNSPECIFIED\x10\x00\x12\x10\n" +
 	"\fMEMO_COMMENT\x10\x01\x12\x10\n" +
 	"\fMEMO_MENTION\x10\x02B\t\n" +
-	"\apayloadB\x95\x01\n" +
+	"\apayloadB\x94\x01\n" +
 	"\x0fcom.memos.storeB\n" +
-	"InboxProtoP\x01Z)github.com/usememos/memos/proto/gen/store\xa2\x02\x03MSX\xaa\x02\vMemos.Store\xca\x02\vMemos\\Store\xe2\x02\x17Memos\\Store\\GPBMetadata\xea\x02\fMemos::Storeb\x06proto3"
+	"InboxProtoP\x01Z(github.com/Rheinmir/lume/proto/gen/store\xa2\x02\x03MSX\xaa\x02\vMemos.Store\xca\x02\vMemos\\Store\xe2\x02\x17Memos\\Store\\GPBMetadata\xea\x02\fMemos::Storeb\x06proto3"
 
 var (
 	file_store_inbox_proto_rawDescOnce sync.Once

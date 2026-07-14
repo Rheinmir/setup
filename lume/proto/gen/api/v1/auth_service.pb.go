@@ -546,8 +546,8 @@ const file_api_v1_auth_service_proto_rawDesc = "" +
 	"\x0eGetCurrentUser\x12#.memos.api.v1.GetCurrentUserRequest\x1a$.memos.api.v1.GetCurrentUserResponse\"\x17\x82\xd3\xe4\x93\x02\x11\x12\x0f/api/v1/auth/me\x12c\n" +
 	"\x06SignIn\x12\x1b.memos.api.v1.SignInRequest\x1a\x1c.memos.api.v1.SignInResponse\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/api/v1/auth/signin\x12]\n" +
 	"\aSignOut\x12\x1c.memos.api.v1.SignOutRequest\x1a\x16.google.protobuf.Empty\"\x1c\x82\xd3\xe4\x93\x02\x16\"\x14/api/v1/auth/signout\x12v\n" +
-	"\fRefreshToken\x12!.memos.api.v1.RefreshTokenRequest\x1a\".memos.api.v1.RefreshTokenResponse\"\x1f\x82\xd3\xe4\x93\x02\x19:\x01*\"\x14/api/v1/auth/refreshB\xa8\x01\n" +
-	"\x10com.memos.api.v1B\x10AuthServiceProtoP\x01Z0github.com/usememos/memos/proto/gen/api/v1;apiv1\xa2\x02\x03MAX\xaa\x02\fMemos.Api.V1\xca\x02\fMemos\\Api\\V1\xe2\x02\x18Memos\\Api\\V1\\GPBMetadata\xea\x02\x0eMemos::Api::V1b\x06proto3"
+	"\fRefreshToken\x12!.memos.api.v1.RefreshTokenRequest\x1a\".memos.api.v1.RefreshTokenResponse\"\x1f\x82\xd3\xe4\x93\x02\x19:\x01*\"\x14/api/v1/auth/refreshB\xa7\x01\n" +
+	"\x10com.memos.api.v1B\x10AuthServiceProtoP\x01Z/github.com/Rheinmir/lume/proto/gen/api/v1;apiv1\xa2\x02\x03MAX\xaa\x02\fMemos.Api.V1\xca\x02\fMemos\\Api\\V1\xe2\x02\x18Memos\\Api\\V1\\GPBMetadata\xea\x02\x0eMemos::Api::V1b\x06proto3"
 
 var (
 	file_api_v1_auth_service_proto_rawDescOnce sync.Once

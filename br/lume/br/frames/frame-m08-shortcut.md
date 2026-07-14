@@ -5,7 +5,7 @@ created_by: human
 kind: frame
 parent_br: br/lume/br/BR.md
 clause_ids: [M8]
-parent_br_hash: a55735359c5b5a75ec4feae592db42d489dfc649646bb247cd198e9d3f9a80dd
+parent_br_hash: 115ad782c6d46903e9c0c38ec2492299b85e3a6a2c5f5f706e3766814e8ea7ed
 muc_tieu: "Người dùng lưu bộ lọc hay dùng thành shortcut để mở lại nhanh, không phải gõ lại điều kiện"
 scope_code: ["lume/store/shortcut.go","lume/web/src/pages/Shortcuts.tsx"]
 scope_test: ["(gate: xem acceptance_test)"]

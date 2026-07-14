@@ -25,7 +25,11 @@ import (
 )
 
 // Store ghi/đọc nội dung memo dưới dạng .md trong một thư mục.
-type Store struct{ Dir string }
+// `mounts` = các thư mục NGOÀI (vd llmwiki/wiki) gắn vào để ĐỌC — read-only, xem mount.go.
+type Store struct {
+	Dir    string
+	mounts []*Mount
+}
 
 func New(dir string) (*Store, error) {
 	if err := os.MkdirAll(dir, 0o755); err != nil {
@@ -55,6 +59,12 @@ type Meta struct {
 // Write ghi 1 memo thành .md (frontmatter + body). Ghi ATOMIC: viết file tạm rồi rename,
 // để tiến trình chết giữa chừng không để lại file cụt.
 func (s *Store) Write(m Meta, content string) error {
+	// CHẶN CỨNG: uid thuộc mount (llmwiki) ⇒ KHÔNG BAO GIỜ ghi. Kho tri thức là git repo có
+	// harness/rule/ledger — app note không có quyền ghi vào đó. Chặn ở TẦNG STORE, vì ẩn nút
+	// trên UI là vô nghĩa: API/gRPC gọi thẳng store được.
+	if s.Mounted(m.UID) {
+		return ErrReadOnly
+	}
 	var b strings.Builder
 	b.WriteString("---\n")
 	fmt.Fprintf(&b, "id: %d\n", m.ID)
@@ -78,6 +88,12 @@ func (s *Store) Write(m Meta, content string) error {
 // Read đọc nội dung (phần sau frontmatter). Không có file → (", false, nil) — người gọi
 // tự quyết fallback về DB (memo cũ tạo trước khi bật file-first).
 func (s *Store) Read(uid string) (string, bool, error) {
+	// MOUNT TRƯỚC: uid thuộc thư mục gắn ngoài (llmwiki) → đọc thẳng file gốc tại chỗ.
+	for _, m := range s.mounts {
+		if body, ok, err := m.Read(uid); err != nil || ok {
+			return body, ok, err
+		}
+	}
 	raw, err := os.ReadFile(s.path(uid))
 	if os.IsNotExist(err) {
 		return "", false, nil
@@ -130,6 +146,9 @@ func (s *Store) ReadMeta(uid string) (Meta, string, bool, error) {
 
 // Delete xoá file memo. Không có file cũng coi là thành công (idempotent).
 func (s *Store) Delete(uid string) error {
+	if s.Mounted(uid) {
+		return ErrReadOnly // xoá memo wiki trong UI KHÔNG được xoá file thật ngoài đĩa
+	}
 	err := os.Remove(s.path(uid))
 	if os.IsNotExist(err) {
 		return nil

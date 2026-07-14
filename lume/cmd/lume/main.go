@@ -40,6 +40,7 @@ var (
 				Port:        viper.GetInt("port"),
 				UNIXSock:    viper.GetString("unix-sock"),
 				Data:        viper.GetString("data"),
+				Mounts:      viper.GetStringSlice("mount"),
 				Driver:      viper.GetString("driver"),
 				DSN:         viper.GetString("dsn"),
 				InstanceURL: viper.GetString("instance-url"),
@@ -73,6 +74,14 @@ var (
 				cancel()
 				slog.Error("failed to create server", "error", err)
 				return
+			}
+
+			// MOUNT (frame-n06): stream thư mục ngoài (llmwiki) lên app — quét index + bật watcher.
+			// Memo wiki thuộc về ADMIN đầu tiên; chưa có ai (chưa setup) thì bỏ qua, không chết server.
+			if host, err := storeInstance.GetUser(ctx, &store.FindUser{Role: func() *store.Role { r := store.RoleAdmin; return &r }()}); err == nil && host != nil {
+				storeInstance.StartMounts(ctx, host.ID)
+			} else if len(instanceProfile.Mounts) > 0 {
+				slog.Warn("có --mount nhưng CHƯA có tài khoản admin → wiki chưa lên app; tạo tài khoản rồi khởi động lại")
 			}
 
 			c := make(chan os.Signal, 1)
@@ -122,12 +131,16 @@ func init() {
 	rootCmd.PersistentFlags().Int("port", 8081, "port of server")
 	rootCmd.PersistentFlags().String("unix-sock", "", "path to the unix socket, overrides --addr and --port")
 	rootCmd.PersistentFlags().String("data", "", "data directory")
+	rootCmd.PersistentFlags().StringSlice("mount", nil, "gắn thư mục .md ngoài để ĐỌC (read-only), dạng name=path — vd --mount wiki=/path/llmwiki/wiki")
 	rootCmd.PersistentFlags().String("driver", "sqlite", "database driver")
 	rootCmd.PersistentFlags().String("dsn", "", "database source name(aka. DSN)")
 	rootCmd.PersistentFlags().String("instance-url", "", "the url of your memos instance")
 	rootCmd.PersistentFlags().Bool("allow-private-webhooks", false, "allow webhook URLs to resolve to private/reserved IP addresses")
 	rootCmd.PersistentFlags().String("log-level", "info", "log verbosity level (debug, info, warn, error)")
 
+	if err := viper.BindPFlag("mount", rootCmd.PersistentFlags().Lookup("mount")); err != nil {
+		panic(err)
+	}
 	if err := viper.BindPFlag("demo", rootCmd.PersistentFlags().Lookup("demo")); err != nil {
 		panic(err)
 	}

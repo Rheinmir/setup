@@ -19,12 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-13 11:40:30 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=acbf78337e0adf7c359d983eef7f |
-| 2026-07-13 11:42:16 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=e789047f65ac29e4abe867902b3f |
-| 2026-07-13 11:43:07 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=627f659a5f838217602f6c8d1161 |
-| 2026-07-13 11:43:17 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=e3f667802ebf69f785a1643b4325 |
-| 2026-07-13 11:46:22 | `file.write` | skills/visual-qa/SKILL.md · tool=Edit · session=90a00343 · actor=agent · prev=a232586432eb3c106638981c274ebc047d0818ed63 |
-| 2026-07-13 11:46:39 | `file.write` | skills/visual-qa/SKILL.md · tool=Edit · session=90a00343 · actor=agent · prev=20706093b03932c4623680ad8abdae52c478ba8e5f |
 | 2026-07-13 13:17:52 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=6460b294071463227b48f4a733f4 |
 | 2026-07-13 13:24:59 | `file.write` | skills/br/assets/design-template.md · tool=Edit · session=90a00343 · actor=agent · prev=b6f543894d2430179bdd0a45b4a8a297 |
 | 2026-07-13 16:45:32 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=ee87caa2ad31c142d1c312aeb685 |
@@ -59,6 +53,12 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-14 08:46:36 | `file.write` | skills/design-twice/SKILL.md · tool=Write · session=90a00343 · actor=agent · prev=814759e84f6f00d7492c373a727a29c727e07e |
 | 2026-07-14 08:47:00 | `file.write` | skills/br/SKILL.md · tool=Edit · session=90a00343 · actor=agent · prev=6a6411e6fd07b419fadaf4c2b7d5848450397acfefe3b0bd5 |
 | 2026-07-14 08:47:18 | `file.write` | skills/br/assets/frame-template.md · tool=Edit · session=90a00343 · actor=agent · prev=c1cbd4b7bdbf2463d33abb4bb2a74ca54 |
+| 2026-07-14 10:10:09 | `file.write` | skills/visual-qa/assets/package.json · tool=Write · session=90a00343 · actor=agent · prev=45170042b06b5e034938cc19720c5d |
+| 2026-07-14 10:59:50 | `file.write` | skills/visual-qa/SKILL.md · tool=Edit · session=90a00343 · actor=agent · prev=89aa58f8d9ec0d62c0de94834aae95860e34cf21a0 |
+| 2026-07-14 11:11:25 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=2 · human=['fdk/CAPABILITIES.md', 'fdk/skills.search.json'] · prev=a19dbaeddca2059 |
+| 2026-07-14 11:11:25 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=2 · human=['llmwiki/skills/utils/visual-qa.md', 'llmwiki/CLAUDE.md'] · prev=a19dba |
+| 2026-07-14 11:11:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['skills/visual-qa/assets/package-lock.json', 'harness/scripts/sync-skil |
+| 2026-07-14 11:11:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/dev-loop/br.md', 'skills/visual-qa/assets/package.json' |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)

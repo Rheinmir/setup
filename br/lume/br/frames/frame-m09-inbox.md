@@ -5,7 +5,7 @@ created_by: human
 kind: frame
 parent_br: br/lume/br/BR.md
 clause_ids: [M9]
-parent_br_hash: a55735359c5b5a75ec4feae592db42d489dfc649646bb247cd198e9d3f9a80dd
+parent_br_hash: 115ad782c6d46903e9c0c38ec2492299b85e3a6a2c5f5f706e3766814e8ea7ed
 muc_tieu: "Hộp thư hiển thị thông báo gửi tới người dùng (nhắc, phản hồi) và cho đánh dấu đã đọc/lưu trữ"
 scope_code: ["lume/store/inbox.go","lume/web/src/pages/Inboxes.tsx"]
 scope_test: ["(gate: xem acceptance_test)"]

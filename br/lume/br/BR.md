@@ -28,6 +28,7 @@
 - **M13 — Explore** (`web/src/pages/Explore.tsx`): feed công khai.
 
 ## NFR — giá trị dây chuyền thêm vào
+- **N06 — Stream thư mục llmwiki vào app (local-first)** (`nfr`): Lume là **app local**, nhận một thư mục trên máy (mặc định `llmwiki/wiki/`) và **stream nguyên cấu trúc thư mục** đó lên app: mỗi `.md` = một memo, **đường dẫn thư mục = tag** (giữ nguyên cây `concepts/`, `entities/`, `sources/`, `draft/`…). File đổi trên đĩa (editor/git/agent) → app hiện **ngay**, không phải import lại. Chiều ngược (memo gõ trong Lume → ghi ra llmwiki) là **THỦ CÔNG** (người bấm), không tự đẩy — tránh app tự ý ghi vào kho tri thức.
 - **N01 — Microservice-by-path** (`nfr`): memos phải chạy được (a) **standalone** 1 binary (đã có: `go run ./cmd/memos` serve SPA nhúng), và (b) **mount dưới `/memos/`** từ app khác qua Vite `base=/memos/` + reverse-proxy. *(assumed A1)*
 - **N02 — Đóng gói 1 khối** (`code:cmd/memos`): `pnpm release` nhúng SPA vào `server/router/frontend/dist` → 1 Go binary serve cả API + UI.
 - **N03 — Theme neumorphism (system theme dây chuyền)** (`nfr`): giao diện memos build LẠI theo design-system mặc định của dây chuyền = **Neumorphism** (`skills/br/assets/design-template.md` §3.6): mặt đơn sắc, cặp bóng sáng+tối, không viền, chữ đạt WCAG AA. Override token shadcn trong `web/src/themes/`, KHÔNG sửa component logic.

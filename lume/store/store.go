@@ -1,7 +1,10 @@
 package store
 
 import (
+	"context"
+	"log/slog"
 	"path/filepath"
+	"strings"
 	"sync"
 	"time"
 
@@ -59,7 +62,43 @@ func New(driver Driver, profile *profile.Profile) *Store {
 		}
 	}
 
+	// MOUNT (frame-n06): gắn thư mục ngoài (llmwiki) để ĐỌC. Chỉ gắn ở đây — việc quét index +
+	// watch do StartMounts() làm (cần ctx + user, không có ở đây).
+	if profile != nil && store.mdStore != nil {
+		for _, spec := range profile.Mounts {
+			name, root, ok := strings.Cut(spec, "=")
+			if !ok || name == "" || root == "" {
+				slog.Warn("bỏ qua --mount sai dạng (cần name=path)", slog.String("spec", spec))
+				continue
+			}
+			store.mdStore.Attach(file.NewMount(name, root))
+		}
+	}
+
 	return store
+}
+
+// StartMounts — quét index + bật watcher cho mọi mount. Gọi lúc server khởi động.
+// creatorID: memo wiki thuộc về ai (thường là host user).
+func (s *Store) StartMounts(ctx context.Context, creatorID int32) {
+	if s.mdStore == nil {
+		return
+	}
+	for _, m := range s.mdStore.Mounts() {
+		c, u, err := s.SyncMount(ctx, m, creatorID)
+		if err != nil {
+			// KHÔNG chết server vì một mount hỏng — nhưng phải kêu to, đừng im lặng chạy tiếp
+			// rồi để user tưởng wiki đã lên app.
+			slog.Error("mount KHÔNG gắn được — wiki sẽ KHÔNG hiện trong app",
+				slog.String("mount", m.Name), slog.String("root", m.Root), slog.Any("err", err))
+			continue
+		}
+		slog.Info("mount đã gắn (read-only)", slog.String("mount", m.Name), slog.String("root", m.Root),
+			slog.Int("memo mới", c), slog.Int("cập nhật", u))
+		if err := s.WatchMount(ctx, m, creatorID); err != nil {
+			slog.Warn("watcher không bật được — file đổi sẽ KHÔNG tự hiện", slog.Any("err", err))
+		}
+	}
 }
 
 func (s *Store) GetDriver() Driver {

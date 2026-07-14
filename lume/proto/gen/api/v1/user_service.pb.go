@@ -3641,8 +3641,8 @@ const file_api_v1_user_service_proto_rawDesc = "" +
 	"\x1bGetUserWebhookSigningSecret\x120.memos.api.v1.GetUserWebhookSigningSecretRequest\x1a1.memos.api.v1.GetUserWebhookSigningSecretResponse\"A\xdaA\x04name\x82\xd3\xe4\x93\x024\x122/api/v1/{name=users/*/webhooks/*}:getSigningSecret\x12\xa9\x01\n" +
 	"\x15ListUserNotifications\x12*.memos.api.v1.ListUserNotificationsRequest\x1a+.memos.api.v1.ListUserNotificationsResponse\"7\xdaA\x06parent\x82\xd3\xe4\x93\x02(\x12&/api/v1/{parent=users/*}/notifications\x12\xcb\x01\n" +
 	"\x16UpdateUserNotification\x12+.memos.api.v1.UpdateUserNotificationRequest\x1a\x1e.memos.api.v1.UserNotification\"d\xdaA\x18notification,update_mask\x82\xd3\xe4\x93\x02C:\fnotification23/api/v1/{notification.name=users/*/notifications/*}\x12\x94\x01\n" +
-	"\x16DeleteUserNotification\x12+.memos.api.v1.DeleteUserNotificationRequest\x1a\x16.google.protobuf.Empty\"5\xdaA\x04name\x82\xd3\xe4\x93\x02(*&/api/v1/{name=users/*/notifications/*}B\xa8\x01\n" +
-	"\x10com.memos.api.v1B\x10UserServiceProtoP\x01Z0github.com/usememos/memos/proto/gen/api/v1;apiv1\xa2\x02\x03MAX\xaa\x02\fMemos.Api.V1\xca\x02\fMemos\\Api\\V1\xe2\x02\x18Memos\\Api\\V1\\GPBMetadata\xea\x02\x0eMemos::Api::V1b\x06proto3"
+	"\x16DeleteUserNotification\x12+.memos.api.v1.DeleteUserNotificationRequest\x1a\x16.google.protobuf.Empty\"5\xdaA\x04name\x82\xd3\xe4\x93\x02(*&/api/v1/{name=users/*/notifications/*}B\xa7\x01\n" +
+	"\x10com.memos.api.v1B\x10UserServiceProtoP\x01Z/github.com/Rheinmir/lume/proto/gen/api/v1;apiv1\xa2\x02\x03MAX\xaa\x02\fMemos.Api.V1\xca\x02\fMemos\\Api\\V1\xe2\x02\x18Memos\\Api\\V1\\GPBMetadata\xea\x02\x0eMemos::Api::V1b\x06proto3"
 
 var (
 	file_api_v1_user_service_proto_rawDescOnce sync.Once

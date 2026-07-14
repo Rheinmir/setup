@@ -773,8 +773,8 @@ const file_api_v1_attachment_service_proto_rawDesc = "" +
 	"\x10UpdateAttachment\x12%.memos.api.v1.UpdateAttachmentRequest\x1a\x18.memos.api.v1.Attachment\"T\xdaA\x16attachment,update_mask\x82\xd3\xe4\x93\x025:\n" +
 	"attachment2'/api/v1/{attachment.name=attachments/*}\x12~\n" +
 	"\x10DeleteAttachment\x12%.memos.api.v1.DeleteAttachmentRequest\x1a\x16.google.protobuf.Empty\"+\xdaA\x04name\x82\xd3\xe4\x93\x02\x1e*\x1c/api/v1/{name=attachments/*}\x12\x89\x01\n" +
-	"\x16BatchDeleteAttachments\x12+.memos.api.v1.BatchDeleteAttachmentsRequest\x1a\x16.google.protobuf.Empty\"*\x82\xd3\xe4\x93\x02$:\x01*\"\x1f/api/v1/attachments:batchDeleteB\xae\x01\n" +
-	"\x10com.memos.api.v1B\x16AttachmentServiceProtoP\x01Z0github.com/usememos/memos/proto/gen/api/v1;apiv1\xa2\x02\x03MAX\xaa\x02\fMemos.Api.V1\xca\x02\fMemos\\Api\\V1\xe2\x02\x18Memos\\Api\\V1\\GPBMetadata\xea\x02\x0eMemos::Api::V1b\x06proto3"
+	"\x16BatchDeleteAttachments\x12+.memos.api.v1.BatchDeleteAttachmentsRequest\x1a\x16.google.protobuf.Empty\"*\x82\xd3\xe4\x93\x02$:\x01*\"\x1f/api/v1/attachments:batchDeleteB\xad\x01\n" +
+	"\x10com.memos.api.v1B\x16AttachmentServiceProtoP\x01Z/github.com/Rheinmir/lume/proto/gen/api/v1;apiv1\xa2\x02\x03MAX\xaa\x02\fMemos.Api.V1\xca\x02\fMemos\\Api\\V1\xe2\x02\x18Memos\\Api\\V1\\GPBMetadata\xea\x02\x0eMemos::Api::V1b\x06proto3"
 
 var (
 	file_api_v1_attachment_service_proto_rawDescOnce sync.Once

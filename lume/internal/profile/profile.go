@@ -23,6 +23,9 @@ type Profile struct {
 	UNIXSock string
 	// Data is the data directory
 	Data string
+	// Mounts — thư mục NGOÀI gắn vào để ĐỌC (read-only), dạng "name=path" (vd wiki=/path/llmwiki/wiki).
+	// Nội dung không copy vào kho memo: đọc thẳng file gốc, xem store/file/mount.go (frame-n06).
+	Mounts []string
 	// DSN points to where memos stores its own data
 	DSN string
 	// Driver is the database driver
