@@ -5,7 +5,7 @@ created_by: human
 kind: frame
 parent_br: br/lume/br/BR.md
 clause_ids: [N06]
-parent_br_hash: 5c7f64350a7d0bffced5cd1b77902cf85f5f7592c03b348423f41985a4d20a79
+parent_br_hash: 1666843d0326e46cbb4d38a75756b0487bdb569a3054f00b7cb82ac6db025e63
 muc_tieu: "Stream nguyên cấu trúc thư mục llmwiki từ máy lên app: mỗi .md = 1 memo, thư mục = tag, file đổi thì app hiện ngay"
 scope_code: ["lume/store/file/mount.go","lume/store/mountsync.go","lume/internal/profile/profile.go","lume/cmd/lume/main.go"]
 scope_test: ["lume/store/file/mount_test.go"]

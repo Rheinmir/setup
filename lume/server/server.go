@@ -21,6 +21,8 @@ import (
 	"github.com/Rheinmir/lume/server/router/fileserver"
 	"github.com/Rheinmir/lume/server/router/frontend"
 	"github.com/Rheinmir/lume/server/router/mcp"
+	"github.com/Rheinmir/lume/server/auth"
+	"github.com/Rheinmir/lume/server/router/mount"
 	"github.com/Rheinmir/lume/server/router/rss"
 	"github.com/Rheinmir/lume/server/runner/s3presign"
 	"github.com/Rheinmir/lume/store"
@@ -80,6 +82,11 @@ func NewServer(ctx context.Context, profile *profile.Profile, store *store.Store
 	// This uses native HTTP serving (http.ServeContent) instead of gRPC for video/audio files.
 	fileServerService := fileserver.NewFileServerService(s.Profile, s.Store, s.Secret)
 	fileServerService.RegisterRoutes(echoServer)
+
+	// MOUNT (frame-n08): API "bấm nút chọn folder" + danh sách view + nút Sync.
+	// Dùng ĐÚNG authorizer của API v1 (Bearer) — không tự chế auth, không nhận cookie.
+	mountService := mount.NewService(s.Profile, s.Store)
+	mountService.RegisterRoutes(rootGroup, auth.NewAuthenticator(s.Store, s.Secret))
 
 	// Create and register RSS routes (needs markdown service from apiV1Service).
 	rss.NewRSSService(s.Profile, s.Store, apiV1Service.MarkdownService).RegisterRoutes(rootGroup)

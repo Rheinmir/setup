@@ -19,9 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-14 01:17:59 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=26771b7fd9b87dd97839ee49ebfb |
-| 2026-07-14 01:18:39 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=a843bb47c754b2bbff52c1ec66bc |
-| 2026-07-14 01:18:49 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=ff6b3d786f5726dbc682760d2193 |
 | 2026-07-14 01:20:07 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=5c0617989aea6198ab8000f0bf42 |
 | 2026-07-14 01:20:12 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=c90aafd708374594ca9a8cfc9aaf |
 | 2026-07-14 01:23:59 | `file.write` | skills/visual-qa/SKILL.md · tool=Edit · session=90a00343 · actor=agent · prev=9ae45b3138916b8d4bc2dd6c851fa8bfb2fc69d67a |
@@ -59,6 +56,9 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-14 12:48:28 | `file.write` | skills/br/SKILL.md · tool=Edit · session=c7f6e21c · actor=agent · prev=26d5357aeba64b5e211c0b42ee817dfc9db2f6fa52d5e3253 |
 | 2026-07-14 12:48:48 | `file.write` | skills/br/assets/queue.example.yaml · tool=Edit · session=c7f6e21c · actor=agent · prev=228b581aea8c27c10103ca2779e2171b |
 | 2026-07-14 13:14:30 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=c7f6e21c · actor=agent · prev=e91c07e0370e07590e7f0a4354438f144525c |
+| 2026-07-14 21:33:12 | `commit.reconcile` |  · actor=system · agent_n=3 · human_n=1 · human=['llmwiki/skills/dev-loop/br.md'] · prev=9b5ca3195507b9ac9281f9e54ad3ffa |
+| 2026-07-14 21:33:12 | `commit.reconcile` |  · actor=system · agent_n=3 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=9b5ca3195507b9ac9281f9e54ad3ffa316f020cad |
+| 2026-07-14 21:33:12 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=0 · prev=9b5ca3195507b9ac9281f9e54ad3ffa316f020cadee505493355d5ee599f41dc · h=728a |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)

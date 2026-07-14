@@ -2,7 +2,9 @@ package store
 
 import (
 	"context"
+	"encoding/json"
 	"log/slog"
+	"os"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -62,14 +64,24 @@ func New(driver Driver, profile *profile.Profile) *Store {
 		}
 	}
 
-	// MOUNT (frame-n06): gắn thư mục ngoài (llmwiki) để ĐỌC. Chỉ gắn ở đây — việc quét index +
-	// watch do StartMounts() làm (cần ctx + user, không có ở đây).
+	// MOUNT: gắn thư mục ngoài để ĐỌC. Hai nguồn, cộng dồn:
+	//   (a) mounts.json — danh sách user THÊM BẰNG NÚT trong app (frame-n08). Nguồn chính.
+	//   (b) --mount name=path — cờ CLI (frame-n06), tiện cho script/CI.
+	// Chỉ gắn ở đây; quét index + watcher do StartMounts() làm (cần ctx + user).
 	if profile != nil && store.mdStore != nil {
+		seen := map[string]bool{}
+		for _, mc := range loadMountsFile(profile.Data) {
+			store.mdStore.Attach(file.NewMount(mc.Name, mc.Root))
+			seen[mc.Name] = true
+		}
 		for _, spec := range profile.Mounts {
 			name, root, ok := strings.Cut(spec, "=")
 			if !ok || name == "" || root == "" {
 				slog.Warn("bỏ qua --mount sai dạng (cần name=path)", slog.String("spec", spec))
 				continue
+			}
+			if seen[name] {
+				continue // đã có trong mounts.json → đừng gắn 2 lần
 			}
 			store.mdStore.Attach(file.NewMount(name, root))
 		}
@@ -117,4 +129,28 @@ func (s *Store) Close() error {
 	s.userSettingCache.Close()
 
 	return s.driver.Close()
+}
+
+// mountFileEntry — một dòng trong <data>/mounts.json (do API "thêm folder" ghi).
+type mountFileEntry struct {
+	Name string `json:"name"`
+	Root string `json:"root"`
+}
+
+// loadMountsFile — đọc danh sách folder user đã thêm bằng NÚT. File hỏng/không có → danh sách rỗng,
+// KHÔNG chết server (mất danh sách view khó chịu, nhưng app vẫn dùng được).
+func loadMountsFile(dataDir string) []mountFileEntry {
+	if dataDir == "" {
+		return nil
+	}
+	raw, err := os.ReadFile(filepath.Join(dataDir, "mounts.json"))
+	if err != nil {
+		return nil
+	}
+	var out []mountFileEntry
+	if err := json.Unmarshal(raw, &out); err != nil {
+		slog.Warn("mounts.json hỏng — bỏ qua danh sách folder", slog.Any("err", err))
+		return nil
+	}
+	return out
 }

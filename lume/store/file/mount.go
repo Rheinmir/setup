@@ -187,3 +187,25 @@ func (s *Store) Mounted(uid string) bool {
 
 // Mounts trả các mount đang gắn (runner cần để quét/watch).
 func (s *Store) Mounts() []*Mount { return s.mounts }
+
+// UIDs — mọi uid đang có trong mount (ảnh chụp bản đồ hiện tại).
+func (m *Mount) UIDs() []string {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+	out := make([]string, 0, len(m.byUID))
+	for uid := range m.byUID {
+		out = append(out, uid)
+	}
+	return out
+}
+
+// Detach — gỡ mount khỏi Store theo tên.
+func (s *Store) Detach(name string) bool {
+	for i, m := range s.mounts {
+		if m.Name == name {
+			s.mounts = append(s.mounts[:i], s.mounts[i+1:]...)
+			return true
+		}
+	}
+	return false
+}

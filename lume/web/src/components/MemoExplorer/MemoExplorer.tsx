@@ -3,6 +3,7 @@ import useCurrentUser from "@/hooks/useCurrentUser";
 import { cn } from "@/lib/utils";
 import type { StatisticsData } from "@/types/statistics";
 import StatisticsView from "../StatisticsView";
+import MountFolders from "../MountFolders";
 import ShortcutsSection from "./ShortcutsSection";
 import TagsSection from "./TagsSection";
 
@@ -79,6 +80,7 @@ const MemoExplorer = (props: Props) => {
         {features.statistics && <StatisticsView statisticsData={statisticsData} />}
         {features.shortcuts && currentUser && <ShortcutsSection />}
         {features.tags && <TagsSection readonly={context === "explore"} tagCount={tagCount} />}
+        {currentUser && <MountFolders />}
       </div>
     </aside>
   );

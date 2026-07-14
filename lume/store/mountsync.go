@@ -157,3 +157,60 @@ func osStat(p string) (bool, error) {
 	}
 	return st.IsDir(), nil
 }
+
+// MemosOfMount — lấy toàn bộ memo của MỘT cụm folder (mount) để đẩy lên remote (frame-n07).
+// Nội dung đọc thẳng từ file gốc; tag = đường dẫn thư mục. Đây là "nguyên cụm" mà user bấm Sync.
+func (s *Store) MemosOfMount(m *file.Mount) []MountMemo {
+	var out []MountMemo
+	for _, uid := range m.UIDs() {
+		rel, _ := m.RelPath(uid)
+		body, ok, err := m.Read(uid)
+		if err != nil || !ok {
+			continue // file vừa bị xoá giữa chừng → bỏ, đừng đẩy nội dung rỗng đè bản trên remote
+		}
+		out = append(out, MountMemo{UID: uid, RelPath: rel, Content: body, Tags: m.TagsFor(rel)})
+	}
+	return out
+}
+
+// MountMemo — một memo thuộc cụm folder.
+type MountMemo struct {
+	UID     string
+	RelPath string
+	Content string
+	Tags    []string
+}
+
+// AttachMount — gắn mount NÓNG (từ API, không cần restart).
+func (s *Store) AttachMount(m *file.Mount) {
+	if s.mdStore != nil {
+		s.mdStore.Attach(m)
+	}
+}
+
+// DetachMount — bỏ folder khỏi danh sách view. KHÔNG đụng file trên đĩa (chỉ gỡ khỏi app).
+// Index memo cũ để nguyên: dọn index là việc của lần Scan sau; xoá vội = mất memo nếu user thêm lại.
+func (s *Store) DetachMount(name string) bool {
+	if s.mdStore == nil {
+		return false
+	}
+	return s.mdStore.Detach(name)
+}
+
+// Mounts — danh sách folder đang gắn (API/UI hỏi qua đây).
+func (s *Store) Mounts() []*file.Mount {
+	if s.mdStore == nil {
+		return nil
+	}
+	return s.mdStore.Mounts()
+}
+
+// MountByName — tìm folder theo tên (UI thao tác theo tên, không theo con trỏ).
+func (s *Store) MountByName(name string) *file.Mount {
+	for _, m := range s.Mounts() {
+		if m.Name == name {
+			return m
+		}
+	}
+	return nil
+}

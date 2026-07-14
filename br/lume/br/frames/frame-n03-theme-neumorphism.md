@@ -5,7 +5,7 @@ created_by: human
 kind: frame
 parent_br: br/lume/br/BR.md
 clause_ids: [N03]
-parent_br_hash: 5c7f64350a7d0bffced5cd1b77902cf85f5f7592c03b348423f41985a4d20a79
+parent_br_hash: 1666843d0326e46cbb4d38a75756b0487bdb569a3054f00b7cb82ac6db025e63
 muc_tieu: "Build lại UI memos theo system theme neumorphism của dây chuyền, đạt AAA contrast và accent đối-nghịch-nền"
 scope_code: ["lume/web/src/themes/neumorphism.css","lume/web/src/themes/default-dark.css","lume/web/src/themes/paper.css","lume/web/src/index.css","lume/web/src/components/MemosLogo.tsx","lume/web/src/components/UserAvatar.tsx","lume/web/src/components/Placeholder/index.tsx","lume/web/src/pages/SignIn.tsx"]
 scope_test: ["(gate = visual-qa --assert)"]

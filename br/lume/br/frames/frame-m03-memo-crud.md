@@ -5,7 +5,7 @@ created_by: human
 kind: frame
 parent_br: br/lume/br/BR.md
 clause_ids: [M3]
-parent_br_hash: 5c7f64350a7d0bffced5cd1b77902cf85f5f7592c03b348423f41985a4d20a79
+parent_br_hash: 1666843d0326e46cbb4d38a75756b0487bdb569a3054f00b7cb82ac6db025e63
 muc_tieu: "Tạo/sửa/xoá/liệt kê memo Markdown-native (lõi sản phẩm)"
 scope_code: ["lume/server/router/api/v1/memo_service.go","lume/web/src/pages/Home.tsx","lume/web/src/pages/MemoDetail.tsx"]   # store/memo.go do frame-n04 sở hữu (file-first) — R6
 scope_test: ["(gate: xem acceptance_test)"]

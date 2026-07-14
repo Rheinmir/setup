@@ -5,7 +5,7 @@ created_by: human
 kind: frame
 parent_br: br/lume/br/BR.md
 clause_ids: [N01]
-parent_br_hash: 5c7f64350a7d0bffced5cd1b77902cf85f5f7592c03b348423f41985a4d20a79
+parent_br_hash: 1666843d0326e46cbb4d38a75756b0487bdb569a3054f00b7cb82ac6db025e63
 muc_tieu: "Mount memos dưới /memos/ (Vite base + reverse-proxy) — giá trị đóng-gói của dây chuyền"
 scope_code: ["lume/web/vite.config.mts"]   # proxy.conf chưa tồn tại — không khai file ma
 scope_test: ["(gate: xem acceptance_test)"]
