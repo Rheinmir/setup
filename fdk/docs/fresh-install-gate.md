@@ -122,6 +122,21 @@ description: >-
 
 **Đã verify đầu-cuối:** sửa 7 skill → `npx` báo **"Installed 74 skills"** → cả 7 vào global → bản đồ downstream **80 → 82 skill** (2 cái mới, 5 cái kia vốn còn sót bản cũ).
 
+### Điều tệ nhất: tài liệu KHÔNG thiếu — nó NÓI QUÁ
+
+`overstack.html` và `CAPABILITIES.md` đều đọc từ **đĩa**, nên cả hai luôn báo **74 skill** — kể cả khi installer chỉ giao **67**. Ba nguồn soi lẫn nhau và cùng đúng *với nhau*, cùng **sai** so với thứ thật sự tới tay người dùng. Không cái nào soi ra ngoài.
+
+Người dùng đọc doc thấy `/web-crawl`, gõ vào → **không có gì**. Đây là mất uy tín trực tiếp.
+
+### Hai lớp gác (nguyên nhân + hệ quả)
+
+| Lớp | Gác gì | Ở đâu |
+|---|---|---|
+| **Nguyên nhân** | frontmatter YAML hỏng → CLI nuốt skill | probe `capsurface` (`medic --ci`, chặn push) |
+| **Hệ quả** | *bất kể nguyên nhân gì*: skill trên đĩa mà không tới được người dùng | `fresh-install-smoke --remote` → **parity hứa↔giao** (GH#77) |
+
+Cần cả hai: `capsurface` chỉ biết một nguyên nhân đã gặp. Parity bắt **mọi** nguyên nhân — skill không đăng ký `marketplace.json`, CLI đổi luật validate, tarball lỗi, mạng đứt giữa chừng. Đã negative-test: xoá `web-crawl` khỏi global → cổng ĐỎ và **gọi đúng tên nó**.
+
 ### Gác: đừng đoán, hãy PARSE
 
 Probe `capsurface` (qua `capability-stamp.py`) nay **parse frontmatter bằng YAML thật** và ĐỎ nếu skill nào hỏng.

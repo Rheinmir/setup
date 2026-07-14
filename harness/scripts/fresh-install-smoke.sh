@@ -58,6 +58,25 @@ echo "${B}fresh-install-smoke${X} — mode=$MODE  ·  cô lập tại $TARGET"
 if [ "$MODE" = "remote" ]; then
   echo "→ curl github raw (đường người-mới thật, gồm npx skills)"
   ( cd "$TARGET" && curl -fsSL "https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh" | bash ) >/dev/null 2>&1
+  # ── PARITY HỨA↔GIAO (GH#77) ────────────────────────────────────────────────────────────
+  # overstack.html + CAPABILITIES.md đều đọc từ ĐĨA nên luôn đồng thuận với nhau — và cùng SAI
+  # so với thứ npx thật sự giao. Đo 2026-07-11: doc hứa 74 skill, installer giao 67; 7 skill bị
+  # CLI nuốt im lặng (frontmatter YAML hỏng). User đọc doc thấy /web-crawl, gõ vào thì không có.
+  # capsurface gác NGUYÊN NHÂN (YAML hỏng); đây gác HỆ QUẢ — bất kể nguyên nhân gì.
+  echo "${Y}parity hứa↔giao:${X}"
+  SK_DIR="${AGENTS_SKILLS_DIR:-$HOME/.agents/skills}"
+  dropped=""
+  for sk in "$ROOT"/skills/*/SKILL.md; do
+    n="$(basename "$(dirname "$sk")")"
+    [ "$n" = "fdk" ] && continue                      # cố ý không ship xuống user (ADR-004)
+    [ -d "$SK_DIR/$n" ] || dropped="$dropped $n"
+  done
+  if [ -z "$dropped" ]; then
+    ok "mọi skill trên đĩa đều tới được người dùng (hứa == giao)"
+  else
+    bad "SKILL RỚT — doc hứa nhưng user KHÔNG nhận được:$dropped"
+    bad "  → CLI nuốt im lặng. Soi: python3 harness/scripts/capability-stamp.py --check"
+  fi
 else
   echo "→ file:// từ working-tree (offline, tất định) — harness + llmwiki, bỏ npx skills"
   ( cd "$TARGET" && HARNESS_BASE="file://$ROOT/harness/poc-vendor-neutral" \
