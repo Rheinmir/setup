@@ -3,9 +3,9 @@ schema_version: 0
 frame_id: frame-f13-adapters
 created_by: slicer
 parent_br: br/BR.md
-clause_ids: [C18.1]
-parent_br_hash: 5aa1c47fb9bc720f40479854a5a5f1bdd49da2a2366b9fdbe72b8bacf59d1d95
-muc_tieu: "Ranh giới vào-ra duy nhất — bốn hàm đọc nhân sự, đọc chấm công, đẩy phiếu lương, xuất file ngân hàng; lô này đọc từ file JSON, lô sau thay ruột bằng Workday mà không đụng engine"
+clause_ids: [C18.1, C18.2]
+parent_br_hash: 2332e28da09ebdd69a6e153974fd7a58dabd8cc667294de676e350f1a05eb70a
+muc_tieu: "Ranh giới vào-ra duy nhất — bốn hàm đọc nhân sự, đọc chấm công, đẩy phiếu lương, xuất file ngân hàng, cộng một hàm thứ năm ghi dữ liệu mass-upload vào đúng chỗ bốn hàm kia đọc; lô này đọc/ghi file JSON, lô sau thay ruột bằng Workday mà không đụng engine"
 scope_code: ["app/adapters.py"]
 scope_test: ["tests/test_f13.py"]
 acceptance_test: "python3 -m tests.test_f13"
@@ -33,8 +33,10 @@ Giải pháp: nhốt toàn bộ thế giới bên ngoài sau đúng bốn hàm. 
 
 ## Tiêu chí nghiệm thu
 
-- Đủ đúng bốn hàm ranh giới
+- Đủ đúng bốn hàm ranh giới gốc, cộng hàm thứ năm `save_uploaded_employees`
 - `fetch_employees("2026-03")` đọc được từ file JSON, trả danh sách có khoá `employee_id`
+- `save_uploaded_employees("2099-01", rows)` ghi đúng `data/inputs/2099-01/employees.json`; `fetch_employees("2099-01")` ngay sau đó đọc lại được ĐÚNG `rows` đã ghi
+- `save_uploaded_employees` không đụng dữ liệu của kỳ khác (ghi kỳ `2099-01` không đổi `data/inputs/2026-03/employees.json`)
 - **Zero network**: mã nguồn không được import `requests`/`socket`/`urllib.request`/`http.client`
 - Mỗi hàm ghi rõ trong mã nguồn nó sẽ nối vào đâu ở lô sau (nhắc tên Workday) — chỗ nối không được mất dấu
 

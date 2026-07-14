@@ -1,12 +1,14 @@
-"""ui.py — 3 màn: bảng lương / phiếu lương / trace (BR C15.1, C15.2, C14.1).
+"""ui.py — 4 màn: bảng lương / phiếu lương / trace / upload (BR C15.1, C15.2, C15.4, C14.1).
 
-Chỉ XEM, không sửa dữ liệu. Số liệu lấy từ engine (không chép công thức sang đây).
+3 màn gốc chỉ XEM, không sửa dữ liệu. /upload là ngoại lệ DUY NHẤT — mass-upload
+nguyên file Excel, không sửa từng field. Số liệu lấy từ engine (không chép công
+thức sang đây).
 """
 import html
 from decimal import Decimal
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-from app import adapters, engine, lichky, params
+from app import adapters, engine, lichky, params, upload
 
 # Kỳ lương duy nhất đang có dữ liệu vào (data/inputs/<period>) [C18.1].
 PERIOD = "2026-03"
@@ -198,6 +200,34 @@ def _man_trace(emp_id: str, code: str):
 <p><a href="/payslip/{_e(emp_id)}">← Phiếu lương</a></p>""")
 
 
+def _man_upload() -> bytes:
+    """Tab tối giản — chọn kỳ + chọn file Excel, KHÔNG có ô nhập tay từng field [C15.4]."""
+    return _page("Tải Excel — mass upload", """
+<h1>Tải Excel (mass upload)</h1>
+<p class="clause">Header hàng 1 của file phải đúng tên field (vd employee_id, BASIC_SAL...).
+Chỉ nạp NGUYÊN file — không sửa từng dòng ở đây.</p>
+<form id="f">
+  <p>Kỳ lương: <input type="text" name="period" placeholder="2026-04" required></p>
+  <p><input type="file" name="xlsx" accept=".xlsx" required></p>
+  <button type="submit">Tải lên</button>
+</form>
+<p id="kq"></p>
+<script>
+document.getElementById('f').onsubmit = async function(ev){
+  ev.preventDefault();
+  var period = this.period.value, file = this.xlsx.files[0];
+  var r = await fetch('/upload?period=' + encodeURIComponent(period), {method:'POST', body: file});
+  document.getElementById('kq').innerHTML = await r.text();
+};
+</script>""")
+
+
+def _xu_ly_upload(period: str, body: bytes) -> bytes:
+    rows = upload.parse_employees_xlsx(body)
+    adapters.save_uploaded_employees(period, rows)
+    return f'<p>Đã tải <b>{len(rows)}</b> nhân sự cho kỳ {_e(period)}. <a href="/">Xem bảng lương</a></p>'.encode("utf-8")
+
+
 class _Handler(BaseHTTPRequestHandler):
     def log_message(self, *a):  # im lặng khi chạy test
         pass
@@ -213,6 +243,8 @@ class _Handler(BaseHTTPRequestHandler):
                 body = _man_phieu_luong(phan[1])
             elif len(phan) == 3 and phan[0] == "trace":
                 body = _man_trace(phan[1], phan[2])
+            elif phan == ["upload"]:
+                body = _man_upload()
             else:
                 body = None
         except Exception as exc:                      # không bịa số — báo lỗi ra màn
@@ -227,9 +259,32 @@ class _Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def do_POST(self):
+        from urllib.parse import urlparse, parse_qs
+        parsed = urlparse(self.path)
+        if [x for x in parsed.path.split("/") if x] != ["upload"]:
+            self.send_error(404)
+            return
+        period = parse_qs(parsed.query).get("period", [None])[0]
+        if not period:
+            self.send_error(400, explain="thiếu ?period=YYYY-MM")
+            return
+        length = int(self.headers.get("Content-Length", 0))
+        raw = self.rfile.read(length)
+        try:
+            body = _xu_ly_upload(period, raw)
+        except Exception as exc:                      # không bịa số — báo lỗi ra màn
+            self.send_error(500, explain=str(exc))
+            return
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
 
 def build_server(port: int = 8000) -> HTTPServer:
-    """Server 3 route: / · /payslip/<mã NV> · /trace/<mã NV>/<mã field> [C15.1]."""
+    """Server 4 route: / · /payslip/<mã NV> · /trace/<mã NV>/<mã field> · /upload [C15.1, C15.4]."""
     return HTTPServer(("127.0.0.1", port), _Handler)
 
 

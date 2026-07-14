@@ -40,6 +40,20 @@ def fetch_timesheet(period: str) -> list:
     return fetch_employees(period)
 
 
+def save_uploaded_employees(period: str, rows: list) -> Path:
+    """Ghi danh sách nhân sự đã mass-upload (từ Excel, xem app/upload.py) — BR C18.2.
+
+    Adapt module có sẵn: ghi ĐÚNG chỗ `fetch_employees` đọc (data/inputs/<period>/
+    employees.json), không mở đường I/O song song. Lô sau: chỗ nối Workday inbound
+    (xem C18.1) thay hẳn nhu cầu upload tay này.
+    """
+    period_dir = _INPUTS / period
+    period_dir.mkdir(parents=True, exist_ok=True)
+    path = period_dir / "employees.json"
+    path.write_text(json.dumps(rows, ensure_ascii=False, indent=2), encoding="utf-8")
+    return path
+
+
 def push_payslip(period: str, payslips: list) -> Path:
     """Đẩy phiếu lương đi.
 

@@ -26,6 +26,19 @@ class TestAdapters(unittest.TestCase):
         src = inspect.getsource(adapters)
         self.assertIn("Workday", src)
 
+    def test_save_uploaded_employees_ghi_dung_cho_fetch_doc_lai_duoc(self):
+        # BR C18.2 — hàm thứ năm: adapt module có sẵn, không mở đường I/O song song
+        rows = [{"employee_id": "UP-001", "ho_ten": "Test Nhân Viên"}]
+        path = adapters.save_uploaded_employees("2099-01", rows)
+        self.assertTrue(path.exists())
+        self.assertEqual(adapters.fetch_employees("2099-01"), rows)
+
+    def test_save_uploaded_employees_khong_dung_ky_khac(self):
+        # ghi kỳ demo không được đụng ground-truth 2026-03
+        before = adapters.fetch_employees("2026-03")
+        adapters.save_uploaded_employees("2099-02", [{"employee_id": "UP-002"}])
+        self.assertEqual(adapters.fetch_employees("2026-03"), before)
+
 
 if __name__ == "__main__":
     unittest.main()

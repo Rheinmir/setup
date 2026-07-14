@@ -215,7 +215,9 @@ Trần **BHTN = 106.200.000** dùng chung cho cả hiển thị lẫn tính (`UI
 
 ## C15 · Giao diện
 
-**C15.1** — **3 màn hình**: `/` bảng lương (grid theo nhóm cột Excel thật, dòng TỔNG, ô lệch ground-truth tô đỏ) · `/payslip/<msnv>` phiếu lương (đúng layout thật: kỳ "Từ 21/[M-1] đến 20/[M]", khối A–E, đánh số `[0]`–`[67]`, in được) · `/trace/<msnv>/<CODE>` cây trace công thức. `provenance: raw:xlsx Payslip template · user (Q6)`
+**C15.1** — **3 màn hình xem**: `/` bảng lương (grid theo nhóm cột Excel thật, dòng TỔNG, ô lệch ground-truth tô đỏ) · `/payslip/<msnv>` phiếu lương (đúng layout thật: kỳ "Từ 21/[M-1] đến 20/[M]", khối A–E, đánh số `[0]`–`[67]`, in được) · `/trace/<msnv>/<CODE>` cây trace công thức. `provenance: raw:xlsx Payslip template · user (Q6)`
+
+**C15.4** — **Màn hình thứ 4 — `/upload` tải Excel mass-upload**: MỘT tab tối giản duy nhất (không thêm form nhập tay từng field) — chọn kỳ lương + chọn file Excel (header hàng 1 = đúng tên field `employees.json`), tải lên thay cho việc HR phải tự tay dựng JSON. Sau khi tải: hiện số nhân sự đã nạp + link sang `/` xem ngay. Chỉ **adapt** module `app/adapters.py` sẵn có (ghi vào đúng `data/inputs/<kỳ>/employees.json` mà 4 hàm ranh giới đã đọc — không mở đường I/O song song), không sửa dữ liệu từng-field qua UI, không đăng nhập/phân quyền (kế thừa "Ngoài phạm vi" của C15.1). `provenance: user (2026-07-15, yêu cầu trực tiếp — không suy diễn từ raw)`
 
 **C15.2** — Số tiền: `tabular-nums`, căn phải, phân cách kiểu VN. **Bắt buộc toggle dark/light** (`prefers-color-scheme` mặc định + nút toggle + `localStorage` + script chống FOUC trong `<head>`) — không ép mode. `provenance: user (Q6)`
 
@@ -265,6 +267,8 @@ push_payslip(period, rows)-> None         # nay: ghi HTML/JSON | sau: SFTP → W
 export_bank_file(period, rows) -> Path    # nay: CSV | sau: template HSBC/Citibank
 ```
 Engine **không gọi gì khác**. Thứ tự nối lại khi có credential: Workday inbound → Payslip outbound → Bank → SAP. `provenance: user (Q3) · assumed (A7)`
+
+**C18.2** — **Hàm thứ năm (adapt, không thay thế 4 hàm gốc)**: `save_uploaded_employees(period, rows: list[dict]) -> Path` — ghi `rows` (đã parse từ Excel mass-upload, xem C15.4) vào **đúng** `data/inputs/<period>/employees.json` mà `fetch_employees` đọc; không network, không schema mới — `rows` phải khớp khoá với record `fetch_employees` đã trả trước giờ (tối thiểu có `employee_id`). `provenance: user (2026-07-15)`
 
 ---
 

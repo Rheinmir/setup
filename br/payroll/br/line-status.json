@@ -414,13 +414,14 @@
       "file": "frame-f13-adapters.md",
       "status": "green-pending-review",
       "clause_ids": [
-        "C18.1"
+        "C18.1",
+        "C18.2"
       ],
       "depends_on": [],
       "scope_code": [
         "app/adapters.py"
       ],
-      "muc_tieu": "Ranh giới vào-ra duy nhất — bốn hàm đọc nhân sự, đọc chấm công, đẩy phiếu lương, xuất file ngân hàng; lô này đọc từ file JSON, lô sau thay ruột bằng Workday mà không đụng engine",
+      "muc_tieu": "Ranh giới vào-ra duy nhất — bốn hàm đọc nhân sự, đọc chấm công, đẩy phiếu lương, xuất file ngân hàng, cộng một hàm thứ năm ghi dữ liệu mass-upload vào đúng chỗ bốn hàm kia đọc; lô này đọc/ghi file JSON, lô sau thay ruột bằng Workday mà không đụng engine",
       "run": {
         "verdict": "SUCCESS",
         "iterations_run": 2,
@@ -473,13 +474,15 @@
       "clause_ids": [
         "C15.1",
         "C15.2",
+        "C15.4",
         "C14.1"
       ],
       "depends_on": [],
       "scope_code": [
-        "app/ui.py"
+        "app/ui.py",
+        "app/upload.py"
       ],
-      "muc_tieu": "Ba màn hình cho HR — bảng lương toàn kỳ, phiếu lương từng người theo đúng mẫu thật, và cây truy vết công thức bấm ngược được từ lương thực nhận xuống tận lương cơ bản",
+      "muc_tieu": "Bốn màn hình cho HR — bảng lương toàn kỳ, phiếu lương từng người theo đúng mẫu thật, cây truy vết công thức bấm ngược được từ lương thực nhận xuống tận lương cơ bản, và MỘT tab tối giản tải Excel mass-upload thay nhập tay",
       "run": {
         "verdict": "SUCCESS",
         "iterations_run": 2,
@@ -786,6 +789,14 @@
       "assumed": true
     },
     "C19": {
+      "provenance": "user",
+      "assumed": false
+    },
+    "C15.4": {
+      "provenance": "user",
+      "assumed": false
+    },
+    "C18.2": {
       "provenance": "user",
       "assumed": false
     }

@@ -185,6 +185,48 @@ class TestUI(unittest.TestCase):
     def test_tien_can_phai_va_dinh_dang_viet_nam(self):
         self.assertIn("tabular-nums", self.html)
 
+    # ── C15.4 mass-upload — MỘT tab tối giản, không form nhập tay ──────────
+    @classmethod
+    def post(cls, path, body: bytes):
+        req = urllib.request.Request(
+            f"http://127.0.0.1:{cls.port}{path}", data=body, method="POST",
+            headers={"Content-Type": "application/octet-stream"})
+        with urllib.request.urlopen(req, timeout=10) as r:
+            assert r.status == 200, path
+            return r.read().decode()
+
+    def test_upload_form_dung_1_tab_khong_nhap_tay_tung_field(self):
+        h = self.fetch("/upload")
+        self.assertEqual(h.count('type="file"'), 1, "chỉ đúng 1 ô chọn file")
+        # không có <input> riêng cho từng field lương/phụ cấp/chấm công — chỉ file + kỳ
+        inputs = re.findall(r'<input[^>]*name="([^"]+)"', h)
+        self.assertEqual(sorted(inputs), ["period", "xlsx"],
+                          f"/upload chỉ được có input period+xlsx, thấy {inputs}")
+
+    def test_upload_post_ghi_va_xac_nhan_so_nhan_su(self):
+        import io
+        from openpyxl import Workbook
+
+        wb = Workbook()
+        ws = wb.active
+        ws.append(["employee_id", "ho_ten", "BASIC_SAL"])
+        ws.append(["UP-101", "Nguyễn Test", 15000000])
+        ws.append(["UP-102", "Trần Test", 16000000])
+        buf = io.BytesIO()
+        wb.save(buf)
+
+        h = self.post("/upload?period=2099-03", buf.getvalue())
+        self.assertIn("2", h)  # 2 nhân sự đã nạp
+        self.assertIn('href="/"', h)
+
+        from app import adapters
+        rows = adapters.fetch_employees("2099-03")
+        self.assertEqual(len(rows), 2)
+        self.assertEqual(rows[0]["employee_id"], "UP-101")
+        self.assertEqual(rows[0]["BASIC_SAL"], 15000000)
+        # ground-truth 2026-03 không bị đụng
+        self.assertIn("189.930.161", self.fetch("/"))
+
 
 if __name__ == "__main__":
     unittest.main()
