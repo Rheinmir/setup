@@ -19,34 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-12 23:43:54 | `file.write` | .github/workflows/harness.yml · tool=Edit · session=cacb3b15 · actor=agent · prev=a123c2283f5ed250a2f5e7cc93c37fd11d63c9 |
-| 2026-07-12 23:44:15 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=0 · prev=98b1c1b25afe4a34d29259cc13cd8df69eafd4dffc8e52b3cae5ba9dad27b99b · h=910b |
-| 2026-07-12 23:51:19 | `file.write` | fdk/docs/fresh-install-gate.md · tool=Edit · session=c82ce215 · actor=agent · prev=910b823db67d42f430985c8196c910cebac7b |
-| 2026-07-13 00:19:58 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['fdk/skills.provenance.json'] · prev=6ba59805b934185429a1eb5bf80e496e7e |
-| 2026-07-13 13:26:35 | `file.write` | fdk/docs/fresh-install-gate.md · tool=Edit · session=c82ce215 · actor=agent · prev=8614d2867956a79a98688353708ac559ba7c9 |
-| 2026-07-13 16:41:13 | `file.write` | harness/downstream-contract.yaml · tool=Write · session=c82ce215 · actor=agent · prev=a53b35fef94b1cd14b458c18e1ae838d3d |
-| 2026-07-13 16:41:37 | `file.write` | harness/scripts/fresh-install-smoke.sh · tool=Edit · session=c82ce215 · actor=agent · prev=ede8cef81dacb484bc9c9d6848742 |
-| 2026-07-13 16:43:24 | `file.write` | fdk/docs/fresh-install-gate.md · tool=Edit · session=c82ce215 · actor=agent · prev=c417049ea26dee89cd55e504bdb0576798d08 |
-| 2026-07-13 16:50:13 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=c82ce215 · actor=agent · prev=80e7d37fadcb71646794fe4023a5d27abad00 |
-| 2026-07-13 16:53:26 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=c82ce215 · actor=agent · prev=e0d7fc02bd570d057c75513ea54fe6699f48d |
-| 2026-07-13 16:57:38 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=c82ce215 · actor=agent · prev=eed6e45e032a7297c7ef69e06814befce18f6 |
-| 2026-07-13 16:58:20 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=c82ce215 · actor=agent · prev=3334d1767fd29b16ee9096a66bebb0ea5ea6b |
-| 2026-07-14 01:17:33 | `file.write` | harness/downstream-contract.yaml · tool=Edit · session=c82ce215 · actor=agent · prev=2c61f3df3006349fcfb33c5b8702ff7b80d |
-| 2026-07-14 01:17:43 | `file.write` | harness/scripts/fresh-install-smoke.sh · tool=Edit · session=c82ce215 · actor=agent · prev=7405cffcf2d4d70df648066dcd00d |
-| 2026-07-14 01:19:05 | `file.write` | fdk/docs/fresh-install-gate.md · tool=Edit · session=c82ce215 · actor=agent · prev=dfbe4c1d6a96b18aa98cbe8e17efdb49275a1 |
-| 2026-07-14 09:39:34 | `file.write` | harness/poc-vendor-neutral/install.sh · tool=Edit · session=c82ce215 · actor=agent · prev=09fb1bad1f310e16657eb07c56a104 |
-| 2026-07-14 09:39:43 | `file.write` | harness/downstream-contract.yaml · tool=Edit · session=c82ce215 · actor=agent · prev=9fb3cd9a3bd0d7319f8969d1835b0c3b6f4 |
-| 2026-07-14 09:43:43 | `file.write` | harness/scripts/capability-stamp.py · tool=Write · session=c82ce215 · actor=agent · prev=776e15fbfdb3bab2a1cd2a793014ef3 |
-| 2026-07-14 09:44:02 | `file.write` | fdk/tools/medic.py · tool=Edit · session=c82ce215 · actor=agent · prev=ff298eec6ca74341b303f9046fc74c72cc29382380744dff0 |
-| 2026-07-14 09:44:07 | `file.write` | fdk/tools/medic.py · tool=Edit · session=c82ce215 · actor=agent · prev=0d12a9984c18390cd6c6ef89346af677d97987e13f3406547 |
-| 2026-07-14 09:46:11 | `file.write` | fdk/docs/fresh-install-gate.md · tool=Edit · session=c82ce215 · actor=agent · prev=23e0874708e15019cb0f7776bdd442be5a0f3 |
-| 2026-07-14 09:54:30 | `file.write` | harness/poc-vendor-neutral/install.sh · tool=Edit · session=c82ce215 · actor=agent · prev=91629bf081ba6b6f6b0a27c1bc81a3 |
-| 2026-07-14 09:55:57 | `file.write` | fdk/docs/fresh-install-gate.md · tool=Edit · session=c82ce215 · actor=agent · prev=6dd5ca3435aa993a417da377b165fa51cb1e3 |
-| 2026-07-14 10:04:52 | `file.write` | harness/scripts/capability-stamp.py · tool=Edit · session=c82ce215 · actor=agent · prev=93f22057d17c0fac8ae76aec6e255b2f |
-| 2026-07-14 10:05:04 | `file.write` | harness/scripts/capability-stamp.py · tool=Edit · session=c82ce215 · actor=agent · prev=ec7b2c2e00fb8e4890186ad0d569f4e7 |
-| 2026-07-14 10:06:51 | `file.write` | harness/scripts/capability-stamp.py · tool=Edit · session=c82ce215 · actor=agent · prev=51025d9e5f027c3f65e425180bbbf22c |
-| 2026-07-14 10:07:02 | `file.write` | harness/scripts/capability-stamp.py · tool=Edit · session=c82ce215 · actor=agent · prev=4ea76eb165222ec9e122d32ddd5602a0 |
-| 2026-07-14 10:09:49 | `file.write` | fdk/docs/fresh-install-gate.md · tool=Edit · session=c82ce215 · actor=agent · prev=384139efab0cf93e49d2c3368caff77bd09c8 |
 | 2026-07-14 13:23:36 | `file.write` | llmwiki/wiki/sources/draft/110726-shipped-vs-documented-parity.md · tool=Write · session=c82ce215 · actor=agent · prev=6 |
 | 2026-07-14 13:24:12 | `file.write` | harness/scripts/fresh-install-smoke.sh · tool=Edit · session=c82ce215 · actor=agent · prev=159e26e39aa2ccb52e4b5b0ea41af |
 | 2026-07-14 13:25:51 | `file.write` | fdk/docs/fresh-install-gate.md · tool=Edit · session=c82ce215 · actor=agent · prev=fafdf5059f6b3308e3deef2086a485e995377 |
@@ -59,6 +31,34 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-14 21:47:49 | `file.write` | llmwiki/html/140726-propose-plan-split-seq.html · tool=Edit · session=36e6562b · actor=agent · prev=2d410078f69274cf6ea4 |
 | 2026-07-14 21:47:56 | `file.write` | llmwiki/wiki/sources/draft/140726-propose-plan-split-superpowers.md · tool=Edit · session=36e6562b · actor=agent · prev= |
 | 2026-07-14 21:48:27 | `file.write` | llmwiki/wiki/sources/draft/140726-propose-plan-split-superpowers.md · tool=Edit · session=36e6562b · actor=agent · prev= |
+| 2026-07-14 21:50:43 | `task.set` |  · task=T-260714-01 · state=approved · note=gate: user duyệt · actor=agent · prev=e00c2bbdf2ce2b4e61cd764f3c9e32e1273127 |
+| 2026-07-14 21:51:18 | `file.write` | skills/propose/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=b019863b9b4f8f6a476aa9679d2854c23621a41ae94a |
+| 2026-07-14 21:51:33 | `file.write` | skills/propose/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=eb4d62cd33b0062c14feb516ee97f0860899850cd095 |
+| 2026-07-14 21:52:44 | `file.write` | skills/plan/SKILL.md · tool=Write · session=36e6562b · actor=agent · prev=2b978735aaaa848bc08003de350b0b0f212ab223966b40 |
+| 2026-07-14 21:53:54 | `file.write` | fdk/tools/docs-curate.py · tool=Edit · session=36e6562b · actor=agent · prev=47b7254222b42ee85914d0ae8cc7007a42d35244bbe |
+| 2026-07-14 21:54:01 | `file.write` | fdk/tools/docs-curate.py · tool=Edit · session=36e6562b · actor=agent · prev=5ec9577fa73c9798aeb7a4af097039abd2c75d69c40 |
+| 2026-07-14 21:54:07 | `file.write` | fdk/tools/docs-curate.py · tool=Edit · session=36e6562b · actor=agent · prev=f7d79e68051024dd9b529aad0304bb56bc73b99781f |
+| 2026-07-14 21:54:11 | `file.write` | fdk/tools/docs-curate.py · tool=Edit · session=36e6562b · actor=agent · prev=f5e65f9b2715eaeb385d17539f46632edefc11973a0 |
+| 2026-07-14 21:54:43 | `file.write` | harness/validators/proposal_complete.py · tool=Edit · session=36e6562b · actor=agent · prev=6e27460ea359eea16fabef6e0c17 |
+| 2026-07-14 21:55:03 | `file.write` | harness/validators/proposal_complete.py · tool=Edit · session=36e6562b · actor=agent · prev=9e129e114857967390f7d6a6f7e3 |
+| 2026-07-14 21:55:36 | `file.write` | harness/validators/proposal_complete.py · tool=Edit · session=36e6562b · actor=agent · prev=810598e4f622d940bb62e766b9ad |
+| 2026-07-14 21:55:45 | `file.write` | harness/validators/proposal_complete.py · tool=Edit · session=36e6562b · actor=agent · prev=279e359e3cc38b72fd3da969123b |
+| 2026-07-14 21:55:53 | `file.write` | harness/validators/proposal_complete.py · tool=Edit · session=36e6562b · actor=agent · prev=905eb1073091c1ef487893980e50 |
+| 2026-07-14 21:56:15 | `file.write` | harness/validators/proposal_complete.py · tool=Edit · session=36e6562b · actor=agent · prev=243855303258f808d9a69f58458e |
+| 2026-07-14 21:56:33 | `file.write` | llmwiki/wiki/sources/draft/140726-propose-plan-split-superpowers.md · tool=Edit · session=36e6562b · actor=agent · prev= |
+| 2026-07-14 21:56:52 | `file.write` | harness/validators/proposal_complete.py · tool=Edit · session=36e6562b · actor=agent · prev=3ddddcc4fc66e88429165811a083 |
+| 2026-07-14 21:57:23 | `file.write` | harness/policy.yaml · tool=Edit · session=36e6562b · actor=agent · prev=1e1830cf45c41bcb3259aa42f6bdb5826751e4e0274db677 |
+| 2026-07-14 21:57:38 | `file.write` | harness/poc-vendor-neutral/policy.yaml · tool=Edit · session=36e6562b · actor=agent · prev=e837daecbf386c68e79993f80a397 |
+| 2026-07-14 21:57:56 | `file.write` | skills/orca-workflow/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=e3e50a8fb0f59fe24d7cd06e8353aff0bcc044 |
+| 2026-07-14 21:58:37 | `file.write` | harness/scripts/sync-skills.py · tool=Edit · session=36e6562b · actor=agent · prev=8ae219faeb3e44b1448bd7fc6a658a6aa9372 |
+| 2026-07-14 22:04:07 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=36e6562b · actor=agent · prev=2825b47fe58da25521a601a4ad83a213cd |
+| 2026-07-14 22:05:04 | `file.write` | harness/poc-vendor-neutral/test-broad.sh · tool=Edit · session=36e6562b · actor=agent · prev=a21e2839dda0669f0bab1509685 |
+| 2026-07-14 22:06:03 | `file.write` | harness/scripts/harness-doctor.py · tool=Edit · session=36e6562b · actor=agent · prev=679b39554cc6cfa09655652d982ec0fa1c |
+| 2026-07-14 22:14:29 | `file.write` | skills/plan/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=3465b9ee8f5386c8bdb10119766a34508b0ef68fb6f2a61 |
+| 2026-07-14 22:14:46 | `file.write` | llmwiki/html/140726-propose-plan-split-seq.html · tool=Edit · session=36e6562b · actor=agent · prev=18a2cce75119a5161613 |
+| 2026-07-14 22:15:29 | `file.write` | llmwiki/html/140726-propose-plan-split-seq.html · tool=Edit · session=36e6562b · actor=agent · prev=1096162b331c100c0ab8 |
+| 2026-07-14 22:16:09 | `file.write` | llmwiki/wiki/sources/draft/140726-propose-plan-split-superpowers.md · tool=Edit · session=36e6562b · actor=agent · prev= |
+| 2026-07-14 22:16:22 | `file.write` | llmwiki/wiki/sources/draft/140726-propose-plan-split-superpowers.md · tool=Edit · session=36e6562b · actor=agent · prev= |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -289,3 +289,9 @@ Giải issue `030726-skill-resolve-supplychain` (trục #5 frontier-gap-scan, Ch
 - B3: gộp format review 1-dòng vào khối B1 (không đẻ skill song song — /simplify là built-in). fdk-problem-tree +node p-24 (solved 2/3 trụ). medic --ci: 9/9 xanh.
 
 - 2026-07-12 · frontier-scan #3 · quét 5 WebSearch, đối chiếu 8 trục vs kỳ #2 (04/07). Diff: không trục nào tụt hạng, không trục mới; 5 trục Thua/Chớm đều đã có issue mở chỉ còn 3 trục mở GH#10/#11/#12; đính chính: GH#9 (Memory) + GH#13 (Skill-security) đã CLOSED có code thật, kỳ #2 chép nhầm nhãn Thua/Chớm → cập nhật bằng chứng, không raise trùng (R7-f). Bằng chứng mới: Skill-security số liệu cứng (42.447 skill 26.1% lỗ hổng, Antiy 1.184 skill độc ClawHub, 80% lệch khai-báo↔hành-vi), Orchestration mốc scale (Kimi K2.5 100 sub-agent song song), Memory blueprint (Zep/Graphiti temporal KG + BEAM/LoCoMo/LongMemEval), Self-Harness/ComfyClaw/MetaSkill-Evolve (vẫn buộc verifier độc lập). Report: llmwiki/html/overstack-vs-world-30d.html.
+
+## 2026-07-14 — R18 plan-executable + /fdk-uat (UAT THẬT, PASS)
+- Lỗ: nhánh PLAN của R7 chỉ sống trong validator Python; downstream chạy engine khai báo → luật KHÔNG tới tay người cài. Cổng vẫn xanh vì rule_parity chỉ so danh sách rule id.
+- Fix: R18 khai ở cả hai policy (khai báo travel downstream + production gác từng task). Bite-test 2 tầng: doctor 18/18 rails, test-broad 72/72.
+- /fdk-uat: skill UAT thật — push trước (đường remote chỉ tồn tại sau push), test sau, không pass thì gỡ commit khỏi remote.
+- UAT chạy thật trên dự án TRỐNG cài bằng curl từ GitHub: 3 trụ đủ · test-broad 72/72 · R18 CẮN đúng lý do · 3 skill orchestration reachable · orca runtime UP · 84 skill global · 18 rule. PASS → giữ commit c5efc57.
