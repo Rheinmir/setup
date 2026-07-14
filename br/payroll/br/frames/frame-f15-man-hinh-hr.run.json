@@ -9,7 +9,7 @@
   "scope_clean": true,
   "out_of_scope_files": [],
   "attempted_out_of_scope": [],
-  "commit": "ecf5f96adc30f159a16575082bd628019ddc8273",
+  "commit": "49418520c3fe25f28fdb5356792008a6ef3cdc46",
   "verify_cmd": "python3 -m tests.test_f15",
   "revise_cmd": "python3 \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/fdk/tools/br-revise.py\" run --frame \"br/frames/frame-f15-man-hinh-hr.md\" --template \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/skills/br/assets/revise-prompt.md\" --verify \"python3 -m tests.test_f15\" --verify-output \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/.frame-f15-man-hinh-hr.verify.out\" --cwd \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll\"",
   "guards": {
@@ -27,27 +27,27 @@
   "state_paths": [
     "app/ui.py"
   ],
-  "started_at": "2026-07-13T18:27:21Z",
-  "ended_at": "2026-07-13T18:29:28Z",
-  "elapsed_s": 127.1518,
+  "started_at": "2026-07-14T01:02:20Z",
+  "ended_at": "2026-07-14T01:04:35Z",
+  "elapsed_s": 135.3328,
   "iterations": [
     {
       "iter": 1,
-      "ts": "2026-07-13T18:27:21Z",
+      "ts": "2026-07-14T01:02:21Z",
       "verify_exit": 1,
-      "duration_s": 0.1309,
-      "verify_output_tail": "E\n======================================================================\nERROR: setUpClass (__main__.TestUI)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/tests/test_f15.py\", line 11, in setUpClass\n    cls.srv = ui.build_server(0)          # cổng 0 = OS tự cấp, không đụng cổng đang dùng\nAttributeError: module 'app.ui' has no attribute 'build_server'\n\n----------------------------------------------------------------------\nRan 0 tests in 0.000s\n\nFAILED (errors=1)\n",
-      "state_hash": "e83c9f66b7602ec70eb57335e31493f91e8b4a0779a4b76e03c90b197cc2287b",
+      "duration_s": 0.6018,
+      "verify_output_tail": "================================================\nFAIL: test_tuong_phan_chu_dat_AAA_o_ca_hai_theme (__main__.TestUI)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/tests/test_f15.py\", line 146, in test_tuong_phan_chu_dat_AAA_o_ca_hai_theme\n    self.assertIsNotNone(bg, f\"theme {ten}: thiếu --bg\")\nAssertionError: unexpectedly None : theme sáng: thiếu --bg\n\n----------------------------------------------------------------------\nRan 15 tests in 0.514s\n\nFAILED (failures=7)\n",
+      "state_hash": "dab7032c40b6e47ba1b582c0059961b253c6b07f03edf245a482bda98825647e",
       "unchanged_streak": 0,
       "revise_exit": 0,
-      "revise_output_tail": "route trên `http.server` stdlib — `/` bảng lương, `/payslip/<mã>`, `/trace/<mã>/<code>` dựng cây phụ thuộc đệ quy từ `engine.bang_luong()` (công thức + clause BR lấy từ registry, không chép lại). Tiền format kiểu VN qua `Decimal`, cột `tabular-nums`. Theme: `data-theme` set trong `<head>` trước khi vẽ (chống FOUC), mặc định theo `prefers-color-scheme`, nhớ bằng `localStorage`.\n\nBỏ qua: đăng nhập/phân quyền, chọn kỳ trên UI (`PERIOD` cố định `2026-03` — kỳ duy nhất có dữ liệu vào); thêm khi có nhiều kỳ.\nPermission deny rule \"MultiEdit(./llmwiki/raw/**)\" matches no known tool — check for typos.\n"
+      "revise_output_tail": "sẵn):\n- Token màu ở `:root` và `[data-theme=dark]`: `--bg/--ink/--muted` đạt WCAG AAA (sáng 13.55:1 và 7.46:1; tối 13.24:1 và 7.96:1), `--accent` lật theo theme.\n- Neumorphism: cặp `--sh-light`/`--sh-dark` cho mọi khối nổi, trạng thái lõm `inset` cho hàng hover và nút nhấn, bo góc ≥12px, bỏ viền `1px solid`, card dùng chung nền `--bg`.\n- Font `Plus Jakarta Sans` (bỏ system-ui làm mặt chính, giữ làm fallback).\n\nBỏ qua: web-font file/CDN — chỉ khai `font-family`, thêm khi cần bản render offline đúng chữ.\nPermission deny rule \"MultiEdit(./llmwiki/raw/**)\" matches no known tool — check for typos.\n"
     },
     {
       "iter": 2,
-      "ts": "2026-07-13T18:29:27Z",
+      "ts": "2026-07-14T01:04:34Z",
       "verify_exit": 0,
-      "duration_s": 0.5779,
-      "verify_output_tail": "......\n----------------------------------------------------------------------\nRan 6 tests in 0.511s\n\nOK\n",
+      "duration_s": 0.6466,
+      "verify_output_tail": "...............\n----------------------------------------------------------------------\nRan 15 tests in 0.516s\n\nOK\n",
       "state_hash": null,
       "unchanged_streak": 0,
       "confirm_exits": [
