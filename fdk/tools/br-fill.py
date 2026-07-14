@@ -243,13 +243,14 @@ def main(argv=None):
     f = sub.add_parser("fill", help="đề xuất điền field missing từ registry defaults")
     f.add_argument("--root", default=".")
     f.add_argument("--json", action="store_true")
-    c = sub.add_parser("check-contract", help="checksum hợp đồng S1–S10 ↔ clause (G1)")
+    c = sub.add_parser("check-contract", aliases=["check"],
+                       help="checksum hợp đồng S1–S10 ↔ clause (G1)")
     c.add_argument("--root", default=".")
     sub.add_parser("selftest")
     a = ap.parse_args(argv)
     if a.cmd == "fill":
         return cmd_fill(Path(a.root), a.json)
-    if a.cmd == "check-contract":
+    if a.cmd in ("check-contract", "check"):
         return cmd_check_contract(Path(a.root))
     return cmd_selftest()
 

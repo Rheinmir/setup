@@ -43,7 +43,7 @@ Runtime artifacts sống ở `br/` tại gốc project (không phải trong skil
 3. Gap-diff: field `missing`/`conflict` → sinh bộ câu hỏi. Ghi 2 file (cùng số thứ tự NNN):
    - `br/interview/NNN-questions.html` — xem theo section, có giải nghĩa thuật ngữ, in full-path (R16), dark-mode. CHỈ hỏi phần thiếu.
    - `br/interview/NNN-answers.md` — block điền theo field-id (vd `## S4.2` … khoảng trống), để user gõ câu trả lời.
-3b. **`--proactive` (T-260714-01)** — user muốn máy điền phần thiếu thay vì hỏi hết: chạy `python3 fdk/tools/br-fill.py fill --root .` (tất định, không model). Tool tra registry defaults (`skills/br/assets/defaults.yaml` — bảng 26 điều kiện loop + convention github/spec-kit; project override `br/defaults.yaml` thắng khi trùng field) và in 2 nhóm:
+3b. **`--proactive` (T-260714-01, gọi tắt `/br auto`)** — user muốn máy điền phần thiếu thay vì hỏi hết: chạy `python3 fdk/tools/br-fill.py fill --root .` (tất định, không model). Tool tra registry defaults (`skills/br/assets/defaults.yaml` — bảng 26 điều kiện loop + convention github/spec-kit; project override `br/defaults.yaml` thắng khi trùng field) và in 2 nhóm:
    - **ĐỀ XUẤT MÁY ĐIỀN** → dán vào `NNN-answers.md`, GIỮ NGUYÊN `filled_by: <source>:<refs>` + `verified: false` từng mục (kỷ luật lens-fill áp cho mọi tầng máy điền).
    - **CÂU HỎI THẬT** (field carve-out — auth/quyền, trust boundary, tiền — và field không có default): chọn **≤5 câu** theo Impact × Uncertainty (carve-out đã xếp trước, chiếm suất hỏi trước) đưa vào questions.html; phần vượt trần thì lens-fill (bước 5). Carve-out KHÔNG BAO GIỜ nhận giá trị máy — kể cả registry có entry, kể cả lens.
 4. **STOP** — báo user mở HTML xem + điền answers.md.
