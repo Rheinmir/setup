@@ -32,6 +32,34 @@ Lý do tách (đối chiếu `obra/superpowers`, tỷ lệ spec:plan ≈ 1:8 —
    - `## Non-goals` — cái gì cố ý KHÔNG làm. Không có mục này thì scope trôi lúc thi hành.
    - `## Approaches` — 2–3 phương án **khác nhau về bản chất** + tradeoff từng cái + phương án chọn và vì sao. **Cấm chọn thầm.**
    - `## Plan` — tasks as `- [ ]` checklist items
+   - `## Requirements (FR)` — **id ổn định** cho từng yêu cầu chức năng: `**FR-001**: Hệ thống PHẢI …`. Đây là neo để PLAN truy vết ngược (R18 chặn PLAN bỏ sót id nào).
+   - `## Success criteria (SC)` — **id ổn định** cho từng tiêu chí: `**SC-001**: …`. Xem mục "Tiêu chí phải đo NGƯỜI, không đo MÁY" bên dưới.
+   - `## Assumptions` — mọi trường **user không nói mà model tự điền**, mỗi dòng gắn tag **`(default)`**. Xem mục "Tự điền hay hỏi" bên dưới.
+
+## Tự điền hay hỏi — mặc định là TỰ ĐIỀN
+User đã mô tả hết những gì họ biết. Đừng phỏng vấn họ về thứ họ không biết — **tự điền mặc định hợp lý, rồi KHAI RA là mình điền**:
+
+- **`(default)`** — model tự chọn. Cứ chạy tiếp, không hỏi. Người duyệt liếc `## Assumptions` là phân biệt được ngay đâu là lời họ, đâu là lời máy, và sửa dòng nào họ không đồng ý.
+- **`[CẦN LÀM RÕ: <câu hỏi cụ thể>]`** — model **TỪ CHỐI đoán**, đặt thẳng vào chỗ đó trong SPEC. Chỉ dùng cho nhóm mà một mặc định sai là **hỏng kiến trúc hoặc hỏng người dùng**, khớp carve-out của `CLAUDE.md`:
+  - cơ chế xác thực / phân quyền (ai được làm gì)
+  - lưu trữ dữ liệu: lưu gì, ở đâu, bao lâu, ai đọc được
+  - tiền / thanh toán / hạn mức
+  - thứ có hệ quả pháp lý hoặc tuân thủ
+  - bất kỳ ranh giới tin cậy nào (nhập liệu từ ngoài, biên hệ thống)
+
+  **R7-n chặn cổng duyệt nếu SPEC còn `[CẦN LÀM RÕ]` chưa được trả lời.** User trả lời → thay bằng giá trị thật; user bảo "cứ đoán đi" → hạ xuống `(default)` **một cách có chủ ý**, có ghi vết.
+
+Sai cái nút màu thì sửa ba mươi giây. Sai cơ chế auth thì cái `(default)` đó lặng lẽ trở thành một quyết định kiến trúc, và người duyệt lướt qua vì nó *trông như đã xong*. `(default)` một mình là cái máy hợp thức hoá phỏng đoán; nó chỉ an toàn khi đi kèm `[CẦN LÀM RÕ]`.
+
+**Interview chỉ chạy khi user YÊU CẦU** (`/br interview`) — và khi chạy thì trần **5 câu**, chọn theo (Impact × Uncertainty).
+
+## Tiêu chí phải đo NGƯỜI, không đo MÁY
+`SC-xxx` phải **đo được** và **không dính công nghệ** — nói người dùng nhận được gì, không nói cái máy làm gì:
+
+- ✅ "User hoàn tất tạo tài khoản dưới 2 phút" · "chịu 1000 người đồng thời không suy giảm" · "giảm 50% ticket hỗ trợ về X"
+- ❌ "chạy `pytest` ra exit 0" · "validator trả về 2" — đó là đo **cái máy**. Một hệ thống có thể xanh toàn tập mà vẫn vô dụng.
+
+Cách kiểm ở tầng máy **vẫn ghi**, nhưng ghi như **bằng chứng** của `SC-xxx`, không thay thế nó.
    - `## Agent Task Assignment` — table `| Task | Agent (CLI) | Lý do chọn | Status |`, one row per task, **no empty Agent cell**, Status=pending. Pick agents by cost table; if all on one agent, say why.
    - `**Sequence diagram:**` link to companion `.html` (must exist on disk)
    - **Task ID bền (Trụ 3 — best-effort, fail-open):** `python3 harness/scripts/code-logger.py --task new title="<feature>"` → in `T-YYMMDD-NN`; ghi vào frontmatter `task: T-YYMMDD-NN`. Lệnh **fail-open** — install cũ thiếu `--task` hoặc store lỗi → in "bỏ qua", cứ để trống `task:`, KHÔNG chặn propose. Đây là id mà gate/dispatch/verify dùng để advance vòng đời + neo vào audit trail bất biến (events.jsonl chained).

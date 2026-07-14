@@ -244,12 +244,17 @@ fi
 
 # ── (tùy chọn) cài skill llmwiki (GLOBAL — khác phạm vi với harness theo-project) ──
 if [ "$WITH_SKILLS" = 1 ]; then
-  log "+ cài bộ skill llmwiki (global, qua npx skills)"
+  # Ref cài skill. Mặc định GIỮ NGUYÊN `#orca` — đây là đường cài của mọi người dùng thật.
+  # Mở override để test được một nhánh khác (canary UAT): không có nó thì cài-từ-nhánh-X vẫn
+  # kéo skill của `orca` → bài UAT chấm bản CŨ rồi báo PASS cho bản MỚI. Cổng nói dối mà vẫn
+  # xanh còn tệ hơn không có cổng. HARNESS_BASE / REPO_RAW đã override được; dòng này thì chưa.
+  SKILLS_REF="${SKILLS_REF:-rheinmir/setup#orca}"
+  log "+ cài bộ skill llmwiki (global, qua npx skills — ref: $SKILLS_REF)"
   if command -v npx >/dev/null; then
-    npx -y skills add rheinmir/setup#orca --global --all 2>&1 | tail -4 | sed 's/^/    /' \
-      || warn "  cài skill lỗi — chạy tay: npx skills add rheinmir/setup#orca --global --all"
+    npx -y skills add "$SKILLS_REF" --global --all 2>&1 | tail -4 | sed 's/^/    /' \
+      || warn "  cài skill lỗi — chạy tay: npx skills add $SKILLS_REF --global --all"
   else
-    warn "  không có npx — cài skill tay: npx skills add rheinmir/setup#orca --global --all"
+    warn "  không có npx — cài skill tay: npx skills add $SKILLS_REF --global --all"
   fi
 fi
 

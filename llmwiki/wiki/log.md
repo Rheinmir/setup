@@ -19,17 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-14 13:23:36 | `file.write` | llmwiki/wiki/sources/draft/110726-shipped-vs-documented-parity.md · tool=Write · session=c82ce215 · actor=agent · prev=6 |
-| 2026-07-14 13:24:12 | `file.write` | harness/scripts/fresh-install-smoke.sh · tool=Edit · session=c82ce215 · actor=agent · prev=159e26e39aa2ccb52e4b5b0ea41af |
-| 2026-07-14 13:25:51 | `file.write` | fdk/docs/fresh-install-gate.md · tool=Edit · session=c82ce215 · actor=agent · prev=fafdf5059f6b3308e3deef2086a485e995377 |
-| 2026-07-14 13:26:21 | `file.write` | llmwiki/wiki/sources/draft/110726-shipped-vs-documented-parity.md · tool=Edit · session=c82ce215 · actor=agent · prev=ea |
-| 2026-07-14 13:29:36 | `file.write` | harness/scripts/fresh-install-smoke.sh · tool=Edit · session=c82ce215 · actor=agent · prev=c29f03e39896e3727aefe5adbeed1 |
-| 2026-07-14 13:30:26 | `file.write` | fdk/docs/fresh-install-gate.md · tool=Edit · session=c82ce215 · actor=agent · prev=de90ec999f113b0b3312d5964604ffb4c0750 |
-| 2026-07-14 21:43:56 | `task.new` |  · task=T-260714-01 · title=propose/plan split chuẩn superpowers · state=proposed · actor=agent · prev=901451629e4a18adc |
-| 2026-07-14 21:45:33 | `file.write` | llmwiki/wiki/sources/draft/140726-propose-plan-split-superpowers.md · tool=Write · session=36e6562b · actor=agent · prev |
-| 2026-07-14 21:47:14 | `file.write` | llmwiki/html/140726-propose-plan-split-seq.html · tool=Write · session=36e6562b · actor=agent · prev=44374ffa3b0816e4c7f |
-| 2026-07-14 21:47:49 | `file.write` | llmwiki/html/140726-propose-plan-split-seq.html · tool=Edit · session=36e6562b · actor=agent · prev=2d410078f69274cf6ea4 |
-| 2026-07-14 21:47:56 | `file.write` | llmwiki/wiki/sources/draft/140726-propose-plan-split-superpowers.md · tool=Edit · session=36e6562b · actor=agent · prev= |
 | 2026-07-14 21:48:27 | `file.write` | llmwiki/wiki/sources/draft/140726-propose-plan-split-superpowers.md · tool=Edit · session=36e6562b · actor=agent · prev= |
 | 2026-07-14 21:50:43 | `task.set` |  · task=T-260714-01 · state=approved · note=gate: user duyệt · actor=agent · prev=e00c2bbdf2ce2b4e61cd764f3c9e32e1273127 |
 | 2026-07-14 21:51:18 | `file.write` | skills/propose/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=b019863b9b4f8f6a476aa9679d2854c23621a41ae94a |
@@ -59,6 +48,17 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-14 22:15:29 | `file.write` | llmwiki/html/140726-propose-plan-split-seq.html · tool=Edit · session=36e6562b · actor=agent · prev=1096162b331c100c0ab8 |
 | 2026-07-14 22:16:09 | `file.write` | llmwiki/wiki/sources/draft/140726-propose-plan-split-superpowers.md · tool=Edit · session=36e6562b · actor=agent · prev= |
 | 2026-07-14 22:16:22 | `file.write` | llmwiki/wiki/sources/draft/140726-propose-plan-split-superpowers.md · tool=Edit · session=36e6562b · actor=agent · prev= |
+| 2026-07-14 22:28:14 | `file.write` | harness/scripts/harness-doctor.py · tool=Edit · session=36e6562b · actor=agent · prev=9a1630aa913519cd086a5db99cd5ae52a9 |
+| 2026-07-14 22:28:22 | `file.write` | harness/scripts/harness-doctor.py · tool=Edit · session=36e6562b · actor=agent · prev=52e0113157fdff40e31fc1b255d6dabf7e |
+| 2026-07-14 22:28:35 | `file.write` | harness/poc-vendor-neutral/policy.yaml · tool=Edit · session=36e6562b · actor=agent · prev=fb65049fba780ffdfc9797d3ff73a |
+| 2026-07-14 22:28:47 | `file.write` | harness/policy.yaml · tool=Edit · session=36e6562b · actor=agent · prev=19c88d5f7f1c4fb7a30f6f9eb525b96d846d9399abadb6a0 |
+| 2026-07-14 22:28:58 | `file.write` | harness/poc-vendor-neutral/test-broad.sh · tool=Edit · session=36e6562b · actor=agent · prev=194cdfc56244539dc85f43dffcc |
+| 2026-07-14 22:29:58 | `file.write` | skills/plan/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=84bf00e67069288b272d94735752993ff6498eeb5a167b1 |
+| 2026-07-14 22:31:00 | `file.write` | skills/fdk-uat/SKILL.md · tool=Write · session=36e6562b · actor=agent · prev=4d4d7378f814a1bb43febdcc0129a0d8ad409bce705 |
+| 2026-07-14 22:40:35 | `task.new` |  · task=T-260714-02 · title=hấp thụ spec-kit: FR/SC id + truy vết + tag default + fdk-uat canary · state=proposed · acto |
+| 2026-07-14 22:42:34 | `file.write` | llmwiki/wiki/sources/draft/140726-spec-kit-traceability.md · tool=Write · session=36e6562b · actor=agent · prev=f9918acd |
+| 2026-07-14 22:44:24 | `file.write` | llmwiki/html/140726-spec-kit-traceability-seq.html · tool=Write · session=36e6562b · actor=agent · prev=9ac07a5743bfa5c1 |
+| 2026-07-14 22:46:30 | `file.write` | llmwiki/html/140726-spec-kit-traceability-seq.html · tool=Edit · session=36e6562b · actor=agent · prev=033a80fb37eca4d47 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)

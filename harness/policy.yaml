@@ -59,6 +59,7 @@ rules:
       - "Link '**Sequence diagram**' trỏ file .html tồn tại trên disk"
       - "Số <div class=\"diagram-box\"> trong html ≥ số task '- [ ]' trong Plan"
       - "'## Global constraints' có nội dung — ràng buộc bao trùm, mỗi task ngầm mang theo khi dispatch"
+      - "KHÔNG còn '[CẦN LÀM RÕ: …]' chưa trả lời — model tự điền mặc định thì tag '(default)', nhưng nhóm auth/dữ-liệu/tiền/pháp-lý/ranh-giới-tin-cậy phải hỏi thật trước khi ra cổng duyệt"
       # nhánh PLAN (do /plan sinh — thứ bơm thẳng vào agent context=0)
       - "Mỗi '### Task' có '**Files:**' với đường dẫn thật + ≥1 khối code"
       - "PLAN ≥2 task → mỗi task bắt buộc '**Interfaces:**' (Consumes/Produces) — agent chỉ thấy task của nó"
@@ -76,6 +77,7 @@ rules:
       - "PLAN ≥2 task → mỗi task bắt buộc '**Interfaces:**' — agent chỉ thấy task CỦA NÓ, không khai chữ ký thì 2 agent đặt tên hàm lệch nhau"
       - "'## Global constraints' có nội dung (chép nguyên văn từ SPEC)"
       - "Cấm placeholder (TBD/TODO/'xử lý lỗi phù hợp'/'tương tự Task N'); tài liệu NÓI VỀ luật khai 'r7_meta: true' để miễn"
+      - "TRUY VẾT: mọi `FR-xxx` trong `## Requirements` của SPEC anh em phải được ≥1 task nhận qua `**Thoả:**` — bỏ sót là chặn, in đúng id. Không có SPEC anh em → fail-open"
     note: "Bản khai báo downstream (poc policy) chỉ gác ở mức FILE — engine vendor-neutral không diễn tả nổi check per-task. Kiểm từng task + cấm placeholder là đặc quyền của validator Python."
 
   - id: R8

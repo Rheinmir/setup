@@ -75,8 +75,33 @@ META_DOC_RE = re.compile(r"^r7_meta:\s*true\s*(?:#.*)?$", re.MULTILINE | re.IGNO
 FENCE_BLOCK_RE = re.compile(r"^```.*?^```", re.MULTILINE | re.DOTALL)
 
 
+# --- truy vết SPEC ↔ PLAN (spec-kit: id ổn định + coverage) ---
+FR_ID_RE = re.compile(r"\bFR-(\d{3})\b")
+THOA_RE = re.compile(r"^\s*\*\*Thoả:?\*\*(.*)$", re.MULTILINE)
+# unknown NGUY HIỂM: model từ chối đoán → phải được trả lời trước khi hỏi duyệt
+NEEDS_CLARIFY_RE = re.compile(r"\[CẦN LÀM RÕ:([^\]]*)\]")
+
+
 def is_plan(path) -> bool:
     return str(path).replace("\\", "/").endswith(PLAN_FILE_SUFFIX)
+
+
+def spec_of(plan_path):
+    """PLAN `<stem>-PLAN.md` → SPEC anh em `<stem>.md`. Không có → None (fail-open)."""
+    p = Path(plan_path)
+    spec = p.parent / (p.name[: -len(PLAN_FILE_SUFFIX)] + ".md")
+    return spec if spec.is_file() else None
+
+
+def fr_ids(text):
+    """Chỉ gom id trong section '## Requirements' — id nhắc trong văn xuôi (vd mục Risks)
+    KHÔNG phải một yêu cầu, quét cả file sẽ chặn nhầm."""
+    sec = None
+    for title in ("Requirements (FR)", "Requirements"):
+        sec = section(text, title)
+        if sec:
+            break
+    return sorted(set(FR_ID_RE.findall(sec))) if sec else []
 
 
 def is_meta_doc(text) -> bool:
@@ -153,6 +178,18 @@ def check(path):
     if not is_meta_doc(text):
         for hit in find_placeholders(strip_fences(text)):
             problems.append(f"(g) con placeholder {hit} — agent CLI re khong hoi lai duoc, no se DOAN roi im lang")
+
+    # (n) unknown NGUY HIEM chua duoc tra loi → KHONG duoc hoi duyet.
+    #     Model tu dien mac dinh la BINH THUONG (tag '(default)'), nhung nhom auth/du-lieu/tien/
+    #     phap-ly/ranh-gioi-tin-cay thi mot mac dinh sai = hong kien truc → phai hoi that.
+    if not is_meta_doc(text):
+        for m in NEEDS_CLARIFY_RE.finditer(strip_fences(text)):
+            line = text[: m.start()].count("\n") + 1
+            problems.append(
+                f"(n) con '[CAN LAM RO: {m.group(1).strip()[:60]}]' chua tra loi (dong {line}) — "
+                f"user phai tra loi, HOAC ha xuong tag '(default)' MOT CACH CO CHU Y. "
+                f"Khong duoc mang unknown nguy hiem ra cong duyet."
+            )
 
     # (f) FORCE-QUERY grounding (R7-f, ADR-009): draft proposed có Plan PHẢI có '## Context'
     #     có nội dung (>=20 ký tự) — tóm tắt wiki liên quan đã query. Chống propose "mù".
@@ -263,6 +300,25 @@ def check_plan(path, text):
     if not is_meta_doc(text):
         for hit in find_placeholders(strip_fences(text)):
             problems.append(f"(l) con placeholder {hit} — PLAN la thu bom thang vao agent, mo ho = doan sai im lang")
+
+    # (o) CONG TRUY VET: moi FR-xxx cua SPEC anh em phai duoc it nhat 1 task nhan.
+    #     Mot yeu cau troi mat giua hai task la loi tham lang nhat cua moi ke hoach —
+    #     no chi lo ra luc agent giao hang thieu, hoac te hon, luc user dung.
+    spec = spec_of(path)
+    if spec and tasks:
+        want = fr_ids(spec.read_text(encoding="utf-8", errors="replace"))
+        if want:
+            claimed = set()
+            for _, body in tasks:
+                for m in THOA_RE.finditer(body):
+                    claimed.update(FR_ID_RE.findall(m.group(1)))
+            missing = [i for i in want if i not in claimed]
+            if missing:
+                problems.append(
+                    f"(o) PLAN bo roi {len(missing)}/{len(want)} yeu cau cua SPEC: "
+                    + ", ".join("FR-" + i for i in missing)
+                    + f" — moi '### Task' phai khai '**Thoa:** FR-xxx'. SPEC: {spec.name}"
+                )
 
     if problems:
         print(

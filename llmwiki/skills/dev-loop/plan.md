@@ -70,6 +70,8 @@ Mỗi task:
 ````markdown
 ### Task N: <tên>
 
+**Thoả:** FR-001, FR-003
+
 **Files:**
 - Tạo: `đường/dẫn/chính/xác.py`
 - Sửa: `đường/dẫn/có/sẵn.py:123-145`
@@ -110,6 +112,8 @@ git add tests/đường/dẫn/test_x.py src/đường/dẫn/x.py
 git commit -m "feat: <việc cụ thể>"
 ```
 ````
+
+**Vì sao `**Thoả:**` là bắt buộc:** SPEC đánh id ổn định `FR-001`, `FR-002`… cho từng yêu cầu. Mỗi task khai mình gánh id nào → câu "phủ hết SPEC" ở Self-review thôi làm bằng mắt, nó thành **dữ liệu grep được**, và **R18 chặn** nếu có `FR-xxx` nào không task nào nhận (in ra đúng id bị bỏ rơi). Một yêu cầu trôi mất giữa hai task là lỗi thầm lặng nhất của mọi kế hoạch — nó chỉ lộ ra lúc agent giao hàng thiếu, hoặc tệ hơn, lúc user dùng.
 
 **Vì sao `Interfaces` là bắt buộc khi có ≥2 agent:** agent thi hành **chỉ nhìn thấy task của chính nó**. Không khai chữ ký thì hai agent song song đặt tên hàm lệch nhau và phần ghép vỡ — đây là lỗi *chắc chắn* xảy ra, không phải rủi ro.
 

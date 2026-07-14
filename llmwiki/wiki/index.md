@@ -120,3 +120,4 @@
 | [110726-auto-wire-eval-loop](sources/draft/110726-auto-wire-eval-loop.md) | draft | 2026-07-11 |
 | [110726-eval-blinding-grader-context](sources/draft/110726-eval-blinding-grader-context.md) | draft | 2026-07-11 |
 | [110726-gold-set-meta-eval-grader](sources/draft/110726-gold-set-meta-eval-grader.md) | draft | 2026-07-11 |
+| [140726-spec-kit-traceability](sources/draft/140726-spec-kit-traceability.md) | draft | 2026-07-14 |
