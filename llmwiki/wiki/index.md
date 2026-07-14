@@ -126,3 +126,6 @@
 | [120726-nghiem-thu-output](sources/draft/120726-nghiem-thu-output.md) | draft | 2026-07-12 |
 | [120726-memos-pipeline-run](sources/draft/120726-memos-pipeline-run.md) | draft | 2026-07-12 |
 | [140726-atomic-task-graph-distill](sources/draft/140726-atomic-task-graph-distill.md) | issue | Issue: Distill Atomic Task Graph (arXiv 2607.01942) — plan = DAG atomic task, sửa cục bộ subgraph, tái dùng subgraph |
+| [140726-br-proactive-fill](sources/draft/140726-br-proactive-fill.md) | draft | 2026-07-14 |
+| [140726-br-proactive-fill-PLAN](sources/draft/140726-br-proactive-fill-PLAN.md) | draft | 2026-07-14 |
+| [140726-br-proactive-fill-report](draft/orca/140726-br-proactive-fill-report.md) | draft | 2026-07-14 |

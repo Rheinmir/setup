@@ -19,11 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-14 01:20:07 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=5c0617989aea6198ab8000f0bf42 |
-| 2026-07-14 01:20:12 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=c90aafd708374594ca9a8cfc9aaf |
-| 2026-07-14 01:23:59 | `file.write` | skills/visual-qa/SKILL.md · tool=Edit · session=90a00343 · actor=agent · prev=9ae45b3138916b8d4bc2dd6c851fa8bfb2fc69d67a |
-| 2026-07-14 01:42:03 | `file.write` | skills/visual-qa/SKILL.md · tool=Edit · session=90a00343 · actor=agent · prev=d3954cd57ecb5a0f5c34d2a414705a8338a77c77b9 |
-| 2026-07-14 08:11:04 | `file.write` | skills/visual-qa/SKILL.md · tool=Edit · session=90a00343 · actor=agent · prev=edb6cdd5d6e44f7f7ca21e69bc2797a246f34e619b |
 | 2026-07-14 08:13:35 | `file.write` | llmwiki/html/140726-br-dieu-kien-day-chuyen.html · tool=Write · session=0506c618 · actor=agent · prev=cc98dff2e28575e213 |
 | 2026-07-14 08:13:49 | `file.write` | llmwiki/html/140726-br-dieu-kien-day-chuyen.html · tool=Edit · session=0506c618 · actor=agent · prev=28b4f21b403d984efdc |
 | 2026-07-14 08:46:36 | `file.write` | skills/design-twice/SKILL.md · tool=Write · session=90a00343 · actor=agent · prev=814759e84f6f00d7492c373a727a29c727e07e |
@@ -59,6 +54,11 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-14 21:33:12 | `commit.reconcile` |  · actor=system · agent_n=3 · human_n=1 · human=['llmwiki/skills/dev-loop/br.md'] · prev=9b5ca3195507b9ac9281f9e54ad3ffa |
 | 2026-07-14 21:33:12 | `commit.reconcile` |  · actor=system · agent_n=3 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=9b5ca3195507b9ac9281f9e54ad3ffa316f020cad |
 | 2026-07-14 21:33:12 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=0 · prev=9b5ca3195507b9ac9281f9e54ad3ffa316f020cadee505493355d5ee599f41dc · h=728a |
+| 2026-07-14 22:18:11 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=728a1418891d3a044355baf345b2ea816f4d09642 |
+| 2026-07-14 23:02:18 | `task.new` |  · task=T-260714-01 · title=br proactive fill — interview tự điền theo default/spec-kit + slice DAG · state=proposed · a |
+| 2026-07-14 23:05:24 | `file.write` | llmwiki/wiki/sources/draft/140726-br-proactive-fill.md · tool=Write · session=15a64d8b · actor=agent · prev=206e043e8957 |
+| 2026-07-14 23:09:46 | `file.write` | llmwiki/html/140726-br-proactive-fill-seq.html · tool=Write · session=15a64d8b · actor=agent · prev=b8c686895ae244da3ea7 |
+| 2026-07-14 23:10:01 | `file.write` | llmwiki/html/140726-br-proactive-fill-seq.html · tool=Edit · session=15a64d8b · actor=agent · prev=59835234e65a0f085828f |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -385,3 +385,9 @@ BR +N03(theme)+N04(file-first); 14 frame (n03/n04); contract 0 lệch. Neumorphi
 
 ## 2026-07-12 — Lume rebrand + neumorphism spec thật
 BR +N05; bỏ tên Memos+logo vẹt → Lume (logo SVG neumorphic); neumorphism.css viết lại theo spec superdesign (dual-shadow 9px/18px #bec3c9/#fff, inset, CTA phẳng #4d6bfe, focus-ring, AA) nhắm class thật .bg-card/[data-slot=button]/input. Rebuild+serve verify: title Lume, CSS markers đúng. Screenshot extension lỗi localhost (app serve 200 OK).
+
+## 2026-07-14 — propose — br-proactive-fill
+Draft SPEC T-260714-01: /br interview --proactive (fill-chain default→spec-kit→lens, trần 5 câu, carve-out) + compile checksum G1 + slice DAG (ATG mảnh 1). Chờ duyệt gate.
+
+## 2026-07-14 — orca-workflow — br-proactive-fill thi công xong
+T-260714-01 done: defaults.yaml (26 điều kiện + spec-kit) + br-fill.py (fill/check-contract/selftest) + SKILL.md Mode1 --proactive + Mode2 gate G1. Đo payroll: 12 câu → 4 câu, S7.5 máy điền, SC-001/004 PASS, medic KHOẺ.

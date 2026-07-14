@@ -43,6 +43,9 @@ Runtime artifacts sống ở `br/` tại gốc project (không phải trong skil
 3. Gap-diff: field `missing`/`conflict` → sinh bộ câu hỏi. Ghi 2 file (cùng số thứ tự NNN):
    - `br/interview/NNN-questions.html` — xem theo section, có giải nghĩa thuật ngữ, in full-path (R16), dark-mode. CHỈ hỏi phần thiếu.
    - `br/interview/NNN-answers.md` — block điền theo field-id (vd `## S4.2` … khoảng trống), để user gõ câu trả lời.
+3b. **`--proactive` (T-260714-01)** — user muốn máy điền phần thiếu thay vì hỏi hết: chạy `python3 fdk/tools/br-fill.py fill --root .` (tất định, không model). Tool tra registry defaults (`skills/br/assets/defaults.yaml` — bảng 26 điều kiện loop + convention github/spec-kit; project override `br/defaults.yaml` thắng khi trùng field) và in 2 nhóm:
+   - **ĐỀ XUẤT MÁY ĐIỀN** → dán vào `NNN-answers.md`, GIỮ NGUYÊN `filled_by: <source>:<refs>` + `verified: false` từng mục (kỷ luật lens-fill áp cho mọi tầng máy điền).
+   - **CÂU HỎI THẬT** (field carve-out — auth/quyền, trust boundary, tiền — và field không có default): chọn **≤5 câu** theo Impact × Uncertainty (carve-out đã xếp trước, chiếm suất hỏi trước) đưa vào questions.html; phần vượt trần thì lens-fill (bước 5). Carve-out KHÔNG BAO GIỜ nhận giá trị máy — kể cả registry có entry, kể cả lens.
 4. **STOP** — báo user mở HTML xem + điền answers.md.
 5. Nếu user bật `--lens-fill` (hoặc nói "cho chuyên gia điền mục chưa chắc"): bốc lens bằng `python3 harness/scripts/council.py roster --case product --json`, điền các field `missing` mà user đánh dấu "không chắc" → mỗi field đóng dấu `filled_by: lens:<tên>` + `verified: false`. KHÔNG trộn với câu trả lời thật của user.
 
@@ -50,7 +53,8 @@ Runtime artifacts sống ở `br/` tại gốc project (không phải trong skil
 1. Đọc `br/spec-filled.md` + `br/interview/*-answers.md` đã điền.
 2. Sinh `br/BR.md`: mỗi điều khoản có `clause_id` (kế thừa field-id, vd `S4.2`) + provenance (`raw|user|lens:<tên>`). Đầu file là bảng **"Giả định đang gánh"** liệt kê mọi clause `lens`/`assumed` (fail-fast: nhìn một phát biết đang cược gì).
    - **Sản phẩm có UI (S7.5)**: chốt một clause NFR (vd `N01 giao-diện`) TRỎ tới `br/DESIGN.md`, KHÔNG chép luật design vào BR. Đồng thời copy `skills/br/assets/design-template.md` → `br/DESIGN.md` và điền §1/§2/§4/§6/§7 cho sản phẩm (giữ nguyên §3/§5 kế thừa). BR = *phải có theme/design*; DESIGN.md = *design trông ra sao*.
-3. Sinh `br/BR.clauses.json`: `{clause_id: {provenance, assumed: bool}}` — monitor (`/br status`) đọc file này để tô cam clause assumed.
+3. Sinh `br/BR.clauses.json`: `{clause_id: {provenance, assumed: bool, fields: ["S4.2", …]}}` — `fields` khai field spec S1–S10 mà clause hiện thực (khoá của checksum hợp đồng); monitor (`/br status`) đọc file này để tô cam clause assumed. Bảng "Giả định đang gánh" **nhóm theo nguồn fill** (`default` / `spec-kit` / `lens`) để người duyệt thấy đang cược gì từ đâu.
+4. **Gate checksum hợp đồng (vá G1 — council c9dc13d):** `python3 fdk/tools/br-fill.py check-contract --root .` — mọi required field S1–S10 phải có clause đối ứng; ĐỎ là compile FAIL, sửa BR cho tới khi xanh, không có chuyện "compile xong mà hợp đồng thủng".
 
 ## Mode 3 — `/br slice`
 1. Đọc `br/BR.md`. ĐỀ XUẤT danh sách lát cắt: mỗi lát = {clause_ids, scope_code dự kiến (≤3 file), scope_test, acceptance_test, **depends_on**}. **STOP cho user duyệt/sửa/gộp/tách TỪNG lát** (người-trong-vòng-lặp — chốt chặn lỗi tương quan slicer). Lô đầu ≤ 3–5 frame.

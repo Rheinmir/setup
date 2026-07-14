@@ -13,6 +13,7 @@
         "C4.5",
         "C4.6"
       ],
+      "depends_on": [],
       "scope_code": [
         "app/params.py"
       ],
@@ -30,7 +31,8 @@
         "scope_clean": true,
         "out_of_scope_files": []
       },
-      "assumed_clauses": []
+      "assumed_clauses": [],
+      "waiting_on": []
     },
     {
       "frame_id": "frame-f02-lich-ky-cong",
@@ -41,6 +43,7 @@
         "C5.2",
         "C5.4"
       ],
+      "depends_on": [],
       "scope_code": [
         "app/lichky.py"
       ],
@@ -58,7 +61,8 @@
         "scope_clean": true,
         "out_of_scope_files": []
       },
-      "assumed_clauses": []
+      "assumed_clauses": [],
+      "waiting_on": []
     },
     {
       "frame_id": "frame-f03-cham-cong",
@@ -69,6 +73,7 @@
         "C6.2",
         "C6.3"
       ],
+      "depends_on": [],
       "scope_code": [
         "app/chamcong.py"
       ],
@@ -86,7 +91,8 @@
         "scope_clean": true,
         "out_of_scope_files": []
       },
-      "assumed_clauses": []
+      "assumed_clauses": [],
+      "waiting_on": []
     },
     {
       "frame_id": "frame-f04-luong-chinh",
@@ -99,6 +105,7 @@
         "C7.4",
         "C13.5"
       ],
+      "depends_on": [],
       "scope_code": [
         "app/luong.py"
       ],
@@ -118,7 +125,8 @@
       },
       "assumed_clauses": [
         "C13.5"
-      ]
+      ],
+      "waiting_on": []
     },
     {
       "frame_id": "frame-f05-suat-an",
@@ -129,6 +137,7 @@
         "C8.2",
         "C17.4"
       ],
+      "depends_on": [],
       "scope_code": [
         "app/com.py"
       ],
@@ -146,7 +155,8 @@
         "scope_clean": true,
         "out_of_scope_files": []
       },
-      "assumed_clauses": []
+      "assumed_clauses": [],
+      "waiting_on": []
     },
     {
       "frame_id": "frame-f06-phu-cap",
@@ -160,6 +170,7 @@
         "C8.7",
         "C17.4"
       ],
+      "depends_on": [],
       "scope_code": [
         "app/phucap.py"
       ],
@@ -206,7 +217,8 @@
           "br/memos/qa-clean/signin.png"
         ]
       },
-      "assumed_clauses": []
+      "assumed_clauses": [],
+      "waiting_on": []
     },
     {
       "frame_id": "frame-f07-tang-ca",
@@ -217,6 +229,7 @@
         "C9.2",
         "C9.3"
       ],
+      "depends_on": [],
       "scope_code": [
         "app/tangca.py"
       ],
@@ -234,7 +247,8 @@
         "scope_clean": true,
         "out_of_scope_files": []
       },
-      "assumed_clauses": []
+      "assumed_clauses": [],
+      "waiting_on": []
     },
     {
       "frame_id": "frame-f08-thuong-trich-quy",
@@ -244,6 +258,7 @@
         "C10.1",
         "C10.2"
       ],
+      "depends_on": [],
       "scope_code": [
         "app/thuong.py"
       ],
@@ -261,7 +276,8 @@
         "scope_clean": true,
         "out_of_scope_files": []
       },
-      "assumed_clauses": []
+      "assumed_clauses": [],
+      "waiting_on": []
     },
     {
       "frame_id": "frame-f09-bao-hiem",
@@ -275,6 +291,7 @@
         "C11.3",
         "C11.4"
       ],
+      "depends_on": [],
       "scope_code": [
         "app/baohiem.py"
       ],
@@ -292,7 +309,8 @@
         "scope_clean": true,
         "out_of_scope_files": []
       },
-      "assumed_clauses": []
+      "assumed_clauses": [],
+      "waiting_on": []
     },
     {
       "frame_id": "frame-f10-thue-tncn",
@@ -305,6 +323,7 @@
         "C12.2",
         "C12.3"
       ],
+      "depends_on": [],
       "scope_code": [
         "app/thue.py"
       ],
@@ -322,7 +341,8 @@
         "scope_clean": true,
         "out_of_scope_files": []
       },
-      "assumed_clauses": []
+      "assumed_clauses": [],
+      "waiting_on": []
     },
     {
       "frame_id": "frame-f11-tong-hop",
@@ -335,6 +355,7 @@
         "C13.4",
         "C13.5"
       ],
+      "depends_on": [],
       "scope_code": [
         "app/tonghop.py"
       ],
@@ -354,7 +375,8 @@
       },
       "assumed_clauses": [
         "C13.5"
-      ]
+      ],
+      "waiting_on": []
     },
     {
       "frame_id": "frame-f12-engine-dag",
@@ -366,6 +388,7 @@
         "C3.3",
         "C14.1"
       ],
+      "depends_on": [],
       "scope_code": [
         "app/engine.py"
       ],
@@ -383,7 +406,8 @@
         "scope_clean": true,
         "out_of_scope_files": []
       },
-      "assumed_clauses": []
+      "assumed_clauses": [],
+      "waiting_on": []
     },
     {
       "frame_id": "frame-f13-adapters",
@@ -392,6 +416,7 @@
       "clause_ids": [
         "C18.1"
       ],
+      "depends_on": [],
       "scope_code": [
         "app/adapters.py"
       ],
@@ -409,7 +434,8 @@
         "scope_clean": true,
         "out_of_scope_files": []
       },
-      "assumed_clauses": []
+      "assumed_clauses": [],
+      "waiting_on": []
     },
     {
       "frame_id": "frame-f14-snapshot-diff",
@@ -419,6 +445,7 @@
         "C16.1",
         "C16.2"
       ],
+      "depends_on": [],
       "scope_code": [
         "app/snapshot.py"
       ],
@@ -436,7 +463,8 @@
         "scope_clean": true,
         "out_of_scope_files": []
       },
-      "assumed_clauses": []
+      "assumed_clauses": [],
+      "waiting_on": []
     },
     {
       "frame_id": "frame-f15-man-hinh-hr",
@@ -447,6 +475,7 @@
         "C15.2",
         "C14.1"
       ],
+      "depends_on": [],
       "scope_code": [
         "app/ui.py"
       ],
@@ -460,11 +489,12 @@
         "changed_files": [
           "app/ui.py"
         ],
-        "commit": "ecf5f96adc30f159a16575082bd628019ddc8273",
+        "commit": "a3a816e9f087c12bf7bed834a70c901d889de760",
         "scope_clean": true,
         "out_of_scope_files": []
       },
-      "assumed_clauses": []
+      "assumed_clauses": [],
+      "waiting_on": []
     },
     {
       "frame_id": "frame-f99-lap-rap",
@@ -476,6 +506,7 @@
         "C17.3",
         "C17.6"
       ],
+      "depends_on": [],
       "scope_code": [
         "app/pipeline.py"
       ],
@@ -493,7 +524,8 @@
         "scope_clean": true,
         "out_of_scope_files": []
       },
-      "assumed_clauses": []
+      "assumed_clauses": [],
+      "waiting_on": []
     }
   ],
   "counts": {
@@ -758,5 +790,6 @@
       "assumed": false
     }
   },
-  "assumed_clause_count": 2
+  "assumed_clause_count": 2,
+  "waiting_frames": 0
 }
