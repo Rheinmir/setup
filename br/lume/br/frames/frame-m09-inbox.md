@@ -5,11 +5,12 @@ created_by: human
 kind: frame
 parent_br: br/lume/br/BR.md
 clause_ids: [M9]
-parent_br_hash: 115ad782c6d46903e9c0c38ec2492299b85e3a6a2c5f5f706e3766814e8ea7ed
+parent_br_hash: 5c7f64350a7d0bffced5cd1b77902cf85f5f7592c03b348423f41985a4d20a79
 muc_tieu: "Hộp thư hiển thị thông báo gửi tới người dùng (nhắc, phản hồi) và cho đánh dấu đã đọc/lưu trữ"
 scope_code: ["lume/store/inbox.go","lume/web/src/pages/Inboxes.tsx"]
 scope_test: ["(gate: xem acceptance_test)"]
 acceptance_test: "node skills/visual-qa/assets/route-shots.mjs --base http://localhost:5230 --route /inbox --assert --user demo --pass demo --out br/lume/qa-m09"
+depends_on: [frame-m01-auth]
 ui_role: screen
 ui_screen: inbox
 ---

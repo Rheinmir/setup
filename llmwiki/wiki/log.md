@@ -19,27 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-13 13:17:52 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=6460b294071463227b48f4a733f4 |
-| 2026-07-13 13:24:59 | `file.write` | skills/br/assets/design-template.md · tool=Edit · session=90a00343 · actor=agent · prev=b6f543894d2430179bdd0a45b4a8a297 |
-| 2026-07-13 16:45:32 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=ee87caa2ad31c142d1c312aeb685 |
-| 2026-07-13 16:45:51 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=246729a6cfb281ef764c67bcccaa |
-| 2026-07-13 16:45:57 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=a718f70af8e31ee8b700bae4cb4d |
-| 2026-07-13 16:49:56 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=2fb0ed2f39a74f4f86f56673862e |
-| 2026-07-13 16:50:02 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=49699ac5780eda28fe7b3e9fe4fe |
-| 2026-07-13 16:50:08 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=92510e05a7e08242b0f59b1edf63 |
-| 2026-07-13 16:50:16 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=227f1959ecc70db555fb4de142ab |
-| 2026-07-13 17:01:40 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=3e9c67e74f2eb3660ef55a2eb364 |
-| 2026-07-13 17:01:49 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=dfc9cfd93435418367f70c75f829 |
-| 2026-07-13 17:01:56 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=747cd2e8a9db343be54f24ad6bb4 |
-| 2026-07-13 17:05:49 | `file.write` | skills/visual-qa/SKILL.md · tool=Edit · session=90a00343 · actor=agent · prev=b69945795afee86ebe74cb595d1d2877d26453ffda |
-| 2026-07-13 17:06:04 | `file.write` | skills/visual-qa/SKILL.md · tool=Edit · session=90a00343 · actor=agent · prev=3909a77f918abff03c975a39c68bd6344b37c8d714 |
-| 2026-07-13 17:06:23 | `file.write` | skills/br/assets/design-template.md · tool=Edit · session=90a00343 · actor=agent · prev=546d931206b04d0d2d68a24046c80e1e |
-| 2026-07-14 01:16:52 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=27c6aa149c7ec2d421a0eb0a5062 |
-| 2026-07-14 01:17:03 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=e2bc90bcb14565ae386c8c96437d |
-| 2026-07-14 01:17:16 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=a4939119ce4dc65ddd51d2ada3bd |
-| 2026-07-14 01:17:24 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=84d24f255d309e6de93967117e39 |
-| 2026-07-14 01:17:39 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=fd1dc9e1672922b112fa9dc82cd1 |
-| 2026-07-14 01:17:44 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=f37d16a79d17bc8601909942654c |
 | 2026-07-14 01:17:59 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=26771b7fd9b87dd97839ee49ebfb |
 | 2026-07-14 01:18:39 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=a843bb47c754b2bbff52c1ec66bc |
 | 2026-07-14 01:18:49 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=ff6b3d786f5726dbc682760d2193 |
@@ -59,6 +38,27 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-14 11:11:25 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=2 · human=['llmwiki/skills/utils/visual-qa.md', 'llmwiki/CLAUDE.md'] · prev=a19dba |
 | 2026-07-14 11:11:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['skills/visual-qa/assets/package-lock.json', 'harness/scripts/sync-skil |
 | 2026-07-14 11:11:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/dev-loop/br.md', 'skills/visual-qa/assets/package.json' |
+| 2026-07-14 11:30:28 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=ed0b695d6dd3903f44b9100e21805e7b7a6990d38 |
+| 2026-07-14 11:32:35 | `file.write` | llmwiki/wiki/sources/draft/140726-atomic-task-graph-distill.md · tool=Write · session=c7f6e21c · actor=agent · prev=ee65 |
+| 2026-07-14 11:33:24 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=c7f6e21c · actor=agent · prev=1cc41cbdeb57b0a0da7ac28cfa183410ea333 |
+| 2026-07-14 11:34:15 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=c7f6e21c · actor=agent · prev=c244f97face47f722e3defc98fb37731e8fca2e56e1849 |
+| 2026-07-14 12:44:33 | `file.write` | fdk/tools/br-queue.py · tool=Edit · session=c7f6e21c · actor=agent · prev=d8c20a58170d8f9dd79d31c3267b7c8414548d8e75ece8 |
+| 2026-07-14 12:44:49 | `file.write` | fdk/tools/br-queue.py · tool=Edit · session=c7f6e21c · actor=agent · prev=382b001109d51a544de11bb7b24a2227120603de63ddd8 |
+| 2026-07-14 12:45:06 | `file.write` | fdk/tools/br-queue.py · tool=Edit · session=c7f6e21c · actor=agent · prev=6bb847a3f9d2190c2e237ebee9a2cb65e93cea221de660 |
+| 2026-07-14 12:45:21 | `file.write` | fdk/tools/br-queue.py · tool=Edit · session=c7f6e21c · actor=agent · prev=c1585ec5166a2fa3db8a638d6c65e46cfd3d99b5ccda31 |
+| 2026-07-14 12:45:35 | `file.write` | fdk/tools/br-queue.py · tool=Edit · session=c7f6e21c · actor=agent · prev=997f53e6d1beab91d50a32b62f377fda6a6f4c0eeec7c8 |
+| 2026-07-14 12:45:46 | `file.write` | fdk/tools/br-queue.py · tool=Edit · session=c7f6e21c · actor=agent · prev=918c5edd9c05526fed68da3cbd026c0a3e59e86f44afda |
+| 2026-07-14 12:46:10 | `file.write` | fdk/tools/br-queue.py · tool=Edit · session=c7f6e21c · actor=agent · prev=ae536c4f3bd18a5e2aaf14051ea23a8533b10324f47752 |
+| 2026-07-14 12:46:16 | `file.write` | fdk/tools/br-queue.py · tool=Edit · session=c7f6e21c · actor=agent · prev=962e7ea8a8ea6276a3e32b6655d5cf95b99b4cdedd2b7f |
+| 2026-07-14 12:46:54 | `file.write` | fdk/tools/build-line-status.py · tool=Edit · session=c7f6e21c · actor=agent · prev=a19b3b373a4fd012c2db220e030398a5e2b36 |
+| 2026-07-14 12:47:07 | `file.write` | fdk/tools/build-line-status.py · tool=Edit · session=c7f6e21c · actor=agent · prev=f35fdb935ce3ecd2c6f19e8fe67c529b2dd1a |
+| 2026-07-14 12:47:19 | `file.write` | fdk/tools/build-line-status.py · tool=Edit · session=c7f6e21c · actor=agent · prev=8297bca46ed88cceb06edbf616428107e6f4f |
+| 2026-07-14 12:47:26 | `file.write` | fdk/tools/build-line-status.py · tool=Edit · session=c7f6e21c · actor=agent · prev=2c2403cb820ed90beb0f126edc241d6975959 |
+| 2026-07-14 12:47:47 | `file.write` | skills/br/assets/frame-template.md · tool=Edit · session=c7f6e21c · actor=agent · prev=8612c11a490de4af222aff6e77531b6b5 |
+| 2026-07-14 12:48:07 | `file.write` | skills/br/SKILL.md · tool=Edit · session=c7f6e21c · actor=agent · prev=1a1c3359592b65100ad23abf1b55bba4e94aecda50aa9bdf2 |
+| 2026-07-14 12:48:28 | `file.write` | skills/br/SKILL.md · tool=Edit · session=c7f6e21c · actor=agent · prev=26d5357aeba64b5e211c0b42ee817dfc9db2f6fa52d5e3253 |
+| 2026-07-14 12:48:48 | `file.write` | skills/br/assets/queue.example.yaml · tool=Edit · session=c7f6e21c · actor=agent · prev=228b581aea8c27c10103ca2779e2171b |
+| 2026-07-14 13:14:30 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=c7f6e21c · actor=agent · prev=e91c07e0370e07590e7f0a4354438f144525c |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)

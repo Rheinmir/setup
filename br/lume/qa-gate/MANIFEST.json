@@ -1,6 +1,6 @@
 {
   "base": "http://localhost:5230",
-  "ts": 1784002238686,
+  "ts": 1784009773621,
   "shots": [
     {
       "name": "signin",
@@ -19,10 +19,10 @@
       "file": "br/lume/qa-gate/auth.png",
       "issues": [],
       "diff": {
-        "pct": 0,
+        "pct": 3.921,
         "diffFile": "br/lume/qa-gate/auth.diff.png"
       },
-      "bytes": 65855,
+      "bytes": 245791,
       "evidence": true
     },
     {
@@ -32,10 +32,10 @@
       "file": "br/lume/qa-gate/auth.dark.png",
       "issues": [],
       "diff": {
-        "pct": 0,
+        "pct": 3.834,
         "diffFile": "br/lume/qa-gate/auth.dark.diff.png"
       },
-      "bytes": 63338,
+      "bytes": 240866,
       "evidence": true
     },
     {
@@ -45,10 +45,10 @@
       "file": "br/lume/qa-gate/auth.paper.png",
       "issues": [],
       "diff": {
-        "pct": 0,
+        "pct": 3.921,
         "diffFile": "br/lume/qa-gate/auth.paper.diff.png"
       },
-      "bytes": 65855,
+      "bytes": 245791,
       "evidence": true
     },
     {
@@ -58,10 +58,10 @@
       "file": "br/lume/qa-gate/home.png",
       "issues": [],
       "diff": {
-        "pct": 0,
+        "pct": 4.023,
         "diffFile": "br/lume/qa-gate/home.diff.png"
       },
-      "bytes": 67035,
+      "bytes": 245113,
       "evidence": true
     },
     {
@@ -71,10 +71,10 @@
       "file": "br/lume/qa-gate/home.dark.png",
       "issues": [],
       "diff": {
-        "pct": 0,
+        "pct": 3.834,
         "diffFile": "br/lume/qa-gate/home.dark.diff.png"
       },
-      "bytes": 63338,
+      "bytes": 240866,
       "evidence": true
     },
     {
@@ -84,10 +84,10 @@
       "file": "br/lume/qa-gate/home.paper.png",
       "issues": [],
       "diff": {
-        "pct": 0,
+        "pct": 3.921,
         "diffFile": "br/lume/qa-gate/home.paper.diff.png"
       },
-      "bytes": 65855,
+      "bytes": 245791,
       "evidence": true
     },
     {

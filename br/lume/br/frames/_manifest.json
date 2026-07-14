@@ -1,0 +1,218 @@
+{
+  "lume/cmd/lume/main.go": {
+    "clause_ids": [
+      "N06"
+    ],
+    "frame_id": "frame-n06-wiki-mount"
+  },
+  "lume/internal/profile/profile.go": {
+    "clause_ids": [
+      "N06"
+    ],
+    "frame_id": "frame-n06-wiki-mount"
+  },
+  "lume/server/router/api/v1/auth_service.go": {
+    "clause_ids": [
+      "M1"
+    ],
+    "frame_id": "frame-m01-auth"
+  },
+  "lume/server/router/api/v1/memo_service.go": {
+    "clause_ids": [
+      "M3"
+    ],
+    "frame_id": "frame-m03-memo-crud"
+  },
+  "lume/store/attachment.go": {
+    "clause_ids": [
+      "M6"
+    ],
+    "frame_id": "frame-m06-attachment"
+  },
+  "lume/store/file/mdstore.go": {
+    "clause_ids": [
+      "N04"
+    ],
+    "frame_id": "frame-n04-storage-file-first"
+  },
+  "lume/store/file/mount.go": {
+    "clause_ids": [
+      "N06"
+    ],
+    "frame_id": "frame-n06-wiki-mount"
+  },
+  "lume/store/idp.go": {
+    "clause_ids": [
+      "M10"
+    ],
+    "frame_id": "frame-m10-sso-idp"
+  },
+  "lume/store/inbox.go": {
+    "clause_ids": [
+      "M9"
+    ],
+    "frame_id": "frame-m09-inbox"
+  },
+  "lume/store/instance_setting.go": {
+    "clause_ids": [
+      "M11"
+    ],
+    "frame_id": "frame-m11-instance-admin"
+  },
+  "lume/store/memo.go": {
+    "clause_ids": [
+      "N04"
+    ],
+    "frame_id": "frame-n04-storage-file-first"
+  },
+  "lume/store/memo_relation.go": {
+    "clause_ids": [
+      "M4"
+    ],
+    "frame_id": "frame-m04-memo-organize"
+  },
+  "lume/store/memo_share.go": {
+    "clause_ids": [
+      "M5"
+    ],
+    "frame_id": "frame-m05-share-explore"
+  },
+  "lume/store/mountsync.go": {
+    "clause_ids": [
+      "N06"
+    ],
+    "frame_id": "frame-n06-wiki-mount"
+  },
+  "lume/store/reaction.go": {
+    "clause_ids": [
+      "M7"
+    ],
+    "frame_id": "frame-m07-reaction"
+  },
+  "lume/store/store.go": {
+    "clause_ids": [
+      "N04"
+    ],
+    "frame_id": "frame-n04-storage-file-first"
+  },
+  "lume/store/user.go": {
+    "clause_ids": [
+      "M1"
+    ],
+    "frame_id": "frame-m01-auth"
+  },
+  "lume/store/user_setting.go": {
+    "clause_ids": [
+      "M2"
+    ],
+    "frame_id": "frame-m02-user-settings"
+  },
+  "lume/web/src/components/MemosLogo.tsx": {
+    "clause_ids": [
+      "N03"
+    ],
+    "frame_id": "frame-n03-theme-neumorphism"
+  },
+  "lume/web/src/components/Placeholder/index.tsx": {
+    "clause_ids": [
+      "N03"
+    ],
+    "frame_id": "frame-n03-theme-neumorphism"
+  },
+  "lume/web/src/components/UserAvatar.tsx": {
+    "clause_ids": [
+      "N03"
+    ],
+    "frame_id": "frame-n03-theme-neumorphism"
+  },
+  "lume/web/src/index.css": {
+    "clause_ids": [
+      "N03"
+    ],
+    "frame_id": "frame-n03-theme-neumorphism"
+  },
+  "lume/web/src/pages/Archived.tsx": {
+    "clause_ids": [
+      "M4"
+    ],
+    "frame_id": "frame-m04-memo-organize"
+  },
+  "lume/web/src/pages/Attachments.tsx": {
+    "clause_ids": [
+      "M6"
+    ],
+    "frame_id": "frame-m06-attachment"
+  },
+  "lume/web/src/pages/AuthCallback.tsx": {
+    "clause_ids": [
+      "M10"
+    ],
+    "frame_id": "frame-m10-sso-idp"
+  },
+  "lume/web/src/pages/Explore.tsx": {
+    "clause_ids": [
+      "M5"
+    ],
+    "frame_id": "frame-m05-share-explore"
+  },
+  "lume/web/src/pages/Home.tsx": {
+    "clause_ids": [
+      "M3"
+    ],
+    "frame_id": "frame-m03-memo-crud"
+  },
+  "lume/web/src/pages/Inboxes.tsx": {
+    "clause_ids": [
+      "M9"
+    ],
+    "frame_id": "frame-m09-inbox"
+  },
+  "lume/web/src/pages/MemoDetail.tsx": {
+    "clause_ids": [
+      "M3"
+    ],
+    "frame_id": "frame-m03-memo-crud"
+  },
+  "lume/web/src/pages/Setting.tsx": {
+    "clause_ids": [
+      "M2"
+    ],
+    "frame_id": "frame-m02-user-settings"
+  },
+  "lume/web/src/pages/Shortcuts.tsx": {
+    "clause_ids": [
+      "M8"
+    ],
+    "frame_id": "frame-m08-shortcut"
+  },
+  "lume/web/src/pages/SignIn.tsx": {
+    "clause_ids": [
+      "N03"
+    ],
+    "frame_id": "frame-n03-theme-neumorphism"
+  },
+  "lume/web/src/themes/default-dark.css": {
+    "clause_ids": [
+      "N03"
+    ],
+    "frame_id": "frame-n03-theme-neumorphism"
+  },
+  "lume/web/src/themes/neumorphism.css": {
+    "clause_ids": [
+      "N03"
+    ],
+    "frame_id": "frame-n03-theme-neumorphism"
+  },
+  "lume/web/src/themes/paper.css": {
+    "clause_ids": [
+      "N03"
+    ],
+    "frame_id": "frame-n03-theme-neumorphism"
+  },
+  "lume/web/vite.config.mts": {
+    "clause_ids": [
+      "N01"
+    ],
+    "frame_id": "frame-n01-microservice-path"
+  }
+}

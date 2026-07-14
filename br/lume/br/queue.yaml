@@ -1,0 +1,34 @@
+# QUEUE prompt cho /br run — driver: fdk/tools/br-queue.py (resumable).
+# status: pending|done|failed do driver TỰ cập nhật. Chạy lại = bỏ qua done, chạy tiếp.
+- frame: br/frames/frame-m01-auth.md
+  status: pending
+- frame: br/frames/frame-m02-user-settings.md
+  status: pending
+- frame: br/frames/frame-m03-memo-crud.md
+  status: pending
+- frame: br/frames/frame-m04-memo-organize.md
+  status: pending
+- frame: br/frames/frame-m05-share-explore.md
+  status: pending
+- frame: br/frames/frame-m06-attachment.md
+  status: pending
+- frame: br/frames/frame-m07-reaction.md
+  status: pending
+- frame: br/frames/frame-m08-shortcut.md
+  status: pending
+- frame: br/frames/frame-m09-inbox.md
+  status: pending
+- frame: br/frames/frame-m10-sso-idp.md
+  status: pending
+- frame: br/frames/frame-m11-instance-admin.md
+  status: pending
+- frame: br/frames/frame-n01-microservice-path.md
+  status: pending
+- frame: br/frames/frame-n03-theme-neumorphism.md
+  status: pending
+- frame: br/frames/frame-n04-storage-file-first.md
+  status: pending
+- frame: br/frames/frame-n06-wiki-mount.md
+  status: pending
+- frame: br/frames/frame-n07-wiki-multi-mount.md
+  status: pending

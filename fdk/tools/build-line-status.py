@@ -117,6 +117,7 @@ def collect(root, frames_dir):
                 "file": f.name,
                 "status": status,
                 "clause_ids": cids,
+                "depends_on": fm.get("depends_on") or [],
                 "scope_code": fm.get("scope_code") or [],
                 "muc_tieu": fm.get("muc_tieu") or "",
                 "run": None if runlog is None else {
@@ -133,6 +134,12 @@ def collect(root, frames_dir):
                 "assumed_clauses": [c for c in cids
                                     if str(clauses.get(c, {}).get("provenance", "")).startswith("lens")],
             })
+    # Which frames are WAITING on an upstream that isn't green yet (GH#75 / ATG). Derived,
+    # like every other status here: a frame is waiting iff some frame it depends_on is not
+    # done. This is what makes the line a graph on screen instead of a list.
+    _done = {fr["frame_id"] for fr in frames if fr["status"] in ("merged", "green-pending-review")}
+    for fr in frames:
+        fr["waiting_on"] = [d for d in fr["depends_on"] if d not in _done]
     counts = {s: sum(1 for fr in frames if fr["status"] == s) for s in STATUS_ORDER}
     total_assumed = sum(1 for c, meta in clauses.items()
                         if str(meta.get("provenance", "")).startswith("lens"))
@@ -143,6 +150,7 @@ def collect(root, frames_dir):
         "total_frames": len(frames),
         "clauses": clauses,
         "assumed_clause_count": total_assumed,
+        "waiting_frames": sum(1 for fr in frames if fr["waiting_on"]),
     }
 
 
@@ -239,10 +247,22 @@ def render_html(model, out_html_path):
                 files_txt += f' <span class="pill" style="background:rgba(239,68,68,.14);color:#b91c1c" title="có file lọt ngoài scope!">⚠ lọt scope: {_esc(", ".join(oos))}</span>'
         else:
             files_txt = f'<span class="mut" title="chưa chạy — mới là phạm vi khai báo, chưa phải file thật đổi">{_esc(", ".join(fr["scope_code"]))} (dự định)</span>'
+        # Dependency column: what this frame is built on top of, and whether it is still
+        # WAITING (an upstream frame is not green yet, so running this one now is premature).
+        if not fr["depends_on"]:
+            dep_txt = '<span class="mut" title="không phụ thuộc frame nào — chạy được ngay">—</span>'
+        elif fr["waiting_on"]:
+            dep_txt = (f'<span class="pill" style="background:rgba(234,179,8,.16);color:#a16207" '
+                       f'title="upstream chưa xanh — chạy frame này bây giờ là phí, sửa upstream trước">'
+                       f'⏸ chờ: {_esc(", ".join(fr["waiting_on"]))}</span>')
+        else:
+            dep_txt = (f'<span class="mut" title="mọi frame nó dựa lên đều đã xanh — sẵn sàng chạy">'
+                       f'✓ sau {_esc(", ".join(fr["depends_on"]))}</span>')
         rows.append(
             f'<tr><td><code>{_esc(fr["frame_id"])}</code></td>'
             f'<td><span class="pill" style="background:{col}22;color:{col}">{_esc(STATUS_LABEL[fr["status"]])}</span></td>'
             f'<td>{_esc(", ".join(fr["clause_ids"]))}{assumed}</td>'
+            f'<td class="mut">{dep_txt}</td>'
             f'<td class="mut">{files_txt}</td>'
             f'<td class="mut">{run_txt}</td></tr>'
         )
@@ -317,8 +337,8 @@ document.getElementById('thBtn').addEventListener('click',function(){{
 <h1>📊 Line status — dây chuyền sản xuất Ralph</h1>
 <p class="sub">Lớp ĐỌC tất định trên dữ liệu đã có (frame · run-log · BR). Không chấm điểm, chỉ hiển thị + truy ngược. Trạng thái suy bằng luật cố định, không dùng model.</p>
 <div class="kpis">{kpis}<div class="kpi"><b style="color:#f59e0b">{model["assumed_clause_count"]}</b><span>điều khoản assumed còn gánh</span></div></div>
-<table><thead><tr><th>Frame</th><th>Trạng thái</th><th>Điều khoản (clause)</th><th>File code (thật đã đổi · scope-check)</th><th>Run gần nhất</th></tr></thead>
-<tbody>{"".join(rows) or '<tr><td colspan="5" class="mut">Chưa có frame nào (chạy /br slice để sinh).</td></tr>'}</tbody></table>
+<table><thead><tr><th>Frame</th><th>Trạng thái</th><th>Điều khoản (clause)</th><th title="frame này dựa lên frame nào (depends_on) — ⏸ = upstream chưa xanh">Phụ thuộc</th><th>File code (thật đã đổi · scope-check)</th><th>Run gần nhất</th></tr></thead>
+<tbody>{"".join(rows) or '<tr><td colspan="6" class="mut">Chưa có frame nào (chạy /br slice để sinh).</td></tr>'}</tbody></table>
 <h2 style="font-size:1.05rem;margin:26px 0 6px">🗂️ Cây thư mục — file nào thuộc frame nào</h2>
 <div class="legend"><span>Chú giải frame:</span>{legend}</div>
 <div class="tree">{tree_html}</div>

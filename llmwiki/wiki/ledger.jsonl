@@ -69,3 +69,6 @@
 {"ts": "2026-07-12T22:52:54", "session": "90a00343", "action": "add", "target": "sources/draft/120726-pipeline-gaps-raised.md", "tool": "Write"}
 {"ts": "2026-07-12T22:53:45", "session": "90a00343", "action": "add", "target": "sources/draft/120726-pipeline-friction.md", "tool": "Write"}
 {"ts": "2026-07-12T22:54:54", "session": "90a00343", "action": "add", "target": "sources/draft/120726-nghiem-thu-output.md", "tool": "Write"}
+{"ts": "2026-07-14T11:32:35", "session": "c7f6e21c", "action": "add", "target": "sources/draft/140726-atomic-task-graph-distill.md", "tool": "Write"}
+{"ts": "2026-07-14T11:33:24", "session": "c7f6e21c", "action": "modify", "target": "sources/ISSUES.md", "tool": "Edit"}
+{"ts": "2026-07-14T13:14:30", "session": "c7f6e21c", "action": "modify", "target": "sources/ISSUES.md", "tool": "Edit"}

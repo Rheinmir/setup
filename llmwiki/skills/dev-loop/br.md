@@ -53,7 +53,8 @@ Runtime artifacts sống ở `br/` tại gốc project (không phải trong skil
 3. Sinh `br/BR.clauses.json`: `{clause_id: {provenance, assumed: bool}}` — monitor (`/br status`) đọc file này để tô cam clause assumed.
 
 ## Mode 3 — `/br slice`
-1. Đọc `br/BR.md`. ĐỀ XUẤT danh sách lát cắt: mỗi lát = {clause_ids, scope_code dự kiến (≤3 file), scope_test, acceptance_test}. **STOP cho user duyệt/sửa/gộp/tách TỪNG lát** (người-trong-vòng-lặp — chốt chặn lỗi tương quan slicer). Lô đầu ≤ 3–5 frame.
+1. Đọc `br/BR.md`. ĐỀ XUẤT danh sách lát cắt: mỗi lát = {clause_ids, scope_code dự kiến (≤3 file), scope_test, acceptance_test, **depends_on**}. **STOP cho user duyệt/sửa/gộp/tách TỪNG lát** (người-trong-vòng-lặp — chốt chặn lỗi tương quan slicer). Lô đầu ≤ 3–5 frame.
+   - **`depends_on` là bắt buộc nghĩ, không bắt buộc có** (GH#75, distill Atomic Task Graph): dây chuyền là ĐỒ THỊ chứ không phải danh sách. Frame B khai `depends_on: [frame-A]` khi B *không thể xanh* nếu A chưa xanh (B gọi API/store/schema A dựng). Không dựa ai → `depends_on: []`. Khai đúng thì được ba thứ miễn phí ở mode 4: thứ tự chạy tự đúng, frame đỏ tự chặn nhánh dưới, và sửa một frame chỉ phải chạy lại đúng nhánh của nó. Khai bừa (nối cho "có vẻ hợp lý") thì mất song song và tạo chờ giả — chỉ nối khi có phụ thuộc THẬT.
 2. Ghi `br/frames/frame-NNN-<slug>.md` **THEO TEMPLATE `skills/br/assets/frame-template.md`** (schema v0 + 4 section body bắt buộc: Nghiệp vụ · Input/Output · Tiêu chí nghiệm thu · Ngoài phạm vi — viết cho NGƯỜI VỀ SAU đọc-hiểu, frame-lint R7 gác cứng: frame_id phải có slug nghiệp vụ, muc_tieu không được generic, section không được rỗng) + `parent_br_hash = sha256(br/BR.md)`.
 3. Sinh registry `br/frames/index.md` (bảng frame_id · clause_ids · scope_code · status · run_log_ref) từ frontmatter các frame.
 4. Gác: `python3 fdk/tools/frame-lint.py check br/frames --root . ` — xanh hết mới coi là slice xong (gồm R6 exclusive-scope: 2 frame không được giẫm cùng file).
@@ -65,8 +66,17 @@ Runtime artifacts sống ở `br/` tại gốc project (không phải trong skil
 python3 fdk/tools/br-run.py run br/frames/<frame>.md --root .
 # xem prompt sẽ gửi mà không chạy: thêm --print-prompt
 # chạy cả hàng đợi resumable: python3 fdk/tools/br-queue.py run --queue br/queue.yaml
+# sửa 1 frame → chạy lại ĐÚNG nhánh của nó, không cả dây chuyền:
+#   python3 fdk/tools/br-queue.py affected <frame_id> --queue br/queue.yaml --reset
+#   python3 fdk/tools/br-queue.py run --queue br/queue.yaml
 # cần cô lập thư mục thật sự (hiếm): thêm --worktree
 ```
+
+**Queue chạy theo ĐỒ THỊ, không theo thứ tự gõ tay** (GH#75 — distill Atomic Task Graph, arXiv 2607.01942):
+- **Topo order**: `br-queue` đọc `depends_on` của từng frame và tự sắp thứ tự (không phụ thuộc thì giữ nguyên thứ tự khai — queue cũ chạy y như trước).
+- **Frame đỏ CHẶN cả nhánh dưới nó** (`status: blocked`, ghi `blocked_by`): input của nhánh đó đã hỏng, chạy tiếp chỉ tốn lượt model cho một cái chắc chắn fail. Nhánh KHÔNG liên quan vẫn chạy bình thường — một frame hỏng không còn đứng chặn cả dây chuyền.
+- **Sửa cục bộ (`affected`)**: sửa một frame → chỉ frame đó + nhánh dưới nó về `pending`, mọi frame xanh khác giữ nguyên. Đây là chỗ trả tiền: trước đây một frame hỏng giữa chuỗi buộc chạy lại nhiều hơn mức cần.
+- **KHÔNG làm subgraph-reuse cache** (paper có, ta bỏ có chủ ý): `status: done` đã bỏ qua frame xanh rồi; thêm cache theo hash ở quy mô vài chục frame chỉ đẻ bug stale. Giới hạn của chính paper cũng áp ở đây — lợi ích còn nguyên khi đồ thị nhỏ và acceptance_test tất định; graph rất lớn hoặc test/tool trả kết quả bấp bênh thì lịch chạy này mất tác dụng.
 `br-run.py` tự: (0) **TIER-GATE** — frame khai `tier: compensable|irreversible` trong frontmatter (effect không-đảo: gọi API ngoài/gửi mail/ghi DB) bị CHẶN cho tới khi người chạy lại với `--ack-tier` (SHEPHERD gate-before-materialize), (1) frame-lint, (2) kiểm working-tree sạch, (3) chạy loop-runner **NGAY TRONG cây hiện tại** với revise **đã trỏ tới `fdk/tools/br-revise.py`** (render `skills/br/assets/revise-prompt.md` → `claude -p` tools bó hẹp), (4) frame xanh → commit vào nhánh hiện tại, message gắn frame_id (mốc revert/blame), (5) in tóm tắt 1 dòng, (6) ghi `run_log_ref` vào frame, (7) **ghi mốc vào SỔ TRACE** `.checkpoints.jsonl` (checkpoint-trace/SHEPHERD — record trỏ commit sẵn, không double-commit) → xem cả dây chuyền: `python3 fdk/tools/checkpoint.py list`; **rollback cả pipeline về frame bất kỳ theo TÊN**: `checkpoint.py rollback <frame_id>` (giữ lịch sử, cảnh báo effect tier không-đảo sau mốc).
 **Vì sao in-place là mặc định (feedback user 05/07):** N frame = N worktree = N folder ma không ai lục; luồng người thường là *bật app lên xem*, sửa phải hiện ngay trong cây đang chạy app. **Kiểm soát không-phạm-scope nằm ở HARNESS** (diff-jail revert mỗi vòng + FINAL SCOPE SWEEP + test-hash + scope_clean + R6 exclusive-scope), không nằm ở cô lập thư mục. Không ưng kết quả → `git revert <commit frame>`.
 

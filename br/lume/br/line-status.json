@@ -1,0 +1,328 @@
+{
+  "schema_version": 0,
+  "frames": [
+    {
+      "frame_id": "frame-m01-auth",
+      "file": "frame-m01-auth.md",
+      "status": "pending",
+      "clause_ids": [
+        "M1"
+      ],
+      "depends_on": [],
+      "scope_code": [
+        "lume/store/user.go",
+        "lume/server/router/api/v1/auth_service.go"
+      ],
+      "muc_tieu": "Đăng nhập/đăng ký + session + admin sign-in cho memos",
+      "run": null,
+      "assumed_clauses": [],
+      "waiting_on": []
+    },
+    {
+      "frame_id": "frame-m02-user-settings",
+      "file": "frame-m02-user-settings.md",
+      "status": "pending",
+      "clause_ids": [
+        "M2"
+      ],
+      "depends_on": [
+        "frame-m01-auth"
+      ],
+      "scope_code": [
+        "lume/store/user_setting.go",
+        "lume/web/src/pages/Setting.tsx"
+      ],
+      "muc_tieu": "Hồ sơ người dùng + cài đặt cá nhân + vai trò",
+      "run": null,
+      "assumed_clauses": [],
+      "waiting_on": [
+        "frame-m01-auth"
+      ]
+    },
+    {
+      "frame_id": "frame-m03-memo-crud",
+      "file": "frame-m03-memo-crud.md",
+      "status": "pending",
+      "clause_ids": [
+        "M3"
+      ],
+      "depends_on": [
+        "frame-n04-storage-file-first",
+        "frame-m01-auth"
+      ],
+      "scope_code": [
+        "lume/server/router/api/v1/memo_service.go",
+        "lume/web/src/pages/Home.tsx",
+        "lume/web/src/pages/MemoDetail.tsx"
+      ],
+      "muc_tieu": "Tạo/sửa/xoá/liệt kê memo Markdown-native (lõi sản phẩm)",
+      "run": null,
+      "assumed_clauses": [],
+      "waiting_on": [
+        "frame-n04-storage-file-first",
+        "frame-m01-auth"
+      ]
+    },
+    {
+      "frame_id": "frame-m04-memo-organize",
+      "file": "frame-m04-memo-organize.md",
+      "status": "pending",
+      "clause_ids": [
+        "M4"
+      ],
+      "depends_on": [
+        "frame-m03-memo-crud"
+      ],
+      "scope_code": [
+        "lume/store/memo_relation.go",
+        "lume/web/src/pages/Archived.tsx"
+      ],
+      "muc_tieu": "Tag/pin/archive/quan hệ memo",
+      "run": null,
+      "assumed_clauses": [],
+      "waiting_on": [
+        "frame-m03-memo-crud"
+      ]
+    },
+    {
+      "frame_id": "frame-m05-share-explore",
+      "file": "frame-m05-share-explore.md",
+      "status": "pending",
+      "clause_ids": [
+        "M5"
+      ],
+      "depends_on": [
+        "frame-m03-memo-crud"
+      ],
+      "scope_code": [
+        "lume/store/memo_share.go",
+        "lume/web/src/pages/Explore.tsx"
+      ],
+      "muc_tieu": "Chia sẻ public + feed Explore",
+      "run": null,
+      "assumed_clauses": [],
+      "waiting_on": [
+        "frame-m03-memo-crud"
+      ]
+    },
+    {
+      "frame_id": "frame-m06-attachment",
+      "file": "frame-m06-attachment.md",
+      "status": "pending",
+      "clause_ids": [
+        "M6"
+      ],
+      "depends_on": [
+        "frame-m03-memo-crud"
+      ],
+      "scope_code": [
+        "lume/store/attachment.go",
+        "lume/web/src/pages/Attachments.tsx"
+      ],
+      "muc_tieu": "Upload file đính kèm vào memo",
+      "run": null,
+      "assumed_clauses": [],
+      "waiting_on": [
+        "frame-m03-memo-crud"
+      ]
+    },
+    {
+      "frame_id": "frame-m07-reaction",
+      "file": "frame-m07-reaction.md",
+      "status": "pending",
+      "clause_ids": [
+        "M7"
+      ],
+      "depends_on": [
+        "frame-m03-memo-crud"
+      ],
+      "scope_code": [
+        "lume/store/reaction.go"
+      ],
+      "muc_tieu": "Thả emoji reaction lên memo",
+      "run": null,
+      "assumed_clauses": [],
+      "waiting_on": [
+        "frame-m03-memo-crud"
+      ]
+    },
+    {
+      "frame_id": "frame-m08-shortcut",
+      "file": "frame-m08-shortcut.md",
+      "status": "pending",
+      "clause_ids": [
+        "M8"
+      ],
+      "depends_on": [
+        "frame-m03-memo-crud"
+      ],
+      "scope_code": [
+        "lume/store/shortcut.go",
+        "lume/web/src/pages/Shortcuts.tsx"
+      ],
+      "muc_tieu": "Người dùng lưu bộ lọc hay dùng thành shortcut để mở lại nhanh, không phải gõ lại điều kiện",
+      "run": null,
+      "assumed_clauses": [],
+      "waiting_on": [
+        "frame-m03-memo-crud"
+      ]
+    },
+    {
+      "frame_id": "frame-m09-inbox",
+      "file": "frame-m09-inbox.md",
+      "status": "pending",
+      "clause_ids": [
+        "M9"
+      ],
+      "depends_on": [
+        "frame-m01-auth"
+      ],
+      "scope_code": [
+        "lume/store/inbox.go",
+        "lume/web/src/pages/Inboxes.tsx"
+      ],
+      "muc_tieu": "Hộp thư hiển thị thông báo gửi tới người dùng (nhắc, phản hồi) và cho đánh dấu đã đọc/lưu trữ",
+      "run": null,
+      "assumed_clauses": [],
+      "waiting_on": [
+        "frame-m01-auth"
+      ]
+    },
+    {
+      "frame_id": "frame-m10-sso-idp",
+      "file": "frame-m10-sso-idp.md",
+      "status": "pending",
+      "clause_ids": [
+        "M10"
+      ],
+      "depends_on": [
+        "frame-m01-auth"
+      ],
+      "scope_code": [
+        "lume/store/idp.go",
+        "lume/web/src/pages/AuthCallback.tsx"
+      ],
+      "muc_tieu": "Đăng nhập ngoài (SSO/IdP) + callback",
+      "run": null,
+      "assumed_clauses": [],
+      "waiting_on": [
+        "frame-m01-auth"
+      ]
+    },
+    {
+      "frame_id": "frame-m11-instance-admin",
+      "file": "frame-m11-instance-admin.md",
+      "status": "pending",
+      "clause_ids": [
+        "M11"
+      ],
+      "depends_on": [
+        "frame-m01-auth"
+      ],
+      "scope_code": [
+        "lume/store/instance_setting.go"
+      ],
+      "muc_tieu": "Cấu hình instance/admin",
+      "run": null,
+      "assumed_clauses": [],
+      "waiting_on": [
+        "frame-m01-auth"
+      ]
+    },
+    {
+      "frame_id": "frame-n01-microservice-path",
+      "file": "frame-n01-microservice-path.md",
+      "status": "pending",
+      "clause_ids": [
+        "N01"
+      ],
+      "depends_on": [],
+      "scope_code": [
+        "lume/web/vite.config.mts"
+      ],
+      "muc_tieu": "Mount memos dưới /memos/ (Vite base + reverse-proxy) — giá trị đóng-gói của dây chuyền",
+      "run": null,
+      "assumed_clauses": [],
+      "waiting_on": []
+    },
+    {
+      "frame_id": "frame-n03-theme-neumorphism",
+      "file": "frame-n03-theme-neumorphism.md",
+      "status": "pending",
+      "clause_ids": [
+        "N03"
+      ],
+      "depends_on": [
+        "frame-m03-memo-crud"
+      ],
+      "scope_code": [
+        "lume/web/src/themes/neumorphism.css",
+        "lume/web/src/themes/default-dark.css",
+        "lume/web/src/themes/paper.css",
+        "lume/web/src/index.css",
+        "lume/web/src/components/MemosLogo.tsx",
+        "lume/web/src/components/UserAvatar.tsx",
+        "lume/web/src/components/Placeholder/index.tsx",
+        "lume/web/src/pages/SignIn.tsx"
+      ],
+      "muc_tieu": "Build lại UI memos theo system theme neumorphism của dây chuyền, đạt AAA contrast và accent đối-nghịch-nền",
+      "run": null,
+      "assumed_clauses": [],
+      "waiting_on": [
+        "frame-m03-memo-crud"
+      ]
+    },
+    {
+      "frame_id": "frame-n04-storage-file-first",
+      "file": "frame-n04-storage-file-first.md",
+      "status": "pending",
+      "clause_ids": [
+        "N04"
+      ],
+      "depends_on": [],
+      "scope_code": [
+        "lume/store/file/mdstore.go",
+        "lume/store/memo.go",
+        "lume/store/store.go"
+      ],
+      "muc_tieu": "Lưu trữ file-first: nội dung memo là file .md trên đĩa (nguồn chân lý), SQL chỉ còn là index",
+      "run": null,
+      "assumed_clauses": [],
+      "waiting_on": []
+    },
+    {
+      "frame_id": "frame-n06-wiki-mount",
+      "file": "frame-n06-wiki-mount.md",
+      "status": "pending",
+      "clause_ids": [
+        "N06"
+      ],
+      "depends_on": [
+        "frame-n04-storage-file-first"
+      ],
+      "scope_code": [
+        "lume/store/file/mount.go",
+        "lume/store/mountsync.go",
+        "lume/internal/profile/profile.go",
+        "lume/cmd/lume/main.go"
+      ],
+      "muc_tieu": "Stream nguyên cấu trúc thư mục llmwiki từ máy lên app: mỗi .md = 1 memo, thư mục = tag, file đổi thì app hiện ngay",
+      "run": null,
+      "assumed_clauses": [],
+      "waiting_on": [
+        "frame-n04-storage-file-first"
+      ]
+    }
+  ],
+  "counts": {
+    "killed": 0,
+    "stalled": 0,
+    "pending": 15,
+    "green-pending-review": 0,
+    "merged": 0
+  },
+  "total_frames": 15,
+  "clauses": {},
+  "assumed_clause_count": 0,
+  "waiting_frames": 12
+}

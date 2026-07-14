@@ -5,11 +5,12 @@ created_by: human
 kind: frame
 parent_br: br/lume/br/BR.md
 clause_ids: [N04]
-parent_br_hash: 115ad782c6d46903e9c0c38ec2492299b85e3a6a2c5f5f706e3766814e8ea7ed
+parent_br_hash: 5c7f64350a7d0bffced5cd1b77902cf85f5f7592c03b348423f41985a4d20a79
 muc_tieu: "Lưu trữ file-first: nội dung memo là file .md trên đĩa (nguồn chân lý), SQL chỉ còn là index"
 scope_code: ["lume/store/file/mdstore.go","lume/store/memo.go","lume/store/store.go"]
 scope_test: ["lume/store/file/mdstore_test.go"]
 acceptance_test: "cd lume && go test ./store/file/... -count=1"
+depends_on: []
 ui_role: none
 ui_screen:
 ---

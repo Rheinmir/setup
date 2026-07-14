@@ -12,6 +12,12 @@ muc_tieu: "<MỘT câu nghiệp vụ người-đọc-hiểu: hệ thống làm G
 scope_code: ["app/<file>.py"]                   # ≤3 file frame ĐƯỢC sửa
 scope_test: ["tests/test_<file>.py"]            # test bảo vệ — frame KHÔNG được sửa
 acceptance_test: "python3 -m tests.test_<file>"
+# depends_on — frame này KHÔNG chạy được cho tới khi các frame dưới đây xanh (dây chuyền
+# là ĐỒ THỊ, không phải danh sách). Khai đúng thì: br-queue tự sắp thứ tự chạy · một frame
+# đỏ tự CHẶN cả nhánh dưới nó (không đốt lượt model cho cái chắc chắn hỏng) · sửa một frame
+# thì `br-queue.py affected <frame_id>` chỉ ra ĐÚNG nhánh phải chạy lại. Không phụ thuộc ai
+# → để rỗng. Chu trình bị frame-lint R5 chặn.
+depends_on: []                                  # vd: [frame-004-store-file-first]
 # ── UI CONTRACT (điền nếu frame có mặt trên giao diện; frame logic thuần để mặc định) ──
 ui_role: none            # none | screen | panel | widget | form | action
 ui_screen:               # id màn hình frame này hiện (khớp br/ui-layout.yaml); trống nếu ui_role=none

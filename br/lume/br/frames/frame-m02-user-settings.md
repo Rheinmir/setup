@@ -5,11 +5,12 @@ created_by: human
 kind: frame
 parent_br: br/lume/br/BR.md
 clause_ids: [M2]
-parent_br_hash: 115ad782c6d46903e9c0c38ec2492299b85e3a6a2c5f5f706e3766814e8ea7ed
+parent_br_hash: 5c7f64350a7d0bffced5cd1b77902cf85f5f7592c03b348423f41985a4d20a79
 muc_tieu: "Hồ sơ người dùng + cài đặt cá nhân + vai trò"
 scope_code: ["lume/store/user_setting.go","lume/web/src/pages/Setting.tsx"]
 scope_test: ["(gate: xem acceptance_test)"]
 acceptance_test: "cd lume && go test ./server/router/api/v1/... -run User -count=1"
+depends_on: [frame-m01-auth]
 ui_role: screen
 ui_screen: settings
 ---
