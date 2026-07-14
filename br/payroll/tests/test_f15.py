@@ -135,6 +135,29 @@ class TestUI(unittest.TestCase):
         self.assertNotEqual(light.lower(), dark.lower(),
                             "accent phải LẬT theo theme (mặt sáng → accent tối; mặt tối → accent sáng) — §3.6")
 
+    def test_accent_la_near_black_khong_phai_mau_ruc(self):
+        # §3.6: "đối nghịch" là đối nghịch ĐỘ SÁNG, không phải thêm hue mới.
+        # Accent cùng họ màu với nền (xanh trên nền xanh-xám) → CHÌM, dù pass AA.
+        # Máy kiểm: độ bão hoà thấp (họ trung tính) + độ sáng ở cực trị.
+        for ten, hexv, phai_toi in (("sáng", token(self.html, ":root", "--accent"), True),
+                                    ("tối", token_any(self.html, DARK_BLOCKS, "--accent"), False)):
+            h = hexv.lstrip("#")
+            r, g, b = (int(h[i:i + 2], 16) / 255 for i in (0, 2, 4))
+            mx, mn = max(r, g, b), min(r, g, b)
+            l = (mx + mn) / 2
+            s = 0 if mx == mn else (mx - mn) / (2 - mx - mn if l > 0.5 else mx + mn)
+            self.assertLessEqual(
+                round(s, 2), 0.20,
+                f"accent theme {ten} = {hexv}: bão hoà {s:.2f} — đây là MÀU RỰC. "
+                "Accent phải thuộc họ trung tính quanh đen/trắng (§3.6). "
+                "Màu rực chỉ dùng cho semantic (đỏ = destructive).")
+            if phai_toi:
+                self.assertLessEqual(round(l, 2), 0.25,
+                                     f"mặt sáng → accent phải TỐI (near-black), got {hexv}")
+            else:
+                self.assertGreaterEqual(round(l, 2), 0.75,
+                                        f"mặt tối → accent phải SÁNG (near-white), got {hexv}")
+
     # ── A11y: tương phản là CON SỐ, cấm ước lượng bằng mắt ─────────────────
     def test_tuong_phan_chu_dat_AAA_o_ca_hai_theme(self):
         cases = [("sáng", token(self.html, ":root", "--bg"),
