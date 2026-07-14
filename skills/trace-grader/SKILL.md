@@ -1,6 +1,16 @@
 ---
 name: trace-grader
-description: Score the PATH an agent took (tool choice, ordering, retries, repeatability, grounding) — not just its final answer — to catch "corrupt success" (right answer via a bad/unsafe path) and flakiness. Deterministic trace schema + pass^k repeatability + config-driven rule checks (forbidden tool, out-of-order, retry-storm, excessive steps, edited-without-read grounding). Parses canonical traces.json, hooklib.audit / code-logger events.jsonl, OR a full Claude Code session transcript (--transcript, richest source: recovers retrieval args + observation + per-step ok). Trigger when the user says "grade the trajectory", "score the path not the answer", "did it cheat / take a bad path", "did it look before it acted / grounding", "corrupt success", "is this flaky / does it repeat", "pass^k", "grade a session transcript", "trace grader", or invokes /trace-grader.
+description: >-
+  Score the PATH an agent took (tool choice, ordering, retries, repeatability, grounding) — not
+  just its final answer — to catch "corrupt success" (right answer via a bad/unsafe path) and
+  flakiness. Deterministic trace schema + pass^k repeatability + config-driven rule checks
+  (forbidden tool, out-of-order, retry-storm, excessive steps, edited-without-read grounding).
+  Parses canonical traces.json, hooklib.audit / code-logger events.jsonl, OR a full Claude Code
+  session transcript (--transcript, richest source: recovers retrieval args + observation + per-
+  step ok). Trigger when the user says "grade the trajectory", "score the path not the answer",
+  "did it cheat / take a bad path", "did it look before it acted / grounding", "corrupt success",
+  "is this flaky / does it repeat", "pass^k", "grade a session transcript", "trace grader", or
+  invokes /trace-grader.
 ---
 
 # Skill: trace-grader

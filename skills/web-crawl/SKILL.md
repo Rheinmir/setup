@@ -1,6 +1,11 @@
 ---
 name: web-crawl
-description: Crawl/scrape a website or single page into clean LLM-ready MARKDOWN. Use when the user wants to fetch a URL's content, scrape a site, extract an article/page as text, pull docs from the web into the wiki, or "crawl this link". Markdown (not raw HTML) = 5-10x fewer tokens. Built-now-adapt-later: works offline with no key via a builtin urllib→markdown backend; premium backends (Firecrawl/Crawl4AI/Jina) are a one-config adapter.
+description: >-
+  Crawl/scrape a website or single page into clean LLM-ready MARKDOWN. Use when the user wants to
+  fetch a URL's content, scrape a site, extract an article/page as text, pull docs from the web
+  into the wiki, or "crawl this link". Markdown (not raw HTML) = 5-10x fewer tokens. Built-now-
+  adapt-later: works offline with no key via a builtin urllib→markdown backend; premium backends
+  (Firecrawl/Crawl4AI/Jina) are a one-config adapter.
 ---
 
 # Skill: web-crawl

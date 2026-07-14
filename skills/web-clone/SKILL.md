@@ -1,6 +1,13 @@
 ---
 name: web-clone
-description: Clone a website — two modes. SNAPSHOT = a faithful, self-contained offline copy of a page (HTML+CSS+JS+images in one file, exact bytes, SingleFile-style). RECONSTRUCT = AI reverse-engineer the page into a clean editable Next.js/Tailwind codebase (design tokens → component specs → parallel builders → visual-diff QA, the ai-website-cloner-template method). Use when the user wants to "clone this site", copy a page's design/UI + interactions, mirror a layout, save offline, or rebuild a site as editable code. Built-now-adapt-later: snapshot builtin works now; faithful live capture + the reconstruct pipeline are one-config engine adapters.
+description: >-
+  Clone a website — two modes. SNAPSHOT = a faithful, self-contained offline copy of a page
+  (HTML+CSS+JS+images in one file, exact bytes, SingleFile-style). RECONSTRUCT = AI reverse-
+  engineer the page into a clean editable Next.js/Tailwind codebase (design tokens → component
+  specs → parallel builders → visual-diff QA, the ai-website-cloner-template method). Use when
+  the user wants to "clone this site", copy a page's design/UI + interactions, mirror a layout,
+  save offline, or rebuild a site as editable code. Built-now-adapt-later: snapshot builtin works
+  now; faithful live capture + the reconstruct pipeline are one-config engine adapters.
 ---
 
 # Skill: web-clone

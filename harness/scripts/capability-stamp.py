@@ -33,15 +33,54 @@ ROOT = Path(__file__).resolve().parents[2]
 VERSION_JSON = ROOT / "harness" / "version.json"
 
 
+# FRONTMATTER YAML HỎNG = SKILL BIẾN MẤT, KHÔNG MỘT DÒNG CẢNH BÁO.
+# Verify 2026-07-11: web-crawl + web-clone có `description:` inline chứa `": "` chưa quote →
+# YAML ScannerError ("mapping values are not allowed here") → CLI `skills` BỎ QUA im lặng →
+# không vào global → KHÔNG vào CAPABILITIES.md → người dùng vĩnh viễn không biết năng lực đó
+# tồn tại. Gấp thành block `>-` là parse được: npx 67 → 69 skill, cả hai vào global ngay.
+# Đừng đoán theo độ dài hay dấu ':' (đã thử, SAI — brandkit 464 ký tự và ship/raise-issue có ': '
+# vẫn ship ngon). Chỉ có PARSER thật mới nói đúng.
+
+
+def _frontmatter(txt):
+    """Khối YAML giữa hai '---' đầu file."""
+    m = re.match(r"^---\n(.*?)\n---", txt, re.S)
+    return m.group(1) if m else ""
+
+
+def _parse(fm):
+    """(dict|None, lỗi|None). Không có PyYAML → (None, None) = bỏ qua (fail-open)."""
+    try:
+        import yaml
+    except ImportError:
+        return None, None
+    try:
+        d = yaml.safe_load(fm)
+        return (d if isinstance(d, dict) else {}), None
+    except Exception as e:
+        return {}, f"{type(e).__name__}: {str(e).splitlines()[0][:70]}"
+
+
 def _skills():
-    """(tên skill, dòng description) — đổi trigger = downstream cần biết."""
+    """(tên skill, description) — đổi trigger = downstream cần biết."""
     out = []
     for sk in sorted((ROOT / "skills").glob("*/SKILL.md")):
-        txt = sk.read_text(encoding="utf-8", errors="ignore")[:1200]
-        m = re.search(r"^description:\s*(.+)$", txt, re.M)
-        desc = (m.group(1).strip().strip('"\'') if m else "")[:200]
+        d, _ = _parse(_frontmatter(sk.read_text(encoding="utf-8", errors="ignore")))
+        desc = str((d or {}).get("description", ""))[:200]
         out.append(f"skill:{sk.parent.name}:{desc}")
     return out
+
+
+def unshippable():
+    """Skill có frontmatter YAML HỎNG → CLI drop im lặng → không bao giờ tới người dùng."""
+    bad = []
+    for sk in sorted((ROOT / "skills").glob("*/SKILL.md")):
+        d, err = _parse(_frontmatter(sk.read_text(encoding="utf-8", errors="ignore")))
+        if err:
+            bad.append((sk.parent.name, err))
+        elif d is not None and not str(d.get("description", "")).strip():
+            bad.append((sk.parent.name, "thiếu description"))
+    return bad
 
 
 def _rules():
@@ -76,6 +115,17 @@ def _load():
 
 
 def check():
+    bad = unshippable()
+    if bad:
+        print("capability-stamp: SKILL SẼ BỊ DROP IM LẶNG — không bao giờ tới người dùng:",
+              file=sys.stderr)
+        for n, err in bad:
+            print(f"    ✗ {n}: frontmatter {err}", file=sys.stderr)
+        print("  CLI `skills` bỏ qua skill có frontmatter YAML hỏng, KHÔNG báo lỗi → skill không vào\n"
+              "  global → không vào CAPABILITIES.md → user vĩnh viễn không biết năng lực đó tồn tại.\n"
+              "  → Thường do `description:` inline chứa ': ' chưa quote. Sửa bằng block gấp dòng:\n"
+              "        description: >-\n          <dòng 1>\n          <dòng 2>", file=sys.stderr)
+        return 1
     d = _load()
     have, want = d.get("capability_sha"), surface_sha()
     if have == want:
