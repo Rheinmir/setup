@@ -194,9 +194,28 @@ if [ "$WITH_WIKI" = 1 ]; then
     # ~/.claude/harness là source-of-truth (U10). Repo chỉ giữ llmwiki (data) + .harness-stamp.
     # Hooks fire từ GLOBAL ~/.claude/settings.json (install-harness --global wire, guard theo stamp).
     GH_HOME="${OVERSTACK_HARNESS_HOME:-$HOME/.claude/harness}"
-    # 1) đảm bảo global harness có mặt — thiếu → cài (ưu tiên bundle cạnh SRC, fallback curl)
-    if [ ! -f "$GH_HOME/version.json" ]; then
-      log "  global harness chưa có ($GH_HOME) → cài install-harness.sh --global"
+    # 1) đảm bảo global harness có mặt VÀ KHÔNG CŨ.
+    #    Trước đây chỉ cài khi VẮNG → re-curl bootstrap không bao giờ refresh global → global kẹt
+    #    ở bản cũ mãi mãi. Hệ quả dây chuyền: stamp dự án == global (cùng bản cũ) → hook
+    #    harness-integrity thấy bằng nhau → im lặng → DỰ ÁN KHÔNG BAO GIỜ BIẾT CÓ NĂNG LỰC MỚI,
+    #    dù framework đã bump. Đây là mắt xích đứt duy nhất của chuỗi "model biết mình có gì mới".
+    #    Nay: vắng HOẶC version remote khác version đang cài → cài lại (idempotent).
+    GH_CUR=""; GH_NEW=""
+    [ -f "$GH_HOME/version.json" ] && GH_CUR="$(python3 -c "import json,sys;print(json.load(open(sys.argv[1])).get('template_version',''))" "$GH_HOME/version.json" 2>/dev/null || echo "")"
+    if [ -f "$SRC/../version.json" ]; then
+      GH_NEW="$(python3 -c "import json,sys;print(json.load(open(sys.argv[1])).get('template_version',''))" "$SRC/../version.json" 2>/dev/null || echo "")"
+    else
+      VJ="$(mktemp)"
+      curl -fsSL "$REPO_RAW/harness/version.json" -o "$VJ" 2>/dev/null \
+        && GH_NEW="$(python3 -c "import json,sys;print(json.load(open(sys.argv[1])).get('template_version',''))" "$VJ" 2>/dev/null || echo "")"
+      rm -f "$VJ"
+    fi
+    if [ ! -f "$GH_HOME/version.json" ] || { [ -n "$GH_NEW" ] && [ "$GH_CUR" != "$GH_NEW" ]; }; then
+      if [ -f "$GH_HOME/version.json" ]; then
+        log "  global harness CŨ (v${GH_CUR:-?} → v$GH_NEW) → cập nhật install-harness.sh --global"
+      else
+        log "  global harness chưa có ($GH_HOME) → cài install-harness.sh --global"
+      fi
       IH="$SRC/../scripts/install-harness.sh"
       if [ ! -f "$IH" ]; then
         IH="$(mktemp)"

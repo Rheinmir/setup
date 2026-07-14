@@ -73,11 +73,33 @@ python3 harness/scripts/capability-stamp.py --update   # ghi sha + bump template
 
 Probe medic **`capsurface`** gọi `--check`. Đổi bề mặt mà chưa bump → `medic --ci` ĐỎ → **không push được**. Không phải lời nhắc — là bị chặn.
 
-### Chuỗi hoàn chỉnh (đã chạy thật)
+### Chuỗi đầy đủ — và mắt xích từng đứt ở đâu
 
-`[thêm năng lực]` → **`capsurface` chặn push tới khi bump** → `[version 1.3.6→1.3.7]` → `[dự án so stamp 1.3.6 vs 1.3.7 → BEHIND]` → `[/harness-update]` → `[CAPABILITIES.md regen]` → **`[model biết mình có đồ nghề mới]`**
+```
+[thêm năng lực]
+   │  ① capsurface CHẶN PUSH tới khi bump          (forcing function — trước đây KHÔNG có)
+   ▼
+[harness/version.json: 1.3.6 → 1.3.7]
+   │  ② user re-curl bootstrap → install.sh thấy global CŨ → refresh global
+   ▼                                              (trước đây chỉ cài KHI VẮNG → global kẹt mãi)
+[global harness: 1.3.7]
+   │  ③ hook harness_integrity so stamp(1.3.6) ≠ global(1.3.7) → in ⟳ nhắc re-curl
+   ▼
+[dự án re-curl → stamp 1.3.7 + CAPABILITIES.md regen]
+   ▼
+[model đọc CAPABILITIES.md → BIẾT mình có đồ nghề mới]
+```
 
-Mắt xích trước đây đứt ở mũi tên thứ nhất: không gì ép bump, nên mọi mũi tên sau không bao giờ khởi động.
+**Hai mắt xích từng đứt (đều đã vá + verify bằng chạy thật):**
+
+- **①** không gì ép bump → framework thêm cả một cổng mới mà version vẫn `1.3.6` → mọi mũi tên sau không bao giờ khởi động. → `capability-stamp.py` + probe `capsurface`.
+- **②** `install.sh` chỉ cài global **khi VẮNG** → re-curl **không** refresh global → global kẹt bản cũ → `stamp == global` → hook `harness_integrity` thấy bằng nhau → **im lặng tuyệt đối**. → nay so version, khác thì cập nhật.
+
+**③ vốn đã đúng từ trước** (hook có sẵn nhánh non-major) — nó chỉ câm vì ② không bao giờ cho global mới hơn stamp.
+
+**Đã verify từng bước, không suy luận:**
+- Hạ global về `1.3.5` → chạy install → log `global harness CŨ (v1.3.5 → v1.3.7) → cập nhật` → global thành `1.3.7` ✓
+- Dự án stamp `1.3.6` + global `1.3.7` → chạy hook thật → in `⟳ [harness-integrity] stamp v1.3.6 ≠ global v1.3.7` ✓
 
 ## Ceiling (giới hạn cố ý)
 
