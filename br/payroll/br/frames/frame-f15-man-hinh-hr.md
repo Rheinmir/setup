@@ -4,7 +4,7 @@ frame_id: frame-f15-man-hinh-hr
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C15.1, C15.2, C14.1]
-parent_br_hash: b859c2b5c4dc70c65391f61a3eb1ad9c883359d3c3f1c2e11714b3d3112f9f6c
+parent_br_hash: 5aa1c47fb9bc720f40479854a5a5f1bdd49da2a2366b9fdbe72b8bacf59d1d95
 muc_tieu: "Ba màn hình cho HR — bảng lương toàn kỳ, phiếu lương từng người theo đúng mẫu thật, và cây truy vết công thức bấm ngược được từ lương thực nhận xuống tận lương cơ bản"
 scope_code: ["app/ui.py"]
 scope_test: ["tests/test_f15.py"]
