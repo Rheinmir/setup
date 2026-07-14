@@ -85,6 +85,8 @@ try {
 // LOGIN HỎNG = GATE PHẢI CHẾT (bài học 13/07/26): login fail ⇒ mọi route redirect về /auth ⇒
 // gate audit 8 bản sao trang sign-in rồi hô "design-ok" = XANH GIẢ, tệ hơn đỏ.
 let LOGIN_FAILED = null;
+let CUR_THEME = "light";   // theme app đang bật (setting tài khoản, dính giữa các route)
+const THEME_BROKEN = [];   // theme khai là đổi nhưng nền không đổi ⇒ ảnh giả ⇒ gate phải chết
 try {
   await page.fill('input[type="text"]', USER, { timeout: 5000 });
   await page.fill('input[type="password"]', PASS, { timeout: 5000 });
@@ -213,6 +215,10 @@ function DESIGN_AUDIT() {   // function-declaration (được hoist) — pre-log
 // App bật dark bằng class `.dark` trên <html>` (theo setting app), KHÔNG theo prefers-color-scheme
 // ⇒ headless mặc định chỉ bao giờ chụp LIGHT ⇒ dark mode là VÙNG MÙ TUYỆT ĐỐI: user mở app ở
 // dark thấy UI vỡ mà gate vẫn xanh. Mỗi route phải chụp ĐỦ CẢ HAI theme.
+// khoá localStorage app dùng để nhớ theme (memos: "memos-theme"). Đổi app khác thì đổi cờ này.
+// lệnh JS đổi theme ĐÚNG CÁCH APP ĐỔI (chạy trong trang). {{theme}} = light|dark.
+// Mặc định = memos/Lume: theme nằm ở SETTING TÀI KHOẢN trên server (localStorage bị ghi đè!).
+const THEME_SET = arg("--theme-set", `fetch("/api/v1/users/-/settings/general?updateMask=theme",{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({setting:{name:"users/-/settings/general",generalSetting:{theme:"{{theme}}"==="dark"?"default-dark":"default"}}})})`);
 const THEMES = (process.argv.includes("--themes")
   ? process.argv[process.argv.indexOf("--themes") + 1] : "light,dark").split(",");
 
@@ -222,7 +228,36 @@ for (const [name0, path] of ROUTES) {
   const name = theme === "light" ? name0 : `${name0}.${theme}`;
   try {
     const resp = await page.goto(BASE + path, { waitUntil: "domcontentloaded", timeout: 15000 });
-    await page.evaluate((t) => document.documentElement.classList.toggle("dark", t === "dark"), theme);
+    // ĐỔI THEME PHẢI ĐI QUA ĐÚNG ĐƯỜNG NGƯỜI DÙNG ĐI (bài học 14/07/26 — sai 2 tầng liên tiếp):
+    //  ① gắn class `.dark` bằng tay ⇒ cơ chế KHÔNG TỒN TẠI (app dùng data-theme + inject CSS).
+    //  ② set localStorage ⇒ app GHI ĐÈ lại từ SETTING TÀI KHOẢN trên server.
+    // Cả 2 lần gate XANH trên trạng thái KHÔNG CÓ THẬT. Đường duy nhất chắc chắn đúng là đường
+    // NGƯỜI DÙNG bấm: vào Settings → Preferences → chọn theme. Chậm hơn, nhưng THẬT.
+    // theme lưu vào SETTING TÀI KHOẢN ⇒ dính lại giữa các route ⇒ phải đổi CẢ HAI CHIỀU,
+    // và chỉ đổi khi khác theme đang bật (đỡ tốn thời gian).
+    if (theme !== CUR_THEME) {
+      try {
+        await page.goto(BASE + "/setting", { waitUntil: "domcontentloaded" });
+        await page.waitForTimeout(1500);
+        await page.getByText("Preferences", { exact: true }).first().click();
+        await page.waitForTimeout(1200);
+        await page.locator("[data-slot='select-trigger']").first().click();   // dropdown Theme
+        await page.waitForTimeout(600);
+        await page.getByRole("option", { name: theme === "dark" ? /^dark$/i : /^light$/i }).click();
+        await page.waitForTimeout(1500);
+        CUR_THEME = theme;
+      } catch (e) { THEME_BROKEN.push(`${theme}: không bấm được UI đổi theme — ${e.message.split("\n")[0]}`); }
+      await page.goto(BASE + path, { waitUntil: "domcontentloaded" });
+      await page.waitForTimeout(1500);
+      // VERIFY nền ĐÃ đổi thật — không có bước này thì "chụp dark" chỉ là chụp light lần 2.
+      const isDark = await page.evaluate(() => {
+        const m = (getComputedStyle(document.body).backgroundColor.match(/\d+/g) || [255,255,255]).map(Number);
+        return (0.2126*m[0] + 0.7152*m[1] + 0.0722*m[2]) / 255 < 0.4;
+      });
+      if ((theme === "dark") !== isDark) {
+        THEME_BROKEN.push(`${theme}: nền KHÔNG đổi ⇒ ảnh "${theme}" là GIẢ`);
+      }
+    }
     await page.waitForTimeout(2200);
     const file = `${OUT}/${name}.png`;
     await page.screenshot({ path: file });
@@ -308,6 +343,11 @@ if (ASSERT) {
   if (LOGIN_FAILED) {
     console.error(`ASSERT FAIL — LOGIN HỎNG (${LOGIN_FAILED}). Mọi route đã redirect về /auth ⇒ ` +
       "ảnh chụp là 8 bản sao trang sign-in, KHÔNG phải app. Xanh ở đây là xanh GIẢ.");
+    process.exit(1);
+  }
+  if (THEME_BROKEN.length) {
+    console.error("ASSERT FAIL — ĐỔI THEME KHÔNG ĂN:\n  " + [...new Set(THEME_BROKEN)].join("\n  ") +
+      "\n  Gate đang chụp cùng một theme hai lần rồi tự khen. Sửa --theme-set cho đúng cách app đổi theme.");
     process.exit(1);
   }
   const bad = results.filter((r) => r.error || (r.status && r.status >= 400) || r.status === 0 || !r.evidence);

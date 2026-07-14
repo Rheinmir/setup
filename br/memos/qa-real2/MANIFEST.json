@@ -1,0 +1,156 @@
+{
+  "base": "http://localhost:5230",
+  "ts": 1783968645113,
+  "shots": [
+    {
+      "name": "signin",
+      "path": "/auth (chưa đăng nhập)",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-real2/signin.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 29887,
+      "evidence": true
+    },
+    {
+      "name": "auth",
+      "path": "/auth [light]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-real2/auth.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 42984,
+      "evidence": true
+    },
+    {
+      "name": "auth.dark",
+      "path": "/auth [dark]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-real2/auth.dark.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 42984,
+      "evidence": true
+    },
+    {
+      "name": "home",
+      "path": "/ [light]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-real2/home.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 42984,
+      "evidence": true
+    },
+    {
+      "name": "home.dark",
+      "path": "/ [dark]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-real2/home.dark.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 42984,
+      "evidence": true
+    },
+    {
+      "name": "explore",
+      "path": "/explore [light]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-real2/explore.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 36684,
+      "evidence": true
+    },
+    {
+      "name": "explore.dark",
+      "path": "/explore [dark]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-real2/explore.dark.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 36684,
+      "evidence": true
+    },
+    {
+      "name": "archived",
+      "path": "/archived [light]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-real2/archived.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 40531,
+      "evidence": true
+    },
+    {
+      "name": "archived.dark",
+      "path": "/archived [dark]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-real2/archived.dark.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 40531,
+      "evidence": true
+    },
+    {
+      "name": "attachments",
+      "path": "/attachments [light]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-real2/attachments.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 23975,
+      "evidence": true
+    },
+    {
+      "name": "attachments.dark",
+      "path": "/attachments [dark]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-real2/attachments.dark.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 23975,
+      "evidence": true
+    },
+    {
+      "name": "inbox",
+      "path": "/inbox [light]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-real2/inbox.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 23337,
+      "evidence": true
+    },
+    {
+      "name": "inbox.dark",
+      "path": "/inbox [dark]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-real2/inbox.dark.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 23337,
+      "evidence": true
+    },
+    {
+      "name": "setting",
+      "path": "/setting [light]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-real2/setting.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 95098,
+      "evidence": true
+    },
+    {
+      "name": "setting.dark",
+      "path": "/setting [dark]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa-real2/setting.dark.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 95098,
+      "evidence": true
+    }
+  ]
+}

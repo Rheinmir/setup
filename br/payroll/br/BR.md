@@ -219,6 +219,10 @@ Trần **BHTN = 106.200.000** dùng chung cho cả hiển thị lẫn tính (`UI
 
 **C15.2** — Số tiền: `tabular-nums`, căn phải, phân cách kiểu VN. **Bắt buộc toggle dark/light** (`prefers-color-scheme` mặc định + nút toggle + `localStorage` + script chống FOUC trong `<head>`) — không ép mode. `provenance: user (Q6)`
 
+**C15.3** — ⭐ **Giao diện BẮT BUỘC theo `br/DESIGN.md`** (kế thừa `skills/br/assets/design-template.md`): Vibe 0 **Neumorphism** — mặc định của cả dây chuyền, template nêu đích danh *"app nghiệp vụ/dashboard/form nội bộ như Payroll"* — cộng Layout **Asymmetrical Bento**. Bốn luật cứng: một mặt đơn sắc (card **cùng màu nền**, KHÔNG viền, không màu card riêng) · cặp bóng đối xứng sáng-trên-trái + tối-dưới-phải · trạng thái nhấn/nhập dùng `inset` · accent là **near-black LẬT theo theme** (không phải màu rực). Chữ đạt **WCAG AAA ≥ 7:1** ở CẢ hai theme — **tương phản là con số, cấm ước lượng bằng mắt**, phải có assert máy. `provenance: raw:skills/br/assets/design-template.md §3.2, §3.6, §4 (bộ specs chuẩn S7.5) · verified`
+
+> ⚠️ **Ghi nhận thất bại (14/07/2026):** vòng slice đầu tôi BỎ QUA S7.5 và tự chế C15 chung chung ("3 màn, có toggle") → loop-runner sinh đúng cái được yêu cầu: bảng HTML trần trụi, không design system. Bài học: **spec chuẩn có gì thì BR phải mang sang, không được tóm tắt mất luật.** Và luật thị giác phải thành assert máy — hứa suông trong prompt không phải lớp gác.
+
 ---
 
 ## C16 · Snapshot & đối chiếu

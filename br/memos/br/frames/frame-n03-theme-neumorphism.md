@@ -81,6 +81,17 @@ Muốn thêm màu thì chỉ dùng cho **semantic** (đỏ = destructive), khôn
 Luật gốc không đổi: accent = đối nghịch **ĐỘ SÁNG** với MẶT ĐANG DÙNG. Mặt sáng → accent tối;
 mặt tối → accent sáng. Một hằng số accent cho cả 2 theme là **sai từ định nghĩa**.
 
+## LUẬT BÓNG THEO KÍCH THƯỚC KHỐI (14/07/26 — user: "trông bựa lắm")
+
+Bóng neumorphic **9px/18px** chỉ đẹp trên khối **NHỎ** (nút, chip, avatar). Trải lên pane **RỘNG**
+(editor 672px, memo card) nó nở thành **quầng sáng mờ ôm cả khối** → đọc ra "hào quang giả", rẻ tiền.
+
+- **Khối càng to → bóng càng phải NHỎ.** Chiều sâu của pane lớn đến từ **MÉP**, không từ quầng:
+  `inset 1px 1px 0 var(--neu-light)` (mép sáng trên-trái) + `inset -1px -1px 0 var(--neu-dark)`
+  (mép tối dưới-phải) + một bóng rơi rất nhẹ có **spread ÂM** (`2px 3px 8px -4px`) để không toả quầng.
+- Dialog/popover (NỔI thật, đè lên nội dung) được phép sâu hơn: `6px 8px 20px -8px`.
+- Khối nhỏ giữ nguyên bóng đầy đủ — đó là chỗ neumorphism thật sự đẹp.
+
 ## Ngoài phạm vi
 
 Không sửa logic component; chỉ override token + rebrand + layer bóng. Không đụng API/store/backend.
