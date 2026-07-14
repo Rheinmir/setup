@@ -25,7 +25,7 @@ LLMWIKI = REPO / "llmwiki" / "skills"    # mirror (bundle llmwiki / sync-templat
 LOOP_MAP = {
     # dev-loop
     "impact-check": "dev-loop", "new-project-setup": "dev-loop", "onboard-codebase": "dev-loop",
-    "propose": "dev-loop", "safe-change": "dev-loop",
+    "propose": "dev-loop", "plan": "dev-loop", "safe-change": "dev-loop",
     "verify-before-commit": "dev-loop", "build-now-adapt-later": "dev-loop", "ship": "dev-loop",
     "new-skill": "dev-loop", "loop-runner": "dev-loop", "failure-flywheel": "dev-loop", "wikieval": "dev-loop",
     "skill-provenance": "dev-loop",

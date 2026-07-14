@@ -5,12 +5,14 @@
 | File | Type | Summary |
 |------|------|---------|
 | [example-concept](concepts/example-concept.md) | concept | Ví dụ một trang concept hợp lệ (Origin + OKF) cho project dùng llmwiki |
+| [adapt-modes](concepts/adapt-modes.md) | concept | 3 kiểu absorb năng lực vào dự án — HÒA TAN / KÉO NGOÀI / NHÚNG-SỞ-HỮU; gọi đúng tên chọn đúng phương án |
 | [040726-issue4-trace-grader-plan](draft/040726-issue4-trace-grader-plan.md) | plan | Plan step-by-step GH#4: sửa run.ok transcript, lọc sidechain, check grounding edited_without_read — cho dev khác làm tiếp |
 | [300626-audit-fix-docs-site-macos](draft/uiux/300626-audit-fix-docs-site-macos.md) | draft | Audit + 8 fix (a11y/head/glass) cho skill docs-site-macos, đồng bộ cả 2 bản mirror |
 | [010726-onboard-html-tabs-redesign](draft/orca/010726-onboard-html-tabs-redesign.md) | draft | 2026-07-01 |
 | [010726-trupillar4-council-persona](draft/orca/010726-trupillar4-council-persona.md) | draft | Chốt cứng Trụ 4 (cổng CI code-health) + persona-lens 18 vĩ nhân cho council (BNAL) |
 | [010726-dev-harness-kit](draft/orca/010726-dev-harness-kit.md) | draft | Thiết kế 'dev tự build harness' (BNAL) + council 18 ông chọn checksum-seal; report HTML |
 | [020726-docs-site-fdk-strategy](sources/draft/020726-docs-site-fdk-strategy.md) | draft | Render concept fdk-dev-strategy (Mongol pattern) thành docs site HTML liquid-glass |
+| [060726-design-standard-ai-elite-PLAN](sources/draft/060726-design-standard-ai-elite-PLAN.md) | plan | Nền chuẩn thiết kế AI-elite chống AI-slop: design-standard (canon) + ai-slop-lint 2 tầng + --fix kill-1-shot + design-review lens; distill design-tip + research 8 nguồn |
 | [wiki-core-relations](concepts/wiki-core-relations.md) | concept | Wiki-core v2 (đánh giá 6 tiêu chí + relations/ledger/validator, council-approved) — bước 1+2&3 shipped d4d8b90 |
 | [architecture](sources/evals/retrieval/architecture.md) | eval | Golden truy-hồi: Kiến trúc repo setup gồm những gì? |
 | [blocking-layer](sources/evals/retrieval/blocking-layer.md) | eval | Golden truy-hồi: Lớp CHẶN nằm ở hook/CI hay ở MCP? |
@@ -108,3 +110,13 @@
 | [050726-map-not-territory-fable5-unknowns](sources/draft/050726-map-not-territory-fable5-unknowns.md) | issue | Issue: Map-is-not-Territory — tìm unknowns đối chiếu & vá overstack (GH#40) |
 | [060726-wiki-sync-openwiki-distill](sources/draft/060726-wiki-sync-openwiki-distill.md) | draft | 060726-wiki-sync-openwiki-distill |
 <!-- index:auto:end -->
+| [140726-propose-plan-split-superpowers](sources/draft/140726-propose-plan-split-superpowers.md) | draft | 2026-07-14 |
+| [110726-shipped-vs-documented-parity](sources/draft/110726-shipped-vs-documented-parity.md) | draft | 2026-07-11 |
+| [130726-session-provenance](sources/130726-session-provenance.md) | source | 2026-07-13 |
+| [140726-session-provenance](sources/140726-session-provenance.md) | source | 2026-07-14 |
+| [060726-ponytail-distill-PLAN](sources/draft/060726-ponytail-distill-PLAN.md) | draft | 2026-07-06 |
+| [070726-ponytail-distill](sources/draft/070726-ponytail-distill.md) | draft | 2026-07-07 |
+| [110726-anti-fabrication-observed-metrics](sources/draft/110726-anti-fabrication-observed-metrics.md) | draft | 2026-07-11 |
+| [110726-auto-wire-eval-loop](sources/draft/110726-auto-wire-eval-loop.md) | draft | 2026-07-11 |
+| [110726-eval-blinding-grader-context](sources/draft/110726-eval-blinding-grader-context.md) | draft | 2026-07-11 |
+| [110726-gold-set-meta-eval-grader](sources/draft/110726-gold-set-meta-eval-grader.md) | draft | 2026-07-11 |

@@ -11,6 +11,24 @@ Giảm lỗi LLM-coding phổ biến. Thiên về cẩn trọng hơn tốc độ
 Đạt khi: diff bớt thừa, bớt viết-lại do overcomplicate, câu hỏi làm rõ đến TRƯỚC khi sai — không phải sau.
 
 (Nguồn: 4 nguyên tắc của Karpathy CLAUDE.md, bản distill của Forrest Chang — `multica-ai/andrej-karpathy-skills`. Bối cảnh framework: rule + skill cụ thể nằm ngay dưới.)
+
+## Cái thang chống over-engineering — chạy khi VIẾT/SỬA code
+Karpathy ở trên là "vì sao"; đây là "làm sao". (Chưng cất từ ponytail, MIT — nguồn `060726-ponytail-distill`.)
+
+**Hiểu bài trước, leo thang sau.** Đọc code, trace flow end-to-end rồi mới sửa. Diff nhỏ ĐẶT SAI CHỖ = bug thứ hai.
+
+**Cái thang — dừng ở bậc đầu tiên đứng vững:** (1) YAGNI — thứ này có cần tồn tại không? bậc rẻ nhất là xoá → (2) codebase đã có chưa? tái dùng → (3) stdlib giải được không? → (4) native platform? CSS thay JS, DB constraint thay app-code → (5) dependency đã cài rồi? → (6) 1 dòng được không? → (7) cuối cùng mới viết code tối thiểu.
+
+**Bug = root cause, không vá triệu chứng.** Grep mọi caller, sửa 1 lần ở hàm chung — fix root-cause thường diff NHỎ HƠN vá từng caller.
+
+**Marker nợ có kỷ luật** — shortcut cố ý phải để lại comment `shortcut: <trần hiện tại>, <trigger nâng cấp>` (vd `# shortcut: global lock, đổi per-account nếu throughput thành vấn đề`). Grep được → nợ có hạn, không thành "never". Marker thiếu trigger bị `/lint` cắn.
+
+**Carve-out — KHÔNG lười ở:** validation tại trust boundary, error-handling chống mất data, security, a11y, calibration phần cứng, và bất cứ thứ gì user YÊU CẦU rõ. Logic non-trivial phải để lại ĐÚNG 1 check chạy được (assert demo / 1 test nhỏ) — YAGNI áp cho cả test, nhưng không phải 0 test.
+
+**Format báo cáo rút gọn (vd khi chạy `/simplify`):** mỗi finding 1 dòng `L<line>: <tag>: <trước> → <sau>`, tag ∈ {delete, stdlib, native, yagni, shrink}; chốt `net: -N dòng`. Không có gì để cắt → "Lean already. Ship."
+
+**Output:** code trước, tối đa 3 dòng "skipped X, add when Y". Giải thích dài hơn code → xoá giải thích.
+
 ## Rules
 - 🧰 **Đồ nghề bạn CÓ — đừng làm lại thứ đã tồn tại:** bản đồ năng lực sinh-bằng-code, luôn-mới (ADR-005): repo framework → `fdk/CAPABILITIES.md` (skill+rule+tool); dự án downstream → `CAPABILITIES.md` ở gốc (build-capabilities deploy cạnh hooks, đọc global skills + rule đã cài). Không chắc có gì cho việc đang làm → ĐỌC nó, hoặc `find-skills "<việc>"`. Sinh lại: `python3 fdk/tools/build-capabilities.py` (downstream tự nhận bối cảnh khi chạy với `--root`).
 - **Đang phát triển CHÍNH framework này (skill/rule/validator/script/hook/wiki)? Gọi `/fdk`** — on-demand front-door: pre-flight + không miss rule + không dẫm module cũ. KHÔNG auto-bơm đầu phiên vì phần lớn phiên là dùng framework để dev DỰ ÁN KHÁC (xem `ADR-004`).
@@ -34,6 +52,7 @@ Giảm lỗi LLM-coding phổ biến. Thiên về cẩn trọng hơn tốc độ
 | `record-episode` | Chốt phiên vào tầng nhớ episodic (mem-rank store) để phiên sau truy hồi "phiên trước làm gì" theo nghĩa | `skills/wiki-loop/record-episode.md` | wiki-loop |
 | `lint` | After every 10 ingests, or wiki feels stale | `skills/wiki-loop/lint.md` | wiki-loop |
 | `propose` | Any new feature or change is requested | `skills/dev-loop/propose.md` | dev-loop |
+| `plan` | SPEC đã DUYỆT → mở rộng thành `-PLAN.md` thi hành được (Files chính xác + Interfaces + code từng bước) TRƯỚC khi dispatch cho agent | `skills/dev-loop/plan.md` | dev-loop |
 | `impact-check` | Before modifying any shared symbol | `skills/dev-loop/impact-check.md` | dev-loop |
 | `safe-change` | Editing code called from more than one place | `skills/dev-loop/safe-change.md` | dev-loop |
 | `verify-before-commit` | Before every commit | `skills/dev-loop/verify-before-commit.md` | dev-loop |
@@ -89,6 +108,7 @@ Giảm lỗi LLM-coding phổ biến. Thiên về cẩn trọng hơn tốc độ
 | `jenkins-agent-l3-deploy` | Deploy a docker-compose app via a Jenkins INBOUND AGENT running on the… | `skills/orchestrate/jenkins-agent-l3-deploy.md` | orchestrate |
 | `join-project` | Orient nhanh vào dự án đang chạy đã có llmwiki — read-only, không ghi wiki | `skills/utils/join-project.md` | utils |
 | `last30days` | Research what people actually say about any topic in the last 30 days. | `skills/utils/last30days.md` | utils |
+| `agent-reach` | Với-tới internet 15 nền (X/Reddit/YT/GitHub/Bilibili/XHS…), zero-API-fee, doctor self-heal — external-pull | `skills/utils/agent-reach.md` | utils |
 | `minimalist-ui` | Clean editorial-style interfaces. | `skills/utils/minimalist-ui.md` | utils |
 | `new-project-setup` | Deploy llmwiki từ đầu vào project mới — template pull, skill install, RTK,… | `skills/dev-loop/new-project-setup.md` | dev-loop |
 | `orca-cli` | Use the public `orca` CLI to operate Orca-managed worktrees/workspaces,… | `skills/orchestrate/orca-cli.md` | orchestrate |

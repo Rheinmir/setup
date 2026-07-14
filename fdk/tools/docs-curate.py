@@ -48,6 +48,19 @@ def _is_canonical(name: str) -> bool:
     return any(c in name for c in CANONICAL)
 
 
+PLAN_SUFFIX = "-PLAN"
+
+
+def _is_plan(name: str) -> bool:
+    """`DDMMYY-<tên>-PLAN.md` — kế hoạch thi hành do /plan sinh (đi kèm SPEC cùng stem)."""
+    return name.endswith(f"{PLAN_SUFFIX}.md")
+
+
+def _spec_stem(stem: str) -> str:
+    """stem của PLAN → stem của SPEC. `140726-x-PLAN` → `140726-x`. Không phải PLAN thì giữ nguyên."""
+    return stem[: -len(PLAN_SUFFIX)] if stem.endswith(PLAN_SUFFIX) else stem
+
+
 def classify():
     htmls = sorted(p.name for p in HTML.glob("*.html"))
     drafts = sorted(p.name for p in DRAFT.glob("*.md") if p.name not in SKIP_DRAFT)
@@ -84,9 +97,14 @@ def classify():
         out[h] = ("html", "report", "report/doc một-lần")
 
     for d in drafts:
-        stem = d[:-3]
+        # bộ ba một feature: SPEC `<stem>.md` + PLAN `<stem>-PLAN.md` + `<stem>-seq.html`.
+        # PLAN là văn bản THI HÀNH (ephemeral) — nó archive theo SPEC, KHÔNG bao giờ promote lên wiki.
+        stem = _spec_stem(d[:-3])
         if (HTML / f"{stem}-seq.html").is_file():
-            out[d] = ("draft", "archive", "cặp proposal (đã xong; promote bản chất trước)")
+            reason = "PLAN của cặp proposal (archive theo SPEC)" if _is_plan(d) else "cặp proposal (đã xong; promote bản chất trước)"
+            out[d] = ("draft", "archive", reason)
+        elif _is_plan(d):
+            out[d] = ("draft", "archive", "PLAN thi hành (ephemeral — không promote)")
         else:
             out[d] = ("draft", "promote?", "draft đứng-một-mình → cân nhắc LÊN wiki ADR/concept")
     return out
@@ -151,7 +169,7 @@ def _ensure_gitignore():
 
 # archive KHÔNG để phẳng — gom theo CHỨC NĂNG (subfolder), và index lại (kể cả file đã archive)
 CATEGORIES = [
-    ("proposals", "📋 Proposals (đã xong — cặp draft + seq)"),
+    ("proposals", "📋 Proposals (đã xong — bộ ba SPEC + PLAN + seq)"),
     ("superseded", "🔁 Bản bị thay thế"),
     ("analysis", "🔬 Phân tích (cân nhắc promote lên wiki)"),
     ("reports", "📰 Reports / docs một-lần"),
@@ -176,7 +194,9 @@ def _category(name, kind, seq_stems):
         if re.search(r"-v\d+\.html$", name) or "master-wiki" in name:
             return "superseded"
         return "reports"
-    stem = name[:-3]                                  # draft .md
+    stem = _spec_stem(name[:-3])                      # draft .md (PLAN → quy về stem của SPEC)
+    if _is_plan(name):
+        return "proposals"                            # PLAN luôn nằm cùng nhóm với SPEC của nó
     return "proposals" if stem in seq_stems else "analysis"
 
 

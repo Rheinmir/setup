@@ -13,6 +13,12 @@ Plan feature/change before writing code. Surfaces impact on existing functionali
 - Change touches shared/core code
 - Scope unclear or multi-interpretable
 
+## What this skill produces — and what it deliberately does NOT
+`/propose` sinh **SPEC** (bản thiết kế): thứ **NGƯỜI** đọc để bấm duyệt ở cổng. Nó KHÔNG phải kế hoạch thi hành.
+Kế hoạch code-level (đường dẫn chính xác, chữ ký hàm, test, code từng bước) là việc của skill **`/plan`**, chạy SAU khi SPEC được duyệt.
+
+Lý do tách (đối chiếu `obra/superpowers`, tỷ lệ spec:plan ≈ 1:8 — 82–511 dòng so với 673–2621 dòng): nếu nhồi code-level vào SPEC thì draft phình tới mức người duyệt không đọc nổi thứ mình đang duyệt, và **cổng duyệt mất tác dụng**. Hai văn bản, hai người đọc.
+
 ## Steps
 0. **Force-query wiki TRƯỚC khi draft** — query/đọc wiki (`concepts/`, `entities/`, `sources/adr/`, `decisions.md`) tìm concept/ADR/quyết định liên quan; tóm tắt vào `## Context` của draft + cite `[[wikilink]]`/path. KHÔNG propose "mù" (R7-f chặn draft thiếu `## Context` có nội dung).
 1. Restate request in one sentence to confirm understanding.
@@ -22,6 +28,9 @@ Plan feature/change before writing code. Surfaces impact on existing functionali
 5. State what success looks like (verifiable criteria).
 6. Create draft file at `llmwiki/wiki/sources/draft/DDMMYY-feature-name-module.md` (e.g. `260425-new-approval-button-fe.md`) containing proposal output from steps 1–5. Draft MUST include (enforced by validator R7 — blocked at write-time and commit if missing):
    - `## Context` — tóm tắt wiki liên quan đã query ở bước 0 (concept/ADR/decision), cite `[[wikilink]]`/path (force-query grounding — R7-f chặn nếu thiếu/rỗng)
+   - `## Global constraints` — ràng buộc **bao trùm mọi task**, chép **nguyên văn** giá trị thật từ wiki/ADR/policy (sàn version, giới hạn dependency, luật đặt tên, gate bắt buộc trước push…). Mỗi task ngầm mang theo section này; agent thi hành chỉ nhìn thấy task của nó, nên ràng buộc chung phải nằm ở một chỗ ai cũng được bơm. **R7-h chặn nếu thiếu/rỗng.**
+   - `## Non-goals` — cái gì cố ý KHÔNG làm. Không có mục này thì scope trôi lúc thi hành.
+   - `## Approaches` — 2–3 phương án **khác nhau về bản chất** + tradeoff từng cái + phương án chọn và vì sao. **Cấm chọn thầm.**
    - `## Plan` — tasks as `- [ ]` checklist items
    - `## Agent Task Assignment` — table `| Task | Agent (CLI) | Lý do chọn | Status |`, one row per task, **no empty Agent cell**, Status=pending. Pick agents by cost table; if all on one agent, say why.
    - `**Sequence diagram:**` link to companion `.html` (must exist on disk)
@@ -33,7 +42,13 @@ Plan feature/change before writing code. Surfaces impact on existing functionali
    - **Style:** the page MUST use the `docs-site-macos` liquid-glass look (light gradient field + refraction layers + glass tier-2 cards + Apple-tint badges) — clone an existing `llmwiki/html/*-seq.html`. Never hand-roll a dark/flat theme (lesson 250626 "sao xấu thế").
    - **Authoring split — Claude thinks, a cheaper CLI renders:** the `.md` is the SUBSTANCE (Claude's job) and must be render-complete — besides Plan + prose, include a `## Render brief` section giving, per task, the diagram's ordered steps (each tagged legacy / add / block) **and** the full prose paragraph. The `.html` is then a **mechanical render** of that brief and, in orchestrated runs, MAY be dispatched to a cheaper CLI (OpenCode `big-pickle` / `agy` / `kiro`, $0) — see `orca-workflow`. Standalone `/propose`: Claude renders directly and `## Render brief` is optional. Because the render is free when delegated, prefer **Full** `docs-site-macos` richness for the `.html` rather than a stripped page — Claude's token cost is the substance only and does not grow with HTML richness.
    - Link both ways: `.md` ↔ `.html`
-8. STOP. No code. Show the draft content + the HTML preview URL. Wait for user to approve or redirect.
+8. **Self-review — soi lại bằng mắt mới, sửa tại chỗ.** Ghi kết quả vào `## Self-review` của draft (3 mắt lưới):
+   1. **Phủ yêu cầu** — mỗi yêu cầu trong request chỉ được về đúng một task. Thiếu → thêm task.
+   2. **Quét placeholder** — không được còn `TBD`, `TODO`, "xử lý lỗi phù hợp", "handle edge cases", "tương tự Task N". **R7-g chặn.**
+   3. **Nhất quán tên-kiểu** — cùng một thứ phải gọi cùng một tên xuyên suốt draft (hàm `clearLayers()` ở task 3 mà `clearFullLayers()` ở task 7 là một con bug đã sinh ra ngay trong lúc viết).
+   Tìm thấy lỗi thì sửa thẳng, không cần review lại vòng hai.
+9. STOP. No code. Show the draft content + the HTML preview URL. Wait for user to approve or redirect.
+10. **Sau khi user DUYỆT** — bàn giao sang `/plan` (Skill tool → `plan`) để mở rộng SPEC này thành `DDMMYY-<tên>-PLAN.md` thi hành được. Đừng dispatch task khi chưa có PLAN: agent CLI rẻ chạy headless không thừa hưởng context nào và không hỏi lại được — nó chỉ có đúng thứ ta bơm vào (bài học 250626: giao hàng ~1/5 khi brief mỏng).
 
 ## Rules
 - **OKF v0.1 (R9):** the draft starts with a YAML frontmatter block (`---`) with `type: draft` (+ optional `title`/`status`/`tags`/`timestamp`/`task`); copy `sources/draft/_template.md`. Keep `**Status:** proposed` in the body so R7 can gate it.

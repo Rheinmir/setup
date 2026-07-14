@@ -19,16 +19,46 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-08 17:02:50 | `file.write` | llmwiki/.claude/hooks/stop.py · tool=Edit · session=ab0659cb · actor=agent · prev=genesis · h=157ea2922127f9bd26bb2879b5 |
-| 2026-07-08 17:03:00 | `file.write` | harness/tests/wiki-graph-user-reachability-test.sh · tool=Edit · session=ab0659cb · actor=agent · prev=157ea2922127f9bd2 |
-| 2026-07-08 17:03:06 | `file.write` | harness/tests/wiki-graph-user-reachability-test.sh · tool=Edit · session=ab0659cb · actor=agent · prev=db3bfd57aae2e4bf5 |
-| 2026-07-08 17:03:24 | `file.write` | harness/tests/wiki-graph-user-reachability-test.sh · tool=Edit · session=ab0659cb · actor=agent · prev=77434142cb94d5103 |
-| 2026-07-08 17:03:44 | `file.write` | harness/tests/wiki-graph-selfcheck.sh · tool=Edit · session=ab0659cb · actor=agent · prev=dde6a984798ddc41f5af1f614fd26e |
-| 2026-07-08 17:03:57 | `file.write` | harness/tests/wiki-graph-selfcheck.sh · tool=Edit · session=ab0659cb · actor=agent · prev=5f00d6f96a6061273483d9ce7f4938 |
-| 2026-07-08 17:04:55 | `file.write` | fdk/wiki/concepts/framework-dev-antipatterns.md · tool=Edit · session=ab0659cb · actor=agent · prev=d5d6810d5f77ea4ed17d |
-| 2026-07-08 17:06:09 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · session=ab0659cb · actor=agent · prev=31719473bc56a0cf26d5f9a07fef406b2 |
-| 2026-07-08 17:06:27 | `file.write` | llmwiki/html/fdk-problem-tree.html · tool=Edit · session=ab0659cb · actor=agent · prev=720e4b271eb045a9cb9cd8356035cb4d8 |
-| 2026-07-08 17:07:44 | `file.write` | harness/foundation.yaml · tool=Edit · session=ab0659cb · actor=agent · prev=3b5cc4aff8346801e717656359f0860e110ab3e43d77 |
+| 2026-07-12 23:43:54 | `file.write` | .github/workflows/harness.yml · tool=Edit · session=cacb3b15 · actor=agent · prev=a123c2283f5ed250a2f5e7cc93c37fd11d63c9 |
+| 2026-07-12 23:44:15 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=0 · prev=98b1c1b25afe4a34d29259cc13cd8df69eafd4dffc8e52b3cae5ba9dad27b99b · h=910b |
+| 2026-07-12 23:51:19 | `file.write` | fdk/docs/fresh-install-gate.md · tool=Edit · session=c82ce215 · actor=agent · prev=910b823db67d42f430985c8196c910cebac7b |
+| 2026-07-13 00:19:58 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['fdk/skills.provenance.json'] · prev=6ba59805b934185429a1eb5bf80e496e7e |
+| 2026-07-13 13:26:35 | `file.write` | fdk/docs/fresh-install-gate.md · tool=Edit · session=c82ce215 · actor=agent · prev=8614d2867956a79a98688353708ac559ba7c9 |
+| 2026-07-13 16:41:13 | `file.write` | harness/downstream-contract.yaml · tool=Write · session=c82ce215 · actor=agent · prev=a53b35fef94b1cd14b458c18e1ae838d3d |
+| 2026-07-13 16:41:37 | `file.write` | harness/scripts/fresh-install-smoke.sh · tool=Edit · session=c82ce215 · actor=agent · prev=ede8cef81dacb484bc9c9d6848742 |
+| 2026-07-13 16:43:24 | `file.write` | fdk/docs/fresh-install-gate.md · tool=Edit · session=c82ce215 · actor=agent · prev=c417049ea26dee89cd55e504bdb0576798d08 |
+| 2026-07-13 16:50:13 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=c82ce215 · actor=agent · prev=80e7d37fadcb71646794fe4023a5d27abad00 |
+| 2026-07-13 16:53:26 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=c82ce215 · actor=agent · prev=e0d7fc02bd570d057c75513ea54fe6699f48d |
+| 2026-07-13 16:57:38 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=c82ce215 · actor=agent · prev=eed6e45e032a7297c7ef69e06814befce18f6 |
+| 2026-07-13 16:58:20 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=c82ce215 · actor=agent · prev=3334d1767fd29b16ee9096a66bebb0ea5ea6b |
+| 2026-07-14 01:17:33 | `file.write` | harness/downstream-contract.yaml · tool=Edit · session=c82ce215 · actor=agent · prev=2c61f3df3006349fcfb33c5b8702ff7b80d |
+| 2026-07-14 01:17:43 | `file.write` | harness/scripts/fresh-install-smoke.sh · tool=Edit · session=c82ce215 · actor=agent · prev=7405cffcf2d4d70df648066dcd00d |
+| 2026-07-14 01:19:05 | `file.write` | fdk/docs/fresh-install-gate.md · tool=Edit · session=c82ce215 · actor=agent · prev=dfbe4c1d6a96b18aa98cbe8e17efdb49275a1 |
+| 2026-07-14 09:39:34 | `file.write` | harness/poc-vendor-neutral/install.sh · tool=Edit · session=c82ce215 · actor=agent · prev=09fb1bad1f310e16657eb07c56a104 |
+| 2026-07-14 09:39:43 | `file.write` | harness/downstream-contract.yaml · tool=Edit · session=c82ce215 · actor=agent · prev=9fb3cd9a3bd0d7319f8969d1835b0c3b6f4 |
+| 2026-07-14 09:43:43 | `file.write` | harness/scripts/capability-stamp.py · tool=Write · session=c82ce215 · actor=agent · prev=776e15fbfdb3bab2a1cd2a793014ef3 |
+| 2026-07-14 09:44:02 | `file.write` | fdk/tools/medic.py · tool=Edit · session=c82ce215 · actor=agent · prev=ff298eec6ca74341b303f9046fc74c72cc29382380744dff0 |
+| 2026-07-14 09:44:07 | `file.write` | fdk/tools/medic.py · tool=Edit · session=c82ce215 · actor=agent · prev=0d12a9984c18390cd6c6ef89346af677d97987e13f3406547 |
+| 2026-07-14 09:46:11 | `file.write` | fdk/docs/fresh-install-gate.md · tool=Edit · session=c82ce215 · actor=agent · prev=23e0874708e15019cb0f7776bdd442be5a0f3 |
+| 2026-07-14 09:54:30 | `file.write` | harness/poc-vendor-neutral/install.sh · tool=Edit · session=c82ce215 · actor=agent · prev=91629bf081ba6b6f6b0a27c1bc81a3 |
+| 2026-07-14 09:55:57 | `file.write` | fdk/docs/fresh-install-gate.md · tool=Edit · session=c82ce215 · actor=agent · prev=6dd5ca3435aa993a417da377b165fa51cb1e3 |
+| 2026-07-14 10:04:52 | `file.write` | harness/scripts/capability-stamp.py · tool=Edit · session=c82ce215 · actor=agent · prev=93f22057d17c0fac8ae76aec6e255b2f |
+| 2026-07-14 10:05:04 | `file.write` | harness/scripts/capability-stamp.py · tool=Edit · session=c82ce215 · actor=agent · prev=ec7b2c2e00fb8e4890186ad0d569f4e7 |
+| 2026-07-14 10:06:51 | `file.write` | harness/scripts/capability-stamp.py · tool=Edit · session=c82ce215 · actor=agent · prev=51025d9e5f027c3f65e425180bbbf22c |
+| 2026-07-14 10:07:02 | `file.write` | harness/scripts/capability-stamp.py · tool=Edit · session=c82ce215 · actor=agent · prev=4ea76eb165222ec9e122d32ddd5602a0 |
+| 2026-07-14 10:09:49 | `file.write` | fdk/docs/fresh-install-gate.md · tool=Edit · session=c82ce215 · actor=agent · prev=384139efab0cf93e49d2c3368caff77bd09c8 |
+| 2026-07-14 13:23:36 | `file.write` | llmwiki/wiki/sources/draft/110726-shipped-vs-documented-parity.md · tool=Write · session=c82ce215 · actor=agent · prev=6 |
+| 2026-07-14 13:24:12 | `file.write` | harness/scripts/fresh-install-smoke.sh · tool=Edit · session=c82ce215 · actor=agent · prev=159e26e39aa2ccb52e4b5b0ea41af |
+| 2026-07-14 13:25:51 | `file.write` | fdk/docs/fresh-install-gate.md · tool=Edit · session=c82ce215 · actor=agent · prev=fafdf5059f6b3308e3deef2086a485e995377 |
+| 2026-07-14 13:26:21 | `file.write` | llmwiki/wiki/sources/draft/110726-shipped-vs-documented-parity.md · tool=Edit · session=c82ce215 · actor=agent · prev=ea |
+| 2026-07-14 13:29:36 | `file.write` | harness/scripts/fresh-install-smoke.sh · tool=Edit · session=c82ce215 · actor=agent · prev=c29f03e39896e3727aefe5adbeed1 |
+| 2026-07-14 13:30:26 | `file.write` | fdk/docs/fresh-install-gate.md · tool=Edit · session=c82ce215 · actor=agent · prev=de90ec999f113b0b3312d5964604ffb4c0750 |
+| 2026-07-14 21:43:56 | `task.new` |  · task=T-260714-01 · title=propose/plan split chuẩn superpowers · state=proposed · actor=agent · prev=901451629e4a18adc |
+| 2026-07-14 21:45:33 | `file.write` | llmwiki/wiki/sources/draft/140726-propose-plan-split-superpowers.md · tool=Write · session=36e6562b · actor=agent · prev |
+| 2026-07-14 21:47:14 | `file.write` | llmwiki/html/140726-propose-plan-split-seq.html · tool=Write · session=36e6562b · actor=agent · prev=44374ffa3b0816e4c7f |
+| 2026-07-14 21:47:49 | `file.write` | llmwiki/html/140726-propose-plan-split-seq.html · tool=Edit · session=36e6562b · actor=agent · prev=2d410078f69274cf6ea4 |
+| 2026-07-14 21:47:56 | `file.write` | llmwiki/wiki/sources/draft/140726-propose-plan-split-superpowers.md · tool=Edit · session=36e6562b · actor=agent · prev= |
+| 2026-07-14 21:48:27 | `file.write` | llmwiki/wiki/sources/draft/140726-propose-plan-split-superpowers.md · tool=Edit · session=36e6562b · actor=agent · prev= |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -245,3 +275,17 @@ Giải issue `030726-skill-resolve-supplychain` (trục #5 frontier-gap-scan, Ch
 ## 2026-07-07 — fdk — gỡ note so sánh openwiki khỏi overstack.html (feedback)
 
 - Docs chính thức không bình phẩm sản phẩm khác: xoá note "Đối chiếu thẳng thắn với openwiki" + attribution inline; nội dung mục Wiki giờ chỉ nói năng lực của mình.
+
+## 2026-07-07 — Cài last30days + agent-reach (external-pull) + concept adapt-modes
+- Cài engine last30days v3.11.0 (mvanhorn) vào ~/.agents/skills; cài agent-reach v1.5.0 (Panniantong) qua pipx (tarball gh-api, không PyPI). Provenance ghi cả hai (.provenance.yaml + fdk/skills.provenance.json, adapt_mode=external-pull).
+- Wiring travel kiểu external-pull: travel-policy.yaml Tầng 1 +research_reach; mirror SKILL.md (last30days→v3.11.0, agent-reach mới); bảng skill CLAUDE.md/AGENT.md +agent-reach.
+- Concept mới `adapt-modes`: đặt tên 3 kiểu absorb (HÒA TAN / KÉO NGOÀI / NHÚNG-SỞ-HỮU) + bảng quyết định. Sẽ render docs-site-macos.
+
+- Render docs-site-macos concept adapt-modes → llmwiki/html/070726-adapt-modes.html (mind-map + sơ đồ định vị kéo-thả + theme toggle + 3 section kiểu adapt).
+
+## 2026-07-07 — Chưng cất ponytail (anti-over-engineering) vào overstack
+- B1: thêm khối luật luôn-nạp "Cái thang chống over-engineering" vào llmwiki/AGENT.md + llmwiki/CLAUDE.md (ladder 7 bậc + hiểu-bài-trước + root-cause fix + carve-out an toàn + format review 1-dòng/tag/net:-N). Nguồn: 060726-ponytail-distill (ponytail, MIT).
+- B2: /lint thêm bước 8 grep marker nợ `shortcut: <trần>, <trigger>` thiếu trigger (canonical skills/lint/SKILL.md → sync-skill.sh ra mirror + bản cài); bước log/neo dời thành 9/10.
+- B3: gộp format review 1-dòng vào khối B1 (không đẻ skill song song — /simplify là built-in). fdk-problem-tree +node p-24 (solved 2/3 trụ). medic --ci: 9/9 xanh.
+
+- 2026-07-12 · frontier-scan #3 · quét 5 WebSearch, đối chiếu 8 trục vs kỳ #2 (04/07). Diff: không trục nào tụt hạng, không trục mới; 5 trục Thua/Chớm đều đã có issue mở chỉ còn 3 trục mở GH#10/#11/#12; đính chính: GH#9 (Memory) + GH#13 (Skill-security) đã CLOSED có code thật, kỳ #2 chép nhầm nhãn Thua/Chớm → cập nhật bằng chứng, không raise trùng (R7-f). Bằng chứng mới: Skill-security số liệu cứng (42.447 skill 26.1% lỗ hổng, Antiy 1.184 skill độc ClawHub, 80% lệch khai-báo↔hành-vi), Orchestration mốc scale (Kimi K2.5 100 sub-agent song song), Memory blueprint (Zep/Graphiti temporal KG + BEAM/LoCoMo/LongMemEval), Self-Harness/ComfyClaw/MetaSkill-Evolve (vẫn buộc verifier độc lập). Report: llmwiki/html/overstack-vs-world-30d.html.

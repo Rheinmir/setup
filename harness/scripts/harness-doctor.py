@@ -216,6 +216,7 @@ def build_r7(base):
     good_c = (
         "---\ntype: draft\n---\n# Feature X — proposal\n\n**Status:** proposed\n\n"
         "## Context\nDa query wiki: lien quan [[rule-registry]] va ADR-008 ve the kit (force-query R7-f).\n\n"
+        "## Global constraints\n- Python 3.11+, khong them dependency moi; medic --ci xanh truoc push (R7-h).\n\n"
         "## Plan\n- [ ] task one — distill raw\n- [ ] task two — update index\n\n"
         "## Agent Task Assignment\n| Task | Agent | Notes |\n|------|-------|-------|\n"
         "| task one | claude | distill |\n| task two | codex | index |\n\n"
