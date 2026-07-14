@@ -612,6 +612,49 @@
     "date": "2026-07-14",
     "solvedBy": "R18 ở harness/policy.yaml + poc/policy.yaml; build_r18 trong harness-doctor (18/18 rails); 3 case R18 trong test-broad (72/72); skills/fdk-uat/SKILL.md. UAT thật PASS trên dự án curl-cài từ remote: R18 chặn PLAN thiếu Files/Interfaces đúng lý do.",
     "session": "2026-07-14 propose/plan split + fdk-uat"
+  },
+  {
+    "id": "p-27",
+    "parent": "p-25",
+    "title": "PLAN bỏ sót một yêu cầu của SPEC — không gì phát hiện được",
+    "desc": "skills/plan § Self-review bảo 'lướt từng yêu cầu, chỉ ra task nào thực hiện nó' — nhưng đó là LỜI HỨA CỦA MODEL, không có gì cưỡng chế. Một yêu cầu trôi mất giữa hai task chỉ lộ ra lúc agent giao hàng thiếu, hoặc tệ hơn, lúc user dùng. Hấp thụ github/spec-kit: SPEC đánh id ổn định FR-xxx/SC-xxx, PLAN khai '**Thoả:** FR-001, FR-003', validator đối chiếu và CHẶN nếu có id nào không task nào nhận (in đúng tên id). Lời hứa thành cổng grep được.",
+    "status": "solved",
+    "scope": [
+      "harness",
+      "skills",
+      "llmwiki"
+    ],
+    "date": "2026-07-14",
+    "solvedBy": "R18-(o) trong proposal_complete.py + need_contains '**Thoả:**' ở poc policy (travel downstream); skills/propose (## Requirements FR) + skills/plan (**Thoả:**). test-broad 74/74, doctor 18/18. UAT 2 pha PASS.",
+    "session": "2026-07-14 hấp thụ spec-kit"
+  },
+  {
+    "id": "p-28",
+    "parent": null,
+    "title": "Model đoán thầm ở chỗ nguy hiểm, và người duyệt lướt qua vì nó 'trông như đã xong'",
+    "desc": "User đúng khi nói: /propose không nên phỏng vấn — user đã mô tả hết những gì họ biết, model cứ tự điền default rồi gắn thẻ (default). NHƯNG autofill trần trụi là cái máy hợp thức hoá phỏng đoán ở đúng chỗ nguy hiểm nhất: cơ chế auth, thời hạn lưu dữ liệu, tiền, pháp lý, ranh giới tin cậy — sai một cái là hỏng kiến trúc, mà dòng đó lại TRÔNG như đã xong. spec-kit dùng CẶP: ## Assumptions (default) + [NEEDS CLARIFICATION] cho nhóm cấm-đoán. Ta lấy cả cặp, và cổng duyệt CHẶN nếu SPEC còn '[CẦN LÀM RÕ]' chưa trả lời.",
+    "status": "solved",
+    "scope": [
+      "harness",
+      "skills",
+      "llmwiki"
+    ],
+    "date": "2026-07-14",
+    "solvedBy": "R7-(n) + forbid_contains ở engine khai báo (travel downstream); skills/propose § 'Tự điền hay hỏi'. Khớp carve-out CLAUDE.md. UAT 2 pha PASS.",
+    "session": "2026-07-14 hấp thụ spec-kit"
+  },
+  {
+    "id": "p-29",
+    "parent": "p-26",
+    "title": "raw.githubusercontent propagate TRỄ và KHÔNG ĐỒNG ĐỀU giữa các file → cài ra bản LAI",
+    "desc": "Đo thật 2026-07-14: curl bootstrap ngay sau push → engine (bin/llmwiki-validate.py) đã là bản MỚI trong khi policy.yaml còn CŨ → dự án cài ra là một thứ lai, test-broad 72/74, luật mới không cắn. Chờ vài phút rồi chạy lại: 74/74. Đây là ĐỎ GIẢ; cùng cơ chế cũng có thể cho XANH GIẢ nếu file cũ tình cờ vẫn qua test — nguy hiểm hơn nhiều. Cũng là rủi ro THẬT cho user curl-cài ngay sau một release.",
+    "status": "solved",
+    "scope": [
+      "skills"
+    ],
+    "date": "2026-07-14",
+    "solvedBy": "skills/fdk-uat § pha 2: BẮT BUỘC poll sentinel (một chuỗi CHỈ có ở bản mới) tới khi raw trả đúng, rồi mới đo. Chưa vá được phía user (bootstrap không tự kiểm nhất quán) → còn hở 1/3 trụ.",
+    "session": "2026-07-14 UAT hai pha"
   }
 ]</script>
 

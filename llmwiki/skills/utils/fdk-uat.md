@@ -95,10 +95,26 @@ Pha 1 chạy với **ref khác** và **ba biến override** → nó **mù** vớ
 ```bash
 git push origin HEAD:<nhánh chính>          # merge — bản này ĐÃ qua canary
 git push origin --delete "$CANARY"          # dọn nhánh tạm
+```
 
-# Chạy ĐÚNG lệnh trong README — KHÔNG override một biến nào:
+**CHỜ CDN PROPAGATE TRƯỚC KHI ĐO — bắt buộc.** `raw.githubusercontent.com` **không** phục vụ bản mới ngay sau push, và độ trễ **không đồng đều giữa các file**: đã đo được cảnh engine (`bin/llmwiki-validate.py`) đã mới trong khi `policy.yaml` còn cũ → bản cài ra là một thứ **lai**, và cổng báo ĐỎ GIẢ. Nguy hiểm hơn: cùng cơ chế đó có thể cho **XANH GIẢ** nếu file cũ tình cờ vẫn qua được test.
+
+Chốt bằng một sentinel — poll tới khi raw trả đúng nội dung mình vừa đẩy:
+
+```bash
+RAW="https://raw.githubusercontent.com/<owner>/<repo>/<nhánh chính>"
+MARK="<một chuỗi CHỈ có ở bản mới>"      # vd tên rule/field vừa thêm
+for i in $(seq 1 30); do
+  curl -fsSL "$RAW/harness/poc-vendor-neutral/policy.yaml" | grep -q "$MARK" && break
+  echo "  raw còn cũ, chờ CDN… ($i)"; sleep 10
+done
+```
+
+Rồi mới chạy **đúng lệnh trong README — không override một biến nào**:
+
+```bash
 D2=$(mktemp -d) && cd "$D2" && git init -q
-curl -fsSL https://raw.githubusercontent.com/<owner>/<repo>/<nhánh chính>/harness/poc-vendor-neutral/bootstrap.sh | bash
+curl -fsSL "$RAW/harness/poc-vendor-neutral/bootstrap.sh" | bash
 ```
 
 Rút gọn (~1 phút): 3 trụ có mặt · `bash harness/poc-vendor-neutral/test-broad.sh` PASS · skill mới reachable trong `~/.claude/skills/`.
@@ -128,6 +144,7 @@ Gỡ xong: ghi lại **vì sao fail** vào `llmwiki/html/fdk-problem-tree.html` 
 - **Canary KHÔNG thay được main-URL smoke.** Nó chạy với ref khác + biến override → mù với các giá trị mặc định, mà mặc định chính là chỗ hardcode tên nhánh. Bỏ pha 2 là bỏ đúng thứ người dùng thật chạm vào.
 - **Không bao giờ push rồi bỏ mặc.** Đã push để UAT thì phải chạy UAT trong cùng phiên. Push xong đi ngủ là để lại một bản chưa nghiệm thu cho người khác kéo về.
 - **Dọn nhánh canary ở CẢ HAI lối ra** (pass và fail). Bước 0 liệt kê `git branch -r | grep uat/` để dọn rác của phiên chết giữa chừng.
+- **CDN propagate không đồng đều — CHỜ SENTINEL, đừng đo ngay sau push.** `raw.githubusercontent` có thể trả file A đã mới còn file B còn cũ trong cùng một lần cài → bản lai, và cổng báo đỏ giả (hoặc xanh giả, nguy hiểm hơn). Poll một chuỗi CHỈ có ở bản mới cho tới khi raw trả đúng, rồi mới đo. Đo được thật ngày 2026-07-14: engine mới + policy cũ → test-broad 72/74, luật mới không cắn; chờ vài phút rồi chạy lại → 74/74.
 - **Không đếm skill/rule bằng trí nhớ** — đếm LIVE trong dự án vừa cài. Con số trên đĩa repo **không** phải con số tới tay người dùng (đã cháy: doc báo 74 skill, installer giao 67 — 7 skill hỏng frontmatter bị CLI nuốt im lặng).
 - **Rule mới phải CẮN, không chỉ có mặt.** File `policy.yaml` có dòng luật ≠ luật chặn được. Luôn test bằng một file BAD thật.
 - **Trần (ceiling) cố ý:** UAT headless không spin được model LLM, nên "`/orchestration` chạy được" chỉ kiểm ở mức tất định (cài đủ + reachable + ping runtime). Live-run bằng model thật vẫn là acceptance làm tay.
