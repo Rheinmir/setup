@@ -57,6 +57,7 @@
         "./skills/docs-site-macos",
         "./skills/extract-site",
             "./skills/visual-qa",
+            "./skills/design-twice",
             "./skills/unknown",
         "./skills/failure-flywheel",
         "./skills/find-skills",

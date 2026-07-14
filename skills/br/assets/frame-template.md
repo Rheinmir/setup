@@ -40,6 +40,13 @@ vì sao cần. Viết như giải thích cho đồng nghiệp mới — không c
 ## Ngoài phạm vi
 <những gì frame này CỐ TÌNH không làm (thuộc frame khác hoặc để sau) — chống scope creep.>
 
+## Thiết kế (design-twice)
+<CHỈ điền nếu ui_role≠none — và phải điền TRƯỚC KHI CODE. Chạy `/design-twice`:
+- **PA-A / PA-B / PA-C:** mỗi phương án 1-2 dòng (khác nhau TẬN GỐC, kèm wireframe/ảnh — tả suông không tính).
+- **CHỌN:** phương án nào + **VÌ SAO** (độ sâu, dễ dùng đúng, hợp ca dùng chính).
+- **GHÉP:** ý hay bê từ phương án thua sang.
+Không có mục này = chưa thiết kế = **frame chưa xong**. Đang vá lần 2 cho cùng một chỗ ⇒ quay lại đây.>
+
 ## UI hoạt động ra sao
 <CHỈ điền nếu ui_role≠none — bỏ qua với frame logic thuần. Mô tả tương tác để CONTRACT chốt được:
 - **Tương tác chính:** nhập gì / bấm gì → thấy gì.

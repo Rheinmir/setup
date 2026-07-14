@@ -1,0 +1,61 @@
+/* LUME — DARK (neumorphic).
+ *
+ * BÀI HỌC 14/07/26 (lỗi "mảng đen bao quanh editor, xung quanh thì trắng"):
+ * memos KHÔNG bật dark bằng class `.dark`. Nó INJECT nội dung file này vào <head> lúc chạy
+ * (utils/theme.ts → injectThemeStyle) và set `data-theme="default-dark"` trên <html>.
+ * Vì style inject SAU nên `:root` ở đây THẮNG token của neumorphism.css, nhưng các rule
+ * `!important` (card/nút) của neumorphism thì vẫn thắng ⇒ nửa nạc nửa mỡ:
+ * NỀN dark của memos + CARD sáng của Lume = mảng đen bao quanh editor giữa trang trắng.
+ *
+ * ⇒ Bảng màu dark phải nằm CHÍNH TẠI ĐÂY, và phải khai cả các biến --neu-* để lớp bóng
+ *   (shadow/inset) lật theo. Viết `.dark {}` trong neumorphism.css là VÔ TÁC DỤNG.
+ *
+ * Số đo (WCAG, nền #2d3239): ink 9.2:1 · muted 7.81:1 · accent vs nền 11.39:1 · ink trên accent 15.86:1.
+ */
+:root {
+  /* mặt neumorphic tối — MỘT màu duy nhất cho body/card/sidebar (mặt đơn sắc, move 1) */
+  --neu-bg: #2d3239;
+  --neu-dark: #23272d;        /* bóng tối  */
+  --neu-light: #373d46;       /* bóng sáng */
+  --neu-ink: #d6dae0;
+  /* accent LẬT theo theme: mặt tối → accent SÁNG (đối nghịch ĐỘ SÁNG, họ trung tính) */
+  --neu-accent: #eef1f5;
+
+  --background: var(--neu-bg);
+  --foreground: var(--neu-ink);
+  --card: var(--neu-bg);
+  --card-foreground: var(--neu-ink);
+  --popover: var(--neu-bg);
+  --popover-foreground: var(--neu-ink);
+
+  --primary: var(--neu-accent);
+  --primary-foreground: #14171c;      /* chữ TRÊN accent phải ĐEN lại — cấm hardcode #fff */
+
+  --secondary: var(--neu-bg);
+  --secondary-foreground: var(--neu-ink);
+  --muted: #2a2f36;
+  --muted-foreground: #c3cad3;        /* 7.81:1 — bản cũ oklch(0.72) chỉ ~4.9 → trượt AAA */
+  --accent: var(--neu-bg);
+  --accent-foreground: var(--neu-ink);
+
+  --destructive: #8f1d15;              /* chữ trắng trên nó 8.92:1 — bản oklch cũ chỉ 6.39 (light) / 3.47 (dark) → trượt AAA */
+  --destructive-foreground: #ffffff;
+  --success: oklch(0.7 0.15 155);
+  --success-foreground: oklch(0.2 0.03 155);
+  --warning: oklch(0.78 0.14 75);
+  --warning-foreground: oklch(0.25 0.03 75);
+
+  --border: transparent;              /* neumorphism không viền — chiều sâu bằng bóng/mép */
+  --input: var(--neu-bg);
+  --ring: var(--neu-accent);
+
+  /* memos có token --sidebar RIÊNG: quên override là sidebar giữ màu khác → lệch mặt đơn sắc */
+  --sidebar: var(--neu-bg);
+  --sidebar-foreground: var(--neu-ink);
+  --sidebar-accent: var(--neu-bg);
+  --sidebar-accent-foreground: var(--neu-ink);
+  --sidebar-border: transparent;
+  --sidebar-primary: var(--neu-accent);
+  --sidebar-primary-foreground: #14171c;
+  --sidebar-ring: var(--neu-accent);
+}

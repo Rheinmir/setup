@@ -65,6 +65,20 @@ mkdirSync(OUT, { recursive: true });
 const browser = await chromium.launch({ channel: "chrome", headless: true });
 const ctx = await browser.newContext({ viewport: { width: 1360, height: 900 }, deviceScaleFactor: 1 });
 const page = await ctx.newPage();
+
+// KHỬ NGẪU NHIÊN TRƯỚC KHI CHỤP (bài học 14/07/26): con trỏ nhấp nháy + animation làm MỌI route
+// lệch baseline ~0.04% ở mỗi lần chụp ⇒ gate đỏ vĩnh viễn ⇒ **gate nhiễu = gate CHẾT** (bị phớt lờ,
+// rồi regression thật lọt qua). Sửa NGUỒN NGẪU NHIÊN, đừng nới ngưỡng — nới ngưỡng là làm mù máy.
+await ctx.addInitScript(() => {
+  const css = `*,*::before,*::after{animation:none!important;transition:none!important;
+    caret-color:transparent!important}
+    .cm-cursor,.cm-cursorLayer{opacity:0!important}`;   /* CHỈ con trỏ CodeMirror.
+    ⚠ KHÔNG dùng [class*="cursor"] — nó trúng luôn class Tailwind `cursor-pointer`/`cursor-text`
+       ⇒ ẩn mất ô nhập ⇒ login chết ⇒ gate tự bắn vào chân mình (đã dính 14/07/26). */
+  const put = () => { const st = document.createElement("style"); st.textContent = css;
+    document.head?.appendChild(st); };
+  document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", put) : put();
+});
 const results = [];
 
 // ── LỖ MÙ ĐÃ VÁ (13/07/26): driver login TRƯỚC rồi mới chụp ⇒ /auth luôn redirect về home

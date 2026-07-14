@@ -19,12 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-13 11:14:30 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=5fecc9f44c58382c31e01d5424f5 |
-| 2026-07-13 11:14:44 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=d66b8424d176a5b91448f98d3703 |
-| 2026-07-13 11:17:51 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=5f9efe30b35e78c50e05f57b4042 |
-| 2026-07-13 11:25:20 | `file.write` | skills/visual-qa/SKILL.md · tool=Write · session=90a00343 · actor=agent · prev=21e0bced4a5c636c01ccd4f3de216ae0a68663148 |
-| 2026-07-13 11:40:08 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=844f6479dd1e16ed1f8d7ecb1af1 |
-| 2026-07-13 11:40:21 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=8ff3b35bf3766ec714127472fc81 |
 | 2026-07-13 11:40:30 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=acbf78337e0adf7c359d983eef7f |
 | 2026-07-13 11:42:16 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=e789047f65ac29e4abe867902b3f |
 | 2026-07-13 11:43:07 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=627f659a5f838217602f6c8d1161 |
@@ -59,6 +53,12 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-14 01:20:12 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=90a00343 · actor=agent · prev=c90aafd708374594ca9a8cfc9aaf |
 | 2026-07-14 01:23:59 | `file.write` | skills/visual-qa/SKILL.md · tool=Edit · session=90a00343 · actor=agent · prev=9ae45b3138916b8d4bc2dd6c851fa8bfb2fc69d67a |
 | 2026-07-14 01:42:03 | `file.write` | skills/visual-qa/SKILL.md · tool=Edit · session=90a00343 · actor=agent · prev=d3954cd57ecb5a0f5c34d2a414705a8338a77c77b9 |
+| 2026-07-14 08:11:04 | `file.write` | skills/visual-qa/SKILL.md · tool=Edit · session=90a00343 · actor=agent · prev=edb6cdd5d6e44f7f7ca21e69bc2797a246f34e619b |
+| 2026-07-14 08:13:35 | `file.write` | llmwiki/html/140726-br-dieu-kien-day-chuyen.html · tool=Write · session=0506c618 · actor=agent · prev=cc98dff2e28575e213 |
+| 2026-07-14 08:13:49 | `file.write` | llmwiki/html/140726-br-dieu-kien-day-chuyen.html · tool=Edit · session=0506c618 · actor=agent · prev=28b4f21b403d984efdc |
+| 2026-07-14 08:46:36 | `file.write` | skills/design-twice/SKILL.md · tool=Write · session=90a00343 · actor=agent · prev=814759e84f6f00d7492c373a727a29c727e07e |
+| 2026-07-14 08:47:00 | `file.write` | skills/br/SKILL.md · tool=Edit · session=90a00343 · actor=agent · prev=6a6411e6fd07b419fadaf4c2b7d5848450397acfefe3b0bd5 |
+| 2026-07-14 08:47:18 | `file.write` | skills/br/assets/frame-template.md · tool=Edit · session=90a00343 · actor=agent · prev=c1cbd4b7bdbf2463d33abb4bb2a74ca54 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)

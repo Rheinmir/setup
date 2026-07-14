@@ -1,0 +1,46 @@
+{
+  "base": "http://localhost:5230",
+  "ts": 1784002047240,
+  "shots": [
+    {
+      "name": "signin",
+      "path": "/auth (chưa đăng nhập)",
+      "status": 200,
+      "file": "br/lume/qa-m09/signin.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 29887,
+      "evidence": true
+    },
+    {
+      "name": "inbox",
+      "path": "/inbox [light]",
+      "status": 200,
+      "file": "br/lume/qa-m09/inbox.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 22938,
+      "evidence": true
+    },
+    {
+      "name": "inbox.dark",
+      "path": "/inbox [dark]",
+      "status": 200,
+      "file": "br/lume/qa-m09/inbox.dark.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 21762,
+      "evidence": true
+    },
+    {
+      "name": "inbox.paper",
+      "path": "/inbox [paper]",
+      "status": 200,
+      "file": "br/lume/qa-m09/inbox.paper.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 22938,
+      "evidence": true
+    }
+  ]
+}

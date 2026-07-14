@@ -1,0 +1,55 @@
+/* LUME — PAPER (neumorphic, mặt giấy ấm).
+ *
+ * BÀI HỌC 14/07/26: app có BA theme (default / default-dark / paper). Tôi chỉ phủ 2 ⇒ paper
+ * giữ nguyên bảng màu gốc của memos, va vào các rule `!important` của neumorphism ⇒ vỡ y hệt
+ * dark. Theme nào KHÔNG được phủ thì theme đó VỠ. Gate phải chụp ĐỦ MỌI theme app cung cấp,
+ * không phải "light + dark" do tôi tự nghĩ ra.
+ *
+ * Cùng HỆ với 2 theme kia, chỉ đổi SẮC mặt (ấm) — accent vẫn là near-black theo LUẬT
+ * "đối nghịch ĐỘ SÁNG, họ trung tính" (chỉ ngả ấm cho khớp giấy, không thêm hue lạ).
+ * Số đo (nền #ece4d8): ink 13.58:1 · muted 7.83:1 · accent vs nền 12.96:1 · chữ trên accent 16.34:1.
+ */
+:root {
+  --neu-bg: #ece4d8;          /* mặt giấy ấm — MỘT màu cho body/card/sidebar */
+  --neu-dark: #c9c1b5;        /* bóng tối  (nền tối đi ~12%) */
+  --neu-light: #fffaf2;       /* bóng sáng (ngả trắng ấm)    */
+  --neu-ink: #1f1b16;
+  --neu-accent: #241f19;      /* near-black ngả ấm — chữ trắng trên nó 16.34:1 */
+
+  --background: var(--neu-bg);
+  --foreground: var(--neu-ink);
+  --card: var(--neu-bg);
+  --card-foreground: var(--neu-ink);
+  --popover: var(--neu-bg);
+  --popover-foreground: var(--neu-ink);
+
+  --primary: var(--neu-accent);
+  --primary-foreground: #fffaf2;
+
+  --secondary: var(--neu-bg);
+  --secondary-foreground: var(--neu-ink);
+  --muted: #e2d9cb;
+  --muted-foreground: #4a4238;     /* 7.83:1 — AAA */
+  --accent: var(--neu-bg);
+  --accent-foreground: var(--neu-ink);
+
+  --destructive: #8f1d15;              /* chữ trắng trên nó 8.92:1 — bản oklch cũ chỉ 6.39 (light) / 3.47 (dark) → trượt AAA */
+  --destructive-foreground: #fffaf2;
+  --success: oklch(0.5 0.13 150);
+  --success-foreground: #fffaf2;
+  --warning: oklch(0.52 0.12 65);
+  --warning-foreground: #fffaf2;
+
+  --border: transparent;           /* neumorphism không viền */
+  --input: var(--neu-bg);
+  --ring: var(--neu-accent);
+
+  --sidebar: var(--neu-bg);
+  --sidebar-foreground: var(--neu-ink);
+  --sidebar-accent: var(--neu-bg);
+  --sidebar-accent-foreground: var(--neu-ink);
+  --sidebar-border: transparent;
+  --sidebar-primary: var(--neu-accent);
+  --sidebar-primary-foreground: #fffaf2;
+  --sidebar-ring: var(--neu-accent);
+}

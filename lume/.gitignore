@@ -1,0 +1,43 @@
+# temp folder
+tmp
+
+# Frontend asset
+web/dist
+
+# Build artifacts
+build/
+bin/
+memos
+
+.DS_Store
+
+# Jetbrains
+.idea
+
+# Docker Compose Environment File
+.env
+
+dist
+
+# VSCode settings
+.vscode
+
+# Git worktrees
+.worktrees/
+
+# Local pnpm store (project-scoped, created when --config.store-dir is set
+# without an existing store; contains a symlink back to the workspace).
+.pnpm-store/
+
+# Frontend test coverage output (Vitest + @vitest/coverage-v8).
+web/coverage/
+
+# ── Lume (dây chuyền /br) ─────────────────────────────────────────────
+node_modules/
+# SPA build nhúng: sinh bằng `pnpm release`, KHÔNG commit (hash đổi mỗi lần build)
+server/router/frontend/dist/assets/
+# DB runtime + file upload của người dùng — dữ liệu, không phải nguồn
+data/
+*.db
+*.db-shm
+*.db-wal

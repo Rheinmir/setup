@@ -1,7 +1,7 @@
 <!-- SINH BẰNG CODE: build-capabilities.py — ĐỪNG sửa tay; chạy lại để cập nhật. -->
 # CAPABILITIES — toàn bộ đồ nghề (luôn-mới, đếm từ đĩa)
 
-**78 skill · 17 rule · 32 fdk-tool · 47 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
+**79 skill · 17 rule · 32 fdk-tool · 47 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
 
 ## Skills (gọi bằng `/<tên>`)
 
@@ -12,10 +12,11 @@
 - **`/record-episode`** — Ghi một SESSION EPISODE có cấu trúc (tầng nhớ episodic) vào memory store để phiên sau truy…
 - **`/wiki-room`** — Mở room (subagent 1 tầng) nạp chi tiết wiki khi context phiên chính đã rot
 
-### dev-loop (15)
+### dev-loop (16)
 - **`/br`** — Hub MỘT TÊN cho dây chuyền sản xuất kiểu Ralph (GH#15): biến tài liệu thô của user thành s…
 - **`/build-now-adapt-later`** — When a task is blocked by missing or unverified information (an undocumented protocol, an …
 - **`/checkpoint-trace`** — Cỗ máy thời gian cho một lượt chạy agent trên codebase
+- **`/design-twice`** — Thiết kế MỘT thứ (interface, module, hoặc MÀN HÌNH/UI) bằng 2-3 phương án RADICALLY KHÁC N…
 - **`/failure-flywheel`** — Capture each agent failure, bucket and count it deterministically, and when a failure clas…
 - **`/impact-check`** — Map all callers and dependents of a symbol before modifying shared code
 - **`/loop-runner`** — Deterministic guardrailed agent-loop driver

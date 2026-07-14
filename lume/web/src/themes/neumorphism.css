@@ -1,0 +1,190 @@
+/* neumorphism.css — Lume premium soft-UI (spec: superdesign 6-moves + neumorphism.io).
+   Nhắm ĐÚNG class memos thật (.bg-card, [data-slot=button], input…) + !important để thắng
+   Tailwind utility. 6 moves: mặt đơn sắc mid-tone · dual-shadow đối xứng · góc 12-16 ·
+   sáng top-left nhất quán · CTA phẳng accent · state kèm color/focus (không chỉ bóng). */
+
+/* ── tokens: mặt đơn sắc mid-tone (move 1,2) ── */
+:root {
+  --neu-bg: #e0e5ec;
+  --neu-dark: #bec3c9;      /* base darkened ~15% */
+  --neu-light: #ffffff;     /* toward white */
+  --neu-accent: #1c1f26;    /* AA: chữ trắng trên nó 6.96:1; nó làm chữ trên nền 5.49:1 (cũ #4d6bfe chỉ 4.33/3.42 → FAIL) */
+  --neu-ink: #14171c;       /* text 4.5:1 AA (move 6) */
+  --background: var(--neu-bg); --card: var(--neu-bg); --popover: var(--neu-bg);
+  --secondary: var(--neu-bg); --muted: #dbe0e8; --accent: var(--neu-bg); --input: var(--neu-bg);
+  --foreground: var(--neu-ink); --card-foreground: var(--neu-ink); --secondary-foreground: var(--neu-ink);
+  --muted-foreground: #3a4049; --primary: var(--neu-accent); --primary-foreground: #ffffff;
+  --border: transparent; --ring: var(--neu-accent); --radius: 1rem;
+  /* destructive: chữ trắng trên nó phải ≥7:1 (AAA). Bản oklch gốc của memos chỉ 6.39:1. */
+  --destructive: #8f1d15; --destructive-foreground: #ffffff;
+  /* F8: memos có token --sidebar RIÊNG (màu kem) → phải ép về mặt đơn sắc */
+  --sidebar: var(--neu-bg); --sidebar-foreground: var(--neu-ink);
+  --sidebar-accent: var(--neu-bg); --sidebar-accent-foreground: var(--neu-ink);
+  --sidebar-border: transparent; --sidebar-primary: var(--neu-accent);
+  --sidebar-primary-foreground: #fff; --sidebar-ring: var(--neu-accent);
+}
+/* DARK: accent phải LẬT. Luật accent = đối nghịch ĐỘ SÁNG với mặt, họ TRUNG TÍNH.
+   Mặt sáng → accent near-black; mặt tối → accent NEAR-WHITE (không phải xanh #6d86ff cũ:
+   trắng trên nó chỉ 3.23:1 — đúng lỗi user thấy). Số đo: accent vs nền 11.39:1, ink trên accent 15.86:1. */
+.dark {
+  --neu-bg: #2d3239; --neu-dark: #23272d; --neu-light: #373d46;
+  --neu-accent: #eef1f5; --neu-ink: #d6dae0;                 /* ink vs nền 9.2:1 (AAA) */
+  --background: var(--neu-bg); --card: var(--neu-bg); --popover: var(--neu-bg);
+  --secondary: var(--neu-bg); --muted: #2a2f36; --accent: var(--neu-bg); --input: var(--neu-bg);
+  --foreground: var(--neu-ink); --card-foreground: var(--neu-ink); --secondary-foreground: var(--neu-ink);
+  --muted-foreground: #c3cad3;                                /* 7.81:1 — #98a1ad cũ chỉ 4.94 → trượt AAA */
+  --primary: var(--neu-accent);
+  --primary-foreground: #14171c;                              /* chữ TRÊN accent phải ĐEN lại (15.86:1) */
+  --border: transparent; --ring: var(--neu-accent);
+  --sidebar: var(--neu-bg); --sidebar-foreground: var(--neu-ink);
+  --sidebar-accent: var(--neu-bg); --sidebar-accent-foreground: var(--neu-ink);
+  --sidebar-border: transparent; --sidebar-primary: var(--neu-accent);
+  --sidebar-primary-foreground: #14171c; --sidebar-ring: var(--neu-accent);
+}
+
+/* ── RAISED surfaces: card, dialog, popover, dropdown (move 3,4) ──
+   BÓNG TỈ LỆ THEO KÍCH THƯỚC KHỐI (bài học 14/07/26 — user: "trông bựa lắm"):
+   cặp bóng 9px/18px chỉ đẹp trên khối NHỎ. Trải lên pane RỘNG (editor 672px, memo card)
+   nó nở thành QUẦNG SÁNG mờ ôm cả khối → đọc ra "hào quang giả", rẻ tiền. Khối càng to,
+   bóng càng phải NHỎ đi — chiều sâu đến từ MÉP (edge-lit 1px: sáng trên-trái, tối dưới-phải),
+   không từ quầng. Bóng lớn giữ nguyên cho khối nhỏ (nút, chip, avatar). */
+.bg-card, [data-slot="dialog-content"], [data-slot="popover-content"],
+[data-slot="dropdown-menu-content"], [data-slot="card"] {
+  background: var(--neu-bg) !important;
+  border: none !important;
+  border-radius: 16px !important;
+  box-shadow:
+    inset 1px 1px 0 var(--neu-light),        /* mép sáng trên-trái  */
+    inset -1px -1px 0 var(--neu-dark),       /* mép tối dưới-phải   */
+    2px 3px 8px -4px var(--neu-dark) !important;   /* bóng rơi rất nhẹ, spread ÂM → không toả quầng */
+}
+/* dialog/popover NỔI thật sự (đè lên nội dung) → cho phép bóng sâu hơn card phẳng */
+[data-slot="dialog-content"], [data-slot="popover-content"], [data-slot="dropdown-menu-content"] {
+  box-shadow:
+    inset 1px 1px 0 var(--neu-light),
+    inset -1px -1px 0 var(--neu-dark),
+    6px 8px 20px -8px var(--neu-dark) !important;
+}
+
+/* ── BUTTONS: KHÔNG outset (F7: nằm trong cha overflow:hidden → bóng bị CẮT thành vệt xấu).
+   Chỉ phản hồi bằng inset khi :active + accent phẳng cho CTA. ── */
+[data-slot="button"] {
+  border: none !important; border-radius: 12px !important;
+  box-shadow: none !important;
+  transition: background .15s ease, box-shadow .12s ease !important;
+}
+[data-slot="button"]:not(.bg-primary):not(.bg-destructive) {
+  background: var(--neu-bg) !important; color: var(--neu-ink) !important;
+}
+[data-slot="button"]:hover:not(.bg-primary) { background: var(--neu-muted, #dbe0e8) !important; }
+[data-slot="button"]:active {
+  box-shadow: inset 3px 3px 6px var(--neu-dark), inset -3px -3px 6px var(--neu-light) !important;
+}
+/* Chữ trên accent KHÔNG được hardcode: accent lật theo theme (đen ở light, trắng ở dark)
+   nên chữ phải lật ngược lại. Hardcode #fff ⇒ ở dark là trắng-trên-trắng = 1.13:1 (tàng hình). */
+[data-slot="button"].bg-primary {
+  background: var(--neu-accent) !important; color: var(--primary-foreground) !important; box-shadow: none !important;
+}
+[data-slot="button"].bg-primary:hover { filter: brightness(1.06); }
+
+/* ── INPUTS / textarea: INSET pressed (move 3) ── */
+input:not([type="checkbox"]):not([type="radio"]), textarea, [data-slot="input"], [data-slot="textarea"] {
+  background: var(--neu-bg) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  box-shadow: inset 4px 4px 8px var(--neu-dark), inset -4px -4px 8px var(--neu-light) !important;
+}
+
+/* ── focus-visible ring — bóng KHÔNG phải focus (move 6, non-negotiable) ── */
+[data-slot="button"]:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visible {
+  outline: 2px solid var(--neu-accent) !important; outline-offset: 2px !important;
+}
+
+/* ── nền tổng + sidebar mềm ── */
+html, body, #root { background: var(--neu-bg) !important; }
+[data-slot="sidebar"], nav[class*="sidebar"], aside {
+  background: var(--neu-bg) !important;
+}
+/* F7: avatar/badge/chip KHÔNG outset (bị clip) — dùng inset nhẹ hoặc phẳng */
+[data-slot="badge"], .rounded-full.bg-secondary {
+  background: var(--neu-bg) !important; border: none !important; box-shadow: none !important;
+}
+
+
+/* ══ F10 fix: PHỤC HỒI chiều sâu (lần trước gỡ sạch shadow → UI phẳng lì).
+   Nguyên tắc: bóng NHỎ (blur < 8px) cho phần tử nằm trong container có thể clip —
+   vẫn thấy neumorphic, mà nếu bị cắt cũng không thành vệt xấu. Bóng LỚN chỉ cho pane
+   gốc không bị clip (card/dialog). ══ */
+[data-slot="button"]:not(.bg-primary):not(.bg-destructive) {
+  box-shadow: 3px 3px 6px var(--neu-dark), -3px -3px 6px var(--neu-light) !important;
+}
+[data-slot="button"]:not(.bg-primary):hover {
+  box-shadow: 2px 2px 4px var(--neu-dark), -2px -2px 4px var(--neu-light) !important;
+}
+[data-slot="button"]:active {
+  box-shadow: inset 3px 3px 6px var(--neu-dark), inset -3px -3px 6px var(--neu-light) !important;
+}
+/* ô lịch / chip tròn nhỏ — nổi nhẹ, không vệt */
+.rounded-full:not([data-slot="button"]):not(.bg-primary) {
+  box-shadow: 2px 2px 5px var(--neu-dark), -2px -2px 5px var(--neu-light);
+}
+/* F7b: cho container bọc card ĐƯỢC tràn bóng (đừng cắt) */
+main, main > div, main > div > div, [role="main"], .flex-1 > .flex-col {
+  overflow: visible !important;
+}
+
+/* ══ F7a fix (gốc THẬT): tab/chip xếp SÁT nhau trong hàng chật — bóng tối dưới-phải của
+   chip này rơi vào khe hẹp cạnh chip kế → đọc thành VỆT CỨNG (không phải clip).
+   Neumorphism cần khoảng thở; hàng chật thì KHÔNG outset. Active dùng inset + accent. ══ */
+[role="tablist"] > *, [data-slot="tabs-trigger"], [role="tab"] {
+  box-shadow: none !important;
+  background: var(--neu-bg) !important;
+  border: none !important;
+}
+[role="tab"][data-state="active"], [data-slot="tabs-trigger"][data-state="active"] {
+  box-shadow: inset 2px 2px 5px var(--neu-dark), inset -2px -2px 5px var(--neu-light) !important;
+  color: var(--neu-accent) !important;
+}
+[role="tablist"] { gap: 10px !important; }
+
+/* ══ F7a fix ĐÚNG SELECTOR (bằng chứng DOM): chip = <button data-slot="button"> trong
+   cha `flex min-w-max items-center gap-1.5` (khe 6px). Bóng tối 3px/6px rơi vào khe →
+   VỆT CỨNG. Neumorphism cần khoảng thở: hàng chật thì KHÔNG outset, dùng inset khi active. ══ */
+[class*="min-w-max"] > [data-slot="button"],
+[class*="gap-1.5"] > [data-slot="button"] {
+  box-shadow: none !important;
+}
+[class*="min-w-max"] > [data-slot="button"]:hover,
+[class*="min-w-max"] > [data-slot="button"][data-state="active"] {
+  box-shadow: inset 2px 2px 4px var(--neu-dark), inset -2px -2px 4px var(--neu-light) !important;
+}
+
+/* F7a — SỬA LẦN CUỐI: dùng DESCENDANT (không phải `>`), vì giữa cha .min-w-max và
+   button còn phần tử trung gian → selector con-trực-tiếp trượt (bằng chứng: computed
+   shadow vẫn 3px/6px sau 2 lần sửa). Hàng chip chật: bỏ outset hẳn. */
+[class*="min-w-max"] [data-slot="button"] { box-shadow: none !important; }
+[class*="min-w-max"] [data-slot="button"]:hover {
+  box-shadow: inset 2px 2px 4px var(--neu-dark), inset -2px -2px 4px var(--neu-light) !important;
+}
+
+/* F7a — GỐC THẬT: specificity. Rule button cũ = (0,3,0); rule hàng-chip cũ = (0,2,0)
+   → cùng !important thì cái cũ THẮNG ⇒ 3 lần sửa vô hiệu (computed shadow vẫn 3px/6px).
+   Nâng specificity lên (0,4,0) để thắng. Hàng chip chật: bỏ outset (bóng rơi vào khe 6px). */
+[class*="min-w-max"] [data-slot="button"]:not(.bg-primary):not(.bg-destructive) {
+  box-shadow: none !important;
+}
+[class*="min-w-max"] [data-slot="button"]:not(.bg-primary):not(.bg-destructive):hover {
+  box-shadow: inset 2px 2px 4px var(--neu-dark), inset -2px -2px 4px var(--neu-light) !important;
+}
+
+/* ══ F12 — AURA BỊ CROP (bằng chứng đo được): logo sidebar có shadow 3px/6px nằm trong
+   `div.px-1` (padding 4px) mà cha có overflow-x:hidden → aura bị CẮT.
+   KHÔNG thể đặt overflow-x:visible (CSS ép về auto khi overflow-y:auto).
+   ⇒ Cách đúng: CHO ĐỦ PADDING để aura (offset 3px + blur 6px ≈ 9px) nằm lọt trong vùng clip.
+   (Trước đây tôi "sửa" bằng cách hạ blur dưới ngưỡng detector — đó là làm MÙ máy, không sửa lỗi.) ══ */
+/* ĐO ĐƯỢC: rail sidebar rộng 55px, logo 58px → logo ĐÃ tràn vùng clip trước cả aura.
+   Tăng padding chỉ đẩy nó tràn thêm. Rail hẹp + overflow-x:hidden ⇒ MỌI aura outset đều
+   bị cắt. Cách đúng DUY NHẤT: dùng INSET (bóng lõm không tràn → không thể bị crop). */
+header [class*="px-1"] span[class*="place-items"] {
+  box-shadow: inset 2px 2px 4px var(--neu-dark), inset -2px -2px 4px var(--neu-light) !important;
+}

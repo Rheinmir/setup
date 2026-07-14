@@ -54,6 +54,7 @@ Giảm lỗi LLM-coding phổ biến. Thiên về cẩn trọng hơn tốc độ
 | `skill-provenance` | Ghi/kiểm provenance (nguồn + sha256) khi cài skill ngoài — audit supply-chain, phát hiện skill bị sửa lén | `skills/dev-loop/skill-provenance.md` | dev-loop |
 | `loop-runner` | Vòng lặp agent có guardrail (propose→verify→revise, termination) | `skills/dev-loop/loop-runner.md` | dev-loop |
 | `br` | Hub dây chuyền Ralph: interview→compile→slice→run→status (BR-kỹ → frames gắn code → loop có 6 phanh) | `skills/dev-loop/br.md` | dev-loop |
+| `design-twice` | Thiết kế 2-3 phương án KHÁC NHAU TẬN GỐC rồi so sánh/tổng hợp (Design It Twice) — BẮT BUỘC trước khi code frame UI | `skills/dev-loop/design-twice.md` | dev-loop |
 | `checkpoint-trace` | Cỗ máy thời gian codebase: rollback về BẤT KỲ trạng thái + tier khả-đảo (distill SHEPHERD) | `skills/dev-loop/checkpoint-trace.md` | dev-loop |
 | `failure-flywheel` | Gom lỗi lặp → đề xuất rule/skill mới (error-analysis) | `skills/dev-loop/failure-flywheel.md` | dev-loop |
 | `council` | Hội đồng nhiều model đánh giá → câu trả lời tốt nhất (Karpathy) | `skills/orchestrate/council.md` | orchestrate |
