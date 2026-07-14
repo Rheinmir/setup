@@ -12,25 +12,37 @@ from app import adapters, engine, lichky, params
 PERIOD = "2026-03"
 
 _CSS = """
-:root{color-scheme:light dark}
-html[data-theme=light]{color-scheme:light}
-html[data-theme=dark]{color-scheme:dark}
-body{font:15px/1.5 system-ui,sans-serif;margin:0;padding:24px;
-     background:Canvas;color:CanvasText}
-h1,h2{margin:.6em 0 .3em}
-table{border-collapse:collapse;width:100%;margin-bottom:1.5rem}
-th,td{border:1px solid color-mix(in srgb,CanvasText 25%,transparent);
-      padding:6px 10px;text-align:left}
-th{background:color-mix(in srgb,CanvasText 8%,transparent)}
+:root{color-scheme:light;--bg:#e6e7ee;--ink:#1a1c23;--muted:#43475a;--accent:#264fc4;
+      --sh-light:-6px -6px 14px #f4f5fa;--sh-dark:6px 6px 14px #c3c6d4}
+[data-theme=dark]{color-scheme:dark;--bg:#22242c;--ink:#eef0f6;--muted:#b6bccd;
+      --accent:#9db8ff;--sh-light:-6px -6px 14px #2b2e38;--sh-dark:6px 6px 14px #16171d}
+body{font:15px/1.6 "Plus Jakarta Sans",ui-sans-serif,system-ui,sans-serif;margin:0;
+     padding:32px;background:var(--bg);color:var(--ink)}
+h1,h2{margin:1.2em 0 .5em;letter-spacing:-.02em}
+table{border-collapse:separate;border-spacing:0;width:100%;margin-bottom:1.5rem;
+      padding:14px;border-radius:20px;background:var(--bg);
+      box-shadow:var(--sh-dark),var(--sh-light)}
+th,td{padding:10px 14px;text-align:left}
+th{color:var(--muted);font-weight:600;font-size:.85em;text-transform:uppercase;
+   letter-spacing:.06em}
+tbody tr td:first-child{border-radius:12px 0 0 12px}
+tbody tr td:last-child{border-radius:0 12px 12px 0}
+tbody tr:hover td{box-shadow:inset 2px 2px 5px rgba(0,0,0,.10),
+                  inset -2px -2px 5px rgba(255,255,255,.06)}
 td.money,th.money{text-align:right;font-variant-numeric:tabular-nums;
                   font-feature-settings:"tnum"}
-ul.trace{list-style:none;padding-left:18px;border-left:1px dashed
-         color-mix(in srgb,CanvasText 30%,transparent)}
-ul.trace>li{margin:.35rem 0}
+ul.trace{list-style:none;padding:8px 0 8px 20px;margin:.4rem 0;
+         border-left:2px dashed var(--muted)}
+ul.trace>li{margin:.4rem 0}
 code{font-family:ui-monospace,monospace}
-.clause{opacity:.7;font-size:.85em}
-a{color:LinkText}
-#theme{position:fixed;top:12px;right:12px;padding:6px 12px;cursor:pointer}
+.clause{color:var(--muted);font-size:.85em}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+#theme{position:fixed;top:16px;right:16px;padding:10px 18px;cursor:pointer;
+       border:0;border-radius:14px;font:inherit;color:var(--ink);background:var(--bg);
+       box-shadow:var(--sh-dark),var(--sh-light)}
+#theme:active{box-shadow:inset 3px 3px 7px rgba(0,0,0,.18),
+                         inset -3px -3px 7px rgba(255,255,255,.10)}
 @media print{#theme{display:none}}
 """
 
