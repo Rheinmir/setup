@@ -9,7 +9,7 @@
   "scope_clean": true,
   "out_of_scope_files": [],
   "attempted_out_of_scope": [],
-  "commit": "49418520c3fe25f28fdb5356792008a6ef3cdc46",
+  "commit": "a3a816e9f087c12bf7bed834a70c901d889de760",
   "verify_cmd": "python3 -m tests.test_f15",
   "revise_cmd": "python3 \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/fdk/tools/br-revise.py\" run --frame \"br/frames/frame-f15-man-hinh-hr.md\" --template \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/skills/br/assets/revise-prompt.md\" --verify \"python3 -m tests.test_f15\" --verify-output \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/.frame-f15-man-hinh-hr.verify.out\" --cwd \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll\"",
   "guards": {
@@ -27,27 +27,27 @@
   "state_paths": [
     "app/ui.py"
   ],
-  "started_at": "2026-07-14T01:02:20Z",
-  "ended_at": "2026-07-14T01:04:35Z",
-  "elapsed_s": 135.3328,
+  "started_at": "2026-07-14T01:05:29Z",
+  "ended_at": "2026-07-14T01:06:32Z",
+  "elapsed_s": 63.2011,
   "iterations": [
     {
       "iter": 1,
-      "ts": "2026-07-14T01:02:21Z",
+      "ts": "2026-07-14T01:05:29Z",
       "verify_exit": 1,
-      "duration_s": 0.6018,
-      "verify_output_tail": "================================================\nFAIL: test_tuong_phan_chu_dat_AAA_o_ca_hai_theme (__main__.TestUI)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/tests/test_f15.py\", line 146, in test_tuong_phan_chu_dat_AAA_o_ca_hai_theme\n    self.assertIsNotNone(bg, f\"theme {ten}: thiếu --bg\")\nAssertionError: unexpectedly None : theme sáng: thiếu --bg\n\n----------------------------------------------------------------------\nRan 15 tests in 0.514s\n\nFAILED (failures=7)\n",
-      "state_hash": "dab7032c40b6e47ba1b582c0059961b253c6b07f03edf245a482bda98825647e",
+      "duration_s": 0.5759,
+      "verify_output_tail": "-------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/payroll/tests/test_f15.py\", line 149, in test_accent_la_near_black_khong_phai_mau_ruc\n    self.assertLessEqual(\nAssertionError: 0.68 not less than or equal to 0.2 : accent theme sáng = #264fc4: bão hoà 0.68 — đây là MÀU RỰC. Accent phải thuộc họ trung tính quanh đen/trắng (§3.6). Màu rực chỉ dùng cho semantic (đỏ = destructive).\n\n----------------------------------------------------------------------\nRan 16 tests in 0.511s\n\nFAILED (failures=1)\n",
+      "state_hash": "722fc5c197236b228a9156f505c2d60175741a6c84fa467b7c94eba57b86f269",
       "unchanged_streak": 0,
       "revise_exit": 0,
-      "revise_output_tail": "sẵn):\n- Token màu ở `:root` và `[data-theme=dark]`: `--bg/--ink/--muted` đạt WCAG AAA (sáng 13.55:1 và 7.46:1; tối 13.24:1 và 7.96:1), `--accent` lật theo theme.\n- Neumorphism: cặp `--sh-light`/`--sh-dark` cho mọi khối nổi, trạng thái lõm `inset` cho hàng hover và nút nhấn, bo góc ≥12px, bỏ viền `1px solid`, card dùng chung nền `--bg`.\n- Font `Plus Jakarta Sans` (bỏ system-ui làm mặt chính, giữ làm fallback).\n\nBỏ qua: web-font file/CDN — chỉ khai `font-family`, thêm khi cần bản render offline đúng chữ.\nPermission deny rule \"MultiEdit(./llmwiki/raw/**)\" matches no known tool — check for typos.\n"
+      "revise_output_tail": "XANH — 16/16 test đạt (`python3 -m tests.test_f15`, exit 0).\n\nChỉ có một test đỏ: `test_accent_la_near_black_khong_phai_mau_ruc`. Accent theme sáng đang là `#264fc4` (bão hoà 0.68 — màu rực). Sửa hai token trong `app/ui.py`:\n\n- sáng: `--accent: #1c1e26` (near-black, s≈0.15, l≈0.13)\n- tối: `--accent: #ecedf0` (near-white, s≈0.12, l≈0.93)\n\nVẫn lật theo theme, vẫn thuộc họ trung tính như §3.6 yêu cầu. Không đụng gì khác.\nPermission deny rule \"MultiEdit(./llmwiki/raw/**)\" matches no known tool — check for typos.\n"
     },
     {
       "iter": 2,
-      "ts": "2026-07-14T01:04:34Z",
+      "ts": "2026-07-14T01:06:30Z",
       "verify_exit": 0,
-      "duration_s": 0.6466,
-      "verify_output_tail": "...............\n----------------------------------------------------------------------\nRan 15 tests in 0.516s\n\nOK\n",
+      "duration_s": 0.5988,
+      "verify_output_tail": "................\n----------------------------------------------------------------------\nRan 16 tests in 0.512s\n\nOK\n",
       "state_hash": null,
       "unchanged_streak": 0,
       "confirm_exits": [
