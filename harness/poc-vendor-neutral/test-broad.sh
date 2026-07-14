@@ -112,6 +112,10 @@ hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/sources/draft/p
 # R7-h: ràng buộc bao trùm là BẮT BUỘC — agent thi hành chỉ được bơm task của nó, luật chung phải đi kèm
 hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/sources/draft/p4.md","content":"---\ntype: draft\n---\n# p\n## Origin\n- x\n## Plan\n## Agent Task Assignment\n| a |\n**Sequence diagram**: x\nStatus: proposed"}}'; assert 2 "R7-h: proposal thiếu '## Global constraints' bị chặn" $?
 hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/sources/draft/p3.md","content":"---\ntype: draft\n---\n# p\n## Origin\n- x\n## Plan\nStatus: done"}}';  assert 0 "R7: không 'proposed' → R7 không áp" $?
+# R18 plan-executable — PLAN là thứ bơm thẳng vào agent context=0; thiếu Files/Interfaces = agent phải đoán
+hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/sources/draft/f-PLAN.md","content":"---\ntype: draft\n---\n# f — PLAN\n## Origin\n- spec\n## Global constraints\n- x\n### Task 1: a\n- [ ] step"}}';                                                                        assert 2 "R18: PLAN thiếu Files/Interfaces bị chặn" $?
+hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/sources/draft/g-PLAN.md","content":"---\ntype: draft\n---\n# g — PLAN\n## Origin\n- spec\n## Global constraints\n- x\n### Task 1: a\n**Files:**\n- Tao: `src/a.py`\n**Interfaces:**\n- Produces: `a() -> int`\n- [ ] step"}}';  assert 0 "R18: PLAN đủ Files+Interfaces+Global constraints qua" $?
+hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/sources/draft/h.md","content":"---\ntype: draft\n---\n# h\n## Origin\n- x\n### Task 1: a\n- [ ] step"}}';                                                                                              assert 0 "R18: file KHÔNG phải *-PLAN.md → R18 không áp" $?
 # R9 NỚI (khớp global): sources/draft cũng cần frontmatter — file có Origin nhưng THIẾU frontmatter → chặn
 hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/sources/draft/q.md","content":"# q\n## Origin\n- x"}}';                       assert 2 "R9 nới: draft có Origin nhưng thiếu frontmatter bị chặn" $?
 

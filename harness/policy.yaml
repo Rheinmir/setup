@@ -64,6 +64,20 @@ rules:
       - "PLAN ≥2 task → mỗi task bắt buộc '**Interfaces:**' (Consumes/Produces) — agent chỉ thấy task của nó"
       - "Cấm placeholder (TBD/TODO/'xử lý lỗi phù hợp'/'tương tự Task N') ở cả SPEC lẫn PLAN; tài liệu NÓI VỀ luật khai 'r7_meta: true' để miễn"
 
+  - id: R18
+    name: plan-executable
+    validator: proposal_complete.py          # cùng validator với R7 — nhánh rẽ theo tên file '*-PLAN.md'
+    statement: "PLAN thi hành (`*-PLAN.md`) — thứ bơm thẳng vào agent context=0 — phải khai Files chính xác + Interfaces (Consumes/Produces) + code từng bước, và cấm placeholder."
+    enforce_at: [session, repo]
+    applies_to: [write]
+    scope: "wiki draft `*-PLAN.md` có '### Task' (PLAN đã implemented/done tự miễn). KHÔNG cần .html — HTML gắn với SPEC, thứ NGƯỜI xem lúc duyệt."
+    conditions:
+      - "Mỗi '### Task' có '**Files:**' với đường dẫn thật + ≥1 khối code"
+      - "PLAN ≥2 task → mỗi task bắt buộc '**Interfaces:**' — agent chỉ thấy task CỦA NÓ, không khai chữ ký thì 2 agent đặt tên hàm lệch nhau"
+      - "'## Global constraints' có nội dung (chép nguyên văn từ SPEC)"
+      - "Cấm placeholder (TBD/TODO/'xử lý lỗi phù hợp'/'tương tự Task N'); tài liệu NÓI VỀ luật khai 'r7_meta: true' để miễn"
+    note: "Bản khai báo downstream (poc policy) chỉ gác ở mức FILE — engine vendor-neutral không diễn tả nổi check per-task. Kiểm từng task + cấm placeholder là đặc quyền của validator Python."
+
   - id: R8
     name: pattern-sync-health
     validator: null              # L4 eval (harness/scripts/health-check.py), KHÔNG chặn — chỉ báo cáo

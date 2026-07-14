@@ -68,6 +68,7 @@ Karpathy ở trên là "vì sao"; đây là "làm sao". (Chưng cất từ ponyt
 | `web-crawl` | Crawl/scrape a URL or site into LLM-ready markdown | `skills/utils/web-crawl.md` | utils |
 | `web-clone` | Clone a page's exact UI as one self-contained offline HTML | `skills/utils/web-clone.md` | utils |
 | `fdk` | Đang phát triển CHÍNH framework (skill/rule/validator/hook/wiki) | `skills/utils/fdk.md` | utils |
+| `fdk-uat` | UAT thật một bản sắp phát hành — dựng dự án TRỐNG, cài bằng curl từ remote (đường người-mới), kiểm năng lực MỚI có tới tay không; không pass thì GỠ commit khỏi remote | `skills/utils/fdk-uat.md` | utils |
 | `medic` | Cổng sức khoẻ tổng — 1 lệnh chứng minh hệ còn khoẻ (luật cắn/drift/docs/code/eval); trước commit, sau pull, nghi rule không chặn | `skills/utils/medic.md` | utils |
 | `new-skill` | Scaffold một skill mới (canonical+mirror+lệnh register) | `skills/dev-loop/new-skill.md` | dev-loop |
 | `skill-provenance` | Ghi/kiểm provenance (nguồn + sha256) khi cài skill ngoài — audit supply-chain, phát hiện skill bị sửa lén | `skills/dev-loop/skill-provenance.md` | dev-loop |

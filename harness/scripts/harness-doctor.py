@@ -229,6 +229,35 @@ def build_r7(base):
     return _content("proposal_complete.py", fixture(bad, good))  # reads disk; no inline content
 
 
+def build_r18(base):
+    # PLAN thi hanh (*-PLAN.md) = thu bom thang vao agent context=0.
+    # bad = task khong khai Files/Interfaces/code; good = khai du.
+    draft = base / "wiki" / "sources" / "draft"
+    good_c = (
+        "# Feature X — PLAN\n\n"
+        "## Global constraints\n- Python 3.11+, khong them dependency moi; medic --ci xanh truoc push.\n\n"
+        "### Task 1: them ham parse\n"
+        "**Files:**\n- Tao: `src/parse.py`\n\n"
+        "**Interfaces:**\n- Consumes: (khong)\n- Produces: `parse(s: str) -> dict`\n\n"
+        "- [ ] **Step 1: viet test fail**\n\n"
+        "```python\ndef test_parse():\n    assert parse(\"a=1\") == {\"a\": \"1\"}\n```\n\n"
+        "### Task 2: noi vao CLI\n"
+        "**Files:**\n- Sua: `src/cli.py:10-20`\n\n"
+        "**Interfaces:**\n- Consumes: `parse(s: str) -> dict` tu Task 1\n- Produces: `main(argv) -> int`\n\n"
+        "- [ ] **Step 1: viet test fail**\n\n"
+        "```python\ndef test_main():\n    assert main([\"a=1\"]) == 0\n```\n"
+    )
+    bad_c = (
+        "# Feature Y — PLAN\n\n"
+        "## Global constraints\n- Python 3.11+, khong them dependency moi.\n\n"
+        "### Task 1: lam gi do\n- [ ] Step 1: viet code\n\n"
+        "### Task 2: lam not\n- [ ] Step 1: tuong tu Task 1\n"
+    )
+    good = _w(draft / "feature-PLAN.md", good_c)
+    bad = _w(draft / "feature-bad-PLAN.md", bad_c)
+    return _content("proposal_complete.py", fixture(bad, good))
+
+
 def build_r9(base):
     bad_c = "# Concept\n\nNo frontmatter block at the top.\n"
     good_c = "---\ntype: concept\n---\n\n# Concept\n\nHas frontmatter.\n"
@@ -497,6 +526,7 @@ RULES = [
     ("R15", "no-ai-attribution", build_r15),
     ("R16", "report-show-path", build_r16),
     ("R17", "problem-tree-flush", build_r17),
+    ("R18", "plan-executable", build_r18),
 ]
 
 

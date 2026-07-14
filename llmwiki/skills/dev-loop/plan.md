@@ -34,15 +34,27 @@ Cái gì không nằm trong PLAN thì agent không có. Đó là toàn bộ nguy
 
 ## Khuôn PLAN
 
-Header bắt buộc:
+Header bắt buộc (frontmatter và `## Origin` KHÔNG được bỏ — file nằm trong `wiki/sources/draft/` nên R9 chặn nếu thiếu frontmatter, R2 chặn nếu thiếu `## Origin`):
 
 ```markdown
+---
+type: draft
+title: <tên>-PLAN
+status: proposed
+timestamp: YYYY-MM-DD
+task: T-YYMMDD-NN        # cùng task-id với SPEC
+---
+
 # <Tên> — PLAN thi hành
 
 **Goal:** <một câu: cái này xây ra cái gì>
 **Architecture:** <2-3 câu: cách tiếp cận>
 **Tech stack:** <ngôn ngữ, lib, test runner, version>
 **SPEC nguồn:** `wiki/sources/draft/DDMMYY-<tên>.md` (đã duyệt <ngày>)
+
+## Origin
+- **SPEC:** `wiki/sources/draft/DDMMYY-<tên>.md`
+- **Commit:** _(verify-before-commit điền)_
 
 ## Global constraints
 <chép NGUYÊN VĂN từ SPEC — sàn version, giới hạn dependency, luật đặt tên, gate trước push.

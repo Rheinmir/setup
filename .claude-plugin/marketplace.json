@@ -86,6 +86,7 @@
         "./skills/orchestration",
         "./skills/propose",
         "./skills/plan",
+        "./skills/fdk-uat",
         "./skills/query",
         "./skills/record-episode",
         "./skills/raise-issue",
