@@ -21,6 +21,10 @@ must_exist:
   - .github/workflows/harness.yml
   - llmwiki/wiki/index.md
   - llmwiki/html/overstack.html
+  # Bản đồ năng lực cho MODEL (ADR-005). Thiếu file này = agent vào dự án KHÔNG BIẾT mình có
+  # đồ nghề gì: hook orientation (session_start.py) trỏ tới nó, không có thì hook câm.
+  # Cài xong mà model vẫn mù là hỏng, kể cả khi mọi file khác đủ.
+  - CAPABILITIES.md
 
 # Lệnh PHẢI chạy xanh trong dự án cài mới (harness cắn thật, không chỉ file có mặt).
 must_bite:

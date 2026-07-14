@@ -54,6 +54,31 @@ Engine **không** sống trong project. Chúng sống ở **global harness home*
 
 **Đã negative-test cả hai chiều:** trỏ `OVERSTACK_HARNESS_HOME` vào thư mục rỗng → gate **FAIL** đúng như thiết kế; khai một `must_exist` không được ship → gate cũng **FAIL**. Cổng biết cắn, không phải đồ trang trí.
 
+## Cổng gác chính nó: model ở dự án local có BIẾT framework có gì mới không?
+
+Hai câu hỏi khác nhau, phải gác riêng:
+
+1. **"Model có biết framework tồn tại và có đồ nghề gì?"** → cần `CAPABILITIES.md` ở gốc dự án. Hook `session_start.py` (global, kích hoạt khi thấy `llmwiki/.harness-stamp`) sẽ trỏ model tới file này. **Trước đây không ai sinh nó** → hook câm → cài xong mà model vẫn mù. Nay `install.sh` chạy `build-capabilities.py --root` và hợp đồng đưa `CAPABILITIES.md` vào `must_exist` → không tái phát được.
+
+2. **"Dự án có biết mình đang CŨ không?"** → `session_start.py` so `.harness-stamp.guarded_by` (dự án) với `version.json.template_version` (global). Cơ chế này *có sẵn và đúng* — **nhưng tín hiệu của nó từng chết**: không gì ép bump version khi framework thêm năng lực, nên cả hai đầu cùng `1.3.6` và dự án tưởng mình current mãi mãi (đây là **p-08**).
+
+### `capability-stamp.py` — forcing function cho (2)
+
+Đóng dấu **bề mặt năng lực** thành một sha: `skills/*/SKILL.md` (tên + trigger) · rule id trong `policy.yaml` · engine trong `harness/scripts/` + `llmwiki/.claude/hooks/`. Cố ý **không** hash nội dung engine — sửa một dòng log trong `council.py` không phải "năng lực mới"; thứ downstream cần biết là *danh sách và trigger*.
+
+```
+python3 harness/scripts/capability-stamp.py --check    # sha đĩa ≠ sha trong version.json → exit 1
+python3 harness/scripts/capability-stamp.py --update   # ghi sha + bump template_version
+```
+
+Probe medic **`capsurface`** gọi `--check`. Đổi bề mặt mà chưa bump → `medic --ci` ĐỎ → **không push được**. Không phải lời nhắc — là bị chặn.
+
+### Chuỗi hoàn chỉnh (đã chạy thật)
+
+`[thêm năng lực]` → **`capsurface` chặn push tới khi bump** → `[version 1.3.6→1.3.7]` → `[dự án so stamp 1.3.6 vs 1.3.7 → BEHIND]` → `[/harness-update]` → `[CAPABILITIES.md regen]` → **`[model biết mình có đồ nghề mới]`**
+
+Mắt xích trước đây đứt ở mũi tên thứ nhất: không gì ép bump, nên mọi mũi tên sau không bao giờ khởi động.
+
 ## Ceiling (giới hạn cố ý)
 
 Một cổng headless **không** spin được model LLM + Orca runtime, nên "`/orchestration` chạy được" chỉ được kiểm ở mức **tất định**: stack đã cài đủ + reachable + (ping runtime nếu máy đang bật). **Live-run `/orchestration` bằng model thật vẫn là acceptance làm tay** — đó là ngưỡng trên, không nhồi vào cổng để cổng khỏi flaky (một cổng required mà chập chờn thì chặn nhầm mọi push).

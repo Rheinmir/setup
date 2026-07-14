@@ -234,6 +234,20 @@ if [ "$WITH_SKILLS" = 1 ]; then
   fi
 fi
 
+# ── BẢN ĐỒ NĂNG LỰC CHO MODEL (ADR-005) — mắt xích cuối, đừng bỏ ──────────────────────
+# Hook orientation (session_start.py) nói với agent "dự án này có CAPABILITIES.md — bản đồ
+# skill/tool đang có". Nhưng nếu KHÔNG AI SINH file đó, hook chẳng có gì để khoe và agent vào
+# dự án KHÔNG BIẾT mình có đồ nghề gì → cài xong mà model vẫn mù. Sinh ngay tại đây, từ skill
+# global + policy vừa cài. fail-open: bản harness cũ chưa có tool này thì bỏ qua, không chặn.
+BC="$GH_HOME/hooks/build-capabilities.py"
+if [ -f "$BC" ]; then
+  if python3 "$BC" --root "$ROOT" >/dev/null 2>&1; then
+    log "  ✓ CAPABILITIES.md (bản đồ đồ nghề — agent đọc để biết dự án này CÓ GÌ)"
+  else
+    warn "  không sinh được CAPABILITIES.md — chạy tay: python3 $BC --root ."
+  fi
+fi
+
 echo ""
 log    "═══════════ TRẠNG THÁI 3 TRỤ ═══════════"
 log    "  1. Harness  ✓ cài/cập nhật   (per-project: hook validate + CI + R1–R10)"

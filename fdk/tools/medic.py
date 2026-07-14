@@ -273,6 +273,21 @@ def p_freshinstall():
     return "ok", "người mới curl-cài → 3 trụ + orchestration-ready (isolated)", ""
 
 
+def p_capsurface():
+    """Bề mặt NĂNG LỰC (skills + rules + engines) đổi mà version CHƯA bump → downstream so
+    version thấy bằng nhau, tưởng mình current, và KHÔNG BAO GIỜ biết có chức năng mới; model
+    làm việc ở dự án đó không biết mình có thêm đồ nghề. Đây là forcing function cho p-08:
+    thêm năng lực thì BẮT BUỘC khai, không thì không push được."""
+    st = ROOT / "harness/scripts/capability-stamp.py"
+    if not st.exists():
+        return "skip", "capability-stamp.py chưa có", ""
+    rc, out = sh([PY, str(st), "--check"], timeout=60)
+    if rc != 0:
+        first = next((l.strip() for l in out.splitlines() if l.strip()), "bề mặt năng lực lệch")
+        return "fail", first, "python3 harness/scripts/capability-stamp.py --update   # bump + đóng dấu"
+    return "ok", "bề mặt năng lực khớp version (downstream sẽ thấy đúng khi có bản mới)", ""
+
+
 PROBES = [
     ("rules",    ["rules", "luật", "bite"],      p_rules),
     ("coverage", ["rules", "coverage", "luật"],  p_coverage),
@@ -286,6 +301,7 @@ PROBES = [
     ("code",     ["code", "health"],             p_code),
     ("eval",     ["eval", "baseline"],           p_eval),
     ("freshinstall", ["freshinstall", "install", "orchestration", "e2e", "push"], p_freshinstall),
+    ("capsurface", ["capsurface", "version", "capabilities", "bump", "downstream"], p_capsurface),
 ]
 # bỏ 'drift' probe trùng — drift đã báo trong rules:
 PROBES = [p for p in PROBES if p[0] != "drift"]
