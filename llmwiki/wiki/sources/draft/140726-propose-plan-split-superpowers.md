@@ -54,7 +54,7 @@ Ba cách đạt mục tiêu, đã cân nhắc:
 
 ## Plan
 
-- [ ] **T1 — `/propose` thành SPEC-grade.** Sửa `skills/propose/SKILL.md`: draft giữ nguyên `## Context` (force-query), `## Plan`, `## Agent Task Assignment`, cặp `.md`+`.html`; **thêm** `## Global constraints` (ràng buộc bao trùm, chép nguyên văn từ wiki/ADR — mỗi task ngầm mang theo), `## Non-goals`, `## Approaches` (2–3 phương án + tradeoff + phương án chọn, không được chọn thầm), và `## Self-review` (3 mắt lưới: phủ hết yêu cầu / quét placeholder / nhất quán tên-kiểu). Cuối skill: bàn giao sang `/plan` sau khi gate duyệt.
+- [ ] **T1 — `/propose` thành SPEC-grade.** Sửa `skills/propose/SKILL.md`: draft giữ nguyên `## Context` (force-query), `## Plan`, bảng phân công agent, cặp `.md`+`.html`; **thêm** `## Global constraints` (ràng buộc bao trùm, chép nguyên văn từ wiki/ADR — mỗi task ngầm mang theo), `## Non-goals`, `## Approaches` (2–3 phương án + tradeoff + phương án chọn, không được chọn thầm), và `## Self-review` (3 mắt lưới: phủ hết yêu cầu / quét placeholder / nhất quán tên-kiểu). Cuối skill: bàn giao sang `/plan` sau khi gate duyệt.
 
 - [ ] **T2 — skill mới `/plan`.** Tạo `skills/plan/SKILL.md` (tương đương `writing-plans` của superpowers, viết cho *người thi hành không biết gì về codebase và gu thì đáng ngờ*). Input: draft SPEC đã duyệt. Output: `llmwiki/wiki/sources/draft/DDMMYY-<tên>-PLAN.md` gồm Goal / Architecture / Tech stack / `## Global constraints` (chép từ SPEC) / `## File structure` (file nào tạo–sửa, mỗi file một trách nhiệm) / `### Task N` × N / `## Self-review`. Mỗi Task N bắt buộc: **Files** (đường dẫn chính xác, kèm dải dòng khi sửa) · **Interfaces** (Consumes / Produces với chữ ký chính xác — agent chỉ thấy task của mình, đây là cách nó biết tên hàm hàng xóm) · các **Step 2–5 phút** dạng TDD (viết test fail → chạy cho thấy fail kèm chuỗi lỗi mong đợi → code tối thiểu → chạy pass → commit), step nào đổi code thì **phải có code**. Kèm danh mục **cấm placeholder** đích danh: `TBD`, `TODO`, "xử lý lỗi phù hợp", "handle edge cases", "tương tự Task N".
 
@@ -66,6 +66,9 @@ Ba cách đạt mục tiêu, đã cân nhắc:
 
 - [ ] **T6 — register + parity.** `bash fdk/tools/sync-skill.sh propose` và `... plan` (canonical → mirror llmwiki → bản cài `~/.claude`); thêm dòng `plan` vào bảng Skills của `llmwiki/CLAUDE.md` + `llmwiki/AGENT.md` + LOOP_MAP; `python3 fdk/tools/build-capabilities.py`; append `wiki/index.md` + `wiki/log.md`; thêm node vào `llmwiki/html/fdk-problem-tree.html`.
 
+- [ ] **T7 — cổng NGƯỢC cho `/plan` (thêm sau phản biện của user).** `/plan` được quyền **BÁC SPEC**: dừng lại, không viết PLAN nửa vời, khi một yêu cầu không quy được về task nào làm được / hai mục SPEC mâu thuẫn nhau hoặc mâu thuẫn `## Global constraints` / phương án đã chọn hoá ra bất khả thi / phải bịa ra hàm-file mà SPEC không hề nhắc. Gom mọi chỗ vỡ thành **một lần báo** (mỗi chỗ kèm đúng câu SPEC gây ra nó) → quay về `/propose` sửa rồi **duyệt lại**. Lý do: viết PLAN chính là cách phát hiện SPEC sai; nếu cổng đã cho qua rồi mới lòi ra thiết kế bất khả thi thì user đã duyệt một thứ không xây được — cổng coi như hỏng.
+
+
 ## Agent Task Assignment
 | Task | Agent (CLI) | Lý do chọn | Status |
 |------|-------------|------------|--------|
@@ -75,6 +78,7 @@ Ba cách đạt mục tiêu, đã cân nhắc:
 | T4 — đồng bộ policy ×2 | Claude | Nhỏ nhưng có gate drift trên CI, làm cùng T3 cho khớp | pending |
 | T5 — orca-workflow bước 4 | Claude | Chạm luồng dispatch đang chạy | pending |
 | T6 — register + parity | OpenCode `big-pickle` (fallback Claude) | Cơ học thuần: chạy sync-skill.sh, build-capabilities.py, append index/log. Watchdog 60–90s, im lặng thì Claude tiếp quản (bài học 250626) | pending |
+| T7 — cổng ngược cho `/plan` | Claude | Hợp đồng skill, nuance cao — sinh ra từ phản biện của user, không có trong bản đầu | pending |
 
 **Sequence diagram:** [140726-propose-plan-split-seq.html](../../../html/140726-propose-plan-split-seq.html)
 
