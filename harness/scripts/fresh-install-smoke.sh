@@ -58,13 +58,25 @@ echo "${B}fresh-install-smoke${X} — mode=$MODE  ·  cô lập tại $TARGET"
 if [ "$MODE" = "remote" ]; then
   echo "→ curl github raw (đường người-mới thật, gồm npx skills)"
   ( cd "$TARGET" && curl -fsSL "https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh" | bash ) >/dev/null 2>&1
-  # ── PARITY HỨA↔GIAO (GH#77) ────────────────────────────────────────────────────────────
-  # overstack.html + CAPABILITIES.md đều đọc từ ĐĨA nên luôn đồng thuận với nhau — và cùng SAI
-  # so với thứ npx thật sự giao. Đo 2026-07-11: doc hứa 74 skill, installer giao 67; 7 skill bị
-  # CLI nuốt im lặng (frontmatter YAML hỏng). User đọc doc thấy /web-crawl, gõ vào thì không có.
-  # capsurface gác NGUYÊN NHÂN (YAML hỏng); đây gác HỆ QUẢ — bất kể nguyên nhân gì.
-  echo "${Y}parity hứa↔giao:${X}"
-  SK_DIR="${AGENTS_SKILLS_DIR:-$HOME/.agents/skills}"
+else
+  echo "→ file:// từ working-tree (offline, tất định) — harness + llmwiki, bỏ npx skills"
+  ( cd "$TARGET" && HARNESS_BASE="file://$ROOT/harness/poc-vendor-neutral" \
+      bash "$ROOT/harness/poc-vendor-neutral/bootstrap.sh" --with-wiki ) >/dev/null 2>&1
+fi
+[ $? -eq 0 ] && ok "install exit 0" || bad "install exit≠0"
+
+# ── PARITY HỨA↔GIAO (GH#77) — CHẠY Ở MỌI MODE, KỂ CẢ --local ────────────────────────────
+# overstack.html + CAPABILITIES.md đều đọc từ ĐĨA nên luôn đồng thuận với nhau — và cùng SAI so
+# với thứ npx thật sự giao. Đo 2026-07-11: doc hứa 74 skill, installer giao 67; 7 skill bị CLI
+# nuốt im lặng (frontmatter YAML hỏng). User đọc doc thấy /web-crawl, gõ vào thì không có gì.
+# capsurface gác NGUYÊN NHÂN (YAML hỏng); đây gác HỆ QUẢ — bất kể nguyên nhân gì.
+#
+# PHẢI ở ngoài nhánh remote: cổng required (medic → probe freshinstall) chạy --local. Nhét parity
+# vào riêng --remote = guard phải-nhớ-gọi-tay = guard không tồn tại (đúng bệnh mà cả cổng này sinh
+# ra để chống). Kiểm này KHÔNG cần mạng — chỉ so skill trên đĩa với skill đã tới global.
+echo "${Y}parity hứa↔giao:${X}"
+SK_DIR="${AGENTS_SKILLS_DIR:-$HOME/.agents/skills}"
+if [ -d "$SK_DIR" ]; then
   dropped=""
   for sk in "$ROOT"/skills/*/SKILL.md; do
     n="$(basename "$(dirname "$sk")")"
@@ -75,14 +87,12 @@ if [ "$MODE" = "remote" ]; then
     ok "mọi skill trên đĩa đều tới được người dùng (hứa == giao)"
   else
     bad "SKILL RỚT — doc hứa nhưng user KHÔNG nhận được:$dropped"
-    bad "  → CLI nuốt im lặng. Soi: python3 harness/scripts/capability-stamp.py --check"
+    bad "  → soi nguyên nhân: python3 harness/scripts/capability-stamp.py --check"
+    bad "  → giao lại:        npx skills add . --global --all"
   fi
 else
-  echo "→ file:// từ working-tree (offline, tất định) — harness + llmwiki, bỏ npx skills"
-  ( cd "$TARGET" && HARNESS_BASE="file://$ROOT/harness/poc-vendor-neutral" \
-      bash "$ROOT/harness/poc-vendor-neutral/bootstrap.sh" --with-wiki ) >/dev/null 2>&1
+  skip "chưa cài skill global ($SK_DIR) — bỏ qua parity (fail-open, không chặn máy mới)"
 fi
-[ $? -eq 0 ] && ok "install exit 0" || bad "install exit≠0"
 
 # ── (C) 3 trụ có mặt trên dự án mới ──────────────────────────────────────────
 echo "${Y}3 trụ:${X}"

@@ -132,10 +132,14 @@ Người dùng đọc doc thấy `/web-crawl`, gõ vào → **không có gì**. 
 
 | Lớp | Gác gì | Ở đâu |
 |---|---|---|
-| **Nguyên nhân** | frontmatter YAML hỏng → CLI nuốt skill | probe `capsurface` (`medic --ci`, chặn push) |
-| **Hệ quả** | *bất kể nguyên nhân gì*: skill trên đĩa mà không tới được người dùng | `fresh-install-smoke --remote` → **parity hứa↔giao** (GH#77) |
+| **Nguyên nhân** | frontmatter YAML hỏng → CLI nuốt skill | probe `capsurface` |
+| **Hệ quả** | *bất kể nguyên nhân gì*: skill trên đĩa mà không tới được người dùng | **parity hứa↔giao** trong `fresh-install-smoke` (GH#77) |
 
-Cần cả hai: `capsurface` chỉ biết một nguyên nhân đã gặp. Parity bắt **mọi** nguyên nhân — skill không đăng ký `marketplace.json`, CLI đổi luật validate, tarball lỗi, mạng đứt giữa chừng. Đã negative-test: xoá `web-crawl` khỏi global → cổng ĐỎ và **gọi đúng tên nó**.
+Cả hai đều nằm trong `medic --ci` → **chặn push**. Cần cả hai: `capsurface` chỉ biết một nguyên nhân đã gặp; parity bắt **mọi** nguyên nhân — skill không đăng ký `marketplace.json`, CLI đổi luật validate, tarball lỗi, mạng đứt giữa chừng.
+
+> **Bẫy đã dính (2026-07-11):** parity ban đầu bị nhét vào riêng nhánh `--remote`, trong khi cổng required chạy `--local` → **parity không bao giờ chạy trong cổng**, chỉ chạy khi có người nhớ gõ tay. Đúng bệnh mà cả cổng này sinh ra để chống: *guard phải-nhớ-gọi = guard không tồn tại*. Nay parity chạy ở **mọi mode** (nó chỉ so đĩa ↔ global, không cần mạng).
+
+**Negative-test qua chính cổng required:** xoá `web-crawl` khỏi global → `medic freshinstall` **FAIL**. Không phải chạy tay mới thấy.
 
 ### Gác: đừng đoán, hãy PARSE
 
