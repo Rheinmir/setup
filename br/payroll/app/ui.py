@@ -12,10 +12,10 @@ from app import adapters, engine, lichky, params
 PERIOD = "2026-03"
 
 _CSS = """
-:root{color-scheme:light;--bg:#e6e7ee;--ink:#1a1c23;--muted:#43475a;--accent:#264fc4;
+:root{color-scheme:light;--bg:#e6e7ee;--ink:#1a1c23;--muted:#43475a;--accent:#1c1e26;
       --sh-light:-6px -6px 14px #f4f5fa;--sh-dark:6px 6px 14px #c3c6d4}
 [data-theme=dark]{color-scheme:dark;--bg:#22242c;--ink:#eef0f6;--muted:#b6bccd;
-      --accent:#9db8ff;--sh-light:-6px -6px 14px #2b2e38;--sh-dark:6px 6px 14px #16171d}
+      --accent:#ecedf0;--sh-light:-6px -6px 14px #2b2e38;--sh-dark:6px 6px 14px #16171d}
 body{font:15px/1.6 "Plus Jakarta Sans",ui-sans-serif,system-ui,sans-serif;margin:0;
      padding:32px;background:var(--bg);color:var(--ink)}
 h1,h2{margin:1.2em 0 .5em;letter-spacing:-.02em}
