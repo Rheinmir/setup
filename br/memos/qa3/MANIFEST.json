@@ -1,0 +1,240 @@
+{
+  "base": "http://localhost:5230",
+  "ts": 1783991666686,
+  "shots": [
+    {
+      "name": "signin",
+      "path": "/auth (chưa đăng nhập)",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa3/signin.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 29887,
+      "evidence": true
+    },
+    {
+      "name": "auth",
+      "path": "/auth [light]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa3/auth.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 41496,
+      "evidence": true
+    },
+    {
+      "name": "auth.dark",
+      "path": "/auth [dark]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa3/auth.dark.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 41496,
+      "evidence": true
+    },
+    {
+      "name": "auth.paper",
+      "path": "/auth [paper]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa3/auth.paper.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 43003,
+      "evidence": true
+    },
+    {
+      "name": "home",
+      "path": "/ [light]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa3/home.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 42984,
+      "evidence": true
+    },
+    {
+      "name": "home.dark",
+      "path": "/ [dark]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa3/home.dark.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 41496,
+      "evidence": true
+    },
+    {
+      "name": "home.paper",
+      "path": "/ [paper]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa3/home.paper.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 43003,
+      "evidence": true
+    },
+    {
+      "name": "explore",
+      "path": "/explore [light]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa3/explore.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 36684,
+      "evidence": true
+    },
+    {
+      "name": "explore.dark",
+      "path": "/explore [dark]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa3/explore.dark.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 34486,
+      "evidence": true
+    },
+    {
+      "name": "explore.paper",
+      "path": "/explore [paper]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa3/explore.paper.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 36700,
+      "evidence": true
+    },
+    {
+      "name": "archived",
+      "path": "/archived [light]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa3/archived.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 40531,
+      "evidence": true
+    },
+    {
+      "name": "archived.dark",
+      "path": "/archived [dark]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa3/archived.dark.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 38580,
+      "evidence": true
+    },
+    {
+      "name": "archived.paper",
+      "path": "/archived [paper]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa3/archived.paper.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 40335,
+      "evidence": true
+    },
+    {
+      "name": "attachments",
+      "path": "/attachments [light]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa3/attachments.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 23975,
+      "evidence": true
+    },
+    {
+      "name": "attachments.dark",
+      "path": "/attachments [dark]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa3/attachments.dark.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 22342,
+      "evidence": true
+    },
+    {
+      "name": "attachments.paper",
+      "path": "/attachments [paper]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa3/attachments.paper.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 23579,
+      "evidence": true
+    },
+    {
+      "name": "inbox",
+      "path": "/inbox [light]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa3/inbox.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 23337,
+      "evidence": true
+    },
+    {
+      "name": "inbox.dark",
+      "path": "/inbox [dark]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa3/inbox.dark.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 21762,
+      "evidence": true
+    },
+    {
+      "name": "inbox.paper",
+      "path": "/inbox [paper]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa3/inbox.paper.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 22938,
+      "evidence": true
+    },
+    {
+      "name": "setting",
+      "path": "/setting [light]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa3/setting.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 95098,
+      "evidence": true
+    },
+    {
+      "name": "setting.dark",
+      "path": "/setting [dark]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa3/setting.dark.png",
+      "issues": [],
+      "diff": null,
+      "bytes": 92445,
+      "evidence": true
+    },
+    {
+      "name": "setting.paper",
+      "path": "/setting [paper]",
+      "status": 200,
+      "file": "/Users/giatran/orca/workspaces/setup/issue-15-br-k/br/memos/qa3/setting.paper.png",
+      "issues": [
+        {
+          "rule": "contrast-aa",
+          "count": 1,
+          "worst": [
+            {
+              "text": "Delete account",
+              "got": 1.21,
+              "need": 7,
+              "size": 14,
+              "color": "rgb(255, 250, 242)"
+            }
+          ]
+        }
+      ],
+      "diff": null,
+      "bytes": 93595,
+      "evidence": true
+    }
+  ]
+}

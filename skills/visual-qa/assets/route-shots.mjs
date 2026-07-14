@@ -86,6 +86,7 @@ try {
 // gate audit 8 bản sao trang sign-in rồi hô "design-ok" = XANH GIẢ, tệ hơn đỏ.
 let LOGIN_FAILED = null;
 let CUR_THEME = "light";   // theme app đang bật (setting tài khoản, dính giữa các route)
+const THEME_BG = {};       // theme → màu nền đo được (2 theme trùng nền = 1 cái chưa đổi)
 const THEME_BROKEN = [];   // theme khai là đổi nhưng nền không đổi ⇒ ảnh giả ⇒ gate phải chết
 try {
   await page.fill('input[type="text"]', USER, { timeout: 5000 });
@@ -145,8 +146,39 @@ function DESIGN_AUDIT() {   // function-declaration (được hoist) — pre-log
   //    evaluator KHÔNG detect nổi chữ mờ, kể cả ở trang đăng nhập. Máy phải tính, không đoán.
   const srgb = (c) => { c /= 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
   const lum = ([r, g, b]) => 0.2126 * srgb(r) + 0.7152 * srgb(g) + 0.0722 * srgb(b);
-  const parse = (s) => { const m = s && s.match(/rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?\)/);
-    return m ? { rgb: [ +m[1], +m[2], +m[3] ], a: m[4] === undefined ? 1 : +m[4] } : null; };
+  // PARSE MÀU: KHÔNG chỉ rgb() — app hiện đại trả về oklch(). Regex chỉ bắt rgb ⇒ màu oklch bị
+  // coi là TRONG SUỐT ⇒ leo lên nền body ⇒ BÁO OAN (nút đỏ oklch bị chấm 1.21:1 rồi FAIL).
+  // Lỗi của THƯỚC, không phải của UI — mà gate báo oan = gate CHẾT. (canvas KHÔNG quy đổi hộ:
+  // Chrome trả lại nguyên chuỗi oklch.) ⇒ tự quy đổi oklch → oklab → linear sRGB → sRGB.
+  const oklchToRgb = (L, C, H, alpha) => {
+    const h = (H * Math.PI) / 180;
+    const a = C * Math.cos(h), bb = C * Math.sin(h);
+    const l_ = L + 0.3963377774 * a + 0.2158037573 * bb;
+    const m_ = L - 0.1055613458 * a - 0.0638541728 * bb;
+    const s_ = L - 0.0894841775 * a - 1.2914855480 * bb;
+    const l = l_ ** 3, m = m_ ** 3, sC = s_ ** 3;
+    const lin = [
+      +4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * sC,
+      -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * sC,
+      -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * sC,
+    ];
+    const g = (v) => { v = v <= 0.0031308 ? 12.92 * v : 1.055 * Math.pow(Math.max(v, 0), 1 / 2.4) - 0.055;
+      return Math.max(0, Math.min(255, Math.round(v * 255))); };
+    return { rgb: lin.map(g), a: alpha };
+  };
+  const parse = (str) => {
+    if (!str) return null;
+    const m = str.match(/rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?\)/);
+    if (m) return { rgb: [ +m[1], +m[2], +m[3] ], a: m[4] === undefined ? 1 : +m[4] };
+    const o = str.match(/oklch\(\s*([\d.]+%?)\s+([\d.]+)\s+([\d.]+)(?:\s*\/\s*([\d.]+%?))?/i);
+    if (o) {
+      const L = o[1].endsWith("%") ? parseFloat(o[1]) / 100 : +o[1];
+      const al = o[4] === undefined ? 1 : (o[4].endsWith("%") ? parseFloat(o[4]) / 100 : +o[4]);
+      return oklchToRgb(L, +o[2], +o[3], al);
+    }
+    if (str === "transparent") return { rgb: [0, 0, 0], a: 0 };
+    return null;
+  };
   const ratio = (fg, bg) => { const L1 = lum(fg), L2 = lum(bg);
     return +(((Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05))).toFixed(2); };
   const effBg = (el) => {                                   // nền hiệu dụng: leo cha tới khi có màu đục
@@ -219,8 +251,11 @@ function DESIGN_AUDIT() {   // function-declaration (được hoist) — pre-log
 // lệnh JS đổi theme ĐÚNG CÁCH APP ĐỔI (chạy trong trang). {{theme}} = light|dark.
 // Mặc định = memos/Lume: theme nằm ở SETTING TÀI KHOẢN trên server (localStorage bị ghi đè!).
 const THEME_SET = arg("--theme-set", `fetch("/api/v1/users/-/settings/general?updateMask=theme",{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({setting:{name:"users/-/settings/general",generalSetting:{theme:"{{theme}}"==="dark"?"default-dark":"default"}}})})`);
+// PHẢI PHỦ *MỌI* THEME APP CUNG CẤP, không phải danh sách tôi tự nghĩ ra (bài học 14/07/26:
+// tôi hardcode "light,dark" ⇒ theme `paper` không ai đụng tới ⇒ nó vỡ y hệt dark, user tìm ra).
+// Danh sách lấy từ CHÍNH APP (dropdown Theme trong Settings→Preferences), không đoán.
 const THEMES = (process.argv.includes("--themes")
-  ? process.argv[process.argv.indexOf("--themes") + 1] : "light,dark").split(",");
+  ? process.argv[process.argv.indexOf("--themes") + 1] : "light,dark,paper").split(",");
 
 // ── chụp từng route × từng theme + audit ──
 for (const [name0, path] of ROUTES) {
@@ -243,20 +278,19 @@ for (const [name0, path] of ROUTES) {
         await page.waitForTimeout(1200);
         await page.locator("[data-slot='select-trigger']").first().click();   // dropdown Theme
         await page.waitForTimeout(600);
-        await page.getByRole("option", { name: theme === "dark" ? /^dark$/i : /^light$/i }).click();
+        await page.getByRole("option", { name: new RegExp("^" + theme + "$", "i") }).click();
         await page.waitForTimeout(1500);
         CUR_THEME = theme;
       } catch (e) { THEME_BROKEN.push(`${theme}: không bấm được UI đổi theme — ${e.message.split("\n")[0]}`); }
       await page.goto(BASE + path, { waitUntil: "domcontentloaded" });
       await page.waitForTimeout(1500);
       // VERIFY nền ĐÃ đổi thật — không có bước này thì "chụp dark" chỉ là chụp light lần 2.
-      const isDark = await page.evaluate(() => {
-        const m = (getComputedStyle(document.body).backgroundColor.match(/\d+/g) || [255,255,255]).map(Number);
-        return (0.2126*m[0] + 0.7152*m[1] + 0.0722*m[2]) / 255 < 0.4;
-      });
-      if ((theme === "dark") !== isDark) {
-        THEME_BROKEN.push(`${theme}: nền KHÔNG đổi ⇒ ảnh "${theme}" là GIẢ`);
-      }
+      // VERIFY: mỗi theme phải có MẶT RIÊNG. Hai theme cùng màu nền ⇒ một trong hai chưa đổi
+      // ⇒ ảnh là GIẢ (đã dính 2 lần: class .dark giả, rồi localStorage bị ghi đè).
+      const bg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
+      const clash = Object.entries(THEME_BG).find(([t, v]) => v === bg && t !== theme);
+      if (clash) THEME_BROKEN.push(`${theme}: nền y hệt theme "${clash[0]}" (${bg}) ⇒ ảnh "${theme}" là GIẢ`);
+      THEME_BG[theme] = bg;
     }
     await page.waitForTimeout(2200);
     const file = `${OUT}/${name}.png`;
