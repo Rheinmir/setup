@@ -45,10 +45,7 @@ harness/metrics/sweep-marker.json
 
 # ephemeral — không push (council 2026-07-03)
 scratchpad/
-br/dream-demo/
-br/dream-40/
-br/harass/
-br/att40/
-br/payroll/br/data-draft/stress-test/
-br/payroll/br/data-draft.backup/
+# br/ = OUTPUT khi dev/test /br (sub-project sinh ra) — artifact cục bộ, KHÔNG push.
+# "Xương" scaffold /br sống ở skills/br/assets/ (defaults + template); README ở br/ giữ lại.
+br/*/
 llmwiki/raw/*.xlsx
