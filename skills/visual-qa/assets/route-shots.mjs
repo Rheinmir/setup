@@ -254,6 +254,60 @@ function DESIGN_AUDIT() {   // function-declaration (được hoist) — pre-log
     issues.push({ rule: "rogue-slab", count: slabs.length, worst: slabs.slice(0, 5) });
   }
 
+  // ── HÌNH HỌC (bài học 15/07/26 — 2 vòng /redesign + flywheel MÙ với lỗi này) ──
+  // Contrast/rogue-slab kiểm MÀU, không kiểm TOẠ ĐỘ. Hai lỗi lọt: (1) nút position:fixed
+  // với magic-offset đè lên nhau; (2) nút cạnh nhau lệch chiều cao. Cả hai chỉ lộ khi
+  // ĐO rect thật — đọc CSS tĩnh không thấy. Hai rule dưới đo bằng getBoundingClientRect.
+  const CTRL = "button, a[href], input, [role=button], .who, .back, #theme";
+  const ctrls = [...document.querySelectorAll(CTRL)].filter((el) => {
+    const cs = getComputedStyle(el);
+    if (cs.visibility === "hidden" || cs.display === "none" || +cs.opacity < 0.15) return false;
+    const r = el.getBoundingClientRect();
+    return r.width >= 8 && r.height >= 8;
+  });
+  const isAnc = (a, b) => a.contains(b) || b.contains(a);       // cha-con thì đè nhau là bình thường
+  const rectOf = (el) => el.getBoundingClientRect();
+
+  // 5. OVERLAP — hai control KHÔNG phải cha-con mà rect chồng ≥4px CẢ HAI chiều = đè nhau.
+  //    KHÔNG dùng ngưỡng %-diện-tích: bug thật chỉ là badge CLIP mép nút (19×37px = 18% dt),
+  //    mọi ngưỡng % đều lọt. Đúng mô hình: 2 control độc lập chồng ≥ vài px = lỗi (bài học
+  //    15/07/26 — ngưỡng 25% ban đầu MISS đúng bug đang muốn bắt, phát hiện khi chạy thật).
+  const OVL = 4;   // px — hơn antialias/mép chạm, chưa tới mức "cố tình chồng nhẹ"
+  const overlaps = [];
+  for (let i = 0; i < ctrls.length; i++) for (let j = i + 1; j < ctrls.length; j++) {
+    if (isAnc(ctrls[i], ctrls[j])) continue;
+    const a = rectOf(ctrls[i]), b = rectOf(ctrls[j]);
+    const ix = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+    const iy = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+    if (ix >= OVL && iy >= OVL) {
+      overlaps.push({ a: (ctrls[i].id || ctrls[i].className || ctrls[i].tagName).toString().slice(0, 24),
+                      b: (ctrls[j].id || ctrls[j].className || ctrls[j].tagName).toString().slice(0, 24),
+                      chồng: `${Math.round(ix)}×${Math.round(iy)}px` });
+    }
+  }
+  if (overlaps.length) issues.push({ rule: "overlap", count: overlaps.length, worst: overlaps.slice(0, 5) });
+
+  // 6. ROW-MISALIGN — control CÙNG CHA (nhóm ngang) + gần cùng hàng (top lệch ≤ 6px) mà
+  //    chiều cao lệch > 3px = "không cao bằng nhau". Đúng lỗi nút Sáng/Tối cao hơn badge.
+  const byParent = new Map();
+  ctrls.forEach((el) => {
+    const p = el.parentElement; if (!p) return;
+    (byParent.get(p) || byParent.set(p, []).get(p)).push(el);
+  });
+  const misaligns = [];
+  byParent.forEach((group) => {
+    if (group.length < 2) return;
+    const rects = group.map(rectOf);
+    // cùng hàng: mọi phần tử có top nằm trong dải 6px
+    const tops = rects.map((r) => r.top);
+    if (Math.max(...tops) - Math.min(...tops) > 6) return;      // khác hàng → bỏ (không so)
+    const hs = rects.map((r) => r.height);
+    const dh = Math.max(...hs) - Math.min(...hs);
+    if (dh > 3) misaligns.push({ parent: (group[0].parentElement.className || group[0].parentElement.tagName).toString().slice(0, 24),
+                                 heights: hs.map((h) => Math.round(h)), lệch: Math.round(dh) });
+  });
+  if (misaligns.length) issues.push({ rule: "row-misalign", count: misaligns.length, worst: misaligns.slice(0, 5) });
+
   return issues;
 }
 

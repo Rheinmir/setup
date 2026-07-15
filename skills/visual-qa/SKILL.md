@@ -51,6 +51,9 @@ Chạy in-page bằng computed style:
 - `rogue-slab` — **MỌI** phần tử ≥2% viewport có nền đục lệch nền body > 1.6:1. **FAIL cứng.**
   (`monochrome-surface` chỉ soi sidebar/aside/nav ⇒ mù với mảng màu lạ là `<div>` bất kỳ giữa trang.)
 - `shadow-clipped` — aura outset trong cha `overflow:hidden` (có ngưỡng blur). Cảnh báo.
+- `overlap` — hai control (`button/a/input/[role=button]`) KHÔNG phải cha-con mà rect chồng ≥4px cả hai chiều. Bắt lỗi **nút đè lên nhau** (vd `position:fixed` với magic-offset lúc badge rộng biến thiên). **FAIL cứng.**
+- `row-misalign` — control cùng cha, gần cùng hàng (top lệch ≤6px) mà **chiều cao lệch >3px**. Bắt lỗi **nút cạnh nhau không bằng chiều cao** (vd nút toggle cao hơn badge do padding/font khác). **FAIL cứng.**
+  (Hai rule này thêm 15/07/26 vì cả `/redesign-existing-projects` [đọc CSS TĨNH — không đo được rect] lẫn unit-test [kiểm NỘI DUNG, không kiểm toạ độ] đều mù với lỗi hình học lúc render. Ngưỡng overlap CỐ Ý không dùng %-diện-tích: bug thật chỉ clip mép nút = 18% dt, mọi ngưỡng % đều lọt — 2 control độc lập chồng ≥ vài px đã là lỗi.)
 
 Mở rộng bất biến theo design spec của dự án.
 

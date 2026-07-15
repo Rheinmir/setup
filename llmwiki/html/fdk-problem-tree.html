@@ -594,6 +594,30 @@
   "date": "14/07/26",
   "solvedBy": "T-260714-01: fdk/tools/br-fill.py + skills/br/assets/defaults.yaml + SKILL.md Mode1 3b / Mode2 gate",
   "session": "issue-15-br-k / orca-workflow proactive-fill"
+ },
+ {
+  "id": "p-auto-15",
+  "parent": null,
+  "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
+  "desc": "Bề mặt bị chạm: llmwiki/html/wiki-graph.html, llmwiki/raw/payroll, llmwiki/wiki/log.md. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát).",
+  "status": "open",
+  "scope": [],
+  "date": "15/07/26",
+  "session": "15a64d8b",
+  "pending": true
+ },
+ {
+  "id": "p-ui-geometry-blind",
+  "parent": null,
+  "title": "QA thị giác MÙ với lỗi hình học lúc render — nút đè nhau + lệch chiều cao lọt qua /redesign (2 lần) + 161 unit-test + flywheel",
+  "desc": "Payroll: badge vai đè nút Sáng/Tối (position:fixed magic-offset), và 3 pill topbar lệch chiều cao — user phải chỉ tay 3 lần. Vì sao mù: /redesign đọc CSS TĨNH (không đo được rect render); unit-test kiểm NỘI DUNG+MÀU (không kiểm toạ độ); visual-qa CÓ render nhưng chỉ có rule MÀU (contrast/rogue-slab), thiếu rule HÌNH HỌC, lại chưa wire vào acceptance của frame UI; flywheel phản ứng, chưa ai nạp. Giải: thêm 2 rule geometry (overlap ≥4px cả 2 chiều; row-misalign chiều cao lệch >3px cùng hàng) vào DESIGN_AUDIT của route-shots.mjs — đo bằng getBoundingClientRect, chạy thật chứng minh bắt đúng cả 2 bug (overlap 19×30px, lệch 14px) và 0 false-positive trên app đã sửa. Ngưỡng overlap KHÔNG dùng %-diện-tích (bug thật = 18% dt, ngưỡng % nào cũng lọt — phát hiện khi chạy thật, sửa 25%→4px tuyệt đối).",
+  "status": "solved",
+  "scope": [
+   "skills"
+  ],
+  "date": "15/07/26",
+  "solvedBy": "route-shots.mjs +rule overlap/row-misalign + visual-qa SKILL.md",
+  "session": "issue-15-br-k / redesign payroll topbar"
  }
 ]</script>
 
@@ -658,6 +682,11 @@
   }
   draw();
   addEventListener('resize', draw);
+})();
+</script>
+</body>
+</html>
+entListener('resize', draw);
 })();
 </script>
 </body>
