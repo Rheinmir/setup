@@ -4,7 +4,7 @@ frame_id: frame-f09-bao-hiem
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C4.2, C4.5, C11.1, C11.2, C11.3, C11.4]
-parent_br_hash: 938526ebb8c91bce8efa64c34d38f73a68401b647cbf87b94dd2c12f40c93879
+parent_br_hash: d4405e637a83f254824170838c8292807a704edb143ff9912a9dbd033cd77d6c
 muc_tieu: "BHXH/BHYT/BHTN và kinh phí công đoàn — hai trần cùng tồn tại (hiển thị 50,6tr, tính thật 46,8tr), miễn đóng khi nghỉ từ 14 ngày, người nước ngoài không đóng thất nghiệp, phí công đoàn có trần 253 nghìn"
 scope_code: ["app/baohiem.py"]
 scope_test: ["tests/test_f09.py"]

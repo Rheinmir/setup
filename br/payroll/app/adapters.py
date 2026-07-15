@@ -70,6 +70,37 @@ def push_payslip(period: str, payslips: list) -> Path:
     return path
 
 
+_KE_TOAN_TRUONG_CHUA_CO = ("profit_cost_center", "wbs", "funds_center")  # FE-20 — không có nguồn
+
+
+def export_payroll_master(period: str, p: dict) -> Path:
+    """Payroll Master (Template 2) — file phẳng cho kế toán [FE-20].
+
+    Cột = nhân sự + TOÀN BỘ field engine tính ra (mọi thành phần lương/phụ
+    cấp/BHXH/thuế/thực nhận/chi phí công ty). BA cột kế toán PRD mô tả
+    (Profit/Cost Center, WBS, Funds Center) để RỖNG — không tồn tại nguồn
+    dữ liệu nào trong hệ thống, KHÔNG bịa số. Đổi ruột lô sau khi có nguồn.
+    """
+    from app import engine
+    rows = fetch_employees(period)
+    codes = list(engine._OUTPUT)
+    fields = ["employee_id", "ho_ten", "phong_ban", "CONTRACT_TYPE"] + codes + list(_KE_TOAN_TRUONG_CHUA_CO)
+    out_dir = _OUT / period
+    out_dir.mkdir(parents=True, exist_ok=True)
+    path = out_dir / "payroll_master.csv"
+    with path.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fields)
+        writer.writeheader()
+        for rec in rows:
+            kq, _trace = engine.bang_luong(rec, p)
+            hang = {"employee_id": rec.get("employee_id", ""), "ho_ten": rec.get("ho_ten", ""),
+                    "phong_ban": rec.get("phong_ban", ""), "CONTRACT_TYPE": rec.get("CONTRACT_TYPE", "")}
+            hang.update({c: kq.get(c, "") for c in codes})
+            hang.update({c: "" for c in _KE_TOAN_TRUONG_CHUA_CO})
+            writer.writerow(hang)
+    return path
+
+
 def export_bank_file(period: str, rows: list) -> Path:
     """Xuất file chuyển khoản ngân hàng (CSV phẳng).
 

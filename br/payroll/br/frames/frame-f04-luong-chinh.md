@@ -4,7 +4,7 @@ frame_id: frame-f04-luong-chinh
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C7.1, C7.2, C7.3, C7.4, C13.5]
-parent_br_hash: 938526ebb8c91bce8efa64c34d38f73a68401b647cbf87b94dd2c12f40c93879
+parent_br_hash: d4405e637a83f254824170838c8292807a704edb143ff9912a9dbd033cd77d6c
 muc_tieu: "Lương chính pro-rata theo ngày công — tách lương thử việc và lương chính thức, cộng phụ cấp trách nhiệm và lương phép tồn, làm tròn kiểu Excel (half-up) chứ không phải kiểu Python"
 scope_code: ["app/luong.py"]
 scope_test: ["tests/test_f04.py"]

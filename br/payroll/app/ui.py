@@ -127,7 +127,7 @@ def _man_bang_luong() -> bytes:
     th = "".join(f'<th class="money">{_e(t)}</th>' for _c, t in _COT)
     return _page(f"Bảng lương {PERIOD}", f"""
 <h1>Bảng lương kỳ {_e(PERIOD)}</h1>
-<p>Từ ngày {dau:%d/%m/%Y} đến ngày {cuoi:%d/%m/%Y} · <a href="/upload">↑ Tải Excel (mass upload)</a> · <a href="/audit">📋 Sổ audit</a> · <a href="/params">⚙ Tham số lương</a></p>
+<p>Từ ngày {dau:%d/%m/%Y} đến ngày {cuoi:%d/%m/%Y} · <a href="/upload">↑ Tải Excel (mass upload)</a> · <a href="/audit">📋 Sổ audit</a> · <a href="/params">⚙ Tham số lương</a> · <a href="/export/payroll-master?period={_e(PERIOD)}">⬇ Payroll Master (CSV)</a></p>
 <table><thead><tr><th>Mã NV</th><th>Họ tên</th>{th}<th></th></tr></thead>
 <tbody>{"".join(hang)}</tbody></table>""")
 
@@ -349,6 +349,22 @@ class _Handler(BaseHTTPRequestHandler):
         from urllib.parse import urlparse, parse_qs
         parsed = urlparse(self.path)
         phan = [x for x in parsed.path.split("/") if x]
+        if phan == ["export", "payroll-master"]:  # file tải về, KHÔNG phải màn HTML [FE-20]
+            try:
+                period = parse_qs(parsed.query).get("period", [PERIOD])[0]
+                path = adapters.export_payroll_master(period, params.load(period))
+                data = path.read_bytes()
+            except Exception as exc:
+                self.send_error(500, explain=str(exc))
+                return
+            self.send_response(200)
+            self.send_header("Content-Type", "text/csv; charset=utf-8")
+            self.send_header("Content-Disposition",
+                             f'attachment; filename="payroll_master_{period}.csv"')
+            self.send_header("Content-Length", str(len(data)))
+            self.end_headers()
+            self.wfile.write(data)
+            return
         try:
             if not phan:
                 body = _man_bang_luong()

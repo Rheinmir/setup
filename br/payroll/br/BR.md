@@ -278,6 +278,8 @@ Engine **không gọi gì khác**. Thứ tự nối lại khi có credential: Wo
 
 **C18.2** — **Hàm thứ năm (adapt, không thay thế 4 hàm gốc)**: `save_uploaded_employees(period, rows: list[dict]) -> Path` — ghi `rows` (đã parse từ Excel mass-upload, xem C15.4) vào **đúng** `data/inputs/<period>/employees.json` mà `fetch_employees` đọc; không network, không schema mới — `rows` phải khớp khoá với record `fetch_employees` đã trả trước giờ (tối thiểu có `employee_id`). `provenance: user (2026-07-15)`
 
+**C18.3** — **Hàm thứ sáu — `export_payroll_master(period, p) -> Path` (FE-20, Payroll Master Template 2)**: xuất `out/<period>/payroll_master.csv` — nhân sự + TOÀN BỘ field engine tính ra (mọi thành phần lương/phụ cấp/BHXH/thuế/thực nhận/chi phí công ty, qua `engine.bang_luong()` thật, không hard-code). **BA cột kế toán** PRD mô tả đầy đủ (`profit_cost_center`, `wbs`, `funds_center`) để **RỖNG** — không có nguồn dữ liệu nào trong hệ thống (không có Profit/Cost Center, WBS, Funds Center ở bất kỳ đâu), **không bịa số** cho ba cột này. Route `GET /export/payroll-master?period=` tải file trực tiếp (`Content-Disposition: attachment`) — đây là **file**, không phải màn hình xem. `provenance: user (2026-07-15) · raw:PRD v2.1 §6.3 (cấu trúc cột) — 3 cột kế toán MISSING theo raw`
+
 ---
 
 ## C19 · Out-of-scope lô đầu (ghi `docs/DEFERRED.md`, kèm lý do chặn)

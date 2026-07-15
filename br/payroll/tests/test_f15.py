@@ -311,6 +311,21 @@ class TestUI(unittest.TestCase):
                   for r in adapters.fetch_employees("2030-01"))
         self.assertIn(ui._fmt(tong), h)
 
+    # ── FE-20 Payroll Master — tải file phẳng CSV (không phải màn xem) ─────
+    def test_export_payroll_master_tai_duoc_qua_route(self):
+        import csv
+        import io
+        req = urllib.request.Request(
+            f"http://127.0.0.1:{self.port}/export/payroll-master?period=2026-03")
+        with urllib.request.urlopen(req, timeout=10) as r:
+            self.assertEqual(r.status, 200)
+            self.assertIn("text/csv", r.headers.get("Content-Type", ""))
+            self.assertIn("attachment", r.headers.get("Content-Disposition", ""))
+            data = r.read().decode("utf-8")
+        rows = list(csv.DictReader(io.StringIO(data)))
+        self.assertEqual(rows[0]["employee_id"], "GT-ROW9")
+        self.assertEqual(int(rows[0]["NET_PAY_HOME"]), 189_930_161)
+
 
 if __name__ == "__main__":
     unittest.main()

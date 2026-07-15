@@ -4,7 +4,7 @@ frame_id: frame-f02-lich-ky-cong
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C5.1, C5.2, C5.4]
-parent_br_hash: 938526ebb8c91bce8efa64c34d38f73a68401b647cbf87b94dd2c12f40c93879
+parent_br_hash: d4405e637a83f254824170838c8292807a704edb143ff9912a9dbd033cd77d6c
 muc_tieu: "Lịch kỳ lương 21→20 và ngày công chuẩn — Văn phòng trừ Chủ nhật và nửa ngày thứ 7, Công trường chỉ trừ Chủ nhật; kèm danh mục ngày lễ"
 scope_code: ["app/lichky.py"]
 scope_test: ["tests/test_f02.py"]

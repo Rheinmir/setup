@@ -39,6 +39,25 @@ class TestAdapters(unittest.TestCase):
         adapters.save_uploaded_employees("2099-02", [{"employee_id": "UP-002"}])
         self.assertEqual(adapters.fetch_employees("2026-03"), before)
 
+    # ── FE-20 Payroll Master (Template 2) ────────────────────────────────────
+    def test_export_payroll_master_dung_ground_truth(self):
+        import csv
+        from app import params
+        p = params.load("2026-03")
+        path = adapters.export_payroll_master("2026-03", p)
+        self.assertTrue(path.exists())
+        with path.open(encoding="utf-8") as f:
+            rows = list(csv.DictReader(f))
+        self.assertEqual(len(rows), 1)
+        r = rows[0]
+        self.assertEqual(r["employee_id"], "GT-ROW9")
+        self.assertEqual(int(r["NET_PAY_HOME"]), 189_930_161)
+        self.assertEqual(int(r["GROSS"]), 225_010_000)
+        # trường kế toán KHÔNG có dữ liệu trong hệ thống — cột rỗng, không bịa
+        for c in ("profit_cost_center", "wbs", "funds_center"):
+            self.assertIn(c, r)
+            self.assertEqual(r[c], "")
+
 
 if __name__ == "__main__":
     unittest.main()
