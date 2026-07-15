@@ -268,6 +268,19 @@ class TestUI(unittest.TestCase):
         # chỉ-xem, có link lùi như 3 màn gốc
         self.assertIn('class="back"', h)
 
+    # ── FE-23 Master Data — /params chỉ-xem cả 2 bộ tham số ─────────────────
+    def test_params_screen_hien_ca_2_bo_tham_so(self):
+        h = self.fetch("/params")
+        self.assertIn("2020-01-01", h)
+        self.assertIn("2026-01-01", h)
+        self.assertIn('class="back"', h)
+
+    def test_params_screen_hien_muc_chua_hieu_luc(self):
+        # đúng chỗ tranh cãi 46,8tr/50,6tr trước đó — giờ hiện công khai, Ctrl+F ra
+        h = self.fetch("/params")
+        self.assertIn("ins_cap_bh_new", h)
+        self.assertIn("50.600.000", h)
+
 
 if __name__ == "__main__":
     unittest.main()

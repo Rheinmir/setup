@@ -34,6 +34,18 @@ class TestParams(unittest.TestCase):
         with self.assertRaises(ValueError):
             params.load("1999-01")
 
+    # ── FE-23 Master Data — xem toàn bộ, không chỉ bộ đang active ───────────
+    def test_list_all_tra_du_2_bo_tham_so(self):
+        d = params.list_all()
+        self.assertEqual(len(d["param_sets"]), 2)
+        self.assertEqual(d["param_sets"][0]["effective_from"], "2020-01-01")
+        self.assertEqual(d["param_sets"][1]["effective_from"], "2026-01-01")
+
+    def test_list_all_co_muc_chua_hieu_luc(self):
+        d = params.list_all()
+        self.assertIn("_pending_hr", d)
+        self.assertIn("ins_cap_bh_new", d["_pending_hr"])
+
 
 if __name__ == "__main__":
     unittest.main()

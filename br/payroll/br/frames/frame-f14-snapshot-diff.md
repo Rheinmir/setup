@@ -4,7 +4,7 @@ frame_id: frame-f14-snapshot-diff
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C16.1, C16.2]
-parent_br_hash: 8d9fbb9d5f6efe5260ac72537c6d6aac516cdbd2891ed98ce053c3fbfee40fab
+parent_br_hash: 5c0174e8f467b73db5a18477ae072a76e12d9f6e83ce4dc8217d3cd89ad71652
 muc_tieu: "Mỗi lần chạy ghi một bản chụp bất biến, không đè lên bản cũ; và so hai bản chụp để chỉ ra ai lệch, field nào lệch, lệch bao nhiêu đồng — đây chính là công cụ chạy song song đối chiếu với Excel"
 scope_code: ["app/snapshot.py"]
 scope_test: ["tests/test_f14.py"]

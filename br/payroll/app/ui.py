@@ -127,7 +127,7 @@ def _man_bang_luong() -> bytes:
     th = "".join(f'<th class="money">{_e(t)}</th>' for _c, t in _COT)
     return _page(f"Bảng lương {PERIOD}", f"""
 <h1>Bảng lương kỳ {_e(PERIOD)}</h1>
-<p>Từ ngày {dau:%d/%m/%Y} đến ngày {cuoi:%d/%m/%Y} · <a href="/upload">↑ Tải Excel (mass upload)</a> · <a href="/audit">📋 Sổ audit</a></p>
+<p>Từ ngày {dau:%d/%m/%Y} đến ngày {cuoi:%d/%m/%Y} · <a href="/upload">↑ Tải Excel (mass upload)</a> · <a href="/audit">📋 Sổ audit</a> · <a href="/params">⚙ Tham số lương</a></p>
 <table><thead><tr><th>Mã NV</th><th>Họ tên</th>{th}<th></th></tr></thead>
 <tbody>{"".join(hang)}</tbody></table>""")
 
@@ -272,6 +272,36 @@ def _man_audit() -> bytes:
 <tbody>{hang}</tbody></table>""", back=("/", "Bảng lương"))
 
 
+def _fmt_param(v):
+    return _fmt(v) if isinstance(v, (int, float)) and not isinstance(v, bool) else _e(v)
+
+
+def _man_params() -> bytes:
+    """Toàn bộ tham số lương — CHỈ XEM [C4.1/FE-23]. Không sửa qua đây (đổi số = sửa data/params.json)."""
+    d = params.list_all()
+    bo_khoi = []
+    for bo in d["param_sets"]:
+        hang = "".join(
+            f'<tr><td><code>{_e(k)}</code></td><td class="money">{_fmt_param(v)}</td></tr>'
+            for k, v in bo.items() if k != "effective_from")
+        bo_khoi.append(f"""<h2>Bộ hiệu lực từ {_e(bo['effective_from'])}</h2>
+<table><thead><tr><th>Tham số</th><th class="money">Giá trị</th></tr></thead>
+<tbody>{hang}</tbody></table>""")
+    cho = d.get("_pending_hr", {})
+    cho_hang = "".join(
+        f'<tr><td><code>{_e(k)}</code></td><td class="money">{_fmt_param(v)}</td></tr>'
+        for k, v in cho.items() if k != "_note")
+    return _page("Tham số lương", f"""
+<h1>Tham số lương (Master Data)</h1>
+<p class="clause">Nguồn: <code>data/params.json</code> [C4.1]. Đổi số = sửa file này,
+không sửa code — chỉ-xem tại đây.</p>
+{"".join(bo_khoi)}
+<h2>Chưa hiệu lực</h2>
+<p class="clause">{_e(cho.get("_note", ""))}</p>
+<table><thead><tr><th>Tham số</th><th class="money">Giá trị</th></tr></thead>
+<tbody>{cho_hang}</tbody></table>""", back=("/", "Bảng lương"))
+
+
 class _Handler(BaseHTTPRequestHandler):
     def log_message(self, *a):  # im lặng khi chạy test
         pass
@@ -291,6 +321,8 @@ class _Handler(BaseHTTPRequestHandler):
                 body = _man_upload()
             elif phan == ["audit"]:
                 body = _man_audit()
+            elif phan == ["params"]:
+                body = _man_params()
             else:
                 body = None
         except Exception as exc:                      # không bịa số — báo lỗi ra màn

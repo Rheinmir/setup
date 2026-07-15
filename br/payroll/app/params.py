@@ -21,3 +21,13 @@ def load(period: str) -> dict:
     if not valid:
         raise ValueError(f"Không có bộ tham số nào hiệu lực cho kỳ {period}")
     return max(valid, key=lambda s: s["effective_from"])
+
+
+def list_all() -> dict:
+    """Toàn bộ nội dung file — mọi bộ tham số (kể cả chưa hiệu lực) [FE-23].
+
+    Chỉ-xem, không sửa qua đây. Trả nguyên cấu trúc file: `param_sets` (mỗi
+    bộ có `effective_from`) + `_pending_hr` (số đã nằm trong sheet HR nhưng
+    chưa công thức nào tiêu thụ — xem BR A2).
+    """
+    return json.loads(_PARAMS_FILE.read_text(encoding="utf-8"))

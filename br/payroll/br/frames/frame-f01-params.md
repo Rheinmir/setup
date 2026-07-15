@@ -3,9 +3,9 @@ schema_version: 0
 frame_id: frame-f01-params
 created_by: slicer
 parent_br: br/BR.md
-clause_ids: [C4.1, C4.2, C4.3, C4.4, C4.5, C4.6]
-parent_br_hash: 8d9fbb9d5f6efe5260ac72537c6d6aac516cdbd2891ed98ce053c3fbfee40fab
-muc_tieu: "Tham số lương ở MỘT chỗ duy nhất, chọn theo ngày hiệu lực — trần BHXH, tỷ lệ đóng, biểu thuế 5 bậc, giảm trừ gia cảnh, đơn giá cơm; đổi số không được sửa code"
+clause_ids: [C4.1, C4.2, C4.3, C4.4, C4.5, C4.6, C15.5]
+parent_br_hash: 5c0174e8f467b73db5a18477ae072a76e12d9f6e83ce4dc8217d3cd89ad71652
+muc_tieu: "Tham số lương ở MỘT chỗ duy nhất, chọn theo ngày hiệu lực — trần BHXH, tỷ lệ đóng, biểu thuế 5 bậc, giảm trừ gia cảnh, đơn giá cơm; đổi số không được sửa code; cộng list_all() cho màn xem Master Data (FE-23, C15.5)"
 scope_code: ["app/params.py"]
 scope_test: ["tests/test_f01.py"]
 acceptance_test: "python3 -m tests.test_f01"
@@ -38,6 +38,7 @@ Hai trần BHXH cùng tồn tại và đó KHÔNG phải lỗi: cột `INS_SAL_B
 - Trả về CẢ HAI trần: `ins_cap_bh_display` = 50.600.000 và `ins_cap_bh` = 46.800.000
 - Biểu thuế đúng 5 bậc; `ot_from_hours` = false
 - Kỳ trước mọi bộ tham số (1999-01) → ném `ValueError`, không im lặng lấy bừa
+- **C15.5/FE-23**: `list_all()` trả đủ cả 2 bộ `param_sets` (2020-01-01 + 2026-01-01) VÀ mục `_pending_hr` (số chưa hiệu lực, vd `ins_cap_bh_new`) — không chỉ bộ đang active như `load()`
 
 ## Ngoài phạm vi
 

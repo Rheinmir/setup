@@ -15,12 +15,12 @@
 | | Số lượng |
 |---|---|
 | ✅ Đã có | 14 |
-| ⚠️ Một phần | 4 |
+| ⚠️ Một phần | 5 |
 | ⊘ Ngoài phạm vi lô đầu (chủ đích, xem `C19`) | 13 |
-| ❌ Chưa có (trong phạm vi, chưa build) | 1 |
+| ❌ Chưa có (trong phạm vi, chưa build) | 0 |
 | **Tổng** | **32** |
 
-> Cập nhật 2026-07-15: FE-17 (Audit Log) + FE-06 (truy thu/truy lĩnh) đã build — còn lại `FE-19/20/21/23/31` (báo cáo/master data).
+> Cập nhật 2026-07-15: FE-17 (Audit Log) + FE-06 (truy thu/truy lĩnh) đã build đủ; FE-23 (Master Data) build 1/6 danh mục — còn `FE-19/20/21/31` (báo cáo) và 5/6 danh mục FE-23 vướng giới hạn dữ liệu (xem mục dưới).
 
 ## Bảng chi tiết
 
@@ -48,7 +48,7 @@
 | FE-20 | Payroll Master (Template 2 — file phẳng kế toán) | ⚠️ Một phần | `frame-f13-adapters` `export_bank_file()` xuất CSV phẳng — nhưng là stub `C18.1` ("nay: CSV | sau: template thật"), chưa phải Template 2 chuẩn kế toán | — | `export_bank_file` (tên hàm trong `app/adapters.py`, không phải UI) |
 | FE-21 | Báo cáo Bảng công chi tiết (mẫu `02__HR C&B`, bảo mật) | ❌ Chưa có | — | — | — |
 | FE-22 | Báo cáo Đơn "Treo" + Dashboard lãnh đạo realtime | ⊘ Ngoài phạm vi (`C19`) | — | — | — |
-| FE-23 | Master Data Management (6 danh mục nền) | ❌ Chưa có (chỉ có `data/params.json` phẳng, không có màn quản trị) | — | — | — |
+| FE-23 | Master Data Management (6 danh mục nền) | ⚠️ Một phần (2026-07-15) | `app/params.py list_all()` (frame-f01, `C15.5`) — chỉ mới xem được **1/6 danh mục** (Bảng định mức/tham số lương, gồm cả bộ chưa hiệu lực); 5 danh mục còn lại (Bộ phận, Nơi cư trú, Khoảng cách, DS Tờ trình, Ngày lễ) KHÔNG tồn tại dạng dữ liệu có cấu trúc trong repo — chỉ nằm rải rác hardcode (`DINH_MUC_CHUNG` trong `phucap.py`) hoặc hoàn toàn chưa có | `/params` | `Tham số lương (Master Data)` (tiêu đề trang, đã kiểm `curl`) |
 | FE-24 | Danh mục ngày lễ tự động + đăng ký đi làm lễ | ⚠️ Một phần | `frame-f02-lich-ky-cong` `C5.4` — danh mục ngày lễ có trong engine; **luồng đăng ký/duyệt đi làm lễ chưa có UI** | `/trace/<mã NV>/PAID_DAYS` (gián tiếp, qua tính công) | `PAID_DAYS` |
 | FE-25 | Xuất file chuyển khoản ngân hàng (HSBC, Citibank…) | ⊘ Ngoài phạm vi (`C19`), có stub CSV | `export_bank_file()` — CSV phẳng, KHÔNG phải template ngân hàng thật | — | — |
 | FE-26 | Payslip PDF hoặc API về Workday | ⚠️ Một phần | Màn `/payslip` (HTML, in được `@media print`) **đã có**; xuất **PDF** hoặc bắn **API** về Workday ⊘ ngoài phạm vi | `/payslip/<mã NV>` | `PHIẾU LƯƠNG` |
@@ -59,11 +59,14 @@
 | FE-31 | Hạch toán & phân bổ chi phí nội bộ | ❌ Chưa có (chỉ có `TOTAL_CTY_COST` tổng, chưa phân bổ theo GĐDA/bộ phận) | `frame-f11-tong-hop` `C13.4` | `/trace/<mã NV>/TOTAL_CTY_COST` | `TOTAL_CTY_COST` (tiêu đề trang, đã kiểm route trả `HTTP 200`) |
 | FE-32 | Azure AD SSO + phân quyền granular | ⊘ Ngoài phạm vi (`C19`) | — | — | — |
 
-## Chức năng "Chưa có" trong phạm vi lô đầu — cần quyết định
+## Chức năng còn dang dở trong phạm vi lô đầu — cần quyết định
 
-Đây là các mục **KHÔNG nằm trong danh sách ngoài-phạm-vi `C19`** (tức đáng lẽ phải làm ở lô đầu) nhưng grep code thật không thấy. ~~FE-17~~, ~~FE-06~~ đã build (2026-07-15, xem bảng trên) — còn lại:
+~~FE-17~~, ~~FE-06~~ đã build đủ (2026-07-15). Còn lại 2 nhóm, cả hai đều vướng **giới hạn dữ liệu thật**, không phải lười build:
 
-1. **FE-19/20/21/23/31** (báo cáo/master data mgmt) — không có route/UI, chỉ có dữ liệu tính toán nội bộ đã đúng.
+1. **FE-19/20/21/31** (báo cáo trình ký / payroll master / bảng công chi tiết / phân bổ chi phí) — ground-truth hiện **chỉ có ĐÚNG 1 nhân viên** (`GT-ROW9`). Báo cáo "phân bổ theo dự án/phòng ban" hay "bảng công nhiều người" trên 1 dòng dữ liệu sẽ rỗng/không chứng minh được gì — cần **thêm dữ liệu nhiều nhân viên** (dù là giả định có kiểm soát) trước khi build có ý nghĩa.
+2. **FE-23 còn 5/6 danh mục** (Bộ phận, Nơi cư trú, Khoảng cách, DS Tờ trình, Ngày lễ) — không tồn tại dạng dữ liệu có cấu trúc trong repo, chỉ hardcode rải rác hoặc hoàn toàn chưa có; cần quyết định nguồn dữ liệu trước khi build màn xem.
+
+**Đề xuất:** quay lại `/br interview` để chốt (a) có cho phép dùng roster nhiều-nhân-viên giả định (đã có tiền lệ `4.179 bản sao dòng 9` cho test PERF) làm nền cho báo cáo, hay bắt buộc chờ dữ liệu Workday thật; (b) 5 danh mục Master Data còn lại lấy nguồn từ đâu.
 
 **Đề xuất:** nếu các mục trên thực sự cần cho lô đầu, phải quay lại `/br interview` bổ sung field còn thiếu ở S9 (Out-of-scope) — hiện BR không nói rõ các mục này được LOẠI hay chỉ ĐANG THIẾU. Nếu chủ đích hoãn, nên thêm vào bảng `C19` cho nhất quán (tránh mập mờ như hiện tại).
 
