@@ -305,3 +305,4 @@ Giải issue `030726-skill-resolve-supplychain` (trục #5 frontier-gap-scan, Ch
 - DOGFOOD lộ slop THẬT: overstack.html + index.html + health-dashboard có gradient-text (blue→purple headline) do generator sinh — sửa 3 generator dùng màu đặc.
 - /propose fill-default từ catalog hallmark (tag default, ghi ## Assumptions). design-variety.py + .design-log.jsonl: cổng Variety travel-được (phơi bày mọi seq.html là một glass template — nợ đã biết).
 - Nợ có sẵn lộ ra (KHÔNG sửa trong SPEC này): ~17 HTML cũ gradient-text + ligature debt.
+- UAT hai pha PASS (hallmark): canary (3 trụ 5/5, harness 74/74, hallmark SKILL + 24 references travel tới tay incl slop-test.md) → main-URL smoke (đường mặc định, 74/74, reachable). Raise ledger issue 150726-legacy-html-slop-debt (ready-for-agent) cho nợ ~17 HTML cũ. p-23 đóng.
