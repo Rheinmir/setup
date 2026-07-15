@@ -45,7 +45,11 @@ a:hover{text-decoration:underline}
        box-shadow:var(--sh-dark),var(--sh-light)}
 #theme:active{box-shadow:inset 3px 3px 7px rgba(0,0,0,.18),
                          inset -3px -3px 7px rgba(255,255,255,.10)}
-@media print{#theme{display:none}}
+.back{position:fixed;top:16px;left:16px;padding:10px 18px;z-index:10;
+      border-radius:14px;font:inherit;color:var(--ink);background:var(--bg);
+      box-shadow:var(--sh-dark),var(--sh-light)}
+.back:hover{text-decoration:underline}
+@media print{#theme,.back{display:none}}
 """
 
 # Chống FOUC: đặt data-theme TRƯỚC khi vẽ; không ép mode — mặc định theo hệ điều hành [C15.2].
@@ -78,7 +82,9 @@ def _e(x) -> str:
     return html.escape(str(x))
 
 
-def _page(title: str, body: str) -> bytes:
+def _page(title: str, body: str, back=None) -> bytes:
+    """back = (href, nhãn) — link lùi CỐ ĐỊNH trên đầu, luôn thấy khi cuộn dài. None = màn gốc."""
+    nut_lui = f'<a class="back" href="{_e(back[0])}">← {_e(back[1])}</a>' if back else ""
     return f"""<!doctype html>
 <html lang="vi"><head><meta charset="utf-8">
 <title>{_e(title)}</title>
@@ -86,6 +92,7 @@ def _page(title: str, body: str) -> bytes:
 <style>{_CSS}</style>
 </head><body>
 <button id="theme" type="button">Sáng / Tối</button>
+{nut_lui}
 {body}
 <script>{_TOGGLE_JS}</script>
 </body></html>""".encode("utf-8")
@@ -167,8 +174,7 @@ def _man_phieu_luong(emp_id: str):
 <h2>Thực nhận</h2>
 <table><tbody><tr><td><b>Lương thực nhận</b></td>
 <td class="money"><b>{_fmt(kq["NET_PAY_HOME"])}</b></td>
-<td class="clause"><a href="/trace/{_e(emp_id)}/NET_PAY">NET_PAY</a></td></tr></tbody></table>
-<p><a href="/">← Bảng lương</a></p>""")
+<td class="clause"><a href="/trace/{_e(emp_id)}/NET_PAY">NET_PAY</a></td></tr></tbody></table>""", back=("/", "Bảng lương"))
 
 
 def _cay(code: str, vet: dict, emp_id: str, sau: set) -> str:
@@ -196,14 +202,12 @@ def _man_trace(emp_id: str, code: str):
 <p class="clause">Nguồn: <code>data/params.json</code>,
    bộ tham số hiệu lực từ {_e(p["effective_from"])} [C4.1]</p>
 <table><thead><tr><th>Tham số</th><th class="money">Giá trị</th></tr></thead>
-<tbody>{tham_so}</tbody></table>
-<p><a href="/payslip/{_e(emp_id)}">← Phiếu lương</a></p>""")
+<tbody>{tham_so}</tbody></table>""", back=(f"/payslip/{_e(emp_id)}", "Phiếu lương"))
 
 
 def _man_upload() -> bytes:
     """Tab tối giản — chọn kỳ + chọn file Excel, KHÔNG có ô nhập tay từng field [C15.4]."""
     return _page("Tải Excel — mass upload", """
-<p><a href="/">← Bảng lương</a></p>
 <h1>Tải Excel (mass upload)</h1>
 <p class="clause">Header hàng 1 của file phải đúng tên field (vd employee_id, BASIC_SAL...).
 Chỉ nạp NGUYÊN file — không sửa từng dòng ở đây.</p>
@@ -220,7 +224,7 @@ document.getElementById('f').onsubmit = async function(ev){
   var r = await fetch('/upload?period=' + encodeURIComponent(period), {method:'POST', body: file});
   document.getElementById('kq').innerHTML = await r.text();
 };
-</script>""")
+</script>""", back=("/", "Bảng lương"))
 
 
 def _xu_ly_upload(period: str, body: bytes) -> bytes:
