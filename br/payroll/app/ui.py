@@ -8,7 +8,7 @@ import html
 from decimal import Decimal
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-from app import adapters, engine, lichky, params, upload
+from app import adapters, audit, engine, lichky, params, upload
 
 # Kỳ lương duy nhất đang có dữ liệu vào (data/inputs/<period>) [C18.1].
 PERIOD = "2026-03"
@@ -127,7 +127,7 @@ def _man_bang_luong() -> bytes:
     th = "".join(f'<th class="money">{_e(t)}</th>' for _c, t in _COT)
     return _page(f"Bảng lương {PERIOD}", f"""
 <h1>Bảng lương kỳ {_e(PERIOD)}</h1>
-<p>Từ ngày {dau:%d/%m/%Y} đến ngày {cuoi:%d/%m/%Y} · <a href="/upload">↑ Tải Excel (mass upload)</a></p>
+<p>Từ ngày {dau:%d/%m/%Y} đến ngày {cuoi:%d/%m/%Y} · <a href="/upload">↑ Tải Excel (mass upload)</a> · <a href="/audit">📋 Sổ audit</a></p>
 <table><thead><tr><th>Mã NV</th><th>Họ tên</th>{th}<th></th></tr></thead>
 <tbody>{"".join(hang)}</tbody></table>""")
 
@@ -206,13 +206,17 @@ def _man_trace(emp_id: str, code: str):
 
 
 def _man_upload() -> bytes:
-    """Tab tối giản — chọn kỳ + chọn file Excel, KHÔNG có ô nhập tay từng field [C15.4]."""
+    """Tab tối giản — chọn kỳ + chọn file Excel, KHÔNG có ô nhập tay từng field [C15.4].
+    performed_by/reason là METADATA cho audit log [C14.2], không phải dữ liệu lương."""
     return _page("Tải Excel — mass upload", """
 <h1>Tải Excel (mass upload)</h1>
 <p class="clause">Header hàng 1 của file phải đúng tên field (vd employee_id, BASIC_SAL...).
-Chỉ nạp NGUYÊN file — không sửa từng dòng ở đây.</p>
+Chỉ nạp NGUYÊN file — không sửa từng dòng ở đây. Người thực hiện + lý do BẮT BUỘC
+(ghi vào <a href="/audit">sổ audit</a>).</p>
 <form id="f">
   <p>Kỳ lương: <input type="text" name="period" placeholder="2026-04" required></p>
+  <p>Người thực hiện: <input type="text" name="performed_by" required></p>
+  <p>Lý do: <input type="text" name="reason" required></p>
   <p><input type="file" name="xlsx" accept=".xlsx" required></p>
   <button type="submit">Tải lên</button>
 </form>
@@ -220,17 +224,52 @@ Chỉ nạp NGUYÊN file — không sửa từng dòng ở đây.</p>
 <script>
 document.getElementById('f').onsubmit = async function(ev){
   ev.preventDefault();
-  var period = this.period.value, file = this.xlsx.files[0];
-  var r = await fetch('/upload?period=' + encodeURIComponent(period), {method:'POST', body: file});
+  var period = this.period.value, by = this.performed_by.value, reason = this.reason.value;
+  var file = this.xlsx.files[0];
+  var qs = 'period=' + encodeURIComponent(period)
+    + '&performed_by=' + encodeURIComponent(by)
+    + '&reason=' + encodeURIComponent(reason);
+  var r = await fetch('/upload?' + qs, {method:'POST', body: file});
   document.getElementById('kq').innerHTML = await r.text();
 };
 </script>""", back=("/", "Bảng lương"))
 
 
-def _xu_ly_upload(period: str, body: bytes) -> bytes:
+def _xu_ly_upload(period: str, performed_by: str, reason: str, body: bytes) -> bytes:
+    # validate người/lý do TRƯỚC khi đụng tới file — 400 phải là 400, không bị
+    # lỗi parse Excel che mất (C14.2: bắt buộc, không âm thầm bỏ qua)
+    if not (performed_by or "").strip():
+        raise ValueError("audit: thiếu người thực hiện (bắt buộc)")
+    if not (reason or "").strip():
+        raise ValueError("audit: thiếu lý do (bắt buộc)")
+    try:
+        old_rows = adapters.fetch_employees(period)
+    except FileNotFoundError:
+        old_rows = []
+    old_ids = [r.get("employee_id") for r in old_rows]
     rows = upload.parse_employees_xlsx(body)
     adapters.save_uploaded_employees(period, rows)
+    new_ids = [r.get("employee_id") for r in rows]
+    audit.log_action(action="mass_upload_employees", period=period,
+                      performed_by=performed_by, reason=reason,
+                      old_ids=old_ids, new_ids=new_ids)
     return f'<p>Đã tải <b>{len(rows)}</b> nhân sự cho kỳ {_e(period)}. <a href="/">Xem bảng lương</a></p>'.encode("utf-8")
+
+
+def _man_audit() -> bytes:
+    """Sổ audit — CHỈ XEM, giống 3 màn gốc [C14.2/FE-17]."""
+    rows = audit.read_log()
+    hang = "".join(
+        f'<tr><td>{_e(r["timestamp"])}</td><td>{_e(r["period"])}</td>'
+        f'<td>{_e(r["action"])}</td><td>{_e(r["performed_by"])}</td>'
+        f'<td>{_e(r["reason"])}</td>'
+        f'<td>{len(r["old_employee_ids"])} → {len(r["new_employee_ids"])}</td></tr>'
+        for r in reversed(rows))
+    return _page("Sổ audit", f"""
+<h1>Sổ audit (giá trị cũ → mới, người, thời gian, lý do)</h1>
+<table><thead><tr><th>Thời gian</th><th>Kỳ</th><th>Hành động</th>
+<th>Người thực hiện</th><th>Lý do</th><th>Số nhân sự (cũ→mới)</th></tr></thead>
+<tbody>{hang}</tbody></table>""", back=("/", "Bảng lương"))
 
 
 class _Handler(BaseHTTPRequestHandler):
@@ -250,6 +289,8 @@ class _Handler(BaseHTTPRequestHandler):
                 body = _man_trace(phan[1], phan[2])
             elif phan == ["upload"]:
                 body = _man_upload()
+            elif phan == ["audit"]:
+                body = _man_audit()
             else:
                 body = None
         except Exception as exc:                      # không bịa số — báo lỗi ra màn
@@ -270,14 +311,20 @@ class _Handler(BaseHTTPRequestHandler):
         if [x for x in parsed.path.split("/") if x] != ["upload"]:
             self.send_error(404)
             return
-        period = parse_qs(parsed.query).get("period", [None])[0]
+        qs = parse_qs(parsed.query)
+        period = qs.get("period", [None])[0]
+        performed_by = qs.get("performed_by", [None])[0]
+        reason = qs.get("reason", [None])[0]
         if not period:
             self.send_error(400, explain="thiếu ?period=YYYY-MM")
             return
         length = int(self.headers.get("Content-Length", 0))
         raw = self.rfile.read(length)
         try:
-            body = _xu_ly_upload(period, raw)
+            body = _xu_ly_upload(period, performed_by, reason, raw)
+        except ValueError as exc:                     # thiếu người/lý do bắt buộc [C14.2]
+            self.send_error(400, explain=str(exc))
+            return
         except Exception as exc:                      # không bịa số — báo lỗi ra màn
             self.send_error(500, explain=str(exc))
             return

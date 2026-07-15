@@ -14,11 +14,13 @@
 ## Tổng kết
 | | Số lượng |
 |---|---|
-| ✅ Đã có | 12 |
+| ✅ Đã có | 13 |
 | ⚠️ Một phần | 4 |
 | ⊘ Ngoài phạm vi lô đầu (chủ đích, xem `C19`) | 13 |
-| ❌ Chưa có (trong phạm vi, chưa build) | 3 |
+| ❌ Chưa có (trong phạm vi, chưa build) | 2 |
 | **Tổng** | **32** |
+
+> Cập nhật 2026-07-15: FE-17 (Audit Log) đã build — xem dòng FE-17 bên dưới + mục "Ba chức năng..." (còn 2, không phải 3).
 
 ## Bảng chi tiết
 
@@ -40,7 +42,7 @@
 | FE-14 | Quản lý NPT/giảm trừ gia cảnh | ✅ Đã có (dạng field, không phải màn quản lý) | `C4.4` — `DEPENDENT_CNT`/`DEPENDENT_DED` khớp xlsx | `/trace/<mã NV>/TAXABLE_INC` | `DEPENDENT_CNT` (node cây truy vết) — đã kiểm bằng `curl`; `DEPENDENT_DED` KHÔNG phải node truy vết được (tính gộp inline), chỉ `DEPENDENT_CNT` mới Ctrl+F ra |
 | FE-15 | Khoá kỳ lương thủ công (Manual Lock) | ⊘ Ngoài phạm vi (`C19`: "khoá kỳ UI") | — | — | — |
 | FE-16 | Quy trình duyệt + Teams Bot + Override + Sync-back | ⊘ Ngoài phạm vi (`C19`) | — | — | — |
-| FE-17 | Audit Log (cũ→mới, ai, khi nào, lý do bắt buộc) | ❌ Chưa có | Grep `app/*.py` không thấy code audit log nào — `C14.2` mới dừng ở mức yêu cầu ghi trong BR, chưa build | — | — |
+| FE-17 | Audit Log (cũ→mới, ai, khi nào, lý do bắt buộc) | ✅ Đã có (2026-07-15) | `app/audit.py` (frame-f13, `C14.2`) — `log_action()` ghi 7 trường, `performed_by`/`reason` bắt buộc (thiếu → `POST /upload` trả `400`, đã kiểm curl thật); phạm vi lô đầu: chỉ áp cho mass-upload (điểm ghi duy nhất hiện có) | `/audit` | `Sổ audit (giá trị cũ → mới, người, thời gian, lý do)` (tiêu đề trang, đã kiểm `curl`) |
 | FE-18 | Quản lý nhân sự Mắt Bão | ⊘ Ngoài phạm vi (`C19`) | — | — | — |
 | FE-19 | Báo cáo Trình ký (Template 0) | ❌ Chưa có | Không có route/report riêng ngoài `/payslip` | — | — |
 | FE-20 | Payroll Master (Template 2 — file phẳng kế toán) | ⚠️ Một phần | `frame-f13-adapters` `export_bank_file()` xuất CSV phẳng — nhưng là stub `C18.1` ("nay: CSV | sau: template thật"), chưa phải Template 2 chuẩn kế toán | — | `export_bank_file` (tên hàm trong `app/adapters.py`, không phải UI) |
@@ -57,15 +59,14 @@
 | FE-31 | Hạch toán & phân bổ chi phí nội bộ | ❌ Chưa có (chỉ có `TOTAL_CTY_COST` tổng, chưa phân bổ theo GĐDA/bộ phận) | `frame-f11-tong-hop` `C13.4` | `/trace/<mã NV>/TOTAL_CTY_COST` | `TOTAL_CTY_COST` (tiêu đề trang, đã kiểm route trả `HTTP 200`) |
 | FE-32 | Azure AD SSO + phân quyền granular | ⊘ Ngoài phạm vi (`C19`) | — | — | — |
 
-## Ba chức năng "Chưa có" trong phạm vi lô đầu — cần quyết định
+## Chức năng "Chưa có" trong phạm vi lô đầu — cần quyết định
 
-Đây là 3 mục **KHÔNG nằm trong danh sách ngoài-phạm-vi `C19`** (tức đáng lẽ phải làm ở lô đầu) nhưng grep code thật không thấy:
+Đây là các mục **KHÔNG nằm trong danh sách ngoài-phạm-vi `C19`** (tức đáng lẽ phải làm ở lô đầu) nhưng grep code thật không thấy. ~~FE-17~~ đã build (2026-07-15, xem dòng FE-17 ở bảng trên) — còn lại:
 
 1. **FE-06** (truy thu/truy lĩnh phụ cấp hồi tố) — không có cơ chế riêng, chỉ có `ADJ_PLUS/ADJ_MINUS` chung chung.
-2. **FE-17** (Audit Log) — `C14.2` đã ghi yêu cầu trong BR nhưng chưa có dòng code nào build. Đây là gap #9 chính HR tự nêu ("payroll sai thì ai biết?") — rủi ro cao nhất trong 3 mục.
-3. **FE-19/20/21/23/31** (báo cáo/master data mgmt) — không có route/UI, chỉ có dữ liệu tính toán nội bộ đã đúng.
+2. **FE-19/20/21/23/31** (báo cáo/master data mgmt) — không có route/UI, chỉ có dữ liệu tính toán nội bộ đã đúng.
 
-**Đề xuất:** nếu 3 mục trên thực sự cần cho lô đầu, phải quay lại `/br interview` bổ sung field còn thiếu ở S9 (Out-of-scope) — hiện BR không nói rõ các mục này được LOẠI hay chỉ ĐANG THIẾU. Nếu chủ đích hoãn, nên thêm vào bảng `C19` cho nhất quán (tránh mập mờ như hiện tại).
+**Đề xuất:** nếu các mục trên thực sự cần cho lô đầu, phải quay lại `/br interview` bổ sung field còn thiếu ở S9 (Out-of-scope) — hiện BR không nói rõ các mục này được LOẠI hay chỉ ĐANG THIẾU. Nếu chủ đích hoãn, nên thêm vào bảng `C19` cho nhất quán (tránh mập mờ như hiện tại).
 
 ## Cách tự kiểm lại (không tin báo cáo này, tự tay verify)
 

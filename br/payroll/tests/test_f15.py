@@ -6,6 +6,7 @@ Tương phản tính bằng SỐ (WCAG AAA ≥ 7:1), cấm ước lượng bằn
 import re
 import threading
 import unittest
+import urllib.error
 import urllib.request
 from app import ui
 
@@ -198,10 +199,11 @@ class TestUI(unittest.TestCase):
     def test_upload_form_dung_1_tab_khong_nhap_tay_tung_field(self):
         h = self.fetch("/upload")
         self.assertEqual(h.count('type="file"'), 1, "chỉ đúng 1 ô chọn file")
-        # không có <input> riêng cho từng field lương/phụ cấp/chấm công — chỉ file + kỳ
+        # performed_by/reason là METADATA cho audit log (C14.2/FE-17), không phải
+        # field lương/phụ cấp/chấm công — không phá nguyên tắc "1 tab, không nhập tay"
         inputs = re.findall(r'<input[^>]*name="([^"]+)"', h)
-        self.assertEqual(sorted(inputs), ["period", "xlsx"],
-                          f"/upload chỉ được có input period+xlsx, thấy {inputs}")
+        self.assertEqual(sorted(inputs), ["performed_by", "period", "reason", "xlsx"],
+                          f"/upload chỉ được có 4 input này, thấy {inputs}")
 
     def test_upload_post_ghi_va_xac_nhan_so_nhan_su(self):
         import io
@@ -215,7 +217,8 @@ class TestUI(unittest.TestCase):
         buf = io.BytesIO()
         wb.save(buf)
 
-        h = self.post("/upload?period=2099-03", buf.getvalue())
+        h = self.post("/upload?period=2099-03&performed_by=Test+Tester&reason=Unit+test",
+                       buf.getvalue())
         self.assertIn("2", h)  # 2 nhân sự đã nạp
         self.assertIn('href="/"', h)
 
@@ -226,6 +229,37 @@ class TestUI(unittest.TestCase):
         self.assertEqual(rows[0]["BASIC_SAL"], 15000000)
         # ground-truth 2026-03 không bị đụng
         self.assertIn("189.930.161", self.fetch("/"))
+
+    def test_upload_post_thieu_nguoi_hoac_ly_do_bi_tu_choi(self):
+        # BR C14.2 — người thực hiện + lý do BẮT BUỘC, thiếu là từ chối (400), không âm thầm bỏ qua
+        req = urllib.request.Request(
+            f"http://127.0.0.1:{self.port}/upload?period=2099-04",
+            data=b"khong quan trong", method="POST",
+            headers={"Content-Type": "application/octet-stream"})
+        with self.assertRaises(urllib.error.HTTPError) as cm:
+            urllib.request.urlopen(req, timeout=10)
+        self.assertEqual(cm.exception.code, 400)
+
+    def test_audit_screen_hien_dung_lan_upload_vua_lam(self):
+        # tự làm 1 lần upload trong CHÍNH test này — không phụ thuộc thứ tự chạy
+        # test khác (unittest chạy theo alphabet, "audit" < "upload")
+        import io
+        from openpyxl import Workbook
+        wb = Workbook()
+        ws = wb.active
+        ws.append(["employee_id"])
+        ws.append(["AUDIT-CHK-1"])
+        buf = io.BytesIO()
+        wb.save(buf)
+        self.post("/upload?period=2099-05&performed_by=Audit+Checker&reason=Kiem+tra+audit",
+                  buf.getvalue())
+
+        h = self.fetch("/audit")
+        self.assertIn("Audit Checker", h)
+        self.assertIn("Kiem tra audit", h)
+        self.assertIn("2099-05", h)
+        # chỉ-xem, có link lùi như 3 màn gốc
+        self.assertIn('class="back"', h)
 
 
 if __name__ == "__main__":

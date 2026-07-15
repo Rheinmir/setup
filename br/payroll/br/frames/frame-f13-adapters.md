@@ -3,12 +3,12 @@ schema_version: 0
 frame_id: frame-f13-adapters
 created_by: slicer
 parent_br: br/BR.md
-clause_ids: [C18.1, C18.2]
+clause_ids: [C18.1, C18.2, C14.2]
 parent_br_hash: 2c84987784c2941a8e8b6617b4735449848831ae3650c0509c3bb9144bb16c58
-muc_tieu: "Ranh giới vào-ra duy nhất — bốn hàm đọc nhân sự, đọc chấm công, đẩy phiếu lương, xuất file ngân hàng, cộng một hàm thứ năm ghi dữ liệu mass-upload vào đúng chỗ bốn hàm kia đọc; lô này đọc/ghi file JSON, lô sau thay ruột bằng Workday mà không đụng engine"
-scope_code: ["app/adapters.py"]
-scope_test: ["tests/test_f13.py"]
-acceptance_test: "python3 -m tests.test_f13"
+muc_tieu: "Ranh giới vào-ra duy nhất — bốn hàm đọc nhân sự, đọc chấm công, đẩy phiếu lương, xuất file ngân hàng, cộng hàm thứ năm ghi dữ liệu mass-upload; lô này đọc/ghi file JSON, lô sau thay ruột bằng Workday mà không đụng engine. Cộng sổ audit (FE-17): mọi lần ghi phải qua log_action ghi giá-trị-cũ → giá-trị-mới, người, thời gian, lý do bắt buộc"
+scope_code: ["app/adapters.py", "app/audit.py"]
+scope_test: ["tests/test_f13.py", "tests/test_f13_audit.py"]
+acceptance_test: "python3 -m tests.test_f13 && python3 -m tests.test_f13_audit"
 ui_role: none
 ui_screen: 
 guards:
@@ -39,6 +39,7 @@ Giải pháp: nhốt toàn bộ thế giới bên ngoài sau đúng bốn hàm. 
 - `save_uploaded_employees` không đụng dữ liệu của kỳ khác (ghi kỳ `2099-01` không đổi `data/inputs/2026-03/employees.json`)
 - **Zero network**: mã nguồn không được import `requests`/`socket`/`urllib.request`/`http.client`
 - Mỗi hàm ghi rõ trong mã nguồn nó sẽ nối vào đâu ở lô sau (nhắc tên Workday) — chỗ nối không được mất dấu
+- **FE-17/C14.2**: `audit.log_action(...)` ghi đúng 7 trường (`timestamp`, `action`, `period`, `performed_by`, `reason`, `old_employee_ids`, `new_employee_ids`); thiếu `performed_by` hoặc `reason` (rỗng/chỉ khoảng trắng) PHẢI ném `ValueError` — không âm thầm bỏ qua bắt buộc; `read_log()` đọc lại đúng thứ tự đã ghi (append-only, không sửa dòng cũ)
 
 ## Ngoài phạm vi
 
