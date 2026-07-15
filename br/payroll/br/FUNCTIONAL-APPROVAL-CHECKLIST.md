@@ -57,7 +57,7 @@
 | FE-29 | Báo cáo động (Headcount, Joiner/Leaver, lũy kế...) | ⊘ Ngoài phạm vi (`C19`) | — | — | — |
 | FE-30 | Quyết toán phép năm & trợ cấp thôi việc | ⚠️ Một phần | Field `SEVER_ALLOW`, `EARNED_PAID_LEAVE` (`C7.3`) có trong engine — chưa có màn "quyết toán" riêng | `/trace/<mã NV>/EARNED_SAL` | `EARNED_PAID_LEAVE` (bảng tham số trang trace) |
 | FE-31 | Hạch toán & phân bổ chi phí nội bộ | ⚠️ Một phần (2026-07-15, dữ liệu DRAFT) | `app/ui.py _bao_cao_phan_bo()` (frame-f15, `C15.6`) — CHỈ cộng dồn `TOTAL_CTY_COST` theo `phong_ban`; KHÔNG phải phân bổ theo dự án/doanh thu (GĐDA) hay tỷ lệ đề xuất TP — không có dữ liệu đó. Chạy trên roster 3 nhân viên DRAFT (không phải ground-truth, do ground-truth chỉ có 1 người) | `/report/cost-by-dept?period=<kỳ draft>` | `Phân bổ chi phí theo phòng ban` + `DỮ LIỆU DRAFT` (đã kiểm `curl` — cảnh báo luôn hiện khi kỳ ≠ 2026-03) |
-| FE-32 | Azure AD SSO + phân quyền granular | ⊘ Ngoài phạm vi (`C19`) | — | — | — |
+| FE-32 | Azure AD SSO + phân quyền granular | ⊘ Ngoài phạm vi (`C19`) — **NHƯNG** đã có cổng `/login` (2026-07-15, `C2.1` cập nhật): chặn mọi route qua session, KHÔNG kiểm mật khẩu/tài khoản nào — chỉ là cổng UX, sẽ bị THAY THẾ (không phải nâng cấp) bằng OAuth thật khi FE-32 được build | `app/auth.py` `login()/session_user()/logout()` (frame-f15) | `/login` | `Vào hệ thống` + không có `type="password"` (đã kiểm `curl`) |
 
 ## Chức năng còn dang dở trong phạm vi lô đầu — cần quyết định
 

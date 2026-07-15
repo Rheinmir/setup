@@ -12,8 +12,8 @@
     "assumed": false
   },
   "C2.1": {
-    "provenance": "raw",
-    "assumed": true
+    "provenance": "user",
+    "assumed": false
   },
   "C2.2": {
     "provenance": "raw",

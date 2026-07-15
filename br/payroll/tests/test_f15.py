@@ -14,6 +14,15 @@ FONT_CAM = ("Inter", "Roboto", "Arial", "Open Sans", "Helvetica")
 FONT_HOP_LE = ("Plus Jakarta Sans", "Geist", "Clash Display", "PP Editorial New")
 
 
+class _NoRedirect(urllib.request.HTTPErrorProcessor):
+    """Đừng biến 3xx/4xx thành exception hay tự follow — trả thẳng response
+    gốc để đọc .status/.headers (urlopen() mặc định tự follow POST 302 và
+    NUỐT MẤT Set-Cookie của response gốc — phải chặn ở đây để lấy cookie)."""
+    def http_response(self, request, response):
+        return response
+    https_response = http_response
+
+
 def _lum(hexstr):
     """Độ chói tương đối WCAG."""
     h = hexstr.lstrip("#")
@@ -58,6 +67,16 @@ class TestUI(unittest.TestCase):
         cls.srv = ui.build_server(0)
         cls.port = cls.srv.server_address[1]
         threading.Thread(target=cls.srv.serve_forever, daemon=True).start()
+        # C2.1 (cập nhật 2026-07-15): mọi route đòi session — tự "đăng nhập"
+        # 1 lần cho cả lớp test này, KHÔNG kiểm gì (đúng cổng UX, không phải auth thật)
+        # PHẢI dùng _NoRedirect — urlopen() mặc định tự follow POST 302 và
+        # nuốt mất Set-Cookie của response gốc trước khi ta đọc được nó
+        opener = urllib.request.build_opener(_NoRedirect)
+        req = urllib.request.Request(f"http://127.0.0.1:{cls.port}/login", method="POST")
+        r = opener.open(req, timeout=10)
+        assert r.status == 302, "POST /login phải redirect 302"
+        cls.cookie = r.headers.get("Set-Cookie", "").split(";")[0]
+        assert cls.cookie.startswith("session="), f"thiếu cookie session, got {cls.cookie!r}"
         cls.html = cls.fetch("/")
 
     @classmethod
@@ -66,7 +85,9 @@ class TestUI(unittest.TestCase):
 
     @classmethod
     def fetch(cls, path):
-        with urllib.request.urlopen(f"http://127.0.0.1:{cls.port}{path}", timeout=10) as r:
+        req = urllib.request.Request(f"http://127.0.0.1:{cls.port}{path}",
+                                     headers={"Cookie": getattr(cls, "cookie", "")})
+        with urllib.request.urlopen(req, timeout=10) as r:
             assert r.status == 200, path
             return r.read().decode()
 
@@ -198,7 +219,8 @@ class TestUI(unittest.TestCase):
     def post(cls, path, body: bytes):
         req = urllib.request.Request(
             f"http://127.0.0.1:{cls.port}{path}", data=body, method="POST",
-            headers={"Content-Type": "application/octet-stream"})
+            headers={"Content-Type": "application/octet-stream",
+                    "Cookie": getattr(cls, "cookie", "")})
         with urllib.request.urlopen(req, timeout=10) as r:
             assert r.status == 200, path
             return r.read().decode()
@@ -242,7 +264,7 @@ class TestUI(unittest.TestCase):
         req = urllib.request.Request(
             f"http://127.0.0.1:{self.port}/upload?period=2099-04",
             data=b"khong quan trong", method="POST",
-            headers={"Content-Type": "application/octet-stream"})
+            headers={"Content-Type": "application/octet-stream", "Cookie": self.cookie})
         with self.assertRaises(urllib.error.HTTPError) as cm:
             urllib.request.urlopen(req, timeout=10)
         self.assertEqual(cm.exception.code, 400)
@@ -334,15 +356,16 @@ class TestUI(unittest.TestCase):
         vai_gioi_han = {"name": "Test vai giới hạn", "perms": {auth.Perm.VIEW}}
         with mock.patch("app.auth.current_user", return_value=vai_gioi_han):
             req = urllib.request.Request(
-                f"http://127.0.0.1:{self.port}/report/attendance-detail?period=2026-03")
+                f"http://127.0.0.1:{self.port}/report/attendance-detail?period=2026-03",
+                headers={"Cookie": self.cookie})
             with self.assertRaises(urllib.error.HTTPError) as cm:
                 urllib.request.urlopen(req, timeout=10)
             self.assertEqual(cm.exception.code, 403)
         # vai lô đầu (mặc định, không patch) vẫn xem được bình thường
-        self.assertEqual(
-            urllib.request.urlopen(
-                f"http://127.0.0.1:{self.port}/report/attendance-detail?period=2026-03",
-                timeout=10).status, 200)
+        req2 = urllib.request.Request(
+            f"http://127.0.0.1:{self.port}/report/attendance-detail?period=2026-03",
+            headers={"Cookie": self.cookie})
+        self.assertEqual(urllib.request.urlopen(req2, timeout=10).status, 200)
 
     # ── C15.7 / FE-19 — Báo cáo Trình ký (Template 0), DỮ LIỆU DRAFT ────────
     def test_bao_cao_trinh_ky_gom_theo_du_an(self):
@@ -381,7 +404,8 @@ class TestUI(unittest.TestCase):
         import csv
         import io
         req = urllib.request.Request(
-            f"http://127.0.0.1:{self.port}/export/payroll-master?period=2026-03")
+            f"http://127.0.0.1:{self.port}/export/payroll-master?period=2026-03",
+            headers={"Cookie": self.cookie})
         with urllib.request.urlopen(req, timeout=10) as r:
             self.assertEqual(r.status, 200)
             self.assertIn("text/csv", r.headers.get("Content-Type", ""))
@@ -390,6 +414,73 @@ class TestUI(unittest.TestCase):
         rows = list(csv.DictReader(io.StringIO(data)))
         self.assertEqual(rows[0]["employee_id"], "GT-ROW9")
         self.assertEqual(int(rows[0]["NET_PAY_HOME"]), 189_930_161)
+
+
+class TestLoginGate(unittest.TestCase):
+    """C2.1 (cập nhật 2026-07-15) — cổng session CHẶN THẬT mọi route, KHÔNG
+    PHẢI xác thực bảo mật (login không kiểm mật khẩu/tài khoản nào)."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.srv = ui.build_server(0)
+        cls.port = cls.srv.server_address[1]
+        threading.Thread(target=cls.srv.serve_forever, daemon=True).start()
+        cls.opener = urllib.request.build_opener(_NoRedirect)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.srv.shutdown()
+
+    def _login(self):
+        req = urllib.request.Request(f"http://127.0.0.1:{self.port}/login", method="POST")
+        r = self.opener.open(req, timeout=10)
+        return r.headers.get("Set-Cookie", "").split(";")[0]
+
+    def test_vao_thang_trang_chu_chua_login_bi_redirect_ve_login(self):
+        req = urllib.request.Request(f"http://127.0.0.1:{self.port}/")
+        r = self.opener.open(req, timeout=10)
+        self.assertEqual(r.status, 302)
+        self.assertEqual(r.headers.get("Location"), "/login")
+
+    def test_man_login_xem_duoc_khong_can_session(self):
+        # /login CHÍNH NÓ không được đòi session, không thì kẹt vòng lặp redirect
+        h = urllib.request.urlopen(f"http://127.0.0.1:{self.port}/login", timeout=10).read().decode()
+        self.assertIn("Vào hệ thống", h)
+        self.assertIn("HR C&amp;B", h)  # HTML đã escape &
+        # không có ô mật khẩu/tài khoản nào — đúng bản chất "cổng UX, không phải auth thật"
+        self.assertNotIn('type="password"', h)
+
+    def test_post_login_tao_session_cookie_va_redirect_ve_trang_chu(self):
+        req = urllib.request.Request(f"http://127.0.0.1:{self.port}/login", method="POST")
+        r = self.opener.open(req, timeout=10)
+        self.assertEqual(r.status, 302)
+        self.assertEqual(r.headers.get("Location"), "/")
+        cookie = r.headers.get("Set-Cookie", "")
+        self.assertIn("session=", cookie)
+
+        # dùng cookie vừa nhận → vào trang chủ được thật
+        req2 = urllib.request.Request(f"http://127.0.0.1:{self.port}/",
+                                      headers={"Cookie": cookie.split(";")[0]})
+        r2 = urllib.request.urlopen(req2, timeout=10)
+        self.assertEqual(r2.status, 200)
+
+    def test_logout_xoa_session_vao_lai_bi_chan_tiep(self):
+        cookie = self._login()
+        req_logout = urllib.request.Request(f"http://127.0.0.1:{self.port}/logout",
+                                            headers={"Cookie": cookie})
+        self.opener.open(req_logout, timeout=10)
+
+        req3 = urllib.request.Request(f"http://127.0.0.1:{self.port}/", headers={"Cookie": cookie})
+        r3 = self.opener.open(req3, timeout=10)
+        self.assertEqual(r3.status, 302)
+        self.assertEqual(r3.headers.get("Location"), "/login")
+
+    def test_badge_hien_dung_vai_sau_khi_login(self):
+        cookie = self._login()
+        req2 = urllib.request.Request(f"http://127.0.0.1:{self.port}/", headers={"Cookie": cookie})
+        h = urllib.request.urlopen(req2, timeout=10).read().decode()
+        self.assertIn("HR C&amp;B", h)  # HTML đã escape &
+        self.assertIn("Đăng xuất", h)
 
 
 if __name__ == "__main__":

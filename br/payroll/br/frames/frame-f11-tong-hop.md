@@ -4,7 +4,7 @@ frame_id: frame-f11-tong-hop
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C13.1, C13.2, C13.3, C13.4, C13.5, C8.8]
-parent_br_hash: 20c2df3e9bee61a36f153ad8b9e19a0fdadc5bb8d38b25bae7d90a089f9630b1
+parent_br_hash: 2d6165cbe2e2ae63778ff892f883df1ccb749b2242ef3a57a4b381a8b66e9ec5
 muc_tieu: "Cộng chuỗi cuối cùng ra LƯƠNG THỰC NHẬN — tổng thu nhập, thu nhập chịu thuế, lương thực nhận, chi phí công ty; giữ đúng hai điểm quái dị của bảng lương thật"
 scope_code: ["app/tonghop.py"]
 scope_test: ["tests/test_f11.py"]

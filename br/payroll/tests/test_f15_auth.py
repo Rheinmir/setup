@@ -25,6 +25,28 @@ class TestAuth(unittest.TestCase):
             auth.require(auth.Perm.MASK_MONEY, user=vai_gioi_han)
         auth.require(auth.Perm.VIEW, user=vai_gioi_han)  # quyền có thì vẫn pass
 
+    # ── C2.1 (cập nhật 2026-07-15) — cổng session, KHÔNG PHẢI xác thực thật ──
+    def test_login_tao_session_hop_le_tra_ve_du_lieu_vai_lo_dau(self):
+        sid = auth.login()
+        self.assertIsInstance(sid, str)
+        u = auth.session_user(sid)
+        self.assertIsNotNone(u)
+        self.assertEqual(u["name"], auth.current_user()["name"])
+        self.assertEqual(u["perms"], auth.current_user()["perms"])
+
+    def test_session_khong_ton_tai_tra_none(self):
+        self.assertIsNone(auth.session_user("khong-ton-tai-bao-gio"))
+        self.assertIsNone(auth.session_user(None))
+        self.assertIsNone(auth.session_user(""))
+
+    def test_logout_xoa_dung_session_khong_dung_session_khac(self):
+        sid1 = auth.login()
+        sid2 = auth.login()
+        auth.logout(sid1)
+        self.assertIsNone(auth.session_user(sid1))
+        self.assertIsNotNone(auth.session_user(sid2))  # session khác không bị đụng
+        auth.logout(sid2)  # dọn
+
 
 if __name__ == "__main__":
     unittest.main()

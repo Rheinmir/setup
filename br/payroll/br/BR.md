@@ -36,7 +36,9 @@
 
 ## C2 · Người dùng & quyền
 
-**C2.1** — Lô đầu: **một vai duy nhất HR C&B**, không đăng nhập (chạy local). Model quyền đặt sẵn **một chỗ** (`app/auth.py`, enum theo PRD v2.1 §3: `view · edit · export · lock_period · approve_on_behalf · mask_money`), mọi handler đi qua `require(perm)` — nối Azure AD sau chỉ thay `current_user()`. `provenance: raw:PRD v3.0 §3 · assumed (A7)`
+**C2.1** — Lô đầu: **một vai duy nhất HR C&B**. Model quyền đặt sẵn **một chỗ** (`app/auth.py`, enum theo PRD v2.1 §3: `view · edit · export · lock_period · approve_on_behalf · mask_money`), mọi handler đi qua `require(perm)` — nối Azure AD sau chỉ thay `current_user()`. `provenance: raw:PRD v3.0 §3 · assumed (A7)`
+
+> ⚠️ **CẬP NHẬT 2026-07-15 — đảo một phần quyết định "không đăng nhập" ở trên, theo yêu cầu trực tiếp của user, KHÔNG phải suy diễn:** mọi route giờ đòi **session** — vào `/` hay bất kỳ trang nào mà chưa qua `/login` → redirect `302` về `/login`. **Đây là CỔNG UX/session, TUYỆT ĐỐI KHÔNG PHẢI xác thực bảo mật thật:** `/login` không có ô mật khẩu/tài khoản nào để kiểm — bấm "Vào hệ thống" là tạo session ngay, không xác minh danh tính. Lý do vẫn giữ nguyên tinh thần A7 (lô đầu 1 vai, không có gì để xác thực) — chỉ thêm cảm giác luồng vào ứng dụng thật, KHÔNG thêm bảo mật thật. Azure AD SSO thật (FE-32) vẫn `⊘ ngoài phạm vi` — khi nối FE-32, `/login` này bị THAY THẾ (không phải bổ sung) bằng luồng OAuth thật. **Trước khi đảo quyết định này, agent đã hỏi user 2 câu rõ ràng** (có/không màn login, chặn hay không chặn) — user chọn "CHẶN thật" và xác nhận biết rõ hệ quả (đảo `C2.1` gốc + phải sửa lại toàn bộ test HTTP). `provenance: user (2026-07-15, quyết định tường minh qua AskUserQuestion — không phải suy diễn) · assumed: false`
 
 **C2.2** — Ràng buộc bảo mật giữ nguyên trong model quyền kể cả khi chưa bật auth: thư ký/CHT **tuyệt đối không thấy số tiền** (`mask_money`); mọi lượt xuất báo cáo nhạy cảm phải ghi log. `provenance: raw:PRD v2.1 §3, §6.4`
 

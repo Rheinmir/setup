@@ -71,6 +71,22 @@ a:focus-visible,button:focus-visible,input:focus-visible{
   box-shadow:var(--sh-dark),var(--sh-light)}
 .stat .n{font-size:1.9em;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .stat .t{color:var(--muted);font-size:.8em;text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+.who{position:fixed;top:16px;right:100px;padding:9px 16px;border-radius:12px;
+  font-size:.8em;background:var(--bg);box-shadow:var(--sh-dark),var(--sh-light);
+  display:flex;align-items:center;gap:8px}
+.who a{color:var(--muted);text-decoration:underline}
+@media print{.who{display:none}}
+@media (max-width:640px){.who{position:static;margin-bottom:14px;width:fit-content}}
+.login-card{max-width:380px;margin:15vh auto 0;padding:32px 30px;border-radius:22px;
+  background:var(--bg);box-shadow:var(--sh-dark),var(--sh-light);text-align:center}
+.login-card h1{font-size:1.3em;margin-bottom:4px}
+.login-card p{color:var(--muted);font-size:.85em;margin:6px 0 20px}
+.login-card button{width:100%;padding:13px;border:0;border-radius:14px;font:inherit;
+  font-weight:700;cursor:pointer;background:var(--bg);color:var(--ink);
+  box-shadow:var(--sh-dark),var(--sh-light);transition:box-shadow .2s ease,transform .15s ease}
+.login-card button:hover{transform:translateY(-2px)}
+.login-card button:active{transform:translateY(0);
+  box-shadow:inset 3px 3px 7px rgba(0,0,0,.14),inset -3px -3px 7px rgba(255,255,255,.08)}
 """
 
 # Chống FOUC: đặt data-theme TRƯỚC khi vẽ; không ép mode — mặc định theo hệ điều hành [C15.2].
@@ -103,9 +119,17 @@ def _e(x) -> str:
     return html.escape(str(x))
 
 
+# Vai của request HIỆN TẠI — server chạy đơn luồng (HTTPServer thường, không
+# Threading) nên biến module-level này an toàn: set 1 lần đầu do_GET/do_POST,
+# đọc lại trong _page() cùng request, không có race condition đa luồng.
+_current_user = None
+
+
 def _page(title: str, body: str, back=None) -> bytes:
     """back = (href, nhãn) — link lùi CỐ ĐỊNH trên đầu, luôn thấy khi cuộn dài. None = màn gốc."""
     nut_lui = f'<a class="back" href="{_e(back[0])}">← {_e(back[1])}</a>' if back else ""
+    who = (f'<div class="who">👤 {_e(_current_user["name"].split(" (")[0])} '
+          f'· <a href="/logout">Đăng xuất</a></div>') if _current_user else ""
     return f"""<!doctype html>
 <html lang="vi"><head><meta charset="utf-8">
 <title>{_e(title)}</title>
@@ -114,12 +138,27 @@ def _page(title: str, body: str, back=None) -> bytes:
 </head><body>
 <a class="skip-link" href="#main">Bỏ qua, đến nội dung chính</a>
 <button id="theme" type="button">Sáng / Tối</button>
+{who}
 {nut_lui}
 <main id="main">
 {body}
 </main>
 <script>{_TOGGLE_JS}</script>
 </body></html>""".encode("utf-8")
+
+
+def _man_login() -> bytes:
+    """Cổng session [C2.1, cập nhật 2026-07-15] — TUYỆT ĐỐI KHÔNG PHẢI xác
+    thực bảo mật thật: không mật khẩu/tài khoản nào để kiểm, bấm là vào
+    được ngay. Lô đầu chỉ MỘT vai HR C&B — chỉ là cổng UX/session."""
+    return _page("Đăng nhập — Payroll", """
+<div class="login-card">
+  <h1>PAYROLL</h1>
+  <p>Vai: <b>HR C&amp;B</b> (mặc định lô đầu — không có tài khoản/mật khẩu để kiểm)</p>
+  <form method="POST" action="/login">
+    <button type="submit">Vào hệ thống</button>
+  </form>
+</div>""")
 
 
 def _tinh(emp_id: str):
@@ -467,10 +506,40 @@ class _Handler(BaseHTTPRequestHandler):
     def log_message(self, *a):  # im lặng khi chạy test
         pass
 
+    def _session_id(self):
+        from http.cookies import SimpleCookie
+        c = SimpleCookie(self.headers.get("Cookie", ""))
+        return c["session"].value if "session" in c else None
+
+    def _redirect(self, location, clear_cookie=False):
+        self.send_response(302)
+        self.send_header("Location", location)
+        if clear_cookie:
+            self.send_header("Set-Cookie", "session=; Path=/; Max-Age=0")
+        self.end_headers()
+
     def do_GET(self):
+        global _current_user
         from urllib.parse import urlparse, parse_qs
         parsed = urlparse(self.path)
         phan = [x for x in parsed.path.split("/") if x]
+        if phan == ["login"]:                          # cổng — KHÔNG đòi session (else kẹt vòng lặp)
+            body = _man_login()
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
+        if phan == ["logout"]:
+            auth.logout(self._session_id())
+            self._redirect("/login", clear_cookie=True)
+            return
+        user = auth.session_user(self._session_id())
+        if user is None:                                # chưa "đăng nhập" [C2.1] → về cổng
+            self._redirect("/login")
+            return
+        _current_user = user
         if phan == ["export", "payroll-master"]:  # file tải về, KHÔNG phải màn HTML [FE-20]
             try:
                 period = parse_qs(parsed.query).get("period", [PERIOD])[0]
@@ -529,9 +598,23 @@ class _Handler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def do_POST(self):
+        global _current_user
         from urllib.parse import urlparse, parse_qs
         parsed = urlparse(self.path)
-        if [x for x in parsed.path.split("/") if x] != ["upload"]:
+        phan = [x for x in parsed.path.split("/") if x]
+        if phan == ["login"]:
+            sid = auth.login()
+            self.send_response(302)
+            self.send_header("Location", "/")
+            self.send_header("Set-Cookie", f"session={sid}; Path=/")
+            self.end_headers()
+            return
+        user = auth.session_user(self._session_id())
+        if user is None:
+            self._redirect("/login")
+            return
+        _current_user = user
+        if phan != ["upload"]:
             self.send_error(404)
             return
         qs = parse_qs(parsed.query)
