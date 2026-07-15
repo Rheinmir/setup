@@ -4,7 +4,7 @@ frame_id: frame-f12-engine-dag
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C3.1, C3.2, C3.3, C14.1]
-parent_br_hash: 2332e28da09ebdd69a6e153974fd7a58dabd8cc667294de676e350f1a05eb70a
+parent_br_hash: 2c84987784c2941a8e8b6617b4735449848831ae3650c0509c3bb9144bb16c58
 muc_tieu: "Bộ máy công thức — mỗi mã field là một nút trong đồ thị phụ thuộc; gọi một lần cho lương thực nhận thì tự kéo theo cả chuỗi, và trả về vết truy ngược tới tận công thức, tham số và điều khoản BR"
 scope_code: ["app/engine.py"]
 scope_test: ["tests/test_f12.py"]

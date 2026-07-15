@@ -44,7 +44,7 @@
 
 ## C3 · Nguồn chân lý & lớp công thức ⭐ điều khoản gốc
 
-**C3.1** — Excel bàn giao chứa **2 lớp công thức mâu thuẫn**: `to-be` (sheet `Payroll structure`) và `as-is` (công thức Excel **sống** trong `Payroll Mar 2026`). HR đã tự chấm **10 field lệch** (`Matched? = N`). **Engine bám lớp `as-is`** — vì đó là lớp duy nhất kiểm chứng được bằng máy hôm nay, và là số nhân viên **thực sự nhận được**. `provenance: raw:xlsx cột M "Matched?" · user (Q1)`
+**C3.1** — Excel bàn giao chứa **2 lớp công thức mâu thuẫn**: `to-be` (sheet `Payroll structure`) và `as-is` (công thức Excel **sống** trong `Payroll Mar 2026`). HR đã tự chấm **10 field lệch** (`Matched? = N`). **Engine bám lớp `as-is`** — vì đó là lớp duy nhất kiểm chứng được bằng máy hôm nay, và là số nhân viên **thực sự nhận được**. `provenance: raw:xlsx sheet "Payroll structure" cột M "Matched? (Y/N)" (10 dòng N: PAID_DAYS, CONTRACT_TOTAL, INS_SAL_BH, INS_SAL_UI, TAXABLE_GROSS, PERSONAL_DED, TAXABLE_INC, UNION_FEE, KPCD_CTY, TOTAL_CTY_COST) · user (Q1)`
 
 **C3.2** — Mọi field lệch phải ghi vào `docs/DELTA-as-is-vs-to-be.md` để HR ký. Lớp to-be giữ sau cờ `params.formula_layer` (`"as_is"` | `"to_be"`) — đổi **một dòng** là chạy lớp kia. `provenance: user (Q1)`
 
@@ -127,7 +127,7 @@ Trần **BHTN = 106.200.000** dùng chung cho cả hiển thị lẫn tính (`UI
 
 **C7.2** — `RESP_EARNED = ROUND(RESP_SAL / STD_DAYS × PAID_DAYS, 0)` — phụ cấp trách nhiệm cũng pro-rata theo ngày, tách theo ngày hiệu lực nếu bổ nhiệm giữa kỳ. `provenance: raw:xlsx AL9 · raw:PRD v2.1 §5.1.2 · verified`
 
-**C7.3** — `EARNED_PAID_LEAVE` (lương phép tồn) = `ngày phép tồn / STD_DAYS × mức lương` — **chỉ NV chính thức**. Cộng vào `EARNED_SAL` (thành phần thứ 4). `provenance: raw:xlsx K25 · verified`
+**C7.3** — `EARNED_PAID_LEAVE` (lương phép tồn) = `ngày phép tồn / STD_DAYS × mức lương` — **chỉ NV chính thức**. Cộng vào `EARNED_SAL` (thành phần thứ 4). `provenance: raw:xlsx sheet "Payroll Mar 2026" AM10/AM11 (note công thức: "ngày phép tồn/ngày công chuẩn × Mức lương... chỉ áp dụng cho nhân viên chính thức") · verified`
 
 **C7.4** — **Tách giai đoạn**: thử việc → chính thức, trước → sau bổ nhiệm, điều động giữa các bộ phận đều tính theo **ngày phát sinh thực tế**, hệ thống **tự tách dòng, không nhập tay**. `provenance: raw:HR-QT §V.4 · raw:PRD v2.1 §5.2 · verified`
 
@@ -171,13 +171,13 @@ Trần **BHTN = 106.200.000** dùng chung cho cả hiển thị lẫn tính (`UI
 
 ## C11 · BHXH / BHYT / BHTN
 
-**C11.1** — `INS_SAL_BH = IF(chính thức, MIN(CONTRACT_TOTAL, 46.800.000), 0)` · `INS_SAL_UI = IF(chính thức, MIN(CONTRACT_TOTAL, 106.200.000), 0)`. Base = `CONTRACT_TOTAL` (⚠ **A1**). `provenance: raw:xlsx U9/V9 · assumed (A1)`
+**C11.1** — `INS_SAL_BH = IF(chính thức, MIN(CONTRACT_TOTAL, 46.800.000), 0)` · `INS_SAL_UI = IF(chính thức, MIN(CONTRACT_TOTAL, 106.200.000), 0)`. Base = `CONTRACT_TOTAL` (⚠ **A1**). `provenance: raw:xlsx U9=50.600.000/V9=106.200.000 (trần HIỂN THỊ, KHÔNG phải trần dùng để tính BHXH) · sheet "Payroll structure" K19 tự ghi công thức dùng 50.600.000 (mâu thuẫn với ground-truth) · 46.800.000 là SỐ SUY NGƯỢC từ BY9/CA9/DD9/DH9/DF9/DM9/CT9 ÷ đúng tỷ lệ % (7 phép chia độc lập đều khớp) — không có ô nào chép thẳng số này · assumed (A1)`
 
 **C11.2** — `SI_EMP/HI_EMP/SI_CTY/HI_CTY/TNLD_CTY/KPCD_CTY/UNION_FEE` **đều** ăn `INS_SAL_BH`. `UI_EMP/UI_CTY` ăn `INS_SAL_UI`. `provenance: raw:xlsx dòng 9 · verified`
 
 **C11.3** — ⭐ **Luật 14 ngày**: trong **tháng dương lịch** (01 → cuối tháng), nếu tổng (ngày thử việc + không lương + thai sản + ốm dài) **≥ 14 ngày** → **KHÔNG trích đóng BHXH** tháng đó. `provenance: raw:HR-QT §V.2 · raw:xlsx note BY10 · verified`
 
-**C11.4** — **Người nước ngoài**: `UI_EMP = 0` (không đóng BHTN). NV có **hợp đồng 2 nơi** → không đóng BHXH/BHYT/BHTN (cờ tay `no_insurance`, Workday chưa quản lý). `provenance: raw:xlsx Q19/Q20 · raw:HR-QT §V.2 · verified`
+**C11.4** — **Người nước ngoài**: `UI_EMP = 0` (không đóng BHTN). NV có **hợp đồng 2 nơi** → không đóng BHXH/BHYT/BHTN (cờ tay `no_insurance`, Workday chưa quản lý). `provenance: raw:xlsx sheet "Payroll structure" Q19 ("HĐ 2 nơi đang k đc quản lý trên WD") + L20 ("người nước ngoài = 0, expat không đóng BHTN") · raw:HR-QT §V.2 · verified`
 
 ---
 

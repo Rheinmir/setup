@@ -4,7 +4,7 @@ frame_id: frame-f15-man-hinh-hr
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C15.1, C15.2, C15.4, C14.1]
-parent_br_hash: 2332e28da09ebdd69a6e153974fd7a58dabd8cc667294de676e350f1a05eb70a
+parent_br_hash: 2c84987784c2941a8e8b6617b4735449848831ae3650c0509c3bb9144bb16c58
 muc_tieu: "Bốn màn hình cho HR — bảng lương toàn kỳ, phiếu lương từng người theo đúng mẫu thật, cây truy vết công thức bấm ngược được từ lương thực nhận xuống tận lương cơ bản, và MỘT tab tối giản tải Excel mass-upload thay nhập tay"
 scope_code: ["app/ui.py", "app/upload.py"]
 scope_test: ["tests/test_f15.py"]

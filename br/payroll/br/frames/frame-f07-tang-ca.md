@@ -4,7 +4,7 @@ frame_id: frame-f07-tang-ca
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C9.1, C9.2, C9.3]
-parent_br_hash: 2332e28da09ebdd69a6e153974fd7a58dabd8cc667294de676e350f1a05eb70a
+parent_br_hash: 2c84987784c2941a8e8b6617b4735449848831ae3650c0509c3bb9144bb16c58
 muc_tieu: "Tăng ca vào engine là SỐ TIỀN đã tính sẵn, KHÔNG tự chế công thức quy giờ ra tiền; hệ số nào tài liệu không nói thì để trống chứ không bịa; ghi nhận ngày nghỉ bù khi đi làm ngày lễ"
 scope_code: ["app/tangca.py"]
 scope_test: ["tests/test_f07.py"]
