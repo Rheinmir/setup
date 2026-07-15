@@ -8,7 +8,7 @@ import html
 from decimal import Decimal
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-from app import adapters, audit, engine, lichky, params, upload
+from app import adapters, audit, auth, engine, lichky, params, upload
 
 # Kỳ lương duy nhất đang có dữ liệu vào (data/inputs/<period>) [C18.1].
 PERIOD = "2026-03"
@@ -438,7 +438,11 @@ def _bang_cong_chi_tiet(period: str) -> bytes:
     """Bảng công chi tiết (mẫu 02__HR C&B) [C15.8/FE-21] — TÓM TẮT theo người,
     KHÔNG PHẢI ma trận ngày × nhân viên đầy đủ (dữ liệu ký hiệu công từng
     ngày không tồn tại trong hệ thống — chỉ có tổng từng loại ngày/kỳ).
+
+    Gate qua auth.require(MASK_MONEY) [C2.1] — vai lô đầu HR C&B đủ quyền
+    nên chưa từng thực chặn ai, nhưng cấu trúc gate đã sẵn cho vai thứ 2.
     """
+    auth.require(auth.Perm.MASK_MONEY)
     p = params.load(period)
     hang = []
     for rec in adapters.fetch_employees(period):
@@ -509,6 +513,9 @@ class _Handler(BaseHTTPRequestHandler):
                 body = _bang_cong_chi_tiet(qperiod)
             else:
                 body = None
+        except PermissionError as exc:                # gate quyền [C2.1] — 403, không phải 500
+            self.send_error(403, explain=str(exc))
+            return
         except Exception as exc:                      # không bịa số — báo lỗi ra màn
             self.send_error(500, explain=str(exc))
             return

@@ -326,6 +326,24 @@ class TestUI(unittest.TestCase):
         paid = engine.compute("PAID_DAYS", rec, p)
         self.assertIn(ui._fmt(paid), h)
 
+    def test_bang_cong_chi_tiet_gate_qua_require_mask_money(self):
+        # C2.1 — route đi qua auth.require(MASK_MONEY); vai lô đầu đủ quyền
+        # nên vẫn 200, nhưng giả lập vai KHÔNG đủ quyền phải bị chặn 403
+        import unittest.mock as mock
+        from app import auth
+        vai_gioi_han = {"name": "Test vai giới hạn", "perms": {auth.Perm.VIEW}}
+        with mock.patch("app.auth.current_user", return_value=vai_gioi_han):
+            req = urllib.request.Request(
+                f"http://127.0.0.1:{self.port}/report/attendance-detail?period=2026-03")
+            with self.assertRaises(urllib.error.HTTPError) as cm:
+                urllib.request.urlopen(req, timeout=10)
+            self.assertEqual(cm.exception.code, 403)
+        # vai lô đầu (mặc định, không patch) vẫn xem được bình thường
+        self.assertEqual(
+            urllib.request.urlopen(
+                f"http://127.0.0.1:{self.port}/report/attendance-detail?period=2026-03",
+                timeout=10).status, 200)
+
     # ── C15.7 / FE-19 — Báo cáo Trình ký (Template 0), DỮ LIỆU DRAFT ────────
     def test_bao_cao_trinh_ky_gom_theo_du_an(self):
         import io
