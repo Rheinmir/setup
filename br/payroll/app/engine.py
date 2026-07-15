@@ -5,7 +5,7 @@ Hàm tính GỌI LẠI module domain đã có, không chép công thức sang đ
 """
 from decimal import Decimal
 
-from app import baohiem, chamcong, thue, thuong, tonghop
+from app import baohiem, chamcong, phucap, thue, thuong, tonghop
 from app.luong import _dec, earned_sal, round0
 
 # Clause gán cho field input (ô Excel gốc, không có công thức) [C14.1].
@@ -57,6 +57,10 @@ _n("EARNED_SAL", ("BASIC_SAL", "PROB_SAL", "RESP_SAL", "STD_DAYS", "PAID_DAYS",
 
 _n("BONUS_TOTAL", thuong.BONUS_KEYS,
    "SUM(13 khoản thưởng input)", "C10.1", lambda e, p: thuong.bonus_total(e))
+
+_n("PC_TRUY_THU", ("RETRO_OLD_RATE", "RETRO_NEW_RATE", "RETRO_DAYS", "STD_DAYS"),
+   "(định mức mới − định mức cũ) / công chuẩn × số ngày tương ứng — 0 nếu không có ca truy thu",
+   "C8.8", phucap.truy_thu)
 
 _n("GROSS", tonghop._GROSS_CODES,
    "EARNED_SAL + phụ cấp + OT + BONUS_TOTAL + TOTAL_SUPPORT + ADJ_PLUS + ADJ_MINUS (⚠ ADJ_MINUS được CỘNG)",

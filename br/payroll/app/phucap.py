@@ -60,3 +60,33 @@ def phu_cap_dieu_dong(segs: list, cong_chuan: Decimal, p: dict) -> Decimal:
         Decimal(0),
     )
     return lam_tron(tong)
+
+
+def truy_thu(e: dict, p: dict) -> Decimal:
+    """Phụ cấp truy thu/truy lĩnh (hồi tố) [C8.8/FE-06].
+
+    = (định mức mới − định mức cũ) / công chuẩn × số ngày công tương ứng
+    (PRD v2.1 §4.3 — "Truy thu/Truy lĩnh trước khóa kỳ"). Không có ca truy
+    thu (không khai RETRO_OLD_RATE/RETRO_NEW_RATE) → trả 0.
+
+    Bắt buộc lý do (RETRO_REASON) + số ngày tương ứng (RETRO_DAYS) khi có ca
+    — không âm thầm đoán, ném lỗi để người nhập phải khai đủ.
+
+    Phạm vi lô đầu: hàm này KHÔNG kiểm được điều kiện "kỳ chưa khoá" vì FE-15
+    (khoá kỳ) nằm ngoài phạm vi (BR C19) — coi như mọi kỳ đang tính đều mở.
+    """
+    old, new = e.get("RETRO_OLD_RATE"), e.get("RETRO_NEW_RATE")
+    # "not old and not new" (không phải "is None"): gọi qua engine DAG (deps đã
+    # khai) thì field vắng mặt bị _resolve tự default thành Decimal(0) TRƯỚC
+    # khi hàm này chạy — 0/None đều coi là "không có ca truy thu"
+    if not old and not new:
+        return Decimal(0)
+    if not (e.get("RETRO_REASON") or "").strip():
+        raise ValueError("PC_TRUY_THU: có định mức cũ/mới nhưng thiếu RETRO_REASON (bắt buộc)")
+    if e.get("RETRO_DAYS") is None:
+        raise ValueError("PC_TRUY_THU: có định mức cũ/mới nhưng thiếu RETRO_DAYS (bắt buộc)")
+    cc = _dec(e.get("STD_DAYS", 0))
+    if not cc:
+        raise ValueError("Công chuẩn = 0 — không tính được truy thu")
+    delta = _dec(new or 0) - _dec(old or 0)
+    return lam_tron(delta / cc * _dec(e["RETRO_DAYS"]))

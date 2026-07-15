@@ -14,13 +14,13 @@
 ## Tổng kết
 | | Số lượng |
 |---|---|
-| ✅ Đã có | 13 |
+| ✅ Đã có | 14 |
 | ⚠️ Một phần | 4 |
 | ⊘ Ngoài phạm vi lô đầu (chủ đích, xem `C19`) | 13 |
-| ❌ Chưa có (trong phạm vi, chưa build) | 2 |
+| ❌ Chưa có (trong phạm vi, chưa build) | 1 |
 | **Tổng** | **32** |
 
-> Cập nhật 2026-07-15: FE-17 (Audit Log) đã build — xem dòng FE-17 bên dưới + mục "Ba chức năng..." (còn 2, không phải 3).
+> Cập nhật 2026-07-15: FE-17 (Audit Log) + FE-06 (truy thu/truy lĩnh) đã build — còn lại `FE-19/20/21/23/31` (báo cáo/master data).
 
 ## Bảng chi tiết
 
@@ -31,7 +31,7 @@
 | FE-03 | Chấm công nhanh (fill công chuẩn, tự trừ nghỉ) | ✅ Đã có | `frame-f03-cham-cong` `C6.3` — `PAID_DAYS` as-is | `/payslip/<mã NV>` | `STD_DAYS` (cột trong khối Ngày công) |
 | FE-04 | Engine phụ cấp 7 loại + pro-rata + luật <14 ngày + điều động | ✅ Đã có | `frame-f06-phu-cap` `C8.3-8.7` — AC-1/AC-2 test riêng | `/payslip/<mã NV>` | `Lương và phụ cấp` |
 | FE-05 | Phụ cấp theo Tờ trình (ghi đè định mức) | ⚠️ Một phần | Engine đọc được override (mô tả `frame-f06`), **UI nhập Tờ trình ⊘ ngoài phạm vi** (`C19`: "màn nhập Tờ trình (FE-05 phần UI)") | — | — |
-| FE-06 | Truy thu/truy lĩnh phụ cấp hồi tố | ❌ Chưa có | Không tìm thấy field/engine riêng cho hồi tố (chỉ có `ADJ_PLUS/ADJ_MINUS` chung, không phải cơ chế hồi tố theo kỳ) | — | — |
+| FE-06 | Truy thu/truy lĩnh phụ cấp hồi tố | ✅ Đã có (2026-07-15) | `app/phucap.py truy_thu()` (frame-f06, `C8.8`) — `PC_TRUY_THU = (mới−cũ)/công_chuẩn×ngày`, cột riêng, lý do bắt buộc; wire qua `engine.py` (frame-f12) + `tonghop._GROSS_CODES` (frame-f11); ⚠️ KHÔNG kiểm được "kỳ chưa khoá" vì FE-15 ngoài phạm vi | `/payslip/GT-ROW9` (luôn hiện, GT-ROW9 = 0 vì không có ca) → `/trace/GT-ROW9/PC_TRUY_THU` | `Phụ cấp truy thu/truy lĩnh` (đã kiểm `curl` — luôn có dòng này dù giá trị 0) |
 | FE-07 | Lương thử việc/chính thức tách theo ngày hiệu lực | ✅ Đã có | `frame-f04-luong-chinh` `C7.1,C7.2` — khớp `AJ9/AK9` xlsx thật | `/payslip/<mã NV>` | `Lương và phụ cấp` (dòng `EARNED_SAL`, xem `/trace/<mã NV>/EARNED_SAL`) |
 | FE-08 | Tăng ca (OT), tách chịu/không chịu thuế | ✅ Đã có (dạng input, `C9.1`) | `frame-f07-tang-ca` `C9.1-9.3` — OT là **số tiền input**, không tự chế công thức giờ | `/trace/<mã NV>/GROSS` (nhánh `OT_TAX`/`OT_NONTAX`) | `GROSS` |
 | FE-09 | Tách dòng & phân bổ chi phí (điều động + kiêm nhiệm %) | ⚠️ Một phần | Chỉ có ở phụ cấp (`frame-f06` điều động chia theo bộ phận); chưa có báo cáo phân bổ chi phí tổng | `/payslip/<mã NV>` | `Lương và phụ cấp` |
@@ -61,10 +61,9 @@
 
 ## Chức năng "Chưa có" trong phạm vi lô đầu — cần quyết định
 
-Đây là các mục **KHÔNG nằm trong danh sách ngoài-phạm-vi `C19`** (tức đáng lẽ phải làm ở lô đầu) nhưng grep code thật không thấy. ~~FE-17~~ đã build (2026-07-15, xem dòng FE-17 ở bảng trên) — còn lại:
+Đây là các mục **KHÔNG nằm trong danh sách ngoài-phạm-vi `C19`** (tức đáng lẽ phải làm ở lô đầu) nhưng grep code thật không thấy. ~~FE-17~~, ~~FE-06~~ đã build (2026-07-15, xem bảng trên) — còn lại:
 
-1. **FE-06** (truy thu/truy lĩnh phụ cấp hồi tố) — không có cơ chế riêng, chỉ có `ADJ_PLUS/ADJ_MINUS` chung chung.
-2. **FE-19/20/21/23/31** (báo cáo/master data mgmt) — không có route/UI, chỉ có dữ liệu tính toán nội bộ đã đúng.
+1. **FE-19/20/21/23/31** (báo cáo/master data mgmt) — không có route/UI, chỉ có dữ liệu tính toán nội bộ đã đúng.
 
 **Đề xuất:** nếu các mục trên thực sự cần cho lô đầu, phải quay lại `/br interview` bổ sung field còn thiếu ở S9 (Out-of-scope) — hiện BR không nói rõ các mục này được LOẠI hay chỉ ĐANG THIẾU. Nếu chủ đích hoãn, nên thêm vào bảng `C19` cho nhất quán (tránh mập mờ như hiện tại).
 

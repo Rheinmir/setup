@@ -149,6 +149,10 @@ Trần **BHTN = 106.200.000** dùng chung cho cả hiển thị lẫn tính (`UI
 
 **C8.7** — Bảng định mức: điện thoại theo ngạch × VP/CT (QL.01 1tr … NV.03-05 200k/300k, thử việc 0/300k); đi lại theo dải khoảng cách × nhóm đối tượng; công trường + công tác xa theo khoảng cách × trình độ. `provenance: raw:PRD v2.1 §5.3.2, §5.3.4, §5.3.5 · assumed (A5: đơn vị bảng Level 1–8 trong Excel)`
 
+**C8.8** — ⭐ **Phụ cấp truy thu/truy lĩnh (FE-06)**: khi định mức phụ cấp của nhân viên **thay đổi có hiệu lực hồi tố** (vd cập nhật trình độ học vấn, nơi tuyển dụng, chức danh theo Tờ trình), `PC_TRUY_THU = (định mức mới − định mức cũ) / công chuẩn × số ngày công tương ứng`, hiện thành **CỘT RIÊNG** trên bảng phụ cấp (không gộp vào `ADJ_PLUS`/`ADJ_MINUS` chung chung — hai cơ chế khác mục đích), **kèm lý do bắt buộc**. Không có ca truy thu → `PC_TRUY_THU = 0`. `provenance: raw:PRD v2.1 §4.3 (trích "Truy thu/Truy lĩnh trước khóa kỳ") · verified`
+
+> ⚠️ **Giới hạn phạm vi lô đầu (ghi rõ để không giả vờ đã kiểm):** yêu cầu gốc là "**trong phạm vi kỳ CHƯA khoá**". Hệ thống **KHÔNG kiểm được** điều kiện này vì FE-15 (khoá kỳ thủ công) nằm ngoài phạm vi lô đầu (`C19`) — không có khái niệm "kỳ đã khoá" để đối chiếu. Coi như mọi kỳ đang tính đều mở; khi FE-15 được build, `PC_TRUY_THU` phải gác thêm điều kiện này.
+
 ---
 
 ## C9 · Tăng ca (OT)

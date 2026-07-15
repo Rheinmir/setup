@@ -81,6 +81,13 @@ class TestUI(unittest.TestCase):
         for muc in ("Lương thực nhận", "Thuế TNCN"):
             self.assertIn(muc, h)
 
+    def test_phieu_luong_hien_cot_rieng_phu_cap_truy_thu(self):
+        # C8.8/FE-06 — PC_TRUY_THU phải là CỘT RIÊNG, luôn hiện (kể cả 0, GT-ROW9
+        # không có ca truy thu) — không được gộp/ẩn vào ADJ_PLUS/ADJ_MINUS
+        h = self.fetch("/payslip/GT-ROW9")
+        self.assertIn("Phụ cấp truy thu/truy lĩnh", h)
+        self.assertIn('href="/trace/GT-ROW9/PC_TRUY_THU"', h)
+
     def test_trace_cong_thuc_di_nguoc_duoc(self):
         h = self.fetch("/trace/GT-ROW9/NET_PAY")
         self.assertIn("NET_PAY", h)

@@ -3,9 +3,9 @@ schema_version: 0
 frame_id: frame-f06-phu-cap
 created_by: slicer
 parent_br: br/BR.md
-clause_ids: [C8.3, C8.4, C8.5, C8.6, C8.7, C17.4]
-parent_br_hash: 2c84987784c2941a8e8b6617b4735449848831ae3650c0509c3bb9144bb16c58
-muc_tieu: "Phụ cấp cố định theo tháng — pro-rata theo ngày công, quy tắc dưới 14 ngày chỉ tính ngày làm việc thực tế cộng ngày lễ, chia theo từng bộ phận khi điều động, tờ trình duyệt riêng ghi đè định mức chung"
+clause_ids: [C8.3, C8.4, C8.5, C8.6, C8.7, C8.8, C17.4]
+parent_br_hash: 8d9fbb9d5f6efe5260ac72537c6d6aac516cdbd2891ed98ce053c3fbfee40fab
+muc_tieu: "Phụ cấp cố định theo tháng — pro-rata theo ngày công, quy tắc dưới 14 ngày chỉ tính ngày làm việc thực tế cộng ngày lễ, chia theo từng bộ phận khi điều động, tờ trình duyệt riêng ghi đè định mức chung, cộng phụ cấp truy thu/truy lĩnh hồi tố (FE-06) khi định mức thay đổi có hiệu lực ngược"
 scope_code: ["app/phucap.py"]
 scope_test: ["tests/test_f06.py"]
 acceptance_test: "python3 -m tests.test_f06"
@@ -42,6 +42,7 @@ Frame này hiện thực AC-2 — ví dụ thứ hai chốt tại họp 23/03/20
 - Luật <14 xét trên TỔNG cả kỳ, không xét riêng từng bộ phận
 - Tờ trình ghi đè định mức chung
 - Khối văn phòng KHÔNG có định mức chung phụ cấp xăng (= 0, chỉ theo tờ trình); công trường thì có 1tr
+- **C8.8/FE-06**: không có ca truy thu (không khai `RETRO_OLD_RATE`/`RETRO_NEW_RATE`) → `truy_thu()` trả `0`; có ca → `(mới−cũ)/công_chuẩn×số_ngày` (vd 500k→1tr, 11/22 ngày → 250.000); thiếu `RETRO_REASON` hoặc `RETRO_DAYS` khi có ca → `ValueError` (bắt buộc, không âm thầm bỏ qua)
 
 ## Ngoài phạm vi
 

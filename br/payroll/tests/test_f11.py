@@ -61,6 +61,18 @@ class TestTongHop(unittest.TestCase):
                                             Decimal(16_666_667), Decimal(1_250_000)])
         self.assertEqual(bs, Decimal(305_018_667))
 
+    # ── C8.8 / FE-06 — PC_TRUY_THU phải cộng vào GROSS ──────────────────────
+    def test_PC_TRUY_THU_co_trong_GROSS_CODES(self):
+        self.assertIn("PC_TRUY_THU", tonghop._GROSS_CODES)
+
+    def test_gross_cong_them_pc_truy_thu(self):
+        self.rec["PC_TRUY_THU"] = Decimal(250_000)
+        self.assertEqual(tonghop.gross(self.rec, self.p), Decimal(225_260_000))
+
+    def test_gross_ground_truth_dong_9_khong_doi_khi_khong_co_truy_thu(self):
+        # PC_TRUY_THU vắng mặt (không có ca truy thu) → GROSS ground-truth vẫn nguyên
+        self.assertEqual(tonghop.gross(self.rec, self.p), Decimal(225_010_000))
+
 
 if __name__ == "__main__":
     unittest.main()

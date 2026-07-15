@@ -136,7 +136,7 @@ _KHOI_CONG = [("STD_DAYS", "Ngày công chuẩn"), ("OFFICIAL_DAYS", "Ngày côn
               ("HOLIDAY_DAYS", "Ngày lễ"), ("PAID_LEAVE_DAYS", "Phép có lương"),
               ("PAID_DAYS", "Tổng ngày công hưởng lương")]
 _KHOI_THU = [("EARNED_SAL", "Lương theo ngày công"), ("BONUS_TOTAL", "Thưởng"),
-             ("GROSS", "Tổng thu nhập")]
+             ("PC_TRUY_THU", "Phụ cấp truy thu/truy lĩnh"), ("GROSS", "Tổng thu nhập")]
 _KHOI_TRU = [("SI_EMP", "BHXH (8%)"), ("HI_EMP", "BHYT (1,5%)"), ("UI_EMP", "BHTN (1%)"),
              ("TOTAL_INS", "Tổng bảo hiểm"), ("PIT", "Thuế TNCN"),
              ("TOTAL_POST_DED", "Trừ sau thuế"), ("TOTAL_POST_ADD", "Cộng sau thuế")]

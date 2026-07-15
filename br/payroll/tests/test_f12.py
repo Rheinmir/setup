@@ -74,6 +74,25 @@ class TestEngine(unittest.TestCase):
                      "TOTAL_CTY_COST", "BUDGET_SAVE"):
             self.assertIn(code, engine.CODES, f"thiếu CODE {code}")
 
+    # ── C8.8 / FE-06 — PC_TRUY_THU là một node DAG, ground-truth không đổi ──
+    def test_PC_TRUY_THU_la_mot_node(self):
+        self.assertIn("PC_TRUY_THU", engine.CODES)
+
+    def test_ground_truth_khong_doi_khi_khong_co_ca_truy_thu(self):
+        # rec dòng 9 không có RETRO_* → PC_TRUY_THU=0, NET_PAY vẫn đúng 189.930.161
+        net = engine.compute("NET_PAY_HOME", _rec(), self.p)
+        self.assertEqual(net, Decimal(189_930_161))
+
+    def test_pc_truy_thu_chay_vao_gross_that(self):
+        rec = _rec()
+        rec["RETRO_OLD_RATE"] = Decimal(500_000)
+        rec["RETRO_NEW_RATE"] = Decimal(1_000_000)
+        rec["RETRO_DAYS"] = Decimal(11)
+        rec["RETRO_REASON"] = "Test đơn vị engine"
+        gross = engine.compute("GROSS", rec, self.p)
+        # GROSS gốc dòng 9 = 225.010.000 + truy thu 250.000
+        self.assertEqual(gross, Decimal(225_260_000))
+
 
 if __name__ == "__main__":
     unittest.main()

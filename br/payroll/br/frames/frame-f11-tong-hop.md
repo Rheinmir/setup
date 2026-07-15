@@ -3,8 +3,8 @@ schema_version: 0
 frame_id: frame-f11-tong-hop
 created_by: slicer
 parent_br: br/BR.md
-clause_ids: [C13.1, C13.2, C13.3, C13.4, C13.5]
-parent_br_hash: 2c84987784c2941a8e8b6617b4735449848831ae3650c0509c3bb9144bb16c58
+clause_ids: [C13.1, C13.2, C13.3, C13.4, C13.5, C8.8]
+parent_br_hash: 8d9fbb9d5f6efe5260ac72537c6d6aac516cdbd2891ed98ce053c3fbfee40fab
 muc_tieu: "Cộng chuỗi cuối cùng ra LƯƠNG THỰC NHẬN — tổng thu nhập, thu nhập chịu thuế, lương thực nhận, chi phí công ty; giữ đúng hai điểm quái dị của bảng lương thật"
 scope_code: ["app/tonghop.py"]
 scope_test: ["tests/test_f11.py"]
@@ -40,6 +40,7 @@ Frame đích: mọi thứ phía trước đổ vào đây để ra con số nhâ
 - Thu nhập thuần 169.114.800
 - Chi phí công ty 201.522.161 — tính trên lương thực nhận, KHÔNG phải tổng thu nhập
 - Quỹ dự phòng 305.018.667
+- **C8.8/FE-06**: `PC_TRUY_THU` nằm trong `_GROSS_CODES`, cộng thẳng vào `GROSS` (250.000 → tổng 225.260.000); vắng mặt (không ca truy thu) → `GROSS` ground-truth dòng 9 không đổi
 
 ## Ngoài phạm vi
 

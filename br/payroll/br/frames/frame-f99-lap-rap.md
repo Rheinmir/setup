@@ -5,7 +5,7 @@ created_by: human
 kind: assemble
 parent_br: br/BR.md
 clause_ids: [C17.1, C17.2, C17.3, C17.6]
-parent_br_hash: 2c84987784c2941a8e8b6617b4735449848831ae3650c0509c3bb9144bb16c58
+parent_br_hash: 8d9fbb9d5f6efe5260ac72537c6d6aac516cdbd2891ed98ce053c3fbfee40fab
 muc_tieu: "Lắp toàn bộ engine chạy trên dòng dữ liệu THẬT của HR rồi đối chiếu từng đồng với 30 cột kết quả trong bảng lương đang dùng — sai một đồng là đỏ"
 scope_code: ["app/pipeline.py"]
 scope_test: ["tests/test_f99.py"]

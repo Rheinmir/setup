@@ -4,7 +4,7 @@ frame_id: frame-f10-thue-tncn
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C4.4, C4.6, C12.1, C12.2, C12.3]
-parent_br_hash: 2c84987784c2941a8e8b6617b4735449848831ae3650c0509c3bb9144bb16c58
+parent_br_hash: 8d9fbb9d5f6efe5260ac72537c6d6aac516cdbd2891ed98ce053c3fbfee40fab
 muc_tieu: "Thuế thu nhập cá nhân theo biểu 5 bậc lũy tiến, giảm trừ bản thân và người phụ thuộc, riêng thử việc người Việt chịu 10% và thử việc người nước ngoài chịu 20%"
 scope_code: ["app/thue.py"]
 scope_test: ["tests/test_f10.py"]

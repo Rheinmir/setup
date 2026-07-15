@@ -61,6 +61,35 @@ class TestPhuCap(unittest.TestCase):
         self.assertEqual(phucap.dinh_muc("xang", level="NV.03", khoi="VP"), Decimal(0))
         self.assertEqual(phucap.dinh_muc("xang", level="NV.03", khoi="CT"), Decimal(1_000_000))
 
+    # ── C8.8 / FE-06 — Phụ cấp truy thu/truy lĩnh (hồi tố) ──────────────────
+    def test_truy_thu_khong_co_ca_thi_bang_0(self):
+        self.assertEqual(phucap.truy_thu({}, self.p), Decimal(0))
+
+    def test_truy_thu_dung_cong_thuc_dinh_muc_moi_tru_cu_pro_rata(self):
+        # PRD-2.1 §4.3: (định mức mới − định mức cũ) / công chuẩn × số ngày tương ứng
+        e = {"RETRO_OLD_RATE": Decimal(500_000), "RETRO_NEW_RATE": Decimal(1_000_000),
+             "RETRO_DAYS": Decimal(11), "STD_DAYS": Decimal(22),
+             "RETRO_REASON": "Cập nhật trình độ học vấn theo Tờ trình"}
+        self.assertEqual(phucap.truy_thu(e, self.p), Decimal(250_000))
+
+    def test_truy_thu_am_khi_dieu_chinh_giam(self):
+        e = {"RETRO_OLD_RATE": Decimal(1_000_000), "RETRO_NEW_RATE": Decimal(500_000),
+             "RETRO_DAYS": Decimal(22), "STD_DAYS": Decimal(22),
+             "RETRO_REASON": "Điều chỉnh giảm chức danh"}
+        self.assertEqual(phucap.truy_thu(e, self.p), Decimal(-500_000))
+
+    def test_truy_thu_bat_buoc_ly_do_khong_am_tham_bo_qua(self):
+        e = {"RETRO_OLD_RATE": Decimal(500_000), "RETRO_NEW_RATE": Decimal(1_000_000),
+             "RETRO_DAYS": Decimal(11), "STD_DAYS": Decimal(22)}
+        with self.assertRaises(ValueError):
+            phucap.truy_thu(e, self.p)
+
+    def test_truy_thu_bat_buoc_so_ngay_tuong_ung(self):
+        e = {"RETRO_OLD_RATE": Decimal(500_000), "RETRO_NEW_RATE": Decimal(1_000_000),
+             "STD_DAYS": Decimal(22), "RETRO_REASON": "thiếu RETRO_DAYS"}
+        with self.assertRaises(ValueError):
+            phucap.truy_thu(e, self.p)
+
 
 if __name__ == "__main__":
     unittest.main()
