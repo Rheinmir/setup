@@ -140,7 +140,7 @@ LOOP_GROUPS = {
         {"docs-site-macos": "docs", "extract-site": "docs", "md-to-html": "docs",
          "web-crawl": "docs", "web-clone": "docs",
          "tour-guide": "taste", "tour-guide-supademo": "taste",
-         "brandkit": "taste", "design-taste-frontend": "taste", "design-taste-frontend-v1": "taste",
+         "brandkit": "taste", "hallmark": "taste", "design-taste-frontend": "taste", "design-taste-frontend-v1": "taste",
          "gpt-taste": "taste", "high-end-visual-design": "taste", "stitch-design-taste": "taste",
          "minimalist-ui": "taste", "industrial-brutalist-ui": "taste", "redesign-existing-projects": "taste",
          "cursor-animated-sites": "docs",
@@ -187,7 +187,7 @@ nav::-webkit-scrollbar{width:0;height:0;display:none}
 nav{position:fixed;top:0;left:0;bottom:0;width:232px;z-index:100;overflow-y:auto;display:flex;flex-direction:column;gap:1px;padding:18px 12px;background:linear-gradient(165deg,rgba(255,255,255,.30),rgba(255,255,255,.20) 48%,rgba(240,248,255,.32));backdrop-filter:blur(24px) saturate(1.7);-webkit-backdrop-filter:blur(24px) saturate(1.7);border-right:1px solid rgba(30,90,170,.12);box-shadow:inset -1px 0 0 rgba(30,90,170,.10),4px 0 24px rgba(30,90,170,.08);transition:transform .28s}
 nav::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(220px 160px at 18% 4%,rgba(255,255,255,.34),transparent 70%)}nav>*{position:relative}
 nav
-.logo{margin:0 0 8px;padding:6px 10px;font-weight:800;font-size:16px;letter-spacing:-.03em;background:linear-gradient(135deg,#0a84ff,#5856d6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.logo{margin:0 0 8px;padding:6px 10px;font-weight:800;font-size:16px;letter-spacing:-.03em;color:#0a84ff}
 nav .logo small{display:block;font-size:10px;font-weight:600;color:var(--t2);-webkit-text-fill-color:var(--t2);letter-spacing:0}
 nav a{position:relative;overflow:hidden;padding:5px 11px;border-radius:9px;font-size:12px;color:var(--t2);text-decoration:none;transition:background .15s,color .15s}nav a:hover{background:rgba(10,132,255,.06);color:#0a84ff}nav a.active{color:#0a84ff;background:rgba(10,132,255,.08);font-weight:600}
 nav a .ic{display:inline-block;width:17px;margin-right:6px;text-align:center;opacity:.95}
@@ -199,7 +199,7 @@ nav .grp{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppe
 .ripple{position:absolute;border-radius:50%;pointer-events:none;transform:scale(0);opacity:.9;background:radial-gradient(circle,rgba(255,255,255,.6) 0%,rgba(10,132,255,.22) 35%,transparent 70%);box-shadow:0 0 0 1px rgba(255,255,255,.45);animation:rippleWave .65s cubic-bezier(.2,.6,.3,1) forwards}
 @keyframes rippleWave{to{transform:scale(2.8);opacity:0}}
 .hero{max-width:1080px;margin:0 auto;padding:74px 24px 8px}.hero .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#5856d6;background:rgba(88,86,214,.1);padding:4px 12px;border-radius:999px;margin-bottom:14px}
-.hero h1{font-size:clamp(26px,4vw,40px);line-height:1.06;letter-spacing:-.03em;margin:0 0 12px;background:linear-gradient(135deg,#0a84ff,#5856d6,#cfe3fb);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero h1{font-size:clamp(26px,4vw,40px);line-height:1.06;letter-spacing:-.03em;margin:0 0 12px;color:#0a2540}
 .hero p{font-size:13.5px;color:var(--t2);max-width:780px;margin:0}
 section{position:relative}.sec::before{content:'';position:absolute;top:0;bottom:0;left:50%;width:100vw;transform:translateX(-50%);pointer-events:none}
 .inner{position:relative;max-width:1080px;margin:0 auto;padding:40px 24px 44px}

@@ -44,6 +44,8 @@ Có một câu hỏi đứng **trước** cả "tự điền hay hỏi": **đây
 
 Ranh giới: nếu bạn *có thể* tìm ra bằng một lệnh, đó là fact — đi tìm. Nếu hai người hợp lý có thể chọn khác nhau, đó là decision — xử theo tầng dưới.
 
+**Lựa chọn THIẾT KẾ user không nói = decision rủi ro thấp → fill từ nền, đừng hỏi.** Khi brief đụng UI mà user không nói rõ macrostructure, theme, type-pairing, hay màu anchor, ĐỪNG phỏng vấn — fill mặc định hợp brief từ catalog `[[design-foundation]]` (nguồn: `skills/hallmark/references/macrostructures/` + `references/genres/`), gắn tag `(default)`, và **ghi tên macrostructure + theme đã chọn vào `## Assumptions`**. User liếc là biết máy chọn gì, đổi một dòng nếu không thích. Chọn sai macrostructure thì sửa nhanh — nó không phải auth hay tiền. Đây là nguồn tham chiếu để fill unknown thiết kế, cắm vào đúng hệ `(default)` này. (Brief mang creative-intent mà không theme nào hợp → hallmark tự sang nhánh Custom; vẫn 6 discipline + slop-test.)
+
 ## Tự điền hay hỏi — mặc định là TỰ ĐIỀN
 User đã mô tả hết những gì họ biết. Đừng phỏng vấn họ về thứ họ không biết — **tự điền mặc định hợp lý, rồi KHAI RA là mình điền**:
 

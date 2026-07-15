@@ -92,6 +92,7 @@
         "./skills/record-episode",
         "./skills/raise-issue",
         "./skills/frontier-scan",
+        "./skills/hallmark",
         "./skills/redesign-existing-projects",
         "./skills/safe-change",
         "./skills/skill-provenance",

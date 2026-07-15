@@ -3,6 +3,8 @@ name: design-taste-frontend
 description: Anti-slop frontend skill for landing pages, portfolios, and redesigns. The agent reads the brief, infers the right design direction, and ships interfaces that do not look templated. Real design systems when applicable, audit-first on redesigns, strict pre-flight check.
 ---
 
+> **Đứng trên nền [[design-foundation]]** — 6 discipline + slop-test của hallmark là SÀN chung (không thương lượng); skill này thêm *flavour* lên trên, không thay sàn.
+
 # tasteskill: Anti-Slop Frontend Skill
 
 > Landing pages, portfolios, and redesigns. Not dashboards, not data tables, not multi-step product UI.

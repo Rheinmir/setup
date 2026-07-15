@@ -1,7 +1,7 @@
 <!-- SINH BẰNG CODE: build-capabilities.py — ĐỪNG sửa tay; chạy lại để cập nhật. -->
 # CAPABILITIES — toàn bộ đồ nghề (luôn-mới, đếm từ đĩa)
 
-**77 skill · 18 rule · 19 fdk-tool · 52 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
+**78 skill · 18 rule · 19 fdk-tool · 53 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
 
 ## Skills (gọi bằng `/<tên>`)
 
@@ -42,7 +42,7 @@
 - **`/trace-grader`** — Score the PATH an agent took (tool choice, ordering, retries, repeatability, grounding)
 - **`/wayfinder`** — Lập bản đồ cho một chunk việc QUÁ LỚN với một phiên agent và còn MÙ MỜ
 
-### utils (46)
+### utils (47)
 - **`/brandkit`** — Premium brand-kit image generation skill for creating high-end brand-guidelines boards, lo…
 - **`/cavecrew`** — Decision guide for delegating to caveman-style subagents
 - **`/caveman`** — Ultra-compressed communication mode
@@ -65,6 +65,7 @@
 - **`/frontier-scan`** — Quét biên giới agent-framework 30 ngày qua và đối chiếu overstack theo 8 trục (frontier-ga…
 - **`/full-output-enforcement`** — Overrides default LLM truncation behavior
 - **`/gpt-taste`** — Elite UX/UI & Advanced GSAP Motion Engineer
+- **`/hallmark`** — Anti-AI-slop design skill for greenfield pages, audits, redesigns, and design extraction f…
 - **`/harness-tour`** — Tour
 - **`/harness-update`** — TỰ BẢO TRÌ framework overstack trên máy user (self-maintain)
 - **`/health-check`** — Kiểm tra sức khỏe "pattern chuẩn" của template
@@ -144,6 +145,7 @@
 - `claim-receipts.py`
 - `code-logger.py`
 - `council.py`
+- `design-variety.py`
 - `dispatch-verify.py`
 - `egress-guard.py`
 - `embed-ollama.py`

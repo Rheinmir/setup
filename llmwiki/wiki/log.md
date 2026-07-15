@@ -19,28 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-14 21:56:52 | `file.write` | harness/validators/proposal_complete.py · tool=Edit · session=36e6562b · actor=agent · prev=3ddddcc4fc66e88429165811a083 |
-| 2026-07-14 21:57:23 | `file.write` | harness/policy.yaml · tool=Edit · session=36e6562b · actor=agent · prev=1e1830cf45c41bcb3259aa42f6bdb5826751e4e0274db677 |
-| 2026-07-14 21:57:38 | `file.write` | harness/poc-vendor-neutral/policy.yaml · tool=Edit · session=36e6562b · actor=agent · prev=e837daecbf386c68e79993f80a397 |
-| 2026-07-14 21:57:56 | `file.write` | skills/orca-workflow/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=e3e50a8fb0f59fe24d7cd06e8353aff0bcc044 |
-| 2026-07-14 21:58:37 | `file.write` | harness/scripts/sync-skills.py · tool=Edit · session=36e6562b · actor=agent · prev=8ae219faeb3e44b1448bd7fc6a658a6aa9372 |
-| 2026-07-14 22:04:07 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=36e6562b · actor=agent · prev=2825b47fe58da25521a601a4ad83a213cd |
-| 2026-07-14 22:05:04 | `file.write` | harness/poc-vendor-neutral/test-broad.sh · tool=Edit · session=36e6562b · actor=agent · prev=a21e2839dda0669f0bab1509685 |
-| 2026-07-14 22:06:03 | `file.write` | harness/scripts/harness-doctor.py · tool=Edit · session=36e6562b · actor=agent · prev=679b39554cc6cfa09655652d982ec0fa1c |
-| 2026-07-14 22:14:29 | `file.write` | skills/plan/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=3465b9ee8f5386c8bdb10119766a34508b0ef68fb6f2a61 |
-| 2026-07-14 22:14:46 | `file.write` | llmwiki/html/140726-propose-plan-split-seq.html · tool=Edit · session=36e6562b · actor=agent · prev=18a2cce75119a5161613 |
-| 2026-07-14 22:15:29 | `file.write` | llmwiki/html/140726-propose-plan-split-seq.html · tool=Edit · session=36e6562b · actor=agent · prev=1096162b331c100c0ab8 |
-| 2026-07-14 22:16:09 | `file.write` | llmwiki/wiki/sources/draft/140726-propose-plan-split-superpowers.md · tool=Edit · session=36e6562b · actor=agent · prev= |
-| 2026-07-14 22:16:22 | `file.write` | llmwiki/wiki/sources/draft/140726-propose-plan-split-superpowers.md · tool=Edit · session=36e6562b · actor=agent · prev= |
-| 2026-07-14 22:28:14 | `file.write` | harness/scripts/harness-doctor.py · tool=Edit · session=36e6562b · actor=agent · prev=9a1630aa913519cd086a5db99cd5ae52a9 |
-| 2026-07-14 22:28:22 | `file.write` | harness/scripts/harness-doctor.py · tool=Edit · session=36e6562b · actor=agent · prev=52e0113157fdff40e31fc1b255d6dabf7e |
-| 2026-07-14 22:28:35 | `file.write` | harness/poc-vendor-neutral/policy.yaml · tool=Edit · session=36e6562b · actor=agent · prev=fb65049fba780ffdfc9797d3ff73a |
-| 2026-07-14 22:28:47 | `file.write` | harness/policy.yaml · tool=Edit · session=36e6562b · actor=agent · prev=19c88d5f7f1c4fb7a30f6f9eb525b96d846d9399abadb6a0 |
-| 2026-07-14 22:28:58 | `file.write` | harness/poc-vendor-neutral/test-broad.sh · tool=Edit · session=36e6562b · actor=agent · prev=194cdfc56244539dc85f43dffcc |
-| 2026-07-14 22:29:58 | `file.write` | skills/plan/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=84bf00e67069288b272d94735752993ff6498eeb5a167b1 |
-| 2026-07-14 22:31:00 | `file.write` | skills/fdk-uat/SKILL.md · tool=Write · session=36e6562b · actor=agent · prev=4d4d7378f814a1bb43febdcc0129a0d8ad409bce705 |
-| 2026-07-14 22:40:35 | `task.new` |  · task=T-260714-02 · title=hấp thụ spec-kit: FR/SC id + truy vết + tag default + fdk-uat canary · state=proposed · acto |
-| 2026-07-14 22:42:34 | `file.write` | llmwiki/wiki/sources/draft/140726-spec-kit-traceability.md · tool=Write · session=36e6562b · actor=agent · prev=f9918acd |
 | 2026-07-14 22:44:24 | `file.write` | llmwiki/html/140726-spec-kit-traceability-seq.html · tool=Write · session=36e6562b · actor=agent · prev=9ac07a5743bfa5c1 |
 | 2026-07-14 22:46:30 | `file.write` | llmwiki/html/140726-spec-kit-traceability-seq.html · tool=Edit · session=36e6562b · actor=agent · prev=033a80fb37eca4d47 |
 | 2026-07-14 22:52:40 | `task.set` |  · task=T-260714-02 · state=approved · note=gate: user duyệt · actor=agent · prev=830af0eb0b599520762a91990cb43b59bc99eb |
@@ -59,6 +37,28 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-15 00:29:01 | `task.new` |  · task=T-260715-01 · title=hấp thụ mattpocock: skill-lens + wayfinder + tracker phối hợp · state=proposed · actor=agent |
 | 2026-07-15 00:31:54 | `file.write` | llmwiki/wiki/sources/draft/150726-mattpocock-absorb.md · tool=Write · session=36e6562b · actor=agent · prev=d47a4f8b11c8 |
 | 2026-07-15 00:35:38 | `file.write` | llmwiki/html/150726-mattpocock-absorb-seq.html · tool=Write · session=36e6562b · actor=agent · prev=1da1b9bd7f13baeda999 |
+| 2026-07-15 08:23:15 | `task.set` |  · task=T-260715-01 · state=approved · note=gate: user duyệt, chạy · actor=agent · prev=413e038a04c7cd650a83fa5d6218b336 |
+| 2026-07-15 08:23:44 | `file.write` | skills/propose/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=62fb35858c42baa48d34afbdfc1d8e7e390ef6ed6f41 |
+| 2026-07-15 08:23:54 | `file.write` | skills/propose/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=a192bcb98bef87d7fa59a59a52ba8b60a418222b3cd5 |
+| 2026-07-15 08:24:25 | `file.write` | skills/plan/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=7d8c2d71d7856f8c62594c8bb63307d4d37444bb0f2f7d3 |
+| 2026-07-15 08:25:50 | `file.write` | llmwiki/wiki/concepts/skill-craft.md · tool=Write · session=36e6562b · actor=agent · prev=240554b580d2bd48b69b354877075f |
+| 2026-07-15 08:28:40 | `file.write` | harness/scripts/skill-health.py · tool=Write · session=36e6562b · actor=agent · prev=384351a28dc6317903dad4bf068e83844f3 |
+| 2026-07-15 08:29:07 | `file.write` | harness/scripts/skill-health.py · tool=Edit · session=36e6562b · actor=agent · prev=ecfeeafad93d971734bd195a544d78985c49 |
+| 2026-07-15 08:29:13 | `file.write` | harness/scripts/skill-health.py · tool=Edit · session=36e6562b · actor=agent · prev=2c707ec508c3ae1b096a49b6bca84aed27da |
+| 2026-07-15 08:29:18 | `file.write` | harness/scripts/skill-health.py · tool=Edit · session=36e6562b · actor=agent · prev=32f481db1e66e1b080ce2121190e5514f54a |
+| 2026-07-15 08:29:38 | `file.write` | harness/scripts/skill-health.py · tool=Edit · session=36e6562b · actor=agent · prev=801039d9a91f344a890791ac6540a14c5054 |
+| 2026-07-15 08:30:11 | `file.write` | skills/lint/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=4f5d1bbf15a80913c784704f6700e0d8c4c9cdf5bfd3f93 |
+| 2026-07-15 08:31:10 | `file.write` | llmwiki/wiki/sources/issue-tracker.md · tool=Write · session=36e6562b · actor=agent · prev=1fd0008ad7a2389fdd0844e0bb756 |
+| 2026-07-15 08:31:58 | `file.write` | harness/scripts/frontier.py · tool=Write · session=36e6562b · actor=agent · prev=d62a72285bb81dba7b6b44d1a3d8dc87762cee5 |
+| 2026-07-15 08:32:55 | `file.write` | skills/raise-issue/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=77cb2db83f76d8418b06c831fba8f11415fed9a8 |
+| 2026-07-15 08:34:14 | `file.write` | skills/wayfinder/SKILL.md · tool=Write · session=36e6562b · actor=agent · prev=67b0131108d3aaccf8b69dd746b81e4019836fa34 |
+| 2026-07-15 08:34:45 | `file.write` | skills/orca-workflow/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=8ea28cbe1432d7191dca84fbbadc7f43788290 |
+| 2026-07-15 08:35:37 | `file.write` | skills/new-skill/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=9daaeed00a669f5912187069a3f2f735c82ccfffd8 |
+| 2026-07-15 08:50:15 | `task.set` |  · task=T-260715-01 · state=done · note=10 task, UAT 2 pha PASS, e18c7b5 · actor=agent · prev=48700d970835f7766378d84177 |
+| 2026-07-15 08:55:17 | `task.new` |  · task=T-260715-02 · title=hấp thụ hallmark: nền design chung + cổng slop tất định + fill-default · state=proposed · ac |
+| 2026-07-15 08:57:21 | `file.write` | llmwiki/wiki/sources/draft/150726-hallmark-design-foundation.md · tool=Write · session=36e6562b · actor=agent · prev=a25 |
+| 2026-07-15 08:59:02 | `file.write` | llmwiki/html/150726-hallmark-design-foundation-seq.html · tool=Write · session=36e6562b · actor=agent · prev=f4125da5573 |
+| 2026-07-15 09:03:06 | `file.write` | llmwiki/html/150726-hallmark-design-foundation-seq.html · tool=Edit · session=36e6562b · actor=agent · prev=f8ecd3129ad8 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -297,3 +297,11 @@ Giải issue `030726-skill-resolve-supplychain` (trục #5 frontier-gap-scan, Ch
 - UAT chạy thật trên dự án TRỐNG cài bằng curl từ GitHub: 3 trụ đủ · test-broad 72/72 · R18 CẮN đúng lý do · 3 skill orchestration reachable · orca runtime UP · 84 skill global · 18 rule. PASS → giữ commit c5efc57.
 - UAT HAI PHA chạy thật: pha 1 canary PASS (74/74, luật mới cắn, SKILLS_REF chứng minh cài đúng bản canary chứ không phải orca). Pha 2 main-URL lần đầu ĐỎ (72/74) — điều tra ra raw.githubusercontent propagate TRỄ và KHÔNG ĐỒNG ĐỀU: engine đã mới, policy.yaml còn cũ → bản LAI. Chờ CDN rồi chạy lại: 74/74 PASS. Không phải bug code → không revert. Bài học thành luật: /fdk-uat pha 2 phải poll sentinel trước khi đo (p-29).
 - UAT hai pha PASS: canary (3 trụ 5/5, harness 74/74, /wayfinder tới tay, 23 skill tắt model-invocation tới global — cắt token thật) → main-URL smoke (đường mặc định 74/74). Bug lộ ra: sentinel CDN của /fdk-uat viết sai pattern → chờ vô ích 4 phút dù raw đã mới (p-32, đã ghi cảnh báo grep-verify). UAT hai pha PASS (150726).
+
+## 2026-07-15 — hấp thụ hallmark làm nền design chung (T-260715-02, đóng p-23)
+- Cài Nutlope/hallmark (Together AI, 106 file, provenance sha256) làm NỀN — 6 discipline + 57 cổng slop-test.
+- concept design-foundation: sàn chung; 12 skill taste trỏ tới (flavour trên sàn). docs-site-macos = ngoại lệ artifact nội bộ.
+- frontend-antipattern.py +4 cổng UNIVERSAL grep được (gradient-text/italic-header/fake-chrome/số-liệu-marketing), quét trong <style>. --self-test PASS. 0 false-positive trên 30+ seq.html.
+- DOGFOOD lộ slop THẬT: overstack.html + index.html + health-dashboard có gradient-text (blue→purple headline) do generator sinh — sửa 3 generator dùng màu đặc.
+- /propose fill-default từ catalog hallmark (tag default, ghi ## Assumptions). design-variety.py + .design-log.jsonl: cổng Variety travel-được (phơi bày mọi seq.html là một glass template — nợ đã biết).
+- Nợ có sẵn lộ ra (KHÔNG sửa trong SPEC này): ~17 HTML cũ gradient-text + ligature debt.

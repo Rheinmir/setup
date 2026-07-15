@@ -3,6 +3,8 @@ name: industrial-brutalist-ui
 description: Raw mechanical interfaces fusing Swiss typographic print with military terminal aesthetics. Rigid grids, extreme type scale contrast, utilitarian color, analog degradation effects. For data-heavy dashboards, portfolios, or editorial sites that need to feel like declassified blueprints.
 ---
 
+> **Đứng trên nền [[design-foundation]]** — 6 discipline + slop-test của hallmark là SÀN chung (không thương lượng); skill này thêm *flavour* lên trên, không thay sàn.
+
 # SKILL: Industrial Brutalism & Tactical Telemetry UI
 
 ## 1. Skill Meta

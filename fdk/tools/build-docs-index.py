@@ -175,7 +175,7 @@ nav{position:fixed;top:0;left:0;bottom:0;width:210px;z-index:100;overflow-y:auto
   border-right:1px solid rgba(255,255,255,.55);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),4px 0 24px rgba(30,90,170,.08);transition:transform .28s cubic-bezier(.4,0,.2,1)}
 nav::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(220px 160px at 18% 4%,rgba(255,255,255,.55),transparent 70%),linear-gradient(115deg,rgba(255,255,255,.28),transparent 28%,transparent 72%,rgba(255,255,255,.14))}
 nav>*{position:relative}
-nav .logo{margin:0 0 14px;padding:6px 10px;font-family:var(--font-display);font-weight:800;font-size:17px;letter-spacing:-.02em;background:linear-gradient(135deg,#0a84ff,#64b5f7);-webkit-background-clip:text;background-clip:text;color:transparent}
+nav .logo{margin:0 0 14px;padding:6px 10px;font-family:var(--font-display);font-weight:800;font-size:17px;letter-spacing:-.02em;color:#0a84ff}
 nav .logo small{display:block;font-size:10px;font-weight:600;color:var(--t2);-webkit-text-fill-color:var(--t2)}
 nav a{padding:8px 12px;border-radius:10px;font-size:13px;color:var(--t2);text-decoration:none;position:relative;overflow:hidden;transition:background .15s,color .15s;display:flex;align-items:center;justify-content:space-between;gap:8px}
 nav a:hover{background:rgba(10,132,255,.06);color:#0a84ff}
@@ -193,7 +193,7 @@ body.nav-collapsed nav{transform:translateX(-100%)}body.nav-collapsed{padding-le
 @media(max-width:640px){body{padding-left:0}}
 .hero{max-width:1100px;margin:0 auto;padding:84px 24px 14px}
 .hero .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#0a84ff;background:rgba(10,132,255,.10);padding:4px 12px;border-radius:999px;margin-bottom:16px}
-.hero h1{font-family:var(--font-display);font-size:clamp(30px,4.6vw,50px);line-height:1.06;letter-spacing:-.02em;margin:0 0 14px;background:linear-gradient(135deg,#0a84ff,#5aa2e8,#cfe3fb);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero h1{font-family:var(--font-display);font-size:clamp(30px,4.6vw,50px);line-height:1.06;letter-spacing:-.02em;margin:0 0 14px;color:#0a84ff}
 .hero p{font-size:16.5px;color:var(--t2);max-width:760px;margin:0}
 /* ─── docs-index additions (cùng token glass) ─── */
 .toolbar{position:sticky;top:0;z-index:30;display:flex;flex-wrap:wrap;gap:10px;align-items:center;
