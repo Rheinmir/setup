@@ -45,14 +45,18 @@ a:hover{text-decoration:underline}
 .topbar{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;
         align-items:center;justify-content:space-between;gap:12px;
         padding:12px 16px;background:var(--bg)}
-.topbar .right{display:flex;align-items:center;gap:10px}
+.topbar .right{display:flex;align-items:stretch;gap:10px}
 body{padding-top:76px}
-#theme{padding:10px 18px;cursor:pointer;border:0;border-radius:14px;font:inherit;
-       color:var(--ink);background:var(--bg);box-shadow:var(--sh-dark),var(--sh-light)}
+/* MỌI pill trong top bar dùng CHUNG một khối kích thước → cao bằng nhau,
+   không còn cảnh nút Sáng/Tối cao hơn badge. height:38px + flex canh giữa
+   nội dung theo chiều dọc, bất kể font/nội dung khác nhau. */
+.topbar .back,.topbar #theme,.topbar .who{
+  height:38px;display:inline-flex;align-items:center;box-sizing:border-box;
+  padding:0 16px;border-radius:14px;font-size:.85em;background:var(--bg);
+  box-shadow:var(--sh-dark),var(--sh-light);color:var(--ink)}
+#theme{cursor:pointer;border:0;font-family:inherit}
 #theme:active{box-shadow:inset 3px 3px 7px rgba(0,0,0,.18),
                          inset -3px -3px 7px rgba(255,255,255,.10)}
-.back{padding:10px 18px;border-radius:14px;font:inherit;color:var(--ink);
-      background:var(--bg);box-shadow:var(--sh-dark),var(--sh-light)}
 .back:hover{text-decoration:underline}
 #theme,.back{transition:box-shadow .2s ease,transform .15s ease}
 #theme:active,.back:active{transform:scale(.97)}
@@ -76,8 +80,7 @@ a:focus-visible,button:focus-visible,input:focus-visible{
   box-shadow:var(--sh-dark),var(--sh-light)}
 .stat .n{font-size:1.9em;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .stat .t{color:var(--muted);font-size:.8em;text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
-.who{padding:9px 16px;border-radius:12px;font-size:.8em;background:var(--bg);
-  box-shadow:var(--sh-dark),var(--sh-light);display:flex;align-items:center;gap:8px}
+.who{gap:8px}  /* kích thước pill do .topbar .who lo; đây chỉ khoảng cách nội bộ */
 .who a{color:var(--muted);text-decoration:underline}
 @media (max-width:520px){.who span{display:none}}  /* màn hẹp: badge chỉ còn icon + đăng xuất */
 .login-card{max-width:380px;margin:8vh auto 0;padding:32px 30px;border-radius:22px;
