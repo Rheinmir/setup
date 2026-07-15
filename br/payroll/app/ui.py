@@ -40,18 +40,23 @@ code{font-family:ui-monospace,monospace}
 .clause{color:var(--muted);font-size:.85em}
 a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
-#theme{position:fixed;top:16px;right:16px;padding:10px 18px;cursor:pointer;
-       border:0;border-radius:14px;font:inherit;color:var(--ink);background:var(--bg);
-       box-shadow:var(--sh-dark),var(--sh-light)}
+/* MỘT thanh top cố định — gom nút lùi/badge/theme vào cùng một hàng flex,
+   hết cảnh 3 phần tử fixed riêng lẻ đè lên nhau vì magic-number offset. */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;
+        align-items:center;justify-content:space-between;gap:12px;
+        padding:12px 16px;background:var(--bg)}
+.topbar .right{display:flex;align-items:center;gap:10px}
+body{padding-top:76px}
+#theme{padding:10px 18px;cursor:pointer;border:0;border-radius:14px;font:inherit;
+       color:var(--ink);background:var(--bg);box-shadow:var(--sh-dark),var(--sh-light)}
 #theme:active{box-shadow:inset 3px 3px 7px rgba(0,0,0,.18),
                          inset -3px -3px 7px rgba(255,255,255,.10)}
-.back{position:fixed;top:16px;left:16px;padding:10px 18px;z-index:10;
-      border-radius:14px;font:inherit;color:var(--ink);background:var(--bg);
-      box-shadow:var(--sh-dark),var(--sh-light)}
+.back{padding:10px 18px;border-radius:14px;font:inherit;color:var(--ink);
+      background:var(--bg);box-shadow:var(--sh-dark),var(--sh-light)}
 .back:hover{text-decoration:underline}
 #theme,.back{transition:box-shadow .2s ease,transform .15s ease}
 #theme:active,.back:active{transform:scale(.97)}
-@media print{#theme,.back{display:none}}
+@media print{.topbar{display:none}}
 a:focus-visible,button:focus-visible,input:focus-visible{
   outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
 .skip-link{position:absolute;left:-9999px;top:0;padding:10px 18px;border-radius:14px;
@@ -71,13 +76,11 @@ a:focus-visible,button:focus-visible,input:focus-visible{
   box-shadow:var(--sh-dark),var(--sh-light)}
 .stat .n{font-size:1.9em;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .stat .t{color:var(--muted);font-size:.8em;text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
-.who{position:fixed;top:16px;right:100px;padding:9px 16px;border-radius:12px;
-  font-size:.8em;background:var(--bg);box-shadow:var(--sh-dark),var(--sh-light);
-  display:flex;align-items:center;gap:8px}
+.who{padding:9px 16px;border-radius:12px;font-size:.8em;background:var(--bg);
+  box-shadow:var(--sh-dark),var(--sh-light);display:flex;align-items:center;gap:8px}
 .who a{color:var(--muted);text-decoration:underline}
-@media print{.who{display:none}}
-@media (max-width:640px){.who{position:static;margin-bottom:14px;width:fit-content}}
-.login-card{max-width:380px;margin:15vh auto 0;padding:32px 30px;border-radius:22px;
+@media (max-width:520px){.who span{display:none}}  /* màn hẹp: badge chỉ còn icon + đăng xuất */
+.login-card{max-width:380px;margin:8vh auto 0;padding:32px 30px;border-radius:22px;
   background:var(--bg);box-shadow:var(--sh-dark),var(--sh-light);text-align:center}
 .login-card h1{font-size:1.3em;margin-bottom:4px}
 .login-card p{color:var(--muted);font-size:.85em;margin:6px 0 20px}
@@ -126,9 +129,9 @@ _current_user = None
 
 
 def _page(title: str, body: str, back=None) -> bytes:
-    """back = (href, nhãn) — link lùi CỐ ĐỊNH trên đầu, luôn thấy khi cuộn dài. None = màn gốc."""
-    nut_lui = f'<a class="back" href="{_e(back[0])}">← {_e(back[1])}</a>' if back else ""
-    who = (f'<div class="who">👤 {_e(_current_user["name"].split(" (")[0])} '
+    """back = (href, nhãn) — link lùi nằm trong TOP BAR, luôn thấy khi cuộn dài. None = màn gốc."""
+    nut_lui = f'<a class="back" href="{_e(back[0])}">← {_e(back[1])}</a>' if back else "<span></span>"
+    who = (f'<div class="who">👤 <span>{_e(_current_user["name"].split(" (")[0])}</span> '
           f'· <a href="/logout">Đăng xuất</a></div>') if _current_user else ""
     return f"""<!doctype html>
 <html lang="vi"><head><meta charset="utf-8">
@@ -137,9 +140,10 @@ def _page(title: str, body: str, back=None) -> bytes:
 <style>{_CSS}</style>
 </head><body>
 <a class="skip-link" href="#main">Bỏ qua, đến nội dung chính</a>
-<button id="theme" type="button">Sáng / Tối</button>
-{who}
-{nut_lui}
+<header class="topbar">
+  {nut_lui}
+  <div class="right">{who}<button id="theme" type="button">Sáng / Tối</button></div>
+</header>
 <main id="main">
 {body}
 </main>
@@ -523,6 +527,10 @@ class _Handler(BaseHTTPRequestHandler):
         from urllib.parse import urlparse, parse_qs
         parsed = urlparse(self.path)
         phan = [x for x in parsed.path.split("/") if x]
+        # Đặt vai theo session THẬT của request NÀY ngay từ đầu — tránh badge
+        # hiện nhầm do global sót lại từ request trước (vd trang /login lẽ ra
+        # không có badge nhưng lại hiện vai của lần login trước).
+        _current_user = auth.session_user(self._session_id())
         if phan == ["login"]:                          # cổng — KHÔNG đòi session (else kẹt vòng lặp)
             body = _man_login()
             self.send_response(200)
@@ -535,11 +543,9 @@ class _Handler(BaseHTTPRequestHandler):
             auth.logout(self._session_id())
             self._redirect("/login", clear_cookie=True)
             return
-        user = auth.session_user(self._session_id())
-        if user is None:                                # chưa "đăng nhập" [C2.1] → về cổng
+        if _current_user is None:                       # chưa "đăng nhập" [C2.1] → về cổng
             self._redirect("/login")
             return
-        _current_user = user
         if phan == ["export", "payroll-master"]:  # file tải về, KHÔNG phải màn HTML [FE-20]
             try:
                 period = parse_qs(parsed.query).get("period", [PERIOD])[0]

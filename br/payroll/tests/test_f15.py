@@ -446,9 +446,16 @@ class TestLoginGate(unittest.TestCase):
         # /login CHÍNH NÓ không được đòi session, không thì kẹt vòng lặp redirect
         h = urllib.request.urlopen(f"http://127.0.0.1:{self.port}/login", timeout=10).read().decode()
         self.assertIn("Vào hệ thống", h)
-        self.assertIn("HR C&amp;B", h)  # HTML đã escape &
+        self.assertIn("HR C&amp;B", h)  # HTML đã escape & (đây là chữ trong thẻ login, không phải badge)
         # không có ô mật khẩu/tài khoản nào — đúng bản chất "cổng UX, không phải auth thật"
         self.assertNotIn('type="password"', h)
+
+    def test_man_login_KHONG_hien_badge_khi_chua_dang_nhap(self):
+        # bug đã sửa: _current_user là global, trang /login từng hiện badge vai
+        # SÓT LẠI từ request trước — giờ phải phản ánh đúng session của request NÀY (rỗng)
+        h = urllib.request.urlopen(f"http://127.0.0.1:{self.port}/login", timeout=10).read().decode()
+        self.assertNotIn('class="who"', h)   # không badge vai
+        self.assertNotIn("Đăng xuất", h)     # không link đăng xuất khi chưa đăng nhập
 
     def test_post_login_tao_session_cookie_va_redirect_ve_trang_chu(self):
         req = urllib.request.Request(f"http://127.0.0.1:{self.port}/login", method="POST")
