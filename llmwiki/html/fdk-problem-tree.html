@@ -655,6 +655,49 @@
     "date": "2026-07-14",
     "solvedBy": "skills/fdk-uat § pha 2: BẮT BUỘC poll sentinel (một chuỗi CHỈ có ở bản mới) tới khi raw trả đúng, rồi mới đo. Chưa vá được phía user (bootstrap không tự kiểm nhất quán) → còn hở 1/3 trụ.",
     "session": "2026-07-14 UAT hai pha"
+  },
+  {
+    "id": "p-30",
+    "parent": null,
+    "title": "76/76 skill model-invoked → ~7.4k token description mỗi lượt, mọi phiên",
+    "desc": "Không skill nào khai disable-model-invocation. Mỗi phiên mới gánh ~7.417 token cho các skill người dùng chưa bao giờ gọi bằng tay. mattpocock tắt 24/39 skill. Fix: tắt model-invocation 22 skill chỉ-gọi-tay (framework-dev + eval định kỳ), giữ nhóm bị skill khác gọi. Còn 5.109 token/lượt — cắt ~2.307. Đánh đổi context load→cognitive load, chữa bằng router /find-skills+CAPABILITIES. Khái niệm hoá thành concept skill-craft + /lint skill-health.py đo bằng máy.",
+    "status": "solved",
+    "scope": [
+      "harness",
+      "skills",
+      "llmwiki"
+    ],
+    "date": "2026-07-15",
+    "solvedBy": "22 skill += disable-model-invocation; concept skill-craft; harness/scripts/skill-health.py + /lint 8b. UAT canary: 23 skill tắt tới global. Đo thật 7.417→5.109 token/lượt.",
+    "session": "2026-07-15 hấp thụ mattpocock"
+  },
+  {
+    "id": "p-31",
+    "parent": null,
+    "title": "Fan-out nhiều agent nhưng ledger KHÔNG có agent-readiness / cạnh chặn / claim",
+    "desc": "Ledger issue chỉ có id/kind/status/assignee — không nhãn ready-for-agent (việc nào giao máy được), không blocked_by (→ không tính được frontier), không claim (→ hai agent song song ôm cùng một việc). Đây là trục yếu nhất của một hệ fan-out. Fix: hợp đồng tracker adapter (issue-tracker.md) + 5 nhãn + 3 cột (labels/blocked_by/claim) + frontier.py tất định (open ∧ không-bị-chặn ∧ chưa-claim). Claim là thao tác GHI ĐẦU TIÊN. Cổng HITL/AFK ở orca-workflow bước 4b chặn việc-cần-người khỏi CLI headless — mảnh còn thiếu của con số 1/5.",
+    "status": "solved",
+    "scope": [
+      "harness",
+      "skills",
+      "llmwiki"
+    ],
+    "date": "2026-07-15",
+    "solvedBy": "wiki/sources/issue-tracker.md; ISSUES.md +3 cột; harness/scripts/frontier.py (self-check logic chặn/claim pass); orca-workflow 4b cổng HITL/AFK; /wayfinder đứng trên. UAT 2 pha PASS.",
+    "session": "2026-07-15 hấp thụ mattpocock"
+  },
+  {
+    "id": "p-32",
+    "parent": "p-29",
+    "title": "Sentinel CDN của /fdk-uat dễ viết sai pattern → chờ vô ích 4 phút",
+    "desc": "Pha 2 poll một chuỗi 'CHỈ có ở bản mới' để biết CDN đã propagate. Nhưng nếu chọn pattern không thật sự khớp file (vd 'frontier =' trong khi file viết 'def frontier(' và '**frontier** ='), vòng lặp chờ hết 24 lần rồi vẫn tưởng raw còn cũ — trong khi raw ĐÃ mới. Bài học: sentinel phải là chuỗi ĐÃ VERIFY có trong file bản mới (grep chính file trước khi dùng làm pattern), không phải chuỗi đoán. Đây là false-negative của chính cổng chống-false-positive.",
+    "status": "partial",
+    "scope": [
+      "skills"
+    ],
+    "date": "2026-07-15",
+    "solvedBy": "Ghi nhận trong /fdk-uat: sentinel phải grep-verify trên file bản mới trước. Chưa tự-động-hoá việc chọn sentinel (vẫn là bước tay).",
+    "session": "2026-07-15 UAT hai pha"
   }
 ]</script>
 

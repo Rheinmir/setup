@@ -105,6 +105,8 @@ Chốt bằng một sentinel — poll tới khi raw trả đúng nội dung mìn
 ```bash
 RAW="https://raw.githubusercontent.com/<owner>/<repo>/<nhánh chính>"
 MARK="<một chuỗi CHỈ có ở bản mới>"      # vd tên rule/field vừa thêm
+  # ⚠ GREP-VERIFY MARK trên file bản mới TRƯỚC (grep "$MARK" <file local>) — chọn pattern đoán
+  #   mà không khớp file → vòng lặp chờ hết lượt rồi tưởng raw còn cũ, dù raw ĐÃ mới (p-32).
 for i in $(seq 1 30); do
   curl -fsSL "$RAW/harness/poc-vendor-neutral/policy.yaml" | grep -q "$MARK" && break
   echo "  raw còn cũ, chờ CDN… ($i)"; sleep 10
