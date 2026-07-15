@@ -728,6 +728,32 @@
     "date": "2026-07-15",
     "solvedBy": "skills/propose (tầng 3 + trả nợ); wiki/draft/unknown/_template.md; harness/scripts/unknown-ledger.py; /lint 8c. SPEC 150726-unknown-ledger.",
     "session": "2026-07-15 unknown-ledger"
+  },
+  {
+    "id": "p-auto-15",
+    "parent": null,
+    "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
+    "desc": "Bề mặt bị chạm: fdk/skills.search.json, fdk/wiki/index.md, fdk/wiki/log.md, harness/mem-rank.config.yaml, harness/metrics/scratch-log.jsonl, harness/scripts/embed-ollama.py, harness/scripts/embed-voyage.py, harness/scripts/mem-rank.py …. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát); lần /fdk kế tiếp sẽ chưng lọc về đúng nhánh.",
+    "status": "open",
+    "scope": [],
+    "date": "15/07/26",
+    "session": "cacb3b15",
+    "pending": true
+  },
+  {
+    "id": "p-34",
+    "parent": null,
+    "title": "Thiếu review-senior-có-chấm-điểm + test tái hiện auto-chạy khi sửa code",
+    "desc": "Có /orca-sec-scans (Trivy tĩnh) + /code-review built-in (tổng quát) nhưng không có review phong cách senior 4-mục-chấm-điểm-verdict, và bug tìm ra không để lại test tái hiện auto-chạy. Fix: /qc-code (security/performance/naming/logic, điểm/10 + lỗi nặng nhất + fix + PASS/CẦN SỬA; mục logic sinh test qc-*). Tách đắt/rẻ (hỏi user → option 3): LLM review thủ công/workflow; test qc-* auto qua hook tất định 0-token (verify-before-commit 3b), không LLM trong hook. Verdict advisory, test gác cứng.",
+    "status": "solved",
+    "scope": [
+      "harness",
+      "skills",
+      "llmwiki"
+    ],
+    "date": "2026-07-15",
+    "solvedBy": "skills/qc-code/SKILL.md; harness/scripts/qc-regression.py (--self-test PASS); verify-before-commit 3b; orca-workflow 6b. SPEC 150726-qc-code-skill.",
+    "session": "2026-07-15 qc-code"
   }
 ]</script>
 

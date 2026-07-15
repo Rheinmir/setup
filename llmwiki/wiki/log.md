@@ -19,18 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-14 23:07:20 | `file.write` | skills/fdk-uat/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=55704d9f32ebc53c8721bd85a4d1175c6ed6dbcc3325 |
-| 2026-07-15 00:29:01 | `task.new` |  · task=T-260715-01 · title=hấp thụ mattpocock: skill-lens + wayfinder + tracker phối hợp · state=proposed · actor=agent |
-| 2026-07-15 00:31:54 | `file.write` | llmwiki/wiki/sources/draft/150726-mattpocock-absorb.md · tool=Write · session=36e6562b · actor=agent · prev=d47a4f8b11c8 |
-| 2026-07-15 00:35:38 | `file.write` | llmwiki/html/150726-mattpocock-absorb-seq.html · tool=Write · session=36e6562b · actor=agent · prev=1da1b9bd7f13baeda999 |
-| 2026-07-15 08:23:15 | `task.set` |  · task=T-260715-01 · state=approved · note=gate: user duyệt, chạy · actor=agent · prev=413e038a04c7cd650a83fa5d6218b336 |
-| 2026-07-15 08:23:44 | `file.write` | skills/propose/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=62fb35858c42baa48d34afbdfc1d8e7e390ef6ed6f41 |
-| 2026-07-15 08:23:54 | `file.write` | skills/propose/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=a192bcb98bef87d7fa59a59a52ba8b60a418222b3cd5 |
-| 2026-07-15 08:24:25 | `file.write` | skills/plan/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=7d8c2d71d7856f8c62594c8bb63307d4d37444bb0f2f7d3 |
-| 2026-07-15 08:25:50 | `file.write` | llmwiki/wiki/concepts/skill-craft.md · tool=Write · session=36e6562b · actor=agent · prev=240554b580d2bd48b69b354877075f |
-| 2026-07-15 08:28:40 | `file.write` | harness/scripts/skill-health.py · tool=Write · session=36e6562b · actor=agent · prev=384351a28dc6317903dad4bf068e83844f3 |
-| 2026-07-15 08:29:07 | `file.write` | harness/scripts/skill-health.py · tool=Edit · session=36e6562b · actor=agent · prev=ecfeeafad93d971734bd195a544d78985c49 |
-| 2026-07-15 08:29:13 | `file.write` | harness/scripts/skill-health.py · tool=Edit · session=36e6562b · actor=agent · prev=2c707ec508c3ae1b096a49b6bca84aed27da |
 | 2026-07-15 08:29:18 | `file.write` | harness/scripts/skill-health.py · tool=Edit · session=36e6562b · actor=agent · prev=32f481db1e66e1b080ce2121190e5514f54a |
 | 2026-07-15 08:29:38 | `file.write` | harness/scripts/skill-health.py · tool=Edit · session=36e6562b · actor=agent · prev=801039d9a91f344a890791ac6540a14c5054 |
 | 2026-07-15 08:30:11 | `file.write` | skills/lint/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=4f5d1bbf15a80913c784704f6700e0d8c4c9cdf5bfd3f93 |
@@ -59,6 +47,18 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-15 11:20:03 | `task.new` |  · task=T-260715-03 · title=unknown ledger: fill-first-find-out-later + sổ nợ truy vết trả nợ · state=proposed · actor=a |
 | 2026-07-15 11:21:58 | `file.write` | llmwiki/wiki/sources/draft/150726-unknown-ledger.md · tool=Write · session=36e6562b · actor=agent · prev=6142ea132a70bf3 |
 | 2026-07-15 11:23:22 | `file.write` | llmwiki/html/150726-unknown-ledger-seq.html · tool=Write · session=36e6562b · actor=agent · prev=bc1a446b8bf9e62f4ce0183 |
+| 2026-07-15 12:59:19 | `task.set` |  · task=T-260715-03 · state=approved · note=gate: duyệt, chạy · actor=agent · prev=d5fab8ad713a1d22459efa349f902ebe79278 |
+| 2026-07-15 12:59:42 | `file.write` | skills/propose/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=30878d70654891d6217941648b7ad10f589d7ea42d1a |
+| 2026-07-15 12:59:55 | `file.write` | skills/propose/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=753f65a12bac9d49b1f132670557cb2ac09cd3722021 |
+| 2026-07-15 13:00:18 | `file.write` | llmwiki/wiki/draft/unknown/_template.md · tool=Write · session=36e6562b · actor=agent · prev=8c8e28705540a6c57de20079065 |
+| 2026-07-15 13:01:09 | `file.write` | harness/scripts/unknown-ledger.py · tool=Write · session=36e6562b · actor=agent · prev=b5a52e16ee83e20ba3ff28291330678c0 |
+| 2026-07-15 13:01:22 | `file.write` | harness/scripts/unknown-ledger.py · tool=Edit · session=36e6562b · actor=agent · prev=08b3b24aad3ad7bea1e75a22e6dd6aae0c |
+| 2026-07-15 13:01:42 | `file.write` | skills/propose/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=02715db04f5f16cd660366d146765f8bc2e2f6845357 |
+| 2026-07-15 13:01:54 | `file.write` | skills/lint/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=2028440ccd01e117cff51a0891fb4e1f809d1efc07b6f11 |
+| 2026-07-15 13:07:43 | `task.set` |  · task=T-260715-03 · state=done · note=6 task, UAT 2 pha PASS, 38ee2c5 · actor=agent · prev=1f8c898f64d27213dbd99c791d5 |
+| 2026-07-15 19:08:54 | `task.new` |  · task=T-260715-04 · title=skill qc-code: senior review 4 mục + test tái hiện auto-hook · state=proposed · actor=agent  |
+| 2026-07-15 19:10:42 | `file.write` | llmwiki/wiki/sources/draft/150726-qc-code-skill.md · tool=Write · session=36e6562b · actor=agent · prev=07c7e6f5230fc6fd |
+| 2026-07-15 19:12:06 | `file.write` | llmwiki/html/150726-qc-code-skill-seq.html · tool=Write · session=36e6562b · actor=agent · prev=7c8bd33bdf55e1dabc5b8c85 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -313,3 +313,8 @@ Giải issue `030726-skill-resolve-supplychain` (trục #5 frontier-gap-scan, Ch
 - /propose: interview LUÔN có đáp án cuối "điền mặc định bây giờ, tìm hiểu sau"; tag (default, find-out-later → [[unknown-x]] U-NN). + luồng trả nợ.
 - Folder llmwiki/wiki/draft/unknown/ + _template.md; harness/scripts/unknown-ledger.py (list/add/resolve/trace, --self-test PASS, audit giữ cả 2 giá trị); /lint 8c hiện nợ (báo cáo không chặn). p-33 solved 3/3.
 - UAT hai pha PASS (unknown-ledger): canary (3 trụ 5/5, harness 74/74, /propose fill-first tới tay) → main-URL smoke (đường mặc định, 74/74, /propose reachable, unknown-ledger.py --self-test PASS ở global harness — engine travel thật). p-33 đóng 3/3.
+
+## 2026-07-15 — skill /qc-code: senior review 4 mục + test tái hiện auto-hook (T-260715-04)
+- /qc-code: review senior 4 mục (security/performance/naming/logic), điểm/10 + lỗi nặng nhất + fix, verdict PASS/CẦN SỬA. Mục logic sinh test tái hiện qc-*.
+- Tách đắt/rẻ (HỎI user → option 3): LLM review gọi tay/workflow; test qc-* auto qua hook tất định 0-token (verify-before-commit 3b), KHÔNG gọi LLM trong hook.
+- harness/scripts/qc-regression.py (--self-test PASS, tự phát hiện pytest/vitest/jest, fail-open). /orca-workflow 6b tùy chọn. Verdict advisory; test gác cứng. p-34 solved 3/3.

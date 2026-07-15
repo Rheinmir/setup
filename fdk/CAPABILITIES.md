@@ -1,7 +1,7 @@
 <!-- SINH BẰNG CODE: build-capabilities.py — ĐỪNG sửa tay; chạy lại để cập nhật. -->
 # CAPABILITIES — toàn bộ đồ nghề (luôn-mới, đếm từ đĩa)
 
-**78 skill · 18 rule · 19 fdk-tool · 54 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
+**79 skill · 18 rule · 19 fdk-tool · 55 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
 
 ## Skills (gọi bằng `/<tên>`)
 
@@ -12,7 +12,7 @@
 - **`/record-episode`** — Ghi một SESSION EPISODE có cấu trúc (tầng nhớ episodic) vào memory store để phiên sau truy…
 - **`/wiki-room`** — Mở room (subagent 1 tầng) nạp chi tiết wiki khi context phiên chính đã rot
 
-### dev-loop (14)
+### dev-loop (15)
 - **`/build-now-adapt-later`** — When a task is blocked by missing or unverified information (an undocumented protocol, an …
 - **`/failure-flywheel`** — Capture each agent failure, bucket and count it deterministically, and when a failure clas…
 - **`/impact-check`** — Map all callers and dependents of a symbol before modifying shared code
@@ -22,6 +22,7 @@
 - **`/onboard-codebase`** — Deep codebase analysis
 - **`/plan`** — Mở rộng một draft SPEC ĐÃ ĐƯỢC DUYỆT thành kế hoạch thi hành được
 - **`/propose`** — Plan a feature before coding
+- **`/qc-code`** — Review code phong cách SENIOR 10 năm
 - **`/safe-change`** — Modify shared code without breaking existing callers
 - **`/ship`** — Workflow chốt PUSH/RELEASE/PR/MR
 - **`/skill-provenance`** — Ghi và kiểm provenance (nguồn + sha256 checksum) cho skill
@@ -164,6 +165,7 @@
 - `okf-check.py`
 - `ovs-notes.py`
 - `prospect-critic.py`
+- `qc-regression.py`
 - `query-log.py`
 - `query-proxy.py`
 - `retrieval-eval.py`

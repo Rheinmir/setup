@@ -123,7 +123,7 @@ ACCENTS = [("#0a84ff", "10,132,255"), ("#30b0c7", "48,176,199"), ("#5856d6", "88
 LOOP_GROUPS = {
     "dev-loop": (
         [("edit", "✏️ sửa code an toàn"), ("build", "🏗️ dựng & onboard"), ("eval", "📊 eval & vòng lặp")],
-        {"propose": "edit", "plan": "edit", "impact-check": "edit", "safe-change": "edit", "verify-before-commit": "edit",
+        {"propose": "edit", "plan": "edit", "qc-code": "edit", "impact-check": "edit", "safe-change": "edit", "verify-before-commit": "edit",
          "build-now-adapt-later": "edit",
          "new-project-setup": "build", "onboard-codebase": "build", "new-skill": "build",
          "skill-provenance": "build",

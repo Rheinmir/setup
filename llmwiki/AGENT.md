@@ -52,6 +52,7 @@ Karpathy ở trên là "vì sao"; đây là "làm sao". (Chưng cất từ ponyt
 | `record-episode` | Chốt phiên vào tầng nhớ episodic (mem-rank store) để phiên sau truy hồi "phiên trước làm gì" theo nghĩa | `skills/wiki-loop/record-episode.md` | wiki-loop |
 | `lint` | After every 10 ingests, or wiki feels stale | `skills/wiki-loop/lint.md` | wiki-loop |
 | `propose` | Any new feature or change is requested | `skills/dev-loop/propose.md` | dev-loop |
+| `qc-code` | Review code phong cách senior 10 năm — 4 mục (security/performance/naming/logic) điểm/10 + lỗi nặng nhất + fix + verdict PASS/CẦN SỬA; sinh test tái hiện qc-* auto-chạy tất định. KHÁC /orca-sec-scans (Trivy tĩnh) | `skills/dev-loop/qc-code.md` | dev-loop |
 | `plan` | SPEC đã DUYỆT → mở rộng thành `-PLAN.md` thi hành được (Files chính xác + Interfaces + code từng bước) TRƯỚC khi dispatch cho agent | `skills/dev-loop/plan.md` | dev-loop |
 | `impact-check` | Before modifying any shared symbol | `skills/dev-loop/impact-check.md` | dev-loop |
 | `safe-change` | Editing code called from more than one place | `skills/dev-loop/safe-change.md` | dev-loop |

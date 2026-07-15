@@ -85,6 +85,7 @@
         "./skills/orca-eval",
         "./skills/wayfinder",
         "./skills/orchestration",
+        "./skills/qc-code",
         "./skills/propose",
         "./skills/plan",
         "./skills/fdk-uat",
