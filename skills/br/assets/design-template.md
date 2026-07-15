@@ -135,6 +135,13 @@ một màu, phân biệt chỉ bằng ánh sáng. Bốn luật cứng:
 - **Toggle:** nút `role="switch"`, ghi `localStorage`, đọc lại lúc load.
 - **Chống FOUC:** inline `<script>` đọc localStorage → set `data-theme` ngay đầu `<head>`.
 
+### 4.1 TOKEN KHOÁ — stream nhất quán xuyên frame (distill hallmark)
+> File này là **HỆ THIẾT KẾ KHOÁ của sản phẩm** — đọc TRƯỚC, nó **đè** mọi lựa chọn khác. Mọi frame UI defer về đây.
+
+- **Locked tokens, không ứng biến giữa lúc render:** mọi màu + `font-family` + bước spacing trong MỌI frame PHẢI trỏ token có tên ở §4 (`var(--accent)`, `var(--ink)`, `var(--font-display)`, thang 4/8px). **CẤM** inline hex/OKLCH/`rgb()`/`font-family:"…"` vượt token. Cần giá trị chưa có → **thêm token vào bảng §4 rồi trỏ tên**, KHÔNG tự chế tại frame.
+- **Luật ĐẢO NGƯỢC của design-system (hallmark):** dự án có DESIGN.md = các trang/frame phải **CHIA SẺ hệ, GIỐNG nhau** — không mỗi frame một kiểu. Đa dạng hoá là SAI ở đây. Mục tiêu: mockup của frame-01 và frame-09 trông như **MỘT sản phẩm**, không phải hai người làm.
+- **Gác drift (tất định):** `/qc-uiux` mục *consistency* + engine visual-qa bắt token lệch (màu/spacing/shadow ngoài hệ). Frame nào inline off-token = drift = CẦN SỬA. Đây là cách "stream UI/UX thống nhất" chạy được, không dựa lời dặn.
+
 ## 5. Pre-output checklist (cổng chốt — copy nguyên)
 - [ ] Không dính font/icon/viền/bóng/layout/motion cấm ở §3.1
 - [ ] Đã chọn 1 Vibe + 1 Layout archetype (§3.2) và áp nhất quán — **mặc định Neumorphism (Vibe 0), đổi thì ghi lý do §6**

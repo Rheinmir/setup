@@ -53,7 +53,7 @@ REQUIRED_FIELDS = [
     "parent_br_hash", "muc_tieu", "scope_code", "scope_test", "acceptance_test",
 ]
 # R7 content — a frame is documentation for the human who comes back later.
-REQUIRED_BODY_SECTIONS = ["## Nghiệp vụ", "## Input", "## Tiêu chí nghiệm thu", "## Ngoài phạm vi"]
+REQUIRED_BODY_SECTIONS = ["## Nghiệp vụ", "## Input", "## Spec", "## Tiêu chí nghiệm thu", "## Ngoài phạm vi"]
 MIN_MUC_TIEU_LEN = 20
 MIN_SECTION_LEN = 30
 # generic slop: "F10 nghiệp vụ", "frame-f10", bare ids…
@@ -472,8 +472,12 @@ Người dùng nhập X trên màn hình nhập liệu; hệ thống tính Y và
 - Input: giá trị X (số nguyên dương, nhập tay)
 - Output: Y = f(X), ghi kèm timestamp vào sổ
 
+## Spec (FR/SC)
+- **FR-01**: Hệ thống PHẢI tính Y từ X hợp lệ và lưu kèm timestamp vào sổ.
+- **SC-01**: Người dùng nhập X xong thấy Y lưu thành công dưới 1 giây.
+
 ## Tiêu chí nghiệm thu
-- X hợp lệ thì Y được tính đúng và lưu thành công
+- X hợp lệ thì Y được tính đúng và lưu thành công (FR-01)
 - X âm hoặc rỗng thì báo lỗi, không ghi sổ
 
 ## Ngoài phạm vi

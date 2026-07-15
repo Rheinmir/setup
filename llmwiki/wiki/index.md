@@ -130,3 +130,4 @@
 | [140726-br-proactive-fill-PLAN](sources/draft/140726-br-proactive-fill-PLAN.md) | draft | 2026-07-14 |
 | [140726-br-proactive-fill-report](draft/orca/140726-br-proactive-fill-report.md) | draft | 2026-07-14 |
 | [150726-qc-code-skill](sources/draft/150726-qc-code-skill.md) | draft | 2026-07-15 |
+| [160726-br-ui-stream-spec-distill](sources/draft/160726-br-ui-stream-spec-distill.md) | draft | 2026-07-16 |
