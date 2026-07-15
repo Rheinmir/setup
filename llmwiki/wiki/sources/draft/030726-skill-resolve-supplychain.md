@@ -19,7 +19,7 @@ source_session: "frontier-gap-scan baseline 03/07/2026 — trục CHỚM #2"
 Với 71 skill và nhiều biến thể cùng-năng-lực (tour-guide vs tour-guide-supademo, design-taste v1/v2…), rủi ro chọn nhầm skill tăng; thế giới đã có benchmark đo việc này (SkillResolve-Bench) và paper audit supply-chain skill — overstack chưa có cơ chế tương ứng.
 
 ## Bối cảnh & bằng chứng
-- Trục Skill security/supply-chain = **Chớm**. Nguồn: [[frontier-gap-scan]], report overstack-vs-world-30d.
+- Trục Skill security/supply-chain = **Chớm**. Nguồn: frontier-gap-scan, report overstack-vs-world-30d.
 - Thế giới: SkillResolve-Bench (arXiv 2606.10388) đo nhập nhằng cùng-năng-lực trong skill retrieval; "Formal Analysis & Supply Chain Security for Agentic AI Skills" (2603.00195); "Repository-Aware Security Analysis of Agent Skill Ecosystem" (2603.16572); NIST mở chuẩn agent (02/2026).
 - overstack hiện: `orca-sec-scans` (Trivy static+dynamic), R-rule chặn ghi sai vùng, `build-skill-search.py`. Chưa có: đo/chặn 2-skill-cùng-trigger, audit provenance skill khi cài.
 
@@ -57,4 +57,4 @@ Cả 3 tiêu chí HOÀN THÀNH đạt:
 Trục #5 frontier-gap-scan chuyển **Chớm → có cơ chế**. Tái-kiểm kỳ scout sau.
 
 ## Origin
-Raise bởi phiên frontier-gap-scan 2026-07-03. Bằng chứng: report overstack-vs-world-30d + [[frontier-gap-scan]].
+Raise bởi phiên frontier-gap-scan 2026-07-03. Bằng chứng: report overstack-vs-world-30d + frontier-gap-scan.

@@ -22,7 +22,7 @@ Nhiều phiên dev cùng lúc trên MỘT working tree: `git add -A` / `git add 
 - **Sự cố A — nuốt-vào:** khi commit `ovs-notes`, `git add -A` của tôi stage luôn file chưa-commit của phiên khác (`raise-issue.md`, `ISSUES.md`, `council-report-026`, 2 draft). Pre-commit `arch-scan` fail trên `raise-issue.md:32` (vi phạm R5 — trỏ `wiki/ISSUES.md` ngoài allowlist) → **chặn commit sạch của tôi**; phải `--no-verify`.
 - **Sự cố B — bị-nuốt:** phiên khác `git add -A` đã cuốn luôn `git mv fdk/tools/ovs-notes.py → harness/scripts/` đang dang-dở của TÔI vào commit `8759f60` của HỌ, TRƯỚC khi tôi kịp rewrite bản council. Move landed trong commit người khác, lịch sử khó truy.
 - **Khuếch đại:** một số hook pre-commit (vd `arch-scan`) quét CẢ working tree (không chỉ file staged) → một file dang-dở vi-phạm-luật của phiên bất kỳ **chặn commit của MỌI phiên**.
-- Đây khớp memory `[[framework-multi-session-dev]]` ("nhiều session sửa chính framework; drift thường local-ahead").
+- Đây khớp memory `framework-multi-session-dev` ("nhiều session sửa chính framework; drift thường local-ahead").
 
 ## Phạm vi
 - Universal — quy trình dev framework (mọi phiên trên cây chung). Chạm: thói quen staging của agent, `llmwiki/.claude/hooks/` (pre-commit/pre-tool), có thể `harness/scripts/` (guard mới).
@@ -47,4 +47,4 @@ Nhiều phiên dev cùng lúc trên MỘT working tree: `git add -A` / `git add 
 
 ## Origin
 - **Raise bởi:** phiên `b73d2c47-27fe-4f86-8a29-0802a2e7e2e3` (2026-07-03), qua `/raise-issue`.
-- **Bằng chứng:** 2 sự cố commit thật trong phiên (A: `--no-verify` do arch-scan chặn bởi file phiên khác; B: commit `8759f60` của phiên khác nuốt git-mv của phiên này). Liên quan [[framework-multi-session-dev]].
+- **Bằng chứng:** 2 sự cố commit thật trong phiên (A: `--no-verify` do arch-scan chặn bởi file phiên khác; B: commit `8759f60` của phiên khác nuốt git-mv của phiên này). Liên quan memory `framework-multi-session-dev`.

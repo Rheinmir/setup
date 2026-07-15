@@ -19,20 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-14 08:13:35 | `file.write` | llmwiki/html/140726-br-dieu-kien-day-chuyen.html · tool=Write · session=0506c618 · actor=agent · prev=cc98dff2e28575e213 |
-| 2026-07-14 08:13:49 | `file.write` | llmwiki/html/140726-br-dieu-kien-day-chuyen.html · tool=Edit · session=0506c618 · actor=agent · prev=28b4f21b403d984efdc |
-| 2026-07-14 08:46:36 | `file.write` | skills/design-twice/SKILL.md · tool=Write · session=90a00343 · actor=agent · prev=814759e84f6f00d7492c373a727a29c727e07e |
-| 2026-07-14 08:47:00 | `file.write` | skills/br/SKILL.md · tool=Edit · session=90a00343 · actor=agent · prev=6a6411e6fd07b419fadaf4c2b7d5848450397acfefe3b0bd5 |
-| 2026-07-14 08:47:18 | `file.write` | skills/br/assets/frame-template.md · tool=Edit · session=90a00343 · actor=agent · prev=c1cbd4b7bdbf2463d33abb4bb2a74ca54 |
-| 2026-07-14 10:10:09 | `file.write` | skills/visual-qa/assets/package.json · tool=Write · session=90a00343 · actor=agent · prev=45170042b06b5e034938cc19720c5d |
-| 2026-07-14 10:59:50 | `file.write` | skills/visual-qa/SKILL.md · tool=Edit · session=90a00343 · actor=agent · prev=89aa58f8d9ec0d62c0de94834aae95860e34cf21a0 |
-| 2026-07-14 11:11:25 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=2 · human=['fdk/CAPABILITIES.md', 'fdk/skills.search.json'] · prev=a19dbaeddca2059 |
-| 2026-07-14 11:11:25 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=2 · human=['llmwiki/skills/utils/visual-qa.md', 'llmwiki/CLAUDE.md'] · prev=a19dba |
-| 2026-07-14 11:11:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['skills/visual-qa/assets/package-lock.json', 'harness/scripts/sync-skil |
-| 2026-07-14 11:11:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/dev-loop/br.md', 'skills/visual-qa/assets/package.json' |
-| 2026-07-14 11:30:28 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=ed0b695d6dd3903f44b9100e21805e7b7a6990d38 |
-| 2026-07-14 11:32:35 | `file.write` | llmwiki/wiki/sources/draft/140726-atomic-task-graph-distill.md · tool=Write · session=c7f6e21c · actor=agent · prev=ee65 |
-| 2026-07-14 11:33:24 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=c7f6e21c · actor=agent · prev=1cc41cbdeb57b0a0da7ac28cfa183410ea333 |
 | 2026-07-14 11:34:15 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=c7f6e21c · actor=agent · prev=c244f97face47f722e3defc98fb37731e8fca2e56e1849 |
 | 2026-07-14 12:44:33 | `file.write` | fdk/tools/br-queue.py · tool=Edit · session=c7f6e21c · actor=agent · prev=d8c20a58170d8f9dd79d31c3267b7c8414548d8e75ece8 |
 | 2026-07-14 12:44:49 | `file.write` | fdk/tools/br-queue.py · tool=Edit · session=c7f6e21c · actor=agent · prev=382b001109d51a544de11bb7b24a2227120603de63ddd8 |
@@ -59,6 +45,20 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-14 23:05:24 | `file.write` | llmwiki/wiki/sources/draft/140726-br-proactive-fill.md · tool=Write · session=15a64d8b · actor=agent · prev=206e043e8957 |
 | 2026-07-14 23:09:46 | `file.write` | llmwiki/html/140726-br-proactive-fill-seq.html · tool=Write · session=15a64d8b · actor=agent · prev=b8c686895ae244da3ea7 |
 | 2026-07-14 23:10:01 | `file.write` | llmwiki/html/140726-br-proactive-fill-seq.html · tool=Edit · session=15a64d8b · actor=agent · prev=59835234e65a0f085828f |
+| 2026-07-14 23:29:21 | `task.set` |  · task=T-260714-01 · state=approved · note=gate approve qua /goal · actor=agent · prev=8b435d75c5722fd91d5a9b0329c55872 |
+| 2026-07-14 23:34:29 | `file.write` | llmwiki/wiki/sources/draft/140726-br-proactive-fill-PLAN.md · tool=Write · session=15a64d8b · actor=agent · prev=44d0c0d |
+| 2026-07-14 23:34:40 | `task.set` |  · task=T-260714-01 · state=dispatched · note=Claude tự thi công theo PLAN · actor=agent · prev=e92d4c975774a4fa79749d2b |
+| 2026-07-14 23:35:18 | `file.write` | skills/br/assets/defaults.yaml · tool=Write · session=15a64d8b · actor=agent · prev=a397c5771ed920bac74a34ac6e9e49974998 |
+| 2026-07-14 23:36:55 | `file.write` | fdk/tools/br-fill.py · tool=Write · session=15a64d8b · actor=agent · prev=5e931ce9ad2105b77cf9df4c49bc6aed33cb4783c3a7dc |
+| 2026-07-14 23:37:30 | `file.write` | skills/br/SKILL.md · tool=Edit · session=15a64d8b · actor=agent · prev=1e493a4b84665942258d4eba86772d9944acd0f44e6954518 |
+| 2026-07-14 23:37:36 | `file.write` | skills/br/SKILL.md · tool=Edit · session=15a64d8b · actor=agent · prev=23fd52ea4965f498b9ea5ad1eae087e71c3516c816959a8d3 |
+| 2026-07-14 23:40:26 | `file.write` | llmwiki/wiki/draft/orca/140726-br-proactive-fill-report.md · tool=Write · session=15a64d8b · actor=agent · prev=941443e4 |
+| 2026-07-14 23:41:35 | `task.set` |  · task=T-260714-01 · state=completed · note=commit 82d6ab4 — usable, medic xanh · actor=agent · prev=c6171684995b1c5d28 |
+| 2026-07-14 23:48:30 | `file.write` | fdk/tools/br-fill.py · tool=Edit · session=15a64d8b · actor=agent · prev=a08bfc0e1e27966ec97e28606be6d5883adf59f81cdb1cb |
+| 2026-07-14 23:48:32 | `file.write` | skills/br/SKILL.md · tool=Edit · session=15a64d8b · actor=agent · prev=d944b7d15f420759ac284f2149710331b573435e2d693f105 |
+| 2026-07-15 19:21:36 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=15a64d8b · actor=agent · prev=13a5ca30533d703f6e1d4426147b |
+| 2026-07-15 19:23:38 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=15a64d8b · actor=agent · prev=34eadcc18df57801084df310bd06 |
+| 2026-07-15 19:25:13 | `file.write` | skills/visual-qa/SKILL.md · tool=Edit · session=15a64d8b · actor=agent · prev=21e6293b20e277e772865ebe3cf4335c56c1efab0c |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -113,10 +113,10 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 - Stale-propagation cap=1 buoc (G2, test A-B-C + chu trinh + tuoi-lai; 9.8ms/lan ghi tren 63 trang). Skill /wiki-room (G3: depth cap=1, budget, circuit breaker) — register du marketplace/LOOP_MAP/AGENT/CLAUDE, skill-registry all agree. Wiki-graph HTML: build-wiki-graph.py (13ms) -> html/wiki-graph-fdk.html + wiki-graph-llmwiki.html. Problem-tree p-11 -> solved 3/3.
 
 ## 2026-07-02 — fdk — wiki-graph het flat
-- build-wiki-graph.py ve them [[wikilink]] than bai = canh mem net dut (khong gia ngu nghia); them 12 relations co kieu that cho 6 trang loi (validator bat 1 cross-wiki dangling -> go). Demo stale: sua rule-registry -> fdk-dev-strategy stale (badge S trong graph). fdk 121 canh / llmwiki 18 canh, build 5ms/3ms.
+- build-wiki-graph.py ve them `[[wikilink]]` than bai = canh mem net dut (khong gia ngu nghia); them 12 relations co kieu that cho 6 trang loi (validator bat 1 cross-wiki dangling -> go). Demo stale: sua rule-registry -> fdk-dev-strategy stale (badge S trong graph). fdk 121 canh / llmwiki 18 canh, build 5ms/3ms.
 
 ## 2026-07-02 — propose — council-chon-de-thi-self-index
-- Draft: dung app mau NGOAI mau + harass 8 loai vector, de COUNCIL tu chon de thi (chong ludic fallacy ma council seed42 vua neu). T-260702-02. Pair md+seq.html (5 task). Derives-from [[020726-wiki-core-relations]] + [[010726-query-retrieval-eval]].
+- Draft: dung app mau NGOAI mau + harass 8 loai vector, de COUNCIL tu chon de thi (chong ludic fallacy ma council seed42 vua neu). T-260702-02. Pair md+seq.html (5 task). Derives-from [[wiki-core-relations]] + [[010726-query-retrieval-eval]].
 
 ## 2026-07-03 — council — T1 chọn đề thi self-index
 - Council seed42 (roster risk: taleb/ilya/munger/kahneman/aurelius) blind peer-rank → winner Munger (TS plugin-host ~150 file). Đề thi chốt: 10 đòn harass 8 vector + đòn âm tính (chống bịa cạnh) + ca để-trống (đo giới hạn suy-ngầm), ground-truth niêm phong chống ludic fallacy. Report council-report-010-seed42.html. T-260702-02 T1 done.
@@ -125,7 +125,7 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 - /last30days: cơ chế benchmark chuẩn = gold-edge interval-overlap P/R/F1 (ContextBench), triplet-F1 + hallucination/omission-rate per-triple + held-out fixed-seed (Unified-KG-Benchmark), MRR/Hits@k, LLM-judge-calibrate-với-người. Áp vào scorer plugin-host/score.py (edge P/R/F1 + hallucination-rate + negative-control + limit tách riêng, verdict gate F1>=0.7 & neg=PASS & halluc<=0.15). Kiểm chứng: engine-tốt giả→PASS 1.0, xấu→FAIL. App mẫu T2 42 file reseal hash 65f51295. T-260702-02 T2 done, T5 scorer ready.
 
 ## 2026-07-03 — T3/T4 — chạy engine thật self-index
-- adapter.py onboard app→wiki-shape, gọi build-wiki-graph.py THẬT (scan+enrich_code), map→engine-edges.json. score.py chấm mù (seal verified): core F1 0.842 (P .889/R .8), hallucination .125, negative PASS. Per-capability: MẠNH đọc 5/5 quan hệ frontmatter khai tường minh + không bịa cạnh negative + không đối-xứng-hóa contradicts; MÙ imports/touches code TS (enrich_code chỉ .py); thiếu cờ cycle/quarantine trong graph-builder; trích [[NotALink]] từ code-fence (1 false-pos). Xác nhận council seed42: robust ở mặt thiết kế, giòn ở đuôi ngoài-mẫu → chưa anti-fragile. 3 defect chờ đẩy failure-flywheel (T5). T-260702-02 T3+T4 done.
+- adapter.py onboard app→wiki-shape, gọi build-wiki-graph.py THẬT (scan+enrich_code), map→engine-edges.json. score.py chấm mù (seal verified): core F1 0.842 (P .889/R .8), hallucination .125, negative PASS. Per-capability: MẠNH đọc 5/5 quan hệ frontmatter khai tường minh + không bịa cạnh negative + không đối-xứng-hóa contradicts; MÙ imports/touches code TS (enrich_code chỉ .py); thiếu cờ cycle/quarantine trong graph-builder; trích `[[NotALink]]` từ code-fence (1 false-pos). Xác nhận council seed42: robust ở mặt thiết kế, giòn ở đuôi ngoài-mẫu → chưa anti-fragile. 3 defect chờ đẩy failure-flywheel (T5). T-260702-02 T3+T4 done.
 
 ## 2026-07-03 — T5 — distill benchmark self-index
 - Report HTML 030726-self-index-benchmark-report.html (glass, KPI + bảng năng lực + 3 defect + kết luận robust-chưa-anti-fragile + phạm vi no-silent-cap). 3 defect vào failure-flywheel (coverage-gap ×2: mù code-TS, thiếu cờ cycle/quarantine; hallucination ×1: wikilink không strip code-fence). Cập nhật concept wiki-core-relations mục "Kiểm chứng NGOÀI-MẪU". T-260702-02 T5 done → proposal 5/5 task xong.

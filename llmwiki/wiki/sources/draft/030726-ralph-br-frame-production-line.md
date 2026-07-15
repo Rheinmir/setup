@@ -21,7 +21,7 @@ Xây một dây chuyền khép kín biến một **BR (bản yêu cầu) soạn 
 ## Bối cảnh & bằng chứng
 - Ý tưởng của user: (1) soạn BR kỹ tới mức mọi vấn đề sản phẩm đều quy về BR; (2) có great-BR rồi thì **slice thành nhiều frame nhỏ**; (3) frame **liên kết chặt với code** cả nội dung lẫn scope → lỗi ở đâu tìm đúng frame đó sửa. Ba phần này Ralph **đã làm được**.
 - Phần CÒN THIẾU (việc của issue này): **monitor** + biến mỗi frame thành **agent làm việc có kỷ luật** bằng cách áp **loop-harness + model**. *harness ở đây chính là framework overstack của chúng ta* — đó là điểm ghép.
-- Liên quan overstack: [[frontier-gap-scan]] (trục self-evolving-skills + observability), `loop-runner` (propose→verify→revise + termination guards), `propose`/`safe-change` (scope-guard), `wikieval`/`medic` (gate), `Workflow` journal (nguyên liệu monitor).
+- Liên quan overstack: frontier-gap-scan (trục self-evolving-skills + observability), `loop-runner` (propose→verify→revise + termination guards), `propose`/`safe-change` (scope-guard), `wikieval`/`medic` (gate), `Workflow` journal (nguyên liệu monitor).
 
 ## Phạm vi
 - Thiết kế dây chuyền: BR-authoring → slicer → frame-registry (map frame↔code) → per-frame loop (loop-runner) → monitor/observability.
@@ -56,4 +56,4 @@ Xây một dây chuyền khép kín biến một **BR (bản yêu cầu) soạn 
 - `PageAI-Pro/ralph-loop` — long-running loop qua task-list.
 
 ## Origin
-Raise bởi phiên frontier-gap-scan 2026-07-03 — user đề xuất dây chuyền Ralph + ghép harness overstack. Bằng chứng: WebSearch Ralph repos; [[frontier-gap-scan]]; [[030726-observability-runtime]].
+Raise bởi phiên frontier-gap-scan 2026-07-03 — user đề xuất dây chuyền Ralph + ghép harness overstack. Bằng chứng: WebSearch Ralph repos; frontier-gap-scan; [[030726-observability-runtime]].

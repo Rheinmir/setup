@@ -19,7 +19,7 @@ source_session: "frontier-gap-scan baseline 03/07/2026 — trục THUA #1"
 Thế giới 2026 chuẩn hoá 4 tầng nhớ (working/episodic/semantic/procedural) + vector + temporal graph, có benchmark; overstack chỉ có semantic + procedural qua wiki, thiếu episodic và truy hồi theo ngữ nghĩa.
 
 ## Bối cảnh & bằng chứng
-- Báo cáo đối chiếu chấm trục Memory = **Thua** (nặng nhất). Nguồn: [[frontier-gap-scan]], `llmwiki/html/overstack-vs-world-30d.html`.
+- Báo cáo đối chiếu chấm trục Memory = **Thua** (nặng nhất). Nguồn: frontier-gap-scan, `llmwiki/html/overstack-vs-world-30d.html`.
 - Thế giới: Mem0 "state of agent memory 2026" (benchmark), Letta (OS-style explicit memory), Zep (temporal knowledge graph), LangMem. Mô hình chủ đạo: core-nhỏ-luôn-trong-context + vector-store retrieval + forgetting policy.
 - overstack hiện: `llmwiki` (semantic + procedural), auto-memory `MEMORY.md`. Truy hồi CHỈ theo `[[wikilink]]`/grep, không theo ngữ nghĩa; không có episodic (sự kiện phiên cụ thể), không temporal.
 
@@ -50,7 +50,7 @@ Thế giới 2026 chuẩn hoá 4 tầng nhớ (working/episodic/semantic/procedu
 - Guide: machinelearningmastery.com "6 Best AI Agent Memory Frameworks 2026".
 
 ## Origin
-Raise bởi phiên frontier-gap-scan 2026-07-03. Bằng chứng: report overstack-vs-world-30d + [[frontier-gap-scan]].
+Raise bởi phiên frontier-gap-scan 2026-07-03. Bằng chứng: report overstack-vs-world-30d + frontier-gap-scan.
 
 ## Kết quả (2026-07-04 — done)
 - Đạt 4/4 tầng nhớ: episodic (`mem-rank episode`) + truy hồi ngữ nghĩa (query/wiki-room Tầng-0) + temporal (ts/supersedes).

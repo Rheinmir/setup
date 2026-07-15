@@ -22,7 +22,7 @@ Overstack đang phụ thuộc **orca** cho tầng orchestration (dispatch worker
 - Nhận xét user (phiên 2026-07-03): "orca lý thuyết chỉ cung cấp orchestration mà chúng ta thực ra cũng tự làm được". Đúng: council-026 vừa chạy protocol 3-stage **không cần orca** — `harness/scripts/council.py` làm phần tất định, còn generation có thể do bất kỳ CLI (opencode/claude) đảm nhận.
 - Tiền lệ kiến trúc trong repo: **build-now-adapt-later** + adapter boundary — orca đã là một "unknown/vendor" quarantine được. `harness/council.config.yaml` (`verified:false`) là ví dụ tách vendor khỏi engine.
 - Skill `orchestration` + `orca-cli` hiện là đường chính; đây KHÔNG đề xuất bỏ orca — orca vẫn là default khi có. Chỉ cần **optionality**: một backend orchestration nội bộ thay thế được.
-- Liên quan: `[[ADR-005]]` (thứ cần travel đi theo harness), poc-vendor-neutral (`harness/poc-vendor-neutral/`) — tinh thần vendor-neutral đã có sẵn.
+- Liên quan: `ADR-005` (thứ cần travel đi theo harness), poc-vendor-neutral (`harness/poc-vendor-neutral/`) — tinh thần vendor-neutral đã có sẵn.
 
 ## Phạm vi
 - Định nghĩa một **interface orchestration tối thiểu** mà cả orca-backend lẫn self-backend cùng thoả: `task-create`, `dispatch(task,to)`, `check --wait --types`, `worker_done`. 
