@@ -120,7 +120,7 @@ def _man_bang_luong() -> bytes:
     th = "".join(f'<th class="money">{_e(t)}</th>' for _c, t in _COT)
     return _page(f"Bảng lương {PERIOD}", f"""
 <h1>Bảng lương kỳ {_e(PERIOD)}</h1>
-<p>Từ ngày {dau:%d/%m/%Y} đến ngày {cuoi:%d/%m/%Y}</p>
+<p>Từ ngày {dau:%d/%m/%Y} đến ngày {cuoi:%d/%m/%Y} · <a href="/upload">↑ Tải Excel (mass upload)</a></p>
 <table><thead><tr><th>Mã NV</th><th>Họ tên</th>{th}<th></th></tr></thead>
 <tbody>{"".join(hang)}</tbody></table>""")
 
@@ -203,6 +203,7 @@ def _man_trace(emp_id: str, code: str):
 def _man_upload() -> bytes:
     """Tab tối giản — chọn kỳ + chọn file Excel, KHÔNG có ô nhập tay từng field [C15.4]."""
     return _page("Tải Excel — mass upload", """
+<p><a href="/">← Bảng lương</a></p>
 <h1>Tải Excel (mass upload)</h1>
 <p class="clause">Header hàng 1 của file phải đúng tên field (vd employee_id, BASIC_SAL...).
 Chỉ nạp NGUYÊN file — không sửa từng dòng ở đây.</p>
