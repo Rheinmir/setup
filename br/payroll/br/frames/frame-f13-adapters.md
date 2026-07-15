@@ -4,7 +4,7 @@ frame_id: frame-f13-adapters
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C18.1, C18.2, C18.3, C14.2]
-parent_br_hash: 8ce24f08a35438423ae90ef63b0fa7fdb648327f745a94d791f713c44984b856
+parent_br_hash: 20c2df3e9bee61a36f153ad8b9e19a0fdadc5bb8d38b25bae7d90a089f9630b1
 muc_tieu: "Ranh giới vào-ra duy nhất — bốn hàm đọc nhân sự, đọc chấm công, đẩy phiếu lương, xuất file ngân hàng, cộng hàm thứ năm ghi dữ liệu mass-upload và hàm thứ sáu xuất Payroll Master (FE-20); lô này đọc/ghi file JSON, lô sau thay ruột bằng Workday mà không đụng engine. Cộng sổ audit (FE-17): mọi lần ghi phải qua log_action ghi giá-trị-cũ → giá-trị-mới, người, thời gian, lý do bắt buộc"
 scope_code: ["app/adapters.py", "app/audit.py"]
 scope_test: ["tests/test_f13.py", "tests/test_f13_audit.py"]

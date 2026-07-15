@@ -4,7 +4,7 @@ frame_id: frame-f05-suat-an
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C8.1, C8.2, C17.4]
-parent_br_hash: 8ce24f08a35438423ae90ef63b0fa7fdb648327f745a94d791f713c44984b856
+parent_br_hash: 20c2df3e9bee61a36f153ad8b9e19a0fdadc5bb8d38b25bae7d90a089f9630b1
 muc_tieu: "Suất ăn theo nơi làm việc — văn phòng 1 bữa, công trường gần 2 bữa, công trường xa từ 30km 3 bữa; làm dưới 4 tiếng không được suất nào; tách phần cơm chịu thuế và miễn thuế"
 scope_code: ["app/com.py"]
 scope_test: ["tests/test_f05.py"]

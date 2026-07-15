@@ -20,7 +20,7 @@
 | ❌ Chưa có (trong phạm vi, chưa build) | 0 |
 | **Tổng** | **32** |
 
-> Cập nhật 2026-07-15: FE-17 (Audit Log) + FE-06 (truy thu/truy lĩnh) + FE-20 (Payroll Master) đã build đủ/tăng cường; FE-23 (Master Data 1/6 danh mục) + FE-31 (phân bổ theo phòng ban) + FE-19 (trình ký theo dự án) build một phần trên dữ liệu DRAFT — còn `FE-21` (bảng công chi tiết, có yêu cầu BẢO MẬT chưa rõ) chưa động tới.
+> Cập nhật 2026-07-15: cả **32/32 FE** đã có trạng thái xác định (không còn ❌). FE-17/FE-06/FE-20 build đủ; FE-23/FE-31/FE-19/FE-21 build một phần (dữ liệu DRAFT hoặc tóm tắt); FE-21 THÊM cờ carve-out bảo mật — route công khai dù PRD gốc yêu cầu hạn chế quyền, theo suy diễn từ phản hồi ngắn "tiếp tục" của user, **cần xác nhận lại tường minh trước khi coi là final**.
 
 ## Bảng chi tiết
 
@@ -46,7 +46,7 @@
 | FE-18 | Quản lý nhân sự Mắt Bão | ⊘ Ngoài phạm vi (`C19`) | — | — | — |
 | FE-19 | Báo cáo Trình ký (Template 0) | ⚠️ Một phần (2026-07-15, dữ liệu DRAFT) | `_bao_cao_trinh_ky()` (frame-f15, `C15.7`) — gộp theo `du_an` (giản lược: 1 dự án/người, PRD gốc cần dự án CUỐI CÙNG ngày 20 — chưa theo dõi nhiều đoạn công tác); KHÔNG phải quy trình duyệt điện tử nhiều cấp (FE-16 `⊘`) | `/report/signoff?period=<kỳ draft>` | `Báo cáo Trình ký (Template 0)` + `DỮ LIỆU DRAFT` (đã kiểm `curl`) |
 | FE-20 | Payroll Master (Template 2 — file phẳng kế toán) | ⚠️ Một phần (2026-07-15, tăng cường) | `export_payroll_master()` (frame-f13, `C18.3`) — TOÀN BỘ field engine tính (lương/phụ cấp/BHXH/thuế/thực nhận/chi phí công ty) qua `engine.bang_luong()` thật; 3 cột kế toán PRD mô tả (Profit/Cost Center, WBS, Funds Center) để RỖNG — không có nguồn dữ liệu, không bịa | `/export/payroll-master?period=2026-03` (tải file, không phải màn HTML) | Header CSV có `NET_PAY_HOME`, `GROSS`... (đã kiểm `curl -D-` thấy đúng `Content-Disposition: attachment`) |
-| FE-21 | Báo cáo Bảng công chi tiết (mẫu `02__HR C&B`, bảo mật) | ❌ Chưa có | — | — | — |
+| FE-21 | Báo cáo Bảng công chi tiết (mẫu `02__HR C&B`, bảo mật) | ⚠️ Một phần + ⚠️ CARVE-OUT (2026-07-15) | `_bang_cong_chi_tiet()` (frame-f15, `C15.8`) — TÓM TẮT tổng ngày công/người (không phải ma trận ngày×NV, dữ liệu đó không tồn tại). **BẢO MẬT: PRD ghi rõ "chỉ cấp HR C&B", app KHÔNG có auth — route build KHÔNG hạn chế, chỉ cảnh báo UI, theo suy diễn từ "tiếp tục" của user (chưa xác nhận tường minh)** | `/report/attendance-detail?period=2026-03` | `BÁO CÁO NHẠY CẢM` + `CHƯA có kiểm soát truy cập` (đã kiểm `curl`, cảnh báo luôn hiện) |
 | FE-22 | Báo cáo Đơn "Treo" + Dashboard lãnh đạo realtime | ⊘ Ngoài phạm vi (`C19`) | — | — | — |
 | FE-23 | Master Data Management (6 danh mục nền) | ⚠️ Một phần (2026-07-15) | `app/params.py list_all()` (frame-f01, `C15.5`) — chỉ mới xem được **1/6 danh mục** (Bảng định mức/tham số lương, gồm cả bộ chưa hiệu lực); 5 danh mục còn lại (Bộ phận, Nơi cư trú, Khoảng cách, DS Tờ trình, Ngày lễ) KHÔNG tồn tại dạng dữ liệu có cấu trúc trong repo — chỉ nằm rải rác hardcode (`DINH_MUC_CHUNG` trong `phucap.py`) hoặc hoàn toàn chưa có | `/params` | `Tham số lương (Master Data)` (tiêu đề trang, đã kiểm `curl`) |
 | FE-24 | Danh mục ngày lễ tự động + đăng ký đi làm lễ | ⚠️ Một phần | `frame-f02-lich-ky-cong` `C5.4` — danh mục ngày lễ có trong engine; **luồng đăng ký/duyệt đi làm lễ chưa có UI** | `/trace/<mã NV>/PAID_DAYS` (gián tiếp, qua tính công) | `PAID_DAYS` |

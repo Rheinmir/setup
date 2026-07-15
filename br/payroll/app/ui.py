@@ -127,7 +127,7 @@ def _man_bang_luong() -> bytes:
     th = "".join(f'<th class="money">{_e(t)}</th>' for _c, t in _COT)
     return _page(f"Bảng lương {PERIOD}", f"""
 <h1>Bảng lương kỳ {_e(PERIOD)}</h1>
-<p>Từ ngày {dau:%d/%m/%Y} đến ngày {cuoi:%d/%m/%Y} · <a href="/upload">↑ Tải Excel (mass upload)</a> · <a href="/audit">📋 Sổ audit</a> · <a href="/params">⚙ Tham số lương</a> · <a href="/export/payroll-master?period={_e(PERIOD)}">⬇ Payroll Master (CSV)</a> · <a href="/report/signoff?period={_e(PERIOD)}">🖊 Trình ký</a> · <a href="/report/cost-by-dept?period={_e(PERIOD)}">📊 Phân bổ chi phí</a></p>
+<p>Từ ngày {dau:%d/%m/%Y} đến ngày {cuoi:%d/%m/%Y} · <a href="/upload">↑ Tải Excel (mass upload)</a> · <a href="/audit">📋 Sổ audit</a> · <a href="/params">⚙ Tham số lương</a> · <a href="/export/payroll-master?period={_e(PERIOD)}">⬇ Payroll Master (CSV)</a> · <a href="/report/signoff?period={_e(PERIOD)}">🖊 Trình ký</a> · <a href="/report/cost-by-dept?period={_e(PERIOD)}">📊 Phân bổ chi phí</a> · <a href="/report/attendance-detail?period={_e(PERIOD)}">⚠ Bảng công chi tiết</a></p>
 <table><thead><tr><th>Mã NV</th><th>Họ tên</th>{th}<th></th></tr></thead>
 <tbody>{"".join(hang)}</tbody></table>""")
 
@@ -376,6 +376,45 @@ def _bao_cao_trinh_ky(period: str) -> bytes:
 {khoi}""", back=("/", "Bảng lương"))
 
 
+_CANH_BAO_BAO_MAT = (
+    '<p style="color:var(--danger,#b3261e)"><b>⚠ BÁO CÁO NHẠY CẢM</b> — theo PRD gốc '
+    '"chỉ cấp cho HR C&amp;B và ghi log truy cập/xuất file" (§6.4). Hệ thống hiện '
+    '<b>CHƯA có kiểm soát truy cập</b> (đăng nhập/phân quyền là FE-32, ⊘ ngoài phạm vi '
+    'lô đầu) — route này KHÔNG bị hạn chế ai xem. Không dùng cho môi trường thật tới '
+    'khi FE-32 được build.</p>')
+
+_KHOI_NGAY = [("STD_DAYS", "Ngày công chuẩn"), ("OFFICIAL_DAYS", "Ngày công chính thức"),
+             ("PROB_DAYS", "Ngày công thử việc"), ("PAID_LEAVE_DAYS", "Phép có lương"),
+             ("HOLIDAY_DAYS", "Ngày lễ"), ("COMP_DAYS", "Nghỉ bù"),
+             ("PAID_OTHER_DAYS", "Nghỉ hưởng lương khác"), ("BEREAVE_DAYS", "Hiếu hỉ"),
+             ("UNPAID_DAYS", "Không lương"), ("SI_DAYS", "Ngày không đóng BHXH")]
+
+
+def _bang_cong_chi_tiet(period: str) -> bytes:
+    """Bảng công chi tiết (mẫu 02__HR C&B) [C15.8/FE-21] — TÓM TẮT theo người,
+    KHÔNG PHẢI ma trận ngày × nhân viên đầy đủ (dữ liệu ký hiệu công từng
+    ngày không tồn tại trong hệ thống — chỉ có tổng từng loại ngày/kỳ).
+    """
+    p = params.load(period)
+    hang = []
+    for rec in adapters.fetch_employees(period):
+        paid = engine.compute("PAID_DAYS", rec, p)
+        o = "".join(f'<td class="money">{_fmt(rec.get(c, 0))}</td>' for c, _t in _KHOI_NGAY)
+        hang.append(f'<tr><td>{_e(rec.get("employee_id",""))}</td>'
+                    f'<td>{_e(rec.get("ho_ten",""))}</td>{o}'
+                    f'<td class="money"><b>{_fmt(paid)}</b></td></tr>')
+    th = "".join(f'<th class="money">{_e(t)}</th>' for _c, t in _KHOI_NGAY)
+    return _page(f"Bảng công chi tiết — {period}", f"""
+<h1>Bảng công chi tiết (mẫu 02__HR C&amp;B) — kỳ {_e(period)}</h1>
+{_CANH_BAO_BAO_MAT}
+<p class="clause">TÓM TẮT theo người (tổng từng loại ngày/kỳ) — KHÔNG phải ma trận
+ngày × nhân viên với ký hiệu công từng ngày như PRD mô tả đầy đủ (dữ liệu đó không
+tồn tại: hệ thống chỉ nhận tổng số ngày mỗi loại, không nhận lịch sử từng ngày).</p>
+<table><thead><tr><th>Mã NV</th><th>Họ tên</th>{th}
+<th class="money">Tổng công hưởng lương</th></tr></thead>
+<tbody>{"".join(hang)}</tbody></table>""", back=("/", "Bảng lương"))
+
+
 class _Handler(BaseHTTPRequestHandler):
     def log_message(self, *a):  # im lặng khi chạy test
         pass
@@ -421,6 +460,9 @@ class _Handler(BaseHTTPRequestHandler):
             elif phan == ["report", "signoff"]:
                 qperiod = parse_qs(parsed.query).get("period", [PERIOD])[0]
                 body = _bao_cao_trinh_ky(qperiod)
+            elif phan == ["report", "attendance-detail"]:
+                qperiod = parse_qs(parsed.query).get("period", [PERIOD])[0]
+                body = _bang_cong_chi_tiet(qperiod)
             else:
                 body = None
         except Exception as exc:                      # không bịa số — báo lỗi ra màn

@@ -4,7 +4,7 @@ frame_id: frame-f03-cham-cong
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C6.1, C6.2, C6.3]
-parent_br_hash: 8ce24f08a35438423ae90ef63b0fa7fdb648327f745a94d791f713c44984b856
+parent_br_hash: 20c2df3e9bee61a36f153ad8b9e19a0fdadc5bb8d38b25bae7d90a089f9630b1
 muc_tieu: "Bộ ký hiệu chấm công và tổng ngày công hưởng lương PAID_DAYS theo đúng công thức đang chạy thật — đơn chờ duyệt không được cộng, ngày ốm BHXH và ngày điều chỉnh KHÔNG cộng"
 scope_code: ["app/chamcong.py"]
 scope_test: ["tests/test_f03.py"]

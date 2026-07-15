@@ -311,6 +311,21 @@ class TestUI(unittest.TestCase):
                   for r in adapters.fetch_employees("2030-01"))
         self.assertIn(ui._fmt(tong), h)
 
+    # ── C15.8 / FE-21 — Bảng công chi tiết, BÁO CÁO NHẠY CẢM chưa có auth ───
+    def test_bang_cong_chi_tiet_canh_bao_bao_mat(self):
+        # ground-truth thật (2026-03), không cần dữ liệu draft — chỉ đọc field ngày công có sẵn
+        h = self.fetch("/report/attendance-detail?period=2026-03")
+        self.assertIn("BÁO CÁO NHẠY CẢM", h)
+        self.assertIn("CHƯA có kiểm soát truy cập", h)
+        self.assertIn("GT-ROW9", h)
+        self.assertIn('class="back"', h)
+        # đúng ngày công chuẩn/tổng ngày hưởng thật của ground-truth (không hard-code)
+        from app import adapters, engine, params
+        p = params.load("2026-03")
+        rec = adapters.fetch_employees("2026-03")[0]
+        paid = engine.compute("PAID_DAYS", rec, p)
+        self.assertIn(ui._fmt(paid), h)
+
     # ── C15.7 / FE-19 — Báo cáo Trình ký (Template 0), DỮ LIỆU DRAFT ────────
     def test_bao_cao_trinh_ky_gom_theo_du_an(self):
         import io
