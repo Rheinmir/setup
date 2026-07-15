@@ -4,7 +4,7 @@ frame_id: frame-f01-params
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C4.1, C4.2, C4.3, C4.4, C4.5, C4.6, C15.5]
-parent_br_hash: 5c0174e8f467b73db5a18477ae072a76e12d9f6e83ce4dc8217d3cd89ad71652
+parent_br_hash: 938526ebb8c91bce8efa64c34d38f73a68401b647cbf87b94dd2c12f40c93879
 muc_tieu: "Tham số lương ở MỘT chỗ duy nhất, chọn theo ngày hiệu lực — trần BHXH, tỷ lệ đóng, biểu thuế 5 bậc, giảm trừ gia cảnh, đơn giá cơm; đổi số không được sửa code; cộng list_all() cho màn xem Master Data (FE-23, C15.5)"
 scope_code: ["app/params.py"]
 scope_test: ["tests/test_f01.py"]

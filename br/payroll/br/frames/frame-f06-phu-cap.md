@@ -4,7 +4,7 @@ frame_id: frame-f06-phu-cap
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C8.3, C8.4, C8.5, C8.6, C8.7, C8.8, C17.4]
-parent_br_hash: 5c0174e8f467b73db5a18477ae072a76e12d9f6e83ce4dc8217d3cd89ad71652
+parent_br_hash: 938526ebb8c91bce8efa64c34d38f73a68401b647cbf87b94dd2c12f40c93879
 muc_tieu: "Phụ cấp cố định theo tháng — pro-rata theo ngày công, quy tắc dưới 14 ngày chỉ tính ngày làm việc thực tế cộng ngày lễ, chia theo từng bộ phận khi điều động, tờ trình duyệt riêng ghi đè định mức chung, cộng phụ cấp truy thu/truy lĩnh hồi tố (FE-06) khi định mức thay đổi có hiệu lực ngược"
 scope_code: ["app/phucap.py"]
 scope_test: ["tests/test_f06.py"]

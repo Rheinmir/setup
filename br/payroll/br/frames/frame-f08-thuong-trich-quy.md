@@ -4,7 +4,7 @@ frame_id: frame-f08-thuong-trich-quy
 created_by: slicer
 parent_br: br/BR.md
 clause_ids: [C10.1, C10.2]
-parent_br_hash: 5c0174e8f467b73db5a18477ae072a76e12d9f6e83ce4dc8217d3cd89ad71652
+parent_br_hash: 938526ebb8c91bce8efa64c34d38f73a68401b647cbf87b94dd2c12f40c93879
 muc_tieu: "Thưởng là các khoản input cộng lại; trích quỹ thưởng hàng tháng thì có công thức thật — du lịch 500k, KPI một phần tư lương, tháng 13 một phần mười hai, Tết bị chặn trần 15 triệu chia 12"
 scope_code: ["app/thuong.py"]
 scope_test: ["tests/test_f08.py"]

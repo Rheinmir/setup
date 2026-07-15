@@ -281,6 +281,36 @@ class TestUI(unittest.TestCase):
         self.assertIn("ins_cap_bh_new", h)
         self.assertIn("50.600.000", h)
 
+    # ── C15.6 / FE-31 — Phân bổ chi phí theo bộ phận (DỮ LIỆU DRAFT) ────────
+    def test_bao_cao_phan_bo_theo_bo_phan_dung_tong(self):
+        import io
+        from openpyxl import Workbook
+        wb = Workbook(); ws = wb.active
+        cols = ["employee_id", "ho_ten", "phong_ban", "CONTRACT_TYPE", "NATIONALITY",
+                "BASIC_SAL", "STD_DAYS", "OFFICIAL_DAYS", "DEPENDENT_CNT"]
+        ws.append(cols)
+        # VP301: 2 người · VP302: 1 người — draft, KHÔNG phải ground-truth
+        ws.append(["D-01", "Draft A", "VP301", "Chính thức", "Việt Nam", 20_000_000, 22, 22, 0])
+        ws.append(["D-02", "Draft B", "VP301", "Chính thức", "Việt Nam", 15_000_000, 22, 22, 1])
+        ws.append(["D-03", "Draft C", "VP302", "Chính thức", "Việt Nam", 30_000_000, 22, 22, 2])
+        buf = io.BytesIO(); wb.save(buf)
+        self.post("/upload?period=2030-01&performed_by=Test+Draft&reason=Demo+FE-31+phan+bo",
+                  buf.getvalue())
+
+        h = self.fetch("/report/cost-by-dept?period=2030-01")
+        self.assertIn("DỮ LIỆU DRAFT", h)   # C15.6 — phải cảnh báo rõ, không lẫn ground-truth
+        self.assertIn("VP301", h)
+        self.assertIn("VP302", h)
+        self.assertIn("2", h)   # VP301 có 2 người
+        self.assertIn('class="back"', h)
+
+        # tổng toàn báo cáo phải bằng tổng TOTAL_CTY_COST cộng dồn từng người (đối chứng độc lập)
+        from app import adapters, engine, params
+        p = params.load("2030-01")
+        tong = sum(engine.compute("TOTAL_CTY_COST", r, p)
+                  for r in adapters.fetch_employees("2030-01"))
+        self.assertIn(ui._fmt(tong), h)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -302,12 +302,53 @@ không sửa code — chỉ-xem tại đây.</p>
 <tbody>{cho_hang}</tbody></table>""", back=("/", "Bảng lương"))
 
 
+def _bao_cao_phan_bo(period: str) -> bytes:
+    """Chi phí công ty cộng dồn theo phòng ban [C15.6/FE-31].
+
+    CHỈ phân bổ theo phòng ban (TOTAL_CTY_COST cộng dồn theo phong_ban) —
+    KHÔNG phải phân bổ theo dự án/doanh thu (GĐDA) hay tỷ lệ đề xuất trưởng
+    phòng ban như PRD §4.3 mô tả đầy đủ — hai thứ đó cần dữ liệu doanh thu/
+    tỷ lệ đề xuất KHÔNG tồn tại trong hệ thống. Đây là nền (department-level
+    aggregation), không phải bản đầy đủ.
+    """
+    p = params.load(period)
+    theo_pb = {}
+    tong = Decimal(0)
+    for rec in adapters.fetch_employees(period):
+        chi_phi = engine.compute("TOTAL_CTY_COST", rec, p)
+        pb = rec.get("phong_ban", "(chưa khai)")
+        theo_pb.setdefault(pb, {"so_nguoi": 0, "chi_phi": Decimal(0)})
+        theo_pb[pb]["so_nguoi"] += 1
+        theo_pb[pb]["chi_phi"] += chi_phi
+        tong += chi_phi
+    hang = "".join(
+        f'<tr><td>{_e(pb)}</td><td class="money">{v["so_nguoi"]}</td>'
+        f'<td class="money">{_fmt(v["chi_phi"])}</td></tr>'
+        for pb, v in sorted(theo_pb.items()))
+    is_draft = period != PERIOD
+    canh_bao = (f'<p style="color:var(--danger,#b3261e)"><b>⚠ DỮ LIỆU DRAFT</b> — kỳ '
+               f'{_e(period)} không phải ground-truth đã kiểm chứng ({_e(PERIOD)}), '
+               f'chỉ dùng để demo cơ chế phân bổ.</p>') if is_draft else ""
+    return _page(f"Phân bổ chi phí — {period}", f"""
+<h1>Phân bổ chi phí theo phòng ban — kỳ {_e(period)}</h1>
+{canh_bao}
+<p class="clause">Chỉ phân bổ theo phòng ban (tổng TOTAL_CTY_COST cộng dồn). KHÔNG
+phải phân bổ theo dự án/doanh thu (GĐDA) — chưa có dữ liệu doanh thu trong hệ thống.</p>
+<table><thead><tr><th>Phòng ban</th><th class="money">Số người</th>
+<th class="money">Chi phí công ty</th></tr></thead>
+<tbody>{hang}</tbody></table>
+<table><tbody><tr><td><b>Tổng toàn kỳ</b></td><td class="money"><b>{_fmt(tong)}</b></td></tr></tbody></table>""",
+        back=("/", "Bảng lương"))
+
+
 class _Handler(BaseHTTPRequestHandler):
     def log_message(self, *a):  # im lặng khi chạy test
         pass
 
     def do_GET(self):
-        phan = [x for x in self.path.split("?")[0].split("/") if x]
+        from urllib.parse import urlparse, parse_qs
+        parsed = urlparse(self.path)
+        phan = [x for x in parsed.path.split("/") if x]
         try:
             if not phan:
                 body = _man_bang_luong()
@@ -323,6 +364,9 @@ class _Handler(BaseHTTPRequestHandler):
                 body = _man_audit()
             elif phan == ["params"]:
                 body = _man_params()
+            elif phan == ["report", "cost-by-dept"]:
+                qperiod = parse_qs(parsed.query).get("period", [PERIOD])[0]
+                body = _bao_cao_phan_bo(qperiod)
             else:
                 body = None
         except Exception as exc:                      # không bịa số — báo lỗi ra màn
