@@ -121,3 +121,7 @@
 | [110726-eval-blinding-grader-context](sources/draft/110726-eval-blinding-grader-context.md) | draft | 2026-07-11 |
 | [110726-gold-set-meta-eval-grader](sources/draft/110726-gold-set-meta-eval-grader.md) | draft | 2026-07-11 |
 | [140726-spec-kit-traceability](sources/draft/140726-spec-kit-traceability.md) | draft | 2026-07-14 |
+| [skill-craft](concepts/skill-craft.md) | concept | 2026-07-15 |
+| [issue-tracker](sources/issue-tracker.md) | reference | 2026-07-15 |
+| [150726-mattpocock-absorb](sources/draft/150726-mattpocock-absorb.md) | draft | 2026-07-15 |
+| [150726-session-provenance](sources/150726-session-provenance.md) | source | 2026-07-15 |

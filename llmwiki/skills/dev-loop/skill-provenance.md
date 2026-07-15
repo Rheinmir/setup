@@ -1,5 +1,6 @@
 ---
 name: skill-provenance
+disable-model-invocation: true
 description: Ghi và kiểm provenance (nguồn + sha256 checksum) cho skill — dùng khi 'cài skill từ ngoài', 'skill này từ đâu', 'audit nguồn skill', 'checksum skill', 'supply-chain skill', phát hiện skill bị sửa lén; bổ trợ orca-sec-scans. Chạy fdk/tools/skill-provenance.py. /skill-provenance
 ---
 

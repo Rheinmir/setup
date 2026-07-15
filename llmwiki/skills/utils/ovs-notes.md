@@ -1,5 +1,6 @@
 ---
 name: ovs-notes
+disable-model-invocation: true
 description: "Viewer release-notes overstack TỨC THÌ (kiểu /release-notes của Claude CLI). Gõ /ovs-notes → liệt kê NGAY changelog OVERSTACK framework (newest-first) để chọn & đọc; /ovs-notes <version|latest> in đầy đủ; /ovs-notes --here = release của PROJECT hiện tại. READ-ONLY, KHÔNG side-effect — KHÁC /ship (quy trình CẮT release). Trigger: /ovs-notes, 'xem release notes', 'release notes bản nào', 'changelog', 'các bản đã ra', 'bản mới nhất có gì'."
 ---
 

@@ -1,5 +1,6 @@
 ---
 name: orca-eval
+disable-model-invocation: true
 description: Quét N session Claude Code gần nhất, distill best practices thành report md + đề xuất action cải tiến quy trình
 ---
 

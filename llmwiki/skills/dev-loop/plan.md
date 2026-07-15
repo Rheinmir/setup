@@ -26,7 +26,13 @@ Cái gì không nằm trong PLAN thì agent không có. Đó là toàn bộ nguy
 1. **Đọc SPEC đã duyệt** — `llmwiki/wiki/sources/draft/DDMMYY-<tên>.md`. Lấy nguyên: `## Context`, `## Global constraints`, `## Plan` (các dòng `- [ ]`), `## Agent Task Assignment`.
 2. **Scope check** — SPEC ôm nhiều hệ con độc lập → tách thành nhiều PLAN, mỗi PLAN tự nó ra được phần mềm chạy được và test được. Đừng nhồi.
 3. **Vẽ `## File structure` trước khi chia task** — liệt kê mọi file sẽ tạo/sửa và trách nhiệm của từng file (một file một trách nhiệm; file nào đổi cùng nhau thì ở cùng chỗ). Quyết định phân rã bị chốt ở đây, không phải trong lúc code.
-4. **Chia task đúng cỡ** — một task là đơn vị **nhỏ nhất có chu kỳ test riêng và đáng một lượt review**. Setup, config, scaffolding, docs → gộp vào task cần chúng; chỉ tách khi một reviewer có thể *bác task này mà vẫn duyệt task kia*. Mỗi task kết thúc bằng một deliverable test được độc lập.
+4. **Chia task thành TRACER BULLET** — mỗi task là một **lát cắt DỌC**: một lát mỏng xuyên hết các tầng (data → logic → giao diện/CLI), tự nó chạy được và tự chứng minh được, để lại một deliverable test được độc lập. Không phải "lát ngang" kiểu "làm hết tầng data" rồi task sau "làm hết tầng logic" — lát ngang không cái nào chạy được một mình. Setup, config, scaffolding, docs → gộp vào task cần chúng; chỉ tách khi một reviewer có thể *bác task này mà vẫn duyệt task kia*.
+
+   **Ngoại lệ có tên — WIDE REFACTOR (expand → migrate → contract).** Một thay đổi cơ học mà **blast radius** trải khắp codebase — đổi tên một cột, đổi kiểu một symbol dùng chung — thì không lát cắt dọc nào xanh nổi: một chỗ sửa làm hàng nghìn call-site đỏ cùng lúc. Đừng ép nó vào khuôn tracer bullet. Sequence:
+   - **expand** — thêm dạng MỚI cạnh dạng cũ, chưa xoá gì. Một task. Không làm hỏng gì vì dạng cũ vẫn còn.
+   - **migrate theo lô** — dời call-site sang dạng mới, chia lô theo blast radius (per-package, per-directory). Mỗi lô một task, **bị chặn bởi** task expand. CI xanh từng lô vì dạng cũ vẫn sống.
+   - **contract** — xoá dạng cũ khi không còn caller nào. Một task, **bị chặn bởi mọi lô migrate**.
+   - Khi ngay cả từng lô cũng không tự xanh nổi: cho chúng chung một nhánh tích hợp, tất cả cùng chặn một task "integrate-and-verify" cuối — xanh chỉ được hứa ở đó.
 5. **Viết từng task theo khuôn dưới** (bắt buộc đủ Files + Interfaces + Steps).
 6. **Self-review** (3 mắt lưới, mục 'Self-review' bên dưới), sửa tại chỗ.
 7. **Ghi file** `llmwiki/wiki/sources/draft/DDMMYY-<tên>-PLAN.md`, thêm dòng vào `llmwiki/wiki/index.md`, append `llmwiki/wiki/log.md`.

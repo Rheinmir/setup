@@ -83,6 +83,7 @@
         "./skills/onboard-codebase",
         "./skills/orca-cli",
         "./skills/orca-eval",
+        "./skills/wayfinder",
         "./skills/orchestration",
         "./skills/propose",
         "./skills/plan",

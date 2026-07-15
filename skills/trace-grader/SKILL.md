@@ -1,5 +1,6 @@
 ---
 name: trace-grader
+disable-model-invocation: true
 description: >-
   Score the PATH an agent took (tool choice, ordering, retries, repeatability, grounding) — not
   just its final answer — to catch "corrupt success" (right answer via a bad/unsafe path) and

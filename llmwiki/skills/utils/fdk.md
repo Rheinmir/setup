@@ -1,5 +1,6 @@
 ---
 name: fdk
+disable-model-invocation: true
 description: Front-door on-demand cho phát triển framework HOẶC distill/author một skill — SELF-CONTAINED, chạy được ở BẤT KỲ project nào (không phụ thuộc file repo-local). Gọi khi đang sửa chính framework, hoặc đang viết/chưng cất một skill trong phiên của dự án khác. KHÔNG dùng cho dev tính năng dự án thường (đó là phần lớn phiên — ADR-004).
 ---
 

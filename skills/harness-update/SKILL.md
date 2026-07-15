@@ -1,5 +1,6 @@
 ---
 name: harness-update
+disable-model-invocation: true
 description: >-
   TỰ BẢO TRÌ framework overstack trên máy user (self-maintain) — migrate llmwiki cũ lên harness
   (case B) hoặc update bản mới (case C). MỘT lệnh `install-harness.sh --self-heal` tự cài + tự

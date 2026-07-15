@@ -31,6 +31,7 @@ LOOP_MAP = {
     "skill-provenance": "dev-loop",
     # orchestrate
     "orca-dispatch-reference": "orchestrate", "orca-onboard": "orchestrate", "orca-issue": "orchestrate",
+    "wayfinder": "orchestrate",
     "orca-sec-scans": "orchestrate", "orca-workflow": "orchestrate", "orca-eval": "orchestrate",
     "council": "orchestrate", "trace-grader": "orchestrate",
     # wiki-loop

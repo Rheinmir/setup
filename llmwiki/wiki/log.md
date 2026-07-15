@@ -19,22 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-14 21:48:27 | `file.write` | llmwiki/wiki/sources/draft/140726-propose-plan-split-superpowers.md · tool=Edit · session=36e6562b · actor=agent · prev= |
-| 2026-07-14 21:50:43 | `task.set` |  · task=T-260714-01 · state=approved · note=gate: user duyệt · actor=agent · prev=e00c2bbdf2ce2b4e61cd764f3c9e32e1273127 |
-| 2026-07-14 21:51:18 | `file.write` | skills/propose/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=b019863b9b4f8f6a476aa9679d2854c23621a41ae94a |
-| 2026-07-14 21:51:33 | `file.write` | skills/propose/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=eb4d62cd33b0062c14feb516ee97f0860899850cd095 |
-| 2026-07-14 21:52:44 | `file.write` | skills/plan/SKILL.md · tool=Write · session=36e6562b · actor=agent · prev=2b978735aaaa848bc08003de350b0b0f212ab223966b40 |
-| 2026-07-14 21:53:54 | `file.write` | fdk/tools/docs-curate.py · tool=Edit · session=36e6562b · actor=agent · prev=47b7254222b42ee85914d0ae8cc7007a42d35244bbe |
-| 2026-07-14 21:54:01 | `file.write` | fdk/tools/docs-curate.py · tool=Edit · session=36e6562b · actor=agent · prev=5ec9577fa73c9798aeb7a4af097039abd2c75d69c40 |
-| 2026-07-14 21:54:07 | `file.write` | fdk/tools/docs-curate.py · tool=Edit · session=36e6562b · actor=agent · prev=f7d79e68051024dd9b529aad0304bb56bc73b99781f |
-| 2026-07-14 21:54:11 | `file.write` | fdk/tools/docs-curate.py · tool=Edit · session=36e6562b · actor=agent · prev=f5e65f9b2715eaeb385d17539f46632edefc11973a0 |
-| 2026-07-14 21:54:43 | `file.write` | harness/validators/proposal_complete.py · tool=Edit · session=36e6562b · actor=agent · prev=6e27460ea359eea16fabef6e0c17 |
-| 2026-07-14 21:55:03 | `file.write` | harness/validators/proposal_complete.py · tool=Edit · session=36e6562b · actor=agent · prev=9e129e114857967390f7d6a6f7e3 |
-| 2026-07-14 21:55:36 | `file.write` | harness/validators/proposal_complete.py · tool=Edit · session=36e6562b · actor=agent · prev=810598e4f622d940bb62e766b9ad |
-| 2026-07-14 21:55:45 | `file.write` | harness/validators/proposal_complete.py · tool=Edit · session=36e6562b · actor=agent · prev=279e359e3cc38b72fd3da969123b |
-| 2026-07-14 21:55:53 | `file.write` | harness/validators/proposal_complete.py · tool=Edit · session=36e6562b · actor=agent · prev=905eb1073091c1ef487893980e50 |
-| 2026-07-14 21:56:15 | `file.write` | harness/validators/proposal_complete.py · tool=Edit · session=36e6562b · actor=agent · prev=243855303258f808d9a69f58458e |
-| 2026-07-14 21:56:33 | `file.write` | llmwiki/wiki/sources/draft/140726-propose-plan-split-superpowers.md · tool=Edit · session=36e6562b · actor=agent · prev= |
 | 2026-07-14 21:56:52 | `file.write` | harness/validators/proposal_complete.py · tool=Edit · session=36e6562b · actor=agent · prev=3ddddcc4fc66e88429165811a083 |
 | 2026-07-14 21:57:23 | `file.write` | harness/policy.yaml · tool=Edit · session=36e6562b · actor=agent · prev=1e1830cf45c41bcb3259aa42f6bdb5826751e4e0274db677 |
 | 2026-07-14 21:57:38 | `file.write` | harness/poc-vendor-neutral/policy.yaml · tool=Edit · session=36e6562b · actor=agent · prev=e837daecbf386c68e79993f80a397 |
@@ -59,6 +43,22 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-14 22:42:34 | `file.write` | llmwiki/wiki/sources/draft/140726-spec-kit-traceability.md · tool=Write · session=36e6562b · actor=agent · prev=f9918acd |
 | 2026-07-14 22:44:24 | `file.write` | llmwiki/html/140726-spec-kit-traceability-seq.html · tool=Write · session=36e6562b · actor=agent · prev=9ac07a5743bfa5c1 |
 | 2026-07-14 22:46:30 | `file.write` | llmwiki/html/140726-spec-kit-traceability-seq.html · tool=Edit · session=36e6562b · actor=agent · prev=033a80fb37eca4d47 |
+| 2026-07-14 22:52:40 | `task.set` |  · task=T-260714-02 · state=approved · note=gate: user duyệt · actor=agent · prev=830af0eb0b599520762a91990cb43b59bc99eb |
+| 2026-07-14 22:53:13 | `file.write` | skills/propose/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=a33f440c03869f710702b696ff8e48056041c5d7400f |
+| 2026-07-14 22:53:19 | `file.write` | skills/plan/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=ad2e6810fecea31ffebb7b8b7825bb5122874026cf9395c |
+| 2026-07-14 22:53:28 | `file.write` | skills/plan/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=101c9c55861a3268e9bc885e7a765396676bb838f238fd8 |
+| 2026-07-14 22:53:41 | `file.write` | harness/validators/proposal_complete.py · tool=Edit · session=36e6562b · actor=agent · prev=5634d246a41a9f798b9255407d50 |
+| 2026-07-14 22:54:00 | `file.write` | harness/validators/proposal_complete.py · tool=Edit · session=36e6562b · actor=agent · prev=ff0ccab189fb81e2fa53f10437e3 |
+| 2026-07-14 22:54:12 | `file.write` | harness/validators/proposal_complete.py · tool=Edit · session=36e6562b · actor=agent · prev=b8d428320c8bf7660fe3f23669fb |
+| 2026-07-14 22:55:22 | `file.write` | harness/poc-vendor-neutral/bin/llmwiki-validate.py · tool=Edit · session=36e6562b · actor=agent · prev=79e5350fc2b2639f7 |
+| 2026-07-14 22:55:30 | `file.write` | harness/poc-vendor-neutral/policy.yaml · tool=Edit · session=36e6562b · actor=agent · prev=ef19d93a1bf9c62f7a35f9b2f198d |
+| 2026-07-14 22:56:43 | `file.write` | harness/poc-vendor-neutral/install.sh · tool=Edit · session=36e6562b · actor=agent · prev=cf4fb6574c67f51301998b75d73adf |
+| 2026-07-14 22:57:25 | `file.write` | skills/fdk-uat/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=4d9d1e06cc6783ac9ccab9f63c0d4a578974e1f287d3 |
+| 2026-07-14 22:57:38 | `file.write` | skills/fdk-uat/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=eb649cb03a8642c6847abb29d9eec2c71bba70ee6105 |
+| 2026-07-14 23:07:20 | `file.write` | skills/fdk-uat/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=55704d9f32ebc53c8721bd85a4d1175c6ed6dbcc3325 |
+| 2026-07-15 00:29:01 | `task.new` |  · task=T-260715-01 · title=hấp thụ mattpocock: skill-lens + wayfinder + tracker phối hợp · state=proposed · actor=agent |
+| 2026-07-15 00:31:54 | `file.write` | llmwiki/wiki/sources/draft/150726-mattpocock-absorb.md · tool=Write · session=36e6562b · actor=agent · prev=d47a4f8b11c8 |
+| 2026-07-15 00:35:38 | `file.write` | llmwiki/html/150726-mattpocock-absorb-seq.html · tool=Write · session=36e6562b · actor=agent · prev=1da1b9bd7f13baeda999 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)

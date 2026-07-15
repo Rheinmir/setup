@@ -1,5 +1,6 @@
 ---
 name: sync-template
+disable-model-invocation: true
 description: Sync structural improvements between project and master template repo
 ---
 

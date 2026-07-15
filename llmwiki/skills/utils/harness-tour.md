@@ -1,6 +1,11 @@
 ---
 name: harness-tour
-description: Tour — Claude tự diễn cho user xem harness chặn mình theo thời gian thực trên project thật. Hai độ dài — "short" = 3 cảnh (R1·R2·R3), "full" = 10 (R1–R10). Tự phát hiện PoC vendor-neutral (cách CHÍNH) hay harness production. Tự dọn sạch demo. Trigger: "harness tour", "xem harness làm gì", "/harness-tour", "test short", "test full".
+disable-model-invocation: true
+description: >-
+  Tour — Claude tự diễn cho user xem harness chặn mình theo thời gian thực trên project thật. Hai
+  độ dài — "short" = 3 cảnh (R1·R2·R3), "full" = 10 (R1–R10). Tự phát hiện PoC vendor-neutral
+  (cách CHÍNH) hay harness production. Tự dọn sạch demo. Trigger: "harness tour", "xem harness
+  làm gì", "/harness-tour", "test short", "test full".
 ---
 
 # Skill: harness-tour

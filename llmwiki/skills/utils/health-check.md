@@ -1,6 +1,10 @@
 ---
 name: health-check
-description: Kiểm tra sức khỏe "pattern chuẩn" của template — pattern đã đủ chưa, có drift local không, và có cần /sync-template từ remote không. So version.json local ↔ remote ↔ disk (0 token, fail-open). Trigger: "health check", "check pattern", "cần sync chưa", "/health-check".
+disable-model-invocation: true
+description: >-
+  Kiểm tra sức khỏe "pattern chuẩn" của template — pattern đã đủ chưa, có drift local không, và
+  có cần /sync-template từ remote không. So version.json local ↔ remote ↔ disk (0 token, fail-
+  open). Trigger: "health check", "check pattern", "cần sync chưa", "/health-check".
 ---
 
 # Skill: health-check

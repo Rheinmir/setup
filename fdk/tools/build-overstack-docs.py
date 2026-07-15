@@ -131,7 +131,7 @@ LOOP_GROUPS = {
     "orchestrate": (
         [("dispatch", "🐳 điều phối"), ("eval", "📊 đánh giá"), ("ops", "🚀 vận hành & deploy")],
         {"orca-workflow": "dispatch", "orca-onboard": "dispatch", "orchestration": "dispatch",
-         "orca-cli": "dispatch", "orca-dispatch-reference": "dispatch",
+         "orca-cli": "dispatch", "orca-dispatch-reference": "dispatch", "wayfinder": "dispatch",
          "council": "eval", "trace-grader": "eval", "orca-eval": "eval",
          "orca-sec-scans": "ops", "jenkins-agent-l3-deploy": "ops", "orca-issue": "ops"}),
     "utils": (

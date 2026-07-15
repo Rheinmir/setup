@@ -1,5 +1,6 @@
 ---
 name: health-check
+disable-model-invocation: true
 description: >-
   Kiểm tra sức khỏe "pattern chuẩn" của template — pattern đã đủ chưa, có drift local không, và
   có cần /sync-template từ remote không. So version.json local ↔ remote ↔ disk (0 token, fail-
