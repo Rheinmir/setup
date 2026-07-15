@@ -15,12 +15,12 @@
 | | Số lượng |
 |---|---|
 | ✅ Đã có | 14 |
-| ⚠️ Một phần | 6 |
+| ⚠️ Một phần | 7 |
 | ⊘ Ngoài phạm vi lô đầu (chủ đích, xem `C19`) | 13 |
 | ❌ Chưa có (trong phạm vi, chưa build) | 0 |
 | **Tổng** | **32** |
 
-> Cập nhật 2026-07-15: FE-17 (Audit Log) + FE-06 (truy thu/truy lĩnh) đã build đủ; FE-23 (Master Data 1/6 danh mục) + FE-31 (phân bổ theo phòng ban, dữ liệu DRAFT) build một phần — còn `FE-19/20/21` (báo cáo) chưa động tới.
+> Cập nhật 2026-07-15: FE-17 (Audit Log) + FE-06 (truy thu/truy lĩnh) + FE-20 (Payroll Master) đã build đủ/tăng cường; FE-23 (Master Data 1/6 danh mục) + FE-31 (phân bổ theo phòng ban) + FE-19 (trình ký theo dự án) build một phần trên dữ liệu DRAFT — còn `FE-21` (bảng công chi tiết, có yêu cầu BẢO MẬT chưa rõ) chưa động tới.
 
 ## Bảng chi tiết
 
@@ -44,7 +44,7 @@
 | FE-16 | Quy trình duyệt + Teams Bot + Override + Sync-back | ⊘ Ngoài phạm vi (`C19`) | — | — | — |
 | FE-17 | Audit Log (cũ→mới, ai, khi nào, lý do bắt buộc) | ✅ Đã có (2026-07-15) | `app/audit.py` (frame-f13, `C14.2`) — `log_action()` ghi 7 trường, `performed_by`/`reason` bắt buộc (thiếu → `POST /upload` trả `400`, đã kiểm curl thật); phạm vi lô đầu: chỉ áp cho mass-upload (điểm ghi duy nhất hiện có) | `/audit` | `Sổ audit (giá trị cũ → mới, người, thời gian, lý do)` (tiêu đề trang, đã kiểm `curl`) |
 | FE-18 | Quản lý nhân sự Mắt Bão | ⊘ Ngoài phạm vi (`C19`) | — | — | — |
-| FE-19 | Báo cáo Trình ký (Template 0) | ❌ Chưa có | Không có route/report riêng ngoài `/payslip` | — | — |
+| FE-19 | Báo cáo Trình ký (Template 0) | ⚠️ Một phần (2026-07-15, dữ liệu DRAFT) | `_bao_cao_trinh_ky()` (frame-f15, `C15.7`) — gộp theo `du_an` (giản lược: 1 dự án/người, PRD gốc cần dự án CUỐI CÙNG ngày 20 — chưa theo dõi nhiều đoạn công tác); KHÔNG phải quy trình duyệt điện tử nhiều cấp (FE-16 `⊘`) | `/report/signoff?period=<kỳ draft>` | `Báo cáo Trình ký (Template 0)` + `DỮ LIỆU DRAFT` (đã kiểm `curl`) |
 | FE-20 | Payroll Master (Template 2 — file phẳng kế toán) | ⚠️ Một phần (2026-07-15, tăng cường) | `export_payroll_master()` (frame-f13, `C18.3`) — TOÀN BỘ field engine tính (lương/phụ cấp/BHXH/thuế/thực nhận/chi phí công ty) qua `engine.bang_luong()` thật; 3 cột kế toán PRD mô tả (Profit/Cost Center, WBS, Funds Center) để RỖNG — không có nguồn dữ liệu, không bịa | `/export/payroll-master?period=2026-03` (tải file, không phải màn HTML) | Header CSV có `NET_PAY_HOME`, `GROSS`... (đã kiểm `curl -D-` thấy đúng `Content-Disposition: attachment`) |
 | FE-21 | Báo cáo Bảng công chi tiết (mẫu `02__HR C&B`, bảo mật) | ❌ Chưa có | — | — | — |
 | FE-22 | Báo cáo Đơn "Treo" + Dashboard lãnh đạo realtime | ⊘ Ngoài phạm vi (`C19`) | — | — | — |
@@ -61,11 +61,12 @@
 
 ## Chức năng còn dang dở trong phạm vi lô đầu — cần quyết định
 
-~~FE-17~~, ~~FE-06~~ đã build đủ (2026-07-15). ~~FE-31~~ đã build phần "cộng dồn theo phòng ban" trên **dữ liệu DRAFT** (roster 3 người, tách biệt hoàn toàn ground-truth `GT-ROW9`) — phần "theo dự án/doanh thu (GĐDA)" vẫn chưa làm vì không có dữ liệu doanh thu. Còn lại:
+~~FE-17~~, ~~FE-06~~, ~~FE-20~~ đã build đủ (2026-07-15). ~~FE-31~~ (cộng dồn theo phòng ban) và ~~FE-19~~ (trình ký theo dự án) đã build phần cốt lõi trên **dữ liệu DRAFT** (roster 3 người, tách biệt hoàn toàn ground-truth `GT-ROW9`). Còn lại:
 
-1. **FE-19/20/21** (báo cáo trình ký / payroll master / bảng công chi tiết) — vẫn vướng cùng giới hạn: ground-truth **chỉ có ĐÚNG 1 nhân viên** (`GT-ROW9`); có thể dùng cùng cách tiếp cận đã áp cho FE-31 (roster DRAFT tách biệt, cảnh báo rõ trên UI) nếu user xác nhận tiếp tục.
+1. **FE-21** (bảng công chi tiết, mẫu `02__HR C&B`) — nguồn PRD tự ghi rõ **"BẢO MẬT"** ("chỉ cấp cho HR C&B và ghi log truy cập/xuất file", `§6.4`). App hiện **không có auth** (FE-32 SSO/phân quyền `⊘` ngoài phạm vi) — build route công khai cho báo cáo mà chính PRD nói phải hạn chế quyền truy cập là làm SAI Ý yêu cầu bảo mật, không phải thiếu sót kỹ thuật. Đây là carve-out (an ninh/phân quyền) — **không tự đoán, cần user xác nhận** cách xử lý trước khi build (vd: build không-hạn-chế + ghi rõ cảnh báo, hay để nguyên `⊘` chờ FE-32).
 2. **FE-23 còn 5/6 danh mục** (Bộ phận, Nơi cư trú, Khoảng cách, DS Tờ trình, Ngày lễ) — không tồn tại dạng dữ liệu có cấu trúc trong repo, chỉ hardcode rải rác hoặc hoàn toàn chưa có; cần quyết định nguồn dữ liệu trước khi build màn xem.
 3. **FE-31 phần GĐDA/doanh thu** — cần dữ liệu doanh thu theo dự án + tỷ lệ đề xuất trưởng phòng ban, hiện không tồn tại ở bất kỳ đâu trong repo.
+4. **FE-19 phần "dự án cuối cùng ngày 20"** — hiện giản lược thành 1 dự án/người; cần theo dõi nhiều đoạn công tác trong tháng để đúng PRD.
 
 **Đề xuất:** nếu các mục trên thực sự cần cho lô đầu, phải quay lại `/br interview` bổ sung field còn thiếu ở S9 (Out-of-scope) — hiện BR không nói rõ các mục này được LOẠI hay chỉ ĐANG THIẾU. Nếu chủ đích hoãn, nên thêm vào bảng `C19` cho nhất quán (tránh mập mờ như hiện tại).
 

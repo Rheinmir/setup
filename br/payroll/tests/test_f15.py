@@ -311,6 +311,38 @@ class TestUI(unittest.TestCase):
                   for r in adapters.fetch_employees("2030-01"))
         self.assertIn(ui._fmt(tong), h)
 
+    # ── C15.7 / FE-19 — Báo cáo Trình ký (Template 0), DỮ LIỆU DRAFT ────────
+    def test_bao_cao_trinh_ky_gom_theo_du_an(self):
+        import io
+        from openpyxl import Workbook
+        wb = Workbook(); ws = wb.active
+        cols = ["employee_id", "ho_ten", "du_an", "CONTRACT_TYPE", "NATIONALITY",
+                "BASIC_SAL", "STD_DAYS", "OFFICIAL_DAYS", "DEPENDENT_CNT"]
+        ws.append(cols)
+        ws.append(["S-01", "Sign A", "Dự án Bình Dương", "Chính thức", "Việt Nam",
+                  18_000_000, 22, 22, 0])
+        ws.append(["S-02", "Sign B", "Dự án Bình Dương", "Chính thức", "Việt Nam",
+                  22_000_000, 22, 22, 1])
+        ws.append(["S-03", "Sign C", "Dự án Long An", "Chính thức", "Việt Nam",
+                  25_000_000, 22, 22, 0])
+        buf = io.BytesIO(); wb.save(buf)
+        self.post("/upload?period=2030-02&performed_by=Test+Draft&reason=Demo+FE-19+trinh+ky",
+                  buf.getvalue())
+
+        h = self.fetch("/report/signoff?period=2030-02")
+        self.assertIn("DỮ LIỆU DRAFT", h)
+        self.assertIn("Dự án Bình Dương", h)
+        self.assertIn("Dự án Long An", h)
+        self.assertIn("Sign A", h)
+        self.assertIn("Sign C", h)
+        self.assertIn('class="back"', h)
+        # NET_PAY_HOME thật của từng người phải hiện đúng (đối chứng bằng engine, không hard-code)
+        from app import adapters, engine, params
+        p = params.load("2030-02")
+        for r in adapters.fetch_employees("2030-02"):
+            net = engine.compute("NET_PAY_HOME", r, p)
+            self.assertIn(ui._fmt(net), h)
+
     # ── FE-20 Payroll Master — tải file phẳng CSV (không phải màn xem) ─────
     def test_export_payroll_master_tai_duoc_qua_route(self):
         import csv

@@ -127,7 +127,7 @@ def _man_bang_luong() -> bytes:
     th = "".join(f'<th class="money">{_e(t)}</th>' for _c, t in _COT)
     return _page(f"Bảng lương {PERIOD}", f"""
 <h1>Bảng lương kỳ {_e(PERIOD)}</h1>
-<p>Từ ngày {dau:%d/%m/%Y} đến ngày {cuoi:%d/%m/%Y} · <a href="/upload">↑ Tải Excel (mass upload)</a> · <a href="/audit">📋 Sổ audit</a> · <a href="/params">⚙ Tham số lương</a> · <a href="/export/payroll-master?period={_e(PERIOD)}">⬇ Payroll Master (CSV)</a></p>
+<p>Từ ngày {dau:%d/%m/%Y} đến ngày {cuoi:%d/%m/%Y} · <a href="/upload">↑ Tải Excel (mass upload)</a> · <a href="/audit">📋 Sổ audit</a> · <a href="/params">⚙ Tham số lương</a> · <a href="/export/payroll-master?period={_e(PERIOD)}">⬇ Payroll Master (CSV)</a> · <a href="/report/signoff?period={_e(PERIOD)}">🖊 Trình ký</a> · <a href="/report/cost-by-dept?period={_e(PERIOD)}">📊 Phân bổ chi phí</a></p>
 <table><thead><tr><th>Mã NV</th><th>Họ tên</th>{th}<th></th></tr></thead>
 <tbody>{"".join(hang)}</tbody></table>""")
 
@@ -341,6 +341,41 @@ phải phân bổ theo dự án/doanh thu (GĐDA) — chưa có dữ liệu doan
         back=("/", "Bảng lương"))
 
 
+def _bao_cao_trinh_ky(period: str) -> bytes:
+    """Báo cáo Trình ký (Template 0) — gộp theo dự án để Chỉ huy trưởng ký [C15.7/FE-19].
+
+    PRD: gộp theo dự án CUỐI CÙNG nơi nhân viên làm việc vào ngày 20 (cần
+    theo dõi nhiều đoạn công tác trong tháng — dữ liệu đó KHÔNG tồn tại).
+    Ở đây gộp thẳng theo field `du_an` của record (giản lược — coi mỗi
+    nhân viên chỉ có 1 dự án trong kỳ). Không phải quy trình duyệt/ký điện
+    tử (đó là FE-16, ⊘ ngoài phạm vi) — đây chỉ là BẢN BÁO CÁO để in ký tay.
+    """
+    p = params.load(period)
+    theo_du_an = {}
+    for rec in adapters.fetch_employees(period):
+        net = engine.compute("NET_PAY_HOME", rec, p)
+        da = rec.get("du_an", "(chưa khai dự án)")
+        theo_du_an.setdefault(da, []).append(
+            f'<tr><td>{_e(rec.get("employee_id",""))}</td><td>{_e(rec.get("ho_ten",""))}</td>'
+            f'<td class="money">{_fmt(net)}</td></tr>')
+    is_draft = period != PERIOD
+    canh_bao = (f'<p style="color:var(--danger,#b3261e)"><b>⚠ DỮ LIỆU DRAFT</b> — kỳ '
+               f'{_e(period)} không phải ground-truth đã kiểm chứng ({_e(PERIOD)}), '
+               f'chỉ dùng để demo cơ chế trình ký.</p>') if is_draft else ""
+    khoi = "".join(
+        f'<h2>{_e(da)}</h2><table><thead><tr><th>Mã NV</th><th>Họ tên</th>'
+        f'<th class="money">Lương thực nhận</th></tr></thead><tbody>{"".join(hang)}</tbody>'
+        f'</table><p class="clause">Chỉ huy trưởng {_e(da)} ký xác nhận: _______________</p>'
+        for da, hang in sorted(theo_du_an.items()))
+    return _page(f"Trình ký — {period}", f"""
+<h1>Báo cáo Trình ký (Template 0) — kỳ {_e(period)}</h1>
+{canh_bao}
+<p class="clause">Gộp theo dự án (giản lược — chưa theo dõi nhiều đoạn công tác/tháng
+để xác định đúng dự án ngày 20). Chỉ là bản in để ký tay, KHÔNG phải quy trình duyệt
+điện tử (⊘ ngoài phạm vi).</p>
+{khoi}""", back=("/", "Bảng lương"))
+
+
 class _Handler(BaseHTTPRequestHandler):
     def log_message(self, *a):  # im lặng khi chạy test
         pass
@@ -383,6 +418,9 @@ class _Handler(BaseHTTPRequestHandler):
             elif phan == ["report", "cost-by-dept"]:
                 qperiod = parse_qs(parsed.query).get("period", [PERIOD])[0]
                 body = _bao_cao_phan_bo(qperiod)
+            elif phan == ["report", "signoff"]:
+                qperiod = parse_qs(parsed.query).get("period", [PERIOD])[0]
+                body = _bao_cao_trinh_ky(qperiod)
             else:
                 body = None
         except Exception as exc:                      # không bịa số — báo lỗi ra màn
