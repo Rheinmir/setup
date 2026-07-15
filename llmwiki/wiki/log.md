@@ -19,9 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-14 22:56:43 | `file.write` | harness/poc-vendor-neutral/install.sh · tool=Edit · session=36e6562b · actor=agent · prev=cf4fb6574c67f51301998b75d73adf |
-| 2026-07-14 22:57:25 | `file.write` | skills/fdk-uat/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=4d9d1e06cc6783ac9ccab9f63c0d4a578974e1f287d3 |
-| 2026-07-14 22:57:38 | `file.write` | skills/fdk-uat/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=eb649cb03a8642c6847abb29d9eec2c71bba70ee6105 |
 | 2026-07-14 23:07:20 | `file.write` | skills/fdk-uat/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=55704d9f32ebc53c8721bd85a4d1175c6ed6dbcc3325 |
 | 2026-07-15 00:29:01 | `task.new` |  · task=T-260715-01 · title=hấp thụ mattpocock: skill-lens + wayfinder + tracker phối hợp · state=proposed · actor=agent |
 | 2026-07-15 00:31:54 | `file.write` | llmwiki/wiki/sources/draft/150726-mattpocock-absorb.md · tool=Write · session=36e6562b · actor=agent · prev=d47a4f8b11c8 |
@@ -59,6 +56,9 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-15 09:12:55 | `file.write` | harness/scripts/design-variety.py · tool=Write · session=36e6562b · actor=agent · prev=743622b10fba60b1d8a186b4ad303e904 |
 | 2026-07-15 09:15:35 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=36e6562b · actor=agent · prev=9f09c4b052d3b3270047226eb7f93cc5e4 |
 | 2026-07-15 09:20:37 | `task.set` |  · task=T-260715-02 · state=done · note=8 task, UAT 2 pha PASS, d5d65d9, đóng p-23 · actor=agent · prev=ae48b768e8e543cc |
+| 2026-07-15 11:20:03 | `task.new` |  · task=T-260715-03 · title=unknown ledger: fill-first-find-out-later + sổ nợ truy vết trả nợ · state=proposed · actor=a |
+| 2026-07-15 11:21:58 | `file.write` | llmwiki/wiki/sources/draft/150726-unknown-ledger.md · tool=Write · session=36e6562b · actor=agent · prev=6142ea132a70bf3 |
+| 2026-07-15 11:23:22 | `file.write` | llmwiki/html/150726-unknown-ledger-seq.html · tool=Write · session=36e6562b · actor=agent · prev=bc1a446b8bf9e62f4ce0183 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -307,3 +307,8 @@ Giải issue `030726-skill-resolve-supplychain` (trục #5 frontier-gap-scan, Ch
 - Nợ có sẵn lộ ra (KHÔNG sửa trong SPEC này): ~17 HTML cũ gradient-text + ligature debt.
 - UAT hai pha PASS (hallmark): canary (3 trụ 5/5, harness 74/74, hallmark SKILL + 24 references travel tới tay incl slop-test.md) → main-URL smoke (đường mặc định, 74/74, reachable). Raise ledger issue 150726-legacy-html-slop-debt (ready-for-agent) cho nợ ~17 HTML cũ. p-23 đóng.
 - /fdk-uat TOÀN DIỆN đường mặc định (curl từ orca, KHÔNG override): 3 trụ 5/5 · harness 74/74 · /wayfinder + /hallmark (129 references incl slop-test.md) tới tay · 23 skill tắt model-invocation · /plan+/propose+/orca-workflow là bản mới · 4 engine tất định ở global harness (frontend-antipattern --self-test PASS, frontier/skill-health/design-variety reachable) · R7-n + R18 CẮN THẬT trong dự án cài mới (exit 2), concept hợp lệ QUA (exit 0) · orchestration-ready 3/3 + orca UP · 86 skill global / 18 rule. UAT toàn diện đường mặc định (150726) PASS.
+
+## 2026-07-15 — sổ nợ unknown: fill-first-find-out-later (T-260715-03)
+- Tầng thứ ba giữa (default) và [CẦN LÀM RÕ]: default rủi ro điền để KHÔNG chặn việc, ghi thành nợ có sổ truy được.
+- /propose: interview LUÔN có đáp án cuối "điền mặc định bây giờ, tìm hiểu sau"; tag (default, find-out-later → [[unknown-x]] U-NN). + luồng trả nợ.
+- Folder llmwiki/wiki/draft/unknown/ + _template.md; harness/scripts/unknown-ledger.py (list/add/resolve/trace, --self-test PASS, audit giữ cả 2 giá trị); /lint 8c hiện nợ (báo cáo không chặn). p-33 solved 3/3.

@@ -128,3 +128,4 @@
 | [design-foundation](concepts/design-foundation.md) | concept | 2026-07-15 |
 | [150726-hallmark-design-foundation](sources/draft/150726-hallmark-design-foundation.md) | draft | 2026-07-15 |
 | [290626-failure-spec-violation](sources/draft/290626-failure-spec-violation.md) | draft | 2026-06-29 |
+| [150726-unknown-ledger](sources/draft/150726-unknown-ledger.md) | draft | 2026-07-15 |
