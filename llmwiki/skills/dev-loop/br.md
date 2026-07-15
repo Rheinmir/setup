@@ -7,10 +7,12 @@ description: >-
   phép lens chuyên gia điền thay mục chưa chắc), `/br compile` (answers → BR.md có
   clause_id + bảng "Giả định đang gánh"), `/br slice` (BR → frames nhỏ gắn chặt code,
   gác bằng frame-lint), `/br run <frame>` (mỗi frame chạy loop-runner có 6 phanh +
-  dry-run + người gác), `/br status` (trang line-status.html tất định: frame nào
-  chạy/kẹt/xong + truy ngược lỗi→frame→clause). Gọi khi user nói "br", "interview",
-  "phỏng vấn yêu cầu", "soạn BR", "slice frame", "chạy frame", "trạng thái dây chuyền",
-  "ralph pipeline", hoặc invoke /br. User chỉ mô tả PHẠM VI, không cần nhớ lệnh con.
+  dry-run + người gác · sau frame xanh TỰ chạy QC tất định 0-token), `/br qc` (audit
+  senior 4-mục: /qc-code soi code + /qc-uiux soi UI/UX qua engine visual-qa), `/br status`
+  (trang line-status.html tất định: frame nào chạy/kẹt/xong + truy ngược lỗi→frame→clause).
+  Gọi khi user nói "br", "interview", "phỏng vấn yêu cầu", "soạn BR", "slice frame",
+  "chạy frame", "qc frame", "audit ui mockup", "trạng thái dây chuyền", "ralph pipeline",
+  hoặc invoke /br. User chỉ mô tả PHẠM VI, không cần nhớ lệnh con.
 ---
 
 # Skill: br — dây chuyền sản xuất Ralph (BR-kỹ → frames → loop có harness)
@@ -119,6 +121,15 @@ python3 fdk/tools/br-find.py "src/auth/login.py"     # theo file
 python3 fdk/tools/br-find.py "đăng nhập"              # theo từ khoá / clause
 ```
 In ra: frame phụ trách (khớp theo file THẬT đã đổi > scope_code > từ khoá) · điều khoản BR · **prompt nằm ở đâu** (inline trong queue.yaml / prompt_file / template mặc định) · lệnh chạy lại ĐÚNG frame đó sau khi sửa prompt. Hoạt động được vì R6 exclusive-scope (frame-lint) ép mỗi file chỉ thuộc MỘT frame.
+
+## Mode 4c — `/br qc [frame]` — audit senior QC (LLM 4-mục) trên mockup/frame
+Sau khi có mockup/frame xanh, chạy CẶP MẮT SENIOR (đắt=LLM, gọi tay — phần rẻ tất định đã tự chạy sau mỗi `/br run`):
+- **Code:** gọi `/qc-code` (Skill tool → `qc-code`) soi diff frame — 4 mục security/performance/naming/logic + sinh test tái hiện `qc-*`.
+- **UI/UX:** gọi `/qc-uiux` (Skill tool → `qc-uiux`) audit mockup — 4 mục a11y/hierarchy/consistency/antipattern; phần đo được (contrast/tap-target/overlap/misalign/missing-label) chạy qua engine visual-qa headless:
+  ```
+  node skills/visual-qa/assets/route-shots.mjs <base-url-mockup> --audit
+  ```
+- Verdict CẦN SỬA → sửa trước khi chốt frame. **Advisory** — verdict LLM là ý kiến; số đo engine + test `qc-*` mới gác cứng (đã tự chạy ở `/br run` và `verify-before-commit` bước 3b). Không có frame chỉ định → audit các route mockup hiện có.
 
 ## Mode 5 — `/br status`
 1. `python3 fdk/tools/build-line-status.py build --root .` → `br/line-status.json` + `llmwiki/html/line-status.html`.

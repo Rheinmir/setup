@@ -31,7 +31,7 @@ LOOP_MAP = {
     "verify-before-commit": "dev-loop", "build-now-adapt-later": "dev-loop", "ship": "dev-loop",
     "new-skill": "dev-loop", "loop-runner": "dev-loop", "failure-flywheel": "dev-loop", "wikieval": "dev-loop",
     "br": "dev-loop", "checkpoint-trace": "dev-loop", "design-twice": "dev-loop",
-    "skill-provenance": "dev-loop",
+    "skill-provenance": "dev-loop", "qc-code": "dev-loop", "qc-uiux": "dev-loop",
     # orchestrate
     "orca-dispatch-reference": "orchestrate", "orca-onboard": "orchestrate", "orca-issue": "orchestrate",
     "orca-sec-scans": "orchestrate", "orca-workflow": "orchestrate", "orca-eval": "orchestrate",

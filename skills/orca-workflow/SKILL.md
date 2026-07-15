@@ -48,7 +48,8 @@ Dự án có `llmwiki/` thì sổ cây vấn đề nằm ở `llmwiki/html/probl
      trước khi dispatch để agy/opencode/kiro vào đúng vai (vd Sweeper bị cấm thêm feature). CLI nào
      hợp archetype nào là adapter `verified:false` (`harness/archetypes.config.yaml`). Xem ADR-015.
 6. **Chờ**: `orca orchestration check --wait --types worker_done --timeout-ms 300000`
-7. **Kiểm tra**: `verify-before-commit` tự động chạy trước mỗi commit
+6b. **(Tùy chọn) QC senior trước commit** — muốn một cặp mắt senior soi trước khi chốt: `/qc-code` (Skill tool → `qc-code`) soi diff code 4 mục + sinh test tái hiện `qc-*`; nếu vừa dựng/đổi UI thì thêm `/qc-uiux` (Skill tool → `qc-uiux`) audit UI/UX + antipattern. Verdict CẦN SỬA → sửa trước khi commit. **Tùy chọn** — verdict LLM advisory, gác cứng là test `qc-*` chạy ở bước 7.
+7. **Kiểm tra**: `verify-before-commit` tự động chạy trước mỗi commit (gồm bước 3b: `qc-regression.py --run` chạy test `qc-*` tất định — lỗi đã tái hiện không âm thầm quay lại)
 
 ## Gotchas orchestration CLI (bài học 230626)
 

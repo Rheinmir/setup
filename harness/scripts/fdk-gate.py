@@ -79,9 +79,10 @@ STEPS = [
         "python3 harness/scripts/archetype.py --self-test >/dev/null && "
         "python3 harness/scripts/mem-proxy.py --self-test >/dev/null && "
         "python3 harness/scripts/retrieval-eval.py --self-test >/dev/null && "
-        "python3 harness/scripts/skill-resolve-eval.py --self-test >/dev/null"],
-     "22 chức năng BNAL — self-test phải còn PASS (giữ verified trung thực; +3 wired 15/07/26: "
-     "mem-proxy/retrieval-eval/skill-resolve-eval)"),
+        "python3 harness/scripts/skill-resolve-eval.py --self-test >/dev/null && "
+        "python3 harness/scripts/qc-regression.py --self-test >/dev/null"],
+     "23 chức năng BNAL — self-test phải còn PASS (giữ verified trung thực; +3 wired 15/07/26: "
+     "mem-proxy/retrieval-eval/skill-resolve-eval; +qc-regression khi mang qc-code về)"),
 ]
 
 

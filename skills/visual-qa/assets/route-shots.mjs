@@ -308,6 +308,27 @@ function DESIGN_AUDIT() {   // function-declaration (được hoist) — pre-log
   });
   if (misaligns.length) issues.push({ rule: "row-misalign", count: misaligns.length, worst: misaligns.slice(0, 5) });
 
+  // 7. TAP-TARGET — control tương tác < 24×24px CSS = dưới sàn WCAG 2.2 AA (2.5.8). ĐO rect thật.
+  //    (khuyến nghị 44/48px cho mobile; 24 là sàn cứng — dưới nó là fail a11y đo được, không phải gu.)
+  const tiny = [];
+  ctrls.forEach((el) => {
+    const r = rectOf(el);
+    if (r.width < 24 || r.height < 24)
+      tiny.push({ el: (el.id || el.className || el.tagName).toString().slice(0, 24),
+                  size: `${Math.round(r.width)}×${Math.round(r.height)}px` });
+  });
+  if (tiny.length) issues.push({ rule: "tap-target", count: tiny.length, worst: tiny.slice(0, 6) });
+
+  // 8. MISSING-LABEL — button/link/icon-button screen-reader đọc RỖNG (không tên truy cập được).
+  //    Bỏ <input> (tên thường tới từ <label for> ngoài — cần resolve, dễ false-pos); bắt đúng
+  //    ca kinh điển: nút-icon không aria-label/text. Đo trực tiếp DOM.
+  const nameOf = (el) => (el.getAttribute("aria-label") || el.textContent.trim() ||
+    el.getAttribute("title") || (el.querySelector("img") && el.querySelector("img").getAttribute("alt")) ||
+    (el.getAttribute("aria-labelledby") ? "x" : "")).trim();
+  const unlabeled = ctrls.filter((el) => el.tagName !== "INPUT" && !nameOf(el))
+    .map((el) => (el.id || el.className || el.tagName).toString().slice(0, 24));
+  if (unlabeled.length) issues.push({ rule: "missing-label", count: unlabeled.length, worst: unlabeled.slice(0, 6) });
+
   return issues;
 }
 

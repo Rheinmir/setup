@@ -90,6 +90,8 @@
         "./skills/orca-eval",
         "./skills/orchestration",
         "./skills/propose",
+        "./skills/qc-code",
+        "./skills/qc-uiux",
         "./skills/query",
         "./skills/record-episode",
         "./skills/raise-issue",

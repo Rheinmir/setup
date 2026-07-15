@@ -241,6 +241,22 @@ def run(frame_path, root=".", baseline=None, keep_worktree=True, revise_cmd=None
         else:
             print(f"  chế độ    : IN-PLACE — sửa nằm ngay trong cây hiện tại, bật app xem liền.")
             print(f"  → không ưng: git revert {str(result.get('commit'))[:8] if result.get('commit') else '<commit>'}   ·   lỗi ở đâu: python3 fdk/tools/br-find.py <file-hoặc-từ-khoá>")
+        # AUTO-QC tất định sau frame xanh (0-token, KHÔNG LLM, advisory — không chặn):
+        # reuse engine test tái hiện qc-code. LLM audit senior (qc-code/qc-uiux 4-mục) gọi tay
+        # qua `/br qc`. Fail-open tuyệt đối — QC không được phép giết dây chuyền.
+        if verdict == "SUCCESS":
+            qc = root / "harness" / "scripts" / "qc-regression.py"
+            if qc.is_file():
+                try:
+                    r = subprocess.run(["python3", str(qc), "--run"], cwd=root,
+                                       capture_output=True, text=True, timeout=120)
+                    tail = (r.stdout or r.stderr or "").strip().splitlines()
+                    print(f"  qc (auto) : {'✓ test qc-* xanh' if r.returncode == 0 else '✗ ' + (tail[-1][:70] if tail else 'qc-* ĐỎ')}"
+                          + "  ·  audit senior: /br qc")
+                except Exception:
+                    pass  # engine QC lỗi/vắng → bỏ qua, không chặn frame
+            else:
+                print(f"  qc (auto) : (chưa có qc-regression.py)  ·  audit senior UI/code: /br qc")
         return 0 if verdict == "SUCCESS" else 2
     finally:
         if use_worktree and not keep_worktree:

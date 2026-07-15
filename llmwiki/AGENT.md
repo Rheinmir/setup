@@ -52,6 +52,8 @@ Giảm lỗi LLM-coding phổ biến. Thiên về cẩn trọng hơn tốc độ
 | `medic` | Cổng sức khoẻ tổng — 1 lệnh chứng minh hệ còn khoẻ (luật cắn/drift/docs/code/eval); trước commit, sau pull, nghi rule không chặn | `skills/utils/medic.md` | utils |
 | `new-skill` | Scaffold một skill mới (canonical+mirror+lệnh register) | `skills/dev-loop/new-skill.md` | dev-loop |
 | `skill-provenance` | Ghi/kiểm provenance (nguồn + sha256) khi cài skill ngoài — audit supply-chain, phát hiện skill bị sửa lén | `skills/dev-loop/skill-provenance.md` | dev-loop |
+| `qc-code` | Review code phong cách senior 10 năm — 4 mục (security/performance/naming/logic) điểm/10 + lỗi nặng nhất + fix + verdict PASS/CẦN SỬA; sinh test tái hiện qc-* auto-chạy tất định. KHÁC /orca-sec-scans (Trivy tĩnh) | `skills/dev-loop/qc-code.md` | dev-loop |
+| `qc-uiux` | Audit UI/UX phong cách senior — 4 mục (a11y/hierarchy/consistency/antipattern) điểm/10 + verdict; phần tất định reuse geometry-audit của visual-qa (overlap/misalign) auto-chạy 0-token. Gọi sau khi có mockup/UI | `skills/dev-loop/qc-uiux.md` | dev-loop |
 | `loop-runner` | Vòng lặp agent có guardrail (propose→verify→revise, termination) | `skills/dev-loop/loop-runner.md` | dev-loop |
 | `br` | Hub dây chuyền Ralph: interview→compile→slice→run→status (BR-kỹ → frames gắn code → loop có 6 phanh) | `skills/dev-loop/br.md` | dev-loop |
 | `design-twice` | Thiết kế 2-3 phương án KHÁC NHAU TẬN GỐC rồi so sánh/tổng hợp (Design It Twice) — BẮT BUỘC trước khi code frame UI | `skills/dev-loop/design-twice.md` | dev-loop |
