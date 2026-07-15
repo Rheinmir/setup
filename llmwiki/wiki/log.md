@@ -19,17 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-14 22:44:24 | `file.write` | llmwiki/html/140726-spec-kit-traceability-seq.html · tool=Write · session=36e6562b · actor=agent · prev=9ac07a5743bfa5c1 |
-| 2026-07-14 22:46:30 | `file.write` | llmwiki/html/140726-spec-kit-traceability-seq.html · tool=Edit · session=36e6562b · actor=agent · prev=033a80fb37eca4d47 |
-| 2026-07-14 22:52:40 | `task.set` |  · task=T-260714-02 · state=approved · note=gate: user duyệt · actor=agent · prev=830af0eb0b599520762a91990cb43b59bc99eb |
-| 2026-07-14 22:53:13 | `file.write` | skills/propose/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=a33f440c03869f710702b696ff8e48056041c5d7400f |
-| 2026-07-14 22:53:19 | `file.write` | skills/plan/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=ad2e6810fecea31ffebb7b8b7825bb5122874026cf9395c |
-| 2026-07-14 22:53:28 | `file.write` | skills/plan/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=101c9c55861a3268e9bc885e7a765396676bb838f238fd8 |
-| 2026-07-14 22:53:41 | `file.write` | harness/validators/proposal_complete.py · tool=Edit · session=36e6562b · actor=agent · prev=5634d246a41a9f798b9255407d50 |
-| 2026-07-14 22:54:00 | `file.write` | harness/validators/proposal_complete.py · tool=Edit · session=36e6562b · actor=agent · prev=ff0ccab189fb81e2fa53f10437e3 |
-| 2026-07-14 22:54:12 | `file.write` | harness/validators/proposal_complete.py · tool=Edit · session=36e6562b · actor=agent · prev=b8d428320c8bf7660fe3f23669fb |
-| 2026-07-14 22:55:22 | `file.write` | harness/poc-vendor-neutral/bin/llmwiki-validate.py · tool=Edit · session=36e6562b · actor=agent · prev=79e5350fc2b2639f7 |
-| 2026-07-14 22:55:30 | `file.write` | harness/poc-vendor-neutral/policy.yaml · tool=Edit · session=36e6562b · actor=agent · prev=ef19d93a1bf9c62f7a35f9b2f198d |
 | 2026-07-14 22:56:43 | `file.write` | harness/poc-vendor-neutral/install.sh · tool=Edit · session=36e6562b · actor=agent · prev=cf4fb6574c67f51301998b75d73adf |
 | 2026-07-14 22:57:25 | `file.write` | skills/fdk-uat/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=4d9d1e06cc6783ac9ccab9f63c0d4a578974e1f287d3 |
 | 2026-07-14 22:57:38 | `file.write` | skills/fdk-uat/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=eb649cb03a8642c6847abb29d9eec2c71bba70ee6105 |
@@ -59,6 +48,17 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-15 08:57:21 | `file.write` | llmwiki/wiki/sources/draft/150726-hallmark-design-foundation.md · tool=Write · session=36e6562b · actor=agent · prev=a25 |
 | 2026-07-15 08:59:02 | `file.write` | llmwiki/html/150726-hallmark-design-foundation-seq.html · tool=Write · session=36e6562b · actor=agent · prev=f4125da5573 |
 | 2026-07-15 09:03:06 | `file.write` | llmwiki/html/150726-hallmark-design-foundation-seq.html · tool=Edit · session=36e6562b · actor=agent · prev=f8ecd3129ad8 |
+| 2026-07-15 09:05:28 | `task.set` |  · task=T-260715-02 · state=approved · note=gate: duyệt · actor=agent · prev=a73f541a3ee6a8d87eacacf4031680338e053d974e5 |
+| 2026-07-15 09:06:33 | `file.write` | llmwiki/wiki/concepts/design-foundation.md · tool=Write · session=36e6562b · actor=agent · prev=5428bade3734d964b6bc70ed |
+| 2026-07-15 09:07:37 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=36e6562b · actor=agent · prev=7288f4f183cb72284684223fd49f4f4aae |
+| 2026-07-15 09:07:54 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=36e6562b · actor=agent · prev=0bd03d577b65b2d6886a90232289bfd21e |
+| 2026-07-15 09:08:12 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=36e6562b · actor=agent · prev=bf856b517512dfbe2303018f81e8464e71 |
+| 2026-07-15 09:10:25 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=36e6562b · actor=agent · prev=2959de56ade27d369cac1abdbde7577360 |
+| 2026-07-15 09:11:37 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=36e6562b · actor=agent · prev=346d81010623a5d1f09667ae6c2a64e9c5 |
+| 2026-07-15 09:11:56 | `file.write` | skills/propose/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=db7e9128d72df011706d78d7a0fd132bd1db3f1367b5 |
+| 2026-07-15 09:12:55 | `file.write` | harness/scripts/design-variety.py · tool=Write · session=36e6562b · actor=agent · prev=743622b10fba60b1d8a186b4ad303e904 |
+| 2026-07-15 09:15:35 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=36e6562b · actor=agent · prev=9f09c4b052d3b3270047226eb7f93cc5e4 |
+| 2026-07-15 09:20:37 | `task.set` |  · task=T-260715-02 · state=done · note=8 task, UAT 2 pha PASS, d5d65d9, đóng p-23 · actor=agent · prev=ae48b768e8e543cc |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -306,3 +306,4 @@ Giải issue `030726-skill-resolve-supplychain` (trục #5 frontier-gap-scan, Ch
 - /propose fill-default từ catalog hallmark (tag default, ghi ## Assumptions). design-variety.py + .design-log.jsonl: cổng Variety travel-được (phơi bày mọi seq.html là một glass template — nợ đã biết).
 - Nợ có sẵn lộ ra (KHÔNG sửa trong SPEC này): ~17 HTML cũ gradient-text + ligature debt.
 - UAT hai pha PASS (hallmark): canary (3 trụ 5/5, harness 74/74, hallmark SKILL + 24 references travel tới tay incl slop-test.md) → main-URL smoke (đường mặc định, 74/74, reachable). Raise ledger issue 150726-legacy-html-slop-debt (ready-for-agent) cho nợ ~17 HTML cũ. p-23 đóng.
+- /fdk-uat TOÀN DIỆN đường mặc định (curl từ orca, KHÔNG override): 3 trụ 5/5 · harness 74/74 · /wayfinder + /hallmark (129 references incl slop-test.md) tới tay · 23 skill tắt model-invocation · /plan+/propose+/orca-workflow là bản mới · 4 engine tất định ở global harness (frontend-antipattern --self-test PASS, frontier/skill-health/design-variety reachable) · R7-n + R18 CẮN THẬT trong dự án cài mới (exit 2), concept hợp lệ QUA (exit 0) · orchestration-ready 3/3 + orca UP · 86 skill global / 18 rule. UAT toàn diện đường mặc định (150726) PASS.
