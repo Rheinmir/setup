@@ -49,7 +49,28 @@ a:hover{text-decoration:underline}
       border-radius:14px;font:inherit;color:var(--ink);background:var(--bg);
       box-shadow:var(--sh-dark),var(--sh-light)}
 .back:hover{text-decoration:underline}
+#theme,.back{transition:box-shadow .2s ease,transform .15s ease}
+#theme:active,.back:active{transform:scale(.97)}
 @media print{#theme,.back{display:none}}
+a:focus-visible,button:focus-visible,input:focus-visible{
+  outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+.skip-link{position:absolute;left:-9999px;top:0;padding:10px 18px;border-radius:14px;
+  background:var(--bg);box-shadow:var(--sh-dark),var(--sh-light);z-index:200;
+  color:var(--ink);text-decoration:none}
+.skip-link:focus{left:16px;top:16px}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 26px;padding:0;list-style:none}
+.toolbar a{display:inline-block;padding:9px 16px;border-radius:12px;font-size:.85em;
+  font-weight:600;background:var(--bg);box-shadow:var(--sh-dark),var(--sh-light);
+  transition:box-shadow .2s ease,transform .15s ease;text-decoration:none!important}
+.toolbar a:hover{transform:translateY(-2px)}
+.toolbar a:active{transform:translateY(0);
+  box-shadow:inset 3px 3px 7px rgba(0,0,0,.14),inset -3px -3px 7px rgba(255,255,255,.08)}
+.stats{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:16px;margin-bottom:24px}
+@media (max-width:720px){.stats{grid-template-columns:1fr}}
+.stat{padding:20px 22px;border-radius:20px;background:var(--bg);
+  box-shadow:var(--sh-dark),var(--sh-light)}
+.stat .n{font-size:1.9em;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stat .t{color:var(--muted);font-size:.8em;text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
 """
 
 # Chống FOUC: đặt data-theme TRƯỚC khi vẽ; không ép mode — mặc định theo hệ điều hành [C15.2].
@@ -91,9 +112,12 @@ def _page(title: str, body: str, back=None) -> bytes:
 <script>{_HEAD_JS}</script>
 <style>{_CSS}</style>
 </head><body>
+<a class="skip-link" href="#main">Bỏ qua, đến nội dung chính</a>
 <button id="theme" type="button">Sáng / Tối</button>
 {nut_lui}
+<main id="main">
 {body}
+</main>
 <script>{_TOGGLE_JS}</script>
 </body></html>""".encode("utf-8")
 
@@ -116,7 +140,9 @@ def _man_bang_luong() -> bytes:
     p = params.load(PERIOD)
     dau, cuoi = lichky.ky_cong(PERIOD)
     hang = []
-    for rec in adapters.fetch_employees(PERIOD):
+    tong_chi_phi = Decimal(0)
+    nhan_su = adapters.fetch_employees(PERIOD)
+    for rec in nhan_su:
         kq, _ = engine.bang_luong(rec, p)
         o = "".join(f'<td class="money">{_fmt(kq[c])}</td>' for c, _t in _COT)
         eid = _e(rec["employee_id"])
@@ -124,10 +150,28 @@ def _man_bang_luong() -> bytes:
             f'<tr><td><a href="/payslip/{eid}">{eid}</a></td>'
             f'<td>{_e(rec.get("ho_ten", ""))}</td>{o}'
             f'<td><a href="/trace/{eid}/NET_PAY">truy vết</a></td></tr>')
+        tong_chi_phi += kq["TOTAL_CTY_COST"]
     th = "".join(f'<th class="money">{_e(t)}</th>' for _c, t in _COT)
+    # trang chủ LUÔN cố định PERIOD — đây chính là kỳ ground-truth đã đối chiếu (khác /report/*
+    # nhận period tuỳ ý qua query string, có thể là dữ liệu DRAFT).
+    trang_thai = "✓ Ground-truth đã kiểm chứng"
     return _page(f"Bảng lương {PERIOD}", f"""
 <h1>Bảng lương kỳ {_e(PERIOD)}</h1>
-<p>Từ ngày {dau:%d/%m/%Y} đến ngày {cuoi:%d/%m/%Y} · <a href="/upload">↑ Tải Excel (mass upload)</a> · <a href="/audit">📋 Sổ audit</a> · <a href="/params">⚙ Tham số lương</a> · <a href="/export/payroll-master?period={_e(PERIOD)}">⬇ Payroll Master (CSV)</a> · <a href="/report/signoff?period={_e(PERIOD)}">🖊 Trình ký</a> · <a href="/report/cost-by-dept?period={_e(PERIOD)}">📊 Phân bổ chi phí</a> · <a href="/report/attendance-detail?period={_e(PERIOD)}">⚠ Bảng công chi tiết</a></p>
+<p>Từ ngày {dau:%d/%m/%Y} đến ngày {cuoi:%d/%m/%Y}</p>
+<div class="stats">
+  <div class="stat"><div class="n">{_fmt(tong_chi_phi)}</div><div class="t">Tổng chi phí công ty kỳ này</div></div>
+  <div class="stat"><div class="n">{len(nhan_su)}</div><div class="t">Nhân sự trong kỳ</div></div>
+  <div class="stat"><div class="n">{_e(trang_thai)}</div><div class="t">Trạng thái tính toán</div></div>
+</div>
+<nav class="toolbar" aria-label="Công cụ">
+  <a href="/upload">↑ Tải Excel (mass upload)</a>
+  <a href="/audit">📋 Sổ audit</a>
+  <a href="/params">⚙ Tham số lương</a>
+  <a href="/export/payroll-master?period={_e(PERIOD)}">⬇ Payroll Master (CSV)</a>
+  <a href="/report/signoff?period={_e(PERIOD)}">🖊 Trình ký</a>
+  <a href="/report/cost-by-dept?period={_e(PERIOD)}">📊 Phân bổ chi phí</a>
+  <a href="/report/attendance-detail?period={_e(PERIOD)}">⚠ Bảng công chi tiết</a>
+</nav>
 <table><thead><tr><th>Mã NV</th><th>Họ tên</th>{th}<th></th></tr></thead>
 <tbody>{"".join(hang)}</tbody></table>""")
 
