@@ -318,3 +318,4 @@ Giải issue `030726-skill-resolve-supplychain` (trục #5 frontier-gap-scan, Ch
 - /qc-code: review senior 4 mục (security/performance/naming/logic), điểm/10 + lỗi nặng nhất + fix, verdict PASS/CẦN SỬA. Mục logic sinh test tái hiện qc-*.
 - Tách đắt/rẻ (HỎI user → option 3): LLM review gọi tay/workflow; test qc-* auto qua hook tất định 0-token (verify-before-commit 3b), KHÔNG gọi LLM trong hook.
 - harness/scripts/qc-regression.py (--self-test PASS, tự phát hiện pytest/vitest/jest, fail-open). /orca-workflow 6b tùy chọn. Verdict advisory; test gác cứng. p-34 solved 3/3.
+- UAT hai pha PASS (qc-code): canary (3 trụ 5/5, harness 74/74, /qc-code tới tay) → main-URL smoke (đường mặc định, 74/74, /qc-code reachable, qc-regression.py --self-test PASS ở global harness — engine travel thật). p-34 đóng 3/3.
