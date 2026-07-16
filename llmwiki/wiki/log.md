@@ -325,3 +325,4 @@ Giải issue `030726-skill-resolve-supplychain` (trục #5 frontier-gap-scan, Ch
 - Điểm phân biệt: CHỨNG "nó chạy thế nào" bằng runtime thật — chạy + instrument/breakpoint (pdb/debugpy/node-inspect/print/log) + quan sát state, KHÔNG đọc-rồi-đoán. Mượn triết lý /verify.
 - Carve-out cứng: instrument tạm DỌN SẠCH sau (git diff xác nhận); không chạy được → khai "giải thích tĩnh" + ghi nợ unknown nếu khẳng định phụ thuộc runtime chưa thấy.
 - Sơ đồ hai đường: mermaid inline (mặc định) / HTML explainer glass docs-site-macos (opt-in khi giữ/chia sẻ). KHÁC /onboard-codebase + /join-project (cả dự án).
+- UAT hai pha PASS (teach-me): canary (3 trụ 5/5, harness 74/74, /teach-me tới tay + nội dung grounded-runtime) → main-URL smoke (đường mặc định, 74/74, reachable). Smoke dogfood trên frontier.py chứng bằng chạy thật. p-35 đóng 2/3 trụ (skill-only).
