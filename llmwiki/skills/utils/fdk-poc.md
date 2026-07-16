@@ -1,50 +1,77 @@
 ---
 name: fdk-poc
 description: >-
-  POC "luồng chạy THẬT, nhanh, ít-phải-nhớ": tạo một PROJECT MỚI rồi chạy trọn vòng đời /br
-  trong đó bằng LỆNH THẬT tất định (frame-lint, build-line-status, qc-regression trỏ --root vào
-  project mới), đo giờ + verify SENTINEL từng bước, xuất trang HTML visualize. Trả lời 3 câu:
-  luồng gõ NHỮNG LỆNH NÀO · NHANH không (wall-clock từng bước) · phải NHỚ NHIỀU không (đếm hub,
-  mục tiêu 1 — mọi thứ dưới /br, tool phụ tự fire). Cùng tinh thần fdk-uat (chứng bằng chạy thật
-  + grep sentinel, không tin lời model). Gọi khi user nói "fdk-poc", "poc luồng", "visualize luồng
-  br chạy", "chạy thử project mới", "/fdk-poc".
+  POC luồng /br: tạo PROJECT THẬT trong Orca (orca-cli) → CURL cài overstack từ REMOTE (đường
+  người mới) → nạp context bằng cách copy tài liệu THẬT sang llmwiki/raw/ → chạy /br TỪ ĐẦU, ghi
+  lại TỪNG BƯỚC THẬT (rc + log) rồi render trang visualize để người xem ĐỌC LOG + CHẤM từng bước.
+  Luật cốt lõi: tool KHÔNG BAO GIỜ BỊA BƯỚC — mọi bước hoặc do tool chạy thật, hoặc do agent chạy
+  thật rồi `record`. Có `probe` để soi một /br project có sẵn bằng tool thật (frame-lint/pytest/
+  line-status/checkpoint). KHÁC /fdk-uat (test nhanh xanh-đỏ "người mới curl về chạy không"):
+  fdk-poc nhắm CHỨC NĂNG THỰC TẾ chạy ra sao. Gọi khi user nói "fdk-poc", "poc luồng", "chạy thử
+  project mới", "visualize luồng br chạy", "/fdk-poc".
 ---
 
-# Skill: fdk-poc — POC luồng /br chạy thật + visualize
+# Skill: fdk-poc — POC luồng /br chạy THẬT + visualize
 
 ## When to use
-- Muốn THẤY (không chỉ nghe) rằng luồng overstack/br chạy được, nhanh, và ít phải nhớ.
-- Trước khi giới thiệu /br cho người mới: một trang visualize "gõ lệnh nào → tự fire lệnh nào → mất bao lâu".
-- KHÔNG dùng để: chạy sản phẩm thật (đó là `/br run`) hay UAT một tính năng (đó là fdk-uat thủ tục verify).
+- Muốn THẤY một luồng ĐẦY ĐỦ chạy thật trên một project MỚI (không phải nghe kể).
+- Chứng năng lực mới **tới tay người dùng** qua đường remote + chạy được trên tài liệu thật.
+- KHÔNG dùng để: test nhanh xanh/đỏ (đó là `/fdk-uat`) hay chạy sản phẩm thật (đó là `/br`).
 
-## Hai chế độ
-```
-# 1) run — project MỚI (tự scaffold demo), chạy trọn vòng đời /br tất định
-python3 fdk/tools/fdk-poc.py run [--out …] [--keep] [--json]
+## Luật CỐT LÕI (rút từ lần fail 16/07/26)
+**Tool KHÔNG BAO GIỜ BỊA BƯỚC.** Bản đầu tự scaffold artifact giả trong `/tmp` rồi vẽ timeline →
+user không thấy project đâu, không có luồng thật ⇒ POC vô giá trị (đúng luật "bằng chứng > lời").
+Nay mọi bước trong trace đến từ MỘT trong hai nguồn:
+- lệnh tool NÀY thực sự chạy (`new`, `probe`), hoặc
+- bước agent THỰC SỰ chạy rồi `record` lại (kèm `rc` + log thật).
 
-# 2) probe — PROJECT CÓ SẴN thật (điều kiện thật): chạy tool thật trên frame/test có sẵn
-python3 fdk/tools/fdk-poc.py probe --project br/payroll [--out …] [--json]
+## Luồng ĐÚNG (user chốt 16/07/26)
 ```
-`probe` KHÔNG scaffold — trỏ vào một /br project thật rồi chạy **frame-lint (frame thật) · pytest (test nghiệp vụ thật) · build-line-status · checkpoint**, bắt LOG + `rc` từng bước để user ĐỌC + ĐÁNH GIÁ. `ok` phản ánh KẾT QUẢ THẬT (đỏ = điều kiện thật fail, không giả xanh); phân biệt lỗi-project vs thiếu-môi-trường (vd pytest chưa cài = N/A env, không tính là lỗi project).
-- Tạo project tạm mới (`/tmp/fdk-poc-*`), chạy 7 bước vòng đời (bootstrap → interview → compile → slice → run → qc → status).
-- Mỗi bước chạy **lệnh THẬT** của tool tất định trỏ `--root` vào project mới, đo `ms`, verify **sentinel** (file artifact tồn tại + chứa needle) → chứng bước THẬT xảy ra, không phải khai.
-- Bước LLM duy nhất (`/br run` → loop-runner gọi `claude -p`) KHÔNG chạy (đắt, không tất định) — đánh dấu `llm:true`, phần còn lại là chi phí THẬT của harness.
-- Xuất `llmwiki/html/DDMMYY-fdk-poc.html` (macOS glass, self-contained): KPI (hub-phải-nhớ · lệnh-user · lệnh-nội-bộ · wall-clock) + timeline từng bước (auto-substeps) + biểu đồ thời gian + kết luận "phải nhớ nhiều không".
-- `--keep` giữ project tạm để soi; `--json` in trace; `--self-test` kiểm bất biến.
+1) orca-cli tạo PROJECT THẬT       → thấy được trong app Orca
+2) CURL cài overstack từ REMOTE    → đường NGƯỜI MỚI, chứng năng lực travel được
+3) nạp CONTEXT: copy tài liệu THẬT → <proj>/llmwiki/raw/
+4) chạy /br TỪ ĐẦU (interview → auto → compile → slice → run → qc → status)
+```
+```bash
+# bước 1–3 (tool chạy thật, ghi 3 bước vào trace)
+python3 fdk/tools/fdk-poc.py new --raw "<dir tài liệu>" [--name <proj>] [--ref <nhánh>] [--dest ~/orca/workspaces]
+
+# bước 4: agent chạy /br THẬT, ghi lại từng bước
+python3 fdk/tools/fdk-poc.py record --project <p> --cmd "/br interview" --rc 0 --log-file <out> --llm \
+        --sentinel "br/spec-filled.md:provenance"
+
+# render trang visualize từ trace THẬT
+python3 fdk/tools/fdk-poc.py render --project <p>
+
+# soi một /br project CÓ SẴN bằng tool thật (không scaffold)
+python3 fdk/tools/fdk-poc.py probe --project br/payroll [--fresh]
+```
+`--ref` trỏ nhánh remote cho `curl` (mặc định `orca`; canary thì đưa tên nhánh — `bootstrap.sh` nhận
+`HARNESS_BASE`). `--skip-curl` CHỈ dùng khi offline/self-test — bỏ nó là bỏ mất phần chứng minh.
+
+## "Không tất định từ raw thì TRỎ thế nào?"
+`/br auto` (`br-fill.py fill`) **không** tất định-từ-raw: nó cần `br/spec-filled.md` có trước, mà file
+đó do **LLM đọc .docx** sinh ra. Cơ chế trỏ nằm ở **provenance per-field**:
+- mỗi field S1–S10 mang `status: filled|missing|conflict|assumed` + `provenance: raw:<file>|user|lens:<tên>`
+  ⇒ field nào cũng **trỏ ngược về đúng tài liệu nguồn** → bước LLM vẫn audit được.
+- `br-fill.py fill` chỉ điền field `missing` từ registry defaults (`skills/br/assets/defaults.yaml`,
+  project override `br/defaults.yaml` thắng) — phần này TẤT ĐỊNH.
+- mọi thứ `assumed` nổi lên bảng **"Giả định đang gánh"** trong BR.md → nhìn một phát biết đang cược gì.
+POC vì thế ghi bước interview là `--llm` + log thật + sentinel `br/spec-filled.md:provenance`.
 
 ## Đọc kết quả
-- **hub phải nhớ** → mục tiêu ≈ **1** (`/br`) + `bootstrap` chạy một lần. 6/7 lệnh gom dưới `/br <mode>` (hub MỘT tên fan-out — xem discoverability).
-- **lệnh nội bộ tự fire** (frame-lint · loop-runner · qc-regression · build-line-status · checkpoint…) → user KHÔNG gõ, KHÔNG nhớ tên chúng.
-- **wall-clock tất định** → phần harness (không tính bước LLM) là mili-giây.
-- **sentinel ALL PASS** → luồng THẬT tạo đủ artifact.
+- **bước THẬT đã chạy** + **sentinel PASS** → luồng thật tạo đủ artifact (không phải khai).
+- **LOG mỗi bước** (`rc` + output) → người xem tự chấm, không tin lời model.
+- **bước LLM (cam)** là biến; **tất định (tím)** là chi phí harness.
 
 ## Rules
-- **Chứng bằng chạy thật + sentinel** (tinh thần fdk-uat) — không "cho pass" bằng suy luận; file artifact phải tồn tại thật.
-- **Bước LLM đánh dấu trung thực** — không giả vờ chạy loop-runner; ghi `llm:true` + để phần tất định nói lên tốc độ.
-- **Tất định, offline** — POC không gọi mạng/LLM; chạy lại cho cùng kết quả (trừ mili-giây).
-- HTML self-contained + in full-path (R16), có toggle sáng/tối nếu mở rộng.
+- **KHÔNG bịa bước** — không có log thật thì không vào trace.
+- **Curl từ remote là bắt buộc** cho POC đầy đủ — cài từ working-tree/`file://` KHÔNG chứng minh năng lực travel (bài học fdk-uat / GH#77).
+- **Bước LLM đánh dấu trung thực** (`--llm`), không giả vờ tất định.
+- **Project phải THẤY ĐƯỢC** (orca repo add) — POC mà user không mở được project thì fail.
+- HTML self-contained + in full-path (R16).
 
 ## Related
-- `fdk/tools/fdk-poc.py` — runner + emit HTML.
-- `fdk/tools/frame-lint.py` · `fdk/tools/build-line-status.py` · `harness/scripts/qc-regression.py` — tool THẬT mà POC chạy.
-- `skills/br/SKILL.md` — vòng đời được demo.
+- `fdk/tools/fdk-poc.py` — new · record · render · probe.
+- `~/.claude/skills/fdk-uat` — test nhanh đường remote (xanh/đỏ), tầng TRÊN medic.
+- `skills/br/SKILL.md` — vòng đời được demo · `fdk/tools/br-fill.py` — engine `/br auto`.
