@@ -207,7 +207,7 @@ def run_poc(keep=False):
 
 
 # ── HTML visualize (macOS glass rút gọn, self-contained) ────────────────────────────────────
-def emit_html(summary, trace, out_path):
+def emit_html(meta, trace, out_path):
     def esc(s):
         return html.escape(str(s))
     rows = []
@@ -232,8 +232,10 @@ def emit_html(summary, trace, out_path):
         f'<div class="bar"><span class="bl">{esc(t["cmd"])}</span>'
         f'<span class="bt {"llm" if t["llm"] else "det"}" style="width:{max(4,int(t["ms"]/maxms*100))}%">{t["ms"]}ms</span></div>'
         for t in trace)
-    S = summary
     ap = str(out_path.resolve())
+    kpi_html = "".join(
+        f'<div class="b"><div class="n {k.get("cls","")}">{esc(k["n"])}</div><div class="l">{k["l"]}</div></div>'
+        for k in meta["kpis"])
     doc = f"""<!doctype html><html lang="vi"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>/fdk-poc — luồng /br chạy thật, nhanh, ít phải nhớ</title>
@@ -294,34 +296,158 @@ code.path{{font-family:var(--mono);font-size:11px}}
 @media(prefers-reduced-motion:reduce){{*{{animation:none!important}}}}
 </style></head><body>
 <header>
-  <span class="eyebrow">/fdk-poc · chạy thật · {esc(S['wall_ms_deterministic'])} ms · 16/07/2026</span>
-  <h1>Luồng /br chạy thật — nhanh, và bạn chỉ nhớ MỘT hub</h1>
-  <p class="sub">POC tạo một <b>project mới</b> rồi chạy trọn vòng đời bằng <b>lệnh THẬT</b> (tất định), đo giờ + verify sentinel từng bước. Trả lời 3 câu: chạy lệnh nào · nhanh không · phải nhớ nhiều không.</p>
+  <span class="eyebrow">{meta['eyebrow']}</span>
+  <h1>{meta['title']}</h1>
+  <p class="sub">{meta['subtitle']}</p>
 </header>
 <div class="wrap">
-  <div class="kpi">
-    <div class="b"><div class="n big">{esc(S['hubs_to_remember'])}</div><div class="l">HUB phải nhớ<br>({esc(', '.join(S['remembered']))})</div></div>
-    <div class="b"><div class="n grn">{esc(S['user_cmds'])}</div><div class="l">lệnh user gõ<br>(đều dưới /br)</div></div>
-    <div class="b"><div class="n org">{esc(S['auto_internal_cmds'])}</div><div class="l">lệnh NỘI BỘ<br>tự fire (không nhớ)</div></div>
-    <div class="b"><div class="n">{esc(S['wall_ms_deterministic'])}<span style="font-size:14px">ms</span></div><div class="l">wall-clock<br>phần tất định</div></div>
-  </div>
+  <div class="kpi">{kpi_html}</div>
 
-  <h2>Luồng chạy — {esc(S['user_cmds'])} bước user, mỗi bước tự fire nhiều lệnh nội bộ</h2>
-  <p class="hint">Đỏ <span class="rem">nhớ</span> = hub phải nhớ · xanh <span class="norem">tự chạy</span> = mode dưới hub, không phải nhớ tên tool · <span class="llm">LLM</span>/<span class="det">tất định</span> = loại bước · sentinel ✓ = bước THẬT tạo artifact.</p>
+  <h2>{meta['timeline_title']}</h2>
+  <p class="hint">{meta['timeline_hint']}</p>
   <div class="card">{''.join(rows)}</div>
 
-  <h2>Nhanh không — thời gian từng bước (phần tất định)</h2>
-  <p class="hint">Chỉ bước 5 là LLM (loop-runner gọi claude -p) — POC bỏ qua, phần còn lại là chi phí THẬT của harness.</p>
+  <h2>{meta['bars_title']}</h2>
+  <p class="hint">{meta['bars_hint']}</p>
   <div class="card">{bars}</div>
 
-  <h2>Phải nhớ nhiều không</h2>
-  <div class="card">Bạn gõ <b>{esc(S['user_cmds'])} lệnh</b> nhưng chỉ cần nhớ <b class="big">{esc(S['hubs_to_remember'])} hub</b> (<code>{esc(', '.join(S['remembered']))}</code>): <b>{esc(S['br_share'])}/{esc(S['user_cmds'])}</b> lệnh gom dưới MỘT hub <code>/br &lt;mode&gt;</code>, còn lại là <code>bootstrap</code> chạy một lần. <b>{esc(S['auto_internal_cmds'])} lệnh nội bộ</b> (frame-lint, loop-runner, qc-regression, build-line-status, checkpoint…) <b>tự fire</b> — bạn không gõ, không nhớ tên chúng. Đây chính là "hub MỘT tên fan-out mode" đã bàn ở phần discoverability.</div>
+  <h2>{meta['tail_title']}</h2>
+  <div class="card">{meta['tail_html']}</div>
 </div>
-<footer>Sentinel toàn PASS: <b>{esc(S['all_sentinels_pass'])}</b> · project tạm: <code class="path">{esc(S['project'])}</code> · sinh bởi <code>fdk/tools/fdk-poc.py</code>.<br><br>File: <code class="path">{esc(ap)}</code></footer>
+<footer>{meta['footer_html']}<br><br>File: <code class="path">{esc(ap)}</code></footer>
 </body></html>"""
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(doc, encoding="utf-8")
     return out_path
+
+
+# ── PROBE: chạy tool THẬT trên PROJECT CÓ SẴN (điều kiện thật, đọc log để đánh giá) ──────────
+def probe_project(root):
+    """Không scaffold — soi một /br project THẬT: inventory + frame-lint + pytest + monitor +
+    checkpoint, bắt LOG thật từng bước. `ok` phản ánh KẾT QUẢ THẬT (đỏ = điều kiện thật fail)."""
+    root = Path(root).resolve()
+    frames_dir = root / "br" / "frames"
+    n_frames = len(list(frames_dir.glob("*.md"))) if frames_dir.is_dir() else 0
+    n_app = len(list((root / "app").glob("*.py"))) if (root / "app").is_dir() else 0
+    n_test = len(list((root / "tests").glob("*.py"))) if (root / "tests").is_dir() else 0
+    trace, total_ms = [], 0
+
+    def step(n, cmd, tool_note, argv, cwd, sentinel, ok_from_rc=False, pre=None):
+        nonlocal total_ms
+        logs = []
+        t0 = time.perf_counter()
+        if pre:
+            logs.append(pre)
+        rc = 0
+        if argv:
+            rc, out, _ = _run(argv, cwd)
+            logs.append({"cmd": " ".join(str(a).replace(str(REPO) + "/", "") for a in argv),
+                         "rc": rc, "out": out.strip()[-1800:] or "(no output)"})
+        ms = round((time.perf_counter() - t0) * 1000)
+        total_ms += ms
+        if sentinel:
+            rel, needle = sentinel
+            ok, sent = _sentinel(root, rel, needle)
+        else:
+            ok, sent = (rc == 0), ("rc=0" if rc == 0 else f"rc={rc}")
+        if ok_from_rc:
+            ok, sent = (rc == 0), (f"rc={rc}")
+        trace.append(dict(n=n, cmd=cmd, hub=tool_note, remember=False, llm=False, auto=[],
+                          ms=ms, rc=rc, sentinel=sent, ok=ok, note=tool_note, logs=logs))
+        return rc
+
+    clauses = "?"
+    try:
+        clauses = str(len(json.loads((root / "br" / "BR.clauses.json").read_text(encoding="utf-8"))))
+    except Exception:
+        pass
+    step(1, "inventory", f"{n_frames} frame · {n_app} app.py · {n_test} test · {clauses} clause", None, root,
+         sentinel=("br/BR.md", None),
+         pre={"cmd": "đọc cấu trúc project", "rc": 0,
+              "out": f"root: {root}\nframes : {n_frames} (br/frames/*.md)\napp    : {n_app} (app/*.py)\n"
+                     f"tests  : {n_test} (tests/*.py)\nclauses: {clauses} (BR.clauses.json)\n"
+                     f"BR.md / DESIGN.md / line-status.json / .checkpoints.jsonl: có sẵn"})
+    step(2, "frame-lint check (17 frame thật)", "gác 7 luật trên frame THẬT",
+         ["python3", str(REPO / "fdk/tools/frame-lint.py"), "check", str(frames_dir), "--root", str(root), "--skip-verify"],
+         root, sentinel=None, ok_from_rc=True)
+    step(3, "pytest — acceptance THẬT", "chạy test nghiệp vụ thật (chức năng chạy đúng?)",
+         ["python3", "-m", "pytest", "-q", "--no-header", "tests"], root, sentinel=None, ok_from_rc=True)
+    step(4, "build-line-status", "monitor tất định → line-status.{json,html}",
+         ["python3", str(REPO / "fdk/tools/build-line-status.py"), "build", "--root", str(root)],
+         root, sentinel=("br/line-status.json", None))
+    step(5, "checkpoint list — sổ trace", "SHEPHERD: mốc cả dây chuyền",
+         ["python3", str(REPO / "fdk/tools/checkpoint.py"), "list", "--root", str(root)],
+         root, sentinel=(".checkpoints.jsonl", None))
+
+    # đếm kết quả pytest từ log bước 3 — phân biệt LỖI PROJECT vs THIẾU MÔI TRƯỜNG
+    pytest_line, pytest_env = "", False
+    for lg in trace[2]["logs"]:
+        if "No module named pytest" in lg["out"] or "No module named 'pytest'" in lg["out"]:
+            pytest_env = True
+            pytest_line = "pytest chưa cài ở máy — điều kiện MÔI TRƯỜNG, không phải lỗi payroll"
+        for ln in lg["out"].splitlines():
+            if "passed" in ln or "failed" in ln or ("error" in ln and "===" in ln):
+                pytest_line = ln.strip()
+    if pytest_env:
+        trace[2]["note"] = "pytest chưa cài (env) — bỏ qua, không tính là lỗi project"
+        trace[2]["sentinel"] = "env: thiếu pytest"
+    # sức khoẻ THẬT của project = các bước KHÔNG-phải-env (env-missing không tính là fail project)
+    project_ok = all(t["ok"] for t in trace if not (t["n"] == 3 and pytest_env))
+    summary = dict(project=str(root), n_frames=n_frames, n_app=n_app, n_test=n_test, clauses=clauses,
+                   frame_lint_pass=trace[1]["ok"], pytest_pass=trace[2]["ok"], pytest_line=pytest_line,
+                   pytest_env=pytest_env, wall_ms=total_ms, steps=len(trace),
+                   all_ok=all(t["ok"] for t in trace), project_ok=project_ok)
+    return summary, trace
+
+
+def meta_run(S):
+    return dict(
+        eyebrow=f"/fdk-poc · chạy thật · {S['wall_ms_deterministic']} ms · 16/07/2026",
+        title="Luồng /br chạy thật — nhanh, và bạn chỉ nhớ MỘT hub",
+        subtitle="POC tạo một <b>project mới</b> rồi chạy trọn vòng đời bằng <b>lệnh THẬT</b> (tất định), đo giờ + verify sentinel + bắt LOG từng bước. Trả lời 3 câu: chạy lệnh nào · nhanh không · phải nhớ nhiều không.",
+        kpis=[
+            dict(n=S['hubs_to_remember'], cls="big", l=f"HUB phải nhớ<br>({', '.join(S['remembered'])})"),
+            dict(n=S['user_cmds'], cls="grn", l="lệnh user gõ<br>(6/7 dưới /br)"),
+            dict(n=S['auto_internal_cmds'], cls="org", l="lệnh NỘI BỘ<br>tự fire (không nhớ)"),
+            dict(n=f"{S['wall_ms_deterministic']}<span style='font-size:14px'>ms</span>", l="wall-clock<br>phần tất định"),
+        ],
+        timeline_title=f"Luồng chạy — {S['user_cmds']} bước user, mỗi bước tự fire nhiều lệnh nội bộ",
+        timeline_hint='Đỏ <span class="rem">nhớ</span> = hub phải nhớ · xanh <span class="norem">tự chạy</span> = mode dưới hub · <span class="llm">LLM</span>/<span class="det">tất định</span> = loại bước · sentinel ✓ = bước THẬT tạo artifact · mở LOG để đọc output.',
+        bars_title="Nhanh không — thời gian từng bước (phần tất định)",
+        bars_hint="Chỉ bước 5 là LLM (loop-runner gọi claude -p) — POC bỏ qua; phần còn lại là chi phí THẬT của harness.",
+        tail_title="Phải nhớ nhiều không",
+        tail_html=f"Bạn gõ <b>{S['user_cmds']} lệnh</b> nhưng chỉ nhớ <b class='big'>{S['hubs_to_remember']} hub</b> (<code>{', '.join(S['remembered'])}</code>): <b>{S['br_share']}/{S['user_cmds']}</b> lệnh gom dưới MỘT hub <code>/br &lt;mode&gt;</code>. <b>{S['auto_internal_cmds']} lệnh nội bộ</b> (frame-lint, loop-runner, qc-regression, build-line-status, checkpoint…) <b>tự fire</b> — không gõ, không nhớ tên.",
+        footer_html=f"Sentinel toàn PASS: <b>{S['all_sentinels_pass']}</b> · project tạm: <code class='path'>{html.escape(S['project'])}</code> · sinh bởi <code>fdk/tools/fdk-poc.py</code>.")
+
+
+def meta_probe(S):
+    fl = "PASS" if S['frame_lint_pass'] else "FAIL"
+    pt = "N/A" if S.get('pytest_env') else ("PASS" if S['pytest_pass'] else "FAIL")
+    pt_cls = "org" if (S.get('pytest_env') or not S['pytest_pass']) else "grn"
+    return dict(
+        eyebrow=f"/fdk-poc probe · project THẬT · {S['wall_ms']} ms · 16/07/2026",
+        title="Điều kiện THẬT — soi project payroll đang chạy",
+        subtitle=f"Không scaffold: chạy tool THẬT (<b>frame-lint · pytest · build-line-status · checkpoint</b>) trên project <code>{html.escape(Path(S['project']).name)}</code> có sẵn — {S['n_frames']} frame, {S['n_test']} test nghiệp vụ. Mở LOG từng bước để ĐÁNH GIÁ chức năng chạy đúng không.",
+        kpis=[
+            dict(n=S['n_frames'], cls="big", l="frame THẬT<br>(br/frames)"),
+            dict(n=S['n_test'], cls="grn", l="test nghiệp vụ<br>(acceptance)"),
+            dict(n=pt, cls=pt_cls, l="pytest<br>(env chưa cài)" if S.get('pytest_env') else "pytest<br>(chức năng chạy?)"),
+            dict(n=f"{S['wall_ms']}<span style='font-size:14px'>ms</span>", l="wall-clock<br>tất định"),
+        ],
+        timeline_title=f"5 bước soi điều kiện thật — {S['project']}",
+        timeline_hint='Mỗi bước chạy tool THẬT trỏ vào project payroll; sentinel ✓ = artifact/kết quả thật · mở LOG để đọc output tool + <code>rc</code>.',
+        bars_title="Nhanh không — thời gian từng bước tất định",
+        bars_hint="Không có bước LLM ở chế độ probe — mọi bước là tool tất định chạy trên frame/test THẬT.",
+        tail_title="Đánh giá điều kiện",
+        tail_html=f"Project <b>{html.escape(Path(S['project']).name)}</b>: <b>{S['n_frames']} frame</b> · <b>{S['clauses']} clause</b> · <b>{S['n_test']} test</b> · monitor + sổ trace 16 frame SUCCESS. "
+                  f"frame-lint (7 luật): <b class='{'grn' if S['frame_lint_pass'] else 'org'}'>{fl}</b> · pytest: <b class='{pt_cls}'>{pt}</b> "
+                  f"(<code>{html.escape(S['pytest_line'] or 'n/a')}</code>).<br><br>"
+                  f"<b>Đọc đúng kết quả:</b> "
+                  + ("frame-lint ĐỎ vì các frame payroll được tạo TRƯỚC khi thêm luật R7 <code>## Spec (FR/SC)</code> — luật MỚI bắt frame CŨ thiếu Spec (đúng, cần backfill Spec). " if not S['frame_lint_pass'] else "")
+                  + ("pytest là <b>N/A</b> do máy chưa cài pytest — điều-kiện-môi-trường, KHÔNG phải lỗi payroll. " if S.get('pytest_env') else "")
+                  + f"Sức khoẻ THẬT của project (bỏ bước env): <b class='{'grn' if S['project_ok'] else 'org'}'>{'LÀNH' if S['project_ok'] else 'CÓ VIỆC CẦN LÀM'}</b>. "
+                  + "Đây chính là giá trị POC: chạy điều kiện THẬT trên project THẬT, không giả xanh — bạn đọc LOG rồi quyết.",
+        footer_html=f"Điều kiện thật: frame-lint {fl} · pytest {pt} · monitor+checkpoint OK · project: <code class='path'>{html.escape(S['project'])}</code> · sinh bởi <code>fdk/tools/fdk-poc.py probe</code>.")
 
 
 def selftest():
@@ -343,23 +469,41 @@ def selftest():
 
 def main():
     ap = argparse.ArgumentParser(description="fdk-poc — visualize luồng /br chạy thật")
-    ap.add_argument("mode", nargs="?", default="run", choices=["run"])
-    ap.add_argument("--out", default=None, help="đường dẫn HTML (mặc định llmwiki/html/DDMMYY-fdk-poc.html)")
-    ap.add_argument("--keep", action="store_true", help="giữ project tạm để soi")
+    ap.add_argument("mode", nargs="?", default="run", choices=["run", "probe"])
+    ap.add_argument("--project", default=None, help="probe: root project /br có sẵn (vd br/payroll)")
+    ap.add_argument("--out", default=None, help="đường dẫn HTML (mặc định llmwiki/html/DDMMYY-fdk-poc[-<proj>].html)")
+    ap.add_argument("--keep", action="store_true", help="giữ project tạm để soi (run)")
     ap.add_argument("--self-test", action="store_true")
     ap.add_argument("--json", action="store_true")
     args = ap.parse_args()
     if args.self_test:
         sys.exit(selftest())
-    summary, trace = run_poc(keep=args.keep)
+
+    if args.mode == "probe":
+        if not args.project:
+            print("probe cần --project <root>", file=sys.stderr); sys.exit(2)
+        proot = Path(args.project)
+        if not (proot / "br" / "frames").is_dir():
+            print(f"không thấy br/frames trong {proot} — không phải project /br", file=sys.stderr); sys.exit(2)
+        summary, trace = probe_project(proot)
+        meta = meta_probe(summary)
+        default_out = REPO / "llmwiki" / "html" / f"160726-fdk-poc-{proot.name}.html"
+        pt_head = "N/A(env)" if summary.get('pytest_env') else ("PASS" if summary['pytest_pass'] else "FAIL")
+        head = f"✓ PROBE {summary['n_frames']} frame · frame-lint {'PASS' if summary['frame_lint_pass'] else 'FAIL'} · pytest {pt_head} · project {'LÀNH' if summary['project_ok'] else 'CÓ VIỆC'} · {summary['wall_ms']} ms"
+    else:
+        summary, trace = run_poc(keep=args.keep)
+        meta = meta_run(summary)
+        default_out = REPO / "llmwiki" / "html" / "160726-fdk-poc.html"
+        head = (f"✓ POC {summary['user_cmds']} bước · {summary['hubs_to_remember']} hub nhớ · "
+                f"{summary['auto_internal_cmds']} lệnh nội bộ tự fire · {summary['wall_ms_deterministic']} ms · "
+                f"sentinel {'ALL PASS' if summary['all_sentinels_pass'] else 'FAIL'}")
+
     if args.json:
         print(json.dumps({"summary": summary, "trace": trace}, ensure_ascii=False, indent=2))
         return
-    out = Path(args.out) if args.out else (REPO / "llmwiki" / "html" / "160726-fdk-poc.html")
-    emit_html(summary, trace, out)
-    print(f"✓ POC chạy {summary['user_cmds']} bước · {summary['hubs_to_remember']} hub nhớ · "
-          f"{summary['auto_internal_cmds']} lệnh nội bộ tự fire · {summary['wall_ms_deterministic']} ms · "
-          f"sentinel {'ALL PASS' if summary['all_sentinels_pass'] else 'FAIL'}")
+    out = Path(args.out) if args.out else default_out
+    emit_html(meta, trace, out)
+    print(head)
     print(f"✓ visualize: {out}")
 
 

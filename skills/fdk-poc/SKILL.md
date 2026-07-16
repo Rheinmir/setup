@@ -17,10 +17,15 @@ description: >-
 - Trước khi giới thiệu /br cho người mới: một trang visualize "gõ lệnh nào → tự fire lệnh nào → mất bao lâu".
 - KHÔNG dùng để: chạy sản phẩm thật (đó là `/br run`) hay UAT một tính năng (đó là fdk-uat thủ tục verify).
 
-## Cách chạy (một lệnh)
+## Hai chế độ
 ```
-python3 fdk/tools/fdk-poc.py run [--out llmwiki/html/DDMMYY-fdk-poc.html] [--keep] [--json]
+# 1) run — project MỚI (tự scaffold demo), chạy trọn vòng đời /br tất định
+python3 fdk/tools/fdk-poc.py run [--out …] [--keep] [--json]
+
+# 2) probe — PROJECT CÓ SẴN thật (điều kiện thật): chạy tool thật trên frame/test có sẵn
+python3 fdk/tools/fdk-poc.py probe --project br/payroll [--out …] [--json]
 ```
+`probe` KHÔNG scaffold — trỏ vào một /br project thật rồi chạy **frame-lint (frame thật) · pytest (test nghiệp vụ thật) · build-line-status · checkpoint**, bắt LOG + `rc` từng bước để user ĐỌC + ĐÁNH GIÁ. `ok` phản ánh KẾT QUẢ THẬT (đỏ = điều kiện thật fail, không giả xanh); phân biệt lỗi-project vs thiếu-môi-trường (vd pytest chưa cài = N/A env, không tính là lỗi project).
 - Tạo project tạm mới (`/tmp/fdk-poc-*`), chạy 7 bước vòng đời (bootstrap → interview → compile → slice → run → qc → status).
 - Mỗi bước chạy **lệnh THẬT** của tool tất định trỏ `--root` vào project mới, đo `ms`, verify **sentinel** (file artifact tồn tại + chứa needle) → chứng bước THẬT xảy ra, không phải khai.
 - Bước LLM duy nhất (`/br run` → loop-runner gọi `claude -p`) KHÔNG chạy (đắt, không tất định) — đánh dấu `llm:true`, phần còn lại là chi phí THẬT của harness.
