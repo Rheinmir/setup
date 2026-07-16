@@ -754,6 +754,31 @@
     "date": "2026-07-15",
     "solvedBy": "skills/qc-code/SKILL.md; harness/scripts/qc-regression.py (--self-test PASS); verify-before-commit 3b; orca-workflow 6b. SPEC 150726-qc-code-skill.",
     "session": "2026-07-15 qc-code"
+  },
+  {
+    "id": "p-auto-16",
+    "parent": null,
+    "title": "Thẻ ghi-tạm tự động: phiên chạm framework, chưa vào sổ",
+    "desc": "Bề mặt bị chạm: fdk/skills.search.json, fdk/wiki/index.md, fdk/wiki/log.md, harness/mem-rank.config.yaml, harness/metrics/scratch-log.jsonl, harness/scripts/embed-ollama.py, harness/scripts/embed-voyage.py, harness/scripts/mem-rank.py …. Thẻ do hook SessionEnd tự ghi (flush — xả sổ trước khi thoát); lần /fdk kế tiếp sẽ chưng lọc về đúng nhánh.",
+    "status": "open",
+    "scope": [],
+    "date": "15/07/26",
+    "session": "abdec664",
+    "pending": true
+  },
+  {
+    "id": "p-35",
+    "parent": null,
+    "title": "Thiếu skill giải-thích-một-thứ có sơ đồ + CHỨNG bằng runtime (không đoán tĩnh)",
+    "desc": "Có /onboard-codebase (cả dự án→wiki) + /join-project (orient) + docs-site-macos (vẽ đẹp) nhưng không có skill giải thích MỘT thứ ở 2 cấp (hệ thống+code) có sơ đồ, và quan trọng: chứng 'nó chạy thế nào' bằng runtime thật thay vì đọc-rồi-đoán. Fix: /teach-me — 4 phần cố định (2 cấp + bộ ba os/cơ-chế/vai-trò + tóm tắt), grounded bằng chạy+instrument/breakpoint (mượn triết lý /verify), instrument dọn sạch sau, sơ đồ mermaid/HTML-glass hai đường.",
+    "status": "solved",
+    "scope": [
+      "skills",
+      "llmwiki"
+    ],
+    "date": "2026-07-16",
+    "solvedBy": "skills/teach-me/SKILL.md (grounded runtime + 4 phần + sơ đồ 2 đường). SPEC 160726-teach-me-skill. Không chạm harness (chỉ skill+wiki) → scope 2/3.",
+    "session": "2026-07-16 teach-me"
   }
 ]</script>
 

@@ -130,3 +130,5 @@
 | [290626-failure-spec-violation](sources/draft/290626-failure-spec-violation.md) | draft | 2026-06-29 |
 | [150726-unknown-ledger](sources/draft/150726-unknown-ledger.md) | draft | 2026-07-15 |
 | [150726-qc-code-skill](sources/draft/150726-qc-code-skill.md) | draft | 2026-07-15 |
+| [160726-teach-me-skill](sources/draft/160726-teach-me-skill.md) | draft | 2026-07-16 |
+| [160726-session-provenance](sources/160726-session-provenance.md) | source | 2026-07-16 |

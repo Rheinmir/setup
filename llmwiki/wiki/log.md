@@ -19,15 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-15 08:29:18 | `file.write` | harness/scripts/skill-health.py · tool=Edit · session=36e6562b · actor=agent · prev=32f481db1e66e1b080ce2121190e5514f54a |
-| 2026-07-15 08:29:38 | `file.write` | harness/scripts/skill-health.py · tool=Edit · session=36e6562b · actor=agent · prev=801039d9a91f344a890791ac6540a14c5054 |
-| 2026-07-15 08:30:11 | `file.write` | skills/lint/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=4f5d1bbf15a80913c784704f6700e0d8c4c9cdf5bfd3f93 |
-| 2026-07-15 08:31:10 | `file.write` | llmwiki/wiki/sources/issue-tracker.md · tool=Write · session=36e6562b · actor=agent · prev=1fd0008ad7a2389fdd0844e0bb756 |
-| 2026-07-15 08:31:58 | `file.write` | harness/scripts/frontier.py · tool=Write · session=36e6562b · actor=agent · prev=d62a72285bb81dba7b6b44d1a3d8dc87762cee5 |
-| 2026-07-15 08:32:55 | `file.write` | skills/raise-issue/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=77cb2db83f76d8418b06c831fba8f11415fed9a8 |
-| 2026-07-15 08:34:14 | `file.write` | skills/wayfinder/SKILL.md · tool=Write · session=36e6562b · actor=agent · prev=67b0131108d3aaccf8b69dd746b81e4019836fa34 |
-| 2026-07-15 08:34:45 | `file.write` | skills/orca-workflow/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=8ea28cbe1432d7191dca84fbbadc7f43788290 |
-| 2026-07-15 08:35:37 | `file.write` | skills/new-skill/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=9daaeed00a669f5912187069a3f2f735c82ccfffd8 |
 | 2026-07-15 08:50:15 | `task.set` |  · task=T-260715-01 · state=done · note=10 task, UAT 2 pha PASS, e18c7b5 · actor=agent · prev=48700d970835f7766378d84177 |
 | 2026-07-15 08:55:17 | `task.new` |  · task=T-260715-02 · title=hấp thụ hallmark: nền design chung + cổng slop tất định + fill-default · state=proposed · ac |
 | 2026-07-15 08:57:21 | `file.write` | llmwiki/wiki/sources/draft/150726-hallmark-design-foundation.md · tool=Write · session=36e6562b · actor=agent · prev=a25 |
@@ -59,6 +50,15 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-15 19:08:54 | `task.new` |  · task=T-260715-04 · title=skill qc-code: senior review 4 mục + test tái hiện auto-hook · state=proposed · actor=agent  |
 | 2026-07-15 19:10:42 | `file.write` | llmwiki/wiki/sources/draft/150726-qc-code-skill.md · tool=Write · session=36e6562b · actor=agent · prev=07c7e6f5230fc6fd |
 | 2026-07-15 19:12:06 | `file.write` | llmwiki/html/150726-qc-code-skill-seq.html · tool=Write · session=36e6562b · actor=agent · prev=7c8bd33bdf55e1dabc5b8c85 |
+| 2026-07-15 19:57:28 | `task.set` |  · task=T-260715-04 · state=approved · note=gate: duyệt, chạy · actor=agent · prev=38c567686bc3475e6009d45c4c0c609fc1071 |
+| 2026-07-15 19:59:40 | `file.write` | skills/qc-code/SKILL.md · tool=Write · session=36e6562b · actor=agent · prev=68e304588a49b9a7703b60a69df633c73716903f16c |
+| 2026-07-15 20:00:19 | `file.write` | harness/scripts/qc-regression.py · tool=Write · session=36e6562b · actor=agent · prev=f54b6f174a3804aef5b77f31b5a8a5bb50 |
+| 2026-07-15 20:00:55 | `file.write` | skills/verify-before-commit/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=611fb3b1ce7e82e840b6b066aa6efd9 |
+| 2026-07-15 20:01:07 | `file.write` | skills/orca-workflow/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=772146d7bdd34b9ea6408a976d304427b3747b |
+| 2026-07-15 20:06:09 | `task.set` |  · task=T-260715-04 · state=done · note=6 task, UAT 2 pha PASS, df37e05 · actor=agent · prev=0ebf7aa967bdbe2bdd8efb5013f |
+| 2026-07-16 08:29:43 | `task.new` |  · task=T-260716-01 · title=skill teach-me: giải thích 2 cấp + sơ đồ + drive runtime bằng debugger · state=proposed · ac |
+| 2026-07-16 08:31:07 | `file.write` | llmwiki/wiki/sources/draft/160726-teach-me-skill.md · tool=Write · session=36e6562b · actor=agent · prev=31443836f23bba2 |
+| 2026-07-16 08:32:50 | `file.write` | llmwiki/html/160726-teach-me-skill-seq.html · tool=Write · session=36e6562b · actor=agent · prev=bc4ac18a1fd3f73bfd11205 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -319,3 +319,9 @@ Giải issue `030726-skill-resolve-supplychain` (trục #5 frontier-gap-scan, Ch
 - Tách đắt/rẻ (HỎI user → option 3): LLM review gọi tay/workflow; test qc-* auto qua hook tất định 0-token (verify-before-commit 3b), KHÔNG gọi LLM trong hook.
 - harness/scripts/qc-regression.py (--self-test PASS, tự phát hiện pytest/vitest/jest, fail-open). /orca-workflow 6b tùy chọn. Verdict advisory; test gác cứng. p-34 solved 3/3.
 - UAT hai pha PASS (qc-code): canary (3 trụ 5/5, harness 74/74, /qc-code tới tay) → main-URL smoke (đường mặc định, 74/74, /qc-code reachable, qc-regression.py --self-test PASS ở global harness — engine travel thật). p-34 đóng 3/3.
+
+## 2026-07-16 — skill /teach-me: giải thích 2 cấp + sơ đồ + grounded runtime (T-260716-01)
+- /teach-me: giải thích MỘT thứ ở 4 phần cố định (cấp hệ thống +sơ đồ · cấp code +sơ đồ · bộ ba vấn-đề/workflow/chi-tiết os·cơ-chế·vai-trò · tóm tắt luồng +sơ đồ).
+- Điểm phân biệt: CHỨNG "nó chạy thế nào" bằng runtime thật — chạy + instrument/breakpoint (pdb/debugpy/node-inspect/print/log) + quan sát state, KHÔNG đọc-rồi-đoán. Mượn triết lý /verify.
+- Carve-out cứng: instrument tạm DỌN SẠCH sau (git diff xác nhận); không chạy được → khai "giải thích tĩnh" + ghi nợ unknown nếu khẳng định phụ thuộc runtime chưa thấy.
+- Sơ đồ hai đường: mermaid inline (mặc định) / HTML explainer glass docs-site-macos (opt-in khi giữ/chia sẻ). KHÁC /onboard-codebase + /join-project (cả dự án).

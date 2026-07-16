@@ -86,6 +86,7 @@
         "./skills/wayfinder",
         "./skills/orchestration",
         "./skills/qc-code",
+        "./skills/teach-me",
         "./skills/propose",
         "./skills/plan",
         "./skills/fdk-uat",
