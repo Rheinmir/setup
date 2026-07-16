@@ -425,9 +425,16 @@ def meta_probe(S):
     pt = "N/A" if S.get('pytest_env') else ("PASS" if S['pytest_pass'] else "FAIL")
     pt_cls = "org" if (S.get('pytest_env') or not S['pytest_pass']) else "grn"
     return dict(
-        eyebrow=f"/fdk-poc probe · project THẬT · {S['wall_ms']} ms · 16/07/2026",
-        title="Điều kiện THẬT — soi project payroll đang chạy",
-        subtitle=f"Không scaffold: chạy tool THẬT (<b>frame-lint · pytest · build-line-status · checkpoint</b>) trên project <code>{html.escape(Path(S['project']).name)}</code> có sẵn — {S['n_frames']} frame, {S['n_test']} test nghiệp vụ. Mở LOG từng bước để ĐÁNH GIÁ chức năng chạy đúng không.",
+        eyebrow=f"/fdk-poc probe{' · PROJECT MỚI (độc lập)' if S.get('fresh') else ''} · {S['wall_ms']} ms · 16/07/2026",
+        title=("Điều kiện THẬT — payroll bê sang PROJECT MỚI, đứng độc lập được không?"
+               if S.get('fresh') else "Điều kiện THẬT — soi project payroll đang chạy"),
+        subtitle=(
+            (f"Copy <code>{html.escape(S.get('src',''))}</code> sang <b>project MỚI ngoài repo framework</b> "
+             f"(<code>{html.escape(S['project'])}</code>, bỏ .git/out/cache) rồi chạy tool THẬT trên đó — "
+             f"test payroll như một dự án ĐỘC LẬP, không ăn ké context repo. "
+             if S.get('fresh') else
+             f"Không scaffold: chạy tool THẬT trên project <code>{html.escape(Path(S['project']).name)}</code> có sẵn. ")
+            + f"<b>frame-lint · pytest · build-line-status · checkpoint</b> — {S['n_frames']} frame, {S['n_test']} test nghiệp vụ. Mở LOG từng bước để ĐÁNH GIÁ."),
         kpis=[
             dict(n=S['n_frames'], cls="big", l="frame THẬT<br>(br/frames)"),
             dict(n=S['n_test'], cls="grn", l="test nghiệp vụ<br>(acceptance)"),
@@ -471,6 +478,8 @@ def main():
     ap = argparse.ArgumentParser(description="fdk-poc — visualize luồng /br chạy thật")
     ap.add_argument("mode", nargs="?", default="run", choices=["run", "probe"])
     ap.add_argument("--project", default=None, help="probe: root project /br có sẵn (vd br/payroll)")
+    ap.add_argument("--fresh", action="store_true",
+                    help="probe: COPY project sang thư mục MỚI ngoài repo rồi soi — test nó như project ĐỘC LẬP")
     ap.add_argument("--out", default=None, help="đường dẫn HTML (mặc định llmwiki/html/DDMMYY-fdk-poc[-<proj>].html)")
     ap.add_argument("--keep", action="store_true", help="giữ project tạm để soi (run)")
     ap.add_argument("--self-test", action="store_true")
@@ -485,9 +494,21 @@ def main():
         proot = Path(args.project)
         if not (proot / "br" / "frames").is_dir():
             print(f"không thấy br/frames trong {proot} — không phải project /br", file=sys.stderr); sys.exit(2)
+        src_name = proot.name
+        if args.fresh:
+            # Copy sang PROJECT MỚI ngoài repo → soi nó như một dự án ĐỘC LẬP (không ăn ké
+            # context repo framework). Bỏ .git/out/cache — giữ br/, app/, tests/, data/.
+            tmp = Path(tempfile.mkdtemp(prefix="fdk-poc-fresh-"))
+            dest = tmp / src_name
+            shutil.copytree(proot, dest, ignore=shutil.ignore_patterns(
+                ".git", "__pycache__", "*.pyc", "out", "graph.db", ".pytest_cache"))
+            print(f"  → copy {proot} → PROJECT MỚI {dest}", file=sys.stderr)
+            proot = dest
         summary, trace = probe_project(proot)
+        summary["fresh"] = bool(args.fresh)
+        summary["src"] = str(Path(args.project).resolve())
         meta = meta_probe(summary)
-        default_out = REPO / "llmwiki" / "html" / f"160726-fdk-poc-{proot.name}.html"
+        default_out = REPO / "llmwiki" / "html" / f"160726-fdk-poc-{src_name}{'-fresh' if args.fresh else ''}.html"
         pt_head = "N/A(env)" if summary.get('pytest_env') else ("PASS" if summary['pytest_pass'] else "FAIL")
         head = f"✓ PROBE {summary['n_frames']} frame · frame-lint {'PASS' if summary['frame_lint_pass'] else 'FAIL'} · pytest {pt_head} · project {'LÀNH' if summary['project_ok'] else 'CÓ VIỆC'} · {summary['wall_ms']} ms"
     else:
