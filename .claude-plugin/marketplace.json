@@ -66,6 +66,7 @@
         "./skills/harness-tour",
         "./skills/harness-update",
         "./skills/health-check",
+        "./skills/fdk-poc",
         "./skills/medic",
         "./skills/ovs-notes",
         "./skills/ship",

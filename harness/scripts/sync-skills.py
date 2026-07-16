@@ -43,7 +43,7 @@ LOOP_MAP = {
     "cavecrew": "utils", "caveman": "utils", "caveman-commit": "utils", "caveman-compress": "utils",
     "caveman-help": "utils", "caveman-review": "utils", "caveman-stats": "utils",
     "extract-site": "utils", "harness-tour": "utils",
-    "harness-update": "utils", "health-check": "utils", "fdk": "utils", "medic": "utils", "md-to-html": "utils",
+    "harness-update": "utils", "health-check": "utils", "fdk": "utils", "fdk-poc": "utils", "medic": "utils", "md-to-html": "utils",
     "docs-curate": "utils", "raise-issue": "utils",
     "frontier-scan": "utils", "ovs-notes": "utils",
     "sync-template": "utils", "uat-nonit-testcase": "utils", "cursor-animated-sites": "utils",

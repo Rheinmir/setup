@@ -48,6 +48,7 @@ Giảm lỗi LLM-coding phổ biến. Thiên về cẩn trọng hơn tốc độ
 | `web-crawl` | Crawl/scrape a URL or site into LLM-ready markdown | `skills/utils/web-crawl.md` | utils |
 | `web-clone` | Clone a page's exact UI as one self-contained offline HTML | `skills/utils/web-clone.md` | utils |
 | `fdk` | Đang phát triển CHÍNH framework (skill/rule/validator/hook/wiki) | `skills/utils/fdk.md` | utils |
+| `fdk-poc` | POC luồng /br chạy THẬT: tạo project mới, chạy vòng đời bằng lệnh thật + đo giờ + sentinel + LOG từng bước → HTML visualize (lệnh nào·nhanh không·nhớ mấy hub). KHÁC fdk-uat (test nhanh xanh/đỏ) | `skills/utils/fdk-poc.md` | utils |
 | `medic` | Cổng sức khoẻ tổng — 1 lệnh chứng minh hệ còn khoẻ (luật cắn/drift/docs/code/eval); trước commit, sau pull, nghi rule không chặn | `skills/utils/medic.md` | utils |
 | `new-skill` | Scaffold một skill mới (canonical+mirror+lệnh register) | `skills/dev-loop/new-skill.md` | dev-loop |
 | `skill-provenance` | Ghi/kiểm provenance (nguồn + sha256) khi cài skill ngoài — audit supply-chain, phát hiện skill bị sửa lén | `skills/dev-loop/skill-provenance.md` | dev-loop |
