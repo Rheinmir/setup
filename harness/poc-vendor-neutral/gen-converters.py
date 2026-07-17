@@ -153,6 +153,12 @@ jobs:
         run: |
           git clone --depth 1 -b "$HARNESS_REF" "$HARNESS_REPO" "$RUNNER_TEMP/harness-src"
           bash "$RUNNER_TEMP/harness-src/harness/scripts/install-harness.sh" --global
+      - name: harness-doctor fire-drill — chứng ref đang pin còn cắn (không dark rail)
+        # chạy từ CHECKOUT ĐẦY ĐỦ vừa clone, KHÔNG từ global: global thiếu hooks/pre-commit
+        # của repo nên side-effect rail (R4/R8/R10/R17) báo missing = dark-rail GIẢ. Bản
+        # $RUNNER_TEMP/harness-src là full repo → 18/18 thật. Mỗi PR tự chứng 18 luật gốc
+        # mà downstream đang bị gác vẫn còn cắn — dark rail của framework nổi đỏ TẠI downstream.
+        run: python3 "$RUNNER_TEMP/harness-src/harness/scripts/harness-doctor.py" --ci
       - name: harness validator (layer=repo, từ global) trên file .md đổi
         run: |
           base="${{{{ github.event.pull_request.base.sha || github.event.before }}}}"
