@@ -306,3 +306,8 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 
 - 2026-07-03 frontier-gap-scan: concept mới (baseline overstack-vs-world 30d) + raise 5 issue gap (GH#9-13: memory, self-evolving-skills, observability, orchestration-scale, skill-resolve-supplychain). Report: llmwiki/html/overstack-vs-world-30d.html
 - 2026-07-03 raise issue Ralph BR→frame production-line + harness/monitor (GH#15, ledger 030726-ralph-br-frame-production-line). Đổi scout tuần thành skill instant /frontier-scan (canonical+mirror+4 surface, checks xanh) vì routine cloud bị chặn GitHub.
+- 2026-07-06 23:15 — session `49ec06f0` — 17 tool calls — files: ISSUES.md, framework-multi-session-dev.md, gen-converters.py, harness-integrity-test.sh, harness.yml, index.md, install-harness.sh, install.sh …
+- 2026-07-07 13:19 — session `e2bc1e44` — 10 tool calls — files: 070726-adapt-modes.html, AGENT.md, CLAUDE.md, MEMORY.md, adapt-modes-taxonomy.md, adapt-modes.md, index.md, travel-policy.yaml
+- 2026-07-07 14:55 — session `8d2bc3a0` — 4 tool calls — files: 070726-adapt-modes.html, build-overstack-docs.py, docs-site-macos.md
+- 2026-07-07 15:06 — session `b2e273ec` — 4 tool calls — files: 060726-ponytail-distill-PLAN.md, 070726-ponytail-distill.md
+- 2026-07-15 09:06 — session `36e6562b` — 21 tool calls — files: 150726-hallmark-design-foundation-seq.html, 150726-hallmark-design-foundation.md, 150726-mattpocock-absorb-seq.html, 150726-mattpocock-absorb.md, SKILL.md, frontier.py, issue-tracker.md, skill-craft.md …

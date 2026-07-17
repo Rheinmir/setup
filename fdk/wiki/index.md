@@ -62,6 +62,7 @@
 | [ADR-016-no-ai-attribution-in-commits](sources/adr/ADR-016-no-ai-attribution-in-commits.md) | decision | ADR-016: Không ghi công AI trong commit (R15) |
 | [framework-dev-antipatterns](concepts/framework-dev-antipatterns.md) | concept | Framework-dev anti-patterns |
 | [ADR-017-global-shared-engine-repo-data-travel](sources/adr/ADR-017-global-shared-engine-repo-data-travel.md) | decision | ADR-017: Global-shared engine + repo-data travel |
+| [010726-council-output](draft/orca/010726-council-output.md) | auto |  |
 <!-- index:auto:end -->
 | [harness-local](concepts/harness-local.md) | concept | harness-local — harness RIÊNG của dự án |
 | [ADR-011-project-local-harness](sources/adr/ADR-011-project-local-harness.md) | source | "ADR-011: project-local harness — dự án tự phát triển rule riêng (P-namespace, sandbox-safe)" |
