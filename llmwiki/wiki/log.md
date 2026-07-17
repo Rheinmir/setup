@@ -59,6 +59,46 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-15 19:21:36 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=15a64d8b · actor=agent · prev=13a5ca30533d703f6e1d4426147b |
 | 2026-07-15 19:23:38 | `file.write` | skills/visual-qa/assets/route-shots.mjs · tool=Edit · session=15a64d8b · actor=agent · prev=34eadcc18df57801084df310bd06 |
 | 2026-07-15 19:25:13 | `file.write` | skills/visual-qa/SKILL.md · tool=Edit · session=15a64d8b · actor=agent · prev=21e6293b20e277e772865ebe3cf4335c56c1efab0c |
+| 2026-07-15 08:50:15 | `task.set` |  · task=T-260715-01 · state=done · note=10 task, UAT 2 pha PASS, e18c7b5 · actor=agent · prev=48700d970835f7766378d84177 |
+| 2026-07-15 08:55:17 | `task.new` |  · task=T-260715-02 · title=hấp thụ hallmark: nền design chung + cổng slop tất định + fill-default · state=proposed · ac |
+| 2026-07-15 08:57:21 | `file.write` | llmwiki/wiki/sources/draft/150726-hallmark-design-foundation.md · tool=Write · session=36e6562b · actor=agent · prev=a25 |
+| 2026-07-15 08:59:02 | `file.write` | llmwiki/html/150726-hallmark-design-foundation-seq.html · tool=Write · session=36e6562b · actor=agent · prev=f4125da5573 |
+| 2026-07-15 09:03:06 | `file.write` | llmwiki/html/150726-hallmark-design-foundation-seq.html · tool=Edit · session=36e6562b · actor=agent · prev=f8ecd3129ad8 |
+| 2026-07-15 09:05:28 | `task.set` |  · task=T-260715-02 · state=approved · note=gate: duyệt · actor=agent · prev=a73f541a3ee6a8d87eacacf4031680338e053d974e5 |
+| 2026-07-15 09:06:33 | `file.write` | llmwiki/wiki/concepts/design-foundation.md · tool=Write · session=36e6562b · actor=agent · prev=5428bade3734d964b6bc70ed |
+| 2026-07-15 09:07:37 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=36e6562b · actor=agent · prev=7288f4f183cb72284684223fd49f4f4aae |
+| 2026-07-15 09:07:54 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=36e6562b · actor=agent · prev=0bd03d577b65b2d6886a90232289bfd21e |
+| 2026-07-15 09:08:12 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=36e6562b · actor=agent · prev=bf856b517512dfbe2303018f81e8464e71 |
+| 2026-07-15 09:10:25 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=36e6562b · actor=agent · prev=2959de56ade27d369cac1abdbde7577360 |
+| 2026-07-15 09:11:37 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=36e6562b · actor=agent · prev=346d81010623a5d1f09667ae6c2a64e9c5 |
+| 2026-07-15 09:11:56 | `file.write` | skills/propose/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=db7e9128d72df011706d78d7a0fd132bd1db3f1367b5 |
+| 2026-07-15 09:12:55 | `file.write` | harness/scripts/design-variety.py · tool=Write · session=36e6562b · actor=agent · prev=743622b10fba60b1d8a186b4ad303e904 |
+| 2026-07-15 09:15:35 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=36e6562b · actor=agent · prev=9f09c4b052d3b3270047226eb7f93cc5e4 |
+| 2026-07-15 09:20:37 | `task.set` |  · task=T-260715-02 · state=done · note=8 task, UAT 2 pha PASS, d5d65d9, đóng p-23 · actor=agent · prev=ae48b768e8e543cc |
+| 2026-07-15 11:20:03 | `task.new` |  · task=T-260715-03 · title=unknown ledger: fill-first-find-out-later + sổ nợ truy vết trả nợ · state=proposed · actor=a |
+| 2026-07-15 11:21:58 | `file.write` | llmwiki/wiki/sources/draft/150726-unknown-ledger.md · tool=Write · session=36e6562b · actor=agent · prev=6142ea132a70bf3 |
+| 2026-07-15 11:23:22 | `file.write` | llmwiki/html/150726-unknown-ledger-seq.html · tool=Write · session=36e6562b · actor=agent · prev=bc1a446b8bf9e62f4ce0183 |
+| 2026-07-15 12:59:19 | `task.set` |  · task=T-260715-03 · state=approved · note=gate: duyệt, chạy · actor=agent · prev=d5fab8ad713a1d22459efa349f902ebe79278 |
+| 2026-07-15 12:59:42 | `file.write` | skills/propose/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=30878d70654891d6217941648b7ad10f589d7ea42d1a |
+| 2026-07-15 12:59:55 | `file.write` | skills/propose/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=753f65a12bac9d49b1f132670557cb2ac09cd3722021 |
+| 2026-07-15 13:00:18 | `file.write` | llmwiki/wiki/draft/unknown/_template.md · tool=Write · session=36e6562b · actor=agent · prev=8c8e28705540a6c57de20079065 |
+| 2026-07-15 13:01:09 | `file.write` | harness/scripts/unknown-ledger.py · tool=Write · session=36e6562b · actor=agent · prev=b5a52e16ee83e20ba3ff28291330678c0 |
+| 2026-07-15 13:01:22 | `file.write` | harness/scripts/unknown-ledger.py · tool=Edit · session=36e6562b · actor=agent · prev=08b3b24aad3ad7bea1e75a22e6dd6aae0c |
+| 2026-07-15 13:01:42 | `file.write` | skills/propose/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=02715db04f5f16cd660366d146765f8bc2e2f6845357 |
+| 2026-07-15 13:01:54 | `file.write` | skills/lint/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=2028440ccd01e117cff51a0891fb4e1f809d1efc07b6f11 |
+| 2026-07-15 13:07:43 | `task.set` |  · task=T-260715-03 · state=done · note=6 task, UAT 2 pha PASS, 38ee2c5 · actor=agent · prev=1f8c898f64d27213dbd99c791d5 |
+| 2026-07-15 19:08:54 | `task.new` |  · task=T-260715-04 · title=skill qc-code: senior review 4 mục + test tái hiện auto-hook · state=proposed · actor=agent  |
+| 2026-07-15 19:10:42 | `file.write` | llmwiki/wiki/sources/draft/150726-qc-code-skill.md · tool=Write · session=36e6562b · actor=agent · prev=07c7e6f5230fc6fd |
+| 2026-07-15 19:12:06 | `file.write` | llmwiki/html/150726-qc-code-skill-seq.html · tool=Write · session=36e6562b · actor=agent · prev=7c8bd33bdf55e1dabc5b8c85 |
+| 2026-07-15 19:57:28 | `task.set` |  · task=T-260715-04 · state=approved · note=gate: duyệt, chạy · actor=agent · prev=38c567686bc3475e6009d45c4c0c609fc1071 |
+| 2026-07-15 19:59:40 | `file.write` | skills/qc-code/SKILL.md · tool=Write · session=36e6562b · actor=agent · prev=68e304588a49b9a7703b60a69df633c73716903f16c |
+| 2026-07-15 20:00:19 | `file.write` | harness/scripts/qc-regression.py · tool=Write · session=36e6562b · actor=agent · prev=f54b6f174a3804aef5b77f31b5a8a5bb50 |
+| 2026-07-15 20:00:55 | `file.write` | skills/verify-before-commit/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=611fb3b1ce7e82e840b6b066aa6efd9 |
+| 2026-07-15 20:01:07 | `file.write` | skills/orca-workflow/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=772146d7bdd34b9ea6408a976d304427b3747b |
+| 2026-07-15 20:06:09 | `task.set` |  · task=T-260715-04 · state=done · note=6 task, UAT 2 pha PASS, df37e05 · actor=agent · prev=0ebf7aa967bdbe2bdd8efb5013f |
+| 2026-07-16 08:29:43 | `task.new` |  · task=T-260716-01 · title=skill teach-me: giải thích 2 cấp + sơ đồ + drive runtime bằng debugger · state=proposed · ac |
+| 2026-07-16 08:31:07 | `file.write` | llmwiki/wiki/sources/draft/160726-teach-me-skill.md · tool=Write · session=36e6562b · actor=agent · prev=31443836f23bba2 |
+| 2026-07-16 08:32:50 | `file.write` | llmwiki/html/160726-teach-me-skill-seq.html · tool=Write · session=36e6562b · actor=agent · prev=bc4ac18a1fd3f73bfd11205 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -391,3 +431,75 @@ Draft SPEC T-260714-01: /br interview --proactive (fill-chain default→spec-kit
 
 ## 2026-07-14 — orca-workflow — br-proactive-fill thi công xong
 T-260714-01 done: defaults.yaml (26 điều kiện + spec-kit) + br-fill.py (fill/check-contract/selftest) + SKILL.md Mode1 --proactive + Mode2 gate G1. Đo payroll: 12 câu → 4 câu, S7.5 máy điền, SC-001/004 PASS, medic KHOẺ.
+
+## 2026-07-06 — Proposal: nền chuẩn thiết kế AI-elite chống AI-slop
+- Distill `raw/design-tip-of-someone-on-internet.md` → bảng 13 tip (3 trục: ĐO ĐƯỢC/QUY TRÌNH/PHÁN ĐOÁN).
+- `/last30days`: engine binary thiếu (chỉ SKILL.md) → dùng WebSearch thay; agent nền `a5a9a19` đào 8 nguồn design-agent (taste-skill, avoid-ai-design, Anthropic frontend-design, Emil Kowalski motion, high-end-visual-design, Refactoring UI, claude-design-auditor, Meta Astryx) → corpus có nguồn.
+- User chốt: gác CẢ HAI đầu ra (HTML framework + skill design) bằng 1 nền chung; 2 tầng nhưng chốt-sửa thì kill 1-shot.
+- Ra draft cặp: `sources/draft/060726-design-standard-ai-elite-PLAN.md` + `html/060726-design-standard-ai-elite-PLAN.html`. Index cập nhật. Problem-tree +node p-23 (open, 0/3 trụ). CHỜ DUYỆT — chưa build.
+
+## 2026-07-07 — fdk — sidebar cuộn-không-nén, scrollbar ẩn (feedback)
+
+- Bệnh gốc "co nhỏ quá mức" = flex-shrink nén item khi thiếu chỗ. Fix: nav>*{flex-shrink:0} + overflow-y:auto + ẩn scrollbar hoàn toàn (scrollbar-width:none, ::-webkit-scrollbar display:none).
+- Luật vào docs-site-macos § Best Practices ("SIDEBAR: CUỘN chứ không NÉN") + memory; verify Safari.
+
+## 2026-07-07 — fdk — fix vỡ selector CSS: block chống-nén chèn giữa `nav\n.logo`
+
+- User báo "chưa thấy thay đổi" → tự capture (headless Chrome + playwright) mới lộ: block chèn hôm qua rơi GIỮA selector `nav\n.logo` viết tách 2 dòng → parser đọc thành `nav nav>*` (không match gì) + `.logo` mất scope; flex-shrink:0 không ăn, link vẫn nén còn 10px.
+- Fix: trả `nav\n.logo` liền lại, chèn block trước rule `nav{position:fixed…}` (anchor không mơ hồ). Verify computed-style thật: h=29px, flexShrink=0, nav scrollable, scrollbar none, cả dark+light.
+- Bài học verify: grep thấy rule trong file ≠ rule được parse — phải đo computed style/behavior thật.
+
+## 2026-07-07 — fdk — gỡ note so sánh openwiki khỏi overstack.html (feedback)
+
+- Docs chính thức không bình phẩm sản phẩm khác: xoá note "Đối chiếu thẳng thắn với openwiki" + attribution inline; nội dung mục Wiki giờ chỉ nói năng lực của mình.
+
+## 2026-07-07 — Cài last30days + agent-reach (external-pull) + concept adapt-modes
+- Cài engine last30days v3.11.0 (mvanhorn) vào ~/.agents/skills; cài agent-reach v1.5.0 (Panniantong) qua pipx (tarball gh-api, không PyPI). Provenance ghi cả hai (.provenance.yaml + fdk/skills.provenance.json, adapt_mode=external-pull).
+- Wiring travel kiểu external-pull: travel-policy.yaml Tầng 1 +research_reach; mirror SKILL.md (last30days→v3.11.0, agent-reach mới); bảng skill CLAUDE.md/AGENT.md +agent-reach.
+- Concept mới `adapt-modes`: đặt tên 3 kiểu absorb (HÒA TAN / KÉO NGOÀI / NHÚNG-SỞ-HỮU) + bảng quyết định. Sẽ render docs-site-macos.
+
+- Render docs-site-macos concept adapt-modes → llmwiki/html/070726-adapt-modes.html (mind-map + sơ đồ định vị kéo-thả + theme toggle + 3 section kiểu adapt).
+
+## 2026-07-07 — Chưng cất ponytail (anti-over-engineering) vào overstack
+- B1: thêm khối luật luôn-nạp "Cái thang chống over-engineering" vào llmwiki/AGENT.md + llmwiki/CLAUDE.md (ladder 7 bậc + hiểu-bài-trước + root-cause fix + carve-out an toàn + format review 1-dòng/tag/net:-N). Nguồn: 060726-ponytail-distill (ponytail, MIT).
+- B2: /lint thêm bước 8 grep marker nợ `shortcut: <trần>, <trigger>` thiếu trigger (canonical skills/lint/SKILL.md → sync-skill.sh ra mirror + bản cài); bước log/neo dời thành 9/10.
+- B3: gộp format review 1-dòng vào khối B1 (không đẻ skill song song — /simplify là built-in). fdk-problem-tree +node p-24 (solved 2/3 trụ). medic --ci: 9/9 xanh.
+
+- 2026-07-12 · frontier-scan #3 · quét 5 WebSearch, đối chiếu 8 trục vs kỳ #2 (04/07). Diff: không trục nào tụt hạng, không trục mới; 5 trục Thua/Chớm đều đã có issue mở chỉ còn 3 trục mở GH#10/#11/#12; đính chính: GH#9 (Memory) + GH#13 (Skill-security) đã CLOSED có code thật, kỳ #2 chép nhầm nhãn Thua/Chớm → cập nhật bằng chứng, không raise trùng (R7-f). Bằng chứng mới: Skill-security số liệu cứng (42.447 skill 26.1% lỗ hổng, Antiy 1.184 skill độc ClawHub, 80% lệch khai-báo↔hành-vi), Orchestration mốc scale (Kimi K2.5 100 sub-agent song song), Memory blueprint (Zep/Graphiti temporal KG + BEAM/LoCoMo/LongMemEval), Self-Harness/ComfyClaw/MetaSkill-Evolve (vẫn buộc verifier độc lập). Report: llmwiki/html/overstack-vs-world-30d.html.
+
+## 2026-07-14 — R18 plan-executable + /fdk-uat (UAT THẬT, PASS)
+- Lỗ: nhánh PLAN của R7 chỉ sống trong validator Python; downstream chạy engine khai báo → luật KHÔNG tới tay người cài. Cổng vẫn xanh vì rule_parity chỉ so danh sách rule id.
+- Fix: R18 khai ở cả hai policy (khai báo travel downstream + production gác từng task). Bite-test 2 tầng: doctor 18/18 rails, test-broad 72/72.
+- /fdk-uat: skill UAT thật — push trước (đường remote chỉ tồn tại sau push), test sau, không pass thì gỡ commit khỏi remote.
+- UAT chạy thật trên dự án TRỐNG cài bằng curl từ GitHub: 3 trụ đủ · test-broad 72/72 · R18 CẮN đúng lý do · 3 skill orchestration reachable · orca runtime UP · 84 skill global · 18 rule. PASS → giữ commit c5efc57.
+- UAT HAI PHA chạy thật: pha 1 canary PASS (74/74, luật mới cắn, SKILLS_REF chứng minh cài đúng bản canary chứ không phải orca). Pha 2 main-URL lần đầu ĐỎ (72/74) — điều tra ra raw.githubusercontent propagate TRỄ và KHÔNG ĐỒNG ĐỀU: engine đã mới, policy.yaml còn cũ → bản LAI. Chờ CDN rồi chạy lại: 74/74 PASS. Không phải bug code → không revert. Bài học thành luật: /fdk-uat pha 2 phải poll sentinel trước khi đo (p-29).
+- UAT hai pha PASS: canary (3 trụ 5/5, harness 74/74, /wayfinder tới tay, 23 skill tắt model-invocation tới global — cắt token thật) → main-URL smoke (đường mặc định 74/74). Bug lộ ra: sentinel CDN của /fdk-uat viết sai pattern → chờ vô ích 4 phút dù raw đã mới (p-32, đã ghi cảnh báo grep-verify). UAT hai pha PASS (150726).
+
+## 2026-07-15 — hấp thụ hallmark làm nền design chung (T-260715-02, đóng p-23)
+- Cài Nutlope/hallmark (Together AI, 106 file, provenance sha256) làm NỀN — 6 discipline + 57 cổng slop-test.
+- concept design-foundation: sàn chung; 12 skill taste trỏ tới (flavour trên sàn). docs-site-macos = ngoại lệ artifact nội bộ.
+- frontend-antipattern.py +4 cổng UNIVERSAL grep được (gradient-text/italic-header/fake-chrome/số-liệu-marketing), quét trong <style>. --self-test PASS. 0 false-positive trên 30+ seq.html.
+- DOGFOOD lộ slop THẬT: overstack.html + index.html + health-dashboard có gradient-text (blue→purple headline) do generator sinh — sửa 3 generator dùng màu đặc.
+- /propose fill-default từ catalog hallmark (tag default, ghi ## Assumptions). design-variety.py + .design-log.jsonl: cổng Variety travel-được (phơi bày mọi seq.html là một glass template — nợ đã biết).
+- Nợ có sẵn lộ ra (KHÔNG sửa trong SPEC này): ~17 HTML cũ gradient-text + ligature debt.
+- UAT hai pha PASS (hallmark): canary (3 trụ 5/5, harness 74/74, hallmark SKILL + 24 references travel tới tay incl slop-test.md) → main-URL smoke (đường mặc định, 74/74, reachable). Raise ledger issue 150726-legacy-html-slop-debt (ready-for-agent) cho nợ ~17 HTML cũ. p-23 đóng.
+- /fdk-uat TOÀN DIỆN đường mặc định (curl từ orca, KHÔNG override): 3 trụ 5/5 · harness 74/74 · /wayfinder + /hallmark (129 references incl slop-test.md) tới tay · 23 skill tắt model-invocation · /plan+/propose+/orca-workflow là bản mới · 4 engine tất định ở global harness (frontend-antipattern --self-test PASS, frontier/skill-health/design-variety reachable) · R7-n + R18 CẮN THẬT trong dự án cài mới (exit 2), concept hợp lệ QUA (exit 0) · orchestration-ready 3/3 + orca UP · 86 skill global / 18 rule. UAT toàn diện đường mặc định (150726) PASS.
+
+## 2026-07-15 — sổ nợ unknown: fill-first-find-out-later (T-260715-03)
+- Tầng thứ ba giữa (default) và [CẦN LÀM RÕ]: default rủi ro điền để KHÔNG chặn việc, ghi thành nợ có sổ truy được.
+- /propose: interview LUÔN có đáp án cuối "điền mặc định bây giờ, tìm hiểu sau"; tag (default, find-out-later → `[[unknown-x]]` U-NN). + luồng trả nợ.
+- Folder llmwiki/wiki/draft/unknown/ + _template.md; harness/scripts/unknown-ledger.py (list/add/resolve/trace, --self-test PASS, audit giữ cả 2 giá trị); /lint 8c hiện nợ (báo cáo không chặn). p-33 solved 3/3.
+- UAT hai pha PASS (unknown-ledger): canary (3 trụ 5/5, harness 74/74, /propose fill-first tới tay) → main-URL smoke (đường mặc định, 74/74, /propose reachable, unknown-ledger.py --self-test PASS ở global harness — engine travel thật). p-33 đóng 3/3.
+
+## 2026-07-15 — skill /qc-code: senior review 4 mục + test tái hiện auto-hook (T-260715-04)
+- /qc-code: review senior 4 mục (security/performance/naming/logic), điểm/10 + lỗi nặng nhất + fix, verdict PASS/CẦN SỬA. Mục logic sinh test tái hiện qc-*.
+- Tách đắt/rẻ (HỎI user → option 3): LLM review gọi tay/workflow; test qc-* auto qua hook tất định 0-token (verify-before-commit 3b), KHÔNG gọi LLM trong hook.
+- harness/scripts/qc-regression.py (--self-test PASS, tự phát hiện pytest/vitest/jest, fail-open). /orca-workflow 6b tùy chọn. Verdict advisory; test gác cứng. p-34 solved 3/3.
+- UAT hai pha PASS (qc-code): canary (3 trụ 5/5, harness 74/74, /qc-code tới tay) → main-URL smoke (đường mặc định, 74/74, /qc-code reachable, qc-regression.py --self-test PASS ở global harness — engine travel thật). p-34 đóng 3/3.
+
+## 2026-07-16 — skill /teach-me: giải thích 2 cấp + sơ đồ + grounded runtime (T-260716-01)
+- /teach-me: giải thích MỘT thứ ở 4 phần cố định (cấp hệ thống +sơ đồ · cấp code +sơ đồ · bộ ba vấn-đề/workflow/chi-tiết os·cơ-chế·vai-trò · tóm tắt luồng +sơ đồ).
+- Điểm phân biệt: CHỨNG "nó chạy thế nào" bằng runtime thật — chạy + instrument/breakpoint (pdb/debugpy/node-inspect/print/log) + quan sát state, KHÔNG đọc-rồi-đoán. Mượn triết lý /verify.
+- Carve-out cứng: instrument tạm DỌN SẠCH sau (git diff xác nhận); không chạy được → khai "giải thích tĩnh" + ghi nợ unknown nếu khẳng định phụ thuộc runtime chưa thấy.
+- Sơ đồ hai đường: mermaid inline (mặc định) / HTML explainer glass docs-site-macos (opt-in khi giữ/chia sẻ). KHÁC /onboard-codebase + /join-project (cả dự án).
+- UAT hai pha PASS (teach-me): canary (3 trụ 5/5, harness 74/74, /teach-me tới tay + nội dung grounded-runtime) → main-URL smoke (đường mặc định, 74/74, reachable). Smoke dogfood trên frontier.py chứng bằng chạy thật. p-35 đóng 2/3 trụ (skill-only).

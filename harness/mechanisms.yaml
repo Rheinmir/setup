@@ -119,7 +119,7 @@ mechanisms:
     name: "bộ nhớ thứ cấp"
     kind: tool
     surface: [mechanism, maintain]
-    desc: "scratch-log (RAW append-only, track git) + memory-map (view) + session-provenance (auto-distill) — bắt sửa/context VỤN, không mất gì, truy được ở phiên sau"
+    desc: "scratch-log (RAW append-only, track git) + memory-map (view) + session-provenance (auto-distill) — bắt sửa/context VỤN, không mất gì, truy được ở phiên sau. AUTO cuối lượt qua Stop-hook (issue #5, council-030): auto-điền why từ git nếu chưa ghi tay → distill → regenerate memory-map.html, không cần agent nhớ gõ"
     live_probe: harness/scripts/scratch-log.py
 
   - id: harness-update

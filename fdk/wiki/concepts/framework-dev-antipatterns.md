@@ -53,6 +53,43 @@ Tự chọn "đề thi" dễ (dự án 3-file đồ chơi) rồi tuyên bố "đ
 loại), ground-truth THẬT (repo chính nó), negative test (input gãy → không đẻ cạnh giả), determinism.
 Thêm lăng kính **senior-tester nghi ngờ chính bài test** — nó tìm ra defect (GH#47 dangling wikilink).
 
+## AP-5 · "Split-brain enablement" — tín hiệu bật tính năng ở code-path KHÁC path thực chạy (GH#70)
+
+**Triệu chứng.** Tính năng có đủ engine + hook nhưng **không bao giờ kích hoạt** ở downstream; không lỗi,
+không cảnh báo — chỉ im lặng tắt.
+
+**Vì sao sập.** Cờ bật (`OVERSTACK_WIKIGRAPH=1`) được set ở **section 4b per-repo** của
+`install-harness.sh`, NHƯNG đường cài thật downstream là `bootstrap.sh → install.sh --full →
+install-harness.sh --global`, mà nhánh `--global` **`exit 0` TRƯỚC section 4b**. Enablement sống ở một
+nhánh; nhánh thực thi là nhánh khác → cờ không bao giờ được set → `stop.py` `wikigraph_on=False` →
+graph tự lệch (đúng #70). Migration v4 (GH#63) dời engine sang global nhưng **tín hiệu bật không dời theo**.
+
+**Cách chặn.**
+- **Khoá enablement vào tín hiệu ĐÃ gate code-path đó**, đừng đẻ cờ song song. Ở đây: hook global chỉ
+  fire khi có `llmwiki/.harness-stamp` → dùng CHÍNH stamp làm điều kiện bật wiki-graph. Một tín hiệu, một
+  sự thật (Meadows: sửa luồng thông tin, không thêm tham số).
+- Sau khi tách một install-path mới (per-repo ↔ global), liệt kê MỌI thứ path cũ set (env, wiring, seed) và
+  hỏi "path mới còn set không?". Cái gì `exit` sớm bỏ qua thì phải mang lên trước điểm exit.
+
+## AP-6 · "Test tự chống đỡ tín hiệu mà production thiếu" (best-practice cho bài test — GH#70)
+
+**Triệu chứng.** Test XANH bền vững nhưng production hỏng ở đúng thứ test tưởng đã phủ.
+
+**Vì sao sập.** `wiki-graph-user-reachability-test.sh` drive `stop.regen_docs` với
+`OVERSTACK_WIKIGRAPH=1` **set tay trong test env**. Chính cờ đó là thứ install path downstream KHÔNG set.
+Test dựng sẵn tiền-đề mà thực tế không có → xanh giả, che AP-5 suốt nhiều PR.
+
+**Best-practice rút ra (áp cho mọi test downstream/install của dự án).**
+- **Fixture phải TÁI HIỆN đúng môi trường đích, không mồi thêm tín hiệu.** Chỉ set những gì install path
+  thật tạo ra (ở đây: `.harness-stamp`); đừng export env/biến mà chỉ có trong đầu người viết test.
+- **Test bất-biến, không test giá trị hiện tại.** Guard đúng = "repo đã bootstrap ⇒ auto-draw", bất kể
+  cơ chế bật là gì — nên khi cơ chế đổi (env→stamp) test vẫn đo đúng ý định.
+- **Kèm negative-control cho ĐIỀU KIỆN bật, không chỉ cho engine.** Đã thêm STAMP-control: không stamp +
+  không env ⇒ KHÔNG vẽ — chốt cả hai chiều (bật đúng lúc, tắt đúng lúc).
+- Liên hệ [[AP-4]] (ludic-fallacy): cả hai là "test dễ hơn thực tế"; AP-4 dễ ở *input*, AP-6 dễ ở *môi trường*.
+
 ## Origin
 - Chưng cất từ phiên dev 2026-07-05 (wiki-graph downstream): các instance GH#41/#43/#47/#49/**#51**.
-- Bằng chứng: `llmwiki/html/council/council-report-028-seed42.html`, PR#42/#45/#49/#52.
+- Bổ sung 2026-07-08 (GH#70): AP-5 split-brain enablement + AP-6 test tự-chống-đỡ tín hiệu.
+- Bằng chứng: `llmwiki/html/council/council-report-028-seed42.html`, PR#42/#45/#49/#52; fix GH#70 ở
+  `stop.py` + `wiki-graph-user-reachability-test.sh` (bỏ `OVERSTACK_WIKIGRAPH=1` mồi + thêm STAMP-control).

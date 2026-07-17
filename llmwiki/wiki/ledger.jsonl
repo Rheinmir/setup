@@ -49,6 +49,7 @@
 {"ts": "2026-07-06T23:55:04", "session": "db4de305", "action": "add", "target": "sources/draft/060726-br-test-harness-plan.md", "tool": "Write"}
 {"ts": "2026-07-06T23:56:21", "session": "db4de305", "action": "modify", "target": "sources/draft/060726-br-test-harness-plan.md", "tool": "Edit"}
 {"ts": "2026-07-06T23:56:37", "session": "db4de305", "action": "modify", "target": "sources/draft/060726-br-test-harness-plan.md", "tool": "Edit"}
+{"ts": "2026-07-05T00:15:21", "session": "8b8c5c36", "action": "modify", "target": "sources/ISSUES.md", "tool": "Edit"}
 {"ts": "2026-07-05T20:17:34", "session": "62b41f4c", "action": "add", "target": "sources/draft/050726-ship-selfindex-engine-downstream.md", "tool": "Write"}
 {"ts": "2026-07-05T20:40:00", "session": "62b41f4c", "action": "add", "target": "sources/draft/050726-wikigraph-package-import-resolver.md", "tool": "Write"}
 {"ts": "2026-07-05T21:34:49", "session": "62b41f4c", "action": "add", "target": "sources/draft/050726-wikigraph-dangling-wikilink.md", "tool": "Write"}
@@ -75,3 +76,4 @@
 {"ts": "2026-07-14T23:05:25", "session": "15a64d8b", "action": "add", "target": "sources/draft/140726-br-proactive-fill.md", "tool": "Write"}
 {"ts": "2026-07-14T23:34:29", "session": "15a64d8b", "action": "add", "target": "sources/draft/140726-br-proactive-fill-PLAN.md", "tool": "Write"}
 {"ts": "2026-07-14T23:40:26", "session": "15a64d8b", "action": "add", "target": "draft/orca/140726-br-proactive-fill-report.md", "tool": "Write"}
+{"ts": "2026-07-11T20:51:00", "session": "cacb3b15", "action": "modify", "target": "sources/ISSUES.md", "tool": "Edit"}

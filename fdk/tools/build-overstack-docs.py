@@ -123,7 +123,7 @@ ACCENTS = [("#0a84ff", "10,132,255"), ("#30b0c7", "48,176,199"), ("#5856d6", "88
 LOOP_GROUPS = {
     "dev-loop": (
         [("edit", "✏️ sửa code an toàn"), ("build", "🏗️ dựng & onboard"), ("eval", "📊 eval & vòng lặp")],
-        {"propose": "edit", "impact-check": "edit", "safe-change": "edit", "verify-before-commit": "edit",
+        {"propose": "edit", "plan": "edit", "qc-code": "edit", "teach-me": "edit", "impact-check": "edit", "safe-change": "edit", "verify-before-commit": "edit",
          "build-now-adapt-later": "edit",
          "new-project-setup": "build", "onboard-codebase": "build", "new-skill": "build",
          "skill-provenance": "build",
@@ -132,7 +132,7 @@ LOOP_GROUPS = {
     "orchestrate": (
         [("dispatch", "🐳 điều phối"), ("eval", "📊 đánh giá"), ("ops", "🚀 vận hành & deploy")],
         {"orca-workflow": "dispatch", "orca-onboard": "dispatch", "orchestration": "dispatch",
-         "orca-cli": "dispatch", "orca-dispatch-reference": "dispatch",
+         "orca-cli": "dispatch", "orca-dispatch-reference": "dispatch", "wayfinder": "dispatch",
          "council": "eval", "trace-grader": "eval", "orca-eval": "eval",
          "orca-sec-scans": "ops", "jenkins-agent-l3-deploy": "ops", "orca-issue": "ops"}),
     "utils": (
@@ -141,7 +141,7 @@ LOOP_GROUPS = {
         {"docs-site-macos": "docs", "extract-site": "docs", "md-to-html": "docs",
          "web-crawl": "docs", "web-clone": "docs",
          "tour-guide": "taste", "tour-guide-supademo": "taste",
-         "brandkit": "taste", "design-taste-frontend": "taste", "design-taste-frontend-v1": "taste",
+         "brandkit": "taste", "hallmark": "taste", "design-taste-frontend": "taste", "design-taste-frontend-v1": "taste",
          "gpt-taste": "taste", "high-end-visual-design": "taste", "stitch-design-taste": "taste",
          "minimalist-ui": "taste", "industrial-brutalist-ui": "taste", "redesign-existing-projects": "taste",
          "cursor-animated-sites": "docs",
@@ -149,7 +149,7 @@ LOOP_GROUPS = {
          "imagegen-frontend-web": "imagegen",
          "cavecrew": "caveman", "caveman": "caveman", "caveman-commit": "caveman", "caveman-compress": "caveman",
          "caveman-help": "caveman", "caveman-review": "caveman", "caveman-stats": "caveman",
-         "fdk": "fdk", "medic": "fdk", "harness-tour": "fdk", "harness-update": "fdk", "health-check": "fdk",
+         "fdk": "fdk", "fdk-uat": "fdk", "medic": "fdk", "harness-tour": "fdk", "harness-update": "fdk", "health-check": "fdk",
          "snapshot-push": "fdk", "sync-template": "fdk", "docs-curate": "fdk",
          "check-approve": "utility", "computer-use": "utility", "find-skills": "utility",
          "full-output-enforcement": "utility", "join-project": "utility", "last30days": "utility",
@@ -181,9 +181,14 @@ body::before{content:'';position:fixed;inset:-10%;z-index:-1;pointer-events:none
 body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;background-image:radial-gradient(rgba(30,90,170,.1) 1px,transparent 1.3px);background-size:22px 22px;mask-image:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.22))}
 @media(prefers-reduced-motion:reduce){body::before{animation:none}}
 ::-webkit-scrollbar{width:11px;height:11px;background:transparent}::-webkit-scrollbar-thumb{background:transparent;border-radius:8px;border:3px solid transparent;background-clip:content-box;transition:background-color .25s}html.scrolling::-webkit-scrollbar-thumb,::-webkit-scrollbar-thumb:hover{background-color:rgba(10,132,255,.32)}
-nav{position:fixed;top:0;left:0;bottom:0;width:232px;z-index:100;overflow-y:auto;display:flex;flex-direction:column;gap:1px;padding:18px 12px;background:linear-gradient(165deg,rgba(255,255,255,.46),rgba(255,255,255,.22) 48%,rgba(240,248,255,.34));backdrop-filter:blur(24px) saturate(1.7);-webkit-backdrop-filter:blur(24px) saturate(1.7);border-right:1px solid rgba(255,255,255,.55);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),4px 0 24px rgba(30,90,170,.08);transition:transform .28s}
-nav::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(220px 160px at 18% 4%,rgba(255,255,255,.55),transparent 70%)}nav>*{position:relative}
-nav .logo{margin:0 0 8px;padding:6px 10px;font-weight:800;font-size:16px;letter-spacing:-.03em;background:linear-gradient(135deg,#0a84ff,#5856d6);-webkit-background-clip:text;background-clip:text;color:transparent}
+/* sidebar: stack KHÔNG bị nén (feedback 2026-07-07) — thiếu chỗ thì CUỘN, scrollbar ẩn hoàn toàn */
+nav>*{flex-shrink:0}
+nav{scrollbar-width:none;-ms-overflow-style:none}
+nav::-webkit-scrollbar{width:0;height:0;display:none}
+nav{position:fixed;top:0;left:0;bottom:0;width:232px;z-index:100;overflow-y:auto;display:flex;flex-direction:column;gap:1px;padding:18px 12px;background:linear-gradient(165deg,rgba(255,255,255,.30),rgba(255,255,255,.20) 48%,rgba(240,248,255,.32));backdrop-filter:blur(24px) saturate(1.7);-webkit-backdrop-filter:blur(24px) saturate(1.7);border-right:1px solid rgba(30,90,170,.12);box-shadow:inset -1px 0 0 rgba(30,90,170,.10),4px 0 24px rgba(30,90,170,.08);transition:transform .28s}
+nav::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(220px 160px at 18% 4%,rgba(255,255,255,.34),transparent 70%)}nav>*{position:relative}
+nav
+.logo{margin:0 0 8px;padding:6px 10px;font-weight:800;font-size:16px;letter-spacing:-.03em;color:#0a84ff}
 nav .logo small{display:block;font-size:10px;font-weight:600;color:var(--t2);-webkit-text-fill-color:var(--t2);letter-spacing:0}
 nav a{position:relative;overflow:hidden;padding:5px 11px;border-radius:9px;font-size:12px;color:var(--t2);text-decoration:none;transition:background .15s,color .15s}nav a:hover{background:rgba(10,132,255,.06);color:#0a84ff}nav a.active{color:#0a84ff;background:rgba(10,132,255,.08);font-weight:600}
 nav a .ic{display:inline-block;width:17px;margin-right:6px;text-align:center;opacity:.95}
@@ -195,7 +200,7 @@ nav .grp{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppe
 .ripple{position:absolute;border-radius:50%;pointer-events:none;transform:scale(0);opacity:.9;background:radial-gradient(circle,rgba(255,255,255,.6) 0%,rgba(10,132,255,.22) 35%,transparent 70%);box-shadow:0 0 0 1px rgba(255,255,255,.45);animation:rippleWave .65s cubic-bezier(.2,.6,.3,1) forwards}
 @keyframes rippleWave{to{transform:scale(2.8);opacity:0}}
 .hero{max-width:1080px;margin:0 auto;padding:74px 24px 8px}.hero .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#5856d6;background:rgba(88,86,214,.1);padding:4px 12px;border-radius:999px;margin-bottom:14px}
-.hero h1{font-size:clamp(26px,4vw,40px);line-height:1.06;letter-spacing:-.03em;margin:0 0 12px;background:linear-gradient(135deg,#0a84ff,#5856d6,#cfe3fb);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero h1{font-size:clamp(26px,4vw,40px);line-height:1.06;letter-spacing:-.03em;margin:0 0 12px;color:#0a2540}
 .hero p{font-size:13.5px;color:var(--t2);max-width:780px;margin:0}
 section{position:relative}.sec::before{content:'';position:absolute;top:0;bottom:0;left:50%;width:100vw;transform:translateX(-50%);pointer-events:none}
 .inner{position:relative;max-width:1080px;margin:0 auto;padding:40px 24px 44px}
@@ -209,9 +214,9 @@ p{margin:10px 0;max-width:860px;font-size:13.5px}
 .pcard{display:flex;gap:10px;align-items:flex-start;background:var(--glass2);border:1px solid var(--border);border-radius:12px;padding:10px 11px}
 .pcard .pav{width:36px;height:36px;flex-shrink:0}.pcard .pn{font-size:12px;font-weight:700;color:var(--t1)}
 .pcard .pl{font-size:10px;font-weight:600}.pcard .ps{font-size:10px;color:var(--t2);margin-top:2px;line-height:1.35}
-code{font-family:var(--mono);font-size:.85em;background:rgba(10,132,255,.08);padding:1px 5px;border-radius:5px;color:#0a5ec7}
+code{font-family:var(--mono);font-variant-ligatures:none;font-feature-settings:"liga" 0,"calt" 0;font-size:.85em;background:rgba(10,132,255,.08);padding:1px 5px;border-radius:5px;color:#0a5ec7}
 .code-wrap{position:relative;margin:12px 0}
-pre{background:rgba(13,24,40,.92);color:#e6edf6;border-radius:12px;padding:14px 46px 14px 16px;white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere;font-family:var(--mono);font-size:12.5px;line-height:1.55;margin:0;box-shadow:var(--edge),0 4px 20px rgba(0,0,0,.12)}pre code{background:none;color:inherit;padding:0;white-space:inherit}
+pre{background:rgba(13,24,40,.92);color:#e6edf6;border-radius:12px;padding:14px 46px 14px 16px;white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere;font-family:var(--mono);font-variant-ligatures:none;font-feature-settings:"liga" 0,"calt" 0;font-size:12.5px;line-height:1.55;margin:0;box-shadow:var(--edge),0 4px 20px rgba(0,0,0,.12)}pre code{background:none;color:inherit;padding:0;white-space:inherit}
 .code-copy{position:absolute;top:7px;right:7px;z-index:2;width:28px;height:26px;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,.12);color:#cbd5e1;border:1px solid rgba(255,255,255,.18);border-radius:7px;cursor:pointer;opacity:0;transition:opacity .15s,background .15s,color .15s}.code-copy svg{width:14px;height:14px;display:block}
 .code-wrap:hover .code-copy{opacity:1}.code-copy:hover{background:rgba(255,255,255,.22);color:#fff}.code-copy.copied{background:rgba(16,185,129,.28);color:#6ee7b7;border-color:rgba(16,185,129,.5);opacity:1}
 @media(max-width:640px){.code-copy{opacity:1}}
@@ -502,14 +507,8 @@ def sections(root: Path):
     S.append(("quickstart", "Quickstart", "00 · Bắt đầu", "Quickstart — chạy được trong 2 phút", [
         "<p class=\"lead\">Bạn chỉ cần nhớ ba thứ: <b>cài</b>, <b>để agent làm việc</b>, và <b>khi muốn tính năng mới thì /propose trước</b>. Phần còn lại overstack lo (rào chắn tất định chặn agent làm bậy, 0 token).</p>",
         "<h3>1. Cài vào dự án của bạn (một dòng)</h3>",
-        "<div class=\"grid\">"
-        "<div class=\"card\"><h4>Cách 1 — dán cho Agent</h4>"
-        "<p style=\"margin:0 0 8px\">Agent tự cài rồi tự kiểm tra mọi thứ đã đúng chỗ:</p>"
-        "<pre class='code-block'><code>chạy curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash và kiểm tra xem mọi thứ đã ở đúng chỗ chưa</code></pre></div>"
-        "<div class=\"card\"><h4>Cách 2 — terminal</h4>"
-        "<p style=\"margin:0 0 8px\">Chạy thẳng một dòng:</p>"
-        "<pre class='code-block'><code>curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash</code></pre></div>"
-        "</div>",
+        "<p>Dán cho <b>Agent</b> (nó tự cài rồi tự kiểm mọi thứ đã đúng chỗ) — hoặc chạy thẳng trong <b>terminal</b>. Cùng một lệnh:</p>"
+        "<pre class='code-block'><code>curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash</code></pre>",
         "<p>Lệnh này kéo cả <b>3 nền tảng</b> — <b>harness</b> (rào chắn), <b>skills</b> (kỹ năng), <b>llmwiki</b> (nền tri thức) — và bật guardrail ngay. Dự án cũ đã có wiki? Gọi <code>/harness-update</code> để migrate + tự trả nợ.</p>",
         "<h3>2. Cứ làm việc bình thường với agent</h3>",
         "<p>Agent (Claude Code, Cursor, opencode…) giờ bị overstack gác: không ghi bậy vào <code>raw/</code>, mọi trang wiki buộc có nguồn gốc (<code>## Origin</code>), index/log tự cập-nhật-bằng-code. Bạn không phải nhớ luật — hàng rào tự cắn.</p>",
@@ -595,14 +594,8 @@ def sections(root: Path):
     S.append(("install", "Cài đặt", "02 · Cài đặt", "Cài đặt — global vs per-project", [
         "<p class=\"lead\">overstack cài bằng một dòng bootstrap. Có hai chế độ, dùng cả hai là tốt nhất.</p>",
         "<h3>Bootstrap (mặc định — cả 3 nền tảng)</h3>",
-        "<div class=\"grid\">"
-        "<div class=\"card\"><h4>Cách 1 — dán cho Agent</h4>"
-        "<p style=\"margin:0 0 8px\">Agent tự cài + tự kiểm tra mọi thứ đã đúng chỗ:</p>"
-        "<pre class='code-block'><code>chạy curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash và kiểm tra xem mọi thứ đã ở đúng chỗ chưa</code></pre></div>"
-        "<div class=\"card\"><h4>Cách 2 — terminal</h4>"
-        "<p style=\"margin:0 0 8px\">Chạy thẳng một dòng:</p>"
-        "<pre class='code-block'><code>curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash</code></pre></div>"
-        "</div>",
+        "<p>Dán cho <b>Agent</b> (nó tự cài rồi tự kiểm mọi thứ đã đúng chỗ) — hoặc chạy thẳng trong <b>terminal</b>. Cùng một lệnh:</p>"
+        "<pre class='code-block'><code>curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash</code></pre>",
         "<p>Kéo harness + skills + llmwiki và bật chặn ngay. Opt-out: <code>--harness-only</code>.</p>",
         "<div class=\"note\"><h4>Dự án MỚI từ đầu (chưa có code)?</h4><p style=\"margin:0\">Không cần cài tay rồi feed từng file — chỉ <b>dán nội dung <code>00-New-Project.md</code></b> cho agent. Nó tự cài overstack → kickoff (hỏi 3 câu) → dựng knowledge base → scaffold MVP, dừng hỏi đúng lúc. Chi tiết: <code>setup.md</code>.</p></div>",
         "<div class=\"grid\"><div class=\"card\"><h4>Per-project (cho team)</h4><ul class=\"s\">"
@@ -635,12 +628,11 @@ def sections(root: Path):
         "<li><b>Wiki→wiki</b>: mỗi lần ghi trang, hook <b>wiki_ledger</b> append sự kiện vào <code>ledger.jsonl</code> "
         "(khoá <code>flock</code> — nhiều phiên ghi song song không giẫm dòng nhau) và lan cờ stale (lệch thời) "
         "<i>đúng 1 bước</i> sang các trang trỏ tới nó (<code>stale.json</code> — cap 1 bước nên miễn nhiễm bão-stale/chu trình).</li>"
-        "<li><b>Code→wiki</b> <i>(mới 07/2026, distill từ openwiki của LangChain rồi nấu lại)</i>: <b>wiki-sync</b> giữ một "
+        "<li><b>Code→wiki</b> <i>(mới 07/2026)</i>: <b>wiki-sync</b> giữ một "
         "NEO <code>.last-sync.json</code> (commit + content-hash của wiki lần rà cuối). <code>--check</code> là "
         "<b>cổng no-op tất định 0 token</b>: code không đổi kể từ neo → trả lời \"wiki current\" mà không cần gọi LLM; "
         "có đổi → tự map file-code-đổi → trang wiki nhắc tới file đó và cờ <code>code-drift</code>.</li>"
-        "<li>Đầu mỗi phiên, <b>session_start</b> nhắc 1 dòng nếu code đã đổi N commit kể từ neo — realtime hơn cron "
-        "(openwiki không có khái niệm phiên để nhắc kiểu này).</li>"
+        "<li>Đầu mỗi phiên, <b>session_start</b> nhắc 1 dòng nếu code đã đổi N commit kể từ neo — realtime, không chờ cron.</li>"
         "<li><i>Giới hạn thật</i>: map code→trang là heuristic nhắc-tên-file (thiên về bắt-thừa); <code>/lint</code> "
         "vẫn là người phán xử cuối trước khi sửa.</li></ul></div>"
         "<div class=\"card\"><h4>Vận hành không người trông</h4><ul class=\"s\">"
@@ -661,15 +653,6 @@ def sections(root: Path):
         "<li><b>mem-rank / record-episode</b> — tầng nhớ episodic (theo phiên): phiên sau hỏi \"phiên trước làm gì\" theo nghĩa.</li>"
         "<li><b>wiki-room</b> — context phiên chính mục rữa thì mở room 1 tầng nạp chi tiết wiki với budget cứng.</li>"
         "<li><b>retrieval-eval</b> chạy trong CI — chất lượng truy hồi không được tụt dưới sàn (tất định, không LLM).</li></ul></div></div>",
-        "<div class=\"note\"><h4>Đối chiếu thẳng thắn với openwiki (LangChain, 07/2026)</h4><ul class=\"s\">"
-        "<li>4 trục openwiki từng hơn — <b>phát hiện code→wiki drift</b>, <b>cổng no-op 0 token + content-hash</b>, "
-        "<b>cron→PR không người trông</b>, <b>chi phí nhập cuộc thấp</b> — nay đều đã phủ (wiki-sync đi cùng bộ cài, "
-        "downstream nhận qua <code>install-harness.sh</code>/<code>/sync-template</code>, không thêm bước cài riêng).</li>"
-        "<li>Các trục overstack vốn hơn và giữ nguyên: <b>provenance</b> (Origin + ledger + log — openwiki không truy được nguồn claim), "
-        "<b>nhất quán nội-wiki bằng validator</b> (openwiki chỉ dặn trong prompt), <b>độ tươi trong phiên</b> (openwiki trễ tới 24h giữa 2 cron), "
-        "<b>đa phiên an toàn</b> (flock), và wiki gắn thẳng vào dev-loop (propose→verify→ship, ADR, eval).</li>"
-        "<li>Có sao nói vậy: phần cron→PR của overstack cần secret <code>ANTHROPIC_API_KEY</code> mới tự sửa được bằng LLM "
-        "(openwiki cũng cần key của provider họ); không key thì mức tự động dừng ở cờ tất định.</li></ul></div>",
     ]))
 
     _flow = [("agent định ghi", "#9aa4b2", ""), ("L0 · hook", "#0a84ff", "PreToolUse"),
@@ -1019,14 +1002,15 @@ def render(root: Path) -> str:
     n_rules = len(rules(root))
     nav = ['<div class="logo">overstack<small>tài liệu chính thức · sinh từ đĩa</small></div>',
            '<div class="grp">Bắt đầu</div>']
-    grouped = [("Bắt đầu", ["quickstart"]),
-               ("Tổng quan", ["what", "reference", "install"]),
+    # Gom nhóm theo HÀNH TRÌNH người mới (feedback 2026-07-07), không theo kiến trúc nội bộ:
+    # người zero-context nghĩ theo câu hỏi "là gì / cài sao / dùng hằng ngày / đo kiểm / tra cứu".
+    grouped = [("Mới bắt đầu", ["quickstart", "what", "install"]),
                ("3 nền tảng", ["wiki", "harness", "skills"]),
-               ("Quy trình & điều phối", ["workflow", "orca"]),
-               ("Đánh giá & truy vết", ["advanced", "awareness", "runtime", "codestate"]),
-               ("An toàn khi mở rộng", ["bnal"]),
+               ("Dùng hằng ngày", ["workflow", "orca", "bnal"]),
+               ("Đo & kiểm khi chạy", ["advanced", "runtime", "awareness", "codestate"]),
+               ("Tra cứu", ["reference"]),
                ("Vận hành", ["maintain"]),
-               ("👷 Phát triển overstack", ["fdk", "newfeature"])]
+               ("👷 Cho người phát triển overstack", ["fdk", "newfeature"])]
     # Thứ tự thân bài = thứ tự phẳng của `grouped` (nav ↔ thân luôn khớp, chống lệch khi chèn/di tab)
     _flat = [sid for _g, ids in grouped for sid in ids]
     S = sorted(S, key=lambda t: _flat.index(t[0]) if t[0] in _flat else len(_flat))
@@ -1036,11 +1020,19 @@ def render(root: Path) -> str:
             "skills": "🧰", "workflow": "🔄", "orca": "🐳", "advanced": "⚖️", "awareness": "🧭",
             "runtime": "📡", "bnal": "🧩", "maintain": "🔧", "reference": "🗺️", "fdk": "👷",
             "newfeature": "✅", "codestate": "📊"}
+    # Nhãn sidebar tiếng-Việt-trước, jargon-trong-ngoặc (feedback 2026-07-07 — người mới không đọc
+    # được FDK/BNAL/AgentOps trần). CHỈ đổi text sidebar; H2 + nội dung section giữ nguyên.
+    NAV_OVERRIDE = {"quickstart": "Chạy thử 2 phút", "wiki": "Wiki (trí nhớ)",
+                    "harness": "Harness (luật)", "skills": "Skills (kỹ năng)",
+                    "workflow": "Quy trình làm việc", "orca": "Chạy nhiều agent (Orca)",
+                    "bnal": "Thêm tính năng có ẩn số", "advanced": "Đánh giá chất lượng",
+                    "runtime": "5 trụ vận hành (AgentOps)", "awareness": "Năng lực & dấu vết",
+                    "reference": "Mind map skill & rule"}
     nav = ['<div class="logo">overstack<small>tài liệu chính thức · sinh từ đĩa</small></div>']
     for grp, ids in grouped:
         nav.append(f'<div class="grp">{grp}</div>')
         for sid in ids:
-            nav.append(f'<a href="#s{idx[sid]}"><span class="ic">{ICON.get(sid, "•")}</span>{id2nav[sid]}</a>')
+            nav.append(f'<a href="#s{idx[sid]}"><span class="ic">{ICON.get(sid, "•")}</span>{NAV_OVERRIDE.get(sid, id2nav[sid])}</a>')
     body = []
     for i, (sid, navlabel, tag, title, blocks) in enumerate(S):
         tag = re.sub(r'^\s*\d+\s*·\s*', f'{i:02d} · ', tag)   # auto-số eyebrow theo thứ tự (chống trùng khi chèn tab)

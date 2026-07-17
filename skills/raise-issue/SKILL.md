@@ -21,14 +21,11 @@ description: "Raise một ISSUE đầy đủ bối cảnh vào ledger local (dra
 - Index tập trung: `llmwiki/wiki/sources/ISSUES.md` — một dòng/issue (id · tiêu đề · status · assignee · **tracker**), giống MEMORY.md. (Lưu ở `sources/` chứ KHÔNG ở `wiki/` root — R5 folder-structure chặn root.)
 - **Mirror lên tracker remote NẾU CÓ** (để hiện ở tab Issues, assign người thật, có notification): tự phát hiện theo `git remote get-url origin` + CLI sẵn có, mirror rồi ghi link vào cột `tracker`. Ledger vẫn là nguồn chân lý; tracker chỉ là bản sao để phối hợp.
 
-## Phát hiện tracker (thuần lookup, fail-open — không có thì bỏ qua)
-| Host remote (origin) | CLI | Lệnh mirror |
-|---|---|---|
-| github.com | `gh` | `gh issue create --title … --body … --assignee <user>` |
-| gitlab.* | `glab` | `glab issue create --title … --description … --assignee <user>` |
-| gitea/codeberg (host tự-quản) | `tea` | `tea issues create --title … --body …` |
-- Không có CLI tương ứng, hoặc không có remote → **chỉ ledger local**, in cảnh báo nhẹ, KHÔNG fail.
-- Body issue remote PHẢI link ngược về file ledger (nguồn chân lý). Sau khi tạo, ghi URL vào cột `tracker` của ISSUES.md.
+## Tracker — đọc HỢP ĐỒNG của repo, đừng hardcode CLI ở đây
+Cách publish/fetch/label/close/claim ở repo này sống trong **một file hợp đồng theo repo** — `llmwiki/wiki/sources/issue-tracker.md` (adapter boundary). Skill này chỉ nói *ý định*; hợp đồng nói *cách làm*. Đổi tracker (thêm Jira, đổi GitLab) là sửa hợp đồng đó, KHÔNG sửa skill này. Xem `[[issue-tracker]]`.
+- Chưa có file hợp đồng → tạo từ mẫu (mặc định **local-markdown**: ledger là gốc, không cần mạng); có remote GitHub → đề xuất thêm mirror `gh`.
+- Body issue remote PHẢI link ngược về file ledger (nguồn chân lý). Ghi URL vào cột `tracker`.
+- **5 nhãn chuẩn** (cột `labels`, mặc định `needs-triage`): `needs-triage` · `needs-info` · `ready-for-agent` · `ready-for-human` · `wontfix`. Chỉ `ready-for-agent` mới được dispatch cho CLI headless; `ready-for-human` là việc phải người.
 
 ## Hook wiki sẽ cắn — thoả ngay từ đầu (đỡ 3 lần bật lại)
 Mọi file trong `llmwiki/wiki/` phải có: **(R9)** YAML frontmatter OKF ở đầu (`type/title/status/tags/timestamp/id`) · **(R2)** section `## Origin` truy nguồn · **(R5)** nằm trong folder hợp lệ (`sources/draft/` cho issue, `sources/` cho index). Template dưới đã gồm sẵn cả ba.

@@ -1,5 +1,6 @@
 ---
 name: new-skill
+disable-model-invocation: true
 description: Scaffold a new skill into both publish trees at once — skills/<name>/SKILL.md plus its byte-identical llmwiki mirror — via fdk/tools/new-skill.py, then print the exact commands to register it on the curated surfaces (LOOP_MAP, marketplace.json, AGENT.md/CLAUDE.md). Use when the user says "create a skill", "add a new skill", "scaffold a skill", "make a new skill", "new skill", or invokes /new-skill.
 ---
 
@@ -11,8 +12,10 @@ Adding a skill touches four places — the canonical `skills/<name>/SKILL.md`, i
 - The user asks to create / add / scaffold a new skill, or invokes `/new-skill`.
 - You are about to hand-create a `skills/<name>/SKILL.md` and would otherwise forget the mirror or the registry surfaces.
 
+> **Viết cho đúng nghề — đọc `[[skill-craft]]` trước.** Bộ từ vựng để một skill đoán được: hai loại phí (context load ↔ cognitive load — skill chỉ-gọi-tay thì khai `disable-model-invocation: true`, khỏi tốn context), completion criterion cho mỗi bước, leading word thay ba câu, và năm failure mode phải tránh (duplication/sediment/sprawl/no-op/negation). `/lint` bước 8b đo các thứ này bằng máy.
+
 ## Steps
-1. Settle three inputs: a kebab-case `<name>`, a `--loop` (`dev-loop` | `orchestrate` | `wiki-loop` | `utils`), and a `--desc` that is **rich with trigger phrases** (the description is what the skill router matches on).
+1. Settle three inputs: a kebab-case `<name>`, a `--loop` (`dev-loop` | `orchestrate` | `wiki-loop` | `utils`), and a `--desc` that is **rich with trigger phrases** (the description is what the skill router matches on). Skill chỉ-gọi-tay (chỉ user gõ, không skill nào khác gọi) → thêm `disable-model-invocation: true`, `--desc` rút thành một dòng người-đọc (xem `[[skill-craft]]`).
 2. Preview first, then create:
    ```bash
    python3 fdk/tools/new-skill.py <name> --loop <loop> --desc "<description>" --dry-run   # preview body + next steps

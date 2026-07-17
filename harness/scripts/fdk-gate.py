@@ -81,8 +81,10 @@ STEPS = [
         "python3 harness/scripts/retrieval-eval.py --self-test >/dev/null && "
         "python3 harness/scripts/skill-resolve-eval.py --self-test >/dev/null && "
         "python3 harness/scripts/qc-regression.py --self-test >/dev/null && "
-        "python3 fdk/tools/fdk-poc.py --self-test >/dev/null"],
-     "24 chức năng BNAL — self-test phải còn PASS (giữ verified trung thực; +3 wired 15/07/26: "
+        "python3 fdk/tools/fdk-poc.py --self-test >/dev/null && "
+        "python3 harness/scripts/capability-stamp.py --self-test >/dev/null && "
+        "python3 harness/scripts/unknown-ledger.py --self-test >/dev/null"],
+     "26 chức năng BNAL — self-test phải còn PASS (giữ verified trung thực; +3 wired 15/07/26: "
      "mem-proxy/retrieval-eval/skill-resolve-eval; +qc-regression, +fdk-poc)"),
 ]
 

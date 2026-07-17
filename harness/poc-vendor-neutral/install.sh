@@ -194,9 +194,28 @@ if [ "$WITH_WIKI" = 1 ]; then
     # ~/.claude/harness là source-of-truth (U10). Repo chỉ giữ llmwiki (data) + .harness-stamp.
     # Hooks fire từ GLOBAL ~/.claude/settings.json (install-harness --global wire, guard theo stamp).
     GH_HOME="${OVERSTACK_HARNESS_HOME:-$HOME/.claude/harness}"
-    # 1) đảm bảo global harness có mặt — thiếu → cài (ưu tiên bundle cạnh SRC, fallback curl)
-    if [ ! -f "$GH_HOME/version.json" ]; then
-      log "  global harness chưa có ($GH_HOME) → cài install-harness.sh --global"
+    # 1) đảm bảo global harness có mặt VÀ KHÔNG CŨ.
+    #    Trước đây chỉ cài khi VẮNG → re-curl bootstrap không bao giờ refresh global → global kẹt
+    #    ở bản cũ mãi mãi. Hệ quả dây chuyền: stamp dự án == global (cùng bản cũ) → hook
+    #    harness-integrity thấy bằng nhau → im lặng → DỰ ÁN KHÔNG BAO GIỜ BIẾT CÓ NĂNG LỰC MỚI,
+    #    dù framework đã bump. Đây là mắt xích đứt duy nhất của chuỗi "model biết mình có gì mới".
+    #    Nay: vắng HOẶC version remote khác version đang cài → cài lại (idempotent).
+    GH_CUR=""; GH_NEW=""
+    [ -f "$GH_HOME/version.json" ] && GH_CUR="$(python3 -c "import json,sys;print(json.load(open(sys.argv[1])).get('template_version',''))" "$GH_HOME/version.json" 2>/dev/null || echo "")"
+    if [ -f "$SRC/../version.json" ]; then
+      GH_NEW="$(python3 -c "import json,sys;print(json.load(open(sys.argv[1])).get('template_version',''))" "$SRC/../version.json" 2>/dev/null || echo "")"
+    else
+      VJ="$(mktemp)"
+      curl -fsSL "$REPO_RAW/harness/version.json" -o "$VJ" 2>/dev/null \
+        && GH_NEW="$(python3 -c "import json,sys;print(json.load(open(sys.argv[1])).get('template_version',''))" "$VJ" 2>/dev/null || echo "")"
+      rm -f "$VJ"
+    fi
+    if [ ! -f "$GH_HOME/version.json" ] || { [ -n "$GH_NEW" ] && [ "$GH_CUR" != "$GH_NEW" ]; }; then
+      if [ -f "$GH_HOME/version.json" ]; then
+        log "  global harness CŨ (v${GH_CUR:-?} → v$GH_NEW) → cập nhật install-harness.sh --global"
+      else
+        log "  global harness chưa có ($GH_HOME) → cài install-harness.sh --global"
+      fi
       IH="$SRC/../scripts/install-harness.sh"
       if [ ! -f "$IH" ]; then
         IH="$(mktemp)"
@@ -225,18 +244,31 @@ fi
 
 # ── (tùy chọn) cài skill llmwiki (GLOBAL — khác phạm vi với harness theo-project) ──
 if [ "$WITH_SKILLS" = 1 ]; then
-  # SKILLS_REF: nhánh kéo skill. Mặc định `orca`. PHẢI override được, nếu không thì skill của
-  # nhánh canary KHÔNG BAO GIỜ tới tay user qua đường cài chuẩn → /fdk-uat pha-1 (canary) mù,
-  # và mọi "docs hứa mà user không nhận được" (GH#77) không bắt được trước merge.
-  # Phát hiện 17/07/26 khi chạy /fdk-poc thật: HARNESS_BASE trỏ canary nhưng skill vẫn về từ orca.
-  SKILLS_REF="${SKILLS_REF:-orca}"
-  SKILLS_PKG="rheinmir/setup#${SKILLS_REF}"
-  log "+ cài bộ skill llmwiki (global, qua npx skills — ref: ${SKILLS_REF})"
+  # Ref cài skill. Mặc định GIỮ NGUYÊN `#orca` — đây là đường cài của mọi người dùng thật.
+  # Mở override để test được một nhánh khác (canary UAT): không có nó thì cài-từ-nhánh-X vẫn
+  # kéo skill của `orca` → bài UAT chấm bản CŨ rồi báo PASS cho bản MỚI. Cổng nói dối mà vẫn
+  # xanh còn tệ hơn không có cổng. HARNESS_BASE / REPO_RAW đã override được; dòng này thì chưa.
+  SKILLS_REF="${SKILLS_REF:-rheinmir/setup#orca}"
+  log "+ cài bộ skill llmwiki (global, qua npx skills — ref: $SKILLS_REF)"
   if command -v npx >/dev/null; then
-    npx -y skills add "$SKILLS_PKG" --global --all 2>&1 | tail -4 | sed 's/^/    /' \
-      || warn "  cài skill lỗi — chạy tay: npx skills add $SKILLS_PKG --global --all"
+    npx -y skills add "$SKILLS_REF" --global --all 2>&1 | tail -4 | sed 's/^/    /' \
+      || warn "  cài skill lỗi — chạy tay: npx skills add $SKILLS_REF --global --all"
   else
-    warn "  không có npx — cài skill tay: npx skills add $SKILLS_PKG --global --all"
+    warn "  không có npx — cài skill tay: npx skills add $SKILLS_REF --global --all"
+  fi
+fi
+
+# ── BẢN ĐỒ NĂNG LỰC CHO MODEL (ADR-005) — mắt xích cuối, đừng bỏ ──────────────────────
+# Hook orientation (session_start.py) nói với agent "dự án này có CAPABILITIES.md — bản đồ
+# skill/tool đang có". Nhưng nếu KHÔNG AI SINH file đó, hook chẳng có gì để khoe và agent vào
+# dự án KHÔNG BIẾT mình có đồ nghề gì → cài xong mà model vẫn mù. Sinh ngay tại đây, từ skill
+# global + policy vừa cài. fail-open: bản harness cũ chưa có tool này thì bỏ qua, không chặn.
+BC="$GH_HOME/hooks/build-capabilities.py"
+if [ -f "$BC" ]; then
+  if python3 "$BC" --root "$ROOT" >/dev/null 2>&1; then
+    log "  ✓ CAPABILITIES.md (bản đồ đồ nghề — agent đọc để biết dự án này CÓ GÌ)"
+  else
+    warn "  không sinh được CAPABILITIES.md — chạy tay: python3 $BC --root ."
   fi
 fi
 

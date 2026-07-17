@@ -9,6 +9,24 @@ Giảm lỗi LLM-coding phổ biến. Thiên về cẩn trọng hơn tốc độ
 Đạt khi: diff bớt thừa, bớt viết-lại do overcomplicate, câu hỏi làm rõ đến TRƯỚC khi sai — không phải sau.
 
 (Nguồn: 4 nguyên tắc của Karpathy CLAUDE.md, bản distill của Forrest Chang — `multica-ai/andrej-karpathy-skills`. Bối cảnh framework: rule + skill cụ thể nằm ngay dưới.)
+
+## Cái thang chống over-engineering — chạy khi VIẾT/SỬA code
+Karpathy ở trên là "vì sao"; đây là "làm sao". (Chưng cất từ ponytail, MIT — nguồn `060726-ponytail-distill`.)
+
+**Hiểu bài trước, leo thang sau.** Đọc code, trace flow end-to-end rồi mới sửa. Diff nhỏ ĐẶT SAI CHỖ = bug thứ hai.
+
+**Cái thang — dừng ở bậc đầu tiên đứng vững:** (1) YAGNI — thứ này có cần tồn tại không? bậc rẻ nhất là xoá → (2) codebase đã có chưa? tái dùng → (3) stdlib giải được không? → (4) native platform? CSS thay JS, DB constraint thay app-code → (5) dependency đã cài rồi? → (6) 1 dòng được không? → (7) cuối cùng mới viết code tối thiểu.
+
+**Bug = root cause, không vá triệu chứng.** Grep mọi caller, sửa 1 lần ở hàm chung — fix root-cause thường diff NHỎ HƠN vá từng caller.
+
+**Marker nợ có kỷ luật** — shortcut cố ý phải để lại comment `shortcut: <trần hiện tại>, <trigger nâng cấp>` (vd `# shortcut: global lock, đổi per-account nếu throughput thành vấn đề`). Grep được → nợ có hạn, không thành "never". Marker thiếu trigger bị `/lint` cắn.
+
+**Carve-out — KHÔNG lười ở:** validation tại trust boundary, error-handling chống mất data, security, a11y, calibration phần cứng, và bất cứ thứ gì user YÊU CẦU rõ. Logic non-trivial phải để lại ĐÚNG 1 check chạy được (assert demo / 1 test nhỏ) — YAGNI áp cho cả test, nhưng không phải 0 test.
+
+**Format báo cáo rút gọn (vd khi chạy `/simplify`):** mỗi finding 1 dòng `L<line>: <tag>: <trước> → <sau>`, tag ∈ {delete, stdlib, native, yagni, shrink}; chốt `net: -N dòng`. Không có gì để cắt → "Lean already. Ship."
+
+**Output:** code trước, tối đa 3 dòng "skipped X, add when Y". Giải thích dài hơn code → xoá giải thích.
+
 ## Rules
 - 🧰 **Đồ nghề bạn CÓ — đừng làm lại thứ đã tồn tại:** bản đồ năng lực sinh-bằng-code, luôn-mới (ADR-005): repo framework → `fdk/CAPABILITIES.md` (skill+rule+tool); dự án downstream → `CAPABILITIES.md` ở gốc (build-capabilities deploy cạnh hooks, đọc global skills + rule đã cài). Không chắc có gì cho việc đang làm → ĐỌC nó, hoặc `find-skills "<việc>"`. Sinh lại: `python3 fdk/tools/build-capabilities.py` (downstream tự nhận bối cảnh khi chạy với `--root`).
 - **Đang phát triển CHÍNH framework này (skill/rule/validator/script/hook/wiki)? Gọi `/fdk`** — on-demand front-door: pre-flight + không miss rule + không dẫm module cũ. KHÔNG auto-bơm đầu phiên vì phần lớn phiên là dùng framework để dev DỰ ÁN KHÁC (xem `ADR-004`).
@@ -33,6 +51,9 @@ Giảm lỗi LLM-coding phổ biến. Thiên về cẩn trọng hơn tốc độ
 | `record-episode` | Chốt phiên vào tầng nhớ episodic (mem-rank store) để phiên sau truy hồi "phiên trước làm gì" theo nghĩa | `skills/wiki-loop/record-episode.md` | wiki-loop |
 | `lint` | After every 10 ingests, or wiki feels stale | `skills/wiki-loop/lint.md` | wiki-loop |
 | `propose` | Any new feature or change is requested | `skills/dev-loop/propose.md` | dev-loop |
+| `qc-code` | Review code phong cách senior 10 năm — 4 mục (security/performance/naming/logic) điểm/10 + lỗi nặng nhất + fix + verdict PASS/CẦN SỬA; sinh test tái hiện qc-* auto-chạy tất định. KHÁC /orca-sec-scans (Trivy tĩnh) | `skills/dev-loop/qc-code.md` | dev-loop |
+| `teach-me` | Giải thích MỘT thứ ở 2 cấp (hệ thống + code) + bộ ba (vấn đề/workflow/chi tiết os·cơ chế·vai trò) + tóm tắt luồng, mỗi phần có sơ đồ; CHỨNG bằng runtime thật (chạy + breakpoint/debugger), không đoán tĩnh. KHÁC /onboard-codebase (cả dự án→wiki) | `skills/dev-loop/teach-me.md` | dev-loop |
+| `plan` | SPEC đã DUYỆT → mở rộng thành `-PLAN.md` thi hành được (Files chính xác + Interfaces + code từng bước) TRƯỚC khi dispatch cho agent | `skills/dev-loop/plan.md` | dev-loop |
 | `impact-check` | Before modifying any shared symbol | `skills/dev-loop/impact-check.md` | dev-loop |
 | `safe-change` | Editing code called from more than one place | `skills/dev-loop/safe-change.md` | dev-loop |
 | `verify-before-commit` | Before every commit | `skills/dev-loop/verify-before-commit.md` | dev-loop |
@@ -41,6 +62,7 @@ Giảm lỗi LLM-coding phổ biến. Thiên về cẩn trọng hơn tốc độ
 | `orca-workflow` | Daily propose → gate → dispatch with Orca | `skills/orchestrate/orca-workflow.md` | orchestrate |
 | `orca-onboard` | Parallel codebase onboarding with Orca | `skills/orchestrate/orca-onboard.md` | orchestrate |
 | `orca-issue` | Sự cố/bug/regression — vòng repro-first → fix red→green → distill kép | `skills/orchestrate/orca-issue.md` | orchestrate |
+| `wayfinder` | Việc QUÁ LỚN một phiên & còn mù mờ — bản đồ ticket QUYẾT ĐỊNH (fog of war/frontier/out-of-scope), giải từng cái tới khi đường rõ. TRƯỚC /propose. Chỉ-gọi-tay | `skills/orchestrate/wayfinder.md` | orchestrate |
 | `onboard-codebase` | Deep analysis of legacy code to populate Wiki | `skills/dev-loop/onboard-codebase.md` | dev-loop |
 | `sync-template` | Upstreaming template improvements to master repo | `skills/utils/sync-template.md` | utils |
 | `md-to-html` | User wants to render a professional HTML report | `skills/utils/md-to-html.md` | utils |
@@ -49,10 +71,10 @@ Giảm lỗi LLM-coding phổ biến. Thiên về cẩn trọng hơn tốc độ
 | `web-clone` | Clone a page's exact UI as one self-contained offline HTML | `skills/utils/web-clone.md` | utils |
 | `fdk` | Đang phát triển CHÍNH framework (skill/rule/validator/hook/wiki) | `skills/utils/fdk.md` | utils |
 | `fdk-poc` | POC luồng /br chạy THẬT: tạo project mới, chạy vòng đời bằng lệnh thật + đo giờ + sentinel + LOG từng bước → HTML visualize (lệnh nào·nhanh không·nhớ mấy hub). KHÁC fdk-uat (test nhanh xanh/đỏ) | `skills/utils/fdk-poc.md` | utils |
+| `fdk-uat` | UAT thật một bản sắp phát hành — dựng dự án TRỐNG, cài bằng curl từ remote (đường người-mới), kiểm năng lực MỚI có tới tay không; không pass thì GỠ commit khỏi remote | `skills/utils/fdk-uat.md` | utils |
 | `medic` | Cổng sức khoẻ tổng — 1 lệnh chứng minh hệ còn khoẻ (luật cắn/drift/docs/code/eval); trước commit, sau pull, nghi rule không chặn | `skills/utils/medic.md` | utils |
 | `new-skill` | Scaffold một skill mới (canonical+mirror+lệnh register) | `skills/dev-loop/new-skill.md` | dev-loop |
 | `skill-provenance` | Ghi/kiểm provenance (nguồn + sha256) khi cài skill ngoài — audit supply-chain, phát hiện skill bị sửa lén | `skills/dev-loop/skill-provenance.md` | dev-loop |
-| `qc-code` | Review code phong cách senior 10 năm — 4 mục (security/performance/naming/logic) điểm/10 + lỗi nặng nhất + fix + verdict PASS/CẦN SỬA; sinh test tái hiện qc-* auto-chạy tất định. KHÁC /orca-sec-scans (Trivy tĩnh) | `skills/dev-loop/qc-code.md` | dev-loop |
 | `qc-uiux` | Audit UI/UX phong cách senior — 4 mục (a11y/hierarchy/consistency/antipattern) điểm/10 + verdict; phần tất định reuse geometry-audit của visual-qa (overlap/misalign) auto-chạy 0-token. Gọi sau khi có mockup/UI | `skills/dev-loop/qc-uiux.md` | dev-loop |
 | `loop-runner` | Vòng lặp agent có guardrail (propose→verify→revise, termination) | `skills/dev-loop/loop-runner.md` | dev-loop |
 | `br` | Hub dây chuyền Ralph: interview→compile→slice→run→status (BR-kỹ → frames gắn code → loop có 6 phanh) | `skills/dev-loop/br.md` | dev-loop |
@@ -66,6 +88,7 @@ Giảm lỗi LLM-coding phổ biến. Thiên về cẩn trọng hơn tốc độ
 | `raise-issue` | Raise issue đầy đủ bối cảnh vào ledger local (draft) để dev khác pull về xử lý qua /fdk — feature-gap/tech-debt/foundation (KHÁC orca-issue = bug repro-first) | `skills/utils/raise-issue.md` | utils |
 | `frontier-scan` | Quét đối thủ + đối chiếu overstack 8 trục (gọi instant) — "frontier scan", "chúng ta thua gì" | `skills/utils/frontier-scan.md` | utils |
 | `brandkit` | Premium brand-kit image generation skill for creating high-end… | `skills/utils/brandkit.md` | utils |
+| `hallmark` | **NỀN design mặc định** (Together AI) — 6 discipline + 57 cổng slop-test, từ chối trông AI-generated. Mọi UI đứng trên nó; skill taste khác là flavour. 4 verb: build/audit/redesign/study. Xem [[design-foundation]] | `skills/utils/hallmark.md` | utils |
 | `build-now-adapt-later` | When a task is blocked by missing or unverified information (an… | `skills/dev-loop/build-now-adapt-later.md` | dev-loop |
 | `cavecrew` | Decision guide for delegating to caveman-style subagents. | `skills/utils/cavecrew.md` | utils |
 | `caveman` | Ultra-compressed communication mode. | `skills/utils/caveman.md` | utils |
@@ -93,6 +116,7 @@ Giảm lỗi LLM-coding phổ biến. Thiên về cẩn trọng hơn tốc độ
 | `jenkins-agent-l3-deploy` | Deploy a docker-compose app via a Jenkins INBOUND AGENT running on the… | `skills/orchestrate/jenkins-agent-l3-deploy.md` | orchestrate |
 | `join-project` | Orient nhanh vào dự án đang chạy đã có llmwiki — read-only, không ghi wiki | `skills/utils/join-project.md` | utils |
 | `last30days` | Research what people actually say about any topic in the last 30 days. | `skills/utils/last30days.md` | utils |
+| `agent-reach` | Với-tới internet 15 nền (X/Reddit/YT/GitHub/Bilibili/XHS…), zero-API-fee, doctor self-heal — external-pull | `skills/utils/agent-reach.md` | utils |
 | `minimalist-ui` | Clean editorial-style interfaces. | `skills/utils/minimalist-ui.md` | utils |
 | `new-project-setup` | Deploy llmwiki từ đầu vào project mới — template pull, skill install, RTK,… | `skills/dev-loop/new-project-setup.md` | dev-loop |
 | `orca-dispatch-reference` | Reference for Antigravity/OpenCode dispatch, skill installation,… | `skills/orchestrate/orca-dispatch-reference.md` | orchestrate |

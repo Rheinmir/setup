@@ -55,8 +55,15 @@ def regen_docs(root: str) -> None:
     # Downstream KHÔNG copy engine vào repo — dùng bản global (cài 1 lần). resolve_tool trả None nếu
     # thiếu cả hai → wikigraph_on False → bỏ (fail-open).
     wg = resolve_tool(root, "fdk/tools/build-wiki-graph.py")
-    # (B) chạy khi CÓ engine (local/global) và (repo framework HOẶC downstream bật opt-in).
-    wikigraph_on = bool(wg) and (is_framework or os.environ.get("OVERSTACK_WIKIGRAPH") == "1")
+    # (B) chạy khi CÓ engine (local/global) và (repo framework HOẶC downstream đã bootstrap overstack).
+    # OPT-IN downstream = sự tồn tại của llmwiki/.harness-stamp — CÙNG tín hiệu đã gate hook global fire
+    # (install-harness.sh: `if [ -f .../llmwiki/.harness-stamp ]`). Trước đây opt-in dựa env
+    # OVERSTACK_WIKIGRAPH=1, nhưng env đó CHỈ được set ở section 4b per-repo của install-harness.sh —
+    # nhánh `--global` (đường bootstrap thật) exit TRƯỚC 4b nên không repo downstream nào có → graph
+    # không bao giờ regen (GH#70). Khoá enablement vào chính stamp (đã gate hook) làm vòng tự-nhất-quán:
+    # tín hiệu bật hook = tín hiệu bật wiki-graph. Giữ env cũ làm override tương thích ngược.
+    has_stamp = os.path.isfile(os.path.join(root, "llmwiki", ".harness-stamp"))
+    wikigraph_on = bool(wg) and (is_framework or has_stamp or os.environ.get("OVERSTACK_WIKIGRAPH") == "1")
     if not is_framework and not wikigraph_on:
         return  # không phải framework và cũng không bật wiki-graph downstream → bỏ hẳn (rẻ)
     try:
@@ -81,6 +88,44 @@ def regen_docs(root: str) -> None:
             also = ["--also", "fdk/wiki"] if os.path.isdir(os.path.join(root, "fdk", "wiki")) else []
             subprocess.run([sys.executable, wg, wiki_dir, *also, "--code-root", code_root],
                            cwd=root, capture_output=True, timeout=90)
+    except Exception:
+        pass
+
+
+def secondary_memory(root: str, session: str) -> None:
+    """Chốt 1+2 (council-030, issue #5): nối bộ-nhớ-thứ-cấp vào chính Stop-hook đang ghi ledger,
+    để context/sửa-vụn được lưu durable + visualizable mà KHÔNG cần agent nhớ gõ tay (leverage
+    Meadows #6 — cấu trúc luồng thông tin, không phải kỷ luật người). Mỗi lần dừng, khi phiên có
+    SỬA thật (git dirty): (a) `scratch-log auto` tự điền why từ git nếu phiên chưa có why thủ công;
+    (b) `scratch-log distill` gom → sources/DDMMYY-session-provenance.md; (c) `memory-map` regenerate
+    llmwiki/html/memory-map.html. ĐỐI XỨNG wiki-graph: engine resolve REPO-LOCAL → GLOBAL
+    ~/.claude/harness/ (downstream KHÔNG copy engine vào repo), enablement bật MẶC ĐỊNH downstream qua
+    llmwiki/.harness-stamp (cùng tín hiệu đã gate hook global) — không cần setting tay. cwd=root nên engine
+    global vẫn đọc/ghi ĐÚNG project. Fail-open tuyệt đối: thiếu engine / lỗi / timeout → im lặng."""
+    sl = resolve_tool(root, "harness/scripts/scratch-log.py")
+    if not sl:
+        return  # thiếu engine (local+global) → bỏ (fail-open)
+    is_framework = os.path.isfile(os.path.join(root, "fdk", "tools", "build-overstack-docs.py"))
+    has_stamp = os.path.isfile(os.path.join(root, "llmwiki", ".harness-stamp"))
+    if not (is_framework or has_stamp or os.environ.get("OVERSTACK_WIKIGRAPH") == "1"):
+        return  # downstream chưa bootstrap (không stamp) → bỏ
+    try:
+        dirty = subprocess.run(["git", "status", "--porcelain"], cwd=root,
+                               capture_output=True, text=True, timeout=8).stdout
+    except Exception:
+        return
+    if not dirty.strip():
+        return  # phiên không sửa gì → khỏi ghi provenance rỗng
+    import datetime
+    today = datetime.date.today().isoformat()
+    mm = resolve_tool(root, "fdk/tools/memory-map.py")
+    try:
+        subprocess.run([sys.executable, sl, "auto", "--session", session, "--root", root],
+                       cwd=root, capture_output=True, timeout=20)
+        subprocess.run([sys.executable, sl, "distill", "--session", session, "--date", today],
+                       cwd=root, capture_output=True, timeout=20)
+        if mm:
+            subprocess.run([sys.executable, mm], cwd=root, capture_output=True, timeout=40)
     except Exception:
         pass
 
@@ -153,6 +198,7 @@ def main() -> None:
     if tp:
         code_log(root, "--run-cost", f"--transcript={tp}", f"--session={payload.get('session_id') or ''}")
     regen_docs(root)               # overstack.html + CAPABILITIES tự cập nhật khi skill/rule đổi (repo framework)
+    secondary_memory(root, (payload.get("session_id") or ""))  # issue #5: bộ-nhớ-thứ-cấp tự lưu context vụn cuối lượt
     if framework_medic_mirror(root) == 2:  # T2: đụng framework → soi medic; FAIL thật thì chặn dừng
         sys.exit(2)
     if not wiki_changed(root):

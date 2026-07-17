@@ -1,5 +1,6 @@
 ---
 name: snapshot-push
+disable-model-invocation: true
 description: Push bonbon-ai outer repo as full snapshot, including be/ and fe/ content
 ---
 

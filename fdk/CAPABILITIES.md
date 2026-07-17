@@ -1,7 +1,7 @@
 <!-- SINH BẰNG CODE: build-capabilities.py — ĐỪNG sửa tay; chạy lại để cập nhật. -->
 # CAPABILITIES — toàn bộ đồ nghề (luôn-mới, đếm từ đĩa)
 
-**79 skill · 17 rule · 34 fdk-tool · 48 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
+**85 skill · 18 rule · 35 fdk-tool · 53 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
 
 ## Skills (gọi bằng `/<tên>`)
 
@@ -19,7 +19,7 @@
 - **`/record-episode`** — Ghi một SESSION EPISODE có cấu trúc (tầng nhớ episodic) vào memory store để phiên sau truy…
 - **`/wiki-room`** — Mở room (subagent 1 tầng) nạp chi tiết wiki khi context phiên chính đã rot
 
-### dev-loop (18)
+### dev-loop (20)
 - **`/br`** — Hub MỘT TÊN cho dây chuyền sản xuất kiểu Ralph (GH#15): biến tài liệu thô của user thành s…
 - **`/build-now-adapt-later`** — When a task is blocked by missing or unverified information (an undocumented protocol, an …
 - **`/checkpoint-trace`** — Cỗ máy thời gian cho một lượt chạy agent trên codebase
@@ -30,16 +30,18 @@
 - **`/new-project-setup`** — Deploy llmwiki từ đầu vào project mới
 - **`/new-skill`** — Scaffold a new skill into both publish trees at once
 - **`/onboard-codebase`** — Deep codebase analysis
+- **`/plan`** — Mở rộng một draft SPEC ĐÃ ĐƯỢC DUYỆT thành kế hoạch thi hành được
 - **`/propose`** — Plan a feature before coding
 - **`/qc-code`** — Review code phong cách SENIOR 10 năm
 - **`/qc-uiux`** — Audit UI/UX phong cách SENIOR
 - **`/safe-change`** — Modify shared code without breaking existing callers
 - **`/ship`** — Workflow chốt PUSH/RELEASE/PR/MR
 - **`/skill-provenance`** — Ghi và kiểm provenance (nguồn + sha256 checksum) cho skill
+- **`/teach-me`** — Giải thích MỘT thứ (một file, hàm, tính năng, hay hệ thống) theo cấu trúc cố định: cách ch…
 - **`/verify-before-commit`** — Gate every commit
 - **`/wikieval`** — Turn wiki golden pages into a CI-blocking eval suite with a cheap→expensive assertion casc…
 
-### orchestrate (9)
+### orchestrate (10)
 - **`/council`** — Run a Karpathy-style LLM council (3-stage multi-agent evaluation) on top of the existing o…
 - **`/jenkins-agent-l3-deploy`** — Deploy a docker-compose app via a Jenkins INBOUND AGENT running on the target server (no S…
 - **`/orca-dispatch-reference`** — Reference for Antigravity/OpenCode dispatch, skill installation, AgentMemory, RTK token pr…
@@ -49,8 +51,10 @@
 - **`/orca-sec-scans`** — Quét bảo mật mã nguồn bằng Trivy
 - **`/orca-workflow`** — Daily propose → gate → dispatch workflow with Orca
 - **`/trace-grader`** — Score the PATH an agent took (tool choice, ordering, retries, repeatability, grounding)
+- **`/wayfinder`** — Lập bản đồ cho một chunk việc QUÁ LỚN với một phiên agent và còn MÙ MỜ
 
-### utils (47)
+### utils (50)
+- **`/agent-reach`** — MUST USE when user wants to research/search/look up/find anything on the internet
 - **`/brandkit`** — Premium brand-kit image generation skill for creating high-end brand-guidelines boards, lo…
 - **`/cavecrew`** — Decision guide for delegating to caveman-style subagents
 - **`/caveman`** — Ultra-compressed communication mode
@@ -68,10 +72,12 @@
 - **`/extract-site`** — Extract and convert a website or docs site into clean markdown
 - **`/fdk`** — Front-door on-demand cho phát triển framework HOẶC distill/author một skill
 - **`/fdk-poc`** — POC luồng /br: tạo PROJECT THẬT trong Orca (orca-cli) → CURL cài overstack từ REMOTE (đườn…
+- **`/fdk-uat`** — UAT THẬT cho một bản framework sắp phát hành
 - **`/find-skills`** — Helps users discover and install agent skills when they ask questions like "how do I do X"…
 - **`/frontier-scan`** — Quét biên giới agent-framework 30 ngày qua và đối chiếu overstack theo 8 trục (frontier-ga…
 - **`/full-output-enforcement`** — Overrides default LLM truncation behavior
 - **`/gpt-taste`** — Elite UX/UI & Advanced GSAP Motion Engineer
+- **`/hallmark`** — Anti-AI-slop design skill for greenfield pages, audits, redesigns, and design extraction f…
 - **`/harness-tour`** — Tour
 - **`/harness-update`** — TỰ BẢO TRÌ framework overstack trên máy user (self-maintain)
 - **`/health-check`** — Kiểm tra sức khỏe "pattern chuẩn" của template
@@ -117,6 +123,7 @@
 - **R15** — no-ai-attribution
 - **R16** — report-show-path
 - **R17** — problem-tree-flush
+- **R18** — plan-executable
 
 ## FDK tools (`python3 fdk/tools/<x>`)
 - `artifacts.py`
@@ -143,6 +150,7 @@
 - `docs-curate.py`
 - `fdk-poc.py`
 - `frame-lint.py`
+- `frontend-antipattern.py`
 - `loop-cost.py`
 - `medic.py`
 - `memory-map.py`
@@ -163,14 +171,17 @@
 - `bnal_config.py`
 - `bnal_guard.py`
 - `bnal_metrics.py`
+- `capability-stamp.py`
 - `claim-receipts.py`
 - `code-logger.py`
 - `council.py`
+- `design-variety.py`
 - `dispatch-verify.py`
 - `egress-guard.py`
 - `failure-flywheel.py`
 - `fdk-gate.py`
 - `flywheel.py`
+- `frontier.py`
 - `harness-doctor.py`
 - `harness-lint.py`
 - `health-check.py`
@@ -187,6 +198,7 @@
 - `retrieval-eval.py`
 - `scoped-hooks.py`
 - `scratch-log.py`
+- `skill-health.py`
 - `skill-registry.py`
 - `skill-resolve-eval.py`
 - `spec-gate.py`
@@ -197,6 +209,7 @@
 - `token-budget.py`
 - `trace-grader.py`
 - `trace-otel.py`
+- `unknown-ledger.py`
 - `web-clone.py`
 - `web-crawl.py`
 - `wiki-graph.py`

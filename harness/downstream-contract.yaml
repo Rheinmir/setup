@@ -1,0 +1,60 @@
+# harness/downstream-contract.yaml
+# HỢP ĐỒNG DOWNSTREAM — thứ một dự án CÀI MỚI (fresh install) BẮT BUỘC phải có.
+# `harness/scripts/fresh-install-smoke.sh` assert từng dòng; smoke là probe `freshinstall` của
+# medic → mọi push qua /fdk & /ship buộc phải xanh.
+#
+# VÌ SAO TỒN TẠI (bài học 2026-07-11): installer hardcode danh sách file. Có thể dev xong một
+# tính năng trong repo framework, test xanh hết, mà installer KHÔNG ship file đó → người dùng
+# downstream không hề có. "Xanh trong repo" ≠ "đúng ở downstream".
+#
+# LUẬT DÙNG: dev một tính năng HƯỚNG DOWNSTREAM? **Thêm vào đây TRƯỚC.** Gate sẽ ĐỎ cho tới khi
+# installer thật sự ship được nó. Đó chính là forcing function — không phải nhớ, mà bị chặn.
+
+# File PHẢI tồn tại trong dự án cài mới.
+must_exist:
+  - harness/poc-vendor-neutral/policy.yaml
+  - harness/poc-vendor-neutral/test-broad.sh
+  - harness/poc-vendor-neutral/gen-converters.py
+  - harness/poc-vendor-neutral/bin/llmwiki-validate.py
+  - .claude/settings.json
+  - .pre-commit-config.yaml
+  - .github/workflows/harness.yml
+  - llmwiki/wiki/index.md
+  - llmwiki/html/overstack.html
+  # Bản đồ năng lực cho MODEL (ADR-005). Thiếu file này = agent vào dự án KHÔNG BIẾT mình có
+  # đồ nghề gì: hook orientation (session_start.py) trỏ tới nó, không có thì hook câm.
+  # Cài xong mà model vẫn mù là hỏng, kể cả khi mọi file khác đủ.
+  - CAPABILITIES.md
+
+# Lệnh PHẢI chạy xanh trong dự án cài mới (harness cắn thật, không chỉ file có mặt).
+must_bite:
+  - bash harness/poc-vendor-neutral/test-broad.sh
+
+# Skill PHẢI reachable (global) để dự án mới dùng được ngay.
+must_reach_skills:
+  - orchestration
+  - orca-cli
+  - orca-dispatch-reference
+
+# Mọi rule id (R\d+) trong policy.yaml của REPO phải có mặt trong policy.yaml DOWNSTREAM.
+# Tự động, không cần bảo trì: thêm rule ở fdk mà không tới được downstream → gate đỏ.
+rule_parity: true
+
+# ── ENGINE GLOBAL — nơi tool của skill THẬT SỰ nằm ────────────────────────────────────────
+# KIẾN TRÚC (đọc kỹ trước khi "sửa"): engine KHÔNG sống trong project. Chúng sống ở GLOBAL
+# HARNESS HOME ($OVERSTACK_HARNESS_HOME, mặc định ~/.claude/harness). install.sh còn CHỦ ĐỘNG
+# xoá bản engine per-project (U10) vì bản global mới là bản dùng. Skill global trỏ tới
+# ~/.claude/harness/... — đúng thiết kế, KHÔNG phải "quên ship".
+#
+# GAP THẬT (đây mới là cái gate phải gác): install.sh gọi `install-harness.sh --global` ở chế độ
+# FAIL-OPEN — bước đó hỏng thì project vẫn báo "cài thành công", nhưng MỌI engine của skill biến
+# mất. Người dùng có một overstack rỗng ruột mà không ai báo. Nên: sau fresh install, các engine
+# dưới đây PHẢI reachable trong global harness, nếu không → gate ĐỎ.
+# Đường dẫn tương đối so với GLOBAL HARNESS HOME.
+must_reach_global_engines:
+  - version.json
+  - hooks/pre_tool_use.py
+  - hooks/build-capabilities.py
+  - hooks/health-check.py
+  - harness/scripts/council.py
+  - fdk/tools/medic.py

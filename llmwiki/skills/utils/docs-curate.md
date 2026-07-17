@@ -1,5 +1,6 @@
 ---
 name: docs-curate
+disable-model-invocation: true
 description: Sắp xếp gọn kho tài liệu LOCAL (llmwiki/html/ + wiki/sources/draft/) khi phình to. Ba tầng — PROMOTE bản chất quý lên wiki ADR/concept (travel, sống sót clone), ARCHIVE render ephemeral (cặp proposal đã xong, bản bị thay thế, report cũ → archive/), KEEP canonical — rồi RE-INDEX đầy đủ. Trigger khi "dọn docs", "sắp xếp/merge tài liệu", "tidy docs", "html/draft quá nhiều", "/docs-curate".
 ---
 

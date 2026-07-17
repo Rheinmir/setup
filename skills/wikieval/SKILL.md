@@ -1,5 +1,6 @@
 ---
 name: wikieval
+disable-model-invocation: true
 description: Turn wiki golden pages into a CI-blocking eval suite with a cheap→expensive assertion cascade plus a committed regression baseline. Goldens are md files under llmwiki/wiki/sources/evals/ with YAML frontmatter (input, expected, optional rubric, asserts). The engine runs deterministic tier-1 asserts (equals/contains/regex/is-json/is-sql-ish) in pure code, an optional tier-2 similarity, and reports tier-3 (LLM-rubric judge) as the quarantined adapter — never calling a model. Candidate outputs come from --outputs outputs.json so the suite is fully runnable without any model. Trigger when the user says "wikieval", "eval suite for the wiki", "regression gate for goldens", "assertion cascade", "block CI on eval drop", or invokes /wikieval.
 ---
 

@@ -97,6 +97,20 @@ def p_docs():
     return "ok", f"{len(checks)} generator khớp đĩa", ""
 
 
+def p_frontend():
+    """Anti-pattern FRONTEND ở HTML sinh (ligature code, prose lọt code block) — p_docs không bắt."""
+    chk = ROOT / "fdk/tools/frontend-antipattern.py"
+    if not chk.exists():
+        return "skip", "chưa có frontend-antipattern.py", ""
+    rc, out = sh([PY, str(chk)], timeout=30)
+    tail = next((ln.strip() for ln in reversed(out.splitlines()) if ln.strip()), "")
+    if rc == 1:
+        return "fail", tail or "có anti-pattern frontend", "python3 fdk/tools/frontend-antipattern.py  # xem chi tiết"
+    if rc == 2:
+        return "warn", tail or "có cảnh báo frontend", "python3 fdk/tools/frontend-antipattern.py"
+    return "ok", "HTML sinh sạch anti-pattern frontend", ""
+
+
 def p_narrative():
     """Narrative overstack có TRUNG THỰC không (council-025) — KHÁC docs-probe (chỉ so
     html==generator-output = tính TRUNG THÀNH bản sao). Probe này gác tính TRUNG THỰC bản gốc:
@@ -243,17 +257,51 @@ def p_eval():
     return "ok", "eval self-index không regress", ""
 
 
+def p_freshinstall():
+    """Đường cài NGƯỜI-MỚI còn sống không: curl-cài overstack vào một dự án TRỐNG,
+    CÔ LẬP (mktemp ngoài repo) qua file:// working-tree, rồi assert 3 trụ + harness
+    CẮN thật + orchestration-ready (skills reachable, runtime ping nếu có). Là cổng
+    required của push-qua-/fdk: người mới clone/curl phải /orchestration được ngay.
+    Bản --local OFFLINE tất định; live-run LLM /orchestration là acceptance tay (ceiling)."""
+    smoke = ROOT / "harness/scripts/fresh-install-smoke.sh"
+    if not smoke.exists():
+        return "skip", "fresh-install-smoke.sh chưa có", ""
+    rc, out = sh(["bash", str(smoke), "--local"], timeout=180)
+    if rc != 0:
+        return "fail", "fresh-install ĐỎ — người mới curl-cài KHÔNG orchestration-ready", \
+               "bash harness/scripts/fresh-install-smoke.sh --local   # xem dòng ✗"
+    return "ok", "người mới curl-cài → 3 trụ + orchestration-ready (isolated)", ""
+
+
+def p_capsurface():
+    """Bề mặt NĂNG LỰC (skills + rules + engines) đổi mà version CHƯA bump → downstream so
+    version thấy bằng nhau, tưởng mình current, và KHÔNG BAO GIỜ biết có chức năng mới; model
+    làm việc ở dự án đó không biết mình có thêm đồ nghề. Đây là forcing function cho p-08:
+    thêm năng lực thì BẮT BUỘC khai, không thì không push được."""
+    st = ROOT / "harness/scripts/capability-stamp.py"
+    if not st.exists():
+        return "skip", "capability-stamp.py chưa có", ""
+    rc, out = sh([PY, str(st), "--check"], timeout=60)
+    if rc != 0:
+        first = next((l.strip() for l in out.splitlines() if l.strip()), "bề mặt năng lực lệch")
+        return "fail", first, "python3 harness/scripts/capability-stamp.py --update   # bump + đóng dấu"
+    return "ok", "bề mặt năng lực khớp version (downstream sẽ thấy đúng khi có bản mới)", ""
+
+
 PROBES = [
     ("rules",    ["rules", "luật", "bite"],      p_rules),
     ("coverage", ["rules", "coverage", "luật"],  p_coverage),
     ("drift",    ["drift", "rules"],             lambda: p_rules()),  # drift lộ trong p_rules
     ("backstop", ["backstop", "git", "commit"],  p_backstop),
     ("docs",     ["docs", "capabilities"],       p_docs),
+    ("frontend", ["frontend", "docs", "html"],    p_frontend),
     ("narrative", ["narrative", "docs", "drift"], p_narrative),
     ("foundation", ["foundation", "docs", "drift"], p_foundation),
     ("selfstate", ["selfstate", "state", "narrative"], p_selfstate),
     ("code",     ["code", "health"],             p_code),
     ("eval",     ["eval", "baseline"],           p_eval),
+    ("freshinstall", ["freshinstall", "install", "orchestration", "e2e", "push"], p_freshinstall),
+    ("capsurface", ["capsurface", "version", "capabilities", "bump", "downstream"], p_capsurface),
 ]
 # bỏ 'drift' probe trùng — drift đã báo trong rules:
 PROBES = [p for p in PROBES if p[0] != "drift"]

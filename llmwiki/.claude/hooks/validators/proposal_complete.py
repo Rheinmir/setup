@@ -1,15 +1,34 @@
 #!/usr/bin/env python3
-"""R7 proposal-complete: proposal chờ duyệt phải khai đủ ai làm gì + seq diagram từng task.
+"""R7 proposal-complete: SPEC chờ duyệt + PLAN thi hành đều phải đủ chất, không thì chặn.
+
+Vòng đời một feature sinh BỘ BA:
+  SPEC  `DDMMYY-<ten>.md`       — NGƯỜI đọc để bấm duyệt ở cổng  (do /propose sinh, kèm .html)
+  PLAN  `DDMMYY-<ten>-PLAN.md`  — MÁY đọc để thi hành            (do /plan sinh, KHÔNG cần .html)
+  HTML  `DDMMYY-<ten>-seq.html` — trang người xem lúc duyệt
 
 Scope: file .md trong wiki draft dir, CÓ section '## Plan', Status còn 'proposed'.
 Output-report (không có Plan) và draft đã implemented/done tự miễn.
 
-Điều kiện:
+Nhánh SPEC:
   (a) Bảng '## Agent Task Assignment' ≥1 data row, không ô Agent nào trống
   (b) Link '**Sequence diagram**' trỏ tới file .html TỒN TẠI
   (c) Số '<div class="diagram-box"' trong html ≥ số task '- [ ]' trong '## Plan'
-  (d) html KHÔNG ẩn nhãn message bằng 'opacity:0' (.msg phải hiện sẵn — bài học 130626)
+  (d) html KHÔNG ẩn nhãn message bằng 'opacity:0' (.msg phải hiện sẵn — bài học 130626).
+      CHỈ quét trong khối <style> — trước đây quét cả trang nên cắn nhầm văn xuôi nào
+      nhắc tới chính chuỗi CSS bị cấm (dính lúc soạn draft 140726).
   (e) html có ≥1 prose 'class="desc"' mỗi diagram (đọc hiểu không cần animation)
+  (f) '## Context' có nội dung — force-query grounding (ADR-009)
+  (g) không còn placeholder ('TBD', 'xử lý lỗi phù hợp', 'tương tự Task N'…)
+  (h) '## Global constraints' có nội dung — ràng buộc bao trùm, mỗi task ngầm mang theo
+
+Nhánh PLAN (tên file kết thúc '-PLAN.md') — miễn (b)(c)(d)(e) vì PLAN không cần .html:
+  (i) mỗi '### Task' phải có '**Files:**' với ≥1 đường dẫn thật
+  (j) mỗi '### Task' phải có ≥1 khối code (bước đổi code thì phải CÓ code)
+  (k) PLAN có ≥2 task → mỗi task bắt buộc '**Interfaces:**' (Consumes/Produces).
+      Agent thi hành chỉ thấy task của nó; không khai chữ ký thì hai agent song song
+      đặt tên hàm lệch nhau và phần ghép vỡ.
+  (l) không còn placeholder
+  (m) '## Global constraints' có nội dung
 
 Contract chung: stdin JSON {"action":"write","file_path":...} hoặc argv files. Exit 0/2.
 """
@@ -28,6 +47,93 @@ DIAGRAM_RE = re.compile(r'<div\s+class="diagram-box"')
 HIDDEN_MSG_RE = re.compile(r"\.msg\b[^{}]*\{[^}]*opacity:\s*0\s*[;}]")
 DESC_STATIC_RE = re.compile(r'class="desc"')          # prose tĩnh <p class="desc">
 DESC_DATA_RE = re.compile(r"\bdesc\s*:\s*['\"`]")     # prose trong data JS: desc:'...'
+STYLE_BLOCK_RE = re.compile(r"<style\b[^>]*>(.*?)</style>", re.IGNORECASE | re.DOTALL)
+
+# --- nhánh PLAN ---
+PLAN_FILE_SUFFIX = "-PLAN.md"
+TASK_HEAD_RE = re.compile(r"^###\s+Task\b.*$", re.MULTILINE)
+FILES_RE = re.compile(r"^\s*\*\*Files:?\*\*", re.MULTILINE)          # nhận cả '**Files**' thiếu ':'
+IFACE_RE = re.compile(r"^\s*\*\*Interfaces:?\*\*", re.MULTILINE)
+CODE_FENCE_RE = re.compile(r"^\s*```", re.MULTILINE)
+# đường dẫn thật: có '/' và một đuôi file, hoặc nằm trong `backtick`
+PATH_RE = re.compile(r"[\w./~-]+/[\w.-]+\.\w+")
+
+# placeholder BỊ CẤM — plan/spec còn mấy chuỗi này là plan HỎNG, không phải plan chưa xong.
+# Agent CLI rẻ không hỏi lại được: gặp chỗ mơ hồ nó sẽ ĐOÁN rồi im lặng.
+PLACEHOLDERS = [
+    (re.compile(r"\bTBD\b", re.IGNORECASE), "TBD"),
+    (re.compile(r"\bTO-?DO\b(?!\s*\.md)", re.IGNORECASE), "TODO"),
+    (re.compile(r"\b(?:điền|chi tiết|bổ sung)\s+sau\b", re.IGNORECASE), "'điền/chi tiết sau'"),
+    (re.compile(r"xử lý lỗi\s+(?:phù hợp|thích hợp)", re.IGNORECASE), "'xử lý lỗi phù hợp'"),
+    (re.compile(r"\b(?:add\s+)?appropriate error handling\b", re.IGNORECASE), "'appropriate error handling'"),
+    (re.compile(r"\bhandle edge cases\b", re.IGNORECASE), "'handle edge cases'"),
+    (re.compile(r"(?:tương tự|similar to)\s+task\s+\d", re.IGNORECASE), "'tương tự Task N' (phải chép code ra)"),
+]
+
+
+META_DOC_RE = re.compile(r"^r7_meta:\s*true\s*(?:#.*)?$", re.MULTILINE | re.IGNORECASE)  # YAML cho phép comment cuối dòng
+FENCE_BLOCK_RE = re.compile(r"^```.*?^```", re.MULTILINE | re.DOTALL)
+
+
+# --- truy vết SPEC ↔ PLAN (spec-kit: id ổn định + coverage) ---
+FR_ID_RE = re.compile(r"\bFR-(\d{3})\b")
+THOA_RE = re.compile(r"^\s*\*\*Thoả:?\*\*(.*)$", re.MULTILINE)
+# unknown NGUY HIỂM: model từ chối đoán → phải được trả lời trước khi hỏi duyệt
+NEEDS_CLARIFY_RE = re.compile(r"\[CẦN LÀM RÕ:([^\]]*)\]")
+
+
+def is_plan(path) -> bool:
+    return str(path).replace("\\", "/").endswith(PLAN_FILE_SUFFIX)
+
+
+def spec_of(plan_path):
+    """PLAN `<stem>-PLAN.md` → SPEC anh em `<stem>.md`. Không có → None (fail-open)."""
+    p = Path(plan_path)
+    spec = p.parent / (p.name[: -len(PLAN_FILE_SUFFIX)] + ".md")
+    return spec if spec.is_file() else None
+
+
+def fr_ids(text):
+    """Chỉ gom id trong section '## Requirements' — id nhắc trong văn xuôi (vd mục Risks)
+    KHÔNG phải một yêu cầu, quét cả file sẽ chặn nhầm."""
+    sec = None
+    for title in ("Requirements (FR)", "Requirements"):
+        sec = section(text, title)
+        if sec:
+            break
+    return sorted(set(FR_ID_RE.findall(sec))) if sec else []
+
+
+def is_meta_doc(text) -> bool:
+    """Draft NÓI VỀ chính luật R7 (nên buộc phải trích nguyên văn chuỗi bị cấm) khai
+    `r7_meta: true` ở frontmatter → miễn check placeholder. Ngoại lệ HIỆN và grep được,
+    không phải heuristic đoán mò 'chuỗi này nằm trong backtick nên chắc là trích dẫn'."""
+    return bool(META_DOC_RE.search(text))
+
+
+def strip_fences(text) -> str:
+    """Bỏ khối ``` … ``` — code mẫu/khuôn template được phép chứa chuỗi minh hoạ."""
+    return FENCE_BLOCK_RE.sub("", text)
+
+
+def find_placeholders(text):
+    """Bỏ qua dòng đang ĐỊNH NGHĨA lệnh cấm (skill/validator tự nói về nó) — chỉ cắn dùng thật."""
+    hits = []
+    for rx, label in PLACEHOLDERS:
+        m = rx.search(text)
+        if m:
+            hits.append(f"{label} (dòng {text[:m.start()].count(chr(10)) + 1})")
+    return hits
+
+
+def task_blocks(text):
+    """Cắt text thành từng khối '### Task N ...' → [(tiêu đề, thân)]."""
+    heads = list(TASK_HEAD_RE.finditer(text))
+    out = []
+    for i, h in enumerate(heads):
+        end = heads[i + 1].start() if i + 1 < len(heads) else len(text)
+        out.append((h.group(0).strip(), text[h.end():end]))
+    return out
 
 
 def section(text, title):
@@ -48,6 +154,10 @@ def check(path):
     except OSError:
         return
 
+    if is_plan(path):
+        check_plan(path, text)
+        return
+
     plan = section(text, "Plan")
     if plan is None:
         return  # output-report / draft không phải plan → miễn
@@ -57,6 +167,29 @@ def check(path):
         return  # đã qua gate / đã làm xong → miễn
 
     problems = []
+
+    # (h) ràng buộc bao trùm — agent thi hành chỉ thấy task của nó, luật chung phải nằm một chỗ
+    gc = section(text, "Global constraints")
+    if gc is None or len(gc.strip()) < 20:
+        problems.append("(h) thieu '## Global constraints' co noi dung — rang buoc bao trum moi task "
+                        "(san version, gioi han dep, gate truoc push), chep NGUYEN VAN tu wiki/ADR/policy")
+
+    # (g) placeholder — tai lieu NOI VE luat cam thi khai 'r7_meta: true' o frontmatter
+    if not is_meta_doc(text):
+        for hit in find_placeholders(strip_fences(text)):
+            problems.append(f"(g) con placeholder {hit} — agent CLI re khong hoi lai duoc, no se DOAN roi im lang")
+
+    # (n) unknown NGUY HIEM chua duoc tra loi → KHONG duoc hoi duyet.
+    #     Model tu dien mac dinh la BINH THUONG (tag '(default)'), nhung nhom auth/du-lieu/tien/
+    #     phap-ly/ranh-gioi-tin-cay thi mot mac dinh sai = hong kien truc → phai hoi that.
+    if not is_meta_doc(text):
+        for m in NEEDS_CLARIFY_RE.finditer(strip_fences(text)):
+            line = text[: m.start()].count("\n") + 1
+            problems.append(
+                f"(n) con '[CAN LAM RO: {m.group(1).strip()[:60]}]' chua tra loi (dong {line}) — "
+                f"user phai tra loi, HOAC ha xuong tag '(default)' MOT CACH CO CHU Y. "
+                f"Khong duoc mang unknown nguy hiem ra cong duyet."
+            )
 
     # (f) FORCE-QUERY grounding (R7-f, ADR-009): draft proposed có Plan PHẢI có '## Context'
     #     có nội dung (>=20 ký tự) — tóm tắt wiki liên quan đã query. Chống propose "mù".
@@ -98,8 +231,10 @@ def check(path):
                     f"(c) Plan co {n_tasks} task nhung seq html chi co {n_diagrams} diagram-box — "
                     f"MOI task phai co sequence diagram rieng"
                 )
-            # (d) khong duoc an nhan message — doc ra phai thay chu ngay, khong cho animation reveal
-            if HIDDEN_MSG_RE.search(html_text):
+            # (d) khong duoc an nhan message — doc ra phai thay chu ngay, khong cho animation reveal.
+            #     Chi quet trong <style>: quet ca trang thi can nham van xuoi nhac toi chuoi CSS bi cam.
+            css = "\n".join(STYLE_BLOCK_RE.findall(html_text))
+            if HIDDEN_MSG_RE.search(css):
                 problems.append(
                     "(d) seq html an nhan bang 'opacity:0' — nhan message PHAI hien san "
                     "(.msg opacity >=.82), animation chi lam noi buoc dang chay. Bai hoc 130626."
@@ -116,6 +251,78 @@ def check(path):
     if problems:
         print(
             f"[R7 proposal-complete] {path} chua du chuan de hoi duyet:\n  - " + "\n  - ".join(problems),
+            file=sys.stderr,
+        )
+        sys.exit(2)
+
+
+def check_plan(path, text):
+    """Nhánh PLAN — file `*-PLAN.md` do /plan sinh: thứ BƠM THẲNG vào agent context=0.
+    Miễn (b)(c)(d)(e): PLAN không cần .html (HTML là để NGƯỜI xem lúc duyệt, gắn với SPEC)."""
+    m = STATUS_RE.search(text)
+    status = (m.group(1) if m else "").lower()
+    if status and ("implement" in status or "done" in status):
+        return  # đã thi hành xong → miễn
+
+    problems = []
+    tasks = task_blocks(text)
+    if not tasks:
+        problems.append("PLAN khong co '### Task N' nao — /plan phai chia task, moi task mot deliverable test duoc")
+
+    # (m) ràng buộc bao trùm — mỗi task chỉ được bơm phần của nó, luật chung phải đi kèm
+    gc = section(text, "Global constraints")
+    if gc is None or len(gc.strip()) < 20:
+        problems.append("(m) thieu '## Global constraints' co noi dung — chep NGUYEN VAN tu SPEC; "
+                        "moi task ngam mang theo section nay khi dispatch --inject")
+
+    multi = len(tasks) >= 2
+    for title, body in tasks:
+        short = title[:60]
+        # (i) đường dẫn chính xác — agent khong doan duoc file nao
+        mf = FILES_RE.search(body)
+        if not mf:
+            problems.append(f"(i) {short}: thieu '**Files:**' — phai khai duong dan CHINH XAC (tao/sua/test)")
+        else:
+            nl = body.find("\n\n", mf.end())
+            files_blk = body[mf.end(): nl if nl > 0 else len(body)]
+            if not PATH_RE.search(files_blk):
+                problems.append(f"(i) {short}: '**Files:**' khong co duong dan that (vd `src/x/y.py`)")
+        # (j) bước đổi code phải CÓ code
+        if len(CODE_FENCE_RE.findall(body)) < 2:   # mở + đóng = 1 khối
+            problems.append(f"(j) {short}: khong co khoi code nao — buoc doi code thi PHAI co code, "
+                            f"khong mo ta suong (agent re se doan)")
+        # (k) ≥2 task → bắt buộc khai chữ ký cho task hàng xóm
+        if multi and not IFACE_RE.search(body):
+            problems.append(f"(k) {short}: thieu '**Interfaces:**' (Consumes/Produces) — PLAN co {len(tasks)} task, "
+                            f"agent chi thay task CUA NO; khong khai chu ky thi 2 agent dat ten ham lech nhau")
+
+    # (l) placeholder
+    if not is_meta_doc(text):
+        for hit in find_placeholders(strip_fences(text)):
+            problems.append(f"(l) con placeholder {hit} — PLAN la thu bom thang vao agent, mo ho = doan sai im lang")
+
+    # (o) CONG TRUY VET: moi FR-xxx cua SPEC anh em phai duoc it nhat 1 task nhan.
+    #     Mot yeu cau troi mat giua hai task la loi tham lang nhat cua moi ke hoach —
+    #     no chi lo ra luc agent giao hang thieu, hoac te hon, luc user dung.
+    spec = spec_of(path)
+    if spec and tasks:
+        want = fr_ids(spec.read_text(encoding="utf-8", errors="replace"))
+        if want:
+            claimed = set()
+            for _, body in tasks:
+                for m in THOA_RE.finditer(body):
+                    claimed.update(FR_ID_RE.findall(m.group(1)))
+            missing = [i for i in want if i not in claimed]
+            if missing:
+                problems.append(
+                    f"(o) PLAN bo roi {len(missing)}/{len(want)} yeu cau cua SPEC: "
+                    + ", ".join("FR-" + i for i in missing)
+                    + f" — moi '### Task' phai khai '**Thoa:** FR-xxx'. SPEC: {spec.name}"
+                )
+
+    if problems:
+        print(
+            f"[R7 plan-executable] {path} chua du chuan de dispatch:\n  - " + "\n  - ".join(problems),
             file=sys.stderr,
         )
         sys.exit(2)

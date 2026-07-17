@@ -1,25 +1,117 @@
-# ⚙️  GENERATED FROM policy.yaml — đừng sửa tay; sửa policy.yaml rồi chạy gen-converters.py
 name: harness
-on: [pull_request, push]
-env:
-  HARNESS_REPO: https://github.com/Rheinmir/setup.git
-  HARNESS_REF: orca            # pin phiên bản harness: nhánh / tag / commit SHA
+
+# Sàn đảm bảo của harness — chạy trên MỌI PR và push lên orca, KHÔNG phụ thuộc
+# vendor/hook nào (advisory rules bị lờ ở mọi agent non-Claude → CI là nơi nói "không"
+# mà không bypass được khi merge). Cả hai job đều gọi CÙNG một lõi llmwiki-validate.py.
+
+on:
+  pull_request:
+  push:
+    branches: [orca]
+
+permissions:
+  contents: read
+
 jobs:
-  validate:
+  selftest:
+    name: self-test lõi (demo 13 + broad 54 = 67 assertion)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
       - uses: actions/setup-python@v5
-        with: { python-version: '3.x' }
+        with:
+          python-version: '3.x'
       - run: pip install pyyaml
-      - name: self-install harness global trên runner (v4 — repo không mang engine)
+      - name: demo.sh (13 assertion)
+        run: bash harness/poc-vendor-neutral/demo.sh
+      - name: test-broad.sh (54 assertion)
+        run: bash harness/poc-vendor-neutral/test-broad.sh
+      - name: wiki-graph user-reachability (chặn AP-1 dev-only trap)
+        run: bash harness/tests/wiki-graph-user-reachability-test.sh .
+      - name: memory-map user-reachability (bộ-nhớ-thứ-cấp tự chạy downstream)
+        run: bash harness/tests/memory-map-user-reachability-test.sh .
+
+  validate-content:
+    name: validate file .md đổi (layer=repo)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: pip install pyyaml
+      - name: harness validator trên file .md thay đổi
         run: |
-          git clone --depth 1 -b "$HARNESS_REF" "$HARNESS_REPO" "$RUNNER_TEMP/harness-src"
-          bash "$RUNNER_TEMP/harness-src/harness/scripts/install-harness.sh" --global
-      - name: harness validator (layer=repo, từ global) trên file .md đổi
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            base="${{ github.event.pull_request.base.sha }}"
+          else
+            base="${{ github.event.before }}"
+          fi
+          # base có thể rỗng / không tồn tại (push đầu, force) → lùi về HEAD~1
+          if [ -z "$base" ] || ! git cat-file -e "$base^{commit}" 2>/dev/null; then
+            base="$(git rev-parse HEAD~1 2>/dev/null || git rev-parse HEAD)"
+          fi
+          files=$(git diff --name-only "$base" HEAD | grep -E '\.md$' || true)
+          if [ -z "$files" ]; then echo "không có .md đổi — bỏ qua"; exit 0; fi
+          echo "kiểm tra:"; echo "$files" | sed 's/^/  /'
+          # shellcheck disable=SC2086
+          python3 harness/poc-vendor-neutral/bin/llmwiki-validate.py files $files
+
+  repo-health:
+    name: repo health (fresh-clone gates — trước nay chỉ pre-commit, bypass được)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: pip install pyyaml
+      # Các validator này trước nay CHỈ chạy pre-commit (bypass bằng --no-verify / không cài).
+      # Nay git-aware (bỏ qua draft/html gitignored) nên chạy được trên checkout sạch của CI.
+      - name: R3 index-sync (git-aware) — framework wiki (fdk/wiki) + demo template (llmwiki/wiki)
         run: |
-          base="${{ github.event.pull_request.base.sha || github.event.before }}"
-          files=$(git diff --name-only "$base" HEAD 2>/dev/null | grep -E '\.md$' || true)
-          [ -z "$files" ] && { echo "no changed .md"; exit 0; }
-          python3 "$HOME/.claude/harness/harness/poc-vendor-neutral/bin/llmwiki-validate.py" files $files
+          python3 harness/validators/index_sync.py --wiki-dir fdk/wiki
+          python3 harness/validators/index_sync.py --wiki-dir llmwiki/wiki
+      - name: L4 wiki-health — broken wikilink (git-aware)
+        run: python3 harness/scripts/wiki-health.py --wiki-dir fdk/wiki --fail-on broken
+      - name: arch-scan — doc vs rule
+        run: python3 harness/scripts/arch-scan.py --root .
+      - name: retrieval-eval — query truy-hồi không tụt dưới sàn (tất định, không LLM)
+        run: |
+          # 1. goldens coherent (mỗi golden tự thoả expected_pages) + cap 30 còn giữ
+          python3 harness/scripts/retrieval-eval.py --self-test
+          # 2. chiến lược query (proxy L1 tất định) không hồi quy hit@k / phình token so baseline L0 đã commit
+          python3 harness/scripts/query-proxy.py --mode L1 --topn 5 --out "$RUNNER_TEMP/retrieval-L1.json"
+          python3 harness/scripts/retrieval-eval.py --outputs "$RUNNER_TEMP/retrieval-L1.json" --check
+      - name: code-health — Trụ 4 cổng CI tất định không-LLM (mọi .py compile; ruff nếu có)
+        run: |
+          pip install ruff --quiet || echo "ruff không cài được — chạy floor compile"
+          python3 harness/validators/code_health.py --root .
+      - name: harness-lint — meta-drift (hằng số content-dir + wiring policy→settings)
+        run: python3 harness/scripts/harness-lint.py --check
+      - name: agent↔claude skill-table parity
+        run: python3 harness/validators/agent_claude_parity.py
+      - name: duplicate-basename — slug wiki không trùng giữa các thư mục
+        run: python3 harness/validators/duplicate_basename.py --wiki-dir fdk/wiki
+      - name: ADR first-class trong khuôn per-project (skeleton + functional)
+        run: bash harness/tests/adr-normal-user-test.sh .
+      - name: auto-index khi wiki đổi + force-query grounding khi propose
+        run: bash harness/tests/auto-index-and-grounding-test.sh .
+      - name: R13 decision→ADR gate (link + edit/delete-when-superseded)
+        run: bash harness/tests/decision-adr-gate-test.sh .
+      - name: T5 policy↔converters drift (adapter khớp rule) — dời từ pre-commit (issue #18)
+        run: bash harness/tests/policy-converters-drift-test.sh
+      - name: harness-local — rule RIÊNG dự án (P-namespace, sync-safe, không giẫm R)
+        run: bash harness/tests/harness-local-test.sh .
+      - name: R14 patterns-protected — kho pattern chỉ sửa khi user cho phép (unlock env)
+        run: bash harness/tests/patterns-guard-test.sh .
+      - name: U11 self-integrity — stamp repo ↔ global version-skew (GH#63 Phase 5)
+        run: bash harness/tests/harness-integrity-test.sh .
+      - name: harness-doctor — fire-drill (mọi rail còn cắn?)
+        run: python3 harness/scripts/harness-doctor.py --ci
+      - name: capabilities current (fdk/CAPABILITIES.md khớp đĩa)
+        run: python3 fdk/tools/build-capabilities.py --check
+      - name: adapt-registry leak-gate (ẩn số quarantine không rò — BNAL Step 7)
+        run: python3 harness/scripts/adapt-registry.py --check

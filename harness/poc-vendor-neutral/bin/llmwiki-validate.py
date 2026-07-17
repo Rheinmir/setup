@@ -176,7 +176,10 @@ def check_require_frontmatter(path, content, rule):
     return None
 
 
-# R7 — nếu content khớp ALL when_contains thì phải có ALL need_contains
+# R7 — nếu content khớp ALL when_contains thì phải có ALL need_contains,
+#      và KHÔNG được chứa bất kỳ chuỗi nào trong forbid_contains (tuỳ chọn).
+#      forbid_contains gác thứ ngược lại need_contains: unknown nguy hiểm chưa trả lời
+#      ('[CẦN LÀM RÕ: …]') KHÔNG được mang ra cổng duyệt.
 def check_conditional_require(path, content, rule):
     p = _in_scope(path, rule)
     if p is None:
@@ -189,6 +192,10 @@ def check_conditional_require(path, content, rule):
     missing = [n for n in rule.get("need_contains", []) if n not in content]
     if missing:
         return f"[{_tag(rule)}] {p} thiếu: {', '.join(missing)} — {rule.get('statement', '')}"
+    banned = [b for b in (rule.get("forbid_contains") or []) if b in content]
+    if banned:
+        return (f"[{_tag(rule)}] {p} còn unknown chưa trả lời: {', '.join(banned)} — "
+                f"trả lời, hoặc hạ xuống tag '(default)' một cách CÓ CHỦ Ý. {rule.get('statement', '')}")
     return None
 
 

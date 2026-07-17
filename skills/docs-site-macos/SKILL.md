@@ -937,6 +937,7 @@ Keep the chrome (traffic-light header), the system-font stack (`var(--font-text)
 ## Best Practices
 
 - **THANG CỠ CHỮ COMPACT — tối ưu màn laptop 13″ (feedback user 2026-07-06, đã đảo chiều một lần — KHÔNG tăng size):** GIẢM chứ đừng tăng: body `p` 13–13.5px, `.lead` 14px, nav link 12px (padding dọc ~5px), list/bảng 12.5px, nhãn/caption 10–10.5px, `h2` ~21px, hero `clamp(26px,4vw,40px)`. Tăng cỡ chữ để "dễ đọc" là SAI trên 13″ — ít nội dung lọt màn hình, wrap chật, nhìn tệ hơn; muốn dễ đọc thì chỉnh line-height/contrast, không chỉnh size. Badge đếm số được phép <10px.
+- **SIDEBAR: CUỘN chứ không NÉN (feedback user 2026-07-07):** nav flex-column sẽ flex-shrink co dẹp từng item khi thiếu chỗ — phải chặn: `nav>*{flex-shrink:0}` + `overflow-y:auto`, và ẨN HOÀN TOÀN scrollbar: `nav{scrollbar-width:none;-ms-overflow-style:none} nav::-webkit-scrollbar{width:0;height:0;display:none}`. Stack item luôn giữ chiều cao tự nhiên, thiếu chỗ thì cuộn ngầm.
 - ALWAYS inline SVG directly in the HTML (not external files)
 - ALWAYS use `clamp()` for hero heading size: `font-size: clamp(32px,5vw,56px)`
 - NEVER use `☐` Unicode for checklists — ALWAYS use real `<input type="checkbox">` with `<label for="...">` so items are clickable. Add this CSS for every checklist:

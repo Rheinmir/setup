@@ -1,5 +1,6 @@
 ---
 name: new-project-setup
+disable-model-invocation: true
 description: Deploy llmwiki từ đầu vào project mới — template pull, skill install, RTK, wiki seed, onboard
 ---
 

@@ -276,6 +276,7 @@ Onboard \`$PROJECT_ROOT\` — understand-anything graph, domain enrichment, wiki
 - \`.orca-onboard/intermediate/domain-graph.json\`
 - \`llmwiki/wiki/\` (index, concepts, entities, architecture, tours)
 - \`llmwiki/html/onboarding-${PROJECT_SLUG}.html\`
+- \`llmwiki/html/wiki-graph.html\` (vector quan hệ concept↔code — STEP C)
 
 ## Files
 | File | Action |
@@ -289,6 +290,7 @@ Onboard \`$PROJECT_ROOT\` — understand-anything graph, domain enrichment, wiki
 | \`llmwiki/wiki/entities/*.md\` | created |
 | \`llmwiki/wiki/concepts/onboarding-tour.md\` | created |
 | \`llmwiki/html/onboarding-${PROJECT_SLUG}.html\` | created |
+| \`llmwiki/html/wiki-graph.html\` | created by STEP C (vector) |
 
 ## Notes
 - Invoked via: \`/orca-onboard\` skill
@@ -663,6 +665,26 @@ fi
 > **Fallback:** opencode chết/treo → Claude main thread tự đọc `ONBOARDING.md` +
 > `domain-graph.json`, viết `$JSON_OUT` theo schema (đây là assemble dữ liệu, OK ở Claude),
 > rồi chạy STEP B. KHÔNG bao giờ tự viết HTML thô — luôn qua skeleton v2.
+
+**STEP C — vẽ vector `wiki-graph.html` (wiki vừa sinh ở Phase 3 → giờ CÓ concept để vẽ):**
+
+Onboard đẻ wiki nhưng KHÔNG tự vẽ vector quan hệ — vẽ NGAY tại đây để dự án code-only kết thúc
+onboard là có luôn vector (đúng nút thắt: `build-wiki-graph.py` đọc `llmwiki/wiki/*.md` + code, không
+đọc thẳng code để đẻ concept). Fail-open, không chặn onboard.
+
+```bash
+# engine: repo-local → global (cùng thứ tự hook Stop resolve)
+WG=$(ls "$PROJECT_ROOT/fdk/tools/build-wiki-graph.py" \
+        "$HOME/.claude/harness/fdk/tools/build-wiki-graph.py" 2>/dev/null | head -1)
+if [ -n "$WG" ] && [ -d "$PROJECT_ROOT/llmwiki/wiki" ]; then
+  ALSO=""; [ -d "$PROJECT_ROOT/fdk/wiki" ] && ALSO="--also fdk/wiki"
+  ( cd "$PROJECT_ROOT" && python3 "$WG" llmwiki/wiki $ALSO --code-root . ) \
+    && echo "✅ vector: llmwiki/html/wiki-graph.html (concept↔code)" \
+    || echo "⚠️ wiki-graph vẽ lỗi — không chặn onboard (Stop hook sẽ vẽ khi wiki/code đổi)"
+else
+  echo "⚠️ bỏ vẽ vector — thiếu engine build-wiki-graph.py (cài harness global) hoặc chưa có llmwiki/wiki"
+fi
+```
 
 **After completion:**
 ```bash

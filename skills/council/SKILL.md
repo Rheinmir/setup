@@ -1,5 +1,6 @@
 ---
 name: council
+disable-model-invocation: true
 description: >-
   Run a Karpathy-style LLM council (3-stage multi-agent evaluation) on top of
   the existing orca orchestration: N seats independently answer a question, the

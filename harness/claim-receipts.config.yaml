@@ -20,9 +20,22 @@ claim_taxonomy:                   # ASSUMPTION (not verified) — starter taxono
   - external-testimony            #   cited a source
   - absence                       #   "no X found"
   - ungrounded-opinion            #   asserted without basis
+  - observed-metric               #   a NUMBER about the user/world the agent claims to have measured
 
 # File extensions treated as resolvable references (conservative — avoids flagging prose words).
 ref_extensions: [py, md, yaml, yml, json, sh, js, ts, html, txt, toml, cfg]   # ASSUMPTION (not verified)
+
+# observed-metric guard — "cấm bịa số của NGƯỜI HỌC/thế-giới agent không đo được" (distill 2026-07-11).
+# A number stated ABOUT a subject, with a metric-noun nearby but NO source marker, is a candidate
+# FABRICATION (e.g. "the learner's confidence is 87%" with no "the learner said…"). Heuristic + advisory:
+# the subject+metric-noun gate keeps precision up; still misses paraphrase / can false-positive → never
+# blocks until strictness:strict + verified:true. Tune these lists against real audits.
+metric_subjects: [user, "người dùng", "người học", learner, "the learner", customer, "họ\\b", their, "the human"]
+metric_sources:  [said, stated, reported, self-report, khai, "nói", "theo\\b", measured, "đo\\b", observed,
+                  "from input", "tool result", "confidence:", rated, answered]
+metric_nouns:    [confidence, score, "điểm", "tỉ lệ", "tỷ lệ", rate, "độ tự tin", calibration, accuracy,
+                  mastery, "nắm", retention, satisfaction, engagement]
+metric_window: 60                 # chars of context around a number scanned for subject/source/noun
 
 # ADAPT-CHECKLIST (finalize when a symbol-aware resolver exists):
 #   1. Set resolver: code-graph + wire it (verify cited SYMBOLS/APIs, not just file paths).

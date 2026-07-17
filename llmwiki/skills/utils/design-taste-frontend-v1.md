@@ -3,6 +3,8 @@ name: design-taste-frontend-v1
 description: The original v1 taste-skill, preserved for projects depending on its exact behavior. The current default is `design-taste-frontend` (v2 experimental), which is a substantial rewrite. Use this v1 install name only if you need exact backward compatibility.
 ---
 
+> **Đứng trên nền [[design-foundation]]** — 6 discipline + slop-test của hallmark là SÀN chung (không thương lượng); skill này thêm *flavour* lên trên, không thay sàn.
+
 # High-Agency Frontend Skill
 
 ## 1. ACTIVE BASELINE CONFIGURATION

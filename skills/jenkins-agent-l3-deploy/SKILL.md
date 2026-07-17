@@ -1,5 +1,6 @@
 ---
 name: jenkins-agent-l3-deploy
+disable-model-invocation: true
 description: >
   Deploy a docker-compose app via a Jenkins INBOUND AGENT running on the target
   server (no SSH from controller), with Docker-secrets "L3" hardening — runtime
