@@ -96,12 +96,12 @@ Chọn **A** — do user chốt trực tiếp ở gate câu hỏi (2026-07-17), 
 
 | Task | Agent (CLI) | Lý do chọn | Status |
 |------|-------------|-----------|--------|
-| T1 qc-code ← gstack + awesome-skills | Claude Code | Distill = đọc hiểu + nén + viết lại, cần phán đoán trùng/thiếu — không phải boilerplate | pending |
-| T2 orca-sec-scans ← security-review | Claude Code | Như T1; đích là skill security, sai một dòng là sai lớp gác | pending |
-| T3 design-foundation ← frontend-design | Claude Code | Có bước verify nguồn + đối chiếu sàn — cần judgment | pending |
-| T4 mem-rank export/import | Claude Code | Code logic + self-test, đụng store episodic dùng chung | pending |
-| T5 qc-code + orca-issue ← superpowers | Claude Code | Distill đối chiếu 2 skill đích | pending |
-| T6 provenance + sync + verify | Claude Code | Chuỗi gate tất định, chạy tại chỗ | pending |
+| T1 qc-code ← gstack + awesome-skills | Claude Code | Distill = đọc hiểu + nén + viết lại, cần phán đoán trùng/thiếu — không phải boilerplate | done |
+| T2 orca-sec-scans ← security-review | Claude Code | Như T1; đích là skill security, sai một dòng là sai lớp gác | done |
+| T3 design-foundation ← frontend-design | Claude Code | Có bước verify nguồn + đối chiếu sàn — cần judgment | done |
+| T4 mem-rank export/import | Claude Code | Code logic + self-test, đụng store episodic dùng chung | done |
+| T5 qc-code + orca-issue ← superpowers | Claude Code | Distill đối chiếu 2 skill đích | done |
+| T6 provenance + sync + verify | Claude Code | Chuỗi gate tất định, chạy tại chỗ | done |
 
 Tất cả về Claude vì cả 6 task là distill/analysis — đúng bảng chi phí ("Architectural decisions → Claude"); không có task search/boilerplate nào đáng đẩy CLI rẻ. Render HTML của SPEC này: Claude render trực tiếp (standalone render, ADR-003 cho phép; không dispatch vì độ tin headless ~1/5 không đáng cho 1 file).
 
