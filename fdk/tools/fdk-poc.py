@@ -46,12 +46,17 @@ def _run(cmd, cwd):
 
 
 def _sentinel(proj, rel, needle=None):
+    """Artifact THẬT chứng bước đã xảy ra. Nhận CẢ file lẫn THƯ MỤC (bug 17/07/26: `harness`
+    là dir → is_file() báo thiếu oan). needle chỉ áp cho file."""
     f = proj / rel
-    if not f.is_file():
+    if not f.exists():
         return False, f"thiếu {rel}"
-    if needle and needle not in f.read_text(encoding="utf-8", errors="replace"):
-        return False, f"{rel} không chứa '{needle}'"
-    return True, rel
+    if needle:
+        if not f.is_file():
+            return False, f"{rel} là thư mục — không kiểm được needle '{needle}'"
+        if needle not in f.read_text(encoding="utf-8", errors="replace"):
+            return False, f"{rel} không chứa '{needle}'"
+    return True, rel + ("/" if f.is_dir() else "")
 
 
 def _append(proj, rec):
@@ -75,7 +80,8 @@ def _read_trace(proj):
 BOOTSTRAP_PATH = "harness/poc-vendor-neutral"
 
 
-def new_project(raw_dir, name=None, dest=None, use_orca=True, force=False, ref="orca", skip_curl=False):
+def new_project(raw_dir, name=None, dest=None, use_orca=True, force=False, ref="orca",
+                skip_curl=False, agent="claude", prompt_text=None):
     """repo THẬT → orca repo add → orca WORKTREE create (=workspace hiện ở panel) → curl remote → raw.
 
     Bài học 17/07/26: `repo add` CHỈ đăng ký repo (hiện ở `orca repo list`); panel **Workspaces**
@@ -173,6 +179,35 @@ def new_project(raw_dir, name=None, dest=None, use_orca=True, force=False, ref="
                        logs=[{"cmd": f"cp '{raw_dir}'/* {proj}/llmwiki/raw/", "rc": 0,
                               "out": f"nguồn: {raw_dir}\n" + "\n".join(
                                   f"  + {p.name}  ({p.stat().st_size//1024} KB)" for p in docs)}]))
+
+    # ── BƯỚC 4: SPAWN AGENT SESSION vào workspace → user THẤY + resume được ──
+    # Bài học 17/07/26: chạy /br từ session repo-gốc rồi ghi file sang ⇒ workspace KHÔNG có phiên
+    # nào (tab Claude Idle, /resume trống) ⇒ user không xem/replay được ⇒ POC vẫn fail.
+    # Guide orca-cli: bare `worktree create` (không --agent) chỉ mở fallback shell. Phải spawn agent
+    # SAU khi curl+raw xong (agent cần harness + tài liệu sẵn), nên dùng terminal create --command.
+    if agent:
+        t0 = time.perf_counter()
+        prompt = (prompt_text or
+                  "Chạy /br TỪ ĐẦU trên tài liệu trong llmwiki/raw/: "
+                  "(1) /br interview — đọc THẬT mọi file raw, map S1–S10, mỗi field ghi status + "
+                  "provenance raw:<file>, ghi br/spec-filled.md; "
+                  "(2) /br auto — python3 fdk/tools/br-fill.py fill --root . ; "
+                  "(3) /br compile → slice → run → qc → status. "
+                  "Sau MỖI bước, ghi lại bằng: fdk-poc.py record --project . --cmd '<lệnh>' --rc N "
+                  "--log-file <file> [--llm] --sentinel '<artifact>'. KHÔNG bịa bước.")
+        cmd = ["orca", "terminal", "create", "--worktree", f"path:{proj}",
+               "--title", "/br POC", "--command", f'{agent} "{prompt}"', "--focus", "--json"]
+        rc, out, _ = _run(cmd, proj)
+        ms = round((time.perf_counter() - t0) * 1000)
+        sok = rc == 0
+        _append(proj, dict(n=len(_read_trace(proj)) + 1, cmd=f"orca terminal create --command '{agent} …' --focus",
+                           hub="orca-cli", llm=False,
+                           auto=[f"spawn phiên {agent} NGAY TRONG workspace", "agent chạy /br từ đầu + record từng bước"],
+                           ms=ms, rc=rc, sentinel=("terminal đã tạo" if sok else "spawn FAIL"), ok=sok,
+                           note="phiên THẬT trong workspace → user xem/resume được",
+                           logs=[{"cmd": " ".join(cmd[:8]) + " …", "rc": rc,
+                                  "out": (out.strip()[:900] or "(đã tạo)")
+                                         + f"\n\nPROMPT gửi agent:\n{prompt}"}]))
     return proj, docs, orca_ok
 
 
@@ -417,7 +452,7 @@ def selftest():
         raw.mkdir()
         (raw / "yeucau.md").write_text("# yêu cầu\nX*2\n", encoding="utf-8")
         # selftest offline → --skip-curl; bước curl remote kiểm bằng chạy thật (không mock mạng)
-        proj, docs, _ = new_project(raw, name="poc-selftest", dest=td / "ws", use_orca=False, skip_curl=True)
+        proj, docs, _ = new_project(raw, name="poc-selftest", dest=td / "ws", use_orca=False, skip_curl=True, agent="")
         checks.append(("new: tạo project THẬT", proj.is_dir() and (proj / ".git").is_dir()))
         checks.append(("new: nạp context — raw docs vào llmwiki/raw", (proj / "llmwiki/raw/yeucau.md").is_file()))
         checks.append(("new: ghi trace 2 bước THẬT (orca+context, curl skip)", len(_read_trace(proj)) == 2))
@@ -446,6 +481,8 @@ def main():
     ap.add_argument("--no-orca", action="store_true", help="new: bỏ qua orca repo add")
     ap.add_argument("--ref", default="orca", help="new: nhánh remote để curl bootstrap (canary: tên nhánh)")
     ap.add_argument("--skip-curl", action="store_true", help="new: bỏ bước curl remote (chỉ khi offline/test)")
+    ap.add_argument("--agent", default="claude", help="new: agent TUI spawn vào workspace (claude|codex|''=không spawn)")
+    ap.add_argument("--prompt", default=None, help="new: prompt gửi agent (mặc định: chạy /br từ đầu + record)")
     ap.add_argument("--force", action="store_true", help="new: ghi đè project đã có")
     ap.add_argument("--project", default=None, help="record/render/probe: root project")
     ap.add_argument("--cmd", default=None, help="record: lệnh THẬT vừa chạy")
@@ -469,7 +506,7 @@ def main():
         if not args.raw:
             print("new cần --raw <dir>", file=sys.stderr); sys.exit(2)
         proj, docs, orca_ok = new_project(args.raw, args.name, args.dest, not args.no_orca,
-                                          args.force, args.ref, args.skip_curl)
+                                          args.force, args.ref, args.skip_curl, args.agent, args.prompt)
         tr = _read_trace(proj)
         print(f"✓ PROJECT THẬT: {proj}")
         print(f"  Orca      : {'ĐÃ đăng ký — MỞ ĐƯỢC TRONG APP' if orca_ok else 'CHƯA đăng ký (xem log / --no-orca)'}")
