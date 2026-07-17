@@ -31,4 +31,4 @@ Nhiều skill ship xuống user (`llmwiki/skills/**`) bảo chạy `python3 harn
 - [x] Install thật kéo đủ.
 
 ## Origin
-- Audit + fix phiên 2026-07-05. Mirror GH#54. [[framework-dev-antipatterns]] AP-1.
+- Audit + fix phiên 2026-07-05. Mirror GH#54. framework-dev-antipatterns AP-1.

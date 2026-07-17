@@ -42,7 +42,7 @@ timestamp: 2026-07-06
 - Invoked via: `/fdk` skill (distill từ so sánh openwiki — clone đọc source `src/agent/utils.ts`, `prompt.ts`).
 - Trục overstack vốn hơn giữ nguyên: provenance (Origin/ledger/log), validator nội-wiki, độ tươi trong phiên, đa phiên (flock), gắn dev-loop.
 - Điều kiện ship do user đặt: qua bài test 5 project bằng orca-cli + /orchestration trước khi commit.
-- Liên quan: [[frontier-gap-scan]], [[harness-enforcement-floor]]
+- Liên quan: frontier-gap-scan, harness-enforcement-floor
 
 ## Origin
 - **Draft:** `wiki/sources/draft/060726-wiki-sync-openwiki-distill.md`

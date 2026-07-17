@@ -1,7 +1,7 @@
 ---
 type: issue
 kind: tech-debt
-title: "wiki-graph: broken wikilink [[X]] đẻ cạnh dangling trỏ node không tồn tại (rác graph data)"
+title: "wiki-graph: broken wikilink (vd node X) đẻ cạnh dangling trỏ node không tồn tại (rác graph data)"
 status: open
 assignee: "@Rheinmir"
 dispatch: Claude

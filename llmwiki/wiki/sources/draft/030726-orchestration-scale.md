@@ -19,7 +19,7 @@ source_session: "frontier-gap-scan baseline 03/07/2026 — trục CHỚM #1"
 Claude Code dynamic workflows chạy hàng trăm subagent song song với verify built-in + saved progress; orca/`council`/`loop-runner` cùng tư tưởng nhưng quy mô nhỏ hơn nhiều.
 
 ## Bối cảnh & bằng chứng
-- Trục Deterministic orchestration = **Chớm**. Nguồn: [[frontier-gap-scan]], report overstack-vs-world-30d.
+- Trục Deterministic orchestration = **Chớm**. Nguồn: frontier-gap-scan, report overstack-vs-world-30d.
 - Thế giới: DAG + file-bus handoff, node Generator/Reviewer/Gate; Claude dynamic workflows (research preview) — orchestration script tự-viết, hàng trăm subagent, verify trước khi trả về, progress lưu qua CLI/Desktop/VS Code.
 - overstack hiện: `orca` orchestration, `council` (blind peer-rank), `loop-runner`, `Workflow` (đã có pipeline/parallel + journal). Nền tảng đúng, cần scale + saved-progress/resume mạnh hơn.
 
@@ -48,4 +48,4 @@ Claude Code dynamic workflows chạy hàng trăm subagent song song với verify
 - AgentCo-op — arXiv 2605.20425 (retrieval-based synthesis of interoperable multi-agent workflows).
 
 ## Origin
-Raise bởi phiên frontier-gap-scan 2026-07-03. Bằng chứng: report overstack-vs-world-30d + [[frontier-gap-scan]].
+Raise bởi phiên frontier-gap-scan 2026-07-03. Bằng chứng: report overstack-vs-world-30d + frontier-gap-scan.

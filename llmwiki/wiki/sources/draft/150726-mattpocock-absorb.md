@@ -17,9 +17,9 @@ Hấp thụ trọn bộ phần tốt của `mattpocock/skills` ("Skills for Real
 ## Context
 Đã query wiki + đọc nguồn ngoài trước khi soạn (force-query, R7-f):
 
-- `[[ADR-003-skill-as-single-source-of-truth]]` — hành vi skill định nghĩa ở `skills/<tên>/SKILL.md`; mirror sinh bằng `sync-skill.sh`.
-- `[[ADR-005-logger-and-capabilities-travel-downstream]]` + `[[ADR-017-global-shared-engine-repo-data-travel]]` — engine ở global, dữ liệu đi theo repo. Ledger issue nằm phía **dữ liệu**, nên mọi thay đổi schema phải travel được.
-- `[[ADR-015-boris-archetypes-into-template]]` — persona theo archetype khi dispatch. Nhãn `ready-for-agent` ăn khớp trục này: nó nói *việc nào* giao máy được, archetype nói *giao cho vai nào*.
+- `ADR-003 (skill-as-single-source-of-truth)` — hành vi skill định nghĩa ở `skills/<tên>/SKILL.md`; mirror sinh bằng `sync-skill.sh`.
+- `ADR-005 (logger-and-capabilities-travel-downstream)` + `[[ADR-017-global-shared-engine-repo-data-travel]]` — engine ở global, dữ liệu đi theo repo. Ledger issue nằm phía **dữ liệu**, nên mọi thay đổi schema phải travel được.
+- `ADR-015 (boris-archetypes-into-template)` — persona theo archetype khi dispatch. Nhãn `ready-for-agent` ăn khớp trục này: nó nói *việc nào* giao máy được, archetype nói *giao cho vai nào*.
 - `skills/raise-issue/SKILL.md` + `llmwiki/wiki/sources/ISSUES.md` — ledger local là nguồn chân lý, tracker remote là mirror. Bảng hiện có đúng 7 cột: `id · kind · tiêu đề · status · assignee · entry · tracker`. **Không có** `blocked_by`, không có nhãn agent-readiness, không có giao thức claim.
 - SPEC `140726-propose-plan-split-superpowers` và `140726-spec-kit-traceability` (đã giao) — bộ ba SPEC/PLAN/HTML, R7 hai nhánh, R18 truy vết `FR-xxx`. Đề xuất này **xây tiếp**, không xây lại.
 - Nguồn ngoài: `scratchpad/mattpocock-skills/` — đọc `skills/productivity/writing-great-skills/SKILL.md`, `skills/engineering/wayfinder/SKILL.md`, `skills/engineering/to-tickets/SKILL.md`, `skills/engineering/triage/SKILL.md`, `skills/engineering/setup-matt-pocock-skills/{SKILL.md,issue-tracker-github.md,triage-labels.md}`, `skills/productivity/grilling/SKILL.md`.
@@ -151,7 +151,7 @@ Không mục nào rơi vào nhóm `[CẦN LÀM RÕ]`: thay đổi thuần nội-
 ## Notes
 - Nguồn ngoài: `scratchpad/mattpocock-skills/` (clone `mattpocock/skills`, 39 skill). Chủ ý thiết kế của họ, ghi trong README: *"Spec-Kit và BMAD cố giúp bằng cách sở hữu quy trình — nhưng làm vậy là lấy mất quyền kiểm soát của bạn"*. Ta đi hướng ngược lại (cưỡng chế tất định), nên chỉ lấy **từ vựng và cơ chế**, không lấy triết lý.
 - Xây tiếp trên [[140726-propose-plan-split-superpowers]] và [[140726-spec-kit-traceability]].
-- [[ADR-003-skill-as-single-source-of-truth]] · [[ADR-005-logger-and-capabilities-travel-downstream]] · [[ADR-015-boris-archetypes-into-template]]
+- ADR-003 (skill-as-single-source-of-truth) · ADR-005 (logger-and-capabilities-travel-downstream) · ADR-015 (boris-archetypes-into-template)
 
 ## Origin
 - **Draft:** `wiki/sources/draft/150726-mattpocock-absorb.md`

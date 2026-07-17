@@ -22,7 +22,7 @@ Ba self-test của harness (`decision-adr-gate-test.sh`, `r12-v3-workspace-test.
 - Phiên 2026-07-04 (ship GH#8): mọi `git commit` treo >2 phút rồi timeout. `ps` cho thấy **hàng chục** tiến trình `git commit -qm adr2` + `pre_commit hook-impl … COMMIT_EDITMSG` chồng nhau.
 - Truy nguồn: `harness/tests/decision-adr-gate-test.sh` dòng 32 & 36 chạy `git commit -qm init` / `git commit -qm adr2` trong repo tạm. Vì commit lồng **không** tắt hook, mỗi commit tự-kích lại commit-msg hook → chạy lại self-test → lại 2 commit lồng. Nhánh 2 → `2^depth` tiến trình, không hội tụ.
 - Hệ quả quan sát: (1) commit treo, buộc `--no-verify` (bỏ qua CẢ 17 rule); (2) bị kill giữa chừng để lại index bẩn (`ADR-002-new.md` trạng thái `AD` + phantom deletion); (3) pre-commit stash file unstaged, kill xong **không trả lại** → nguy cơ mất việc chưa lưu (đã thấy `.claude/settings.json` bị phẳng về `.bak`).
-- Liên quan: `[[harness-enforcement-floor]]` (CI L4 mới là sàn thật, L2 chỉ tiện-nghi), GH#18 (`040726-precommit-slow-fragile-on-commit` — đã trim 25→12 hook, tháo self-test khỏi pre-commit). GH#18 chữa TRIỆU CHỨNG (gỡ self-test khỏi hook); issue này chữa GỐC (self-test tự nó không được phép tự-kích, dù tương lai ai đó nối lại vào hook).
+- Liên quan: `harness-enforcement-floor` (CI L4 mới là sàn thật, L2 chỉ tiện-nghi), GH#18 (`040726-precommit-slow-fragile-on-commit` — đã trim 25→12 hook, tháo self-test khỏi pre-commit). GH#18 chữa TRIỆU CHỨNG (gỡ self-test khỏi hook); issue này chữa GỐC (self-test tự nó không được phép tự-kích, dù tương lai ai đó nối lại vào hook).
 
 ## Phạm vi
 - 3 file: `harness/tests/decision-adr-gate-test.sh`, `harness/tests/r12-v3-workspace-test.sh`, `harness/tests/harness-update-test.sh`.

@@ -23,7 +23,7 @@ Hook `pre-commit` (bộ fire-drill 17 rule) chạy quá 2 phút cho một lần 
 - Hậu quả: `git status` báo **621 "D" (deletion) staged** trong khi mọi file vẫn tồn tại trên đĩa → index bị pre-commit reset dở dang. Thay đổi unstaged (gồm cả sửa `skills/ship/SKILL.md`) bị lùi về bản HEAD trong working tree, nằm trong patch cache chưa trả lại.
 - Khôi phục thủ công đã làm được: backup patch → `git reset` (index về HEAD, không đụng file) → `git apply` patch → về nguyên trạng, không mất dữ liệu. Nhưng đây là bẫy dễ mất việc nếu người dùng không biết patch nằm ở `~/.cache/pre-commit/`.
 - Workaround đã dùng để commit tiếp: `git commit --no-verify` sau khi `medic --ci` đã xanh (gate tương đương) + CI remote (L3) chạy lại trên PR. PR #17 merge xanh bằng đường này.
-- Liên quan: `[[harness-enforcement-floor]]` (3 tầng L1 hook / L2 pre-commit / L3 CI), skill `[[medic]]` (probe `backstop` nhắc cài pre-commit). Nghịch lý: backstop L2 vừa là thứ được khuyến khích bật, vừa là thứ đang gây timeout + rủi ro hỏng cây.
+- Liên quan: `harness-enforcement-floor` (3 tầng L1 hook / L2 pre-commit / L3 CI), skill `[[medic]]` (probe `backstop` nhắc cài pre-commit). Nghịch lý: backstop L2 vừa là thứ được khuyến khích bật, vừa là thứ đang gây timeout + rủi ro hỏng cây.
 
 ## Phạm vi
 - Cấu hình `.pre-commit-config.yaml` + các hook script `harness/scripts/harness-doctor.py` (fire-drill) và các validator được gọi trong pre-commit. Cách pre-commit chạy (toàn bộ bộ rule mỗi commit thay vì chỉ file đổi). Universal (mọi repo cài harness đều dính).
@@ -53,4 +53,4 @@ Raise bởi phiên orca-fdk issue-16 (2026-07-04). Bằng chứng: log pre-commi
 - Đo lại: bộ 25 hook chạy mỗi commit trước đây → nay **12 hook nhanh** theo file-đổi; `pre-commit run` = **0.16s** (trước >2 phút). DoD #1 ✓ (<15s).
 - Dời TRỌN fire-drill nặng (arch-scan · index-sync · wiki-health · harness-lint · duplicate-basename · 2 ADR test · decision-adr-gate-test · adr-delete-guard · capabilities · adapt-registry · harness-local-check) sang CI job "repo health" (đã có sẵn) — **không mất phủ**. `policy-converters-drift` chưa có ở CI → thêm mới vào harness.yml.
 - Cửa sổ interrupt còn sub-second ⇒ gần như loại index-hỏng-khi-kill (DoD #2); thêm đường cứu `~/.cache/pre-commit/patch*` vào comment config.
-- Căn cứ ADR: concept [[harness-enforcement-floor]] — "CI là sàn thật, pre-commit chỉ chặn-sớm"; đổi này đưa L2 về đúng vai.
+- Căn cứ ADR: concept harness-enforcement-floor — "CI là sàn thật, pre-commit chỉ chặn-sớm"; đổi này đưa L2 về đúng vai.

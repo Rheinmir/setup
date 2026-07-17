@@ -306,3 +306,4 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 
 - 2026-07-03 frontier-gap-scan: concept mới (baseline overstack-vs-world 30d) + raise 5 issue gap (GH#9-13: memory, self-evolving-skills, observability, orchestration-scale, skill-resolve-supplychain). Report: llmwiki/html/overstack-vs-world-30d.html
 - 2026-07-03 raise issue Ralph BR→frame production-line + harness/monitor (GH#15, ledger 030726-ralph-br-frame-production-line). Đổi scout tuần thành skill instant /frontier-scan (canonical+mirror+4 surface, checks xanh) vì routine cloud bị chặn GitHub.
+- 2026-07-05 00:18 — session `db4de305` — 3 tool calls — files: 050726-ralph-interview-pipeline.html, 050726-ralph-interview-pipeline.md, index.md

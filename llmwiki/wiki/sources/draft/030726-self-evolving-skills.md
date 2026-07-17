@@ -19,7 +19,7 @@ source_session: "frontier-gap-scan baseline 03/07/2026 — trục THUA #2"
 Thế giới có agent tự sinh + tiến hoá skill đa-file qua verify vòng lặp (CoEvoSkills/SkillForge/SkillClaw), còn overstack skill vẫn viết tay và không có eval riêng cho từng skill.
 
 ## Bối cảnh & bằng chứng
-- Trục Self-evolving skills = **Thua**. Nguồn: [[frontier-gap-scan]], report overstack-vs-world-30d.
+- Trục Self-evolving skills = **Thua**. Nguồn: frontier-gap-scan, report overstack-vs-world-30d.
 - Thế giới: CoEvoSkills (arXiv 2604.01687) sinh skill package đa-file, tiến hoá qua iterative verification; SkillForge (2604.08618) skill tự-tiến-hoá theo domain; Self-Harness (arXiv 08/06/2026) weakness-mining → propose → validate, +52% Terminal-Bench.
 - overstack hiện: `new-skill` scaffold + `fdk` + `failure-flywheel` (đề xuất rule khi lỗi lặp) — có phôi thai nhưng còn người-trong-vòng-lặp toàn phần, chưa có vòng sinh→eval→giữ/loại tự động.
 
@@ -50,4 +50,4 @@ Thế giới có agent tự sinh + tiến hoá skill đa-file qua verify vòng l
 - `muratcankoylan/agent-skills-for-context-engineering` — skill package đa-file mẫu.
 
 ## Origin
-Raise bởi phiên frontier-gap-scan 2026-07-03. Bằng chứng: report overstack-vs-world-30d + [[frontier-gap-scan]].
+Raise bởi phiên frontier-gap-scan 2026-07-03. Bằng chứng: report overstack-vs-world-30d + frontier-gap-scan.

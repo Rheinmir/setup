@@ -19,12 +19,18 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 SKIP_BASENAMES = {"README.md", "_template.md"}
+# eval fixtures deliberately reuse skill slugs as query stimuli (skill-resolve/
+# retrieval evals) — they are NOT diverging copies of the canonical skill doc.
+SKIP_DIR_PREFIXES = ("sources/evals/",)
 
 
 def find_duplicates(wiki: Path) -> dict:
     by_name = defaultdict(set)
     for f in wiki.rglob("*.md"):
         if f.name in SKIP_BASENAMES or not f.is_file():
+            continue
+        rel = f.relative_to(wiki).as_posix()
+        if rel.startswith(SKIP_DIR_PREFIXES):
             continue
         by_name[f.name].add(f.parent.relative_to(wiki).as_posix() or ".")
     return {name: sorted(dirs) for name, dirs in by_name.items() if len(dirs) >= 2}

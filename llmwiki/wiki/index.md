@@ -5,14 +5,12 @@
 | File | Type | Summary |
 |------|------|---------|
 | [example-concept](concepts/example-concept.md) | concept | Ví dụ một trang concept hợp lệ (Origin + OKF) cho project dùng llmwiki |
-| [adapt-modes](concepts/adapt-modes.md) | concept | 3 kiểu absorb năng lực vào dự án — HÒA TAN / KÉO NGOÀI / NHÚNG-SỞ-HỮU; gọi đúng tên chọn đúng phương án |
 | [040726-issue4-trace-grader-plan](draft/040726-issue4-trace-grader-plan.md) | plan | Plan step-by-step GH#4: sửa run.ok transcript, lọc sidechain, check grounding edited_without_read — cho dev khác làm tiếp |
 | [300626-audit-fix-docs-site-macos](draft/uiux/300626-audit-fix-docs-site-macos.md) | draft | Audit + 8 fix (a11y/head/glass) cho skill docs-site-macos, đồng bộ cả 2 bản mirror |
 | [010726-onboard-html-tabs-redesign](draft/orca/010726-onboard-html-tabs-redesign.md) | draft | 2026-07-01 |
 | [010726-trupillar4-council-persona](draft/orca/010726-trupillar4-council-persona.md) | draft | Chốt cứng Trụ 4 (cổng CI code-health) + persona-lens 18 vĩ nhân cho council (BNAL) |
 | [010726-dev-harness-kit](draft/orca/010726-dev-harness-kit.md) | draft | Thiết kế 'dev tự build harness' (BNAL) + council 18 ông chọn checksum-seal; report HTML |
 | [020726-docs-site-fdk-strategy](sources/draft/020726-docs-site-fdk-strategy.md) | draft | Render concept fdk-dev-strategy (Mongol pattern) thành docs site HTML liquid-glass |
-| [060726-design-standard-ai-elite-PLAN](sources/draft/060726-design-standard-ai-elite-PLAN.md) | plan | Nền chuẩn thiết kế AI-elite chống AI-slop: design-standard (canon) + ai-slop-lint 2 tầng + --fix kill-1-shot + design-review lens; distill design-tip + research 8 nguồn |
 | [wiki-core-relations](concepts/wiki-core-relations.md) | concept | Wiki-core v2 (đánh giá 6 tiêu chí + relations/ledger/validator, council-approved) — bước 1+2&3 shipped d4d8b90 |
 | [architecture](sources/evals/retrieval/architecture.md) | eval | Golden truy-hồi: Kiến trúc repo setup gồm những gì? |
 | [blocking-layer](sources/evals/retrieval/blocking-layer.md) | eval | Golden truy-hồi: Lớp CHẶN nằm ở hook/CI hay ở MCP? |
@@ -80,6 +78,14 @@
 | [030726-retrieval-eval-baseline-rot](sources/draft/030726-retrieval-eval-baseline-rot.md) | issue | Issue: retrieval-eval baseline rot + guard-rail quá giòn |
 | [040726-precommit-slow-fragile-on-commit](sources/draft/040726-precommit-slow-fragile-on-commit.md) | issue | Issue: pre-commit chậm + giòn khi bị ngắt |
 | [040726-episodic-vector-plan](sources/draft/040726-episodic-vector-plan.md) | draft | Draft: đạt 4/4 tầng nhớ cho llmwiki (issue #9) |
+| [050726-ralph-interview-pipeline](sources/draft/050726-ralph-interview-pipeline.md) | draft | Draft: entity map dây chuyền Ralph + step Interview (/br, GH#15) |
+| [050726-ralph-slice-frames](sources/draft/050726-ralph-slice-frames.md) | draft | Draft: step 2 Slice — BR → frames + frame-lint + registry truy ngược (GH#15) |
+| [050726-ralph-loop-gate](sources/draft/050726-ralph-loop-gate.md) | draft | Draft: step 3 Loop+Gate — 6 phanh (2 mới: diff-jail, test-hash), dry-run, người gác (GH#15) |
+| [050726-ralph-monitor](sources/draft/050726-ralph-monitor.md) | draft | Draft: step 4 Monitor — build-line-status.py + /br status, lớp đọc tất định (GH#15·#11) |
+| [050726-ralph-pipeline-build](sources/draft/050726-ralph-pipeline-build.md) | draft | Build-report: thi công đồ nghề step 1–4 + docs site (GH#15), selftest xanh |
+| [060726-br-test-harness-plan](sources/draft/060726-br-test-harness-plan.md) | draft | Plan test/harass moi vấn đề dây chuyền /br — council 033, 3 bug fixed (GH#15) |
+| [070726-huong-dan-repo-files](sources/draft/070726-huong-dan-repo-files.md) | draft | Docs: hướng dẫn tương tác file trong repo (người/máy/sổ sách + lệnh↔file) |
+| [050726-br-huong-dan-nguoi-moi](sources/draft/050726-br-huong-dan-nguoi-moi.md) | draft | Docs: hướng dẫn /br cho người mới, có ảnh chụp mockup (GH#15) |
 | [ep-ci-tech-debt](sources/evals/episodic/ep-ci-tech-debt.md) | eval | Episodic golden: đóng tech-debt CI |
 | [ep-episodic-wire](sources/evals/episodic/ep-episodic-wire.md) | eval | Episodic golden: nối episodic + vector retrieval |
 | [caveman-commit](sources/evals/skill-resolve/caveman-commit.md) | auto | skill-resolve golden: caveman-commit |
@@ -110,12 +116,25 @@
 | [050726-map-not-territory-fable5-unknowns](sources/draft/050726-map-not-territory-fable5-unknowns.md) | issue | Issue: Map-is-not-Territory — tìm unknowns đối chiếu & vá overstack (GH#40) |
 | [060726-wiki-sync-openwiki-distill](sources/draft/060726-wiki-sync-openwiki-distill.md) | draft | 060726-wiki-sync-openwiki-distill |
 <!-- index:auto:end -->
+| [110726-br-assembly-provenance-isolation](sources/draft/110726-br-assembly-provenance-isolation.md) | draft | 2026-07-11 |
+| [120726-codebase-map-payroll](sources/draft/120726-codebase-map-payroll.md) | draft | 2026-07-12 |
+| [120726-br-sync-plus-guide](sources/draft/120726-br-sync-plus-guide.md) | draft | 2026-07-12 |
+| [120726-ui-contract](sources/draft/120726-ui-contract.md) | draft | 2026-07-12 |
+| [120726-clone-memos-flow](sources/draft/120726-clone-memos-flow.md) | draft | 2026-07-12 |
+| [120726-pipeline-gaps-raised](sources/draft/120726-pipeline-gaps-raised.md) | issue | 2026-07-12 |
+| [120726-pipeline-friction](sources/draft/120726-pipeline-friction.md) | draft | 2026-07-12 |
+| [120726-nghiem-thu-output](sources/draft/120726-nghiem-thu-output.md) | draft | 2026-07-12 |
+| [120726-memos-pipeline-run](sources/draft/120726-memos-pipeline-run.md) | draft | 2026-07-12 |
+| [140726-atomic-task-graph-distill](sources/draft/140726-atomic-task-graph-distill.md) | issue | Issue: Distill Atomic Task Graph (arXiv 2607.01942) — plan = DAG atomic task, sửa cục bộ subgraph, tái dùng subgraph |
+| [140726-br-proactive-fill](sources/draft/140726-br-proactive-fill.md) | draft | 2026-07-14 |
+| [140726-br-proactive-fill-PLAN](sources/draft/140726-br-proactive-fill-PLAN.md) | draft | 2026-07-14 |
+| [140726-br-proactive-fill-report](draft/orca/140726-br-proactive-fill-report.md) | draft | 2026-07-14 |
+| [150726-qc-code-skill](sources/draft/150726-qc-code-skill.md) | draft | 2026-07-15 |
+| [160726-br-ui-stream-spec-distill](sources/draft/160726-br-ui-stream-spec-distill.md) | draft | 2026-07-16 |
+| [170726-skills-ref-hardcode-canary-mu](sources/draft/170726-skills-ref-hardcode-canary-mu.md) | draft | 2026-07-17 |
+| [170726-deny-rule-raw-no-op](sources/draft/170726-deny-rule-raw-no-op.md) | draft | 2026-07-17 |
 | [140726-propose-plan-split-superpowers](sources/draft/140726-propose-plan-split-superpowers.md) | draft | 2026-07-14 |
 | [110726-shipped-vs-documented-parity](sources/draft/110726-shipped-vs-documented-parity.md) | draft | 2026-07-11 |
-| [130726-session-provenance](sources/130726-session-provenance.md) | source | 2026-07-13 |
-| [140726-session-provenance](sources/140726-session-provenance.md) | source | 2026-07-14 |
-| [060726-ponytail-distill-PLAN](sources/draft/060726-ponytail-distill-PLAN.md) | draft | 2026-07-06 |
-| [070726-ponytail-distill](sources/draft/070726-ponytail-distill.md) | draft | 2026-07-07 |
 | [110726-anti-fabrication-observed-metrics](sources/draft/110726-anti-fabrication-observed-metrics.md) | draft | 2026-07-11 |
 | [110726-auto-wire-eval-loop](sources/draft/110726-auto-wire-eval-loop.md) | draft | 2026-07-11 |
 | [110726-eval-blinding-grader-context](sources/draft/110726-eval-blinding-grader-context.md) | draft | 2026-07-11 |
@@ -124,11 +143,8 @@
 | [skill-craft](concepts/skill-craft.md) | concept | 2026-07-15 |
 | [issue-tracker](sources/issue-tracker.md) | reference | 2026-07-15 |
 | [150726-mattpocock-absorb](sources/draft/150726-mattpocock-absorb.md) | draft | 2026-07-15 |
-| [150726-session-provenance](sources/150726-session-provenance.md) | source | 2026-07-15 |
 | [design-foundation](concepts/design-foundation.md) | concept | 2026-07-15 |
 | [150726-hallmark-design-foundation](sources/draft/150726-hallmark-design-foundation.md) | draft | 2026-07-15 |
-| [290626-failure-spec-violation](sources/draft/290626-failure-spec-violation.md) | draft | 2026-06-29 |
 | [150726-unknown-ledger](sources/draft/150726-unknown-ledger.md) | draft | 2026-07-15 |
 | [150726-qc-code-skill](sources/draft/150726-qc-code-skill.md) | draft | 2026-07-15 |
 | [160726-teach-me-skill](sources/draft/160726-teach-me-skill.md) | draft | 2026-07-16 |
-| [160726-session-provenance](sources/160726-session-provenance.md) | source | 2026-07-16 |
