@@ -53,6 +53,17 @@ Nguồn thật là transcript Claude Code:
 Đọc nó mới thấy đúng câu hỏi/câu trả lời (vd phiên payroll-poc: 757 record · 456 lượt).
 **Kết luận "đã theo dõi" mà chỉ nhìn tail TUI là tự lừa.**
 
+### BẪY LỚN: workspace giữ SNAPSHOT ĐÔNG CỨNG — sửa repo KHÔNG tới agent
+Ca thật 17/07/26 (agent chặn coordinator **2 lần**, cả 2 lần agent ĐÚNG):
+- `curl bootstrap` cài **bản `fdk/tools/*` RIÊNG vào workspace** (payroll-poc: `fdk-poc.py` 38.110B @09:33).
+- Coordinator sửa repo (`42.676B @10:43`, +`--must/--asks`) rồi bảo agent *"tool NAY ĐÃ CÓ"* → **SAI**:
+  agent grep bản CỦA NÓ → `0 matches` → **từ chối chạy trên tiền đề sai**.
+- Cùng lớp lỗi với `install.sh` hardcode `#orca`: **thứ đã cài KHÔNG tự tươi**.
+
+**Luật:** trước khi bảo agent dùng flag/tool mới → **đồng bộ bản trong workspace TRƯỚC**
+(`cp` từ repo, hoặc curl lại), rồi **để agent tự verify** (`--help`/grep), rồi mới ra lệnh.
+Coordinator khẳng định "tool đã có" mà không kiểm bản-trong-workspace = tiền đề sai.
+
 ### Prompt nhắc flag mà tool CHƯA CÓ ⇒ agent đúng khi từ chối
 Ca thật: prompt bảo `record --must/--asks` nhưng agent spawn TRƯỚC commit thêm 2 flag đó.
 Agent `--help`/grep source, thấy không có, **từ chối chế flag giả** và báo lại — hành vi ĐÚNG.

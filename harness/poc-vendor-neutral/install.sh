@@ -225,12 +225,18 @@ fi
 
 # ── (tùy chọn) cài skill llmwiki (GLOBAL — khác phạm vi với harness theo-project) ──
 if [ "$WITH_SKILLS" = 1 ]; then
-  log "+ cài bộ skill llmwiki (global, qua npx skills)"
+  # SKILLS_REF: nhánh kéo skill. Mặc định `orca`. PHẢI override được, nếu không thì skill của
+  # nhánh canary KHÔNG BAO GIỜ tới tay user qua đường cài chuẩn → /fdk-uat pha-1 (canary) mù,
+  # và mọi "docs hứa mà user không nhận được" (GH#77) không bắt được trước merge.
+  # Phát hiện 17/07/26 khi chạy /fdk-poc thật: HARNESS_BASE trỏ canary nhưng skill vẫn về từ orca.
+  SKILLS_REF="${SKILLS_REF:-orca}"
+  SKILLS_PKG="rheinmir/setup#${SKILLS_REF}"
+  log "+ cài bộ skill llmwiki (global, qua npx skills — ref: ${SKILLS_REF})"
   if command -v npx >/dev/null; then
-    npx -y skills add rheinmir/setup#orca --global --all 2>&1 | tail -4 | sed 's/^/    /' \
-      || warn "  cài skill lỗi — chạy tay: npx skills add rheinmir/setup#orca --global --all"
+    npx -y skills add "$SKILLS_PKG" --global --all 2>&1 | tail -4 | sed 's/^/    /' \
+      || warn "  cài skill lỗi — chạy tay: npx skills add $SKILLS_PKG --global --all"
   else
-    warn "  không có npx — cài skill tay: npx skills add rheinmir/setup#orca --global --all"
+    warn "  không có npx — cài skill tay: npx skills add $SKILLS_PKG --global --all"
   fi
 fi
 
