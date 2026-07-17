@@ -134,3 +134,5 @@
 | [160726-teach-me-skill](sources/draft/160726-teach-me-skill.md) | draft | 2026-07-16 |
 | [160726-session-provenance](sources/160726-session-provenance.md) | source | 2026-07-16 |
 | [170726-session-provenance](sources/170726-session-provenance.md) | source | 2026-07-17 |
+| [170726-absorb-six-sources](sources/draft/170726-absorb-six-sources.md) | draft | 2026-07-17 |
+| [170726-absorb-six-sources-PLAN](sources/draft/170726-absorb-six-sources-PLAN.md) | draft | 2026-07-17 |

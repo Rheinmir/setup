@@ -19,33 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-16 16:24:25 | `file.write` | skills/teach-me/SKILL.md · tool=Write · session=36e6562b · actor=agent · prev=3f0619d591056cb8c4a2b514a0798a4900ceb2634b |
-| 2026-07-16 16:29:07 | `task.set` |  · task=T-260716-01 · state=done · note=3 task, UAT 2 pha PASS, 703d5a5 · actor=agent · prev=61e6e8d5449c80eac4cc6ffa798 |
-| 2026-07-17 09:38:44 | `task.new` |  · task=T-260717-01 · title=Gộp gitignored-check thành 1 helper dùng chung cho scanner · state=proposed · actor=agent ·  |
-| 2026-07-17 09:42:08 | `file.write` | llmwiki/wiki/sources/draft/170726-gitignored-dedupe.md · tool=Write · session=b06734dd · actor=agent · prev=48517e6f9faa |
-| 2026-07-17 09:42:19 | `file.write` | llmwiki/wiki/sources/draft/170726-gitignored-dedupe.md · tool=Edit · session=b06734dd · actor=agent · prev=b8b34e48ca229 |
-| 2026-07-17 09:42:24 | `file.write` | llmwiki/wiki/sources/draft/170726-gitignored-dedupe.md · tool=Edit · session=b06734dd · actor=agent · prev=b64e6c1c71ff8 |
-| 2026-07-17 09:43:06 | `file.write` | llmwiki/html/170726-gitignored-dedupe-seq.html · tool=Write · session=b06734dd · actor=agent · prev=747453c21f2452326cc3 |
-| 2026-07-17 09:43:10 | `file.write` | llmwiki/html/170726-gitignored-dedupe-seq.html · tool=Edit · session=b06734dd · actor=agent · prev=63a01e3a14fd4a6ea5471 |
-| 2026-07-17 09:43:20 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=b06734dd · actor=agent · prev=cab6dbbd3ca9483722ebf5f5db5c206921d3c02b63a83b |
-| 2026-07-17 09:43:38 | `file.write` | llmwiki/wiki/log.md · tool=Edit · session=b06734dd · actor=agent · prev=215e65be2f339824ca3db240f036ed40b0fb2f4b463478e5 |
-| 2026-07-17 09:45:24 | `file.write` | skills/council/SKILL.md · tool=Edit · session=b06734dd · actor=agent · prev=f108152f56e494482f88d38dee313aedaa115d459018 |
-| 2026-07-17 09:45:27 | `file.write` | skills/council/SKILL.md · tool=Edit · session=b06734dd · actor=agent · prev=2cf71738dc5bdb86935bbc1b0d9388b1e7ca6433f54e |
-| 2026-07-17 09:45:58 | `file.write` | llmwiki/wiki/log.md · tool=Edit · session=b06734dd · actor=agent · prev=735174fbe2f89380a34f7137d9e0f2e73c9ea4e1c6735a55 |
-| 2026-07-17 09:52:04 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=b06734dd · actor=agent · prev=32ab76cd1d0b405fb49b0f4f5d556e26606d4024abfee9 |
-| 2026-07-17 09:52:35 | `file.write` | llmwiki/wiki/log.md · tool=Edit · session=b06734dd · actor=agent · prev=260311d27e43c38764d616ebd3858559c5d05670a7e0d53e |
-| 2026-07-17 10:35:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/scripts/embed-ollama.py', 'harness/mem-rank.config.yaml', 'har |
-| 2026-07-17 10:35:24 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['harness/travel-policy.yaml'] · prev=0f9697a3f28ab4216db11acf85bcee5bfe |
-| 2026-07-17 10:35:37 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/wiki/log.md', 'fdk/wiki/index.md', 'harness/version.json'] · prev= |
-| 2026-07-17 10:35:37 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/skills.search.json', 'llmwiki/wiki/.last-sync.json'] · prev=c74568 |
-| 2026-07-17 10:35:51 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/wiki/sources/150726-session-provenance.md', 'llmwiki/raw/desig |
-| 2026-07-17 10:35:51 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/sources/draft/060726-ponytail-distill-PLAN.md', 'llmwiki/ |
-| 2026-07-17 10:35:51 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/wiki/sources/draft/070726-ponytail-distill.md', 'llmwiki/wiki/ |
-| 2026-07-17 10:36:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/070726-ponytail-distill.md'] · prev=224faf3 |
-| 2026-07-17 10:36:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/wiki/sources/draft/290626-failure-spec-violation.md', 'llmwiki |
-| 2026-07-17 10:36:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/wiki/sources/150726-session-provenance.md', 'llmwiki/raw/desig |
-| 2026-07-17 10:36:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/raw/design-tip-of-someone-on-internet.md', 'llmwiki/wiki/sourc |
-| 2026-07-17 10:36:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/wiki/sources/130726-session-provenance.md', 'llmwiki/wiki/conc |
 | 2026-07-17 10:36:49 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/sources/170726-session-provenance.md', 'llmwiki/wiki/sour |
 | 2026-07-17 10:36:49 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/skills/orchestrate/council.md', 'llmwiki/wiki/log.md', 'skills |
 | 2026-07-17 10:38:30 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/version.json', 'llmwiki/wiki/log.md', 'llmwiki/wiki/sources/17 |
@@ -59,6 +32,33 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-17 20:54:55 | `file.write` | llmwiki/.claude/hooks/pre_tool_use.py · tool=Edit · session=246fa7ac · actor=agent · prev=194d10846b864a50c247da5907ed23 |
 | 2026-07-17 20:55:19 | `file.write` | harness/tests/flywheel-autocapture-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=59a78c889c7cb07c9e58b2a05 |
 | 2026-07-17 20:55:48 | `file.write` | harness/tests/flywheel-autocapture-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=d010effe046357fe7f5f7ab03 |
+| 2026-07-17 21:19:38 | `file.write` | harness/scripts/install-harness.sh · tool=Edit · session=246fa7ac · actor=agent · prev=59f78b4273222c80aea6aca18084fccc0 |
+| 2026-07-17 21:21:20 | `file.write` | harness/scripts/install-harness.sh · tool=Edit · session=246fa7ac · actor=agent · prev=84ea1081da4aa502b148e4c19a7f95285 |
+| 2026-07-17 21:21:29 | `file.write` | harness/scripts/install-harness.sh · tool=Edit · session=246fa7ac · actor=agent · prev=fc2049a485b0766a48d1897b857c5479a |
+| 2026-07-17 21:22:08 | `file.write` | harness/tests/install-ref-override-test.sh · tool=Write · session=246fa7ac · actor=agent · prev=83a5e97508632ecd10565d9f |
+| 2026-07-17 21:24:12 | `file.write` | harness/tests/install-ref-override-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=9b16c98c507d8be5f01617e1d |
+| 2026-07-17 21:25:28 | `file.write` | .github/workflows/harness.yml · tool=Edit · session=246fa7ac · actor=agent · prev=53a573feb2eefbde329b0a7d12f15704bb3899 |
+| 2026-07-17 23:05:17 | `file.write` | harness/poc-vendor-neutral/gen-converters.py · tool=Edit · session=246fa7ac · actor=agent · prev=1ae940f6d394b2044f01973 |
+| 2026-07-17 23:06:13 | `file.write` | harness/tests/downstream-firedrill-test.sh · tool=Write · session=246fa7ac · actor=agent · prev=6c4cee5155bfead7db0fd164 |
+| 2026-07-17 23:06:29 | `file.write` | .github/workflows/harness.yml · tool=Edit · session=246fa7ac · actor=agent · prev=354068a5923e21b1bfffe6ec530d612613b0ec |
+| 2026-07-17 23:07:53 | `file.write` | harness/tests/downstream-firedrill-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=b878177827555498f964411ce |
+| 2026-07-17 23:14:03 | `file.write` | harness/poc-vendor-neutral/gen-converters.py · tool=Edit · session=246fa7ac · actor=agent · prev=d23959ec46ea4f28ed58a32 |
+| 2026-07-17 23:14:58 | `file.write` | harness/poc-vendor-neutral/gen-converters.py · tool=Edit · session=246fa7ac · actor=agent · prev=b673d15d4235ff0a9e99c92 |
+| 2026-07-17 23:15:30 | `file.write` | harness/tests/downstream-firedrill-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=6f96c87e8bd52b92f7ecbead8 |
+| 2026-07-17 23:20:03 | `file.write` | harness/poc-vendor-neutral/gen-converters.py · tool=Edit · session=246fa7ac · actor=agent · prev=347096b6516f23ff1357cc8 |
+| 2026-07-17 23:20:52 | `file.write` | harness/tests/downstream-firedrill-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=8307149ccf30fd1ae7e1b815a |
+| 2026-07-17 23:21:07 | `file.write` | harness/tests/downstream-firedrill-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=ce267e0785bbdc0051811fd3a |
+| 2026-07-17 23:38:51 | `task.new` |  · task=T-260717-02 · title=absorb HÒA TAN 6 nguồn GitHub · state=proposed · actor=agent · prev=7bc544914a1b2c3ca2a95fea |
+| 2026-07-17 23:41:08 | `file.write` | llmwiki/wiki/sources/draft/170726-absorb-six-sources.md · tool=Write · session=246fa7ac · actor=agent · prev=27dc8a90fb2 |
+| 2026-07-17 23:42:43 | `file.write` | llmwiki/html/170726-absorb-six-sources-seq.html · tool=Write · session=246fa7ac · actor=agent · prev=2e6011aa6b564231331 |
+| 2026-07-17 23:42:50 | `file.write` | llmwiki/html/170726-absorb-six-sources-seq.html · tool=Edit · session=246fa7ac · actor=agent · prev=c5c0f2f3e655231f4bfb |
+| 2026-07-17 23:42:59 | `file.write` | llmwiki/wiki/sources/draft/170726-absorb-six-sources.md · tool=Edit · session=246fa7ac · actor=agent · prev=228abcb593a9 |
+| 2026-07-17 23:43:42 | `file.write` | llmwiki/wiki/draft/unknown/unknown-frontend-design.md · tool=Write · session=246fa7ac · actor=agent · prev=1454833bd4ba1 |
+| 2026-07-17 23:44:02 | `file.write` | llmwiki/wiki/sources/draft/170726-absorb-six-sources.md · tool=Edit · session=246fa7ac · actor=agent · prev=e7e580d42d1a |
+| 2026-07-17 23:44:05 | `file.write` | llmwiki/wiki/sources/draft/170726-absorb-six-sources.md · tool=Edit · session=246fa7ac · actor=agent · prev=a87102405534 |
+| 2026-07-17 23:44:06 | `file.write` | llmwiki/html/170726-absorb-six-sources-seq.html · tool=Edit · session=246fa7ac · actor=agent · prev=1f5686c075ea2e6ae14c |
+| 2026-07-17 23:44:08 | `file.write` | llmwiki/wiki/draft/unknown/unknown-frontend-design.md · tool=Edit · session=246fa7ac · actor=agent · prev=763afd8ac06448 |
+| 2026-07-17 23:45:55 | `task.set` |  · task=T-260717-02 · state=approved · note=gate gate_5a6720864d05 duyệt 2026-07-17 · actor=agent · prev=2669750b11be5ba |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -351,3 +351,9 @@ Giải issue `030726-skill-resolve-supplychain` (trục #5 frontier-gap-scan, Ch
 - **Phát hiện mới ngoài checklist chuẩn**: `llmwiki/wiki/skills/` là một cây lạc **68 file** mirror toàn bộ skill docs, nằm sai vị trí (wiki content chỉ được phép ở concepts/entities/sources/draft/architecture/tours theo CLAUDE.md) — cùng gốc thời điểm với stray `council.md` đã ghi ở mục housekeeping trên (commit `0363f5d`, 2026-07-02). KHÔNG dọn trong lượt này (68 file, vượt soft-diff-budget) — khuyến nghị `/raise-issue` riêng.
 - Pattern-health (`health-check.py`): 1 file "thiếu" (`llmwiki/skills/README.md`) hoá ra là bị XOÁ CÓ CHỦ Ý ở cùng commit `0363f5d` (33 dòng, thay bằng whiteboard) nhưng `.template-manifest.json` quên gỡ tên — xoá đúng 1 dòng thừa trong manifest (root-cause fix, không phục dựng file đã xoá chủ ý). Sau sửa: 75 pattern, 0 missing; 26 pattern "cũ hơn remote" lộ ra đúng thực chất sau khi bỏ entry ma — khớp `[[framework-multi-session-dev]]` (repo này local-ahead, KHÔNG sync/revert).
 - Chốt neo: `wiki-sync.py --mark-synced` sau khi review xong.
+
+## 2026-07-17 — propose — absorb-six-sources
+Draft SPEC absorb HÒA TAN 6 nguồn GitHub (gstack review, awesome-skills code-review, everything-claude-code security-review, anthropics frontend-design, claude-mem portability, superpowers receiving-review+systematic-debugging) → nâng qc-code / orca-sec-scans / mem-rank / design-foundation / orca-issue. T-260717-02, chờ gate.
+
+## 2026-07-17 — plan — absorb-six-sources-PLAN
+PLAN 6 task thi hành cho T-260717-02 (FR-001..007 phủ đủ, R18 xanh). Executor: Claude in-session.
