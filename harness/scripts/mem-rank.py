@@ -25,7 +25,9 @@ The embedding scorer is the quarantined unknown; absent => token-overlap.
 """
 import json
 import os
+import math
 import re
+import subprocess
 import sys
 import tempfile
 from datetime import datetime, timezone
@@ -164,15 +166,62 @@ def _overlap(query, text):
     return len(q & t) / len(q | t)            # Jaccard — deterministic
 
 
-def retrieve(root, query, k=5, kind_filter=None):
-    """Top-k by relevance. NOOP (empty) if nothing overlaps — don't return noise.
-    `kind_filter` restricts ranking to one memory kind (e.g. 'episode' for episodic recall)."""
+def _embed(text, cmd):
+    """Pluggable embedder: writes `text` to the command's stdin, expects a JSON float
+    array on stdout. Returns list[float] or None on any failure (caller falls back).
+    `cmd` is any backend — ollama wrapper, Voyage/OpenAI script, local model — so no
+    embedding dependency is baked into the framework."""
+    try:
+        p = subprocess.run(cmd, shell=True, input=(text or ""),
+                           capture_output=True, text=True, timeout=30)
+        vec = json.loads(p.stdout)
+        if isinstance(vec, list) and vec and all(isinstance(x, (int, float)) for x in vec):
+            return [float(x) for x in vec]
+    except Exception:
+        pass
+    return None
+
+
+def _cosine(a, b):
+    if not a or not b or len(a) != len(b):
+        return 0.0
+    na = math.sqrt(sum(x * x for x in a))
+    nb = math.sqrt(sum(y * y for y in b))
+    if not na or not nb:
+        return 0.0
+    return sum(x * y for x, y in zip(a, b)) / (na * nb)
+
+
+def retrieve(root, query, k=5, kind_filter=None, cfg=None):
+    """Top-k by relevance. NOOP (empty) if nothing relevant — don't return noise.
+    `kind_filter` restricts ranking to one memory kind (e.g. 'episode' for episodic recall).
+    Scorer picked from config: 'embedding' (cosine over `relevance.embedder_cmd`, SEMANTIC —
+    catches paraphrase/synonym) else 'token-overlap' (Jaccard, lexical, zero-dep default).
+    Embedding path degrades to token-overlap if the backend is unset or unreachable."""
     root = Path(root)
+    if cfg is None:
+        cfg = load_config(root)
     mems = _read(root)
     if kind_filter:
         mems = [m for m in mems if m.get("kind") == kind_filter]
-    scored = [(m, _overlap(query, m.get("text", ""))) for m in mems]
-    scored = [(m, s) for m, s in scored if s > 0]
+    rel = cfg.get("relevance", {}) or {}
+    cmd = rel.get("embedder_cmd")
+    use_embed = rel.get("scorer") == "embedding" and bool(cmd)
+    qv = _embed(query, cmd) if use_embed else None
+    if use_embed and qv is None:
+        sys.stderr.write("mem-rank: embedder_cmd unreachable — falling back to token-overlap\n")
+        use_embed = False
+    if use_embed:
+        thr = float(rel.get("min_score", 0.25))       # cosine>0 for unrelated too — need a floor
+        scored = []
+        for m in mems:
+            mv = _embed(m.get("text", ""), cmd)
+            s = _cosine(qv, mv) if mv else 0.0
+            if s >= thr:
+                scored.append((m, s))
+    else:
+        scored = [(m, _overlap(query, m.get("text", ""))) for m in mems]
+        scored = [(m, s) for m, s in scored if s > 0]
     scored.sort(key=lambda ms: (-ms[1], ms[0].get("id", "")))
     return scored[:max(1, int(k))]
 
@@ -223,7 +272,30 @@ def self_test() -> int:
         e2 = episode(root, "revised episodic recall to filter by kind", mid="ep1", supersedes="ep1")
         temporal_ok = e2.get("supersedes") == "ep1" and len(_read(root)) == 2  # ep1 replaced, note kept
         ep_ok = ep_stamped and ep_hit_ok and filter_ok and temporal_ok
-    ok = bool(top_ok) and none_ok and evict_ok and ep_ok
+    # ── embedding scorer slice: the REAL cosine path via a deterministic pluggable embedder ──
+    with tempfile.TemporaryDirectory() as d:
+        root = Path(d)
+        (root / "harness").mkdir()
+        emb = root / "fake_embed.py"              # 26-dim letter-frequency embedder (deterministic)
+        emb.write_text("import sys,json\nt=sys.stdin.read().lower()\n"
+                       "print(json.dumps([float(t.count(chr(97+i))) for i in range(26)]))\n",
+                       encoding="utf-8")
+        cmd = f"{sys.executable} {emb}"
+        _config_file(root).write_text(
+            "verified: true\nrelevance:\n  scorer: embedding\n"
+            f"  embedder_cmd: {json.dumps(cmd)}\n  min_score: 0.5\neviction:\n  policy: none\n",
+            encoding="utf-8")
+        cfg = load_config(root)
+        add(root, "deploy the service to production", "ops")
+        add(root, "xyzzy qwkk", "note")
+        hits = retrieve(root, "production deployment of the service", k=2, cfg=cfg)
+        embed_top_ok = bool(hits) and "deploy" in hits[0][0]["text"]
+        # backend unreachable => graceful fallback to token-overlap, still returns lexical hit
+        bad = dict(cfg); bad["relevance"] = {"scorer": "embedding", "embedder_cmd": "false", "min_score": 0.5}
+        fb = retrieve(root, "deploy production", k=2, cfg=bad)
+        fallback_ok = bool(fb) and "deploy" in fb[0][0]["text"]
+        embed_ok = embed_top_ok and fallback_ok
+    ok = bool(top_ok) and none_ok and evict_ok and ep_ok and embed_ok
     print("mem-rank self-test:", "PASS" if ok else "FAIL")
     return 0 if ok else 1
 
