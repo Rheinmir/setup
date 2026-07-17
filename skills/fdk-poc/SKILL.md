@@ -32,6 +32,33 @@ Ba hệ quả **bắt buộc**:
    `render` in KPI **LỆNH PHẢI NHỚ** + `N/M bước user gõ` — phần còn lại tool tự fire.
    Mục tiêu con số: **≈1 hub** (`/br`) — khớp bài học discoverability.
 
+## LÁI TỪNG LƯỢT — không bắn 1 prompt rồi thả (bài học 17/07/26)
+> User: *"có mỗi 1 prompt làm tôi chả hình dung được là làm việc cùng ntn? phải kiểu hỏi đáp chứ —
+> vấn đề chính là việc bạn không theo dõi session đấy."*
+
+Một **mega-prompt fire-and-forget** hỏng cả 3 mục tiêu: không thấy prompt inject **từ từ**,
+không thấy **cách cộng tác**, và coordinator **không giám sát gì**. Bắt buộc:
+- **`drive_step(proj, handle, text, …)`** = `terminal send --enter` → `terminal wait --for tui-idle`
+  → `terminal read` → `record`. MỘT bước một lượt; coordinator TRẢ LỜI khi agent hỏi.
+  User **ngồi xem** hội thoại, không phải người trả lời.
+- **Handle, không phải title:** selector đúng là `term_…` (`terminal list --json` → `.handle`).
+  Dùng `--terminal "title:…"` → `terminal_handle_stale`, coordinator mù hoàn toàn.
+
+### Theo dõi THẬT = đọc TRANSCRIPT, không scrape TUI
+`orca terminal read` chỉ trả **màn hình TUI đã vẽ lại** (`❯ Crunched for 18s`) — KHÔNG có hội thoại.
+Nguồn thật là transcript Claude Code:
+```
+~/.claude/projects/<path-slug>/<session-id>.jsonl     # mỗi dòng 1 record; type=user|assistant
+```
+Đọc nó mới thấy đúng câu hỏi/câu trả lời (vd phiên payroll-poc: 757 record · 456 lượt).
+**Kết luận "đã theo dõi" mà chỉ nhìn tail TUI là tự lừa.**
+
+### Prompt nhắc flag mà tool CHƯA CÓ ⇒ agent đúng khi từ chối
+Ca thật: prompt bảo `record --must/--asks` nhưng agent spawn TRƯỚC commit thêm 2 flag đó.
+Agent `--help`/grep source, thấy không có, **từ chối chế flag giả** và báo lại — hành vi ĐÚNG.
+⇒ Luật: **spawn agent SAU khi tool đã có đủ flag prompt nhắc tới**; agent gặp lệch phải báo,
+không được bịa. (Cũng là lý do `ms=0`: prompt không ép đo giờ → agent không tự chế số.)
+
 ## Luật CỐT LÕI (rút từ lần fail 16/07/26)
 **Tool KHÔNG BAO GIỜ BỊA BƯỚC.** Bản đầu tự scaffold artifact giả trong `/tmp` rồi vẽ timeline →
 user không thấy project đâu, không có luồng thật ⇒ POC vô giá trị (đúng luật "bằng chứng > lời").

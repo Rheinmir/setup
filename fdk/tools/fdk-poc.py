@@ -295,6 +295,45 @@ def probe_project(root):
     return summary, trace
 
 
+
+# ── drive: LÁI phiên TỪNG LƯỢT (hỏi–đáp) — không bắn 1 prompt rồi thả ────────────────────────
+# Bài học 17/07/26 (user): "có mỗi 1 prompt làm tôi chả hình dung được là làm việc cùng ntn?
+# phải kiểu hỏi đáp chứ — vấn đề chính là bạn không theo dõi session".
+# Một mega-prompt fire-and-forget = KHÔNG thấy prompt inject TỪ TỪ, KHÔNG thấy cách cộng tác,
+# và coordinator không hề giám sát. `drive` gửi MỘT bước → wait tui-idle → read → record → bước kế.
+def term_handle(proj, title_hint="POC"):
+    rc, out, _ = _run(["orca", "terminal", "list", "--json"], proj)
+    try:
+        for t in json.loads(out).get("result", {}).get("terminals", []):
+            if str(proj) in str(t.get("worktreePath", "")) and title_hint in str(t.get("title") or ""):
+                return t.get("handle")
+    except Exception:
+        pass
+    return None
+
+
+def drive_step(proj, handle, text, label, timeout_ms=600000, must=False, llm=True, sentinel=None):
+    """Gửi 1 lượt → chờ agent rảnh → đọc output THẬT → record. Trả (rc, tail)."""
+    t0 = time.perf_counter()
+    _run(["orca", "terminal", "send", "--terminal", handle, "--text", text, "--enter"], proj)
+    _run(["orca", "terminal", "wait", "--terminal", handle, "--for", "tui-idle",
+          "--timeout-ms", str(timeout_ms)], proj)
+    rc, out, _ = _run(["orca", "terminal", "read", "--terminal", handle, "--limit", "80", "--json"], proj)
+    tail = ""
+    try:
+        tail = "\n".join(str(x) for x in json.loads(out).get("result", {}).get("terminal", {}).get("tail", []))
+    except Exception:
+        tail = out[-1500:]
+    ms = round((time.perf_counter() - t0) * 1000)
+    ok, sent = (True, "(không khai sentinel)")
+    if sentinel:
+        rel, _, needle = sentinel.partition(":")
+        ok, sent = _sentinel(proj, rel, needle or None)
+    _append(proj, dict(n=len(_read_trace(proj)) + 1, cmd=label, hub="/br" if label.startswith("/br") else "",
+                       remember=must, llm=llm, auto=[], ms=ms, rc=0, sentinel=sent, ok=ok, note="drive turn",
+                       logs=[{"cmd": "SEND → " + text[:160], "rc": 0, "out": tail[-1800:] or "(no output)"}]))
+    return tail
+
 # ── render HTML (dùng chung) ─────────────────────────────────────────────────────────────────
 def emit_html(meta, trace, out_path):
     def esc(s):
