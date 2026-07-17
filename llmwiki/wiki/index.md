@@ -13,6 +13,7 @@
 | [010726-dev-harness-kit](draft/orca/010726-dev-harness-kit.md) | draft | Thiết kế 'dev tự build harness' (BNAL) + council 18 ông chọn checksum-seal; report HTML |
 | [020726-docs-site-fdk-strategy](sources/draft/020726-docs-site-fdk-strategy.md) | draft | Render concept fdk-dev-strategy (Mongol pattern) thành docs site HTML liquid-glass |
 | [060726-design-standard-ai-elite-PLAN](sources/draft/060726-design-standard-ai-elite-PLAN.md) | plan | Nền chuẩn thiết kế AI-elite chống AI-slop: design-standard (canon) + ai-slop-lint 2 tầng + --fix kill-1-shot + design-review lens; distill design-tip + research 8 nguồn |
+| [170726-gitignored-dedupe](sources/draft/170726-gitignored-dedupe.md) | draft | Chốt rule từ 3 failure flywheel `spec-violation`: trỏ `okf-check.py` về canonical `index_sync.gitignored` (dùng lại pattern `_load()` của `audit.py`); giữ nguyên `harness-events.py` vì ranh giới vendor-neutral |
 | [wiki-core-relations](concepts/wiki-core-relations.md) | concept | Wiki-core v2 (đánh giá 6 tiêu chí + relations/ledger/validator, council-approved) — bước 1+2&3 shipped d4d8b90 |
 | [architecture](sources/evals/retrieval/architecture.md) | eval | Golden truy-hồi: Kiến trúc repo setup gồm những gì? |
 | [blocking-layer](sources/evals/retrieval/blocking-layer.md) | eval | Golden truy-hồi: Lớp CHẶN nằm ở hook/CI hay ở MCP? |
@@ -132,3 +133,4 @@
 | [150726-qc-code-skill](sources/draft/150726-qc-code-skill.md) | draft | 2026-07-15 |
 | [160726-teach-me-skill](sources/draft/160726-teach-me-skill.md) | draft | 2026-07-16 |
 | [160726-session-provenance](sources/160726-session-provenance.md) | source | 2026-07-16 |
+| [170726-session-provenance](sources/170726-session-provenance.md) | source | 2026-07-17 |

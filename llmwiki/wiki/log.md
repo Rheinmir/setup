@@ -19,9 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-15 08:50:15 | `task.set` |  · task=T-260715-01 · state=done · note=10 task, UAT 2 pha PASS, e18c7b5 · actor=agent · prev=48700d970835f7766378d84177 |
-| 2026-07-15 08:55:17 | `task.new` |  · task=T-260715-02 · title=hấp thụ hallmark: nền design chung + cổng slop tất định + fill-default · state=proposed · ac |
-| 2026-07-15 08:57:21 | `file.write` | llmwiki/wiki/sources/draft/150726-hallmark-design-foundation.md · tool=Write · session=36e6562b · actor=agent · prev=a25 |
 | 2026-07-15 08:59:02 | `file.write` | llmwiki/html/150726-hallmark-design-foundation-seq.html · tool=Write · session=36e6562b · actor=agent · prev=f4125da5573 |
 | 2026-07-15 09:03:06 | `file.write` | llmwiki/html/150726-hallmark-design-foundation-seq.html · tool=Edit · session=36e6562b · actor=agent · prev=f8ecd3129ad8 |
 | 2026-07-15 09:05:28 | `task.set` |  · task=T-260715-02 · state=approved · note=gate: duyệt · actor=agent · prev=a73f541a3ee6a8d87eacacf4031680338e053d974e5 |
@@ -59,6 +56,9 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-16 08:29:43 | `task.new` |  · task=T-260716-01 · title=skill teach-me: giải thích 2 cấp + sơ đồ + drive runtime bằng debugger · state=proposed · ac |
 | 2026-07-16 08:31:07 | `file.write` | llmwiki/wiki/sources/draft/160726-teach-me-skill.md · tool=Write · session=36e6562b · actor=agent · prev=31443836f23bba2 |
 | 2026-07-16 08:32:50 | `file.write` | llmwiki/html/160726-teach-me-skill-seq.html · tool=Write · session=36e6562b · actor=agent · prev=bc4ac18a1fd3f73bfd11205 |
+| 2026-07-16 16:23:27 | `task.set` |  · task=T-260716-01 · state=approved · note=gate: duyệt, chạy · actor=agent · prev=593e360306ca2676536616b9a32acf4d6c0c3 |
+| 2026-07-16 16:24:25 | `file.write` | skills/teach-me/SKILL.md · tool=Write · session=36e6562b · actor=agent · prev=3f0619d591056cb8c4a2b514a0798a4900ceb2634b |
+| 2026-07-16 16:29:07 | `task.set` |  · task=T-260716-01 · state=done · note=3 task, UAT 2 pha PASS, 703d5a5 · actor=agent · prev=61e6e8d5449c80eac4cc6ffa798 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -326,3 +326,28 @@ Giải issue `030726-skill-resolve-supplychain` (trục #5 frontier-gap-scan, Ch
 - Carve-out cứng: instrument tạm DỌN SẠCH sau (git diff xác nhận); không chạy được → khai "giải thích tĩnh" + ghi nợ unknown nếu khẳng định phụ thuộc runtime chưa thấy.
 - Sơ đồ hai đường: mermaid inline (mặc định) / HTML explainer glass docs-site-macos (opt-in khi giữ/chia sẻ). KHÁC /onboard-codebase + /join-project (cả dự án).
 - UAT hai pha PASS (teach-me): canary (3 trụ 5/5, harness 74/74, /teach-me tới tay + nội dung grounded-runtime) → main-URL smoke (đường mặc định, 74/74, reachable). Smoke dogfood trên frontier.py chứng bằng chạy thật. p-35 đóng 2/3 trụ (skill-only).
+
+## 2026-07-17 — propose — gộp gitignored-check trùng lặp về canonical (T-260717-01)
+- Nguồn: quét vấn đề tồn đọng → flywheel `spec-violation` đã tới ngưỡng 3 (harness-events.py m_stop, audit.py detect, okf-check.py content_files — cùng lỗi "quên skip file gitignored", mỗi lần vá bằng một bản copy logic riêng).
+- Điều tra lộ: `harness-lint.py` đã có sẵn meta-guard `WIKI_TREE_SCANNERS` bắt được cả 3 và khiến chúng được vá trong ngày (2026-06-28) — cơ chế phòng-ngừa hệ thống đã chứng minh hoạt động. Phần còn thiếu chỉ là dọn trùng lặp implementation trong `harness/scripts/`.
+- SPEC hẹp có chủ ý: chỉ trỏ `okf-check.py` về canonical `index_sync.gitignored()` qua pattern `_load()` mà `audit.py` đã dùng đúng — không file mới. `harness-events.py` giữ nguyên bản tự chứa vì nó là lõi PoC vendor-neutral (cài độc lập qua `curl | bash` vào project khác, không có `harness/scripts/` đi kèm) — Non-goal có lý do kiến trúc, không phải bỏ sót.
+- Ghi chú follow-up ngoài phạm vi: `wiki-graph.py`/`wiki-health.py` có `local_only_stem()` trùng lặp verbatim giữa 2 file — khác class lỗi, để dành propose riêng nếu cần.
+- Draft: `sources/draft/170726-gitignored-dedupe.md` + `html/170726-gitignored-dedupe-seq.html`. DỪNG chờ duyệt.
+
+## 2026-07-17 — housekeeping — dọn run-council*/ + sửa root cause thói quen output sai chỗ
+- Phát hiện: 6 thư mục `run-council`..`run-council6` untracked ở repo root (audit log xác nhận tạo rải từ 2026-07-05 20:10 đến 2026-07-06 11:28 — 6 phiên riêng biệt, mỗi phiên bump số để tránh đè bản trước).
+- Root cause: `skills/council/SKILL.md` (canonical) ví dụ Stage 2a/2c dùng `--out run/` — path tương đối trần, không trỏ `scratchpad/`, nên mỗi phiên tự đặt tên khác nhau ở repo root thay vì theo quy ước scratchpad đã có (đối chiếu `scratchpad/co-council/`, `scratchpad/council-eval/` — nhiều lần council TRƯỚC đã làm đúng).
+- Fix root: sửa 2 ví dụ lệnh trong canonical thành `--out scratchpad/council-<slug>/` + ghi rõ lý do (bài học 170726), sync ra mirror (`llmwiki/skills/orchestrate/council.md`) + installed (`~/.claude/skills/council/SKILL.md`) qua `fdk/tools/sync-skill.sh council`.
+- Dọn: gom 6 thư mục vào `scratchpad/council-archive-170726/` (giữ transcript, không xoá — reversible), không còn xuất hiện trong `git status`.
+- Ghi chú phụ, KHÔNG sửa trong lượt này: phát hiện 1 bản `council.md` lạc trong `llmwiki/wiki/skills/orchestrate/council.md` (nằm sai vị trí, wiki content chỉ nên ở concepts/entities/sources/draft/architecture/tours) — nêu ra, chưa dọn vì ngoài phạm vi việc đang làm.
+
+## 2026-07-17 — lint — wiki-sync 11 ngày drift (false-positive) + pattern-health (1 manifest thừa)
+- Bước 0 `wiki-sync.py --check`: exit 3, 264 file code/nguồn đổi kể từ neo `2067448d5d` (2026-07-06, 11 ngày). 63 trang wiki bị cờ code-drift (5 concept + 10 draft + 48 source).
+- Spot-check 5 trang concept bị cờ (đọc toàn văn): CẢ 5 đều được viết CÙNG LÚC hoặc SAU file code kích hoạt cờ (vd `design-foundation.md` 2026-07-15 cùng ngày `frontend-antipattern.py` được tạo) — nội dung khớp thực tế, không sai. Kết luận: cờ drift ở đây là "chưa đóng vòng review" (11 ngày không ai `--mark-synced`), không phải nội dung sai. 58 trang draft/source còn lại là ghi chép lịch sử tại-thời-điểm-viết, không cần đồng bộ liên tục.
+- Bước 1 (orphan, flag không sửa): 3 concept không được trang nào khác trỏ tới — `adapt-modes.md`, `design-foundation.md`, `skill-craft.md`.
+- Bước 5 (index gaps): lệnh mẫu trong SKILL.md giả định link dạng `llmwiki/wiki/...` nhưng `index.md` dự án này dùng path tương đối (`concepts/...`) → chạy đúng định dạng thì chỉ có **1 gap thật**: `sources/170726-session-provenance.md` (auto-distill hôm nay) — đã thêm dòng vào index.
+- Bước 6 (empty page, flag không sửa): `llmwiki/wiki/draft/orca/README.md` <5 dòng.
+- Bước 7/8/8b/8c: 0 file thiếu `## Origin` (2 README loại trừ hợp lệ), 0 marker `shortcut:` thiếu trigger, skill-health 30 skill có cờ description/negation (báo cáo, không chặn — xem `[[skill-craft]]`), 0 nợ unknown mở.
+- **Phát hiện mới ngoài checklist chuẩn**: `llmwiki/wiki/skills/` là một cây lạc **68 file** mirror toàn bộ skill docs, nằm sai vị trí (wiki content chỉ được phép ở concepts/entities/sources/draft/architecture/tours theo CLAUDE.md) — cùng gốc thời điểm với stray `council.md` đã ghi ở mục housekeeping trên (commit `0363f5d`, 2026-07-02). KHÔNG dọn trong lượt này (68 file, vượt soft-diff-budget) — khuyến nghị `/raise-issue` riêng.
+- Pattern-health (`health-check.py`): 1 file "thiếu" (`llmwiki/skills/README.md`) hoá ra là bị XOÁ CÓ CHỦ Ý ở cùng commit `0363f5d` (33 dòng, thay bằng whiteboard) nhưng `.template-manifest.json` quên gỡ tên — xoá đúng 1 dòng thừa trong manifest (root-cause fix, không phục dựng file đã xoá chủ ý). Sau sửa: 75 pattern, 0 missing; 26 pattern "cũ hơn remote" lộ ra đúng thực chất sau khi bỏ entry ma — khớp `[[framework-multi-session-dev]]` (repo này local-ahead, KHÔNG sync/revert).
+- Chốt neo: `wiki-sync.py --mark-synced` sau khi review xong.
