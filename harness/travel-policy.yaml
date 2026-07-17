@@ -48,6 +48,14 @@ global_shared:
     - "harness/scripts/health-check.py + okf-check.py + sync-template.py — downstream tự-update"
     - "fdk/tools/build-skill-search.py + skill-usage.py + docs-curate.py + artifacts.py"
     - "harness/scripts/web-clone.py + web-crawl.py"
+  # research_reach: năng lực NGHIÊN CỨU/VỚI-TỚI internet — adapt_mode=external-pull (KÉO HẠ TẦNG NGOÀI,
+  # không hòa-tan vào kit). Engine ở ~/.agents/skills (global, dùng chung mọi project); repo chỉ giữ
+  # RECIPE đi theo git = mirror SKILL.md + pin trong fdk/skills.provenance.json (source+commit+sha).
+  # State máy-local (yt-dlp/ffmpeg/Node/mcporter + cookie login + API key) KHÔNG travel — tái lập bằng
+  # `agent-reach doctor`/`install --safe` mỗi máy. Xem concept [[adapt-modes]] để chọn đúng kiểu adapt.
+  research_reach:
+    - "last30days — mvanhorn/last30days-skill v3.11.0 (research 30 ngày: Reddit/X/YT/TikTok/HN/Polymarket/GitHub)"
+    - "agent-reach — Panniantong/agent-reach v1.5.0 (capability layer 15 nền, zero-API-fee, doctor self-heal)"
 
 # ── TẦNG 2 · TRAVEL-IN-REPO — dữ liệu riêng dự án, đi theo git, sống sót clone ──
 travel_in_repo:
