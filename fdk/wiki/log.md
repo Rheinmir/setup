@@ -311,3 +311,4 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 - 2026-07-07 14:55 — session `8d2bc3a0` — 4 tool calls — files: 070726-adapt-modes.html, build-overstack-docs.py, docs-site-macos.md
 - 2026-07-07 15:06 — session `b2e273ec` — 4 tool calls — files: 060726-ponytail-distill-PLAN.md, 070726-ponytail-distill.md
 - 2026-07-15 09:06 — session `36e6562b` — 21 tool calls — files: 150726-hallmark-design-foundation-seq.html, 150726-hallmark-design-foundation.md, 150726-mattpocock-absorb-seq.html, 150726-mattpocock-absorb.md, SKILL.md, frontier.py, issue-tracker.md, skill-craft.md …
+- 2026-07-17 20:11 — session `b06734dd` — 13 tool calls — files: .template-manifest.json, 170726-gitignored-dedupe-seq.html, 170726-gitignored-dedupe.md, SKILL.md, index.md, log.md

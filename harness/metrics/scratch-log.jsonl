@@ -12,3 +12,4 @@
 {"ts": "", "session": "9777f0f1-dc2d-4cfa-ac2d-705600a8d707", "action": "auto", "file": "template-manifest.json", "why": "auto: docs(uat): ghi vết UAT hai pha PASS + sentinel CDN phải grep-verify (p-32) — trích từ git (32 file dirty); agent chưa ghi why thủ công"}
 {"ts": "", "session": "0a072460-56dd-4790-bd8c-b4a7189198a7", "action": "auto", "file": "template-manifest.json", "why": "auto: docs(uat): qc-code UAT hai pha PASS — trích từ git (32 file dirty); agent chưa ghi why thủ công"}
 {"ts": "", "session": "b06734dd-90f0-42db-8cf6-2b543083b8c0", "action": "auto", "file": "template-manifest.json", "why": "auto: docs(uat): teach-me UAT hai pha PASS — trích từ git (30 file dirty); agent chưa ghi why thủ công"}
+{"ts": "", "session": "246fa7ac-eeea-41c8-88fc-78bd6f355ce7", "action": "auto", "file": "dk/wiki/log.md", "why": "auto: chore: capability-stamp (medic guong-soi) sau khi dung framework hom nay — trích từ git (6 file dirty); agent chưa ghi why thủ công"}

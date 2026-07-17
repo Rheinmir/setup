@@ -19,17 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-15 19:12:06 | `file.write` | llmwiki/html/150726-qc-code-skill-seq.html · tool=Write · session=36e6562b · actor=agent · prev=7c8bd33bdf55e1dabc5b8c85 |
-| 2026-07-15 19:57:28 | `task.set` |  · task=T-260715-04 · state=approved · note=gate: duyệt, chạy · actor=agent · prev=38c567686bc3475e6009d45c4c0c609fc1071 |
-| 2026-07-15 19:59:40 | `file.write` | skills/qc-code/SKILL.md · tool=Write · session=36e6562b · actor=agent · prev=68e304588a49b9a7703b60a69df633c73716903f16c |
-| 2026-07-15 20:00:19 | `file.write` | harness/scripts/qc-regression.py · tool=Write · session=36e6562b · actor=agent · prev=f54b6f174a3804aef5b77f31b5a8a5bb50 |
-| 2026-07-15 20:00:55 | `file.write` | skills/verify-before-commit/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=611fb3b1ce7e82e840b6b066aa6efd9 |
-| 2026-07-15 20:01:07 | `file.write` | skills/orca-workflow/SKILL.md · tool=Edit · session=36e6562b · actor=agent · prev=772146d7bdd34b9ea6408a976d304427b3747b |
-| 2026-07-15 20:06:09 | `task.set` |  · task=T-260715-04 · state=done · note=6 task, UAT 2 pha PASS, df37e05 · actor=agent · prev=0ebf7aa967bdbe2bdd8efb5013f |
-| 2026-07-16 08:29:43 | `task.new` |  · task=T-260716-01 · title=skill teach-me: giải thích 2 cấp + sơ đồ + drive runtime bằng debugger · state=proposed · ac |
-| 2026-07-16 08:31:07 | `file.write` | llmwiki/wiki/sources/draft/160726-teach-me-skill.md · tool=Write · session=36e6562b · actor=agent · prev=31443836f23bba2 |
-| 2026-07-16 08:32:50 | `file.write` | llmwiki/html/160726-teach-me-skill-seq.html · tool=Write · session=36e6562b · actor=agent · prev=bc4ac18a1fd3f73bfd11205 |
-| 2026-07-16 16:23:27 | `task.set` |  · task=T-260716-01 · state=approved · note=gate: duyệt, chạy · actor=agent · prev=593e360306ca2676536616b9a32acf4d6c0c3 |
 | 2026-07-16 16:24:25 | `file.write` | skills/teach-me/SKILL.md · tool=Write · session=36e6562b · actor=agent · prev=3f0619d591056cb8c4a2b514a0798a4900ceb2634b |
 | 2026-07-16 16:29:07 | `task.set` |  · task=T-260716-01 · state=done · note=3 task, UAT 2 pha PASS, 703d5a5 · actor=agent · prev=61e6e8d5449c80eac4cc6ffa798 |
 | 2026-07-17 09:38:44 | `task.new` |  · task=T-260717-01 · title=Gộp gitignored-check thành 1 helper dùng chung cho scanner · state=proposed · actor=agent ·  |
@@ -59,6 +48,17 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-17 10:36:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/wiki/sources/130726-session-provenance.md', 'llmwiki/wiki/conc |
 | 2026-07-17 10:36:49 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/sources/170726-session-provenance.md', 'llmwiki/wiki/sour |
 | 2026-07-17 10:36:49 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/skills/orchestrate/council.md', 'llmwiki/wiki/log.md', 'skills |
+| 2026-07-17 10:38:30 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/version.json', 'llmwiki/wiki/log.md', 'llmwiki/wiki/sources/17 |
+| 2026-07-17 20:48:58 | `file.write` | llmwiki/.claude/hooks/pre_tool_use.py · tool=Edit · session=246fa7ac · actor=agent · prev=c69f7500fda3f0a91ff85c162f4d80 |
+| 2026-07-17 20:49:08 | `file.write` | llmwiki/.claude/hooks/pre_tool_use.py · tool=Edit · session=246fa7ac · actor=agent · prev=785e5452f8da070c4db642c72df4a3 |
+| 2026-07-17 20:49:19 | `file.write` | llmwiki/.claude/hooks/pre_tool_use.py · tool=Edit · session=246fa7ac · actor=agent · prev=63337067315b2d14404bd0f724a2c0 |
+| 2026-07-17 20:50:34 | `file.write` | harness/tests/flywheel-autocapture-test.sh · tool=Write · session=246fa7ac · actor=agent · prev=14772eee18464a79d34ae1f1 |
+| 2026-07-17 20:50:43 | `file.write` | harness/tests/flywheel-autocapture-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=852931a2ff5b8988a2a178d2a |
+| 2026-07-17 20:51:35 | `file.write` | harness/tests/harness-local-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=14a86f18ab9c63da49b3d6f14afcd7be |
+| 2026-07-17 20:52:18 | `file.write` | .github/workflows/harness.yml · tool=Edit · session=246fa7ac · actor=agent · prev=a03ad3cb993ff1b9a3a6a5d681fc0a1163cce8 |
+| 2026-07-17 20:54:55 | `file.write` | llmwiki/.claude/hooks/pre_tool_use.py · tool=Edit · session=246fa7ac · actor=agent · prev=194d10846b864a50c247da5907ed23 |
+| 2026-07-17 20:55:19 | `file.write` | harness/tests/flywheel-autocapture-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=59a78c889c7cb07c9e58b2a05 |
+| 2026-07-17 20:55:48 | `file.write` | harness/tests/flywheel-autocapture-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=d010effe046357fe7f5f7ab03 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
