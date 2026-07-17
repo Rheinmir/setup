@@ -19,21 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-17 10:36:49 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/sources/170726-session-provenance.md', 'llmwiki/wiki/sour |
-| 2026-07-17 10:36:49 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/skills/orchestrate/council.md', 'llmwiki/wiki/log.md', 'skills |
-| 2026-07-17 10:38:30 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/version.json', 'llmwiki/wiki/log.md', 'llmwiki/wiki/sources/17 |
-| 2026-07-17 20:48:58 | `file.write` | llmwiki/.claude/hooks/pre_tool_use.py · tool=Edit · session=246fa7ac · actor=agent · prev=c69f7500fda3f0a91ff85c162f4d80 |
-| 2026-07-17 20:49:08 | `file.write` | llmwiki/.claude/hooks/pre_tool_use.py · tool=Edit · session=246fa7ac · actor=agent · prev=785e5452f8da070c4db642c72df4a3 |
-| 2026-07-17 20:49:19 | `file.write` | llmwiki/.claude/hooks/pre_tool_use.py · tool=Edit · session=246fa7ac · actor=agent · prev=63337067315b2d14404bd0f724a2c0 |
-| 2026-07-17 20:50:34 | `file.write` | harness/tests/flywheel-autocapture-test.sh · tool=Write · session=246fa7ac · actor=agent · prev=14772eee18464a79d34ae1f1 |
-| 2026-07-17 20:50:43 | `file.write` | harness/tests/flywheel-autocapture-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=852931a2ff5b8988a2a178d2a |
-| 2026-07-17 20:51:35 | `file.write` | harness/tests/harness-local-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=14a86f18ab9c63da49b3d6f14afcd7be |
-| 2026-07-17 20:52:18 | `file.write` | .github/workflows/harness.yml · tool=Edit · session=246fa7ac · actor=agent · prev=a03ad3cb993ff1b9a3a6a5d681fc0a1163cce8 |
-| 2026-07-17 20:54:55 | `file.write` | llmwiki/.claude/hooks/pre_tool_use.py · tool=Edit · session=246fa7ac · actor=agent · prev=194d10846b864a50c247da5907ed23 |
-| 2026-07-17 20:55:19 | `file.write` | harness/tests/flywheel-autocapture-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=59a78c889c7cb07c9e58b2a05 |
-| 2026-07-17 20:55:48 | `file.write` | harness/tests/flywheel-autocapture-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=d010effe046357fe7f5f7ab03 |
-| 2026-07-17 21:19:38 | `file.write` | harness/scripts/install-harness.sh · tool=Edit · session=246fa7ac · actor=agent · prev=59f78b4273222c80aea6aca18084fccc0 |
-| 2026-07-17 21:21:20 | `file.write` | harness/scripts/install-harness.sh · tool=Edit · session=246fa7ac · actor=agent · prev=84ea1081da4aa502b148e4c19a7f95285 |
 | 2026-07-17 21:21:29 | `file.write` | harness/scripts/install-harness.sh · tool=Edit · session=246fa7ac · actor=agent · prev=fc2049a485b0766a48d1897b857c5479a |
 | 2026-07-17 21:22:08 | `file.write` | harness/tests/install-ref-override-test.sh · tool=Write · session=246fa7ac · actor=agent · prev=83a5e97508632ecd10565d9f |
 | 2026-07-17 21:24:12 | `file.write` | harness/tests/install-ref-override-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=9b16c98c507d8be5f01617e1d |
@@ -59,6 +44,21 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-17 23:44:06 | `file.write` | llmwiki/html/170726-absorb-six-sources-seq.html · tool=Edit · session=246fa7ac · actor=agent · prev=1f5686c075ea2e6ae14c |
 | 2026-07-17 23:44:08 | `file.write` | llmwiki/wiki/draft/unknown/unknown-frontend-design.md · tool=Edit · session=246fa7ac · actor=agent · prev=763afd8ac06448 |
 | 2026-07-17 23:45:55 | `task.set` |  · task=T-260717-02 · state=approved · note=gate gate_5a6720864d05 duyệt 2026-07-17 · actor=agent · prev=2669750b11be5ba |
+| 2026-07-17 23:51:42 | `file.write` | llmwiki/wiki/sources/draft/170726-absorb-six-sources-PLAN.md · tool=Write · session=246fa7ac · actor=agent · prev=4fe0c0 |
+| 2026-07-17 23:52:03 | `task.set` |  · task=T-260717-02 · state=dispatched · note=self-dispatch Claude in-session theo PLAN · actor=agent · prev=56f8b95aaa1 |
+| 2026-07-17 23:53:33 | `file.write` | skills/qc-code/SKILL.md · tool=Edit · session=246fa7ac · actor=agent · prev=c1e72b5988e707c1bad20d82f91acf35eb85624d8a50 |
+| 2026-07-17 23:54:24 | `file.write` | skills/orca-sec-scans/SKILL.md · tool=Edit · session=246fa7ac · actor=agent · prev=89fd7586edb3c42e0e6d2903f9c6fd6249aa4 |
+| 2026-07-17 23:55:49 | `file.write` | skills/hallmark/references/frontend-design-delta.md · tool=Write · session=246fa7ac · actor=agent · prev=a860ed026866eab |
+| 2026-07-17 23:55:59 | `file.write` | llmwiki/wiki/concepts/design-foundation.md · tool=Edit · session=246fa7ac · actor=agent · prev=65de7e9a214d38ce2c4d9a9c5 |
+| 2026-07-17 23:56:28 | `file.write` | harness/scripts/mem-rank.py · tool=Edit · session=246fa7ac · actor=agent · prev=63a9d152557ce743cf510b752bc9a9a6c2667f5c |
+| 2026-07-17 23:56:37 | `file.write` | harness/scripts/mem-rank.py · tool=Edit · session=246fa7ac · actor=agent · prev=3fd0b6f9db0434b73f119d94f33209e95b06e5b0 |
+| 2026-07-17 23:56:44 | `file.write` | harness/scripts/mem-rank.py · tool=Edit · session=246fa7ac · actor=agent · prev=d40c0ce12266f1fe2cf06acfd878be248f9d92d7 |
+| 2026-07-17 23:56:50 | `file.write` | harness/scripts/mem-rank.py · tool=Edit · session=246fa7ac · actor=agent · prev=67be331368b257f8207d25b5d68e07c37728db59 |
+| 2026-07-17 23:57:38 | `file.write` | skills/qc-code/SKILL.md · tool=Edit · session=246fa7ac · actor=agent · prev=4a580b967282f1b945d0dcea78bec9849d5ef62551b4 |
+| 2026-07-17 23:57:51 | `file.write` | skills/orca-issue/SKILL.md · tool=Edit · session=246fa7ac · actor=agent · prev=1b4b5b175882a98a1e2c80520d6f82c581814a48c |
+| 2026-07-17 23:58:09 | `file.write` | skills/qc-code/SKILL.md · tool=Edit · session=246fa7ac · actor=agent · prev=9d822bafa6933f812ba5dbb587e6bbdf8a6c5a600fb9 |
+| 2026-07-17 23:58:58 | `task.set` |  · task=T-260717-02 · state=completed · note=6 task xong, medic xanh, 2 commit · actor=agent · prev=6d144a29773173618404 |
+| 2026-07-18 00:04:45 | `file.write` | skills/hallmark/SKILL.md · tool=Edit · session=246fa7ac · actor=agent · prev=5f1224ee9c36e11e10c8160c5c7dfb3fdcbe49190c0 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)

@@ -3,7 +3,7 @@ type: source
 title: "session-provenance 246fa7ac (auto-distill scratch-log)"
 status: shipped
 tags: [session-provenance, secondary-memory, auto-distill]
-timestamp: 2026-07-17
+timestamp: 2026-07-18
 session: 246fa7ac-eeea-41c8-88fc-78bd6f355ce7
 ---
 
@@ -16,8 +16,10 @@ session: 246fa7ac-eeea-41c8-88fc-78bd6f355ce7
 
 ## File chạm trong phiên
 
+- `concepts/design-foundation.md`
 - `dk/wiki/log.md`
 - `draft/unknown/unknown-frontend-design.md`
+- `sources/draft/170726-absorb-six-sources-PLAN.md`
 - `sources/draft/170726-absorb-six-sources.md`
 
 ## Origin
