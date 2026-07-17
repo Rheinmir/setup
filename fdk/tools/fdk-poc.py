@@ -76,36 +76,63 @@ BOOTSTRAP_PATH = "harness/poc-vendor-neutral"
 
 
 def new_project(raw_dir, name=None, dest=None, use_orca=True, force=False, ref="orca", skip_curl=False):
+    """repo THẬT → orca repo add → orca WORKTREE create (=workspace hiện ở panel) → curl remote → raw.
+
+    Bài học 17/07/26: `repo add` CHỈ đăng ký repo (hiện ở `orca repo list`); panel **Workspaces**
+    liệt kê **worktree** → thiếu `worktree create` thì user KHÔNG THẤY project ⇒ POC fail.
+    Layout khớp Orca: repo ở ~/orca/<name>/<name>, worktree ở ~/orca/workspaces/<name>/<wt>.
+    """
     raw_dir = Path(raw_dir).expanduser().resolve()
     if not raw_dir.is_dir():
         raise SystemExit(f"raw dir không tồn tại: {raw_dir}")
-    dest = Path(dest).expanduser() if dest else DEFAULT_DEST
     name = name or ("poc-" + raw_dir.name.replace(" ", "-").lower())
-    proj = (dest / name).resolve()
-    if proj.exists() and not force:
-        raise SystemExit(f"project đã tồn tại: {proj} (dùng --force để ghi đè)")
-    if proj.exists():
-        shutil.rmtree(proj)
-    proj.mkdir(parents=True)
+    repo_root = (Path(dest).expanduser() if dest else (Path.home() / "orca")).resolve()
+    repo_dir = repo_root / name / name
+    if repo_dir.exists() and not force:
+        raise SystemExit(f"repo đã tồn tại: {repo_dir} (dùng --force)")
+    if (repo_root / name).exists():
+        shutil.rmtree(repo_root / name)
+    repo_dir.mkdir(parents=True)
 
-    # ── BƯỚC 1: project THẬT + đăng ký Orca (thấy được trong app) ──
+    # ── BƯỚC 1: repo THẬT + commit gốc (worktree cần base) + đăng ký Orca + TẠO WORKSPACE ──
     t0 = time.perf_counter()
     logs = []
-    rc, out, _ = _run(["git", "init", "-q"], proj)
-    _run(["git", "config", "user.email", "poc@t"], proj)
-    _run(["git", "config", "user.name", "poc"], proj)
-    logs.append({"cmd": f"mkdir {proj} && git init", "rc": rc, "out": out.strip() or f"project: {proj}"})
-    orca_ok = False
+    _run(["git", "init", "-q"], repo_dir)
+    _run(["git", "config", "user.email", "poc@t"], repo_dir)
+    _run(["git", "config", "user.name", "poc"], repo_dir)
+    (repo_dir / "README.md").write_text(f"# {name}\n\nPOC: raw → /br từ đầu (fdk-poc).\n", encoding="utf-8")
+    _run(["git", "add", "README.md"], repo_dir)
+    rc, out, _ = _run(["git", "commit", "-qm", f"chore: khởi tạo {name} (fdk-poc)"], repo_dir)
+    logs.append({"cmd": f"mkdir {repo_dir} && git init && commit gốc", "rc": rc,
+                 "out": out.strip() or f"repo: {repo_dir}"})
+
+    proj, orca_ok = repo_dir, False
     if use_orca:
-        rc, out, _ = _run(["orca", "repo", "add", "--path", str(proj)], proj)
-        orca_ok = rc == 0
-        logs.append({"cmd": f"orca repo add --path {proj}", "rc": rc,
-                     "out": (out.strip() or "(đăng ký)") + ("\n→ MỞ ĐƯỢC TRONG ORCA" if orca_ok else "\n→ Orca add THẤT BẠI")})
+        rc, out, _ = _run(["orca", "repo", "add", "--path", str(repo_dir)], repo_dir)
+        logs.append({"cmd": f"orca repo add --path {repo_dir}", "rc": rc, "out": (out.strip() or "(đăng ký repo)")[:600]})
+        # WORKSPACE = worktree → cái user THẤY ở panel Workspaces
+        rc, out, _ = _run(["orca", "worktree", "create", "--name", name,
+                           "--repo", f"path:{repo_dir}", "--base-branch", "main",
+                           "--setup", "skip", "--activate", "--json"], repo_dir)
+        wpath = None
+        try:
+            d = json.loads(out)
+            w = d.get("result", {}).get("worktree", {})
+            wpath = w.get("path")
+            orca_ok = bool(d.get("ok")) and bool(wpath)
+        except Exception:
+            pass
+        logs.append({"cmd": f"orca worktree create --name {name} --repo path:{repo_dir} --activate", "rc": rc,
+                     "out": (f"workspace: {wpath}\n→ HIỆN Ở PANEL WORKSPACES CỦA ORCA" if orca_ok
+                             else "worktree create THẤT BẠI:\n" + out.strip()[:600])})
+        if orca_ok:
+            proj = Path(wpath)
     ms = round((time.perf_counter() - t0) * 1000)
-    _append(proj, dict(n=1, cmd="orca repo add (tạo project trong Orca)", hub="orca-cli", llm=False,
-                       auto=["git init", "đăng ký repo vào Orca → hiện trong app"],
-                       ms=ms, rc=0, sentinel=".git", ok=(proj / ".git").is_dir(),
-                       note=f"project THẬT: {proj}", logs=logs))
+    _append(proj, dict(n=1, cmd="orca repo add + worktree create", hub="orca-cli", llm=False,
+                       auto=["git init + commit gốc", "orca repo add → đăng ký repo",
+                             "orca worktree create --activate → WORKSPACE hiện ở panel"],
+                       ms=ms, rc=0, sentinel=".git", ok=(proj / ".git").exists(),
+                       note=f"workspace THẬT: {proj}", logs=logs))
 
     # ── BƯỚC 2: CURL cài overstack từ REMOTE (đường người mới — chứng năng lực travel) ──
     base = f"https://raw.githubusercontent.com/Rheinmir/setup/{ref}/{BOOTSTRAP_PATH}"
@@ -118,12 +145,19 @@ def new_project(raw_dir, name=None, dest=None, use_orca=True, force=False, ref="
         if not ok:
             ok = (proj / "harness").is_dir()
             sent = "harness/" if ok else "thiếu harness/ (curl fail)"
-        _append(proj, dict(n=2, cmd=f"curl … bootstrap.sh | bash   (ref={ref})", hub="remote", llm=False,
+        # TRUNG THỰC: install.sh hardcode `npx skills add rheinmir/setup#orca` (không có SKILLS_REF)
+        # ⇒ HARNESS tới từ `ref`, nhưng SKILL luôn tới từ nhánh `orca`. Skill mới ở nhánh canary
+        # KHÔNG tới tay user qua đường này cho tới khi merge. Đây đúng lớp lỗi fdk-uat pha-2 săn.
+        skills_warn = ("\n\n⚠ SKILL kéo từ nhánh `orca` (install.sh:230 hardcode "
+                       "`npx skills add rheinmir/setup#orca`, không có SKILLS_REF override)"
+                       + (f" — KHÁC ref={ref} bạn chọn ⇒ skill MỚI của nhánh này CHƯA tới qua đường remote."
+                          if ref != "orca" else " — khớp ref."))
+        _append(proj, dict(n=2, cmd=f"curl … bootstrap.sh | bash   (HARNESS_BASE→{ref})", hub="remote", llm=False,
                            auto=["tải harness (rào chắn) từ raw.githubusercontent",
-                                 "cài skills + llmwiki", "bật guardrail"],
+                                 "npx skills add rheinmir/setup#orca --global (REF HARDCODE)", "seed llmwiki"],
                            ms=ms, rc=rc, sentinel=sent, ok=ok,
-                           note=f"cài NĂNG LỰC từ REMOTE nhánh {ref} — đường người mới",
-                           logs=[{"cmd": cmd, "rc": rc, "out": out.strip()[-2200:] or "(no output)"}]))
+                           note=f"harness từ REMOTE nhánh {ref}; skill từ nhánh orca (hardcode)",
+                           logs=[{"cmd": cmd, "rc": rc, "out": (out.strip()[-2000:] or "(no output)") + skills_warn}]))
 
     # ── BƯỚC 3: nạp CONTEXT — copy raw docs THẬT sang project mới ──
     t0 = time.perf_counter()
