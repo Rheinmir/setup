@@ -61,6 +61,39 @@ python3 fdk/tools/fdk-poc.py probe --project br/payroll [--fresh]
 `--ref` trỏ nhánh remote cho `curl` (mặc định `orca`; canary thì đưa tên nhánh — `bootstrap.sh` nhận
 `HARNESS_BASE`). `--skip-curl` CHỈ dùng khi offline/self-test — bỏ nó là bỏ mất phần chứng minh.
 
+## LUỒNG INJECT GÌ ở mỗi bước (câu hỏi user 17/07/26: "muốn coi 1 luồng phải inject những gì")
+Không phải "đồ đi bùa" — mỗi bước có **input xác định** và **artifact ra**, xem được bằng lệnh thật:
+
+| Bước | INJECT vào | RA | Xem bằng |
+|---|---|---|---|
+| `/br interview` | `llmwiki/raw/*` (tài liệu THẬT) + `skills/br/assets/spec-template.md` (khung S1–S10) | `br/spec-filled.md` — mỗi field có `status` + `provenance: raw:<file>` | đọc file |
+| `/br auto` | `skills/br/assets/defaults.yaml` (registry) + `br/defaults.yaml` (project override THẮNG) | điền field `missing` + in **câu hỏi thật** cho field không có default | `br-fill.py fill --root .` |
+| `/br compile` | spec-filled + answers | `br/BR.md` (clause_id + bảng "Giả định đang gánh") · `BR.clauses.json` · `br/DESIGN.md` (token KHOÁ) | đọc file |
+| `/br slice` | BR.md + `frame-template.md` | frames: `scope_code` (≤3 file) · `scope_test` · `acceptance_test` · `## Spec (FR/SC)` | `frame-lint check` (7 luật) |
+| **`/br run`** | **xem dưới** ↓ | code trong scope + `<frame>.run.json` + commit gắn frame_id | **`br-revise.py … --print`** |
+| `/br qc` | diff + route mockup | verdict 4 mục + test `qc-*` | `/qc-code` · `/qc-uiux` |
+| `/br status` | frames + run-log + BR | `line-status.html` (truy ngược lỗi→frame→clause) | mở HTML |
+
+### `/br run` — chỗ inject QUAN TRỌNG NHẤT (xem được, không phải tin lời)
+`fdk/tools/br-revise.py` render prompt rồi gọi `claude -p`. **Placeholder được inject:**
+`{{frame_id}}` · `{{clause_ids}}` · `{{muc_tieu}}` · `{{scope_code}}` · `{{scope_test}}` · `{{verify_cmd}}` · `{{verify_output}}`
+
+- **Nguồn prompt, thứ tự ưu tiên:** `br/prompts.md` (**SỔ PROMPT TỔNG — user sửa tay, không cần model**) > queue inline > `prompt_file` > template mặc định `skills/br/assets/revise-prompt.md`.
+- **`{{verify_output}}`** = output ĐỎ của vòng trước → **feedback loop thật** (vòng sau biết vì sao fail).
+- **Tools bó hẹp:** `--allowedTools Edit,Write,Read,Grep,Glob` — KHÔNG Bash tự do, KHÔNG network.
+- **XEM ĐÚNG PROMPT SẼ GỬI, không tốn model:**
+  ```
+  python3 fdk/tools/br-revise.py run --frame <frame.md> --verify "<cmd>" --print
+  ```
+  In ra: bối cảnh frame · lệnh nghiệm thu · output đỏ gần nhất · **LUẬT BẤT KHẢ XÂM PHẠM** (chỉ sửa `scope_code`, cấm đụng `scope_test` → test-hash, cấm lệnh phụ/mạng, sửa tối thiểu).
+
+### Ra mockup CHẠY ĐƯỢC ở staging + sửa AGILE (không phải đồ trình diễn)
+- **Frame UI phải có `acceptance_test` HIT UI thật** (visual-qa `route-shots.mjs --assert`), không phải unit-test cạnh bên ⇒ frame ĐỎ tới khi route render đúng; chạy lại `/br run` = **tự re-verify UI**.
+- **IN-PLACE là mặc định** (feedback 05/07): sửa hiện ngay trong cây đang chạy app → *bật app lên xem liền*. Không đẻ N worktree ma.
+- **Vòng agile thật:** thấy lỗi trên app → `/br find <file|từ khoá>` → ra **frame phụ trách + prompt nằm ở đâu** → sửa `br/prompts.md` (tay, 0 token) → `/br run` lại ĐÚNG frame đó (`br-queue.py affected <id>` chỉ chạy lại nhánh của nó).
+- **CẤM sửa UI tay ngoài `/br run`** (nợ p28) — sửa tay = mất gate + không re-verify.
+- **Không ưng kết quả:** `git revert <commit frame>` (mỗi frame 1 commit gắn `frame_id`) hoặc `checkpoint.py rollback <frame_id>`.
+
 ## "Không tất định từ raw thì TRỎ thế nào?"
 `/br auto` (`br-fill.py fill`) **không** tất định-từ-raw: nó cần `br/spec-filled.md` có trước, mà file
 đó do **LLM đọc .docx** sinh ra. Cơ chế trỏ nằm ở **provenance per-field**:
