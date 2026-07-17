@@ -26,6 +26,9 @@ rule chết âm thầm vì hook fail-open). Rule RIÊNG của bạn framework kh
 - Rule CÓ validator mà **thiếu fixtures** → firedrill FAIL (blind-spot: không chứng được rule còn sống ≡ dark rail của chính rule đó).
 - `bad` không bị chặn → **rule CHẾT** (đỏ). `good` bị chặn → rule **over-block** (đỏ).
 - **CI downstream chạy `firedrill` mỗi PR** — rule riêng của bạn mục ruỗng thì CI đỏ ngay, không im lặng.
+- CI **không gọi `run.py` của repo** mà chạy engine luôn-mới từ harness-src (pin `HARNESS_REF`), trỏ
+  `HARNESS_LOCAL_DIR` vào thư mục này: `run.py` repo có thể là bản cũ chưa có `firedrill` (mode lạ
+  rơi về `check` → degrade âm thầm). Engine đi theo framework; rules/validators ở lại với dự án.
 
 ## Contract của một project validator (API ỔN ĐỊNH — framework cam kết không đổi)
 Một validator = 1 file `.py` trong `harness-local/validators/` (KHÔNG bắt đầu bằng `_`):

@@ -159,12 +159,15 @@ jobs:
         # $RUNNER_TEMP/harness-src là full repo → 18/18 thật. Mỗi PR tự chứng 18 luật gốc
         # mà downstream đang bị gác vẫn còn cắn — dark rail của framework nổi đỏ TẠI downstream.
         run: python3 "$RUNNER_TEMP/harness-src/harness/scripts/harness-doctor.py" --ci
-      - name: harness-local fire-drill — rule RIÊNG dự án còn cắn? (chạy trên repo, bỏ qua nếu vắng)
-        # phủ nốt lỗ harness-doctor không chạm: rule tuỳ biến của downstream. Chạy trên repo hiện
-        # tại (không phải harness-src). Vắng harness-local thì skip (đa số dự án). Rule có validator
-        # mà thiếu fixtures bad/good thì đỏ (blind-spot). Bad không chặn thì rule chết, đỏ.
+      - name: harness-local fire-drill — rule RIÊNG dự án còn cắn? (engine mới + rules repo)
+        # phủ nốt lỗ harness-doctor không chạm: rule tuỳ biến của downstream. Chạy ENGINE
+        # luôn-mới từ harness-src (run.py của repo có thể là bản cũ chưa có firedrill — nếu
+        # gọi nó, mode lạ rơi về check và CI degrade ÂM THẦM), trỏ HARNESS_LOCAL_DIR vào
+        # rules của repo. Vắng harness-local thì skip (đa số dự án). Rule có validator mà
+        # thiếu fixtures bad/good thì đỏ (blind-spot). Bad không chặn thì rule chết, đỏ.
         run: |
-          if [ -f harness-local/run.py ]; then python3 harness-local/run.py firedrill; else echo "no harness-local — skip"; fi
+          [ -d harness-local ] || {{ echo "no harness-local — skip"; exit 0; }}
+          HARNESS_LOCAL_DIR="$PWD/harness-local" python3 "$RUNNER_TEMP/harness-src/harness-local/run.py" firedrill
       - name: harness validator (layer=repo, từ global) trên file .md đổi
         run: |
           base="${{{{ github.event.pull_request.base.sha || github.event.before }}}}"

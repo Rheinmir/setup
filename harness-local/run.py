@@ -11,12 +11,15 @@ Exit 0 = pass · 2 = có rule block (hoặc check/firedrill fail). Fail-open per
 lỗi không làm gãy phiên/commit). File validator bắt đầu '_' bị BỎ QUA (mẫu/helper).
 """
 import json
+import os
 import re
 import subprocess
 import sys
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parent
+# HARNESS_LOCAL_DIR: cho CI chạy ENGINE luôn-mới (từ harness-src) trên RULES của repo khác.
+# Tách đúng chỗ căng: engine update theo framework, rules/validators ở lại project-owned.
+HERE = Path(os.environ.get("HARNESS_LOCAL_DIR") or Path(__file__).resolve().parent)
 VDIR = HERE / "validators"
 
 

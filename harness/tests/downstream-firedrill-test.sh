@@ -47,11 +47,14 @@ grep -q 'harness-doctor.py" --ci' "$GEN" 2>/dev/null \
   && ok "gen-converters.py (nguồn) mang step → regen không mất" \
   || bad "step chỉ có ở output, không ở generator → lần regen kế sẽ xoá mất"
 
-# 4. harness-local fire-drill (phủ rule RIÊNG) cũng ship xuống — chạy trên repo, fail-open nếu vắng
-grep -q 'harness-local/run.py firedrill' "$CI" 2>/dev/null \
-  && ok "CI downstream có harness-local firedrill (phủ rule tuỳ biến)" \
-  || bad "CI downstream KHÔNG chứng rule harness-local → rule riêng có thể chết âm thầm"
-grep -q 'if \[ -f harness-local/run.py \]' "$CI" 2>/dev/null \
+# 4. harness-local fire-drill (phủ rule RIÊNG) cũng ship xuống — ENGINE luôn-mới, fail-open nếu vắng
+grep -q 'harness-src/harness-local/run.py" firedrill' "$CI" 2>/dev/null \
+  && ok "CI dùng ENGINE từ harness-src (run.py repo có thể bản cũ → mode lạ degrade về check ÂM THẦM)" \
+  || bad "CI KHÔNG dùng engine harness-src → run.py cũ của repo sẽ degrade firedrill thành check"
+grep -q 'HARNESS_LOCAL_DIR="\$PWD/harness-local"' "$CI" 2>/dev/null \
+  && ok "engine trỏ HARNESS_LOCAL_DIR vào rules của repo (engine theo framework, rules theo dự án)" \
+  || bad "thiếu HARNESS_LOCAL_DIR → engine soi nhầm rules của harness-src thay vì của repo"
+grep -q '\[ -d harness-local \] ||' "$CI" 2>/dev/null \
   && ok "harness-local firedrill fail-open (vắng harness-local → skip, không đỏ)" \
   || bad "harness-local firedrill KHÔNG fail-open → dự án không có harness-local sẽ đỏ oan"
 
@@ -69,6 +72,13 @@ if [ -f "$RUN" ]; then
   # rule thiếu fixtures → firedrill ĐỎ (blind-spot không im lặng)
   printf 'rules:\n  - id: P1\n    name: t\n    validator: harness-local/validators/v.py\n' > "$LR/policy.yaml"
   python3 "$LR/run.py" firedrill >/dev/null 2>&1; [ $? -eq 2 ] && ok "firedrill: thiếu fixtures → đỏ (không im lặng blind-spot)" || bad "firedrill bỏ qua rule thiếu fixtures"
+  # HARNESS_LOCAL_DIR: engine ở NGOÀI thư mục rules vẫn soi đúng rules (chính cảnh CI harness-src)
+  printf 'import json,sys\ntry: ev=json.load(sys.stdin)\nexcept: sys.exit(0)\nif "TODO" in (ev.get("content") or ""): sys.exit(2)\nsys.exit(0)\n' > "$LR/validators/v.py"
+  printf 'rules:\n  - id: P1\n    name: t\n    validator: harness-local/validators/v.py\n    fixtures:\n      bad:  { content: "TODO" }\n      good: { content: "ok" }\n' > "$LR/policy.yaml"
+  cp "$LR/run.py" "$SB/engine-elsewhere.py"
+  HARNESS_LOCAL_DIR="$LR" python3 "$SB/engine-elsewhere.py" firedrill >/dev/null 2>&1 \
+    && ok "HARNESS_LOCAL_DIR: engine ngoài thư mục vẫn soi đúng rules (cảnh CI engine-mới)" \
+    || bad "HARNESS_LOCAL_DIR không hoạt động → CI engine harness-src soi nhầm/không thấy rules"
   rm -rf "$SB"
 fi
 
