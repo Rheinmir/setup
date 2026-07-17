@@ -393,14 +393,22 @@ def meta_flow(proj, trace):
     n_llm = sum(1 for t in trace if t.get("llm"))
     total = sum(t["ms"] for t in trace)
     ok = sum(1 for t in trace if t["ok"])
+    # LỆNH PHẢI NHỚ = bước user thực sự phải gõ (record --must). Còn lại tool tự fire.
+    must = [t["cmd"] for t in trace if t.get("remember")]
+    hubs = sorted({(t.get("hub") or t["cmd"].split()[0]) for t in trace if t.get("remember")})
+    asks = [(t["cmd"], t["asks"]) for t in trace if t.get("asks")]
+    asks_html = ("<br><br><b>Chỗ bản THẬT sẽ HỎI bạn</b> (POC tự điền để chạy không-người-gác, "
+                 "đóng dấu <code>verified:false</code>):<ul>"
+                 + "".join(f"<li><code>{html.escape(c)}</code> — {html.escape(a)}</li>" for c, a in asks)
+                 + "</ul>") if asks else ""
     return dict(
         eyebrow=f"/fdk-poc · luồng THẬT · {len(trace)} bước · {total} ms",
         title="Luồng /br chạy THẬT trên project mới trong Orca",
         subtitle=f"Project THẬT: <code>{html.escape(str(proj))}</code> (mở được trong Orca). Mọi bước dưới đây là bước "
                  f"<b>THẬT ĐÃ CHẠY</b> — tool này KHÔNG bịa bước: hoặc do <code>fdk-poc</code> chạy, hoặc do agent chạy rồi "
                  f"<code>record</code> kèm <code>rc</code> + log thật. Mở LOG để đọc + chấm từng bước.",
-        kpis=[dict(n=len(trace), cls="big", l="bước THẬT<br>đã chạy"),
-              dict(n=f"{ok}/{len(trace)}", cls=("grn" if ok == len(trace) else "org"), l="sentinel<br>PASS"),
+        kpis=[dict(n=len(hubs) or "—", cls="big", l="LỆNH PHẢI NHỚ<br>(" + (", ".join(hubs) or "chưa đánh dấu") + ")"),
+              dict(n=f"{len(must)}/{len(trace)}", cls="grn", l="bước user gõ<br>/ tổng bước THẬT"),
               dict(n=n_llm, cls="org", l="bước LLM<br>(còn lại tất định)"),
               dict(n=f"{total}<span style='font-size:14px'>ms</span>", l="tổng<br>wall-clock")],
         timeline_title=f"{len(trace)} bước THẬT — đọc log, chấm từng bước",
@@ -408,9 +416,10 @@ def meta_flow(proj, trace):
         bars_title="Nhanh không — wall-clock từng bước",
         bars_hint="Bước LLM (cam) là biến; bước tất định (tím) là chi phí harness.",
         tail_title="Đánh giá",
-        tail_html=f"Project mở trong Orca: <code>{html.escape(str(proj))}</code>. "
-                  f"{ok}/{len(trace)} bước có sentinel PASS · {n_llm} bước LLM. "
-                  f"Trace nguồn: <code>{TRACE_REL}</code> (append-only, mỗi dòng một bước THẬT).",
+        tail_html=f"<b>Bạn chỉ phải nhớ {len(hubs)} lệnh</b>: <code>{', '.join(hubs) or '(chưa đánh dấu --must)'}</code> — "
+                  f"{len(must)}/{len(trace)} bước là user gõ, còn lại tool TỰ FIRE (không phải nhớ tên). "
+                  f"{ok}/{len(trace)} sentinel PASS · {n_llm} bước LLM. "
+                  f"Trace: <code>{TRACE_REL}</code> (append-only, mỗi dòng một bước THẬT).{asks_html}",
         footer_html=f"POC luồng THẬT · project: <code class='path'>{html.escape(str(proj))}</code> · sinh bởi <code>fdk/tools/fdk-poc.py render</code>.")
 
 
@@ -490,6 +499,8 @@ def main():
     ap.add_argument("--log", default=None)
     ap.add_argument("--log-file", default=None)
     ap.add_argument("--llm", action="store_true", help="record: bước này cần model")
+    ap.add_argument("--must", action="store_true", help="record: lệnh USER PHẢI GÕ (đếm vào 'lệnh phải nhớ')")
+    ap.add_argument("--asks", default=None, help="record: bản THẬT sẽ HỎI user ở đây (POC tự điền, ghi chú lại)")
     ap.add_argument("--note", default="")
     ap.add_argument("--ms", type=int, default=0)
     ap.add_argument("--sentinel", default=None, help="record: rel[:needle] — artifact chứng bước THẬT")
@@ -534,7 +545,7 @@ def main():
             ok, sent = _sentinel(proj, rel, needle or None)
         tr = _read_trace(proj)
         _append(proj, dict(n=len(tr) + 1, cmd=args.cmd, hub="/br" if args.cmd.startswith("/br") else "",
-                           remember=False, llm=args.llm, auto=[], ms=args.ms, rc=args.rc,
+                           remember=args.must, asks=args.asks, llm=args.llm, auto=[], ms=args.ms, rc=args.rc,
                            sentinel=sent, ok=ok, note=args.note,
                            logs=[{"cmd": args.cmd, "rc": args.rc, "out": (out.strip()[-1800:] or "(no output)")}]))
         print(f"✓ record bước {len(tr)+1}: {args.cmd} (rc={args.rc}, sentinel {'✓' if ok else '✗'} {sent})")

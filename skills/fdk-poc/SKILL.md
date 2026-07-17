@@ -18,6 +18,20 @@ description: >-
 - Chứng năng lực mới **tới tay người dùng** qua đường remote + chạy được trên tài liệu thật.
 - KHÔNG dùng để: test nhanh xanh/đỏ (đó là `/fdk-uat`) hay chạy sản phẩm thật (đó là `/br`).
 
+## MỤC TIÊU THẬT (user chốt 17/07/26) — POC để XEM, không để THAM GIA
+> "tôi muốn xem prompt được inject **từ từ** để biết **bước nào BẮT BUỘC** khi làm việc với /br,
+> để biết **những lệnh nào tôi phải nhớ** — chứ nhớ all thì không nhớ nổi."
+
+Ba hệ quả **bắt buộc**:
+1. **KHÔNG-NGƯỜI-GÁC.** POC **cấm dừng chờ user trả lời**. Field `missing`/`conflict` → `/br auto`
+   (registry defaults) + `--lens-fill` tự điền, đóng dấu `verified: false`; ghi lại bằng
+   `record --asks "<bản thật sẽ hỏi gì ở đây>"`. User **vào trả lời = POC đã sai mục tiêu**.
+2. **Hiện prompt inject TỪ TỪ.** Mỗi bước phải in được cái nó bơm vào model
+   (`br-revise.py --print` cho `/br run` — xem mục "LUỒNG INJECT GÌ" dưới).
+3. **Trả lời "phải nhớ mấy lệnh".** `record --must` đánh dấu bước **user THỰC SỰ phải gõ**;
+   `render` in KPI **LỆNH PHẢI NHỚ** + `N/M bước user gõ` — phần còn lại tool tự fire.
+   Mục tiêu con số: **≈1 hub** (`/br`) — khớp bài học discoverability.
+
 ## Luật CỐT LÕI (rút từ lần fail 16/07/26)
 **Tool KHÔNG BAO GIỜ BỊA BƯỚC.** Bản đầu tự scaffold artifact giả trong `/tmp` rồi vẽ timeline →
 user không thấy project đâu, không có luồng thật ⇒ POC vô giá trị (đúng luật "bằng chứng > lời").
