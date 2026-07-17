@@ -111,6 +111,8 @@ jobs:
         run: bash harness/tests/harness-integrity-test.sh .
       - name: flywheel auto-capture — rule cắn tự vào ledger (capture không chờ ai nhớ gõ)
         run: bash harness/tests/flywheel-autocapture-test.sh .
+      - name: install ref-override — canary không được chấm nhầm bản cũ (UAT mù engine)
+        run: bash harness/tests/install-ref-override-test.sh .
       - name: harness-doctor — fire-drill (mọi rail còn cắn?)
         run: python3 harness/scripts/harness-doctor.py --ci
       - name: capabilities current (fdk/CAPABILITIES.md khớp đĩa)
