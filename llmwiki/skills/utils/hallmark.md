@@ -55,6 +55,8 @@ These six disciplines are **not** verb-specific. They apply to default Design, `
 
 6. **Typography purity — no italic headers.** Headings and display type are always roman (`font-style: normal`). An italicised emphasis word inside an otherwise-upright heading (`Built to <em>think</em>`) is one of the most reliable AI tells; so is an all-italic display face on headings. Carry emphasis with weight, accent colour, or a drawn underline. Italic survives only as *body-copy* emphasis inside running paragraphs. See [`references/anti-patterns.md` § Italic headers](references/anti-patterns.md) and slop-test gate **38a**.
 
+7. **Frontend-design checkpoints (delta trên sàn).** Bốn checkpoint distill từ skill `frontend-design` của Anthropic: KHÔNG tiêu trục-brief-bỏ-ngỏ vào một trong ba default-AI-look có tên (kem+serif+đất-nung · gần-đen+acid-accent · broadsheet hairline); hero là THESIS của chủ đề, không phải "số to + nhãn nhỏ + gradient"; mỗi trang một signature element duy nhất — tiêu boldness đúng một chỗ rồi soi gương bỏ bớt một phụ kiện; UX-writing theo hành động (nút nói đúng việc, tên hành động giữ nguyên xuyên flow, error chỉ đường, empty-state là lời mời). Load [`references/frontend-design-delta.md`](references/frontend-design-delta.md) khi build/redesign UI.
+
 ---
 
 ## When the brief is a component, not a page
