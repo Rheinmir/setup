@@ -10,6 +10,8 @@ the missing piece: a queryable store you write to by code and retrieve top-k fro
                                       record a structured SESSION EPISODE (kind=episode) — the
                                       EPISODIC memory layer (what a past session did), retrievable.
   delete ID                           remove a memory (DELETE).
+  export                              dump store as JSONL to stdout (memory portability).
+  import <file.jsonl>                 load JSONL, dedupe by id (local store wins).
   retrieve "<query>" [--k N]          top-N memories by relevance (NOOP if nothing relevant).
   --kind-filter K                     with retrieve: only rank memories of kind K (e.g. episode).
   --report                            list stored memories + count.
@@ -155,6 +157,39 @@ def delete(root, mid) -> int:
     return len(mems) - len(kept)
 
 
+def export_all(root) -> int:
+    """Dump toàn bộ store ra stdout dạng JSONL — memory di chuyển máy bằng file.
+    (Ý từ claude-mem "memory phải portable"; code là của mình, format là store sẵn có.)"""
+    mems = _read(Path(root))
+    for m in mems:
+        print(json.dumps(m, ensure_ascii=False))
+    return len(mems)
+
+
+def import_file(root, path):
+    """Nạp JSONL vào store, dedupe theo id (bản trong store thắng — không ghi đè bản local)."""
+    root = Path(root)
+    have = {m.get("id") for m in _read(root)}
+    added, skipped = [], 0
+    for line in Path(path).read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            rec = json.loads(line)
+        except Exception:
+            skipped += 1
+            continue
+        if not isinstance(rec, dict) or not rec.get("id") or rec["id"] in have:
+            skipped += 1
+            continue
+        have.add(rec["id"])
+        added.append(rec)
+    if added:
+        _write_all(root, _read(root) + added)
+    return len(added), skipped
+
+
 def _toks(s):
     return set(re.findall(r"[a-z0-9]+", (s or "").lower()))
 
@@ -295,7 +330,17 @@ def self_test() -> int:
         fb = retrieve(root, "deploy production", k=2, cfg=bad)
         fallback_ok = bool(fb) and "deploy" in fb[0][0]["text"]
         embed_ok = embed_top_ok and fallback_ok
-    ok = bool(top_ok) and none_ok and evict_ok and ep_ok and embed_ok
+    # ── export/import round-trip (portability máy↔máy) ──
+    with tempfile.TemporaryDirectory() as d2:
+        src, dst = Path(d2) / "src", Path(d2) / "dst"
+        src.mkdir(); dst.mkdir()
+        add(src, "portable fact", mid="port1")
+        dump = "\n".join(json.dumps(m, ensure_ascii=False) for m in _read(src))
+        f = Path(d2) / "mem.jsonl"; f.write_text(dump, encoding="utf-8")
+        n1, _ = import_file(dst, str(f))
+        n2, _ = import_file(dst, str(f))          # import lần 2 phải skip hết (dedupe)
+        roundtrip_ok = n1 == 1 and n2 == 0 and _read(dst)[0]["id"] == "port1"
+    ok = bool(top_ok) and none_ok and evict_ok and ep_ok and embed_ok and roundtrip_ok
     print("mem-rank self-test:", "PASS" if ok else "FAIL")
     return 0 if ok else 1
 
@@ -344,6 +389,13 @@ def main() -> None:
         if len(args) < 2:
             print("usage: mem-rank.py delete ID", file=sys.stderr); sys.exit(2)
         n = delete(root, args[1]); print(f"deleted {n}"); return
+    if args and args[0] == "export":
+        export_all(root); return
+    if args and args[0] == "import":
+        if len(args) < 2:
+            print("usage: mem-rank.py import <file.jsonl>", file=sys.stderr); sys.exit(2)
+        n, sk = import_file(root, args[1])
+        print(f"imported {n}, skipped {sk}"); return
     if args and args[0] == "retrieve":
         if len(args) < 2:
             print('usage: mem-rank.py retrieve "<query>" [--k N] [--kind-filter K]', file=sys.stderr); sys.exit(2)
