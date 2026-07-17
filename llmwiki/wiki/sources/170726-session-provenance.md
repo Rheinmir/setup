@@ -16,6 +16,7 @@ session: b06734dd-90f0-42db-8cf6-2b543083b8c0
 
 ## File chạm trong phiên
 
+- `sources/draft/170726-gitignored-dedupe.md`
 - `template-manifest.json`
 
 ## Origin
