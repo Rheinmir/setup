@@ -67,7 +67,7 @@
 - **`/frontier-scan`** — Quét biên giới agent-framework 30 ngày qua và đối chiếu overstack theo 8 trục (frontier-ga…
 - **`/full-output-enforcement`** — Overrides default LLM truncation behavior
 - **`/gpt-taste`** — Elite UX/UI & Advanced GSAP Motion Engineer
-- **`/hallmark`** — Anti-AI-slop design skill for greenfield pages, audits, redesigns, and design extraction f…
+- **`/hallmark`** — SÀN design mặc định của overstack (anti-AI-slop)
 - **`/harness-tour`** — Tour
 - **`/harness-update`** — TỰ BẢO TRÌ framework overstack trên máy user (self-maintain)
 - **`/health-check`** — Kiểm tra sức khỏe "pattern chuẩn" của template

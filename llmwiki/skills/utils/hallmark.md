@@ -1,6 +1,6 @@
 ---
 name: hallmark
-description: "Anti-AI-slop design skill for greenfield pages, audits, redesigns, and design extraction from URLs or screenshots. Use when the user asks to build a new app or landing page, wants to redesign something, invokes Hallmark by name, or uses audit/redesign/study."
+description: "SÀN design mặc định của overstack (anti-AI-slop) — mọi UI đứng trên nó: build trang mới, audit, redesign, extract design từ URL/screenshot, và KHÓA HỆ THIẾT KẾ XUYÊN MÀN HÌNH qua design.md (chạy `hallmark redesign` cả app một lần → sinh design.md ở project root → mọi màn hình sau bám cùng hệ token/type/motion, không mỗi màn một kiểu). Gọi khi user nói: 'thiết kế', 'giao diện', 'làm UI/landing page/app mới', 'redesign', 'audit design', 'design system', 'đồng bộ giao diện giữa các màn hình', 'khóa hệ thiết kế', 'sao trang này trông AI-generated', hoặc gọi đích danh hallmark / dùng verb build·audit·redesign·study. Việc chạm UI mà không chắc dùng gì → dùng skill này (nó là sàn, các skill taste khác là flavour bên trên)."
 version: 1.1.0
 ---
 
