@@ -188,15 +188,27 @@ def new_project(raw_dir, name=None, dest=None, use_orca=True, force=False, ref="
     if agent:
         t0 = time.perf_counter()
         prompt = (prompt_text or
-                  "Chạy /br TỪ ĐẦU trên tài liệu trong llmwiki/raw/: "
-                  "(1) /br interview — đọc THẬT mọi file raw, map S1–S10, mỗi field ghi status + "
-                  "provenance raw:<file>, ghi br/spec-filled.md; "
-                  "(2) /br auto — python3 fdk/tools/br-fill.py fill --root . ; "
-                  "(3) /br compile → slice → run → qc → status. "
-                  "Sau MỖI bước, ghi lại bằng: fdk-poc.py record --project . --cmd '<lệnh>' --rc N "
-                  "--log-file <file> [--llm] --sentinel '<artifact>'. KHÔNG bịa bước.")
+                  "POC KHÔNG-NGƯỜI-GÁC: TUYỆT ĐỐI KHÔNG hỏi tôi, KHÔNG dừng chờ trả lời. "
+                  "Gặp field missing/conflict thì TỰ ĐIỀN default (registry / lens-fill), đóng dấu "
+                  "verified:false, rồi ghi lại bằng --asks. Chạy /br TỪ ĐẦU trên llmwiki/raw/: "
+                  "(1) /br interview: đọc THẬT mọi file raw (docx: zipfile+regex), map S1-S10, mỗi field ghi "
+                  "status + provenance raw:<file>, ghi br/spec-filled.md; "
+                  "(2) /br auto: python3 fdk/tools/br-fill.py fill --root . ; "
+                  "(3) /br compile -> slice -> run -> qc -> status. "
+                  "Ở /br run: TRƯỚC khi chạy, in prompt sẽ inject bằng "
+                  "'python3 fdk/tools/br-revise.py run --frame <f> --verify \"<cmd>\" --print' và lưu vào log. "
+                  "SAU MỖI bước chạy: python3 fdk/tools/fdk-poc.py record --project . --cmd '<lệnh>' --rc N "
+                  "--log-file <file> [--llm nếu cần model] [--must nếu đây là lệnh USER phải gõ] "
+                  "[--asks '<bản thật sẽ hỏi user gì ở đây>'] --sentinel '<artifact>'. "
+                  "KHÔNG bịa bước. Xong hết thì: fdk-poc.py render --project . ")
+        # Prompt GHI RA FILE rồi `claude "$(cat …)"` — bài học 17/07/26: nhét prompt thẳng vào
+        # --command làm vỡ quoting shell (prompt có dấu " lồng → zsh: 'no such file: cmd').
+        pf = proj / "br" / ".poc-prompt.txt"
+        pf.parent.mkdir(parents=True, exist_ok=True)
+        pf.write_text(prompt, encoding="utf-8")
         cmd = ["orca", "terminal", "create", "--worktree", f"path:{proj}",
-               "--title", "/br POC", "--command", f'{agent} "{prompt}"', "--focus", "--json"]
+               "--title", "/br POC", "--command", f'{agent} "$(cat br/.poc-prompt.txt)"',
+               "--focus", "--json"]
         rc, out, _ = _run(cmd, proj)
         ms = round((time.perf_counter() - t0) * 1000)
         sok = rc == 0
