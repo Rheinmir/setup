@@ -289,6 +289,34 @@ def p_capsurface():
     return "ok", "bề mặt năng lực khớp version (downstream sẽ thấy đúng khi có bản mới)", ""
 
 
+def p_provenance():
+    """Skill NGOÀI (adapt_mode=external-pull — pin + audit, engine ở ngoài) chạy full-permission
+    sau khi cài; supply-chain drift (upstream sửa lén sau lúc pin) chỉ lộ ra nếu ai đó CHỦ ĐỘNG
+    chạy check. Gap #4 (senior-lens review 2026-07-18): trust chỉ gác lúc cài, không có nhịp
+    re-verify. Scope HẸP CÓ CHỦ Ý: chỉ hard-fail MODIFIED trên skill external-pull (rủi ro thật —
+    checksum đổi sau khi pin = có thể bị sửa lén). Skill local-authored đổi MỖI NGÀY là dev churn
+    bình thường (chính phiên này vừa sửa qc-code/hallmark/lint) — hard-fail trên chúng là đúng
+    kiểu 'gate cries wolf' đã né ở capproof; chỉ đếm, không chặn."""
+    sp = ROOT / "fdk/tools/skill-provenance.py"
+    if not sp.exists():
+        return "skip", "skill-provenance.py chưa có", ""
+    rc, out = sh([PY, str(sp), "check", "--json"], timeout=30)
+    try:
+        rows = json.loads(out)["rows"]
+    except Exception:
+        return "skip", "skill-provenance --json không parse được", ""
+    ext_bad = [r for r in rows if r.get("adapt_mode") == "external-pull" and r["status"] == "MODIFIED"]
+    local_mod = sum(1 for r in rows if r.get("adapt_mode") != "external-pull" and r["status"] == "MODIFIED")
+    untracked = sum(1 for r in rows if r["status"] == "UNTRACKED")
+    if ext_bad:
+        names = ", ".join(r["name"] for r in ext_bad)
+        return ("fail", f"skill NGOÀI bị sửa lén sau khi pin: {names}",
+                f"soi diff skills/<name>/SKILL.md với commit đã pin; đúng ý thì "
+                f"`python3 fdk/tools/skill-provenance.py record <name> --source <src>` để re-pin")
+    return ("ok", f"external-pull sạch (0 tamper) · {local_mod} local đổi (dev churn, không chặn) "
+                  f"· {untracked} untracked (chưa record, advisory)", "")
+
+
 def p_capproof():
     """Năng lực MỚI vào phải kèm bằng chứng sống; năng lực đã-proven không được tụt.
     Ratchet: nợ tồn trong baseline chỉ đếm, không đỏ (gate cries wolf thì bị tắt)."""
@@ -334,6 +362,7 @@ PROBES = [
     ("freshinstall", ["freshinstall", "install", "orchestration", "e2e", "push"], p_freshinstall),
     ("capsurface", ["capsurface", "version", "capabilities", "bump", "downstream"], p_capsurface),
     ("capproof", ["capproof", "proof", "unproven", "ratchet", "dup"], p_capproof),
+    ("provenance", ["provenance", "supply-chain", "external-pull", "tamper"], p_provenance),
 ]
 # bỏ 'drift' probe trùng — drift đã báo trong rules:
 PROBES = [p for p in PROBES if p[0] != "drift"]
