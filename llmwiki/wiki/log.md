@@ -366,3 +366,6 @@ PLAN 4 task (resolver 6 tầng / probe ratchet / guard 4 chiều / dups+mech). E
 
 ## 2026-07-18 — propose — archetype-tester
 SPEC vai thứ 6 tester (/test): persona thiết kế test neo FR/SC + code qc-*. T-260718-02, chờ gate.
+
+## 2026-07-18 — fdk-uat — batch grower+tester+maintainer lên orca
+Canary 260718-1101 vòng 1: 10/12 — lens TESTER bắt 2 lỗi thật (persona không travel global; wikieval self-test không hermetic). Fix faf5918 → vòng 2: 12/12. PHA 2 main-URL smoke 0-override: 7/7. orca @ faf5918, canary đã xoá, stamp 1.3.24.
