@@ -141,6 +141,16 @@ def _resolve_one(root: Path, src: dict, kind: str, name: str, body: str = "") ->
                 return f"harness/scripts/{eng} --self-test", "selftest"
     if kind in ("script", "tool") and "--self-test" in body:          # 4b. script tự có self-test
         return f"{name} --self-test", "selftest"
+    if kind in ("script", "tool") and "os.execv(" in body:            # 4c. thin os.execv shim
+        # shim gán biến từ os.path.join(os.path.dirname(...), "target.py") rồi execv biến đó —
+        # KHÔNG match cấu trúc os.path.join(...) (dấu ')' lồng bên trong phá [^)]*), chỉ cần
+        # tìm chuỗi "*.py" bất kỳ trong file — shim mỏng chỉ có đúng 1 chuỗi .py là target.
+        m = re.search(r'["\']([\w\-]+\.py)["\']', body)
+        if m:
+            sub = "harness/scripts" if kind == "script" else "fdk/tools"
+            target = root / sub / m.group(1)
+            if target.is_file() and "--self-test" in target.read_text(encoding="utf-8", errors="ignore"):
+                return f"{m.group(1)} --self-test (qua shim delegate)", "shim-delegate"
     if name.replace(".py", "") in src["goldens"]:                     # 5. golden eval nhắc tên
         return "wiki/sources/evals/*", "golden"
     if kind != "mech" and name.replace(".py", "") in src["medic"]:    # 6. medic probe nhắc tên

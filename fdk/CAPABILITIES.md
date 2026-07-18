@@ -192,10 +192,10 @@
 - `wiki-sync.py`
 - `wikieval.py`
 
-## Proof — năng lực còn sống (155/196 có bằng chứng)
+## Proof — năng lực còn sống (157/196 có bằng chứng)
 Mỗi năng lực map tất định sang bằng chứng chạy được (frontmatter `proof:` > rule-map > tests > self-test > golden > medic). Chi tiết: `build-capabilities.py --capproof-json`.
 
-## UNPROVEN (41) — có mặt nhưng CHƯA chứng được còn sống
+## UNPROVEN (39) — có mặt nhưng CHƯA chứng được còn sống
 - `mech:archetype-tester` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
 - `mech:capsurface` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
 - `mech:code-state` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
@@ -213,7 +213,6 @@ Mỗi năng lực map tất định sang bằng chứng chạy được (frontma
 - `script:dispatch-verify.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
 - `script:embed-ollama.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
 - `script:embed-voyage.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `script:failure-flywheel.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
 - `script:harness-lint.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
 - `script:loop-runner.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
 - `script:ovs-notes.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
@@ -221,7 +220,6 @@ Mỗi năng lực map tất định sang bằng chứng chạy được (frontma
 - `script:query-proxy.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
 - `script:skill-health.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
 - `script:skill-registry.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `script:success-flywheel.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
 - `script:sync-skills.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
 - `script:sync-template.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
 - `script:wiki-health.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter

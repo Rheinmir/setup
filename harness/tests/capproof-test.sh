@@ -38,6 +38,14 @@ echo "$u" | grep -q "skill:proven-sk" && bad "proven-sk bị bêu OAN" || ok "pr
 echo "$u" | grep -q "skill:pure-prompt-sk" && bad "pure-prompt-sk (0 engine) bị bêu OAN — root-cause chưa fix" \
                                             || ok "pure-prompt-sk (0 engine) MIỄN TRỪ đúng (tier 7, không phải nợ giả)"
 
+# 1b. shim os.execv mỏng → resolve qua proof của TARGET (tier 8), không đòi shim tự có test riêng
+printf 'def self_test():\n    return 0\n' > "$SB/harness/scripts/fake-target.py"
+printf -- '--self-test' >> "$SB/harness/scripts/fake-target.py"
+printf 'import os, sys\n_T = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fake-target.py")\nos.execv(sys.executable, [sys.executable, _T, *sys.argv[1:]])\n' > "$SB/harness/scripts/fake-shim.py"
+u_shim=$(j "$SB" | python3 -c "import sys,json;print(','.join(json.load(sys.stdin)['unproven']))")
+echo "$u_shim" | grep -q "script:fake-shim.py" && bad "shim mỏng bị bêu OAN — tier shim-delegate chưa hoạt động" \
+                                                || ok "shim os.execv mỏng resolve qua proof của target (tier 8)"
+
 # 2. baseline chốt nợ → logic ratchet XANH (nợ tồn không đỏ)
 python3 "$BC" --root "$SB" --write-capproof-baseline >/dev/null
 u2=$(j "$SB" | python3 -c "
