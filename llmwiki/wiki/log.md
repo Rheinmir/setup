@@ -19,10 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-18 08:55:55 | `file.write` | fdk/tools/medic.py · tool=Edit · session=246fa7ac · actor=agent · prev=716e44c40ec7b1b7e5dd4f4fe03fd69ddaf20685184636b98 |
-| 2026-07-18 08:55:57 | `file.write` | fdk/tools/medic.py · tool=Edit · session=246fa7ac · actor=agent · prev=a3e889c88682222e85961924da599001d29edeedb39bffdf8 |
-| 2026-07-18 08:56:12 | `file.write` | fdk/tools/medic.py · tool=Edit · session=246fa7ac · actor=agent · prev=13e6d27cc2c1017868dd5911e6073db68c919b1767db3dbe3 |
-| 2026-07-18 08:57:16 | `file.write` | harness/tests/capproof-test.sh · tool=Write · session=246fa7ac · actor=agent · prev=41e7cea51a45919dff655606c639b7064bd1 |
 | 2026-07-18 08:57:29 | `file.write` | .github/workflows/harness.yml · tool=Edit · session=246fa7ac · actor=agent · prev=e9b956e62c254535042d16c54419a949c096bc |
 | 2026-07-18 08:58:22 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=06387a937cc307d0195405e612bcc3e01f7b |
 | 2026-07-18 08:59:08 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=5a9d353138395810ce2836d3f928cfcce077 |
@@ -59,6 +55,10 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-18 10:56:30 | `file.write` | harness/tests/ledger-snapshot-test.sh · tool=Write · session=246fa7ac · actor=agent · prev=3d9049d2f5112f0eb96517f0ab419 |
 | 2026-07-18 10:56:44 | `file.write` | .github/workflows/harness.yml · tool=Edit · session=246fa7ac · actor=agent · prev=fe7cb78d5fbd6053c5ae51e4b0b2a12413defd |
 | 2026-07-18 10:57:11 | `task.set` |  · task=T-260718-03 · state=completed · note=snapshot live: 30 ledger 102KB, SessionEnd wired, guard 5/5 · actor=agent · |
+| 2026-07-18 11:16:17 | `file.write` | harness/scripts/archetype.py · tool=Edit · session=246fa7ac · actor=agent · prev=83e663b00ba7cd53d765512815b69fddeba3898 |
+| 2026-07-18 11:16:19 | `file.write` | harness/scripts/archetype.py · tool=Edit · session=246fa7ac · actor=agent · prev=24f634fab467dd15fd776020cee4b9e640b1989 |
+| 2026-07-18 11:16:31 | `file.write` | harness/scripts/install-harness.sh · tool=Edit · session=246fa7ac · actor=agent · prev=f691f91ae8dabaa49e46683893e3711eb |
+| 2026-07-18 11:16:37 | `file.write` | harness/scripts/wikieval.py · tool=Edit · session=246fa7ac · actor=agent · prev=0a5e098e698afb4181152bf214a81b69576a1869 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
