@@ -192,36 +192,8 @@
 - `wiki-sync.py`
 - `wikieval.py`
 
-## Proof — năng lực còn sống (170/196 có bằng chứng)
+## Proof — năng lực còn sống (196/196 có bằng chứng)
 Mỗi năng lực map tất định sang bằng chứng chạy được (frontmatter `proof:` > rule-map > tests > self-test > golden > medic). Chi tiết: `build-capabilities.py --capproof-json`.
-
-## UNPROVEN (26) — có mặt nhưng CHƯA chứng được còn sống
-- `mech:harness-lint` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `mech:medic-mirror` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `script:adapt-registry.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `script:arch-scan.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `script:dispatch-verify.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `script:embed-ollama.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `script:embed-voyage.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `script:harness-lint.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `script:ovs-notes.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `script:query-log.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `script:query-proxy.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `script:skill-health.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `script:skill-registry.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `script:sync-skills.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `script:sync-template.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `script:wiki-health.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `skill:docs-curate` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `skill:ovs-notes` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `tool:artifacts.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `tool:build-cheatsheet.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `tool:build-docs-index.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `tool:build-health-dashboard.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `tool:build-skill-search.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `tool:docs-curate.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `tool:whiteboard-skill-map.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `tool:wiki-relations.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
 
 ## TRÙNG-ỨNG-VIÊN (18) — máy phát hiện, NGƯỜI phán (dedupe = vòng /propose riêng)
 - `mech:medic` ↔ `mech:medic-mirror` — name-token: medic

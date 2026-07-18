@@ -19,28 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-18 09:51:16 | `file.write` | skills/lint/SKILL.md · tool=Edit · session=246fa7ac · actor=agent · prev=a1fc632df5fc72c64e0fbc2923f2710231be1f4ef1ad257 |
-| 2026-07-18 09:55:50 | `task.set` |  · task=T-260718-02 · state=dispatched · note=self-dispatch in-session · actor=agent · prev=bb0f339c00f7722b36c10bcc37ec |
-| 2026-07-18 09:56:34 | `file.write` | llmwiki/personas/tester.md · tool=Write · session=246fa7ac · actor=agent · prev=b36cf5c56cb68d5f9bcf919db5e4b30ac1717d74 |
-| 2026-07-18 09:56:43 | `file.write` | harness/archetypes.config.yaml · tool=Edit · session=246fa7ac · actor=agent · prev=0241399072401703ba99e96a91f6f5ac3ce3a |
-| 2026-07-18 09:56:46 | `file.write` | harness/scripts/archetype.py · tool=Edit · session=246fa7ac · actor=agent · prev=fd7a54b37627eb28239e0286cfe6d6d1467fe45 |
-| 2026-07-18 09:56:50 | `file.write` | harness/scripts/archetype.py · tool=Edit · session=246fa7ac · actor=agent · prev=4fbf38cbe4880b20757bf29a6ba37d68c6ff5ef |
-| 2026-07-18 09:57:22 | `file.write` | harness/scripts/wikieval.py · tool=Edit · session=246fa7ac · actor=agent · prev=995c683df5281a74a0ecc0fd07f66aa7f48a3ce4 |
-| 2026-07-18 09:58:05 | `task.set` |  · task=T-260718-02 · state=completed · note=6 vai live, --get /test OK, self-test PASS · actor=agent · prev=5f670303356 |
-| 2026-07-18 10:31:09 | `file.write` | skills/lint/SKILL.md · tool=Edit · session=246fa7ac · actor=agent · prev=63b1cbb96cf1478006245d62fefa08c1695cb1e7bb94937 |
-| 2026-07-18 10:38:25 | `file.write` | fdk/tools/docs-curate.py · tool=Edit · session=246fa7ac · actor=agent · prev=5855fbe7a2963142045c2b484cc259870b0b1c916eb |
-| 2026-07-18 10:38:37 | `file.write` | fdk/tools/docs-curate.py · tool=Edit · session=246fa7ac · actor=agent · prev=b6c8f4be348725f4aeda741e682555153ea15f71d3e |
-| 2026-07-18 10:38:51 | `file.write` | fdk/tools/docs-curate.py · tool=Edit · session=246fa7ac · actor=agent · prev=fa2769462ba2c7042be54ece169c5fb63b25c91f8a7 |
-| 2026-07-18 10:43:00 | `file.write` | skills/lint/SKILL.md · tool=Edit · session=246fa7ac · actor=agent · prev=3f6c05553d3f2ca5028e2aea3a41642c4e6350180b56b60 |
-| 2026-07-18 10:51:46 | `file.write` | skills/lint/SKILL.md · tool=Edit · session=246fa7ac · actor=agent · prev=9b7371caa85287a6228762b6d9421a96d0f8c25707fb48f |
-| 2026-07-18 10:52:46 | `file.write` | skills/lint/SKILL.md · tool=Edit · session=246fa7ac · actor=agent · prev=6c1a4e18d7957e5a4f3f435db7d0166ac7b979b0ddda77b |
-| 2026-07-18 10:54:52 | `task.new` |  · task=T-260718-03 · title=ledger-snapshot — ký ức sống sót mất máy (maintainer #2) · state=proposed · actor=agent · pr |
-| 2026-07-18 10:55:44 | `file.write` | harness/scripts/ledger-snapshot.py · tool=Write · session=246fa7ac · actor=agent · prev=180361f31122bfa192b23fd1a30aeba3 |
-| 2026-07-18 10:56:12 | `file.write` | llmwiki/.claude/hooks/session_end.py · tool=Edit · session=246fa7ac · actor=agent · prev=e25f1e1a345df72b5fc327f2fa60646 |
-| 2026-07-18 10:56:30 | `file.write` | harness/tests/ledger-snapshot-test.sh · tool=Write · session=246fa7ac · actor=agent · prev=3d9049d2f5112f0eb96517f0ab419 |
-| 2026-07-18 10:56:44 | `file.write` | .github/workflows/harness.yml · tool=Edit · session=246fa7ac · actor=agent · prev=fe7cb78d5fbd6053c5ae51e4b0b2a12413defd |
-| 2026-07-18 10:57:11 | `task.set` |  · task=T-260718-03 · state=completed · note=snapshot live: 30 ledger 102KB, SessionEnd wired, guard 5/5 · actor=agent · |
-| 2026-07-18 11:16:17 | `file.write` | harness/scripts/archetype.py · tool=Edit · session=246fa7ac · actor=agent · prev=83e663b00ba7cd53d765512815b69fddeba3898 |
 | 2026-07-18 11:16:19 | `file.write` | harness/scripts/archetype.py · tool=Edit · session=246fa7ac · actor=agent · prev=24f634fab467dd15fd776020cee4b9e640b1989 |
 | 2026-07-18 11:16:31 | `file.write` | harness/scripts/install-harness.sh · tool=Edit · session=246fa7ac · actor=agent · prev=f691f91ae8dabaa49e46683893e3711eb |
 | 2026-07-18 11:16:37 | `file.write` | harness/scripts/wikieval.py · tool=Edit · session=246fa7ac · actor=agent · prev=0a5e098e698afb4181152bf214a81b69576a1869 |
@@ -59,6 +37,28 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-18 12:00:20 | `file.write` | llmwiki/wiki/sources/draft/180726-council-self-index-remaining-scope.md · tool=Edit · session=246fa7ac · actor=agent · p |
 | 2026-07-18 12:00:44 | `task.set` |  · task=T-260702-02 · state=superseded · note=scope con lai chuyen sang GH#81 (issue 180726-council-self-index-remaining |
 | 2026-07-18 12:01:03 | `file.write` | fdk/tools/docs-curate.py · tool=Edit · session=246fa7ac · actor=agent · prev=87707ddca60e04d21b75e5bf0c9d15ce0160e70be37 |
+| 2026-07-18 12:16:39 | `file.write` | harness/mechanisms.yaml · tool=Edit · session=246fa7ac · actor=agent · prev=11e6fa3a94bb8658129582c84be838a8eb525e84517a |
+| 2026-07-18 12:19:32 | `file.write` | fdk/tools/medic.py · tool=Edit · session=246fa7ac · actor=agent · prev=3c408500612a21cf5daaf807c791de3745ee9ee0fbcce501f |
+| 2026-07-18 12:19:58 | `file.write` | harness/mechanisms.yaml · tool=Edit · session=246fa7ac · actor=agent · prev=280a904f61d15a7af686bf94e0780df4a2647b52dfba |
+| 2026-07-18 12:27:55 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=12fa96d284907058613800405db26b78e79d |
+| 2026-07-18 12:28:16 | `file.write` | harness/tests/capproof-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=36f276a9b90344460bddfa9d94e4b8ef6c2bf |
+| 2026-07-18 12:28:22 | `file.write` | harness/tests/capproof-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=945e6031049b862300531c6c5c6649ab26df1 |
+| 2026-07-18 12:28:41 | `file.write` | harness/tests/capproof-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=344453dcdfb8f7d742ccc538787716c90749b |
+| 2026-07-18 12:28:54 | `file.write` | harness/tests/capproof-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=a03f16ab2886f1f245f734091574db9863310 |
+| 2026-07-18 12:29:28 | `file.write` | harness/tests/capproof-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=7f3a79f367bc4a00b84bd3b41a9dbc85da42e |
+| 2026-07-18 12:31:35 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=59a4ae60545f27ad6ff60ac4411a5e7ef162 |
+| 2026-07-18 12:32:03 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=d52dea50c1c936a85687b7ea742e904704fc |
+| 2026-07-18 12:32:29 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=783cb434d409eb9421b185224a8786da0b5b |
+| 2026-07-18 12:32:55 | `file.write` | harness/tests/capproof-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=8fd860ebaf8d7898db783ee438a9fdf70ba7f |
+| 2026-07-18 15:14:34 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=e2a0acfa4f14c3a5ca49258d5b7050ac0777 |
+| 2026-07-18 15:14:43 | `file.write` | harness/mechanisms.yaml · tool=Edit · session=246fa7ac · actor=agent · prev=11c6dc579cbc351c72a72d90b6623a07c3de5baa3ec8 |
+| 2026-07-18 15:14:50 | `file.write` | harness/mechanisms.yaml · tool=Edit · session=246fa7ac · actor=agent · prev=b977e5b73749b161b2636c5d9ec8c0d27da77d6d547f |
+| 2026-07-18 15:16:24 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=f2480e81526526f7c784dc38aa7b3af37893 |
+| 2026-07-18 15:17:34 | `file.write` | harness/scripts/bnal_config.py · tool=Edit · session=246fa7ac · actor=agent · prev=0fc6ac00afc7a98f7bcd31686e56e0bd20eb2 |
+| 2026-07-18 15:17:42 | `file.write` | harness/scripts/bnal_metrics.py · tool=Edit · session=246fa7ac · actor=agent · prev=0ef515fb8fc4f4dbed2a8451c061c0cc5caa |
+| 2026-07-18 15:17:52 | `file.write` | harness/scripts/bnal_guard.py · tool=Edit · session=246fa7ac · actor=agent · prev=e8aabdff32a39f39cfad57f1fb987e5df4e88c |
+| 2026-07-18 15:20:05 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=60504815de3481c123e38bce79bde7be825c |
+| 2026-07-18 15:20:24 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=ee01e34f2dd66466017de86cc9ddfe87e384 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)

@@ -121,6 +121,8 @@ jobs:
         run: bash harness/tests/ledger-snapshot-test.sh .
       - name: skill-provenance-scope — tamper skill NGOÀI đỏ, dev churn local không cries-wolf
         run: bash harness/tests/skill-provenance-scope-test.sh .
+      - name: engines-smoke — chạy THẬT từng engine từng thiếu proof (26 nợ capproof → 0)
+        run: bash harness/tests/engines-smoke-test.sh .
       - name: harness-doctor — fire-drill (mọi rail còn cắn?)
         run: python3 harness/scripts/harness-doctor.py --ci
       - name: capabilities current (fdk/CAPABILITIES.md khớp đĩa)
