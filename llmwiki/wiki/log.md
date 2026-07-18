@@ -19,21 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-17 21:21:29 | `file.write` | harness/scripts/install-harness.sh · tool=Edit · session=246fa7ac · actor=agent · prev=fc2049a485b0766a48d1897b857c5479a |
-| 2026-07-17 21:22:08 | `file.write` | harness/tests/install-ref-override-test.sh · tool=Write · session=246fa7ac · actor=agent · prev=83a5e97508632ecd10565d9f |
-| 2026-07-17 21:24:12 | `file.write` | harness/tests/install-ref-override-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=9b16c98c507d8be5f01617e1d |
-| 2026-07-17 21:25:28 | `file.write` | .github/workflows/harness.yml · tool=Edit · session=246fa7ac · actor=agent · prev=53a573feb2eefbde329b0a7d12f15704bb3899 |
-| 2026-07-17 23:05:17 | `file.write` | harness/poc-vendor-neutral/gen-converters.py · tool=Edit · session=246fa7ac · actor=agent · prev=1ae940f6d394b2044f01973 |
-| 2026-07-17 23:06:13 | `file.write` | harness/tests/downstream-firedrill-test.sh · tool=Write · session=246fa7ac · actor=agent · prev=6c4cee5155bfead7db0fd164 |
-| 2026-07-17 23:06:29 | `file.write` | .github/workflows/harness.yml · tool=Edit · session=246fa7ac · actor=agent · prev=354068a5923e21b1bfffe6ec530d612613b0ec |
-| 2026-07-17 23:07:53 | `file.write` | harness/tests/downstream-firedrill-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=b878177827555498f964411ce |
-| 2026-07-17 23:14:03 | `file.write` | harness/poc-vendor-neutral/gen-converters.py · tool=Edit · session=246fa7ac · actor=agent · prev=d23959ec46ea4f28ed58a32 |
-| 2026-07-17 23:14:58 | `file.write` | harness/poc-vendor-neutral/gen-converters.py · tool=Edit · session=246fa7ac · actor=agent · prev=b673d15d4235ff0a9e99c92 |
-| 2026-07-17 23:15:30 | `file.write` | harness/tests/downstream-firedrill-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=6f96c87e8bd52b92f7ecbead8 |
-| 2026-07-17 23:20:03 | `file.write` | harness/poc-vendor-neutral/gen-converters.py · tool=Edit · session=246fa7ac · actor=agent · prev=347096b6516f23ff1357cc8 |
-| 2026-07-17 23:20:52 | `file.write` | harness/tests/downstream-firedrill-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=8307149ccf30fd1ae7e1b815a |
-| 2026-07-17 23:21:07 | `file.write` | harness/tests/downstream-firedrill-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=ce267e0785bbdc0051811fd3a |
-| 2026-07-17 23:38:51 | `task.new` |  · task=T-260717-02 · title=absorb HÒA TAN 6 nguồn GitHub · state=proposed · actor=agent · prev=7bc544914a1b2c3ca2a95fea |
 | 2026-07-17 23:41:08 | `file.write` | llmwiki/wiki/sources/draft/170726-absorb-six-sources.md · tool=Write · session=246fa7ac · actor=agent · prev=27dc8a90fb2 |
 | 2026-07-17 23:42:43 | `file.write` | llmwiki/html/170726-absorb-six-sources-seq.html · tool=Write · session=246fa7ac · actor=agent · prev=2e6011aa6b564231331 |
 | 2026-07-17 23:42:50 | `file.write` | llmwiki/html/170726-absorb-six-sources-seq.html · tool=Edit · session=246fa7ac · actor=agent · prev=c5c0f2f3e655231f4bfb |
@@ -59,6 +44,21 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-17 23:58:09 | `file.write` | skills/qc-code/SKILL.md · tool=Edit · session=246fa7ac · actor=agent · prev=9d822bafa6933f812ba5dbb587e6bbdf8a6c5a600fb9 |
 | 2026-07-17 23:58:58 | `task.set` |  · task=T-260717-02 · state=completed · note=6 task xong, medic xanh, 2 commit · actor=agent · prev=6d144a29773173618404 |
 | 2026-07-18 00:04:45 | `file.write` | skills/hallmark/SKILL.md · tool=Edit · session=246fa7ac · actor=agent · prev=5f1224ee9c36e11e10c8160c5c7dfb3fdcbe49190c0 |
+| 2026-07-18 00:17:03 | `file.write` | skills/hallmark/SKILL.md · tool=Edit · session=246fa7ac · actor=agent · prev=ad8474e5a1a673f77eecf4361bf308f3af1ef33c896 |
+| 2026-07-18 00:18:26 | `file.write` | llmwiki/wiki/sources/evals/skill-resolve/design-frontend.md · tool=Write · session=246fa7ac · actor=agent · prev=89049a3 |
+| 2026-07-18 00:29:57 | `task.new` |  · task=T-260718-01 · title=capability-proof map — checklist năng lực tự soi + tự cộng · state=proposed · actor=agent ·  |
+| 2026-07-18 00:31:32 | `file.write` | llmwiki/wiki/sources/draft/180726-capability-proof-map.md · tool=Write · session=246fa7ac · actor=agent · prev=82b4c86a0 |
+| 2026-07-18 00:32:39 | `file.write` | llmwiki/html/180726-capability-proof-map-seq.html · tool=Write · session=246fa7ac · actor=agent · prev=f8713173b8b21d714 |
+| 2026-07-18 00:47:21 | `file.write` | llmwiki/wiki/sources/draft/180726-capability-proof-map.md · tool=Edit · session=246fa7ac · actor=agent · prev=604a4bcbae |
+| 2026-07-18 00:47:37 | `file.write` | llmwiki/wiki/sources/draft/180726-capability-proof-map.md · tool=Edit · session=246fa7ac · actor=agent · prev=91d4dc4144 |
+| 2026-07-18 00:48:02 | `file.write` | llmwiki/html/180726-capability-proof-map-seq.html · tool=Edit · session=246fa7ac · actor=agent · prev=7867dd17b9254da91f |
+| 2026-07-18 00:48:13 | `file.write` | llmwiki/wiki/sources/draft/180726-capability-proof-map.md · tool=Edit · session=246fa7ac · actor=agent · prev=47d3bd52b0 |
+| 2026-07-18 00:48:18 | `file.write` | llmwiki/wiki/sources/draft/180726-capability-proof-map.md · tool=Edit · session=246fa7ac · actor=agent · prev=61e2165b93 |
+| 2026-07-18 00:48:22 | `file.write` | llmwiki/wiki/sources/draft/180726-capability-proof-map.md · tool=Edit · session=246fa7ac · actor=agent · prev=6c4e3c5853 |
+| 2026-07-18 00:48:30 | `file.write` | llmwiki/wiki/sources/draft/180726-capability-proof-map.md · tool=Edit · session=246fa7ac · actor=agent · prev=b72f00d58b |
+| 2026-07-18 00:48:35 | `file.write` | llmwiki/wiki/sources/draft/180726-capability-proof-map.md · tool=Edit · session=246fa7ac · actor=agent · prev=ef40d7bdaa |
+| 2026-07-18 00:48:39 | `file.write` | llmwiki/wiki/sources/draft/180726-capability-proof-map.md · tool=Edit · session=246fa7ac · actor=agent · prev=04425895c0 |
+| 2026-07-18 00:48:51 | `file.write` | llmwiki/wiki/sources/draft/180726-capability-proof-map.md · tool=Edit · session=246fa7ac · actor=agent · prev=4ded235897 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -357,3 +357,9 @@ Draft SPEC absorb HÒA TAN 6 nguồn GitHub (gstack review, awesome-skills code-
 
 ## 2026-07-17 — plan — absorb-six-sources-PLAN
 PLAN 6 task thi hành cho T-260717-02 (FR-001..007 phủ đủ, R18 xanh). Executor: Claude in-session.
+
+## 2026-07-18 — propose — capability-proof-map
+SPEC checklist năng lực tự soi + tự cộng: proof-resolver 6 tầng trong build-capabilities, medic probe capproof (ratchet), guard fire-drill. T-260718-01, chờ gate.
+
+## 2026-07-18 — plan — capability-proof-map-PLAN
+PLAN 4 task (resolver 6 tầng / probe ratchet / guard 4 chiều / dups+mech). Executor: Claude in-session.
