@@ -19,6 +19,7 @@ CLI:
   build-capabilities.py --root <path>   # ép root (deployed cạnh hooks gọi với --root <project>)
   build-capabilities.py --check         # exit 2 nếu CAPABILITIES.md cũ (CHỈ dùng ở repo framework)
 """
+import json
 import re
 import subprocess
 import sys
@@ -101,6 +102,98 @@ def first_sentence(s, n=90):
     return (s[:n] + "…") if len(s) > n else s
 
 
+PROOF_STOP = {"check", "build", "test", "sync", "run", "skill", "orca", "harness", "code", "wiki"}
+
+
+def _proof_sources(root: Path):
+    """Đọc MỘT LẦN các nguồn bằng chứng; downstream thiếu harness/tests → None (không đo được)."""
+    tests_dir = root / "harness" / "tests"
+    if not tests_dir.is_dir():
+        return None
+    tests = {p.name: p.read_text(encoding="utf-8", errors="ignore") for p in sorted(tests_dir.glob("*.*"))}
+    doctor = root / "harness" / "scripts" / "harness-doctor.py"
+    doctor_txt = doctor.read_text(encoding="utf-8", errors="ignore") if doctor.is_file() else ""
+    goldens = ""
+    gd = root / "llmwiki" / "wiki" / "sources" / "evals"
+    if gd.is_dir():
+        goldens = " ".join(p.read_text(encoding="utf-8", errors="ignore") for p in gd.rglob("*.md"))
+    medic_txt = (root / "fdk" / "tools" / "medic.py").read_text(encoding="utf-8", errors="ignore") \
+        if (root / "fdk" / "tools" / "medic.py").is_file() else ""
+    return {"tests": tests, "doctor": doctor_txt, "goldens": goldens, "medic": medic_txt}
+
+
+def _resolve_one(root: Path, src: dict, kind: str, name: str, body: str = "") -> tuple:
+    """(proof, via) — thứ tự tất định, khai-tay thắng suy-diễn. proof=None ⇒ UNPROVEN."""
+    m = re.search(r'^proof:\s*(.+?)\s*$', body[:800], re.M)          # 1. frontmatter khai tay
+    if m and (root / m.group(1)).exists():
+        return m.group(1), "frontmatter"
+    if kind == "rule":                                                # 2. rule ↔ harness-doctor
+        marker = f"build_{name.lower()}"
+        if marker in src["doctor"]:
+            return f"harness/scripts/harness-doctor.py:{marker}", "rule-map"
+    for tn, tt in src["tests"].items():                               # 3. tên trong harness/tests/
+        if name in tt or name.replace(".py", "") in tn:
+            return f"harness/tests/{tn}", "tests"
+    if kind == "skill" and body:                                      # 4. engine skill bọc có --self-test
+        for eng in re.findall(r'harness/scripts/([\w\-]+\.py)', body):
+            ep = root / "harness" / "scripts" / eng
+            if ep.is_file() and "--self-test" in ep.read_text(encoding="utf-8", errors="ignore"):
+                return f"harness/scripts/{eng} --self-test", "selftest"
+    if kind in ("script", "tool") and "--self-test" in body:          # 4b. script tự có self-test
+        return f"{name} --self-test", "selftest"
+    if name.replace(".py", "") in src["goldens"]:                     # 5. golden eval nhắc tên
+        return "wiki/sources/evals/*", "golden"
+    if kind != "mech" and name.replace(".py", "") in src["medic"]:    # 6. medic probe nhắc tên
+        return "fdk/tools/medic.py", "medic-tag"
+    return None, "none"
+
+
+def _dup_candidates(items: dict, descs: dict) -> list:
+    return []  # stub có chủ ý — T4 thay thân thật (dup-candidates)
+
+
+def capproof(root: Path) -> dict:
+    src = _proof_sources(root)
+    if src is None:
+        return {"schema": "capproof/v1", "downstream": True}
+    items, descs = {}, {}
+    for d in sorted(skills_dir(root).glob("*/")):
+        sk = d / "SKILL.md"
+        if sk.is_file():
+            body = sk.read_text(encoding="utf-8", errors="ignore")
+            p, via = _resolve_one(root, src, "skill", d.name, body)
+            items[f"skill:{d.name}"] = {"proof": p, "via": via}
+            descs[f"skill:{d.name}"] = parse_frontmatter_desc(sk) or ""
+    pol = root / "harness" / "poc-vendor-neutral" / "policy.yaml"
+    if pol.is_file():
+        for rid in re.findall(r"id:\s*(R\d+)", pol.read_text(encoding="utf-8")):
+            p, via = _resolve_one(root, src, "rule", rid)
+            items[f"rule:{rid}"] = {"proof": p, "via": via}
+    for sub, kind in (("fdk/tools", "tool"), ("harness/scripts", "script")):
+        base = root / sub
+        if not base.is_dir():
+            continue
+        for f in sorted(base.glob("*.py")):
+            body = f.read_text(encoding="utf-8", errors="ignore")
+            p, via = _resolve_one(root, src, kind, f.name, body)
+            items[f"{kind}:{f.name}"] = {"proof": p, "via": via}
+            mdoc = re.search(r'"""(.+?)$', body, re.M)
+            descs[f"{kind}:{f.name}"] = mdoc.group(1) if mdoc else ""
+    man = root / "harness" / "mechanisms.yaml"
+    if man.is_file():
+        mt = man.read_text(encoding="utf-8")
+        for mid, lp in zip(re.findall(r'^\s*-\s*id:\s*(\S+)', mt, re.M),
+                           re.findall(r'^\s*live_probe:\s*(.+?)\s*$', mt, re.M)):
+            lpp = root / lp
+            body = lpp.read_text(encoding="utf-8", errors="ignore") if lpp.is_file() else ""
+            p, via = _resolve_one(root, src, "mech", mid, body)
+            items[f"mech:{mid}"] = {"proof": p, "via": via}
+    unproven = sorted(k for k, v in items.items() if v["proof"] is None)
+    return {"schema": "capproof/v1", "downstream": False,
+            "counts": {"total": len(items), "proven": len(items) - len(unproven), "unproven": len(unproven)},
+            "items": items, "unproven": unproven, "dups": _dup_candidates(items, descs)}
+
+
 def build(root: Path) -> str:
     repo = is_framework_repo(root)
     loops = load_loops(root)
@@ -159,6 +252,16 @@ def build(root: Path) -> str:
         out += [f"- `{t}`" for t in tools]
         out.append("\n## Harness scripts (`python3 harness/scripts/<x>`)")
         out += [f"- `{s}`" for s in scripts]
+        cp = capproof(root)
+        if not cp.get("downstream"):
+            out.append(f"\n## Proof — năng lực còn sống ({cp['counts']['proven']}/{cp['counts']['total']} có bằng chứng)")
+            out.append("Mỗi năng lực map tất định sang bằng chứng chạy được (frontmatter `proof:` > rule-map > tests > self-test > golden > medic). Chi tiết: `build-capabilities.py --capproof-json`.")
+            if cp["unproven"]:
+                out.append(f"\n## UNPROVEN ({len(cp['unproven'])}) — có mặt nhưng CHƯA chứng được còn sống")
+                out += [f"- `{k}` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter" for k in cp["unproven"]]
+            if cp["dups"]:
+                out.append(f"\n## TRÙNG-ỨNG-VIÊN ({len(cp['dups'])}) — máy phát hiện, NGƯỜI phán (dedupe = vòng /propose riêng)")
+                out += [f"- `{d['a']}` ↔ `{d['b']}` — {d['why']}" for d in cp["dups"]]
         out.append("\n## Origin\n- Sinh bằng `fdk/tools/build-capabilities.py` từ đĩa (skills/, policy.yaml, fdk/tools/, harness/scripts/, sync-skills LOOP_MAP). KHÔNG hardcode.")
     else:
         out.append("\n## Đồ nghề dev-framework")
@@ -176,6 +279,16 @@ def main():
         ROOT = Path(args[i + 1]).resolve()
     elif any(a.startswith("--root=") for a in args):
         ROOT = Path(next(a.split("=", 1)[1] for a in args if a.startswith("--root="))).resolve()
+    if "--capproof-json" in args:
+        print(json.dumps(capproof(ROOT), ensure_ascii=False, indent=1)); sys.exit(0)
+    if "--write-capproof-baseline" in args:
+        cp = capproof(ROOT)
+        bl = ROOT / "harness" / "metrics" / "capproof-baseline.json"
+        bl.parent.mkdir(parents=True, exist_ok=True)
+        bl.write_text(json.dumps({"schema": "capproof-baseline/v1",
+                                  "proven": sorted(k for k, v in cp["items"].items() if v["proof"]),
+                                  "unproven": cp["unproven"]}, ensure_ascii=False, indent=1), encoding="utf-8")
+        print(f"✓ baseline: {cp['counts']['proven']} proven, {cp['counts']['unproven']} unproven (nợ tồn đã chốt)"); sys.exit(0)
     cap = cap_path(ROOT)
     content = build(ROOT)
     if "--check" in args:
