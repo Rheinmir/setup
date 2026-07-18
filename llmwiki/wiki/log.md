@@ -19,12 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-18 12:29:28 | `file.write` | harness/tests/capproof-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=ea56af41fb99140d846be462fdd937725b7a2 |
-| 2026-07-18 12:31:35 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=a23d1bd6a286199c7162a9842c7fbdac8882 |
-| 2026-07-18 12:32:03 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=d69b53bb12a06aea502c5f1d7874316c54ca |
-| 2026-07-18 12:32:29 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=5e92f4153a6a6c5ba626eec097d7bb689d0a |
-| 2026-07-18 12:32:55 | `file.write` | harness/tests/capproof-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=55dde1aa849ab3d84aa3c1330cf6cdfb13f87 |
-| 2026-07-18 15:14:34 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=a3b3453b8a56bd6455d32d52b06c23b9c8b9 |
 | 2026-07-18 15:14:43 | `file.write` | harness/mechanisms.yaml · tool=Edit · session=246fa7ac · actor=agent · prev=88b1da877521a084483277bcb3aa5c7ae6e0da599d57 |
 | 2026-07-18 15:14:50 | `file.write` | harness/mechanisms.yaml · tool=Edit · session=246fa7ac · actor=agent · prev=580a91435f65dbbe68b86b2083db064ca4694c38ecc6 |
 | 2026-07-18 15:16:24 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=cc1a9d1bd9c8164212fee6485bddbde7720c |
@@ -59,6 +53,12 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-18 17:07:03 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=246fa7ac · actor=agent · prev=9c88ddb8a15a3cbbb717b4e07d5da7be3c |
 | 2026-07-18 17:10:33 | `file.write` | harness/poc-vendor-neutral/policy.yaml · tool=Edit · session=246fa7ac · actor=agent · prev=acec7103991fd13781290d5a930f3 |
 | 2026-07-18 17:11:12 | `file.write` | harness/tests/ledger-snapshot-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=cc88c8f6eb7ecb16da1833b1c1530e |
+| 2026-07-18 23:26:53 | `file.write` | llmwiki/personas/grower.md · tool=Edit · session=df308014 · actor=agent · prev=1a28f03906d5fbaa463ebcb6d565ff674cfa5f274 |
+| 2026-07-18 23:26:56 | `file.write` | llmwiki/personas/builder.md · tool=Edit · session=df308014 · actor=agent · prev=0377e138eafcc2a8c3a5b055669795351d3c23ac |
+| 2026-07-18 23:26:59 | `file.write` | llmwiki/personas/maintainer.md · tool=Edit · session=df308014 · actor=agent · prev=28e8f226cbef9ac3eef9ff598ddc765bdb49e |
+| 2026-07-18 23:27:02 | `file.write` | llmwiki/personas/prototyper.md · tool=Edit · session=df308014 · actor=agent · prev=a30e448723e4979d27fc181863a75f6175bc8 |
+| 2026-07-18 23:27:06 | `file.write` | llmwiki/personas/sweeper.md · tool=Edit · session=df308014 · actor=agent · prev=55dcca8dd722128f00f8673e92c1e98455aa9fc8 |
+| 2026-07-18 23:27:09 | `file.write` | llmwiki/personas/tester.md · tool=Edit · session=df308014 · actor=agent · prev=31190c58d299acb4de4d180d7e2fe339754ba44c4 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -372,3 +372,13 @@ Canary 260718-1101 vòng 1: 10/12 — lens TESTER bắt 2 lỗi thật (persona 
 
 ## 2026-07-18 — raise-issue — council-self-index-remaining-scope
 Draft 020726-council-chon-de-thi-self-index verify chéo 6 nguồn: hạ tầng nền đã ship (d4d8b90), phần lõi (council tự chọn đề thi) chưa. Mở GH#81 giữ scope còn lại, priority P3 ready-for-human. Task T-260702-02 → superseded.
+
+## 2026-07-18 — persona-beneficiary — chống miscontext lens
+Feedback: dùng lens grower phân tích RedPlanetHQ/core, metric bị đo trên chính framework thay vì dự án đích (ngược ADR-004). Fix root-cause: thêm dòng **Beneficiary** vào cả 6 file `llmwiki/personas/*.md` — mặc định đo trên DỰ ÁN ĐÍCH, ngoại lệ duy nhất là phiên /fdk khai rõ. Memory máy-local `persona-lens-beneficiary` ghi kèm.
+
+## 2026-07-18 — mem-rank-episodic-wire — bật 2/3 thí nghiệm mượn từ RedPlanetHQ/core
+Sau khi mổ code CORE (temporal invalidation + hybrid recall) và đối chiếu với framework, wire 2/3 cải tiến đã đo metric/guardrail:
+1. `llmwiki/.claude/hooks/stop.py` — `secondary_memory()` giờ gọi thêm `mem-rank.py episode` mỗi phiên có git-dirty (did=commit subject, files=đổi trong phiên). Trước bản vá này tầng episodic CHƯA từng tự ghi (`memory.jsonl` rỗng) — chỉ chạy tay qua `/record-episode`.
+2. `llmwiki/skills/wiki-loop/lint.md` step 0b — thêm rubric 4 nhánh (contradiction/superseding/progression/equivalence) để phân loại code-drift trước khi sửa trang; nhánh `superseding` dùng frontmatter `invalid_at`/`invalidated_by` (đóng dấu, không xoá) thay vì sửa đè câm lặng — mượn ý bi-temporal của CORE, R9 không chặn khoá lạ nên an toàn thêm.
+3. **Chưa làm** (item 1/3 — bật embedder semantic cho mem-rank): cần Ollama cài local, máy hiện không có (`which ollama` → not found). Adapter đã sẵn (`harness/mem-rank.config.yaml` + `embed-ollama.py`), chỉ còn bước hạ tầng ngoài phạm vi code — để lại nguyên trạng `verified:false`.
+Verify: `mem-rank.py --self-test` PASS, dry-run episode ghi+retrieve đúng trong store tạm, `medic --ci` 14/14 + toàn bộ step CI repo-health (wiki-health/arch-scan/harness-lint/parity/dup-basename/7 test bash/harness-doctor/build-capabilities/adapt-registry) đều xanh trước khi push.

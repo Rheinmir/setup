@@ -98,7 +98,10 @@ def secondary_memory(root: str, session: str) -> None:
     Meadows #6 — cấu trúc luồng thông tin, không phải kỷ luật người). Mỗi lần dừng, khi phiên có
     SỬA thật (git dirty): (a) `scratch-log auto` tự điền why từ git nếu phiên chưa có why thủ công;
     (b) `scratch-log distill` gom → sources/DDMMYY-session-provenance.md; (c) `memory-map` regenerate
-    llmwiki/html/memory-map.html. ĐỐI XỨNG wiki-graph: engine resolve REPO-LOCAL → GLOBAL
+    llmwiki/html/memory-map.html; (d) `mem-rank episode` tự ghi episode có-cấu-trúc (did=commit subject,
+    files=đổi trong phiên) vào tầng episodic — trước bản vá này layer này CHƯA từng được gọi tự động
+    (memory.jsonl rỗng, phải gõ tay `/record-episode`); giờ mỗi phiên có sửa thật đều để lại 1 episode
+    retrieve được, không cần agent nhớ. ĐỐI XỨNG wiki-graph: engine resolve REPO-LOCAL → GLOBAL
     ~/.claude/harness/ (downstream KHÔNG copy engine vào repo), enablement bật MẶC ĐỊNH downstream qua
     llmwiki/.harness-stamp (cùng tín hiệu đã gate hook global) — không cần setting tay. cwd=root nên engine
     global vẫn đọc/ghi ĐÚNG project. Fail-open tuyệt đối: thiếu engine / lỗi / timeout → im lặng."""
@@ -128,6 +131,18 @@ def secondary_memory(root: str, session: str) -> None:
             subprocess.run([sys.executable, mm], cwd=root, capture_output=True, timeout=40)
     except Exception:
         pass
+    mr = resolve_tool(root, "harness/scripts/mem-rank.py")
+    if mr:
+        try:
+            subject = subprocess.run(["git", "log", "-1", "--format=%s"], cwd=root,
+                                      capture_output=True, text=True, timeout=8).stdout.strip()
+            changed = [ln[3:] for ln in dirty.splitlines() if len(ln) > 3][:8]
+            did = subject or "(phiên có sửa, chưa commit)"
+            subprocess.run([sys.executable, mr, "episode", did,
+                             "--files", ",".join(changed), "--session", session],
+                           cwd=root, capture_output=True, timeout=15)
+        except Exception:
+            pass
 
 
 _ANSI = re.compile(r"\033\[[0-9;]*m")
