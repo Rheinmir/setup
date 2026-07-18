@@ -140,10 +140,21 @@ def _resolve_one(root: Path, src: dict, kind: str, name: str, body: str = "") ->
         for sub in ("harness/scripts", "fdk/tools"):
             for eng in re.findall(sub + r'/([\w\-]+\.py)', body):
                 ep = root / sub / eng
-                if ep.is_file() and "--self-test" in ep.read_text(encoding="utf-8", errors="ignore"):
+                if not ep.is_file():
+                    continue
+                et = ep.read_text(encoding="utf-8", errors="ignore")
+                if "--self-test" in et:
                     return f"{sub}/{eng} --self-test", "selftest"
-    if kind in ("script", "tool", "mech") and "--self-test" in body:  # 4b. engine tự có self-test
-        return f"{name} --self-test", "selftest"
+                if re.search(r'["\']selftest["\']', et):
+                    return f"{sub}/{eng} selftest", "selftest"
+    if kind in ("script", "tool", "mech"):                             # 4b. engine tự có self-test
+        # hai quy ước cùng tồn tại trong codebase: flag "--self-test" (đa số) và subcommand
+        # "selftest" không gạch ngang (vd loop-runner.py) — cả hai đều hợp lệ, resolver phải
+        # nhận cả hai thay vì đòi quy ước duy nhất.
+        if "--self-test" in body:
+            return f"{name} --self-test", "selftest"
+        if re.search(r'["\']selftest["\']', body):
+            return f"{name} selftest", "selftest"
     if kind in ("script", "tool", "mech") and "os.execv(" in body:    # 4c. thin os.execv shim
         # shim gán biến từ os.path.join(os.path.dirname(...), "target.py") rồi execv biến đó —
         # KHÔNG match cấu trúc os.path.join(...) (dấu ')' lồng bên trong phá [^)]*), chỉ cần
