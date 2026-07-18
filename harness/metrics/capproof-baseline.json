@@ -45,6 +45,7 @@
   "script:harness-doctor.py",
   "script:health-check.py",
   "script:inject-scan.py",
+  "script:ledger-snapshot.py",
   "script:mem-proxy.py",
   "script:mem-rank.py",
   "script:okf-check.py",

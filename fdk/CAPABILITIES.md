@@ -1,7 +1,7 @@
 <!-- SINH BẰNG CODE: build-capabilities.py — ĐỪNG sửa tay; chạy lại để cập nhật. -->
 # CAPABILITIES — toàn bộ đồ nghề (luôn-mới, đếm từ đĩa)
 
-**80 skill · 18 rule · 19 fdk-tool · 55 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
+**80 skill · 18 rule · 19 fdk-tool · 56 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
 
 ## Skills (gọi bằng `/<tên>`)
 
@@ -160,6 +160,7 @@
 - `harness-lint.py`
 - `health-check.py`
 - `inject-scan.py`
+- `ledger-snapshot.py`
 - `loop-runner.py`
 - `mem-proxy.py`
 - `mem-rank.py`
@@ -191,7 +192,7 @@
 - `wiki-sync.py`
 - `wikieval.py`
 
-## Proof — năng lực còn sống (117/190 có bằng chứng)
+## Proof — năng lực còn sống (118/191 có bằng chứng)
 Mỗi năng lực map tất định sang bằng chứng chạy được (frontmatter `proof:` > rule-map > tests > self-test > golden > medic). Chi tiết: `build-capabilities.py --capproof-json`.
 
 ## UNPROVEN (73) — có mặt nhưng CHƯA chứng được còn sống

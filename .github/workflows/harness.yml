@@ -117,6 +117,8 @@ jobs:
         run: bash harness/tests/downstream-firedrill-test.sh .
       - name: capproof — checklist năng lực tự soi còn cắn (nợ mới đỏ, nợ tồn đếm)
         run: bash harness/tests/capproof-test.sh .
+      - name: ledger-snapshot — ký ức máy-local round-trip + backup tự chạy
+        run: bash harness/tests/ledger-snapshot-test.sh .
       - name: harness-doctor — fire-drill (mọi rail còn cắn?)
         run: python3 harness/scripts/harness-doctor.py --ci
       - name: capabilities current (fdk/CAPABILITIES.md khớp đĩa)
