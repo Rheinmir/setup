@@ -135,10 +135,13 @@ def _resolve_one(root: Path, src: dict, kind: str, name: str, body: str = "") ->
         if name in tt or name.replace(".py", "") in tn:
             return f"harness/tests/{tn}", "tests"
     if kind == "skill" and body:                                      # 4. engine skill bọc có --self-test
-        for eng in re.findall(r'harness/scripts/([\w\-]+\.py)', body):
-            ep = root / "harness" / "scripts" / eng
-            if ep.is_file() and "--self-test" in ep.read_text(encoding="utf-8", errors="ignore"):
-                return f"harness/scripts/{eng} --self-test", "selftest"
+        # regex trước đây CHỈ bắt harness/scripts/ — bỏ sót fdk/tools/ (bug thật: fdk-uat wrap
+        # medic.py ở fdk/tools/, có --self-test, vẫn bị bêu UNPROVEN vì lệch đường dẫn).
+        for sub in ("harness/scripts", "fdk/tools"):
+            for eng in re.findall(sub + r'/([\w\-]+\.py)', body):
+                ep = root / sub / eng
+                if ep.is_file() and "--self-test" in ep.read_text(encoding="utf-8", errors="ignore"):
+                    return f"{sub}/{eng} --self-test", "selftest"
     if kind in ("script", "tool", "mech") and "--self-test" in body:  # 4b. engine tự có self-test
         return f"{name} --self-test", "selftest"
     if kind in ("script", "tool", "mech") and "os.execv(" in body:    # 4c. thin os.execv shim
