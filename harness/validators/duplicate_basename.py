@@ -26,6 +26,10 @@ def find_duplicates(wiki: Path) -> dict:
     for f in wiki.rglob("*.md"):
         if f.name in SKIP_BASENAMES or not f.is_file():
             continue
+        # sources/evals/** là golden-fixture DATA cố ý đặt trùng tên skill/trang
+        # (eval skill-resolve/retrieval) — không phải trang wiki, không gây nhập nhằng wikilink.
+        if "evals" in f.relative_to(wiki).parts:
+            continue
         by_name[f.name].add(f.parent.relative_to(wiki).as_posix() or ".")
     return {name: sorted(dirs) for name, dirs in by_name.items() if len(dirs) >= 2}
 

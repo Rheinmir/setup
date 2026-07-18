@@ -19,7 +19,7 @@ Hai trục phân loại:
 "Hòa tan hoàn toàn thành một phần của framework."
 - **Cách**: distill **bản chất** rồi VIẾT LẠI thành code/concept CỦA framework (validator, skill nội bộ, wiki ADR/concept). Không còn phụ thuộc ngoài.
 - **Sở hữu**: framework 100%, tự maintain.
-- **Travel**: đi như source framework — `global_shared` (engine) hoặc `travel_in_repo` (wiki). Xem [[travel-policy]].
+- **Travel**: đi như source framework — `global_shared` (engine) hoặc `travel_in_repo` (wiki). Xem `travel-policy`.
 - **Chọn khi**: bản chất nhỏ-gọn, cần kiểm soát/sửa sâu, cần **gác tất định**, muốn 0 external dep.
 - **Ví dụ**: distill `design-tip` → concept `design-standard` + validator `ai-slop-lint`; promote raw → wiki ADR.
 - **Giá phải trả**: tự chịu maintain + chất lượng; không có "update từ upstream".
@@ -60,5 +60,5 @@ Nó mượn mỗi cực một nửa — **gốc code bên ngoài** (giống KÉO
 
 ## Origin
 - Feedback user 2026-07-07: "có ít nhất 2 kiểu adapt — hòa tan hoàn toàn thành 1 phần framework, và kéo từ hạ tầng ngoài; cần biết để lần sau gọi đúng tên đúng phương án."
-- Ca cụ thể sinh ra concept: cài `last30days` + `agent-reach` theo kiểu external-pull (phiên 2026-07-07) + phản biện travel-in-repo bằng [[travel-policy]] v4 (3 tầng global_shared/travel_in_repo/framework_only).
-- Liên quan: [[travel-policy]], skill `build-now-adapt-later`, `skill-provenance`, `docs-curate` (promote bản chất → wiki).
+- Ca cụ thể sinh ra concept: cài `last30days` + `agent-reach` theo kiểu external-pull (phiên 2026-07-07) + phản biện travel-in-repo bằng `travel-policy` v4 (3 tầng global_shared/travel_in_repo/framework_only).
+- Liên quan: `travel-policy`, skill `build-now-adapt-later`, `skill-provenance`, `docs-curate` (promote bản chất → wiki).

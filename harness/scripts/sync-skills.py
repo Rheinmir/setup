@@ -38,6 +38,7 @@ LOOP_MAP = {
     "ingest": "wiki-loop", "lint": "wiki-loop", "query": "wiki-loop", "wiki-room": "wiki-loop",
     "record-episode": "wiki-loop",
     # utils
+    "agent-reach": "utils",
     "cavecrew": "utils", "caveman": "utils", "caveman-commit": "utils", "caveman-compress": "utils",
     "caveman-help": "utils", "caveman-review": "utils", "caveman-stats": "utils",
     "extract-site": "utils", "harness-tour": "utils",

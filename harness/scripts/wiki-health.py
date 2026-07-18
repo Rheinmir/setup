@@ -16,7 +16,10 @@ import subprocess
 import sys
 from pathlib import Path
 
-SKIP_BASENAMES = {"README.md", "_template.md"}
+SKIP_BASENAMES = {"README.md", "_template.md",
+                  # ledger append-only (code-logger / issue ledger): chứa văn bản LỊCH SỬ
+                  # được trích nguyên văn — [[...]] trong đó không phải liên kết sống.
+                  "log.md", "ISSUES.md"}
 CONTENT_DIRS = ("concepts", "entities", "sources", "draft", "architecture", "tours")
 WIKILINK_RE = re.compile(r"\[\[([^\]|#]+)(?:[|#][^\]]*)?\]\]")
 MDLINK_RE = re.compile(r"\]\(([^)#\s]+\.md)\)")
@@ -46,17 +49,37 @@ def local_only_stem(stem: str, wiki: Path) -> bool:
     return _LO_CACHE[stem]
 
 
+def _archived(p: Path) -> bool:
+    # archive/ = lịch sử đông cứng (docs-curate dời vào, không bảo trì nữa) —
+    # link gãy trong đó không phải nợ sống, quét chỉ tạo nhiễu vĩnh viễn.
+    return "archive" in p.parts
+
+
 def content_files(wiki: Path) -> list[Path]:
     out = []
     for d in CONTENT_DIRS:
         base = wiki / d
         if base.is_dir():
-            out += [f for f in base.rglob("*.md") if f.name not in SKIP_BASENAMES]
+            out += [f for f in base.rglob("*.md")
+                    if f.name not in SKIP_BASENAMES and not _archived(f.relative_to(wiki))]
     return sorted(out)
 
 
 def all_pages(wiki: Path) -> list[Path]:
-    return sorted(f for f in wiki.rglob("*.md") if f.name not in SKIP_BASENAMES)
+    return sorted(f for f in wiki.rglob("*.md")
+                  if f.name not in SKIP_BASENAMES and not _archived(f.relative_to(wiki)))
+
+
+_CODE_FENCE_RE = re.compile(r"```.*?```", re.S)
+_CODE_SPAN_RE = re.compile(r"`[^`\n]*`")
+
+
+def prose_only(text: str) -> str:
+    """Bỏ fenced code block + inline code trước khi quét wikilink.
+
+    [[...]] trong code là cú-pháp-ví-dụ hoặc bash test ([[ "$1" == x ]]) —
+    không phải liên kết; quét cả code từng sinh ~20 broken-link giả."""
+    return _CODE_SPAN_RE.sub("", _CODE_FENCE_RE.sub("", text))
 
 
 def git_last_commit_ts(repo_cwd: Path, file: Path):
@@ -84,21 +107,25 @@ def main() -> None:
         sys.exit(1)
 
     pages = content_files(wiki)
-    stems = {p.stem: p for p in pages}
+    # đích wikilink = MỌI trang trong cây wiki (kể cả skills/) — trước chỉ lấy CONTENT_DIRS
+    # nên [[fdk]]/[[failure-flywheel]] (trang thật dưới skills/) bị báo broken oan;
+    # orphan/index vẫn đo trên content_files như cũ.
+    stems = {p.stem: p for p in all_pages(wiki)}
+    stems.update({p.stem: p for p in pages})
     rel = {p: p.relative_to(wiki).as_posix() for p in pages}
 
     # 1. broken wikilinks + inbound graph
     broken = []
     inbound = {p: 0 for p in pages}
     for src in all_pages(wiki):
-        text = src.read_text(encoding="utf-8", errors="replace")
+        text = prose_only(src.read_text(encoding="utf-8", errors="replace"))
         for name in WIKILINK_RE.findall(text):
             name = name.strip()
             target = stems.get(name)
             if target is None:
                 if not local_only_stem(name, wiki):   # wikilink→draft local-only ≠ broken
                     broken.append({"from": src.relative_to(wiki).as_posix(), "wikilink": name})
-            elif target != src:
+            elif target != src and target in inbound:  # inbound chỉ đo trên content pages
                 inbound[target] += 1
         for link in MDLINK_RE.findall(text):
             cand = (src.parent / link).resolve()

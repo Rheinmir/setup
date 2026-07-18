@@ -76,8 +76,16 @@ STEPS = [
         "python3 harness/scripts/web-crawl.py --self-test >/dev/null && "
         "python3 harness/scripts/web-clone.py --self-test >/dev/null && "
         "python3 harness/scripts/sweep-gate.py --self-test >/dev/null && "
-        "python3 harness/scripts/archetype.py --self-test >/dev/null"],
-     "19 chức năng BNAL — self-test phải còn PASS (5 verified:true + 14 verified:false; giữ verified trung thực)"),
+        "python3 harness/scripts/archetype.py --self-test >/dev/null && "
+        "python3 harness/scripts/capability-stamp.py --self-test >/dev/null && "
+        "python3 harness/scripts/design-variety.py --self-test >/dev/null && "
+        "python3 harness/scripts/ledger-snapshot.py --self-test >/dev/null && "
+        "python3 harness/scripts/mem-proxy.py --self-test >/dev/null && "
+        "python3 harness/scripts/qc-regression.py --self-test >/dev/null && "
+        "python3 harness/scripts/retrieval-eval.py --self-test >/dev/null && "
+        "python3 harness/scripts/skill-resolve-eval.py --self-test >/dev/null && "
+        "python3 harness/scripts/unknown-ledger.py --self-test >/dev/null"],
+     "27 chức năng BNAL — self-test phải còn PASS (giữ verified trung thực)"),
 ]
 
 
