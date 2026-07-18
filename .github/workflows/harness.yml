@@ -115,6 +115,8 @@ jobs:
         run: bash harness/tests/install-ref-override-test.sh .
       - name: downstream fire-drill — CI downstream tự chứng rule gốc còn cắn (đúng cách)
         run: bash harness/tests/downstream-firedrill-test.sh .
+      - name: capproof — checklist năng lực tự soi còn cắn (nợ mới đỏ, nợ tồn đếm)
+        run: bash harness/tests/capproof-test.sh .
       - name: harness-doctor — fire-drill (mọi rail còn cắn?)
         run: python3 harness/scripts/harness-doctor.py --ci
       - name: capabilities current (fdk/CAPABILITIES.md khớp đĩa)
