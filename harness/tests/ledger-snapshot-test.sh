@@ -20,8 +20,14 @@ OVERSTACK_SNAPSHOT_DIR="$SD" python3 "$SNAP" export --quiet --root "$ROOT"
 TAR=$(ls "$SD"/snap-*.tar.gz 2>/dev/null | head -1)
 if [ -n "$TAR" ]; then
   ok "export repo thật ra tarball ($(du -k "$TAR" | cut -f1)KB)"
-  tar -tzf "$TAR" | grep -q "harness/metrics/failures.jsonl" \
-    && ok "chứa flywheel failures.jsonl (ký ức đắt nhất)" || bad "thiếu failures.jsonl"
+  # failures.jsonl là ledger LOCAL gitignored — fresh clone (CI) không có là ĐÚNG;
+  # chỉ khi máy này CÓ ledger mà tarball thiếu mới là bug.
+  if [ -f "$ROOT/harness/metrics/failures.jsonl" ]; then
+    tar -tzf "$TAR" | grep -q "harness/metrics/failures.jsonl" \
+      && ok "chứa flywheel failures.jsonl (ký ức đắt nhất)" || bad "thiếu failures.jsonl"
+  else
+    ok "repo không có failures.jsonl (fresh clone) — miễn assert nội dung"
+  fi
   tar -tzf "$TAR" | grep -q "baseline" \
     && bad "chở cả baseline (rác regen được)" || ok "không chở baseline"
 else

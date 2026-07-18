@@ -1,7 +1,7 @@
 ---
 type: draft
 title: "narrative-as-data + medic narrative-drift probe (council-025)"
-status: proposed
+status: implemented  # ship v1.0.6 (narrative-as-data + code-state)
 tags: [overstack-docs, narrative-drift, medic, anti-drift, council-025]
 timestamp: 2026-07-03
 task: T-260703-04
@@ -14,7 +14,7 @@ relations:
 
 # 030726-narrative-as-data — biến narrative overstack thành DATA + medic gác drift
 
-**Type:** draft · **Status:** proposed · **Proposed:** 2026-07-03 · **Task:** T-260703-04
+**Type:** draft · **Status:** implemented (ship v1.0.6) · **Proposed:** 2026-07-03 · **Task:** T-260703-04
 
 ## What
 Đóng lỗ hổng council-025 phát hiện: `overstack.html` **tự-render đúng nhưng chưa tự-đúng** — số liệu (DATA) sinh từ đĩa nên khớp, nhưng phần **narrative** (list `MECHANISMS` + tab "Tự bảo trì") là **prose viết tay** đóng băng, drift âm thầm mà `medic docs-probe` (chỉ so `html == generator-output`) không bao giờ bắt được. Giải: rút narrative cơ-chế-phòng-thủ khỏi prose tay → **derive từ một manifest máy-đọc**; thêm **medic probe `narrative`** cắn khi cơ-chế phòng-thủ LIVE vắng khỏi trang (bắt sớm y như R7-f).
