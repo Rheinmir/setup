@@ -138,3 +138,5 @@
 | [170726-absorb-six-sources-PLAN](sources/draft/170726-absorb-six-sources-PLAN.md) | draft | 2026-07-17 |
 | [180726-capability-proof-map](sources/draft/180726-capability-proof-map.md) | draft | 2026-07-18 |
 | [180726-capability-proof-map-PLAN](sources/draft/180726-capability-proof-map-PLAN.md) | draft | 2026-07-18 |
+| [unknown-frontend-design](draft/unknown/unknown-frontend-design.md) | unknown-ledger | 2026-07-17 |
+| [180726-session-provenance](sources/180726-session-provenance.md) | source | 2026-07-18 |

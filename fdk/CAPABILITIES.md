@@ -191,10 +191,10 @@
 - `wiki-sync.py`
 - `wikieval.py`
 
-## Proof — năng lực còn sống (115/190 có bằng chứng)
+## Proof — năng lực còn sống (116/190 có bằng chứng)
 Mỗi năng lực map tất định sang bằng chứng chạy được (frontmatter `proof:` > rule-map > tests > self-test > golden > medic). Chi tiết: `build-capabilities.py --capproof-json`.
 
-## UNPROVEN (75) — có mặt nhưng CHƯA chứng được còn sống
+## UNPROVEN (74) — có mặt nhưng CHƯA chứng được còn sống
 - `mech:code-state` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
 - `mech:fdk-gate` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
 - `mech:harness-lint` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
@@ -207,7 +207,6 @@ Mỗi năng lực map tất định sang bằng chứng chạy được (frontma
 - `script:bnal_config.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
 - `script:bnal_guard.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
 - `script:bnal_metrics.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `script:design-variety.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
 - `script:dispatch-verify.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
 - `script:embed-ollama.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
 - `script:embed-voyage.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter

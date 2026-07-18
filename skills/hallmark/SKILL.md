@@ -57,6 +57,8 @@ These six disciplines are **not** verb-specific. They apply to default Design, `
 
 7. **Frontend-design checkpoints (delta trên sàn).** Bốn checkpoint distill từ skill `frontend-design` của Anthropic: KHÔNG tiêu trục-brief-bỏ-ngỏ vào một trong ba default-AI-look có tên (kem+serif+đất-nung · gần-đen+acid-accent · broadsheet hairline); hero là THESIS của chủ đề, không phải "số to + nhãn nhỏ + gradient"; mỗi trang một signature element duy nhất — tiêu boldness đúng một chỗ rồi soi gương bỏ bớt một phụ kiện; UX-writing theo hành động (nút nói đúng việc, tên hành động giữ nguyên xuyên flow, error chỉ đường, empty-state là lời mời). Load [`references/frontend-design-delta.md`](references/frontend-design-delta.md) khi build/redesign UI.
 
+8. **Variety memory — cưỡng chế xuyên phiên (tất định).** Mỗi trang emit ra mang stamp `<!-- design: macrostructure=<M> theme=<T> -->`; sau khi emit, nếu repo có harness thì chạy `python3 harness/scripts/design-variety.py` (hoặc `--stamp <file> --macro <M> --theme <T>` để ghi log) — nó BÁO khi trang mới LẶP cấu trúc trang trước (structural distance, không phải colour-swap), đưa trục Variety từ tự-giác thành kiểm được. Trên project có `design.md` luật đảo chiều (các màn hình phải CHUNG hệ) — bỏ qua cảnh báo lặp ở đó.
+
 ---
 
 ## When the brief is a component, not a page
