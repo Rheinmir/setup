@@ -332,6 +332,18 @@ def self_test(evals_dir, cfg):
     if it does, the deterministic tier-1 cascade and the goldens are coherent. This is what
     makes the wikieval adapter's `verified: true` honest: the deterministic engine is proven
     here; only the tier-3 LLM-rubric judge stays a separate, disabled adapter."""
+    if not Path(evals_dir).is_dir():
+        # Engine GLOBAL không mang goldens repo (UAT canary 260718) → chứng ENGINE bằng fixture
+        # hermetic thay vì chết; goldens thật vẫn được chứng khi chạy trong repo.
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "fixture.md").write_text(
+                "---\ntype: eval\nid: engine-fixture\ninput: \"q\"\n"
+                "expected: \"Origin section is required.\"\n"
+                "asserts:\n  - 'contains:Origin'\n  - 'regex:(?i)required'\n---\n",
+                encoding="utf-8")
+            print("[wikieval selftest] evals dir vắng → hermetic engine-fixture (global engine)")
+            return self_test(d, cfg)
     goldens = load_goldens(evals_dir)
     with_asserts = [g for g in goldens if g.get("asserts")]
     if not with_asserts:

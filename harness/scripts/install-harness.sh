@@ -132,9 +132,11 @@ if [ "${1:-}" = "--global" ]; then
   # repo (fdk/tools, harness/scripts, harness/validators) để hooklib.resolve_tool + find_validators
   # tìm được engine ở ~/.claude/harness/<rel>. Mọi project được gác dùng CHUNG — cài 1 lần, update 1 chỗ,
   # KHÔNG copy vào từng repo. code_imports.py đi cùng build-wiki-graph.py (copy nguyên thư mục).
-  mkdir -p "$GH/fdk/tools" "$GH/harness/scripts" "$GH/harness/validators"
+  mkdir -p "$GH/fdk/tools" "$GH/harness/scripts" "$GH/harness/validators" "$GH/llmwiki/personas"
   cp "$SRC/fdk/tools/"*.py         "$GH/fdk/tools/"        2>/dev/null || true
   cp "$SRC/harness/scripts/"*.py   "$GH/harness/scripts/"  2>/dev/null || true
+  # personas travel theo engine (archetype.py --get đọc posture; UAT canary 260718 bắt preamble rỗng)
+  cp "$SRC/llmwiki/personas/"*.md  "$GH/llmwiki/personas/" 2>/dev/null || true
   cp "$SRC/harness/validators/"*.py "$GH/harness/validators/" 2>/dev/null || true
   cp "$SRC/harness/"*.yaml         "$GH/harness/"          2>/dev/null || true
   cp "$SRC/harness/version.json"   "$GH/version.json"      2>/dev/null || true
