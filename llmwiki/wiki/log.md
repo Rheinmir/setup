@@ -19,46 +19,46 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-18 11:16:19 | `file.write` | harness/scripts/archetype.py · tool=Edit · session=246fa7ac · actor=agent · prev=24f634fab467dd15fd776020cee4b9e640b1989 |
-| 2026-07-18 11:16:31 | `file.write` | harness/scripts/install-harness.sh · tool=Edit · session=246fa7ac · actor=agent · prev=f691f91ae8dabaa49e46683893e3711eb |
-| 2026-07-18 11:16:37 | `file.write` | harness/scripts/wikieval.py · tool=Edit · session=246fa7ac · actor=agent · prev=0a5e098e698afb4181152bf214a81b69576a1869 |
-| 2026-07-18 11:38:37 | `file.write` | fdk/tools/skill-provenance.py · tool=Edit · session=246fa7ac · actor=agent · prev=8e63243668b9a32532865ed51148b6f29a790f |
-| 2026-07-18 11:38:46 | `file.write` | fdk/tools/skill-provenance.py · tool=Edit · session=246fa7ac · actor=agent · prev=183239f81292a60f15aeb523c64aec71a5de20 |
-| 2026-07-18 11:39:44 | `file.write` | fdk/tools/medic.py · tool=Edit · session=246fa7ac · actor=agent · prev=a7565f2ed60ae4ec0d3e46b01522ddde11cf7c30b0813b3af |
-| 2026-07-18 11:39:53 | `file.write` | fdk/tools/medic.py · tool=Edit · session=246fa7ac · actor=agent · prev=8bd40e0de7627472deea092522b54dbc33b3d909fdc88a140 |
-| 2026-07-18 11:40:52 | `file.write` | harness/tests/skill-provenance-scope-test.sh · tool=Write · session=246fa7ac · actor=agent · prev=61bdca479e1bb7314ec11d |
-| 2026-07-18 11:41:37 | `file.write` | harness/tests/skill-provenance-scope-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=aa7f1b130b156b8ddfd8657 |
-| 2026-07-18 11:41:48 | `file.write` | harness/tests/skill-provenance-scope-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=9c2e0071abfc6d6cab5ee7c |
-| 2026-07-18 11:42:02 | `file.write` | .github/workflows/harness.yml · tool=Edit · session=246fa7ac · actor=agent · prev=18484a10f7ae9ae3446f22996028684a91b78a |
-| 2026-07-18 11:48:36 | `file.write` | harness/scripts/okf-check.py · tool=Edit · session=246fa7ac · actor=agent · prev=574f54f8adb179488131372f073ab1bc5016b0e |
-| 2026-07-18 11:49:22 | `task.set` |  · task=T-260717-01 · state=completed · note=okf-check.py tro canonical index_sync qua _load(), xoa ban trung, medic 14/ |
-| 2026-07-18 11:59:36 | `file.write` | llmwiki/wiki/sources/draft/180726-council-self-index-remaining-scope.md · tool=Write · session=246fa7ac · actor=agent ·  |
-| 2026-07-18 11:59:49 | `file.write` | llmwiki/wiki/sources/draft/180726-council-self-index-remaining-scope.md · tool=Edit · session=246fa7ac · actor=agent · p |
-| 2026-07-18 12:00:20 | `file.write` | llmwiki/wiki/sources/draft/180726-council-self-index-remaining-scope.md · tool=Edit · session=246fa7ac · actor=agent · p |
-| 2026-07-18 12:00:44 | `task.set` |  · task=T-260702-02 · state=superseded · note=scope con lai chuyen sang GH#81 (issue 180726-council-self-index-remaining |
-| 2026-07-18 12:01:03 | `file.write` | fdk/tools/docs-curate.py · tool=Edit · session=246fa7ac · actor=agent · prev=87707ddca60e04d21b75e5bf0c9d15ce0160e70be37 |
-| 2026-07-18 12:16:39 | `file.write` | harness/mechanisms.yaml · tool=Edit · session=246fa7ac · actor=agent · prev=11e6fa3a94bb8658129582c84be838a8eb525e84517a |
-| 2026-07-18 12:19:32 | `file.write` | fdk/tools/medic.py · tool=Edit · session=246fa7ac · actor=agent · prev=3c408500612a21cf5daaf807c791de3745ee9ee0fbcce501f |
-| 2026-07-18 12:19:58 | `file.write` | harness/mechanisms.yaml · tool=Edit · session=246fa7ac · actor=agent · prev=280a904f61d15a7af686bf94e0780df4a2647b52dfba |
-| 2026-07-18 12:27:55 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=12fa96d284907058613800405db26b78e79d |
-| 2026-07-18 12:28:16 | `file.write` | harness/tests/capproof-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=36f276a9b90344460bddfa9d94e4b8ef6c2bf |
-| 2026-07-18 12:28:22 | `file.write` | harness/tests/capproof-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=945e6031049b862300531c6c5c6649ab26df1 |
-| 2026-07-18 12:28:41 | `file.write` | harness/tests/capproof-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=344453dcdfb8f7d742ccc538787716c90749b |
-| 2026-07-18 12:28:54 | `file.write` | harness/tests/capproof-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=a03f16ab2886f1f245f734091574db9863310 |
-| 2026-07-18 12:29:28 | `file.write` | harness/tests/capproof-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=7f3a79f367bc4a00b84bd3b41a9dbc85da42e |
-| 2026-07-18 12:31:35 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=59a4ae60545f27ad6ff60ac4411a5e7ef162 |
-| 2026-07-18 12:32:03 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=d52dea50c1c936a85687b7ea742e904704fc |
-| 2026-07-18 12:32:29 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=783cb434d409eb9421b185224a8786da0b5b |
-| 2026-07-18 12:32:55 | `file.write` | harness/tests/capproof-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=8fd860ebaf8d7898db783ee438a9fdf70ba7f |
-| 2026-07-18 15:14:34 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=e2a0acfa4f14c3a5ca49258d5b7050ac0777 |
-| 2026-07-18 15:14:43 | `file.write` | harness/mechanisms.yaml · tool=Edit · session=246fa7ac · actor=agent · prev=11c6dc579cbc351c72a72d90b6623a07c3de5baa3ec8 |
-| 2026-07-18 15:14:50 | `file.write` | harness/mechanisms.yaml · tool=Edit · session=246fa7ac · actor=agent · prev=b977e5b73749b161b2636c5d9ec8c0d27da77d6d547f |
-| 2026-07-18 15:16:24 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=f2480e81526526f7c784dc38aa7b3af37893 |
-| 2026-07-18 15:17:34 | `file.write` | harness/scripts/bnal_config.py · tool=Edit · session=246fa7ac · actor=agent · prev=0fc6ac00afc7a98f7bcd31686e56e0bd20eb2 |
-| 2026-07-18 15:17:42 | `file.write` | harness/scripts/bnal_metrics.py · tool=Edit · session=246fa7ac · actor=agent · prev=0ef515fb8fc4f4dbed2a8451c061c0cc5caa |
-| 2026-07-18 15:17:52 | `file.write` | harness/scripts/bnal_guard.py · tool=Edit · session=246fa7ac · actor=agent · prev=e8aabdff32a39f39cfad57f1fb987e5df4e88c |
-| 2026-07-18 15:20:05 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=60504815de3481c123e38bce79bde7be825c |
-| 2026-07-18 15:20:24 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=ee01e34f2dd66466017de86cc9ddfe87e384 |
+| 2026-07-18 12:29:28 | `file.write` | harness/tests/capproof-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=ea56af41fb99140d846be462fdd937725b7a2 |
+| 2026-07-18 12:31:35 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=a23d1bd6a286199c7162a9842c7fbdac8882 |
+| 2026-07-18 12:32:03 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=d69b53bb12a06aea502c5f1d7874316c54ca |
+| 2026-07-18 12:32:29 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=5e92f4153a6a6c5ba626eec097d7bb689d0a |
+| 2026-07-18 12:32:55 | `file.write` | harness/tests/capproof-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=55dde1aa849ab3d84aa3c1330cf6cdfb13f87 |
+| 2026-07-18 15:14:34 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=a3b3453b8a56bd6455d32d52b06c23b9c8b9 |
+| 2026-07-18 15:14:43 | `file.write` | harness/mechanisms.yaml · tool=Edit · session=246fa7ac · actor=agent · prev=88b1da877521a084483277bcb3aa5c7ae6e0da599d57 |
+| 2026-07-18 15:14:50 | `file.write` | harness/mechanisms.yaml · tool=Edit · session=246fa7ac · actor=agent · prev=580a91435f65dbbe68b86b2083db064ca4694c38ecc6 |
+| 2026-07-18 15:16:24 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=cc1a9d1bd9c8164212fee6485bddbde7720c |
+| 2026-07-18 15:17:34 | `file.write` | harness/scripts/bnal_config.py · tool=Edit · session=246fa7ac · actor=agent · prev=d301d0674a84bc66a4f5919971c948af1a166 |
+| 2026-07-18 15:17:42 | `file.write` | harness/scripts/bnal_metrics.py · tool=Edit · session=246fa7ac · actor=agent · prev=56038059ae1f2441d94a4ae08e11ea5cf8ed |
+| 2026-07-18 15:17:52 | `file.write` | harness/scripts/bnal_guard.py · tool=Edit · session=246fa7ac · actor=agent · prev=9d12cee5e7491f6cfe9fff424b9a46557c82b0 |
+| 2026-07-18 15:20:05 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=e68f69a2fbbf21bc245e15c554c4f16b4954 |
+| 2026-07-18 15:20:24 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=bac30eaa8659a0da17683ae84d89a0431c01 |
+| 2026-07-18 16:46:35 | `file.write` | harness/tests/engines-smoke-test.sh · tool=Write · session=246fa7ac · actor=agent · prev=90acf87d2dca2d10e096583f50ce64b |
+| 2026-07-18 16:47:06 | `file.write` | harness/tests/engines-smoke-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=ef9425fee451fedc2e84e37dd10a5e30 |
+| 2026-07-18 16:47:11 | `file.write` | harness/tests/engines-smoke-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=ea2341927b7484ab1fd671316456eb92 |
+| 2026-07-18 16:47:15 | `file.write` | harness/tests/engines-smoke-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=5ccd2972277aa0acf84a2155cfba3770 |
+| 2026-07-18 16:47:29 | `file.write` | harness/tests/engines-smoke-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=94878a391a278694cb5a3ef430b545ec |
+| 2026-07-18 16:48:33 | `file.write` | .github/workflows/harness.yml · tool=Edit · session=246fa7ac · actor=agent · prev=faca5c43137dfb220e0ce770b0d81de5ac6a58 |
+| 2026-07-18 16:49:10 | `file.write` | harness/tests/engines-smoke-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=414beb0e442065ea4721fac4c1f76470 |
+| 2026-07-18 16:52:14 | `file.write` | .github/workflows/harness.yml · tool=Edit · session=246fa7ac · actor=agent · prev=092d8c5022cb6e677b7fcd23ac24db4144277b |
+| 2026-07-18 16:52:46 | `file.write` | .github/workflows/harness.yml · tool=Edit · session=246fa7ac · actor=agent · prev=67f79881f9a12c2eca644337e2873d3ab7e89a |
+| 2026-07-18 16:58:37 | `file.write` | harness/scripts/wiki-health.py · tool=Edit · session=246fa7ac · actor=agent · prev=3c713fe71418ce644250ebe92028b3c609d3e |
+| 2026-07-18 16:58:44 | `file.write` | harness/scripts/wiki-health.py · tool=Edit · session=246fa7ac · actor=agent · prev=b30c20ba7bae7ff8f327eea53e2b52c5d6a85 |
+| 2026-07-18 17:00:08 | `file.write` | harness/scripts/wiki-health.py · tool=Edit · session=246fa7ac · actor=agent · prev=61c6b6b3fe49eee94628b1e45c6397ea2841a |
+| 2026-07-18 17:00:14 | `file.write` | harness/scripts/wiki-health.py · tool=Edit · session=246fa7ac · actor=agent · prev=1b4632528c65968928c9768d3cda9f817680e |
+| 2026-07-18 17:00:31 | `file.write` | harness/scripts/wiki-health.py · tool=Edit · session=246fa7ac · actor=agent · prev=fd55582e1af4325931eb943ece7ef2d0667d7 |
+| 2026-07-18 17:02:05 | `file.write` | harness/validators/duplicate_basename.py · tool=Edit · session=246fa7ac · actor=agent · prev=e446bac7898d12a1772549ba743 |
+| 2026-07-18 17:02:13 | `file.write` | harness/scripts/sync-skills.py · tool=Edit · session=246fa7ac · actor=agent · prev=744b0d8ded96e913b9e0047b884d03c148aec |
+| 2026-07-18 17:03:31 | `file.write` | harness/validators/task_lifecycle.py · tool=Edit · session=246fa7ac · actor=agent · prev=1212e657a6f0a6070fd987978fadb8e |
+| 2026-07-18 17:04:43 | `file.write` | harness/scripts/code-logger.py · tool=Edit · session=246fa7ac · actor=agent · prev=5f0737cf78bae35761b57fca832cd9253d8d4 |
+| 2026-07-18 17:04:52 | `file.write` | harness/scripts/code-logger.py · tool=Edit · session=246fa7ac · actor=agent · prev=0cdfcaa1489a20f3e05ba3a76079d61b26261 |
+| 2026-07-18 17:05:06 | `file.write` | harness/scripts/code-logger.py · tool=Edit · session=246fa7ac · actor=agent · prev=6d6aa3b44b7819a5e8607b581367593f426d2 |
+| 2026-07-18 17:05:10 | `audit.rechain` |  · actor=system · fixed=187 · from_line=1308 · note=tính lại prev/h từ điểm đứt (race đa-phiên cùng prev) — nội dung eve |
+| 2026-07-18 17:05:44 | `file.write` | harness/scripts/bnal-selftest.py · tool=Edit · session=246fa7ac · actor=agent · prev=e99c69b56dfe876599efaeba688270d27ba |
+| 2026-07-18 17:06:10 | `file.write` | harness/scripts/fdk-gate.py · tool=Edit · session=246fa7ac · actor=agent · prev=5b71f278bab3243c9637c49b8b73a2432bf2299d |
+| 2026-07-18 17:07:03 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=246fa7ac · actor=agent · prev=9c88ddb8a15a3cbbb717b4e07d5da7be3c |
+| 2026-07-18 17:10:33 | `file.write` | harness/poc-vendor-neutral/policy.yaml · tool=Edit · session=246fa7ac · actor=agent · prev=acec7103991fd13781290d5a930f3 |
+| 2026-07-18 17:11:12 | `file.write` | harness/tests/ledger-snapshot-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=cc88c8f6eb7ecb16da1833b1c1530e |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
