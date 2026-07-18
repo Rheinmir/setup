@@ -2,6 +2,7 @@
  "schema": "capproof-baseline/v1",
  "proven": [
   "mech:auto-index",
+  "mech:capproof",
   "mech:code-index",
   "mech:code-logger",
   "mech:docs-gate",
@@ -10,8 +11,10 @@
   "mech:harness-local",
   "mech:harness-update",
   "mech:health-check",
+  "mech:ledger-snapshot",
   "mech:medic",
   "mech:orientation",
+  "mech:provenance-scope",
   "rule:R1",
   "rule:R10",
   "rule:R11",
@@ -121,6 +124,8 @@
   "tool:skill-usage.py"
  ],
  "unproven": [
+  "mech:archetype-tester",
+  "mech:capsurface",
   "mech:code-state",
   "mech:fdk-gate",
   "mech:harness-lint",

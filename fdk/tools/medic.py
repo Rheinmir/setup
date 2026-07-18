@@ -112,18 +112,47 @@ def p_frontend():
     return "ok", "HTML sinh sạch anti-pattern frontend", ""
 
 
+#   Root-cause gap (senior-lens 2026-07-18): 4 probe mới (capproof, provenance) + 4 mechanism
+#   mới ship trong 2 ngày mà KHÔNG vào mechanisms.yaml — narrative probe vẫn PASS vì nó chỉ so
+#   manifest ĐÃ KHAI với trang, không biết PROBES thực tế đã lớn hơn manifest. Vá lần này chỉ là
+#   TRIỆU CHỨNG (thêm tay 4 dòng); vá TẬN GỐC là dòng dưới — bắt PROBES tự đối chiếu chính nó với
+#   manifest, để probe mới KHÔNG THỂ ship im lặng lần sau (probe mới không có dòng ở đây → medic đỏ
+#   ngay, không cần ai nhớ hỏi "đã document chưa").
+#   Giá trị None = quyết định TƯỜNG MINH "đây là probe nội bộ/meta, không narrate" (không phải
+#   quên) — thêm probe mới mà không thêm dòng vào đây là lỗi cấu trúc (KeyError-shaped), không
+#   phải lỗi ngữ nghĩa (string không khớp).
+PROBE_MECH_MAP = {
+    "rules": None, "coverage": None, "backstop": None, "docs": None, "frontend": None,
+    "narrative": None, "foundation": None, "code": None, "eval": None, "freshinstall": None,
+    "selfstate": "code-state", "capsurface": "capsurface",
+    "capproof": "capproof", "provenance": "provenance-scope",
+}
+
+
 def p_narrative():
     """Narrative overstack có TRUNG THỰC không (council-025) — KHÁC docs-probe (chỉ so
     html==generator-output = tính TRUNG THÀNH bản sao). Probe này gác tính TRUNG THỰC bản gốc:
       (b) mọi live_probe trong mechanisms.yaml phải TỒN TẠI (manifest không nói dối);
       (a) mọi cơ-chế LIVE phải XUẤT HIỆN trong overstack.html (không narrative drift);
-      (c) canary: skill mô tả tuyến-phòng-thủ mà chưa vào manifest → warn.
+      (c) canary: skill mô tả tuyến-phòng-thủ mà chưa vào manifest → warn;
+      (d) ROOT-CAUSE (2026-07-18): mọi probe trong PROBES đối chiếu PROBE_MECH_MAP — probe MỚI
+          không có dòng map (dù None hay id thật) → FAIL ngay, không chờ ai audit tay lần nữa.
     Parse manifest bằng regex → medic vẫn stdlib-only; fail-open nếu không parse được."""
     man = ROOT / "harness/mechanisms.yaml"
     page = ROOT / "llmwiki/html/overstack.html"
     if not (man.exists() and page.exists()):
         return "skip", "thiếu mechanisms.yaml/overstack.html", ""
     text = man.read_text(encoding="utf-8")
+    ids = re.findall(r'^\s*-\s*id:\s*(\S+)', text, re.M)
+    unmapped = [n for n, _, _ in PROBES if n not in PROBE_MECH_MAP]
+    if unmapped:
+        return ("fail", f"probe MỚI chưa khai trong PROBE_MECH_MAP: {','.join(unmapped)}",
+                "fdk/tools/medic.py — thêm dòng '<probe>: \"<mechanism-id>\"' hoặc '<probe>: None' (nếu meta)")
+    dangling = [(n, mid) for n, mid in PROBE_MECH_MAP.items() if mid and mid not in ids]
+    if dangling:
+        d = dangling[0]
+        return ("fail", f"probe '{d[0]}' map sang mechanism '{d[1]}' nhưng id đó KHÔNG có trong mechanisms.yaml",
+                f"thêm entry id: {d[1]} vào harness/mechanisms.yaml, hoặc sửa PROBE_MECH_MAP")
     names = re.findall(r'^\s*name:\s*"?(.+?)"?\s*$', text, re.M)
     probes = re.findall(r'^\s*live_probe:\s*(.+?)\s*$', text, re.M)
     if not names or len(names) != len(probes):
