@@ -192,18 +192,14 @@
 - `wiki-sync.py`
 - `wikieval.py`
 
-## Proof — năng lực còn sống (157/196 có bằng chứng)
+## Proof — năng lực còn sống (161/196 có bằng chứng)
 Mỗi năng lực map tất định sang bằng chứng chạy được (frontmatter `proof:` > rule-map > tests > self-test > golden > medic). Chi tiết: `build-capabilities.py --capproof-json`.
 
-## UNPROVEN (39) — có mặt nhưng CHƯA chứng được còn sống
-- `mech:archetype-tester` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `mech:capsurface` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
+## UNPROVEN (35) — có mặt nhưng CHƯA chứng được còn sống
 - `mech:code-state` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `mech:fdk-gate` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
 - `mech:harness-lint` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
 - `mech:medic-mirror` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
 - `mech:secondary-memory` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
-- `mech:skill-usage` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
 - `mech:wiki-fdk` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
 - `script:adapt-registry.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
 - `script:arch-scan.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter

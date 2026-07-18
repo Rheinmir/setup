@@ -139,9 +139,9 @@ def _resolve_one(root: Path, src: dict, kind: str, name: str, body: str = "") ->
             ep = root / "harness" / "scripts" / eng
             if ep.is_file() and "--self-test" in ep.read_text(encoding="utf-8", errors="ignore"):
                 return f"harness/scripts/{eng} --self-test", "selftest"
-    if kind in ("script", "tool") and "--self-test" in body:          # 4b. script tự có self-test
+    if kind in ("script", "tool", "mech") and "--self-test" in body:  # 4b. engine tự có self-test
         return f"{name} --self-test", "selftest"
-    if kind in ("script", "tool") and "os.execv(" in body:            # 4c. thin os.execv shim
+    if kind in ("script", "tool", "mech") and "os.execv(" in body:    # 4c. thin os.execv shim
         # shim gán biến từ os.path.join(os.path.dirname(...), "target.py") rồi execv biến đó —
         # KHÔNG match cấu trúc os.path.join(...) (dấu ')' lồng bên trong phá [^)]*), chỉ cần
         # tìm chuỗi "*.py" bất kỳ trong file — shim mỏng chỉ có đúng 1 chuỗi .py là target.

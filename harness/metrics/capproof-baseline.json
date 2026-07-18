@@ -1,11 +1,14 @@
 {
  "schema": "capproof-baseline/v1",
  "proven": [
+  "mech:archetype-tester",
   "mech:auto-index",
   "mech:capproof",
+  "mech:capsurface",
   "mech:code-index",
   "mech:code-logger",
   "mech:docs-gate",
+  "mech:fdk-gate",
   "mech:force-query",
   "mech:harness-doctor",
   "mech:harness-local",
@@ -15,6 +18,7 @@
   "mech:medic",
   "mech:orientation",
   "mech:provenance-scope",
+  "mech:skill-usage",
   "rule:R1",
   "rule:R10",
   "rule:R11",
@@ -160,14 +164,10 @@
   "tool:skill-usage.py"
  ],
  "unproven": [
-  "mech:archetype-tester",
-  "mech:capsurface",
   "mech:code-state",
-  "mech:fdk-gate",
   "mech:harness-lint",
   "mech:medic-mirror",
   "mech:secondary-memory",
-  "mech:skill-usage",
   "mech:wiki-fdk",
   "script:adapt-registry.py",
   "script:arch-scan.py",
