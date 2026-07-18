@@ -19,25 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-17 23:41:08 | `file.write` | llmwiki/wiki/sources/draft/170726-absorb-six-sources.md · tool=Write · session=246fa7ac · actor=agent · prev=27dc8a90fb2 |
-| 2026-07-17 23:42:43 | `file.write` | llmwiki/html/170726-absorb-six-sources-seq.html · tool=Write · session=246fa7ac · actor=agent · prev=2e6011aa6b564231331 |
-| 2026-07-17 23:42:50 | `file.write` | llmwiki/html/170726-absorb-six-sources-seq.html · tool=Edit · session=246fa7ac · actor=agent · prev=c5c0f2f3e655231f4bfb |
-| 2026-07-17 23:42:59 | `file.write` | llmwiki/wiki/sources/draft/170726-absorb-six-sources.md · tool=Edit · session=246fa7ac · actor=agent · prev=228abcb593a9 |
-| 2026-07-17 23:43:42 | `file.write` | llmwiki/wiki/draft/unknown/unknown-frontend-design.md · tool=Write · session=246fa7ac · actor=agent · prev=1454833bd4ba1 |
-| 2026-07-17 23:44:02 | `file.write` | llmwiki/wiki/sources/draft/170726-absorb-six-sources.md · tool=Edit · session=246fa7ac · actor=agent · prev=e7e580d42d1a |
-| 2026-07-17 23:44:05 | `file.write` | llmwiki/wiki/sources/draft/170726-absorb-six-sources.md · tool=Edit · session=246fa7ac · actor=agent · prev=a87102405534 |
-| 2026-07-17 23:44:06 | `file.write` | llmwiki/html/170726-absorb-six-sources-seq.html · tool=Edit · session=246fa7ac · actor=agent · prev=1f5686c075ea2e6ae14c |
-| 2026-07-17 23:44:08 | `file.write` | llmwiki/wiki/draft/unknown/unknown-frontend-design.md · tool=Edit · session=246fa7ac · actor=agent · prev=763afd8ac06448 |
-| 2026-07-17 23:45:55 | `task.set` |  · task=T-260717-02 · state=approved · note=gate gate_5a6720864d05 duyệt 2026-07-17 · actor=agent · prev=2669750b11be5ba |
-| 2026-07-17 23:51:42 | `file.write` | llmwiki/wiki/sources/draft/170726-absorb-six-sources-PLAN.md · tool=Write · session=246fa7ac · actor=agent · prev=4fe0c0 |
-| 2026-07-17 23:52:03 | `task.set` |  · task=T-260717-02 · state=dispatched · note=self-dispatch Claude in-session theo PLAN · actor=agent · prev=56f8b95aaa1 |
-| 2026-07-17 23:53:33 | `file.write` | skills/qc-code/SKILL.md · tool=Edit · session=246fa7ac · actor=agent · prev=c1e72b5988e707c1bad20d82f91acf35eb85624d8a50 |
-| 2026-07-17 23:54:24 | `file.write` | skills/orca-sec-scans/SKILL.md · tool=Edit · session=246fa7ac · actor=agent · prev=89fd7586edb3c42e0e6d2903f9c6fd6249aa4 |
-| 2026-07-17 23:55:49 | `file.write` | skills/hallmark/references/frontend-design-delta.md · tool=Write · session=246fa7ac · actor=agent · prev=a860ed026866eab |
-| 2026-07-17 23:55:59 | `file.write` | llmwiki/wiki/concepts/design-foundation.md · tool=Edit · session=246fa7ac · actor=agent · prev=65de7e9a214d38ce2c4d9a9c5 |
-| 2026-07-17 23:56:28 | `file.write` | harness/scripts/mem-rank.py · tool=Edit · session=246fa7ac · actor=agent · prev=63a9d152557ce743cf510b752bc9a9a6c2667f5c |
-| 2026-07-17 23:56:37 | `file.write` | harness/scripts/mem-rank.py · tool=Edit · session=246fa7ac · actor=agent · prev=3fd0b6f9db0434b73f119d94f33209e95b06e5b0 |
-| 2026-07-17 23:56:44 | `file.write` | harness/scripts/mem-rank.py · tool=Edit · session=246fa7ac · actor=agent · prev=d40c0ce12266f1fe2cf06acfd878be248f9d92d7 |
 | 2026-07-17 23:56:50 | `file.write` | harness/scripts/mem-rank.py · tool=Edit · session=246fa7ac · actor=agent · prev=67be331368b257f8207d25b5d68e07c37728db59 |
 | 2026-07-17 23:57:38 | `file.write` | skills/qc-code/SKILL.md · tool=Edit · session=246fa7ac · actor=agent · prev=4a580b967282f1b945d0dcea78bec9849d5ef62551b4 |
 | 2026-07-17 23:57:51 | `file.write` | skills/orca-issue/SKILL.md · tool=Edit · session=246fa7ac · actor=agent · prev=1b4b5b175882a98a1e2c80520d6f82c581814a48c |
@@ -59,6 +40,25 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-18 00:48:35 | `file.write` | llmwiki/wiki/sources/draft/180726-capability-proof-map.md · tool=Edit · session=246fa7ac · actor=agent · prev=ef40d7bdaa |
 | 2026-07-18 00:48:39 | `file.write` | llmwiki/wiki/sources/draft/180726-capability-proof-map.md · tool=Edit · session=246fa7ac · actor=agent · prev=04425895c0 |
 | 2026-07-18 00:48:51 | `file.write` | llmwiki/wiki/sources/draft/180726-capability-proof-map.md · tool=Edit · session=246fa7ac · actor=agent · prev=4ded235897 |
+| 2026-07-18 08:51:18 | `task.set` |  · task=T-260718-01 · state=approved · note=gate_bd49612032be duyệt qua /plan · actor=agent · prev=c8f2aed4f667aad290b60 |
+| 2026-07-18 08:54:18 | `file.write` | llmwiki/wiki/sources/draft/180726-capability-proof-map-PLAN.md · tool=Write · session=246fa7ac · actor=agent · prev=a34a |
+| 2026-07-18 08:54:33 | `task.set` |  · task=T-260718-01 · state=dispatched · note=self-dispatch theo PLAN · actor=agent · prev=97e4682a12cfb731a5f7ed9a4040d |
+| 2026-07-18 08:54:44 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=d35af3055a2edb0ad1552b31ce3238a7eafb |
+| 2026-07-18 08:55:09 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=6b3663da99d9cff3149ae0f7856e11f298c4 |
+| 2026-07-18 08:55:21 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=bc20fbf44b80b3b0663828f761b1ad27dfea |
+| 2026-07-18 08:55:25 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=53b79731c55515e3b7ed87030d3493938bc5 |
+| 2026-07-18 08:55:55 | `file.write` | fdk/tools/medic.py · tool=Edit · session=246fa7ac · actor=agent · prev=716e44c40ec7b1b7e5dd4f4fe03fd69ddaf20685184636b98 |
+| 2026-07-18 08:55:57 | `file.write` | fdk/tools/medic.py · tool=Edit · session=246fa7ac · actor=agent · prev=a3e889c88682222e85961924da599001d29edeedb39bffdf8 |
+| 2026-07-18 08:56:12 | `file.write` | fdk/tools/medic.py · tool=Edit · session=246fa7ac · actor=agent · prev=13e6d27cc2c1017868dd5911e6073db68c919b1767db3dbe3 |
+| 2026-07-18 08:57:16 | `file.write` | harness/tests/capproof-test.sh · tool=Write · session=246fa7ac · actor=agent · prev=41e7cea51a45919dff655606c639b7064bd1 |
+| 2026-07-18 08:57:29 | `file.write` | .github/workflows/harness.yml · tool=Edit · session=246fa7ac · actor=agent · prev=e9b956e62c254535042d16c54419a949c096bc |
+| 2026-07-18 08:58:22 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=06387a937cc307d0195405e612bcc3e01f7b |
+| 2026-07-18 08:59:08 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=5a9d353138395810ce2836d3f928cfcce077 |
+| 2026-07-18 08:59:30 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=fc6ecb1b0c8c82d28e3f83035f3d49d861fd |
+| 2026-07-18 09:00:21 | `task.set` |  · task=T-260718-01 · state=completed · note=4 task xong, medic 13 ok, capproof live: 115/190 proven, 75 no ton, 18 dup  |
+| 2026-07-18 09:28:45 | `file.write` | harness/scripts/design-variety.py · tool=Edit · session=246fa7ac · actor=agent · prev=19fc6df058ef2bf15e76a91dd172433de2 |
+| 2026-07-18 09:28:55 | `file.write` | harness/scripts/design-variety.py · tool=Edit · session=246fa7ac · actor=agent · prev=22dca199c6a5c2a0ea34bfcad091afbfd8 |
+| 2026-07-18 09:29:08 | `file.write` | skills/hallmark/SKILL.md · tool=Edit · session=246fa7ac · actor=agent · prev=1554d632ed9350b2250b2658b92e2feac07b97a2b9a |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
