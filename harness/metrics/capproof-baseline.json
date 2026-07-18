@@ -116,7 +116,8 @@
   "tool:medic.py",
   "tool:memory-map.py",
   "tool:new-skill.py",
-  "tool:skill-provenance.py"
+  "tool:skill-provenance.py",
+  "tool:skill-usage.py"
  ],
  "unproven": [
   "mech:code-state",
@@ -190,7 +191,6 @@
   "tool:build-health-dashboard.py",
   "tool:build-skill-search.py",
   "tool:docs-curate.py",
-  "tool:skill-usage.py",
   "tool:whiteboard-skill-map.py",
   "tool:wiki-relations.py"
  ]
