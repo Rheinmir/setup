@@ -139,6 +139,8 @@ def classify():
             out[d] = ("draft", "archive", f"OUTDATED — task {tid} đã {st}; promote bản chất (nếu có) rồi archive")
         elif st == "rejected":
             out[d] = ("draft", "archive", f"OUTDATED — task {tid} bị rejected (proposal chết)")
+        elif st == "superseded":
+            out[d] = ("draft", "archive", f"SUPERSEDED — task {tid} scope còn lại đã chuyển sang issue riêng, xem note trong tasks.json")
         elif st:  # proposed/approved/dispatched — vòng còn sống, tuổi không được archive nó
             out[d] = ("draft", "keep", f"⏱ TREO — task {tid} còn `{st}`: cần người quyết làm-tiếp hay reject, KHÔNG archive theo tuổi")
     return out

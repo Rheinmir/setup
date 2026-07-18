@@ -141,3 +141,4 @@
 | [unknown-frontend-design](draft/unknown/unknown-frontend-design.md) | unknown-ledger | 2026-07-17 |
 | [180726-session-provenance](sources/180726-session-provenance.md) | source | 2026-07-18 |
 | [180726-archetype-tester](sources/draft/180726-archetype-tester.md) | draft | 2026-07-18 |
+| [180726-council-self-index-remaining-scope](sources/draft/180726-council-self-index-remaining-scope.md) | issue | Issue: council tự chọn đề thi — phần lõi chưa ship (GH#81) |

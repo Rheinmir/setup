@@ -19,16 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-18 08:57:29 | `file.write` | .github/workflows/harness.yml · tool=Edit · session=246fa7ac · actor=agent · prev=e9b956e62c254535042d16c54419a949c096bc |
-| 2026-07-18 08:58:22 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=06387a937cc307d0195405e612bcc3e01f7b |
-| 2026-07-18 08:59:08 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=5a9d353138395810ce2836d3f928cfcce077 |
-| 2026-07-18 08:59:30 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=fc6ecb1b0c8c82d28e3f83035f3d49d861fd |
-| 2026-07-18 09:00:21 | `task.set` |  · task=T-260718-01 · state=completed · note=4 task xong, medic 13 ok, capproof live: 115/190 proven, 75 no ton, 18 dup  |
-| 2026-07-18 09:28:45 | `file.write` | harness/scripts/design-variety.py · tool=Edit · session=246fa7ac · actor=agent · prev=19fc6df058ef2bf15e76a91dd172433de2 |
-| 2026-07-18 09:28:55 | `file.write` | harness/scripts/design-variety.py · tool=Edit · session=246fa7ac · actor=agent · prev=22dca199c6a5c2a0ea34bfcad091afbfd8 |
-| 2026-07-18 09:29:08 | `file.write` | skills/hallmark/SKILL.md · tool=Edit · session=246fa7ac · actor=agent · prev=1554d632ed9350b2250b2658b92e2feac07b97a2b9a |
-| 2026-07-18 09:41:22 | `task.new` |  · task=T-260718-02 · title=archetype tester — vai thứ 6 · state=proposed · actor=agent · prev=187a60897f15c8a8ef548d3d8 |
-| 2026-07-18 09:42:19 | `file.write` | llmwiki/wiki/sources/draft/180726-archetype-tester.md · tool=Write · session=246fa7ac · actor=agent · prev=259ad574297fc |
 | 2026-07-18 09:43:13 | `file.write` | llmwiki/html/180726-archetype-tester-seq.html · tool=Write · session=246fa7ac · actor=agent · prev=cfdfbe12778363421ef4d |
 | 2026-07-18 09:50:07 | `file.write` | fdk/wiki/sources/evals/adapt-modes-pick.md · tool=Write · session=246fa7ac · actor=agent · prev=e3b00408d90223990a524e29 |
 | 2026-07-18 09:50:17 | `file.write` | fdk/wiki/sources/evals/capproof-liveness.md · tool=Write · session=246fa7ac · actor=agent · prev=7997c8cfe61199ea0ff6d3d |
@@ -59,6 +49,16 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-18 11:16:19 | `file.write` | harness/scripts/archetype.py · tool=Edit · session=246fa7ac · actor=agent · prev=24f634fab467dd15fd776020cee4b9e640b1989 |
 | 2026-07-18 11:16:31 | `file.write` | harness/scripts/install-harness.sh · tool=Edit · session=246fa7ac · actor=agent · prev=f691f91ae8dabaa49e46683893e3711eb |
 | 2026-07-18 11:16:37 | `file.write` | harness/scripts/wikieval.py · tool=Edit · session=246fa7ac · actor=agent · prev=0a5e098e698afb4181152bf214a81b69576a1869 |
+| 2026-07-18 11:38:37 | `file.write` | fdk/tools/skill-provenance.py · tool=Edit · session=246fa7ac · actor=agent · prev=8e63243668b9a32532865ed51148b6f29a790f |
+| 2026-07-18 11:38:46 | `file.write` | fdk/tools/skill-provenance.py · tool=Edit · session=246fa7ac · actor=agent · prev=183239f81292a60f15aeb523c64aec71a5de20 |
+| 2026-07-18 11:39:44 | `file.write` | fdk/tools/medic.py · tool=Edit · session=246fa7ac · actor=agent · prev=a7565f2ed60ae4ec0d3e46b01522ddde11cf7c30b0813b3af |
+| 2026-07-18 11:39:53 | `file.write` | fdk/tools/medic.py · tool=Edit · session=246fa7ac · actor=agent · prev=8bd40e0de7627472deea092522b54dbc33b3d909fdc88a140 |
+| 2026-07-18 11:40:52 | `file.write` | harness/tests/skill-provenance-scope-test.sh · tool=Write · session=246fa7ac · actor=agent · prev=61bdca479e1bb7314ec11d |
+| 2026-07-18 11:41:37 | `file.write` | harness/tests/skill-provenance-scope-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=aa7f1b130b156b8ddfd8657 |
+| 2026-07-18 11:41:48 | `file.write` | harness/tests/skill-provenance-scope-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=9c2e0071abfc6d6cab5ee7c |
+| 2026-07-18 11:42:02 | `file.write` | .github/workflows/harness.yml · tool=Edit · session=246fa7ac · actor=agent · prev=18484a10f7ae9ae3446f22996028684a91b78a |
+| 2026-07-18 11:48:36 | `file.write` | harness/scripts/okf-check.py · tool=Edit · session=246fa7ac · actor=agent · prev=574f54f8adb179488131372f073ab1bc5016b0e |
+| 2026-07-18 11:49:22 | `task.set` |  · task=T-260717-01 · state=completed · note=okf-check.py tro canonical index_sync qua _load(), xoa ban trung, medic 14/ |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -369,3 +369,6 @@ SPEC vai thứ 6 tester (/test): persona thiết kế test neo FR/SC + code qc-*
 
 ## 2026-07-18 — fdk-uat — batch grower+tester+maintainer lên orca
 Canary 260718-1101 vòng 1: 10/12 — lens TESTER bắt 2 lỗi thật (persona không travel global; wikieval self-test không hermetic). Fix faf5918 → vòng 2: 12/12. PHA 2 main-URL smoke 0-override: 7/7. orca @ faf5918, canary đã xoá, stamp 1.3.24.
+
+## 2026-07-18 — raise-issue — council-self-index-remaining-scope
+Draft 020726-council-chon-de-thi-self-index verify chéo 6 nguồn: hạ tầng nền đã ship (d4d8b90), phần lõi (council tự chọn đề thi) chưa. Mở GH#81 giữ scope còn lại, priority P3 ready-for-human. Task T-260702-02 → superseded.
