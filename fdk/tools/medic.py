@@ -16,6 +16,7 @@ Triết lý: Meadows (vòng phản hồi trên tầng enforcement) + hub-1-tên/
 Tự-mở-coverage: đọc policy.yaml/validator/generator LIVE → thêm chức năng mà quên hàng rào → medic tự báo.
 Self-contained: chỉ stdlib. Fail-open từng probe: probe lỗi → SKIP, không giết cả cổng.
 """
+import json
 import re
 import subprocess
 import sys
@@ -288,6 +289,36 @@ def p_capsurface():
     return "ok", "bề mặt năng lực khớp version (downstream sẽ thấy đúng khi có bản mới)", ""
 
 
+def p_capproof():
+    """Năng lực MỚI vào phải kèm bằng chứng sống; năng lực đã-proven không được tụt.
+    Ratchet: nợ tồn trong baseline chỉ đếm, không đỏ (gate cries wolf thì bị tắt)."""
+    bc = ROOT / "fdk/tools/build-capabilities.py"
+    bl = ROOT / "harness/metrics/capproof-baseline.json"
+    if not bc.exists():
+        return "skip", "không có build-capabilities.py", ""
+    rc, out = sh([PY, str(bc), "--capproof-json"])
+    try:
+        cp = json.loads(out)
+    except Exception:
+        return "skip", "capproof-json không parse được", ""
+    if cp.get("downstream"):
+        return "skip", "downstream: không đo được (không có harness/tests) — by design", ""
+    if not bl.exists():
+        return ("warn", f"{cp['counts']['unproven']} UNPROVEN, chưa có baseline — chốt nợ tồn đi",
+                "python3 fdk/tools/build-capabilities.py --write-capproof-baseline")
+    base = json.loads(bl.read_text(encoding="utf-8"))
+    known = set(base.get("proven", [])) | set(base.get("unproven", []))
+    new_debt = [k for k in cp["unproven"] if k not in known]
+    demoted = [k for k in cp["unproven"] if k in set(base.get("proven", []))]
+    if new_debt or demoted:
+        parts = ([f"{len(new_debt)} năng lực MỚI không proof: {','.join(new_debt[:3])}"] if new_debt else []) \
+              + ([f"{len(demoted)} năng lực TỤT (mất proof): {','.join(demoted[:3])}"] if demoted else [])
+        return ("fail", " · ".join(parts),
+                "thêm test/frontmatter proof: cho từng cái, hoặc chốt có chủ ý: build-capabilities.py --write-capproof-baseline")
+    return "ok", (f"{cp['counts']['proven']}/{cp['counts']['total']} proven · nợ tồn {cp['counts']['unproven']}"
+                  + (f" · {len(cp.get('dups', []))} trùng-ứng-viên" if cp.get("dups") else "")), ""
+
+
 PROBES = [
     ("rules",    ["rules", "luật", "bite"],      p_rules),
     ("coverage", ["rules", "coverage", "luật"],  p_coverage),
@@ -302,6 +333,7 @@ PROBES = [
     ("eval",     ["eval", "baseline"],           p_eval),
     ("freshinstall", ["freshinstall", "install", "orchestration", "e2e", "push"], p_freshinstall),
     ("capsurface", ["capsurface", "version", "capabilities", "bump", "downstream"], p_capsurface),
+    ("capproof", ["capproof", "proof", "unproven", "ratchet", "dup"], p_capproof),
 ]
 # bỏ 'drift' probe trùng — drift đã báo trong rules:
 PROBES = [p for p in PROBES if p[0] != "drift"]
