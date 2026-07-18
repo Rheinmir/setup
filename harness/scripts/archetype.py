@@ -28,6 +28,8 @@ _FALLBACK = {"verified": False, "archetypes": {
                "tools": ["success-flywheel", "wikieval"], "posture": "llmwiki/personas/grower.md"},
     "maintainer": {"keyword": "/maintain", "phase": "scale / harden", "cli": "claude",
                    "tools": ["harness-update", "orca-sec-scans"], "posture": "llmwiki/personas/maintainer.md"},
+    "tester": {"keyword": "/test", "phase": "verify design-first", "cli": "claude",
+               "tools": ["qc-code", "wikieval"], "posture": "llmwiki/personas/tester.md"},
 }}
 
 
@@ -89,9 +91,11 @@ def self_test() -> int:
     n1, s1 = resolve(arcs, "/sweep")
     n2, s2 = resolve(arcs, "maintainer")
     n3, _ = resolve(arcs, "/nope")
+    n4, s4 = resolve(arcs, "/test")
     posture_ok = all((root / s.get("posture", "")).is_file() for s in arcs.values())
     ok = (n1 == "sweeper" and "simplify" in s1.get("tools", []) and n2 == "maintainer"
-          and n3 is None and len(arcs) == 5 and posture_ok)
+          and n3 is None and n4 == "tester" and "qc-code" in s4.get("tools", [])
+          and len(arcs) == 6 and posture_ok)
     print("archetype self-test:", "PASS" if ok else "FAIL")
     return 0 if ok else 1
 

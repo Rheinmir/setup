@@ -381,6 +381,20 @@ def main():
 
     if args.write_baseline:
         baseline = build_baseline(results, args.evals_dir)
+        # Guard chống mất-dữ-liệu-âm-thầm (cháy thật 2026-07-18): chạy thiếu --outputs → 0 golden
+        # được chấm → lặng lẽ đè baseline tốt bằng baseline rỗng. Từ chối ghi bản 0-decided đè lên
+        # baseline đang có dữ liệu; muốn thật thì xoá file baseline trước (hành động có chủ ý).
+        if baseline["summary"]["decided"] == 0 and Path(args.baseline).is_file():
+            try:
+                old = json.loads(Path(args.baseline).read_text(encoding="utf-8"))
+                if old.get("summary", {}).get("decided", 0) > 0:
+                    sys.exit("[wikieval] TỪ CHỐI ghi: 0 golden được chấm (thiếu --outputs?) mà baseline "
+                             f"hiện có {old['summary']['decided']} decided — đè lên là mất dữ liệu. "
+                             "Cấp --outputs rồi chạy lại; thật sự muốn baseline rỗng thì xoá file baseline trước.")
+            except SystemExit:
+                raise
+            except Exception:
+                pass  # baseline cũ hỏng/không đọc được → cho ghi (không tệ hơn hiện trạng)
         Path(args.baseline).parent.mkdir(parents=True, exist_ok=True)
         Path(args.baseline).write_text(json.dumps(baseline, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         try:

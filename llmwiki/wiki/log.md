@@ -19,14 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-17 23:56:50 | `file.write` | harness/scripts/mem-rank.py · tool=Edit · session=246fa7ac · actor=agent · prev=67be331368b257f8207d25b5d68e07c37728db59 |
-| 2026-07-17 23:57:38 | `file.write` | skills/qc-code/SKILL.md · tool=Edit · session=246fa7ac · actor=agent · prev=4a580b967282f1b945d0dcea78bec9849d5ef62551b4 |
-| 2026-07-17 23:57:51 | `file.write` | skills/orca-issue/SKILL.md · tool=Edit · session=246fa7ac · actor=agent · prev=1b4b5b175882a98a1e2c80520d6f82c581814a48c |
-| 2026-07-17 23:58:09 | `file.write` | skills/qc-code/SKILL.md · tool=Edit · session=246fa7ac · actor=agent · prev=9d822bafa6933f812ba5dbb587e6bbdf8a6c5a600fb9 |
-| 2026-07-17 23:58:58 | `task.set` |  · task=T-260717-02 · state=completed · note=6 task xong, medic xanh, 2 commit · actor=agent · prev=6d144a29773173618404 |
-| 2026-07-18 00:04:45 | `file.write` | skills/hallmark/SKILL.md · tool=Edit · session=246fa7ac · actor=agent · prev=5f1224ee9c36e11e10c8160c5c7dfb3fdcbe49190c0 |
-| 2026-07-18 00:17:03 | `file.write` | skills/hallmark/SKILL.md · tool=Edit · session=246fa7ac · actor=agent · prev=ad8474e5a1a673f77eecf4361bf308f3af1ef33c896 |
-| 2026-07-18 00:18:26 | `file.write` | llmwiki/wiki/sources/evals/skill-resolve/design-frontend.md · tool=Write · session=246fa7ac · actor=agent · prev=89049a3 |
 | 2026-07-18 00:29:57 | `task.new` |  · task=T-260718-01 · title=capability-proof map — checklist năng lực tự soi + tự cộng · state=proposed · actor=agent ·  |
 | 2026-07-18 00:31:32 | `file.write` | llmwiki/wiki/sources/draft/180726-capability-proof-map.md · tool=Write · session=246fa7ac · actor=agent · prev=82b4c86a0 |
 | 2026-07-18 00:32:39 | `file.write` | llmwiki/html/180726-capability-proof-map-seq.html · tool=Write · session=246fa7ac · actor=agent · prev=f8713173b8b21d714 |
@@ -59,6 +51,14 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-18 09:28:45 | `file.write` | harness/scripts/design-variety.py · tool=Edit · session=246fa7ac · actor=agent · prev=19fc6df058ef2bf15e76a91dd172433de2 |
 | 2026-07-18 09:28:55 | `file.write` | harness/scripts/design-variety.py · tool=Edit · session=246fa7ac · actor=agent · prev=22dca199c6a5c2a0ea34bfcad091afbfd8 |
 | 2026-07-18 09:29:08 | `file.write` | skills/hallmark/SKILL.md · tool=Edit · session=246fa7ac · actor=agent · prev=1554d632ed9350b2250b2658b92e2feac07b97a2b9a |
+| 2026-07-18 09:41:22 | `task.new` |  · task=T-260718-02 · title=archetype tester — vai thứ 6 · state=proposed · actor=agent · prev=187a60897f15c8a8ef548d3d8 |
+| 2026-07-18 09:42:19 | `file.write` | llmwiki/wiki/sources/draft/180726-archetype-tester.md · tool=Write · session=246fa7ac · actor=agent · prev=259ad574297fc |
+| 2026-07-18 09:43:13 | `file.write` | llmwiki/html/180726-archetype-tester-seq.html · tool=Write · session=246fa7ac · actor=agent · prev=cfdfbe12778363421ef4d |
+| 2026-07-18 09:50:07 | `file.write` | fdk/wiki/sources/evals/adapt-modes-pick.md · tool=Write · session=246fa7ac · actor=agent · prev=e3b00408d90223990a524e29 |
+| 2026-07-18 09:50:17 | `file.write` | fdk/wiki/sources/evals/capproof-liveness.md · tool=Write · session=246fa7ac · actor=agent · prev=7997c8cfe61199ea0ff6d3d |
+| 2026-07-18 09:50:39 | `file.write` | fdk/tools/skill-usage.py · tool=Edit · session=246fa7ac · actor=agent · prev=5d293e43f9346a1626d093205fa2336809d48be5e97 |
+| 2026-07-18 09:50:45 | `file.write` | fdk/tools/skill-usage.py · tool=Edit · session=246fa7ac · actor=agent · prev=a57f88a4101bfcbf89952bcab0aad47da77e1ef0679 |
+| 2026-07-18 09:51:16 | `file.write` | skills/lint/SKILL.md · tool=Edit · session=246fa7ac · actor=agent · prev=a1fc632df5fc72c64e0fbc2923f2710231be1f4ef1ad257 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -363,3 +363,6 @@ SPEC checklist năng lực tự soi + tự cộng: proof-resolver 6 tầng trong
 
 ## 2026-07-18 — plan — capability-proof-map-PLAN
 PLAN 4 task (resolver 6 tầng / probe ratchet / guard 4 chiều / dups+mech). Executor: Claude in-session.
+
+## 2026-07-18 — propose — archetype-tester
+SPEC vai thứ 6 tester (/test): persona thiết kế test neo FR/SC + code qc-*. T-260718-02, chờ gate.
