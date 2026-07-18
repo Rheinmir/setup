@@ -21,6 +21,7 @@ session: 246fa7ac-eeea-41c8-88fc-78bd6f355ce7
 - `draft/unknown/unknown-frontend-design.md`
 - `sources/draft/170726-absorb-six-sources-PLAN.md`
 - `sources/draft/170726-absorb-six-sources.md`
+- `sources/draft/180726-archetype-tester.md`
 - `sources/draft/180726-capability-proof-map-PLAN.md`
 - `sources/draft/180726-capability-proof-map.md`
 - `sources/evals/skill-resolve/design-frontend.md`
