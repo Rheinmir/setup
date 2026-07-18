@@ -19,11 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-18 09:43:13 | `file.write` | llmwiki/html/180726-archetype-tester-seq.html · tool=Write · session=246fa7ac · actor=agent · prev=cfdfbe12778363421ef4d |
-| 2026-07-18 09:50:07 | `file.write` | fdk/wiki/sources/evals/adapt-modes-pick.md · tool=Write · session=246fa7ac · actor=agent · prev=e3b00408d90223990a524e29 |
-| 2026-07-18 09:50:17 | `file.write` | fdk/wiki/sources/evals/capproof-liveness.md · tool=Write · session=246fa7ac · actor=agent · prev=7997c8cfe61199ea0ff6d3d |
-| 2026-07-18 09:50:39 | `file.write` | fdk/tools/skill-usage.py · tool=Edit · session=246fa7ac · actor=agent · prev=5d293e43f9346a1626d093205fa2336809d48be5e97 |
-| 2026-07-18 09:50:45 | `file.write` | fdk/tools/skill-usage.py · tool=Edit · session=246fa7ac · actor=agent · prev=a57f88a4101bfcbf89952bcab0aad47da77e1ef0679 |
 | 2026-07-18 09:51:16 | `file.write` | skills/lint/SKILL.md · tool=Edit · session=246fa7ac · actor=agent · prev=a1fc632df5fc72c64e0fbc2923f2710231be1f4ef1ad257 |
 | 2026-07-18 09:55:50 | `task.set` |  · task=T-260718-02 · state=dispatched · note=self-dispatch in-session · actor=agent · prev=bb0f339c00f7722b36c10bcc37ec |
 | 2026-07-18 09:56:34 | `file.write` | llmwiki/personas/tester.md · tool=Write · session=246fa7ac · actor=agent · prev=b36cf5c56cb68d5f9bcf919db5e4b30ac1717d74 |
@@ -59,6 +54,11 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-18 11:42:02 | `file.write` | .github/workflows/harness.yml · tool=Edit · session=246fa7ac · actor=agent · prev=18484a10f7ae9ae3446f22996028684a91b78a |
 | 2026-07-18 11:48:36 | `file.write` | harness/scripts/okf-check.py · tool=Edit · session=246fa7ac · actor=agent · prev=574f54f8adb179488131372f073ab1bc5016b0e |
 | 2026-07-18 11:49:22 | `task.set` |  · task=T-260717-01 · state=completed · note=okf-check.py tro canonical index_sync qua _load(), xoa ban trung, medic 14/ |
+| 2026-07-18 11:59:36 | `file.write` | llmwiki/wiki/sources/draft/180726-council-self-index-remaining-scope.md · tool=Write · session=246fa7ac · actor=agent ·  |
+| 2026-07-18 11:59:49 | `file.write` | llmwiki/wiki/sources/draft/180726-council-self-index-remaining-scope.md · tool=Edit · session=246fa7ac · actor=agent · p |
+| 2026-07-18 12:00:20 | `file.write` | llmwiki/wiki/sources/draft/180726-council-self-index-remaining-scope.md · tool=Edit · session=246fa7ac · actor=agent · p |
+| 2026-07-18 12:00:44 | `task.set` |  · task=T-260702-02 · state=superseded · note=scope con lai chuyen sang GH#81 (issue 180726-council-self-index-remaining |
+| 2026-07-18 12:01:03 | `file.write` | fdk/tools/docs-curate.py · tool=Edit · session=246fa7ac · actor=agent · prev=87707ddca60e04d21b75e5bf0c9d15ce0160e70be37 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)

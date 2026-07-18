@@ -24,6 +24,7 @@ session: 246fa7ac-eeea-41c8-88fc-78bd6f355ce7
 - `sources/draft/180726-archetype-tester.md`
 - `sources/draft/180726-capability-proof-map-PLAN.md`
 - `sources/draft/180726-capability-proof-map.md`
+- `sources/draft/180726-council-self-index-remaining-scope.md`
 - `sources/evals/skill-resolve/design-frontend.md`
 
 ## Origin
