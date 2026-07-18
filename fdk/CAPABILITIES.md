@@ -271,5 +271,25 @@ Mỗi năng lực map tất định sang bằng chứng chạy được (frontma
 - `tool:whiteboard-skill-map.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
 - `tool:wiki-relations.py` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter
 
+## TRÙNG-ỨNG-VIÊN (18) — máy phát hiện, NGƯỜI phán (dedupe = vòng /propose riêng)
+- `mech:medic` ↔ `mech:medic-mirror` — name-token: medic
+- `script:embed-ollama.py` ↔ `script:embed-voyage.py` — desc-jaccard 0.82
+- `script:failure-flywheel.py` ↔ `script:flywheel.py` — name-token: flywheel
+- `script:failure-flywheel.py` ↔ `script:success-flywheel.py` — desc-jaccard 0.50
+- `script:flywheel.py` ↔ `script:success-flywheel.py` — name-token: flywheel
+- `script:flywheel.py` ↔ `skill:failure-flywheel` — name-token: flywheel
+- `script:frontier.py` ↔ `skill:frontier-scan` — name-token: frontier
+- `script:harness-lint.py` ↔ `skill:lint` — name-token: lint
+- `script:query-log.py` ↔ `skill:query` — name-token: query
+- `script:query-proxy.py` ↔ `skill:query` — name-token: query
+- `script:wiki-graph.py` ↔ `tool:build-wiki-graph.py` — name-token: graph
+- `skill:caveman` ↔ `skill:caveman-commit` — name-token: caveman
+- `skill:caveman` ↔ `skill:caveman-compress` — name-token: caveman
+- `skill:caveman` ↔ `skill:caveman-help` — name-token: caveman
+- `skill:caveman` ↔ `skill:caveman-review` — name-token: caveman
+- `skill:caveman` ↔ `skill:caveman-stats` — name-token: caveman
+- `skill:design-taste-frontend` ↔ `skill:design-taste-frontend-v1` — name-token: design+frontend
+- `skill:tour-guide` ↔ `skill:tour-guide-supademo` — name-token: guide+tour
+
 ## Origin
 - Sinh bằng `fdk/tools/build-capabilities.py` từ đĩa (skills/, policy.yaml, fdk/tools/, harness/scripts/, sync-skills LOOP_MAP). KHÔNG hardcode.

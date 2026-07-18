@@ -149,7 +149,37 @@ def _resolve_one(root: Path, src: dict, kind: str, name: str, body: str = "") ->
 
 
 def _dup_candidates(items: dict, descs: dict) -> list:
-    return []  # stub có chủ ý — T4 thay thân thật (dup-candidates)
+    """Ứng viên trùng — CHỈ BÁO, người phán (dedupe = vòng /propose riêng). Hai tín hiệu tất định:
+    (a) chung token tên HIẾM giữa 2 kind khác nhau, hoặc cùng kind mà stem này chứa stem kia
+        (bắt ca 'đã merge nhưng bản cũ còn sống': flywheel.py ⊂ failure-flywheel.py);
+    (b) desc Jaccard token ≥ 0.5 (cả hai ≥ 5 token)."""
+    def toks(s):
+        return {t for t in re.findall(r"[a-z]{4,}", (s or "").lower()) if t not in PROOF_STOP}
+    def stem(k):
+        return k.split(":", 1)[1].replace(".py", "").replace("_", "-")
+    names = {k: toks(stem(k).replace("-", " ")) for k in items}
+    dups = []
+    keys = sorted(items)
+    for i, a in enumerate(keys):
+        for b in keys[i + 1:]:
+            ka, kb = a.split(":")[0], b.split(":")[0]
+            if ka == kb == "rule":
+                continue
+            if stem(a) == stem(b):
+                continue  # wrapper theo thiết kế: skill/mech ↔ chính engine cùng tên — không phải dup
+            shared = names[a] & names[b]
+            substem = stem(a) in stem(b) or stem(b) in stem(a)
+            mech_pair = (ka == "mech") != (kb == "mech")
+            strong = substem or len(shared) >= 2   # 1 token chung chung (scan/design/verify) chưa đủ nghi
+            if shared and strong and not mech_pair and (ka != kb or substem):
+                dups.append({"a": a, "b": b, "why": f"name-token: {'+'.join(sorted(shared)[:2])}"})
+                continue
+            ta, tb = toks(descs.get(a, "")), toks(descs.get(b, ""))
+            if len(ta) >= 5 and len(tb) >= 5:
+                jac = len(ta & tb) / len(ta | tb)
+                if jac >= 0.5:
+                    dups.append({"a": a, "b": b, "why": f"desc-jaccard {jac:.2f}"})
+    return dups
 
 
 def capproof(root: Path) -> dict:
