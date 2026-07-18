@@ -123,6 +123,24 @@ jobs:
         run: bash harness/tests/skill-provenance-scope-test.sh .
       - name: engines-smoke — chạy THẬT từng engine từng thiếu proof (26 nợ capproof → 0)
         run: bash harness/tests/engines-smoke-test.sh .
+      - name: hook-guard-invariant — self-test không được commit trần (GH#30, chặn đệ quy hook)
+        run: bash harness/tests/hook-guard-invariant-test.sh .
+      - name: wiki-sync — neo code→wiki (no-op gate 0-token)
+        run: bash harness/tests/wiki-sync-test.sh .
+      - name: docs-skill-okf — skill tạo wiki .md phải xuất chuẩn OKF v0.1 (R9)
+        run: bash harness/tests/docs-skill-okf-test.sh .
+      - name: harness-update — T1-T4 cài/refresh trong repo tạm cô lập
+        run: bash harness/tests/harness-update-test.sh .
+      - name: orca-guard fail-open — hook thiếu file không được brick tool (cozyroom)
+        run: bash harness/tests/orca-guard-failopen-test.sh .
+      - name: r12-v3-workspace — sweep subrepo behind (T5)
+        run: bash harness/tests/r12-v3-workspace-test.sh .
+      - name: tests-wired — MỌI harness/tests/*-test.sh phải có step trong workflow này
+        run: |
+          for t in harness/tests/*-test.sh; do
+            grep -q "$(basename "$t")" .github/workflows/harness.yml \
+              || { echo "chưa wire vào CI: $t"; exit 1; }
+          done
       - name: harness-doctor — fire-drill (mọi rail còn cắn?)
         run: python3 harness/scripts/harness-doctor.py --ci
       - name: capabilities current (fdk/CAPABILITIES.md khớp đĩa)
