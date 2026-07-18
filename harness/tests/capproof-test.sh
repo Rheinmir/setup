@@ -16,15 +16,27 @@ j(){ python3 "$BC" --root "$1" --capproof-json; }
 SB="$(mktemp -d)"
 mkdir -p "$SB/skills/proven-sk" "$SB/skills/orphan-sk" "$SB/harness/tests" \
          "$SB/harness/scripts" "$SB/fdk/tools" "$SB/harness/metrics" "$SB/harness/poc-vendor-neutral"
-printf -- '---\nname: proven-sk\ndescription: co test\n---\n' > "$SB/skills/proven-sk/SKILL.md"
-printf -- '---\nname: orphan-sk\ndescription: khong co gi\n---\n' > "$SB/skills/orphan-sk/SKILL.md"
+# proven-sk THAM CHIẾU engine thật (để không rơi vào miễn trừ tier-7 no-engine khi test bị xoá
+# ở bước "tụt" bên dưới) — proof của nó đến từ tier-3 (tên khớp file trong harness/tests/),
+# KHÔNG phải từ chính dòng python3 này (engine đó thật ra không cần tồn tại cho tier 3).
+printf -- '---\nname: proven-sk\ndescription: co test\n---\ndung: python3 harness/scripts/proven-sk-engine.py\n' > "$SB/skills/proven-sk/SKILL.md"
+# orphan-sk THAM CHIẾU 1 engine giả (không tồn tại) — đại diện "skill CÓ code nhưng chưa có
+# test", phân biệt với skill thuần-prompt (miễn trừ N/A, tier 7) — nếu bỏ dòng python3 này,
+# orphan-sk sẽ rơi vào miễn trừ và test dưới đây sai oan.
+printf -- '---\nname: orphan-sk\ndescription: khong co gi\n---\ndung: python3 harness/scripts/khong-ton-tai.py\n' > "$SB/skills/orphan-sk/SKILL.md"
 printf 'echo proven-sk duoc test o day\n' > "$SB/harness/tests/proven-sk-test.sh"
+# pure-prompt-sk: KHÔNG tham chiếu engine .py nào — skill thuần thẩm mỹ/hướng dẫn (root-cause
+# 2026-07-18: 34/38 skill-unproven thật rơi đúng dạng này — brandkit/caveman-*/gpt-taste…).
+mkdir -p "$SB/skills/pure-prompt-sk"
+printf -- '---\nname: pure-prompt-sk\ndescription: mot skill thuan huong dan, khong dung engine nao\n---\n' > "$SB/skills/pure-prompt-sk/SKILL.md"
 printf 'rules: []\n' > "$SB/harness/poc-vendor-neutral/policy.yaml"
 
 # 1. resolver phân loại đúng: proven-sk có proof (tests), orphan-sk UNPROVEN
 u=$(j "$SB" | python3 -c "import sys,json;print(','.join(json.load(sys.stdin)['unproven']))")
-echo "$u" | grep -q "skill:orphan-sk" && ok "orphan-sk bị bêu UNPROVEN" || bad "orphan-sk lọt lưới ($u)"
+echo "$u" | grep -q "skill:orphan-sk" && ok "orphan-sk (có engine, chưa test) bị bêu UNPROVEN" || bad "orphan-sk lọt lưới ($u)"
 echo "$u" | grep -q "skill:proven-sk" && bad "proven-sk bị bêu OAN" || ok "proven-sk được nhận proof (tests)"
+echo "$u" | grep -q "skill:pure-prompt-sk" && bad "pure-prompt-sk (0 engine) bị bêu OAN — root-cause chưa fix" \
+                                            || ok "pure-prompt-sk (0 engine) MIỄN TRỪ đúng (tier 7, không phải nợ giả)"
 
 # 2. baseline chốt nợ → logic ratchet XANH (nợ tồn không đỏ)
 python3 "$BC" --root "$SB" --write-capproof-baseline >/dev/null
@@ -38,7 +50,7 @@ print('RED' if (new or dem) else 'GREEN')")
 [ "$u2" = "GREEN" ] && ok "nợ tồn trong baseline → XANH (ratchet đúng chiều)" || bad "nợ tồn làm đỏ ($u2)"
 
 # 3. thêm capability MỚI không proof → đỏ
-mkdir -p "$SB/skills/new-orphan"; printf -- '---\nname: new-orphan\ndescription: x\n---\n' > "$SB/skills/new-orphan/SKILL.md"
+mkdir -p "$SB/skills/new-orphan"; printf -- '---\nname: new-orphan\ndescription: x\n---\ndung: python3 harness/scripts/khong-ton-tai-2.py\n' > "$SB/skills/new-orphan/SKILL.md"
 u3=$(j "$SB" | python3 -c "
 import sys,json
 cp=json.load(sys.stdin); base=json.load(open('$SB/harness/metrics/capproof-baseline.json'))

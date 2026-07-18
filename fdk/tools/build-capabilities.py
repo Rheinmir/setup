@@ -145,6 +145,12 @@ def _resolve_one(root: Path, src: dict, kind: str, name: str, body: str = "") ->
         return "wiki/sources/evals/*", "golden"
     if kind != "mech" and name.replace(".py", "") in src["medic"]:    # 6. medic probe nhắc tên
         return "fdk/tools/medic.py", "medic-tag"
+    # 7. N/A — skill THUẦN PROMPT (không tham chiếu engine .py nào trong SKILL.md) không có
+    # code-path để test; đếm nó là "unproven" là capproof tự tạo nợ giả (root-cause 2026-07-18:
+    # 34/38 skill-unproven hoá ra rơi đúng nhóm này — brandkit/caveman-*/gpt-taste/imagegen-*…).
+    # Chỉ áp dụng skill; script/tool luôn LÀ code nên không được exempt qua nhánh này.
+    if kind == "skill" and not re.search(r'python3 (?:harness/scripts|fdk/tools)/[\w\-]+\.py', body):
+        return "N/A — pure-prompt skill, không có engine .py để test", "no-engine"
     return None, "none"
 
 
