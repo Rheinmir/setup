@@ -228,9 +228,25 @@ def capproof(root: Path) -> dict:
     man = root / "harness" / "mechanisms.yaml"
     if man.is_file():
         mt = man.read_text(encoding="utf-8")
-        for mid, lp in zip(re.findall(r'^\s*-\s*id:\s*(\S+)', mt, re.M),
-                           re.findall(r'^\s*live_probe:\s*(.+?)\s*$', mt, re.M)):
+        # per-entry BLOCK (không phải flat file) — để `proof:` khai tay đúng ĐÚNG entry, không
+        # lẫn giữa các mechanism cạnh nhau (2026-07-18: mech kind bị loại khỏi tier 6 medic-tag
+        # có chủ ý — chống false-positive — nên khi coverage THẬT tồn tại nhưng khác từ vựng
+        # (vd secondary-memory ↔ memory-map-user-reachability-test.sh), đường thoát tường minh
+        # là khai tay ở ĐÚNG CHỖ dữ liệu sống — manifest entry — không phải hack docstring .py).
+        for blk in re.split(r'(?=^  - id:)', mt, flags=re.M)[1:]:
+            idm = re.search(r'^\s*-\s*id:\s*(\S+)', blk, re.M)
+            lpm = re.search(r'^\s*live_probe:\s*(.+?)\s*$', blk, re.M)
+            if not (idm and lpm):
+                continue
+            mid, lp = idm.group(1), lpm.group(1)
+            proofm = re.search(r'^\s*proof:\s*(.+?)\s*$', blk, re.M)
+            if proofm and (root / proofm.group(1)).exists():
+                items[f"mech:{mid}"] = {"proof": proofm.group(1), "via": "manifest-proof"}
+                continue
             lpp = root / lp
+            if lpp.is_dir():          # mechanism cấu trúc (thư mục) — narrative probe đã tự
+                items[f"mech:{mid}"] = {"proof": f"{lp} (thư mục tồn tại)", "via": "dir-exists"}
+                continue
             body = lpp.read_text(encoding="utf-8", errors="ignore") if lpp.is_file() else ""
             p, via = _resolve_one(root, src, "mech", mid, body)
             items[f"mech:{mid}"] = {"proof": p, "via": via}

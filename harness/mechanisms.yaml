@@ -121,6 +121,7 @@ mechanisms:
     surface: [mechanism, maintain]
     desc: "scratch-log (RAW append-only, track git) + memory-map (view) + session-provenance (auto-distill) — bắt sửa/context VỤN, không mất gì, truy được ở phiên sau. AUTO cuối lượt qua Stop-hook (issue #5, council-030): auto-điền why từ git nếu chưa ghi tay → distill → regenerate memory-map.html, không cần agent nhớ gõ"
     live_probe: harness/scripts/scratch-log.py
+    proof: harness/tests/memory-map-user-reachability-test.sh
 
   - id: harness-update
     name: harness-update
@@ -135,6 +136,7 @@ mechanisms:
     surface: [mechanism]
     desc: "overstack tự tường thuật trạng thái code: FACT có [nguồn]+lệnh tái tạo, tách FACT/OPINION (council-advisory); medic probe selfstate gác reproducibility"
     live_probe: fdk/tools/code-state.py
+    proof: fdk/tools/medic.py
 
   - id: skill-usage
     name: "skill-usage (đo tần suất)"
