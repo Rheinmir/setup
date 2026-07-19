@@ -815,6 +815,19 @@
     "date": "19/07/26",
     "solvedBy": "skills/docs-site-macos/SKILL.md § Best Practices — bullet 'KHÔNG LOCK PX — CO GIÃN THEO VIEWPORT' (PR #82)",
     "session": "c753ac99"
+  },
+  {
+    "id": "p-37",
+    "parent": null,
+    "title": "Gate local (fdk-gate) không phủ hết CI → cùng loại đỏ tái phát lần 2",
+    "desc": "fdk-gate báo 20/20 xanh nhưng PR #82 vẫn đỏ ở step skill-provenance (sổ checksum của skill — sửa SKILL.md phải chạy `record` để ghi lại). Đây là lần TÁI PHÁT thứ 2 của cùng một loại lỗi: commit b226621 của repo cũng là 'fix(ci): cập nhật provenance skill lint sau sửa nội dung'. Nguyên nhân cấu trúc: gate local và workflow CI là hai danh sách step viết TAY, không có cơ chế đối chiếu, nên step chỉ-có-ở-CI là điểm mù cố định. Đã vá 1 điểm mù (thêm step skill-provenance vào fdk-gate, đã fire-drill xác nhận cắn). CÒN MỞ: CI chạy 21 file harness/tests/*.sh mà gate local chỉ chạy 1 (policy-converters-drift) — 20 điểm mù còn lại. Bậc đòn bẩy cao nhất chưa làm: một check tự đối chiếu gate↔workflow, thiếu step nào thì đỏ, thay vì vá tay từng cái sau mỗi lần CI đỏ.",
+    "status": "partial",
+    "scope": [
+      "harness"
+    ],
+    "date": "19/07/26",
+    "solvedBy": "harness/scripts/fdk-gate.py — thêm step 'skill provenance' (PR #82); phần đối chiếu gate↔CI CHƯA làm",
+    "session": "c753ac99"
   }
 ]
 </script>
