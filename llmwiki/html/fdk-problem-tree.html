@@ -106,7 +106,8 @@
   📄 File (worktree issue-70): <code>/Users/giatran/orca/workspaces/setup/issue-70-bonbon-ai-wiki/llmwiki/html/fdk-problem-tree.html</code></footer>
 </div>
 
-<script type="application/json" id="tree-data">[
+<script type="application/json" id="tree-data">
+[
   {
     "id": "p-01",
     "parent": null,
@@ -801,8 +802,22 @@
     "date": "18/07/26",
     "session": "2a2207b0",
     "pending": true
+  },
+  {
+    "id": "p-36",
+    "parent": "p-23",
+    "title": "Rule cỡ chữ compact bị hiểu thành lock px cứng cho MỌI màn",
+    "desc": "Rule 'thang cỡ chữ compact cho màn 13 inch' (feedback 06/07/26) được các trang sinh ra áp thành px cứng + max-width:1100px hardcode ở nhiều chỗ. Hậu quả: trên màn 1545px bỏ phí ~450px chiều ngang trong khi bảng 9 cột vẫn wrap chật — người dùng đọc thành 'trang bị nén'. Gốc là THIẾU KHOẢNG THỞ và THIẾU CO GIÃN (responsive — layout tự giãn theo bề ngang màn), không phải cỡ chữ. Sửa ở tầng skill: khai biến --content-w:min(1400px,92vw), body dùng clamp() để thang compact thành SÀN chứ không thành TRẦN, font con dùng em để scale theo body, padding cũng clamp. Chưa có validator tự bắt trang hardcode px (bậc đòn bẩy cao hơn còn bỏ ngỏ).",
+    "status": "partial",
+    "scope": [
+      "skills"
+    ],
+    "date": "19/07/26",
+    "solvedBy": "skills/docs-site-macos/SKILL.md § Best Practices — bullet 'KHÔNG LOCK PX — CO GIÃN THEO VIEWPORT' (PR #82)",
+    "session": "c753ac99"
   }
-]</script>
+]
+</script>
 
 <script>
 (function(){
