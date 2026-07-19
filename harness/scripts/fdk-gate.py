@@ -41,6 +41,8 @@ STEPS = [
      "fdk/CAPABILITIES.md khớp đĩa (agent biết đúng đồ nghề)"),
     ("skill mirror parity", ["python3", "harness/scripts/sync-skills.py", "--check"],
      "canonical ↔ mirror skill byte-identical + loop khai đủ"),
+    ("skill provenance", ["python3", "fdk/tools/skill-provenance.py", "check", "--ci"],
+     "checksum sổ khớp SKILL.md trên đĩa — sửa skill mà quên `record` thì đỏ tại đây, không đỏ ở CI"),
     ("skill cross-surface", ["python3", "harness/scripts/skill-registry.py", "--check"],
      "mọi skill có mặt đủ marketplace + AGENT + CLAUDE + LOOP_MAP (không drift surface)"),
     ("task-lifecycle", ["python3", "harness/validators/task_lifecycle.py", "--root", "."],
