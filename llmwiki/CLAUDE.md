@@ -96,6 +96,7 @@ Karpathy ở trên là "vì sao"; đây là "làm sao". (Chưng cất từ ponyt
 | `hallmark` | **NỀN design mặc định** (Together AI) — 6 discipline + 57 cổng slop-test, từ chối trông AI-generated. Mọi UI đứng trên nó; skill taste khác là flavour. 4 verb: build/audit/redesign/study. Xem [[design-foundation]] | `skills/utils/hallmark.md` | utils |
 | `build-now-adapt-later` | When a task is blocked by missing or unverified information (an… | `skills/dev-loop/build-now-adapt-later.md` | dev-loop |
 | `cavecrew` | Decision guide for delegating to caveman-style subagents. | `skills/utils/cavecrew.md` | utils |
+| `i-have-adhd` | Định hình OUTPUT cho người đọc ADHD — hành động trước, đánh số bước, nêu lại state mỗi lượt, chặn lạc đề, ước lượng thời gian cụ thể, không mở bài/kết bài xã giao. Áp cho phần CHAT; tài liệu người đọc vẫn theo luật văn xuôi đầy đủ | `skills/utils/i-have-adhd.md` | utils |
 | `caveman` | Ultra-compressed communication mode. | `skills/utils/caveman.md` | utils |
 | `caveman-commit` | Ultra-compressed commit message generator. | `skills/utils/caveman-commit.md` | utils |
 | `caveman-compress` | Compress natural language memory files (CLAUDE.md, todos, preferences)… | `skills/utils/caveman-compress.md` | utils |

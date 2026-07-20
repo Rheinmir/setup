@@ -445,6 +445,13 @@
       "recorded": "2026-07-18",
       "source": "local-authored"
     },
+    "i-have-adhd": {
+      "files": {
+        "SKILL.md": "944ddb6a03cdbeff392d81f26f4486f3f20e23285c37bed2e50f1eb9c9b089ca"
+      },
+      "recorded": "2026-07-20",
+      "source": "https://github.com/ayghri/i-have-adhd.git"
+    },
     "image-to-code": {
       "files": {
         "SKILL.md": "faf7b2dfc7219e6280270b3c85099e293445435ee70abbf07833528f0a4d5fd1"

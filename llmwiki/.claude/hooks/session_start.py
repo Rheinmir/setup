@@ -80,6 +80,33 @@ def wiki_drift(root: Path) -> None:
         pass
 
 
+
+def output_style(root: Path) -> None:
+    """Nhắc kiểu OUTPUT đầu mỗi phiên — chỉ khi skill thật sự có mặt (thăm dò, không đoán).
+
+    ADR-004 không cấm: đây KHÔNG phải context nội-bộ-framework, nó là cách nói chuyện với
+    user, áp cho mọi dự án. Nhưng vẫn theo đúng luật đã học hôm nay — quảng cáo một năng
+    lực thì phải KIỂM nó có mặt, không được nhắc mù.
+
+    Ranh giới phải nói rõ, vì hai luật đang kéo ngược nhau: i-have-adhd bảo cắt ngắn, còn
+    CLAUDE.md bảo tài liệu-người-đọc phải là văn xuôi đầy đủ. Phân xử: skill này áp cho
+    phần CHAT; file tài liệu (ADR, proposal, README, report, trang HTML) giữ nguyên luật cũ.
+    """
+    try:
+        for cand in (Path.home() / ".claude/skills/i-have-adhd/SKILL.md",
+                     root / "skills/i-have-adhd/SKILL.md"):
+            if cand.is_file():
+                print("🧠 [output] Áp `/i-have-adhd` cho phần CHAT: hành động trước · đánh số bước · "
+                      "nêu lại state mỗi lượt · chặn lạc đề · ước lượng thời gian cụ thể · "
+                      "không mở bài/kết bài xã giao · list tối đa 5 mục.\n"
+                      "   NGOẠI LỆ giữ nguyên: user hỏi \"giải thích/walk me through\" → viết đủ dài; "
+                      "trước hành động phá huỷ → xác nhận đã; và TÀI LIỆU người đọc "
+                      "(ADR/proposal/README/report/HTML) vẫn theo luật văn xuôi đầy đủ của CLAUDE.md.")
+                return
+    except Exception:
+        pass
+
+
 def orient(root: Path) -> None:
     """SessionStart orientation: in NGẮN để agent BIẾT project có code-index + wiki + capabilities,
     và NHẮC query chúng để định vị nhanh (đừng grep/đọc mù). Project-relevant — KHÔNG phải FDK
@@ -171,6 +198,7 @@ def main() -> None:
     if not (root / ".template-manifest.json").is_file():
         sys.exit(0)  # không phải project dùng template → bỏ qua
 
+    output_style(root)  # đầu phiên: chốt KIỂU nói chuyện (chat), trước khi nói gì
     orient(root)  # đầu phiên: cho agent BIẾT project có gì + nhắc query trước (chống 'lơ ngơ')
 
     # NOTE: KHÔNG auto-bơm context framework-dev (FDK) ở đây. Phần lớn phiên là dùng
