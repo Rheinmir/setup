@@ -2,7 +2,7 @@
 type: issue
 kind: foundation
 title: "code-graph MCP hỏng — MỘT database thiếu schema giết toàn bộ truy vấn (fan-out không cô lập lỗi)"
-status: fixed-pending-restart
+status: resolved
 assignee: maintainer
 resolved: 2026-07-20
 dispatch: human
@@ -46,9 +46,32 @@ Nó dùng `os.path.basename(p).rsplit("-", 1)[0]` — tàn dư của layout cũ 
 
 **Kết quả sau sửa:** `get_all_db_paths` 17 → 16 (loại đúng cái rác), `list_projects` trả tên repo thật, `search_symbols("flag_stale")` trả 8 kết quả thay vì ném lỗi, tổng 53.208 symbol query được.
 
-## ⚠ Còn một bước: KHỞI ĐỘNG LẠI MCP server
+## ĐÃ XÁC MINH TỪ PHÍA CLIENT (sau restart, 2026-07-20)
 
-Server đang chạy giữ code cũ trong bộ nhớ — vừa kiểm lại, `list_projects` vẫn trả 17× `index.db`. Fix chỉ có hiệu lực sau khi restart tiến trình MCP (khởi động lại Claude Code). Chưa restart thì mọi kết luận "đã hết lỗi" là chưa kiểm chứng được từ phía client.
+| Tool | Trước | Sau |
+|---|---|---|
+| `list_projects` | 17× `"index.db"` | 16 tên repo thật (`setup`, `bonbon-ai-backend`, `payroll-*`…) |
+| `get_stats` | `no such table: files` | 16 project · 5.963 file · **53.208 symbol** · 550.651 edge |
+| `search_symbols("flag_stale")` | `no such table: symbols` | `harness/scripts/wiki-sync.py:138` — đúng |
+
+## Đo lại A/B — câu trả lời THẬT cho câu hỏi gốc
+
+Chạy lại đúng 5 nhiệm vụ × 2 nhánh trên tool đã lành (`harness/metrics/code-graph-ab.json`):
+
+| | code-graph | grep/Read | |
+|---|---|---|---|
+| Lần 1 (tool HỎNG) | 37 | 14 | 2.64× đắt — *đo chi phí của lỗi* |
+| **Lần 2 (tool LÀNH)** | **24** | **16** | **1.50× đắt** |
+| — tra hàm/lớp/method | 11 | 11 | **HOÀ** |
+| — tra hằng số | 13 | 5 | **THUA 2.6×** |
+
+Độ chính xác hoà 5/5 ở cả hai lần.
+
+**Nguyên nhân khoản thua:** code-graph **chỉ index function/class/method**. `search_symbols("CONTENT_DIRS")` trả rỗng (agent A5b xác nhận trực tiếp). Nhưng orientation lại bảo thử nó TRƯỚC cho mọi thứ — nên mỗi lần tìm hằng số là một lần trả phí hai lần: thử code-graph, hụt, rồi mới grep.
+
+**Đã sửa:** dòng orientation trong `llmwiki/.claude/hooks/session_start.py` khai rõ phạm vi — code-graph cho hàm/lớp/method và nhất là `get_callers`; hằng số·config·chuỗi thì grep thẳng.
+
+**Trả lời thread Grapuco:** ở repo cỡ này, với ca **định-vị-hàm** thì ba người nói *"model đã đủ giỏi đọc repo"* là **đúng** — code-graph hoà, không hơn. Giá trị còn lại của nó nằm ở `get_callers` / quan hệ gọi (550.651 cạnh) — thứ grep không làm được, và **chưa** nằm trong bộ đo này.
 
 ## Vì sao P1 chứ không phải "tool phụ hỏng thì thôi"
 

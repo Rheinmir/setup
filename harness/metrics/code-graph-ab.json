@@ -1,49 +1,63 @@
 {
- "measured": "2026-07-20",
- "task": "T-260719-02",
- "engine": "5 task x 2 nhánh, Explore subagent",
- "evidence_grade": "self-reported trajectory (agent tự khai số tool-call) — KHÔNG phải log hệ thống; events.jsonl chỉ ghi tool GHI (Edit/Write), không ghi Read/Grep/MCP.",
- "finding": "code-graph MCP HỎNG tại thời điểm đo: search_symbols/get_stats -> 'no such table: symbols|files'. reindex_repo BÁO THÀNH CÔNG (2660 file, 21972 symbol, 276595 edge) nhưng search vẫn hỏng => đường GHI và đường ĐỌC trỏ hai DB khác nhau (bug server-side).",
- "caveat": "Vì vậy KHÔNG đo được giá trị thật của code-graph. Số dưới đo CHI PHÍ CỦA MỘT TOOL HỎNG mà orientation khuyên mọi phiên dùng trước.",
+ "measured": "2026-07-20 (LẦN 2 — sau khi sửa code-graph, commit 2727ede)",
+ "task": "T-260719-02 / T-260720-01",
+ "supersedes": "lần 1 đo khi code-graph ĐANG HỎNG (A=37 B=14) — số đó là chi phí của lỗi, không phải giá trị của tool",
  "runs": [
   {
    "task": "flag_stale",
+   "kind": "function",
+   "code_graph_calls": 4,
+   "baseline_calls": 3
+  },
+  {
+   "task": "hard_cap",
+   "kind": "constant",
    "code_graph_calls": 5,
    "baseline_calls": 2
   },
   {
-   "task": "hard_cap",
-   "code_graph_calls": 5,
-   "baseline_calls": 3
-  },
-  {
    "task": "detect_wiki_dir",
-   "code_graph_calls": 13,
+   "kind": "function",
+   "code_graph_calls": 3,
    "baseline_calls": 3
   },
   {
    "task": "cmd_roster",
-   "code_graph_calls": 6,
-   "baseline_calls": 3
+   "kind": "function",
+   "code_graph_calls": 4,
+   "baseline_calls": 5
   },
   {
    "task": "content_dirs",
+   "kind": "constant",
    "code_graph_calls": 8,
    "baseline_calls": 3
   }
  ],
  "totals": {
-  "code_graph": 37,
-  "baseline": 14,
-  "mean_code_graph": 7.4,
-  "mean_baseline": 2.8,
-  "ratio": 2.64
+  "code_graph": 24,
+  "baseline": 16,
+  "ratio": 1.5
+ },
+ "by_kind": {
+  "function_class_method": {
+   "code_graph": 11,
+   "baseline": 11,
+   "verdict": "HOÀ — code-graph không thắng cũng không thua"
+  },
+  "module_level_constant": {
+   "code_graph": 13,
+   "baseline": 5,
+   "verdict": "code-graph THUA nặng — nó KHÔNG index hằng số module-level, search_symbols trả rỗng, agent phải quay về grep nên trả phí HAI lần"
+  }
  },
  "accuracy": {
   "code_graph_found": 5,
   "baseline_found": 5,
   "of": 5,
-  "note": "hai nhánh ra CÙNG đáp án — khác biệt duy nhất là chi phí."
+  "note": "hai nhánh cùng đáp án"
  },
- "decision": "DỪNG Ở SỐ (đúng ranh giới Grower). Không kết luận giữ/bỏ code-graph khi nó đang hỏng — phải sửa server rồi đo lại."
+ "root_finding": "code-graph chỉ index function/class/method (A5b xác nhận: search_symbols cho CONTENT_DIRS/WIKI_DIRS trả rỗng). Với hằng số và chuỗi, nó cấu trúc-tính không giúp được, mà orientation lại bảo thử nó TRƯỚC — nên mỗi lần tìm hằng số là một lần trả phí thừa.",
+ "actionable": "Orientation nên nói RÕ: code-graph cho HÀM/LỚP/METHOD; hằng số·config·chuỗi thì grep thẳng. Chỉ sửa một dòng hướng dẫn là biến 13-vs-5 (thua) thành hoà.",
+ "answers_grapuco_thread": "Ở repo cỡ này, code-graph KHÔNG còn lợi thế cho tra cứu hàm (hoà 11-11). Ba người trong thread nói 'model đã đủ giỏi đọc repo' — với ca định-vị-hàm thì họ ĐÚNG. Giá trị còn lại của code-graph nằm ở get_callers/edges (550.651 cạnh), thứ grep không làm được — chưa đo trong bộ này."
 }

@@ -94,8 +94,18 @@ def orient(root: Path) -> None:
             except Exception:
                 pass
         if has_cg:
+            # Khai RÕ phạm vi, đừng khuyên chung chung "đừng grep mù". Đo A/B 2026-07-20
+            # (harness/metrics/code-graph-ab.json, 5 task × 2 nhánh, sau khi sửa bug 2727ede):
+            #   · tra HÀM/LỚP/METHOD  → code-graph 11 vs grep 11 tool-call = HOÀ
+            #   · tra HẰNG SỐ         → code-graph 13 vs grep  5 tool-call = THUA 2.6×
+            # Vì code-graph CHỈ index function/class/method — `search_symbols("CONTENT_DIRS")`
+            # trả rỗng. Khuyên dùng nó trước cho MỌI thứ khiến mỗi lần tìm hằng số phải trả
+            # phí hai lần (thử code-graph, hụt, rồi mới grep). Một dòng hướng dẫn đúng phạm vi
+            # biến khoản thua đó thành hoà.
             bits.append("• code-index (code-graph, auto-reindex khi code đổi) — query `mcp__code-graph__*` "
-                        "(search_symbols / get_symbol_context / get_callers) để ĐỊNH VỊ code nhanh, đừng grep mù.")
+                        "cho HÀM/LỚP/METHOD (search_symbols / get_symbol_context) và nhất là "
+                        "get_callers (quan hệ gọi — grep không làm được). HẰNG SỐ · config · chuỗi "
+                        "thì grep THẲNG: code-graph không index chúng, thử trước chỉ tốn thêm lượt.")
         wiki = root / "fdk" / "wiki" if (root / "fdk" / "wiki").is_dir() else root / "llmwiki" / "wiki"
         if wiki.is_dir():
             bits.append(f"• wiki `{wiki.relative_to(root)}` — query concept/entity/sources/adr/decisions cho context.")
