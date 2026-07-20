@@ -19,7 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-18 23:57:56 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['fdk/skills.provenance.json'] · prev=d0bed4a3f34deaa4eb714d75147ead559f |
 | 2026-07-19 00:05:20 | `task.new` |  · task=T-260719-01 · title=Bịt 3 lỗ travel đường curl update + forcing functions · state=proposed · actor=agent · prev= |
 | 2026-07-19 00:08:26 | `file.write` | llmwiki/html/190726-travel-gap-forcing-functions-seq.html · tool=Write · session=ee3f5da6 · actor=agent · prev=a7b3a5251 |
 | 2026-07-19 00:09:13 | `file.write` | llmwiki/html/190726-travel-gap-forcing-functions-seq.html · tool=Edit · session=ee3f5da6 · actor=agent · prev=06236c085e |
@@ -59,6 +58,7 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-20 14:11:18 | `file.write` | harness/scripts/dep-health.py · tool=Write · session=eec0806a · actor=agent · prev=47d9ded7112a5be774cc14a6000632c84b6b1 |
 | 2026-07-20 14:12:11 | `file.write` | llmwiki/.claude/hooks/session_start.py · tool=Edit · session=eec0806a · actor=agent · prev=84403384ec36fd6c6c5f767618cbd |
 | 2026-07-20 14:13:16 | `file.write` | harness/tests/dep-health-gate-test.sh · tool=Write · session=eec0806a · actor=agent · prev=c36a8f9cc49bfc75328254f01f234 |
+| 2026-07-20 14:56:04 | `file.write` | harness/tests/wikigraph-single-source-test.sh · tool=Write · session=eec0806a · actor=agent · prev=4a4cfa7c7762d729a5db4 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -441,3 +441,10 @@ User: "10 con cùng sống là lỗi to vl rồi còn gì" — đúng, tôi đá
 Trả lời 4 câu của user. TẠO: #1 code-graph do reindex_repo; #2 wiki-whiteboard + #4 memory-map do stop.py::regen_docs cuối phiên; #3 wiki-graph.py dựng trong RAM mỗi lần gọi; #5 skill-whiteboard thủ công, 17 ngày không ai gọi. DELIVER: travel-policy cho #2/#3/#4 đi xuống (nhóm memory_query), #5 framework_only ở lại, còn #1 code-graph KHÔNG có trong travel-policy lẫn template-manifest — nó là MCP server riêng ở workspace/graph, downstream curl-cài KHÔNG hề có. UPDATE: #2/#4 tự sinh lại cuối phiên khi git-status có diff wiki/ hoặc code; #1 watcher debounce 2s nhưng chỉ trên máy có server.
 KIỂM KÊ: 5 graph THẬT gộp về 3 mô hình. #1 code-graph (22.213 symbol, 272.529 cạnh: 253.969 CALLS + 18.560 IMPORTS) là cái DUY NHẤT agent truy vấn theo quan hệ lúc chạy; #2/#4/#5 để NGƯỜI nhìn; #3 là CLI thủ công. #4 và #5 chỉ importlib renderer của #2 — lười đúng cách. CHẾT: graph.db ở gốc repo (xác minh 0 file/0 symbol/0 cạnh), wiki-graph-static.html, skill-whiteboard drift 17 ngày. KHÔNG phải graph: mem-rank (danh sách xếp hạng), ledger.jsonl (chuỗi), stale.json (dict phẳng), fdk-problem-tree (CÂY, mỗi node 1 cha).
 CENTRALIZE #2+#3 (user chốt): hai bản cài trả lời cùng câu hỏi "cái gì link tới cái gì" bằng hai regex độc lập, LỆCH THẬT 208 vs 164 cạnh, mỗi bên sai một kiểu nên không chọn bừa bên nào làm chuẩn — #3 không bỏ code-fence (đếm [[...]] trong ví dụ code), #2 giữ nguyên [[trang#anchor]] (sinh cạnh trỏ vào hư không). Nay một nguồn: wikilink_targets()/mdlink_targets() ở wiki-graph.py, build-wiki-graph.py import qua importlib có fail-open về regex local. #3 giảm 208→194 (loại 14 cạnh giả). Test wikigraph-single-source 4/4 khoá cả ba bất biến.
+
+## 2026-07-20 — /fdk (a) nhúng graph vào overstack + (c) touches tự suy
+User: "touch không tự update là vấn đề hệ thống" — đúng, và cùng root với 19/20 thẻ ghi-tạm, 24 issue mở, 15 pattern lệch.
+5-Why touches: cũ vì wiki-relations.py chạy 1 lần 02/07 → nó là MIGRATOR không phải MAINTAINER → không ai nối vào nhịp → vì được đóng khung "dập quan hệ vào frontmatter" → ROOT: một sự thật SUY RA ĐƯỢC bị cất như sự thật ĐƯỢC KHAI; cất rồi thì đóng băng. wikilink không bao giờ cũ vì suy lại mỗi lần dựng.
+(c) Chuyển logic suy touches từ writer sang ENGINE: wiki-graph.py thêm touches_targets(text, repo_root) — path trong backtick, có "/", TỒN TẠI trên đĩa. Lưu ý ngược với wikilink_targets: KHÔNG strip_code vì path nằm chính trong inline-code. build-wiki-graph.scan() suy sống mỗi lần dựng, frontmatter vẫn thắng (không nhân đôi). KẾT QUẢ: touches 21 → 283 cạnh, và 283/283 đích tồn tại thật (zero false-positive vì điều kiện bắt buộc có trên đĩa). Cầu nối concept↔code từ 0,8% lên ~10% tổng cạnh, và không thể cũ nữa.
+(a) Nhúng #4 memory-map + #5 skill-whiteboard vào overstack.html bằng iframe srcdoc. Lý do chọn iframe thay vì tách fragment renderer: iframe cô lập JS/id nên KHÔNG phải mổ template 350 dòng của build-wiki-graph.py — engine đó đang travel. overstack.html 145KB → 412KB, 2 iframe, unescape ra tài liệu hợp lệ. Vì overstack.html là "output travel" nên #4/#5 giờ đi xuống máy user mà không cần đổi travel-policy.
+Kiểm kê trả lời user: #1 code-graph (symbol→symbol) và #3 wiki-link (trang→trang) KHÔNG giải chung bài toán — khác node, khác câu hỏi. Cầu nối concept→code là #2 touches, và trước hôm nay nó gần rỗng.

@@ -984,6 +984,31 @@ def sections(root: Path):
         "bảng <b>từng rule</b> ở tab <a href=\"@harness\">Nền 2 · Harness</a>; bảng <b>từng skill</b> ở tab "
         "<a href=\"@skills\">Skill</a>. Mind map trên là bản tra cứu nhanh; bảng đầy đủ nằm đúng tab chủ đề.</p>",
     ]))
+    # ── Graph nhúng: đường DUY NHẤT để memory-map (#4) và skill-whiteboard (#5) xuống
+    # được máy user. Hai artifact đó KHÔNG travel (generator là framework_only), nhưng
+    # overstack.html thì "output travel" — nên nhúng vào đây là chúng đi theo.
+    # Dùng iframe srcdoc thay vì tách fragment renderer: iframe cô lập JS/id, nên KHÔNG
+    # phải mổ template 350 dòng của build-wiki-graph.py — engine đó đang travel, mổ nó
+    # để lấy một khung nhìn là đổi rủi ro lấy tiện.
+    emb = []
+    for fname, title, why in (
+            ("memory-map.html", "Bản đồ trí nhớ",
+             "phiên nào chạm file nào — cạnh <code>elaborates</code>, sinh lại cuối mỗi phiên"),
+            ("skill-whiteboard.html", "Bản đồ skill",
+             "loop chứa skill nào — cạnh <code>contains</code> / <code>orchestrates</code>")):
+        f = root / "llmwiki" / "html" / fname
+        if not f.is_file():
+            continue
+        doc = f.read_text(encoding="utf-8").replace("&", "&amp;").replace('"', "&quot;")
+        emb.append(f'<h3>{title}</h3><p class="lead">{why}</p>'
+                   f'<iframe title="{title}" style="width:100%;height:640px;border:1px solid '
+                   f'var(--line,#d8e2f0);border-radius:12px;background:#fff" '
+                   f'sandbox="allow-scripts" srcdoc="{doc}"></iframe>')
+    if emb:
+        S.append(("graphs", "Bản đồ quan hệ", "· BẢN ĐỒ", "Bản đồ quan hệ (graph)", [
+            '<p class="lead">Các đồ thị này nhúng thẳng vào trang, nên chúng đi cùng '
+            '<code>overstack.html</code> xuống máy bạn — không cần cài thêm gì.</p>'] + emb))
+
     return S
 
 
@@ -1000,7 +1025,7 @@ def render(root: Path) -> str:
                ("3 nền tảng", ["wiki", "harness", "skills"]),
                ("Dùng hằng ngày", ["workflow", "orca", "bnal"]),
                ("Đo & kiểm khi chạy", ["advanced", "runtime", "awareness", "codestate"]),
-               ("Tra cứu", ["reference"]),
+               ("Tra cứu", ["reference", "graphs"]),
                ("Vận hành", ["maintain"]),
                ("👷 Cho người phát triển overstack", ["fdk", "newfeature"])]
     # Thứ tự thân bài = thứ tự phẳng của `grouped` (nav ↔ thân luôn khớp, chống lệch khi chèn/di tab)

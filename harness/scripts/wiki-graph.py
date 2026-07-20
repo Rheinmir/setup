@@ -70,6 +70,33 @@ def wikilink_targets(text: str) -> list:
     return out
 
 
+# `touches` — cạnh CONCEPT → CODE. Suy ra, KHÔNG cất.
+#
+# Trước 2026-07-20 quan hệ này được `fdk/tools/wiki-relations.py` DẬP VÀO frontmatter
+# đúng một lần (02/07) rồi đóng băng: 21 cạnh trên tổng 2.559 (0,8%) trong khi nó là
+# thứ DUY NHẤT không graph nào khác làm được — code-graph chỉ biết code↔code, wiki-link
+# chỉ biết wiki↔wiki. Root: một sự thật SUY RA ĐƯỢC bị cất như sự thật ĐƯỢC KHAI; cất
+# rồi thì nó không tự cập nhật. `wikilink` không bao giờ cũ vì nó được suy lại mỗi lần
+# dựng — `touches` phải theo đúng cơ chế đó.
+#
+# LƯU Ý ngược với wikilink_targets: hàm này KHÔNG được strip_code, vì path nằm CHÍNH
+# TRONG inline-code. Điều kiện chống false-positive giữ nguyên bản gốc: phải có "/" và
+# phải TỒN TẠI trên đĩa.
+CODE_PATH_RE = re.compile(r"`([\w./-]+\.(?:py|js|ts|sh|yaml|yml|json|html))`")
+
+
+def touches_targets(text: str, repo_root) -> list:
+    """Path code mà trang này nhắc tới trong backtick VÀ có thật trên đĩa."""
+    root = Path(repo_root)
+    out, seen = [], set()
+    for cp in CODE_PATH_RE.findall(text or ""):
+        cp = cp.strip()
+        if cp and cp not in seen and "/" in cp and (root / cp).exists():
+            seen.add(cp)
+            out.append(cp)
+    return out
+
+
 def mdlink_targets(text: str) -> list:
     """Đích của mọi ](*.md) trong thân bài (đã bỏ code)."""
     out, seen = [], set()
