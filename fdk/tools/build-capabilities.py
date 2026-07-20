@@ -330,10 +330,18 @@ def build(root: Path) -> str:
         out += [f"- `{s}`" for s in scripts]
         cp = capproof(root)
         if not cp.get("downstream"):
-            out.append(f"\n## Proof — năng lực còn sống ({cp['counts']['proven']}/{cp['counts']['total']} có bằng chứng)")
-            out.append("Mỗi năng lực map tất định sang bằng chứng chạy được (frontmatter `proof:` > rule-map > tests > self-test > golden > medic). Chi tiết: `build-capabilities.py --capproof-json`.")
+            out.append(f"\n## Neo bằng chứng — {cp['counts']['proven']}/{cp['counts']['total']} năng lực có neo KHAI BÁO")
+            out.append("**Đọc cho đúng: đây KHÔNG phải bằng chứng năng lực còn SỐNG.** Mỗi năng lực được map "
+                       "tất định tới một *điểm neo* bằng chứng trên đĩa (frontmatter `proof:` > rule-map > tests "
+                       "> self-test > golden > medic). Việc map là **tĩnh** — nó kiểm file/chuỗi có mặt, "
+                       "**không thực thi gì cả**. Nó bắt được ca 'năng lực này chẳng có test/golden/rule nào neo "
+                       "vào' (hữu ích thật), nhưng KHÔNG bắt được ca 'test có mà đỏ' hay 'engine có mà chết'. "
+                       "Muốn biết một dependency ngoài còn sống thì hỏi `harness/scripts/dep-health.py`. "
+                       "Chi tiết neo: `build-capabilities.py --capproof-json`.")
+            # shortcut: neo TĨNH (0 thực thi), nâng lên chạy thật khi có ngân sách CI —
+            # rẻ nhất là tier `selftest` (engine đã có --self-test) rồi mới tới `tests`.
             if cp["unproven"]:
-                out.append(f"\n## UNPROVEN ({len(cp['unproven'])}) — có mặt nhưng CHƯA chứng được còn sống")
+                out.append(f"\n## CHƯA CÓ NEO ({len(cp['unproven'])}) — năng lực có mặt nhưng không neo vào test/golden/rule nào")
                 out += [f"- `{k}` — thêm proof rẻ nhất: test nhắc tên trong harness/tests/, hoặc khai `proof:` trong frontmatter" for k in cp["unproven"]]
             if cp["dups"]:
                 out.append(f"\n## TRÙNG-ỨNG-VIÊN ({len(cp['dups'])}) — máy phát hiện, NGƯỜI phán (dedupe = vòng /propose riêng)")

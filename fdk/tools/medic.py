@@ -71,9 +71,20 @@ def p_coverage():
 
 
 def p_backstop():
-    """Backstop L2 git còn sống không (pre-commit)."""
-    if (ROOT / ".git/hooks/pre-commit").exists():
-        return "ok", "pre-commit đã cài (.git/hooks)", ""
+    """Backstop L2 git còn SỐNG không — không phải "có tồn tại file hook không".
+
+    Bản cũ hỏi `.git/hooks/pre-commit.exists()` rồi kết luận "đã cài". Nhưng shim git là
+    một file shell gọi binary `pre-commit`; binary vắng mặt thì shim vẫn tồn tại còn hook
+    thì GÃY lúc commit — cổng sức khoẻ cuối tuyên bố một phòng tuyến đang sống từ một inode.
+    Cùng lớp lỗi với code-graph (xem p_deps)."""
+    import shutil as _sh
+    hook = (ROOT / ".git/hooks/pre-commit").exists()
+    binary = _sh.which("pre-commit") is not None
+    if hook and binary:
+        return "ok", "pre-commit sống (shim + binary trên PATH)", ""
+    if hook and not binary:
+        return "warn", ("shim git CÓ nhưng binary `pre-commit` KHÔNG trên PATH — "
+                        "hook gãy lúc commit, L2 coi như TẮT"), "pip install pre-commit"
     return "warn", "pre-commit CHƯA cài — backstop L2 tắt", "pre-commit install"
 
 
@@ -154,6 +165,10 @@ def p_narrative():
         d = dangling[0]
         return ("fail", f"probe '{d[0]}' map sang mechanism '{d[1]}' nhưng id đó KHÔNG có trong mechanisms.yaml",
                 f"thêm entry id: {d[1]} vào harness/mechanisms.yaml, hoặc sửa PROBE_MECH_MAP")
+    # LƯU Ý TÊN: trường trong manifest gọi là `live_probe` nhưng probe này chỉ kiểm ĐƯỜNG DẪN
+    # CÓ TỒN TẠI — nó chứng minh "manifest không nói dối về vị trí", KHÔNG chứng minh cơ-chế
+    # đang chạy. Cơ-chế bị vô hiệu (hook gỡ khỏi settings, validator không resolve) vẫn lọt.
+    # Cùng lớp lỗi đã sửa ở p_deps; giữ probe vì nó vẫn bắt được manifest trỏ vào hư không.
     names = re.findall(r'^\s*name:\s*"?(.+?)"?\s*$', text, re.M)
     probes = re.findall(r'^\s*live_probe:\s*(.+?)\s*$', text, re.M)
     if not names or len(names) != len(probes):
@@ -373,7 +388,8 @@ def p_capproof():
               + ([f"{len(demoted)} năng lực TỤT (mất proof): {','.join(demoted[:3])}"] if demoted else [])
         return ("fail", " · ".join(parts),
                 "thêm test/frontmatter proof: cho từng cái, hoặc chốt có chủ ý: build-capabilities.py --write-capproof-baseline")
-    return "ok", (f"{cp['counts']['proven']}/{cp['counts']['total']} proven · nợ tồn {cp['counts']['unproven']}"
+    return "ok", (f"{cp['counts']['proven']}/{cp['counts']['total']} có NEO khai báo (tĩnh, chưa thực thi) "
+                  f"· chưa neo {cp['counts']['unproven']}"
                   + (f" · {len(cp.get('dups', []))} trùng-ứng-viên" if cp.get("dups") else "")), ""
 
 
