@@ -28,6 +28,24 @@ try:
 except Exception:
     code_imports = None   # fail-open: thiếu module → im lặng bỏ enrich imports đa-ngôn-ngữ
 
+# --- Mảnh A2: TRÍCH WIKILINK dùng chung với harness/scripts/wiki-graph.py -------------
+# Trước 2026-07-20 file này và wiki-graph.py trả lời CÙNG câu hỏi "cái gì link tới cái gì"
+# bằng hai regex khác nhau, không chia sẻ dòng code nào — và LỆCH THẬT: 208 cạnh so với
+# 164. Mỗi bên sai một kiểu: bên kia không bỏ code-fence (đếm cả [[...]] trong ví dụ
+# code), bên này bỏ code-fence đúng nhưng bỏ sót [[trang#anchor]]. Không bên nào là tập
+# cha của bên kia. Nay một nguồn chân lý: wikilink_targets() ở wiki-graph.py.
+_wg = None
+for _cand in (Path(__file__).resolve().parents[2] / "harness/scripts/wiki-graph.py",
+              Path.home() / ".claude/harness/harness/scripts/wiki-graph.py"):
+    if _cand.is_file():
+        try:
+            _s = importlib.util.spec_from_file_location("_wikigraph", _cand)
+            _wg = importlib.util.module_from_spec(_s)
+            _s.loader.exec_module(_wg)
+            break
+        except Exception:
+            _wg = None   # fail-open: hỏng thì rơi về regex local bên dưới
+
 # --- Mảnh B: bỏ code-fence + inline-code trước khi bắt [[wikilink]] (chống false-positive) ---
 _FENCE_RE = re.compile(r"```.*?```", re.DOTALL)
 _INLINE_RE = re.compile(r"`[^`\n]*`")
@@ -126,9 +144,14 @@ def scan(wiki: Path, tag: str, nodes, edges, ledger, stale):
             for rel, kind, tgt in REL_RE.findall(fm):
                 edges.append({"from": pid, "rel": rel, "to": tgt, "kind": kind})
             typed_to = {t for _, _, t in REL_RE.findall(fm)}
-            body = _strip_code(text[m.end():] if m else text)   # Mảnh B: bỏ code-fence/inline
-            for w in dict.fromkeys(WIKILINK_RE.findall(body)):
-                w = w.strip()
+            raw_body = text[m.end():] if m else text
+            # Nguồn chung nếu nạp được; regex local chỉ là lưới đỡ khi thiếu harness.
+            if _wg is not None:
+                targets = _wg.wikilink_targets(raw_body)
+            else:
+                targets = [w.strip() for w in dict.fromkeys(
+                    WIKILINK_RE.findall(_strip_code(raw_body)))]
+            for w in targets:
                 if w and w != pid and w not in typed_to:
                     edges.append({"from": pid, "rel": "wikilink", "to": w, "kind": "to"})
     lp = wiki / "ledger.jsonl"

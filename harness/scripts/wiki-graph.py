@@ -42,6 +42,43 @@ SKIP_BASENAMES = {"README.md", "_template.md"}
 WIKILINK_RE = re.compile(r"\[\[([^\]|#]+)(?:[|#][^\]]*)?\]\]")
 MDLINK_RE = re.compile(r"\]\(([^)#\s]+\.md)\)")
 
+# ── NGUỒN CHÂN LÝ DUY NHẤT cho "cái gì link tới cái gì" ─────────────────────────
+# Trước 2026-07-20 có HAI bản cài trả lời cùng câu hỏi này, không chia sẻ dòng code
+# nào: file này (query cho agent) và fdk/tools/build-wiki-graph.py (vẽ cho người).
+# Đo được chúng LỆCH THẬT: 208 cạnh wikilink so với 164 — và mỗi bên sai một kiểu:
+#   · bản này KHÔNG bỏ code-fence → đếm cả [[...]] trong khối code là cạnh thật
+#   · bản kia bỏ code-fence đúng nhưng BỎ SÓT [[trang#anchor]] và ](file.md)
+# Không bên nào là tập cha của bên kia, nên không thể chọn bừa một bên. Hàm dưới hợp
+# cái đúng của cả hai; build-wiki-graph.py import nó thay vì tự bắt regex.
+_FENCE_RE = re.compile(r"```.*?```", re.DOTALL)
+_INLINE_RE = re.compile(r"`[^`\n]*`")
+
+
+def strip_code(text: str) -> str:
+    """Bỏ code-fence + inline-code — [[...]] trong ví dụ code KHÔNG phải liên kết thật."""
+    return _INLINE_RE.sub(" ", _FENCE_RE.sub(" ", text))
+
+
+def wikilink_targets(text: str) -> list:
+    """Đích của mọi [[wikilink]] trong THÂN BÀI (đã bỏ code), giữ thứ tự, khử trùng."""
+    out, seen = [], set()
+    for name in WIKILINK_RE.findall(strip_code(text)):
+        n = name.strip()
+        if n and n not in seen:
+            seen.add(n)
+            out.append(n)
+    return out
+
+
+def mdlink_targets(text: str) -> list:
+    """Đích của mọi ](*.md) trong thân bài (đã bỏ code)."""
+    out, seen = [], set()
+    for link in MDLINK_RE.findall(strip_code(text)):
+        if link and link not in seen:
+            seen.add(link)
+            out.append(link)
+    return out
+
 _DEFAULT_CONTENT_DIRS = ("concepts", "entities", "sources", "draft", "architecture", "tours")
 
 
@@ -146,8 +183,7 @@ def build_graph(wiki: Path) -> Graph:
         text = src.read_text(encoding="utf-8", errors="replace")
         seen_edge: set = set()  # khử trùng cạnh (dst, type) trong cùng một file
 
-        for name in WIKILINK_RE.findall(text):
-            name = name.strip()
+        for name in wikilink_targets(text):
             dst = g.stem_content.get(name)
             if dst is None:
                 if local_only_stem(name, wiki):          # trỏ draft gitignored → KHÔNG broken
@@ -168,7 +204,7 @@ def build_graph(wiki: Path) -> Graph:
             g.out_adj[srel].add(dst)
             g.in_adj[dst].add(srel)
 
-        for link in MDLINK_RE.findall(text):
+        for link in mdlink_targets(text):
             cand = (src.parent / link).resolve()
             dst = path_index.get(cand)
             if dst is None or dst == srel:
