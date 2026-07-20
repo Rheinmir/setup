@@ -926,6 +926,19 @@
   "date": "2026-07-20",
   "solvedBy": "skill /orca-handover + sources/handover/ (phiên 2026-07-20)",
   "session": "/fdk graph-foundation"
+ },
+ {
+  "id": "p-44",
+  "parent": "p-41",
+  "title": "travel-policy phân loại SAI medic.py → cổng nghiệm thu đỏ tất định",
+  "desc": "downstream-contract.yaml:54 khai fdk/tools/medic.py trong must_reach_global_engines (BẮT BUỘC tới global), nhưng travel-policy.yaml xếp nó vào framework_only — và install-harness.sh:154-175 ĐỌC travel-policy để XOÁ nhóm đó khỏi global. Installer xoá đúng thứ hợp đồng nghiệm thu đòi ⇒ fresh-install-smoke đỏ tất định. Chú thích của chính travel-policy tự khai 'stop.py gọi có guard fail-open ở downstream', tức tác giả biết downstream cần nó mà vẫn xếp nhầm tầng. Sửa: chuyển sang global_shared/engine_core.",
+  "status": "solved",
+  "scope": [
+   "harness"
+  ],
+  "date": "2026-07-20",
+  "solvedBy": "travel-policy: medic.py framework_only → global_shared/engine_core (phiên 2026-07-20)",
+  "session": "/fdk orca-handover"
  }
 ]</script>
 

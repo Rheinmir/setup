@@ -40,19 +40,32 @@ def copied_patterns(installer: Path) -> list[str]:
     pats = []
     # glob hay nằm NGOÀI dấu nháy: `cp "$SRC/harness/scripts/"*.py` — phải ghép đuôi lại,
     # bỏ đuôi thì pattern cụt thành thư mục và mọi file trong đó bị coi là không travel.
-    for m in re.finditer(r'^\s*cp\s+(-R\s+)?"\$SRC/([^"]+)"(\S*)', block, re.M):
-        recursive, src = bool(m.group(1)), m.group(2) + m.group(3)
+    for m in re.finditer(r'^\s*cp\s+(-R\s+)?"\$SRC/([^"]+)"(\S*)\s+"\$GH/([^"]*)"', block, re.M):
+        recursive, src, dest = bool(m.group(1)), m.group(2) + m.group(3), m.group(4)
         if recursive:
             # `cp -R "$SRC/dir/." "$GH/dir/"` → cả cây con
-            pats.append(src.rstrip("/.") + "/**")
-        else:
-            pats.append(src)
+            src = src.rstrip("/.") + "/**"
+        pats.append((src, dest.rstrip("/")))
     return pats
 
 
-def travels(path: str, pats: list[str]) -> bool:
+def strip_list(installer: Path) -> list[str]:
+    """Danh sách STRIP_TIER3 hardcode trong installer — cái nó THỰC SỰ gỡ khỏi global."""
+    m = re.search(r'STRIP_TIER3="\n(.*?)\n"', installer.read_text(encoding="utf-8"), re.S)
+    return [ln.strip() for ln in m.group(1).splitlines() if ln.strip()] if m else []
+
+
+def travels(path: str, pats, skip_same_dest: bool = False) -> bool:
+    """path có tới ~/.claude/harness không.
+
+    skip_same_dest=True (dùng cho tầng 3 khi installer có block gỡ): bỏ qua bản copy giữ
+    NGUYÊN đường dẫn repo-relative — `rm -f "$GH/<rel>"` gỡ đúng nó. Bản copy sang đích KHÁC
+    (fdk/tools/x.py → $GH/hooks/x.py) thì rm không chạm tới: vẫn tới tay user, vẫn tính travel.
+    """
     parts = path.split("/")
-    for p in pats:
+    for p, dest in pats:
+        if skip_same_dest and dest == path.rsplit("/", 1)[0]:
+            continue
         if p.endswith("/**"):
             if path.startswith(p[:-2]):
                 return True
@@ -115,14 +128,19 @@ def main(argv=None) -> int:
         return 2
 
     fw, gl = policy_paths(policy)
-    leaked = [p for p in fw if travels(p, pats)]
-    # `llmwiki/.claude/hooks/*.py` copy phẳng vào $GH/hooks/ — pattern khớp thẳng, không cần trừ.
+    strip = strip_list(installer)
+    leaked = [p for p in fw if travels(p, pats, skip_same_dest=p in strip)]
     missing = [p for p in gl if not travels(p, pats)]
+    # hằng số STRIP_TIER3 đi cùng script (không đọc policy runtime) — phải gác nó khỏi tự trôi
+    drift = sorted(set(fw) ^ set(strip))
 
-    if not leaked and not missing:
+    if not leaked and not missing and not drift:
         return 0
 
     out = ["[travel-policy-sync] travel-policy.yaml LỆCH so với install-harness.sh:"]
+    if drift:
+        out.append(f"  framework_only ≠ STRIP_TIER3 trong installer — {len(drift)} lệch:")
+        out += [f"      {p}  ({'chỉ trong policy' if p in fw else 'chỉ trong installer'})" for p in drift]
     if leaked:
         out.append(f"  khai framework_only (không đi xuống) nhưng installer VẪN copy — {len(leaked)}:")
         out += [f"      {p}" for p in leaked]
@@ -135,11 +153,15 @@ def main(argv=None) -> int:
 
 
 def demo():
-    pats = ["fdk/tools/*.py", "harness/poc-vendor-neutral/**", "harness/version.json"]
+    pats = [("fdk/tools/*.py", "fdk/tools"), ("harness/poc-vendor-neutral/**", "harness/poc-vendor-neutral"),
+            ("harness/version.json", "version.json"), ("fdk/tools/build-capabilities.py", "hooks")]
     assert travels("fdk/tools/medic.py", pats)
     assert travels("harness/poc-vendor-neutral/bin/x.sh", pats)
     assert not travels("harness/scripts/medic.py", pats)
     assert not travels("fdk/tools/sub/deep.py", pats), "fnmatch * không được vượt thư mục"
+    # có block gỡ: bản copy cùng chỗ bị rm dọn, bản copy sang $GH/hooks/ thì không
+    assert not travels("fdk/tools/medic.py", pats, skip_same_dest=True)
+    assert travels("fdk/tools/build-capabilities.py", pats, skip_same_dest=True)
     print("demo ok")
 
 

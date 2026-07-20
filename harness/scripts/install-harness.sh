@@ -139,6 +139,9 @@ if [ "${1:-}" = "--global" ]; then
   cp "$SRC/llmwiki/personas/"*.md  "$GH/llmwiki/personas/" 2>/dev/null || true
   cp "$SRC/harness/validators/"*.py "$GH/harness/validators/" 2>/dev/null || true
   cp "$SRC/harness/"*.yaml         "$GH/harness/"          2>/dev/null || true
+  # config đi CÙNG script đọc nó (mem-rank.py ⇄ mem-rank.config.yaml) — glob *.py bên trên bỏ sót,
+  # script global đọc config repo-local là đường dẫn tới "chạy được ở máy này, chết ở máy khác".
+  cp "$SRC/harness/scripts/"*.yaml  "$GH/harness/scripts/"  2>/dev/null || true
   cp "$SRC/harness/version.json"   "$GH/version.json"      2>/dev/null || true
   # Phase 1 v4 (council-038): poc-vendor-neutral (RÀO CHẮN R1-R17: bin/llmwiki-validate.py, policy.yaml,
   # gen-converters) → global. CI downstream (Phase 3) sẽ curl bootstrap → cài poc global → validate từ global;
@@ -148,6 +151,39 @@ if [ "${1:-}" = "--global" ]; then
     cp -R "$SRC/harness/poc-vendor-neutral/." "$GH/harness/poc-vendor-neutral/" 2>/dev/null || true
     log "GLOBAL-SHARED rào chắn: poc-vendor-neutral (validate + policy + converters) → $GH/harness/poc-vendor-neutral/"
   fi
+  # TẦNG 3 (travel-policy.yaml framework_only) KHÔNG được ở lại global: các glob *.py bên trên copy
+  # tất tay, nên gỡ lại đúng danh sách đã khai. Installer TIÊU THỤ policy — policy hết là văn bản mô tả
+  # (đo 2026-07-20: 18/18 mục tầng 3 vẫn đi xuống global, tầng 3 khi đó là hư cấu).
+  # Gác hai chiều bằng harness/validators/travel_policy_sync.py.
+  # Danh sách nằm NGAY ĐÂY, không đọc travel-policy.yaml lúc chạy: script này được copy đi khắp nơi
+  # (bundle, clone remote, bản đã cài trong repo target) nên mọi đường dẫn tới policy đều có thể trỏ
+  # vào bản CŨ. Đo 2026-07-20: đọc policy runtime làm fresh-install-smoke đỏ vì script working-tree
+  # gặp policy remote còn xếp medic.py ở tầng 3 → xoá medic khỏi global; mà smoke là cổng chặn push
+  # ⇒ deadlock chỉ-xanh-sau-khi-push. Hằng số đi cùng script thì không bao giờ lệch pha với script.
+  # Đồng bộ với travel-policy.yaml framework_only do harness/validators/travel_policy_sync.py gác.
+  STRIP_TIER3="
+fdk/tools/build-overstack-docs.py
+fdk/tools/build-cheatsheet.py
+fdk/tools/build-docs-index.py
+fdk/tools/build-health-dashboard.py
+fdk/tools/whiteboard-skill-map.py
+fdk/tools/new-skill.py
+harness/scripts/harness-lint.py
+harness/scripts/harness-doctor.py
+harness/scripts/fdk-gate.py
+harness/scripts/sync-skills.py
+harness/scripts/skill-registry.py
+harness/scripts/bnal-selftest.py
+harness/scripts/adapt-registry.py
+harness/scripts/arch-scan.py
+harness/scripts/audit.py
+harness/scripts/dispatch-verify.py
+"
+  n=0
+  for rel in $STRIP_TIER3; do
+    if [ -f "$GH/$rel" ]; then rm -f "$GH/$rel"; n=$((n+1)); fi
+  done
+  log "GLOBAL: gỡ $n tool framework_only khỏi $GH — tầng 3 chỉ chạy ở repo framework"
   log "GLOBAL-SHARED engine: fdk/tools + harness/scripts + validators + *.yaml + version.json → $GH/ (mọi project dùng chung)"
 
   SETTINGS="$HOME/.claude/settings.json"
