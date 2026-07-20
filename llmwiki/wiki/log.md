@@ -19,10 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-18 23:46:56 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=0 · prev=f83c198471b29d252db8609f4402d6b6192ed609ebd5a9510fe607b3e74abf0e · h=55b6 |
-| 2026-07-18 23:46:56 | `commit.reconcile` |  · actor=system · agent_n=4 · human_n=0 · prev=55b62a6517e4172031801d974c8291d261f6fe00fd3bb379c95cb3cfeda22d3c · h=b887 |
-| 2026-07-18 23:52:00 | `file.write` | skills/lint/SKILL.md · tool=Edit · session=df308014 · actor=agent · prev=b8871a00b0c76460135c8b2cc53209556ed563b9b38ddcb |
-| 2026-07-18 23:52:43 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=0 · prev=046e8d624a75ddf6e093466d36ee0b5576920a6a4169929d82f5fc9ab08f0377 · h=d0be |
 | 2026-07-18 23:57:56 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['fdk/skills.provenance.json'] · prev=d0bed4a3f34deaa4eb714d75147ead559f |
 | 2026-07-19 00:05:20 | `task.new` |  · task=T-260719-01 · title=Bịt 3 lỗ travel đường curl update + forcing functions · state=proposed · actor=agent · prev= |
 | 2026-07-19 00:08:26 | `file.write` | llmwiki/html/190726-travel-gap-forcing-functions-seq.html · tool=Write · session=ee3f5da6 · actor=agent · prev=a7b3a5251 |
@@ -59,6 +55,10 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-20 09:01:36 | `file.write` | llmwiki/wiki/sources/draft/200726-orchestration-triage.md · tool=Write · session=eec0806a · actor=agent · prev=dd0340c1c |
 | 2026-07-20 09:10:51 | `file.write` | harness/scripts/orca-reconcile.py · tool=Edit · session=eec0806a · actor=agent · prev=3d1cf8155d0bb38dbe0cc9bc14e3eada6e |
 | 2026-07-20 09:11:50 | `file.write` | harness/scripts/orca-reconcile.py · tool=Edit · session=eec0806a · actor=agent · prev=1ba01cc628692b71f0b0fe32ad8925b8ab |
+| 2026-07-20 13:02:25 | `file.write` | llmwiki/.claude/hooks/session_start.py · tool=Edit · session=eec0806a · actor=agent · prev=93ccf1ec3e2465c91d9ea8702f193 |
+| 2026-07-20 14:11:18 | `file.write` | harness/scripts/dep-health.py · tool=Write · session=eec0806a · actor=agent · prev=47d9ded7112a5be774cc14a6000632c84b6b1 |
+| 2026-07-20 14:12:11 | `file.write` | llmwiki/.claude/hooks/session_start.py · tool=Edit · session=eec0806a · actor=agent · prev=84403384ec36fd6c6c5f767618cbd |
+| 2026-07-20 14:13:16 | `file.write` | harness/tests/dep-health-gate-test.sh · tool=Write · session=eec0806a · actor=agent · prev=c36a8f9cc49bfc75328254f01f234 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -406,3 +406,6 @@ User hỏi "HRIS/DMS/email-viewer là gì sao có trong này" → truy ra: sổ 
 
 ## 2026-07-20 — /fdk đóng issue code-graph + đo lại A/B trên tool đã lành
 Sau restart, verify từ client: list_projects trả 16 tên repo thật (trước 17x "index.db"), get_stats 16 project/5963 file/53208 symbol/550651 edge (trước "no such table"), search_symbols("flag_stale") ra đúng wiki-sync.py:138. Chạy lại A/B 5 task x 2 nhánh: lần 1 (tool hỏng) 37-vs-14 = 2.64x đắt; lần 2 (tool lành) 24-vs-16 = 1.50x. Tách theo LOẠI TRA CỨU mới ra kết luận thật: tra HÀM/LỚP/METHOD 11-vs-11 HOÀ; tra HẰNG SỐ 13-vs-5 THUA 2.6x — vì code-graph CHỈ index function/class/method, search_symbols("CONTENT_DIRS") trả rỗng, agent thử rồi phải quay về grep nên trả phí hai lần. Sửa dòng orientation trong session_start.py khai rõ phạm vi (hàm/lớp/method + get_callers; hằng số·config·chuỗi thì grep thẳng) — một dòng biến khoản thua thành hoà. Trả lời thread Grapuco: với ca định-vị-hàm ở repo cỡ này, "model đã đủ giỏi đọc repo" là ĐÚNG; giá trị còn lại của code-graph nằm ở get_callers/quan hệ gọi (550k cạnh) mà grep không làm được — CHƯA đo. medic 0 fail 15 ok.
+
+## 2026-07-20 — /fdk vá lớp lỗi "TỒN TẠI ≠ DÙNG ĐƯỢC"
+User hỏi: tool cứ chết ngang thì kiểm kiểu gì. Truy ra lỗi CẤU TRÚC: orientation quảng cáo code-graph dựa trên đúng một câu `(root/".graph-agent"/"index.db").is_file()` — tức "file có tồn tại không". DB 0 byte, DB thiếu schema, server chết, server chạy code cũ đều lọt. Đó là lý do code-graph hỏng nhiều tuần mà mọi phiên vẫn bị lùa vào (đo 37 tool-call vs 14). Nguyên tắc mới: QUẢNG CÁO MỘT NĂNG LỰC = PHẢI THĂM DÒ NÓ, không phải kiểm sự tồn tại của nó. dep-health.py (probe code-graph: DB có schema + tiến trình server sống; orca: CLI + runtime ready), self-test 8/8 không cần dependency nào. session_start đảo thành fail-CLOSED: không chứng minh được là chạy thì KHÔNG quảng cáo (fail-open ở tầng hook, fail-closed ở tầng quảng cáo). medic probe thứ 16 "deps" mức warn. Test dep-health-gate khoá 3 bất biến 5/5. TRẦN ĐÃ BIẾT ghi thẳng docstring: không bắt được ca "server chạy code CŨ" — hook không nói được giao thức MCP.

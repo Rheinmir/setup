@@ -86,13 +86,24 @@ def orient(root: Path) -> None:
     framework-dev (ADR-004 chỉ cấm auto-bơm FDK). Chỉ in khi thật sự có; fail-open tuyệt đối."""
     try:
         bits = []
-        has_cg = (root / ".graph-agent" / "index.db").is_file()
-        if not has_cg:
-            try:
-                has_cg = any((d / ".graph-agent" / "index.db").is_file()
-                             for d in root.iterdir() if d.is_dir())
-            except Exception:
-                pass
+        # QUẢNG CÁO PHẢI DỰA TRÊN THĂM DÒ, KHÔNG DỰA TRÊN FILE TỒN TẠI.
+        # Bản cũ hỏi đúng một câu: `(root/".graph-agent"/"index.db").is_file()`. DB 0 byte,
+        # DB thiếu schema, server chết — đều lọt. Hậu quả thật: code-graph hỏng nhiều tuần
+        # mà mọi phiên vẫn được lùa vào nó (đo: 37 tool-call so với 14 của grep).
+        # Nguyên tắc đảo lại: chỉ quảng cáo khi CHỨNG MINH ĐƯỢC là chạy — không chứng minh
+        # được thì im. Fail-open ở tầng hook (không bao giờ làm gãy phiên), nhưng fail-CLOSED
+        # ở tầng quảng cáo (thà thiếu một dòng gợi ý còn hơn lùa agent vào tool chết).
+        has_cg = False
+        try:
+            probe = resolve_tool(str(root), "harness/scripts/dep-health.py")
+            if probe:
+                out = subprocess.run([sys.executable, str(probe), "--root", str(root), "--json"],
+                                     capture_output=True, text=True, timeout=10)
+                deps = json.loads(out.stdout).get("deps", [])
+                has_cg = any(d.get("name") == "code-graph" and d.get("status") == "ok"
+                             for d in deps)
+        except Exception:
+            has_cg = False  # không thăm dò được → KHÔNG quảng cáo
         if has_cg:
             # Khai RÕ phạm vi, đừng khuyên chung chung "đừng grep mù". Đo A/B 2026-07-20
             # (harness/metrics/code-graph-ab.json, 5 task × 2 nhánh, sau khi sửa bug 2727ede):

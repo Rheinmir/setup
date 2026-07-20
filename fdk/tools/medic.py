@@ -126,7 +126,7 @@ PROBE_MECH_MAP = {
     "narrative": None, "foundation": None, "code": None, "eval": None, "freshinstall": None,
     "selfstate": "code-state", "capsurface": "capsurface",
     "capproof": "capproof", "provenance": "provenance-scope",
-    "orchestration": None,
+    "orchestration": None, "deps": None,
 }
 
 
@@ -407,6 +407,38 @@ def p_orchestration():
            "python3 harness/scripts/orca-reconcile.py"
 
 
+
+def p_deps():
+    """Dependency NGOÀI còn dùng được không — không chỉ còn tồn tại.
+
+    Bài học 2026-07-20: orientation quảng cáo code-graph dựa trên `.is_file()` của
+    index.db. DB 0 byte / thiếu schema / server chết đều lọt, nên framework lùa mọi
+    phiên vào một tool hỏng suốt nhiều tuần (đo: 37 tool-call vs 14 của grep).
+    Nguyên tắc: quảng cáo một năng lực = phải THĂM DÒ nó.
+
+    WARN chứ không FAIL: dependency ngoài chết là chuyện môi trường của người dùng,
+    không phải repo hỏng. Absent (không cài) thì im — người không dùng không bị phiền."""
+    tool = ROOT / "harness/scripts/dep-health.py"
+    if not tool.exists():
+        return "skip", "dep-health.py chưa có", ""
+    rc, out = sh([PY, str(tool), "--json"], timeout=60)
+    if rc != 0:
+        return "skip", "dep-health không chạy được", ""
+    try:
+        deps = json.loads(out).get("deps", [])
+    except Exception:
+        return "skip", "dep-health --json không parse được", ""
+    bad = [d for d in deps if d.get("status") == "degraded"]
+    if bad:
+        first = bad[0]
+        return "warn", (f"{len(bad)}/{len(deps)} dependency HỎNG: "
+                        + ", ".join(d["name"] for d in bad)
+                        + f" — {first.get('reason', '')}"), first.get("fix", "")
+    ok = [d for d in deps if d.get("status") == "ok"]
+    return "ok", (f"{len(ok)}/{len(deps)} dependency ngoài dùng được"
+                  + (f" ({', '.join(d['name'] for d in ok)})" if ok else "")), ""
+
+
 PROBES = [
     ("rules",    ["rules", "luật", "bite"],      p_rules),
     ("coverage", ["rules", "coverage", "luật"],  p_coverage),
@@ -424,6 +456,7 @@ PROBES = [
     ("capproof", ["capproof", "proof", "unproven", "ratchet", "dup"], p_capproof),
     ("provenance", ["provenance", "supply-chain", "external-pull", "tamper"], p_provenance),
     ("orchestration", ["orchestration", "orca", "dispatch", "task", "treo"], p_orchestration),
+    ("deps", ["deps", "dependency", "code-graph", "orca", "mcp", "ngoài"], p_deps),
 ]
 # bỏ 'drift' probe trùng — drift đã báo trong rules:
 PROBES = [p for p in PROBES if p[0] != "drift"]
