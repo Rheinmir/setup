@@ -9,7 +9,7 @@ task: T-260720-01
 
 # 200726-orchestration-triage
 
-**Status:** verdict sẵn sàng — **CHƯA áp dụng** (đóng task là hành động có chủ ý, cần user bấm nút)
+**Status:** ĐÃ XÁC MINH quy thuộc — user xác nhận nhóm B **không liên quan dự án này** (2026-07-20)
 **Task:** `T-260720-01` (T4)
 **Công cụ:** `harness/scripts/orca-reconcile.py`
 
@@ -33,7 +33,15 @@ Chép từ chính proposal T-260720-01, nhánh amber bước 6 của T4: **khôn
 | `task_878c40ce717b` | 2d | Capability-proof map — T-260718-01 | `medic capproof` → **199/199 proven · nợ tồn 0** | **ĐÓNG** — đã ship |
 | `task_9aae1bbea821` | 2d | Archetype tester T-260718-02 | `llmwiki/personas/tester.md` tồn tại (3.1K, có `keyword`), đã nằm trong roster `council.personas.yaml` từ T-260719-02 | **ĐÓNG** — đã ship |
 
-## Nhóm B — thuộc DỰ ÁN KHÁC, tôi không kiểm chứng được (11 task)
+## Phát hiện then chốt: sổ task của Orca là RUNTIME-GLOBAL
+
+Đây mới là lý do các task lạ xuất hiện. Guide của chính Orca ghi thẳng: *"Orchestration messages and tasks are runtime-global."* Đo được **18 terminal thuộc nhiều dự án khác nhau cùng ghi vào MỘT sổ**, nên `task-list` chạy ở repo `setup` trả về cả việc của `bonbon-ai`, HRIS/payroll, DMS Coteccons.
+
+Hệ quả nghiêm trọng hơn báo cáo nhiễu: **một orchestrator chạy ở dự án A nhìn thấy và claim được task của dự án B** — phá đúng mục tiêu "tách bias ở tầng vật lý" (cô lập được worktree và CLI, nhưng sổ việc thì dùng chung).
+
+Đã vá ở `orca-reconcile.py` (2026-07-20): `--stamp` đóng dấu repo root lúc TẠO task (chính xác vĩnh viễn, còn đúng khi terminal đã chết — thực đo 0/17 terminal cũ còn sống), `--scope current|all` khi ĐỌC. Quy tắc fail-safe: chỉ loại task **chứng minh được** thuộc dự án khác; `unknown` thì giữ, vì thà hiện một task không phải của mình còn hơn giấu một task là của mình.
+
+## Nhóm B — thuộc DỰ ÁN KHÁC (11 task) — user đã xác nhận không liên quan
 
 Các task này trỏ vào repo/đường dẫn ngoài repo framework này. Tôi **không** đọc được trạng thái thật của chúng từ đây, nên **không phán**.
 
@@ -51,7 +59,7 @@ Các task này trỏ vào repo/đường dẫn ngoài repo framework này. Tôi 
 | `task_428bb3355096` | 14d | Regen wiki-graph project **4-polyglot** | như trên |
 | `task_e3bb0e8c2118` | 14d | Regen wiki-graph project **5-knowledgebase** | như trên |
 
-**Gợi ý (không phải verdict):** 5 task regen wiki-graph là một lô sinh cùng ngày cho các project mẫu; nếu các project đó là sân UAT tạm thì cả lô đóng được một lượt. 3 task email-viewer đã 59 ngày — nếu tính năng đó đã ship hoặc dự án đã dừng thì đóng. Cần user xác nhận.
+**User xác nhận 2026-07-20: nhóm này không liên quan dự án của chúng ta.** Gợi ý cũ giữ lại làm ghi chú: 5 task regen wiki-graph là một lô sinh cùng ngày cho các project mẫu; nếu các project đó là sân UAT tạm thì cả lô đóng được một lượt. 3 task email-viewer đã 59 ngày — nếu tính năng đó đã ship hoặc dự án đã dừng thì đóng. Cần user xác nhận.
 
 ## Nhóm C — `failed`, là thí nghiệm cũ (3 task)
 
