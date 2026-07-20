@@ -212,8 +212,13 @@ def main() -> None:
     tp = payload.get("transcript_path")  # Trụ 1 Cost Attribution: 1 cost record / run, upsert theo session (cumulative, idempotent)
     if tp:
         code_log(root, "--run-cost", f"--transcript={tp}", f"--session={payload.get('session_id') or ''}")
-    regen_docs(root)               # overstack.html + CAPABILITIES tự cập nhật khi skill/rule đổi (repo framework)
+    # THỨ TỰ CÓ CHỦ ĐÍCH: thứ SINH nội dung chạy trước thứ RENDER nội dung.
+    # secondary_memory ghi session-provenance vào wiki và sinh lại memory-map; regen_docs
+    # dựng wiki-graph + overstack (overstack NHÚNG memory-map). Thứ tự cũ ngược lại nên
+    # overstack luôn ôm bản memory-map cũ và medic báo "docs CŨ so đĩa" ở MỌI phiên —
+    # một cảnh báo đúng nhưng vô phương sửa bằng cách chạy lại generator.
     secondary_memory(root, (payload.get("session_id") or ""))  # issue #5: bộ-nhớ-thứ-cấp tự lưu context vụn cuối lượt
+    regen_docs(root)               # overstack.html + CAPABILITIES tự cập nhật khi skill/rule đổi (repo framework)
     if framework_medic_mirror(root) == 2:  # T2: đụng framework → soi medic; FAIL thật thì chặn dừng
         sys.exit(2)
     if not wiki_changed(root):

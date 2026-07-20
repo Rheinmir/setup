@@ -16,6 +16,7 @@ session: eec0806a-c1bb-4b11-be50-2dc5940e31f7
 
 ## File chạm trong phiên
 
+- `concepts/graph-model.md`
 - `dk/wiki/log.md`
 - `sources/draft/190726-graph-lessons-grapuco.md`
 - `sources/draft/200726-code-graph-index-broken.md`

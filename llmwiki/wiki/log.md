@@ -19,7 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-19 00:05:20 | `task.new` |  · task=T-260719-01 · title=Bịt 3 lỗ travel đường curl update + forcing functions · state=proposed · actor=agent · prev= |
 | 2026-07-19 00:08:26 | `file.write` | llmwiki/html/190726-travel-gap-forcing-functions-seq.html · tool=Write · session=ee3f5da6 · actor=agent · prev=a7b3a5251 |
 | 2026-07-19 00:09:13 | `file.write` | llmwiki/html/190726-travel-gap-forcing-functions-seq.html · tool=Edit · session=ee3f5da6 · actor=agent · prev=06236c085e |
 | 2026-07-19 00:10:55 | `file.write` | llmwiki/wiki/sources/draft/190726-travel-gap-forcing-functions.md · tool=Write · session=ee3f5da6 · actor=agent · prev=b |
@@ -59,6 +58,7 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-20 14:12:11 | `file.write` | llmwiki/.claude/hooks/session_start.py · tool=Edit · session=eec0806a · actor=agent · prev=84403384ec36fd6c6c5f767618cbd |
 | 2026-07-20 14:13:16 | `file.write` | harness/tests/dep-health-gate-test.sh · tool=Write · session=eec0806a · actor=agent · prev=c36a8f9cc49bfc75328254f01f234 |
 | 2026-07-20 14:56:04 | `file.write` | harness/tests/wikigraph-single-source-test.sh · tool=Write · session=eec0806a · actor=agent · prev=4a4cfa7c7762d729a5db4 |
+| 2026-07-20 15:21:40 | `file.write` | llmwiki/wiki/concepts/graph-model.md · tool=Write · session=eec0806a · actor=agent · prev=eff64f2c2e845729082d96ed403b46 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)

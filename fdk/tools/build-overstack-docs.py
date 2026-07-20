@@ -990,6 +990,21 @@ def sections(root: Path):
     # Dùng iframe srcdoc thay vì tách fragment renderer: iframe cô lập JS/id, nên KHÔNG
     # phải mổ template 350 dòng của build-wiki-graph.py — engine đó đang travel, mổ nó
     # để lấy một khung nhìn là đổi rủi ro lấy tiện.
+    # TỰ SINH hai graph trước khi nhúng — KHÔNG dựa vào thứ tự hook.
+    # Bug đã dính ngay lần đầu: stop.py chạy build-overstack-docs ở block (A), còn
+    # wiki-graph ở block (B) và memory-map ở secondary_memory() — đều SAU. Nên overstack
+    # nhúng bản cũ và medic báo docs stale ở mọi phiên. Root không phải "sai thứ tự" mà là
+    # "overstack phụ thuộc artifact có trigger sinh KHÁC nó". Tự sinh thì hết cả lớp lỗi,
+    # không phải sắp lại thứ tự rồi mong nó đứng yên.
+    import subprocess as _sp
+    for _gen in ("memory-map.py", "whiteboard-skill-map.py"):
+        _g = root / "fdk" / "tools" / _gen
+        if _g.is_file():
+            try:
+                _sp.run([sys.executable, str(_g)], cwd=str(root), capture_output=True, timeout=60)
+            except Exception:
+                pass   # fail-open: thiếu/hỏng generator thì nhúng bản đang có
+
     emb = []
     for fname, title, why in (
             ("memory-map.html", "Bản đồ trí nhớ",
