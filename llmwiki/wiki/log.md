@@ -418,3 +418,9 @@ T3 hệ PROOF nói dối ở quy mô danh mục — build-capabilities: ĐO ĐƯ
 T4 code-state: "index có (0KB)" là FACT sai lên overstack.html; nay "index dùng được (22335 symbol)" / "index HỎNG (thiếu bảng)".
 T5 skill prose orca-onboard: gate "server đang khai báo" → đòi dep-health status ok; và mô tả keeper khớp hành vi mới.
 medic 0 fail 16 ok · dep-health-gate 5/5 · capability-stamp 1.3.37→1.3.38.
+
+## 2026-07-20 — /fdk 5-Why thành mặc định + trả lời "thẻ ghi-tạm có đóng không"
+User hỏi: ghi tạm xong có đóng không → ĐO: 20 thẻ p-auto, 19 MỞ 1 đóng. Hook session_end sinh thẻ tự động nhưng KHÔNG có gì đóng chúng — xác nhận root đã nêu: bắt nợ có, trả nợ không.
+5-Why lập kế hoạch sửa chữa 8 mục, phát hiện HỘI TỤ: 5/8 (thẻ ghi-tạm 19/20 · issue mở 24 · pattern lệch 15 · file chưa rà wiki 39 · task treo 17) chung MỘT root — hệ giỏi PHÁT HIỆN nợ, không có nhịp TRẢ nợ. Đòn bẩy Meadows: thêm MỘT đường trả nợ, không thêm bộ phát hiện thứ sáu.
+Phát hiện ngoài dự kiến trong lúc lập kế hoạch: 10 tiến trình code-graph server orphan (cũ nhất 15/07, mỗi phiên spawn một, không ai dọn) ⇒ _proc_alive("graph/server.py") của dep-health khớp BẤT KỲ cái nào, kể cả orphan chạy code cũ — tôi vừa mắc lại chính lớp lỗi mình đi sửa, mức nhẹ. Phát hiện được từ ngoài: so ps -o lstart của process với git log -1 của repo server.
+Ghi 5-Why thành MẶC ĐỊNH vào llmwiki/CLAUDE.md + AGENT.md (đặt TRƯỚC cái thang: hiểu đã rồi mới lười đúng chỗ): viết chuỗi ra không nghĩ thầm · dừng ở cấu trúc không dừng ở "vì người ta quên" · tìm hội tụ trước khi sửa · nghi ngờ chẩn đoán đầu tiên của chính mình (ca code-graph) · ngoại lệ duy nhất là việc không chứa chẩn đoán. Parity AGENT↔CLAUDE xanh. medic 0 fail 16 ok.

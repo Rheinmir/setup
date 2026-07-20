@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "template_version": "1.3.38",
+  "template_version": "1.3.39",
   "remote": "https://github.com/Rheinmir/setup.git",
   "branch": "orca",
   "generated_at": "2026-06-28",

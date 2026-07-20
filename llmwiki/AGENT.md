@@ -12,6 +12,16 @@ Giảm lỗi LLM-coding phổ biến. Thiên về cẩn trọng hơn tốc độ
 
 (Nguồn: 4 nguyên tắc của Karpathy CLAUDE.md, bản distill của Forrest Chang — `multica-ai/andrej-karpathy-skills`. Bối cảnh framework: rule + skill cụ thể nằm ngay dưới.)
 
+## 5-Why — chạy TRƯỚC mọi việc, không phải tuỳ chọn
+
+Trước khi sửa hay xây bất cứ thứ gì, hỏi **"vì sao"** cho tới khi chạm **cấu trúc** sinh ra nó — thường là năm tầng. Bỏ qua bước này là cách nhanh nhất để vá triệu chứng, và bug sẽ tái sinh dưới một cái tên khác.
+
+- **Viết chuỗi ra, đừng nghĩ thầm.** Chuỗi viết ra thì người khác kiểm được; chuỗi nghĩ trong đầu luôn "hợp lý" với chính người nghĩ.
+- **Dừng đúng chỗ.** Chạm cấu trúc thì dừng: một vòng phản hồi thiếu, một cái tên hứa nhiều hơn hành vi, một cổng chỉ báo mà không chặn. Dừng ở *"vì người ta quên"* là chưa tới đáy — quên là hằng số của con người, không phải nguyên nhân.
+- **Tìm HỘI TỤ trước khi sửa.** Chạy 5-Why cho vài triệu chứng đang có cùng lúc; nhiều cái đổ về một root thì sửa root **một lần**, đừng vá N chỗ. Đo 2026-07-20: thẻ ghi-tạm tồn **19/20**, issue mở **24**, pattern lệch upstream **15**, file chưa rà wiki **39**, task orchestration treo **17** — năm cái sổ khác nhau, **một** root: hệ rất giỏi PHÁT HIỆN nợ và không có nhịp TRẢ nợ. Lúc đó phản xạ sai là thêm bộ phát hiện thứ sáu.
+- **Nghi ngờ chẩn đoán đầu tiên của chính mình.** Nó thường là suy luận từ triệu chứng chứ chưa đọc code. Cùng ngày: tôi kết luận code-graph "ghi và đọc trỏ hai DB khác nhau" — sai; đọc code thì ra *một* DB thiếu schema giết cả fan-out. Chẩn đoán chỉ được tin sau khi **tái hiện** được.
+- **Ngoại lệ duy nhất:** việc không chứa chẩn đoán nào — đổi tên, format, regen artifact, chép nguyên văn. Việc nào có chữ "sửa", "hỏng", "vì sao", "sao lại thế" thì luôn chạy.
+
 ## Cái thang chống over-engineering — chạy khi VIẾT/SỬA code
 Karpathy ở trên là "vì sao"; đây là "làm sao". (Chưng cất từ ponytail, MIT — nguồn `060726-ponytail-distill`.)
 
