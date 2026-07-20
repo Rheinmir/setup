@@ -82,7 +82,8 @@ def _graph_symbols():
             continue
         kb = db.stat().st_size // 1024
         try:
-            conn = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
+            # KHÔNG mode=ro: WAL thiếu -shm → ro báo hỏng trên DB lành.
+            conn = sqlite3.connect(str(db))
             try:
                 names = {r[0] for r in conn.execute(
                     "SELECT name FROM sqlite_master WHERE type='table'")}

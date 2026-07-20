@@ -78,7 +78,8 @@ def _db_usable(db_path) -> bool:
         pass
     try:
         import sqlite3
-        conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+        # KHÔNG mode=ro: WAL thiếu -shm thì ro báo hỏng trên DB lành (xem dep-health).
+        conn = sqlite3.connect(str(db_path))
         try:
             names = {r[0] for r in conn.execute(
                 "SELECT name FROM sqlite_master WHERE type='table'")}

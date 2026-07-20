@@ -424,3 +424,8 @@ User hỏi: ghi tạm xong có đóng không → ĐO: 20 thẻ p-auto, 19 MỞ 1
 5-Why lập kế hoạch sửa chữa 8 mục, phát hiện HỘI TỤ: 5/8 (thẻ ghi-tạm 19/20 · issue mở 24 · pattern lệch 15 · file chưa rà wiki 39 · task treo 17) chung MỘT root — hệ giỏi PHÁT HIỆN nợ, không có nhịp TRẢ nợ. Đòn bẩy Meadows: thêm MỘT đường trả nợ, không thêm bộ phát hiện thứ sáu.
 Phát hiện ngoài dự kiến trong lúc lập kế hoạch: 10 tiến trình code-graph server orphan (cũ nhất 15/07, mỗi phiên spawn một, không ai dọn) ⇒ _proc_alive("graph/server.py") của dep-health khớp BẤT KỲ cái nào, kể cả orphan chạy code cũ — tôi vừa mắc lại chính lớp lỗi mình đi sửa, mức nhẹ. Phát hiện được từ ngoài: so ps -o lstart của process với git log -1 của repo server.
 Ghi 5-Why thành MẶC ĐỊNH vào llmwiki/CLAUDE.md + AGENT.md (đặt TRƯỚC cái thang: hiểu đã rồi mới lười đúng chỗ): viết chuỗi ra không nghĩ thầm · dừng ở cấu trúc không dừng ở "vì người ta quên" · tìm hội tụ trước khi sửa · nghi ngờ chẩn đoán đầu tiên của chính mình (ca code-graph) · ngoại lệ duy nhất là việc không chứa chẩn đoán. Parity AGENT↔CLAUDE xanh. medic 0 fail 16 ok.
+
+## 2026-07-20 — /fdk truy tận gốc vụ "10 con server cùng sống"
+User: "10 con cùng sống là lỗi to vl rồi còn gì" — đúng, tôi đã đánh giá nhẹ. 5-Why + đo thật, ra CHUỖI lỗi chứ không phải một lỗi:
+1. RÒ RỈ CONNECTION (repo graph, commit 2c2653a): indexer.py:154 `get_stats(get_conn(db_path))` mở connection inline không đóng — nằm trên đường index nên mỗi lượt reindex rò 1 fd. Đo: 1 server sống 3 ngày giữ 369 fd tới CÙNG 1 file (712 fd, chỉ 3 file riêng biệt). Chưa sập vì trần fd máy này là 1.048.576, KHÔNG phóng đại thành nguyên nhân "chết ngang".
+2. ORPHAN: 10 tiến trình, mỗi phiên spawn 1, không ai dọn. RAM chỉ 152MB, CPU 0
