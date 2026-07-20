@@ -429,3 +429,10 @@ Ghi 5-Why thành MẶC ĐỊNH vào llmwiki/CLAUDE.md + AGENT.md (đặt TRƯỚ
 User: "10 con cùng sống là lỗi to vl rồi còn gì" — đúng, tôi đã đánh giá nhẹ. 5-Why + đo thật, ra CHUỖI lỗi chứ không phải một lỗi:
 1. RÒ RỈ CONNECTION (repo graph, commit 2c2653a): indexer.py:154 `get_stats(get_conn(db_path))` mở connection inline không đóng — nằm trên đường index nên mỗi lượt reindex rò 1 fd. Đo: 1 server sống 3 ngày giữ 369 fd tới CÙNG 1 file (712 fd, chỉ 3 file riêng biệt). Chưa sập vì trần fd máy này là 1.048.576, KHÔNG phóng đại thành nguyên nhân "chết ngang".
 2. ORPHAN: 10 tiến trình, mỗi phiên spawn 1, không ai dọn. RAM chỉ 152MB, CPU 0
+## 2026-07-20 — /fdk truy tận gốc vụ "10 con server cùng sống"
+User: "10 con cùng sống là lỗi to vl rồi còn gì" — đúng, tôi đánh giá nhẹ. Đo thật ra một CHUỖI lỗi:
+1. RÒ RỈ (repo graph 2c2653a) indexer.py:154 mở connection inline không đóng; 1 server 3 ngày giữ 369 fd tới CÙNG 1 file. Chưa sập vì trần fd = 1.048.576.
+2. ORPHAN 10 tiến trình, mỗi phiên spawn 1, không ai dọn. Nhưng 152MB/0% CPU — không phải vấn đề tài nguyên.
+3. LỖI CỦA TÔI #1: _proc_alive hỏi "có tiến trình nào không". Sửa: so ps -o lstart với git log -1 repo server, BẮT ĐƯỢC ca "server chạy code cũ" mà bản trước tự khai là giới hạn kiến trúc.
+4. LỖI CỦA TÔI #2 (hỏng thật): reap định nghĩa orphan = "không phải cái mới nhất", kill 9 con, TỰ CẮT MCP phiên này; con sống sót thuộc phiên Claude khác. Sửa: is_orphan = CHA ĐÃ CHẾT.
+5. LỖI CỦA TÔI #3 (nặng nhất): db_has_schema dùng mode=ro. WAL cần -shm; server tắt thì mode=ro báo hỏng trên DB LÀNH. Lời giải cho lần đo đầu "11 DB hỏng" — tôi đổ oan cho ổ ngoài. Vá 4 chỗ gồm db.py server (801651b) nơi nó lọc get_all_db_paths.
