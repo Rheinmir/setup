@@ -71,6 +71,7 @@ Karpathy ở trên là "vì sao"; đây là "làm sao". (Chưng cất từ ponyt
 | `ovs-notes` | Xem release notes/changelog — liệt kê các bản (tag/GH release) newest-first để chọn & đọc, read-only (khác /ship = cắt release) | `skills/utils/ovs-notes.md` | utils |
 | `orca-workflow` | Daily propose → gate → dispatch with Orca | `skills/orchestrate/orca-workflow.md` | orchestrate |
 | `orca-onboard` | Parallel codebase onboarding with Orca | `skills/orchestrate/orca-onboard.md` | orchestrate |
+| `orca-handover` | Sinh MỘT file .md bàn giao đủ dày để phiên KHÁC (không có context nào) mở ra là làm được ngay — việc dở + thứ tự có lý do + số đo làm bằng chứng + cạm bẫy đã trả giá + hướng đã thử và BỎ. KHÁC record-episode (ghi cho MÁY) và plan (task ĐÃ duyệt, đã rõ) | `skills/orchestrate/orca-handover.md` | orchestrate |
 | `orca-issue` | Sự cố/bug/regression — vòng repro-first → fix red→green → distill kép | `skills/orchestrate/orca-issue.md` | orchestrate |
 | `wayfinder` | Việc QUÁ LỚN một phiên & còn mù mờ — bản đồ ticket QUYẾT ĐỊNH (fog of war/frontier/out-of-scope), giải từng cái tới khi đường rõ. TRƯỚC /propose. Chỉ-gọi-tay | `skills/orchestrate/wayfinder.md` | orchestrate |
 | `onboard-codebase` | Deep analysis of legacy code to populate Wiki | `skills/dev-loop/onboard-codebase.md` | dev-loop |

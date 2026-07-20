@@ -19,7 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-19 00:08:26 | `file.write` | llmwiki/html/190726-travel-gap-forcing-functions-seq.html · tool=Write · session=ee3f5da6 · actor=agent · prev=a7b3a5251 |
 | 2026-07-19 00:09:13 | `file.write` | llmwiki/html/190726-travel-gap-forcing-functions-seq.html · tool=Edit · session=ee3f5da6 · actor=agent · prev=06236c085e |
 | 2026-07-19 00:10:55 | `file.write` | llmwiki/wiki/sources/draft/190726-travel-gap-forcing-functions.md · tool=Write · session=ee3f5da6 · actor=agent · prev=b |
 | 2026-07-19 00:11:04 | `file.write` | llmwiki/wiki/sources/draft/190726-travel-gap-forcing-functions.md · tool=Edit · session=ee3f5da6 · actor=agent · prev=22 |
@@ -59,6 +58,7 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-20 14:13:16 | `file.write` | harness/tests/dep-health-gate-test.sh · tool=Write · session=eec0806a · actor=agent · prev=c36a8f9cc49bfc75328254f01f234 |
 | 2026-07-20 14:56:04 | `file.write` | harness/tests/wikigraph-single-source-test.sh · tool=Write · session=eec0806a · actor=agent · prev=4a4cfa7c7762d729a5db4 |
 | 2026-07-20 15:21:40 | `file.write` | llmwiki/wiki/concepts/graph-model.md · tool=Write · session=eec0806a · actor=agent · prev=eff64f2c2e845729082d96ed403b46 |
+| 2026-07-20 15:41:45 | `file.write` | llmwiki/wiki/sources/draft/200726-graph-foundation-handoff.md · tool=Write · session=eec0806a · actor=agent · prev=94939 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -460,3 +460,9 @@ Cài skill i-have-adhd (github.com/ayghri/i-have-adhd) đúng quy trình: canoni
 FRESH-INSTALL BẮT ĐÚNG TÔI: sau khi đăng ký bảng mà chưa cài global, medic báo "SKILL RỚT — doc hứa nhưng user KHÔNG nhận được: i-have-adhd". Chính lớp lỗi "documented ≠ delivered" truy cả phiên, và harness bắt được người truy nó. Sửa bằng npx skills add . --global --all.
 Hook output_style() vào session_start, gọi TRƯỚC orient(). Chỉ in khi skill thật sự có mặt trên đĩa (thăm dò, không đoán — theo đúng luật đã học). Khai rõ ranh giới vì hai luật kéo ngược nhau: i-have-adhd cắt ngắn CHAT, còn CLAUDE.md bắt tài liệu-người-đọc phải văn xuôi đầy đủ ⇒ phân xử: skill áp cho CHAT, file tài liệu (ADR/proposal/README/report/HTML) giữ luật cũ.
 File bàn giao wiki/sources/draft/200726-graph-foundation-handoff.md: 6 việc theo thứ tự (bước 0 travel-policy vs installer là CHẶN, rồi --also, bỏ imports, wiki-sync đọc graph, merge, CAPABILITIES sinh từ graph), 4 việc dọn nhỏ, nợ mở, và 5 cạm bẫy phải đọc trước khi sửa code.
+
+## 2026-07-20 — /fdk skill /orca-handover + thư mục sources/handover/
+Pre-flight #3: grep ra KHÔNG có skill nào làm việc này. Ba cái gần nhất và ranh giới đã khai vào description để router không chọn nhầm — record-episode ghi cho MÁY truy hồi ngữ nghĩa (mem-rank); plan là brief thi hành cho task ĐÃ duyệt và đã rõ; orca-cli 'full handoff' là chuyển quyền sở hữu worktree. Khoảng giữa — việc CÒN DỞ và CÒN MƠ HỒ — không ai giữ, nên phiên này phải viết tay file bàn giao.
+Skill quy định 7 mục bắt buộc (đọc trước · việc tiếp theo có ⏱ và cái CHẶN · dọn nhỏ · nợ mở · cạm bẫy · ĐÃ THỬ VÀ BỎ · origin) + 3 nguyên tắc: số đo thay tính từ, thứ tự phải có lý do và chỉ rõ cái chặn, cạm bẫy là phần đắt nhất. Rule cấm chép transcript (>200 dòng là dấu hiệu chép thay vì chắt).
+Thư mục RIÊNG llmwiki/wiki/sources/handover/ theo yêu cầu user, không trộn vào sources/draft/ — draft là đề xuất chờ duyệt, handover là việc đang chạy dở; hai vòng đời khác nhau. R5 chỉ kiểm subfolder cấp một nên hợp lệ. Đã chuyển 200726-graph-foundation-handoff.md sang.
+Đăng ký đủ: canonical → LOOP_MAP orchestrate → mirror → bảng Skills CLAUDE+AGENT (parity 83/83) → provenance → global. medic 0 fail 16 ok. problem-tree +p-41 (travel-policy nói ngược installer) +p-42 (CAPABILITIES là kiểm kê không phải bản đồ) +p-43 (solved).

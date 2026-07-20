@@ -596,6 +596,13 @@
       "recorded": "2026-07-18",
       "source": "local-authored"
     },
+    "orca-handover": {
+      "files": {
+        "SKILL.md": "9a47fc00f8cf82e6e15a3ad6d1abe7954397b53ad54eb82c7217c3817092bda8"
+      },
+      "recorded": "2026-07-20",
+      "source": "local-authored"
+    },
     "orca-issue": {
       "files": {
         "SKILL.md": "5270a9f3700850d84ea53461bb08aff4fe43311874d89f9f9eab6c72e82374d6"
