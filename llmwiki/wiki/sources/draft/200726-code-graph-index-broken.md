@@ -1,9 +1,10 @@
 ---
 type: issue
 kind: foundation
-title: "code-graph MCP hỏng — đường GHI và đường ĐỌC trỏ hai DB khác nhau, mọi phiên vẫn được khuyên dùng nó trước"
-status: open
+title: "code-graph MCP hỏng — MỘT database thiếu schema giết toàn bộ truy vấn (fan-out không cô lập lỗi)"
+status: fixed-pending-restart
 assignee: maintainer
+resolved: 2026-07-20
 dispatch: human
 entry: /fdk
 priority: P1
@@ -13,7 +14,7 @@ id: 200726-code-graph-index-broken
 source_session: "T-260719-02 — đo A/B code-graph (task T2 của proposal 190726-graph-lessons-grapuco)"
 ---
 
-# Issue: code-graph MCP hỏng, nhưng orientation vẫn dặn mọi phiên dùng nó TRƯỚC
+# Issue: code-graph MCP hỏng — một database rác giết cả tool, mà orientation vẫn dặn mọi phiên dùng nó TRƯỚC
 
 ## Triệu chứng
 
@@ -27,13 +28,27 @@ mcp__code-graph__list_projects   → trả 17 mục, TẤT CẢ đều tên "ind
 
 Đã tự tay tái hiện trong phiên chính (không chỉ nghe agent báo), và **5 subagent độc lập** đều gặp đúng ba lỗi này.
 
-## Nguyên nhân gốc (đã khoanh)
+## Nguyên nhân gốc — ĐÃ SỬA (đính chính chẩn đoán ban đầu)
 
-`mcp__code-graph__reindex_repo` **BÁO THÀNH CÔNG** — 2660 file, 21972 symbol, 276595 edge — nhưng ngay sau đó `search_symbols` vẫn `no such table: symbols`.
+> **Chẩn đoán đầu tiên của tôi SAI.** Tôi viết *"đường GHI và đường ĐỌC trỏ hai database khác nhau"*. Không phải. Đó là suy luận từ triệu chứng, chưa đọc code. Sau khi đọc `db.py` + `server.py` và tái hiện, nguyên nhân thật là **hai bug độc lập**, cả hai đã sửa ở commit `2727ede` của repo `workspace/graph`.
 
-Nghĩa là **đường GHI và đường ĐỌC trỏ vào hai database khác nhau**. Dấu hiệu phụ củng cố: `list_projects` trả về 17 mục cùng tên `"index.db"` — server đang lấy *tên project* từ *tên file DB*, rồi query một DB chưa hề có schema.
+**Bug 1 — fan-out không cô lập lỗi (đây mới là thứ giết `search_symbols`).**
+`_each_db()` và `get_stats()` duyệt MỌI database trong registry, còn `get_all_db_paths()` chỉ kiểm `.exists()`. Một repo đã đăng ký nhưng index chưa chạy xong để lại `index.db` **có file mà chưa có bảng** — truy vấn chạm nó là ném `no such table: symbols` và **giết cả lệnh**, kể cả khi mọi database còn lại đều lành.
 
-Server nằm ngoài repo này: `/Volumes/giatbhSSD(APFS)/workspace/graph/server.py` (khai trong `~/.claude.json` → `mcpServers.code-graph`, chạy kèm `--watch`).
+Tái hiện dứt khoát: đúng **một** database hỏng (`payroll-frontend-develop`) làm chết toàn bộ, trong khi **16** database khác query tốt. *Một cái là đủ* — đó là lý do triệu chứng trông như "ghi một nơi đọc một nẻo": `reindex_repo` báo thành công thật (2660 file, 21972 symbol) vì nó chỉ ghi vào database của repo mình, còn `search_symbols` fan-out thì chết ở database rác của repo khác.
+
+**Đính chính số liệu:** lần đo đầu tôi báo "11 database hỏng". Sai — lúc đó ổ ngoài `/Volumes/giatbhSSD(APFS)` chưa sẵn sàng nên đọc ra 0 byte. Đo lại: 19 repo trong registry, **1 database thiếu schema**, 2 mục trỏ file không tồn tại (vô hại, đã bị `.exists()` lọc), 16 lành.
+
+**Bug 2 — `list_projects` trả tên file thay vì tên repo.**
+Nó dùng `os.path.basename(p).rsplit("-", 1)[0]` — tàn dư của layout cũ khi database đặt tên `<repo>-<hash>.db` chung một thư mục. Sau khi chuyển sang `<repo>/.graph-agent/index.db` thì `basename` luôn là `index.db`, nên **mọi** repo đều hiện thành `index.db` (đo: 17 mục giống hệt).
+
+**Cách sửa:** đặt guard `is_usable_db()` ngay trong `get_all_db_paths()` — hàm dùng chung — thay vì bọc `try/except` ở từng caller. Một guard, mọi caller hưởng, database rác không bao giờ lọt xuống tầng dưới. `list_projects` lấy tên thư mục ông của file database.
+
+**Kết quả sau sửa:** `get_all_db_paths` 17 → 16 (loại đúng cái rác), `list_projects` trả tên repo thật, `search_symbols("flag_stale")` trả 8 kết quả thay vì ném lỗi, tổng 53.208 symbol query được.
+
+## ⚠ Còn một bước: KHỞI ĐỘNG LẠI MCP server
+
+Server đang chạy giữ code cũ trong bộ nhớ — vừa kiểm lại, `list_projects` vẫn trả 17× `index.db`. Fix chỉ có hiệu lực sau khi restart tiến trình MCP (khởi động lại Claude Code). Chưa restart thì mọi kết luận "đã hết lỗi" là chưa kiểm chứng được từ phía client.
 
 ## Vì sao P1 chứ không phải "tool phụ hỏng thì thôi"
 
@@ -60,8 +75,9 @@ Nên đây không phải một tool hỏng nằm im. Đây là một tool hỏng
 
 ## Việc phải làm
 
-- [ ] Sửa server `graph/server.py`: thống nhất DB giữa đường ghi (`reindex_repo`) và đường đọc (`search_symbols`/`get_stats`); sửa luôn `list_projects` để lấy tên project thay vì tên file DB.
-- [ ] Trong lúc chưa sửa: hạ giọng dòng orientation — đừng khuyên dùng code-graph như bước ĐẦU TIÊN khi nó có thể đang hỏng; hoặc để `code_graph_keeper.py` tự thăm dò một truy vấn rẻ rồi mới quảng cáo.
+- [x] Sửa server — commit `2727ede` (`workspace/graph`): guard `is_usable_db()` tại `get_all_db_paths()` + `list_projects` lấy tên repo.
+- [ ] **Khởi động lại MCP server** rồi kiểm lại `list_projects` / `search_symbols` từ phía client.
+- [ ] Cân nhắc để `code_graph_keeper.py` tự thăm dò một truy vấn rẻ rồi mới quảng cáo code-graph ở orientation — hàng rào chống tái phát, không còn gấp sau khi bug đã sửa nhưng vẫn đáng làm (lần này framework lùa mọi phiên vào một tool hỏng suốt nhiều tuần mà không ai hay).
 - [ ] Sau khi sửa: chạy lại A/B (5 task × 2 nhánh) để cuối cùng cũng trả lời được câu hỏi gốc — code-graph có đáng bật không.
 
 ## Tiêu chí xong

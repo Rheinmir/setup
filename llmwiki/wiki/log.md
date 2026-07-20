@@ -19,8 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-18 23:44:52 | `file.write` | llmwiki/skills/wiki-loop/lint.md · tool=Edit · session=df308014 · actor=agent · prev=d5a586da1e615c56ccb955fc1a66441927c |
-| 2026-07-18 23:46:56 | `commit.reconcile` |  · actor=system · agent_n=3 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=a6d08229ee290af9ea53f19c0319c22899845e1af |
 | 2026-07-18 23:46:56 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=0 · prev=f83c198471b29d252db8609f4402d6b6192ed609ebd5a9510fe607b3e74abf0e · h=55b6 |
 | 2026-07-18 23:46:56 | `commit.reconcile` |  · actor=system · agent_n=4 · human_n=0 · prev=55b62a6517e4172031801d974c8291d261f6fe00fd3bb379c95cb3cfeda22d3c · h=b887 |
 | 2026-07-18 23:52:00 | `file.write` | skills/lint/SKILL.md · tool=Edit · session=df308014 · actor=agent · prev=b8871a00b0c76460135c8b2cc53209556ed563b9b38ddcb |
@@ -59,6 +57,8 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-20 08:58:36 | `file.write` | harness/scripts/orca-reconcile.py · tool=Write · session=eec0806a · actor=agent · prev=8f1d1d31a9dd6b4da9b5992d6a8e471f1 |
 | 2026-07-20 08:59:08 | `file.write` | harness/scripts/orca-reconcile.py · tool=Edit · session=eec0806a · actor=agent · prev=b8c327cbe9c5f681943592e9e5fda88c5a |
 | 2026-07-20 09:01:36 | `file.write` | llmwiki/wiki/sources/draft/200726-orchestration-triage.md · tool=Write · session=eec0806a · actor=agent · prev=dd0340c1c |
+| 2026-07-20 09:10:51 | `file.write` | harness/scripts/orca-reconcile.py · tool=Edit · session=eec0806a · actor=agent · prev=3d1cf8155d0bb38dbe0cc9bc14e3eada6e |
+| 2026-07-20 09:11:50 | `file.write` | harness/scripts/orca-reconcile.py · tool=Edit · session=eec0806a · actor=agent · prev=1ba01cc628692b71f0b0fe32ad8925b8ab |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -400,3 +400,6 @@ User phản biện "orca-workflow toàn tự làm" → ĐO LẠI: user ĐÚNG, t
 
 ## 2026-07-20 — /fdk vá gap scope — sổ task Orca là runtime-global
 User hỏi "HRIS/DMS/email-viewer là gì sao có trong này" → truy ra: sổ orchestration của Orca RUNTIME-GLOBAL (guide Orca nói thẳng), 18 terminal của nhiều dự án cùng ghi MỘT sổ. 11/17 task treo thuộc bonbon-ai · HRIS/payroll · DMS Coteccons · 5 sân test framework — không phải nợ của repo này; tôi đã trình bày sai chỗ đó. Nguy hiểm hơn báo cáo nhiễu: orchestrator ở dự án A claim được task dự án B, phá đúng mục tiêu tách-bias-tầng-vật-lý. Orca không có trường dự án (task-create không tag, task-list không lọc — đã kiểm). Vá ở tầng ta: (ghi) orca-reconcile.py --stamp đóng dấu repo root lúc task-create, đúng vĩnh viễn kể cả khi terminal chết (0/17 terminal cũ còn sống); (đọc) --scope current|all, thứ tự tin cậy stamp > map người-xác-nhận > dò path > unknown; fail-safe CHỈ loại task chứng minh được là của dự án khác, unknown thì GIỮ (vứt đi sẽ báo "0 treo" trong khi 3 task của mình đang nằm đó — đã dính bug này, test khoá lại). harness/orca-project-map.json backfill 11 task user xác nhận. Đóng 6 task của chính repo (3 có bằng chứng đã ship + 3 thí nghiệm chết). Kết quả: scope current 0 treo, medic 0 fail 0 warn 15 ok.
+
+## 2026-07-20 — /fdk sửa code-graph MCP (issue P1)
+Đọc code server (workspace/graph, 2087 LOC) thay vì đoán từ triệu chứng → chẩn đoán cũ của tôi SAI ("đường ghi/đọc lệch DB"). Thật ra 2 bug: (1) _each_db/get_stats fan-out qua MỌI DB registry mà get_all_db_paths chỉ kiểm .exists() → ĐÚNG MỘT db thiếu bảng symbols (payroll-frontend-develop) ném lỗi giết cả truy vấn, dù 16 DB kia lành — giải thích vì sao reindex báo thành công mà search vẫn hỏng; (2) list_projects dùng basename.rsplit("-") tàn dư layout cũ → mọi repo hiện thành "index.db". Đính chính số liệu: tôi từng báo "11 DB hỏng" — sai, do ổ ngoài chưa sẵn sàng lúc đo; thật là 1. Sửa tại HÀM DÙNG CHUNG (is_usable_db trong get_all_db_paths) thay vì vá từng caller. Commit 2727ede repo graph. Sau sửa: 17→16 DB, list_projects trả tên repo thật, search_symbols("flag_stale") trả 8 kết quả, 53.208 symbol query được. CÒN: phải restart MCP server (process giữ code cũ — vừa kiểm, vẫn trả 17x index.db).
