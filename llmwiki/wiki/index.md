@@ -151,3 +151,4 @@
 | [200726-orchestration-loop-closure](sources/draft/200726-orchestration-loop-closure.md) | draft | 2026-07-20 |
 | [200726-orchestration-loop-closure](sources/draft/200726-orchestration-loop-closure.md) | draft | 2026-07-20 |
 | [200726-orchestration-triage](sources/draft/200726-orchestration-triage.md) | draft | 2026-07-20 |
+| [graph-model](concepts/graph-model.md) | concept | 2026-07-20 |
