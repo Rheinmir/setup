@@ -19,46 +19,46 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-18 15:14:43 | `file.write` | harness/mechanisms.yaml · tool=Edit · session=246fa7ac · actor=agent · prev=88b1da877521a084483277bcb3aa5c7ae6e0da599d57 |
-| 2026-07-18 15:14:50 | `file.write` | harness/mechanisms.yaml · tool=Edit · session=246fa7ac · actor=agent · prev=580a91435f65dbbe68b86b2083db064ca4694c38ecc6 |
-| 2026-07-18 15:16:24 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=cc1a9d1bd9c8164212fee6485bddbde7720c |
-| 2026-07-18 15:17:34 | `file.write` | harness/scripts/bnal_config.py · tool=Edit · session=246fa7ac · actor=agent · prev=d301d0674a84bc66a4f5919971c948af1a166 |
-| 2026-07-18 15:17:42 | `file.write` | harness/scripts/bnal_metrics.py · tool=Edit · session=246fa7ac · actor=agent · prev=56038059ae1f2441d94a4ae08e11ea5cf8ed |
-| 2026-07-18 15:17:52 | `file.write` | harness/scripts/bnal_guard.py · tool=Edit · session=246fa7ac · actor=agent · prev=9d12cee5e7491f6cfe9fff424b9a46557c82b0 |
-| 2026-07-18 15:20:05 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=e68f69a2fbbf21bc245e15c554c4f16b4954 |
-| 2026-07-18 15:20:24 | `file.write` | fdk/tools/build-capabilities.py · tool=Edit · session=246fa7ac · actor=agent · prev=bac30eaa8659a0da17683ae84d89a0431c01 |
-| 2026-07-18 16:46:35 | `file.write` | harness/tests/engines-smoke-test.sh · tool=Write · session=246fa7ac · actor=agent · prev=90acf87d2dca2d10e096583f50ce64b |
-| 2026-07-18 16:47:06 | `file.write` | harness/tests/engines-smoke-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=ef9425fee451fedc2e84e37dd10a5e30 |
-| 2026-07-18 16:47:11 | `file.write` | harness/tests/engines-smoke-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=ea2341927b7484ab1fd671316456eb92 |
-| 2026-07-18 16:47:15 | `file.write` | harness/tests/engines-smoke-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=5ccd2972277aa0acf84a2155cfba3770 |
-| 2026-07-18 16:47:29 | `file.write` | harness/tests/engines-smoke-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=94878a391a278694cb5a3ef430b545ec |
-| 2026-07-18 16:48:33 | `file.write` | .github/workflows/harness.yml · tool=Edit · session=246fa7ac · actor=agent · prev=faca5c43137dfb220e0ce770b0d81de5ac6a58 |
-| 2026-07-18 16:49:10 | `file.write` | harness/tests/engines-smoke-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=414beb0e442065ea4721fac4c1f76470 |
-| 2026-07-18 16:52:14 | `file.write` | .github/workflows/harness.yml · tool=Edit · session=246fa7ac · actor=agent · prev=092d8c5022cb6e677b7fcd23ac24db4144277b |
-| 2026-07-18 16:52:46 | `file.write` | .github/workflows/harness.yml · tool=Edit · session=246fa7ac · actor=agent · prev=67f79881f9a12c2eca644337e2873d3ab7e89a |
-| 2026-07-18 16:58:37 | `file.write` | harness/scripts/wiki-health.py · tool=Edit · session=246fa7ac · actor=agent · prev=3c713fe71418ce644250ebe92028b3c609d3e |
-| 2026-07-18 16:58:44 | `file.write` | harness/scripts/wiki-health.py · tool=Edit · session=246fa7ac · actor=agent · prev=b30c20ba7bae7ff8f327eea53e2b52c5d6a85 |
-| 2026-07-18 17:00:08 | `file.write` | harness/scripts/wiki-health.py · tool=Edit · session=246fa7ac · actor=agent · prev=61c6b6b3fe49eee94628b1e45c6397ea2841a |
-| 2026-07-18 17:00:14 | `file.write` | harness/scripts/wiki-health.py · tool=Edit · session=246fa7ac · actor=agent · prev=1b4632528c65968928c9768d3cda9f817680e |
-| 2026-07-18 17:00:31 | `file.write` | harness/scripts/wiki-health.py · tool=Edit · session=246fa7ac · actor=agent · prev=fd55582e1af4325931eb943ece7ef2d0667d7 |
-| 2026-07-18 17:02:05 | `file.write` | harness/validators/duplicate_basename.py · tool=Edit · session=246fa7ac · actor=agent · prev=e446bac7898d12a1772549ba743 |
-| 2026-07-18 17:02:13 | `file.write` | harness/scripts/sync-skills.py · tool=Edit · session=246fa7ac · actor=agent · prev=744b0d8ded96e913b9e0047b884d03c148aec |
-| 2026-07-18 17:03:31 | `file.write` | harness/validators/task_lifecycle.py · tool=Edit · session=246fa7ac · actor=agent · prev=1212e657a6f0a6070fd987978fadb8e |
-| 2026-07-18 17:04:43 | `file.write` | harness/scripts/code-logger.py · tool=Edit · session=246fa7ac · actor=agent · prev=5f0737cf78bae35761b57fca832cd9253d8d4 |
-| 2026-07-18 17:04:52 | `file.write` | harness/scripts/code-logger.py · tool=Edit · session=246fa7ac · actor=agent · prev=0cdfcaa1489a20f3e05ba3a76079d61b26261 |
-| 2026-07-18 17:05:06 | `file.write` | harness/scripts/code-logger.py · tool=Edit · session=246fa7ac · actor=agent · prev=6d6aa3b44b7819a5e8607b581367593f426d2 |
-| 2026-07-18 17:05:10 | `audit.rechain` |  · actor=system · fixed=187 · from_line=1308 · note=tính lại prev/h từ điểm đứt (race đa-phiên cùng prev) — nội dung eve |
-| 2026-07-18 17:05:44 | `file.write` | harness/scripts/bnal-selftest.py · tool=Edit · session=246fa7ac · actor=agent · prev=e99c69b56dfe876599efaeba688270d27ba |
-| 2026-07-18 17:06:10 | `file.write` | harness/scripts/fdk-gate.py · tool=Edit · session=246fa7ac · actor=agent · prev=5b71f278bab3243c9637c49b8b73a2432bf2299d |
-| 2026-07-18 17:07:03 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=246fa7ac · actor=agent · prev=9c88ddb8a15a3cbbb717b4e07d5da7be3c |
-| 2026-07-18 17:10:33 | `file.write` | harness/poc-vendor-neutral/policy.yaml · tool=Edit · session=246fa7ac · actor=agent · prev=acec7103991fd13781290d5a930f3 |
-| 2026-07-18 17:11:12 | `file.write` | harness/tests/ledger-snapshot-test.sh · tool=Edit · session=246fa7ac · actor=agent · prev=cc88c8f6eb7ecb16da1833b1c1530e |
 | 2026-07-18 23:26:53 | `file.write` | llmwiki/personas/grower.md · tool=Edit · session=df308014 · actor=agent · prev=1a28f03906d5fbaa463ebcb6d565ff674cfa5f274 |
 | 2026-07-18 23:26:56 | `file.write` | llmwiki/personas/builder.md · tool=Edit · session=df308014 · actor=agent · prev=0377e138eafcc2a8c3a5b055669795351d3c23ac |
 | 2026-07-18 23:26:59 | `file.write` | llmwiki/personas/maintainer.md · tool=Edit · session=df308014 · actor=agent · prev=28e8f226cbef9ac3eef9ff598ddc765bdb49e |
 | 2026-07-18 23:27:02 | `file.write` | llmwiki/personas/prototyper.md · tool=Edit · session=df308014 · actor=agent · prev=a30e448723e4979d27fc181863a75f6175bc8 |
 | 2026-07-18 23:27:06 | `file.write` | llmwiki/personas/sweeper.md · tool=Edit · session=df308014 · actor=agent · prev=55dcca8dd722128f00f8673e92c1e98455aa9fc8 |
 | 2026-07-18 23:27:09 | `file.write` | llmwiki/personas/tester.md · tool=Edit · session=df308014 · actor=agent · prev=31190c58d299acb4de4d180d7e2fe339754ba44c4 |
+| 2026-07-18 23:43:59 | `file.write` | llmwiki/.claude/hooks/stop.py · tool=Edit · session=df308014 · actor=agent · prev=df11b2a49fb79dd044a0f80f0f3ac945702a80 |
+| 2026-07-18 23:44:08 | `file.write` | llmwiki/.claude/hooks/stop.py · tool=Edit · session=df308014 · actor=agent · prev=569c6090829c2f6b964daac7f9c2f51db3e23a |
+| 2026-07-18 23:44:41 | `file.write` | llmwiki/skills/wiki-loop/lint.md · tool=Edit · session=df308014 · actor=agent · prev=4a7ccae80846234aab84e6345272aa40f96 |
+| 2026-07-18 23:44:52 | `file.write` | llmwiki/skills/wiki-loop/lint.md · tool=Edit · session=df308014 · actor=agent · prev=d5a586da1e615c56ccb955fc1a66441927c |
+| 2026-07-18 23:46:56 | `commit.reconcile` |  · actor=system · agent_n=3 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=a6d08229ee290af9ea53f19c0319c22899845e1af |
+| 2026-07-18 23:46:56 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=0 · prev=f83c198471b29d252db8609f4402d6b6192ed609ebd5a9510fe607b3e74abf0e · h=55b6 |
+| 2026-07-18 23:46:56 | `commit.reconcile` |  · actor=system · agent_n=4 · human_n=0 · prev=55b62a6517e4172031801d974c8291d261f6fe00fd3bb379c95cb3cfeda22d3c · h=b887 |
+| 2026-07-18 23:52:00 | `file.write` | skills/lint/SKILL.md · tool=Edit · session=df308014 · actor=agent · prev=b8871a00b0c76460135c8b2cc53209556ed563b9b38ddcb |
+| 2026-07-18 23:52:43 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=0 · prev=046e8d624a75ddf6e093466d36ee0b5576920a6a4169929d82f5fc9ab08f0377 · h=d0be |
+| 2026-07-18 23:57:56 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['fdk/skills.provenance.json'] · prev=d0bed4a3f34deaa4eb714d75147ead559f |
+| 2026-07-19 00:05:20 | `task.new` |  · task=T-260719-01 · title=Bịt 3 lỗ travel đường curl update + forcing functions · state=proposed · actor=agent · prev= |
+| 2026-07-19 00:08:26 | `file.write` | llmwiki/html/190726-travel-gap-forcing-functions-seq.html · tool=Write · session=ee3f5da6 · actor=agent · prev=a7b3a5251 |
+| 2026-07-19 00:09:13 | `file.write` | llmwiki/html/190726-travel-gap-forcing-functions-seq.html · tool=Edit · session=ee3f5da6 · actor=agent · prev=06236c085e |
+| 2026-07-19 00:10:55 | `file.write` | llmwiki/wiki/sources/draft/190726-travel-gap-forcing-functions.md · tool=Write · session=ee3f5da6 · actor=agent · prev=b |
+| 2026-07-19 00:11:04 | `file.write` | llmwiki/wiki/sources/draft/190726-travel-gap-forcing-functions.md · tool=Edit · session=ee3f5da6 · actor=agent · prev=22 |
+| 2026-07-19 08:07:26 | `file.write` | llmwiki/wiki/sources/draft/190726-travel-gap-forcing-functions.md · tool=Edit · session=ee3f5da6 · actor=agent · prev=fb |
+| 2026-07-19 08:07:40 | `file.write` | llmwiki/wiki/sources/draft/190726-travel-gap-forcing-functions.md · tool=Edit · session=ee3f5da6 · actor=agent · prev=f9 |
+| 2026-07-19 08:07:46 | `file.write` | llmwiki/wiki/sources/draft/190726-travel-gap-forcing-functions.md · tool=Edit · session=ee3f5da6 · actor=agent · prev=82 |
+| 2026-07-19 08:07:56 | `file.write` | llmwiki/wiki/sources/draft/190726-travel-gap-forcing-functions.md · tool=Edit · session=ee3f5da6 · actor=agent · prev=44 |
+| 2026-07-19 21:11:58 | `task.new` |  · task=T-260719-02 · title=graph-lessons-from-grapuco · state=proposed · actor=agent · prev=53a32f43df53969825054dd6fad |
+| 2026-07-19 21:16:31 | `file.write` | llmwiki/wiki/sources/draft/190726-graph-lessons-grapuco.md · tool=Write · session=eec0806a · actor=agent · prev=25d6263c |
+| 2026-07-19 21:16:42 | `file.write` | llmwiki/wiki/sources/draft/190726-graph-lessons-grapuco.md · tool=Edit · session=eec0806a · actor=agent · prev=5f3f594c3 |
+| 2026-07-19 21:19:53 | `file.write` | llmwiki/html/190726-graph-lessons-grapuco-seq.html · tool=Write · session=eec0806a · actor=agent · prev=8689a9340b62e323 |
+| 2026-07-20 00:01:56 | `file.write` | harness/scripts/wiki-sync.py · tool=Edit · session=eec0806a · actor=agent · prev=4727bcc252944d486627716f539602a597445bd |
+| 2026-07-20 00:02:07 | `file.write` | harness/scripts/wiki-sync.py · tool=Edit · session=eec0806a · actor=agent · prev=50ccce13e08388eedf651c72ca6da4f95d7b028 |
+| 2026-07-20 00:02:37 | `file.write` | harness/tests/wiki-sync-flags-failopen-test.sh · tool=Write · session=eec0806a · actor=agent · prev=14424d1171ce93d2388a |
+| 2026-07-20 00:03:00 | `file.write` | skills/query/SKILL.md · tool=Edit · session=eec0806a · actor=agent · prev=01dea3b23e8f873ccce1eb2ac917f8a5ed233299a86194 |
+| 2026-07-20 00:03:45 | `file.write` | harness/council.personas.yaml · tool=Edit · session=eec0806a · actor=agent · prev=40c16c7d1dfa3e1f930de9d4170a8a57404f5c |
+| 2026-07-20 00:03:51 | `file.write` | harness/council.personas.yaml · tool=Edit · session=eec0806a · actor=agent · prev=574d7fb080b0d4c900fd1e9d158df71295abf6 |
+| 2026-07-20 00:03:55 | `file.write` | harness/council.personas.yaml · tool=Edit · session=eec0806a · actor=agent · prev=d2a0fe9db2d0e857845cff41f08fec5bd40d6d |
+| 2026-07-20 00:03:58 | `file.write` | harness/council.personas.yaml · tool=Edit · session=eec0806a · actor=agent · prev=d07f6fa12adde6432210f3824ca962d733c96d |
+| 2026-07-20 00:05:14 | `file.write` | harness/scripts/wiki-sync.py · tool=Edit · session=eec0806a · actor=agent · prev=d89699e765d81cfeeb05fdeb34df43b4d0332ef |
+| 2026-07-20 00:15:41 | `file.write` | llmwiki/wiki/sources/evals/retrieval/newcomer-adr.md · tool=Write · session=eec0806a · actor=agent · prev=b1091cefa755c2 |
+| 2026-07-20 00:21:03 | `file.write` | llmwiki/wiki/sources/draft/200726-code-graph-index-broken.md · tool=Write · session=eec0806a · actor=agent · prev=303df6 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -382,3 +382,12 @@ Sau khi mổ code CORE (temporal invalidation + hybrid recall) và đối chiế
 2. `llmwiki/skills/wiki-loop/lint.md` step 0b — thêm rubric 4 nhánh (contradiction/superseding/progression/equivalence) để phân loại code-drift trước khi sửa trang; nhánh `superseding` dùng frontmatter `invalid_at`/`invalidated_by` (đóng dấu, không xoá) thay vì sửa đè câm lặng — mượn ý bi-temporal của CORE, R9 không chặn khoá lạ nên an toàn thêm.
 3. **Chưa làm** (item 1/3 — bật embedder semantic cho mem-rank): cần Ollama cài local, máy hiện không có (`which ollama` → not found). Adapter đã sẵn (`harness/mem-rank.config.yaml` + `embed-ollama.py`), chỉ còn bước hạ tầng ngoài phạm vi code — để lại nguyên trạng `verified:false`.
 Verify: `mem-rank.py --self-test` PASS, dry-run episode ghi+retrieve đúng trong store tạm, `medic --ci` 14/14 + toàn bộ step CI repo-health (wiki-health/arch-scan/harness-lint/parity/dup-basename/7 test bash/harness-doctor/build-capabilities/adapt-registry) đều xanh trước khi push.
+
+## 2026-07-19 — propose — travel-gap-forcing-functions
+Draft T-260719-01: bịt 3 lỗ travel đường curl update (stamp surface thiếu 4 nhóm file · 34 skill trỏ path repo-relative chết ở downstream · fdk-uat/poc chỉ test dự án trống) — mỗi fix kèm forcing function (fdk-gate/medic · harness-lint · cổng /ship); T3 nâng thành fixture "dự án dang dở" dùng chung uat+poc theo góp ý user. Cặp: sources/draft/190726-travel-gap-forcing-functions.md + html/190726-travel-gap-forcing-functions-seq.html. STOP chờ duyệt.
+
+## 2026-07-19 — propose — graph-lessons-grapuco
+Draft T-260719-02: đọc thread cộng đồng Grapuco qua 3 lens persona (Grower/Prototyper/Maintainer) → 6 task chia theo độ chắc bằng chứng "sửa 2, đo 3, nháp 1". Phát hiện lõi: `/query` KHÔNG đọc `stale.json` (grep ra 0) — cờ code-drift do wiki-sync ghi chỉ tiêu thụ ở /lint, đường đọc mù → đúng kịch bản "graph là source-of-truth mà nội dung lệch" thread cảnh báo. Hở thứ 6 do user nêu: ranh giới persona là ngõ cụt (archetype.py không có handoff) → nối /raise-issue (hoãn) + council roster (gọi vào room ngay), cả hai nửa đã có sẵn. Loại phương án Context Hub vì thừa hưởng đúng 2 vết thương thread chỉ ra. Cặp: sources/draft/190726-graph-lessons-grapuco.md + html/190726-graph-lessons-grapuco-seq.html. STOP chờ duyệt.
+
+## 2026-07-20 — thi hành T-260719-02 — graph-lessons-grapuco (6/6 task)
+T1 wiki-sync `--flags-for` (fail-open, luôn exit 0) + query SKILL bước 3b — cờ code-drift cuối cùng tới ĐƯỜNG ĐỌC; test 11/11, chứng trên 3 trang drift thật. T3 sync-log.jsonl (137ms, 0 token). T4 đổi golden extract-site→newcomer-adr, giữ trần 30, HIT recall 1.0, hit@5 30/30, baseline chốt lại. T6 6 persona + 6 archetype vào council roster (case lifecycle, profile archetype, 3 cặp đối-trọng) — ranh giới persona hết là ngõ cụt. T2 ĐỔI KẾT LUẬN: code-graph MCP HỎNG (ghi/đọc lệch DB; reindex OK mà search `no such table`), A/B 37 vs 14 call cùng độ chính xác 5/5 — đo được chi phí tool hỏng, KHÔNG đo được giá trị code-graph; dừng ở số, handoff issue 200726-code-graph-index-broken cho maintainer. T5 NO-GO vì cùng nền hỏng. medic --ci 14 ok.

@@ -1,0 +1,49 @@
+{
+ "measured": "2026-07-20",
+ "task": "T-260719-02",
+ "engine": "5 task x 2 nhánh, Explore subagent",
+ "evidence_grade": "self-reported trajectory (agent tự khai số tool-call) — KHÔNG phải log hệ thống; events.jsonl chỉ ghi tool GHI (Edit/Write), không ghi Read/Grep/MCP.",
+ "finding": "code-graph MCP HỎNG tại thời điểm đo: search_symbols/get_stats -> 'no such table: symbols|files'. reindex_repo BÁO THÀNH CÔNG (2660 file, 21972 symbol, 276595 edge) nhưng search vẫn hỏng => đường GHI và đường ĐỌC trỏ hai DB khác nhau (bug server-side).",
+ "caveat": "Vì vậy KHÔNG đo được giá trị thật của code-graph. Số dưới đo CHI PHÍ CỦA MỘT TOOL HỎNG mà orientation khuyên mọi phiên dùng trước.",
+ "runs": [
+  {
+   "task": "flag_stale",
+   "code_graph_calls": 5,
+   "baseline_calls": 2
+  },
+  {
+   "task": "hard_cap",
+   "code_graph_calls": 5,
+   "baseline_calls": 3
+  },
+  {
+   "task": "detect_wiki_dir",
+   "code_graph_calls": 13,
+   "baseline_calls": 3
+  },
+  {
+   "task": "cmd_roster",
+   "code_graph_calls": 6,
+   "baseline_calls": 3
+  },
+  {
+   "task": "content_dirs",
+   "code_graph_calls": 8,
+   "baseline_calls": 3
+  }
+ ],
+ "totals": {
+  "code_graph": 37,
+  "baseline": 14,
+  "mean_code_graph": 7.4,
+  "mean_baseline": 2.8,
+  "ratio": 2.64
+ },
+ "accuracy": {
+  "code_graph_found": 5,
+  "baseline_found": 5,
+  "of": 5,
+  "note": "hai nhánh ra CÙNG đáp án — khác biệt duy nhất là chi phí."
+ },
+ "decision": "DỪNG Ở SỐ (đúng ranh giới Grower). Không kết luận giữ/bỏ code-graph khi nó đang hỏng — phải sửa server rồi đo lại."
+}

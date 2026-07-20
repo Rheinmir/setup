@@ -24,7 +24,6 @@
 | [docs-macos](sources/evals/retrieval/docs-macos.md) | eval | Golden truy-hồi: Skill docs-site-macos dùng để làm gì? |
 | [enforcement-floor](sources/evals/retrieval/enforcement-floor.md) | eval | Golden truy-hồi: Vì sao CI mới là sàn enforcement thật, ba lớp chặn ra sao? |
 | [explain-clone-site](sources/evals/retrieval/explain-clone-site.md) | eval | Golden truy-hồi: Làm sao explain và clone một website? |
-| [extract-site](sources/evals/retrieval/extract-site.md) | eval | Golden truy-hồi: Skill extract-site dùng để làm gì? |
 | [fdk-optin](sources/evals/retrieval/fdk-optin.md) | eval | Golden truy-hồi: Vì sao framework-dev context là opt-in, không auto-bơm đầu phiên? |
 | [fdk-what](sources/evals/retrieval/fdk-what.md) | eval | Golden truy-hồi: FDK — Framework Development Kit là gì, gọi khi nào? |
 | [feature-catalog](sources/evals/retrieval/feature-catalog.md) | eval | Golden truy-hồi: Bản đồ mọi năng lực framework và vì sao cần nằm ở đâu? |
@@ -142,3 +141,10 @@
 | [180726-session-provenance](sources/180726-session-provenance.md) | source | 2026-07-18 |
 | [180726-archetype-tester](sources/draft/archive/proposals/180726-archetype-tester.md) | draft | 2026-07-18 |
 | [180726-council-self-index-remaining-scope](sources/draft/180726-council-self-index-remaining-scope.md) | issue | Issue: council tự chọn đề thi — phần lõi chưa ship (GH#81) |
+| [190726-travel-gap-forcing-functions](sources/draft/190726-travel-gap-forcing-functions.md) | draft | 2026-07-19 |
+| [190726-graph-lessons-grapuco](sources/draft/190726-graph-lessons-grapuco.md) | draft | 2026-07-19 |
+| [200726-code-graph-index-broken](sources/draft/200726-code-graph-index-broken.md) | issue | 2026-07-20 |
+| [grapuco-discuss](draft/grapuco-discuss.md) | draft | 2026-07-19 |
+| [newcomer-adr](sources/evals/retrieval/newcomer-adr.md) | eval | 2026-07-20 |
+| [190726-session-provenance](sources/190726-session-provenance.md) | source | 2026-07-19 |
+| [200726-session-provenance](sources/200726-session-provenance.md) | source | 2026-07-20 |
