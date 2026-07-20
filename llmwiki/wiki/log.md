@@ -19,15 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-18 23:26:53 | `file.write` | llmwiki/personas/grower.md · tool=Edit · session=df308014 · actor=agent · prev=1a28f03906d5fbaa463ebcb6d565ff674cfa5f274 |
-| 2026-07-18 23:26:56 | `file.write` | llmwiki/personas/builder.md · tool=Edit · session=df308014 · actor=agent · prev=0377e138eafcc2a8c3a5b055669795351d3c23ac |
-| 2026-07-18 23:26:59 | `file.write` | llmwiki/personas/maintainer.md · tool=Edit · session=df308014 · actor=agent · prev=28e8f226cbef9ac3eef9ff598ddc765bdb49e |
-| 2026-07-18 23:27:02 | `file.write` | llmwiki/personas/prototyper.md · tool=Edit · session=df308014 · actor=agent · prev=a30e448723e4979d27fc181863a75f6175bc8 |
-| 2026-07-18 23:27:06 | `file.write` | llmwiki/personas/sweeper.md · tool=Edit · session=df308014 · actor=agent · prev=55dcca8dd722128f00f8673e92c1e98455aa9fc8 |
-| 2026-07-18 23:27:09 | `file.write` | llmwiki/personas/tester.md · tool=Edit · session=df308014 · actor=agent · prev=31190c58d299acb4de4d180d7e2fe339754ba44c4 |
-| 2026-07-18 23:43:59 | `file.write` | llmwiki/.claude/hooks/stop.py · tool=Edit · session=df308014 · actor=agent · prev=df11b2a49fb79dd044a0f80f0f3ac945702a80 |
-| 2026-07-18 23:44:08 | `file.write` | llmwiki/.claude/hooks/stop.py · tool=Edit · session=df308014 · actor=agent · prev=569c6090829c2f6b964daac7f9c2f51db3e23a |
-| 2026-07-18 23:44:41 | `file.write` | llmwiki/skills/wiki-loop/lint.md · tool=Edit · session=df308014 · actor=agent · prev=4a7ccae80846234aab84e6345272aa40f96 |
 | 2026-07-18 23:44:52 | `file.write` | llmwiki/skills/wiki-loop/lint.md · tool=Edit · session=df308014 · actor=agent · prev=d5a586da1e615c56ccb955fc1a66441927c |
 | 2026-07-18 23:46:56 | `commit.reconcile` |  · actor=system · agent_n=3 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=a6d08229ee290af9ea53f19c0319c22899845e1af |
 | 2026-07-18 23:46:56 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=0 · prev=f83c198471b29d252db8609f4402d6b6192ed609ebd5a9510fe607b3e74abf0e · h=55b6 |
@@ -59,6 +50,15 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-20 00:05:14 | `file.write` | harness/scripts/wiki-sync.py · tool=Edit · session=eec0806a · actor=agent · prev=d89699e765d81cfeeb05fdeb34df43b4d0332ef |
 | 2026-07-20 00:15:41 | `file.write` | llmwiki/wiki/sources/evals/retrieval/newcomer-adr.md · tool=Write · session=eec0806a · actor=agent · prev=b1091cefa755c2 |
 | 2026-07-20 00:21:03 | `file.write` | llmwiki/wiki/sources/draft/200726-code-graph-index-broken.md · tool=Write · session=eec0806a · actor=agent · prev=303df6 |
+| 2026-07-20 08:25:51 | `task.new` |  · task=T-260720-01 · title=orchestration-loop-closure · state=proposed · actor=agent · prev=fcf32accf09d356187b528fdf7d |
+| 2026-07-20 08:27:51 | `file.write` | llmwiki/wiki/sources/draft/200726-orchestration-loop-closure.md · tool=Write · session=eec0806a · actor=agent · prev=617 |
+| 2026-07-20 08:29:50 | `file.write` | llmwiki/html/200726-orchestration-loop-closure-seq.html · tool=Write · session=eec0806a · actor=agent · prev=7b357d3c871 |
+| 2026-07-20 08:53:06 | `file.write` | llmwiki/wiki/sources/draft/200726-orchestration-loop-closure.md · tool=Write · session=eec0806a · actor=agent · prev=9c3 |
+| 2026-07-20 08:55:22 | `file.write` | llmwiki/html/200726-orchestration-loop-closure-seq.html · tool=Write · session=eec0806a · actor=agent · prev=891b54eb856 |
+| 2026-07-20 08:56:24 | `file.write` | harness/scripts/orca-dispatch.py · tool=Write · session=eec0806a · actor=agent · prev=033cb400d837466a9f94297bebd564922f |
+| 2026-07-20 08:58:36 | `file.write` | harness/scripts/orca-reconcile.py · tool=Write · session=eec0806a · actor=agent · prev=8f1d1d31a9dd6b4da9b5992d6a8e471f1 |
+| 2026-07-20 08:59:08 | `file.write` | harness/scripts/orca-reconcile.py · tool=Edit · session=eec0806a · actor=agent · prev=b8c327cbe9c5f681943592e9e5fda88c5a |
+| 2026-07-20 09:01:36 | `file.write` | llmwiki/wiki/sources/draft/200726-orchestration-triage.md · tool=Write · session=eec0806a · actor=agent · prev=dd0340c1c |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -391,3 +391,9 @@ Draft T-260719-02: đọc thread cộng đồng Grapuco qua 3 lens persona (Grow
 
 ## 2026-07-20 — thi hành T-260719-02 — graph-lessons-grapuco (6/6 task)
 T1 wiki-sync `--flags-for` (fail-open, luôn exit 0) + query SKILL bước 3b — cờ code-drift cuối cùng tới ĐƯỜNG ĐỌC; test 11/11, chứng trên 3 trang drift thật. T3 sync-log.jsonl (137ms, 0 token). T4 đổi golden extract-site→newcomer-adr, giữ trần 30, HIT recall 1.0, hit@5 30/30, baseline chốt lại. T6 6 persona + 6 archetype vào council roster (case lifecycle, profile archetype, 3 cặp đối-trọng) — ranh giới persona hết là ngõ cụt. T2 ĐỔI KẾT LUẬN: code-graph MCP HỎNG (ghi/đọc lệch DB; reindex OK mà search `no such table`), A/B 37 vs 14 call cùng độ chính xác 5/5 — đo được chi phí tool hỏng, KHÔNG đo được giá trị code-graph; dừng ở số, handoff issue 200726-code-graph-index-broken cho maintainer. T5 NO-GO vì cùng nền hỏng. medic --ci 14 ok.
+
+## 2026-07-20 — /fdk propose — orchestration-loop-closure
+T-260720-01 Pha 1. Thử Orca trước theo yêu cầu: ĐO LIVE runtime — 59 task, 42 completed, 8 có deps, 18 terminal, 4 CLI khác vendor (claude/opencode/agy/copilot) ⇒ Orca LÀM ĐƯỢC, chưa cần herdr (điều kiện user không kích hoạt; herdr vẫn là ẩn số). Nhưng phép đo phơi ra 17 task treo (12 ready + 2 blocked + 3 failed) từ 22/05→17/07 — vòng phản hồi HỞ. dispatch-verify chỉ đóng vòng proposal↔đĩa, không chạm runtime state. Theo Meadows: thêm vòng phản hồi trước, không thêm tính năng. 3 task: orca-reconcile (chỉ báo cáo, fail-open, KHÔNG tự đóng) · probe medic thứ 15 mức warn · triage 17 task. Pha 2 (orchestrator tự học + ghim vai↔worktree↔CLI) chỉ mở khi SC-004 đạt. STOP chờ duyệt.
+
+## 2026-07-20 — /fdk thi hành T-260720-01 — nguyên thuỷ "biết khi nào agent xong"
+User phản biện "orca-workflow toàn tự làm" → ĐO LẠI: user ĐÚNG, tôi SAI. 59 task orchestration, chỉ 13 (22%) từng dispatch, 46 (78%) có dispatch:null; 14/14 task ready+blocked chưa từng giao. Nhưng gốc KHÔNG phải Orca không giao được: dispatch thật cho opencode chạy ngon, còn `terminal wait --for tui-idle` TIMEOUT 90s trên việc xong sau 9s (status vẫn "running" vì đó là shell). Orca không có agent_status ở đâu cả (soi terminal list 12 trường + worktree ps). Clone+đọc herdr (Rust 233k LOC, AGPL-3.0): nó có agent_status working/blocked/done vì QUAN SÁT pane thay vì tin worker tự khai. Mode HÒA TAN: lấy ý tưởng, cài bằng đồ Orca — sentinel `<cmd>; echo __ORCA_DONE__<id>:$?` + poll terminal read. T1 orca-dispatch.py (self-test 9/9). T2 chứng thật: opencode 9385ms exit=0 "Hà Nội" · agy 9088ms exit=0 "Tokyo" · nhánh lỗi 2337ms exit=127 → harness/metrics/dispatch-proof.json. T3 orca-reconcile.py (self-test 9/9, nhóm chính chưa-từng-dispatch) + probe medic thứ 15 mức WARN. T4 bản đối soát 17 task: 6 đóng được (bằng chứng cứng), 11 thuộc dự án khác → GIỮ, chờ user xác nhận (không xoá thứ mình không hiểu). medic --ci 0 fail 14 ok.

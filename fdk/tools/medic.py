@@ -126,6 +126,7 @@ PROBE_MECH_MAP = {
     "narrative": None, "foundation": None, "code": None, "eval": None, "freshinstall": None,
     "selfstate": "code-state", "capsurface": "capsurface",
     "capproof": "capproof", "provenance": "provenance-scope",
+    "orchestration": None,
 }
 
 
@@ -376,6 +377,36 @@ def p_capproof():
                   + (f" · {len(cp.get('dups', []))} trùng-ứng-viên" if cp.get("dups") else "")), ""
 
 
+
+def p_orchestration():
+    """Việc giao cho agent có bị bỏ quên không. Đo 2026-07-20: 78% task orchestration
+    có `dispatch: null` — chưa BAO GIỜ được giao; 17 task treo, cũ nhất 59 ngày.
+    Gốc là coordinator không biết lúc nào worker xong (orca terminal wait --for tui-idle
+    timeout 90s trên việc xong sau 9s) nên bỏ cuộc, tự làm inline.
+
+    WARN chứ không FAIL: nợ điều phối không phải hỏng hệ, và một cổng đỏ vì nợ tồn
+    đọng sẽ bị học cách phớt lờ — lúc đó mất luôn tín hiệu thật. Không có Orca → skip."""
+    tool = ROOT / "harness/scripts/orca-reconcile.py"
+    if not tool.exists():
+        return "skip", "orca-reconcile.py chưa có", ""
+    rc, out = sh([PY, str(tool), "--json"], timeout=180)
+    if rc != 0:
+        return "skip", "orca-reconcile không chạy được", ""
+    try:
+        rep = json.loads(out)
+    except Exception:
+        return "skip", "orca-reconcile --json không parse được", ""
+    if not rep.get("available"):
+        return "skip", f"không có Orca ({rep.get('reason', 'runtime tắt')})", ""
+    if not rep.get("open_total"):
+        return "ok", f"0 task treo / {rep.get('total_tasks', 0)} task", ""
+    g = rep.get("groups", {})
+    never = g.get("chua-tung-dispatch", 0)
+    return "warn", (f"{rep['open_total']} task treo (cũ nhất {rep.get('max_age_days', 0)}d)"
+                    + (f" · {never} CHƯA TỪNG giao" if never else "")), \
+           "python3 harness/scripts/orca-reconcile.py"
+
+
 PROBES = [
     ("rules",    ["rules", "luật", "bite"],      p_rules),
     ("coverage", ["rules", "coverage", "luật"],  p_coverage),
@@ -392,6 +423,7 @@ PROBES = [
     ("capsurface", ["capsurface", "version", "capabilities", "bump", "downstream"], p_capsurface),
     ("capproof", ["capproof", "proof", "unproven", "ratchet", "dup"], p_capproof),
     ("provenance", ["provenance", "supply-chain", "external-pull", "tamper"], p_provenance),
+    ("orchestration", ["orchestration", "orca", "dispatch", "task", "treo"], p_orchestration),
 ]
 # bỏ 'drift' probe trùng — drift đã báo trong rules:
 PROBES = [p for p in PROBES if p[0] != "drift"]

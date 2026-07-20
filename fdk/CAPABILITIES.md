@@ -1,7 +1,7 @@
 <!-- SINH BẰNG CODE: build-capabilities.py — ĐỪNG sửa tay; chạy lại để cập nhật. -->
 # CAPABILITIES — toàn bộ đồ nghề (luôn-mới, đếm từ đĩa)
 
-**81 skill · 18 rule · 19 fdk-tool · 56 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
+**81 skill · 18 rule · 19 fdk-tool · 58 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
 
 ## Skills (gọi bằng `/<tên>`)
 
@@ -166,6 +166,8 @@
 - `mem-proxy.py`
 - `mem-rank.py`
 - `okf-check.py`
+- `orca-dispatch.py`
+- `orca-reconcile.py`
 - `ovs-notes.py`
 - `prospect-critic.py`
 - `qc-regression.py`
@@ -193,10 +195,10 @@
 - `wiki-sync.py`
 - `wikieval.py`
 
-## Proof — năng lực còn sống (197/197 có bằng chứng)
+## Proof — năng lực còn sống (199/199 có bằng chứng)
 Mỗi năng lực map tất định sang bằng chứng chạy được (frontmatter `proof:` > rule-map > tests > self-test > golden > medic). Chi tiết: `build-capabilities.py --capproof-json`.
 
-## TRÙNG-ỨNG-VIÊN (18) — máy phát hiện, NGƯỜI phán (dedupe = vòng /propose riêng)
+## TRÙNG-ỨNG-VIÊN (19) — máy phát hiện, NGƯỜI phán (dedupe = vòng /propose riêng)
 - `mech:medic` ↔ `mech:medic-mirror` — name-token: medic
 - `script:embed-ollama.py` ↔ `script:embed-voyage.py` — desc-jaccard 0.82
 - `script:failure-flywheel.py` ↔ `script:flywheel.py` — name-token: flywheel
@@ -205,6 +207,7 @@ Mỗi năng lực map tất định sang bằng chứng chạy được (frontma
 - `script:flywheel.py` ↔ `skill:failure-flywheel` — name-token: flywheel
 - `script:frontier.py` ↔ `skill:frontier-scan` — name-token: frontier
 - `script:harness-lint.py` ↔ `skill:lint` — name-token: lint
+- `script:orca-dispatch.py` ↔ `skill:orca-dispatch-reference` — name-token: dispatch
 - `script:query-log.py` ↔ `skill:query` — name-token: query
 - `script:query-proxy.py` ↔ `skill:query` — name-token: query
 - `script:wiki-graph.py` ↔ `tool:build-wiki-graph.py` — name-token: graph

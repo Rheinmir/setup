@@ -148,3 +148,6 @@
 | [newcomer-adr](sources/evals/retrieval/newcomer-adr.md) | eval | 2026-07-20 |
 | [190726-session-provenance](sources/190726-session-provenance.md) | source | 2026-07-19 |
 | [200726-session-provenance](sources/200726-session-provenance.md) | source | 2026-07-20 |
+| [200726-orchestration-loop-closure](sources/draft/200726-orchestration-loop-closure.md) | draft | 2026-07-20 |
+| [200726-orchestration-loop-closure](sources/draft/200726-orchestration-loop-closure.md) | draft | 2026-07-20 |
+| [200726-orchestration-triage](sources/draft/200726-orchestration-triage.md) | draft | 2026-07-20 |
