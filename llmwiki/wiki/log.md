@@ -19,34 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-21 14:12:33 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Write · session=765fc26c · actor=agent · prev=aa7b047683f |
-| 2026-07-21 14:12:44 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=b5637118a6e0 |
-| 2026-07-21 14:12:50 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=1b9e14f1a90f |
-| 2026-07-21 14:18:56 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Write · session=765fc26c · actor=agent · prev=c6ead1676a50df6e64c |
-| 2026-07-21 14:27:43 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=538dde361f529ba18d0e |
-| 2026-07-21 14:28:07 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=069f66467d253f9325af |
-| 2026-07-21 14:28:26 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=b9f4a18fc9487238b8b4 |
-| 2026-07-21 14:28:38 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=6dd04a643b17e6429743 |
-| 2026-07-21 14:28:46 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=f4649a66c6601dab1145 |
-| 2026-07-21 14:29:08 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=efb21e19bd16ee322bb2 |
-| 2026-07-21 14:29:30 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=b60c12e565cac261ca88 |
-| 2026-07-21 14:30:03 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=4c10e84385a57ff8a73d |
-| 2026-07-21 14:30:39 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=85401a9ea4d3355db3bf |
-| 2026-07-21 14:31:08 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=a384fea0ab3d6b30e76a |
-| 2026-07-21 14:31:34 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=154034a3918f31720213 |
-| 2026-07-21 14:31:58 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=e7aa899987990a923598 |
-| 2026-07-21 14:32:30 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=eceb51a2f0845eef286a |
-| 2026-07-21 14:38:14 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=7158ccf7261e |
-| 2026-07-21 14:38:31 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=f0a70fd8bc45 |
-| 2026-07-21 14:38:47 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=642b5129e396 |
-| 2026-07-21 14:39:33 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=66b5ee9142b9 |
-| 2026-07-21 14:39:48 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=29f1e82e58fa |
-| 2026-07-21 14:40:04 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=677df204f9f9 |
-| 2026-07-21 14:40:19 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=33d9ec481510 |
-| 2026-07-21 14:40:51 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=9c8165855607 |
-| 2026-07-21 14:43:07 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=62c1f46a1378 |
-| 2026-07-21 14:43:20 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=44552e0e5b751b45a961 |
-| 2026-07-21 14:43:21 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=e396cf7e519f |
 | 2026-07-21 14:43:42 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=953d3d67e4c5 |
 | 2026-07-21 14:44:02 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=6b73929e4ee47ec10573 |
 | 2026-07-21 14:44:04 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=43afa5d4bf87 |
@@ -59,6 +31,34 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-21 14:52:06 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=f5a928c51bbb |
 | 2026-07-21 14:53:59 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring-adoption-metric.md · tool=Write · session=765fc26c · actor=agent ·  |
 | 2026-07-21 14:55:24 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=765fc26c · actor=agent · prev=44b29f41b4bd785fdfd2cb8d42617806de085 |
+| 2026-07-21 15:09:47 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=795357f13947 |
+| 2026-07-21 15:48:32 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring-PLAN.md · tool=Write · session=765fc26c · actor=agent · prev=16c383 |
+| 2026-07-21 15:48:56 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring-PLAN.md · tool=Edit · session=765fc26c · actor=agent · prev=1fac447 |
+| 2026-07-21 15:52:44 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring-PLAN.md · tool=Edit · session=765fc26c · actor=agent · prev=f137005 |
+| 2026-07-21 15:53:10 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=765fc26c · actor=agent · prev=398cbd16c4887e34f5c53585cee980fac4f0113b2a62b4 |
+| 2026-07-21 15:54:25 | `file.write` | harness/scripts/decision-liveness.py · tool=Write · session=765fc26c · actor=agent · prev=f663100db100cdaebc885f96a50a3a |
+| 2026-07-21 15:54:38 | `file.write` | harness/scripts/decision-liveness.py · tool=Edit · session=765fc26c · actor=agent · prev=a1d09468a75dc5659d33684b99dac0b |
+| 2026-07-21 15:55:27 | `file.write` | harness/scripts/decision-liveness.py · tool=Edit · session=765fc26c · actor=agent · prev=27523594af38e9256b9dc08ee6866af |
+| 2026-07-21 15:56:05 | `file.write` | harness/mechanisms.yaml · tool=Edit · session=765fc26c · actor=agent · prev=e63ecb044fdbf9668bd94d4a54eac11ff791d80cfde5 |
+| 2026-07-21 15:56:56 | `file.write` | harness/scripts/decision-liveness.py · tool=Edit · session=765fc26c · actor=agent · prev=a1030b8834db9682abff9b5f6d587a8 |
+| 2026-07-21 15:57:45 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=0 · prev=90b13817d02eb43de47e2db7e65d0d612c8302c924daaa3bdeb6a207ad391edb · h=18f9 |
+| 2026-07-21 15:57:46 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['harness/mechanisms.yaml'] · prev=18f91b43ed4b61a8388a5556e1b6a52a5c374 |
+| 2026-07-21 15:58:13 | `file.write` | llmwiki/skills/wiki-loop/lint.md · tool=Edit · session=765fc26c · actor=agent · prev=5144179ee3c8ca2603cb86c2f0f73b4340e |
+| 2026-07-21 15:58:19 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=0 · prev=610fe41452124f33da23bc6eaaf80a932231465d4e4b730c759840a878793847 · h=03f2 |
+| 2026-07-21 15:58:56 | `file.write` | harness/scripts/decision-guard.py · tool=Write · session=765fc26c · actor=agent · prev=03f2248a204b1dd4ae3d128b2fcb6b483 |
+| 2026-07-21 15:59:14 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=0 · prev=02b7381886ffdeef1403b65163a2c1c851c21e8d6c754d39f44ddc7b57f3d4d5 · h=d21c |
+| 2026-07-21 15:59:30 | `file.write` | harness/scripts/decision-anchoring-crosscheck.py · tool=Write · session=765fc26c · actor=agent · prev=d21c9f9f2b319d20da |
+| 2026-07-21 16:00:36 | `file.write` | llmwiki/wiki/concepts/decision-anchoring.md · tool=Write · session=765fc26c · actor=agent · prev=183873622940197c048b6f1 |
+| 2026-07-21 16:01:00 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=765fc26c · actor=agent · prev=23cd09d885ace41e07901e9374cef4957a33ab51ed07bb |
+| 2026-07-21 16:01:26 | `commit.reconcile` |  · actor=system · agent_n=3 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=0b5b1a753fe689d0c443c051a858d4413321adae1 |
+| 2026-07-21 16:02:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/sources/draft/210721-decision-anchoring-PLAN.md', 'llmwik |
+| 2026-07-21 16:03:33 | `file.write` | harness/mechanisms.yaml · tool=Edit · session=765fc26c · actor=agent · prev=fa2faec313e08497912aa4e659815b64316ef77ada24 |
+| 2026-07-21 16:03:52 | `file.write` | harness/mechanisms.yaml · tool=Edit · session=765fc26c · actor=agent · prev=b4f4c4d41c5572d37a5c9893d2304e96f7a1ebce61a5 |
+| 2026-07-21 16:04:33 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=1 · human=['fdk/CAPABILITIES.md'] · prev=34e6096cee980310acc2be468503eb194a527bda9 |
+| 2026-07-21 16:19:28 | `file.write` | skills/fdk-uat/SKILL.md · tool=Edit · session=765fc26c · actor=agent · prev=244dea0ebe3c5e383f989dbf1ea32fe08350954312f5 |
+| 2026-07-21 16:19:57 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=2 · human=['llmwiki/skills/utils/fdk-uat.md', 'llmwiki/wiki/log.md'] · prev=05d344 |
+| 2026-07-21 16:25:35 | `file.write` | skills/lint/SKILL.md · tool=Edit · session=765fc26c · actor=agent · prev=3dc6c7495503ddcc6d89c8118362a1d2d09515e6c4dd82b |
+| 2026-07-21 16:26:03 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=2 · human=['llmwiki/skills/wiki-loop/lint.md', 'llmwiki/wiki/log.md'] · prev=f445b |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -546,3 +546,9 @@ User yêu cầu tường minh (xác nhận 2 lần: "tôi cho phép" rồi gọi
 `/fdk-uat` (main-URL smoke, curl thật từ nhánh `orca`) phát hiện T7 sai vị trí sửa: bước 8e đã chèn vào `llmwiki/skills/wiki-loop/lint.md` (mirror) thay vì `skills/lint/SKILL.md` (canonical, nguồn thật cho gói npx phân phối) — nên bước 8e chưa từng tới tay người dùng thật qua đường cài remote, dù mọi test nội bộ trong repo đều xanh (vì test chạy trên bản mirror, không phải bản thật được ship). Đây đúng lớp lỗi eval 020726 mà `fdk/tools/sync-skill.sh` sinh ra để chặn ("ĐỪNG cp tay từng bản — nguồn drift"). Vá bằng cách chèn 8e vào `skills/lint/SKILL.md` rồi chạy `sync-skill.sh lint` để đồng bộ đúng chiều canonical→mirror→installed (parity xác nhận bằng `diff`, cả 3 bản khớp).
 
 Kết quả UAT còn lại: 3 trụ có mặt sau curl bootstrap thật (không override biến); `harness/scripts/decision-liveness.py`/`decision-guard.py` tới tay qua tầng `global_shared` (`~/.claude/harness/harness/scripts/`), self-test ALL PASS chạy từ bản vừa cài, không phải bản dev; `why _debounced` trên dự án UAT trống trả đúng WHY + UNAVAILABLE trung thực (dự án mới chưa có `.graph-agent/index.db`); `test-broad.sh` 74/74 PASS.
+
+## 2026-07-21 — decision-anchoring — UAT dựng workspace Orca thật (thấy được bằng mắt)
+
+Lần UAT trước chỉ chạy filesystem-level (`/tmp`, xoá sau khi verify) — user chỉ ra không thấy gì trong app Orca. Dựng lại: curl bootstrap thật vào `~/orca/workspaces/uat-decision-anchoring-260721-1707`, `orca repo add` + `orca worktree create --name uat-verify --activate` — hiện đủ 2 worktree (`main` + `uat-verify`) trong `orca worktree list`, giữ lại (không xoá) để mở được trong app. Verify lại decision-anchoring trong chính worktree đó: `why _debounced` đúng WHY + UNAVAILABLE trung thực, self-test ALL PASS, skill `lint` global đã có bước 8e.
+
+`/fdk-poc` bị hoãn: tool `fdk/tools/fdk-poc.py` chỉ tồn tại trên nhánh `Rheinmir/issue-15-br-k` (chưa merge `orca`, lệch ~127-281 commit mỗi chiều) — không có trên `orca` nên không chạy thật được, đúng luật "không bịa bước" của chính skill đó. User chọn bỏ qua.
