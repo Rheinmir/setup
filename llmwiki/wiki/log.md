@@ -19,7 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-21 14:43:42 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=953d3d67e4c5 |
 | 2026-07-21 14:44:02 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=6b73929e4ee47ec10573 |
 | 2026-07-21 14:44:04 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=43afa5d4bf87 |
 | 2026-07-21 14:44:26 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=5b92d7245f99 |
@@ -59,6 +58,7 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-21 16:19:57 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=2 · human=['llmwiki/skills/utils/fdk-uat.md', 'llmwiki/wiki/log.md'] · prev=05d344 |
 | 2026-07-21 16:25:35 | `file.write` | skills/lint/SKILL.md · tool=Edit · session=765fc26c · actor=agent · prev=3dc6c7495503ddcc6d89c8118362a1d2d09515e6c4dd82b |
 | 2026-07-21 16:26:03 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=2 · human=['llmwiki/skills/wiki-loop/lint.md', 'llmwiki/wiki/log.md'] · prev=f445b |
+| 2026-07-21 17:08:14 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=6984c58121e1d2d608d86878c196ae0ce1e71f1b7 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -552,3 +552,15 @@ Kết quả UAT còn lại: 3 trụ có mặt sau curl bootstrap thật (không 
 Lần UAT trước chỉ chạy filesystem-level (`/tmp`, xoá sau khi verify) — user chỉ ra không thấy gì trong app Orca. Dựng lại: curl bootstrap thật vào `~/orca/workspaces/uat-decision-anchoring-260721-1707`, `orca repo add` + `orca worktree create --name uat-verify --activate` — hiện đủ 2 worktree (`main` + `uat-verify`) trong `orca worktree list`, giữ lại (không xoá) để mở được trong app. Verify lại decision-anchoring trong chính worktree đó: `why _debounced` đúng WHY + UNAVAILABLE trung thực, self-test ALL PASS, skill `lint` global đã có bước 8e.
 
 `/fdk-poc` bị hoãn: tool `fdk/tools/fdk-poc.py` chỉ tồn tại trên nhánh `Rheinmir/issue-15-br-k` (chưa merge `orca`, lệch ~127-281 commit mỗi chiều) — không có trên `orca` nên không chạy thật được, đúng luật "không bịa bước" của chính skill đó. User chọn bỏ qua.
+
+## 2026-07-21 — decision-anchoring — 2 agent thật test độc lập trong workspace Orca
+
+Spawn 2 phiên Claude Code THẬT (không phải tôi tự gõ lệnh) trong worktree `uat-verify`, mỗi phiên nhận một nhiệm vụ mơ hồ có chủ ý (không mách lệnh) để xem agent có tự khám phá cơ chế decision-anchoring không.
+
+**Agent 1 (tra WHY):** tự grep `~/.claude`, tìm đúng bộ 3 script, tự chạy `decision-liveness.py why _debounced`, trả đúng WHY. Thành công không cần gợi ý thêm.
+
+**Agent 2 (test ORPHAN):** tự bắt lỗi trong chính đề bài (tôi ra đề đổi tên `_debounce_mark`, nhưng symbol neo thật là `_debounced`) và tự sửa lại test cho đúng. Kết quả baseline thật trên `~/.claude/harness`: `path_state=ORPHAN` (không có `llmwiki/.claude/hooks/stop.py`, harness home chỉ mirror `llmwiki/personas/`), `symbol_state=UNAVAILABLE` (`.graph-agent/index.db` không tồn tại). Agent giải thích đúng: đây không phải bug logic (self-test sandbox đã pass) mà vì 2 tầng hạ tầng cần (file thật + index tươi) đang gãy sẵn trong bản cài — đúng thiết kế FR-002 "không bao giờ báo ORPHAN/STALE giả khi hạ tầng đứt".
+
+**Phát hiện phụ, NGOÀI phạm vi (chưa xử lý):** MCP code-graph có một project "setup" khác trỏ `~/harness/setup` báo sai `_debounced` tồn tại dòng 49-60 trong khi file thật ở đó chỉ 46 dòng — index cũ lệch từ trước, không liên quan decision-liveness.py (script không lọc theo field "project", chỉ đọc DB riêng theo ROOT của chính nó). Agent 2 đúng đắn không đụng vào — cần `/raise-issue` riêng nếu muốn xử lý sau.
+
+Không file nào bị agent ghi/sửa trong cả 2 phiên — sạch.
