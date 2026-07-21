@@ -90,7 +90,14 @@ def resolve_symbol(anchor_symbol: str, root: Path, db_path: Path):
         return UNAVAILABLE, "git không có trên PATH (tầng 1 dependency chain đứt)"
     status = db_status(db_path)
     if status != "ok":
-        return UNAVAILABLE, f"index.db {status} (tầng 2 đứt — DB thiếu/hỏng schema)"
+        # 5-Why 2026-07-21: DB vắng hoàn toàn ở ROOT này thường KHÔNG phải "chưa reindex" —
+        # đó là khi DB có schema nhưng thiếu file/symbol (xem nhánh dưới). DB vắng hẳn ở một
+        # ROOT tự suy (Path(__file__).parents[2]) thường là dấu hiệu đang chạy bản mirror
+        # global_shared (nhân bản cố ý, xem harness/mechanisms.yaml comment đầu file) chứ
+        # không phải repo dev thật — hint luôn để không phải mò.
+        return UNAVAILABLE, (f"index.db {status} tại ROOT={root} (tầng 2 đứt) — nếu đây là "
+                              f"bản global_shared (~/.claude/harness), thử chạy từ repo dev thật "
+                              f"để có index đầy đủ, hoặc reindex_repo(root) qua code-graph MCP")
     parsed = parse_anchor(anchor_symbol)
     if not parsed:
         return UNAVAILABLE, f"anchor_symbol sai định dạng: {anchor_symbol!r}"
@@ -99,6 +106,15 @@ def resolve_symbol(anchor_symbol: str, root: Path, db_path: Path):
     try:
         row = conn.execute("SELECT id, checksum FROM files WHERE path = ?", (file_rel,)).fetchone()
         if not row:
+            # 5-Why 2026-07-21: "chưa index" gộp chung 2 ca rất khác nhau — (a) project THẬT
+            # chưa chạy reindex (tạm, tự khỏi), (b) đang chạy NHẦM ROOT — bản global_shared bị
+            # nhân bản (ROOT tự suy theo Path(__file__).parents[2]) không đồng bộ file mà chính
+            # mechanisms.yaml của nó tham chiếu chéo sang tầng khác (llmwiki/). Case (b) là lỗi
+            # CẤU TRÚC cần sửa ROOT, không phải chờ tự khỏi — tách message để không lẫn hai ca.
+            if not (root / file_rel).is_file():
+                return UNAVAILABLE, (f"{file_rel} không tồn tại ở ROOT={root} — có thể đang chạy "
+                                      f"NHẦM BẢN (global_shared mirror thiếu file tham chiếu chéo "
+                                      f"tầng); thử chạy script từ repo dev thật thay vì bản global")
             return UNAVAILABLE, f"{file_rel} chưa được index (tầng 3 đứt — project chưa reindex)"
         file_id, checksum = row
         disk = root / file_rel

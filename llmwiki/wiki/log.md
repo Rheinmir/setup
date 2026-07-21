@@ -19,7 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-21 14:44:04 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=43afa5d4bf87 |
 | 2026-07-21 14:44:26 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=5b92d7245f99 |
 | 2026-07-21 14:45:19 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=2d818081c09287cef5cd |
 | 2026-07-21 14:50:36 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=243dd8ebf5fd |
@@ -59,6 +58,7 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-21 16:26:03 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=2 · human=['llmwiki/skills/wiki-loop/lint.md', 'llmwiki/wiki/log.md'] · prev=f445b |
 | 2026-07-21 17:08:14 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=6984c58121e1d2d608d86878c196ae0ce1e71f1b7 |
 | 2026-07-21 18:12:13 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=d0715a830a2c3a45d9b5b257331b94301113109f1 |
+| 2026-07-21 18:23:30 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=ab1a14a188a558dcdbe11731ba0639696787165e7 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -575,3 +575,17 @@ Agent 2 (tiếp tục phiên trước) dùng code-graph MCP THẬT: `reindex_rep
 ```
 
 Đây là lần đầu tiên cơ chế thật ra khỏi UNAVAILABLE — đóng nốt case còn thiếu trong toàn bộ chuỗi verify (trước đó chỉ có UNAVAILABLE thật + STALE/ORPHAN/LIVE trên sandbox). Xác nhận: mọi lần UNAVAILABLE trước đó là ĐÚNG hành vi (hạ tầng thật sự gãy — thiếu file hoặc index cũ), không phải lỗi logic của `resolve_symbol`/`compute_state`. Agent không sửa file mã nguồn nào, chỉ ghi `.graph-agent/index.db` (index cache, không phải nguồn code).
+
+## 2026-07-21 — decision-anchoring — 5-Why "trỏ nhầm root" + vá thông điệp UNAVAILABLE
+
+User yêu cầu 5-Why cho hiện tượng "trỏ nhầm root" mà 2 agent test gặp phải (UNAVAILABLE ở mirror `~/.claude/harness`, ORPHAN-giả ở index cũ `~/harness/setup`, chỉ LIVE khi chạy đúng repo dev thật). Chuỗi:
+
+1. Script tự suy `ROOT = Path(__file__).parents[2]` — có 3+ bản cùng tên script nằm ở 3 root khác nhau, không lệnh nào tự báo đang ở world nào.
+2. Nhiều bản phân tán là CỐ Ý — travel-policy tầng `global_shared` chủ động nhân bản script dùng-chung ra global harness home.
+3. Nhân bản (cố ý) gây trỏ nhầm vì bản nhân ra KHÔNG đồng bộ toàn vẹn — có `mechanisms.yaml`/`decision-liveness.py` nhưng thiếu `llmwiki/.claude/hooks/stop.py` (chính file nó trỏ tới) và thiếu `.graph-agent/index.db`.
+4. Không có kiểm tra toàn vẹn này vì travel-policy phân loại THEO TỪNG FILE độc lập, không mô hình hoá quan hệ tham chiếu CHÉO TẦNG (một mục ở `harness/` trỏ symbol ở `llmwiki/`).
+5. Góc mù này chưa lộ trước đó vì mọi `live_probe` cũ đều trỏ file NẰM TRONG CHÍNH `harness/`/`fdk/` (cùng tầng) — decision-anchoring là cơ chế ĐẦU TIÊN neo chéo tầng.
+
+**Root cause:** `global_shared` "hứa" là *"dùng chung mọi phiên"* nhưng chỉ đồng bộ đúng cái được khai `global_shared`, không đồng bộ theo-nhu-cầu những gì nó tham chiếu chéo sang tầng khác.
+
+**Fix đòn-bẩy-thấp đã áp** (không sửa cả travel-policy — để dành nếu tái diễn nhiều hơn): `resolve_symbol()` trong `decision-liveness.py` giờ tự phân biệt UNAVAILABLE "chưa reindex" (tạm) khỏi "file/DB không tồn tại ở ROOT này — có thể đang chạy nhầm bản global_shared, thử repo dev thật hoặc reindex_repo qua code-graph MCP" (cấu trúc). Verify thật trên đúng 2 root gây nhầm trước đó: mirror `~/.claude/harness` giờ in gợi ý rõ ràng, repo dev thật vẫn LIVE đúng như trước. Self-test vẫn ALL PASS.
