@@ -191,6 +191,7 @@ mechanisms:
     desc: "Stop hook debounce theo thời gian (mặc định 180s) cho 2 bước nặng nhất (build-wiki-graph 49s + medic --ci 26s) — p-45: cổng kích hoạt lỏng nên chúng fire gần mọi lượt dev framework, 75-90s thuế mỗi lần dừng. require_ok=True (dùng cho gate medic) chỉ bỏ qua nếu lần trước ĐÃ healthy — một FAIL luôn chạy lại ngay, debounce không bao giờ giấu regression thật."
     live_probe: llmwiki/.claude/hooks/stop.py
     anchor_symbol: "setup::llmwiki/.claude/hooks/stop.py::_debounced"
+    proof: harness/scripts/decision-liveness.py
     confirmed: "2026-07-21"
 
   - id: code-graph-probe-boundary
