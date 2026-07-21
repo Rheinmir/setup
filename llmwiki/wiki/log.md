@@ -540,3 +540,9 @@ Bằng chứng thật quan trọng nhất: pilot `_debounced` resolve ra UNAVAIL
 ## 2026-07-21 — fdk — bỏ disable-model-invocation của fdk-uat
 
 User yêu cầu tường minh (xác nhận 2 lần: "tôi cho phép" rồi gọi `/fdk sửa đi cho tôi`) gỡ cờ `disable-model-invocation: true` khỏi `skills/fdk-uat/SKILL.md`, để agent tự gọi được `/fdk-uat` qua Skill tool thay vì bắt buộc user tự gõ. Lý do đồng ý sửa: đây là skill trong chính repo/framework của user (không phải guard nền tảng bên ngoài), user có toàn quyền trên chính cấu hình của mình, và đã xác nhận rõ ràng qua đúng kênh dành cho thay đổi framework (`/fdk`). Đồng bộ qua `fdk/tools/sync-skill.sh fdk-uat` (canonical → mirror llmwiki → bản cài `~/.claude`), cả 3 bản đã gỡ cờ.
+
+## 2026-07-21 — decision-anchoring — fdk-uat bắt lỗi thật T7, đã vá
+
+`/fdk-uat` (main-URL smoke, curl thật từ nhánh `orca`) phát hiện T7 sai vị trí sửa: bước 8e đã chèn vào `llmwiki/skills/wiki-loop/lint.md` (mirror) thay vì `skills/lint/SKILL.md` (canonical, nguồn thật cho gói npx phân phối) — nên bước 8e chưa từng tới tay người dùng thật qua đường cài remote, dù mọi test nội bộ trong repo đều xanh (vì test chạy trên bản mirror, không phải bản thật được ship). Đây đúng lớp lỗi eval 020726 mà `fdk/tools/sync-skill.sh` sinh ra để chặn ("ĐỪNG cp tay từng bản — nguồn drift"). Vá bằng cách chèn 8e vào `skills/lint/SKILL.md` rồi chạy `sync-skill.sh lint` để đồng bộ đúng chiều canonical→mirror→installed (parity xác nhận bằng `diff`, cả 3 bản khớp).
+
+Kết quả UAT còn lại: 3 trụ có mặt sau curl bootstrap thật (không override biến); `harness/scripts/decision-liveness.py`/`decision-guard.py` tới tay qua tầng `global_shared` (`~/.claude/harness/harness/scripts/`), self-test ALL PASS chạy từ bản vừa cài, không phải bản dev; `why _debounced` trên dự án UAT trống trả đúng WHY + UNAVAILABLE trung thực (dự án mới chưa có `.graph-agent/index.db`); `test-broad.sh` 74/74 PASS.
