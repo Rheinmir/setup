@@ -1,6 +1,5 @@
 ---
 name: fdk-uat
-disable-model-invocation: true
 description: >-
   UAT THẬT cho một bản framework sắp phát hành - dựng một dự án TRỐNG hoàn toàn mới, cài overstack
   đúng đường NGƯỜI MỚI (curl bootstrap từ GitHub raw, không phải file:// working-tree), rồi kiểm chứng
