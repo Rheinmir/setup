@@ -19,9 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-21 14:44:26 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=5b92d7245f99 |
-| 2026-07-21 14:45:19 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=2d818081c09287cef5cd |
-| 2026-07-21 14:50:36 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=243dd8ebf5fd |
 | 2026-07-21 14:51:05 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=981871f81da4 |
 | 2026-07-21 14:51:16 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=06eccbc8e032 |
 | 2026-07-21 14:51:39 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=f487196d9fa5 |
@@ -59,6 +56,9 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-21 17:08:14 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=6984c58121e1d2d608d86878c196ae0ce1e71f1b7 |
 | 2026-07-21 18:12:13 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=d0715a830a2c3a45d9b5b257331b94301113109f1 |
 | 2026-07-21 18:23:30 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=ab1a14a188a558dcdbe11731ba0639696787165e7 |
+| 2026-07-21 21:01:06 | `file.write` | harness/scripts/decision-liveness.py · tool=Edit · session=765fc26c · actor=agent · prev=84d440f83e87d913e793c5baac8cca4 |
+| 2026-07-21 21:01:47 | `file.write` | harness/scripts/decision-liveness.py · tool=Edit · session=765fc26c · actor=agent · prev=3c792b8358062d34e6823c3dd7d809b |
+| 2026-07-21 21:02:52 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=be5907dbf1ab012e124cf89d16141f3b974a4ba5a |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -589,3 +589,9 @@ User yêu cầu 5-Why cho hiện tượng "trỏ nhầm root" mà 2 agent test g
 **Root cause:** `global_shared` "hứa" là *"dùng chung mọi phiên"* nhưng chỉ đồng bộ đúng cái được khai `global_shared`, không đồng bộ theo-nhu-cầu những gì nó tham chiếu chéo sang tầng khác.
 
 **Fix đòn-bẩy-thấp đã áp** (không sửa cả travel-policy — để dành nếu tái diễn nhiều hơn): `resolve_symbol()` trong `decision-liveness.py` giờ tự phân biệt UNAVAILABLE "chưa reindex" (tạm) khỏi "file/DB không tồn tại ở ROOT này — có thể đang chạy nhầm bản global_shared, thử repo dev thật hoặc reindex_repo qua code-graph MCP" (cấu trúc). Verify thật trên đúng 2 root gây nhầm trước đó: mirror `~/.claude/harness` giờ in gợi ý rõ ràng, repo dev thật vẫn LIVE đúng như trước. Self-test vẫn ALL PASS.
+
+## 2026-07-21 — decision-anchoring — 5-Why xuôi cho "vì sao agent phải tự reindex" + giảm ma sát
+
+User hỏi tiếp: nếu wiring agent-tự-reindex thì giải được bài toán gì (5-Why xuôi, chứng minh giá trị). Chuỗi: (1) xoá vòng lặp "hỏi→UNAVAILABLE→mò→reindex→hỏi lại" trong 1 lượt; (2) đo được thật hôm nay — agent 2 tốn thêm 1 lượt mới ra LIVE; (3) đúng lời hứa gốc "từ code tìm WHY, không cần nhớ tay"; (4) UNAVAILABLE-lượt-đầu dễ hiểu nhầm "cơ chế hỏng" — đúng nguyên nhân giết `touches` ("không ai tiêu thụ thì không ai nuôi"); (5) chi phí đo được NGAY (khác GH#83 phải chờ dữ liệu dài hạn) nên đáng sửa ngay, đòn bẩy rẻ (đổi luồng thông tin, không đổi kiến trúc MCP).
+
+Vá: thêm đoạn hướng dẫn tường minh vào docstring đầu `decision-liveness.py` ("AGENT ĐANG ĐỌC FILE NÀY... trước tiên hãy tự gọi reindex_repo qua code-graph MCP") + thêm mục "Trỏ nhầm root, và vì sao reindex vẫn phải do agent chủ động" vào concept — giải thích rõ 2 ràng buộc cứng khiến máy không tự reindex được (MCP chỉ agent gọi; cố ý không để máy tự sửa lặng lẽ, theo tiền sử code-graph server hỏng-mà-không-ai-biết của `dep-health.py`). Verify: self-test ALL PASS, crosscheck 4 FACT khớp, `medic --ci` 0 fail.

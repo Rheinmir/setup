@@ -12,6 +12,14 @@ CLI:
     decision-liveness.py check [--json]      # mọi mục có anchor_symbol/live_probe -> trạng thái
     decision-liveness.py why <symbol>        # tra ngược symbol -> quyết định (mechanisms.yaml)
     decision-liveness.py --self-test
+
+AGENT ĐANG ĐỌC FILE NÀY (before you run `why`/`check`): nếu kết quả là UNAVAILABLE vì "chưa
+được index" hoặc "index.db absent/degraded", ĐỪNG báo đó là kết luận cuối ngay — trước tiên
+hãy tự gọi `reindex_repo(<ROOT in bao ra>)` qua code-graph MCP (bạn CÓ quyền gọi, script này
+thì không) rồi chạy lại lệnh. 5-Why 2026-07-21: bỏ qua bước này khiến `why` trả lời sai-cảm-giác
+ở lượt đầu (trông như cơ chế neo hỏng, trong khi chỉ cần reindex) — đúng nguyên nhân đã giết
+`touches` trong repo này ("thứ không ai tiêu thụ thì không ai nuôi"). Chỉ báo UNAVAILABLE là
+kết luận cuối SAU KHI đã thử reindex mà vẫn vậy (tầng 1 git hoặc tầng 2 DB thật sự hỏng).
 """
 from __future__ import annotations
 
