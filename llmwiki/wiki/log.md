@@ -19,7 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-21 14:44:02 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=6b73929e4ee47ec10573 |
 | 2026-07-21 14:44:04 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=43afa5d4bf87 |
 | 2026-07-21 14:44:26 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=5b92d7245f99 |
 | 2026-07-21 14:45:19 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=2d818081c09287cef5cd |
@@ -59,6 +58,7 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-21 16:25:35 | `file.write` | skills/lint/SKILL.md · tool=Edit · session=765fc26c · actor=agent · prev=3dc6c7495503ddcc6d89c8118362a1d2d09515e6c4dd82b |
 | 2026-07-21 16:26:03 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=2 · human=['llmwiki/skills/wiki-loop/lint.md', 'llmwiki/wiki/log.md'] · prev=f445b |
 | 2026-07-21 17:08:14 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=6984c58121e1d2d608d86878c196ae0ce1e71f1b7 |
+| 2026-07-21 18:12:13 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=d0715a830a2c3a45d9b5b257331b94301113109f1 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -564,3 +564,14 @@ Spawn 2 phiên Claude Code THẬT (không phải tôi tự gõ lệnh) trong wor
 **Phát hiện phụ, NGOÀI phạm vi (chưa xử lý):** MCP code-graph có một project "setup" khác trỏ `~/harness/setup` báo sai `_debounced` tồn tại dòng 49-60 trong khi file thật ở đó chỉ 46 dòng — index cũ lệch từ trước, không liên quan decision-liveness.py (script không lọc theo field "project", chỉ đọc DB riêng theo ROOT của chính nó). Agent 2 đúng đắn không đụng vào — cần `/raise-issue` riêng nếu muốn xử lý sau.
 
 Không file nào bị agent ghi/sửa trong cả 2 phiên — sạch.
+
+## 2026-07-21 — decision-anchoring — happy path LIVE xác nhận qua code-graph MCP thật
+
+Agent 2 (tiếp tục phiên trước) dùng code-graph MCP THẬT: `reindex_repo("/Users/giatran/orca/setup/setup")` → 107 file scan, 1 reindex (stop.py dirty), 0 lỗi; `search_symbols`/`get_symbol_context` xác nhận `_debounce_mark` (38-46), `_debounce_state` (30-35), `_debounced` (49-60, callers: regen_docs, framework_medic_mirror) khớp 100% file thật. Chạy `decision-liveness.py check/why` từ đúng bản trong repo dev (không phải mirror `~/.claude/harness` — DB_PATH tự resolve theo `Path(__file__).parents[2]`, không cần sửa biến môi trường):
+
+```
+[stop-debounce]              → LIVE (resolve stop.py:49-60, không đổi kể từ 2026-07-21)
+[code-graph-probe-boundary]  → LIVE (resolve dep-health.py:151-195, không đổi kể từ 2026-07-21)
+```
+
+Đây là lần đầu tiên cơ chế thật ra khỏi UNAVAILABLE — đóng nốt case còn thiếu trong toàn bộ chuỗi verify (trước đó chỉ có UNAVAILABLE thật + STALE/ORPHAN/LIVE trên sandbox). Xác nhận: mọi lần UNAVAILABLE trước đó là ĐÚNG hành vi (hạ tầng thật sự gãy — thiếu file hoặc index cũ), không phải lỗi logic của `resolve_symbol`/`compute_state`. Agent không sửa file mã nguồn nào, chỉ ghi `.graph-agent/index.db` (index cache, không phải nguồn code).
