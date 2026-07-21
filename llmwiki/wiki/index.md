@@ -6,6 +6,7 @@
 |------|------|---------|
 | [example-concept](concepts/example-concept.md) | concept | Ví dụ một trang concept hợp lệ (Origin + OKF) cho project dùng llmwiki |
 | [adapt-modes](concepts/adapt-modes.md) | concept | 3 kiểu absorb năng lực vào dự án — HÒA TAN / KÉO NGOÀI / NHÚNG-SỞ-HỮU; gọi đúng tên chọn đúng phương án |
+| [decision-anchoring](concepts/decision-anchoring.md) | concept | Neo quyết định vào symbol code, 4 trạng thái LIVE/STALE/ORPHAN/UNAVAILABLE suy từ code-graph, không cất tay |
 | [040726-issue4-trace-grader-plan](draft/040726-issue4-trace-grader-plan.md) | plan | Plan step-by-step GH#4: sửa run.ok transcript, lọc sidechain, check grounding edited_without_read — cho dev khác làm tiếp |
 | [300626-audit-fix-docs-site-macos](draft/uiux/300626-audit-fix-docs-site-macos.md) | draft | Audit + 8 fix (a11y/head/glass) cho skill docs-site-macos, đồng bộ cả 2 bản mirror |
 | [010726-onboard-html-tabs-redesign](draft/orca/010726-onboard-html-tabs-redesign.md) | draft | 2026-07-01 |
@@ -153,3 +154,10 @@
 | [200726-orchestration-triage](sources/draft/200726-orchestration-triage.md) | draft | 2026-07-20 |
 | [graph-model](concepts/graph-model.md) | concept | 2026-07-20 |
 | [200726-graph-foundation-handoff](sources/handover/200726-graph-foundation-handoff.md) | draft | 2026-07-20 |
+| [200726-context-hygiene-budget](sources/draft/200726-context-hygiene-budget.md) | draft | 2026-07-20 |
+| [200726-failure-missing-verification](sources/draft/200726-failure-missing-verification.md) | draft | 2026-07-20 |
+| [210726-codegraph-external-pull](sources/draft/210726-codegraph-external-pull.md) | draft | 2026-07-21 |
+| [210726-capability-map](sources/draft/210726-capability-map.md) | draft | 2026-07-21 |
+| [210726-code-as-truth-migration](sources/draft/210726-code-as-truth-migration.md) | draft | 2026-07-21 |
+| [210721-decision-anchoring](sources/draft/210721-decision-anchoring.md) | draft | 2026-07-21 |
+| [210721-decision-anchoring-PLAN](sources/draft/210721-decision-anchoring-PLAN.md) | draft | 2026-07-21 |

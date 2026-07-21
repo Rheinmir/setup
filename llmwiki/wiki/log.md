@@ -19,46 +19,46 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-20 00:03:00 | `file.write` | skills/query/SKILL.md · tool=Edit · session=eec0806a · actor=agent · prev=01dea3b23e8f873ccce1eb2ac917f8a5ed233299a86194 |
-| 2026-07-20 00:03:45 | `file.write` | harness/council.personas.yaml · tool=Edit · session=eec0806a · actor=agent · prev=40c16c7d1dfa3e1f930de9d4170a8a57404f5c |
-| 2026-07-20 00:03:51 | `file.write` | harness/council.personas.yaml · tool=Edit · session=eec0806a · actor=agent · prev=574d7fb080b0d4c900fd1e9d158df71295abf6 |
-| 2026-07-20 00:03:55 | `file.write` | harness/council.personas.yaml · tool=Edit · session=eec0806a · actor=agent · prev=d2a0fe9db2d0e857845cff41f08fec5bd40d6d |
-| 2026-07-20 00:03:58 | `file.write` | harness/council.personas.yaml · tool=Edit · session=eec0806a · actor=agent · prev=d07f6fa12adde6432210f3824ca962d733c96d |
-| 2026-07-20 00:05:14 | `file.write` | harness/scripts/wiki-sync.py · tool=Edit · session=eec0806a · actor=agent · prev=d89699e765d81cfeeb05fdeb34df43b4d0332ef |
-| 2026-07-20 00:15:41 | `file.write` | llmwiki/wiki/sources/evals/retrieval/newcomer-adr.md · tool=Write · session=eec0806a · actor=agent · prev=b1091cefa755c2 |
-| 2026-07-20 00:21:03 | `file.write` | llmwiki/wiki/sources/draft/200726-code-graph-index-broken.md · tool=Write · session=eec0806a · actor=agent · prev=303df6 |
-| 2026-07-20 08:25:51 | `task.new` |  · task=T-260720-01 · title=orchestration-loop-closure · state=proposed · actor=agent · prev=fcf32accf09d356187b528fdf7d |
-| 2026-07-20 08:27:51 | `file.write` | llmwiki/wiki/sources/draft/200726-orchestration-loop-closure.md · tool=Write · session=eec0806a · actor=agent · prev=617 |
-| 2026-07-20 08:29:50 | `file.write` | llmwiki/html/200726-orchestration-loop-closure-seq.html · tool=Write · session=eec0806a · actor=agent · prev=7b357d3c871 |
-| 2026-07-20 08:53:06 | `file.write` | llmwiki/wiki/sources/draft/200726-orchestration-loop-closure.md · tool=Write · session=eec0806a · actor=agent · prev=9c3 |
-| 2026-07-20 08:55:22 | `file.write` | llmwiki/html/200726-orchestration-loop-closure-seq.html · tool=Write · session=eec0806a · actor=agent · prev=891b54eb856 |
-| 2026-07-20 08:56:24 | `file.write` | harness/scripts/orca-dispatch.py · tool=Write · session=eec0806a · actor=agent · prev=033cb400d837466a9f94297bebd564922f |
-| 2026-07-20 08:58:36 | `file.write` | harness/scripts/orca-reconcile.py · tool=Write · session=eec0806a · actor=agent · prev=8f1d1d31a9dd6b4da9b5992d6a8e471f1 |
-| 2026-07-20 08:59:08 | `file.write` | harness/scripts/orca-reconcile.py · tool=Edit · session=eec0806a · actor=agent · prev=b8c327cbe9c5f681943592e9e5fda88c5a |
-| 2026-07-20 09:01:36 | `file.write` | llmwiki/wiki/sources/draft/200726-orchestration-triage.md · tool=Write · session=eec0806a · actor=agent · prev=dd0340c1c |
-| 2026-07-20 09:10:51 | `file.write` | harness/scripts/orca-reconcile.py · tool=Edit · session=eec0806a · actor=agent · prev=3d1cf8155d0bb38dbe0cc9bc14e3eada6e |
-| 2026-07-20 09:11:50 | `file.write` | harness/scripts/orca-reconcile.py · tool=Edit · session=eec0806a · actor=agent · prev=1ba01cc628692b71f0b0fe32ad8925b8ab |
-| 2026-07-20 13:02:25 | `file.write` | llmwiki/.claude/hooks/session_start.py · tool=Edit · session=eec0806a · actor=agent · prev=93ccf1ec3e2465c91d9ea8702f193 |
-| 2026-07-20 14:11:18 | `file.write` | harness/scripts/dep-health.py · tool=Write · session=eec0806a · actor=agent · prev=47d9ded7112a5be774cc14a6000632c84b6b1 |
-| 2026-07-20 14:12:11 | `file.write` | llmwiki/.claude/hooks/session_start.py · tool=Edit · session=eec0806a · actor=agent · prev=84403384ec36fd6c6c5f767618cbd |
-| 2026-07-20 14:13:16 | `file.write` | harness/tests/dep-health-gate-test.sh · tool=Write · session=eec0806a · actor=agent · prev=c36a8f9cc49bfc75328254f01f234 |
-| 2026-07-20 14:56:04 | `file.write` | harness/tests/wikigraph-single-source-test.sh · tool=Write · session=eec0806a · actor=agent · prev=4a4cfa7c7762d729a5db4 |
-| 2026-07-20 15:21:40 | `file.write` | llmwiki/wiki/concepts/graph-model.md · tool=Write · session=eec0806a · actor=agent · prev=eff64f2c2e845729082d96ed403b46 |
-| 2026-07-20 15:41:45 | `file.write` | llmwiki/wiki/sources/draft/200726-graph-foundation-handoff.md · tool=Write · session=eec0806a · actor=agent · prev=94939 |
-| 2026-07-20 15:48:09 | `file.write` | skills/orca-handover/SKILL.md · tool=Write · session=eec0806a · actor=agent · prev=f41118c3be417a9cb6ab4028b8147c9e8d857 |
-| 2026-07-20 15:49:01 | `file.write` | harness/validators/travel_policy_sync.py · tool=Write · session=765fc26c · actor=agent · prev=af8bc0ae5aa737855bd5eab503 |
-| 2026-07-20 15:49:14 | `file.write` | harness/validators/travel_policy_sync.py · tool=Edit · session=765fc26c · actor=agent · prev=ab3746bed6b755426fb351bcbdb |
-| 2026-07-20 15:49:39 | `file.write` | harness/validators/travel_policy_sync.py · tool=Edit · session=765fc26c · actor=agent · prev=1d7934a939f03213ffee9b494da |
-| 2026-07-20 15:49:45 | `file.write` | harness/validators/travel_policy_sync.py · tool=Edit · session=765fc26c · actor=agent · prev=545e57f766a405da7267c6d79e7 |
-| 2026-07-20 15:51:27 | `file.write` | harness/travel-policy.yaml · tool=Edit · session=765fc26c · actor=agent · prev=80f0a0a766d3df9cd05922b7faad0af409eca331c |
-| 2026-07-20 15:51:31 | `file.write` | harness/travel-policy.yaml · tool=Edit · session=765fc26c · actor=agent · prev=9794a0649c3091465cd26733ed7d455f7fc2b003f |
-| 2026-07-20 15:51:40 | `file.write` | harness/scripts/install-harness.sh · tool=Edit · session=765fc26c · actor=agent · prev=d8ea5d854bf8761c0a9036e452fb0cc9a |
-| 2026-07-20 15:51:53 | `file.write` | harness/scripts/install-harness.sh · tool=Edit · session=765fc26c · actor=agent · prev=ca9902435c66b57b0b85bc034e2b1cf5e |
-| 2026-07-20 15:52:34 | `file.write` | harness/validators/travel_policy_sync.py · tool=Edit · session=765fc26c · actor=agent · prev=fd030dda554c8ebd228e46db46a |
-| 2026-07-20 15:53:09 | `file.write` | harness/validators/travel_policy_sync.py · tool=Edit · session=765fc26c · actor=agent · prev=1dd00c00f9b627b14738ab449fa |
-| 2026-07-20 15:53:19 | `file.write` | harness/validators/travel_policy_sync.py · tool=Edit · session=765fc26c · actor=agent · prev=b4718752ba522039b12b9771140 |
-| 2026-07-20 15:53:25 | `file.write` | harness/validators/travel_policy_sync.py · tool=Edit · session=765fc26c · actor=agent · prev=bdb17704aa12d5a0b0d8c685ec4 |
-| 2026-07-20 15:53:34 | `file.write` | harness/validators/travel_policy_sync.py · tool=Edit · session=765fc26c · actor=agent · prev=92d3310da14c1931d696baa11e1 |
+| 2026-07-21 14:12:33 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Write · session=765fc26c · actor=agent · prev=aa7b047683f |
+| 2026-07-21 14:12:44 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=b5637118a6e0 |
+| 2026-07-21 14:12:50 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=1b9e14f1a90f |
+| 2026-07-21 14:18:56 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Write · session=765fc26c · actor=agent · prev=c6ead1676a50df6e64c |
+| 2026-07-21 14:27:43 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=538dde361f529ba18d0e |
+| 2026-07-21 14:28:07 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=069f66467d253f9325af |
+| 2026-07-21 14:28:26 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=b9f4a18fc9487238b8b4 |
+| 2026-07-21 14:28:38 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=6dd04a643b17e6429743 |
+| 2026-07-21 14:28:46 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=f4649a66c6601dab1145 |
+| 2026-07-21 14:29:08 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=efb21e19bd16ee322bb2 |
+| 2026-07-21 14:29:30 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=b60c12e565cac261ca88 |
+| 2026-07-21 14:30:03 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=4c10e84385a57ff8a73d |
+| 2026-07-21 14:30:39 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=85401a9ea4d3355db3bf |
+| 2026-07-21 14:31:08 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=a384fea0ab3d6b30e76a |
+| 2026-07-21 14:31:34 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=154034a3918f31720213 |
+| 2026-07-21 14:31:58 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=e7aa899987990a923598 |
+| 2026-07-21 14:32:30 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=eceb51a2f0845eef286a |
+| 2026-07-21 14:38:14 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=7158ccf7261e |
+| 2026-07-21 14:38:31 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=f0a70fd8bc45 |
+| 2026-07-21 14:38:47 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=642b5129e396 |
+| 2026-07-21 14:39:33 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=66b5ee9142b9 |
+| 2026-07-21 14:39:48 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=29f1e82e58fa |
+| 2026-07-21 14:40:04 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=677df204f9f9 |
+| 2026-07-21 14:40:19 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=33d9ec481510 |
+| 2026-07-21 14:40:51 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=9c8165855607 |
+| 2026-07-21 14:43:07 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=62c1f46a1378 |
+| 2026-07-21 14:43:20 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=44552e0e5b751b45a961 |
+| 2026-07-21 14:43:21 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=e396cf7e519f |
+| 2026-07-21 14:43:42 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=953d3d67e4c5 |
+| 2026-07-21 14:44:02 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=6b73929e4ee47ec10573 |
+| 2026-07-21 14:44:04 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=43afa5d4bf87 |
+| 2026-07-21 14:44:26 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=5b92d7245f99 |
+| 2026-07-21 14:45:19 | `file.write` | llmwiki/html/210721-decision-anchoring-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=2d818081c09287cef5cd |
+| 2026-07-21 14:50:36 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=243dd8ebf5fd |
+| 2026-07-21 14:51:05 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=981871f81da4 |
+| 2026-07-21 14:51:16 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=06eccbc8e032 |
+| 2026-07-21 14:51:39 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=f487196d9fa5 |
+| 2026-07-21 14:52:06 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=f5a928c51bbb |
+| 2026-07-21 14:53:59 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring-adoption-metric.md · tool=Write · session=765fc26c · actor=agent ·  |
+| 2026-07-21 14:55:24 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=765fc26c · actor=agent · prev=44b29f41b4bd785fdfd2cb8d42617806de085 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -471,3 +471,68 @@ Thư mục RIÊNG llmwiki/wiki/sources/handover/ theo yêu cầu user, không tr
 Stop hook báo fresh-install ĐỎ: "engine global THIẾU: fdk/tools/medic.py". Truy ra mâu thuẫn BA NGUỒN: downstream-contract.yaml:54 khai medic.py trong must_reach_global_engines (BẮT BUỘC tới global) · travel-policy.yaml xếp nó framework_only · install-harness.sh:154-175 đọc travel-policy để XOÁ nhóm đó khỏi global. Installer xoá đúng thứ hợp đồng nghiệm thu đòi ⇒ cổng đỏ tất định. Chú thích của chính travel-policy tự khai "stop.py gọi có guard fail-open ở downstream" — tác giả biết downstream cần mà vẫn xếp nhầm tầng. Sửa: medic.py → global_shared/engine_core. Sau sửa: install giữ lại medic (29 file .py ở global), fresh-install PASS, medic --ci 0 fail 16 ok.
 BÀI HỌC CÔNG CỤ (đã dính 2 lần trong ngày): output `ls` bị RTK nén làm tôi chẩn đoán nhầm hai lần — lần đầu đếm fdk/tools ra "19 vs 27, không thiếu gì" (thật ra thiếu 8), lần sau tưởng medic.py có sẵn. Phải kiểm sự tồn tại file bằng python pathlib hoặc `test -e`, KHÔNG dựa vào `ls | grep` khi đang chẩn đoán.
 Kèm p-44 vào problem-tree (con của p-41 — cùng lớp "hai nguồn chân lý nói ngược nhau").
+
+## 2026-07-20 — /propose vệ sinh nền + trần ngân sách context (T-260720-02)
+Đo trước, đề xuất sau. Số nền: code-graph 16 project / 5.970 file / 546.133 cạnh; get_callers("save") ~65 kết quả ~2.000 token, hỏng 4 cách (không tách project · index cả node_modules và .next · trùng lặp thô · khớp tên chứ không khớp symbol). Kho skill: 83 mô tả = 10.686 token nạp mỗi phiên, nhưng chỉ 26/83 skill từng được gọi trên 46 phiên. BA HƯỚNG THỬ RỒI BỎ, đều bác bằng số: BM25 chấm prompt để auto-inject (điểm trôi theo độ dài — log Jenkins 3.159 điểm vs trung vị 11.61; margin nổ ở đuôi thưa nên "tiếp tục"/"ok" đạt margin vô cực); head+tail scoring (74% prompt dài đổi kết luận); min-cut/Ncut (sai hình dạng bài — bài đúng là PCST, chưa tới ngưỡng). Bằng chứng phản diện mạnh nhất từ repo code-review-graph 22k sao: eval của chính họ cho 195.653 token cho một commit sửa docstring, thất bại ở BUDGET chứ không ở thuật toán. Kết luận hội tụ: chặn nằm ở vệ sinh dữ liệu và cưỡng chế ngân sách, không ở thuật toán chọn. Chọn phương án lọc nguồn + trần cưỡng chế; PCST giữ lại kèm điều kiện kích hoạt đo được (FR-007).
+BÀI HỌC PHƯƠNG PHÁP: tập "prompt thật" ban đầu lẫn 22.863 tool-result + 4.412 message subagent — kết luận đầu tiên rút ra từ dữ liệu bẩn và đã phải rút lại. Lọc bằng cờ transcript (isSidechain/toolUseResult/isMeta), không lọc bằng khớp chuỗi.
+
+## 2026-07-20 — /failure-flywheel distill session này
+Ghi 3 failure vào missing-verification (fnmatch glob vượt "/", travel-policy đọc runtime, kết luận BM25 từ transcript bẩn). Report: missing-verification 5x + spec-violation 3x, cả hai chạm threshold=3. Draft --date 260720 (DDMMYY quen dùng cho tên file wiki) ra file SAI NGÀY 290626 — flywheel.py:_ddmmyy() nuốt exception khi --date không đúng ISO YYYY-MM-DD, rơi về DEFAULT_DATE 2026-06-29 không cảnh báo. Bug này chính nó là instance thứ 6 của missing-verification, xảy ra NGAY TRONG LÚC distill loại lỗi đó — đã ghi thêm vào sổ. Xoá file sai, draft lại đúng ISO date → 200726-failure-missing-verification.md, 5 failure, STOP cho người duyệt (skill từ chối tự viết rule vào TODO — đúng thiết kế "never auto-promote").
+
+## 2026-07-21 — /propose code-graph → KÉO NGOÀI (T-260721-01)
+Sau khi T1-T4 (context-hygiene) thi hành xong, lộ ra code-graph không nằm trong travel-policy — chỉ có code_graph_keeper.py giữ registry bền, không ai cài server. User hỏi: curl không tự cài nếu quan trọng thì phải từ bỏ, viết lại, hay giữ 1 bản ổn định để kéo về? Ánh xạ đúng 3 lựa chọn vào [[adapt-modes]]: "từ bỏ+distill riêng"=HÒA TAN, "1 bản lưu đơn để kéo về"=nghe giống NHÚNG nhưng đúng là KÉO NGOÀI. Quyết định bằng dữ kiện: git log repo graph thật cho 2 tác giả (rheinmir + Trần Bùi Hoàng Gia), remote Rheinmir/graph-kit — CÙNG org sở hữu rheinmir/setup (framework này). Không phải bên thứ ba như last30days/agent-reach mà là repo khác của cùng tác giả. Loại HÒA TAN (viết lại thứ đã có+chạy tốt), loại NHÚNG (vendor sẽ trôi khỏi bản gốc ngay từ commit sau). Chọn KÉO NGOÀI theo đúng khuôn research_reach đã có tiền lệ. Draft: FR-001..006, pin theo sha (chưa có tag), bootstrap trong install-harness.sh --global, verify bằng thăm dò thật (nguyên tắc dep-health.py) chứ không chỉ kiểm tồn tại file. R7 xanh, CHƯA được duyệt — khác draft context-hygiene đã "thi hành đi thôi", draft này đụng install-harness.sh (mã dùng chung mọi máy) nên dừng đúng ở bước hỏi duyệt.
+
+## 2026-07-21 — /fdk giải cây vấn đề
+Triage 36 node open/partial, KHÔNG giải hết (Meadows: đừng bắn một phát) — chỉ đóng sổ node có bằng chứng thật hoặc làm được ngay với chi phí thấp. Kết quả: 36 → 14 còn mở.
+
+**Đóng sổ có verify lại (không phải suy từ trí nhớ):**
+- p-39 (code-graph 2 DB lệch) — chẩn đoán gốc SAI, đã tự sửa trong CLAUDE.md 5-Why; verify lại: list_projects 0/16 trùng tên, 16/16 DB lành 0 lỗi no-such-table.
+- p-41 (travel-policy nói ngược install-harness.sh) — travel_policy_sync.py exit 0, khớp commit 882ec92 đã có sẵn từ trước phiên này.
+
+**Giải mới trong phiên — debounce Stop hook (p-45):** đo lại build-wiki-graph.py 49.0s + medic.py --ci 26.1s, hai bước ăn ~75-90s MỖI LƯỢT vì cổng kích hoạt quá lỏng. Thêm debounce theo thời gian (window 180s, harness/metrics/.stop-debounce.json). Nhánh trang trí (wiki-graph) debounce vô điều kiện; nhánh GATE (medic --ci) debounce CÓ ĐIỀU KIỆN — chỉ bỏ qua nếu lần trước ĐÃ healthy, một FAIL luôn chạy lại ngay, test 5 assert xác nhận không bao giờ bị giấu. KHÔNG rewrite build-wiki-graph.py (generator dùng chung, để dành /propose riêng nếu cần incremental thật).
+
+**Triage 15 thẻ p-auto-*** (flush card tồn 19 ngày, 02/07→21/07, chưa ai chưng lọc): đọc lại toàn bộ, không thẻ nào có nội dung vấn đề riêng biệt ngoài "bề mặt bị chạm" (toàn artifact tự sinh). Đóng sổ, gộp làm bằng chứng cho p-10 (nhịp ship/triage chậm) thay vì để trôi vô thời hạn.
+
+**Nợ mở, không giải trong phiên này (đúng chủ đích — đừng chồng fix chưa kịp phát tác):** p-07/08/09/10 (harness governance cũ), p-12/13/15/17 (partial, cần đo thêm), p-32 (fdk-uat sentinel), p-36/37/38 (orchestration), p-42 (CAPABILITIES.md kiểm kê vs bản đồ — liên quan trực tiếp draft 200726-context-hygiene-budget nhưng chưa thi hành T5-T7 nên chưa đủ đóng).
+
+**Phát hiện phụ, chưa sửa:** hai node cùng id "p-07" (một từ 02/07, một từ 08/07) — bug id-trùng có sẵn trong cây từ trước, ngoài phạm vi lượt này.
+
+## 2026-07-21 — docs-site-macos capability-map
+Dựng llmwiki/html/210726-capability-map.html — đối chiếu 3 nguồn thật (travel-policy.yaml, LOOP_GROUPS, fdk-problem-tree.html #tree-data) trả lời "các năng lực có cô lập không". Số đo: 61% (25/41) vấn đề có scope chạm ≥2 trụ, 12/41 chạm cả 3; stop.py orchestrate 10 tool tuần tự (điểm hội tụ vật lý); 7/83 skill rơi ngoài LOOP_GROUPS vì CLAUDE.md khai "wiki-loop" mà code không biết. Verdict: chưa đủ cô lập — ranh giới có trên giấy nhưng rò ở chỗ quan trọng nhất.
+
+## 2026-07-21 — /propose migration code-là-source-of-truth (T-260721-02)
+User đọc bài RDD (goonnguyen.substack) và yêu cầu chuyển kiến trúc: code là sự thật, quan hệ suy ra được, merge so sánh A-B tự động. Đối chiếu trung thực: bài viết là Revenue-DD, KHÔNG chứa luận điểm merge A-B — phần đó là của user và là phần mạnh nhất. Phần áp dụng được của bài (SDD chết vì 135 plan + 40 ADR = distractor interference) khớp bệnh đã đo của ta: p-41 (đọc travel-policy 3 lần tin nhầm cả 3 — distractor interference xảy ra thật trong phiên 20/07), p-10 (15 draft tồn), p-42 (CAPABILITIES từ os.listdir), 7/83 skill rơi khỏi mind map vì LOOP_GROUPS viết tay. Nền đã đi nửa đường: touches tự suy 21→283 (bc39047), log.md render từ events.jsonl, STRIP_TIER3+travel_policy_sync (bước 0), khuôn --check. SPEC: 3 lớp artifact AUTHORED/DERIVED/STATE + ledger một chỗ (FR-001), mọi DERIVED có --check nối medic (FR-002), quan hệ CHỈ suy từ nguồn — khai tử wiki-relations.py (FR-003), LOOP_GROUPS → frontmatter SKILL.md, wiki-loop thành giá trị hợp lệ (FR-004), CAPABILITIES từ graph trả p-42 (FR-005), merge protocol regen + diff A-B thử trên merge thật (FR-006), draft-age vào lint trả p-10 (FR-007), hạ vai wiki thành "nguồn chân lý của WHY" (FR-008). Điểm nghẽn chốt ở cổng: travel-policy Tầng 2 đang khai wiki là "nguồn chân lý" — mâu thuẫn trực diện, giải bằng tách WHY (wiki giữ) / WHAT-quan-hệ (code sinh). 7 task, phân công theo cost table (3 OpenCode, 3 Claude, 1 kép). CHỜ DUYỆT.
+
+## 2026-07-21 — hoàn nguyên move-lạc harness-local (medic narrative fail)
+Stop hook báo "manifest NÓI DỐI: live_probe harness-local không tồn tại". Truy: harness-local/ (gốc, tracked HEAD, hợp đồng cứng ADR-011) bị xoá khỏi working tree, xuất hiện bản lạc llmwiki/harness-local/ (mtime 17/07, byte giống hệt HEAD, 0 consumer). Grep chứng minh harness-local PHẢI ở gốc: wired vào pre-commit:65, gen-converters CI:170 ($PWD/harness-local/run.py), install-harness:319 (scaffold $ROOT/harness-local), harness-local-test.sh + downstream-firedrill-test.sh, mechanisms.yaml, scoped-hooks. harness-local-test.sh:73 còn assert PHẢI ngoài manifest + ở gốc. Kết luận: move sang llmwiki/ là NHẦM, không phải relocation chủ đích. Hoàn nguyên: git checkout -- harness-local/ + rm bản lạc. Medic 0 fail 16 ok. KHÔNG phải việc phiên này tạo ra — có thể phiên song song; ghi lại để không tưởng mất việc.
+
+## 2026-07-21 — /propose decision-anchoring (T-260721-03)
+Sau chuỗi hỏi "từ code tìm WHY thế nào / code đổi doc biết ra sao / neo theo symbol là gì / adapt đứa ngoài hạ tầng thế nào", viết SPEC. Phát hiện quan trọng lúc grounding: harness/mechanisms.yaml (ADR-001, council-025) ĐÃ LÀ tiền lệ chạy sống của đúng ý tưởng này — id+desc(WHY)+live_probe(anchor path) + medic probe "narrative" tự bắt khi live_probe biến mất. Bằng chứng sống ngay trong phiên: probe đó vừa bắt được harness-local/ bị git-mv, chặn medic tới khi hoàn nguyên. Giới hạn của tiền lệ: neo mức FILE, không phải SYMBOL — sửa nội bộ hàm không kích hoạt xác nhận lại; chỉ phủ 1 loại quyết định (mechanism), không phủ ADR/feedback khác. SPEC = tổng quát hoá pattern đã chứng minh, không phát minh mới: thêm anchor_symbol+confirmed cạnh live_probe cũ, dùng code-graph (vừa vệ sinh xong phiên trước) resolve, 3 trạng thái LIVE/STALE/ORPHAN, lệnh why <symbol>, /lint báo cáo không chặn. Kiểm chéo vercel-labs/zerolang (agent-first, graph NẰM TRONG compiler) — đọc thẳng README: graph chứa symbols/types/effects/ownership/calls, 0 trường rationale. Ngay lab đi xa nhất cũng không giải WHY — củng cố đây là lỗ thật của cả ngành, không phải fantasy riêng. FR-007 chốt ranh giới trung thực: liveness chỉ cấu trúc (tồn tại/đổi tên/xoá), KHÔNG semantic — phán đoán ý nghĩa ở lại người. T8 (promote concepts/decision-anchoring.md) đặt CUỐI cùng, sau khi T1-T7 xanh — đúng luật "wiki entries chỉ tạo sau khi code commit". CHỜ DUYỆT.
+
+## 2026-07-21 — vá 2 lỗ hổng decision-anchoring (feedback trực tiếp)
+User hỏi liên tiếp 2 câu, cả hai đều bắt trúng chỗ SPEC thiếu:
+
+1. "case delete và edit thì sao đủ CRUD chứ" — lộ ra tôi chỉ nghĩ CRUD trên 1 trục (code), bỏ sót trục thứ 2 (chính mục quyết định/neo). Xoá VẬT LÝ một mục mechanisms.yaml có anchor_symbol thì liveness KHÔNG CÒN GÌ ĐỂ KIỂM — không ORPHAN, không STALE, WHY biến mất không dấu vết. Đúng chính bệnh "docs rot" mà cả cơ chế sinh ra để chống, xảy ra ngay trong chính cơ chế. Vá: FR-009 (CRUD phía decision — update tự do, delete CẤM vật lý, bắt buộc status: retired theo đúng kỷ luật append-only đã chạy sống ở fdk-problem-tree.html) + SC-006 + task mới T8 (validator so git-diff bắt xoá-lén). Số task 8→9, promote-concept đổi từ T8→T9.
+
+2. "phụ thuộc vào cái gì hay input, dependency là gì" — lộ ra dependency chain của liveness chưa viết ra, và có đúng 1 case UNAVAILABLE (code-graph MCP không tới được) mà FR-002 (3 trạng thái) không xử lý — sẽ rơi nhầm xuống ORPHAN, gây bão báo-động-giả. KHÔNG PHẢI rủi ro lý thuyết: code-graph MCP của chính phiên này đang disconnect thật (kill để restart nạp code T1-T4 hygiene trước đó, không tự respawn) — dùng ngay sự kiện đang xảy ra làm bằng chứng. Vá: FR-002 mở rộng 4 trạng thái (thêm UNAVAILABLE) + SC-007 + Global constraints ghi rõ dependency chain (git → code-graph THĂM DÒ được, nguyên tắc dep-health.py → project reindex → mới tin kết quả) + T1 Plan/verify mở rộng.
+
+Cả 2 vá xong, R7 xanh (exit 0), 9/9 diagram-box khớp 9 task. Bài học chung: câu hỏi "còn thiếu gì" hiệu quả hơn nhiều so với tự rà — cả hai lỗ hổng đều tồn tại từ bản đầu tiên và R7/self-review không bắt được vì chúng không phải placeholder hay thiếu nhất-quán-tên, mà là thiếu HẲN một góc nhìn.
+
+## 2026-07-21 — persona-lens grower/tester soi decision-anchoring
+User gọi 2 lens (llmwiki/personas/grower.md + tester.md), khai beneficiary = chính framework (ngoại lệ /fdk theo ADR-004). 
+
+Tester: bắt 3 lỗ — (1) race trên T8 (so nguyên file thay vì theo id, đúng câu hỏi đã ghi nợ U-03 — nay nâng thành FR-010 bắt buộc, đóng U-03), (2) chưa test hồi phục UNAVAILABLE→LIVE khi code-graph sống lại, (3) T9 promote-concept không có gate xác minh trích dẫn khớp output thật (LLM trust boundary, 1/13 nhóm lỗi qc-code). Cả 3 vá NGAY vào SPEC (FR-010, SC-008), mở rộng trong task có sẵn T1/T8/T9 — không phình thêm task, giữ 9/9 diagram-box khớp R7.
+
+Grower: bắt 1 lỗ — 8 SC toàn correctness, không SC nào đo adoption, không kill-switch nếu không ai dùng anchor_symbol/why — trong khi chính SPEC tự trích bài học touches (chết vì không ai tiêu thụ) mà không tự áp cho mình. KHÔNG vá ngay — đúng ranh giới persona (grower đòi "đã dựng xong" mà T1-T9 còn pending) — raise-issue đúng quy trình ghi trong chính grower.md ("chạm ranh giới → /raise-issue assignee: <persona>"): GH#83, ledger 210721-decision-anchoring-adoption-metric.md, ISSUES.md đã đăng ký.
+
+Bài học phương pháp: cả 3 phiên liên tiếp (CRUD, dependency, persona-lens) đều tìm ra lỗ hổng THẬT bằng cách đổi góc nhìn thay vì tự rà lại cùng một góc — không cái nào là placeholder hay lỗi chính tả mà R7/self-review bắt được.
+
+## 2026-07-21 — plan — decision-anchoring-PLAN
+
+`/plan` mở rộng SPEC `210721-decision-anchoring.md` (đã duyệt ngầm: user "rồi làm đi" + "trong chiều này xong cả 3 v0.1-0.3") thành `210721-decision-anchoring-PLAN.md` — 9 task (T1-T9, phát hiện lại T9 nằm TRONG v0.3, không tách rời như tóm tắt phiên trước ghi nhầm). Quyết định kiến trúc quan trọng: engine liveness đọc TRỰC TIẾP `.graph-agent/index.db` (sqlite) thay vì gọi MCP `search_symbols`/`get_symbol_context` — vì script CLI chạy ngoài context Claude không gọi được MCP tool (chỉ Claude-agent gọi được); đây là biến thể thi hành của "thăm dò code-graph" (Global constraints), verify bằng checksum sha256[:16] khớp cột `checksum` của bảng `files` (proxy cho "project đã reindex"). Khảo sát thật trước khi viết PLAN: DB hiện có 108 file/984 symbol nhưng KHÔNG index `llmwiki/.claude/hooks/stop.py` (chỉ 4/10 file trong `hooks/`) — bằng chứng sống cho nhánh UNAVAILABLE, không phải giả định. R7 (`proposal_complete.py`) chặn 2 lần trước khi xanh: thiếu `### Task N` (dùng nhầm `##`), và tự nhắc "TBD"/"TODO"/"điền sau" trong Self-review khi nói KHÔNG còn — cùng bẫy đã gặp ở SPEC gốc.
+
+## 2026-07-21 — decision-anchoring — T1-T9 thi hành xong (v0.1+v0.2+v0.3)
+
+Thi hành đầy đủ PLAN `210721-decision-anchoring-PLAN.md`, không dừng ở SPEC: `harness/scripts/decision-liveness.py` (T1: schema `anchor_symbol`/`confirmed` + engine 4 trạng thái, đọc trực tiếp `.graph-agent/index.db` thay vì MCP vì script CLI không gọi được MCP tool), 2 mục pilot trong `mechanisms.yaml` (T2 `stop-debounce` neo `_debounced`/stop.py, T6 `code-graph-probe-boundary` neo `probe_code_graph`/dep-health.py — 25 mục tổng, 2 anchored), lệnh `why <symbol>` (T3), self-test bao đủ 3 nhánh code-side sửa-thân/đổi-tên/xoá trên sandbox git (T4, SC-003) + mô phỏng drift kiểu harness-local (T5, SC-002), `/lint` bước 8e báo ORPHAN/STALE (T7), `harness/scripts/decision-guard.py` khoá xoá-vật-lý theo từng id (T8, SC-006 + race FR-010 đóng U-03), và `llmwiki/wiki/concepts/decision-anchoring.md` promote kèm `decision-anchoring-crosscheck.py` đối chiếu 4 FACT với output thật (T9, FR-010 trust boundary — script tự FAIL nếu concept trích sai số, không dựa lời tự khai).
+
+Bằng chứng thật quan trọng nhất: pilot `_debounced` resolve ra UNAVAILABLE (không phải LIVE) vì `.graph-agent/index.db` thật KHÔNG index `stop.py` — xác nhận nhánh UNAVAILABLE hoạt động đúng trên dữ liệu thật, không phải giả lập; `why` vẫn trả đủ nội dung WHY (SC-001 không đòi trạng thái phải LIVE, chỉ đòi đọc được lý do). Regen `overstack.html` từ manifest để giữ probe `narrative` của `medic` xanh (25 cơ chế khớp). R7 (`proposal_complete.py`) chặn PLAN 2 lần trước khi xanh — thiếu `### Task N` (dùng nhầm `##`) và tự nhắc "TBD"/"TODO"/"điền sau" trong Self-review khi nói KHÔNG còn (bẫy lặp lại từ SPEC gốc). Một bug thật phát hiện qua self-test: `confirmed: YYYY-MM-DD` chỉ có độ phân giải NGÀY — nếu commit xác nhận và commit sửa cùng ngày, `git log --until=<ngày>` trả về HEAD thay vì baseline; self-test phải backdate commit init để mô phỏng đúng use-case thật (không phải bug của thuật toán diff, mà là hạn chế granularity đã biết trước ở FR-004).
