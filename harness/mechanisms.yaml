@@ -181,3 +181,23 @@ mechanisms:
     surface: [mechanism]
     desc: "vai thứ 6 (Cherny 5→6): senior tester thiết kế kịch bản test neo FR/SC + code test qc-* đỏ-trước, khớp lưới qc-regression tất định"
     live_probe: harness/scripts/archetype.py
+
+  # ── decision-anchoring pilot (T-260721-03) — 2 mục đầu tiên có anchor_symbol (neo mức-symbol,
+  #    cạnh live_probe mức-file cũ). Liveness suy bởi harness/scripts/decision-liveness.py. ──
+  - id: stop-debounce
+    name: "stop-debounce (_debounced/require_ok)"
+    kind: hook
+    surface: [mechanism]
+    desc: "Stop hook debounce theo thời gian (mặc định 180s) cho 2 bước nặng nhất (build-wiki-graph 49s + medic --ci 26s) — p-45: cổng kích hoạt lỏng nên chúng fire gần mọi lượt dev framework, 75-90s thuế mỗi lần dừng. require_ok=True (dùng cho gate medic) chỉ bỏ qua nếu lần trước ĐÃ healthy — một FAIL luôn chạy lại ngay, debounce không bao giờ giấu regression thật."
+    live_probe: llmwiki/.claude/hooks/stop.py
+    anchor_symbol: "setup::llmwiki/.claude/hooks/stop.py::_debounced"
+    confirmed: "2026-07-21"
+
+  - id: code-graph-probe-boundary
+    name: "code-graph probe boundary (thăm dò thay vì kiểm tồn tại)"
+    kind: tool
+    surface: [mechanism]
+    desc: "Quyết định 2026-07-20: quảng cáo một dependency ngoài (code-graph) phải THĂM DÒ nó (schema DB, tiến trình server, code server có mới không) — không chỉ kiểm file .is_file(). Neo vào adapter trong repo (dep-health.py), không trỏ thẳng ra graph-kit ngoài repo vì graph-kit không index được (KÉO NGOÀI không version hoá theo pin)."
+    live_probe: harness/scripts/dep-health.py
+    anchor_symbol: "setup::harness/scripts/dep-health.py::probe_code_graph"
+    confirmed: "2026-07-21"
