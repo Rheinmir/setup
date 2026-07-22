@@ -161,3 +161,4 @@
 | [210726-code-as-truth-migration](sources/draft/210726-code-as-truth-migration.md) | draft | 2026-07-21 |
 | [210721-decision-anchoring](sources/draft/210721-decision-anchoring.md) | draft | 2026-07-21 |
 | [210721-decision-anchoring-PLAN](sources/draft/210721-decision-anchoring-PLAN.md) | draft | 2026-07-21 |
+| [220722-artifact-provenance-eventlog](sources/draft/220722-artifact-provenance-eventlog.md) | draft | 2026-07-22 |

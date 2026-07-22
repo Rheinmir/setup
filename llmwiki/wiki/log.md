@@ -19,9 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-21 14:52:06 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=f5a928c51bbb |
-| 2026-07-21 14:53:59 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring-adoption-metric.md · tool=Write · session=765fc26c · actor=agent ·  |
-| 2026-07-21 14:55:24 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=765fc26c · actor=agent · prev=44b29f41b4bd785fdfd2cb8d42617806de085 |
 | 2026-07-21 15:09:47 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=795357f13947 |
 | 2026-07-21 15:48:32 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring-PLAN.md · tool=Write · session=765fc26c · actor=agent · prev=16c383 |
 | 2026-07-21 15:48:56 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring-PLAN.md · tool=Edit · session=765fc26c · actor=agent · prev=1fac447 |
@@ -59,6 +56,9 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-21 23:12:06 | `file.write` | harness/scripts/decision-liveness.py · tool=Edit · session=765fc26c · actor=agent · prev=9471a4ae9b09992de2c825a99622832 |
 | 2026-07-21 23:12:44 | `file.write` | llmwiki/wiki/concepts/decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=4be14e92e6eaf59f01e7b397 |
 | 2026-07-21 23:13:35 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=343dd63ca9fb8e4396a1f120e9e6fa9912bd4a1e4 |
+| 2026-07-22 08:37:15 | `file.write` | harness/scripts/decision-liveness.py · tool=Edit · session=765fc26c · actor=agent · prev=48d1126b53dd65e25377daca7d663d4 |
+| 2026-07-22 08:37:26 | `file.write` | harness/scripts/decision-liveness.py · tool=Edit · session=765fc26c · actor=agent · prev=6e10c284f5aa916f235a6a0bfc26559 |
+| 2026-07-22 08:38:50 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=75fbb5bcef9ad46b40d384346efcdfe917d8ee4b2 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -605,3 +605,7 @@ User hỏi trực tiếp: "CRUD phía code có thực sự handle hết chưa, c
 **Đa luồng:** thử tái hiện crash bằng writer giữ WAL lock + reader đọc cùng lúc — **KHÔNG crash** (tự phản chứng giả thuyết ban đầu, WAL mode cho phép đọc-ghi đồng thời an toàn). Thử ép DB corrupt sau khi qua `db_status()` check — bị bắt sớm ở chính `db_status()`, không lọt xuống dưới. Nhưng phát hiện thật khác: khối `conn.execute()` thứ 2 (query bảng `symbols`) KHÔNG có `except` bọc quanh, chỉ có `finally: conn.close()` — lỗi sqlite thoáng qua (thiếu cột do reindex nửa chừng, disk I/O) sẽ **crash cả script** thay vì trả UNAVAILABLE. Tái hiện thật bằng DB có đủ tên bảng (qua được schema check) nhưng thiếu cột `line_start`/`line_end` → xác nhận crash trước khi vá.
 
 **Vá cả 2:** (1) `ORDER BY id DESC LIMIT 1` khi query symbols — ưu tiên dòng mới nhất, không đọc phải dòng ma từ lần index cũ; (2) bọc `except sqlite3.Error` quanh cả 2 khối query trong `resolve_symbol()`, đúng ethos fail-open đã dùng ở `dep-health.py`. Verify lại: self-test ALL PASS, ca thiếu-cột giờ trả UNAVAILABLE gracefully thay vì crash, crosscheck 4 FACT khớp, `medic --ci` 0 fail.
+
+## 2026-07-22 — propose — artifact-provenance-eventlog
+
+`/propose` cho event log theo pattern Kafka git-native (`T-260722-01`), nối tiếp trực tiếp mạch decision-anchoring hôm qua. Tự đánh giá ban đầu ("Kafka thừa, git+events.jsonl đủ") sai ở 2 điểm user chỉ ra và tôi tự kiểm chứng lại: `events.jsonl` bị gitignore (không merge qua nhánh/máy), chỉ actor {agent,system} qua hook Claude Code (không multi-vendor). CAP/AP framing của user (mỗi lãnh địa local độc lập, hợp nhất chỉ ở merge) trở thành luận điểm chính của Approach A: file JSONL git-tracked, hash-chain THEO TỪNG writer (không phải 1 chuỗi toàn cục), merge bằng driver `merge=union` có sẵn trong git (không tự viết consensus). Thêm FR-007 (adapter 3 hàm duy nhất) theo yêu cầu bổ sung giữa lượt: chừa slot migrate sang broker thật sau này mà không sửa mọi call site. R7 chặn 1 lần (thiếu `class="desc"` — dùng nhầm `class="prose"`), đã sửa. SPEC+HTML (`docs-site-macos`, draggable diagram + mind map + theme toggle) đã xanh, dừng chờ duyệt.
