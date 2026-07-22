@@ -19,9 +19,6 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-21 14:51:05 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=981871f81da4 |
-| 2026-07-21 14:51:16 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=06eccbc8e032 |
-| 2026-07-21 14:51:39 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=f487196d9fa5 |
 | 2026-07-21 14:52:06 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=f5a928c51bbb |
 | 2026-07-21 14:53:59 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring-adoption-metric.md · tool=Write · session=765fc26c · actor=agent ·  |
 | 2026-07-21 14:55:24 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=765fc26c · actor=agent · prev=44b29f41b4bd785fdfd2cb8d42617806de085 |
@@ -59,6 +56,9 @@ Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm
 | 2026-07-21 21:01:06 | `file.write` | harness/scripts/decision-liveness.py · tool=Edit · session=765fc26c · actor=agent · prev=84d440f83e87d913e793c5baac8cca4 |
 | 2026-07-21 21:01:47 | `file.write` | harness/scripts/decision-liveness.py · tool=Edit · session=765fc26c · actor=agent · prev=3c792b8358062d34e6823c3dd7d809b |
 | 2026-07-21 21:02:52 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=be5907dbf1ab012e124cf89d16141f3b974a4ba5a |
+| 2026-07-21 23:12:06 | `file.write` | harness/scripts/decision-liveness.py · tool=Edit · session=765fc26c · actor=agent · prev=9471a4ae9b09992de2c825a99622832 |
+| 2026-07-21 23:12:44 | `file.write` | llmwiki/wiki/concepts/decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=4be14e92e6eaf59f01e7b397 |
+| 2026-07-21 23:13:35 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=343dd63ca9fb8e4396a1f120e9e6fa9912bd4a1e4 |
 
 <!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
@@ -595,3 +595,13 @@ User yêu cầu 5-Why cho hiện tượng "trỏ nhầm root" mà 2 agent test g
 User hỏi tiếp: nếu wiring agent-tự-reindex thì giải được bài toán gì (5-Why xuôi, chứng minh giá trị). Chuỗi: (1) xoá vòng lặp "hỏi→UNAVAILABLE→mò→reindex→hỏi lại" trong 1 lượt; (2) đo được thật hôm nay — agent 2 tốn thêm 1 lượt mới ra LIVE; (3) đúng lời hứa gốc "từ code tìm WHY, không cần nhớ tay"; (4) UNAVAILABLE-lượt-đầu dễ hiểu nhầm "cơ chế hỏng" — đúng nguyên nhân giết `touches` ("không ai tiêu thụ thì không ai nuôi"); (5) chi phí đo được NGAY (khác GH#83 phải chờ dữ liệu dài hạn) nên đáng sửa ngay, đòn bẩy rẻ (đổi luồng thông tin, không đổi kiến trúc MCP).
 
 Vá: thêm đoạn hướng dẫn tường minh vào docstring đầu `decision-liveness.py` ("AGENT ĐANG ĐỌC FILE NÀY... trước tiên hãy tự gọi reindex_repo qua code-graph MCP") + thêm mục "Trỏ nhầm root, và vì sao reindex vẫn phải do agent chủ động" vào concept — giải thích rõ 2 ràng buộc cứng khiến máy không tự reindex được (MCP chỉ agent gọi; cố ý không để máy tự sửa lặng lẽ, theo tiền sử code-graph server hỏng-mà-không-ai-biết của `dep-health.py`). Verify: self-test ALL PASS, crosscheck 4 FACT khớp, `medic --ci` 0 fail.
+
+## 2026-07-21 — decision-anchoring — UAT thật kiểm CRUD phía code + đa luồng, vá 2 lỗ
+
+User hỏi trực tiếp: "CRUD phía code có thực sự handle hết chưa, có xử lý đa luồng không". Trả lời bằng test thật, không đoán:
+
+**CRUD phía code:** đủ 4 sự kiện vòng đời (read=`why`, update-body→STALE, update-rename→ORPHAN, delete-file/symbol→ORPHAN) đều đã verify thật. Phát hiện thật khi đọc lại code: DB thật CÓ 10 cặp (file, tên symbol) trùng nhau — nguyên nhân là code-graph indexer APPEND dòng mới mỗi lần reindex thay vì thay thế (tự gây ra bởi 3 lần reindex liên tiếp `decision-liveness.py` trong phiên hôm nay). Query `symbols` cũ không có `ORDER BY` — `.fetchone()` lấy dòng nào cũng được, không xác định.
+
+**Đa luồng:** thử tái hiện crash bằng writer giữ WAL lock + reader đọc cùng lúc — **KHÔNG crash** (tự phản chứng giả thuyết ban đầu, WAL mode cho phép đọc-ghi đồng thời an toàn). Thử ép DB corrupt sau khi qua `db_status()` check — bị bắt sớm ở chính `db_status()`, không lọt xuống dưới. Nhưng phát hiện thật khác: khối `conn.execute()` thứ 2 (query bảng `symbols`) KHÔNG có `except` bọc quanh, chỉ có `finally: conn.close()` — lỗi sqlite thoáng qua (thiếu cột do reindex nửa chừng, disk I/O) sẽ **crash cả script** thay vì trả UNAVAILABLE. Tái hiện thật bằng DB có đủ tên bảng (qua được schema check) nhưng thiếu cột `line_start`/`line_end` → xác nhận crash trước khi vá.
+
+**Vá cả 2:** (1) `ORDER BY id DESC LIMIT 1` khi query symbols — ưu tiên dòng mới nhất, không đọc phải dòng ma từ lần index cũ; (2) bọc `except sqlite3.Error` quanh cả 2 khối query trong `resolve_symbol()`, đúng ethos fail-open đã dùng ở `dep-health.py`. Verify lại: self-test ALL PASS, ca thiếu-cột giờ trả UNAVAILABLE gracefully thay vì crash, crosscheck 4 FACT khớp, `medic --ci` 0 fail.

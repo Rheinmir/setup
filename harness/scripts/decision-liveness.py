@@ -112,7 +112,13 @@ def resolve_symbol(anchor_symbol: str, root: Path, db_path: Path):
     _project, file_rel, name = parsed
     conn = sqlite3.connect(str(db_path))
     try:
-        row = conn.execute("SELECT id, checksum FROM files WHERE path = ?", (file_rel,)).fetchone()
+        try:
+            row = conn.execute("SELECT id, checksum FROM files WHERE path = ?", (file_rel,)).fetchone()
+        except sqlite3.Error as e:
+            # lỗi sqlite thoáng qua (SQLITE_BUSY, disk I/O, DB đổi giữa chừng) PHẢI degrade về
+            # UNAVAILABLE — không bao giờ để crash tràn ra ngoài (đúng ethos fail-open đã dùng ở
+            # dep-health.py's db_has_schema: except sqlite3.Error: return False).
+            return UNAVAILABLE, f"lỗi đọc index.db: {e} (thử lại — có thể do ghi đồng thời)"
         if not row:
             # 5-Why 2026-07-21: "chưa index" gộp chung 2 ca rất khác nhau — (a) project THẬT
             # chưa chạy reindex (tạm, tự khỏi), (b) đang chạy NHẦM ROOT — bản global_shared bị
@@ -132,9 +138,18 @@ def resolve_symbol(anchor_symbol: str, root: Path, db_path: Path):
         if checksum and real != checksum:
             return UNAVAILABLE, (f"{file_rel} đổi trên đĩa nhưng index chưa bắt kịp "
                                   f"(checksum lệch) — cần reindex trước khi tin liveness")
-        sym = conn.execute(
-            "SELECT line_start, line_end FROM symbols WHERE file_id = ? AND name = ?",
-            (file_id, name)).fetchone()
+        try:
+            # ORDER BY id DESC: code-graph indexer APPEND dòng mới mỗi lần reindex thay vì thay
+            # thế dòng cũ (xác nhận thật 2026-07-21 — 10 cặp (file,name) trùng trong DB thật, tự
+            # gây ra bởi 3 lần reindex liên tiếp cùng 1 file trong phiên này). Không ORDER BY thì
+            # SQLite trả dòng NÀO cũng được (không xác định) — ưu tiên id lớn nhất (dòng mới nhất
+            # được ghi) để không vô tình đọc phải dòng ma còn sót từ lần index cũ.
+            sym = conn.execute(
+                "SELECT line_start, line_end FROM symbols WHERE file_id = ? AND name = ? "
+                "ORDER BY id DESC LIMIT 1",
+                (file_id, name)).fetchone()
+        except sqlite3.Error as e:
+            return UNAVAILABLE, f"lỗi đọc index.db: {e} (thử lại — có thể do ghi đồng thời)"
     finally:
         conn.close()
     if not sym:
