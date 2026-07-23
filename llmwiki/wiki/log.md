@@ -13,54 +13,6 @@ Chốt cứng Trụ 4 bằng cổng CI tất định không-LLM (`code_health.py
 ## 2026-07-01 — fdk+bnal+council — dev-harness-kit
 Thiết kế cơ chế 'dev tự build harness riêng' (skeleton + không-chạm-core + protected/seal) theo BNAL: nền đã có harness-local(ADR-011)+R14; chốt 3 mảnh CHẮC (scaffolder/seal-command/R14-ext) + cô lập 2 ẩn số. Council 18 persona (council.py mean-rank, thoát loop) chọn checksum-seal #1 (1.39) > R14-ext (1.72) > chmod (3.0) > zip (3.89). Report: llmwiki/html/010726-dev-harness-kit-council.html.
 
-<!-- log:auto:start -->
-
-### 🤖 Log tự-động (code-logger, không do agent ghi)
-
-| Thời điểm | Event | Chi tiết |
-|---|---|---|
-| 2026-07-21 15:09:47 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=795357f13947 |
-| 2026-07-21 15:48:32 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring-PLAN.md · tool=Write · session=765fc26c · actor=agent · prev=16c383 |
-| 2026-07-21 15:48:56 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring-PLAN.md · tool=Edit · session=765fc26c · actor=agent · prev=1fac447 |
-| 2026-07-21 15:52:44 | `file.write` | llmwiki/wiki/sources/draft/210721-decision-anchoring-PLAN.md · tool=Edit · session=765fc26c · actor=agent · prev=f137005 |
-| 2026-07-21 15:53:10 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=765fc26c · actor=agent · prev=398cbd16c4887e34f5c53585cee980fac4f0113b2a62b4 |
-| 2026-07-21 15:54:25 | `file.write` | harness/scripts/decision-liveness.py · tool=Write · session=765fc26c · actor=agent · prev=f663100db100cdaebc885f96a50a3a |
-| 2026-07-21 15:54:38 | `file.write` | harness/scripts/decision-liveness.py · tool=Edit · session=765fc26c · actor=agent · prev=a1d09468a75dc5659d33684b99dac0b |
-| 2026-07-21 15:55:27 | `file.write` | harness/scripts/decision-liveness.py · tool=Edit · session=765fc26c · actor=agent · prev=27523594af38e9256b9dc08ee6866af |
-| 2026-07-21 15:56:05 | `file.write` | harness/mechanisms.yaml · tool=Edit · session=765fc26c · actor=agent · prev=e63ecb044fdbf9668bd94d4a54eac11ff791d80cfde5 |
-| 2026-07-21 15:56:56 | `file.write` | harness/scripts/decision-liveness.py · tool=Edit · session=765fc26c · actor=agent · prev=a1030b8834db9682abff9b5f6d587a8 |
-| 2026-07-21 15:57:45 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=0 · prev=90b13817d02eb43de47e2db7e65d0d612c8302c924daaa3bdeb6a207ad391edb · h=18f9 |
-| 2026-07-21 15:57:46 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['harness/mechanisms.yaml'] · prev=18f91b43ed4b61a8388a5556e1b6a52a5c374 |
-| 2026-07-21 15:58:13 | `file.write` | llmwiki/skills/wiki-loop/lint.md · tool=Edit · session=765fc26c · actor=agent · prev=5144179ee3c8ca2603cb86c2f0f73b4340e |
-| 2026-07-21 15:58:19 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=0 · prev=610fe41452124f33da23bc6eaaf80a932231465d4e4b730c759840a878793847 · h=03f2 |
-| 2026-07-21 15:58:56 | `file.write` | harness/scripts/decision-guard.py · tool=Write · session=765fc26c · actor=agent · prev=03f2248a204b1dd4ae3d128b2fcb6b483 |
-| 2026-07-21 15:59:14 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=0 · prev=02b7381886ffdeef1403b65163a2c1c851c21e8d6c754d39f44ddc7b57f3d4d5 · h=d21c |
-| 2026-07-21 15:59:30 | `file.write` | harness/scripts/decision-anchoring-crosscheck.py · tool=Write · session=765fc26c · actor=agent · prev=d21c9f9f2b319d20da |
-| 2026-07-21 16:00:36 | `file.write` | llmwiki/wiki/concepts/decision-anchoring.md · tool=Write · session=765fc26c · actor=agent · prev=183873622940197c048b6f1 |
-| 2026-07-21 16:01:00 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=765fc26c · actor=agent · prev=23cd09d885ace41e07901e9374cef4957a33ab51ed07bb |
-| 2026-07-21 16:01:26 | `commit.reconcile` |  · actor=system · agent_n=3 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=0b5b1a753fe689d0c443c051a858d4413321adae1 |
-| 2026-07-21 16:02:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/sources/draft/210721-decision-anchoring-PLAN.md', 'llmwik |
-| 2026-07-21 16:03:33 | `file.write` | harness/mechanisms.yaml · tool=Edit · session=765fc26c · actor=agent · prev=fa2faec313e08497912aa4e659815b64316ef77ada24 |
-| 2026-07-21 16:03:52 | `file.write` | harness/mechanisms.yaml · tool=Edit · session=765fc26c · actor=agent · prev=b4f4c4d41c5572d37a5c9893d2304e96f7a1ebce61a5 |
-| 2026-07-21 16:04:33 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=1 · human=['fdk/CAPABILITIES.md'] · prev=34e6096cee980310acc2be468503eb194a527bda9 |
-| 2026-07-21 16:19:28 | `file.write` | skills/fdk-uat/SKILL.md · tool=Edit · session=765fc26c · actor=agent · prev=244dea0ebe3c5e383f989dbf1ea32fe08350954312f5 |
-| 2026-07-21 16:19:57 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=2 · human=['llmwiki/skills/utils/fdk-uat.md', 'llmwiki/wiki/log.md'] · prev=05d344 |
-| 2026-07-21 16:25:35 | `file.write` | skills/lint/SKILL.md · tool=Edit · session=765fc26c · actor=agent · prev=3dc6c7495503ddcc6d89c8118362a1d2d09515e6c4dd82b |
-| 2026-07-21 16:26:03 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=2 · human=['llmwiki/skills/wiki-loop/lint.md', 'llmwiki/wiki/log.md'] · prev=f445b |
-| 2026-07-21 17:08:14 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=6984c58121e1d2d608d86878c196ae0ce1e71f1b7 |
-| 2026-07-21 18:12:13 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=d0715a830a2c3a45d9b5b257331b94301113109f1 |
-| 2026-07-21 18:23:30 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=ab1a14a188a558dcdbe11731ba0639696787165e7 |
-| 2026-07-21 21:01:06 | `file.write` | harness/scripts/decision-liveness.py · tool=Edit · session=765fc26c · actor=agent · prev=84d440f83e87d913e793c5baac8cca4 |
-| 2026-07-21 21:01:47 | `file.write` | harness/scripts/decision-liveness.py · tool=Edit · session=765fc26c · actor=agent · prev=3c792b8358062d34e6823c3dd7d809b |
-| 2026-07-21 21:02:52 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=be5907dbf1ab012e124cf89d16141f3b974a4ba5a |
-| 2026-07-21 23:12:06 | `file.write` | harness/scripts/decision-liveness.py · tool=Edit · session=765fc26c · actor=agent · prev=9471a4ae9b09992de2c825a99622832 |
-| 2026-07-21 23:12:44 | `file.write` | llmwiki/wiki/concepts/decision-anchoring.md · tool=Edit · session=765fc26c · actor=agent · prev=4be14e92e6eaf59f01e7b397 |
-| 2026-07-21 23:13:35 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=343dd63ca9fb8e4396a1f120e9e6fa9912bd4a1e4 |
-| 2026-07-22 08:37:15 | `file.write` | harness/scripts/decision-liveness.py · tool=Edit · session=765fc26c · actor=agent · prev=48d1126b53dd65e25377daca7d663d4 |
-| 2026-07-22 08:37:26 | `file.write` | harness/scripts/decision-liveness.py · tool=Edit · session=765fc26c · actor=agent · prev=6e10c284f5aa916f235a6a0bfc26559 |
-| 2026-07-22 08:38:50 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=75fbb5bcef9ad46b40d384346efcdfe917d8ee4b2 |
-
-<!-- log:auto:end -->
 ## 2026-07-01 — orca-onboard — html-tabs-redesign (propose)
 ## 2026-07-01 — docs-site-macos — 21-quy-tac-docs
 
@@ -609,3 +561,58 @@ User hỏi trực tiếp: "CRUD phía code có thực sự handle hết chưa, c
 ## 2026-07-22 — propose — artifact-provenance-eventlog
 
 `/propose` cho event log theo pattern Kafka git-native (`T-260722-01`), nối tiếp trực tiếp mạch decision-anchoring hôm qua. Tự đánh giá ban đầu ("Kafka thừa, git+events.jsonl đủ") sai ở 2 điểm user chỉ ra và tôi tự kiểm chứng lại: `events.jsonl` bị gitignore (không merge qua nhánh/máy), chỉ actor {agent,system} qua hook Claude Code (không multi-vendor). CAP/AP framing của user (mỗi lãnh địa local độc lập, hợp nhất chỉ ở merge) trở thành luận điểm chính của Approach A: file JSONL git-tracked, hash-chain THEO TỪNG writer (không phải 1 chuỗi toàn cục), merge bằng driver `merge=union` có sẵn trong git (không tự viết consensus). Thêm FR-007 (adapter 3 hàm duy nhất) theo yêu cầu bổ sung giữa lượt: chừa slot migrate sang broker thật sau này mà không sửa mọi call site. R7 chặn 1 lần (thiếu `class="desc"` — dùng nhầm `class="prose"`), đã sửa. SPEC+HTML (`docs-site-macos`, draggable diagram + mind map + theme toggle) đã xanh, dừng chờ duyệt.
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-07-23 10:54:07 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=fce7e8ca53b681c6d2263940b0bc9ebd61573ef1d6e30f |
+| 2026-07-23 10:54:11 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=88a67c8efbca03859d69555f9d693749625983d4a1fd4a |
+| 2026-07-23 10:54:15 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=b69a7283f5947b62c436d26c8ddac6ff4f5078b53f34de |
+| 2026-07-23 10:54:43 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=695c2c56f80afc698afc69a5a6064e95b3e539a76e4731 |
+| 2026-07-23 10:54:47 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=27d0e319081ac4a80c1be320fa39dcede889ff0955457e |
+| 2026-07-23 10:54:51 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=40e41ed8e972b2a185ba7b7009326caac997ae645049ae |
+| 2026-07-23 10:54:56 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=499d9f482a4195b4faa7562cdfb75c502189b738102bbb |
+| 2026-07-23 10:55:00 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=0d2226a13378f2e5efb2ddeb736eeff2f2cd97187f747d |
+| 2026-07-23 10:55:05 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=9a1ffceddcbc531fbcea55d4735386508751521a195117 |
+| 2026-07-23 10:55:10 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=9486d7320b587f7a384df8aafac737acea13a0d41e7635 |
+| 2026-07-23 10:55:14 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=e5a593d6a1a2a85e63203c96964d071553a669af72a540 |
+| 2026-07-23 10:55:17 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=141b8c4e4cb9b0fcde9f768384b3ee28a7da8cf48fd30c |
+| 2026-07-23 10:55:35 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=dd3f75c1e4386e4ac2d48eef5e7727f36e000f339a2a74 |
+| 2026-07-23 10:55:40 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=83fd4da085f648de7630b06ebc0b7587fb14986e6bb4d7 |
+| 2026-07-23 10:55:45 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=e009ae522d80ba062aa8a5083cc8dce43683c024b3a882 |
+| 2026-07-23 10:55:49 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=e71b454e687319b0418dd0f5acac560be770dcc941292b |
+| 2026-07-23 10:55:53 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=62a2a952406e8107baf567777294fe5041eb00f6267894 |
+| 2026-07-23 10:55:57 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=8e6df12b37ec38cf0b05c7d0c32b1d696be4fb05deaa21 |
+| 2026-07-23 10:56:02 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=4920410830e6fcd316debbfb2f0a33a8aa1555974a6176 |
+| 2026-07-23 10:56:23 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=e1596bb276b067bb1fcb439d580f9b58ca514690551347 |
+| 2026-07-23 10:56:27 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=2a222792bca70497c636fae7d23d7d3e6cd91ad285f8dd |
+| 2026-07-23 10:56:31 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=77eddd1cc047f930c5888ad5ec2e9ad07061ef1a6ee38d |
+| 2026-07-23 10:56:35 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=26aa546857428cae5480c608380b18748afd15ca19b138 |
+| 2026-07-23 10:56:40 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=cf6ff6a644a039c162eea4ec1f35913dff98133572cb79 |
+| 2026-07-23 10:56:44 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=f302f39b06eb3157b41d55c3ff1c26bb3c1aa2dd4411cc |
+| 2026-07-23 10:56:48 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=a32cc9f04d4b74fa0a8f63651984bc90253966083d25ad |
+| 2026-07-23 10:57:07 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=317e4fcaa0909e1b8bbc037ff1ce1d4c09808c485e41fd |
+| 2026-07-23 10:57:11 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=18d66edf157d1502247e5217d74ad0b325e74cfbe37411 |
+| 2026-07-23 10:57:15 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=ab0deebe3e2f41bb85193937b26356ee0944c6d02ec27f |
+| 2026-07-23 10:57:21 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=4e04512033ba614fc0f6f24ac0a892d2ef059a82f1bede |
+| 2026-07-23 10:57:26 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=ef184a8fbf9c191284c4c718041ac07fdbb3b0d6597d00 |
+| 2026-07-23 10:57:30 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=31ce9e416e1fc9a90a1282f1a834c0d8bec4b8bfab46b3 |
+| 2026-07-23 10:57:51 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=ae7b0195ce96da9e4c2a1106548fadf914c7eceb38e5ed |
+| 2026-07-23 10:57:55 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=7aa81b72ab5d4db42728b6b5647a89de471d99f4fec5bc |
+| 2026-07-23 10:58:00 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=4a9274346ba379ec9574f0352f33db11e2b6a3366c20e7 |
+| 2026-07-23 10:58:04 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=0e9f1db6b30aad8d39eaddee7d91de5af076f4517db5a2 |
+| 2026-07-23 10:58:09 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=7e3a29606f107800065c47642ec05423440921e9dd9802 |
+| 2026-07-23 10:58:14 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=1715c1fe286a3c7b3ee053ea5adaabae3f7fe42a35f2f2 |
+| 2026-07-23 11:02:01 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=2 · human=['llmwiki/skills/utils/fable5.md', 'skills/fable5/references/content-tas |
+| 2026-07-23 11:02:01 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['skills/fable5/references/worked-examples.md'] · prev=9f984a97f64824978 |
+
+<!-- log:auto:end -->
+
+## 2026-07-22 — propose — artifact-provenance-eventlog: vòng phản biện /fable5, chốt FR-005
+
+User bật `/fable5` thách 2 luận điểm về SPEC `220722-artifact-provenance-eventlog.md`: ẩn dụ cờ vua ("tăng trưởng vô hạn nhưng thực tế bounded") và câu hỏi "outlines có giúp được không" (kèm ảnh một hội thoại khác về constrained-decoding). Kết quả chạy đủ Floor+5 Move: ẩn dụ cờ vua SAI CƠ CHẾ khi soi kỹ (cờ vua pruning bằng cách vĩnh viễn không thăm phần cây luỹ thừa; log của mình append-only, tăng TUYẾN TÍNH — không cùng loại tăng trưởng) nhưng kết luận thực dụng của user vẫn đúng bằng lý do khác đơn giản hơn (log tuyến tính cùng bậc tăng trưởng với chính git history, chỉ thêm hằng số nhân — không cần ẩn dụ). Điểm "log hỗn loạn thứ tự vẫn dùng làm clue truy origin được" của user ĐÚNG và hạ mức nghiêm trọng của rủi ro merge=union-timeline-skew đã nêu trước đó xuống thấp hơn (chỉ hại use-case cần replay đúng thứ tự, không hại use-case lookup mà `/lint` bước 0b đã chạy sống). "outlines" không áp trực tiếp cho Claude API (không lộ logits) nhưng đúng ý tưởng của nó áp được qua tool-use/structured-output built-in của Claude cho nhánh "cần agent phán đoán" của `correlate()`.
+
+Vá vào SPEC: FR-005 thêm yêu cầu cứng — nhánh fallback PHẢI trả lời qua tool-use schema `{is_related, confidence, reasoning}`, không phải free-text. Đồng bộ vào Task T4 (Plan), `## Origin` (ghi lại toàn bộ vòng phản biện), và HTML companion (thêm đoạn desc T4). R7 vẫn xanh sau mọi sửa.
