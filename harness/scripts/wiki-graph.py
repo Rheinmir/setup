@@ -84,6 +84,10 @@ def wikilink_targets(text: str) -> list:
 # phải TỒN TẠI trên đĩa.
 CODE_PATH_RE = re.compile(r"`([\w./-]+\.(?:py|js|ts|sh|yaml|yml|json|html))`")
 
+# 2026-07-22: đây là nguồn CHUẨN cho câu hỏi "wiki nói về code nào" (content-based, tất
+# định). provenance-log.jsonl (đề xuất, xem llmwiki/wiki/concepts/log-model.md) KHÔNG được
+# suy lại quan hệ này bằng heuristic thời gian — sẽ tệ hơn hàm này, đừng làm lại.
+
 
 def touches_targets(text: str, repo_root) -> list:
     """Path code mà trang này nhắc tới trong backtick VÀ có thật trên đĩa."""

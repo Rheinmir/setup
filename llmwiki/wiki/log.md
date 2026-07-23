@@ -562,25 +562,18 @@ User hỏi trực tiếp: "CRUD phía code có thực sự handle hết chưa, c
 
 `/propose` cho event log theo pattern Kafka git-native (`T-260722-01`), nối tiếp trực tiếp mạch decision-anchoring hôm qua. Tự đánh giá ban đầu ("Kafka thừa, git+events.jsonl đủ") sai ở 2 điểm user chỉ ra và tôi tự kiểm chứng lại: `events.jsonl` bị gitignore (không merge qua nhánh/máy), chỉ actor {agent,system} qua hook Claude Code (không multi-vendor). CAP/AP framing của user (mỗi lãnh địa local độc lập, hợp nhất chỉ ở merge) trở thành luận điểm chính của Approach A: file JSONL git-tracked, hash-chain THEO TỪNG writer (không phải 1 chuỗi toàn cục), merge bằng driver `merge=union` có sẵn trong git (không tự viết consensus). Thêm FR-007 (adapter 3 hàm duy nhất) theo yêu cầu bổ sung giữa lượt: chừa slot migrate sang broker thật sau này mà không sửa mọi call site. R7 chặn 1 lần (thiếu `class="desc"` — dùng nhầm `class="prose"`), đã sửa. SPEC+HTML (`docs-site-macos`, draggable diagram + mind map + theme toggle) đã xanh, dừng chờ duyệt.
 
+## 2026-07-22 — propose — artifact-provenance-eventlog: vòng phản biện /fable5, chốt FR-005
+
+User bật `/fable5` thách 2 luận điểm về SPEC `220722-artifact-provenance-eventlog.md`: ẩn dụ cờ vua ("tăng trưởng vô hạn nhưng thực tế bounded") và câu hỏi "outlines có giúp được không" (kèm ảnh một hội thoại khác về constrained-decoding). Kết quả chạy đủ Floor+5 Move: ẩn dụ cờ vua SAI CƠ CHẾ khi soi kỹ (cờ vua pruning bằng cách vĩnh viễn không thăm phần cây luỹ thừa; log của mình append-only, tăng TUYẾN TÍNH — không cùng loại tăng trưởng) nhưng kết luận thực dụng của user vẫn đúng bằng lý do khác đơn giản hơn (log tuyến tính cùng bậc tăng trưởng với chính git history, chỉ thêm hằng số nhân — không cần ẩn dụ). Điểm "log hỗn loạn thứ tự vẫn dùng làm clue truy origin được" của user ĐÚNG và hạ mức nghiêm trọng của rủi ro merge=union-timeline-skew đã nêu trước đó xuống thấp hơn (chỉ hại use-case cần replay đúng thứ tự, không hại use-case lookup mà `/lint` bước 0b đã chạy sống). "outlines" không áp trực tiếp cho Claude API (không lộ logits) nhưng đúng ý tưởng của nó áp được qua tool-use/structured-output built-in của Claude cho nhánh "cần agent phán đoán" của `correlate()`.
+
+Vá vào SPEC: FR-005 thêm yêu cầu cứng — nhánh fallback PHẢI trả lời qua tool-use schema `{is_related, confidence, reasoning}`, không phải free-text. Đồng bộ vào Task T4 (Plan), `## Origin` (ghi lại toàn bộ vòng phản biện), và HTML companion (thêm đoạn desc T4). R7 vẫn xanh sau mọi sửa.
+
 <!-- log:auto:start -->
 
 ### 🤖 Log tự-động (code-logger, không do agent ghi)
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-23 10:54:07 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=fce7e8ca53b681c6d2263940b0bc9ebd61573ef1d6e30f |
-| 2026-07-23 10:54:11 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=88a67c8efbca03859d69555f9d693749625983d4a1fd4a |
-| 2026-07-23 10:54:15 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=b69a7283f5947b62c436d26c8ddac6ff4f5078b53f34de |
-| 2026-07-23 10:54:43 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=695c2c56f80afc698afc69a5a6064e95b3e539a76e4731 |
-| 2026-07-23 10:54:47 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=27d0e319081ac4a80c1be320fa39dcede889ff0955457e |
-| 2026-07-23 10:54:51 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=40e41ed8e972b2a185ba7b7009326caac997ae645049ae |
-| 2026-07-23 10:54:56 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=499d9f482a4195b4faa7562cdfb75c502189b738102bbb |
-| 2026-07-23 10:55:00 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=0d2226a13378f2e5efb2ddeb736eeff2f2cd97187f747d |
-| 2026-07-23 10:55:05 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=9a1ffceddcbc531fbcea55d4735386508751521a195117 |
-| 2026-07-23 10:55:10 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=9486d7320b587f7a384df8aafac737acea13a0d41e7635 |
-| 2026-07-23 10:55:14 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=e5a593d6a1a2a85e63203c96964d071553a669af72a540 |
-| 2026-07-23 10:55:17 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=141b8c4e4cb9b0fcde9f768384b3ee28a7da8cf48fd30c |
-| 2026-07-23 10:55:35 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=dd3f75c1e4386e4ac2d48eef5e7727f36e000f339a2a74 |
 | 2026-07-23 10:55:40 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=83fd4da085f648de7630b06ebc0b7587fb14986e6bb4d7 |
 | 2026-07-23 10:55:45 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=e009ae522d80ba062aa8a5083cc8dce43683c024b3a882 |
 | 2026-07-23 10:55:49 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=e71b454e687319b0418dd0f5acac560be770dcc941292b |
@@ -608,11 +601,24 @@ User hỏi trực tiếp: "CRUD phía code có thực sự handle hết chưa, c
 | 2026-07-23 10:58:14 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=1715c1fe286a3c7b3ee053ea5adaabae3f7fe42a35f2f2 |
 | 2026-07-23 11:02:01 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=2 · human=['llmwiki/skills/utils/fable5.md', 'skills/fable5/references/content-tas |
 | 2026-07-23 11:02:01 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['skills/fable5/references/worked-examples.md'] · prev=9f984a97f64824978 |
+| 2026-07-23 11:27:24 | `file.write` | llmwiki/wiki/sources/draft/220722-artifact-provenance-eventlog.md · tool=Edit · session=765fc26c · actor=agent · prev=fa |
+| 2026-07-23 11:27:35 | `file.write` | llmwiki/wiki/sources/draft/220722-artifact-provenance-eventlog.md · tool=Edit · session=765fc26c · actor=agent · prev=95 |
+| 2026-07-23 11:27:56 | `file.write` | llmwiki/wiki/sources/draft/220722-artifact-provenance-eventlog.md · tool=Edit · session=765fc26c · actor=agent · prev=71 |
+| 2026-07-23 11:28:31 | `file.write` | llmwiki/html/220722-artifact-provenance-eventlog-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=ab13cb9579 |
+| 2026-07-23 11:28:53 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=a38621c29d3e1825cffe2be4b528880f095616c8c |
+| 2026-07-23 11:32:02 | `file.write` | harness/scripts/fdk-gate.py · tool=Edit · session=6ac5fed4 · actor=agent · prev=fd444cfaec65c4b59dc73cf21673c697891aadcd |
+| 2026-07-23 11:35:52 | `file.write` | harness/scripts/harness-lint.py · tool=Edit · session=6ac5fed4 · actor=agent · prev=2d736d600ce95ebcf063e25651ab6f19c7e4 |
+| 2026-07-23 11:36:03 | `file.write` | harness/scripts/harness-lint.py · tool=Edit · session=6ac5fed4 · actor=agent · prev=caef318ba84f913755f3c1fed591e8f03e29 |
+| 2026-07-23 11:36:14 | `file.write` | harness/scripts/harness-lint.py · tool=Edit · session=6ac5fed4 · actor=agent · prev=b5aa5550d2d7e11a939e631fbbf4b1c8583f |
+| 2026-07-23 11:36:22 | `file.write` | harness/scripts/harness-lint.py · tool=Edit · session=6ac5fed4 · actor=agent · prev=517d281c0ed3abdbdd73f5b65f8903dc3bc1 |
+| 2026-07-23 11:39:34 | `file.write` | harness/scripts/harness-lint.py · tool=Edit · session=6ac5fed4 · actor=agent · prev=ddfd27a31a1b31d0b1cc4d7003860b5a278c |
+| 2026-07-23 11:39:48 | `file.write` | harness/scripts/harness-lint.py · tool=Edit · session=6ac5fed4 · actor=agent · prev=1e981f5b5b4ff83e5b3a33f8bbaefcb595d6 |
+| 2026-07-23 11:40:04 | `file.write` | harness/scripts/harness-lint.py · tool=Edit · session=6ac5fed4 · actor=agent · prev=adaf0cebedce769549d6d0cce0f36c8e13d8 |
 
 <!-- log:auto:end -->
 
-## 2026-07-22 — propose — artifact-provenance-eventlog: vòng phản biện /fable5, chốt FR-005
+## 2026-07-22 — concept mới — log-model + đơn giản hoá SPEC provenance-log
 
-User bật `/fable5` thách 2 luận điểm về SPEC `220722-artifact-provenance-eventlog.md`: ẩn dụ cờ vua ("tăng trưởng vô hạn nhưng thực tế bounded") và câu hỏi "outlines có giúp được không" (kèm ảnh một hội thoại khác về constrained-decoding). Kết quả chạy đủ Floor+5 Move: ẩn dụ cờ vua SAI CƠ CHẾ khi soi kỹ (cờ vua pruning bằng cách vĩnh viễn không thăm phần cây luỹ thừa; log của mình append-only, tăng TUYẾN TÍNH — không cùng loại tăng trưởng) nhưng kết luận thực dụng của user vẫn đúng bằng lý do khác đơn giản hơn (log tuyến tính cùng bậc tăng trưởng với chính git history, chỉ thêm hằng số nhân — không cần ẩn dụ). Điểm "log hỗn loạn thứ tự vẫn dùng làm clue truy origin được" của user ĐÚNG và hạ mức nghiêm trọng của rủi ro merge=union-timeline-skew đã nêu trước đó xuống thấp hơn (chỉ hại use-case cần replay đúng thứ tự, không hại use-case lookup mà `/lint` bước 0b đã chạy sống). "outlines" không áp trực tiếp cho Claude API (không lộ logits) nhưng đúng ý tưởng của nó áp được qua tool-use/structured-output built-in của Claude cho nhánh "cần agent phán đoán" của `correlate()`.
+User chỉ đúng chỗ over-engineering: SPEC `220722-artifact-provenance-eventlog.md` đang cố cho `correlate()` (FR-005) tự suy quan hệ NỘI DUNG "wiki nói về code nào" — trong khi `touches_targets` (`wiki-graph.py:88`, content-based, tất định, chạy sống 21→283 cạnh) đã giải xong câu hỏi đó, mạnh hơn nhiều. Bài học rộng hơn: repo có 5 cơ chế "ghi lại chuyện đã xảy ra" (`events.jsonl`/`scratch-log.jsonl`/`memory.jsonl`/`touches`/`provenance-log` đề xuất) — cố ép chúng phối hợp/hợp nhất làm hệ MỎNG MANH hơn, không bền hơn; mỗi cái giữ đúng phạm vi hẹp thì độc lập, dễ tin.
 
-Vá vào SPEC: FR-005 thêm yêu cầu cứng — nhánh fallback PHẢI trả lời qua tool-use schema `{is_related, confidence, reasoning}`, không phải free-text. Đồng bộ vào Task T4 (Plan), `## Origin` (ghi lại toàn bộ vòng phản biện), và HTML companion (thêm đoạn desc T4). R7 vẫn xanh sau mọi sửa.
+Tạo `llmwiki/wiki/concepts/log-model.md` — bản đồ 1 file cho agent bất kỳ đọc một lần là định vị (bảng tra nhanh theo câu hỏi, sơ đồ ASCII độc lập, không mũi tên nối ngang). Thêm note 2 dòng vào docstring 4 file liên quan (`code-logger.py`, `scratch-log.py`, `mem-rank.py`, `wiki-graph.py::touches_targets`) trỏ về trang này. Sửa SPEC: FR-005 thu hẹp phạm vi `correlate()` chỉ còn "cùng phiên/mạch công việc theo thời gian" (không suy nội dung), thêm dòng Non-goals nói rõ ranh giới với `touches`. R7 vẫn xanh, `py_compile` sạch cả 4 file đã note.

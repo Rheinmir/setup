@@ -7,9 +7,10 @@
 | [example-concept](concepts/example-concept.md) | concept | Ví dụ một trang concept hợp lệ (Origin + OKF) cho project dùng llmwiki |
 | [adapt-modes](concepts/adapt-modes.md) | concept | 3 kiểu absorb năng lực vào dự án — HÒA TAN / KÉO NGOÀI / NHÚNG-SỞ-HỮU; gọi đúng tên chọn đúng phương án |
 | [decision-anchoring](concepts/decision-anchoring.md) | concept | Neo quyết định vào symbol code, 4 trạng thái LIVE/STALE/ORPHAN/UNAVAILABLE suy từ code-graph, không cất tay |
+| [log-model](concepts/log-model.md) | concept | Bản đồ 5 cơ chế "ghi lại chuyện đã xảy ra" (events/scratch-log/mem-rank/touches/provenance-log) — mỗi cái độc lập, đừng ép hợp nhất |
 | [040726-issue4-trace-grader-plan](draft/040726-issue4-trace-grader-plan.md) | plan | Plan step-by-step GH#4: sửa run.ok transcript, lọc sidechain, check grounding edited_without_read — cho dev khác làm tiếp |
 | [300626-audit-fix-docs-site-macos](draft/uiux/300626-audit-fix-docs-site-macos.md) | draft | Audit + 8 fix (a11y/head/glass) cho skill docs-site-macos, đồng bộ cả 2 bản mirror |
-| [010726-onboard-html-tabs-redesign](draft/orca/010726-onboard-html-tabs-redesign.md) | draft | 2026-07-01 |
+| [010726-onboard-html-tabs-redesign](draft/orca/010726-onboard-html-tabs-redesign.md) | draft | Redesign tầng báo cáo HTML orca-onboard: sidebar-nav scroll-spy, tour master-detail, tab Modules DB-style tự ẩn nếu mono |
 | [010726-trupillar4-council-persona](draft/orca/010726-trupillar4-council-persona.md) | draft | Chốt cứng Trụ 4 (cổng CI code-health) + persona-lens 18 vĩ nhân cho council (BNAL) |
 | [010726-dev-harness-kit](draft/orca/010726-dev-harness-kit.md) | draft | Thiết kế 'dev tự build harness' (BNAL) + council 18 ông chọn checksum-seal; report HTML |
 | [020726-docs-site-fdk-strategy](sources/draft/archive/analysis/020726-docs-site-fdk-strategy.md) | draft | Render concept fdk-dev-strategy (Mongol pattern) thành docs site HTML liquid-glass |
@@ -47,23 +48,23 @@
 | [wiki-in-kit](sources/evals/retrieval/wiki-in-kit.md) | eval | Golden truy-hồi: Vì sao wiki của framework sống trong kit (fdk)? |
 | [010726-query-retrieval-eval](draft/orca/010726-query-retrieval-eval.md) | draft | Query L0→L1: eval truy-hồi + telemetry + query 3-tầng |
 | [010726-21-quy-tac-docs](sources/draft/archive/analysis/010726-21-quy-tac-docs.md) | draft | Docs site bóc tách "21 Quy Tắc Không Thể Phá Vỡ" |
-| [010726-council-report-redesign](draft/uiux/010726-council-report-redesign.md) | draft | 2026-07-01 |
-| [020726-cor-pattern](draft/uiux/020726-cor-pattern.md) | draft | 2026-07-02 |
-| [020726-openai-compat-endpoint-pools](sources/draft/archive/analysis/020726-openai-compat-endpoint-pools.md) | draft | 2026-07-02 |
-| [020726-adr-015-status](sources/draft/archive/analysis/020726-adr-015-status.md) | draft | 2026-07-02 |
-| [020726-eval-report](sources/draft/archive/analysis/020726-eval-report.md) | draft | 2026-07-02 |
-| [020726-orca-issue-ledger-travel](sources/020726-orca-issue-ledger-travel.md) | draft | 2026-07-02 |
-| [problem-tree](concepts/problem-tree.md) | concept | 2026-07-02 |
-| [020726-overstack-docs-redesign](draft/uiux/020726-overstack-docs-redesign.md) | draft | 2026-07-02 |
+| [010726-council-report-redesign](draft/uiux/010726-council-report-redesign.md) | draft | Redesign council.report.html theo audit chống AI-slop: đổi font/palette/surface/states, giữ nguyên số liệu và cảnh báo verified:false |
+| [020726-cor-pattern](draft/uiux/020726-cor-pattern.md) | draft | Chưng COR (Controlled Output Renderer) thành microlib dùng chung cor.py sau khảo sát 65 skill + council 5 ghế chốt scope hẹp |
+| [020726-openai-compat-endpoint-pools](sources/draft/archive/analysis/020726-openai-compat-endpoint-pools.md) | draft | Docs site phân loại 4 pool endpoint tương thích OpenAI (cloud/gateway/compat-shim/local) + 1 pool agent CLI tiêu thụ |
+| [020726-adr-015-status](sources/draft/archive/analysis/020726-adr-015-status.md) | draft | Chốt baseline sweep-gate (140 đơn vị) + docs site đối chiếu ADR-015 (5 archetype Boris Cherny) với hiện trạng, còn nợ gì |
+| [020726-eval-report](sources/draft/archive/analysis/020726-eval-report.md) | draft | Eval session qua lens Donella Meadows (đòn bẩy hệ thống): 5 tín hiệu tái diễn, đề xuất nâng từ luồng thông tin lên luật chơi |
+| [020726-orca-issue-ledger-travel](sources/020726-orca-issue-ledger-travel.md) | draft | Tạo skill orca-issue (vòng xử lý sự cố repro-first) + làm convention problem-tree travel theo mọi dự án cài overstack |
+| [problem-tree](concepts/problem-tree.md) | concept | Sổ ledger append-only xuyên session, màu theo độ phủ 3 trụ (harness/skills/llmwiki), trigger tự xả qua R16/R17 |
+| [020726-overstack-docs-redesign](draft/uiux/020726-overstack-docs-redesign.md) | draft | Redesign a11y + reorder mind map cho overstack.html, council 5-ghế soi từng node, sửa nhãn nav + phân loại lại 3 skill |
 | [020726-ingest-fdk-strategy](sources/draft/archive/analysis/020726-ingest-fdk-strategy.md) | draft | Ingest fdk-stragegy.md → pattern 8 nguyên tắc "Mongol" cho dev fdk (ghi vào fdk/wiki) |
 | [020726-audit-fdk-strategy](sources/draft/archive/analysis/020726-audit-fdk-strategy.md) | draft | Audit 3 trụ theo 8 nguyên tắc Mongol pattern — nợ lớn nhất ở #3 (policy chưa drive, drift che) |
-| [020726-council-chon-de-thi-self-index](sources/draft/020726-council-chon-de-thi-self-index.md) | draft | 2026-07-02 |
-| [030726-eval-report](draft/orca/030726-eval-report.md) | draft | 2026-07-03 |
-| [030726-milestone-v106-harden](sources/draft/030726-milestone-v106-harden.md) | draft | 2026-07-03 |
-| [030726-session-provenance](sources/030726-session-provenance.md) | source | 2026-07-03 |
-| [030726-secondary-memory](sources/draft/030726-secondary-memory.md) | draft | 2026-07-03 |
-| [030726-narrative-as-data](sources/draft/030726-narrative-as-data.md) | draft | 2026-07-03 |
-| [030726-overstack-html-audit](sources/draft/archive/analysis/030726-overstack-html-audit.md) | draft | 2026-07-03 |
+| [020726-council-chon-de-thi-self-index](sources/draft/020726-council-chon-de-thi-self-index.md) | draft | Dựng app mẫu TS ngoài mẫu để council tự chọn đề thi, harass 8 loại vector quan hệ chống ludic fallacy (superseded → GH#81) |
+| [030726-eval-report](draft/orca/030726-eval-report.md) | draft | Eval phiên dev phân mảnh (8 chủ đề nhảy, đổi ý giữa chừng) làm stress-test /fdk: 3 anti-pattern (hand-author/reinvent/quên verify) → 2 cổng tự-cắn |
+| [030726-milestone-v106-harden](sources/draft/030726-milestone-v106-harden.md) | draft | Milestone v1.0.6: medic phủ 17/17 rule + hook gương-soi-cuối-phiên, hạ /query xuống optional, đo reinvent/cross-break-rate |
+| [030726-session-provenance](sources/030726-session-provenance.md) | source | Auto-distill phiên b73d2c47: đặt tên medic, sửa sync SAI HƯỚNG gây R7 rail-đen, council chọn app mẫu TS plugin-host chống ludic-fallacy |
+| [030726-secondary-memory](sources/draft/030726-secondary-memory.md) | draft | Thiết kế bộ nhớ thứ cấp 3-tầng (THÔ auto scratch-log → DISTILL → WIKI) file-first không RAG, view session/feature qua build-wiki-graph |
+| [030726-narrative-as-data](sources/draft/030726-narrative-as-data.md) | draft | Rút narrative cơ-chế-phòng-thủ của overstack.html khỏi prose tay thành manifest mechanisms.yaml + medic probe narrative-drift cắn khi lệch |
+| [030726-overstack-html-audit](sources/draft/archive/analysis/030726-overstack-html-audit.md) | draft | Audit đa-góc-nhìn overstack.html: 4 mâu thuẫn nội tại mức CAO, lỗi thời 3 commit (thiếu GH#8), thiếu dark-mode/search/a11y |
 | [ISSUES](sources/ISSUES.md) | index | Issues — ledger local |
 | [030726-foundation-section](sources/draft/archive/analysis/030726-foundation-section.md) | draft | Mọi wiki thiếu mục Foundation — bài toán · vì sao tồn tại · vì sao chọn công nghệ |
 | [030726-foundation-section-PLAN](sources/draft/archive/proposals/030726-foundation-section-PLAN.md) | plan | Kế hoạch triển khai issue #6 Foundation section (foundation.yaml → generator → medic probe) |
@@ -111,54 +112,53 @@
 | [050726-map-not-territory-fable5-unknowns](sources/draft/archive/analysis/050726-map-not-territory-fable5-unknowns.md) | issue | Issue: Map-is-not-Territory — tìm unknowns đối chiếu & vá overstack (GH#40) |
 | [060726-wiki-sync-openwiki-distill](sources/draft/archive/analysis/060726-wiki-sync-openwiki-distill.md) | draft | 060726-wiki-sync-openwiki-distill |
 <!-- index:auto:end -->
-| [140726-propose-plan-split-superpowers](sources/draft/140726-propose-plan-split-superpowers.md) | draft | 2026-07-14 |
-| [110726-shipped-vs-documented-parity](sources/draft/110726-shipped-vs-documented-parity.md) | draft | 2026-07-11 |
-| [130726-session-provenance](sources/130726-session-provenance.md) | source | 2026-07-13 |
-| [140726-session-provenance](sources/140726-session-provenance.md) | source | 2026-07-14 |
-| [060726-ponytail-distill-PLAN](sources/draft/archive/proposals/060726-ponytail-distill-PLAN.md) | draft | 2026-07-06 |
-| [070726-ponytail-distill](sources/draft/archive/analysis/070726-ponytail-distill.md) | draft | 2026-07-07 |
-| [110726-anti-fabrication-observed-metrics](sources/draft/110726-anti-fabrication-observed-metrics.md) | draft | 2026-07-11 |
-| [110726-auto-wire-eval-loop](sources/draft/110726-auto-wire-eval-loop.md) | draft | 2026-07-11 |
-| [110726-eval-blinding-grader-context](sources/draft/110726-eval-blinding-grader-context.md) | draft | 2026-07-11 |
-| [110726-gold-set-meta-eval-grader](sources/draft/110726-gold-set-meta-eval-grader.md) | draft | 2026-07-11 |
-| [140726-spec-kit-traceability](sources/draft/140726-spec-kit-traceability.md) | draft | 2026-07-14 |
-| [skill-craft](concepts/skill-craft.md) | concept | 2026-07-15 |
-| [issue-tracker](sources/issue-tracker.md) | reference | 2026-07-15 |
-| [150726-mattpocock-absorb](sources/draft/archive/proposals/150726-mattpocock-absorb.md) | draft | 2026-07-15 |
-| [150726-session-provenance](sources/150726-session-provenance.md) | source | 2026-07-15 |
-| [design-foundation](concepts/design-foundation.md) | concept | 2026-07-15 |
-| [150726-hallmark-design-foundation](sources/draft/archive/proposals/150726-hallmark-design-foundation.md) | draft | 2026-07-15 |
-| [290626-failure-spec-violation](sources/draft/archive/analysis/290626-failure-spec-violation.md) | draft | 2026-06-29 |
-| [150726-unknown-ledger](sources/draft/archive/proposals/150726-unknown-ledger.md) | draft | 2026-07-15 |
-| [150726-qc-code-skill](sources/draft/archive/proposals/150726-qc-code-skill.md) | draft | 2026-07-15 |
-| [160726-teach-me-skill](sources/draft/archive/proposals/160726-teach-me-skill.md) | draft | 2026-07-16 |
-| [160726-session-provenance](sources/160726-session-provenance.md) | source | 2026-07-16 |
-| [170726-session-provenance](sources/170726-session-provenance.md) | source | 2026-07-17 |
-| [170726-absorb-six-sources](sources/draft/archive/proposals/170726-absorb-six-sources.md) | draft | 2026-07-17 |
-| [170726-absorb-six-sources-PLAN](sources/draft/archive/proposals/170726-absorb-six-sources-PLAN.md) | draft | 2026-07-17 |
-| [180726-capability-proof-map](sources/draft/archive/proposals/180726-capability-proof-map.md) | draft | 2026-07-18 |
-| [180726-capability-proof-map-PLAN](sources/draft/archive/proposals/180726-capability-proof-map-PLAN.md) | draft | 2026-07-18 |
-| [unknown-frontend-design](draft/unknown/unknown-frontend-design.md) | unknown-ledger | 2026-07-17 |
-| [180726-session-provenance](sources/180726-session-provenance.md) | source | 2026-07-18 |
-| [180726-archetype-tester](sources/draft/archive/proposals/180726-archetype-tester.md) | draft | 2026-07-18 |
+| [140726-propose-plan-split-superpowers](sources/draft/140726-propose-plan-split-superpowers.md) | draft | Tách vòng đời đề xuất thành SPEC (/propose, người duyệt) và PLAN (/plan mới, agent mù thi hành), mở rộng R7 cắn cả hai |
+| [110726-shipped-vs-documented-parity](sources/draft/110726-shipped-vs-documented-parity.md) | draft | Issue: tài liệu hứa 74 skill nhưng npx chỉ giao 67 trong im lặng — cần cổng so hứa với giao ở fresh-install-smoke --remote |
+| [130726-session-provenance](sources/130726-session-provenance.md) | source | Auto-distill phiên c82ce215: fix bỏ dòng secondary-memory bị trùng do resolve merge sai (32 file dirty) |
+| [140726-session-provenance](sources/140726-session-provenance.md) | source | Auto-distill phiên 36e6562b: parity hứa↔giao phải chạy ở MỌI mode smoke, không thì cổng required mù với nó (#77) |
+| [060726-ponytail-distill-PLAN](sources/draft/archive/proposals/060726-ponytail-distill-PLAN.md) | draft | Plan chưng cất ponytail (anti-over-engineering, MIT) vào overstack: the ladder 7 bậc + carve-out + marker nợ, bỏ phần bao bì phân phối |
+| [070726-ponytail-distill](sources/draft/archive/analysis/070726-ponytail-distill.md) | draft | Issue: overstack chưa có luật chống over-engineering áp LÚC VIẾT code — chưng cất ladder 7 bậc + marker nợ từ ponytail |
+| [110726-anti-fabrication-observed-metrics](sources/draft/110726-anti-fabrication-observed-metrics.md) | draft | Issue: claim-receipts chỉ chống bịa reference file/API, chưa bắt agent tự bịa số đo về người-dùng/thế-giới không quan sát được |
+| [110726-auto-wire-eval-loop](sources/draft/110726-auto-wire-eval-loop.md) | draft | Issue: các guard chống-lạc-quan (council/wikieval/trace-grader/claim-receipts) đều là skill gọi tay, thiếu loop tự-kích khép kín qua hook |
+| [110726-eval-blinding-grader-context](sources/draft/110726-eval-blinding-grader-context.md) | draft | Issue: grader nội bộ (wikieval/trace-grader) thấy toàn bộ transcript sinh output nên bị mồi lạc quan — cần contract blind theo context |
+| [110726-gold-set-meta-eval-grader](sources/draft/110726-gold-set-meta-eval-grader.md) | draft | Issue: chưa có gold-set + QWK để đo độ ĐÚNG của chính grader (wikieval/trace-grader) — grader có thể trôi mà không ai biết |
+| [140726-spec-kit-traceability](sources/draft/140726-spec-kit-traceability.md) | draft | Hấp thụ 3 điểm mạnh của github/spec-kit vào /propose+/plan: id FR-xxx/SC-xxx truy vết, tag (default)/[CẦN LÀM RÕ], sửa /fdk-uat sang nhánh canary |
+| [skill-craft](concepts/skill-craft.md) | concept | Bộ từ vựng viết/soi skill: context-load vs cognitive-load, information hierarchy, completion criterion, leading word (chưng cất từ mattpocock/skills) |
+| [issue-tracker](sources/issue-tracker.md) | reference | Hợp đồng adapter cho issue tracker của repo — ledger ISSUES.md là gốc, GitHub là mirror, 5 nhãn triage + frontier.py |
+| [150726-mattpocock-absorb](sources/draft/archive/proposals/150726-mattpocock-absorb.md) | draft | Hấp thụ mattpocock/skills: cắt context-load (tắt model-invocation hàng loạt), thêm nhãn ready-for-agent/blocked_by/claim cho ledger issue, thêm /wayfinder |
+| [150726-session-provenance](sources/150726-session-provenance.md) | source | Auto-distill phiên 36e6562b: tạo concept design-foundation + skill-craft, soạn 4 draft (hallmark-design-foundation/mattpocock-absorb/qc-code-skill/unknown-ledger) |
+| [design-foundation](concepts/design-foundation.md) | concept | hallmark (Together AI) là sàn chung 6 discipline + slop-test cho mọi UI; skill design khác là flavour đứng trên, docs-site-macos là ngoại lệ nội bộ |
+| [150726-hallmark-design-foundation](sources/draft/archive/proposals/150726-hallmark-design-foundation.md) | draft | Hấp thụ Nutlope/hallmark làm nền design chung: nâng cổng tất định frontend-antipattern.py bằng slop-test cơ học + nối catalog vào /propose làm fill-default |
+| [290626-failure-spec-violation](sources/draft/archive/analysis/290626-failure-spec-violation.md) | draft | Rule stub từ failure-flywheel: spec-violation tái diễn 3× (scanner R3/R9 không skip file gitignored) — chờ người distill thành rule |
+| [150726-unknown-ledger](sources/draft/archive/proposals/150726-unknown-ledger.md) | draft | Biến default lặng khi model tự điền gap thành sổ nợ unknown-ledger truy vết được: lựa chọn fill-first-find-out-later + file wiki/draft/unknown/ |
+| [150726-qc-code-skill](sources/draft/archive/proposals/150726-qc-code-skill.md) | draft | Thêm skill /qc-code: review senior 4 mục (security/performance/naming/logic) chấm điểm + verdict, mỗi bug logic sinh test tái hiện auto-chạy qua hook tất định |
+| [160726-teach-me-skill](sources/draft/archive/proposals/160726-teach-me-skill.md) | draft | Thêm skill /teach-me: giải thích một thứ ở 2 cấp (hệ thống + code) + bộ ba vấn-đề/workflow/chi-tiết, chứng bằng runtime thật (breakpoint/instrument) thay vì đoán tĩnh |
+| [160726-session-provenance](sources/160726-session-provenance.md) | source | Auto-distill phiên 36e6562b: tiếp tục design-foundation/skill-craft, thêm draft teach-me-skill vào bộ proposal absorb |
+| [170726-session-provenance](sources/170726-session-provenance.md) | source | Auto-distill phiên 246fa7ac: chạy capability-stamp (medic gương-soi) sau khi dùng framework, ghi unknown-frontend-design + draft absorb-six-sources |
+| [170726-absorb-six-sources](sources/draft/archive/proposals/170726-absorb-six-sources.md) | draft | Absorb HÒA TAN 6 nguồn GitHub vào 5 bề mặt sẵn có (qc-code/orca-sec-scans/mem-rank/design-foundation/orca-issue), không thêm skill mới |
+| [170726-absorb-six-sources-PLAN](sources/draft/archive/proposals/170726-absorb-six-sources-PLAN.md) | draft | Plan thi hành absorb 6 nguồn: task-by-task nối vào qc-code/orca-sec-scans/hallmark/mem-rank, verify bằng rg + self-test, sync mirror ở T6 |
+| [180726-capability-proof-map](sources/draft/archive/proposals/180726-capability-proof-map.md) | draft | Nâng CAPABILITIES.md từ liệt-kê sang chứng-minh-còn-sống: cột Proof + mục UNPROVEN + đảo chiều bêu cơ chế TRÙNG LẶP, medic probe capproof ratchet |
+| [180726-capability-proof-map-PLAN](sources/draft/archive/proposals/180726-capability-proof-map-PLAN.md) | draft | Plan thi hành capproof: proof-resolver trong build-capabilities.py + medic probe capproof + baseline ratchet JSON + guard fire-drill CI |
+| [unknown-frontend-design](draft/unknown/unknown-frontend-design.md) | unknown-ledger | Unknown: xác nhận skill frontend-design có tồn tại trong anthropics/skills không — đã resolved CÓ, dùng cho absorb-six-sources |
+| [180726-session-provenance](sources/180726-session-provenance.md) | source | Auto-distill phiên ee3f5da6: fix CI cập nhật provenance sau sửa nội dung, skill-provenance lint đang đỏ |
+| [180726-archetype-tester](sources/draft/archive/proposals/180726-archetype-tester.md) | draft | Thêm archetype thứ 6 tester (/test): persona senior tester sinh kịch bản test neo FR/SC + code test qc-* chạy tất định qua qc-regression |
 | [180726-council-self-index-remaining-scope](sources/draft/180726-council-self-index-remaining-scope.md) | issue | Issue: council tự chọn đề thi — phần lõi chưa ship (GH#81) |
-| [190726-travel-gap-forcing-functions](sources/draft/190726-travel-gap-forcing-functions.md) | draft | 2026-07-19 |
-| [190726-graph-lessons-grapuco](sources/draft/190726-graph-lessons-grapuco.md) | draft | 2026-07-19 |
-| [200726-code-graph-index-broken](sources/draft/200726-code-graph-index-broken.md) | issue | 2026-07-20 |
-| [grapuco-discuss](draft/grapuco-discuss.md) | draft | 2026-07-19 |
-| [newcomer-adr](sources/evals/retrieval/newcomer-adr.md) | eval | 2026-07-20 |
-| [190726-session-provenance](sources/190726-session-provenance.md) | source | 2026-07-19 |
-| [200726-session-provenance](sources/200726-session-provenance.md) | source | 2026-07-20 |
-| [200726-orchestration-loop-closure](sources/draft/200726-orchestration-loop-closure.md) | draft | 2026-07-20 |
-| [200726-orchestration-loop-closure](sources/draft/200726-orchestration-loop-closure.md) | draft | 2026-07-20 |
-| [200726-orchestration-triage](sources/draft/200726-orchestration-triage.md) | draft | 2026-07-20 |
-| [graph-model](concepts/graph-model.md) | concept | 2026-07-20 |
-| [200726-graph-foundation-handoff](sources/handover/200726-graph-foundation-handoff.md) | draft | 2026-07-20 |
-| [200726-context-hygiene-budget](sources/draft/200726-context-hygiene-budget.md) | draft | 2026-07-20 |
-| [200726-failure-missing-verification](sources/draft/200726-failure-missing-verification.md) | draft | 2026-07-20 |
-| [210726-codegraph-external-pull](sources/draft/210726-codegraph-external-pull.md) | draft | 2026-07-21 |
-| [210726-capability-map](sources/draft/210726-capability-map.md) | draft | 2026-07-21 |
-| [210726-code-as-truth-migration](sources/draft/210726-code-as-truth-migration.md) | draft | 2026-07-21 |
-| [210721-decision-anchoring](sources/draft/210721-decision-anchoring.md) | draft | 2026-07-21 |
-| [210721-decision-anchoring-PLAN](sources/draft/210721-decision-anchoring-PLAN.md) | draft | 2026-07-21 |
-| [220722-artifact-provenance-eventlog](sources/draft/220722-artifact-provenance-eventlog.md) | draft | 2026-07-22 |
+| [190726-travel-gap-forcing-functions](sources/draft/190726-travel-gap-forcing-functions.md) | draft | Bịt 3 lỗ travel đường curl update (path repo-relative chết ở downstream, capability-stamp thiếu 4 nhóm file global, fdk-uat chỉ test dự án trống) — mỗi fix kèm hàng rào tự gác |
+| [190726-graph-lessons-grapuco](sources/draft/190726-graph-lessons-grapuco.md) | draft | Đối chiếu thread cộng đồng Grapuco qua 3 lens Grower/Prototyper/Maintainer, rút việc phải làm cho graph stack overstack (sửa 2, đo 3, nháp 1) |
+| [200726-code-graph-index-broken](sources/draft/200726-code-graph-index-broken.md) | issue | Issue: code-graph MCP hỏng do 1 database thiếu schema giết cả fan-out truy vấn + list_projects lộ tên file thay tên repo — đã sửa bằng guard is_usable_db() |
+| [grapuco-discuss](draft/grapuco-discuss.md) | draft | Nguồn thảo luận cộng đồng về sản phẩm Grapuco (context-management/graph cho multi-agent), chất liệu đối chiếu cho graph-lessons-grapuco |
+| [newcomer-adr](sources/evals/retrieval/newcomer-adr.md) | eval | Golden truy-hồi mô phỏng người mới hỏi bằng ý định (không thuật ngữ wiki) để kiểm ADR-004 có nổi lên trước khi bị vi phạm |
+| [190726-session-provenance](sources/190726-session-provenance.md) | source | Auto-distill phiên eec0806a: fix CI cập nhật provenance sau sửa nội dung, skill-provenance lint đang đỏ, chạm draft graph-lessons-grapuco |
+| [200726-session-provenance](sources/200726-session-provenance.md) | source | Auto-distill phiên 765fc26c: thêm skill /orca-handover sinh file bàn giao đủ dày cho phiên khác bắt đầu ngay |
+| [200726-orchestration-loop-closure](sources/draft/200726-orchestration-loop-closure.md) | draft | Đo được 78% task orchestration Orca chưa từng dispatch — gốc là coordinator không biết khi nào worker xong (orca terminal wait timeout sai); bản 2 sau khi user bác bỏ chẩn đoán bản 1 |
+| [200726-orchestration-triage](sources/draft/200726-orchestration-triage.md) | draft | Đối soát 17 task orchestration treo: sổ task Orca là runtime-global lẫn nhiều dự án, 3 task đóng được (đã ship nơi khác), 11 task thuộc dự án khác đã user xác nhận |
+| [graph-model](concepts/graph-model.md) | concept | 5 bản cài graph trong repo đều giải chung một bài toán (artifact liên quan gì code); lát cắt touches artifact↔code là thứ không nguồn nào khác thay được |
+| [200726-graph-foundation-handoff](sources/handover/200726-graph-foundation-handoff.md) | draft | Bàn giao việc tiếp theo cho nền graph: đồng bộ travel-policy.yaml với installer, wiki-graph quét nhiều kho, bỏ lớp imports trùng code-graph, wiki-sync đọc graph thay vì grep |
+| [200726-context-hygiene-budget](sources/draft/200726-context-hygiene-budget.md) | draft | Thiết kế vệ sinh dữ liệu nền + trần ngân sách context cho dự án khách: code-graph 546k cạnh lẫn dự án, index cả node_modules, 83 skill tốn ~10.7k token mỗi phiên |
+| [200726-failure-missing-verification](sources/draft/200726-failure-missing-verification.md) | draft | Rule stub từ failure-flywheel: missing-verification tái diễn 5× (artifact quên wire vào luồng đọc, engine viết xong không ai gọi, glob fnmatch sai) — chờ người distill |
+| [210726-codegraph-external-pull](sources/draft/210726-codegraph-external-pull.md) | draft | Chính thức hoá code-graph thành KÉO NGOÀI: pin travel-policy Tầng 1 + bootstrap cài trong install-harness.sh, verify bằng thăm dò thật thay vì kiểm tồn tại file |
+| [210726-capability-map](sources/draft/210726-capability-map.md) | draft | Docs site đối chiếu 3 nguồn (travel-policy/LOOP_GROUPS/problem-tree): năng lực framework CHƯA đủ cô lập — 61% node vấn đề chạm ≥2 trụ, 7/83 skill rơi ngoài mind map |
+| [210726-code-as-truth-migration](sources/draft/210726-code-as-truth-migration.md) | draft | Migration sang kiến trúc code-là-source-of-truth: wiki chỉ giữ WHY, mọi WHAT/quan-hệ phải sinh từ code để merge hai nhánh = regen thay vì hoà giải tay |
+| [210721-decision-anchoring](sources/draft/210721-decision-anchoring.md) | draft | Neo quyết định vào symbol code (không chỉ file), 4 trạng thái LIVE/STALE/ORPHAN/UNAVAILABLE suy từ code-graph — mở rộng mechanisms.yaml xuống mức symbol |
+| [210721-decision-anchoring-PLAN](sources/draft/210721-decision-anchoring-PLAN.md) | draft | Plan thi hành decision-anchoring T1-T8: engine decision-liveness.py đọc trực tiếp index.db (không qua MCP), checksum-freshness thay is_file(), test trên sandbox |
+| [220722-artifact-provenance-eventlog](sources/draft/220722-artifact-provenance-eventlog.md) | draft | Thiết kế event log Kafka-pattern git-native cho artifact-provenance: sổ sự kiện đa-writer merge qua git branch, chọn CAP=AP, tương quan code↔docs |

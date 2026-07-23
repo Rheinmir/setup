@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """mem-rank — a small agent-memory layer: ADD/UPDATE/DELETE/NOOP ops + RANKED retrieval that
+
+See llmwiki/wiki/concepts/log-model.md for how this differs from events.jsonl/scratch-log/
+touches/provenance-log — each answers ONE narrow question, none coordinate with the others.
 returns the few relevant memories instead of dumping full context (2026 agent-memory trend).
 
 The harness already has the wiki (curated knowledge) + .claude/memory (flat facts). This adds

@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """code-logger — ghi log framework BẰNG CODE, không phụ thuộc agent nhớ.
 
+Xem llmwiki/wiki/concepts/log-model.md để biết sổ này khác gì scratch-log/mem-rank/
+touches/provenance-log — mỗi sổ trả lời một câu hỏi hẹp, KHÔNG phối hợp với nhau.
+
 Vấn đề: AGENT.md/CLAUDE.md bảo "ALWAYS append to wiki/log.md after every operation" —
 nhưng đó là kỷ luật con-người/agent, agent QUÊN là chuyện thường → log.md drift, không
 phản ánh thực tế. Cùng họ với `hooklib.audit()` (đã ghi raw event BẰNG CODE) và
@@ -127,9 +130,13 @@ def render_md(root, keep: int = 40) -> bool:
         block = "\n".join(lines)
         text = log.read_text(encoding="utf-8")
         if AUTO_START in text and AUTO_END in text:
-            pre = text.split(AUTO_START)[0]
-            post = text.split(AUTO_END, 1)[1]
-            new = pre.rstrip() + "\n\n" + block + post
+            # marker cũ có thể đứng lệch giữa file (agent vẫn append thủ công phía dưới
+            # mỗi lần) — gộp pre+post (bỏ block cũ) rồi đặt lại block ở CUỐI file, để
+            # block "sự kiện mới nhất" luôn nằm đúng vị trí thời gian của nó.
+            pre = text.split(AUTO_START)[0].rstrip()
+            post = text.split(AUTO_END, 1)[1].strip()
+            body = pre + ("\n\n" + post if post else "")
+            new = body.rstrip() + "\n\n" + block + "\n"
         else:
             new = text.rstrip() + "\n\n" + block + "\n"
         log.write_text(new, encoding="utf-8")
