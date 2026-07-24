@@ -588,27 +588,22 @@ web-clone vẫn là nhà cho Mode A (snapshot offline byte-exact).
 
 User hỏi tiếp "5 log này có bỏ được cái nào không, hay mỗi cái giải bài toán riêng" — trả lời bằng bảng ánh xạ 5 log → 5 bài toán cụ thể (đều có ví dụ thật đã xảy ra trong phiên), rồi tự Attack chính đề xuất `provenance-log` mới: có thể gộp vào `scratch-log.jsonl` (đã git-tracked sẵn) thay vì đẻ file mới không? Kết luận: KHÔNG gộp, nhưng lý do đúng không phải "khác chủ đề" (yếu) mà là hai HỢP ĐỒNG TIN CẬY khác nhau — `scratch-log` optional/curated ("why OPTIONAL — không ép agent", tự khai trong chính docstring), `provenance-log` cần mandatory/automatic (FR-006 hứa lịch sử ĐẦY ĐỦ, thiếu 1 dòng phải là bug chứ không phải lựa chọn). Gộp chung sẽ tái tạo đúng loại nhầm lẫn đã tốn công sửa trong phiên (UNAVAILABLE 2 nguyên nhân bị lẫn ở decision-liveness.py, mirror-drift ở /lint 8e). Đã sửa vào Non-goals của SPEC, R7 vẫn xanh.
 
+## 2026-07-23 — plan — artifact-provenance-eventlog-PLAN
+
+`/plan` mở rộng SPEC `220722-artifact-provenance-eventlog.md` (duyệt qua "chạy /plan đi") thành PLAN thi hành T1-T5. T6 (rotate, v0.3/COULD) loại khỏi PLAN có chủ ý — ngưỡng rotate chưa trả nợ (U-05), viết task cho nó sẽ là placeholder giả trang, đúng điều khoản "cổng ngược" của /plan. Trước khi viết PLAN, verify thật claim kỹ thuật cốt lõi của SPEC (FR-004, merge=union) trên sandbox git — 3 dòng từ 2 branch độc lập đều còn sau merge, KHÔNG cần config thêm gì ngoài dòng `.gitattributes` — xác nhận Approach A khả thi, không cần quay lại /propose. R7 chặn 1 lần (Self-review tự nhắc TBD/TODO literal khi nói KHÔNG còn — bẫy đã gặp nhiều lần trong phiên), đã sửa.
+
+## 2026-07-24 — decision-anchoring/provenance-log — T1-T5 thi hành xong, đánh dấu implemented
+
+Thi hành đầy đủ PLAN `220722-artifact-provenance-eventlog-PLAN.md` (T1-T5, T6 hoãn chờ trả nợ U-05): `harness/scripts/provenance-log.py` (adapter `append_event`/`read_events`/`correlate`/`classify_topic`, hash-chain theo writer_id, `.gitattributes merge=union` verify thật trên sandbox 2 branch — 2 sự kiện đều còn sau merge, không mất dòng); `decision-liveness.py confirm <id>` (T3, bump `confirmed:` + phát event `decision.confirm`, verify thật trên `stop-debounce`); `correlate()` phạm vi hẹp temporal-only (T4, FR-005 đã thu hẹp sau phản biện trước đó); wiring `stop.py::regen_docs()` gọi `record-changed` phân loại theo path-prefix (T5, verify thật — file `.py` → `code.change`).
+
+Một bug thật bắt được qua self-test: `classify_topic()` ban đầu kỳ vọng `SKILL.md`/`README.md` → `code.change`, nhưng `_CODE_RE` (mượn từ `stop.py`) cố ý KHÔNG chứa `.md` — sửa bằng cách thêm nhánh `p.endswith(".md")` riêng cho `.md` ngoài `llmwiki/wiki/`. Đồng bộ mirror global (`~/.claude/harness`), bump `capability-stamp` (178 mục), `medic --ci` 0 fail. SPEC + PLAN đổi `status: implemented`, đánh dấu T1-T5 done trong Plan.
+
 <!-- log:auto:start -->
 
 ### 🤖 Log tự-động (code-logger, không do agent ghi)
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-23 11:46:03 | `file.write` | fdk/tools/medic.py · tool=Edit · session=6ac5fed4 · actor=agent · prev=ebc971cb4f7f4742688149d50ad6405bb55b8541c56df7b58 |
-| 2026-07-23 15:06:31 | `file.write` | skills/extract-site/SKILL.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=ab399d44b300041435ff47ee5ac2f486243b745 |
-| 2026-07-23 15:06:54 | `file.write` | llmwiki/AGENT.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=e3865df2081035061b74282ebeb622da0814b5271262a9b0dd1 |
-| 2026-07-23 15:07:01 | `file.write` | llmwiki/AGENT.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=354acfcbd451fa0985affe8cde9f2ac72601db2a980422966df |
-| 2026-07-23 15:07:04 | `file.write` | llmwiki/CLAUDE.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=3a94cd394f8f66e0d486fce6a9583b81da114a5eee45677f4c |
-| 2026-07-23 15:07:08 | `file.write` | llmwiki/CLAUDE.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=f3de1b2fd59c2c148f6ac8ff7e0ea706e74d3b80019d660ea9 |
-| 2026-07-23 15:08:27 | `file.write` | llmwiki/wiki/sources/draft/230726-webclone-extractsite-dedup.md · tool=Write · session=3c7d0f9c · actor=agent · prev=ab2 |
-| 2026-07-23 15:08:35 | `file.write` | llmwiki/wiki/sources/draft/230726-webclone-extractsite-dedup.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=3e4b |
-| 2026-07-23 15:08:49 | `file.write` | llmwiki/wiki/log.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=7f83d46c440fa1222017ce5732a23aa5778ec7a439d44343 |
-| 2026-07-23 15:08:55 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=ce94d41fe8c27a58d64cace400e91cc98b89b8eec742db |
-| 2026-07-23 15:09:43 | `file.write` | llmwiki/html/230726-webclone-extractsite-dedup.html · tool=Write · session=3c7d0f9c · actor=agent · prev=00de6a56d6b16cf |
-| 2026-07-23 15:09:48 | `file.write` | llmwiki/html/230726-webclone-extractsite-dedup.html · tool=Edit · session=3c7d0f9c · actor=agent · prev=56843f725e8a1a33 |
-| 2026-07-23 15:18:08 | `file.write` | llmwiki/html/230726-webclone-extractsite-dedup.html · tool=Edit · session=3c7d0f9c · actor=agent · prev=b5f6ee8ce32d2d4c |
-| 2026-07-23 15:18:32 | `file.write` | llmwiki/html/230726-webclone-extractsite-dedup.html · tool=Edit · session=3c7d0f9c · actor=agent · prev=b84212ebe7cfe33e |
-| 2026-07-23 15:18:43 | `file.write` | llmwiki/html/230726-webclone-extractsite-dedup.html · tool=Edit · session=3c7d0f9c · actor=agent · prev=47b51557ff8275c0 |
 | 2026-07-23 16:37:49 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=b9e01839319ff7fd79365aae198b04a0f860e53de217ca |
 | 2026-07-23 16:47:17 | `file.write` | llmwiki/wiki/sources/adr/ADR-003-skill-as-single-source-of-truth.md · tool=Write · session=3c7d0f9c · actor=agent · prev |
 | 2026-07-23 16:47:34 | `file.write` | llmwiki/wiki/sources/adr/ADR-004-framework-dev-context-opt-in.md · tool=Write · session=3c7d0f9c · actor=agent · prev=c7 |
@@ -634,9 +629,20 @@ User hỏi tiếp "5 log này có bỏ được cái nào không, hay mỗi cái
 | 2026-07-24 08:47:10 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=2 · human=['llmwiki/innovation/230726-innovation.md', 'llmwiki/wiki/sources/230726 |
 | 2026-07-24 08:47:10 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=1 · human=['llmwiki/wiki/sources/draft/210721-decision-anchoring-adoption-metric.m |
 | 2026-07-24 08:47:10 | `commit.reconcile` |  · actor=system · agent_n=3 · human_n=1 · human=['llmwiki/wiki/draft/unknown/unknown-context-hygiene.md'] · prev=dbc90fc |
+| 2026-07-24 08:55:17 | `file.write` | llmwiki/wiki/sources/draft/220722-artifact-provenance-eventlog-PLAN.md · tool=Write · session=765fc26c · actor=agent · p |
+| 2026-07-24 08:55:29 | `file.write` | llmwiki/wiki/sources/draft/220722-artifact-provenance-eventlog-PLAN.md · tool=Edit · session=765fc26c · actor=agent · pr |
+| 2026-07-24 08:55:47 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=765fc26c · actor=agent · prev=0c6675fe2842ebf235ea01bfe009b6524883d7a0260a5e |
+| 2026-07-24 08:56:00 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=96b25e265daf6c0104aa49c11ea452b7d1e132a33 |
+| 2026-07-24 08:57:20 | `file.write` | harness/scripts/provenance-log.py · tool=Write · session=765fc26c · actor=agent · prev=ed61abaa4cf228bc1aa12b288354873b4 |
+| 2026-07-24 08:57:40 | `file.write` | harness/scripts/provenance-log.py · tool=Edit · session=765fc26c · actor=agent · prev=63d7c49cf13ceb8dfa9248f93c19843113 |
+| 2026-07-24 08:58:26 | `file.write` | harness/scripts/decision-liveness.py · tool=Edit · session=765fc26c · actor=agent · prev=7a118f76188601aaaab06ba6e885cd0 |
+| 2026-07-24 08:58:38 | `file.write` | harness/scripts/decision-liveness.py · tool=Edit · session=765fc26c · actor=agent · prev=22a974ddb854008c8b6da248c754acf |
+| 2026-07-24 08:59:01 | `file.write` | harness/scripts/decision-liveness.py · tool=Edit · session=765fc26c · actor=agent · prev=ed25b8c81025aee1e43ffd737e0404a |
+| 2026-07-24 08:59:19 | `file.write` | harness/scripts/decision-liveness.py · tool=Edit · session=765fc26c · actor=agent · prev=e0486f7da005b63533194ea0672f947 |
+| 2026-07-24 08:59:32 | `file.write` | harness/scripts/decision-liveness.py · tool=Edit · session=765fc26c · actor=agent · prev=11f2022e8f8289b13e1d82cc6b760a3 |
+| 2026-07-24 08:59:57 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=0 · prev=15edb18d5cc945fd7f2a1f06c38c9a79dc401392b97118b8008954161f2935d8 · h=1a85 |
+| 2026-07-24 08:59:58 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['harness/scripts/decision-liveness.py'] · prev=1a858d16bd7f18b4fe319d8c |
+| 2026-07-24 09:00:15 | `file.write` | llmwiki/.claude/hooks/stop.py · tool=Edit · session=765fc26c · actor=agent · prev=39c48863af5321cb15ee1a506f7a6fa10c43eb |
+| 2026-07-24 09:03:57 | `file.write` | llmwiki/innovation/240726-innovation.md · tool=Write · session=bfce9765 · actor=agent · prev=96e7a747818f92f48d6f599d12c |
 
 <!-- log:auto:end -->
-
-## 2026-07-23 — plan — artifact-provenance-eventlog-PLAN
-
-`/plan` mở rộng SPEC `220722-artifact-provenance-eventlog.md` (duyệt qua "chạy /plan đi") thành PLAN thi hành T1-T5. T6 (rotate, v0.3/COULD) loại khỏi PLAN có chủ ý — ngưỡng rotate chưa trả nợ (U-05), viết task cho nó sẽ là placeholder giả trang, đúng điều khoản "cổng ngược" của /plan. Trước khi viết PLAN, verify thật claim kỹ thuật cốt lõi của SPEC (FR-004, merge=union) trên sandbox git — 3 dòng từ 2 branch độc lập đều còn sau merge, KHÔNG cần config thêm gì ngoài dòng `.gitattributes` — xác nhận Approach A khả thi, không cần quay lại /propose. R7 chặn 1 lần (Self-review tự nhắc TBD/TODO literal khi nói KHÔNG còn — bẫy đã gặp nhiều lần trong phiên), đã sửa.

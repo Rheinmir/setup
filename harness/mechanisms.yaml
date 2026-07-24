@@ -192,7 +192,7 @@ mechanisms:
     live_probe: llmwiki/.claude/hooks/stop.py
     anchor_symbol: "setup::llmwiki/.claude/hooks/stop.py::_debounced"
     proof: harness/scripts/decision-liveness.py
-    confirmed: "2026-07-21"
+    confirmed: "2026-07-23"
 
   - id: code-graph-probe-boundary
     name: "code-graph probe boundary (thăm dò thay vì kiểm tồn tại)"

@@ -1,7 +1,7 @@
 ---
 type: draft
 title: "Artifact-provenance-eventlog-PLAN"
-status: proposed
+status: implemented
 timestamp: 2026-07-23
 task: T-260722-01
 ---

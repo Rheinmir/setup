@@ -1,7 +1,7 @@
 ---
 type: draft
 title: "Artifact-provenance event log — pattern Kafka git-native cho code/docs/decision"
-status: proposed
+status: implemented
 tags: [event-log, kafka-pattern, provenance, git-native, decision-anchoring, cap-theorem]
 timestamp: 2026-07-22
 task: T-260722-01
@@ -9,7 +9,7 @@ task: T-260722-01
 
 # Artifact-provenance event log — pattern Kafka git-native cho code/docs/decision
 
-**Status:** proposed
+**Status:** implemented (T1-T5 committed 2026-07-24; T6 hoãn, chờ U-05)
 
 Yêu cầu gốc, một câu: cần một sổ sự kiện có thứ tự, timestamp UTC, gắn được git account/commit — biết "sự kiện nào sinh ra artifact nào" — và **đa writer thật** (nhiều session, nhiều vendor agent, nhiều nhánh git), merge được qua branch, tương quan được thay đổi CODE với thay đổi DOCS theo độ gần thời gian (fallback bằng phán đoán agent khi mơ hồ), và chừa sẵn chỗ để sau này chuyển sang dạng broker/server nếu cần.
 
@@ -104,14 +104,14 @@ Cắt theo MoSCoW, học từ bài học chính decision-anchoring vừa trải 
 
 **v0.1 — MUST, lõi chạy được:**
 
-- [ ] **T1 — Module adapter `harness/scripts/provenance-log.py`: `append_event()` (hash-chain theo writer_id, UTC, git_sha SUY từ `git rev-parse HEAD`), `read_events()`.** Verify: SC-002, SC-005 (fail-open thật khi ghi lỗi).
-- [ ] **T2 — `.gitattributes` khai `merge=union` cho `provenance-log.jsonl`; test merge 2 branch thật.** Verify: SC-001.
-- [ ] **T3 — Wiring decision-anchoring: bump `confirmed:` trong `mechanisms.yaml` PHẢI gọi `append_event(topic="decision.confirm", ...)`.** Verify: SC-004.
+- [x] **T1 — Module adapter `harness/scripts/provenance-log.py`: `append_event()` (hash-chain theo writer_id, UTC, git_sha SUY từ `git rev-parse HEAD`), `read_events()`.** Verify: SC-002, SC-005 (fail-open thật khi ghi lỗi).
+- [x] **T2 — `.gitattributes` khai `merge=union` cho `provenance-log.jsonl`; test merge 2 branch thật.** Verify: SC-001.
+- [x] **T3 — Wiring decision-anchoring: bump `confirmed:` trong `mechanisms.yaml` PHẢI gọi `append_event(topic="decision.confirm", ...)`.** Verify: SC-004.
 
 **v0.2 — SHOULD, giá trị tương quan code↔docs:**
 
-- [ ] **T4 — `correlate()` trong adapter: đề xuất cặp code.change/docs.change theo độ gần thời gian + cùng writer_id/task_id; trả "cần agent phán đoán" khi mơ hồ, qua tool-use schema `{is_related, confidence, reasoning}` (FR-005), không phải free-text.** Verify: SC-003.
-- [ ] **T5 — Wiring hook ghi `topic: code.change`/`docs.change` cho các file thay đổi thật trong một phiên (tái dùng logic phát hiện `.py`/`.md` đã có ở `stop.py::_CODE_RE`).** Verify: SC-002 mở rộng — đọc lại thấy phân loại đúng code vs docs.
+- [x] **T4 — `correlate()` trong adapter: đề xuất cặp code.change/docs.change theo độ gần thời gian + cùng writer_id/task_id; trả "cần agent phán đoán" khi mơ hồ, qua tool-use schema `{is_related, confidence, reasoning}` (FR-005), không phải free-text.** Verify: SC-003.
+- [x] **T5 — Wiring hook ghi `topic: code.change`/`docs.change` cho các file thay đổi thật trong một phiên (tái dùng logic phát hiện `.py`/`.md` đã có ở `stop.py::_CODE_RE`).** Verify: SC-002 mở rộng — đọc lại thấy phân loại đúng code vs docs.
 
 **v0.3 — COULD, hoãn thật sự:**
 
