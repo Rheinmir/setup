@@ -170,3 +170,4 @@
 | [210726-session-provenance](sources/210726-session-provenance.md) | source | Auto-distill scratch-log phiên 765fc26c ngày 21/07 |
 | [220726-session-provenance](sources/220726-session-provenance.md) | source | Auto-distill scratch-log phiên 501779e7 ngày 22/07 |
 | [230726-session-provenance](sources/230726-session-provenance.md) | source | Auto-distill scratch-log phiên 3c7d0f9c ngày 23/07 |
+| [240726-skill-evolve-loop](sources/draft/240726-skill-evolve-loop.md) | draft | Distill GH#84/SkillRL: correlator nối skill-usage.py + trace-grader.py, chấm chất lượng per-skill, tự soạn đề xuất sửa SKILL.md khi tỷ lệ lỗi vượt ngưỡng, dừng ở /propose |

@@ -806,6 +806,9 @@ if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)
 ```css
 .theme-row{position:sticky;bottom:-<pad-nav>;margin-top:auto;display:flex;align-items:center;justify-content:space-between;
   padding:11px 16px;border-top:1px solid rgba(30,90,170,.14);background:…glass…;backdrop-filter:blur(14px)}
+.theme-switch{display:inline-flex;align-items:center;cursor:pointer} /* BẮT BUỘC: track/knob là <span> position:relative — không ép flex thì
+  chúng vẫn là inline, mọi nội dung con (::before/::after + knob) đều position:absolute nên bị lấy khỏi flow, .track mất kích thước intrinsic
+  và width/height bị trình duyệt bỏ qua (spec: width/height không áp dụng cho phần tử inline) → nút gạt co về 0×0, coi như biến mất */
 .theme-switch .track{position:relative;width:50px;height:26px;border-radius:999px;…}
 .theme-switch .track::before{content:'☀️';left:6px;…} .theme-switch .track::after{content:'🌙';right:6px;…}
 .theme-switch .knob{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .18s}

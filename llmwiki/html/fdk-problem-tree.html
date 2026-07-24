@@ -103,7 +103,8 @@
   📄 File (worktree issue-4): <code>/Users/giatran/orca/workspaces/setup/issue-4-logger-c/llmwiki/html/fdk-problem-tree.html</code><br>
   📄 File (worktree issue-9): <code>/Users/giatran/orca/workspaces/setup/issue-9-episodic-vector/llmwiki/html/fdk-problem-tree.html</code><br>
   📄 File (worktree issue-8): <code>/Users/giatran/orca/workspaces/setup/issue-8-feature-gap-th-ng/llmwiki/html/fdk-problem-tree.html</code><br>
-  📄 File (worktree issue-70): <code>/Users/giatran/orca/workspaces/setup/issue-70-bonbon-ai-wiki/llmwiki/html/fdk-problem-tree.html</code></footer>
+  📄 File (worktree issue-70): <code>/Users/giatran/orca/workspaces/setup/issue-70-bonbon-ai-wiki/llmwiki/html/fdk-problem-tree.html</code><br>
+  📄 File (worktree skill): <code>/Users/giatran/orca/workspaces/setup/skill/llmwiki/html/fdk-problem-tree.html</code></footer>
 </div>
 
 <script type="application/json" id="tree-data">[
@@ -939,6 +940,20 @@
   "date": "2026-07-20",
   "solvedBy": "travel-policy: medic.py framework_only → global_shared/engine_core (phiên 2026-07-20)",
   "session": "/fdk orca-handover"
+ },
+ {
+  "id": "p-45",
+  "parent": "p-06",
+  "title": "Snippet CSS trong SKILL.md đúng-cú-pháp nhưng THIẾU thuộc tính bắt buộc — agent chép đúng, ra bug thật",
+  "desc": "docs-site-macos § Theme Toggle dạy `.theme-switch .track{position:relative;width:50px;height:26px;…}` nhưng track/knob là <span> (inline) — thiếu `.theme-switch{display:inline-flex}` thì mọi nội dung con (::before/::after + knob) đều position:absolute nên bị lấy khỏi flow, .track mất kích thước intrinsic → width/height bị trình duyệt BỎ QUA (spec CSS). Agent chép chính xác snippet trong skill vẫn ra nút gạt 0×0 — khác p-06 (drift do QUÊN sync), đây là nội dung canonical tự nó thiếu. Phát hiện qua design-feedback của user trên llmwiki/html/240726-skill-evolve-loop-seq.html; generator build-overstack-docs.py đã có sẵn display:inline-flex nên overstack.html không dính.",
+  "status": "solved",
+  "scope": [
+   "skills",
+   "llmwiki"
+  ],
+  "date": "2026-07-24",
+  "solvedBy": "thêm `.theme-switch{display:inline-flex;align-items:center}` vào skills/docs-site-macos/SKILL.md (kèm comment giải thích) + fix trực tiếp llmwiki/html/240726-skill-evolve-loop-seq.html + sync-skill.sh docs-site-macos. Chưa có: quét lại các HTML khác đã sinh TRƯỚC fix nếu có (mới scan llmwiki/html/*.html, chỉ 1 file dính).",
+  "session": "phiên 2026-07-24 — design-feedback theme toggle"
  }
 ]</script>
 

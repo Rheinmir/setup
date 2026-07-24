@@ -53,3 +53,6 @@ llmwiki/wiki/sources/draft/archive/
 
 # mem-rank local memory store
 harness/metrics/memory.jsonl
+
+# Stop-hook debounce cache (per-machine timestamps, không phải ledger)
+harness/metrics/.stop-debounce.json
