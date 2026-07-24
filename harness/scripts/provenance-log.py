@@ -64,9 +64,19 @@ def _last_hash_for_writer(path: Path, writer_id: str) -> str:
 
 
 def _writer_id() -> str:
-    """<vendor>::<session_id>::<hostname> (FR-002) — không đăng ký tập trung (Assumptions)."""
+    """<vendor>::<session_id>::<hostname> (FR-002) — không đăng ký tập trung (Assumptions).
+
+    2026-07-24 (/fable5): biến MÔI TRƯỜNG THẬT của Claude Code là `CLAUDE_CODE_SESSION_ID`
+    (xác nhận qua `env` thật trong hook context) — bản đầu đoán nhầm `CLAUDE_SESSION_ID`
+    (không tồn tại), nên mọi event thật đều rơi vào 'unknown-session', vô hiệu hoá đúng phần
+    FR-002 hứa phân biệt writer theo session. Self-test không bắt được vì nó tự set writer_id
+    tay, không đi qua nhánh env thật này — bài học: test phải phủ CẢ đường lấy giá trị mặc định,
+    không chỉ đường override tường minh."""
     import os
-    session = os.environ.get("CLAUDE_SESSION_ID") or os.environ.get("SESSION_ID") or "unknown-session"
+    session = (os.environ.get("CLAUDE_CODE_SESSION_ID")
+               or os.environ.get("CLAUDE_SESSION_ID")
+               or os.environ.get("SESSION_ID")
+               or "unknown-session")
     vendor = os.environ.get("PROVENANCE_VENDOR", "claude-code")
     return f"{vendor}::{session}::{socket.gethostname()}"
 
@@ -295,6 +305,22 @@ def self_test() -> int:
     ck("file .py bất kỳ -> code.change", classify_topic("harness/scripts/foo.py") == "code.change", fails)
     ck("file .json (không khớp _CODE_RE, không phải wiki) -> None (không ghi)",
        classify_topic("harness/metrics/tasks.json") is None, fails)
+
+    # --- /fable5 2026-07-24: _writer_id() PHẢI đọc đúng biến môi trường THẬT của Claude Code
+    # (CLAUDE_CODE_SESSION_ID), không phải qua writer_id override tay như mọi case trên — bài
+    # học: bản đầu đoán nhầm tên biến, self-test không bắt được vì luôn override thủ công. ---
+    import os as _os_env
+    _saved = _os_env.environ.get("CLAUDE_CODE_SESSION_ID")
+    _os_env.environ["CLAUDE_CODE_SESSION_ID"] = "test-session-xyz"
+    try:
+        wid = _writer_id()
+        ck("_writer_id() đọc đúng CLAUDE_CODE_SESSION_ID (không rơi về 'unknown-session')",
+           "test-session-xyz" in wid, fails)
+    finally:
+        if _saved is None:
+            _os_env.environ.pop("CLAUDE_CODE_SESSION_ID", None)
+        else:
+            _os_env.environ["CLAUDE_CODE_SESSION_ID"] = _saved
 
     sh.rmtree(td, ignore_errors=True)
     sh.rmtree(td2, ignore_errors=True)
