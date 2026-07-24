@@ -194,11 +194,75 @@ def report(root=ROOT) -> str:
     return "\n".join(lines)
 
 
+def _skill_md_path(root, skill_id):
+    """FR-008: định vị qua registry canonical (glob skills/*/SKILL.md dùng bởi
+    fdk/tools/build-capabilities.py::skills_dir), KHÔNG đoán bằng convention tên file khác."""
+    p = Path(root) / "skills" / skill_id / "SKILL.md"
+    return p if p.is_file() else None
+
+
+def _ddmmyy(date_str: str) -> str:
+    y, m, d = date_str.split("-")
+    return f"{d}{m}{y[2:]}"
+
+
+def draft(root=ROOT, skill_id=None, date_str=None):
+    cfg = bnal_config.load(root, CONFIG_NAME, DEFAULT_CFG)
+    min_sample = int(cfg.get("min_sample", 5))
+    thr = float(cfg.get("fail_rate_threshold", 0.4))
+    groups = _leaderboard(root)
+    g = groups.get(skill_id)
+    if not g or not (g["count"] >= min_sample and (g["bad"] / g["count"]) >= thr):
+        return None, f"'{skill_id}' chưa đủ mẫu (>= {min_sample}) hoặc chưa vượt ngưỡng ({thr}) — không eligible."
+
+    skill_md = _skill_md_path(root, skill_id)
+    if not skill_md:
+        return None, f"Không tìm thấy skills/{skill_id}/SKILL.md — không thể soạn draft."
+
+    rows = [r for r in bnal_metrics.read(root, LEDGER)
+            if r["skill"] == skill_id and r["verdict"] in ("corrupt-success", "fail")]
+    date_str = date_str or _dt.date.today().isoformat()
+    ddmmyy = _ddmmyy(date_str)
+    out_dir = Path(root) / "llmwiki" / "wiki" / "sources" / "draft"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out = out_dir / f"{ddmmyy}-skill-evolve-{skill_id}.md"
+
+    rate = g["bad"] / g["count"]
+    md = [
+        "---", "type: draft",
+        f'title: "Đề xuất sửa SKILL.md — {skill_id} (skill-evolve)"',
+        "status: proposed", f"tags: [skill-evolve, {skill_id}, quality-regression]",
+        f"timestamp: {date_str}", "---", "",
+        f"# {ddmmyy}-skill-evolve-{skill_id}", "",
+        f"Tỷ lệ lỗi (`corrupt-success`/`fail`) của skill `{skill_id}` = "
+        f"{g['bad']}/{g['count']} ({rate:.0%}), vượt ngưỡng {thr:.0%} "
+        f"(cấu hình `harness/{CONFIG_NAME}.config.yaml`). Nội dung `SKILL.md` hiện tại và "
+        f"bằng chứng cụ thể ở dưới — bản này là SEED cho `/propose`, KHÔNG tự ghi đè.", "",
+        "## SKILL.md hiện tại (nguyên văn)", "```markdown",
+        skill_md.read_text(encoding="utf-8"), "```", "",
+        f"## Bằng chứng ({len(rows)} lần gọi lỗi)", "",
+        "| Session | Verdict | Flags |", "|---|---|---|",
+    ]
+    for r in rows[-20:]:
+        flags_s = "; ".join(f.get("check", "?") for f in r.get("flags", [])) or "-"
+        md.append(f"| {r['session']} | {r['verdict']} | {flags_s} |")
+    md += [
+        "", "## Origin",
+        f"- **Source:** `skill-evolve.py --draft {skill_id}` từ `harness/metrics/{LEDGER}` "
+        f"({g['count']} lần gọi, {g['bad']} lỗi).",
+        f"- **Adapter:** `harness/{CONFIG_NAME}.config.yaml` (verified={cfg.get('verified')}).",
+        f"- **Date:** {date_str}", "",
+    ]
+    out.write_text("\n".join(md), encoding="utf-8")
+    return out, f"Đã soạn {out} — STOP, chờ /propose hoàn thiện + người duyệt."
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="skill-evolve — per-skill quality ledger")
     ap.add_argument("--scan", nargs="?", const=1, type=int, metavar="N",
                     help="quét N session gần nhất (mặc định 1 = session hiện tại)")
     ap.add_argument("--report", action="store_true", help="leaderboard per-skill")
+    ap.add_argument("--draft", metavar="SKILL_ID", help="soạn đề xuất sửa SKILL.md nếu eligible")
     args = ap.parse_args()
     if args.scan is not None:
         n = args.scan
@@ -208,7 +272,11 @@ def main() -> int:
     if args.report:
         print(report(ROOT))
         return 0
-    ap.error("chưa có subcommand — dùng --scan/--report (thêm --draft/--self-test ở task sau)")
+    if args.draft:
+        out, msg = draft(ROOT, args.draft)
+        print(msg)
+        return 0 if out else 1
+    ap.error("chưa có subcommand — dùng --scan/--report/--draft (thêm --self-test ở task sau)")
     return 2
 
 
