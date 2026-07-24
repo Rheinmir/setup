@@ -51,11 +51,11 @@ Yêu cầu gốc, một câu: issue GH#84 ("skill improve loop") trỏ tới `ai
 - **Không** train/fine-tune model gì cả — không có "policy update", không có reward số theo nghĩa RL. "Reward" ở đây là verdict tất định của `trace-grader` (an toàn/quy trình), không phải đo "task có đúng về mặt nghiệp vụ không" (câu đó cần domain judge, ngoài phạm vi v0.1).
 - **Không** làm lại việc `orca-eval` đã làm (report tổng quát về best-practice toàn phiên) — `skill-evolve` hẹp hơn: CHỈ verdict gắn `skill_id`, tích luỹ, có ngưỡng, có auto-draft. Hai skill SONG SONG, không thay thế nhau.
 - **Không** tự thêm skill MỚI (khác nhánh "skill bank thêm skill" của SkillRL) — v0.1 chỉ SỬA skill đã có. Thêm-skill-mới tự động là mở rộng tương lai, không phải bây giờ (rủi ro cao hơn nhiều: sửa 1 file có gate còn dễ review hơn tạo file mới hàng loạt).
-- **Không** bật "agent-as-judge" (LLM chấm nội dung câu trả lời của skill) trong v0.1 — chỉ dùng verdict tất định của `trace-grader` (rule-based). Trục LLM-judge để ngỏ như một cấu hình TẮT, giống `trace-grader.config.yaml`'s `judge_trajectory()` đã làm — bật sau khi có model/ngưỡng thật.
+- **Không** gọi thêm một API/model RỜI (Anthropic SDK, API key riêng) để làm "agent-as-judge" — khác `trace-grader.config.yaml`'s `judge_trajectory()` (STUB chờ model cấu hình), ở đây judge chính là **agent đang gọi `/skill-evolve`** đọc bằng chứng đã nhúng sẵn và tự nhận định — zero dependency mới, zero API key (quyết định 2026-07-24, xem FR-010).
 
 ## Approaches
 
-**Phương án A — Correlator mỏng, tái dùng nguyên `skill-usage.py` + `trace-grader.py`, feed ledger riêng, tự soạn draft giàu ngữ cảnh (chọn).** Một script mới `harness/scripts/skill-evolve.py` KHÔNG viết lại logic chấm — nó chỉ: (1) quét transcript, tìm ranh giới mỗi lần gọi Skill-tool (tái dùng field `line_idx` mới thêm vào `skill-usage.py::collect()`); (2) cắt lát jsonl giữa hai ranh giới liền kề, gọi thẳng `trace_grader.runs_from_transcript()` + `grade_run()` (import qua `importlib.util`, đúng tiền lệ đã chạy sống trong repo) để lấy verdict tất định CHO ĐÚNG LẦN GỌI SKILL ĐÓ; (3) ghi verdict vào ledger cục bộ theo `skill_id`; (4) `--report` xếp hạng skill theo tỷ lệ `corrupt-success`/`fail` (chỉ tính khi đủ mẫu tối thiểu); (5) `--draft <skill_id>` khi vượt ngưỡng — khác `failure-flywheel --draft` (stub rỗng để người tự điền) ở chỗ stub này **tự nhúng sẵn** nội dung `SKILL.md` hiện tại + danh sách bằng chứng (session, rule vi phạm, verdict) để người duyệt sửa ngay tại chỗ, không phải đi tìm lại. Ưu điểm: không sửa 2 file lõi đã có test/hành vi ổn định, chi phí review thấp (1 file mới + 1 dòng thêm field). Nhược điểm: verdict chỉ phản ánh "an toàn/quy trình" (theo rule của trace-grader: forbidden-tool, retry-storm, edited-without-read…), KHÔNG phản ánh "câu trả lời có đúng về nghiệp vụ không" — chấp nhận, ghi rõ ở Non-goals, để ngỏ trục LLM-judge cho bản sau.
+**Phương án A — Correlator mỏng, tái dùng nguyên `skill-usage.py` + `trace-grader.py`, feed ledger riêng, tự soạn draft giàu ngữ cảnh (chọn).** Một script mới `harness/scripts/skill-evolve.py` KHÔNG viết lại logic chấm — nó chỉ: (1) quét transcript, tìm ranh giới mỗi lần gọi Skill-tool (tái dùng field `line_idx` mới thêm vào `skill-usage.py::collect()`); (2) cắt lát jsonl giữa hai ranh giới liền kề, gọi thẳng `trace_grader.runs_from_transcript()` + `grade_run()` (import qua `importlib.util`, đúng tiền lệ đã chạy sống trong repo) để lấy verdict tất định CHO ĐÚNG LẦN GỌI SKILL ĐÓ; (3) ghi verdict vào ledger cục bộ theo `skill_id`; (4) `--report` xếp hạng skill theo tỷ lệ `corrupt-success`/`fail` (chỉ tính khi đủ mẫu tối thiểu); (5) `--draft <skill_id>` khi vượt ngưỡng — khác `failure-flywheel --draft` (stub rỗng để người tự điền) ở chỗ stub này **tự nhúng sẵn** nội dung `SKILL.md` hiện tại + danh sách bằng chứng (session, rule vi phạm, verdict) để người duyệt sửa ngay tại chỗ, không phải đi tìm lại. Ưu điểm: không sửa 2 file lõi đã có test/hành vi ổn định, chi phí review thấp (1 file mới + 1 dòng thêm field). Nhược điểm: verdict tất định chỉ phản ánh "an toàn/quy trình" (theo rule của trace-grader: forbidden-tool, retry-storm, edited-without-read…), KHÔNG tự nó phản ánh "câu trả lời có đúng về nghiệp vụ không" — bù bằng FR-010 (quyết định bổ sung 2026-07-24, theo yêu cầu user): SAU KHI trace-grader đã lọc ra đúng skill DRAFT-ELIGIBLE (rẻ, tất định), agent đang gọi `/skill-evolve` tự đọc bằng chứng + SKILL.md hiện tại và ghi nhận định đúng-sai-nghiệp-vụ vào chính file stub — chỉ 1 lần/skill-eligible, không phải trên mọi invocation (khác chi phí của Phương án B bị bác dưới đây).
 
 **Phương án B — Gắn signal-detection kiểu SkillRL/orca-eval (LLM đọc digest, tự phân loại correction/friction) làm reward chính, thay vì rule tất định của trace-grader.** Bám sát tinh thần SkillRL hơn (SkillRL cũng dùng "validation failure" — một dạng phán đoán, không phải rule cứng). Bác: mỗi lần scan phải gọi một model để phân loại digest (chi phí token cho MỖI phiên, MỖI skill invocation) và không tất định (2 lần chạy có thể ra kết luận khác nhau) — vi phạm nguyên tắc `trace-grader` đã chọn cho tầng rule ("Never present a guessed threshold as verified" áp tương tự cho verdict: đừng giả một điểm số suy luận khi chưa cấu hình+verify). Giữ lại làm **trục LLM-judge tuỳ chọn, tắt mặc định** — đúng pattern `trace-grader.config.yaml`'s `judge_trajectory()` STUB, không phải bản build ngay.
 
@@ -81,6 +81,8 @@ Yêu cầu gốc, một câu: issue GH#84 ("skill improve loop") trỏ tới `ai
 
 **FR-009**: Toàn bộ ngưỡng số (`min_sample`, `fail_rate_threshold`) PHẢI sống trong ĐÚNG MỘT file `harness/skill-evolve.config.yaml`, `verified: false`, mỗi giá trị gắn `# ASSUMPTION` — khuôn `build-now-adapt-later`.
 
+**FR-010** (bổ sung 2026-07-24, theo yêu cầu user "cho llm đánh giá để tự cải thiện"): Hệ thống PHẢI cung cấp một companion skill `/skill-evolve` (frontmatter + When to use/Steps/Rules, khuôn `fdk.md`'s "distill một skill") mà bước cuối — CHỈ chạy SAU KHI `--draft <skill_id>` đã sinh file thật cho một skill `DRAFT-ELIGIBLE` — yêu cầu agent đang gọi skill đó tự đọc nguyên văn file stub (SKILL.md hiện tại + bảng bằng chứng đã nhúng) và ghi nhận định vào một mục MỚI `## Đánh giá LLM` ngay trong file đó: tỷ lệ lỗi có phải do NỘI DUNG SKILL.md (mô tả mơ hồ/thiếu bước/sai giả định) hay do NGỮ CẢNH SỬ DỤNG (gọi sai tình huống, ngoài "When to use"). BẬT MẶC ĐỊNH (khác `judge_trajectory()` của `trace-grader.config.yaml` — TẮT, chờ model cấu hình): judge chính là agent đang chạy phiên, KHÔNG gọi thêm API/model rời, không thêm dependency hay API key. Vẫn dừng ở `/propose` — nhận định LLM chỉ là một mục trong stub, không tự sửa `SKILL.md`.
+
 ## Success criteria (SC)
 
 **SC-001**: Cho một transcript có thật chứa ≥ 2 lần gọi Skill-tool khác nhau trong cùng session, `--scan` tạo ra đúng số dòng ledger bằng số lần gọi, mỗi dòng gắn đúng `skill_id` của lần gọi tương ứng (không lẫn verdict giữa hai skill).
@@ -93,11 +95,13 @@ Yêu cầu gốc, một câu: issue GH#84 ("skill improve loop") trỏ tới `ai
 
 **SC-005**: Ngắt giả lập lỗi ghi ledger (đổi quyền file thành read-only) — `--scan` vẫn chạy xong, không crash, không chặn phiên (fail-open thật).
 
+**SC-006**: Với một skill `DRAFT-ELIGIBLE` giả lập (fixture), chạy `/skill-evolve` hết bước `--draft` + bước judge (FR-010) — file draft có mục `## Đánh giá LLM` chứa nhận định cụ thể tham chiếu đúng bằng chứng đã nhúng (không phải khung rỗng/câu chung chung); trên một skill CHƯA eligible, bước judge KHÔNG chạy (không tốn token vô ích trên mẫu chưa đủ).
+
 ## Assumptions
 
 - `fail_rate_threshold` mặc định **40%** — **(default, find-out-later → cần đo trên ledger thật sau vài tuần, U-06)**: mượn đúng con số SkillRL dùng cho việc RL của họ, chưa có cơ sở riêng cho verdict trace-grader.
 - `min_sample` mặc định **5 lần gọi** — **(default)**: đủ để tránh 1 lần lỗi ngẫu nhiên kết luận cả skill tệ, chưa tối ưu bằng dữ liệu thật.
-- Phạm vi verdict v0.1 CHỈ dùng rule tất định của `trace-grader` (an toàn/quy trình) — **(default)**: không đo đúng-sai nghiệp vụ, ghi rõ ở Non-goals, không phải thiếu sót bị bỏ quên.
+- Verdict/ngưỡng eligibility (`--scan`/`--report`) CHỈ dùng rule tất định của `trace-grader` (an toàn/quy trình) — **(default)**: bước judge LLM (FR-010) là lớp BỔ SUNG chạy sau, ở đúng file stub đã eligible, không thay thế hay nới lỏng ngưỡng tất định này.
 - Ledger + state file đặt tại `harness/skill-evolve-ledger.jsonl` / `harness/skill-evolve.state.json` — **(default)**: theo đúng convention thư mục `harness/` của các ledger cục bộ khác (`failures.jsonl`, `events.jsonl`).
 - `--scan` mặc định quét session HIỆN TẠI, nhận `[N]` để mở rộng — **(default)**: khuôn `orca-eval`/`skill-usage.py` đã dùng, người dùng quen lệnh này.
 
@@ -109,10 +113,10 @@ Yêu cầu gốc, một câu: issue GH#84 ("skill improve loop") trỏ tới `ai
 - [ ] **T3 — `harness/skill-evolve.config.yaml` (`verified:false`, `min_sample`/`fail_rate_threshold` mỗi giá trị `# ASSUMPTION`) + `--report` leaderboard.** Verify: FR-006/009, SC-003.
 - [ ] **T4 — `--draft <skill_id>`: định vị `SKILL.md` nguồn (FR-008), nhúng nội dung + bằng chứng vào draft, dừng ở `/propose`.** Verify: FR-007, SC-004.
 - [ ] **T5 — Bundled self-test (khuôn `trace-grader.py --self-test`/`skill-usage.py::self_test()`): fixture transcript giả lập 2+ lần gọi skill, 1 clean 1 corrupt-success, assert ledger + report + idempotency.** Verify: toàn bộ SC.
+- [ ] **T6 — Companion skill `skills/skill-evolve/SKILL.md`: bước judge mặc định BẬT (agent tự đọc stub + ghi `## Đánh giá LLM`, chỉ chạy khi đã DRAFT-ELIGIBLE).** Verify: FR-010, SC-006.
 
 **v0.2 — SHOULD, hoãn có chủ đích:**
-- [ ] **T6 — Wiring vào `/lint` (đúng cách `skill-usage.py --weekly` đã được gọi định kỳ) để `--scan` chạy tự động, không cần user gõ tay.** Verify: (default, U-07) — chưa có SC riêng, mở khi T1-T5 đã chạy sống đủ lâu để tin ngưỡng.
-- [ ] **T7 — Trục agent-as-judge tuỳ chọn (đo đúng-sai nghiệp vụ, không chỉ an toàn/quy trình) — TẮT mặc định, khuôn `trace-grader.config.yaml`'s `judge_trajectory()` STUB.** Verify: (default) — mở khi có model+ngưỡng đã verify.
+- [ ] **T7 — Wiring vào `/lint` (đúng cách `skill-usage.py --weekly` đã được gọi định kỳ) để `--scan` chạy tự động, không cần user gõ tay.** Verify: (default, U-07) — chưa có SC riêng, mở khi T1-T6 đã chạy sống đủ lâu để tin ngưỡng.
 
 ## Agent Task Assignment
 
@@ -123,12 +127,12 @@ Yêu cầu gốc, một câu: issue GH#84 ("skill improve loop") trỏ tới `ai
 | T3 | Claude | Ngưỡng + report leaderboard là quyết định thiết kế (cách đếm, cách xếp hạng), không phải thao tác cơ học | pending |
 | T4 | Claude | Định vị SKILL.md nguồn + soạn draft giàu ngữ cảnh cần đọc đúng registry, tránh đoán sai đường dẫn (FR-008 cấm đoán) | pending |
 | T5 | OpenCode (rẻ) | Viết fixture test theo khuôn đã có sẵn ở `trace-grader.py --self-test`, thao tác lặp lại một pattern đã biết | pending |
-| T6 | OpenCode (rẻ) | Thêm một dòng gọi vào `/lint` theo đúng chỗ `skill-usage.py --weekly` đã được gọi | pending |
-| T7 | Claude | Thiết kế trục judge cần phán đoán, không phải thao tác cơ học | pending |
+| T6 | Claude | Viết instructions cho bước judge (khi nào chạy, đọc gì, ghi mục nào) cần phán đoán thiết kế, không phải thao tác cơ học | pending |
+| T7 | OpenCode (rẻ) | Thêm một dòng gọi vào `/lint` theo đúng chỗ `skill-usage.py --weekly` đã được gọi | pending |
 
 ## Self-review
 
-**Phủ yêu cầu.** Yêu cầu gốc "distill SkillRL → loop tự cải thiện skill" về đủ: cơ chế phân tầng skill-bank của SkillRL → khái niệm "verdict per-skill tích luỹ" (T1-T3); cơ chế "ngưỡng rớt → tự sinh candidate cải tiến" → T4 (draft giàu ngữ cảnh, khác `failure-flywheel`'s stub rỗng); khác biệt RL-thật vs markdown-skill → khai rõ ở Context + Non-goals, không giả vờ port nguyên khối.
+**Phủ yêu cầu.** Yêu cầu gốc "distill SkillRL → loop tự cải thiện skill" về đủ: cơ chế phân tầng skill-bank của SkillRL → khái niệm "verdict per-skill tích luỹ" (T1-T3); cơ chế "ngưỡng rớt → tự sinh candidate cải tiến" → T4 (draft giàu ngữ cảnh, khác `failure-flywheel`'s stub rỗng); yêu cầu bổ sung "cho llm đánh giá để tự cải thiện" (2026-07-24) → T6/FR-010 (judge mặc định bật, chỉ chạy khi đã DRAFT-ELIGIBLE, agent tự chấm không gọi API rời); khác biệt RL-thật vs markdown-skill → khai rõ ở Context + Non-goals, không giả vờ port nguyên khối.
 
 **Quét placeholder.** Rà toàn văn không còn mục nào bỏ ngỏ kiểu "việc này để sau tính" hay "xử lý cho hợp lý" — mọi mục Non-goals có lý do cụ thể, mọi Assumption có tag `(default)` hoặc `(default, find-out-later → U-NN)`.
 
