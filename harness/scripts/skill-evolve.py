@@ -244,7 +244,7 @@ def draft(root=ROOT, skill_id=None, date_str=None):
         "| Session | Verdict | Flags |", "|---|---|---|",
     ]
     for r in rows[-20:]:
-        flags_s = "; ".join(f.get("check", "?") for f in r.get("flags", [])) or "-"
+        flags_s = "; ".join(f.get("detail") or f.get("check", "?") for f in r.get("flags", [])) or "-"
         md.append(f"| {r['session']} | {r['verdict']} | {flags_s} |")
     md += [
         "", "## Origin",
@@ -257,13 +257,94 @@ def draft(root=ROOT, skill_id=None, date_str=None):
     return out, f"Đã soạn {out} — STOP, chờ /propose hoàn thiện + người duyệt."
 
 
+def self_test() -> int:
+    import json as _json
+    import tempfile
+
+    with tempfile.TemporaryDirectory() as d:
+        root = Path(d)
+        (root / "harness").mkdir()
+        (root / "harness" / f"{CONFIG_NAME}.config.yaml").write_text(
+            "verified: false\nmin_sample: 1\nfail_rate_threshold: 0.4\n", encoding="utf-8"
+        )
+        skills_dir = root / "skills" / "demo-bad"
+        skills_dir.mkdir(parents=True)
+        (skills_dir / "SKILL.md").write_text("---\nname: demo-bad\n---\n# demo-bad\n", encoding="utf-8")
+
+        proj = root / "proj"
+        proj.mkdir()
+        lines = [
+            {"type": "assistant", "timestamp": "2026-07-24T10:00:00.000Z", "sessionId": "st-se",
+             "message": {"content": [{"type": "tool_use", "id": "c1", "name": "Skill",
+                                       "input": {"skill": "demo-clean"}}]}},
+            {"type": "assistant", "timestamp": "2026-07-24T10:00:01.000Z", "sessionId": "st-se",
+             "message": {"content": [{"type": "tool_use", "id": "c2", "name": "Read",
+                                       "input": {"file_path": "x.py"}}]}},
+            {"type": "user", "timestamp": "2026-07-24T10:00:02.000Z", "sessionId": "st-se",
+             "message": {"content": [{"type": "tool_result", "tool_use_id": "c2",
+                                       "content": "ok", "is_error": False}]}},
+            {"type": "assistant", "timestamp": "2026-07-24T10:00:03.000Z", "sessionId": "st-se",
+             "message": {"content": [{"type": "tool_use", "id": "c3", "name": "Skill",
+                                       "input": {"skill": "demo-bad"}}]}},
+            {"type": "assistant", "timestamp": "2026-07-24T10:00:04.000Z", "sessionId": "st-se",
+             "message": {"content": [{"type": "tool_use", "id": "c4", "name": "force_push",
+                                       "input": {}}]}},
+            {"type": "user", "timestamp": "2026-07-24T10:00:05.000Z", "sessionId": "st-se",
+             "message": {"content": [{"type": "tool_result", "tool_use_id": "c4",
+                                       "content": "done", "is_error": False}]}},
+        ]
+        (proj / "st-se.jsonl").write_text(
+            "\n".join(_json.dumps(l) for l in lines) + "\n", encoding="utf-8"
+        )
+
+        su = skill_usage()
+        events = su.collect([proj])
+        by_file = {}
+        for e in events:
+            by_file.setdefault(e["file"], []).append(e)
+        tg = trace_grader()
+        cfg = tg.load_config(str(tg.DEFAULT_CONFIG_PATH))
+        written = 0
+        for fpath, evs in by_file.items():
+            evs.sort(key=lambda e: e["line_idx"])
+            all_lines = Path(fpath).read_text(encoding="utf-8").splitlines()
+            for i, e in enumerate(evs):
+                start = e["line_idx"]
+                end = evs[i + 1]["line_idx"] if i + 1 < len(evs) else len(all_lines)
+                runs = tg.runs_from_transcript(all_lines[start:end], task_hint=e["skill"])
+                if not runs:
+                    continue
+                verdict = tg.grade_run(runs[0], cfg)
+                rec = {"skill": e["skill"], "session": e["session"], "ts": e["ts"].isoformat(),
+                       "verdict": verdict["verdict"], "flags": verdict["flags"]}
+                bnal_metrics.append(root, LEDGER, rec, comment="self-test")
+                written += 1
+
+        rep = report(root)
+        out, _msg = draft(root, "demo-bad", date_str="2026-07-24")
+
+        ok = (
+            written == 2
+            and "demo-clean" in rep and "demo-bad" in rep
+            and "DRAFT-ELIGIBLE" in rep
+            and out is not None and out.exists()
+            and "force_push" in out.read_text(encoding="utf-8")
+        )
+
+    print("skill-evolve self-test:", "PASS" if ok else "FAIL")
+    return 0 if ok else 1
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="skill-evolve — per-skill quality ledger")
     ap.add_argument("--scan", nargs="?", const=1, type=int, metavar="N",
                     help="quét N session gần nhất (mặc định 1 = session hiện tại)")
     ap.add_argument("--report", action="store_true", help="leaderboard per-skill")
     ap.add_argument("--draft", metavar="SKILL_ID", help="soạn đề xuất sửa SKILL.md nếu eligible")
+    ap.add_argument("--self-test", action="store_true")
     args = ap.parse_args()
+    if args.self_test:
+        return self_test()
     if args.scan is not None:
         n = args.scan
         written = scan(ROOT, n)
@@ -276,7 +357,7 @@ def main() -> int:
         out, msg = draft(ROOT, args.draft)
         print(msg)
         return 0 if out else 1
-    ap.error("chưa có subcommand — dùng --scan/--report/--draft (thêm --self-test ở task sau)")
+    ap.error("chưa có subcommand — dùng --scan/--report/--draft/--self-test")
     return 2
 
 

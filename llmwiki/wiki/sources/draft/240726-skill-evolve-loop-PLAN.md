@@ -594,7 +594,7 @@ def draft(root=ROOT, skill_id=None, date_str=None):
         "| Session | Verdict | Flags |", "|---|---|---|",
     ]
     for r in rows[-20:]:
-        flags_s = "; ".join(f.get("check", "?") for f in r.get("flags", [])) or "-"
+        flags_s = "; ".join(f.get("detail") or f.get("check", "?") for f in r.get("flags", [])) or "-"
         md.append(f"| {r['session']} | {r['verdict']} | {flags_s} |")
     md += [
         "", "## Origin",
