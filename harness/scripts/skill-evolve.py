@@ -150,17 +150,65 @@ def scan(root=ROOT, n=1) -> int:
     return written
 
 
+def _leaderboard(root=ROOT) -> dict:
+    """{skill_id: {count, bad}} — bad = số verdict corrupt-success (verdict 'fail' cũng
+    tính nếu có, nhưng KHÔNG BAO GIỜ xảy ra với run xuất phát từ transcript — xem
+    trace-grader.py docstring runs_from_transcript: Run.ok bị ép True nên grade_run không
+    bao giờ trả 'fail' cho nguồn dữ liệu này; giữ cả hai nhánh để không vỡ nếu sau này
+    thêm nguồn khác (traces.json/audit) có Run.ok thật)."""
+    groups = {}
+    for r in bnal_metrics.read(root, LEDGER):
+        g = groups.setdefault(r["skill"], {"count": 0, "bad": 0})
+        g["count"] += 1
+        if r["verdict"] in ("corrupt-success", "fail"):
+            g["bad"] += 1
+    return groups
+
+
+def report(root=ROOT) -> str:
+    cfg = bnal_config.load(root, CONFIG_NAME, DEFAULT_CFG)
+    min_sample = int(cfg.get("min_sample", 5))
+    thr = float(cfg.get("fail_rate_threshold", 0.4))
+    groups = _leaderboard(root)
+    lines = [
+        f"skill-evolve — {len(groups)} skill(s) tracked",
+        f"min_sample={min_sample}  fail_rate_threshold={thr}  "
+        f"(adapter: harness/{CONFIG_NAME}.config.yaml, verified={cfg.get('verified')})",
+        "",
+    ]
+    if not groups:
+        lines.append("(chưa có dữ liệu — chạy --scan trước)")
+        return "\n".join(lines)
+    ordered = sorted(groups.items(), key=lambda kv: (-kv[1]["bad"], kv[0]))
+    eligible = []
+    for skill, g in ordered:
+        rate = g["bad"] / g["count"] if g["count"] else 0.0
+        elig = g["count"] >= min_sample and rate >= thr
+        if elig:
+            eligible.append(skill)
+        tag = "DRAFT-ELIGIBLE" if elig else "-"
+        lines.append(f"  {g['count']:>4}  fail_rate={rate:.2f}  {tag:<15}  {skill}")
+    lines.append("")
+    lines.append("Eligible for --draft:" if eligible else "Chưa skill nào đủ mẫu + vượt ngưỡng.")
+    lines += [f"  skill-evolve.py --draft {s}" for s in eligible]
+    return "\n".join(lines)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="skill-evolve — per-skill quality ledger")
     ap.add_argument("--scan", nargs="?", const=1, type=int, metavar="N",
                     help="quét N session gần nhất (mặc định 1 = session hiện tại)")
+    ap.add_argument("--report", action="store_true", help="leaderboard per-skill")
     args = ap.parse_args()
     if args.scan is not None:
         n = args.scan
         written = scan(ROOT, n)
         print(f"· scan {n} session → {written} verdict mới ghi vào harness/metrics/{LEDGER}")
         return 0
-    ap.error("chưa có subcommand — dùng --scan (thêm --report/--draft/--self-test ở task sau)")
+    if args.report:
+        print(report(ROOT))
+        return 0
+    ap.error("chưa có subcommand — dùng --scan/--report (thêm --draft/--self-test ở task sau)")
     return 2
 
 

@@ -1,0 +1,12 @@
+# harness/skill-evolve.config.yaml
+# Adapter DUY NHẤT của skill-evolve — /build-now-adapt-later. Engine (scan/report/draft)
+# built now, không phụ thuộc giá trị nào dưới đây ngoài 2 ngưỡng số này.
+
+verified: false          # ASSUMPTION — chưa hiệu chỉnh trên dữ liệu ledger thật, xem U-06.
+
+min_sample: 5             # ASSUMPTION — số lần gọi tối thiểu trước khi kết luận (tránh
+                          #   1 lần lỗi ngẫu nhiên kết luận cả skill tệ).
+
+fail_rate_threshold: 0.4  # ASSUMPTION — mượn nguyên số 40% SkillRL dùng cho RL của họ,
+                          #   chưa có cơ sở riêng cho verdict trace-grader (an toàn/quy trình,
+                          #   không đo đúng-sai nghiệp vụ — xem Non-goals SPEC).
