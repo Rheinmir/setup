@@ -132,6 +132,7 @@ LOOP_GROUPS = {
         [("dispatch", "🐳 điều phối"), ("eval", "📊 đánh giá"), ("ops", "🚀 vận hành & deploy")],
         {"orca-workflow": "dispatch", "orca-onboard": "dispatch", "orchestration": "dispatch",
          "orca-cli": "dispatch", "orca-dispatch-reference": "dispatch", "wayfinder": "dispatch",
+         "orca-handover": "dispatch",
          "council": "eval", "trace-grader": "eval", "orca-eval": "eval",
          "orca-sec-scans": "ops", "jenkins-agent-l3-deploy": "ops", "orca-issue": "ops"}),
     "utils": (
@@ -154,7 +155,7 @@ LOOP_GROUPS = {
          "check-approve": "utility", "computer-use": "utility", "find-skills": "utility",
          "full-output-enforcement": "utility", "join-project": "utility", "last30days": "utility",
          "raise-issue": "utility", "ovs-notes": "utility", "frontier-scan": "utility",
-         "uat-nonit-testcase": "utility"}),
+         "uat-nonit-testcase": "utility", "fable5": "utility", "i-have-adhd": "utility"}),
 }
 
 

@@ -568,57 +568,71 @@ User bật `/fable5` thách 2 luận điểm về SPEC `220722-artifact-provenan
 
 Vá vào SPEC: FR-005 thêm yêu cầu cứng — nhánh fallback PHẢI trả lời qua tool-use schema `{is_related, confidence, reasoning}`, không phải free-text. Đồng bộ vào Task T4 (Plan), `## Origin` (ghi lại toàn bộ vòng phản biện), và HTML companion (thêm đoạn desc T4). R7 vẫn xanh sau mọi sửa.
 
+## 2026-07-22 — concept mới — log-model + đơn giản hoá SPEC provenance-log
+
+User chỉ đúng chỗ over-engineering: SPEC `220722-artifact-provenance-eventlog.md` đang cố cho `correlate()` (FR-005) tự suy quan hệ NỘI DUNG "wiki nói về code nào" — trong khi `touches_targets` (`wiki-graph.py:88`, content-based, tất định, chạy sống 21→283 cạnh) đã giải xong câu hỏi đó, mạnh hơn nhiều. Bài học rộng hơn: repo có 5 cơ chế "ghi lại chuyện đã xảy ra" (`events.jsonl`/`scratch-log.jsonl`/`memory.jsonl`/`touches`/`provenance-log` đề xuất) — cố ép chúng phối hợp/hợp nhất làm hệ MỎNG MANH hơn, không bền hơn; mỗi cái giữ đúng phạm vi hẹp thì độc lập, dễ tin.
+
+Tạo `llmwiki/wiki/concepts/log-model.md` — bản đồ 1 file cho agent bất kỳ đọc một lần là định vị (bảng tra nhanh theo câu hỏi, sơ đồ ASCII độc lập, không mũi tên nối ngang). Thêm note 2 dòng vào docstring 4 file liên quan (`code-logger.py`, `scratch-log.py`, `mem-rank.py`, `wiki-graph.py::touches_targets`) trỏ về trang này. Sửa SPEC: FR-005 thu hẹp phạm vi `correlate()` chỉ còn "cùng phiên/mạch công việc theo thời gian" (không suy nội dung), thêm dòng Non-goals nói rõ ranh giới với `touches`. R7 vẫn xanh, `py_compile` sạch cả 4 file đã note.
+
+## 2026-07-23 — skill-maintenance — gộp trùng lặp web-clone vs extract-site
+
+Phát hiện `skills/extract-site/SKILL.md` Mode 3 và `skills/web-clone/SKILL.md` Mode B mô tả
+CÙNG một pipeline reconstruct (distill từ `ai-website-cloner-template`) ở 2 nơi độc lập — rủi ro
+drift khi sửa 1 bên quên bên kia. Gộp: `web-clone` là nhà canonical duy nhất cho pipeline này,
+`extract-site` Mode 3 rút còn 1 đoạn trỏ sang. Sync mirror + bản cài máy qua `sync-skill.sh`,
+cập nhật bảng skill `AGENT.md`/`CLAUDE.md` (2 dòng), regen `fdk/CAPABILITIES.md`. Giữ nguyên phần
+không trùng: extract-site vẫn là nhà cho design-token extraction (DESIGN.md/tokens.json/css),
+web-clone vẫn là nhà cho Mode A (snapshot offline byte-exact).
+
 <!-- log:auto:start -->
 
 ### 🤖 Log tự-động (code-logger, không do agent ghi)
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-23 10:55:40 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=83fd4da085f648de7630b06ebc0b7587fb14986e6bb4d7 |
-| 2026-07-23 10:55:45 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=e009ae522d80ba062aa8a5083cc8dce43683c024b3a882 |
-| 2026-07-23 10:55:49 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=e71b454e687319b0418dd0f5acac560be770dcc941292b |
-| 2026-07-23 10:55:53 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=62a2a952406e8107baf567777294fe5041eb00f6267894 |
-| 2026-07-23 10:55:57 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=8e6df12b37ec38cf0b05c7d0c32b1d696be4fb05deaa21 |
-| 2026-07-23 10:56:02 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=4920410830e6fcd316debbfb2f0a33a8aa1555974a6176 |
-| 2026-07-23 10:56:23 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=e1596bb276b067bb1fcb439d580f9b58ca514690551347 |
-| 2026-07-23 10:56:27 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=2a222792bca70497c636fae7d23d7d3e6cd91ad285f8dd |
-| 2026-07-23 10:56:31 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=77eddd1cc047f930c5888ad5ec2e9ad07061ef1a6ee38d |
-| 2026-07-23 10:56:35 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=26aa546857428cae5480c608380b18748afd15ca19b138 |
-| 2026-07-23 10:56:40 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=cf6ff6a644a039c162eea4ec1f35913dff98133572cb79 |
-| 2026-07-23 10:56:44 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=f302f39b06eb3157b41d55c3ff1c26bb3c1aa2dd4411cc |
-| 2026-07-23 10:56:48 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=a32cc9f04d4b74fa0a8f63651984bc90253966083d25ad |
-| 2026-07-23 10:57:07 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=317e4fcaa0909e1b8bbc037ff1ce1d4c09808c485e41fd |
-| 2026-07-23 10:57:11 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=18d66edf157d1502247e5217d74ad0b325e74cfbe37411 |
-| 2026-07-23 10:57:15 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=ab0deebe3e2f41bb85193937b26356ee0944c6d02ec27f |
-| 2026-07-23 10:57:21 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=4e04512033ba614fc0f6f24ac0a892d2ef059a82f1bede |
-| 2026-07-23 10:57:26 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=ef184a8fbf9c191284c4c718041ac07fdbb3b0d6597d00 |
-| 2026-07-23 10:57:30 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=31ce9e416e1fc9a90a1282f1a834c0d8bec4b8bfab46b3 |
-| 2026-07-23 10:57:51 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=ae7b0195ce96da9e4c2a1106548fadf914c7eceb38e5ed |
-| 2026-07-23 10:57:55 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=7aa81b72ab5d4db42728b6b5647a89de471d99f4fec5bc |
-| 2026-07-23 10:58:00 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=4a9274346ba379ec9574f0352f33db11e2b6a3366c20e7 |
-| 2026-07-23 10:58:04 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=0e9f1db6b30aad8d39eaddee7d91de5af076f4517db5a2 |
-| 2026-07-23 10:58:09 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=7e3a29606f107800065c47642ec05423440921e9dd9802 |
-| 2026-07-23 10:58:14 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=6ac5fed4 · actor=agent · prev=1715c1fe286a3c7b3ee053ea5adaabae3f7fe42a35f2f2 |
-| 2026-07-23 11:02:01 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=2 · human=['llmwiki/skills/utils/fable5.md', 'skills/fable5/references/content-tas |
-| 2026-07-23 11:02:01 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['skills/fable5/references/worked-examples.md'] · prev=9f984a97f64824978 |
-| 2026-07-23 11:27:24 | `file.write` | llmwiki/wiki/sources/draft/220722-artifact-provenance-eventlog.md · tool=Edit · session=765fc26c · actor=agent · prev=fa |
-| 2026-07-23 11:27:35 | `file.write` | llmwiki/wiki/sources/draft/220722-artifact-provenance-eventlog.md · tool=Edit · session=765fc26c · actor=agent · prev=95 |
-| 2026-07-23 11:27:56 | `file.write` | llmwiki/wiki/sources/draft/220722-artifact-provenance-eventlog.md · tool=Edit · session=765fc26c · actor=agent · prev=71 |
-| 2026-07-23 11:28:31 | `file.write` | llmwiki/html/220722-artifact-provenance-eventlog-seq.html · tool=Edit · session=765fc26c · actor=agent · prev=ab13cb9579 |
-| 2026-07-23 11:28:53 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=a38621c29d3e1825cffe2be4b528880f095616c8c |
-| 2026-07-23 11:32:02 | `file.write` | harness/scripts/fdk-gate.py · tool=Edit · session=6ac5fed4 · actor=agent · prev=fd444cfaec65c4b59dc73cf21673c697891aadcd |
-| 2026-07-23 11:35:52 | `file.write` | harness/scripts/harness-lint.py · tool=Edit · session=6ac5fed4 · actor=agent · prev=2d736d600ce95ebcf063e25651ab6f19c7e4 |
-| 2026-07-23 11:36:03 | `file.write` | harness/scripts/harness-lint.py · tool=Edit · session=6ac5fed4 · actor=agent · prev=caef318ba84f913755f3c1fed591e8f03e29 |
-| 2026-07-23 11:36:14 | `file.write` | harness/scripts/harness-lint.py · tool=Edit · session=6ac5fed4 · actor=agent · prev=b5aa5550d2d7e11a939e631fbbf4b1c8583f |
-| 2026-07-23 11:36:22 | `file.write` | harness/scripts/harness-lint.py · tool=Edit · session=6ac5fed4 · actor=agent · prev=517d281c0ed3abdbdd73f5b65f8903dc3bc1 |
-| 2026-07-23 11:39:34 | `file.write` | harness/scripts/harness-lint.py · tool=Edit · session=6ac5fed4 · actor=agent · prev=ddfd27a31a1b31d0b1cc4d7003860b5a278c |
-| 2026-07-23 11:39:48 | `file.write` | harness/scripts/harness-lint.py · tool=Edit · session=6ac5fed4 · actor=agent · prev=1e981f5b5b4ff83e5b3a33f8bbaefcb595d6 |
-| 2026-07-23 11:40:04 | `file.write` | harness/scripts/harness-lint.py · tool=Edit · session=6ac5fed4 · actor=agent · prev=adaf0cebedce769549d6d0cce0f36c8e13d8 |
+| 2026-07-23 11:44:47 | `file.write` | llmwiki/wiki/sources/draft/220722-artifact-provenance-eventlog.md · tool=Edit · session=765fc26c · actor=agent · prev=30 |
+| 2026-07-23 11:44:58 | `file.write` | llmwiki/wiki/sources/draft/220722-artifact-provenance-eventlog.md · tool=Edit · session=765fc26c · actor=agent · prev=86 |
+| 2026-07-23 11:45:20 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=765fc26c · actor=agent · prev=5e5b1f62627790ecff1409afd5c87796039bb1afba24d4 |
+| 2026-07-23 11:45:38 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=2 · human=['harness/scripts/scratch-log.py', 'harness/scripts/mem-rank.py'] · prev |
+| 2026-07-23 11:45:38 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=2 · human=['harness/scripts/code-logger.py', 'llmwiki/wiki/log.md'] · prev=7336a28 |
+| 2026-07-23 11:45:53 | `file.write` | fdk/tools/medic.py · tool=Edit · session=6ac5fed4 · actor=agent · prev=e54d73f6d1d8f9b9ef7ac2af1e08eaa7ca947ba2f54ca3283 |
+| 2026-07-23 11:46:00 | `file.write` | fdk/tools/medic.py · tool=Edit · session=6ac5fed4 · actor=agent · prev=a19f3ae9c941f3e2fb33d9761772f28578e82d9dba1446413 |
+| 2026-07-23 11:46:03 | `file.write` | fdk/tools/medic.py · tool=Edit · session=6ac5fed4 · actor=agent · prev=ebc971cb4f7f4742688149d50ad6405bb55b8541c56df7b58 |
+| 2026-07-23 15:06:31 | `file.write` | skills/extract-site/SKILL.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=ab399d44b300041435ff47ee5ac2f486243b745 |
+| 2026-07-23 15:06:54 | `file.write` | llmwiki/AGENT.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=e3865df2081035061b74282ebeb622da0814b5271262a9b0dd1 |
+| 2026-07-23 15:07:01 | `file.write` | llmwiki/AGENT.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=354acfcbd451fa0985affe8cde9f2ac72601db2a980422966df |
+| 2026-07-23 15:07:04 | `file.write` | llmwiki/CLAUDE.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=3a94cd394f8f66e0d486fce6a9583b81da114a5eee45677f4c |
+| 2026-07-23 15:07:08 | `file.write` | llmwiki/CLAUDE.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=f3de1b2fd59c2c148f6ac8ff7e0ea706e74d3b80019d660ea9 |
+| 2026-07-23 15:08:27 | `file.write` | llmwiki/wiki/sources/draft/230726-webclone-extractsite-dedup.md · tool=Write · session=3c7d0f9c · actor=agent · prev=ab2 |
+| 2026-07-23 15:08:35 | `file.write` | llmwiki/wiki/sources/draft/230726-webclone-extractsite-dedup.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=3e4b |
+| 2026-07-23 15:08:49 | `file.write` | llmwiki/wiki/log.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=7f83d46c440fa1222017ce5732a23aa5778ec7a439d44343 |
+| 2026-07-23 15:08:55 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=ce94d41fe8c27a58d64cace400e91cc98b89b8eec742db |
+| 2026-07-23 15:09:43 | `file.write` | llmwiki/html/230726-webclone-extractsite-dedup.html · tool=Write · session=3c7d0f9c · actor=agent · prev=00de6a56d6b16cf |
+| 2026-07-23 15:09:48 | `file.write` | llmwiki/html/230726-webclone-extractsite-dedup.html · tool=Edit · session=3c7d0f9c · actor=agent · prev=56843f725e8a1a33 |
+| 2026-07-23 15:18:08 | `file.write` | llmwiki/html/230726-webclone-extractsite-dedup.html · tool=Edit · session=3c7d0f9c · actor=agent · prev=b5f6ee8ce32d2d4c |
+| 2026-07-23 15:18:32 | `file.write` | llmwiki/html/230726-webclone-extractsite-dedup.html · tool=Edit · session=3c7d0f9c · actor=agent · prev=b84212ebe7cfe33e |
+| 2026-07-23 15:18:43 | `file.write` | llmwiki/html/230726-webclone-extractsite-dedup.html · tool=Edit · session=3c7d0f9c · actor=agent · prev=47b51557ff8275c0 |
+| 2026-07-23 16:37:49 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=b9e01839319ff7fd79365aae198b04a0f860e53de217ca |
+| 2026-07-23 16:47:17 | `file.write` | llmwiki/wiki/sources/adr/ADR-003-skill-as-single-source-of-truth.md · tool=Write · session=3c7d0f9c · actor=agent · prev |
+| 2026-07-23 16:47:34 | `file.write` | llmwiki/wiki/sources/adr/ADR-004-framework-dev-context-opt-in.md · tool=Write · session=3c7d0f9c · actor=agent · prev=c7 |
+| 2026-07-23 16:47:49 | `file.write` | llmwiki/wiki/sources/adr/ADR-005-logger-and-capabilities-travel-downstream.md · tool=Write · session=3c7d0f9c · actor=ag |
+| 2026-07-23 16:48:04 | `file.write` | llmwiki/wiki/sources/adr/ADR-009-session-orientation-autoindex-forcequery.md · tool=Write · session=3c7d0f9c · actor=age |
+| 2026-07-23 16:48:18 | `file.write` | llmwiki/wiki/sources/adr/ADR-015-boris-archetypes-into-template.md · tool=Write · session=3c7d0f9c · actor=agent · prev= |
+| 2026-07-23 16:48:30 | `file.write` | llmwiki/wiki/sources/adr/ADR-016-no-ai-attribution-in-commits.md · tool=Write · session=3c7d0f9c · actor=agent · prev=73 |
+| 2026-07-23 16:48:46 | `file.write` | llmwiki/wiki/sources/adr/ADR-017-global-shared-engine-repo-data-travel.md · tool=Write · session=3c7d0f9c · actor=agent  |
+| 2026-07-23 16:49:22 | `file.write` | llmwiki/wiki/sources/draft/190726-graph-lessons-grapuco.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=d53470882 |
+| 2026-07-23 16:49:27 | `file.write` | llmwiki/wiki/sources/draft/190726-graph-lessons-grapuco.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=e582d381c |
+| 2026-07-23 16:51:24 | `file.write` | llmwiki/wiki/sources/draft/190726-graph-lessons-grapuco.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=bc6daf67f |
+| 2026-07-23 16:51:29 | `file.write` | llmwiki/wiki/sources/draft/190726-graph-lessons-grapuco.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=85cb37509 |
+| 2026-07-23 16:51:34 | `file.write` | llmwiki/wiki/sources/draft/200726-orchestration-loop-closure.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=f6db |
+| 2026-07-23 16:51:38 | `file.write` | llmwiki/wiki/sources/draft/200726-orchestration-loop-closure.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=9ba9 |
+| 2026-07-23 16:51:47 | `file.write` | llmwiki/wiki/sources/draft/190726-travel-gap-forcing-functions.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=3a |
+| 2026-07-23 16:55:18 | `file.write` | harness/scripts/fdk-gate.py · tool=Edit · session=3c7d0f9c · actor=agent · prev=b64437e5205ddfc9c58a5dcd81c1f08fc928575a |
+| 2026-07-23 16:58:07 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=3c7d0f9c · actor=agent · prev=84271e8cd486d2fdaa251f4d86b5bd6040 |
+| 2026-07-23 16:58:18 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=3c7d0f9c · actor=agent · prev=7d1fd67db3325b8bc3ebcdd015216cbad1 |
 
 <!-- log:auto:end -->
 
-## 2026-07-22 — concept mới — log-model + đơn giản hoá SPEC provenance-log
+## 2026-07-23 — propose — provenance-log: chốt lý do KHÔNG gộp vào scratch-log.jsonl
 
-User chỉ đúng chỗ over-engineering: SPEC `220722-artifact-provenance-eventlog.md` đang cố cho `correlate()` (FR-005) tự suy quan hệ NỘI DUNG "wiki nói về code nào" — trong khi `touches_targets` (`wiki-graph.py:88`, content-based, tất định, chạy sống 21→283 cạnh) đã giải xong câu hỏi đó, mạnh hơn nhiều. Bài học rộng hơn: repo có 5 cơ chế "ghi lại chuyện đã xảy ra" (`events.jsonl`/`scratch-log.jsonl`/`memory.jsonl`/`touches`/`provenance-log` đề xuất) — cố ép chúng phối hợp/hợp nhất làm hệ MỎNG MANH hơn, không bền hơn; mỗi cái giữ đúng phạm vi hẹp thì độc lập, dễ tin.
-
-Tạo `llmwiki/wiki/concepts/log-model.md` — bản đồ 1 file cho agent bất kỳ đọc một lần là định vị (bảng tra nhanh theo câu hỏi, sơ đồ ASCII độc lập, không mũi tên nối ngang). Thêm note 2 dòng vào docstring 4 file liên quan (`code-logger.py`, `scratch-log.py`, `mem-rank.py`, `wiki-graph.py::touches_targets`) trỏ về trang này. Sửa SPEC: FR-005 thu hẹp phạm vi `correlate()` chỉ còn "cùng phiên/mạch công việc theo thời gian" (không suy nội dung), thêm dòng Non-goals nói rõ ranh giới với `touches`. R7 vẫn xanh, `py_compile` sạch cả 4 file đã note.
+User hỏi tiếp "5 log này có bỏ được cái nào không, hay mỗi cái giải bài toán riêng" — trả lời bằng bảng ánh xạ 5 log → 5 bài toán cụ thể (đều có ví dụ thật đã xảy ra trong phiên), rồi tự Attack chính đề xuất `provenance-log` mới: có thể gộp vào `scratch-log.jsonl` (đã git-tracked sẵn) thay vì đẻ file mới không? Kết luận: KHÔNG gộp, nhưng lý do đúng không phải "khác chủ đề" (yếu) mà là hai HỢP ĐỒNG TIN CẬY khác nhau — `scratch-log` optional/curated ("why OPTIONAL — không ép agent", tự khai trong chính docstring), `provenance-log` cần mandatory/automatic (FR-006 hứa lịch sử ĐẦY ĐỦ, thiếu 1 dòng phải là bug chứ không phải lựa chọn). Gộp chung sẽ tái tạo đúng loại nhầm lẫn đã tốn công sửa trong phiên (UNAVAILABLE 2 nguyên nhân bị lẫn ở decision-liveness.py, mirror-drift ở /lint 8e). Đã sửa vào Non-goals của SPEC, R7 vẫn xanh.

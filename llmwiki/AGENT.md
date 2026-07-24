@@ -80,7 +80,7 @@ Karpathy ở trên là "vì sao"; đây là "làm sao". (Chưng cất từ ponyt
 | `md-to-html` | User wants to render a professional HTML report | `skills/utils/md-to-html.md` | utils |
 | `docs-site-macos` | User wants macOS-style documentation site | `skills/utils/docs-site-macos.md` | utils |
 | `web-crawl` | Crawl/scrape a URL or site into LLM-ready markdown | `skills/utils/web-crawl.md` | utils |
-| `web-clone` | Clone a page's exact UI as one self-contained offline HTML | `skills/utils/web-clone.md` | utils |
+| `web-clone` | Clone a website — snapshot (1-file offline copy) or reconstruct (rebuild as editable Next.js code, canonical home for the full-clone pipeline) | `skills/utils/web-clone.md` | utils |
 | `fdk` | Đang phát triển CHÍNH framework (skill/rule/validator/hook/wiki) | `skills/utils/fdk.md` | utils |
 | `fdk-uat` | UAT thật một bản sắp phát hành — dựng dự án TRỐNG, cài bằng curl từ remote (đường người-mới), kiểm năng lực MỚI có tới tay không; không pass thì GỠ commit khỏi remote | `skills/utils/fdk-uat.md` | utils |
 | `medic` | Cổng sức khoẻ tổng — 1 lệnh chứng minh hệ còn khoẻ (luật cắn/drift/docs/code/eval); trước commit, sau pull, nghi rule không chặn | `skills/utils/medic.md` | utils |
@@ -110,7 +110,8 @@ Karpathy ở trên là "vì sao"; đây là "làm sao". (Chưng cất từ ponyt
 | `cursor-animated-sites` | Build an interactive "cursor-animated walkthrough" page on top of the… | `skills/utils/cursor-animated-sites.md` | utils |
 | `design-taste-frontend` | Anti-slop frontend skill for landing pages, portfolios, and redesigns. | `skills/utils/design-taste-frontend.md` | utils |
 | `design-taste-frontend-v1` | The original v1 taste-skill, preserved for projects depending on its exact… | `skills/utils/design-taste-frontend-v1.md` | utils |
-| `extract-site` | Extract and convert a website or docs site into clean markdown | `skills/utils/extract-site.md` | utils |
+| `extract-site` | Extract and convert a website or docs site into clean markdown (full-code clone → see `web-clone`) | `skills/utils/extract-site.md` | utils |
+| `fable5` | Reasoning protocol distilled from Claude Fable 5 — Floor check, multi-hypothesis diagnosis, adversarial self-review, Constraint Loop. Persists for the session like `/caveman` once invoked | `skills/utils/fable5.md` | utils |
 | `find-skills` | Helps users discover and install agent skills when they ask questions like… | `skills/utils/find-skills.md` | utils |
 | `full-output-enforcement` | Overrides default LLM truncation behavior. | `skills/utils/full-output-enforcement.md` | utils |
 | `gpt-taste` | Elite UX/UI & Advanced GSAP Motion Engineer. | `skills/utils/gpt-taste.md` | utils |

@@ -77,7 +77,7 @@ Kiểm công bằng cho Orca: đã soi cả `terminal list` (12 trường: handl
 
 User chốt **HÒA TAN** (lấy ý tưởng), không **KÉO NGOÀI** (cài herdr làm hạ tầng): lấy insight "quan sát thay vì tin worker tự khai" nhưng cài bằng đồ Orca sẵn có. Tránh thêm 233k LOC hạ tầng và ràng buộc AGPL-3.0 nếu sau này phát hành. Xem [[adapt-modes]].
 
-**Đã có, KHÔNG dẫm (pre-flight #3):** `skills/orca-workflow` (propose→gate→dispatch, cổng HITL/AFK, watchdog) · `skills/orca-dispatch-reference` (SoT syntax) · `harness/scripts/dispatch-verify.py` (đóng vòng *proposal ↔ đĩa* — vòng KHÁC) · `harness/council.personas.yaml` (6 archetype) · [[ADR-015-boris-archetypes-into-template]] · [[ADR-003-skill-as-single-source-of-truth]] · [[ADR-004-framework-dev-context-opt-in]].
+**Đã có, KHÔNG dẫm (pre-flight #3):** `skills/orca-workflow` (propose→gate→dispatch, cổng HITL/AFK, watchdog) · `skills/orca-dispatch-reference` (SoT syntax) · `harness/scripts/dispatch-verify.py` (đóng vòng *proposal ↔ đĩa* — vòng KHÁC) · `harness/council.personas.yaml` (6 archetype) · ADR-015-boris-archetypes-into-template · ADR-003-skill-as-single-source-of-truth · ADR-004-framework-dev-context-opt-in (all 3 ở `fdk/wiki/sources/adr/`).
 
 ## Global constraints
 
@@ -85,7 +85,7 @@ User chốt **HÒA TAN** (lấy ý tưởng), không **KÉO NGOÀI** (cài herdr
 - **Mọi file wiki phải có `## Origin`**; chỉ nằm trong `concepts/ entities/ sources/ draft/ architecture/ tours/` (R5); **luôn cập nhật `index.md` + append `log.md`**.
 - **R3 index-sync khớp ĐĨA** — thừa hay thiếu dòng index đều đỏ.
 - **Skill canonical `skills/` ↔ mirror `llmwiki/skills/` byte-identical**, qua `sync-skills`; `medic` gác parity.
-- **Commit CẤM mọi AI-attribution** — R15, [[ADR-016-no-ai-attribution-in-commits]].
+- **Commit CẤM mọi AI-attribution** — R15, ADR-016-no-ai-attribution-in-commits (`fdk/wiki/sources/adr/ADR-016-no-ai-attribution-in-commits.md`).
 - **`medic --ci` xanh trước push**; trước push chạy trọn step `repo health` của `.github/workflows/harness.yml` tại local (L2 ≠ L4).
 - **`orca orchestration` là RPC tới runtime đang chạy** — runtime tắt là trạng thái BÌNH THƯỜNG, không phải lỗi.
 - **herdr là AGPL-3.0** — không sao chép code herdr vào repo này; chỉ lấy ý tưởng (HÒA TAN).

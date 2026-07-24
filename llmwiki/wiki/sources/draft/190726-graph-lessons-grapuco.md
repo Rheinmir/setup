@@ -22,12 +22,12 @@ task: T-260719-02
 
 Đã force-query wiki trước khi draft. Các trang chi phối proposal này:
 
-- **[[query-retrieval-eval]]** (`fdk/wiki/concepts/query-retrieval-eval.md`) — trang quan trọng nhất ở đây. Ta **đã có sẵn bộ đo truy hồi**: `harness/scripts/query-log.py` (telemetry JSONL mỗi query), `harness/scripts/retrieval-eval.py` (hit@k + token, so baseline `harness/metrics/retrieval-baseline.json`, `--check` exit 2 khi tụt), goldens ở `llmwiki/wiki/sources/evals/retrieval/`. Nâng L0→L1 giữ hit@5 7/10 mà token giảm 272k→95k (−65%), và eval đã **chặn 3 lần thử L1 tồi**. Nghĩa là mọi task "đo" trong proposal này **không phải xây mới**, chỉ thêm golden/nhánh đo vào bộ đã chạy.
-- **[[ADR-004-framework-dev-context-opt-in]]** — beneficiary phải khai rõ; framework-dev context là opt-in. Proposal này là phiên `/fdk` (đánh giá chính framework) nên dùng đúng ngoại lệ đó, nhưng SC vẫn phải đo trên dự án đích.
-- **[[ADR-009-session-orientation-autoindex-forcequery]]** — force-query là nơi `query` được gọi; telemetry đo chính đường đó. Đây là lý do vá `/query` (T1) chạm được tới hầu hết lượt đọc wiki.
-- **[[ADR-015-boris-archetypes-into-template]]** + `harness/archetypes.config.yaml` — 6 persona (`llmwiki/personas/*.md`) là posture dispatch; file config còn `verified: false` (routing CLI/model theo archetype là best-guess chưa đo).
+- **[[010726-query-retrieval-eval]]** (`fdk/wiki/concepts/query-retrieval-eval.md`) — trang quan trọng nhất ở đây. Ta **đã có sẵn bộ đo truy hồi**: `harness/scripts/query-log.py` (telemetry JSONL mỗi query), `harness/scripts/retrieval-eval.py` (hit@k + token, so baseline `harness/metrics/retrieval-baseline.json`, `--check` exit 2 khi tụt), goldens ở `llmwiki/wiki/sources/evals/retrieval/`. Nâng L0→L1 giữ hit@5 7/10 mà token giảm 272k→95k (−65%), và eval đã **chặn 3 lần thử L1 tồi**. Nghĩa là mọi task "đo" trong proposal này **không phải xây mới**, chỉ thêm golden/nhánh đo vào bộ đã chạy.
+- **ADR-004-framework-dev-context-opt-in** (`fdk/wiki/sources/adr/ADR-004-framework-dev-context-opt-in.md`) — beneficiary phải khai rõ; framework-dev context là opt-in. Proposal này là phiên `/fdk` (đánh giá chính framework) nên dùng đúng ngoại lệ đó, nhưng SC vẫn phải đo trên dự án đích.
+- **ADR-009-session-orientation-autoindex-forcequery** (`fdk/wiki/sources/adr/ADR-009-session-orientation-autoindex-forcequery.md`) — force-query là nơi `query` được gọi; telemetry đo chính đường đó. Đây là lý do vá `/query` (T1) chạm được tới hầu hết lượt đọc wiki.
+- **ADR-015-boris-archetypes-into-template** (`fdk/wiki/sources/adr/ADR-015-boris-archetypes-into-template.md`) + `harness/archetypes.config.yaml` — 6 persona (`llmwiki/personas/*.md`) là posture dispatch; file config còn `verified: false` (routing CLI/model theo archetype là best-guess chưa đo).
 - **[[wiki-core-relations]]** — quan hệ lõi của wiki, nền cho `wiki-graph.py`.
-- **[[150726-unknown-ledger]]** — cơ chế ghi nợ `U-NN`, hiện ở `/lint`, không chặn cổng.
+- **150726-unknown-ledger** (archived) — cơ chế ghi nợ `U-NN`, hiện ở `/lint`, không chặn cổng.
 - Mã nguồn đã đọc: `harness/scripts/wiki-sync.py` (neo `.last-sync.json`, cổng no-op tất định 0 token, exit 3 = drift), `harness/scripts/wiki-graph.py` (đồ thị in-memory từ `[[wikilink]]`, **không embedding**), `harness/scripts/archetype.py` (chỉ resolve/dispatch — **không có handoff**), `skills/council/SKILL.md` (đã hỗ trợ ghế persona: `roster --personas …`, thư viện 18 persona).
 - Nguồn ngoài: `llmwiki/wiki/draft/grapuco-discuss.md` — thread cộng đồng, 9 người phản biện.
 
@@ -77,10 +77,10 @@ Chép nguyên văn giá trị thật từ wiki/ADR/policy — mọi task ngầm 
 - **Mọi file wiki phải có `## Origin`** — nguồn luôn truy được.
 - **Luôn cập nhật `llmwiki/wiki/index.md`** khi thêm/bớt file wiki; **luôn append `llmwiki/wiki/log.md`** sau mỗi thao tác.
 - **File wiki không được nằm ở `wiki/` root** — chỉ `concepts/`, `entities/`, `sources/`, `draft/`, `architecture/`, `tours/` (R5 validator gác).
-- **`retrieval-eval` từ chối chạy khi >30 golden** (hard-cap, exit ≠ 0) — chống mạ vàng eval, [[query-retrieval-eval]].
+- **`retrieval-eval` từ chối chạy khi >30 golden** (hard-cap, exit ≠ 0) — chống mạ vàng eval, [[010726-query-retrieval-eval]].
 - **Hook fail-open; CLI/CI thì lỗi bất ngờ phải nổi (exit ≠ 0)** — quy ước đã ghi ngay trong docstring `wiki-sync.py`.
 - **Skill canonical `skills/` ↔ mirror `llmwiki/skills/` phải byte-identical**, đồng bộ qua `sync-skills`; `medic` gác parity.
-- **Commit CẤM mọi AI-attribution** (`Co-Authored-By`, "Generated with…") — R15 chặn cứng, [[ADR-016-no-ai-attribution-in-commits]].
+- **Commit CẤM mọi AI-attribution** (`Co-Authored-By`, "Generated with…") — R15 chặn cứng, ADR-016-no-ai-attribution-in-commits (`fdk/wiki/sources/adr/ADR-016-no-ai-attribution-in-commits.md`).
 - **`medic --ci` phải xanh trước push**; commit-msg hook R13 có bug đệ quy đã biết → chạy medic thủ công rồi `commit --no-verify` khi cần.
 - **Beneficiary khai rõ ở mọi kết luận** (ADR-004): proposal này là phiên `/fdk` nên được phép đánh giá chính framework, nhưng **SC phải đo trên dự án đích**.
 
@@ -204,7 +204,7 @@ Dùng cho bước render `.html` (một sơ đồ mỗi task, tag từng bước
 
 **3. Nhất quán tên-kiểu.** Rà các tên xuất hiện nhiều lần: `stale.json` (không viết lẫn "stale file"), cờ `code-drift` (không viết lẫn "cờ stale"), `retrieval-eval` (không viết lẫn "wikieval" — hai thứ khác nhau, proposal này chỉ dùng `retrieval-eval`), `wiki-sync --check`, `code-graph`, `/raise-issue`, `council roster`. Đã thống nhất `harness/metrics/` là nơi ghi số cho cả T2 và T3.
 
-**Một chỉnh sửa tại chỗ trong lúc self-review:** bản nháp đầu giao T2 cho `wikieval`; đã sửa thành `retrieval-eval` vì [[query-retrieval-eval]] cho thấy đó mới là bộ đo hit@k + token có baseline, còn `wikieval` là eval hồi quy từ goldens wiki — dùng nhầm sẽ đo sai thứ.
+**Một chỉnh sửa tại chỗ trong lúc self-review:** bản nháp đầu giao T2 cho `wikieval`; đã sửa thành `retrieval-eval` vì [[010726-query-retrieval-eval]] cho thấy đó mới là bộ đo hit@k + token có baseline, còn `wikieval` là eval hồi quy từ goldens wiki — dùng nhầm sẽ đo sai thứ.
 
 ## Kết quả thi hành (2026-07-20)
 

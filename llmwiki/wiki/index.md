@@ -162,3 +162,9 @@
 | [210721-decision-anchoring](sources/draft/210721-decision-anchoring.md) | draft | Neo quyết định vào symbol code (không chỉ file), 4 trạng thái LIVE/STALE/ORPHAN/UNAVAILABLE suy từ code-graph — mở rộng mechanisms.yaml xuống mức symbol |
 | [210721-decision-anchoring-PLAN](sources/draft/210721-decision-anchoring-PLAN.md) | draft | Plan thi hành decision-anchoring T1-T8: engine decision-liveness.py đọc trực tiếp index.db (không qua MCP), checksum-freshness thay is_file(), test trên sandbox |
 | [220722-artifact-provenance-eventlog](sources/draft/220722-artifact-provenance-eventlog.md) | draft | Thiết kế event log Kafka-pattern git-native cho artifact-provenance: sổ sự kiện đa-writer merge qua git branch, chọn CAP=AP, tương quan code↔docs |
+| [230726-webclone-extractsite-dedup](sources/draft/230726-webclone-extractsite-dedup.md) | draft | Gộp trùng lặp pipeline reconstruct viết ở cả extract-site Mode 3 và web-clone Mode B — web-clone là canonical, extract-site trỏ sang |
+| [210721-decision-anchoring-adoption-metric](sources/draft/210721-decision-anchoring-adoption-metric.md) | issue | Decision-anchoring chưa có metric adoption, chưa có kill-switch nếu không ai dùng — issue mở, assignee grower |
+| [unknown-context-hygiene](draft/unknown/unknown-context-hygiene.md) | unknown-ledger | Sổ nợ unknown cho context-hygiene-budget: U-02 trần code-graph mặc định (open), U-03 so-diff theo mục hay nguyên file (resolved) |
+| [210726-session-provenance](sources/210726-session-provenance.md) | source | Auto-distill scratch-log phiên 765fc26c ngày 21/07 |
+| [220726-session-provenance](sources/220726-session-provenance.md) | source | Auto-distill scratch-log phiên 501779e7 ngày 22/07 |
+| [230726-session-provenance](sources/230726-session-provenance.md) | source | Auto-distill scratch-log phiên 3c7d0f9c ngày 23/07 |

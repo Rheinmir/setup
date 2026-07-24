@@ -19,8 +19,8 @@ Sau UAT thật 18/07 phát hiện dự án cũ chạy curl update xong mà agent
 
 ## Context
 
-- [[ADR-017-global-shared-engine-repo-data-travel]] — engine 1 bản ở `~/.claude/harness/`, repo chỉ giữ data + stamp (council-036/038, GH#63 v4). Quyết định ĐÚNG, giữ nguyên; lỗ nằm ở chỗ **văn bản 34 skill chưa dời theo kiến trúc**.
-- [[ADR-005-logger-and-capabilities-travel-downstream]] — "không vào CAPABILITIES.md → user vĩnh viễn không biết năng lực đó tồn tại"; đã áp cho skills, **chưa áp cho engine**.
+- ADR-017-global-shared-engine-repo-data-travel (`fdk/wiki/sources/adr/ADR-017-global-shared-engine-repo-data-travel.md`) — engine 1 bản ở `~/.claude/harness/`, repo chỉ giữ data + stamp (council-036/038, GH#63 v4). Quyết định ĐÚNG, giữ nguyên; lỗ nằm ở chỗ **văn bản 34 skill chưa dời theo kiến trúc**.
+- ADR-005-logger-and-capabilities-travel-downstream (`fdk/wiki/sources/adr/ADR-005-logger-and-capabilities-travel-downstream.md`) — "không vào CAPABILITIES.md → user vĩnh viễn không biết năng lực đó tồn tại"; đã áp cho skills, **chưa áp cho engine**.
 - `harness/travel-policy.yaml` v4 — khai 3 tầng nhưng **thiếu dòng `llmwiki/personas/`** dù `install-harness.sh --global` (dòng 139) có copy → drift chính-sách↔code.
 - `harness/scripts/capability-stamp.py` — forcing function "đổi surface phải bump version" ĐÃ wired vào fdk-gate + medic; surface hiện chỉ đếm skills + rules + `harness/scripts/` + hooks.
 - Bằng chứng UAT tay 18/07 (`scratchpad/uat-update-path/old-proj/`): bootstrap chạy sạch, archetype resolve persona từ global OK, **nhưng** lệnh y nguyên trong skill (`python3 harness/scripts/archetype.py`) chết `No such file or directory`; 34/69 skill global dính path repo-relative, chỉ 3 skill có fallback; CAPABILITIES.md downstream 0 dòng engine.
