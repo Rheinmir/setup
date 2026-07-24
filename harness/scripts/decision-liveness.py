@@ -32,6 +32,7 @@ import shutil
 import sqlite3
 import subprocess
 import sys
+from datetime import datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -50,6 +51,38 @@ def _load_dep_health():
 
 
 _dh = _load_dep_health()
+
+
+def _load_provenance_log():
+    spec = importlib.util.spec_from_file_location(
+        "provenance_log", ROOT / "harness/scripts/provenance-log.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def bump_confirmed(mech_id: str, date_str: str, root: Path = None) -> bool:
+    """Sửa TRỰC TIẾP dòng 'confirmed:' của đúng entry mech_id trong mechanisms.yaml (text-edit,
+    giữ nguyên mọi dòng khác — KHÔNG parse/serialize lại cả YAML, tránh phá format comment).
+    Phát 1 event decision.confirm (FR-006). Trả True nếu tìm thấy và sửa được, False nếu không
+    tìm thấy mech_id."""
+    root = root or ROOT
+    text = MECH_PATH.read_text(encoding="utf-8")
+    blocks = re.split(r'(?=^\s*-\s*id:\s*)', text, flags=re.M)
+    for i, b in enumerate(blocks):
+        m_id = re.search(r'^\s*-\s*id:\s*(\S+)', b, re.M)
+        if not (m_id and m_id.group(1) == mech_id):
+            continue
+        if re.search(r'^\s*confirmed:', b, re.M):
+            new_b = re.sub(r'^(\s*confirmed:\s*).*$', rf'\g<1>"{date_str}"', b, count=1, flags=re.M)
+        else:
+            new_b = b.rstrip("\n") + f'\n    confirmed: "{date_str}"\n'
+        blocks[i] = new_b
+        MECH_PATH.write_text("".join(blocks), encoding="utf-8")
+        pl = _load_provenance_log()
+        pl.append_event(root, "decision.confirm", ref=mech_id, note=f"bump confirmed: {date_str}")
+        return True
+    return False
 
 
 def parse_mechanisms(text: str) -> list:
@@ -263,6 +296,7 @@ def ck(name, cond, fails):
 
 
 def self_test() -> int:
+    global MECH_PATH
     import tempfile
     import shutil as _sh
 
@@ -401,6 +435,33 @@ def self_test() -> int:
     ck(f"SC-004: {len(anchored)} mục có anchor_symbol, 100% trỏ file trong repo",
        len(anchored) > 0 and all(_in_repo(e) for e in anchored), fails)
 
+    # --- T3 (provenance-log T-260722-01): bump_confirmed phát event decision.confirm thật ---
+    import shutil as _sh3
+    import tempfile as _tf
+    td3 = Path(_tf.mkdtemp())
+    (td3 / "harness").mkdir()
+    fake_mech = td3 / "harness" / "mechanisms.yaml"
+    fake_mech.write_text('mechanisms:\n  - id: demo-id\n    live_probe: x\n    confirmed: "2020-01-01"\n')
+    subprocess.run(["git", "init", "-q"], cwd=td3)
+    subprocess.run(["git", "config", "user.email", "t@t.t"], cwd=td3)
+    subprocess.run(["git", "config", "user.name", "t"], cwd=td3)
+    (td3 / "x").write_text("x")
+    subprocess.run(["git", "add", "-A"], cwd=td3)
+    subprocess.run(["git", "commit", "-q", "-m", "init"], cwd=td3)
+    _orig_mech = MECH_PATH
+    MECH_PATH = fake_mech
+    try:
+        ok = bump_confirmed("demo-id", "2026-07-23", root=td3)
+        ck("FR-006: bump_confirmed tìm đúng entry, trả True", ok, fails)
+        new_text = fake_mech.read_text()
+        ck("FR-006: confirmed: đã đổi thành ngày mới", '"2026-07-23"' in new_text, fails)
+        pl = _load_provenance_log()
+        evs = pl.read_events(td3, topic="decision.confirm", ref="demo-id")
+        ck("FR-006: đúng 1 event decision.confirm được ghi", len(evs) == 1, fails)
+    finally:
+        MECH_PATH = _orig_mech
+        _sh3.rmtree(td3, ignore_errors=True)
+
     print(f"\nSELF-TEST: {'ALL PASS' if not fails else str(len(fails)) + ' FAIL'}")
     return 1 if fails else 0
 
@@ -412,6 +473,9 @@ def main():
     p_check.add_argument("--json", action="store_true")
     p_why = sub.add_parser("why")
     p_why.add_argument("symbol")
+    p_confirm = sub.add_parser("confirm")
+    p_confirm.add_argument("id")
+    p_confirm.add_argument("--date", default=None)
     ap.add_argument("--self-test", action="store_true")
     args = ap.parse_args()
     if args.self_test:
@@ -420,6 +484,12 @@ def main():
         sys.exit(cmd_check(args))
     if args.cmd == "why":
         sys.exit(cmd_why(args))
+    if args.cmd == "confirm":
+        date_str = args.date or datetime.now().strftime("%Y-%m-%d")
+        ok = bump_confirmed(args.id, date_str)
+        print(f"✓ confirmed: {args.id} -> {date_str}" if ok
+              else f"✗ không tìm thấy id={args.id!r} trong mechanisms.yaml")
+        sys.exit(0 if ok else 1)
     ap.print_help()
     sys.exit(1)
 
