@@ -84,7 +84,7 @@ def parse_ts(s):
 
 
 def collect(transcript_dirs):
-    """Trả list event {skill, ts(datetime), week, session} từ mọi .jsonl trong mọi dir."""
+    """Trả list event {skill, ts(datetime), week, session, line_idx, file} từ mọi .jsonl trong mọi dir."""
     events = []
     files = sorted(f for d in transcript_dirs for f in glob.glob(str(d / "*.jsonl")))
     for f in files:
@@ -93,7 +93,7 @@ def collect(transcript_dirs):
         except OSError:
             continue
         with fh:
-            for line in fh:
+            for idx, line in enumerate(fh):
                 line = line.strip()
                 if not line or '"Skill"' not in line:
                     continue
@@ -118,7 +118,8 @@ def collect(transcript_dirs):
                         skill = (b.get("input") or {}).get("skill")
                         if skill:
                             events.append(
-                                {"skill": skill, "ts": ts, "week": iso_week(ts), "session": session}
+                                {"skill": skill, "ts": ts, "week": iso_week(ts),
+                                 "session": session, "line_idx": idx, "file": f}
                             )
     return events
 
@@ -358,6 +359,7 @@ def self_test() -> int:
         (td / "s1.jsonl").write_text(_json.dumps(line) + "\n", encoding="utf-8")
         events = collect([td])
         ok = len(events) == 1 and events[0]["skill"] == "qc-code" and iso_week(parse_ts(line["timestamp"])) == "2026-W29"
+        ok = ok and events[0].get("line_idx") == 0 and events[0].get("file") == str(td / "s1.jsonl")
     print("skill-usage self-test:", "PASS" if ok else "FAIL")
     return 0 if ok else 1
 
