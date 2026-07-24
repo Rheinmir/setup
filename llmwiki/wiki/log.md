@@ -604,17 +604,20 @@ User gọi `/fable5` hỏi "tiếp tục chưa" — verify lại thật (Move 2 
 
 Vá `_writer_id()` đọc đúng `CLAUDE_CODE_SESSION_ID` (fallback `CLAUDE_SESSION_ID`/`SESSION_ID` cho vendor khác), thêm self-test case phủ đúng nhánh mặc định (không override tay) — bài học ghi thẳng vào comment code để không lặp lại. Verify thật: `_writer_id()` giờ trả đúng UUID phiên thật (`765fc26c-...`, khớp chính phiên này). `medic --ci` 0 fail.
 
+## 2026-07-24 — provenance-log — nối /lint (8f) + promote concept, đóng vòng consumer
+
+`/fable5` hỏi "check tình trạng, what next" — verify lại thật (grep `read_events`/`correlate` toàn repo) lộ ra: T1-T5 build xong nhưng KHÔNG có consumer thật nào ngoài self-test — hạ tầng ghi chạy sống (98 event thật đã tích luỹ) nhưng chưa ai đọc. User chọn cả 2 hướng: nối `/lint` + promote concept.
+
+Thêm bước 8f vào `skills/lint/SKILL.md` (canonical — nhớ đúng bài học mirror-drift đã bắt qua UAT trước đó, sửa canonical trước rồi `sync-skill.sh lint`, verify parity 3 bản khớp nhau bằng `diff`). Bước 8f tra `provenance-log.jsonl` như nguồn "vì sao đổi" THỨ HAI cạnh `events.jsonl`/`scratch-log.jsonl` ở bước 0b, khác biệt: git-tracked, đi theo được qua máy khác. Verify grep thật hoạt động trên dữ liệu thật.
+
+Tạo `llmwiki/wiki/concepts/provenance-log.md` — concept đầy đủ (CAP/AP, ranh giới với `touches`/`correlate()`, bài học `/fable5` writer_id, bằng chứng thật 98 event/53 code.change/44 docs.change/1 decision.confirm đo lúc viết). `medic --ci` 0 fail sau khi regen `build-overstack-docs.py` (docs drift từ skill-listing đổi, không liên quan trực tiếp).
+
 <!-- log:auto:start -->
 
 ### 🤖 Log tự-động (code-logger, không do agent ghi)
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-23 16:48:18 | `file.write` | llmwiki/wiki/sources/adr/ADR-015-boris-archetypes-into-template.md · tool=Write · session=3c7d0f9c · actor=agent · prev= |
-| 2026-07-23 16:48:30 | `file.write` | llmwiki/wiki/sources/adr/ADR-016-no-ai-attribution-in-commits.md · tool=Write · session=3c7d0f9c · actor=agent · prev=73 |
-| 2026-07-23 16:48:46 | `file.write` | llmwiki/wiki/sources/adr/ADR-017-global-shared-engine-repo-data-travel.md · tool=Write · session=3c7d0f9c · actor=agent  |
-| 2026-07-23 16:49:22 | `file.write` | llmwiki/wiki/sources/draft/190726-graph-lessons-grapuco.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=d53470882 |
-| 2026-07-23 16:49:27 | `file.write` | llmwiki/wiki/sources/draft/190726-graph-lessons-grapuco.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=e582d381c |
 | 2026-07-23 16:51:24 | `file.write` | llmwiki/wiki/sources/draft/190726-graph-lessons-grapuco.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=bc6daf67f |
 | 2026-07-23 16:51:29 | `file.write` | llmwiki/wiki/sources/draft/190726-graph-lessons-grapuco.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=85cb37509 |
 | 2026-07-23 16:51:34 | `file.write` | llmwiki/wiki/sources/draft/200726-orchestration-loop-closure.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=f6db |
@@ -650,13 +653,16 @@ Vá `_writer_id()` đọc đúng `CLAUDE_CODE_SESSION_ID` (fallback `CLAUDE_SESS
 | 2026-07-24 09:24:49 | `file.write` | harness/scripts/provenance-log.py · tool=Edit · session=765fc26c · actor=agent · prev=10d23019252ac6ab513480492bd611b497 |
 | 2026-07-24 09:25:09 | `file.write` | harness/scripts/provenance-log.py · tool=Edit · session=765fc26c · actor=agent · prev=eaacfef826c3c69569432cec8bf8274b5a |
 | 2026-07-24 09:25:58 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=e6b912c8f260f6f80f40fe142620fde98d6c37286 |
+| 2026-07-24 09:36:10 | `file.write` | skills/lint/SKILL.md · tool=Edit · session=765fc26c · actor=agent · prev=b363dd7a107410d2575c9c3e39bc529d66a5d493b072f92 |
+| 2026-07-24 09:37:25 | `file.write` | llmwiki/wiki/concepts/provenance-log.md · tool=Write · session=765fc26c · actor=agent · prev=a8fa6b46f0effbe95cb6463362e |
+| 2026-07-24 09:37:41 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=765fc26c · actor=agent · prev=a4cbb1a77f96a8f91cc29ccb43cc56e74eeff332224dcf |
+| 2026-07-24 09:39:16 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=f221708e0d75c533ec4da00960d68b4073dc0385f |
+| 2026-07-24 09:39:16 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=1 · human=['llmwiki/skills/wiki-loop/lint.md'] · prev=9d22c4136892038c8495ed4c0aee |
 
 <!-- log:auto:end -->
 
-## 2026-07-24 — provenance-log — nối /lint (8f) + promote concept, đóng vòng consumer
+## 2026-07-24 — fdk-uat/fdk-poc — gate cứng bắt buộc tạo workspace Orca thật
 
-`/fable5` hỏi "check tình trạng, what next" — verify lại thật (grep `read_events`/`correlate` toàn repo) lộ ra: T1-T5 build xong nhưng KHÔNG có consumer thật nào ngoài self-test — hạ tầng ghi chạy sống (98 event thật đã tích luỹ) nhưng chưa ai đọc. User chọn cả 2 hướng: nối `/lint` + promote concept.
+User nhắc lần thứ 2 (2026-07-21 → 2026-07-24, cùng lỗi tái diễn ở cả /fdk-uat lẫn /fdk-poc): agent tự ý chạy filesystem-only (curl vào thư mục tạm, test CLI thuần) rồi báo hoàn tất, bỏ qua việc dựng workspace Orca thật — "không visual = không dùng được". Root cause: bước dựng workspace trong `skills/fdk-uat/SKILL.md` được đánh dấu "(tuỳ chọn)" — nhớ tay đã fail 2 lần liền, đúng dấu hiệu cần đổi cấu trúc thay vì nhắc thêm.
 
-Thêm bước 8f vào `skills/lint/SKILL.md` (canonical — nhớ đúng bài học mirror-drift đã bắt qua UAT trước đó, sửa canonical trước rồi `sync-skill.sh lint`, verify parity 3 bản khớp nhau bằng `diff`). Bước 8f tra `provenance-log.jsonl` như nguồn "vì sao đổi" THỨ HAI cạnh `events.jsonl`/`scratch-log.jsonl` ở bước 0b, khác biệt: git-tracked, đi theo được qua máy khác. Verify grep thật hoạt động trên dữ liệu thật.
-
-Tạo `llmwiki/wiki/concepts/provenance-log.md` — concept đầy đủ (CAP/AP, ranh giới với `touches`/`correlate()`, bài học `/fable5` writer_id, bằng chứng thật 98 event/53 code.change/44 docs.change/1 decision.confirm đo lúc viết). `medic --ci` 0 fail sau khi regen `build-overstack-docs.py` (docs drift từ skill-listing đổi, không liên quan trực tiếp).
+Vá `skills/fdk-uat/SKILL.md` (canonical, sync mirror+installed, parity xác nhận `diff`): bỏ chữ "tuỳ chọn", thêm block assert chạy `orca worktree list` verify đúng tên worktree vừa tạo có mặt — fail thì DỪNG, không được báo PASS. Vá tương tự bản CÀI của `fdk-poc` (`~/.claude/skills/fdk-poc/SKILL.md`) — nhưng canonical thật của skill này nằm trên nhánh `Rheinmir/issue-15-br-k`, không sửa được sạch từ `orca`; ghi rõ giới hạn này để không tưởng nhầm đã vá triệt để (bản cài sẽ mất vá nếu `npx skills add` cài lại từ nguồn gốc).
