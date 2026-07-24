@@ -584,19 +584,16 @@ cập nhật bảng skill `AGENT.md`/`CLAUDE.md` (2 dòng), regen `fdk/CAPABILIT
 không trùng: extract-site vẫn là nhà cho design-token extraction (DESIGN.md/tokens.json/css),
 web-clone vẫn là nhà cho Mode A (snapshot offline byte-exact).
 
+## 2026-07-23 — propose — provenance-log: chốt lý do KHÔNG gộp vào scratch-log.jsonl
+
+User hỏi tiếp "5 log này có bỏ được cái nào không, hay mỗi cái giải bài toán riêng" — trả lời bằng bảng ánh xạ 5 log → 5 bài toán cụ thể (đều có ví dụ thật đã xảy ra trong phiên), rồi tự Attack chính đề xuất `provenance-log` mới: có thể gộp vào `scratch-log.jsonl` (đã git-tracked sẵn) thay vì đẻ file mới không? Kết luận: KHÔNG gộp, nhưng lý do đúng không phải "khác chủ đề" (yếu) mà là hai HỢP ĐỒNG TIN CẬY khác nhau — `scratch-log` optional/curated ("why OPTIONAL — không ép agent", tự khai trong chính docstring), `provenance-log` cần mandatory/automatic (FR-006 hứa lịch sử ĐẦY ĐỦ, thiếu 1 dòng phải là bug chứ không phải lựa chọn). Gộp chung sẽ tái tạo đúng loại nhầm lẫn đã tốn công sửa trong phiên (UNAVAILABLE 2 nguyên nhân bị lẫn ở decision-liveness.py, mirror-drift ở /lint 8e). Đã sửa vào Non-goals của SPEC, R7 vẫn xanh.
+
 <!-- log:auto:start -->
 
 ### 🤖 Log tự-động (code-logger, không do agent ghi)
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-07-23 11:44:47 | `file.write` | llmwiki/wiki/sources/draft/220722-artifact-provenance-eventlog.md · tool=Edit · session=765fc26c · actor=agent · prev=30 |
-| 2026-07-23 11:44:58 | `file.write` | llmwiki/wiki/sources/draft/220722-artifact-provenance-eventlog.md · tool=Edit · session=765fc26c · actor=agent · prev=86 |
-| 2026-07-23 11:45:20 | `file.write` | llmwiki/wiki/index.md · tool=Edit · session=765fc26c · actor=agent · prev=5e5b1f62627790ecff1409afd5c87796039bb1afba24d4 |
-| 2026-07-23 11:45:38 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=2 · human=['harness/scripts/scratch-log.py', 'harness/scripts/mem-rank.py'] · prev |
-| 2026-07-23 11:45:38 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=2 · human=['harness/scripts/code-logger.py', 'llmwiki/wiki/log.md'] · prev=7336a28 |
-| 2026-07-23 11:45:53 | `file.write` | fdk/tools/medic.py · tool=Edit · session=6ac5fed4 · actor=agent · prev=e54d73f6d1d8f9b9ef7ac2af1e08eaa7ca947ba2f54ca3283 |
-| 2026-07-23 11:46:00 | `file.write` | fdk/tools/medic.py · tool=Edit · session=6ac5fed4 · actor=agent · prev=a19f3ae9c941f3e2fb33d9761772f28578e82d9dba1446413 |
 | 2026-07-23 11:46:03 | `file.write` | fdk/tools/medic.py · tool=Edit · session=6ac5fed4 · actor=agent · prev=ebc971cb4f7f4742688149d50ad6405bb55b8541c56df7b58 |
 | 2026-07-23 15:06:31 | `file.write` | skills/extract-site/SKILL.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=ab399d44b300041435ff47ee5ac2f486243b745 |
 | 2026-07-23 15:06:54 | `file.write` | llmwiki/AGENT.md · tool=Edit · session=3c7d0f9c · actor=agent · prev=e3865df2081035061b74282ebeb622da0814b5271262a9b0dd1 |
@@ -630,9 +627,16 @@ web-clone vẫn là nhà cho Mode A (snapshot offline byte-exact).
 | 2026-07-23 16:55:18 | `file.write` | harness/scripts/fdk-gate.py · tool=Edit · session=3c7d0f9c · actor=agent · prev=b64437e5205ddfc9c58a5dcd81c1f08fc928575a |
 | 2026-07-23 16:58:07 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=3c7d0f9c · actor=agent · prev=84271e8cd486d2fdaa251f4d86b5bd6040 |
 | 2026-07-23 16:58:18 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=3c7d0f9c · actor=agent · prev=7d1fd67db3325b8bc3ebcdd015216cbad1 |
+| 2026-07-24 08:46:53 | `file.write` | llmwiki/wiki/sources/draft/220722-artifact-provenance-eventlog.md · tool=Edit · session=765fc26c · actor=agent · prev=5c |
+| 2026-07-24 08:47:10 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=3 · human=['llmwiki/wiki/sources/210726-session-provenance.md', 'fdk/CAPABILITIES. |
+| 2026-07-24 08:47:10 | `commit.reconcile` |  · actor=system · agent_n=3 · human_n=0 · prev=06f0468baf94455dcfd1886b3db26f2efbf8d760347b6bb3cd71d14f70163d66 · h=de87 |
+| 2026-07-24 08:47:10 | `commit.reconcile` |  · actor=system · agent_n=3 · human_n=1 · human=['llmwiki/skills/utils/extract-site.md'] · prev=de875b1fd0ec34d68a8bff0f |
+| 2026-07-24 08:47:10 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=2 · human=['llmwiki/innovation/230726-innovation.md', 'llmwiki/wiki/sources/230726 |
+| 2026-07-24 08:47:10 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=1 · human=['llmwiki/wiki/sources/draft/210721-decision-anchoring-adoption-metric.m |
+| 2026-07-24 08:47:10 | `commit.reconcile` |  · actor=system · agent_n=3 · human_n=1 · human=['llmwiki/wiki/draft/unknown/unknown-context-hygiene.md'] · prev=dbc90fc |
 
 <!-- log:auto:end -->
 
-## 2026-07-23 — propose — provenance-log: chốt lý do KHÔNG gộp vào scratch-log.jsonl
+## 2026-07-23 — plan — artifact-provenance-eventlog-PLAN
 
-User hỏi tiếp "5 log này có bỏ được cái nào không, hay mỗi cái giải bài toán riêng" — trả lời bằng bảng ánh xạ 5 log → 5 bài toán cụ thể (đều có ví dụ thật đã xảy ra trong phiên), rồi tự Attack chính đề xuất `provenance-log` mới: có thể gộp vào `scratch-log.jsonl` (đã git-tracked sẵn) thay vì đẻ file mới không? Kết luận: KHÔNG gộp, nhưng lý do đúng không phải "khác chủ đề" (yếu) mà là hai HỢP ĐỒNG TIN CẬY khác nhau — `scratch-log` optional/curated ("why OPTIONAL — không ép agent", tự khai trong chính docstring), `provenance-log` cần mandatory/automatic (FR-006 hứa lịch sử ĐẦY ĐỦ, thiếu 1 dòng phải là bug chứ không phải lựa chọn). Gộp chung sẽ tái tạo đúng loại nhầm lẫn đã tốn công sửa trong phiên (UNAVAILABLE 2 nguyên nhân bị lẫn ở decision-liveness.py, mirror-drift ở /lint 8e). Đã sửa vào Non-goals của SPEC, R7 vẫn xanh.
+`/plan` mở rộng SPEC `220722-artifact-provenance-eventlog.md` (duyệt qua "chạy /plan đi") thành PLAN thi hành T1-T5. T6 (rotate, v0.3/COULD) loại khỏi PLAN có chủ ý — ngưỡng rotate chưa trả nợ (U-05), viết task cho nó sẽ là placeholder giả trang, đúng điều khoản "cổng ngược" của /plan. Trước khi viết PLAN, verify thật claim kỹ thuật cốt lõi của SPEC (FR-004, merge=union) trên sandbox git — 3 dòng từ 2 branch độc lập đều còn sau merge, KHÔNG cần config thêm gì ngoài dòng `.gitattributes` — xác nhận Approach A khả thi, không cần quay lại /propose. R7 chặn 1 lần (Self-review tự nhắc TBD/TODO literal khi nói KHÔNG còn — bẫy đã gặp nhiều lần trong phiên), đã sửa.
