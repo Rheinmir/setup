@@ -201,7 +201,6 @@ root,snip,subdir=sys.argv[1],sys.argv[2],sys.argv[3]
 sp=os.path.join(root,subdir,'settings.json')
 os.makedirs(os.path.dirname(sp),exist_ok=True)
 cur=json.load(open(sp,encoding='utf-8')) if os.path.exists(sp) else {}
-if os.path.exists(sp): shutil.copy(sp, sp+'.bak')
 add=json.load(open(snip,encoding='utf-8'))
 MARK='harness/poc-vendor-neutral/bin/'
 cur.setdefault('hooks',{})
@@ -217,8 +216,14 @@ for ev,defs in list(cur['hooks'].items()):
 # 2) THÊM hook harness mới (đúng 1 bản, đã fail-open)
 for ev,entries in add.get('hooks',{}).items():
     cur['hooks'].setdefault(ev,[]).extend(entries)
-json.dump(cur,open(sp,'w',encoding='utf-8'),ensure_ascii=False,indent=2)
-print(f'  \033[1;32m✓\033[0m {subdir:<9}→ {subdir}/settings.json (merged, backup .bak)')
+# GH#149 tc3: merge không đổi gì thì khỏi backup + khỏi ghi — chạy lại không để rác settings.json.bak
+new=json.dumps(cur,ensure_ascii=False,indent=2)
+old=open(sp,encoding='utf-8').read() if os.path.exists(sp) else None
+if new!=old:
+    if old is not None: shutil.copy(sp, sp+'.bak')
+    open(sp,'w',encoding='utf-8').write(new)
+print(f'  \033[1;32m✓\033[0m {subdir:<9}→ {subdir}/settings.json '
+      + ('(không đổi)' if new == old else '(merged' + (', backup .bak)' if old is not None else ')')))
 PY
 }
 if has claude; then merge_claude_hooks .claude; fi
@@ -230,7 +235,6 @@ import json,os,sys,shutil
 root,snip=sys.argv[1],sys.argv[2]
 op=os.path.join(root,'opencode.json')
 cur=json.load(open(op,encoding='utf-8')) if os.path.exists(op) else {}
-if os.path.exists(op): shutil.copy(op,op+'.bak')
 add=json.load(open(snip,encoding='utf-8'))
 perm=cur.get('permission')
 if not isinstance(perm,dict): perm={}
@@ -241,8 +245,13 @@ for k,v in add.get('permission',{}).get('edit',{}).items():
     else: edit[k]=v                      # luôn áp glob deny của harness
 perm['edit']=edit; cur['permission']=perm
 cur.setdefault('$schema', add.get('$schema','https://opencode.ai/config.json'))
-json.dump(cur,open(op,'w',encoding='utf-8'),ensure_ascii=False,indent=2)
-print('  \033[1;32m✓\033[0m opencode → opencode.json (merged permission.edit, backup .bak)')
+new=json.dumps(cur,ensure_ascii=False,indent=2)
+old=open(op,encoding='utf-8').read() if os.path.exists(op) else None
+if new!=old:   # không đổi → khỏi backup/ghi (GH#149 tc3)
+    if old is not None: shutil.copy(op,op+'.bak')
+    open(op,'w',encoding='utf-8').write(new)
+print('  \033[1;32m✓\033[0m opencode → opencode.json '
+      + ('(không đổi)' if new == old else '(merged permission.edit' + (', backup .bak)' if old is not None else ')')))
 PY
 fi
 # advisory (nhắc — dựa CI là chính)

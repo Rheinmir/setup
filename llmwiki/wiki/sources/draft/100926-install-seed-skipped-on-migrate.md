@@ -2,7 +2,7 @@
 type: issue
 kind: tech-debt
 title: "install-harness.sh chỉ seed khung llmwiki ở MODE=new — project migrate thiếu thư mục vĩnh viễn"
-status: open
+status: done
 assignee: "@Rheinmir"
 dispatch: Claude
 entry: /fdk
@@ -114,7 +114,9 @@ không phải để làm lại phần sửa.
 - **Tiêu chí 2** — project đã có sẵn `llmwiki/wiki/sources/draft/brd.md` cùng một `index.md` riêng chạy ở mode `migrate`. Installer thoát `rc=3` ("MIGRATE CÓ NỢ": hooks vẫn cài xong, audit baseline báo BRD thiếu Origin), thư mục khung được bổ sung đủ bốn, còn BRD và `index.md` giữ nguyên từng byte.
 - **Tiêu chí 3** — chạy lần hai thì cây `llmwiki/` giống hệt lần một. Chính bài test này bắt thêm một lỗi mà `c1b3814` chưa sửa: mỗi lần chạy lại, installer đẻ thêm một file `settings.json.bak.<timestamp>` (cả trong `llmwiki/.claude/` lẫn `.claude/` gốc) dù phép merge không đổi gì. Cách sửa: merge xong mà file giống hệt bản backup thì xoá backup, chỉ giữ backup khi thật sự có thay đổi. Hai chỗ backup ở nhánh `--global` cùng loại lỗi nhưng không có test phủ nên chưa đụng.
 - **Fire-drill** — thay installer bằng bản trước khi sửa backup thì test đỏ ở tiêu chí 3; thay bằng bản `c1b3814^` (trước khi sửa seed) thì đỏ ở tiêu chí 2 ("mong 4, được 2"). Test cắn đúng cả hai lỗi.
-- **Tiêu chí 4 (UAT qua `/fdk-uat`)** — chưa làm tại thời điểm ghi mục này.
+- **Tiêu chí 4 (UAT qua `/fdk-uat`, pha 2 main-URL smoke @ `90334c3`)** — chạy nguyên văn lệnh README (`curl … bootstrap.sh | bash`, không override biến nào) vào project trắng `~/orca/overstack-uat-260911-1421`, sau khi raw CDN đã phục vụ bản mới (sentinel `html_docs_shell` trong policy). Kết quả: rc=0, demo 13 và test-broad 80 xanh, đủ ba trụ, khung `.llmwiki/{html,raw,wiki}` được seed, harness global lên 1.3.88, và workspace Orca `uat-260911-1421` hiện thật trong app (đã assert đúng tên). Mô phỏng migrate trên chính project đó — đặt sẵn `brd.md` cùng một `index.md` riêng, commit, rồi chạy lại lệnh README — thì BRD và `index.md` giữ nguyên từng byte.
+- **UAT bắt thêm một lỗi cùng loại tiêu chí 3 trên đường curl** — lần chạy thứ hai để lại `.claude/settings.json.bak` (untracked, hiện `??` trong `git status` của dự án người dùng) dù `settings.json` không đổi byte nào. Đường curl đi qua `harness/poc-vendor-neutral/install.sh` chứ không qua `install-harness.sh`, nên sửa riêng ở đó theo cùng mẫu: merge không đổi thì không backup và không ghi lại; dòng log cũng nói thật "(không đổi)". Case 4 của `install-seed-test.sh` gác lỗi này, và fire-drill với bản cũ cho đỏ ("mong 0, được 1").
+- **Ghi chú phạm vi** — đường curl chỉ gọi `install-harness.sh --global`, không đi qua khối seed per-project. Vì vậy lỗi gốc của issue này (seed chỉ ở `MODE=new`) chưa từng chạm người cài bằng curl; nó chạm người cài per-project bằng `install-harness.sh <root>`, và phần đó do case 1–3 phủ.
 
 ## Origin
 

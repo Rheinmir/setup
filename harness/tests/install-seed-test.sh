@@ -41,4 +41,16 @@ before=$(snap "$P2"); b0=$(nbak "$P2"); inst "$P2" mig2; after=$(snap "$P2")
 assert "snapshot llmwiki/ giống hệt (trừ log.md append)" "$before" "$after"
 assert "không đẻ thêm settings.json.bak khi merge không đổi" "$b0" "$(nbak "$P2")"
 
+echo "[4] đường curl của người mới (poc install.sh) chạy lại → settings.json không đổi, không để .bak"
+# UAT pha 2 ngày 11/09 bắt được: lần chạy thứ hai để lại .claude/settings.json.bak (untracked) dù không đổi gì.
+POC="$HERE/../poc-vendor-neutral/install.sh"
+P3="$TMP/curl"; mkdir -p "$P3"; git -C "$P3" init -q
+bash "$POC" "$P3" >"$TMP/log.c1" 2>&1; rc=$?
+assert "lần 1 rc=0" 0 "$rc"
+s1=$(shasum < "$P3/.claude/settings.json")
+bash "$POC" "$P3" >"$TMP/log.c2" 2>&1
+assert "lần 2: settings.json giữ nguyên byte" "$s1" "$(shasum < "$P3/.claude/settings.json")"
+assert "lần 2: không có settings.json.bak" 0 "$(ls -a "$P3/.claude" | grep -c 'settings.json.bak')"
+assert "lần 2: log nói thật là không đổi" 1 "$(grep -c 'settings.json (không đổi)' "$TMP/log.c2")"
+
 echo "PASS $pass/$pass"
