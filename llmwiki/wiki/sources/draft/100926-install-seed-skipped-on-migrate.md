@@ -106,6 +106,16 @@ lệnh bash chứa đường dẫn inbox — kể cả repro trong thư mục t�
 bằng chứng chạy. Issue này tồn tại chủ yếu để **khoản kiểm chứng đó không bị bỏ quên**,
 không phải để làm lại phần sửa.
 
+## Kiểm chứng hành vi — 2026-09-11
+
+`harness/tests/install-seed-test.sh` chạy installer thật trong sandbox (project tạm + `HOME` tạm) và đã được gắn vào CI `harness.yml`. Kết quả 11/11 assert xanh:
+
+- **Tiêu chí 1** — project trắng chạy ở mode `new`, có đủ bốn thư mục khung và `index.md`.
+- **Tiêu chí 2** — project đã có sẵn `llmwiki/wiki/sources/draft/brd.md` cùng một `index.md` riêng chạy ở mode `migrate`. Installer thoát `rc=3` ("MIGRATE CÓ NỢ": hooks vẫn cài xong, audit baseline báo BRD thiếu Origin), thư mục khung được bổ sung đủ bốn, còn BRD và `index.md` giữ nguyên từng byte.
+- **Tiêu chí 3** — chạy lần hai thì cây `llmwiki/` giống hệt lần một. Chính bài test này bắt thêm một lỗi mà `c1b3814` chưa sửa: mỗi lần chạy lại, installer đẻ thêm một file `settings.json.bak.<timestamp>` (cả trong `llmwiki/.claude/` lẫn `.claude/` gốc) dù phép merge không đổi gì. Cách sửa: merge xong mà file giống hệt bản backup thì xoá backup, chỉ giữ backup khi thật sự có thay đổi. Hai chỗ backup ở nhánh `--global` cùng loại lỗi nhưng không có test phủ nên chưa đụng.
+- **Fire-drill** — thay installer bằng bản trước khi sửa backup thì test đỏ ở tiêu chí 3; thay bằng bản `c1b3814^` (trước khi sửa seed) thì đỏ ở tiêu chí 2 ("mong 4, được 2"). Test cắn đúng cả hai lỗi.
+- **Tiêu chí 4 (UAT qua `/fdk-uat`)** — chưa làm tại thời điểm ghi mục này.
+
 ## Origin
 
 Raise bởi phiên Claude Opus 5 ngày 2026-09-10 (session `016D4EHCU84xKYaGino8sAQM`),

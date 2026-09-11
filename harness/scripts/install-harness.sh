@@ -575,7 +575,7 @@ printf '# runtime data — khong commit\naudit/\n' > "$ROOT/llmwiki/.claude/.git
 
 SETTINGS="$ROOT/llmwiki/.claude/settings.json"
 if [ -f "$SETTINGS" ]; then
-  cp "$SETTINGS" "$SETTINGS.bak.$(date +%s)"
+  BAK="$SETTINGS.bak.$(date +%s)"; cp "$SETTINGS" "$BAK"
   python3 - "$SETTINGS" "$SRC/llmwiki/.claude/settings.json" <<'PY'
 import json, sys
 cur = json.load(open(sys.argv[1])); tpl = json.load(open(sys.argv[2]))
@@ -595,7 +595,9 @@ for event, defs in tpl.get("hooks", {}).items():
             cur_defs.append(d)
 json.dump(cur, open(sys.argv[1], "w"), indent=2, ensure_ascii=False)
 PY
-  log "settings.json: MERGE (backup .bak.*)"
+  # GH#149 tiêu chí 3: merge không đổi gì thì bỏ backup — trước đây mỗi lần chạy lại đẻ thêm 1 .bak.
+  cmp -s "$SETTINGS" "$BAK" && rm -f "$BAK"
+  log "settings.json: MERGE$([ -f "$BAK" ] && echo ' (backup .bak.*)' || echo ' — không đổi')"
 else
   cp "$SRC/llmwiki/.claude/settings.json" "$SETTINGS"
   log "settings.json: cài mới"
@@ -605,7 +607,8 @@ fi
 # (llmwiki/.claude/settings.json chỉ tác dụng khi session mở ngay tại llmwiki/)
 ROOT_SETTINGS="$ROOT/.claude/settings.json"
 mkdir -p "$ROOT/.claude"
-[ -f "$ROOT_SETTINGS" ] && cp "$ROOT_SETTINGS" "$ROOT_SETTINGS.bak.$(date +%s)"
+ROOT_BAK="$ROOT_SETTINGS.bak.$(date +%s)"
+[ -f "$ROOT_SETTINGS" ] && cp "$ROOT_SETTINGS" "$ROOT_BAK"
 python3 - "$ROOT_SETTINGS" <<'PY'
 import json, os, sys
 path = sys.argv[1]
@@ -644,6 +647,7 @@ for event, defs in tpl["hooks"].items():
             cur_defs.append(d)
 json.dump(cur, open(path, "w"), indent=2, ensure_ascii=False)
 PY
+[ -f "$ROOT_BAK" ] && cmp -s "$ROOT_SETTINGS" "$ROOT_BAK" && rm -f "$ROOT_BAK"   # không đổi → khỏi backup
 grep -q "audit/" "$ROOT/.claude/.gitignore" 2>/dev/null || printf 'audit/\nsettings.json.bak.*\n' >> "$ROOT/.claude/.gitignore"
 log "settings.json ở ROOT: OK (session mở tại root sẽ load hooks)"
 
