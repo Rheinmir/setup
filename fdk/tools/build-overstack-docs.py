@@ -1119,7 +1119,10 @@ def main():
         # nhau theo máy/worktree, nên so nguyên văn làm `--check` đỏ ở MỌI máy không phải máy
         # sinh ra file — gate nói dối theo máy chứ không theo nội dung. Đo 2026-09-07: clone
         # sạch của orca đỏ 1/21 chỉ vì 2 dòng path, nội dung y hệt (diff = 0 sau khi regen).
-        if _strip_selfpath(cur.strip()) != _strip_selfpath(content.strip()):
+        # Cùng lý do, bỏ nội dung iframe memory-map: nó sinh từ dữ liệu phiên LOCAL (gitignored) và
+        # đổi ở mọi lượt có ghi file, nên gate đỏ ở mọi Stop mà regen+commit cũng không xanh bền
+        # (đo 2026-09-11: 3 lần liền trong một phiên). Iframe skill-whiteboard vẫn được so.
+        if _normalize(cur.strip()) != _normalize(content.strip()):
             print("[build-overstack-docs] overstack.html CŨ so với đĩa — chạy lại để cập nhật.", file=sys.stderr)
             sys.exit(2)
         print("overstack.html khớp đĩa ✓")
@@ -1136,6 +1139,15 @@ _FOOT_PATH = re.compile(r'(<div class=(?:"|&quot;)foot(?:"|&quot;)><code>)[^<]*(
 def _strip_selfpath(text: str) -> str:
     """Thay đường dẫn tuyệt đối trong footer bằng placeholder — chỉ dùng để SO SÁNH, không ghi."""
     return _FOOT_PATH.sub(r"\1<SELF-PATH>\2", text)
+
+
+# srcdoc đã escape `"` thành &quot; nên [^"]* dừng đúng ở dấu nháy đóng thuộc tính.
+_MEMMAP = re.compile(r'(<iframe title="Bản đồ trí nhớ"[^>]*?srcdoc=")[^"]*(")')
+
+
+def _normalize(text: str) -> str:
+    """Phần lệch theo MÁY (self-path, memory-map từ dữ liệu phiên local) → placeholder; chỉ để so."""
+    return _MEMMAP.sub(r"\1<MEMORY-MAP>\2", _strip_selfpath(text))
 
 
 def _deliver(out_path, content: str) -> None:
