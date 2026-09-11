@@ -290,6 +290,16 @@ def build_r16(base):
     return _content("report_show_path.py", fixture(bad, good))
 
 
+def build_r20(base):
+    bad = base / "llmwiki" / "html" / "docs-bad.html"
+    good = base / "llmwiki" / "html" / "docs-good.html"
+    secs = "".join('<section id="s%d"><h2>S%d</h2></section>' % (i, i) for i in range(5))
+    _w(bad, "<!doctype html><body>%s</body>" % secs)
+    _w(good, "<!doctype html><body><nav>%s</nav>%s</body>"
+       % ("".join('<a href="#s%d">S%d</a>' % (i, i) for i in range(5)), secs))
+    return _content("html_docs_shell.py", fixture(bad, good))
+
+
 # ── Tier 1b: argv-only / custom-flag content validators ─────────────────────
 def build_r13(base):
     # R13: architecture row in decisions.md must reference an ADR-N (or (no-adr: …)).
@@ -569,6 +579,7 @@ RULES = [
     ("R17", "problem-tree-flush", build_r17),
     ("R18", "plan-executable", build_r18),
     ("R19", "evidence-terminal", build_r19),
+    ("R20", "html-docs-shell", build_r20),
 ]
 
 

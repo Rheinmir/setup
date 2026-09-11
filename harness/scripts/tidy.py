@@ -19,10 +19,12 @@ Subcommands:
   apply   dời nhóm ARCHIVE (git mv nếu tracked) rồi reindex.
   reindex sắp xếp archive/ theo nhóm + build-docs-index (nếu có) + index_sync --fix + archive/INDEX.md.
 
-Chạy được ở repo framework lẫn downstream (tự dò llmwiki/wiki · .llmwiki/wiki · wiki). Tool phụ
+Chạy được ở repo framework lẫn downstream: wiki dò qua overstack_paths.project_wiki() (cùng hàm với
+scratch-log; cây lạc thiếu index.md bị bỏ + báo, ≥2 wiki thật → lỗi) hoặc chỉ định --wiki-dir. Tool phụ
 (build-docs-index, index_sync) tìm REPO-LOCAL rồi GLOBAL ~/.claude/harness — thiếu thì bỏ qua, không lỗi.
 """
 import argparse
+import fnmatch
 import json
 import os
 import re
@@ -30,6 +32,9 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from overstack_paths import project_wiki  # noqa: E402
 
 HARNESS_HOME = Path(os.environ.get("OVERSTACK_HARNESS_HOME", Path.home() / ".claude" / "harness"))
 SKIP_DRAFT = ("README.md", "_template.md", "index.md", "log.md")
@@ -64,15 +69,23 @@ def find_root(start: Path) -> Path:
 
 
 class Layout:
-    def __init__(self, root: Path):
+    def __init__(self, root: Path, wiki_dir: str = "", keep=()):
         self.root = root
-        self.wiki = None
-        for cand in (root / "llmwiki" / "wiki", root / ".llmwiki" / "wiki", root / "wiki"):
-            if cand.is_dir():
-                self.wiki = cand
-                break
+        self.keep = tuple(keep)
+        if wiki_dir:
+            self.wiki = Path(wiki_dir).resolve()
+            if not self.wiki.is_dir():
+                raise SystemExit(f"tidy: --wiki-dir {wiki_dir} không tồn tại")
+        else:
+            # GH#153: cùng một hàm dò với scratch-log — không "cái nào tồn tại trước thì lấy".
+            try:
+                self.wiki, strays = project_wiki(root)
+            except ValueError as e:
+                raise SystemExit(f"tidy: {e}")
+            for s in strays:
+                print(f"tidy: ⚠ bỏ qua cây wiki lạc {s} (không có index.md) — dùng {self.wiki}", file=sys.stderr)
         if self.wiki is None:
-            raise SystemExit("tidy: không tìm thấy wiki (llmwiki/wiki · .llmwiki/wiki · wiki) dưới " + str(root))
+            raise SystemExit("tidy: không tìm thấy wiki (.llmwiki/wiki · llmwiki/wiki · wiki) dưới " + str(root))
         self.draft = self.wiki / "sources" / "draft"
         self.html = self.wiki.parent / "html"
         self.draft_arc = self.draft / "archive"
@@ -276,6 +289,11 @@ def classify(L: Layout, keep_dates=2):
         for h, dk in dated_reports.items():
             out[h] = ("html", "keep", "report gần đây — giữ active") if dk in recent \
                 else ("html", "archive", f"report cũ (ngoài {keep_dates} mốc ngày gần nhất)")
+    # GH#153: seq của SPEC đang TẠM ngoài wiki (R7 chặn ghi SPEC còn câu hỏi mở) không có draft nào
+    # nhắc tới → bị coi mồ côi. Tool không thấy SPEC đó, nên người gọi khai bằng --keep <glob>.
+    for n in out:
+        if any(fnmatch.fnmatch(n, g) for g in L.keep):
+            out[n] = (out[n][0], "keep", "giữ theo --keep")
     return out
 
 
@@ -480,8 +498,11 @@ def main():
     ap.add_argument("--threshold", type=int, default=int(os.environ.get("OVERSTACK_DRAFT_THRESHOLD", "10") or 10))
     ap.add_argument("--keep-dates", type=int, default=2, help="html report có ngày: giữ N mốc gần nhất")
     ap.add_argument("--json", action="store_true")
+    ap.add_argument("--wiki-dir", default="", help="chỉ định wiki (bỏ qua dò tự động)")
+    ap.add_argument("--keep", action="append", default=[], metavar="GLOB",
+                    help="tên file luôn GIỮ (lặp được), vd seq của SPEC đang tạm ngoài wiki")
     a = ap.parse_args()
-    L = Layout(find_root(Path(a.root).resolve()))
+    L = Layout(find_root(Path(a.root).resolve()), a.wiki_dir, a.keep)
     if a.cmd == "check":
         sys.exit(cmd_check(L, a.threshold, a.json))
     if a.cmd == "apply":

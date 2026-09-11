@@ -164,7 +164,7 @@ sum_after=$(cat "$SB/wiki/concepts/page-a.md")
   && ok "wiki-relations.py --dry-run chạy sạch, không sửa file" || bad "wiki-relations.py rc=$rc hoặc dry-run có side-effect"
 
 # ── 22. tidy.py (skill:tidy, ex docs-curate): plan trong sandbox-repo → phân loại thật ──
-T="$SB/dc"; clone_tool "$T" harness/scripts/tidy.py
+T="$SB/dc"; clone_tool "$T" harness/scripts/tidy.py harness/scripts/overstack_paths.py   # dò wiki chung (GH#153)
 mkdir -p "$T/llmwiki/html" "$T/llmwiki/wiki/sources/draft" "$T/harness/metrics"
 printf '<html><title>a</title></html>\n' > "$T/llmwiki/html/180726-smoke.html"
 printf -- '---\ntitle: draft smoke\n---\nnoi dung\n' > "$T/llmwiki/wiki/sources/draft/180726-smoke.md"

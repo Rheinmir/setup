@@ -63,6 +63,44 @@ def wiki_dir(root):
     return r / "wiki" if (r / "wiki").is_dir() else None
 
 
+def _declared_wiki(root):
+    """`wiki_dir:` trong .overstack.yaml (GH#49) — cùng khoá hooklib.scope_config() đọc."""
+    try:
+        text = (pathlib.Path(root) / ".overstack.yaml").read_text(encoding="utf-8")
+    except OSError:
+        return None
+    for ln in text.splitlines():
+        k, _, v = ln.split("#", 1)[0].partition(":")
+        v = v.strip().strip("'\"")
+        if k.strip() == "wiki_dir" and v:
+            return pathlib.Path(root) / v
+    return None
+
+
+def project_wiki(root):
+    """Wiki NỘI DUNG của dự án — nơi draft/html/session-provenance sống (GH#153).
+
+    Khác wiki_dir(): KHÔNG ưu tiên fdk/wiki (repo framework vẫn để draft ở llmwiki/wiki).
+    Thứ tự: `.overstack.yaml` wiki_dir → ứng viên tồn tại (chuẩn mới trước) → `wiki/` trần.
+    Ứng viên thiếu index.md là cây LẠC (scratch-log từng ghi cứng llmwiki/ ở dự án dùng .llmwiki)
+    → không chọn, nhưng trả về để caller BÁO. Trả (wiki | None, [cây lạc]).
+    ≥2 wiki thật → ValueError nêu cả hai: im lặng lấy cái đầu chính là cách tidy từng báo
+    "0 draft, ok" trên một kho 51 file."""
+    d = _declared_wiki(root)
+    if d is not None and d.is_dir():
+        return d, []
+    r = pathlib.Path(root)
+    found = [c for c in (r / n / "wiki" for n in OVERSTACK_DIRS) if c.is_dir()]
+    if not found and (r / "wiki").is_dir():
+        found = [r / "wiki"]
+    real = [c for c in found if (c / "index.md").is_file()]
+    if len(real) > 1:
+        raise ValueError("nhiều wiki thật cùng tồn tại: " + " · ".join(map(str, real))
+                         + " — khai `wiki_dir:` trong .overstack.yaml hoặc truyền --wiki-dir")
+    pick = real[0] if real else (found[0] if found else None)
+    return pick, [c for c in found if c != pick]
+
+
 def needs_migration(root) -> list:
     """Thư mục còn RƠI RỚT ở chuẩn cũ (có bản trần, chưa có bản dấu chấm).
 
@@ -159,6 +197,31 @@ def self_test() -> int:
         (fw / "llmwiki" / "wiki").mkdir(parents=True)
         ck("repo framework → fdk/wiki thắng", wiki_dir(fw) == fw / "fdk" / "wiki")
         ck("repo framework → KHÔNG BAO GIỜ migrate chính nó", needs_migration(fw) == [])
+
+        # 6. GH#153 project_wiki: cây lạc (thiếu index.md) không được chọn; ≥2 wiki thật → lỗi
+        def mkwiki(p, index=True):
+            (p / "sources").mkdir(parents=True)
+            if index:
+                (p / "index.md").write_text("# i")
+        dot = tmp / "dot"
+        mkwiki(dot / ".llmwiki" / "wiki"); mkwiki(dot / "llmwiki" / "wiki", index=False)
+        ck("dot thật + llmwiki lạc → chọn .llmwiki, báo cây lạc",
+           project_wiki(dot) == (dot / ".llmwiki" / "wiki", [dot / "llmwiki" / "wiki"]))
+        leg = tmp / "leg"
+        mkwiki(leg / "llmwiki" / "wiki"); mkwiki(leg / ".llmwiki" / "wiki", index=False)
+        ck("llmwiki thật + .llmwiki lạc → chọn cây CÓ nội dung",
+           project_wiki(leg)[0] == leg / "llmwiki" / "wiki")
+        two = tmp / "two"
+        mkwiki(two / ".llmwiki" / "wiki"); mkwiki(two / "llmwiki" / "wiki")
+        try:
+            project_wiki(two)
+            ck("2 wiki thật → ValueError", False)
+        except ValueError as e:
+            ck("2 wiki thật → ValueError nêu cả hai", "/.llmwiki/wiki" in str(e) and "/llmwiki/wiki" in str(e))
+        (two / ".overstack.yaml").write_text("wiki_dir: llmwiki/wiki  # khai\n")
+        ck(".overstack.yaml wiki_dir thắng (gỡ mơ hồ)", project_wiki(two) == (two / "llmwiki" / "wiki", []))
+        ck("repo framework → llmwiki/wiki (KHÔNG fdk/wiki)", project_wiki(fw)[0] == fw / "llmwiki" / "wiki")
+        ck("không có wiki nào → (None, [])", project_wiki(tmp / "none") == (None, []))
 
         # 5. tracked_set: cổng đọc GIT chứ không đọc ĐĨA
         import subprocess

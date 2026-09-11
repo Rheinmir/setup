@@ -70,4 +70,41 @@ echo "[5] check sau apply: 10 file → exit 0 (vòng khép)"
 set +e; python3 "$TIDY" check --root . >/dev/null; rc=$?; set -e
 assert "sau archive còn 10 → exit 0" 0 "$rc"
 
+echo "[6] GH#153: wiki .llmwiki thật (12 draft) + cây llmwiki/ lạc 1 file → đếm wiki thật, không '0 ok'"
+T2="$(mktemp -d)"; trap 'rm -rf "$TMP" "$T2"' EXIT
+( cd "$T2" && git init -q -b main )
+mkdir -p "$T2/.llmwiki/wiki/sources/draft" "$T2/llmwiki/wiki/sources"
+printf '# idx\n' > "$T2/.llmwiki/wiki/index.md"
+for i in $(seq 1 12); do printf -- '---\nstatus: proposed\n---\n# d\n' > "$T2/.llmwiki/wiki/sources/draft/010126-d$i.md"; done
+printf 'x\n' > "$T2/llmwiki/wiki/sources/110926-session-provenance.md"
+set +e; j=$(python3 "$TIDY" check --root "$T2" --json 2>"$T2/err"); rc=$?; set -e
+assert "dot: rc=3 (vượt ngưỡng)" 3 "$rc"
+assert "dot: draft_top=12" 12 "$(echo "$j" | python3 -c 'import json,sys;print(json.load(sys.stdin)["draft_top"])')"
+assert "dot: báo cây lạc llmwiki/wiki" 1 "$(grep -c 'cây wiki lạc' "$T2/err")"
+
+echo "[7] 2 wiki thật → thoát lỗi nêu cả hai; --wiki-dir gỡ mơ hồ"
+printf '# idx\n' > "$T2/llmwiki/wiki/index.md"
+set +e; msg=$(python3 "$TIDY" check --root "$T2" 2>&1); rc=$?; set -e
+assert "2 wiki thật → rc lỗi (không 0, không 3)" 1 "$([ "$rc" -ne 0 ] && [ "$rc" -ne 3 ] && echo 1 || echo 0)"
+assert "thông báo nêu cả hai" 1 "$(echo "$msg" | grep -c '/\.llmwiki/wiki.*/llmwiki/wiki')"
+set +e; python3 "$TIDY" check --root "$T2" --wiki-dir "$T2/.llmwiki/wiki" >/dev/null 2>&1; rc=$?; set -e
+assert "--wiki-dir .llmwiki → rc=3 (đếm 12)" 3 "$rc"
+
+echo "[8] scratch-log distill ở repo .llmwiki → ghi .llmwiki/wiki/sources, không đẻ llmwiki/"
+rm -rf "$T2/llmwiki"
+(cd "$T2" && python3 "$HERE/../scripts/scratch-log.py" distill --session s1 --date 2026-09-11 >/dev/null)
+assert "provenance vào .llmwiki" 1 "$([ -f "$T2/.llmwiki/wiki/sources/110926-session-provenance.md" ] && echo 1 || echo 0)"
+assert "không tạo llmwiki/" 0 "$([ -e "$T2/llmwiki" ] && echo 1 || echo 0)"
+T3="$(mktemp -d)"
+( cd "$T3" && git init -q -b main && python3 "$HERE/../scripts/scratch-log.py" distill --date 2026-09-11 >/dev/null )
+assert "repo chưa có wiki → không tự tạo cây nào" 0 "$({ [ -e "$T3/llmwiki" ] || [ -e "$T3/.llmwiki" ]; } && echo 1 || echo 0)"
+rm -rf "$T3"
+
+echo "[9] seq của SPEC đang tạm ngoài wiki: mặc định mồ côi, --keep giữ lại"
+mkdir -p "$T2/.llmwiki/html"; printf '<html>seq</html>' > "$T2/.llmwiki/html/110926-pending-seq.html"
+out=$(python3 "$TIDY" plan --root "$T2" 2>/dev/null)
+assert "không --keep → mồ côi" 1 "$(echo "$out" | grep 'pending-seq' | grep -c 'mồ côi')"
+out=$(python3 "$TIDY" plan --root "$T2" --keep '*-pending-seq.html' 2>/dev/null)
+assert "--keep → GIỮ" 1 "$(echo "$out" | grep 'pending-seq' | grep -c 'giữ theo --keep')"
+
 echo "PASS $pass/$pass"

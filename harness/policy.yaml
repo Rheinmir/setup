@@ -168,3 +168,12 @@ rules:
     applies_to: [write]
     scope: "wiki/**/*.md có chứa khối ```evidence-chain; tài liệu DẠY chính định dạng này khai `r19_meta: true` để miễn"
     note: "Công tắc 3 tầng ưu tiên từ hẹp tới rộng: cờ --no-evidence-chain > env OVERSTACK_EVIDENCE_TERMINAL > `enabled` trong harness/evidence-terminal.config.yaml. Tắt ở tầng nào cũng in một dòng lên stderr — cổng câm nguy hiểm hơn cổng đỏ."
+
+  - id: R20
+    name: html-docs-shell
+    validator: html_docs_shell.py
+    statement: 'Trang HTML nằm trực tiếp trong một thư mục html/ phải có vỏ tài liệu nhất quán, bất kể skill nào sinh: (a) hơn 3 mục (<section id> hoặc <h2>) thì phải có <nav> chứa ít nhất 3 link #anchor; (b) sơ đồ archify nhúng qua <iframe> phải dùng preset macos như trang chứa. Thoát tường minh: <meta name="overstack-nav" content="none"> / <meta name="overstack-preset" content="<preset>">.'
+    enforce_at: [session]
+    applies_to: [write]
+    scope: "**/html/*.html (miễn chính artifact archify)"
+    note: "PostToolUse nhánh .html cùng R16 (llmwiki/.claude/hooks/post_tool_use.py). Nguồn: GH#155 (trang 11 mục không menu vì agent chỉ bắt chước look docs-site-macos) + GH#154 (sơ đồ nhúng preset signal-flow lệch theme)."

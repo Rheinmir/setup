@@ -248,3 +248,13 @@ rules:
     timeout: 15
     handler: "harness-events.py session-end · llmwiki/.claude/hooks/session_end.py::flush_problem_tree. Đích: tắt app bình thường thì cây truy vết vẫn nằm đúng chỗ (feedback 020726)."
     blocking: false
+
+  html_docs_shell:
+    id: R20
+    name: html-docs-shell
+    kind: content_check
+    statement: 'Trang HTML nằm trực tiếp trong một thư mục html/ phải có vỏ tài liệu nhất quán, bất kể skill nào sinh: (a) hơn 3 mục (<section id> hoặc <h2>) thì phải có <nav> chứa ít nhất 3 link #anchor; (b) sơ đồ archify nhúng qua <iframe> phải dùng preset macos như trang chứa. Thoát tường minh: <meta name="overstack-nav" content="none"> / <meta name="overstack-preset" content="<preset>">.'
+    enforce_at: [session]
+    target_globs: ["**/html/*.html"]
+    handler: "harness/validators/html_docs_shell.py · PostToolUse (llmwiki/.claude/hooks/post_tool_use.py nhánh .html, cùng R16). Nguồn: GH#155 + GH#154."
+    blocking: true

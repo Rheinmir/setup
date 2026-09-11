@@ -160,6 +160,8 @@ Rộng → cap 1052 căn giữa, thẳng hàng với chữ trong hero (1100−24
 
 ### Navigation — SIDEBAR ONLY (không bao giờ dùng top bar)
 
+Máy gác (R20, hook PostToolUse): trang `*/html/*.html` có hơn 3 mục (`<section id>` hoặc `<h2>`) mà không có `<nav>` chứa ít nhất 3 link `#anchor` sẽ bị chặn, bất kể skill nào sinh trang. Trang cố ý một cột thì khai `<meta name="overstack-nav" content="none">` kèm lý do.
+
 Mọi cỡ màn hình đều dùng LEFT SIDEBAR + nút collapse. ⛔ KHÔNG có chế độ top bar — top bar nhồi link wrap chữ rất xấu trên màn hẹp. Màn hẹp (<640px): sidebar OVERLAY đè content (body giữ padding-left:0), mặc định THU GỌN, user mở bằng nút toggle:
 
 ⚠️ **Sidebar PHẢI là kính thật, không phải tấm trắng sữa** (bài học 12/06/2026 — user chê "màu trơn trông hơi chắn"): fill phẳng `--glass-1` alpha .55 trên nền sáng ra "sữa" đục, không ra gương. Pane chrome LỚN (sidebar, panel cao full màn) bắt buộc 3 thứ: (1) **gradient-alpha glass** — alpha biến thiên dọc mặt kính thay vì một hằng số; (2) **specular sheen** `::before` — vùng sáng radial góc trên + dải sheen chéo; (3) **orb màu ngay sau lưng pane** (xem Background Plane) — blur 24px phải có màu thật để nghiền. `--glass-1` chỉ còn dùng cho floating panel nhỏ:
@@ -1080,6 +1082,41 @@ table, .diagram-box text, .mm .node .ct{font-variant-numeric:tabular-nums}
 
 **Headline orphans** — add `text-wrap:balance` to hero/`h2` and `text-wrap:pretty` to body paragraphs so a single word never strands on its own line.
 
+## Nhúng artifact ngoài — sơ đồ archify qua `<iframe>`
+
+Luật "inline SVG" ở §Best Practices áp cho sơ đồ TỰ VẼ trong trang. Sơ đồ do ENGINE vẽ (`/diagram` → archify — vd mỗi task của `*-seq.html` do `/propose` sinh) là một trang viewer tự chứa, nên nhúng bằng `<iframe>` chứ không chép SVG ra ngoài (chép ra là mất phần gác hình học của archify). Hai điều bắt buộc:
+
+**1. Khung cao VỪA nội dung — người xem không bao giờ phải cuộn trong khung.** Chiều cao cố định (vd `height:840px`) luôn cắt: đo ngày 11/09/2026, viewer archify cao từ 905 đến 1565px tuỳ số message và bề rộng khung (650–1100px), vì còn kèm toolbar và khối Guided views. Dùng recipe đo chiều cao thật lúc chạy, và luôn đặt link mở riêng cạnh khung:
+
+```html
+<iframe class="archify-embed" src="DDMMYY-feature-t1.html" title="T1 — <tên task>" loading="lazy"></iframe>
+<a class="embed-open" href="DDMMYY-feature-t1.html" target="_blank" rel="noopener">Mở sơ đồ riêng ↗</a>
+```
+
+```css
+.archify-embed{display:block;width:100%;height:1000px;border:0;border-radius:14px;background:transparent}
+.embed-open{display:inline-block;margin-top:6px;font-size:12px}
+```
+
+```js
+// Auto-height: đọc scrollHeight THẬT của trang archify (cùng origin) → khung vừa khít, theo dõi đổi cỡ.
+document.querySelectorAll('iframe.archify-embed').forEach(f => {
+  const fit = () => {
+    let d; try { d = f.contentDocument; } catch (e) {}
+    if (!d || !d.documentElement) { f.dataset.fit = 'blocked'; return; }   // file:// — xem giới hạn bên dưới
+    const h = d.documentElement.scrollHeight;
+    if (Math.abs(h - f.offsetHeight) > 2) f.style.height = h + 'px';
+  };
+  f.addEventListener('load', () => { fit(); try { new ResizeObserver(fit).observe(f.contentDocument.body); } catch (e) {} });
+});
+```
+
+Đã đo bằng Playwright (archify 2.17): mở qua http (§Auto-Host), khung bằng đúng `scrollHeight` của nội dung ở cả bề rộng 650px lẫn 1100px, giữ nguyên sau 1 giây (không có vòng lặp đổi cỡ), và không còn thanh cuộn trong khung.
+
+**Giới hạn khi mở bằng `file://`:** Chrome và Firefox coi mỗi file `file://` là một origin riêng, nên trang cha không đọc được `contentDocument`; khung giữ chiều cao mặc định 1000px và vẫn có thể phải cuộn trong khung. Đường thay thế là mở trang qua §Auto-Host (`http://localhost:8765/...`), hoặc bấm "Mở sơ đồ riêng ↗" để xem sơ đồ toàn màn hình — đó là lý do link mở riêng là bắt buộc.
+
+**2. Theme khớp trang chứa — để trống `meta.visual_preset`.** Mặc định của bản cài là `macos` (system font, hợp với liquid-glass). Đừng chép `visual_preset` từ `archify/examples/*.json` (ví dụ sequence có sẵn `signal-flow`, font mono). Chỉ đặt preset khác khi user yêu cầu, và khi đó khai `<meta name="overstack-preset" content="<preset>">` trong trang chứa. Không có meta đó, luật R20 (hook PostToolUse) chặn trang nhúng artifact archify có preset khác `macos`.
+
 ## Self-Contained — CRITICAL
 
 The user opens these files directly (`file://`, offline, double-click). The output HTML must make ZERO external requests: no font/CSS/JS CDN links, no remote images, no `@import`, no `<script src>`. Everything (CSS, JS, SVG, icons) lives inline in the one file. `<a href>` hyperlinks to external sites are fine — they are navigation, not resource loads.
@@ -1202,7 +1239,7 @@ Keep the chrome (traffic-light header), the system-font stack (`var(--font-text)
 
 - **THANG CỠ CHỮ COMPACT — tối ưu màn laptop 13″ (feedback user 2026-07-06, đã đảo chiều một lần — KHÔNG tăng size):** GIẢM chứ đừng tăng: body `p` 13–13.5px, `.lead` 14px, nav link 12px (padding dọc ~5px), list/bảng 12.5px, nhãn/caption 10–10.5px, `h2` ~21px, hero `clamp(26px,4vw,40px)`. Tăng cỡ chữ để "dễ đọc" là SAI trên 13″ — ít nội dung lọt màn hình, wrap chật, nhìn tệ hơn; muốn dễ đọc thì chỉnh line-height/contrast, không chỉnh size. Badge đếm số được phép <10px.
 - **SIDEBAR: CUỘN chứ không NÉN (feedback user 2026-07-07):** nav flex-column sẽ flex-shrink co dẹp từng item khi thiếu chỗ — phải chặn: `nav>*{flex-shrink:0}` + `overflow-y:auto`, và ẨN HOÀN TOÀN scrollbar: `nav{scrollbar-width:none;-ms-overflow-style:none} nav::-webkit-scrollbar{width:0;height:0;display:none}`. Stack item luôn giữ chiều cao tự nhiên, thiếu chỗ thì cuộn ngầm.
-- ALWAYS inline SVG directly in the HTML (not external files)
+- ALWAYS inline SVG directly in the HTML (not external files) — áp cho sơ đồ TỰ VẼ. Ngoại lệ duy nhất: sơ đồ do engine archify vẽ, nhúng bằng `<iframe>` theo §Nhúng artifact ngoài
 - ALWAYS use `clamp()` for hero heading size: `font-size: clamp(32px,5vw,56px)`
 - NEVER use `☐` Unicode for checklists — ALWAYS use real `<input type="checkbox">` with `<label for="...">` so items are clickable. Add this CSS for every checklist:
 

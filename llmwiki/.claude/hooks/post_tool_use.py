@@ -56,12 +56,16 @@ def main() -> None:
     if vdir is None:
         sys.exit(0)
 
-    # R16: HTML report phải tự khai đường dẫn của mình
+    # R16: HTML report phải tự khai đường dẫn của mình · R20: vỏ trang tài liệu (menu khi >3 mục,
+    # sơ đồ archify nhúng cùng theme) — gác ở chỗ ghi nên đúng bất kể skill nào sinh trang (GH#155).
     if fp.endswith(".html"):
-        rc, err = run_validator("report_show_path.py", {"action": "write", "file_path": fp}, vdir)
-        if rc == 2:
-            print(err, file=sys.stderr)
-            sys.exit(2)
+        for name in ("report_show_path.py", "html_docs_shell.py"):
+            if not (vdir / name).is_file():
+                continue  # bộ validators cũ chưa có luật này → bỏ, không chặn nhầm
+            rc, err = run_validator(name, {"action": "write", "file_path": fp}, vdir)
+            if rc == 2:
+                print(err, file=sys.stderr)
+                sys.exit(2)
         sys.exit(0)
 
     if not fp.endswith(".md"):

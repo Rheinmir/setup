@@ -232,11 +232,11 @@
     },
     "docs-site-macos": {
       "files": {
-        "SKILL.md": "dfb6db8cb6d58a9b94fb6825728aac0ccfd4ee6ed619c0b199e5b18a227ba75c",
+        "SKILL.md": "d7e18ca72abfd7c02eddb1a28d66aeb289120829a0ceaa6b9ae685db6f79b59f",
         "vendor/README.md": "637090466e5c66282a3e092751982f95f05eeca3ebf3f7eadc29596960ced445",
         "vendor/beautiful-mermaid.min.js.gz.b64": "89e9982b5e5b5f06c7b07ed44ee525df4e8fa5372b93c70bc79cd492acf29b37"
       },
-      "recorded": "2026-09-07",
+      "recorded": "2026-09-11",
       "source": "local-authored"
     },
     "doyourmagic": {
@@ -836,7 +836,7 @@
     },
     "propose": {
       "files": {
-        "SKILL.md": "5d3379a14d230946658cafbdb8a6c3a0236e5d414536de6d24744f245ee88656"
+        "SKILL.md": "d65257cf15de1422124f094b930a122bb8a4c71cf4d2a4485f456b8e225f4795"
       },
       "recorded": "2026-09-11",
       "source": "local-authored"
