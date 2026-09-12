@@ -4,3 +4,6 @@
 {"ts": "2026-07-23T11:37:16", "status": "drift", "sync_ms": 143, "sync_tokens": 0, "suspects": 88}
 {"ts": "2026-09-07T15:57:55", "status": "anchor-invalid", "sync_ms": 26, "sync_tokens": 0, "suspects": 0}
 {"ts": "2026-09-08T16:48:30", "status": "drift", "sync_ms": 295, "sync_tokens": 0, "suspects": 114}
+{"ts": "2026-09-09T20:14:24", "status": "drift", "sync_ms": 259, "sync_tokens": 0, "suspects": 120}
+{"ts": "2026-09-09T20:15:09", "status": "drift", "sync_ms": 236, "sync_tokens": 0, "suspects": 120}
+{"ts": "2026-09-10T15:34:32", "status": "drift", "sync_ms": 147, "sync_tokens": 0, "suspects": 91}

@@ -1,1 +1,542 @@
-{}
+{
+ "concepts/evidence-terminal-chain.md": {
+  "by": "harness/metrics/provenance-log.jsonl (+1)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "concepts/commit-dag-hub.md": {
+  "by": "harness/scripts/loop-runner.py",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "concepts/adapt-modes.md": {
+  "by": "fdk/skills.provenance.json",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "concepts/ci-issue-loop.md": {
+  "by": "fdk/skills.provenance.json",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "concepts/log-model.md": {
+  "by": "harness/metrics/provenance-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "concepts/graph-model.md": {
+  "by": "harness/travel-policy.yaml",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "concepts/skill-craft.md": {
+  "by": "fdk/CAPABILITIES.md",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "concepts/provenance-log.md": {
+  "by": "harness/metrics/provenance-log.jsonl (+1)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/150726-session-provenance.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/050826-setup-openclaude-opencode.md": {
+  "by": "harness/scripts/install-harness.sh (+1)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/080826-session-provenance.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/290726-session-provenance.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/210726-session-provenance.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/070826-session-provenance.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/170726-session-provenance.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/010826-session-provenance-350f10dd.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/310726-session-provenance.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/050826-session-provenance-b8afb386.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/240726-session-provenance.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/020826-session-provenance.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/090926-session-provenance.md": {
+  "by": ".overstack/doyourmagic/dym/SKILL.md (+1)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/050826-session-provenance.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/230726-session-provenance.md": {
+  "by": ".claude-plugin/marketplace.json (+1)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/030826-session-provenance-b8afb386.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/300726-session-provenance-350f10dd.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/100826-session-provenance.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/180726-session-provenance.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/020826-session-provenance-1319b8e1.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/300726-session-provenance-test-hook.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/110826-session-provenance.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/190726-session-provenance.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/220726-session-provenance.md": {
+  "by": ".claude-plugin/marketplace.json (+1)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/040826-session-provenance.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/060826-session-provenance-b8afb386.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/290726-session-provenance-1319b8e1.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/080926-session-provenance.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/030726-session-provenance.md": {
+  "by": "fdk/tools/medic.py (+1)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/030826-session-provenance.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/160826-session-provenance.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/300726-session-provenance.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/160726-session-provenance.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/020726-orca-issue-ledger-travel.md": {
+  "by": "fdk/CAPABILITIES.md (+2)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/ci-maintainer-brief.md": {
+  "by": "fdk/tools/medic.py",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/130726-session-provenance.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/130826-session-provenance.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/030826-session-provenance-3b20b398.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/100926-session-provenance.md": {
+  "by": ".overstack/doyourmagic/dym/SKILL.md (+1)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/310726-session-provenance-1319b8e1.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/060826-session-provenance.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/200726-session-provenance.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/070826-session-provenance-b8afb386.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/280726-session-provenance.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/090826-session-provenance.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/270726-session-provenance.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/010826-session-provenance.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/140826-session-provenance.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/140726-session-provenance.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/draft/080926-archify-fork-pin.md": {
+  "by": ".github/workflows/harness.yml (+3)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/draft/290726-ge-test-PLAN.md": {
+  "by": "fdk/skills.search.json (+7)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/draft/040926-downstream-dot-layout.md": {
+  "by": ".gitignore (+5)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/draft/210726-code-as-truth-migration.md": {
+  "by": "fdk/CAPABILITIES.md (+4)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/draft/140726-propose-plan-split-superpowers.md": {
+  "by": ".github/workflows/harness.yml (+7)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/draft/290726-graph-engineering-PLAN.md": {
+  "by": "fdk/tools/medic.py (+2)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/draft/030726-medic-cong-suc-khoe-tong.md": {
+  "by": "fdk/tools/build-overstack-docs.py (+3)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/draft/180726-council-self-index-remaining-scope.md": {
+  "by": "fdk/tools/docs-curate.py",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/draft/210726-capability-map.md": {
+  "by": "fdk/tools/build-overstack-docs.py (+2)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/draft/300726-pr92-model.md": {
+  "by": ".overstack/doyourmagic/agent-desktop/flow.html",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/draft/300726-pr92-flow.md": {
+  "by": ".overstack/doyourmagic/agent-desktop/flow.html (+1)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/draft/170726-gitignored-dedupe.md": {
+  "by": ".gitignore (+4)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/draft/140726-spec-kit-traceability.md": {
+  "by": "fdk/CAPABILITIES.md (+3)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/draft/200726-orchestration-triage.md": {
+  "by": "harness/scripts/orca-dispatch.py",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/draft/040926-lint-drift-catchup.md": {
+  "by": "fdk/tools/build-overstack-docs.py (+2)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/draft/210726-codegraph-external-pull.md": {
+  "by": "fdk/CAPABILITIES.md (+4)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/draft/030726-secondary-memory.md": {
+  "by": "harness/metrics/scratch-log.jsonl",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/draft/200726-context-hygiene-budget.md": {
+  "by": "harness/travel-policy.yaml (+2)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/draft/030726-milestone-v106-harden.md": {
+  "by": "fdk/tools/medic.py",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/draft/040926-absorb-round.md": {
+  "by": "fdk/tools/build-overstack-docs.py (+1)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/draft/230726-webclone-extractsite-dedup.md": {
+  "by": "fdk/CAPABILITIES.md (+2)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/draft/240726-global-tool-path-resolution-broken.md": {
+  "by": "fdk/skills.provenance.json (+2)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/draft/300726-fdk-uat-flow.md": {
+  "by": ".overstack/doyourmagic/agent-desktop/flow.html",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/draft/200726-orchestration-loop-closure.md": {
+  "by": ".github/workflows/harness.yml (+1)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/draft/020926-sessionstart-episodic-recall.md": {
+  "by": "llmwiki/.claude/hooks/session_start.py (+1)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/draft/290726-spec-vs-overstack.md": {
+  "by": "harness/scripts/loop-runner.py",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/draft/190726-graph-lessons-grapuco.md": {
+  "by": "harness/archetypes.config.yaml (+2)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/draft/190726-travel-gap-forcing-functions.md": {
+  "by": "fdk/CAPABILITIES.md (+6)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "sources/draft/070926-installer-update-idempotent.md": {
+  "by": ".gitignore (+3)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "draft/uiux/020726-overstack-docs-redesign.md": {
+  "by": "fdk/skills.search.json (+2)",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "draft/uiux/300626-audit-fix-docs-site-macos.md": {
+  "by": "harness/scripts/sync-skills.py",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "draft/orca/010726-dev-harness-kit.md": {
+  "by": ".template-manifest.json",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ },
+ "draft/orca/010726-trupillar4-council-persona.md": {
+  "by": ".github/workflows/harness.yml",
+  "action": "code-drift",
+  "ts": "2026-09-10T15:34:32",
+  "session": null
+ }
+}
