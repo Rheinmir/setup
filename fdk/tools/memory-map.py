@@ -15,6 +15,20 @@ import json
 import sys
 from pathlib import Path
 
+for _c in Path(__file__).resolve().parents:
+    if (_c / "harness" / "scripts" / "overstack_paths.py").is_file():
+        sys.path.insert(0, str(_c / "harness" / "scripts"))
+        break
+try:
+    from overstack_paths import harness_dir as _harness_dir
+except Exception:
+    _harness_dir = None
+
+
+def _metrics_dir(root) -> Path:
+    return (_harness_dir(root) if _harness_dir else Path(root) / "harness") / "metrics"
+
+
 # ENGINE = nơi chứa fdk/tools/*.py (repo-local khi framework; GLOBAL ~/.claude/harness khi downstream).
 # ROOT  = project để đọc metrics + ghi html — ưu tiên cwd (Stop-hook đặt cwd=project root) nên engine
 # global vẫn vẽ ĐÚNG project downstream, không cần copy engine vào từng repo (đối xứng build-wiki-graph).
@@ -54,7 +68,7 @@ def _read(p):
 
 
 def build():
-    scratch = _read("harness/metrics/scratch-log.jsonl")
+    scratch = _read((_metrics_dir(ROOT) / "scratch-log.jsonl").relative_to(ROOT).as_posix())
     ledger = _read("llmwiki/wiki/ledger.jsonl")
     events = _read("harness/metrics/events.jsonl")
 
@@ -101,7 +115,7 @@ def _session_parents() -> dict:
     """{session con: session cha} từ store mem-rank (harness/metrics/memory.jsonl). Fail-open."""
     out = {}
     try:
-        p = Path("harness/metrics/memory.jsonl")
+        p = _metrics_dir(Path.cwd()) / "memory.jsonl"
         for ln in p.read_text(encoding="utf-8").splitlines():
             if not ln.strip():
                 continue

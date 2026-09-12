@@ -41,12 +41,23 @@ from pathlib import Path
 
 import bnal_config
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+try:
+    from overstack_paths import harness_dir as _harness_dir
+except Exception:          # bản cài cũ thiếu overstack_paths → giữ hành vi cũ
+    _harness_dir = None
+
+
+def _metrics_dir(root) -> Path:
+    return (_harness_dir(root) if _harness_dir else Path(root) / "harness") / "metrics"
+
+
 _FALLBACK = {"verified": False, "relevance": {"scorer": "token-overlap", "embedding_model": None},
              "eviction": {"policy": "score", "max_entries": 500}}
 
 
 def _store_file(root: Path) -> Path:
-    return root / "harness" / "metrics" / "memory.jsonl"
+    return _metrics_dir(root) / "memory.jsonl"
 
 
 def _config_file(root: Path) -> Path:
@@ -55,12 +66,13 @@ def _config_file(root: Path) -> Path:
 
 def _ensure_gitignored(root: Path) -> None:
     try:
-        (root / "harness" / "metrics").mkdir(parents=True, exist_ok=True)
+        _metrics_dir(root).mkdir(parents=True, exist_ok=True)
+        rel = _store_file(root).relative_to(root).as_posix()
         gi = root / ".gitignore"
         cur = gi.read_text(encoding="utf-8", errors="ignore") if gi.exists() else ""
-        if "harness/metrics/memory.jsonl" not in cur:
+        if rel not in cur:
             with open(gi, "a", encoding="utf-8") as f:
-                f.write("\n# mem-rank local memory store\nharness/metrics/memory.jsonl\n")
+                f.write(f"\n# mem-rank local memory store\n{rel}\n")
     except Exception:
         pass
 

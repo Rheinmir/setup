@@ -119,6 +119,36 @@ def find_wiki_dir(root: str):
     return None
 
 
+# Cùng THỨ TỰ với harness/scripts/overstack_paths.py (chuẩn mới trước, cũ sau). Hook không chắc
+# import được file đó (global: ~/.claude/harness/harness/scripts) nên chép thứ tự sang đây;
+# harness/validators/bare_path_lint.py --self-test assert hai nơi khớp nhau.
+OVERSTACK_DIRS = (".llmwiki", "llmwiki")
+HARNESS_DIRS = (".harness", "harness")
+
+def _first_dir(root, names):
+    for n in names:
+        c = pathlib.Path(root) / n
+        if c.is_dir():
+            return c
+    return None
+
+def overstack_dir(root: str):
+    return _first_dir(root, OVERSTACK_DIRS)
+
+def harness_dir(root: str) -> pathlib.Path:
+    d = _first_dir(root, HARNESS_DIRS)
+    if d:
+        return d
+    fw = (pathlib.Path(root) / "fdk" / "wiki").is_dir()
+    return pathlib.Path(root) / ("harness" if fw else ".harness")
+
+def stamp_path(root: str):
+    d = overstack_dir(root)
+    if d and (d / ".harness-stamp").is_file():
+        return d / ".harness-stamp"
+    return None
+
+
 def code_log(root, *args) -> None:
     """Gọi harness/scripts/code-logger.py qua subprocess (fail-open) — log framework BẰNG CODE.
 

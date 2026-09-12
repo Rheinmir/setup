@@ -48,7 +48,10 @@ def overstack_dir(root):
 
 
 def harness_dir(root):
-    return _first_dir(root, HARNESS_DIRS)
+    d = _first_dir(root, HARNESS_DIRS)
+    if d:
+        return d
+    return pathlib.Path(root) / ("harness" if is_framework_repo(root) else ".harness")
 
 
 def wiki_dir(root):

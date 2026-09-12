@@ -9,7 +9,7 @@ import subprocess
 import sys
 import time
 
-from hooklib import audit, code_log, find_validators, project_dir, read_payload, resolve_tool, run_validator, scope_config
+from hooklib import audit, code_log, find_validators, harness_dir, overstack_dir, project_dir, read_payload, resolve_tool, run_validator, scope_config, stamp_path
 
 
 # file code (đa ngôn ngữ) trong git-status → trigger regen phần code-graph của wiki-graph.
@@ -24,12 +24,16 @@ _CODE_RE = re.compile(r"\.(py|js|jsx|ts|tsx|mjs|cjs|go|rs|java|rb|php|c|h|cpp|cc
 # code-graph). KHÔNG đổi thuật toán generator (build-wiki-graph.py là engine dùng chung, sửa
 # sai lan rộng — để dành cho /propose riêng nếu cần incremental thật). Window là default CHƯA
 # đo trên hành vi thật, chỉnh qua biến môi trường khi cần, không phải hằng số thiêng.
-_DEBOUNCE_STATE = "harness/metrics/.stop-debounce.json"
 _DEBOUNCE_WINDOW_S = int(os.environ.get("OVERSTACK_STOP_DEBOUNCE_S", "180"))
 
 
+def _debounce_path(root: str) -> str:
+    """.harness/metrics ở dự án khách, harness/metrics ở repo framework (hooklib.harness_dir)."""
+    return os.path.join(str(harness_dir(root)), "metrics", ".stop-debounce.json")
+
+
 def _debounce_state(root: str) -> dict:
-    path = os.path.join(root, _DEBOUNCE_STATE)
+    path = _debounce_path(root)
     try:
         return json.load(open(path, encoding="utf-8")) if os.path.isfile(path) else {}
     except Exception:
@@ -37,7 +41,7 @@ def _debounce_state(root: str) -> dict:
 
 
 def _debounce_mark(root: str, key: str, ok: bool = True) -> None:
-    path = os.path.join(root, _DEBOUNCE_STATE)
+    path = _debounce_path(root)
     state = _debounce_state(root)
     state[key] = {"ts": time.time(), "ok": ok}
     try:
@@ -62,9 +66,11 @@ def _debounced(root: str, key: str, require_ok: bool = False) -> bool:
 
 
 def _scope_config(root: str):
-    """GH#49 — MỘT nguồn: hooklib.scope_config(). Fallback = hành vi cũ (llmwiki/wiki + '.')."""
+    """GH#49 — MỘT nguồn: hooklib.scope_config(). Fallback = <thư mục overstack đang dùng>/wiki
+    (.llmwiki ở dự án khách, llmwiki ở repo framework) + '.'."""
     c = scope_config(root)
-    return c["wiki_dir"] or "llmwiki/wiki", c["code_root"] or "."
+    od = overstack_dir(root)
+    return c["wiki_dir"] or (f"{od.name}/wiki" if od else "llmwiki/wiki"), c["code_root"] or "."
 
 
 def regen_docs(root: str) -> None:
@@ -89,7 +95,7 @@ def regen_docs(root: str) -> None:
     # nhánh `--global` (đường bootstrap thật) exit TRƯỚC 4b nên không repo downstream nào có → graph
     # không bao giờ regen (GH#70). Khoá enablement vào chính stamp (đã gate hook) làm vòng tự-nhất-quán:
     # tín hiệu bật hook = tín hiệu bật wiki-graph. Giữ env cũ làm override tương thích ngược.
-    has_stamp = os.path.isfile(os.path.join(root, "llmwiki", ".harness-stamp"))
+    has_stamp = stamp_path(root) is not None
     wikigraph_on = bool(wg) and (is_framework or has_stamp or os.environ.get("OVERSTACK_WIKIGRAPH") == "1")
     if not is_framework and not wikigraph_on:
         return  # không phải framework và cũng không bật wiki-graph downstream → bỏ hẳn (rẻ)
@@ -114,7 +120,11 @@ def regen_docs(root: str) -> None:
                 and not _debounced(root, "wiki-graph")):
             wiki_dir, code_root = _scope_config(root)
             also = ["--also", "fdk/wiki"] if os.path.isdir(os.path.join(root, "fdk", "wiki")) else []
-            subprocess.run([sys.executable, wg, wiki_dir, *also, "--code-root", code_root],
+            # build-wiki-graph.py mặc định ghi vào llmwiki/html (cứng) → truyền -o theo thư mục
+            # overstack đang dùng (.llmwiki ở dự án khách, llmwiki ở repo framework).
+            od = overstack_dir(root)
+            out = ["-o", str(od / "html" / "wiki-graph.html")] if od else []
+            subprocess.run([sys.executable, wg, wiki_dir, *also, "--code-root", code_root, *out],
                            cwd=root, capture_output=True, timeout=90)
             _debounce_mark(root, "wiki-graph")
         # T5 (provenance-log, T-260722-01): phân loại file đổi theo path-prefix, ghi sự kiện
@@ -160,7 +170,7 @@ def secondary_memory(root: str, session: str) -> None:
     if not sl:
         return  # thiếu engine (local+global) → bỏ (fail-open)
     is_framework = os.path.isfile(os.path.join(root, "fdk", "tools", "build-overstack-docs.py"))
-    has_stamp = os.path.isfile(os.path.join(root, "llmwiki", ".harness-stamp"))
+    has_stamp = stamp_path(root) is not None
     if not (is_framework or has_stamp or os.environ.get("OVERSTACK_WIKIGRAPH") == "1"):
         return  # downstream chưa bootstrap (không stamp) → bỏ
     try:

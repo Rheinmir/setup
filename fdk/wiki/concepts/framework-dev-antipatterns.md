@@ -88,8 +88,17 @@ Test dựng sẵn tiền-đề mà thực tế không có → xanh giả, che AP
   không env ⇒ KHÔNG vẽ — chốt cả hai chiều (bật đúng lúc, tắt đúng lúc).
 - Liên hệ [[AP-4]] (ludic-fallacy): cả hai là "test dễ hơn thực tế"; AP-4 dễ ở *input*, AP-6 dễ ở *môi trường*.
 
+## AP-7 · "Layout hallucination" — code viết theo cây repo framework, chạy trên cây máy khách
+
+**Triệu chứng.** Hook/engine xanh hết trong repo, xuống máy khách thì câm (không kêu lệch version, không vẽ graph, không ghi provenance) hoặc đẻ thư mục lạc `llmwiki/` `harness/` cạnh `.llmwiki/` `.harness/`. Không lỗi, không cảnh báo.
+
+**Vì sao sập.** Repo framework KHÔNG BAO GIỜ migrate (cố ý) nên mọi phiên dev chỉ nhìn thấy layout trần; agent quét/CRUD/viết test theo cái nó thấy. Đo 2026-09-11: 55 file đi xuống global ghi cứng đường trần; `session_start.harness_integrity` + `stop.has_stamp` đọc `llmwiki/.harness-stamp` trong khi installer ghi `.llmwiki/.harness-stamp`. Sáu sự cố cùng lớp trong một tuần (GH#106 #111 #112 #113 #149 #153).
+
+**Cách chặn.** (1) Đường dẫn qua một nguồn: `overstack_paths.*` / `hooklib.*`; `bare_path_lint` đỏ khi ghi cứng. (2) Test hành vi trong fixture dot THẬT: `dot-layout-runtime-test.sh` (CI). (3) Đầu phiên ở repo framework in `[downstream-map]`; `/fdk` có mục "Bản đồ downstream". Liên hệ [[AP-1]] (reachability) và [[AP-6]] (test tự chống đỡ tín hiệu): AP-7 là test/code tự chống đỡ *cây thư mục*.
+
 ## Origin
 - Chưng cất từ phiên dev 2026-07-05 (wiki-graph downstream): các instance GH#41/#43/#47/#49/**#51**.
 - Bổ sung 2026-07-08 (GH#70): AP-5 split-brain enablement + AP-6 test tự-chống-đỡ tín hiệu.
 - Bằng chứng: `llmwiki/html/council/council-report-028-seed42.html`, PR#42/#45/#49/#52; fix GH#70 ở
   `stop.py` + `wiki-graph-user-reachability-test.sh` (bỏ `OVERSTACK_WIKIGRAPH=1` mồi + thêm STAMP-control).
+- Bổ sung 2026-09-11: AP-7 layout hallucination (PLAN 110926-downstream-layout-awareness).

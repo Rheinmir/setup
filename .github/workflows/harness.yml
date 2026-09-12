@@ -91,6 +91,8 @@ jobs:
           python3 harness/validators/code_health.py --root .
       - name: harness-lint — meta-drift (hằng số content-dir + wiring policy→settings)
         run: python3 harness/scripts/harness-lint.py --check
+      - name: bare-path-lint — file đi xuống global không ghi cứng llmwiki/ · harness/ (ratchet, nợ mới đỏ)
+        run: python3 harness/validators/bare_path_lint.py --root . --check
       - name: agent↔claude skill-table parity
         run: python3 harness/validators/agent_claude_parity.py
       - name: duplicate-basename — slug wiki không trùng giữa các thư mục
@@ -179,6 +181,8 @@ jobs:
         run: bash harness/tests/token-attrib-test.sh .
       - name: dot-layout-migrate — installer migrate llmwiki/→.llmwiki/ + harness/→.harness/ (downstream)
         run: bash harness/tests/dot-layout-migrate-test.sh .
+      - name: dot-layout-runtime — hook GLOBAL chạy trong dự án downstream layout DOT (a-d, GH#153 class)
+        run: bash harness/tests/dot-layout-runtime-test.sh .
       - name: tests-wired — MỌI harness/tests/*-test.sh phải có step trong workflow này
         run: |
           for t in harness/tests/*-test.sh; do

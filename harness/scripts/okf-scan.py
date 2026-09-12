@@ -38,10 +38,21 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 try:
     import overstack_paths
+    from overstack_paths import harness_dir
 except Exception:
     overstack_paths = None
+    harness_dir = None
 
-RECEIPTS = "harness/metrics/context-receipts.jsonl"
+def receipts_path(root):
+    if harness_dir:
+        return harness_dir(str(root)) / "metrics" / "context-receipts.jsonl"
+    return root / "harness" / "metrics" / "context-receipts.jsonl"
+
+
+def _metrics_dir(root) -> Path:
+    return (harness_dir(root) if harness_dir else Path(root) / "harness") / "metrics"
+
+
 MEMORY = "harness/metrics/memory.jsonl"
 WIKI_CANDS = ("fdk/wiki", ".llmwiki/wiki", "llmwiki/wiki", "wiki")
 FM = re.compile(r"\A---\r?\n(.*?)\r?\n---", re.S)
@@ -96,13 +107,14 @@ def collect(root: Path) -> list:
                           "type": fm["type"], "title": fm.get("title") or p.stem,
                           "tags": tags if isinstance(tags, list) else [str(tags)], "id": fm.get("id") or p.stem})
     try:
-        for ln in (root / MEMORY).read_text(encoding="utf-8").splitlines():
+        for ln in (_metrics_dir(root) / "memory.jsonl").read_text(encoding="utf-8").splitlines():
             if not ln.strip():
                 continue
             m = json.loads(ln)
             if not m.get("type"):
                 continue
-            items.append({"source": "memory", "path": f"{MEMORY}#{m.get('id')}",
+            items.append({"source": "memory",
+                          "path": f"{(_metrics_dir(root) / 'memory.jsonl').relative_to(root).as_posix()}#{m.get('id')}",
                           "type": m["type"], "title": (m.get("did") or m.get("text") or "")[:90],
                           "tags": ["memory", m["type"]] + ([m["session"]] if m.get("session") else []),
                           "id": m.get("id")})
@@ -133,14 +145,15 @@ def rank(items: list, query: str, tags=None, type_filter=None, k: int = 5) -> li
 
 
 def _receipts_file(root: Path) -> Path:
-    p = root / RECEIPTS
+    p = receipts_path(root)
     p.parent.mkdir(parents=True, exist_ok=True)
+    rel = p.relative_to(root).as_posix()
     try:                                     # sổ local, không vào git — cùng quy ước các sổ khác
         gi = root / ".gitignore"
         cur = gi.read_text(encoding="utf-8", errors="ignore") if gi.exists() else ""
-        if RECEIPTS not in cur:
+        if rel not in cur:
             with open(gi, "a", encoding="utf-8") as f:
-                f.write(f"\n# okf-scan context receipts\n{RECEIPTS}\n")
+                f.write(f"\n# okf-scan context receipts\n{rel}\n")
     except Exception:
         pass
     return p
@@ -157,7 +170,7 @@ def write_receipt(root: Path, rec: dict) -> None:
 def read_receipts(root: Path, session=None) -> list:
     out = []
     try:
-        for ln in (root / RECEIPTS).read_text(encoding="utf-8").splitlines():
+        for ln in receipts_path(root).read_text(encoding="utf-8").splitlines():
             if not ln.strip():
                 continue
             r = json.loads(ln)
@@ -222,7 +235,7 @@ def self_test() -> int:
             encoding="utf-8")
         (wd / "no-frontmatter.md").write_text("# không phải OKF\n", encoding="utf-8")
         (root / "harness" / "metrics").mkdir(parents=True)
-        (root / MEMORY).write_text(json.dumps(
+        (_metrics_dir(root) / "memory.jsonl").write_text(json.dumps(
             {"id": "ep1", "kind": "episode", "type": "episode", "did": "vá hook harness",
              "session": "sessA", "ts": "2026-09-07T00:00:00"}) + "\n", encoding="utf-8")
 
@@ -258,7 +271,8 @@ def self_test() -> int:
 
         chk(check(root, "sessX") == 0 and check(root, "sessRong") == 2,
             "check: phiên có biên lai → 0, phiên chưa quét gì → 2")
-        chk(RECEIPTS in (root / ".gitignore").read_text(encoding="utf-8"), "sổ biên lai tự vào .gitignore")
+        chk(receipts_path(root).relative_to(root).as_posix() in (root / ".gitignore").read_text(encoding="utf-8"),
+            "sổ biên lai tự vào .gitignore")
 
     print("okf-scan self-test:", "PASS" if ok else "FAIL")
     return 0 if ok else 2

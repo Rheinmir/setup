@@ -25,6 +25,20 @@ import subprocess
 import sys
 from pathlib import Path
 
+for _c in Path(__file__).resolve().parents:
+    if (_c / "harness" / "scripts" / "overstack_paths.py").is_file():
+        sys.path.insert(0, str(_c / "harness" / "scripts"))
+        break
+try:
+    from overstack_paths import harness_dir as _harness_dir
+except Exception:
+    _harness_dir = None
+
+
+def _metrics_dir(root) -> Path:
+    return (_harness_dir(root) if _harness_dir else Path(root) / "harness") / "metrics"
+
+
 ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -119,7 +133,7 @@ def facts(include_medic=True):
         ("đồ nghề", "hook", _fmt(_count("*.py", "llmwiki/.claude/hooks")), "đĩa", "ls llmwiki/.claude/hooks/*.py | wc -l"),
         ("đồ nghề", "cơ-chế (manifest)", _fmt(_mech_count()), "manifest", "grep -c '- id:' harness/mechanisms.yaml"),
         ("đồ nghề", "script", _fmt(_count("*.py", "harness/scripts")), "đĩa", "ls harness/scripts/*.py | wc -l"),
-        ("bộ nhớ", "scratch-log entry", _fmt(_lines("harness/metrics/scratch-log.jsonl")), "ledger", "wc -l harness/metrics/scratch-log.jsonl"),
+        ("bộ nhớ", "scratch-log entry", _fmt(_lines((_metrics_dir(ROOT) / "scratch-log.jsonl").relative_to(ROOT).as_posix())), "ledger", "wc -l harness/metrics/scratch-log.jsonl"),
         ("bộ nhớ", "wiki-ledger event", _fmt(_lines("llmwiki/wiki/ledger.jsonl")), "ledger", "wc -l llmwiki/wiki/ledger.jsonl"),
         ("code-graph", "index", _graph_symbols(), "graph", "ls -la .graph-agent/index.db"),
     ]

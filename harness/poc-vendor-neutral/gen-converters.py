@@ -27,6 +27,7 @@ OUT = os.path.join(HERE, "out")
 # đường không tồn tại và rơi vào nhánh `|| exit 0` — im lặng, dự án tưởng có rào mà không có
 # (GH#111). Mặc định giữ "harness" nên output không đổi khi env không set → drift-test vẫn xanh.
 HARNESS_DIR = os.environ.get("OVERSTACK_HARNESS_DIR", "harness")
+OVERSTACK_DIR = os.environ.get("OVERSTACK_OVERSTACK_DIR", "llmwiki")
 CLI = f"{HARNESS_DIR}/poc-vendor-neutral/bin/llmwiki-validate.py"
 GEN = "# ⚙️  GENERATED FROM policy.yaml — đừng sửa tay; sửa policy.yaml rồi chạy gen-converters.py"
 
@@ -145,6 +146,8 @@ on: [pull_request, push]
 env:
   HARNESS_REPO: https://github.com/Rheinmir/setup.git
   HARNESS_REF: orca            # pin phiên bản harness: nhánh / tag / commit SHA
+  OVERSTACK_DIR: {OVERSTACK_DIR}
+  HARNESS_DIR: {HARNESS_DIR}
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -184,16 +187,16 @@ jobs:
         # PHẢI trỏ vào repo đang check: wikieval tính REPO_ROOT từ __file__, nên gọi bản
         # global mà không truyền 3 đường dẫn này sẽ đo nhầm chính ~/.claude/harness.
         run: |
-          [ -f harness/metrics/eval-baseline.json ] || {{ echo "no eval baseline — skip"; exit 0; }}
-          E=$(ls -d llmwiki/wiki/sources/evals fdk/wiki/sources/evals 2>/dev/null | head -1)
+          [ -f "$HARNESS_DIR/metrics/eval-baseline.json" ] || {{ echo "no eval baseline — skip"; exit 0; }}
+          E=$(ls -d "$OVERSTACK_DIR/wiki/sources/evals" fdk/wiki/sources/evals 2>/dev/null | head -1)
           [ -n "$E" ] || {{ echo "no goldens dir — skip"; exit 0; }}
-          [ -f harness/scripts/wikieval-collect.py ] \
-            && python3 harness/scripts/wikieval-collect.py > harness/evals/wikieval-outputs.json
-          [ -f harness/evals/wikieval-outputs.json ] || {{ echo "no candidate outputs — skip"; exit 0; }}
+          [ -f "$HARNESS_DIR/scripts/wikieval-collect.py" ] \
+            && python3 "$HARNESS_DIR/scripts/wikieval-collect.py" > "$HARNESS_DIR/evals/wikieval-outputs.json"
+          [ -f "$HARNESS_DIR/evals/wikieval-outputs.json" ] || {{ echo "no candidate outputs — skip"; exit 0; }}
           python3 "$HOME/.claude/harness/harness/scripts/wikieval.py" \
-            --evals-dir "$E" --baseline harness/metrics/eval-baseline.json \
-            --config harness/wikieval.config.yaml \
-            --outputs harness/evals/wikieval-outputs.json --check
+            --evals-dir "$E" --baseline "$HARNESS_DIR/metrics/eval-baseline.json" \
+            --config "$HARNESS_DIR/wikieval.config.yaml" \
+            --outputs "$HARNESS_DIR/evals/wikieval-outputs.json" --check
 """
     write("ci/harness.yml", ci)
 
@@ -251,7 +254,7 @@ jobs:
         if: steps.drift.outputs.status == 'drift'
         uses: peter-evans/create-pull-request@v7
         with:
-          add-paths: llmwiki/wiki
+          add-paths: {OVERSTACK_DIR}/wiki
           branch: wiki-refresh/update
           commit-message: "docs(wiki): wiki-refresh tự động (neo wiki-sync)"
           title: "docs(wiki): wiki-refresh — đồng bộ wiki với code"

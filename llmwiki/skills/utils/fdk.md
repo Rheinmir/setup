@@ -33,6 +33,19 @@ Cạnh tư duy Meadows, mọi tool/skill/hub framework tuân nguyên tắc dùng
 3. **Đừng dẫm module cũ** — trước khi tạo skill/validator/script/hook mới, **grep tên** xem đã tồn tại chưa; sửa code dùng-chung thì map caller trước (impact-check) rồi safe-change.
 4. **Propose trước** — mọi thay đổi → draft kế hoạch, STOP chờ duyệt; đừng code thẳng.
 5. **Surgical → verify → ghi vết** — chỉ chạm cái buộc phải chạm; chạy test/drift-test; cập nhật registry/log.
+6. **Layout máy khách ≠ layout repo** — trước khi chạm path trong hook/engine/installer/CI: đọc mục "Bản đồ downstream" bên dưới; đường trần `llmwiki/` `harness/` CHỈ đúng trong repo này.
+
+## Bản đồ downstream — cái bạn đang thấy KHÔNG phải cái chạy ở máy khách
+| Repo framework (đang mở) | Máy khách sau `curl bootstrap.sh` | Ghi chú |
+|---|---|---|
+| `llmwiki/` | `.llmwiki/` | wiki · raw · html · `.harness-stamp` |
+| `harness/` | `.harness/` | chỉ `poc-vendor-neutral/` + `foundation.yaml` + `metrics/`; KHÔNG có `scripts/` `validators/` |
+| `harness/scripts` · `harness/validators` · `fdk/tools` · `llmwiki/.claude/hooks` | `~/.claude/harness/` (global) | engine dùng chung; hook fire từ `~/.claude/settings.json` |
+| `fdk/wiki/` | không có | framework_only |
+| `skills/*/SKILL.md` | `~/.claude/skills/` | qua npx, không nằm trong repo dự án |
+| không có | `CAPABILITIES.md` · `.overstack.yaml` · root `.claude/settings.json` | chỉ có ở downstream |
+
+Nguồn máy-đọc: `harness/downstream-contract.yaml` → `layout_map`. Luật: path chạm downstream đi qua `harness/scripts/overstack_paths.py` (engine) hoặc `hooklib.overstack_dir/harness_dir/stamp_path` (hook); `bare_path_lint` đỏ nếu ghi cứng. Test hành vi thật: `bash harness/tests/dot-layout-runtime-test.sh .` (fixture dot, HOME cô lập). Nhớ: `rg`/Grep bỏ qua thư mục dấu chấm — dùng `--hidden` khi soi dự án downstream.
 
 ## Distill / author một skill (dùng ở project bất kỳ)
 - 1 skill = 1 file `SKILL.md`: frontmatter `name` + `description`, rồi `## When to use`, `## Steps`, `## Rules`.

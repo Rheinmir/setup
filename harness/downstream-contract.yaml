@@ -67,3 +67,13 @@ must_reach_global_engines:
   - hooks/health-check.py
   - harness/scripts/council.py
   - fdk/tools/medic.py
+
+# BẢN ĐỒ LAYOUT — repo framework nhìn thấy gì ↔ máy khách thật sự có gì. session_start in khối này
+# khi đang ở repo framework (nhận diện fdk/wiki); /fdk chép lại; bare_path_lint gác code.
+layout_map:
+  - {repo: "llmwiki/",                 downstream: ".llmwiki/",                    note: "wiki + raw + html + .harness-stamp (installer migrate, resolver chấp cả hai)"}
+  - {repo: "harness/",                 downstream: ".harness/",                    note: "chỉ poc-vendor-neutral + foundation.yaml + metrics; KHÔNG có scripts/ validators/ (U10 gỡ)"}
+  - {repo: "harness/scripts, harness/validators, fdk/tools, llmwiki/.claude/hooks", downstream: "~/.claude/harness/{harness,fdk,hooks}/", note: "engine GLOBAL dùng chung mọi dự án; hook fire từ ~/.claude/settings.json, guard theo .harness-stamp"}
+  - {repo: "fdk/wiki/ (wiki của framework)", downstream: "(không có)",             note: "framework_only — downstream chỉ có .llmwiki/wiki của chính nó"}
+  - {repo: "skills/*/SKILL.md",         downstream: "~/.claude/skills/ (npx skills add)", note: "không nằm trong repo dự án"}
+  - {repo: "(không có)",                downstream: "CAPABILITIES.md · .overstack.yaml · .claude/settings.json (root)", note: "chỉ tồn tại ở downstream — code framework đọc phải chấp vắng mặt"}

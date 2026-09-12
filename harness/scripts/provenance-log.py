@@ -22,8 +22,20 @@ import json
 import re
 import socket
 import subprocess
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+try:
+    from overstack_paths import harness_dir as _harness_dir
+except Exception:          # bản cài cũ thiếu overstack_paths → giữ hành vi cũ
+    _harness_dir = None
+
+
+def _metrics_dir(root) -> Path:
+    return (_harness_dir(root) if _harness_dir else Path(root) / "harness") / "metrics"
+
 
 EVENTS_PATH_REL = "harness/metrics/provenance-log.jsonl"
 
@@ -37,7 +49,7 @@ _CODE_RE = re.compile(r"\.(py|js|jsx|ts|tsx|mjs|cjs|go|rs|java|rb|php|c|h|cpp|cc
 
 
 def _events_path(root) -> Path:
-    return Path(root) / EVENTS_PATH_REL
+    return _metrics_dir(root) / "provenance-log.jsonl"
 
 
 def _canon(body: dict) -> str:

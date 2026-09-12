@@ -31,6 +31,15 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
+try:
+    from overstack_paths import harness_dir
+except Exception:
+    harness_dir = None
+
+
+def _metrics_dir(root) -> Path:
+    return (harness_dir(root) if harness_dir else Path(root) / "harness") / "metrics"
+
 
 MET = "harness/metrics"
 HIST = f"{MET}/self-report.jsonl"
@@ -102,7 +111,10 @@ def gather(root: Path, cfg: dict) -> dict:
     m["tokens_max"] = max([int((s.get("tokens") or {}).get("input_tokens", 0))
                            + int((s.get("tokens") or {}).get("output_tokens", 0)) for s in sess] or [0])
 
-    rec = _jsonl(root / MET / "context-receipts.jsonl")
+    if harness_dir:
+        rec = _jsonl(harness_dir(str(root)) / "metrics" / "context-receipts.jsonl")
+    else:
+        rec = _jsonl(root / MET / "context-receipts.jsonl")
     scans = [r for r in rec if r.get("kind") != "verify"]
     vers = [r for r in rec if r.get("kind") == "verify"]
     m["scans"] = len(scans)
@@ -112,7 +124,7 @@ def gather(root: Path, cfg: dict) -> dict:
     m["coverage_avg"] = round(sum(covs) / len(covs), 3) if covs else None
     m["verifies"] = len(covs)
 
-    eps = [x for x in _jsonl(root / MET / "memory.jsonl") if x.get("kind") == "episode"]
+    eps = [x for x in _jsonl(_metrics_dir(root) / "memory.jsonl") if x.get("kind") == "episode"]
     m["episodes"] = len(eps)
     m["episodes_orphan"] = sum(1 for e in eps if not e.get("parent"))
     m["chain_max"] = 0

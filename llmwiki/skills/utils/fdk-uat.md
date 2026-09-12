@@ -77,8 +77,8 @@ git push origin --delete "$CANARY"
 
 ### 3. UAT — chạy checklist bước 1 trong dự án ĐÓ
 Tối thiểu, theo `fdk/docs/fresh-install-gate.md`:
-1. **3 trụ có mặt:** `harness/poc-vendor-neutral/policy.yaml` · `.claude/settings.json` · `.pre-commit-config.yaml` · `llmwiki/wiki/index.md` · `CAPABILITIES.md`.
-2. **Harness cắn thật:** `bash harness/poc-vendor-neutral/test-broad.sh` → PASS (validator GOOD-pass / BAD-block).
+1. **3 trụ có mặt:** `.harness/poc-vendor-neutral/policy.yaml` · `.claude/settings.json` · `.pre-commit-config.yaml` · `.llmwiki/wiki/index.md` · `CAPABILITIES.md`.
+2. **Harness cắn thật:** `bash .harness/poc-vendor-neutral/test-broad.sh` → PASS (validator GOOD-pass / BAD-block).
 3. **Năng lực MỚI tới tay** — phần riêng của bản này (checklist bước 1). Đây là mục hay bị bỏ nhất, và cũng là mục duy nhất chứng minh bản MỚI có giá trị.
 4. **Orchestration-ready:** skill `orchestration` / `orca-cli` / `orca-dispatch-reference` reachable.
 5. **BẮT BUỘC (không phải tuỳ chọn — feedback 2026-07-24, lần thứ 2 bị nhắc vì skip bước này): dựng workspace Orca thật + TỰ VERIFY nó hiện trong app, đừng chỉ chạy filesystem-level.** Chỉ curl-cài vào một thư mục tạm rồi test bằng CLI KHÔNG tính là UAT hoàn chỉnh — user không thấy được gì, "không visual = không dùng được". Đây là cổng CỨNG: UAT KHÔNG được coi là PASS nếu bỏ qua bước này.
@@ -100,6 +100,7 @@ print(f'✓ worktree \"$WT_NAME\" hiện thật trong Orca — {names}')
 "
 ```
 Assertion FAIL ở đây → **DỪNG, không được tiếp tục báo PASS cho user** — quay lại sửa lệnh `worktree create` (thường do `--repo` sai định dạng selector hoặc `repo add` chưa commit) rồi verify lại. Đây chính là gate cấu trúc thay cho việc "phải nhớ tự giác dựng workspace mỗi lần" — nhớ tay đã fail 2 lần liền (2026-07-21, 2026-07-24), giờ ép bằng assert.
+6. **Layout đúng chuẩn dot:** không tồn tại `llmwiki/` hay `harness/` trần ở gốc dự án UAT — chỉ `.llmwiki/` · `.harness/` (AP-7 layout hallucination).
 
 ### 4. PHA 2 — main-URL smoke, NGAY SAU merge (canary KHÔNG thay được bước này)
 Pha 1 chạy với **ref khác** và **ba biến override** → nó **mù** với chính các giá trị **mặc định**. Mà mặc định là chỗ chứa chuỗi nhánh hardcode (`bootstrap.sh` `BASE=`, `install.sh` `REPO_RAW=`, `SKILLS_REF=`). Chỉ pha này kiểm được **đúng cái lệnh người mới thật sự gõ**.
@@ -131,7 +132,7 @@ D2=$(mktemp -d) && cd "$D2" && git init -q
 curl -fsSL "$RAW/harness/poc-vendor-neutral/bootstrap.sh" | bash
 ```
 
-Rút gọn (~1 phút): 3 trụ có mặt · `bash harness/poc-vendor-neutral/test-broad.sh` PASS · skill mới reachable trong `~/.claude/skills/`.
+Rút gọn (~1 phút): 3 trụ có mặt · `bash .harness/poc-vendor-neutral/test-broad.sh` PASS · skill mới reachable trong `~/.claude/skills/`.
 
 **FAIL → gỡ ngay** (bước 5). Cửa sổ rủi ro của nhánh chính thu từ "cả bài UAT dài" xuống "một lần smoke ~1 phút".
 

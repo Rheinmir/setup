@@ -140,7 +140,7 @@ log "B1 · vendor: $VENDORS"
 
 # ── B2. Sinh wiring từ policy ──
 log "B2 · gen-converters → out/"
-( cd "$DEST" && OVERSTACK_HARNESS_DIR="$HARNESS_DIR" python3 gen-converters.py >/dev/null )
+( cd "$DEST" && OVERSTACK_HARNESS_DIR="$HARNESS_DIR" OVERSTACK_OVERSTACK_DIR="$OVERSTACK_DIR" python3 gen-converters.py >/dev/null )
 
 # ── B3. Cắm wiring ──
 log "B3 · cắm wiring"

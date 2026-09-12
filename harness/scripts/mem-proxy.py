@@ -25,6 +25,17 @@ import sys
 import tempfile
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+try:
+    from overstack_paths import harness_dir as _harness_dir
+except Exception:          # bản cài cũ thiếu overstack_paths → giữ hành vi cũ
+    _harness_dir = None
+
+
+def _metrics_dir(root) -> Path:
+    return (_harness_dir(root) if _harness_dir else Path(root) / "harness") / "metrics"
+
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_FIXTURES = REPO_ROOT / "harness" / "evals" / "episodic-fixtures.json"
 DEFAULT_EVALS = REPO_ROOT / "llmwiki" / "wiki" / "sources" / "evals" / "episodic"
@@ -44,7 +55,7 @@ def _load_memrank():
 def _seed_store(mr, root: Path, fixtures: Path):
     data = json.loads(Path(fixtures).read_text(encoding="utf-8"))
     eps = data.get("episodes") or []
-    store = root / "harness" / "metrics" / "memory.jsonl"
+    store = _metrics_dir(root) / "memory.jsonl"
     store.parent.mkdir(parents=True, exist_ok=True)
     with open(store, "w", encoding="utf-8") as f:
         for e in eps:

@@ -27,6 +27,16 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+try:
+    from overstack_paths import harness_dir as _harness_dir
+except Exception:          # bản cài cũ thiếu overstack_paths → giữ hành vi cũ
+    _harness_dir = None
+
+
+def _metrics_dir(root) -> Path:
+    return (_harness_dir(root) if _harness_dir else Path(root) / "harness") / "metrics"
+
 
 def repo_root() -> Path:
     # Ưu tiên cwd: Stop-hook chạy engine (có thể ở GLOBAL ~/.claude/harness) với cwd=project root
@@ -42,7 +52,7 @@ def repo_root() -> Path:
 
 
 ROOT = repo_root()
-LOG = ROOT / "harness" / "metrics" / "scratch-log.jsonl"
+LOG = _metrics_dir(ROOT) / "scratch-log.jsonl"
 
 
 def _now_iso():
