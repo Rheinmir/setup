@@ -1,0 +1,679 @@
+<!doctype html>
+<title>Downstream-Layout Awareness</title>
+<meta name="description" content="Tại sao repo framework và máy khách có hai cây thư mục khác nhau, và các lớp gác mới ngăn code câm khi xuống máy khách.">
+<meta name="theme-color" content="#eaf2fd">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a84ff'/%3E%3C/svg%3E">
+<script>(function(){try{var t=localStorage.getItem("dl120926-theme");
+if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}})();</script>
+<style>
+:root{
+  --glass-1: rgba(255,255,255,.55);
+  --glass-2: rgba(255,255,255,.7);
+  --glass-3: rgba(255,255,255,.88);
+  --blur-1: 24px; --blur-2: 8px; --blur-3: 4px;
+  --edge-hi: inset 0 1px 0 rgba(255,255,255,.85);
+  --border: rgba(30,90,170,.14);
+  --ink: #0f0f12; --ink2: #4a4a55;
+  --nav-pad-y: 18px;
+  --font-text: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', 'Roboto', 'Segoe UI', sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', 'Roboto', 'Segoe UI', sans-serif;
+  --font-mono: 'SF Mono', ui-monospace, 'SFMono-Regular', Menlo, 'Roboto Mono', Consolas, monospace;
+}
+*{box-sizing:border-box}
+html{background:#e9f0fb;scrollbar-width:thin;scrollbar-color:transparent transparent;scroll-behavior:smooth}
+html.scrolling{scrollbar-color:rgba(10,132,255,.32) transparent}
+body{
+  margin:0;font-family:var(--font-text);font-size:13.5px;line-height:1.6;color:var(--ink);
+  padding-left:200px;transition:padding-left .28s cubic-bezier(.4,0,.2,1);
+  background:
+    radial-gradient(900px 500px at 12% -10%, rgba(10,132,255,.10), transparent 60%),
+    radial-gradient(700px 420px at 95% 15%, rgba(90,162,232,.08), transparent 55%),
+    linear-gradient(180deg, #f7fbff 0%, #eaf2fd 100%);
+}
+body::before{content:'';position:fixed;inset:-10%;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(640px 440px at 10% 14%,rgba(10,132,255,.22),transparent 65%),
+    radial-gradient(380px 460px at 4% 52%,rgba(48,176,199,.18),transparent 65%),
+    radial-gradient(540px 400px at 88% 10%,rgba(88,86,214,.13),transparent 60%),
+    radial-gradient(720px 500px at 74% 76%,rgba(48,176,199,.13),transparent 65%),
+    radial-gradient(480px 380px at 16% 86%,rgba(255,149,0,.12),transparent 60%);
+  animation:orbDrift 46s ease-in-out infinite alternate}
+@keyframes orbDrift{100%{transform:translate(2.2%,1.6%) scale(1.045)}}
+body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:radial-gradient(rgba(30,90,170,.11) 1px,transparent 1.3px);
+  background-size:22px 22px;
+  mask-image:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.22))}
+h1,h2,h3,.logo{font-family:var(--font-display);letter-spacing:-.02em}
+h1{text-wrap:balance} p{text-wrap:pretty}
+::-webkit-scrollbar{width:11px;height:11px;background:transparent}
+::-webkit-scrollbar-track,::-webkit-scrollbar-track-piece,::-webkit-scrollbar-corner,::-webkit-scrollbar-button{background:transparent;border:0;box-shadow:none}
+::-webkit-scrollbar-thumb{background:transparent;border-radius:8px;border:3px solid transparent;background-clip:content-box;transition:background-color .25s ease}
+html.scrolling::-webkit-scrollbar-thumb,nav.scrolling::-webkit-scrollbar-thumb,::-webkit-scrollbar-thumb:hover{background-color:rgba(10,132,255,.32)}
+::-webkit-scrollbar-thumb:active{background-color:rgba(10,132,255,.6)}
+
+/* ---- sidebar ---- */
+.skip-link{position:fixed;top:8px;left:8px;z-index:200;padding:8px 14px;border-radius:10px;
+  background:var(--glass-1);backdrop-filter:blur(var(--blur-1));border:1px solid var(--border);
+  transform:translateY(-150%);transition:transform .2s;color:var(--ink);text-decoration:none;font-size:12px}
+.skip-link:focus-visible{transform:translateY(0)}
+:focus-visible{outline:2px solid #0a84ff;outline-offset:2px;border-radius:8px}
+:focus:not(:focus-visible){outline:none}
+
+nav{position:fixed;top:0;left:0;bottom:0;width:200px;z-index:100;
+  display:flex;flex-direction:column;align-items:stretch;gap:2px;padding:var(--nav-pad-y) 12px;
+  background:linear-gradient(165deg,rgba(255,255,255,.46) 0%,rgba(255,255,255,.22) 48%,rgba(240,248,255,.34) 100%);
+  backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
+  -webkit-backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
+  border-right:1px solid rgba(255,255,255,.55);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 1px 0 0 rgba(255,255,255,.5),
+    inset -1px 0 0 rgba(30,90,170,.10),4px 0 24px rgba(30,90,170,.08);
+  overflow-y:auto;scrollbar-width:none;-ms-overflow-style:none;
+  transition:transform .28s cubic-bezier(.4,0,.2,1)}
+nav::-webkit-scrollbar{width:0;height:0;display:none}
+nav::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(220px 160px at 18% 4%,rgba(255,255,255,.55),transparent 70%),
+    linear-gradient(115deg,rgba(255,255,255,.28) 0%,transparent 28%,transparent 72%,rgba(255,255,255,.14) 100%)}
+nav>*{position:relative;flex-shrink:0}
+nav .logo{margin:0 0 10px;padding:6px 10px;font-size:14px;font-weight:700;
+  background:linear-gradient(135deg,#0a84ff,#64b5f7);-webkit-background-clip:text;background-clip:text;color:transparent}
+nav .logo small{display:block;font-size:9.5px;font-weight:500;color:var(--ink2);-webkit-text-fill-color:var(--ink2)}
+nav a{padding:7px 12px;border-radius:10px;font-size:12px;position:relative;overflow:hidden;
+  color:var(--ink2);text-decoration:none;display:block}
+nav a:hover{background:rgba(10,132,255,.06);color:var(--ink)}
+nav a.active{color:#0a84ff;background:rgba(10,132,255,.08);font-weight:600}
+.ripple-ink{position:absolute;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.70) 0%,rgba(255,255,255,.28) 38%,rgba(10,132,255,.20) 72%,transparent 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 0 -10px 20px rgba(10,132,255,.12),0 0 14px rgba(10,132,255,.10);
+  backdrop-filter:blur(2px) saturate(1.25);-webkit-backdrop-filter:blur(2px) saturate(1.25);
+  transform:scale(0);opacity:1;animation:rippleGrow .6s cubic-bezier(.25,.46,.45,.94) forwards}
+@keyframes rippleGrow{55%{transform:scale(1);opacity:.75}100%{transform:scale(1.04);opacity:0}}
+
+body.nav-collapsed nav{transform:translateX(-100%)}
+body.nav-collapsed{padding-left:0}
+.nav-toggle{position:fixed;top:12px;left:12px;z-index:120;width:32px;height:32px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-size:14px;color:#4a4a55;cursor:pointer;
+  background:linear-gradient(165deg,rgba(255,255,255,.5),rgba(255,255,255,.24));
+  backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
+  -webkit-backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
+  border:1px solid transparent;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 0 0 1px rgba(30,90,170,.08),0 2px 10px rgba(30,90,170,.12);
+  transition:opacity .2s,transform .28s cubic-bezier(.4,0,.2,1);overflow:hidden}
+.nav-toggle:hover{color:#0a84ff}
+body:not(.nav-collapsed) .nav-toggle{opacity:0;pointer-events:none;transform:translateX(-6px)}
+.nav-close{position:absolute;top:10px;right:10px;width:24px;height:24px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--ink2);cursor:pointer;
+  background:rgba(0,0,0,.04);border:none;overflow:hidden}
+.nav-close:hover{color:#0a84ff;background:rgba(10,132,255,.10)}
+@media(max-width:640px){body{padding-left:0}nav{box-shadow:0 8px 30px rgba(0,0,0,.14)}}
+
+.theme-row{position:sticky;bottom:calc(-1 * var(--nav-pad-y));margin-top:auto;display:flex;align-items:center;
+  justify-content:space-between;padding:11px 12px;border-top:1px solid rgba(30,90,170,.14);
+  background:linear-gradient(165deg,rgba(255,255,255,.5),rgba(240,248,255,.32));backdrop-filter:blur(14px)}
+.theme-row .lbl{font-size:11px;color:var(--ink2);font-weight:600}
+.theme-switch{cursor:pointer}
+.theme-switch .track{display:inline-block;position:relative;width:46px;height:24px;border-radius:999px;
+  background:rgba(30,90,170,.16);transition:background .18s}
+.theme-switch .track::before{content:'☀️';position:absolute;left:5px;top:50%;transform:translateY(-50%);font-size:9px;opacity:.8}
+.theme-switch .track::after{content:'🌙';position:absolute;right:5px;top:50%;transform:translateY(-50%);font-size:9px;opacity:.5}
+.theme-switch .knob{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;
+  box-shadow:0 1px 3px rgba(0,0,0,.25);transition:left .18s}
+.theme-switch.on .knob{left:24px}
+.theme-switch.on .track{background:#0a84ff}
+
+/* ---- content ---- */
+main{display:block}
+.hero{max-width:1100px;margin:0 auto;padding:56px 24px 20px}
+.hero h1{font-size:clamp(26px,4vw,38px);margin:0 0 10px;
+  background:linear-gradient(135deg, #0a84ff, #5aa2e8, #cfe3fb);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{font-size:14px;color:var(--ink2);max-width:760px;margin:0 0 8px}
+.hero .path-chip{display:inline-block;margin-top:10px;font-size:10.5px;padding:5px 10px;border-radius:8px;
+  background:var(--glass-2);border:1px solid var(--border);box-shadow:var(--edge-hi)}
+.hero .path-chip code{font-family:var(--font-mono);font-size:10.5px}
+
+.mm{overflow-x:auto;padding:6px 4px 4px;max-width:1100px;margin:0 auto 8px}
+.mm-wrap{margin:0 24px 8px}
+.mm-canvas{position:relative;width:max-content}
+.mm-links{position:absolute;top:0;left:0;pointer-events:none;overflow:visible;z-index:0}
+.mm-links path{fill:none;stroke-width:2.2;opacity:.55;stroke-linecap:round}
+.mm .tree{position:relative;z-index:1}
+.mm .tree,.mm .children{display:flex;flex-direction:column;gap:7px;justify-content:center}
+.mm .row{display:flex;align-items:center;gap:40px;position:relative}
+.mm .children.collapsed{display:none}
+.mm .node{position:relative;display:inline-flex;flex-direction:column;gap:1px;padding:6px 11px;border-radius:12px;cursor:default;
+  white-space:nowrap;background:rgba(255,255,255,.72);backdrop-filter:blur(7px) saturate(1.1);border:1px solid var(--border);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 3px 14px rgba(20,40,90,.07);transition:transform .12s}
+.mm .node.has-children{cursor:pointer}
+.mm .node:hover{transform:translateY(-1px)}
+.mm .node .nm{font-size:12px;font-weight:700;letter-spacing:-.01em}
+.mm .node .ds{font-size:10px;color:var(--ink2)}
+.mm .node.has-children::after{content:'';position:absolute;right:-7px;top:50%;width:6px;height:6px;
+  border-right:2px solid var(--ink2);border-bottom:2px solid var(--ink2);transform:translateY(-50%) rotate(-45deg);opacity:.5}
+.mm .node.collapsed-parent::after{transform:translateY(-50%) rotate(45deg)}
+.mm .node.root{background:linear-gradient(135deg,rgba(10,132,255,.16),rgba(88,86,214,.14));border-color:rgba(10,132,255,.4)}
+.mm .node.b-0{border-color:rgba(48,176,199,.4)} .mm .node.b-0 .nm{color:#1c7f8e}
+.mm .node.b-1{border-color:rgba(88,86,214,.4)} .mm .node.b-1 .nm{color:#4340ab}
+.mm .node.b-2{border-color:rgba(255,149,0,.4)} .mm .node.b-2 .nm{color:#c96f00}
+.mm .node.b-3{border-color:rgba(52,199,89,.4)} .mm .node.b-3 .nm{color:#218a3d}
+.mm .node.b-4{border-color:rgba(255,45,85,.4)} .mm .node.b-4 .nm{color:#c11f42}
+.mm .node.b-5{border-color:rgba(10,132,255,.4)} .mm .node.b-5 .nm{color:#0a6fd6}
+
+section{position:relative;overflow:visible;padding:36px 24px 44px;max-width:1100px;margin:0 auto;scroll-margin-top:24px}
+.section-header .tag{display:inline-block;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:7px;margin-bottom:8px;letter-spacing:.02em}
+.section-header h2{font-size:21px;margin:0 0 8px;color:#1d1d1f}
+.section-header p{color:var(--ink2);font-size:13px;max-width:780px}
+.section-bg::before{content:'';position:absolute;top:0;bottom:0;left:50%;width:100vw;transform:translateX(-50%);pointer-events:none}
+.s-bg0::before{background:linear-gradient(180deg, rgba(10,132,255,.05) 0%, transparent 60%)}
+.s-bg1::before{background:linear-gradient(180deg, rgba(48,176,199,.05) 0%, transparent 60%)}
+.s-bg2::before{background:linear-gradient(180deg, rgba(88,86,214,.05) 0%, transparent 60%)}
+.s-bg3::before{background:linear-gradient(180deg, rgba(52,199,89,.05) 0%, transparent 60%)}
+.s-bg4::before{background:linear-gradient(180deg, rgba(255,149,0,.06) 0%, transparent 60%)}
+.s-bg5::before{background:linear-gradient(180deg, rgba(255,45,85,.05) 0%, transparent 60%)}
+.s-bg6::before{background:linear-gradient(180deg, rgba(10,132,255,.05) 0%, transparent 60%)}
+
+#sec-0 .tag{background:rgba(10,132,255,.10);color:#0a84ff} #sec-0 .card h4{color:#0a84ff} #sec-0 li::before{color:#0a84ff}
+#sec-1 .tag{background:rgba(48,176,199,.10);color:#30b0c7} #sec-1 .card h4{color:#30b0c7} #sec-1 li::before{color:#30b0c7}
+#sec-2 .tag{background:rgba(88,86,214,.10);color:#5856d6} #sec-2 .card h4{color:#5856d6} #sec-2 li::before{color:#5856d6}
+#sec-3 .tag{background:rgba(52,199,89,.10);color:#34c759} #sec-3 .card h4{color:#28a745} #sec-3 li::before{color:#28a745}
+#sec-4 .tag{background:rgba(255,149,0,.12);color:#ff9500} #sec-4 .card h4{color:#f08c00} #sec-4 li::before{color:#f08c00}
+#sec-5 .tag{background:rgba(255,45,85,.10);color:#ff2d55} #sec-5 .card h4{color:#e0264b} #sec-5 li::before{color:#e0264b}
+#sec-6 .tag{background:rgba(10,132,255,.10);color:#0a84ff} #sec-6 .card h4{color:#0a84ff} #sec-6 li::before{color:#0a84ff}
+
+.card{background:var(--glass-2);backdrop-filter:blur(var(--blur-2)) saturate(1.1);border:1px solid var(--border);
+  border-radius:16px;box-shadow:var(--edge-hi), 0 4px 20px rgba(20,40,90,.08);padding:18px}
+.content-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media(max-width:700px){.content-grid{grid-template-columns:1fr}}
+.card h4{margin:0 0 8px;font-size:13.5px}
+.card ul{margin:0;padding:0;list-style:none}
+.card li{padding-left:16px;position:relative;margin-bottom:7px;font-size:13px;color:var(--ink2)}
+.card li::before{content:'›';position:absolute;left:0;font-weight:700}
+.card li code, p code, td code, li code{font-family:var(--font-mono);font-size:12px;background:rgba(30,90,170,.07);
+  padding:1px 5px;border-radius:5px;color:var(--ink)}
+
+.table-wrap{margin-top:18px;overflow-x:auto;border-radius:14px;background:var(--glass-3);backdrop-filter:blur(var(--blur-3));
+  border:1px solid var(--border);box-shadow:var(--edge-hi), 0 4px 16px rgba(20,40,90,.06)}
+table{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-numeric:tabular-nums}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--ink2);font-weight:700}
+tr:last-child td{border-bottom:none}
+td code{white-space:nowrap}
+
+.code-wrap{position:relative;margin:14px 0}
+pre.code-block{margin:0;background:#12141c;color:#e6edf7;border-radius:12px;padding:14px 16px;font-family:var(--font-mono);
+  font-size:12px;overflow-x:auto;line-height:1.55;box-shadow:0 4px 18px rgba(10,20,40,.18)}
+.code-copy{position:absolute;top:7px;right:7px;z-index:2;width:26px;height:24px;display:inline-flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.1);color:#cbd5e1;border:1px solid rgba(255,255,255,.15);
+  border-radius:7px;cursor:pointer;opacity:0;transition:opacity .15s,background .15s,color .15s}
+.code-copy svg{width:13px;height:13px;display:block}
+.code-wrap:hover .code-copy{opacity:1}
+.code-copy:hover{background:rgba(255,255,255,.2);color:#fff}
+.code-copy.copied{background:rgba(16,185,129,.25);color:#6ee7b7;border-color:rgba(16,185,129,.45);opacity:1}
+@media(max-width:640px){.code-copy{opacity:1}}
+
+.callout{border-left:3px solid #0a84ff;padding:10px 14px;background:rgba(10,132,255,.05);border-radius:0 10px 10px 0;font-size:12.5px;color:var(--ink2);margin:14px 0}
+.gh-badge{font-family:var(--font-mono);font-size:11px;background:rgba(30,90,170,.08);padding:2px 6px;border-radius:6px;color:#0a84ff}
+ol.steps{padding-left:20px;font-size:13px;color:var(--ink2)}
+ol.steps li{margin-bottom:8px}
+ol.steps strong{color:var(--ink)}
+footer{max-width:1100px;margin:0 auto;padding:24px 24px 60px;font-size:11px;color:var(--ink2)}
+footer code{font-family:var(--font-mono);font-size:10.5px;background:rgba(30,90,170,.07);padding:2px 6px;border-radius:5px}
+
+.ripple{position:absolute;border-radius:50%;pointer-events:none;transform:scale(0);opacity:.9;
+  background:radial-gradient(circle, rgba(255,255,255,.6) 0%, rgba(10,132,255,.22) 35%, transparent 70%);
+  box-shadow:0 0 0 1px rgba(255,255,255,.45);animation:rippleWave .65s cubic-bezier(.2,.6,.3,1) forwards}
+@keyframes rippleWave{to{transform:scale(2.8);opacity:0}}
+
+@media (prefers-color-scheme: dark){
+  html:not([data-theme=light]){background:#0c0f16;--ink:#e8f0fb;--ink2:#9fb4d1}
+  html:not([data-theme=light]) body{color:#e8f0fb;
+    background:radial-gradient(900px 500px at 12% -10%, rgba(10,132,255,.14), transparent 60%),
+      radial-gradient(700px 420px at 95% 15%, rgba(90,162,232,.10), transparent 55%),
+      linear-gradient(180deg, #0d1220 0%, #0a0d16 100%)}
+  html:not([data-theme=light]) .hero p.lead,
+  html:not([data-theme=light]) .section-header p,
+  html:not([data-theme=light]) .card li,
+  html:not([data-theme=light]) .theme-row .lbl,
+  html:not([data-theme=light]) footer{color:#9fb4d1}
+  html:not([data-theme=light]) .section-header h2{color:#f1f5fb}
+  html:not([data-theme=light]) nav,
+  html:not([data-theme=light]) .card,
+  html:not([data-theme=light]) .theme-row,
+  html:not([data-theme=light]) .hero .path-chip{
+    background:linear-gradient(165deg,rgba(30,42,64,.6) 0%,rgba(20,28,44,.5) 100%);border-color:rgba(120,160,220,.22)}
+  html:not([data-theme=light]) .table-wrap{background:rgba(20,28,44,.7)}
+  html:not([data-theme=light]) th,
+  html:not([data-theme=light]) .gh-badge{color:#9fb4d1}
+  html:not([data-theme=light]) td{color:#d7e2f2;border-color:rgba(120,160,220,.18)}
+  html:not([data-theme=light]) th{border-color:rgba(120,160,220,.18)}
+  html:not([data-theme=light]) .card li code, html:not([data-theme=light]) td code, html:not([data-theme=light]) p code{
+    background:rgba(120,160,220,.14);color:#e8f0fb}
+  html:not([data-theme=light]) .callout{background:rgba(10,132,255,.10);color:#c7d6ec}
+  html:not([data-theme=light]) .mm .node{background:rgba(30,42,64,.7);border-color:rgba(120,160,220,.25)}
+  html:not([data-theme=light]) .mm .node .ds{color:#9fb4d1}
+}
+html[data-theme=dark]{background:#0c0f16;--ink:#e8f0fb;--ink2:#9fb4d1}
+html[data-theme=dark] body{color:#e8f0fb;
+  background:radial-gradient(900px 500px at 12% -10%, rgba(10,132,255,.14), transparent 60%),
+    radial-gradient(700px 420px at 95% 15%, rgba(90,162,232,.10), transparent 55%),
+    linear-gradient(180deg, #0d1220 0%, #0a0d16 100%)}
+html[data-theme=dark] .hero p.lead,
+html[data-theme=dark] .section-header p,
+html[data-theme=dark] .card li,
+html[data-theme=dark] .theme-row .lbl,
+html[data-theme=dark] footer{color:#9fb4d1}
+html[data-theme=dark] .section-header h2{color:#f1f5fb}
+html[data-theme=dark] nav,
+html[data-theme=dark] .card,
+html[data-theme=dark] .theme-row,
+html[data-theme=dark] .hero .path-chip{
+  background:linear-gradient(165deg,rgba(30,42,64,.6) 0%,rgba(20,28,44,.5) 100%);border-color:rgba(120,160,220,.22)}
+html[data-theme=dark] .table-wrap{background:rgba(20,28,44,.7)}
+html[data-theme=dark] th,
+html[data-theme=dark] .gh-badge{color:#9fb4d1}
+html[data-theme=dark] td{color:#d7e2f2;border-color:rgba(120,160,220,.18)}
+html[data-theme=dark] th{border-color:rgba(120,160,220,.18)}
+html[data-theme=dark] .card li code, html[data-theme=dark] td code, html[data-theme=dark] p code{
+  background:rgba(120,160,220,.14);color:#e8f0fb}
+html[data-theme=dark] .callout{background:rgba(10,132,255,.10);color:#c7d6ec}
+html[data-theme=dark] .mm .node{background:rgba(30,42,64,.7);border-color:rgba(120,160,220,.25)}
+html[data-theme=dark] .mm .node .ds{color:#9fb4d1}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;
+    transition-duration:.001ms!important;scroll-behavior:auto!important}
+}
+</style>
+
+<a class="skip-link" href="#main">Bỏ qua, vào nội dung chính</a>
+
+<nav aria-label="Điều hướng tài liệu">
+  <div class="logo">Downstream Layout<small>Ghi nhận cấu trúc máy khách</small></div>
+  <a href="#sec-0">01 · Vấn đề</a>
+  <a href="#sec-1">02 · Bản đồ layout</a>
+  <a href="#sec-2">03 · Đường giao hàng</a>
+  <a href="#sec-3">04 · Lớp gác mới</a>
+  <a href="#sec-4">05 · Tự kiểm (fresher)</a>
+  <a href="#sec-5">06 · Bài học từ review</a>
+  <a href="#sec-6">07 · Nghiệm thu</a>
+</nav>
+
+<main id="main">
+<div class="hero">
+  <h1>Repo framework bạn đang mở không phải cây thư mục chạy ở máy khách</h1>
+  <p class="lead">Ghi lại vì sao hai lớp cây thư mục (repo dev vs. máy khách sau khi cài) từng làm hook "câm" hoặc đẻ thư mục lạc mà không một dấu hiệu lỗi nào hiện ra, và các lớp gác mới (test, lint, tài liệu) chặn việc này lặp lại — dành cho fresher mới vào team dev framework overstack.</p>
+  <span class="path-chip">File này: <code>llmwiki/html/120926-downstream-layout.html</code></span>
+</div>
+
+<div class="mm-wrap">
+<div class="mm"><div class="mm-canvas"><svg class="mm-links"></svg><div class="tree">
+  <div class="row">
+    <div class="node root has-children"><span class="nm">Downstream layout</span><span class="ds">7 mục</span><span class="ct">7</span></div>
+    <div class="children">
+      <div class="row"><div class="node b-0 leaf"><span class="nm">01 Vấn đề</span><span class="ds">6 sự cố cùng lớp</span></div></div>
+      <div class="row"><div class="node b-1 leaf"><span class="nm">02 Bản đồ layout</span><span class="ds">layout_map, 6 dòng</span></div></div>
+      <div class="row"><div class="node b-2 leaf"><span class="nm">03 Đường giao hàng</span><span class="ds">curl → install → global</span></div></div>
+      <div class="row"><div class="node b-3 leaf"><span class="nm">04 Lớp gác mới</span><span class="ds">test + lint + CI + docs</span></div></div>
+      <div class="row"><div class="node b-4 leaf"><span class="nm">05 Tự kiểm</span><span class="ds">5 lệnh fresher chạy được</span></div></div>
+      <div class="row"><div class="node b-5 leaf"><span class="nm">06 Bài học review</span><span class="ds">5 lỗi của chính PLAN</span></div></div>
+      <div class="row"><div class="node b-0 leaf"><span class="nm">07 Nghiệm thu</span><span class="ds">số đo đỏ→xanh</span></div></div>
+    </div>
+  </div>
+</div></div></div>
+</div>
+
+<section id="sec-0" class="section-bg s-bg0">
+  <div class="section-header">
+    <span class="tag">01 · Vấn đề</span>
+    <h2>Một repo, hai cây thư mục — code viết theo cây nhìn thấy, chạy trên cây khác</h2>
+    <p>Repo framework (nơi bạn đang code) giữ nguyên <code>llmwiki/</code> và <code>harness/</code> "trần" (không có dấu chấm đầu tên) — installer đã hứa "có <code>fdk/wiki</code> thì KHÔNG BAO GIỜ migrate" cấu trúc này. Nhưng khi một dự án khách chạy lệnh cài (bootstrap — script tự động tải và thiết lập framework), nó nhận được <code>.llmwiki/</code> và <code>.harness/</code> (có dấu chấm, layout "dot") cộng thêm một bản engine (bộ script/hook lõi của framework) dùng chung nằm ở <code>~/.claude/harness</code> trên máy — hoàn toàn tách khỏi thư mục dự án.</p>
+  </div>
+  <div class="content-grid">
+    <div class="card">
+      <h4>Vì sao hook "câm" mà không báo lỗi</h4>
+      <ul>
+        <li>Hook (đoạn mã tự chạy tại các mốc sự kiện của Claude Code, ví dụ lúc bắt đầu/kết thúc phiên) chạy <em>fail-open</em> — nghĩa là mọi ngoại lệ đều bị bọc <code>try/except: pass</code> để không làm gãy phiên người dùng. Hệ quả phụ: nếu code đọc sai đường dẫn (tìm <code>llmwiki/.harness-stamp</code> trong khi installer ghi <code>.llmwiki/.harness-stamp</code>), hook không kêu lỗi — nó chỉ lặng lẽ không làm gì.</li>
+        <li>Không cảnh báo, không exception, không log — chỉ là tính năng biến mất khỏi máy khách trong khi mọi test ở repo framework vẫn xanh (vì repo framework có cây trần thật, nên code đọc đúng ngay tại nhà).</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Sáu sự cố cùng lớp trong một tuần</h4>
+      <ul>
+        <li><span class="gh-badge">GH#106</span> pre-commit trỏ <code>.harness/scripts</code> không tồn tại → chặn mọi commit.</li>
+        <li><span class="gh-badge">GH#111</span> 3 chỗ sinh dây ghi cứng đường trần → 0 luật cắn ở tầng phiên.</li>
+        <li><span class="gh-badge">GH#112</span> glob của 4 luật gác ghi cứng segment <code>llmwiki</code>.</li>
+        <li><span class="gh-badge">GH#113</span> check bash bỏ qua glob đường dot.</li>
+        <li><span class="gh-badge">GH#149</span> seed (dữ liệu khởi tạo) chỉ chạy ở chế độ cài mới.</li>
+        <li><span class="gh-badge">GH#153</span> scratch-log ghi cứng <code>llmwiki/</code> → đẻ thư mục lạc, tidy quét nhầm báo 0 draft.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout">Đo thật ngày 2026-09-11 (dựng fixture — dự án giả lập dùng để test — từ working tree): <code>session_start.py</code> in <b>0 dòng</b> dù hạ version xuống lệch MAJOR; <code>stop.py</code> không vẽ wiki-graph, không ghi provenance; hook lại đẻ thêm <code>harness/metrics/context-receipts.jsonl</code> trần cạnh <code>.harness/</code>. Đếm bằng script: <b>55 file</b> đi xuống máy khách ghi cứng đường trần mà không qua resolver (hàm phân giải đường dẫn theo đúng layout đang chạy).</div>
+</section>
+
+<section id="sec-1" class="section-bg s-bg1">
+  <div class="section-header">
+    <span class="tag">02 · Bản đồ layout</span>
+    <h2>Cái bạn đang thấy trong repo ↔ cái máy khách thật sự có</h2>
+    <p>Nguồn máy-đọc: <code>harness/downstream-contract.yaml</code>, khối <code>layout_map</code>. Đây là bảng mà hook <code>session_start.py</code> in ra đầu phiên khi đang ở repo framework, và <code>/fdk</code> chép lại nguyên văn.</p>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Repo framework (đang thấy)</th><th>Máy khách thật sự có</th><th>Ghi chú</th></tr></thead>
+      <tbody>
+        <tr><td><code>llmwiki/</code></td><td><code>.llmwiki/</code></td><td>wiki + raw + html + <code>.harness-stamp</code> (installer migrate, resolver chấp cả hai dạng)</td></tr>
+        <tr><td><code>harness/</code></td><td><code>.harness/</code></td><td>chỉ chứa <code>poc-vendor-neutral/</code> + <code>foundation.yaml</code> + <code>metrics/</code>; KHÔNG có <code>scripts/</code> hay <code>validators/</code></td></tr>
+        <tr><td><code>harness/scripts</code>, <code>harness/validators</code>, <code>fdk/tools</code>, <code>llmwiki/.claude/hooks</code></td><td><code>~/.claude/harness/{harness,fdk,hooks}/</code></td><td>engine GLOBAL dùng chung mọi dự án trên máy; hook được kích hoạt (fire) từ <code>~/.claude/settings.json</code>, chỉ chạy khi thấy <code>.harness-stamp</code></td></tr>
+        <tr><td><code>fdk/wiki/</code> (wiki của framework)</td><td>(không có)</td><td><em>framework_only</em> — cố ý, downstream chỉ có <code>.llmwiki/wiki</code> của riêng nó</td></tr>
+        <tr><td><code>skills/*/SKILL.md</code></td><td><code>~/.claude/skills/</code> (qua <code>npx skills add</code>)</td><td>không nằm trong repo dự án khách</td></tr>
+        <tr><td>(không có)</td><td><code>CAPABILITIES.md</code> · <code>.overstack.yaml</code> · <code>.claude/settings.json</code> ở gốc</td><td>chỉ tồn tại ở máy khách — code framework đọc phải chấp nhận vắng mặt</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:12.5px;color:var(--ink2);margin-top:10px">Luật đi kèm bảng: mọi path chạm downstream đi qua <code>harness/scripts/overstack_paths.py</code> (phía engine) hoặc <code>hooklib.overstack_dir/harness_dir/stamp_path</code> (phía hook) — <code>bare_path_lint</code> (mục 04) đỏ nếu ai ghi cứng đường trần.</p>
+</section>
+
+<section id="sec-2" class="section-bg s-bg2">
+  <div class="section-header">
+    <span class="tag">03 · Đường giao hàng</span>
+    <h2>curl → install.sh → engine global → CI của khách</h2>
+    <p>Bốn chặng một dự án khách đi qua khi cài overstack, và vì sao một sửa hook không tự nhiên tới tay người dùng cũ.</p>
+  </div>
+  <ol class="steps">
+    <li><strong>curl bootstrap.sh</strong> — one-liner người mới gõ, tải lõi bootstrap về thư mục tạm.</li>
+    <li><strong>install.sh</strong> — migrate layout (trần → dot nếu cần), seed dữ liệu khởi tạo, cắm wiring (nối hook vào <code>.claude/settings.json</code> ở gốc dự án).</li>
+    <li><strong>install-harness.sh --global</strong> — copy engine (script/hook lõi) và hook vào <code>~/.claude/harness</code>, dùng chung cho MỌI dự án trên máy đó. Hook chỉ bật khi thấy <code>.harness-stamp</code> trong dự án — đây là điều kiện fail-safe, không phải cờ song song.</li>
+    <li><strong>CI sinh cho khách</strong> — <code>gen-converters.py</code> sinh ra <code>.github/workflows/harness.yml</code> riêng cho dự án khách, phải tự theo layout dot của chính nó.</li>
+  </ol>
+  <div class="callout">
+    <b>Vì sao bắt buộc bump version 1.3.88 → 1.3.89 (commit <code>4f4db2e</code>):</b> <code>install.sh</code> chỉ làm mới engine global khi <code>template_version</code> khác bản đang cài trên máy. Commit sửa hook (<code>684e73b</code>) không đổi bề mặt năng lực nào nên version lẽ ra đứng yên ở 1.3.88 — nếu vậy, người dùng đã cài overstack (đang ở 1.3.88) chạy lại đúng lệnh curl vẫn sẽ <b>không nhận được bản hook đã sửa</b>, vì <code>install.sh</code> thấy version khớp thì bỏ qua bước copy engine mới. Bump version là cách duy nhất báo cho installer "có bản mới, hãy copy lại".
+  </div>
+</section>
+
+<section id="sec-3" class="section-bg s-bg3">
+  <div class="section-header">
+    <span class="tag">04 · Các lớp gác mới</span>
+    <h2>Năm lớp chặn để lỗi lớp này không lặp lại</h2>
+    <p>Không đổi layout nào — chỉ thêm các van phản hồi (theo thang can thiệp hệ thống của Meadows: đổi luật chơi trước, đổi luồng thông tin, rồi mới vá tham số).</p>
+  </div>
+  <div class="content-grid">
+    <div class="card">
+      <h4>1 · Test runtime trong fixture dot</h4>
+      <ul>
+        <li><code>harness/tests/dot-layout-runtime-test.sh</code> chạy hook <b>THẬT</b> (<code>session_start.py</code>, <code>stop.py</code>) trong một dự án khách layout dot, dựng bằng <code>downstream-fixture.sh</code>, <code>HOME</code> cô lập bằng <code>mktemp -d</code>.</li>
+        <li>Vì sao fixture phải cài engine từ working tree rồi <code>cmp</code>: <code>bootstrap.sh</code> chỉ tải lõi vào thư mục tạm, còn <code>install.sh</code> tải <code>install-harness.sh</code> qua <code>REPO_RAW</code> — bản đó thiếu bundle nên tự clone <code>rheinmir/setup@orca</code> từ remote. Nếu không sửa, fixture kiểm chứng code REMOTE chứ không phải code đang sửa trong working tree (lỗi này chính review đã bắt — xem mục 06). Cách chặn: cài đè engine global bằng <code>install-harness.sh --global</code> chạy từ working tree, rồi <code>cmp</code> hook global với hook trong worktree để chắc hai bên khớp byte-for-byte.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>2 · Lint bare-path, ratchet theo baseline</h4>
+      <ul>
+        <li><code>harness/validators/bare_path_lint.py</code> quét mọi file đi xuống global, chặn đường trần (viết cứng <code>llmwiki/</code>, <code>harness/</code> lúc chạy) mới.</li>
+        <li>Nợ cũ (đo được: <b>83 file / 381 chỗ</b>) nằm trong <code>harness/metrics/bare-path-baseline.json</code> — ratchet (chốt không cho tăng, chỉ cho giảm): sửa được file nào thì baseline giảm; thêm nợ mới ở bất kỳ file nào → CI đỏ, chỉ đích danh file + số dòng.</li>
+        <li>Miễn trừ theo <b>dòng</b> (<code>&#35; bare-path: ok &lt;lý do&gt;</code>), KHÔNG miễn theo cả file — một file đã import resolver vẫn có thể còn literal trần ở hằng khác (ví dụ <code>okf-scan.py</code> import <code>overstack_paths</code> nhưng hằng <code>MEMORY</code> vẫn ghi cứng).</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>3 · CI downstream theo biến môi trường</h4>
+      <ul>
+        <li><code>gen-converters.py</code> sinh CI cho dự án khách dùng <code>$OVERSTACK_DIR</code> / <code>$HARNESS_DIR</code> thay vì viết cứng <code>llmwiki/</code>, <code>harness/</code> — nên CI của khách chạy đúng theo layout dot của chính nó, không skip im lặng.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>4 · Khối <code>[downstream-map]</code> + tài liệu</h4>
+      <ul>
+        <li><code>session_start.py</code> in khối <code>[downstream-map]</code> (bảng ở mục 02) <b>chỉ khi</b> đang ở repo framework (nhận diện qua <code>fdk/wiki</code> tồn tại) — dự án khách không thấy khối này.</li>
+        <li><code>skills/fdk/SKILL.md</code> có mục "Bản đồ downstream" bắt buộc đọc trước khi chạm path trong hook/engine/installer/CI.</li>
+        <li><code>fdk/wiki/concepts/framework-dev-antipatterns.md</code> thêm <b>AP-7 "Layout hallucination"</b> — chi tiết ở mục 06.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="sec-4" class="section-bg s-bg4">
+  <div class="section-header">
+    <span class="tag">05 · Fresher tự kiểm thế nào</span>
+    <h2>Các lệnh chạy được ngay, không cần hỏi ai</h2>
+    <p>Chạy trong repo framework, tại gốc repo. Không có gì trong các lệnh này là bí mật nội bộ — copy-paste được.</p>
+  </div>
+  <div class="card">
+    <h4>Test runtime hook thật trong fixture dot</h4>
+    <div class="code-wrap"><pre class="code-block">bash harness/tests/dot-layout-runtime-test.sh .</pre></div>
+    <h4>Lint bare-path (đường trần đi xuống global)</h4>
+    <div class="code-wrap"><pre class="code-block">python3 harness/validators/bare_path_lint.py --root . --check</pre></div>
+    <h4>Chạy trọn step CI tại local</h4>
+    <div class="code-wrap"><pre class="code-block">python3 fdk/tools/ci-local.py</pre></div>
+    <h4>Cổng sức khoẻ trước khi push</h4>
+    <div class="code-wrap"><pre class="code-block">python3 fdk/tools/medic.py --ci</pre></div>
+    <h4>UAT hai pha (canary → main-URL smoke)</h4>
+    <div class="code-wrap"><pre class="code-block">/fdk-uat
+&#35; Pha 1 — canary: đẩy nhánh uat/&lt;ts&gt;, curl bootstrap từ raw của CHÍNH nhánh đó vào dự án trống.
+&#35; FAIL ở pha này thì xoá canary, nhánh chính chưa hề bị bẩn.
+&#35; Pha 2 — main-URL smoke NGAY SAU merge: chạy đúng lệnh người mới gõ, không override biến nào.</pre></div>
+  </div>
+  <div class="callout">Nhớ: <code>rg</code>/Grep bỏ qua thư mục bắt đầu bằng dấu chấm theo mặc định — khi soi một dự án downstream (layout dot) phải thêm cờ <code>--hidden</code>, không thì <code>.llmwiki/</code>, <code>.harness/</code> biến mất khỏi kết quả tìm kiếm mà không báo lỗi gì (đúng lớp "câm" của mục 01).</div>
+</section>
+
+<section id="sec-5" class="section-bg s-bg5">
+  <div class="section-header">
+    <span class="tag">06 · Bài học từ review</span>
+    <h2>Chính bản PLAN cũng sai 5 chỗ — review dispatch bắt được</h2>
+    <p>PLAN gốc được giao cho một agent khác (<code>opencode/mimo-v2.5-free</code>) làm Task 1 và Task 2, rồi tự chạy lại để review. Mục "Đính chính sau review dispatch" trong PLAN ghi lại nguyên văn 5 lỗi này.</p>
+  </div>
+  <div class="content-grid">
+    <div class="card">
+      <h4>1 · Fixture test nhầm code REMOTE</h4>
+      <ul><li><code>bootstrap.sh</code> chỉ tải lõi; <code>install.sh</code> tải <code>install-harness.sh</code> qua <code>REPO_RAW</code>, bản đó thiếu bundle nên tự clone <code>rheinmir/setup@orca</code>. Đo: hook global trong fixture có sha khác bản worktree — test tưởng đang kiểm code sửa, thực ra đang kiểm code cũ trên GitHub. Sửa bằng cài đè global từ working tree rồi <code>cmp</code>.</li></ul>
+    </div>
+    <div class="card">
+      <h4>2 · <code>hooklib.x(...)</code> gây <code>NameError</code></h4>
+      <ul><li>Hai hook import theo tên (<code>from hooklib import ...</code>), không có tên module <code>hooklib</code> trong file. <code>stop.py</code> gọi hai hàm không bọc <code>try</code> — viết nhầm <code>hooklib.stamp_path(...)</code> sẽ làm sập cả hook Stop ở MỌI dự án khách, không chỉ câm.</li></ul>
+    </div>
+    <div class="card">
+      <h4>3 · <code>wiki_drift</code> dùng nhầm resolver</h4>
+      <ul><li>Neo đồng bộ (<code>.last-sync.json</code>) nằm ở <code>llmwiki/wiki/</code> — nơi <code>wiki-sync.py</code> ghi — nhưng <code>find_wiki_dir</code> trả <code>fdk/wiki</code> trước ở repo framework, nơi không có neo, nên dòng nhắc <code>[wiki-sync]</code> câm. Phải dò neo theo đúng thứ tự nơi GHI, không dùng resolver chung.</li></ul>
+    </div>
+    <div class="card">
+      <h4>4 · Lint miễn theo cả file thì giấu nợ</h4>
+      <ul><li>Bản lint đầu bỏ qua mọi file có import resolver — sau khi vá, <code>okf-scan.py</code> import <code>overstack_paths</code> nhưng hằng <code>MEMORY</code> vẫn viết cứng, và lint sẽ không bao giờ thấy nó nữa. Sửa: miễn theo DÒNG, không theo file; baseline ratchet đếm hết.</li></ul>
+    </div>
+    <div class="card">
+      <h4>5 · Fixture đúng rồi mới lộ thêm nợ ở Stop</h4>
+      <ul><li>Sau khi fixture chạy đúng code working-tree, test ra 2 PASS · 3 FAIL: Stop vẫn đẻ 4 sổ metrics (debounce, memory, scratch-log, provenance-log) trần, wiki-graph không vẽ. PLAN ban đầu không thấy vì trước đó fixture chạy code remote (bug 1 che bug 5). Phải thêm hẳn Task 2b dời cả nơi ghi và mọi nơi đọc (9 file).</li></ul>
+    </div>
+    <div class="card">
+      <h4>+ Lỗi thứ 6 (ngoài mục Đính chính): quên bump version</h4>
+      <ul><li>Sau khi merge <code>684e73b</code>, version vẫn đứng ở 1.3.88 dù engine global đã đổi — nếu không phát hiện và sửa bằng <code>4f4db2e</code>, người dùng cũ chạy lại curl sẽ không bao giờ nhận bản hook đã sửa (chi tiết ở mục 03). Đây là AP-1 "dev-repo-only reachability trap" ở dạng cụ thể: sửa xong, xanh trong repo, nhưng không tới tay người dùng nếu thiếu bước cuối.</li></ul>
+    </div>
+  </div>
+  <div class="section-header" style="margin-top:26px"><h2 style="font-size:16px">Việc còn mở, cố ý ngoài phạm vi PLAN này</h2></div>
+  <ul style="font-size:13px;color:var(--ink2)">
+    <li>Cổng <code>freshinstall</code> của <code>medic</code> cài engine từ remote và soi <code>HOME</code> THẬT của máy chạy test — cùng lớp lỗi với bug 1 ở trên, chưa sửa trong PLAN này.</li>
+    <li><code>wiki-sync.py</code> (hàm <code>detect_wiki_dir</code>) chưa biết <code>.llmwiki/wiki</code> — thoát lỗi ở dự án layout dot.</li>
+    <li>pre-commit chạy trong worktree Orca đôi khi stash nhầm checkout của nhánh chính.</li>
+    <li><code>medic</code> báo giả "chưa cài pre-commit" khi đang chạy trong một worktree.</li>
+    <li>381 chỗ nợ bare-path còn lại trong baseline — ratchet bắt trả nợ mỗi khi chạm file, không sửa hết một lượt.</li>
+    <li>Eval A/B (mục 07) cho thấy ngữ cảnh mới sửa được ý resolver/metrics và cách chứng minh, nhưng chưa sửa được ý "hook chạy ở đâu" — việc tiếp theo là khối <code>[downstream-map]</code> nói thẳng "dự án khách không chứa hook".</li>
+  </ul>
+</section>
+
+<section id="sec-6" class="section-bg s-bg6">
+  <div class="section-header">
+    <span class="tag">07 · Nghiệm thu</span>
+    <h2>Số đo thật, không suy diễn</h2>
+    <p>Toàn bộ số dưới đây lấy nguyên văn từ kết quả đo đã chạy — không có số nào ước lượng.</p>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Phép đo</th><th>Kết quả</th></tr></thead>
+      <tbody>
+        <tr><td>Test hook thật trong dự án khách layout dot, code cũ (HEAD trước T2)</td><td>0/5 PASS</td></tr>
+        <tr><td>Cùng test, sau khi vá (T2 → T4)</td><td>5/5 PASS</td></tr>
+        <tr><td>17 test liên quan khác</td><td>giữ nguyên xanh (rc=0, không hồi quy)</td></tr>
+        <tr><td>CI chạy tại local (<code>fdk/tools/ci-local.py</code>)</td><td>65/65 step</td></tr>
+        <tr><td><code>medic --ci</code></td><td>0 fail</td></tr>
+        <tr><td>UAT pha canary (nhánh <code>uat/260912-1022</code>) — checklist năng lực mới</td><td>19/19</td></tr>
+        <tr><td>UAT pha canary — workspace</td><td>Orca thật (không phải filesystem-only)</td></tr>
+        <tr><td>UAT pha canary — test-broad</td><td>80/80</td></tr>
+        <tr><td>Merge vào <code>origin/orca</code></td><td>fast-forward (gộp nhánh không tạo commit merge riêng) <code>5ad733d → 4f4db2e</code></td></tr>
+        <tr><td>Smoke bằng đúng lệnh curl người mới, không override biến nào</td><td>0 lỗi</td></tr>
+        <tr><td>GitHub Actions trên <code>orca</code> — workflow <code>harness</code> (3 job)</td><td>success</td></tr>
+        <tr><td>GitHub Actions trên <code>orca</code> — workflow <code>skills-sync</code></td><td>success</td></tr>
+        <tr><td>Version bump (bắt buộc để máy khách re-curl nhận hook đã sửa)</td><td>1.3.88 → 1.3.89</td></tr>
+        <tr><td>Eval A/B (golden <code>downstream-layout-awareness</code> bản 2, 5 assert) — đối chứng dương / đối chứng âm</td><td>PASS 5/5 · FAIL 0/5</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:12.5px;color:var(--ink2);margin-top:10px">Cùng eval, hai agent Sonnet đọc bản xuất sạch của repo (không có golden): agent trên bản trước thay đổi (<code>5ad733d</code>, chưa có khối <code>[downstream-map]</code>) FAIL 4/5 — khuyên dựng metrics ở <code>harness/metrics</code> trần. Agent trên bản sau thay đổi (<code>4f4db2e</code>, có khối đó) cũng FAIL 4/5 — nói hook chạy từ <code>.llmwiki/.claude/hooks</code> trong dự án khách, thật ra hook chạy từ <code>~/.claude/harness/hooks</code>. Nguồn: <code>harness/evals/downstream-layout-ab-120926.json</code>, <code>fdk/wiki/sources/evals/downstream-layout-awareness.md</code> (mục "Kết quả A/B lần đầu").</p>
+  <p style="font-size:11.5px;color:var(--ink2);margin-top:10px">Nguồn: PLAN <code>llmwiki/wiki/sources/draft/110926-downstream-layout-awareness-PLAN.md</code> (mục "Đính chính sau review dispatch" + "Chạy + kết quả mong đợi" từng Task) và commit message <code>684e73b</code>, <code>4f4db2e</code> (<code>git log</code>).</p>
+</section>
+</main>
+
+<footer>
+  Đường dẫn của trang này (từ gốc repo): <code>llmwiki/html/120926-downstream-layout.html</code>
+  &middot; Nguồn: PLAN <code>110926-downstream-layout-awareness-PLAN.md</code>, <code>fdk/wiki/concepts/framework-dev-antipatterns.md</code> (AP-1, AP-5, AP-6, AP-7), <code>harness/downstream-contract.yaml</code>, <code>skills/fdk/SKILL.md</code>, commit <code>684e73b</code> và <code>4f4db2e</code>.
+</footer>
+
+<script>
+(function(){
+  var links = document.querySelectorAll('nav a[href^="#"]');
+  var sections = document.querySelectorAll('section[id]');
+  var observer = new IntersectionObserver(function(entries){
+    var active = '';
+    entries.forEach(function(entry){ if (entry.isIntersecting) active = entry.target.id; });
+    if (active) links.forEach(function(a){ a.classList.toggle('active', a.getAttribute('href') === '#' + active); });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  sections.forEach(function(s){ observer.observe(s); });
+})();
+
+(function(){
+  var nav = document.querySelector('nav'); if (!nav) return;
+  var btn = document.createElement('button'); btn.className = 'nav-toggle'; btn.textContent = '☰'; btn.setAttribute('aria-label','Mở menu');
+  document.body.appendChild(btn);
+  var close = document.createElement('button'); close.className = 'nav-close'; close.textContent = '✕'; close.setAttribute('aria-label','Đóng menu');
+  nav.appendChild(close);
+  var apply = function(c){ document.body.classList.toggle('nav-collapsed', c);
+    try { localStorage.setItem('dl120926-navCollapsed', c ? '1' : '0'); } catch(e){} };
+  btn.addEventListener('click', function(){ apply(false); });
+  close.addEventListener('click', function(){ apply(true); });
+  try {
+    var s = localStorage.getItem('dl120926-navCollapsed');
+    if (s === '1' || (s !== '0' && matchMedia('(max-width:640px)').matches)) apply(true);
+  } catch(e){}
+})();
+
+(function(){
+  function attach(el){
+    el.addEventListener('pointerdown', function(e){
+      var r = el.getBoundingClientRect();
+      var x = e.clientX - r.left, y = e.clientY - r.top;
+      var rad = Math.hypot(Math.max(x, r.width - x), Math.max(y, r.height - y));
+      var ink = document.createElement('span'); ink.className = 'ripple-ink';
+      ink.style.width = ink.style.height = rad * 2 + 'px';
+      ink.style.left = (x - rad) + 'px'; ink.style.top = (y - rad) + 'px';
+      el.appendChild(ink);
+      ink.addEventListener('animationend', function(){ ink.remove(); });
+    });
+  }
+  document.querySelectorAll('nav a, .nav-toggle, .nav-close').forEach(attach);
+})();
+
+(function(){
+  var K = 'dl120926-theme', d = document.documentElement, nav = document.querySelector('nav'); if (!nav) return;
+  function isDark(){ var t = d.getAttribute('data-theme'); return t ? t === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches; }
+  var sw = document.createElement('div'); sw.className = 'theme-switch'; sw.setAttribute('role','switch'); sw.setAttribute('tabindex','0');
+  sw.innerHTML = '<span class="track"><span class="knob"></span></span>';
+  var row = document.createElement('div'); row.className = 'theme-row';
+  var lb = document.createElement('span'); lb.className = 'lbl'; lb.textContent = 'Giao diện';
+  row.appendChild(lb); row.appendChild(sw); nav.appendChild(row);
+  function paint(){ var dk = isDark(); sw.classList.toggle('on', dk); sw.setAttribute('aria-checked', dk ? 'true' : 'false');
+    sw.setAttribute('aria-label', dk ? 'Nút gạt giao diện: đang tối — gạt sang sáng' : 'Nút gạt giao diện: đang sáng — gạt sang tối'); }
+  function flip(){ var n = isDark() ? 'light' : 'dark'; d.setAttribute('data-theme', n); try { localStorage.setItem(K, n); } catch(e){} paint(); }
+  sw.addEventListener('click', flip);
+  sw.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); } });
+  paint();
+})();
+
+function initCodeCopy() {
+  var COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+  var CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
+  document.querySelectorAll('pre.code-block').forEach(function(pre){
+    if (pre.dataset.copy) return; pre.dataset.copy = '1';
+    var code = pre.textContent;
+    var wrap = pre.closest('.code-wrap');
+    if (!wrap) { wrap = document.createElement('div'); wrap.className = 'code-wrap'; pre.parentNode.insertBefore(wrap, pre); wrap.appendChild(pre); }
+    var btn = document.createElement('button'); btn.className = 'code-copy'; btn.setAttribute('aria-label','Copy'); btn.title = 'Copy'; btn.innerHTML = COPY;
+    wrap.appendChild(btn);
+    btn.addEventListener('click', function(){
+      function done(){ btn.innerHTML = CHECK; btn.classList.add('copied'); setTimeout(function(){ btn.innerHTML = COPY; btn.classList.remove('copied'); }, 1500); }
+      if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(code).then(done).catch(function(){ fallback(); }); }
+      else fallback();
+      function fallback(){ var ta = document.createElement('textarea'); ta.value = code; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); done(); }
+    });
+  });
+}
+initCodeCopy();
+
+function initRipple() {
+  document.addEventListener('pointerdown', function(e){
+    var el = e.target.closest('button, .nav-link, .collapse-toggle');
+    if (!el || el.dataset.noRipple || el.classList.contains('nav-toggle') || el.classList.contains('nav-close') || el.classList.contains('code-copy')) return;
+    var r = el.getBoundingClientRect();
+    var d = Math.max(r.width, r.height) * 1.2;
+    var s = document.createElement('span'); s.className = 'ripple';
+    s.style.cssText = 'width:' + d + 'px;height:' + d + 'px;left:' + (e.clientX - r.left - d/2) + 'px;top:' + (e.clientY - r.top - d/2) + 'px';
+    if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+    el.style.overflow = 'hidden';
+    el.appendChild(s);
+    s.addEventListener('animationend', function(){ s.remove(); });
+  });
+}
+initRipple();
+
+(function(){
+  var flash = function(el){ var t; return function(){ el.classList.add('scrolling'); clearTimeout(t); t = setTimeout(function(){ el.classList.remove('scrolling'); }, 900); }; };
+  var root = document.documentElement;
+  window.addEventListener('scroll', flash(root), { passive:true });
+  var nav = document.querySelector('nav');
+  if (nav) nav.addEventListener('scroll', flash(nav), { passive:true });
+})();
+
+(function(){
+  var mm = document.querySelector('.mm'); if (!mm) return;
+  var NS = 'http://www.w3.org/2000/svg';
+  function colorOf(n){
+    return n.classList.contains('b-0') ? '#30b0c7' : n.classList.contains('b-1') ? '#5856d6'
+      : n.classList.contains('b-2') ? '#ff9500' : n.classList.contains('b-3') ? '#34c759'
+      : n.classList.contains('b-4') ? '#ff2d55' : '#9aa4b2';
+  }
+  function draw(){
+    var canvas = mm.querySelector('.mm-canvas'), svg = mm.querySelector('.mm-links'); if (!canvas || !svg) return;
+    var w = canvas.offsetWidth, h = canvas.offsetHeight;
+    svg.setAttribute('width', w); svg.setAttribute('height', h); svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    var cR = canvas.getBoundingClientRect();
+    Array.prototype.slice.call(canvas.querySelectorAll('.node.has-children')).forEach(function(p){
+      var row = p.parentElement, kids = null, ch = row.children;
+      for (var i = 0; i < ch.length; i++) { if (ch[i].classList.contains('children')) kids = ch[i]; }
+      if (!kids || kids.classList.contains('collapsed')) return;
+      var pr = p.getBoundingClientRect(), px = pr.right - cR.left, py = pr.top + pr.height / 2 - cR.top;
+      Array.prototype.slice.call(kids.children).forEach(function(crow){
+        var cn = crow.querySelector(':scope > .node'); if (!cn) return;
+        var rr = cn.getBoundingClientRect(), cx = rr.left - cR.left, cy = rr.top + rr.height / 2 - cR.top, dx = Math.max(22, (cx - px) * 0.55);
+        var pa = document.createElementNS(NS, 'path');
+        pa.setAttribute('d', 'M' + px + ' ' + py + ' C' + (px + dx) + ' ' + py + ' ' + (cx - dx) + ' ' + cy + ' ' + cx + ' ' + cy);
+        pa.setAttribute('stroke', colorOf(cn));
+        svg.appendChild(pa);
+      });
+    });
+  }
+  Array.prototype.slice.call(mm.querySelectorAll('.node.has-children')).forEach(function(n){
+    var row = n.parentElement, kids = null, c = row.children;
+    for (var i = 0; i < c.length; i++) { if (c[i].classList.contains('children')) kids = c[i]; }
+    if (!kids) return;
+    if (n.classList.contains('cat')) { kids.classList.add('collapsed'); n.classList.add('collapsed-parent'); }
+    n.addEventListener('click', function(e){ e.stopPropagation(); var open = kids.classList.toggle('collapsed'); n.classList.toggle('collapsed-parent', open); draw(); });
+  });
+  draw();
+  addEventListener('load', function(){ setTimeout(draw, 60); });
+  addEventListener('resize', function(){ clearTimeout(window.__mmt); window.__mmt = setTimeout(draw, 120); }, { passive:true });
+})();
+</script>
