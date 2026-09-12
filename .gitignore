@@ -75,3 +75,6 @@ harness/metrics/context-receipts.jsonl
 # handover tự sinh khi phiên hết ngân sách (per-terminal, đã consume) + artifact visual-check của viewport-check
 llmwiki/handover/
 *.visual-check.*
+
+# orca-graph: lockfile runtime, không track
+llmwiki/graph/*.locks/

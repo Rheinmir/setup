@@ -35,7 +35,7 @@ LOOP_MAP = {
     "orca-dispatch-reference": "orchestrate", "orca-onboard": "orchestrate", "orca-issue": "orchestrate",
     "orca-handover": "orchestrate",
     "wayfinder": "orchestrate",
-    "orca-sec-scans": "orchestrate", "orca-workflow": "orchestrate", "orca-eval": "orchestrate",
+    "orca-sec-scans": "orchestrate", "orca-workflow": "orchestrate", "orca-graph": "orchestrate", "orca-eval": "orchestrate",
     "council": "orchestrate", "trace-grader": "orchestrate",
     # wiki-loop
     "ingest": "wiki-loop", "lint": "wiki-loop", "query": "wiki-loop", "wiki-room": "wiki-loop",

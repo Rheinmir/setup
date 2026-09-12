@@ -1,0 +1,215 @@
+{
+ "id": "290726-graph-engineering",
+ "plan": "llmwiki/wiki/sources/draft/290726-graph-engineering-PLAN.md",
+ "built": "2026-09-12T12:15:25+0700",
+ "nodes": [
+  {
+   "id": "t1",
+   "title": "Ratchet theo điểm số cho loop-runner (PDF §II, gốc 1)",
+   "files": [
+    "harness/scripts/loop-runner.py",
+    "harness/loop-runner.config.yaml"
+   ],
+   "consumes": [
+    "`run_loop(...)` hiện có (dòng 172), `DEFAULTS` (dòng 64), `_run_cmd(cmd, cwd)` (dòng 166), run-log JSON `iterations[]` hiện có."
+   ],
+   "produces": [
+    "Produces (dùng bởi Task 4 và mọi caller loop):"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "",
+   "state": "done_unverified",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t2",
+   "title": "Edge ID ổn định + typed edges cho wiki-graph (PDF §V, gốc 2a)",
+   "files": [
+    "harness/scripts/wiki-graph.py"
+   ],
+   "consumes": [
+    "`class Graph` (dòng 171, `self.edges: list[(src, dst, type)]`), `build_graph(wiki)` (dòng 188), frontmatter cú pháp `relations:` ĐANG được `fdk/tools/build-wiki-graph.py` đọc — tái dùng y nguyên: `relations: [{rel: derives-from, to: page-x}, ...]` cộng rel mới `supports`, `contradicts`, `supersedes`."
+   ],
+   "produces": [
+    "Produces (dùng bởi Task 3):"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "",
+   "state": "dispatched",
+   "gen": 1,
+   "rev": 2,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t3",
+   "title": "/query trích dẫn edge ID (gốc 2b)",
+   "files": [
+    "skills/query/SKILL.md",
+    "llmwiki/skills/wiki-loop/query.md"
+   ],
+   "consumes": [
+    "`wiki-graph.py cite <page>` (Task 2 Produces)."
+   ],
+   "produces": [
+    "hợp đồng output mới của /query — mục cuối câu trả lời:"
+   ],
+   "deps": [
+    "t2"
+   ],
+   "deps_conf": "gợi-ý",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t4",
+   "title": "Grounding-feedback schema cho evaluator (PDF §V, gốc 4 bước nhỏ)",
+   "files": [
+    "harness/scripts/grounding-check.py",
+    "skills/qc-code/SKILL.md",
+    "llmwiki/skills/dev-loop/qc-code.md"
+   ],
+   "consumes": [
+    "JSON verdict do evaluator (agent chạy /qc-code hoặc council judge) tự phát."
+   ],
+   "produces": [
+    "Produces:"
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "gợi-ý",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t5",
+   "title": "Bốn hạn mức budget còn thiếu (PDF §VIII.B complexity budget)",
+   "files": [
+    "harness/scripts/token-budget.py",
+    "harness/token-budget.config.yaml"
+   ],
+   "consumes": [
+    "`record()` (dòng 62), `over_budget()` (dòng 101), `load_config()` (dòng 51), metrics JSONL hiện có."
+   ],
+   "produces": [
+    "Produces:"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "",
+   "state": "ready",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t6",
+   "title": "Sổ giả thuyết đã bỏ (PDF §III.E message board)",
+   "files": [
+    "harness/scripts/provenance-log.py"
+   ],
+   "consumes": [
+    "`append_event(root, topic, **fields)` / `read_events(root, topic=...)` hiện có (adapter DUY NHẤT — đúng FR-007 của chính module, không mở đường ghi thứ hai)."
+   ],
+   "produces": [
+    "Produces:"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "",
+   "state": "ready",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t7",
+   "title": "Commit-DAG hub LOCAL — opt-in, gỡ được sạch (PDF §III, gốc 3)",
+   "files": [
+    "harness/scripts/hub.py",
+    "harness/hub.config.yaml",
+    "llmwiki/wiki/concepts/commit-dag-hub.md",
+    "harness/scripts/loop-runner.py",
+    "harness/loop-runner.config.yaml",
+    "harness/scripts/fdk-gate.py"
+   ],
+   "consumes": [
+    "`git` qua `subprocess` (pattern `provenance-log.py::_git_sha`); `run_loop()` của loop-runner sau khi Trial có `commit` + `score` (T1 Produces)."
+   ],
+   "produces": [
+    "Produces:"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "",
+   "state": "ready",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  }
+ ],
+ "layers": [
+  [
+   "t1",
+   "t2",
+   "t5",
+   "t6",
+   "t7"
+  ],
+  [
+   "t3",
+   "t4"
+  ]
+ ],
+ "conflicts": [
+  {
+   "a": "t1",
+   "b": "t7",
+   "files": [
+    "harness/loop-runner.config.yaml",
+    "harness/scripts/loop-runner.py"
+   ]
+  }
+ ],
+ "links": [],
+ "schema_version": 1,
+ "checksum": "d7f77d5cb4cda6e0"
+}

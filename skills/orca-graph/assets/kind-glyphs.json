@@ -1,0 +1,19 @@
+{
+  "_doc": "Sổ icon/shape/color MẶC ĐỊNH cho từng `Kind` của task trong PLAN.md — dùng bởi fdk/tools/graph-viz.py để vẽ node đồ thị (icon = việc task LÀM, shape = hình dạng, color = màu nền; màu VIỀN của node vẫn là STATE, không đụng ở đây). Sửa/thêm mục ở đây là NGUỒN vĩnh viễn, tái sử dụng mọi graph. `kind` không khớp mục nào thì graph-viz.py tự sinh tạm (ghi vào kind-glyphs.local.json, KHÔNG ghi vào file này) và in ra gợi ý raise-issue để submit lên đây.",
+  "build":       { "icon": "🔧", "shape": "circle", "color": "#3b82f6" },
+  "test":        { "icon": "🧪", "shape": "circle", "color": "#14b8a6" },
+  "fix":         { "icon": "🐛", "shape": "circle", "color": "#f97316" },
+  "research":    { "icon": "🔍", "shape": "circle", "color": "#8b5cf6" },
+  "docs":        { "icon": "📄", "shape": "square", "color": "#64748b" },
+  "design":      { "icon": "🎨", "shape": "square", "color": "#ec4899" },
+  "review":      { "icon": "👁",  "shape": "circle", "color": "#eab308" },
+  "security":    { "icon": "🛡",  "shape": "square", "color": "#e11d48" },
+  "infra":       { "icon": "⚙",  "shape": "square", "color": "#6b7280" },
+  "data":        { "icon": "🗄",  "shape": "square", "color": "#06b6d4" },
+  "migrate":     { "icon": "🔄", "shape": "circle", "color": "#6366f1" },
+  "deploy":      { "icon": "🚀", "shape": "circle", "color": "#0ea5e9" },
+  "release":     { "icon": "📦", "shape": "square", "color": "#10b981" },
+  "cleanup":     { "icon": "🧹", "shape": "circle", "color": "#84cc16" },
+  "integration": { "icon": "🔌", "shape": "circle", "color": "#f59e0b" },
+  "wiki":        { "icon": "📚", "shape": "square", "color": "#a16207" }
+}

@@ -1,0 +1,238 @@
+{
+ "id": "120926-orca-graph-v2",
+ "plan": "llmwiki/wiki/sources/draft/120926-orca-graph-v2-PLAN.md",
+ "built": "2026-09-12T16:50:16+0700",
+ "nodes": [
+  {
+   "id": "t1",
+   "title": "Phân cấp graph mẹ → con (containment tree) + join",
+   "files": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "consumes": [
+    "`Store`, `fold()`, `cmd_build()`."
+   ],
+   "produces": [
+    "`build <PLAN> --parent <gid>/<node>` ghi `graph.parent={graph,node}` và bên graph mẹ node đó có `child_graph=<gid>`; `fold()` join: node có `child_graph` thì state = `done_unverified` khi MỌI node con ∈ TERMINAL_OK (invariant 4: thiếu 1 required → không completed), `blocked` nếu con có node `blocked`; `depth` = cấp; từ chối depth > 6 và > 20 node/graph (PRD §5.2)."
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 harness/tests/test_orca_graph.py 2>&1 | grep -q 'ok test_hierarchy_join'",
+   "spec_hash": "8c8ca5417d642dc7",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": null
+  },
+  {
+   "id": "t2",
+   "title": "Deps xuyên graph + báo ĐƯỜNG cycle",
+   "files": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "consumes": [
+    "Task 1 (`graph.parent`, `child_graph`)."
+   ],
+   "produces": [
+    "`**Depends:**` chấp nhận `other-graph/t3`; `toposort` coi dep ngoài là đã thoả khi node đó ∈ TERMINAL_OK ở graph kia (đọc store); `check-cycles <dir>` duyệt toàn bộ graph trong dir, in đường cycle cụ thể `a/t1 → b/t2 → a/t1` (PRD §5.3), rc 2 khi có cycle."
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 harness/tests/test_orca_graph.py 2>&1 | grep -q 'ok test_cross_graph_cycle_path'",
+   "spec_hash": "97ace0bfd6fa1484",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": null
+  },
+  {
+   "id": "t3",
+   "title": "Leaf contract lint (§4.4)",
+   "files": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "consumes": [
+    "`parse_plan()`."
+   ],
+   "produces": [
+    "`lint <id>` liệt kê từng node thiếu: outcome(title) · files(write scope) · produces(output) · verify(phép kiểm) · deps rõ (không `gợi-ý`); in `N/M leaf đủ hợp đồng`; `build --strict` rc 2 nếu có node thiếu verify hoặc files."
+   ],
+   "deps": [
+    "t2"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 harness/tests/test_orca_graph.py 2>&1 | grep -q 'ok test_lint_leaf_contract'",
+   "spec_hash": "55fbf90a37bbe7fc",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": null
+  },
+  {
+   "id": "t4",
+   "title": "plan_version + spec_hash + supersede khi rebuild (§10.1, §7.3)",
+   "files": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "consumes": [
+    "`cmd_build()`, `fold()`."
+   ],
+   "produces": [
+    "mỗi node có `spec_hash` (sha256 của title+files+deps+verify+produces); `build` lại trên graph đã có → `plan_version += 1`, ghi event graph-level `plan.rebuilt {from,to,changed[],removed[]}`; node đã terminal mà spec_hash đổi → `fresh=stale` + note; node bị bỏ khỏi PLAN → giữ trong `superseded[]` (không xoá lịch sử, invariant 10); `set done --plan-version N` với N ≠ hiện tại → STALE không publish (invariant 2)."
+   ],
+   "deps": [
+    "t3"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 harness/tests/test_orca_graph.py 2>&1 | grep -q 'ok test_plan_version_supersede'",
+   "spec_hash": "5c2b12accea02e91",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": null
+  },
+  {
+   "id": "t5",
+   "title": "Control state (pause/resume/cancel) + max-parallel (§8.3, §12.1)",
+   "files": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "consumes": [
+    "`cmd_next()`, `cmd_lock()`."
+   ],
+   "produces": [
+    "`control <id> pause|resume|cancel` → graph.control ∈ {active, pause_requested, paused, cancel_requested, cancelled}; `next` khi không active in \"control=… — không cấp node mới\" và rỗng; `paused/cancelled` chỉ khi không còn node `locked|dispatched` (invariant 11: yêu cầu ≠ đã dừng); `lock` từ chối khi số node `locked+dispatched` ≥ `max_parallel` (mặc định 4, `build --max-parallel N`)."
+   ],
+   "deps": [
+    "t4"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 harness/tests/test_orca_graph.py 2>&1 | grep -q 'ok test_control_and_max_parallel'",
+   "spec_hash": "400e56e12a52c402",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": null
+  },
+  {
+   "id": "t6",
+   "title": "Atlas theo cấp chứa",
+   "files": [
+    "fdk/tools/graph-atlas.py"
+   ],
+   "consumes": [
+    "`graph.parent` (Task 1)."
+   ],
+   "produces": [
+    "trục Y = depth (graph mẹ hàng 0, con hàng 1…), trong hàng sắp theo thời gian; dây containment liền nét (mẹ→con) khác dây liên hệ file (đứt); tile ghi `cấp N`."
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 harness/tests/test_orca_graph.py 2>&1 | grep -q 'ok test_render_viz_and_atlas'",
+   "spec_hash": "971999dbf64b8c7f",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": null
+  },
+  {
+   "id": "t7",
+   "title": "SKILL.md + docs",
+   "files": [
+    "skills/orca-graph/SKILL.md"
+   ],
+   "consumes": [
+    "mọi lệnh mới của Task 1–6."
+   ],
+   "produces": [
+    "mục \"Phân cấp\", \"Replan\", \"Control\", \"Ngoài phạm vi PRD\" trong SKILL.md; mirror sync."
+   ],
+   "deps": [
+    "t5",
+    "t6"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "bash fdk/tools/sync-skill.sh orca-graph >/dev/null && grep -q 'check-cycles' skills/orca-graph/SKILL.md",
+   "spec_hash": "dac8b6a0456fe029",
+   "state": "done",
+   "gen": 1,
+   "rev": 4,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "dac8b6a0456fe029"
+  }
+ ],
+ "layers": [
+  [
+   "t1"
+  ],
+  [
+   "t2",
+   "t6"
+  ],
+  [
+   "t3"
+  ],
+  [
+   "t4"
+  ],
+  [
+   "t5"
+  ],
+  [
+   "t7"
+  ]
+ ],
+ "parent": null,
+ "depth": 0,
+ "plan_version": 2,
+ "superseded": [],
+ "max_parallel": 4,
+ "conflicts": [],
+ "links": [],
+ "control": "active",
+ "schema_version": 1,
+ "checksum": "0e4d4eff28d2879a"
+}

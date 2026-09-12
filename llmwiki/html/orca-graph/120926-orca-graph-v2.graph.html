@@ -1,0 +1,200 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Graph phân việc · 120926-orca-graph-v2</title><meta name="description" content="Đồ thị phụ thuộc 7 node của PLAN llmwiki/wiki/sources/draft/120926-orca-graph-v2-PLAN.md"><meta name="theme-color" content="#eaf2fd">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a84ff'/%3E%3C/svg%3E">
+<script>(function(){try{var t=localStorage.getItem("orca-graph-120926-orca-graph-v2-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}})();</script>
+<style>
+:root{--bg:#eaf2fd;--glass1:rgba(255,255,255,.55);--glass2:rgba(255,255,255,.7);--glass3:rgba(255,255,255,.88);
+ --t1:#0f0f12;--t2:#4a4a55;--border:rgba(30,90,170,.14);--edge:#3b6fb6;--accent:#0a84ff;--orb1:#bcd6ff;--orb2:#dcc9ff;
+ --nav-w:260px;--nav-pad-y:18px;--r:16px}
+*{box-sizing:border-box}html{color-scheme:light dark}[hidden]{display:none!important}
+body{margin:0;font:13.5px/1.55 -apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,system-ui,sans-serif;color:var(--t1);
+ background:radial-gradient(1200px 700px at 8% -10%,var(--orb1),transparent 60%),radial-gradient(900px 600px at 100% 100%,var(--orb2),transparent 60%),var(--bg);
+ min-height:100vh;padding-left:var(--nav-w);transition:padding-left .25s}
+body.nav-collapsed{padding-left:0}
+nav{position:fixed;inset:0 auto 0 0;width:var(--nav-w);display:flex;flex-direction:column;padding:var(--nav-pad-y) 0 var(--nav-pad-y);
+ background:linear-gradient(180deg,rgba(255,255,255,.62),rgba(255,255,255,.38) 55%,rgba(255,255,255,.5));backdrop-filter:blur(24px) saturate(1.3);
+ border-right:1px solid var(--border);transition:transform .25s;z-index:5;overflow:auto}
+nav::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(420px 220px at 20% 0%,rgba(255,255,255,.55),transparent 70%),linear-gradient(115deg,transparent 40%,rgba(255,255,255,.18) 50%,transparent 60%)}
+html:not([data-theme=light]) nav,html[data-theme=dark] nav{background:linear-gradient(180deg,rgba(30,38,56,.7),rgba(24,30,44,.5) 55%,rgba(30,38,56,.62))}
+@media (prefers-color-scheme: light){html:not([data-theme=dark]) nav{background:linear-gradient(180deg,rgba(255,255,255,.62),rgba(255,255,255,.38) 55%,rgba(255,255,255,.5))}}
+body.nav-collapsed nav{transform:translateX(-100%)}
+nav .brand{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--t2);padding:0 18px 10px}
+nav a{display:block;padding:7px 18px;font-size:12px;color:var(--t1);text-decoration:none;border-left:2px solid transparent}
+nav a:hover{background:var(--glass1);border-left-color:var(--accent)}
+nav .grp{font-size:10.5px;color:var(--t2);padding:12px 18px 4px;text-transform:uppercase;letter-spacing:.06em}
+.nav-close{position:absolute;top:10px;right:10px;width:26px;height:26px;border:0;border-radius:8px;background:var(--glass1);color:var(--t2);cursor:pointer}
+.nav-toggle{position:fixed;top:12px;left:12px;width:32px;height:32px;border:1px solid var(--border);border-radius:10px;background:var(--glass1);backdrop-filter:blur(14px);cursor:pointer;z-index:6;transition:opacity .2s}
+body:not(.nav-collapsed) .nav-toggle{opacity:0;pointer-events:none}
+.theme-row{position:sticky;bottom:calc(-1 * var(--nav-pad-y));margin-top:auto;display:flex;align-items:center;justify-content:space-between;padding:11px 16px;
+ border-top:1px solid var(--border);background:var(--glass1);backdrop-filter:blur(14px);font-size:12px;color:var(--t2)}
+.theme-switch{cursor:pointer}.theme-switch .track{display:inline-block;position:relative;width:50px;height:26px;border-radius:999px;background:#cfe0fa;border:1px solid var(--border);font-size:11px;line-height:26px}
+.theme-switch .track::before{content:'☀️';position:absolute;left:6px}.theme-switch .track::after{content:'🌙';position:absolute;right:6px}
+.theme-switch .knob{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:left .18s;z-index:1}
+.theme-switch.on .knob{left:26px}.theme-switch.on .track{background:#2b3a5c}
+main{max-width:1180px;margin:0 auto;padding:28px 28px 60px}
+h1{font-size:22px;margin:6px 0 4px;letter-spacing:-.01em}h2{font-size:15px;margin:30px 0 10px}.sub{color:var(--t2);font-size:12.5px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.chip{padding:4px 10px;border-radius:999px;font-size:11px;background:var(--glass2);border:1px solid var(--border)}
+.chip b{color:var(--accent)}
+.card,.diagram-box{background:var(--glass2);backdrop-filter:blur(18px) saturate(1.1);border:1px solid var(--border);border-radius:var(--r);
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 8px 30px rgba(20,60,120,.08);padding:14px 16px}
+.diagram-box{padding:0;overflow:hidden;position:relative;height:min(62vh,560px)}
+.diagram-box .pan{position:absolute;inset:0;cursor:grab}.diagram-box .pan:active{cursor:grabbing}
+.diagram-box svg{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform}
+.diagram-box .tools{position:absolute;right:10px;top:10px;display:flex;gap:6px;z-index:2}
+.diagram-box .tools button{width:28px;height:28px;border:1px solid var(--border);border-radius:8px;background:var(--glass1);backdrop-filter:blur(12px);color:var(--t1);cursor:pointer;font-size:13px}
+svg .edge{fill:none;stroke:var(--edge);stroke-width:1.6;opacity:.85}svg .conflict{fill:none;stroke:#ef4444;stroke-width:1.6;stroke-dasharray:4 4;opacity:.85}
+svg .node:focus{outline:none}svg .node:focus-visible circle,svg .node:focus-visible rect{stroke-width:4}
+svg .node{cursor:pointer}svg .node :first-child{transition:filter .15s}svg .node:hover :first-child,svg .node:focus :first-child{filter:brightness(1.15);stroke-width:4}
+svg .node.dim{opacity:.22}svg .edge.dim{opacity:.1}svg .edge.hot{stroke-width:2.6;opacity:1}
+svg text{fill:var(--t1);font-family:inherit;pointer-events:none}svg .nid{font-size:10px;font-weight:600}svg .nicon{font-size:15px}
+svg .st{font-weight:400;fill:var(--t2);font-size:10.5px}svg .ttl{font-size:11.5px}svg .meta{font-size:10px;fill:var(--t2)}
+#node-inspector{margin-top:12px;min-height:44px}#node-inspector .placeholder{margin:0;font-style:italic}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:11px;color:var(--t2);margin:10px 2px}.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+table{width:100%;border-collapse:collapse;font-size:12.5px;background:var(--glass3);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top}th{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--t2)}
+tr:last-child td{border-bottom:0}code,.path{font:11.5px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--glass1);padding:1px 5px;border-radius:5px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}.node-card{scroll-margin-top:20px}.node-card h3{margin:0 0 4px;font-size:13px}
+.node-card .st{font-size:10.5px;padding:2px 8px;border-radius:999px;color:#fff;margin-left:6px;vertical-align:1px}
+.node-card ul{margin:6px 0 0;padding-left:16px;font-size:12px;color:var(--t2)}.node-card li b{color:var(--t1)}
+.gloss dt{font-weight:600;font-size:12.5px;margin-top:8px}.gloss dd{margin:2px 0 0;font-size:12px;color:var(--t2)}
+footer{margin-top:40px;color:var(--t2);font-size:11px}footer .path{display:inline-block;margin-top:6px;user-select:all}
+.badge{display:inline-block;padding:1px 7px;border-radius:999px;font-size:10.5px;border:1px solid var(--border);background:var(--glass1)}
+@media (max-width:640px){body{padding-left:0}main{padding:18px 14px}}
+@media (prefers-color-scheme: dark){
+html:not([data-theme=light]){--bg:#0c0f16;--glass1:rgba(22,28,40,.55);--glass2:rgba(24,30,44,.72);--glass3:rgba(20,26,38,.9);--t1:#e6e9f0;--t2:#a2a9b8;--border:rgba(120,160,230,.16);--edge:#8fb3ff;--accent:#5ea2ff;--orb1:#1a3a6a;--orb2:#2a1a5a}
+html:not([data-theme=light]) body{background:radial-gradient(1200px 700px at 8% -10%,var(--orb1),transparent 60%),radial-gradient(900px 600px at 100% 100%,var(--orb2),transparent 60%),var(--bg)}
+}
+html[data-theme=dark]{--bg:#0c0f16;--glass1:rgba(22,28,40,.55);--glass2:rgba(24,30,44,.72);--glass3:rgba(20,26,38,.9);--t1:#e6e9f0;--t2:#a2a9b8;--border:rgba(120,160,230,.16);--edge:#8fb3ff;--accent:#5ea2ff;--orb1:#1a3a6a;--orb2:#2a1a5a}
+html[data-theme=dark] body{background:radial-gradient(1200px 700px at 8% -10%,var(--orb1),transparent 60%),radial-gradient(900px 600px at 100% 100%,var(--orb2),transparent 60%),var(--bg)}</style></head><body>
+<nav><div class="brand">orca-graph</div><a href="#top">120926-orca-graph-v2</a><div class="grp">Mục</div><a href="#do-thi">Đồ thị</a><a href="#lop">Lớp song song</a><a href="#node">Từng node</a><a href="#lien-he">Liên hệ graph cũ</a><a href="#tra-loi">Câu trả lời & audit</a><a href="#thuat-ngu">Thuật ngữ</a><div class="grp">Node</div><a href="#n-t1">t1 · Phân cấp graph mẹ → con </a><a href="#n-t2">t2 · Deps xuyên graph + báo Đ</a><a href="#n-t3">t3 · Leaf contract lint (§4.4</a><a href="#n-t4">t4 · plan_version + spec_hash</a><a href="#n-t5">t5 · Control state (pause/res</a><a href="#n-t6">t6 · Atlas theo cấp chứa</a><a href="#n-t7">t7 · SKILL.md + docs</a></nav>
+<main><a id="top"></a><h1>120926-orca-graph-v2</h1><div class="sub">PLAN nguồn: <code>llmwiki/wiki/sources/draft/120926-orca-graph-v2-PLAN.md</code> · dựng lúc 2026-09-12T16:50:16+0700 · 7 node · 6 lớp</div>
+<div class="chips"><span class="chip"><b>7</b> xong — đã verify</span><span class="chip"><b>0</b> xung đột ghi cùng file</span><span class="chip"><b>0</b> liên hệ graph cũ</span></div>
+<h2 id="do-thi">Đồ thị phụ thuộc</h2><div class="sub">Trái → phải là thứ tự bắt buộc; các vòng tròn cùng một cột chạy song song được. Mỗi vòng tròn là một node — bấm vào để xem nội dung ở thẻ bên dưới. Hover để sáng chuỗi phụ thuộc. Lăn chuột để zoom, kéo để pan.</div>
+<div class="diagram-box"><div class="tools"><button data-z="+" title="Phóng to">+</button><button data-z="-" title="Thu nhỏ">−</button><button data-z="fit" title="Vừa khung">⤢</button></div><div class="pan"><svg class="graph" viewBox="-12 -12 730 156" width="730" height="156" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Đồ thị phụ thuộc 120926-orca-graph-v2">
+<defs><marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--edge)"/></marker></defs>
+<path class="edge" d="M46 18 C89.0 18 89.0 18 132 18" marker-end="url(#arw)" data-e="t1->t2"><title>t1 → t2 (phụ thuộc)</title></path>
+<path class="edge" d="M178 18 C221.0 18 221.0 18 264 18" marker-end="url(#arw)" data-e="t2->t3"><title>t2 → t3 (phụ thuộc)</title></path>
+<path class="edge" d="M310 18 C353.0 18 353.0 18 396 18" marker-end="url(#arw)" data-e="t3->t4"><title>t3 → t4 (phụ thuộc)</title></path>
+<path class="edge" d="M442 18 C485.0 18 485.0 18 528 18" marker-end="url(#arw)" data-e="t4->t5"><title>t4 → t5 (phụ thuộc)</title></path>
+<path class="edge" d="M46 18 C89.0 18 89.0 96 132 96" marker-end="url(#arw)" data-e="t1->t6"><title>t1 → t6 (phụ thuộc)</title></path>
+<path class="edge" d="M574 18 C617.0 18 617.0 18 660 18" marker-end="url(#arw)" data-e="t5->t7"><title>t5 → t7 (phụ thuộc)</title></path>
+<path class="edge" d="M178 96 C419.0 96 419.0 18 660 18" marker-end="url(#arw)" data-e="t6->t7"><title>t6 → t7 (phụ thuộc)</title></path>
+<g class="node" data-id="t1" transform="translate(23.0,18)" tabindex="0"><circle r="15" fill="#3b82f6" fill-opacity=".28" stroke="#22c55e" stroke-width="3"/><text text-anchor="middle" dy="0.34em" class="nicon">🔧</text><text text-anchor="middle" y="28" class="nid">t1</text><title>t1: Phân cấp graph mẹ → con (containment tree) + join · kind=build</title></g>
+<g class="node" data-id="t2" transform="translate(155.0,18)" tabindex="0"><circle r="15" fill="#3b82f6" fill-opacity=".28" stroke="#22c55e" stroke-width="3"/><text text-anchor="middle" dy="0.34em" class="nicon">🔧</text><text text-anchor="middle" y="28" class="nid">t2</text><title>t2: Deps xuyên graph + báo ĐƯỜNG cycle · kind=build</title></g>
+<g class="node" data-id="t3" transform="translate(287.0,18)" tabindex="0"><circle r="15" fill="#3b82f6" fill-opacity=".28" stroke="#22c55e" stroke-width="3"/><text text-anchor="middle" dy="0.34em" class="nicon">🔧</text><text text-anchor="middle" y="28" class="nid">t3</text><title>t3: Leaf contract lint (§4.4) · kind=build</title></g>
+<g class="node" data-id="t4" transform="translate(419.0,18)" tabindex="0"><circle r="15" fill="#3b82f6" fill-opacity=".28" stroke="#22c55e" stroke-width="3"/><text text-anchor="middle" dy="0.34em" class="nicon">🔧</text><text text-anchor="middle" y="28" class="nid">t4</text><title>t4: plan_version + spec_hash + supersede khi rebuild (§10.1, §7.3) · kind=build</title></g>
+<g class="node" data-id="t5" transform="translate(551.0,18)" tabindex="0"><circle r="15" fill="#3b82f6" fill-opacity=".28" stroke="#22c55e" stroke-width="3"/><text text-anchor="middle" dy="0.34em" class="nicon">🔧</text><text text-anchor="middle" y="28" class="nid">t5</text><title>t5: Control state (pause/resume/cancel) + max-parallel (§8.3, §12.1) · kind=build</title></g>
+<g class="node" data-id="t6" transform="translate(155.0,96)" tabindex="0"><circle r="15" fill="#3b82f6" fill-opacity=".28" stroke="#22c55e" stroke-width="3"/><text text-anchor="middle" dy="0.34em" class="nicon">🔧</text><text text-anchor="middle" y="28" class="nid">t6</text><title>t6: Atlas theo cấp chứa · kind=build</title></g>
+<g class="node" data-id="t7" transform="translate(683.0,18)" tabindex="0"><circle r="15" fill="#3b82f6" fill-opacity=".28" stroke="#22c55e" stroke-width="3"/><text text-anchor="middle" dy="0.34em" class="nicon">🔧</text><text text-anchor="middle" y="28" class="nid">t7</text><title>t7: SKILL.md + docs · kind=build</title></g>
+</svg></div></div>
+<div class="card node-card" id="node-inspector"><p class="sub placeholder">Bấm vào một vòng tròn trong đồ thị để xem nội dung node ở đây.</p></div>
+<div class="sub">Icon/hình = <b>kind</b> (việc task làm) · viền màu = <b>state</b> (đang ở đâu trong vòng đời).</div>
+<div class="legend"><span><i style="background:#3b82f6;border-radius:50%"></i>🔧 build</span></div>
+<div class="legend"><span><i style="background:#94a3b8"></i>đề xuất (chờ deps)</span><span><i style="background:#0a84ff"></i>sẵn sàng (chạy được ngay)</span><span><i style="background:#a855f7"></i>đã khoá (đang giành)</span><span><i style="background:#f59e0b"></i>đã giao (agent đang chạy)</span><span><i style="background:#22c55e"></i>xong — đã verify</span><span><i style="background:#16a34a"></i>xong — người báo tay</span><span><i style="background:#84cc16"></i>xong — chưa verify</span><span><i style="background:#ef4444"></i>hỏng (retry được)</span><span><i style="background:#f97316"></i>không rõ (hết lease, cần reconcile)</span><span><i style="background:#64748b"></i>chặn — cần người (HITL)</span><span><i style="background:transparent;border-top:2px dashed var(--edge);height:0"></i>dây đứt = phụ thuộc SUY LUẬN (chưa khai Depends)</span><span><i style="background:transparent;border-top:2px dashed #ef4444;height:0"></i>đỏ = 2 node song song ghi cùng file</span></div>
+<h2 id="lop">Lớp song song (topo layers)</h2><table><tr><th>Lớp</th><th>Node chạy song song</th><th>Xung đột</th></tr><tr><td><b>L0</b></td><td><code>t1</code></td><td>⚠ </td></tr><tr><td><b>L1</b></td><td><code>t2</code> ∥ <code>t6</code></td><td>⚠ </td></tr><tr><td><b>L2</b></td><td><code>t3</code></td><td>⚠ </td></tr><tr><td><b>L3</b></td><td><code>t4</code></td><td>⚠ </td></tr><tr><td><b>L4</b></td><td><code>t5</code></td><td>⚠ </td></tr><tr><td><b>L5</b></td><td><code>t7</code></td><td>⚠ </td></tr></table>
+<h2 id="node">Từng node — cần gì, mở khoá gì, xong thì ra sao</h2>
+<button type="button" id="toggle-grid-btn" class="chip" style="cursor:pointer">Xem dạng lưới đầy đủ ▾</button>
+<div class="grid" id="node-grid" hidden><div class="card node-card" id="n-t1"><h3>t1 — Phân cấp graph mẹ → con (containment tree) + join<span class="st" style="background:#22c55e">xong — đã verify</span></h3>
+<ul><li><b>Cần xong trước</b> (deps): — (gốc) <span class="badge">chắc</span></li>
+<li><b>Mở khoá cho</b>: <code>t2</code>, <code>t6</code></li>
+<li><b>Kiểu / chế độ</b>: build / agent tự chạy (AFK)</li>
+<li><b>File chạm</b>: <code>harness/scripts/orca-graph.py</code>, <code>harness/tests/test_orca_graph.py</code></li>
+<li><b>Làm ra</b>: `build &lt;PLAN&gt; --parent &lt;gid&gt;/&lt;node&gt;` ghi `graph.parent={graph,node}` và bên graph mẹ node đó có `child_graph=&lt;gid&gt;`; `fold()` join: node có `child_graph` thì state = `done_unverified` khi MỌI node con ∈ TERMINAL_OK (inva</li>
+<li><b>Verify</b>: <code>python3 harness/tests/test_orca_graph.py 2&gt;&amp;1 | grep -q &#x27;ok test_hierarchy_join&#x27;</code></li>
+<li><b>Runtime</b>: gen 1 · rev 3 · attempt 1 · còn tươi</li></ul></div><div class="card node-card" id="n-t2"><h3>t2 — Deps xuyên graph + báo ĐƯỜNG cycle<span class="st" style="background:#22c55e">xong — đã verify</span></h3>
+<ul><li><b>Cần xong trước</b> (deps): <code>t1</code> <span class="badge">chắc</span></li>
+<li><b>Mở khoá cho</b>: <code>t3</code></li>
+<li><b>Kiểu / chế độ</b>: build / agent tự chạy (AFK)</li>
+<li><b>File chạm</b>: <code>harness/scripts/orca-graph.py</code>, <code>harness/tests/test_orca_graph.py</code></li>
+<li><b>Làm ra</b>: `**Depends:**` chấp nhận `other-graph/t3`; `toposort` coi dep ngoài là đã thoả khi node đó ∈ TERMINAL_OK ở graph kia (đọc store); `check-cycles &lt;dir&gt;` duyệt toàn bộ graph trong dir, in đường cycle cụ thể `a/t1 → b/t2 → a</li>
+<li><b>Verify</b>: <code>python3 harness/tests/test_orca_graph.py 2&gt;&amp;1 | grep -q &#x27;ok test_cross_graph_cycle_path&#x27;</code></li>
+<li><b>Runtime</b>: gen 1 · rev 3 · attempt 1 · còn tươi</li></ul></div><div class="card node-card" id="n-t3"><h3>t3 — Leaf contract lint (§4.4)<span class="st" style="background:#22c55e">xong — đã verify</span></h3>
+<ul><li><b>Cần xong trước</b> (deps): <code>t2</code> <span class="badge">chắc</span></li>
+<li><b>Mở khoá cho</b>: <code>t4</code></li>
+<li><b>Kiểu / chế độ</b>: build / agent tự chạy (AFK)</li>
+<li><b>File chạm</b>: <code>harness/scripts/orca-graph.py</code>, <code>harness/tests/test_orca_graph.py</code></li>
+<li><b>Làm ra</b>: `lint &lt;id&gt;` liệt kê từng node thiếu: outcome(title) · files(write scope) · produces(output) · verify(phép kiểm) · deps rõ (không `gợi-ý`); in `N/M leaf đủ hợp đồng`; `build --strict` rc 2 nếu có node thiếu verify hoặc fi</li>
+<li><b>Verify</b>: <code>python3 harness/tests/test_orca_graph.py 2&gt;&amp;1 | grep -q &#x27;ok test_lint_leaf_contract&#x27;</code></li>
+<li><b>Runtime</b>: gen 1 · rev 3 · attempt 1 · còn tươi</li></ul></div><div class="card node-card" id="n-t4"><h3>t4 — plan_version + spec_hash + supersede khi rebuild (§10.1, §7.3)<span class="st" style="background:#22c55e">xong — đã verify</span></h3>
+<ul><li><b>Cần xong trước</b> (deps): <code>t3</code> <span class="badge">chắc</span></li>
+<li><b>Mở khoá cho</b>: <code>t5</code></li>
+<li><b>Kiểu / chế độ</b>: build / agent tự chạy (AFK)</li>
+<li><b>File chạm</b>: <code>harness/scripts/orca-graph.py</code>, <code>harness/tests/test_orca_graph.py</code></li>
+<li><b>Làm ra</b>: mỗi node có `spec_hash` (sha256 của title+files+deps+verify+produces); `build` lại trên graph đã có → `plan_version += 1`, ghi event graph-level `plan.rebuilt {from,to,changed[],removed[]}`; node đã terminal mà spec_hash</li>
+<li><b>Verify</b>: <code>python3 harness/tests/test_orca_graph.py 2&gt;&amp;1 | grep -q &#x27;ok test_plan_version_supersede&#x27;</code></li>
+<li><b>Runtime</b>: gen 1 · rev 3 · attempt 1 · còn tươi</li></ul></div><div class="card node-card" id="n-t5"><h3>t5 — Control state (pause/resume/cancel) + max-parallel (§8.3, §12.1)<span class="st" style="background:#22c55e">xong — đã verify</span></h3>
+<ul><li><b>Cần xong trước</b> (deps): <code>t4</code> <span class="badge">chắc</span></li>
+<li><b>Mở khoá cho</b>: <code>t7</code></li>
+<li><b>Kiểu / chế độ</b>: build / agent tự chạy (AFK)</li>
+<li><b>File chạm</b>: <code>harness/scripts/orca-graph.py</code>, <code>harness/tests/test_orca_graph.py</code></li>
+<li><b>Làm ra</b>: `control &lt;id&gt; pause|resume|cancel` → graph.control ∈ {active, pause_requested, paused, cancel_requested, cancelled}; `next` khi không active in &quot;control=… — không cấp node mới&quot; và rỗng; `paused/cancelled` chỉ khi không c</li>
+<li><b>Verify</b>: <code>python3 harness/tests/test_orca_graph.py 2&gt;&amp;1 | grep -q &#x27;ok test_control_and_max_parallel&#x27;</code></li>
+<li><b>Runtime</b>: gen 1 · rev 3 · attempt 1 · còn tươi</li></ul></div><div class="card node-card" id="n-t6"><h3>t6 — Atlas theo cấp chứa<span class="st" style="background:#22c55e">xong — đã verify</span></h3>
+<ul><li><b>Cần xong trước</b> (deps): <code>t1</code> <span class="badge">chắc</span></li>
+<li><b>Mở khoá cho</b>: <code>t7</code></li>
+<li><b>Kiểu / chế độ</b>: build / agent tự chạy (AFK)</li>
+<li><b>File chạm</b>: <code>fdk/tools/graph-atlas.py</code></li>
+<li><b>Làm ra</b>: trục Y = depth (graph mẹ hàng 0, con hàng 1…), trong hàng sắp theo thời gian; dây containment liền nét (mẹ→con) khác dây liên hệ file (đứt); tile ghi `cấp N`.</li>
+<li><b>Verify</b>: <code>python3 harness/tests/test_orca_graph.py 2&gt;&amp;1 | grep -q &#x27;ok test_render_viz_and_atlas&#x27;</code></li>
+<li><b>Runtime</b>: gen 1 · rev 3 · attempt 1 · còn tươi</li></ul></div><div class="card node-card" id="n-t7"><h3>t7 — SKILL.md + docs<span class="st" style="background:#22c55e">xong — đã verify</span></h3>
+<ul><li><b>Cần xong trước</b> (deps): <code>t5</code>, <code>t6</code> <span class="badge">chắc</span></li>
+<li><b>Mở khoá cho</b>: — (lá)</li>
+<li><b>Kiểu / chế độ</b>: build / agent tự chạy (AFK)</li>
+<li><b>File chạm</b>: <code>skills/orca-graph/SKILL.md</code></li>
+<li><b>Làm ra</b>: mục &quot;Phân cấp&quot;, &quot;Replan&quot;, &quot;Control&quot;, &quot;Ngoài phạm vi PRD&quot; trong SKILL.md; mirror sync.</li>
+<li><b>Verify</b>: <code>bash fdk/tools/sync-skill.sh orca-graph &gt;/dev/null &amp;&amp; grep -q &#x27;check-cycles&#x27; skills/orca-graph/SKILL.md</code></li>
+<li><b>Runtime</b>: gen 1 · rev 4 · attempt 1 · còn tươi</li></ul></div></div>
+<script id="node-html-data" type="application/json">{"t1": "<h3>t1 — Phân cấp graph mẹ → con (containment tree) + join<span class=\"st\" style=\"background:#22c55e\">xong — đã verify<\/span><\/h3>\n<ul><li><b>Cần xong trước<\/b> (deps): — (gốc) <span class=\"badge\">chắc<\/span><\/li>\n<li><b>Mở khoá cho<\/b>: <code>t2<\/code>, <code>t6<\/code><\/li>\n<li><b>Kiểu / chế độ<\/b>: build / agent tự chạy (AFK)<\/li>\n<li><b>File chạm<\/b>: <code>harness/scripts/orca-graph.py<\/code>, <code>harness/tests/test_orca_graph.py<\/code><\/li>\n<li><b>Làm ra<\/b>: `build &lt;PLAN&gt; --parent &lt;gid&gt;/&lt;node&gt;` ghi `graph.parent={graph,node}` và bên graph mẹ node đó có `child_graph=&lt;gid&gt;`; `fold()` join: node có `child_graph` thì state = `done_unverified` khi MỌI node con ∈ TERMINAL_OK (inva<\/li>\n<li><b>Verify<\/b>: <code>python3 harness/tests/test_orca_graph.py 2&gt;&amp;1 | grep -q &#x27;ok test_hierarchy_join&#x27;<\/code><\/li>\n<li><b>Runtime<\/b>: gen 1 · rev 3 · attempt 1 · còn tươi<\/li><\/ul>", "t2": "<h3>t2 — Deps xuyên graph + báo ĐƯỜNG cycle<span class=\"st\" style=\"background:#22c55e\">xong — đã verify<\/span><\/h3>\n<ul><li><b>Cần xong trước<\/b> (deps): <code>t1<\/code> <span class=\"badge\">chắc<\/span><\/li>\n<li><b>Mở khoá cho<\/b>: <code>t3<\/code><\/li>\n<li><b>Kiểu / chế độ<\/b>: build / agent tự chạy (AFK)<\/li>\n<li><b>File chạm<\/b>: <code>harness/scripts/orca-graph.py<\/code>, <code>harness/tests/test_orca_graph.py<\/code><\/li>\n<li><b>Làm ra<\/b>: `**Depends:**` chấp nhận `other-graph/t3`; `toposort` coi dep ngoài là đã thoả khi node đó ∈ TERMINAL_OK ở graph kia (đọc store); `check-cycles &lt;dir&gt;` duyệt toàn bộ graph trong dir, in đường cycle cụ thể `a/t1 → b/t2 → a<\/li>\n<li><b>Verify<\/b>: <code>python3 harness/tests/test_orca_graph.py 2&gt;&amp;1 | grep -q &#x27;ok test_cross_graph_cycle_path&#x27;<\/code><\/li>\n<li><b>Runtime<\/b>: gen 1 · rev 3 · attempt 1 · còn tươi<\/li><\/ul>", "t3": "<h3>t3 — Leaf contract lint (§4.4)<span class=\"st\" style=\"background:#22c55e\">xong — đã verify<\/span><\/h3>\n<ul><li><b>Cần xong trước<\/b> (deps): <code>t2<\/code> <span class=\"badge\">chắc<\/span><\/li>\n<li><b>Mở khoá cho<\/b>: <code>t4<\/code><\/li>\n<li><b>Kiểu / chế độ<\/b>: build / agent tự chạy (AFK)<\/li>\n<li><b>File chạm<\/b>: <code>harness/scripts/orca-graph.py<\/code>, <code>harness/tests/test_orca_graph.py<\/code><\/li>\n<li><b>Làm ra<\/b>: `lint &lt;id&gt;` liệt kê từng node thiếu: outcome(title) · files(write scope) · produces(output) · verify(phép kiểm) · deps rõ (không `gợi-ý`); in `N/M leaf đủ hợp đồng`; `build --strict` rc 2 nếu có node thiếu verify hoặc fi<\/li>\n<li><b>Verify<\/b>: <code>python3 harness/tests/test_orca_graph.py 2&gt;&amp;1 | grep -q &#x27;ok test_lint_leaf_contract&#x27;<\/code><\/li>\n<li><b>Runtime<\/b>: gen 1 · rev 3 · attempt 1 · còn tươi<\/li><\/ul>", "t4": "<h3>t4 — plan_version + spec_hash + supersede khi rebuild (§10.1, §7.3)<span class=\"st\" style=\"background:#22c55e\">xong — đã verify<\/span><\/h3>\n<ul><li><b>Cần xong trước<\/b> (deps): <code>t3<\/code> <span class=\"badge\">chắc<\/span><\/li>\n<li><b>Mở khoá cho<\/b>: <code>t5<\/code><\/li>\n<li><b>Kiểu / chế độ<\/b>: build / agent tự chạy (AFK)<\/li>\n<li><b>File chạm<\/b>: <code>harness/scripts/orca-graph.py<\/code>, <code>harness/tests/test_orca_graph.py<\/code><\/li>\n<li><b>Làm ra<\/b>: mỗi node có `spec_hash` (sha256 của title+files+deps+verify+produces); `build` lại trên graph đã có → `plan_version += 1`, ghi event graph-level `plan.rebuilt {from,to,changed[],removed[]}`; node đã terminal mà spec_hash<\/li>\n<li><b>Verify<\/b>: <code>python3 harness/tests/test_orca_graph.py 2&gt;&amp;1 | grep -q &#x27;ok test_plan_version_supersede&#x27;<\/code><\/li>\n<li><b>Runtime<\/b>: gen 1 · rev 3 · attempt 1 · còn tươi<\/li><\/ul>", "t5": "<h3>t5 — Control state (pause/resume/cancel) + max-parallel (§8.3, §12.1)<span class=\"st\" style=\"background:#22c55e\">xong — đã verify<\/span><\/h3>\n<ul><li><b>Cần xong trước<\/b> (deps): <code>t4<\/code> <span class=\"badge\">chắc<\/span><\/li>\n<li><b>Mở khoá cho<\/b>: <code>t7<\/code><\/li>\n<li><b>Kiểu / chế độ<\/b>: build / agent tự chạy (AFK)<\/li>\n<li><b>File chạm<\/b>: <code>harness/scripts/orca-graph.py<\/code>, <code>harness/tests/test_orca_graph.py<\/code><\/li>\n<li><b>Làm ra<\/b>: `control &lt;id&gt; pause|resume|cancel` → graph.control ∈ {active, pause_requested, paused, cancel_requested, cancelled}; `next` khi không active in &quot;control=… — không cấp node mới&quot; và rỗng; `paused/cancelled` chỉ khi không c<\/li>\n<li><b>Verify<\/b>: <code>python3 harness/tests/test_orca_graph.py 2&gt;&amp;1 | grep -q &#x27;ok test_control_and_max_parallel&#x27;<\/code><\/li>\n<li><b>Runtime<\/b>: gen 1 · rev 3 · attempt 1 · còn tươi<\/li><\/ul>", "t6": "<h3>t6 — Atlas theo cấp chứa<span class=\"st\" style=\"background:#22c55e\">xong — đã verify<\/span><\/h3>\n<ul><li><b>Cần xong trước<\/b> (deps): <code>t1<\/code> <span class=\"badge\">chắc<\/span><\/li>\n<li><b>Mở khoá cho<\/b>: <code>t7<\/code><\/li>\n<li><b>Kiểu / chế độ<\/b>: build / agent tự chạy (AFK)<\/li>\n<li><b>File chạm<\/b>: <code>fdk/tools/graph-atlas.py<\/code><\/li>\n<li><b>Làm ra<\/b>: trục Y = depth (graph mẹ hàng 0, con hàng 1…), trong hàng sắp theo thời gian; dây containment liền nét (mẹ→con) khác dây liên hệ file (đứt); tile ghi `cấp N`.<\/li>\n<li><b>Verify<\/b>: <code>python3 harness/tests/test_orca_graph.py 2&gt;&amp;1 | grep -q &#x27;ok test_render_viz_and_atlas&#x27;<\/code><\/li>\n<li><b>Runtime<\/b>: gen 1 · rev 3 · attempt 1 · còn tươi<\/li><\/ul>", "t7": "<h3>t7 — SKILL.md + docs<span class=\"st\" style=\"background:#22c55e\">xong — đã verify<\/span><\/h3>\n<ul><li><b>Cần xong trước<\/b> (deps): <code>t5<\/code>, <code>t6<\/code> <span class=\"badge\">chắc<\/span><\/li>\n<li><b>Mở khoá cho<\/b>: — (lá)<\/li>\n<li><b>Kiểu / chế độ<\/b>: build / agent tự chạy (AFK)<\/li>\n<li><b>File chạm<\/b>: <code>skills/orca-graph/SKILL.md<\/code><\/li>\n<li><b>Làm ra<\/b>: mục &quot;Phân cấp&quot;, &quot;Replan&quot;, &quot;Control&quot;, &quot;Ngoài phạm vi PRD&quot; trong SKILL.md; mirror sync.<\/li>\n<li><b>Verify<\/b>: <code>bash fdk/tools/sync-skill.sh orca-graph &gt;/dev/null &amp;&amp; grep -q &#x27;check-cycles&#x27; skills/orca-graph/SKILL.md<\/code><\/li>\n<li><b>Runtime<\/b>: gen 1 · rev 4 · attempt 1 · còn tươi<\/li><\/ul>"}</script>
+<h2 id="lien-he">Liên hệ với graph cũ (khớp artifact, tất định)</h2><table><tr><th>Graph</th><th>Node</th><th>Qua file</th><th>Kiểu</th></tr><tr><td colspan="4">Không khớp artifact với graph cũ nào. Liên hệ ngữ nghĩa (nếu có) do model trả lời và phải gắn nhãn + nguồn — xem mục Câu trả lời.</td></tr></table>
+<h2 id="tra-loi">Câu trả lời của model & tự chấm</h2><div class="sub">Rubric: đúng 1 · sai 0 · không-biết 0.3 · gợi-ý có nguồn thật 0.5 · <b>bịa nguồn 0</b>. Điểm sau audit xem <code>orca-graph.py audit</code>.</div>
+<table><tr><th>Câu hỏi</th><th>Node</th><th>Nhãn</th><th>Tự chấm</th><th>Nguồn</th><th>Trả lời</th></tr><tr><td>why</td><td>t1</td><td><span class="badge">chắc</span></td><td>1.0</td><td><code>file:harness/scripts/orca-graph.py:1</code><br><code>edge:t1-&gt;t2</code><br><code>edge:t1-&gt;t6</code></td><td>t1 là gốc: parent/child_graph là dữ liệu mà t2 (dep xuyên graph) và t6 (atlas theo cấp) đều đọc</td></tr><tr><td>related</td><td>-</td><td><span class="badge">chắc</span></td><td>1.0</td><td><code>file:llmwiki/raw/Reprise-Graph-Engine-Full-Cycle-PRD.md:78</code><br><code>file:llmwiki/wiki/graph/290726-graph-engineering.graph.json</code></td><td>Graph này sinh từ PRD §3–§12; không chạm file của 2 graph 290726 (links=0) — liên hệ chỉ là cùng store</td></tr><tr><td>deps</td><td>t5</td><td><span class="badge">gợi-ý</span></td><td>0.5</td><td><code>file:llmwiki/raw/Reprise-Graph-Engine-Full-Cycle-PRD.md:413</code></td><td>t5 xếp sau t4 chỉ vì cùng sửa 1 file; về logic control độc lập với plan_version, có thể song song nếu 2 agent</td></tr></table>
+<h2 id="thuat-ngu">Thuật ngữ</h2><dl class="gloss card">
+<dt>deps (phụ thuộc)</dt><dd>Node phải XONG trước thì node này mới được chạy. Dây đứt = tool suy ra từ Consumes/Produces, chưa ai khai tường minh.</dd>
+<dt>lớp topo (topological layer)</dt><dd>Nhóm node không phụ thuộc nhau → chạy song song được. Lớp sau chỉ mở khi lớp trước xong.</dd>
+<dt>lease (thuê khoá)</dt><dd>Khoá có hạn giờ. Hết hạn mà chưa báo xong → node về <i>unknown</i> (không rõ), không tự kết luận hỏng.</dd>
+<dt>generation (thế hệ giao việc)</dt><dd>Mỗi lần giao lại tăng 1. Kết quả mang gen cũ bị bỏ, tránh agent chết-sống-lại ghi đè lần giao mới.</dd>
+<dt>verify</dt><dd>Lệnh shell trả 0 = task xong thật. Không có verify thì tối đa chỉ đạt <i>done_unverified</i> (xong nhưng chưa ai kiểm).</dd>
+<dt>stale (cũ)</dt><dd>Node đã xong nhưng node nó phụ thuộc bị làm lại → kết quả có thể lệch; chỉ cảnh báo, không tự lùi trạng thái.</dd>
+<dt>HITL / AFK</dt><dd>HITL = cần người sống quyết định, không giao cho agent headless. AFK = agent tự chạy được.</dd></dl>
+<footer>Sinh bởi <code>fdk/tools/graph-viz.py</code> · 2026-09-12 23:40 · file này nằm tại:<br><code class="path">/Users/giatran/orca/setup/setup/llmwiki/html/orca-graph/120926-orca-graph-v2.graph.html</code></footer>
+</main><script>
+(function(){var b=document.body;var nav=document.querySelector('nav');if(!nav)return;
+var x=document.createElement('button');x.className='nav-close';x.textContent='✕';x.title='Đóng thanh bên';nav.appendChild(x);
+var t=document.createElement('button');t.className='nav-toggle';t.textContent='☰';t.title='Mở thanh bên';b.appendChild(t);
+function set(c){b.classList.toggle('nav-collapsed',c);try{localStorage.setItem('navCollapsed',c?'1':'0')}catch(e){}}
+x.onclick=function(){set(true)};t.onclick=function(){set(false)};
+try{var s=localStorage.getItem('navCollapsed');set(s===null?matchMedia('(max-width:640px)').matches:s==='1')}catch(e){}})();
+(function(){var K='orca-graph-120926-orca-graph-v2-theme',d=document.documentElement,nav=document.querySelector('nav');if(!nav)return;
+function isDark(){var t=d.getAttribute('data-theme');return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches}
+var sw=document.createElement('div');sw.className='theme-switch';sw.setAttribute('role','switch');sw.setAttribute('tabindex','0');
+sw.innerHTML='<span class="track"><span class="knob"></span></span>';
+var row=document.createElement('div');row.className='theme-row';var lb=document.createElement('span');lb.textContent='Giao diện';row.appendChild(lb);row.appendChild(sw);nav.appendChild(row);
+function paint(){var dk=isDark();sw.classList.toggle('on',dk);sw.setAttribute('aria-checked',dk?'true':'false');sw.setAttribute('aria-label',dk?'Đang tối — gạt sang sáng':'Đang sáng — gạt sang tối')}
+function flip(){var n=isDark()?'light':'dark';d.setAttribute('data-theme',n);try{localStorage.setItem(K,n)}catch(e){}paint()}
+sw.addEventListener('click',flip);sw.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();flip()}});paint()})();
+/* pan/zoom + highlight chuỗi phụ thuộc khi hover/click node */
+document.querySelectorAll('.diagram-box').forEach(function(box){var svg=box.querySelector('svg');if(!svg)return;var pan=box.querySelector('.pan')||box;
+var s=1,tx=16,ty=16,drag=null;function ap(){svg.style.transform='translate('+tx+'px,'+ty+'px) scale('+s+')'}
+function fit(){var r=box.getBoundingClientRect(),w=svg.width.baseVal.value,h=svg.height.baseVal.value;s=Math.min((r.width-32)/w,(r.height-32)/h,1.4);tx=(r.width-w*s)/2;ty=(r.height-h*s)/2;ap()}
+pan.addEventListener('wheel',function(e){e.preventDefault();var k=e.deltaY<0?1.1:0.9;var r=box.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;tx=mx-(mx-tx)*k;ty=my-(my-ty)*k;s*=k;ap()},{passive:false});
+pan.addEventListener('mousedown',function(e){drag={x:e.clientX-tx,y:e.clientY-ty}});window.addEventListener('mousemove',function(e){if(drag){tx=e.clientX-drag.x;ty=e.clientY-drag.y;ap()}});window.addEventListener('mouseup',function(){drag=null});
+box.querySelectorAll('.tools [data-z]').forEach(function(bt){bt.onclick=function(){var z=bt.dataset.z;if(z==='fit')return fit();var k=z==='+'?1.2:0.83;var r=box.getBoundingClientRect();tx=r.width/2-(r.width/2-tx)*k;ty=r.height/2-(r.height/2-ty)*k;s*=k;ap()}});
+var edges=[].slice.call(svg.querySelectorAll('.edge')),nodes=[].slice.call(svg.querySelectorAll('.node'));
+function chain(id,dir,acc){edges.forEach(function(e){var p=e.dataset.e.split('->');if(dir==='up'&&p[1]===id&&acc.indexOf(p[0])<0){acc.push(p[0]);chain(p[0],'up',acc)}if(dir==='down'&&p[0]===id&&acc.indexOf(p[1])<0){acc.push(p[1]);chain(p[1],'down',acc)}});return acc}
+function hl(id){if(!id){nodes.forEach(function(n){n.classList.remove('dim')});edges.forEach(function(e){e.classList.remove('dim','hot')});return}
+var keep=chain(id,'up',[id]);keep=chain(id,'down',keep);nodes.forEach(function(n){n.classList.toggle('dim',keep.indexOf(n.dataset.id)<0)});
+edges.forEach(function(e){var p=e.dataset.e.split('->');var on=keep.indexOf(p[0])>=0&&keep.indexOf(p[1])>=0;e.classList.toggle('dim',!on);e.classList.toggle('hot',on)})}
+var pinned=null,insp=document.getElementById('node-inspector'),dataEl=document.getElementById('node-html-data');
+var NODE_HTML=dataEl?JSON.parse(dataEl.textContent):{};
+function showCard(id){if(!insp)return;insp.innerHTML=NODE_HTML[id]||'';insp.classList.toggle('empty',!id)}
+var pph=insp&&insp.querySelector('.placeholder')?insp.innerHTML:'';
+nodes.forEach(function(n){n.addEventListener('mouseenter',function(){if(!pinned)hl(n.dataset.id)});n.addEventListener('mouseleave',function(){if(!pinned)hl(null)});
+n.addEventListener('click',function(){var id=n.dataset.id;pinned=pinned===id?null:id;hl(pinned);showCard(pinned||'')})});
+if(insp&&!pinned)insp.innerHTML=pph;
+fit();window.addEventListener('resize',fit)});
+/* Lưới đầy đủ — ẨN mặc định, chỉ bung khi bấm nút hoặc bấm link node ở thanh bên. */
+(function(){var btn=document.getElementById('toggle-grid-btn'),grid=document.getElementById('node-grid');if(!btn||!grid)return;
+function label(){btn.textContent=grid.hidden?'Xem dạng lưới đầy đủ ▾':'Ẩn dạng lưới đầy đủ ▴'}
+btn.onclick=function(){grid.hidden=!grid.hidden;label()};label();
+document.querySelectorAll('nav a[href^="#n-"]').forEach(function(a){a.addEventListener('click',function(){grid.hidden=false;label()})})})();
+</script></body></html>

@@ -762,6 +762,14 @@
       "recorded": "2026-07-18",
       "source": "local-authored"
     },
+    "orca-graph": {
+      "files": {
+        "SKILL.md": "7f133275263cd7de1674548f13c1c88f32ef12fd31ff87be4fbd2047f713d012",
+        "assets/kind-glyphs.json": "5b9fd7a4769104a29915c9107390228b669b93df8c93c5ca4b256a1555a50c7f"
+      },
+      "recorded": "2026-09-12",
+      "source": "local-authored"
+    },
     "orca-handover": {
       "files": {
         "SKILL.md": "6fed6e847043214e150f75e0f76b1b5f734440fffebb84c9a963e8c36555c576"
@@ -807,9 +815,9 @@
     },
     "plan": {
       "files": {
-        "SKILL.md": "80f62174eced01c8af8655644ea58f8dca8370ccb114c92b8b1c88874e2f2a30"
+        "SKILL.md": "ff5a936d9a57465547ce922a8358da1fc3d80d57a6815de5e97254ae9c45d666"
       },
-      "recorded": "2026-07-18",
+      "recorded": "2026-09-12",
       "source": "local-authored"
     },
     "playwright-verify": {

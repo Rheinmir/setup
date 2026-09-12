@@ -320,3 +320,4 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 - 2026-07-23 14:56 — session `6ac5fed4` — 86 tool calls — files: CLAUDE.md, code-logger.py, fdk-gate.py, harness-lint.py, index.md, medic.py, outlines-distill.md, wiki-health.py
 - 2026-07-27 10:33 — session `dff80143` — 6 tool calls — files: 270726-innovation.md, ISSUES.md
 - 2026-08-14 08:13 — session `dba79064` — 12 tool calls — files: .stop-debounce.json, harness.yml, index.md, log.md
+- 2026-09-12 23:40 — phiên /fdk — thêm concepts/orca-graph.md + ADR-018 (orca-graph v2 theo Reprise Graph Engine PRD)

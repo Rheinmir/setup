@@ -87,6 +87,9 @@ Mỗi task:
 - Consumes: <dùng gì từ task trước — chữ ký chính xác>
 - Produces: <task sau dựa vào cái gì — tên hàm, kiểu tham số, kiểu trả về>
 
+**Depends:** Task 1, Task 3   <!-- task nào phải DONE trước; không có → ghi `—`. `/orca-graph build` đọc dòng này để dựng đồ thị phụ thuộc; thiếu thì nó SUY từ Consumes/Produces và gắn nhãn gợi-ý -->
+**Verify:** `pytest tests/x.py -q`   <!-- lệnh rc 0 = task xong thật; thiếu → node chỉ đạt done_unverified -->
+
 - [ ] **Step 1: viết test fail**
 
 ```python

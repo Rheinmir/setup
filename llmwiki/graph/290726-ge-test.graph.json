@@ -1,0 +1,224 @@
+{
+ "id": "290726-ge-test",
+ "plan": "llmwiki/wiki/sources/draft/290726-ge-test-PLAN.md",
+ "built": "2026-09-12T12:15:25+0700",
+ "nodes": [
+  {
+   "id": "tt1",
+   "title": "Test tích hợp — chuỗi ratchet → hub → graph → cite",
+   "files": [
+    "harness/tests/ge-integration-test.sh"
+   ],
+   "consumes": [
+    "`harness/scripts/loop-runner.py` (`--metric-cmd`, `--direction`, `--hub`, run-log JSON), `harness/scripts/hub.py` (`push/children/leaves/log`), `harness/scripts/wiki-graph.py` (`export --json`, `cite`), `harness/scripts/grounding-check.py` (`--check`)."
+   ],
+   "produces": [
+    "script nhận `<repo-root>`, exit 0 khi mọi assert xanh, exit 2 khi có FAIL; in `PASS/FAIL` từng dòng cho CI đọc."
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "",
+   "state": "ready",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "tt2",
+   "title": "Test hồi quy — dữ liệu và lệnh CŨ vẫn chạy",
+   "files": [
+    "harness/tests/ge-backcompat-test.sh"
+   ],
+   "consumes": [
+    "`harness/scripts/loop-runner.py`, `token-budget.py`, `wiki-graph.py`, `provenance-log.py`."
+   ],
+   "produces": [
+    "script cùng khuôn TT1; thêm fixture JSONL \"phiên bản cũ\" sinh tại chỗ (KHÔNG commit fixture vào repo — sinh trong sandbox để test luôn phản ánh schema hiện tại)."
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "",
+   "state": "ready",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "tt3",
+   "title": "Test kill-switch T7 — tắt được, xoá được, gỡ được",
+   "files": [
+    "harness/tests/ge-killswitch-test.sh"
+   ],
+   "consumes": [
+    "`harness/scripts/hub.py` (`push/purge/prune`), `harness/scripts/loop-runner.py` (`--hub`/`--no-hub`), `harness/loop-runner.config.yaml` (`hub.enabled`)."
+   ],
+   "produces": [
+    "script cùng khuôn; **bắt buộc** assert tầng 3 (xoá file) vì đó là tính chất dễ vỡ nhất khi ai đó \"tiện tay\" thêm `import hub` ở đầu loop-runner."
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "",
+   "state": "ready",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "tt4",
+   "title": "Test travel — thay đổi mới có tới tay người dùng mới không",
+   "files": [
+    "harness/tests/ge-travel-test.sh"
+   ],
+   "consumes": [
+    "`harness/scripts/install-harness.sh`, `harness/travel-policy.yaml`, `harness/validators/travel_policy_sync.py`, `harness/scripts/fresh-install-smoke.sh`."
+   ],
+   "produces": [
+    "script cùng khuôn; assert theo **hai chiều** — file phải travel thì có mặt, file KHÔNG được travel (nếu quyết định hub là dev-tool) thì phải vắng."
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "",
+   "state": "ready",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "tt5",
+   "title": "Test reachability + không tụt baseline",
+   "files": [
+    "harness/tests/ge-reachability-test.sh"
+   ],
+   "consumes": [
+    "`harness/scripts/skill-resolve-eval.py`, `fdk/tools/build-capabilities.py` (`capproof`), `harness/scripts/retrieval-eval.py`, `harness/metrics/retrieval-baseline.json`, `fdk/skills.search.json`."
+   ],
+   "produces": [
+    "script cùng khuôn, in delta so với baseline thay vì chỉ pass/fail (xu hướng đọc được, đúng §7.4 của spec)."
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "",
+   "state": "ready",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "tt7",
+   "title": "Acceptance — chấm lại bài nghiệm thu §X của PDF",
+   "files": [
+    "harness/tests/ge-acceptance-test.sh"
+   ],
+   "consumes": [
+    "`harness/scripts/wiki-graph.py` (`cite`), `hub.py` (`lineage`, `log`), `grounding-check.py`, `provenance-log.py` (`read-events`), `harness/metrics/*.json`, một trang wiki thật làm mẫu."
+   ],
+   "produces": [
+    "script in **bảng chấm 7 mắt xích** (`✓`/`✗` + lệnh chứng minh cho từng mắt xích) và exit 2 nếu điểm **thấp hơn** ngưỡng khai trong script (`EXPECT_LINKS=6`) — tức là hồi quy traceability bị chặn, không chỉ được ghi nhận."
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "",
+   "state": "ready",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "tt8",
+   "title": "Test MỤC ĐÍCH — từng thay đổi có làm đúng việc nó sinh ra để làm không",
+   "files": [
+    "harness/tests/ge-purpose-test.sh"
+   ],
+   "consumes": [
+    "cả 6 engine của T1–T7."
+   ],
+   "produces": [
+    "script cùng khuôn; mỗi assert gắn với **một câu mục đích** viết thành lời, để khi đỏ thì biết *mục đích nào* vỡ chứ không chỉ *hàm nào* lỗi."
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "",
+   "state": "ready",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "tt6",
+   "title": "Nối 7 test vào cổng, và UAT đường người mới",
+   "files": [
+    "harness/scripts/fdk-gate.py"
+   ],
+   "consumes": [
+    "5 script của TT1–TT5."
+   ],
+   "produces": [
+    "step mới trong `STEPS` của fdk-gate, chạy cả 5, đỏ nếu bất kỳ cái nào đỏ."
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "",
+   "state": "ready",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  }
+ ],
+ "layers": [
+  [
+   "tt1",
+   "tt2",
+   "tt3",
+   "tt4",
+   "tt5",
+   "tt6",
+   "tt7",
+   "tt8"
+  ]
+ ],
+ "conflicts": [],
+ "links": [
+  {
+   "to_graph": "290726-graph-engineering",
+   "to_node": "t7",
+   "via": [
+    "harness/scripts/fdk-gate.py"
+   ],
+   "kind": "touches-same-file"
+  }
+ ],
+ "schema_version": 1,
+ "checksum": "3572c774e357d873"
+}

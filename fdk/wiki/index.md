@@ -22,6 +22,7 @@
 | [250626-walkthroughs](html/250626-walkthroughs.html) | index | 2026-06-25 |
 | [rule-registry](concepts/rule-registry.md) | concept | 2026-06-27 — Registry R1..R12 (1 trang) + 2 policy.yaml + R6=verify-before-commit |
 | [fdk](concepts/fdk.md) | concept | 2026-06-27 — Framework Development Kit: front-door + pre-flight + module map (không miss rule, không dẫm module cũ) |
+| [orca-graph](concepts/orca-graph.md) | concept | 2026-09-12 — phân việc dạng đồ thị phụ thuộc: runtime khoá/lease/generation/state bền + 2 file vẽ + sổ câu trả lời model có audit (bịa = 0); v2 thêm cấp chứa, cycle xuyên graph, replan, control |
 | [ADR-001-policy-as-source-of-truth](sources/adr/ADR-001-policy-as-source-of-truth.md) | decision | 2026-06-27 — policy.yaml nguồn chân lý, thin-adapter (case R11) |
 | [ADR-002-pull-before-change-gates](sources/adr/ADR-002-pull-before-change-gates.md) | decision | 2026-06-27 — R12 git-level+orchestrator, bỏ per-edit, đa-vendor/đa-subrepo |
 | [ADR-003-skill-as-single-source-of-truth](sources/adr/ADR-003-skill-as-single-source-of-truth.md) | decision | 2026-06-27 — skill con = SoT, orchestrator delegate; Claude nghĩ / CLI rẻ render |
@@ -69,6 +70,7 @@
 | [ADR-016-no-ai-attribution-in-commits](sources/adr/ADR-016-no-ai-attribution-in-commits.md) | decision | ADR-016: Không ghi công AI trong commit (R15) |
 | [framework-dev-antipatterns](concepts/framework-dev-antipatterns.md) | concept | Framework-dev anti-patterns |
 | [ADR-017-global-shared-engine-repo-data-travel](sources/adr/ADR-017-global-shared-engine-repo-data-travel.md) | decision | ADR-017: Global-shared engine + repo-data travel |
+| [ADR-018-orca-graph-file-based-graph-engine](sources/adr/ADR-018-orca-graph-file-based-graph-engine.md) | source | "ADR-018: orca-graph là graph engine file-based một máy — vay luật state của Reprise, không vay hạ tầng" |
 | [010726-council-output](draft/orca/010726-council-output.md) | auto |  |
 | [adapt-modes-pick](sources/evals/adapt-modes-pick.md) | eval | Golden: adapt-modes-pick |
 | [capproof-liveness](sources/evals/capproof-liveness.md) | eval | Golden: capproof-liveness |

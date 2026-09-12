@@ -1,0 +1,5 @@
+{"ts": "2026-09-12T12:15:25+0700", "node": "t1", "from": "ready", "to": "locked", "by": "demo", "op_key": "t1:locked:1789190125825", "gen": 0, "rev": 1, "note": "lease 5400s"}
+{"ts": "2026-09-12T12:15:25+0700", "node": "t1", "from": "locked", "to": "dispatched", "by": "giatran", "op_key": "demo-d1", "gen": 1, "rev": 2, "note": ""}
+{"ts": "2026-09-12T12:15:25+0700", "node": "t1", "from": "dispatched", "to": "done_unverified", "by": "giatran", "op_key": "demo-done1", "gen": 1, "rev": 3, "note": "(không có verify)"}
+{"ts": "2026-09-12T12:15:25+0700", "node": "t2", "from": "ready", "to": "locked", "by": "demo", "op_key": "t2:locked:1789190125957", "gen": 0, "rev": 1, "note": "lease 5400s"}
+{"ts": "2026-09-12T12:15:26+0700", "node": "t2", "from": "locked", "to": "dispatched", "by": "giatran", "op_key": "demo-d2", "gen": 1, "rev": 2, "note": ""}
