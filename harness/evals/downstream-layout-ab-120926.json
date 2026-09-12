@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "golden": "fdk/wiki/sources/evals/downstream-layout-awareness.md",
+  "date": "2026-09-12",
+  "method": "Hai agent Sonnet mới, mỗi bên chỉ đọc bản xuất sạch của repo (không chứa golden) + output session_start của bản đó; chấm bằng harness/scripts/wikieval.py tier-1 asserts.",
+  "arms": {
+    "A": {
+      "repo_commit": "5ad733d",
+      "has_downstream_map": false,
+      "answer": "Ở dự án khách (cài bằng curl bootstrap): stamp nằm ở `.llmwiki/.harness-stamp` (layout DOT — installer ghi ở đó; repo framework dùng bản không-dot `llmwiki/.harness-stamp`, guard trong install-harness.sh nhận cả hai). Wiki khách nằm ở `.llmwiki/wiki/`. Hook KHÔNG được copy vào project khách — chạy từ GLOBAL `~/.claude/harness/hooks` (biến `HOOKS_DIR` trong `harness/scripts/install-harness.sh`). Engine như `fdk/tools/build-wiki-graph.py` cũng không có bản local ở khách, resolve qua global `~/.claude/harness/` (`HARNESS_HOME`, override bằng env `OVERSTACK_HARNESS_HOME`).\n\nTrong code, đừng hardcode path. Lấy root bằng `hooklib.project_dir(payload)` (đọc `CLAUDE_PROJECT_DIR` → `payload[\"cwd\"]` → `os.getcwd()`), rồi:\n- Wiki: gọi `hooklib.find_wiki_dir(root)` — ưu tiên `.overstack.yaml` khai `wiki_dir:`, không có thì thử `fdk/wiki` → `wiki` → `.llmwiki/wiki` → `llmwiki/wiki`; tự đúng ở cả framework và khách.\n- Tool/engine: gọi `hooklib.resolve_tool(root, \"fdk/tools/<tool>.py\")` — repo-local trước, fallback global.\n- Metrics: LUÔN project-local, `os.path.join(root, \"harness\", \"metrics\", ...)` — không có bản global; installer tự `mkdir -p \"$ROOT/harness/metrics\"`.\n\nstop.py hiện có `_scope_config()` gọi `hooklib.scope_config(root)` (fallback cũ `llmwiki/wiki`) — nếu thêm logic path mới trong stop.py, đi qua `find_wiki_dir`/`resolve_tool`, đừng tự nối `os.path.join(root,\"llmwiki\",\"wiki\")` tay vì sẽ gãy ở khách (thiếu dot, GH#111 từng bị vậy).\n\nChứng minh trên máy khách: chạy skill `/fdk-uat` — dựng project rỗng, curl bootstrap từ remote raw thật (đường người mới, không file://), rồi assert `.llmwiki/.harness-stamp` tồn tại, `.llmwiki/wiki/` có nội dung, `harness/metrics/` có file, và hook thực sự fire từ `~/.claude/harness/hooks`.\n",
+      "grade_v1": {
+        "verdict": "FAIL",
+        "passed": 3,
+        "total": 4,
+        "failed_asserts": [
+          "regex:(?i)(overstack_paths|stamp_path|harness_dir|overstack_dir)"
+        ]
+      },
+      "grade_v2": {
+        "verdict": "FAIL",
+        "passed": 4,
+        "total": 5,
+        "failed_asserts": [
+          "contains:.harness/metrics"
+        ]
+      },
+      "rubric": {
+        "layout_stamp": true,
+        "hooks_engine_global": true,
+        "no_bare_paths_resolver": false,
+        "proof_in_target_env": true
+      },
+      "real_error": "khuyên dựng root/'harness'/'metrics' — metrics 'luôn project-local'"
+    },
+    "B": {
+      "repo_commit": "4f4db2e",
+      "has_downstream_map": true,
+      "answer": "Ở dự án khách (cài qua curl bootstrap, layout \"dot\"):\n- Stamp: `.llmwiki/.harness-stamp` (`hooklib.stamp_path()` / `overstack_paths.overstack_dir()` ưu tiên `.llmwiki` trước `llmwiki` cũ).\n- Wiki: `.llmwiki/wiki/` (`hooklib.find_wiki_dir()`/`all_wiki_dirs()`, `overstack_paths.wiki_dir()`/`project_wiki()` — cùng thứ tự: `.overstack.yaml: wiki_dir` khai báo → `.llmwiki/wiki` → `llmwiki/wiki` cũ → `wiki/` trần).\n- Metrics: `.harness/metrics/` (`hooklib.harness_dir()`), ví dụ `.harness/metrics/.stop-debounce.json`.\n- Hook thật chạy từ file `<project>/.llmwiki/.claude/hooks/stop.py` (+ `hooklib.py`, `validators/` cạnh nó), đăng ký trong `.claude/settings.json` bằng `$CLAUDE_PROJECT_DIR/.llmwiki/.claude/hooks/stop.py`.\n- Engine nặng (build-wiki-graph.py, medic.py, mem-rank.py, scratch-log.py, token-budget.py, provenance-log.py) KHÔNG copy vào repo khách — `hooklib.resolve_tool(root, rel)` tìm `root/rel` trước rồi global `~/.claude/harness/rel` (cài một lần, dùng chung mọi project).\n\nDựng path trong code: KHÔNG bao giờ hardcode `llmwiki/`/`harness/`. Trong hooks (`llmwiki/.claude/hooks/*.py`) gọi các hàm của `hooklib`: `overstack_dir`, `harness_dir`, `find_wiki_dir`/`all_wiki_dirs`, `stamp_path`, `scope_config`, `resolve_tool`. Trong script độc lập (`harness/scripts/*.py`, `fdk/tools/*.py`) gọi `harness/scripts/overstack_paths.py`: `wiki_dir`, `overstack_dir`, `harness_dir`, `project_wiki`, `needs_migration`. Hai module này phải giữ ĐÚNG cùng thứ tự tìm (`.llmwiki` trước `llmwiki`, `.harness` trước `harness`) — khớp nhau được kiểm bởi `harness/validators/bare_path_lint.py --self-test`.\n\nChứng minh chạy đúng ở máy khách: chạy `bash harness/tests/dot-layout-runtime-test.sh <repo-root>` — dựng fixture layout dot thật rồi assert 4 bất biến: (a) `session_start.py` kêu khi stamp lệch MAJOR ngay cả ở layout dot; (b) `stop.py` KHÔNG đẻ thêm `llmwiki/`/`harness/` trần cạnh `.llmwiki/`/`.harness/`; (c) `stop.py` ghi session-provenance vào `.llmwiki/wiki/sources/` và vẽ `wiki-graph.html` vào `.llmwiki/html/`; (d) CI sinh cho downstream không còn đường dẫn trần `llmwiki/`/`harness/` ngoài harness-src/$HOME/.claude. Bổ sung `python3 harness/scripts/overstack_paths.py --self-test` để unit-test riêng path-resolver.\n",
+      "grade_v1": {
+        "verdict": "PASS",
+        "passed": 4,
+        "total": 4,
+        "failed_asserts": []
+      },
+      "grade_v2": {
+        "verdict": "FAIL",
+        "passed": 4,
+        "total": 5,
+        "failed_asserts": [
+          "regex:~/\\.claude/harness/hooks"
+        ]
+      },
+      "rubric": {
+        "layout_stamp": true,
+        "hooks_engine_global": false,
+        "no_bare_paths_resolver": true,
+        "proof_in_target_env": true
+      },
+      "real_error": "nói hook chạy từ .llmwiki/.claude/hooks trong dự án khách (thật: ~/.claude/harness/hooks)"
+    }
+  },
+  "controls": {
+    "positive_v2": {
+      "verdict": "PASS",
+      "passed": 5,
+      "total": 5,
+      "failed_asserts": []
+    },
+    "negative_v2": {
+      "verdict": "FAIL",
+      "passed": 0,
+      "total": 5,
+      "failed_asserts": [
+        "contains:.llmwiki/.harness-stamp",
+        "contains:.harness/metrics",
+        "regex:~/\\.claude/harness/hooks",
+        "regex:(?i)(overstack_paths|stamp_path|harness_dir|overstack_dir|find_wiki_dir|project_wiki)",
+        "regex:(?i)(dot-layout-runtime|fixture|layout dot|fdk-uat|dự án trống|project rỗng)"
+      ]
+    }
+  },
+  "conclusion": "Ngữ cảnh mới sửa được ý resolver/metrics và cách chứng minh; chưa sửa được ý 'hook chạy ở đâu' — B tin fixture đời cũ trong dot-layout-migrate-test.sh hơn dòng bản đồ."
+}
