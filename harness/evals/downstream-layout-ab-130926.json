@@ -1,0 +1,70 @@
+{
+  "schema": 1,
+  "golden": "fdk/wiki/sources/evals/downstream-layout-awareness.md",
+  "date": "2026-09-13",
+  "golden_version": 3,
+  "change_v2_to_v3": "assert 3 nhận cả dạng ~/.claude/harness/{…,hooks} — dạng ngoặc nhọn chép từ dòng bản đồ [downstream-map]; B2 trượt ở v2 chỉ vì cách viết (âm tính giả).",
+  "arm_B2": {
+    "source": "bản xuất sạch worktree Rheinmir/downstream-layout sau PLAN 130926 Task A (loại golden, hồ sơ A/B, trang docs 120926, PLAN 130926, dòng index golden, dòng ledger nhắc golden)",
+    "has_no_hook_line": true,
+    "answer": "Ở dự án khách cài qua curl bootstrap: stamp nằm ở `.llmwiki/.harness-stamp`, wiki nội dung ở `.llmwiki/wiki` (chuẩn dot — installer mới). Dự án khách KHÔNG chứa hook/engine: hook (stop.py, session_start.py...) và engine (build-wiki-graph.py...) chạy từ `~/.claude/harness/{harness,fdk,hooks}` — đăng ký sẵn trong `~/.claude/settings.json`, chỉ bật khi thấy `.llmwiki/.harness-stamp`. Trong repo khách chỉ có `.harness/poc-vendor-neutral` (validator + CI), không có bản copy hook/engine.\n\nTrong code, KHÔNG hardcode `llmwiki/`/`harness/`. Dựng đường dẫn qua các hàm dùng chung, có ở hai nơi song song cùng thứ tự (bare_path_lint.py --self-test assert khớp nhau):\n- `harness/scripts/overstack_paths.py`: `overstack_dir(root)`, `harness_dir(root)`, `wiki_dir(root)`, `project_wiki(root)`.\n- `llmwiki/.claude/hooks/hooklib.py` (bản chép cạnh hooks, deploy xuống dự án khách): `overstack_dir()`, `harness_dir()`, `find_wiki_dir()`, `stamp_path()`.\nCả hai đều thử `.llmwiki`/`.harness` (chuẩn mới) TRƯỚC, `llmwiki`/`harness` (chuẩn cũ, chỉ còn ở repo framework — nhận diện qua `fdk/wiki`) SAU. Ví dụ trong stop.py: `_debounce_path()` gọi `harness_dir(root)` rồi nối `\"metrics/.stop-debounce.json\"` — cùng dòng code cho ra `.harness/metrics/...` ở dự án khách và `harness/metrics/...` ở repo framework.\n\nChứng minh chạy đúng ở máy khách: `bash harness/tests/dot-layout-runtime-test.sh <repo-root>` — script tự dựng fixture dự án layout dot (qua `downstream-fixture.sh`) rồi assert 4 bất biến: (a) session_start báo `harness-integrity` khi stamp lệch MAJOR so với global, (b) stop KHÔNG đẻ `llmwiki/`/`harness/` trần, (c) stop ghi session-provenance vào `.llmwiki/wiki/sources/` và vẽ wiki-graph vào `.llmwiki/html/` nếu có engine, (d) CI sinh cho dự án khách không chứa đường trần `llmwiki/`/`harness/` ngoài `harness-src`/`$HOME/.claude`.\n",
+    "grade_v2": {
+      "verdict": "FAIL",
+      "passed": 4,
+      "total": 5,
+      "failed_asserts": [
+        "regex:~/\\.claude/harness/hooks"
+      ]
+    },
+    "grade_v3": {
+      "verdict": "PASS",
+      "passed": 5,
+      "total": 5,
+      "failed_asserts": []
+    },
+    "rubric": {
+      "layout_stamp": true,
+      "hooks_engine_global": true,
+      "no_bare_paths_resolver": true,
+      "proof_in_target_env": true
+    },
+    "note": "tự mâu thuẫn nhỏ: gọi hooklib.py là 'deploy xuống dự án khách'"
+  },
+  "regrade_v3": {
+    "A_5ad733d": {
+      "verdict": "FAIL",
+      "passed": 4,
+      "total": 5,
+      "failed_asserts": [
+        "contains:.harness/metrics"
+      ]
+    },
+    "B_4f4db2e": {
+      "verdict": "FAIL",
+      "passed": 4,
+      "total": 5,
+      "failed_asserts": [
+        "regex:~/\\.claude/harness/(hooks|\\{[^}]*\\bhooks\\b[^}]*\\})"
+      ]
+    },
+    "positive": {
+      "verdict": "PASS",
+      "passed": 5,
+      "total": 5,
+      "failed_asserts": []
+    },
+    "negative": {
+      "verdict": "FAIL",
+      "passed": 0,
+      "total": 5,
+      "failed_asserts": [
+        "contains:.llmwiki/.harness-stamp",
+        "contains:.harness/metrics",
+        "regex:~/\\.claude/harness/(hooks|\\{[^}]*\\bhooks\\b[^}]*\\})",
+        "regex:(?i)(overstack_paths|stamp_path|harness_dir|overstack_dir|find_wiki_dir|project_wiki)",
+        "regex:(?i)(dot-layout-runtime|fixture|layout dot|fdk-uat|dự án trống|project rỗng)"
+      ]
+    }
+  },
+  "conclusion": "Câu 'dự án khách KHÔNG chứa hook' trong [downstream-map] sửa được ý còn thiếu: B2 PASS 5/5 trên v3, trong khi A và B lần 1 vẫn trượt đúng ở lỗi thật."
+}

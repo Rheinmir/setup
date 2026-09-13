@@ -7,7 +7,7 @@ expected: "Dự án khách dùng layout ẩn: .llmwiki/ (wiki ở .llmwiki/wiki,
 asserts:
   - 'contains:.llmwiki/.harness-stamp'
   - 'contains:.harness/metrics'
-  - 'regex:~/\.claude/harness/hooks'
+  - 'regex:~/\.claude/harness/(hooks|\{[^}]*\bhooks\b[^}]*\})'
   - 'regex:(?i)(overstack_paths|stamp_path|harness_dir|overstack_dir|find_wiki_dir|project_wiki)'
   - 'regex:(?i)(dot-layout-runtime|fixture|layout dot|fdk-uat|dự án trống|project rỗng)'
 rubric: "ĐẠT nếu đủ bốn ý: (1) máy khách dùng layout ẩn .llmwiki/ + .harness/, stamp ở .llmwiki/.harness-stamp; (2) hook và engine chạy từ ~/.claude/harness global; (3) cấm ghi cứng đường trần và chỉ ra resolver dùng chung; (4) chứng minh bằng cách chạy hook thật trong một dự án hay fixture layout dot, không phải chỉ chạy test trong repo framework. KHÔNG đạt nếu trả lời stamp ở llmwiki/.harness-stamp cho dự án khách, hoặc cho rằng test xanh trong repo framework là đủ."
@@ -33,6 +33,22 @@ Hai agent Sonnet mới, mỗi bên chỉ được đọc một bản xuất sạ
 Bản 1 bị siết thành bản 2 vì hai khuyết điểm lộ ra khi chấm: assert "chứng minh" khớp cả cụm "dự án khách" có sẵn trong câu hỏi, và regex resolver thiếu `find_wiki_dir`, nên A trượt vì lý do sai còn B lọt dù sai. Bản 2 thêm hai assert khẳng định (`.harness/metrics`, `~/.claude/harness/hooks`) thay vì assert phủ định, để không phạt nhầm câu trả lời đúng có nói "không nằm ở …".
 
 Theo rubric, cả hai bên đạt ba trên bốn ý. Ngữ cảnh mới sửa được ý (3) và (4): B dùng đúng resolver, đúng chỗ metrics, và chứng minh bằng `dot-layout-runtime-test.sh`. Nó chưa sửa được ý (2): B đọc `dot-layout-migrate-test.sh`, nơi fixture đời cũ còn ghi hook vào `.llmwiki/.claude/hooks`, và tin fixture hơn dòng bản đồ `llmwiki/.claude/hooks → ~/.claude/harness/{…,hooks}/`. Việc nên làm tiếp: khối `[downstream-map]` nói thẳng "dự án khách không chứa hook", rồi chạy lại bên B trên bản đó.
+
+## Kết quả lần 2 (2026-09-13, sau PLAN 130926 Task A)
+
+Task A thêm vào khối `[downstream-map]` một câu nói thẳng "dự án khách KHÔNG chứa hook hay engine", và chú thích fixture đời cũ trong `dot-layout-migrate-test.sh`. Bên B2 là một agent Sonnet mới, đọc bản xuất sạch của trạng thái đó, đã loại mọi dấu vết golden và eval, kèm đúng output `session_start` mới. Hồ sơ: `harness/evals/downstream-layout-ab-130926.json`.
+
+Dưới bản 2, B2 trượt đúng một assert vì cách viết: nó ghi `~/.claude/harness/{harness,fdk,hooks}`, dạng ngoặc nhọn chép nguyên văn từ chính dòng bản đồ mà framework in ra. Đó là âm tính giả của assert, nên bản 3 cho assert 3 nhận cả dạng ngoặc nhọn có chứa `hooks`. Để không sửa đề cho vừa một đáp án, mọi câu trả lời được chấm lại trên bản 3:
+
+| Câu trả lời | Bản 2 | Bản 3 | Ghi chú |
+|---|---|---|---|
+| Đối chứng dương | PASS 5/5 | PASS 5/5 | |
+| Đối chứng âm | FAIL 0/5 | FAIL 0/5 | |
+| A — trước thay đổi | FAIL 4/5 | FAIL 4/5 | vẫn sai metrics |
+| B — lần 1 sau thay đổi | FAIL 4/5 | FAIL 4/5 | vẫn sai chỗ hook |
+| B2 — sau Task A | FAIL 4/5 | PASS 5/5 | đúng cả bốn ý rubric |
+
+Theo rubric, B2 đạt bốn trên bốn ý. Còn một chỗ tự mâu thuẫn nhỏ: B2 gọi `hooklib.py` là "bản chép cạnh hooks, deploy xuống dự án khách", ngược với câu trước của chính nó. Chỗ này không đổi kết luận nhưng đáng theo dõi ở lần đo sau.
 
 Cách dùng như một phép đo A/B: hỏi cùng câu `input` cho một agent mới ở repo trước thay đổi (`5ad733d`) và ở repo sau thay đổi (`4f4db2e`), mỗi bên kèm đúng output `session_start` mà phiên thật được bơm vào, rồi chấm cả hai bằng `harness/scripts/wikieval.py`.
 
