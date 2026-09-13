@@ -22,6 +22,8 @@ run_migrate(){ # run_migrate <root>
 P="$TMP/old"; mkdir -p "$P/llmwiki/wiki/concepts" "$P/harness/scripts" "$P/src"
 echo "noi dung" > "$P/llmwiki/wiki/concepts/a.md"
 mkdir -p "$P/.claude"
+# settings.json ĐỜI CŨ (trước v4, hook per-project). Bản cài hiện tại KHÔNG ghi hook vào dự án khách:
+# hook chạy từ ~/.claude/harness/hooks. Fixture này chỉ tồn tại để kiểm migrate viết lại con trỏ đời cũ.
 printf '{"hooks":{"SessionStart":[{"command":"python3 \\"$CLAUDE_PROJECT_DIR/llmwiki/.claude/hooks/session_start.py\\""}]}}\n' > "$P/.claude/settings.json"
 printf 'llmwiki/html/*.png\n' > "$P/.gitignore"
 ( run_migrate "$P" ) >/dev/null 2>&1

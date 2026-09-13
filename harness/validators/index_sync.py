@@ -6,6 +6,7 @@ Contract: `index_sync.py --wiki-dir path/to/wiki` (CLI/pre-commit/Stop hook)
 Exit 0 = khớp, exit 2 = lệch (liệt kê thiếu/thừa trên stderr).
 """
 import json
+import os
 import re
 import subprocess
 import sys
@@ -13,6 +14,17 @@ from pathlib import Path
 
 SKIP_BASENAMES = {"README.md", "_template.md"}
 _IGN_CACHE: dict[str, bool] = {}
+
+
+def _git_env() -> dict:
+    """Hook git trong linked worktree đặt GIT_DIR (không kèm GIT_WORK_TREE). Khi đó git con chạy
+    với cwd khác gốc worktree sẽ coi cwd là gốc work tree → ls-files/check-ignore sai hết (đo
+    2026-09-13: --show-toplevel = …/fdk/wiki, mọi trang wiki '??'). Bỏ GIT_DIR để git tự dò repo từ
+    cwd; GIT_INDEX_FILE giữ nguyên vì đó là index đúng của lần commit đang chạy."""
+    env = dict(os.environ)
+    if "GIT_DIR" in env and "GIT_WORK_TREE" not in env:
+        env.pop("GIT_DIR")
+    return env
 
 
 def gitignored(rel: str, wiki: Path) -> bool:
@@ -36,7 +48,7 @@ def gitignored(rel: str, wiki: Path) -> bool:
     if full not in _IGN_CACHE:
         try:
             r = subprocess.run(["git", "check-ignore", "-q", full], cwd=str(wiki_abs),
-                                capture_output=True, timeout=5)
+                                capture_output=True, timeout=5, env=_git_env())
             _IGN_CACHE[full] = (r.returncode == 0)
         except Exception:
             _IGN_CACHE[full] = False
@@ -59,7 +71,7 @@ def tracked(wiki: Path):  # -> set[str] | None (3.9 không có union operator)
     if key not in _TRACKED_CACHE:
         try:
             r = subprocess.run(["git", "ls-files", "-z", "--cached", "."], cwd=key,
-                               capture_output=True, timeout=10)
+                               capture_output=True, timeout=10, env=_git_env())
             got = ({p for p in r.stdout.decode().split("\0") if p}
                    if r.returncode == 0 else None)
             _TRACKED_CACHE[key] = got or None

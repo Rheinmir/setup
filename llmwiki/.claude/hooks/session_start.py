@@ -303,6 +303,9 @@ def downstream_map(root: Path) -> None:
             return
         print("🗺 [downstream-map] Đây là REPO FRAMEWORK — layout máy khách KHÁC cái bạn đang thấy:")
         print("\n".join(rows[:6]))
+        print("  • Dự án khách KHÔNG chứa hook hay engine: hook chạy từ ~/.claude/harness/hooks "
+              "(đăng ký ở ~/.claude/settings.json, chỉ bật khi thấy .llmwiki/.harness-stamp); "
+              "trong dự án chỉ có .harness/poc-vendor-neutral (validator + CI).")
         print("  LUẬT: code/hook/CI chạm downstream KHÔNG ghi cứng llmwiki/ · harness/ — dùng overstack_paths.* / hooklib.*;"
               " test trong fixture dot: bash harness/tests/dot-layout-runtime-test.sh .")
     except Exception:

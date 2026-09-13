@@ -338,7 +338,7 @@ if [ "$WITH_WIKI" = 1 ]; then
     # 2) stamp — hợp đồng travel "repo này được gác bản vX" (session_start so với global → warn skew, U11)
     TV="$(python3 -c "import json,sys;print(json.load(open(sys.argv[1])).get('template_version','0'))" "$GH_HOME/version.json" 2>/dev/null || echo 0)"
     printf '{"schema": 1, "guarded_by": "%s"}\n' "${TV:-0}" > "$ROOT/$OVERSTACK_DIR/.harness-stamp"
-    log "  ✓ llmwiki/.harness-stamp (guarded_by: ${TV:-0})"
+    log "  ✓ $OVERSTACK_DIR/.harness-stamp (guarded_by: ${TV:-0})"
     # 3) U10: gỡ engine bản GH#51 từng copy vào repo (fdk/tools, harness/scripts) — global thay thế.
     #    KHÔNG đụng repo framework (nhận diện: có fdk/wiki — framework_only, downstream không có).
     if [ ! -d "$ROOT/fdk/wiki" ]; then

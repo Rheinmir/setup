@@ -119,4 +119,13 @@ assert not any(p.startswith('concepts/common') for p in sus), \
 assert 'concepts/app-core.md' in sus, 'path đầy đủ vẫn phải cờ (không được lọc mất recall thật)'"
 pass=$((pass+1)); echo "  ✓ archive bỏ qua · basename không-định-danh không sinh cờ · path đầy đủ vẫn cờ"
 
-echo "wiki-sync-test: $pass/10 assertion XANH"
+# 9. dự án khách layout dot: mark-synced phải neo vào .llmwiki/wiki, không thoát lỗi
+D="$(mktemp -d)"; ( cd "$D" && git init -q && git config user.email t@t && git config user.name t \
+  && mkdir -p .llmwiki/wiki/concepts && printf '# a\n\n## Origin\n- t\n' > .llmwiki/wiki/concepts/a.md \
+  && git add -A && git -c core.hooksPath=/dev/null commit --no-verify -qm init && python3 "$SYNC" --mark-synced >/dev/null )
+[ -f "$D/.llmwiki/wiki/.last-sync.json" ] && echo "  ✓ layout dot: neo nằm ở .llmwiki/wiki" \
+  || { echo "  ✗ layout dot: không neo được vào .llmwiki/wiki"; exit 1; }
+rm -rf "$D"
+pass=$((pass+1))
+
+echo "wiki-sync-test: $pass/11 assertion XANH"

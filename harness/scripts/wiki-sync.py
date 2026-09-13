@@ -59,10 +59,12 @@ def run_git(root: pathlib.Path, *args: str) -> str:
 def detect_wiki_dir(root: pathlib.Path, arg) -> pathlib.Path:
     if arg:
         return (root / arg).resolve() if not pathlib.Path(arg).is_absolute() else pathlib.Path(arg)
-    for cand in (root / "llmwiki" / "wiki", root / "wiki"):
+    # layout dot (dự án khách cài mới) trước, layout trần (repo framework / bản cài cũ) sau —
+    # cùng thứ tự với overstack_paths.OVERSTACK_DIRS và session_start.wiki_drift (nơi đọc neo).
+    for cand in (root / ".llmwiki" / "wiki", root / "llmwiki" / "wiki", root / "wiki"):
         if cand.is_dir():
             return cand
-    sys.exit("wiki-sync: không tìm thấy thư mục wiki (llmwiki/wiki hay wiki/) — chỉ định --wiki-dir")
+    sys.exit("wiki-sync: không tìm thấy thư mục wiki (.llmwiki/wiki, llmwiki/wiki hay wiki/) — chỉ định --wiki-dir")
 
 
 def read_anchor(wiki_dir: pathlib.Path):

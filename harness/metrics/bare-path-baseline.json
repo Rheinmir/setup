@@ -13,7 +13,7 @@
   "harness/poc-vendor-neutral/bin/harness-events.py": 4,
   "harness/poc-vendor-neutral/bootstrap-fork.sh": 1,
   "harness/poc-vendor-neutral/demo.sh": 8,
-  "harness/poc-vendor-neutral/install.sh": 5,
+  "harness/poc-vendor-neutral/install.sh": 4,
   "harness/poc-vendor-neutral/test-broad.sh": 58,
   "harness/poc-vendor-neutral/uninstall.sh": 1,
   "harness/scripts/agent-trace.py": 6,

@@ -78,7 +78,16 @@ def p_backstop():
     thì GÃY lúc commit — cổng sức khoẻ cuối tuyên bố một phòng tuyến đang sống từ một inode.
     Cùng lớp lỗi với code-graph (xem p_deps)."""
     import shutil as _sh
-    hook = (ROOT / ".git/hooks/pre-commit").exists()
+    import subprocess as _sp
+    # worktree có `.git` là FILE → ROOT/.git/hooks không tồn tại dù hook dùng chung đã cài.
+    # Hỏi git: --git-path hooks/pre-commit trả đúng hook chung (và tôn trọng core.hooksPath).
+    try:
+        _p = _sp.run(["git", "-C", str(ROOT), "rev-parse", "--git-path", "hooks/pre-commit"],
+                     capture_output=True, text=True, timeout=5).stdout.strip()
+        hook_path = Path(_p) if _p and Path(_p).is_absolute() else ROOT / (_p or ".git/hooks/pre-commit")
+    except Exception:
+        hook_path = ROOT / ".git/hooks/pre-commit"
+    hook = hook_path.exists()
     binary = _sh.which("pre-commit") is not None
     if hook and binary:
         return "ok", "pre-commit sống (shim + binary trên PATH)", ""
