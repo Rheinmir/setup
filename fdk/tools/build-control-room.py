@@ -18,6 +18,12 @@ og = importlib.util.module_from_spec(_ospec); _ospec.loader.exec_module(og)
 STUCK = ("unknown", "failed", "blocked")
 
 
+def proj_name(d) -> str:
+    """Tên dự án từ thư mục store: <proj>/llmwiki/graph → proj; <proj>/.llmwiki/graph → proj; <x>/p1 → p1."""
+    parts = [x for x in Path(d).resolve().parts if x not in ("graph", "llmwiki", ".llmwiki")]
+    return parts[-1] if parts else str(d)
+
+
 def read_jsonl(p: Path) -> list:
     if not p.exists():
         return []
@@ -53,23 +59,25 @@ def block_running(graphs: list, cap: int) -> str:
                     left = f"{int(json.loads((st.locks_d / n['id']).read_text())['lease_until'] - time.time())} s"
                 except (OSError, ValueError, KeyError):
                     pass
-                rows.append(f'<tr><td><code>{html.escape(Path(g["_dir"]).parent.name)}/{html.escape(g["id"])}</code></td><td><code>{n["id"]}</code></td><td>{html.escape(n["title"][:48])}</td>'
+                rows.append(f'<tr><td><code>{html.escape(proj_name(g["_dir"]))}/{html.escape(g["id"])}</code></td><td><code>{n["id"]}</code></td><td>{html.escape(n["title"][:48])}</td>'
                             f'<td><span class="badge" style="border-color:{viz.STATE_COLOR[n["state"]]}">{html.escape(viz.STATE_VI[n["state"]])}</span></td><td>{left}</td><td>{n.get("gen", 0)}</td></tr>')
     warn = f'<div class="sub" style="color:#ef4444">⚠ {len(rows)} node đang chạy vượt trần toàn máy {cap}</div>' if len(rows) > cap else ""
     body = "".join(rows) or '<tr><td colspan="6">Không có node nào đang chạy.</td></tr>'
     return f'<h2 id="chay">Đang chạy toàn máy <span class="badge">{len(rows)}/{cap}</span></h2>{warn}<table><tr><th>Graph</th><th>Node</th><th>Việc</th><th>State</th><th>Lease còn</th><th>Gen</th></tr>{body}</table>'
 
 
-def block_progress(graphs: list) -> str:
+def block_progress(graphs: list, out: Path) -> str:
     rows = []
     for g in graphs:
         n = len(g["nodes"]); done = sum(1 for x in g["nodes"] if x["state"] in og.TERMINAL_OK)
         stuck = [f'<code>{x["id"]}</code> {html.escape(viz.STATE_VI[x["state"]])}' for x in g["nodes"] if x["state"] in STUCK]
         pct = int(100 * done / n) if n else 0
         bar = f'<svg width="160" height="10" role="img" aria-label="{pct}%"><rect width="160" height="10" rx="5" fill="var(--glass1)" stroke="var(--border)"/><rect width="{1.6*pct:.0f}" height="10" rx="5" fill="#22c55e"/></svg>'
-        page = Path(g["_dir"]).parent / "html" / "orca-graph" / f"{g['id']}.graph.html"
-        link = f'<a href="{html.escape(os.path.relpath(page, ROOT / "llmwiki/html"))}">{html.escape(g["id"])}</a>' if page.exists() else html.escape(g["id"])
-        rows.append(f'<tr><td><span class="sub">{html.escape(Path(g["_dir"]).parent.name)}/</span>{link}</td><td>{bar} {done}/{n}</td><td>{g.get("control", "active")} · v{g.get("plan_version", 1)} · cấp {g.get("depth", 0)}</td><td>{", ".join(stuck) or "—"}</td></tr>')
+        cands = [Path(g["_dir"]).parent / "html" / "orca-graph" / f"{g['id']}.graph.html",   # <proj>/llmwiki/graph → <proj>/llmwiki/html/orca-graph
+                 Path(g["_dir"]) / "html" / "orca-graph" / f"{g['id']}.graph.html"]           # store đặt thẳng trong thư mục dự án
+        page = next((c for c in cands if c.exists()), cands[0])
+        link = f'<a href="{html.escape(os.path.relpath(page, out.resolve().parent))}">{html.escape(g["id"])}</a>' if page.exists() else html.escape(g["id"])
+        rows.append(f'<tr><td><span class="sub">{html.escape(proj_name(g["_dir"]))}/</span>{link}</td><td>{bar} {done}/{n}</td><td>{g.get("control", "active")} · v{g.get("plan_version", 1)} · cấp {g.get("depth", 0)}</td><td>{", ".join(stuck) or "—"}</td></tr>')
     return f'<h2 id="tien-do">Tiến độ từng graph</h2><table><tr><th>Graph</th><th>Xong</th><th>Control · plan · cấp</th><th>Kẹt (cần người / reconcile)</th></tr>{"".join(rows) or "<tr><td colspan=4>Chưa có graph.</td></tr>"}</table>'
 
 
@@ -109,7 +117,7 @@ def build(dirs: list, out: Path) -> None:
            '<div class="grp">Trang khác</div><a href="orca-graph/atlas.html">Atlas graph</a><a href="fdk-problem-tree.html">Problem tree</a><a href="overstack.html">Overstack</a>')
     main = (f'<h1>Control room</h1><div class="sub">Trang data-first: chỉ đọc registry orca-graph, graph.json, problem-tree, tokens.jsonl, audit-log. Tự refresh 15 s. '
             f'Thư mục đang theo dõi: {", ".join(f"<code>{html.escape(d)}</code>" for d in dirs)}. Daemon: {"pid " + str(og.daemon_alive()) if og.daemon_alive() else "không chạy"}.</div>'
-            + block_running(graphs, reg.get("max_running", 4)) + block_progress(graphs) + block_debt() + block_cost(dirs))
+            + block_running(graphs, reg.get("max_running", 4)) + block_progress(graphs, out) + block_debt() + block_cost(dirs))
     old_css = viz.CSS
     viz.CSS = old_css + "\n.badge{font-size:11px}"
     try:

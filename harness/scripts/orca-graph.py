@@ -737,6 +737,8 @@ def cmd_watch(a):
         sys.stdout.reconfigure(line_buffering=True)   # chạy nền redirect vào watch.log → không được buffer
     except Exception:
         pass
+    if a.once:                       # một lượt thủ công: op_key idempotent nên chạy song song daemon vẫn an toàn
+        watch_once(); return
     if not daemon_lock():
         raise SystemExit(f"daemon đã chạy (pid {daemon_alive()})")
     idle_since = None
