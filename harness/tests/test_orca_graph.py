@@ -181,6 +181,39 @@ def test_control_and_max_parallel(tmp_path):
     run(tmp_path, "control", gid, "resume"); r = run(tmp_path, "next", gid); assert "t3" in r.stdout
 
 
+def test_run_wrapper(tmp_path):
+    gid = setup(tmp_path); home = tmp_path / "home"
+    env = dict(os.environ, ORCA_GRAPH_HOME=str(home), ORCA_GRAPH_NO_DAEMON="1")
+    r = subprocess.run([sys.executable, str(SCRIPT), "--dir", str(tmp_path), "run", gid, "t1", "--hb", "0.2", "--", "sh", "-c", "sleep 0.5"], capture_output=True, text=True, cwd=ROOT, env=env)
+    assert r.returncode == 0 and "→ done" in r.stdout, r.stdout + r.stderr          # verify=true
+    reg = json.loads((home / "registry.json").read_text()); assert str(tmp_path.resolve()) not in reg["dirs"]   # hết node chạy → prune
+    r = subprocess.run([sys.executable, str(SCRIPT), "--dir", str(tmp_path), "run", gid, "t3", "--", "false"], capture_output=True, text=True, cwd=ROOT, env=env)
+    assert r.returncode != 0 and "không có verify" in r.stderr                        # t3 không verify → từ chối headless
+    r = subprocess.run([sys.executable, str(SCRIPT), "--dir", str(tmp_path), "run", gid, "t3", "--allow-unverified", "--", "false"], capture_output=True, text=True, cwd=ROOT, env=env)
+    assert "→ failed" in r.stdout, r.stdout + r.stderr
+
+
+def test_watch_once(tmp_path):
+    gid = setup(tmp_path); home = tmp_path / "home"; home.mkdir()
+    (home / "registry.json").write_text(json.dumps({"dirs": [str(tmp_path.resolve())]}))
+    env = dict(os.environ, ORCA_GRAPH_HOME=str(home))
+    run(tmp_path, "lock", gid, "t1", "--lease-sec", "1"); run(tmp_path, "set", gid, "t1", "dispatched", "--op-key", "k"); time.sleep(1.2)
+    r = subprocess.run([sys.executable, str(SCRIPT), "watch", "--once"], capture_output=True, text=True, cwd=ROOT, env=env)
+    assert r.returncode == 0 and "t1" in r.stdout and "reconcile" in r.stdout, r.stdout + r.stderr
+    g = json.loads((tmp_path / f"{gid}.graph.json").read_text()); assert {n["id"]: n["state"] for n in g["nodes"]}["t1"] == "done"
+    assert not (home / "daemon.lock").exists()
+
+
+def test_control_room(tmp_path):
+    gid = setup(tmp_path); run(tmp_path, "lock", gid, "t1"); run(tmp_path, "set", gid, "t1", "dispatched", "--op-key", "k")
+    out = tmp_path / "control-room.html"
+    env = dict(os.environ, ORCA_GRAPH_HOME=str(tmp_path / "home"))
+    r = subprocess.run([sys.executable, str(ROOT / "fdk/tools/build-control-room.py"), "--dirs", str(tmp_path), "-o", str(out)], capture_output=True, text=True, cwd=ROOT, env=env)
+    assert r.returncode == 0, r.stderr
+    h = out.read_text(encoding="utf-8")
+    assert "theme-switch" in h and 'class="path"' in h and 'http-equiv="refresh"' in h and ">t1<" in h and "đã giao" in h, h[:300]
+
+
 if __name__ == "__main__":
     import tempfile
     for name, fn in list(globals().items()):

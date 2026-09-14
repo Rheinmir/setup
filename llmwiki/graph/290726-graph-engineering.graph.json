@@ -26,7 +26,8 @@
    "rev": 3,
    "attempts": 1,
    "fresh": "current",
-   "verified": "unverified"
+   "verified": "unverified",
+   "done_spec_hash": null
   },
   {
    "id": "t2",
@@ -45,9 +46,9 @@
    "kind": "build",
    "mode": "afk",
    "verify": "",
-   "state": "dispatched",
+   "state": "unknown",
    "gen": 1,
-   "rev": 2,
+   "rev": 3,
    "attempts": 1,
    "fresh": "current",
    "verified": "unverified"
@@ -211,5 +212,6 @@
  ],
  "links": [],
  "schema_version": 1,
- "checksum": "d7f77d5cb4cda6e0"
+ "control": "active",
+ "checksum": "86c9b07fc98dfa43"
 }

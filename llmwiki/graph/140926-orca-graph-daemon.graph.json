@@ -22,12 +22,13 @@
    "mode": "afk",
    "verify": "python3 harness/tests/test_orca_graph.py 2>&1 | grep -q 'ok test_run_wrapper'",
    "spec_hash": "000baf3136e2aee7",
-   "state": "dispatched",
+   "state": "done",
    "gen": 1,
-   "rev": 2,
+   "rev": 3,
    "attempts": 1,
    "fresh": "current",
-   "verified": "unverified"
+   "verified": "verified",
+   "done_spec_hash": "000baf3136e2aee7"
   },
   {
    "id": "t2",
@@ -50,12 +51,13 @@
    "mode": "afk",
    "verify": "python3 harness/tests/test_orca_graph.py 2>&1 | grep -q 'ok test_watch_once'",
    "spec_hash": "3adcc7ae465452dd",
-   "state": "proposed",
-   "gen": 0,
-   "rev": 0,
-   "attempts": 0,
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
    "fresh": "current",
-   "verified": "unverified"
+   "verified": "verified",
+   "done_spec_hash": "3adcc7ae465452dd"
   },
   {
    "id": "t3",
@@ -80,12 +82,13 @@
    "mode": "afk",
    "verify": "python3 harness/tests/test_orca_graph.py 2>&1 | grep -q 'ok test_control_room'",
    "spec_hash": "e17484b22620a4a8",
-   "state": "proposed",
-   "gen": 0,
-   "rev": 0,
-   "attempts": 0,
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
    "fresh": "current",
-   "verified": "unverified"
+   "verified": "verified",
+   "done_spec_hash": "e17484b22620a4a8"
   }
  ],
  "layers": [
@@ -162,5 +165,5 @@
  ],
  "control": "active",
  "schema_version": 1,
- "checksum": "c207e01ef06c1a19"
+ "checksum": "7dbdcba51ee95571"
 }

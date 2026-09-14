@@ -1131,6 +1131,20 @@
   "date": "2026-09-12",
   "solvedBy": "orca-graph.py parse_plan fence-aware (phiên fdk 120926)",
   "session": "fdk 120926"
+ },
+ {
+  "id": "p-55",
+  "parent": "p-53",
+  "title": "Agent headless chết giữa chừng chỉ phát hiện khi hết lease 90 phút; n dự án mở không được thành n daemon",
+  "desc": "Giải: run wrapper heartbeat theo pid (lease 60 s), watch = một daemon toàn máy đọc registry (chi phí theo số node chạy, đo 84 ms/lượt), control-room tĩnh data-first daemon regen. Dogfood: PLAN daemon chạy qua chính run wrapper; watch --once dọn node 290726/t2 quá lease 2 ngày → unknown.",
+  "status": "solved",
+  "scope": [
+   "harness",
+   "skills"
+  ],
+  "date": "2026-09-14",
+  "solvedBy": "orca-graph.py run/watch + build-control-room.py + 3 test (phiên 140926)",
+  "session": "fdk 140926"
  }
 ]</script>
 

@@ -52,6 +52,12 @@ không phải suy đoán trong đầu. Runtime: `harness/scripts/orca-graph.py`.
 - `control <id> pause|resume|cancel|status`. "Yêu cầu" ≠ "đã dừng": `pause_requested` chỉ thành `paused` khi không còn node `locked|dispatched`; `next`/`lock` không cấp node mới khi không `active`. `cancelled` không resume — build plan version mới.
 - `build --max-parallel N` (mặc định 4): `lock` từ chối khi số node đang chạy đã đủ (PRD §12.1).
 
+## Daemon & control-room (PRD §8.4: lease 60 s · heartbeat 15 s · reaper 15 s)
+- `run <id> <node> [--hb 15] [--lease-sec 60] -- <lệnh agent>` — thay 4 lệnh gõ tay: lock ngắn → dispatched → spawn lệnh → heartbeat theo pid → exit 0 thành `done` (verify tự chạy), khác 0 thành `failed`. Node không có `verify` bị từ chối headless (`--allow-unverified` để ép). Tự ghi thư mục vào registry `~/.orca-graph/registry.json` và tự spawn daemon nếu chưa có (`ORCA_GRAPH_NO_DAEMON=1` để tắt, `ORCA_GRAPH_HOME` đổi thư mục nhà).
+- `watch [--once] [--interval 15] [--idle-sec 600]` — **một daemon cho cả máy**, lock `daemon.lock` theo pid. Mỗi lượt chỉ đọc các dir trong registry còn node chạy (chi phí theo số node chạy, không theo số dự án mở; đo 84 ms/lượt kể cả khởi động Python): reaper lease hết → `unknown` → có verify thì reconcile ngay; in bảng sống/chết; registry rỗng quá idle-sec thì tự thoát; graph đổi thì regen control-room.
+- `fdk/tools/build-control-room.py` → `llmwiki/html/control-room.html` — trang đầu tiên mở ra, data-first (chỉ đọc registry, graph.json, problem-tree, tokens.jsonl, audit-log): đang chạy gì toàn máy + trần, tiến độ từng graph + node kẹt, nợ mở, chi phí hôm nay + khoảng cách tự chấm/audit. Tự refresh 15 s. Bậc 2 (server + bấm pause/cancel) và bậc 3 (nhúng Orca) chưa làm, chỉ làm khi bậc 1 dùng hằng ngày thấy thiếu.
+- Sống/chết ≠ đúng/sai: daemon chỉ biết process còn hay mất; `done` hay làm lại vẫn do `verify` quyết. Process sống mà treo thì heartbeat vẫn xanh — đặt `**Verify:**` idempotent và trần thời gian theo node.
+
 ## Ngoài phạm vi PRD (nói thẳng, không giả vờ có)
 PostgreSQL ledger, sandbox/runtime isolation, secret gateway, ngân sách tiền, LangGraph, integration queue/candidate hash, compensation cho effect ngoài. Tool này là file-based cho một máy; cần những thứ trên thì đó là engine khác, không phải nâng cấp orca-graph.
 

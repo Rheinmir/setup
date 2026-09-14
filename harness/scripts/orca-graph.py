@@ -599,6 +599,156 @@ def cmd_sync_orca(a):
         print("\n".join(cmds))
 
 
+# ---------- daemon: run wrapper · registry · watch (PRD §8.4: lease 60 s · heartbeat 15 s · reaper 15 s) ----------
+def home() -> Path:
+    h = Path(os.environ.get("ORCA_GRAPH_HOME") or Path.home() / ".orca-graph"); h.mkdir(parents=True, exist_ok=True); return h
+
+
+def registry_load() -> dict:
+    p = home() / "registry.json"
+    try:
+        return json.loads(p.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {"dirs": [], "max_running": 4}
+
+
+def registry_save(r: dict) -> None:
+    atomic_write(home() / "registry.json", json.dumps(r, ensure_ascii=False, indent=1))
+
+
+def registry_add(d: Path) -> None:
+    r = registry_load(); k = str(d.resolve())
+    if k not in r["dirs"]:
+        r["dirs"].append(k); registry_save(r)
+
+
+def running_nodes(d: Path) -> list:
+    """[(gid, node)] đang locked|dispatched trong một dir — chi phí tỉ lệ số graph trong dir."""
+    out = []
+    for p in sorted(Path(d).glob("*.graph.json")):
+        try:
+            g = Store(Path(d), p.name[:-len(".graph.json")]).load()
+        except SystemExit:
+            continue
+        out += [(g, n) for n in g["nodes"] if n["state"] in ("locked", "dispatched")]
+    return out
+
+
+def registry_prune() -> dict:
+    r = registry_load()
+    r["dirs"] = [d for d in r["dirs"] if Path(d).is_dir() and running_nodes(Path(d))]
+    registry_save(r); return r
+
+
+def daemon_alive() -> int:
+    lp = home() / "daemon.lock"
+    try:
+        pid = int(lp.read_text().strip()); os.kill(pid, 0); return pid
+    except (OSError, ValueError):
+        return 0
+
+
+def daemon_lock() -> bool:
+    lp = home() / "daemon.lock"
+    if daemon_alive():
+        return False
+    lp.unlink(missing_ok=True)
+    try:
+        fd = os.open(lp, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+    except FileExistsError:
+        return False
+    with os.fdopen(fd, "w") as f:
+        f.write(str(os.getpid()))
+    return True
+
+
+def spawn_daemon() -> None:
+    if os.environ.get("ORCA_GRAPH_NO_DAEMON") or daemon_alive():
+        return
+    subprocess.Popen([sys.executable, str(Path(__file__).resolve()), "watch"], stdin=subprocess.DEVNULL,
+                     stdout=open(home() / "watch.log", "a"), stderr=subprocess.STDOUT, start_new_session=True)
+
+
+def cmd_run(a):
+    """Chạy MỘT node headless: lock ngắn → dispatched → spawn lệnh → heartbeat theo pid → done/failed tự động."""
+    st = Store(Path(a.dir), a.id); g = st.load()
+    n = {x["id"]: x for x in g["nodes"]}[a.node]
+    if not n.get("verify") and not a.allow_unverified:
+        raise SystemExit(f"{a.node} không có verify — không chạy headless (PRD §4.4); thêm **Verify:** hoặc --allow-unverified")
+    if not a.cmd:
+        raise SystemExit("thiếu lệnh: run <id> <node> -- <cmd...>")
+    a.by = a.by or f"run:{os.getpid()}"; a.op_key = ""; a.max_attempts = 3
+    cmd_lock(a)
+    g = st.load()
+    emit(st, g, a.node, "dispatched", by=a.by, note=" ".join(a.cmd)[:120], op_key=f"run:{a.node}:{int(time.time()*1000)}")
+    registry_add(Path(a.dir)); spawn_daemon()
+    gen = {x["id"]: x for x in st.load()["nodes"]}[a.node]["gen"]
+    lp = st.locks_d / a.node
+    p = subprocess.Popen(a.cmd)
+    while p.poll() is None:
+        time.sleep(a.hb)
+        if lp.exists():
+            lk = json.loads(lp.read_text()); lk["lease_until"] = time.time() + a.lease_sec; lk["pid"] = p.pid; atomic_write(lp, json.dumps(lk))
+    g = st.load()
+    to = "done" if p.returncode == 0 else "failed"
+    emit(st, g, a.node, to, by=a.by, note=f"rc={p.returncode}", op_key=f"run-end:{a.node}:{gen}", gen=gen)
+    cmd_unlock(a); registry_prune()
+    sys.exit(0 if to == "done" else p.returncode or 1)
+
+
+def watch_once(build_room: bool = True) -> int:
+    r = registry_prune(); total = 0; changed = False
+    print(f"[watch {time.strftime('%H:%M:%S')}] {len(r['dirs'])} dir đang có node chạy · trần toàn máy {r.get('max_running', 4)}")
+    for d in r["dirs"]:
+        d = Path(d)
+        for p in sorted(d.glob("*.graph.json")):
+            gid = p.name[:-len(".graph.json")]; st = Store(d, gid)
+            try:
+                g = st.load()
+            except SystemExit:
+                continue
+            k = reaper(st, g)
+            if k:
+                changed = True; g = st.load()
+            for n in g["nodes"]:
+                if n["state"] == "unknown" and n.get("verify"):
+                    rc = subprocess.call(n["verify"], shell=True)
+                    emit(st, g, n["id"], "done" if rc == 0 else "ready", by="reconcile", note=f"watch reconcile rc={rc}", op_key=f"reconcile:{n['id']}:{n['gen']}:{rc}")
+                    print(f"  reconcile {gid}/{n['id']} → {'done' if rc == 0 else 'ready'}"); changed = True; g = st.load()
+                if n["state"] in ("locked", "dispatched"):
+                    lk = {}
+                    try:
+                        lk = json.loads((st.locks_d / n["id"]).read_text())
+                    except (OSError, ValueError):
+                        pass
+                    left = int(lk.get("lease_until", 0) - time.time())
+                    print(f"  {gid:<32} {n['id']:<5} {n['state']:<10} lease còn {left:>5}s  gen {n['gen']}"); total += 1
+    if total > r.get("max_running", 4):
+        print(f"  ⚠ {total} node đang chạy > trần toàn máy {r.get('max_running', 4)}")
+    if build_room and changed:
+        br = Path(__file__).resolve().parents[2] / "fdk/tools/build-control-room.py"
+        if br.exists():
+            subprocess.call([sys.executable, str(br)], stdout=subprocess.DEVNULL)
+    return total
+
+
+def cmd_watch(a):
+    if not daemon_lock():
+        raise SystemExit(f"daemon đã chạy (pid {daemon_alive()})")
+    idle_since = None
+    try:
+        while True:
+            n = watch_once()
+            if a.once:
+                return
+            idle_since = None if n else (idle_since or time.time())
+            if idle_since and time.time() - idle_since > a.idle_sec:
+                print("registry rỗng quá lâu — daemon thoát"); return
+            time.sleep(a.interval)
+    finally:
+        (home() / "daemon.lock").unlink(missing_ok=True)
+
+
 # ---------- answers + audit ----------
 EV_RE = re.compile(r"^(file|event|edge|absence|cmd):(.+)$")
 
@@ -708,9 +858,17 @@ def main(argv=None):
     p = sp.add_parser("audit"); p.add_argument("id"); p.set_defaults(f=cmd_audit)
     p = sp.add_parser("check-cycles"); p.add_argument("cdir", nargs="?"); p.set_defaults(f=lambda a: (setattr(a, "dir", a.cdir or a.dir), cmd_check_cycles(a)))
     p = sp.add_parser("show"); p.add_argument("id"); p.set_defaults(f=cmd_show)
+    p = sp.add_parser("run"); p.add_argument("id"); p.add_argument("node")
+    p.add_argument("--hb", type=float, default=15); p.add_argument("--lease-sec", type=int, default=60); p.add_argument("--allow-unverified", action="store_true"); p.add_argument("--by", default="")
+    p.set_defaults(f=cmd_run)
+    p = sp.add_parser("watch"); p.add_argument("--once", action="store_true"); p.add_argument("--interval", type=float, default=15); p.add_argument("--idle-sec", type=int, default=600); p.set_defaults(f=cmd_watch)
     p = sp.add_parser("lint"); p.add_argument("id"); p.set_defaults(f=cmd_lint)
     p = sp.add_parser("control"); p.add_argument("id"); p.add_argument("action", choices=["pause", "resume", "cancel", "status"]); p.add_argument("--by", default=os.environ.get("USER", "agent")); p.set_defaults(f=cmd_control)
-    a = ap.parse_args(argv)
+    argv = list(sys.argv[1:] if argv is None else argv)
+    cmd = []
+    if "--" in argv:                       # run <id> <node> [flags] -- <lệnh agent...>
+        i = argv.index("--"); cmd = argv[i + 1:]; argv = argv[:i]
+    a = ap.parse_args(argv); a.cmd = cmd
     if getattr(a, "node", None) == "-":
         a.node = None
     a.f(a)
