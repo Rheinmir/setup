@@ -149,6 +149,7 @@ def _refresh(out: Path) -> None:
 
 # ---------- COCKPIT: board-first, mọi thứ trong MỘT màn hình; ô nào tràn thì cắt + "→ chi tiết" ----------
 COCKPIT_CSS = """
+main a{color:var(--accent);text-decoration:none}main a:hover{text-decoration:underline}
 nav{position:sticky;inset:auto;top:0;width:auto;height:auto;flex-direction:row;align-items:center;gap:6px;padding:8px 14px;border-right:0;border-bottom:1px solid var(--border);overflow:visible;z-index:5}
 nav::before{display:none}body{padding-left:0!important}nav .brand{padding:0 10px 0 0;font-size:12px}
 nav a{padding:5px 9px;border-left:0;border-radius:8px;font-size:11.5px}nav .grp{display:none}nav .nav-close,.nav-toggle{display:none}
