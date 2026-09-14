@@ -1,0 +1,166 @@
+{
+ "id": "140926-orca-graph-daemon",
+ "plan": "llmwiki/wiki/sources/draft/140926-orca-graph-daemon-PLAN.md",
+ "built": "2026-09-14T14:01:58+0700",
+ "nodes": [
+  {
+   "id": "t1",
+   "title": "`run` wrapper — lock ngắn, heartbeat theo pid, tự set done/failed",
+   "files": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "consumes": [
+    "`cmd_lock`, `emit`, `Store`."
+   ],
+   "produces": [
+    "`run <id> <node> [--hb 15] [--lease-sec 60] [--allow-unverified] -- <cmd...>`: lock → dispatched → `subprocess.Popen(cmd)` → mỗi `hb` giây ghi `lease_until` mới vào lockfile → exit 0 → `set done --gen` (verify chạy trong emit) · exit ≠ 0 → `failed`; `registry_add(dir)` khi bắt đầu, `registry_prune()` khi graph hết node chạy. Registry: `$ORCA_GRAPH_HOME/registry.json` = `{\"dirs\": [...]}`."
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 harness/tests/test_orca_graph.py 2>&1 | grep -q 'ok test_run_wrapper'",
+   "spec_hash": "000baf3136e2aee7",
+   "state": "dispatched",
+   "gen": 1,
+   "rev": 2,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t2",
+   "title": "`watch` daemon toàn máy — registry, reaper, reconcile, lock pid, tự thoát khi rảnh",
+   "files": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "consumes": [
+    "Task 1 registry; `reaper`, `cmd_reconcile`."
+   ],
+   "produces": [
+    "`watch [--once] [--interval 15] [--idle-sec 600]`: lock `$HOME/daemon.lock` (pid; pid chết → chiếm lại); mỗi lượt: với mỗi dir trong registry → reaper → node `unknown` có verify → reconcile → prune; in bảng `dir · node · state · lease còn`; registry rỗng quá `idle-sec` → thoát; `--once` chạy một lượt rồi thoát (test). `run` tự spawn `watch` nền nếu không có daemon sống (tắt bằng `ORCA_GRAPH_NO_DAEMON=1`)."
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 harness/tests/test_orca_graph.py 2>&1 | grep -q 'ok test_watch_once'",
+   "spec_hash": "3adcc7ae465452dd",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t3",
+   "title": "control-room bậc 1 — trang tĩnh data-first, daemon regen",
+   "files": [
+    "fdk/tools/build-control-room.py",
+    "harness/scripts/orca-graph.py",
+    "skills/orca-graph/SKILL.md",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "consumes": [
+    "registry + `*.graph.json` (Task 1–2), `llmwiki/html/fdk-problem-tree.html#tree-data`, `harness/metrics/tokens.jsonl`, `llmwiki/graph/audit-log.jsonl`, theme `graph-viz.page()`."
+   ],
+   "produces": [
+    "`build-control-room.py [--dirs d1 d2] [-o out.html]` → 4 khối: (1) node đang chạy toàn máy (graph, node, state, lease còn, gen) + trần toàn máy; (2) tiến độ từng graph (thanh SVG done/total, node kẹt `unknown|failed|blocked`); (3) nợ mở từ problem-tree (status ≠ solved, mới nhất trước); (4) chi phí hôm nay từ tokens.jsonl + khoảng cách tự chấm/audit. `<meta http-equiv=\"refresh\" content=\"15\">`, toggle sáng/tối, full path."
+   ],
+   "deps": [
+    "t2"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 harness/tests/test_orca_graph.py 2>&1 | grep -q 'ok test_control_room'",
+   "spec_hash": "e17484b22620a4a8",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  }
+ ],
+ "layers": [
+  [
+   "t1"
+  ],
+  [
+   "t2"
+  ],
+  [
+   "t3"
+  ]
+ ],
+ "parent": null,
+ "depth": 0,
+ "plan_version": 1,
+ "superseded": [],
+ "max_parallel": 4,
+ "conflicts": [],
+ "links": [
+  {
+   "to_graph": "120926-orca-graph-v2",
+   "to_node": "t1",
+   "via": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "120926-orca-graph-v2",
+   "to_node": "t2",
+   "via": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "120926-orca-graph-v2",
+   "to_node": "t3",
+   "via": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "120926-orca-graph-v2",
+   "to_node": "t4",
+   "via": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "120926-orca-graph-v2",
+   "to_node": "t5",
+   "via": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "120926-orca-graph-v2",
+   "to_node": "t7",
+   "via": [
+    "skills/orca-graph/SKILL.md"
+   ],
+   "kind": "touches-same-file"
+  }
+ ],
+ "control": "active",
+ "schema_version": 1,
+ "checksum": "c207e01ef06c1a19"
+}
