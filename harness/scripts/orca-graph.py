@@ -733,6 +733,10 @@ def watch_once(build_room: bool = True) -> int:
 
 
 def cmd_watch(a):
+    try:
+        sys.stdout.reconfigure(line_buffering=True)   # chạy nền redirect vào watch.log → không được buffer
+    except Exception:
+        pass
     if not daemon_lock():
         raise SystemExit(f"daemon đã chạy (pid {daemon_alive()})")
     idle_since = None

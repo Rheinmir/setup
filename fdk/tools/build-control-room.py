@@ -53,7 +53,7 @@ def block_running(graphs: list, cap: int) -> str:
                     left = f"{int(json.loads((st.locks_d / n['id']).read_text())['lease_until'] - time.time())} s"
                 except (OSError, ValueError, KeyError):
                     pass
-                rows.append(f'<tr><td><code>{html.escape(g["id"])}</code></td><td><code>{n["id"]}</code></td><td>{html.escape(n["title"][:48])}</td>'
+                rows.append(f'<tr><td><code>{html.escape(Path(g["_dir"]).parent.name)}/{html.escape(g["id"])}</code></td><td><code>{n["id"]}</code></td><td>{html.escape(n["title"][:48])}</td>'
                             f'<td><span class="badge" style="border-color:{viz.STATE_COLOR[n["state"]]}">{html.escape(viz.STATE_VI[n["state"]])}</span></td><td>{left}</td><td>{n.get("gen", 0)}</td></tr>')
     warn = f'<div class="sub" style="color:#ef4444">⚠ {len(rows)} node đang chạy vượt trần toàn máy {cap}</div>' if len(rows) > cap else ""
     body = "".join(rows) or '<tr><td colspan="6">Không có node nào đang chạy.</td></tr>'
@@ -69,7 +69,7 @@ def block_progress(graphs: list) -> str:
         bar = f'<svg width="160" height="10" role="img" aria-label="{pct}%"><rect width="160" height="10" rx="5" fill="var(--glass1)" stroke="var(--border)"/><rect width="{1.6*pct:.0f}" height="10" rx="5" fill="#22c55e"/></svg>'
         page = Path(g["_dir"]).parent / "html" / "orca-graph" / f"{g['id']}.graph.html"
         link = f'<a href="{html.escape(os.path.relpath(page, ROOT / "llmwiki/html"))}">{html.escape(g["id"])}</a>' if page.exists() else html.escape(g["id"])
-        rows.append(f'<tr><td>{link}</td><td>{bar} {done}/{n}</td><td>{g.get("control", "active")} · v{g.get("plan_version", 1)} · cấp {g.get("depth", 0)}</td><td>{", ".join(stuck) or "—"}</td></tr>')
+        rows.append(f'<tr><td><span class="sub">{html.escape(Path(g["_dir"]).parent.name)}/</span>{link}</td><td>{bar} {done}/{n}</td><td>{g.get("control", "active")} · v{g.get("plan_version", 1)} · cấp {g.get("depth", 0)}</td><td>{", ".join(stuck) or "—"}</td></tr>')
     return f'<h2 id="tien-do">Tiến độ từng graph</h2><table><tr><th>Graph</th><th>Xong</th><th>Control · plan · cấp</th><th>Kẹt (cần người / reconcile)</th></tr>{"".join(rows) or "<tr><td colspan=4>Chưa có graph.</td></tr>"}</table>'
 
 
