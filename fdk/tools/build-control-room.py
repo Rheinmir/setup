@@ -120,24 +120,132 @@ def block_cost(dirs: list) -> str:
             f'<h3 style="font-size:13px;margin:14px 0 6px">Model tự chấm vs audit (khoảng cách lớn = bịa/tự tin quá)</h3><table><tr><th>Lúc</th><th>Graph</th><th>Tự chấm</th><th>Audit</th><th>Khoảng cách</th></tr>{grows or "<tr><td colspan=5>Chưa có audit.</td></tr>"}</table>')
 
 
-def build(dirs: list, out: Path) -> None:
+def _collect(dirs: list):
     reg = og.registry_load()
     dirs = [str(Path(d).resolve()) for d in dirs] or reg.get("dirs", []) or [str(OVERSTACK / "graph")]
-    graphs = graphs_in(dirs)
-    nav = ('<div class="brand">control room</div><a href="#chay">Đang chạy</a><a href="#tien-do">Tiến độ</a><a href="#no">Nợ mở</a><a href="#chi-phi">Hôm nay</a>'
+    return reg, dirs, graphs_in(dirs)
+
+
+def build_detail(dirs: list, out: Path) -> None:
+    """Trang CHI TIẾT (dài, cuộn) — mở từ cockpit khi một ô không đủ chỗ."""
+    reg, dirs, graphs = _collect(dirs)
+    nav = ('<div class="brand">control room · chi tiết</div><a href="control-room.html">← Cockpit</a><a href="#chay">Đang chạy</a><a href="#tien-do">Tiến độ</a><a href="#no">Nợ mở</a><a href="#chi-phi">Hôm nay</a>'
            '<div class="grp">Trang khác</div><a href="orca-graph/atlas.html">Atlas graph</a><a href="fdk-problem-tree.html">Problem tree</a><a href="overstack.html">Overstack</a>')
-    main = (f'<h1>Control room</h1><div class="sub">Trang data-first: chỉ đọc registry orca-graph, graph.json, problem-tree, tokens.jsonl, audit-log. Tự refresh 15 s. '
+    main = (f'<h1>Control room — chi tiết</h1><div class="sub">Trang data-first: chỉ đọc registry orca-graph, graph.json, problem-tree, tokens.jsonl, audit-log. Tự refresh 15 s. '
             f'Thư mục đang theo dõi: {", ".join(f"<code>{html.escape(d)}</code>" for d in dirs)}. Daemon: {"pid " + str(og.daemon_alive()) if og.daemon_alive() else "không chạy"}.</div>'
             + block_running(graphs, reg.get("max_running", 4)) + block_progress(graphs, out) + block_debt() + block_cost(dirs))
-    old_css = viz.CSS
-    viz.CSS = old_css + "\n.badge{font-size:11px}"
+    old_css = viz.CSS; viz.CSS = old_css + "\n.badge{font-size:11px}"
     try:
-        viz.page("Control room · overstack", nav, main, out, pagekey="control-room", desc="Trang đầu tiên: đang chạy gì, kẹt gì, nợ gì, tốn bao nhiêu")
+        viz.page("Control room · chi tiết", nav, main, out, pagekey="control-room", desc="Bản đầy đủ của cockpit")
     finally:
         viz.CSS = old_css
+    _refresh(out); print(f"→ {out}  (chi tiết · {len(graphs)} graph)")
+
+
+def _refresh(out: Path) -> None:
     s = out.read_text(encoding="utf-8").replace('<meta name="viewport"', '<meta http-equiv="refresh" content="15"><meta name="viewport"', 1)
     out.write_text(s, encoding="utf-8")
-    print(f"→ {out}  ({len(graphs)} graph, {len(dirs)} dir)")
+
+
+# ---------- COCKPIT: board-first, mọi thứ trong MỘT màn hình; ô nào tràn thì cắt + "→ chi tiết" ----------
+COCKPIT_CSS = """
+nav{position:sticky;inset:auto;top:0;width:auto;height:auto;flex-direction:row;align-items:center;gap:6px;padding:8px 14px;border-right:0;border-bottom:1px solid var(--border);overflow:visible;z-index:5}
+nav::before{display:none}body{padding-left:0!important}nav .brand{padding:0 10px 0 0;font-size:12px}
+nav a{padding:5px 9px;border-left:0;border-radius:8px;font-size:11.5px}nav .grp{display:none}nav .nav-close,.nav-toggle{display:none}
+nav .kpi{display:flex;gap:6px;flex-wrap:wrap;margin-left:6px}nav .kpi .chip{padding:3px 9px;font-size:11px}
+nav .theme-row{position:static;margin-left:auto;padding:0 0 0 12px;border:0;background:transparent;backdrop-filter:none}
+main{max-width:none;padding:10px 14px 8px;height:calc(100vh - 50px);display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:minmax(0,1.15fr) minmax(0,1fr);gap:10px}
+.panel{display:flex;flex-direction:column;min-height:0;padding:10px 12px}.panel h2{margin:0 0 6px;font-size:12.5px;display:flex;align-items:center;gap:8px}
+.panel h2 .badge{margin-left:auto;font-size:10.5px}.panel .body{overflow:auto;min-height:0;flex:1}.panel table{font-size:11.5px;border-radius:10px}.panel th,.panel td{padding:5px 8px}
+.panel .more{font-size:11px;color:var(--accent);text-decoration:none;margin-top:6px;align-self:flex-end}
+.p-run{grid-column:span 7}.p-stuck{grid-column:span 5}.p-prog{grid-column:span 4}.p-debt{grid-column:span 5}.p-cost{grid-column:span 3}
+.stuck-row{display:flex;gap:8px;align-items:center;padding:6px 4px;border-bottom:1px solid var(--border);font-size:11.5px}.stuck-row:last-child{border:0}
+.stuck-row .st{padding:1px 7px;border-radius:999px;color:#fff;font-size:10px;white-space:nowrap}.stuck-row .who{color:var(--t2);white-space:nowrap}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;font-size:11.5px}.kv b{font-size:15px}.kv .lb{color:var(--t2)}
+footer{grid-column:1/-1;margin:0;font-size:10.5px;align-self:end}footer .path{font-size:10.5px}
+@media (max-width:900px){main{height:auto;display:block}.panel{margin-bottom:10px}}
+"""
+
+
+def _trim(rows: list, n: int, anchor: str, detail: str) -> tuple:
+    """Cắt danh sách theo ô; phần dư thành link "→ chi tiết" (quy tắc: không đủ vùng hiển thị mới đổi trang)."""
+    more = f'<a class="more" href="{detail}#{anchor}">+{len(rows) - n} nữa → chi tiết</a>' if len(rows) > n else ""
+    return rows[:n], more
+
+
+def build_cockpit(dirs: list, out: Path, detail_name: str = "control-room-detail.html") -> None:
+    reg, dirs, graphs = _collect(dirs)
+    cap = reg.get("max_running", 4); pid = og.daemon_alive()
+    # --- ô 1: đang chạy toàn máy ---
+    run_rows = []
+    for g in graphs:
+        st = og.Store(Path(g["_dir"]), g["id"])
+        for n in g["nodes"]:
+            if n["state"] in ("locked", "dispatched"):
+                left = "—"
+                try:
+                    left = f"{int(json.loads((st.locks_d / n['id']).read_text())['lease_until'] - time.time())} s"
+                except (OSError, ValueError, KeyError):
+                    pass
+                run_rows.append(f'<tr><td><code>{html.escape(proj_name(g["_dir"]))}/{html.escape(g["id"])}</code></td><td><code>{n["id"]}</code></td><td>{html.escape(n["title"][:40])}</td>'
+                                f'<td><span class="badge" style="border-color:{viz.STATE_COLOR[n["state"]]}">{html.escape(viz.STATE_VI[n["state"]])}</span></td><td>{left}</td><td>{n.get("gen", 0)}</td></tr>')
+    n_run = len(run_rows); run_rows, run_more = _trim(run_rows, 8, "chay", detail_name)
+    warn = f'<span class="badge" style="border-color:#ef4444;color:#ef4444">vượt trần</span>' if n_run > cap else ""
+    p_run = (f'<section class="card panel p-run"><h2 id="chay">Đang chạy toàn máy {warn}<span class="badge">{n_run}/{cap}</span></h2><div class="body"><table><tr><th>Graph</th><th>Node</th><th>Việc</th><th>State</th><th>Lease</th><th>Gen</th></tr>'
+             f'{"".join(run_rows) or "<tr><td colspan=6>Không có node nào đang chạy.</td></tr>"}</table></div>{run_more}</section>')
+    # --- ô 2: kẹt / cần người ---
+    stuck = []
+    for g in graphs:
+        for n in g["nodes"]:
+            if n["state"] in STUCK:
+                stuck.append(f'<div class="stuck-row"><span class="st" style="background:{viz.STATE_COLOR[n["state"]]}">{html.escape(viz.STATE_VI[n["state"]].split(" (")[0])}</span>'
+                             f'<code>{html.escape(proj_name(g["_dir"]))}/{html.escape(g["id"])}/{n["id"]}</code><span>{html.escape(n["title"][:34])}</span>'
+                             f'<span class="who">{"reconcile" if n["state"] == "unknown" and n.get("verify") else "cần người"}</span></div>')
+    n_stuck = len(stuck); stuck, stuck_more = _trim(stuck, 7, "tien-do", detail_name)
+    p_stuck = f'<section class="card panel p-stuck"><h2>Kẹt — cần người hoặc reconcile<span class="badge">{n_stuck}</span></h2><div class="body">{"".join(stuck) or "<div class=sub>Không có node kẹt.</div>"}</div>{stuck_more}</section>'
+    # --- ô 3: tiến độ ---
+    prog = []
+    for g in sorted(graphs, key=lambda x: x.get("built", ""), reverse=True):
+        n = len(g["nodes"]); done = sum(1 for x in g["nodes"] if x["state"] in og.TERMINAL_OK); pct = int(100 * done / n) if n else 0
+        cands = [Path(g["_dir"]).parent / "html" / "orca-graph" / f"{g['id']}.graph.html", Path(g["_dir"]) / "html" / "orca-graph" / f"{g['id']}.graph.html"]
+        page = next((c for c in cands if c.exists()), None)
+        name = f'<a href="{html.escape(os.path.relpath(page, out.resolve().parent))}">{html.escape(g["id"])}</a>' if page else html.escape(g["id"])
+        bar = f'<svg width="90" height="8"><rect width="90" height="8" rx="4" fill="var(--glass1)" stroke="var(--border)"/><rect width="{0.9*pct:.0f}" height="8" rx="4" fill="#22c55e"/></svg>'
+        prog.append(f'<tr><td><span class="sub">{html.escape(proj_name(g["_dir"]))}/</span>{name}</td><td>{bar} {done}/{n}</td><td class="sub">{g.get("control", "active")} · v{g.get("plan_version", 1)}</td></tr>')
+    n_prog = len(prog); prog, prog_more = _trim(prog, 7, "tien-do", detail_name)
+    p_prog = f'<section class="card panel p-prog"><h2 id="tien-do">Tiến độ<span class="badge">{n_prog} graph</span></h2><div class="body"><table><tr><th>Graph</th><th>Xong</th><th></th></tr>{"".join(prog) or "<tr><td colspan=3>Chưa có graph.</td></tr>"}</table></div>{prog_more}</section>'
+    # --- ô 4: nợ mở ---
+    debt_rows, n_open, n_all = [], 0, 0
+    pt = OVERSTACK / "html" / "fdk-problem-tree.html"
+    if pt.exists():
+        m = re.search(r'<script type="application/json" id="tree-data">(.*?)</script>', pt.read_text(encoding="utf-8"), re.S)
+        nodes = json.loads(m.group(1)) if m else []; n_all = len(nodes)
+        open_ = sorted([x for x in nodes if x.get("status") != "solved"], key=lambda x: x.get("date", ""), reverse=True); n_open = len(open_)
+        debt_rows = [f'<tr><td><code>{x["id"]}</code></td><td>{html.escape(x["title"][:70])}</td><td class="sub">{x.get("status")}</td></tr>' for x in open_]
+    debt_rows, debt_more = _trim(debt_rows, 7, "no", detail_name)
+    p_debt = f'<section class="card panel p-debt"><h2 id="no">Nợ mở (problem-tree)<span class="badge">{n_open}/{n_all}</span></h2><div class="body"><table>{"".join(debt_rows) or "<tr><td>Không còn nợ mở.</td></tr>"}</table></div>{debt_more}</section>'
+    # --- ô 5: chi phí + audit ---
+    toks = read_jsonl(HARNESS / "metrics" / "tokens.jsonl")[-8:]
+    usd = sum(float(t.get("usd", 0) or 0) for t in toks); tout = sum(int(t.get("out", 0) or 0) for t in toks)
+    gaps = sorted([(a.get("ts", ""), a.get("graph", ""), a.get("self", 0), a.get("audit", 0)) for d in dirs for a in read_jsonl(Path(d) / "audit-log.jsonl")], reverse=True)[:3]
+    gap_html = "".join(f'<div class="stuck-row"><code>{html.escape(g)[:26]}</code><span class="who">tự {s:.1f} · audit {a:.1f} · lệch {s - a:.1f}</span></div>' for _, g, s, a in gaps) or '<div class="sub">Chưa có audit.</div>'
+    p_cost = (f'<section class="card panel p-cost"><h2 id="chi-phi">Chi phí & audit</h2><div class="body"><div class="kv"><span class="lb">{len(toks)} session gần nhất</span><b>${usd:,.2f}</b><span class="lb">output tokens</span><b>{tout:,}</b></div>'
+              f'<div class="sub" style="margin:8px 0 4px">Model tự chấm vs audit</div>{gap_html}</div><a class="more" href="{detail_name}#chi-phi">→ chi tiết</a></section>')
+    nav = (f'<div class="brand">cockpit</div><div class="kpi"><span class="chip">daemon <b>{"pid " + str(pid) if pid else "tắt"}</b></span><span class="chip">chạy <b>{n_run}/{cap}</b></span>'
+           f'<span class="chip">kẹt <b>{n_stuck}</b></span><span class="chip">graph <b>{len(graphs)}</b></span><span class="chip">nợ <b>{n_open}</b></span></div>'
+           f'<a href="#chay">Đang chạy</a><a href="#tien-do">Tiến độ</a><a href="#no">Nợ mở</a><a href="#chi-phi">Hôm nay</a><a href="{detail_name}">Chi tiết ↗</a><a href="orca-graph/atlas.html">Atlas</a><a href="fdk-problem-tree.html">Problem tree</a>')
+    old_css = viz.CSS; viz.CSS = old_css + COCKPIT_CSS
+    try:
+        viz.page("Cockpit · overstack", nav, p_run + p_stuck + p_prog + p_debt + p_cost, out, pagekey="control-room", desc="Board-first: đang chạy · kẹt · tiến độ · nợ · chi phí trong một màn hình")
+    finally:
+        viz.CSS = old_css
+    _refresh(out); print(f"→ {out}  (cockpit · {len(graphs)} graph, {n_run} chạy, {n_stuck} kẹt)")
+
+
+def build(dirs: list, out: Path) -> None:
+    out = Path(out)
+    build_cockpit(dirs, out)
+    build_detail(dirs, out.with_name(out.stem + "-detail.html"))
 
 
 def main(argv=None):

@@ -60,15 +60,15 @@ step('1 mở trang', ['Đang chạy', 'Tiến độ', 'Nợ mở', 'Hôm nay'].e
 // 2. run 1 node headless → hàng hiện với lease + daemon pid
 const a1 = spawn('python3', [OG, '--dir', D1, 'run', 'job', 't1', '--hb', '1', '--lease-sec', '3', '--', 'sh', '-c', 'sleep 25'], { cwd: ROOT, env, stdio: 'ignore' });
 await sleep(2500); await open();
-const row1 = pg.locator('table').first().locator('tr', { hasText: 'p1/job' });
+const row1 = pg.locator('.p-run table, table').first().locator('tr', { hasText: 'p1/job' });
 const lease1 = (await row1.textContent()) || '';
-step('2 run 1 node', (await row1.count()) === 1 && /đã giao/.test(lease1) && /\d+ s/.test(lease1) && /Daemon: pid \d+/.test(await pg.textContent('main')),
+step('2 run 1 node', (await row1.count()) === 1 && /đã giao/.test(lease1) && /\d+ s/.test(lease1) && /daemon\s*pid \d+/.test(await pg.textContent('body')),
   lease1.replace(/\s+/g, ' ').slice(0, 90));
 
 // 3. phiên 2, dự án khác → 2 hàng, 2/4, chỉ 1 daemon
 const a2 = spawn('python3', [OG, '--dir', D2, 'run', 'job', 't1', '--hb', '1', '--lease-sec', '3', '--', 'sh', '-c', 'sleep 25'], { cwd: ROOT, env, stdio: 'ignore' });
 await sleep(2500); await open();
-const rows = await pg.locator('table').first().locator('tr:has-text("đã giao")').count();
+const rows = await pg.locator('.p-run table, table').first().locator('tr:has-text("đã giao")').count();
 const badge = await pg.locator('h2#chay .badge').textContent();
 const pids = readFileSync(join(HOME, 'daemon.lock'), 'utf8').trim();
 step('3 đa phiên', rows === 2 && badge.trim() === '2/4' && /^\d+$/.test(pids), `rows=${rows} badge=${badge.trim()} daemon=${pids}`);
@@ -79,7 +79,7 @@ spawnSync('pkill', ['-f', 'sleep 25']);
 await sleep(4000);
 const w = py([OG, 'watch', '--once']).stdout;
 await open();
-const prog = (await pg.locator('h2#tien-do ~ table').first().textContent()).replace(/\s+/g, ' ');
+const prog = (await pg.locator('.p-prog table, h2#tien-do ~ table').first().textContent()).replace(/\s+/g, ' ');
 step('4 giết agent', /reconcile p1\/job\/t1 → done|reconcile job\/t1 → done/.test(w) && /p1\/job 1\/2/.test(prog) && /p2\/job 0\/2/.test(prog),
   `watch: ${(w.match(/reconcile.*/g) || []).join(' | ')} · ${prog.slice(0, 80)}`);
 
