@@ -214,6 +214,18 @@ def test_control_room(tmp_path):
     assert "theme-switch" in h and 'class="path"' in h and 'http-equiv="refresh"' in h and ">t1<" in h and "đã giao" in h, h[:300]
 
 
+def test_concurrent_runs_same_dir(tmp_path):
+    """Race 140926: 2 run cùng lúc trong 1 dir — cả hai phải có event dispatched, không wrapper nào chết vì tmp file chung."""
+    gid = setup(tmp_path); env = dict(os.environ, ORCA_GRAPH_HOME=str(tmp_path / "home"), ORCA_GRAPH_NO_DAEMON="1")
+    procs = [subprocess.Popen([sys.executable, str(SCRIPT), "--dir", str(tmp_path), "run", gid, n, "--allow-unverified", "--hb", "0.2", "--", "sh", "-c", "sleep 0.6"],
+                              cwd=ROOT, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) for n in ("t1", "t3")]
+    outs = [p.communicate() for p in procs]
+    assert all(p.returncode == 0 for p in procs), outs
+    ev = [json.loads(l) for l in (tmp_path / f"{gid}.events.jsonl").read_text().splitlines() if l.strip()]
+    assert {e["node"] for e in ev if e.get("to") == "dispatched"} == {"t1", "t3"}
+    assert not list(tmp_path.glob("*.tmp"))
+
+
 if __name__ == "__main__":
     import tempfile
     for name, fn in list(globals().items()):

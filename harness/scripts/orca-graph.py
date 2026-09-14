@@ -54,7 +54,7 @@ def now() -> str:
 
 def atomic_write(p: Path, text: str) -> None:
     p.parent.mkdir(parents=True, exist_ok=True)
-    tmp = p.with_suffix(p.suffix + ".tmp")
+    tmp = p.with_suffix(f"{p.suffix}.{os.getpid()}.{int(time.time()*1e6)}.tmp")   # tên tmp RIÊNG mỗi process — 2 run song song cùng dir không đạp nhau (race 140926)
     with open(tmp, "w", encoding="utf-8") as f:
         f.write(text); f.flush(); os.fsync(f.fileno())
     os.replace(tmp, p)
