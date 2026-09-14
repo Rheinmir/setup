@@ -696,7 +696,7 @@ def cmd_run(a):
     cmd_lock(a)
     g = st.load()
     emit(st, g, a.node, "dispatched", by=a.by, note=" ".join(a.cmd)[:120], op_key=f"run:{a.node}:{int(time.time()*1000)}")
-    registry_add(Path(a.dir)); spawn_daemon()
+    registry_add(Path(a.dir)); spawn_daemon(); regen_room()
     gen = {x["id"]: x for x in st.load()["nodes"]}[a.node]["gen"]
     lp = st.locks_d / a.node
     p = subprocess.Popen(a.cmd)
@@ -707,8 +707,17 @@ def cmd_run(a):
     g = st.load()
     to = "done" if p.returncode == 0 else "failed"
     emit(st, g, a.node, to, by=a.by, note=f"rc={p.returncode}", op_key=f"run-end:{a.node}:{gen}", gen=gen)
-    cmd_unlock(a); registry_prune()
+    cmd_unlock(a); registry_prune(); regen_room()
     sys.exit(0 if to == "done" else p.returncode or 1)
+
+
+def regen_room() -> None:
+    """Vẽ lại cockpit (rẻ ~100 ms) — gọi ở mỗi lượt daemon và mỗi lần run bắt đầu/kết thúc để trang LIVE."""
+    br = Path(__file__).resolve().parents[2] / "fdk/tools/build-control-room.py"
+    if not br.exists():
+        br = Path.home() / ".claude/harness/fdk/tools/build-control-room.py"
+    if br.exists():
+        subprocess.call([sys.executable, str(br)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
 def watch_once(build_room: bool = True) -> int:
@@ -740,10 +749,8 @@ def watch_once(build_room: bool = True) -> int:
                     print(f"  {gid:<32} {n['id']:<5} {n['state']:<10} lease còn {left:>5}s  gen {n['gen']}"); total += 1
     if total > r.get("max_running", 4):
         print(f"  ⚠ {total} node đang chạy > trần toàn máy {r.get('max_running', 4)}")
-    if build_room and changed:
-        br = Path(__file__).resolve().parents[2] / "fdk/tools/build-control-room.py"
-        if br.exists():
-            subprocess.call([sys.executable, str(br)], stdout=subprocess.DEVNULL)
+    if build_room:
+        regen_room()          # mỗi lượt, không chỉ khi reaper đổi state — lease còn/số node chạy đổi liên tục
     return total
 
 
@@ -882,7 +889,7 @@ def main(argv=None):
     p = sp.add_parser("run"); p.add_argument("id"); p.add_argument("node")
     p.add_argument("--hb", type=float, default=15); p.add_argument("--lease-sec", type=int, default=60); p.add_argument("--allow-unverified", action="store_true"); p.add_argument("--by", default="")
     p.set_defaults(f=cmd_run)
-    p = sp.add_parser("watch"); p.add_argument("--once", action="store_true"); p.add_argument("--interval", type=float, default=15); p.add_argument("--idle-sec", type=int, default=600); p.set_defaults(f=cmd_watch)
+    p = sp.add_parser("watch"); p.add_argument("--once", action="store_true"); p.add_argument("--interval", type=float, default=5); p.add_argument("--idle-sec", type=int, default=600); p.set_defaults(f=cmd_watch)
     p = sp.add_parser("lint"); p.add_argument("id"); p.set_defaults(f=cmd_lint)
     p = sp.add_parser("control"); p.add_argument("id"); p.add_argument("action", choices=["pause", "resume", "cancel", "status"]); p.add_argument("--by", default=os.environ.get("USER", "agent")); p.set_defaults(f=cmd_control)
     argv = list(sys.argv[1:] if argv is None else argv)

@@ -143,7 +143,7 @@ def build_detail(dirs: list, out: Path) -> None:
 
 
 def _refresh(out: Path) -> None:
-    s = out.read_text(encoding="utf-8").replace('<meta name="viewport"', '<meta http-equiv="refresh" content="15"><meta name="viewport"', 1)
+    s = out.read_text(encoding="utf-8").replace('<meta name="viewport"', '<meta http-equiv="refresh" content="5"><meta name="viewport"', 1)
     out.write_text(s, encoding="utf-8")
 
 
@@ -154,6 +154,7 @@ nav{position:sticky;inset:auto;top:0;width:auto;height:auto;flex-direction:row;a
 nav::before{display:none}body{padding-left:0!important}nav .brand{padding:0 10px 0 0;font-size:12px}
 nav a{padding:5px 9px;border-left:0;border-radius:8px;font-size:11.5px}nav .grp{display:none}nav .nav-close,.nav-toggle{display:none}
 nav .kpi{display:flex;gap:6px;flex-wrap:wrap;margin-left:6px}nav .kpi .chip{padding:3px 9px;font-size:11px}
+body.nav-collapsed nav{transform:none}  /* cockpit không có sidebar để đóng — localStorage navCollapsed từ trang khác không được kéo thanh trên ra ngoài */
 nav .theme-row{position:static;margin-left:auto;padding:0 0 0 12px;border:0;background:transparent;backdrop-filter:none}
 main{max-width:none;padding:10px 14px 8px;height:calc(100vh - 50px);display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:minmax(0,1.15fr) minmax(0,1fr);gap:10px}
 .panel{display:flex;flex-direction:column;min-height:0;padding:10px 12px}.panel h2{margin:0 0 6px;font-size:12.5px;display:flex;align-items:center;gap:8px}
