@@ -4,16 +4,27 @@ không sinh dữ liệu mới. Bốn khối: (1) node đang chạy toàn máy (r
 từng graph + node kẹt, (3) nợ mở từ problem-tree, (4) chi phí hôm nay + khoảng cách tự chấm/audit.
 Daemon `orca-graph.py watch` gọi lại file này mỗi khi có graph đổi; trang tự refresh 15 s.
 
-Usage: build-control-room.py [--dirs d1 d2 ...] [-o llmwiki/html/control-room.html]
+Usage: build-control-room.py [--dirs d1 d2 ...] [-o <overstack>/html/control-room.html]
 """
 import argparse, html, importlib.util, json, os, re, time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-_spec = importlib.util.spec_from_file_location("graph_viz", Path(__file__).with_name("graph-viz.py"))
-viz = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(viz)
-_ospec = importlib.util.spec_from_file_location("orca_graph", ROOT / "harness/scripts/orca-graph.py")
-og = importlib.util.module_from_spec(_ospec); _ospec.loader.exec_module(og)
+
+
+def _load(name: str, cands: list):
+    for c in cands:
+        if c.is_file():
+            spec = importlib.util.spec_from_file_location(name, c); m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m); return m
+    raise SystemExit(f"không tìm thấy {name}: {cands}")
+
+
+viz = _load("graph_viz", [Path(__file__).with_name("graph-viz.py")])
+# Layout máy khách KHÁC repo framework: harness/ → .harness/ hoặc ~/.claude/harness — đi qua overstack_paths, không ghi cứng
+_op = _load("overstack_paths", [ROOT / "harness" / "scripts" / "overstack_paths.py", Path.home() / ".claude/harness/harness/scripts/overstack_paths.py"])
+HARNESS = Path(_op.harness_dir(ROOT))
+OVERSTACK = Path(_op.overstack_dir(ROOT) or (ROOT / "llmwiki"))   # bare-path: ok fallback repo framework khi helper trả None
+og = _load("orca_graph", [HARNESS / "scripts" / "orca-graph.py", Path.home() / ".claude/harness/harness/scripts/orca-graph.py"])
 
 STUCK = ("unknown", "failed", "blocked")
 
@@ -82,7 +93,7 @@ def block_progress(graphs: list, out: Path) -> str:
 
 
 def block_debt() -> str:
-    p = ROOT / "llmwiki/html/fdk-problem-tree.html"
+    p = OVERSTACK / "html" / "fdk-problem-tree.html"
     if not p.exists():
         return '<h2 id="no">Nợ mở</h2><div class="sub">Không có problem-tree.</div>'
     m = re.search(r'<script type="application/json" id="tree-data">(.*?)</script>', p.read_text(encoding="utf-8"), re.S)
@@ -94,7 +105,7 @@ def block_debt() -> str:
 
 def block_cost(dirs: list) -> str:
     today = time.strftime("%Y-%m-%d")
-    toks = read_jsonl(ROOT / "harness/metrics/tokens.jsonl")
+    toks = read_jsonl(HARNESS / "metrics" / "tokens.jsonl")
     # tokens.jsonl (cost-sync) là tổng theo SESSION, không có ts → lấy các session còn được ghi nhận trong ngày qua mtime file cost-by-session
     tt = toks[-8:]
     tin = sum(int(t.get("in", t.get("input", 0)) or 0) for t in tt); tout = sum(int(t.get("out", t.get("output", 0)) or 0) for t in tt)
@@ -111,7 +122,7 @@ def block_cost(dirs: list) -> str:
 
 def build(dirs: list, out: Path) -> None:
     reg = og.registry_load()
-    dirs = [str(Path(d).resolve()) for d in dirs] or reg.get("dirs", []) or [str(ROOT / "llmwiki/graph")]
+    dirs = [str(Path(d).resolve()) for d in dirs] or reg.get("dirs", []) or [str(OVERSTACK / "graph")]
     graphs = graphs_in(dirs)
     nav = ('<div class="brand">control room</div><a href="#chay">Đang chạy</a><a href="#tien-do">Tiến độ</a><a href="#no">Nợ mở</a><a href="#chi-phi">Hôm nay</a>'
            '<div class="grp">Trang khác</div><a href="orca-graph/atlas.html">Atlas graph</a><a href="fdk-problem-tree.html">Problem tree</a><a href="overstack.html">Overstack</a>')
@@ -131,7 +142,7 @@ def build(dirs: list, out: Path) -> None:
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--dirs", nargs="*", default=[]); ap.add_argument("-o", "--out", default=str(ROOT / "llmwiki/html/control-room.html"))
+    ap.add_argument("--dirs", nargs="*", default=[]); ap.add_argument("-o", "--out", default=str(OVERSTACK / "html" / "control-room.html"))
     a = ap.parse_args(argv)
     build(a.dirs, Path(a.out))
 

@@ -2,7 +2,7 @@
 """orca-graph — phân việc dạng ĐỒ THỊ PHỤ THUỘC trên PLAN.md, có khoá + lease + generation,
 state bền append-only (events.jsonl), và sổ câu trả lời của model có audit nguồn.
 
-Store (mặc định `llmwiki/graph/`, override bằng --dir):
+Store (mặc định `<overstack>/graph/` — llmwiki/ hoặc .llmwiki/ tuỳ layout, override bằng --dir):
   <id>.graph.json      cache fold từ events (ghi temp → fsync → rename)
   <id>.events.jsonl    append-only {ts,node,from,to,by,op_key,gen,rev,note}
   <id>.answers.jsonl   câu trả lời của MODEL: {q,node,label,score,evidence[],text,ts}
@@ -29,7 +29,22 @@ STATES = ["proposed", "ready", "locked", "dispatched", "done", "done_unverified"
           "done_user_reported", "failed", "unknown", "blocked"]
 TERMINAL_OK = {"done", "done_user_reported"}
 LABELS = {"chắc": 1.0, "gợi-ý": 0.5, "không-biết": 0.3}
-DEFAULT_DIR = Path("llmwiki/graph")
+def _default_dir() -> Path:
+    """Store mặc định = <overstack>/graph — máy khách là .llmwiki/, repo framework là llmwiki/; đi qua overstack_paths."""
+    import importlib.util
+    for c in (Path(__file__).resolve().with_name("overstack_paths.py"), Path.home() / ".claude/harness/harness/scripts/overstack_paths.py"):
+        if c.is_file():
+            try:
+                sp = importlib.util.spec_from_file_location("_op", c); m = importlib.util.module_from_spec(sp); sp.loader.exec_module(m)
+                d = m.overstack_dir(Path.cwd())
+                if d:
+                    return Path(d) / "graph"
+            except Exception:
+                pass
+    return Path("llmwiki/graph")   # bare-path: ok fallback khi không có helper (repo framework)
+
+
+DEFAULT_DIR = _default_dir()
 
 
 # ---------- store ----------
