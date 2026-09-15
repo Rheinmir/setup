@@ -1,7 +1,7 @@
 <!-- SINH BẰNG CODE: build-capabilities.py — ĐỪNG sửa tay; chạy lại để cập nhật. -->
 # CAPABILITIES — toàn bộ đồ nghề (luôn-mới, đếm từ đĩa)
 
-**87 skill · 20 rule · 26 fdk-tool · 74 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
+**88 skill · 20 rule · 26 fdk-tool · 75 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
 
 ## Skills (gọi bằng `/<tên>`)
 
@@ -32,7 +32,7 @@
 - **`/verify-before-commit`** — Gate every commit
 - **`/wikieval`** — Turn wiki golden pages into a CI-blocking eval suite with a cheap→expensive assertion casc…
 
-### orchestrate (12)
+### orchestrate (13)
 - **`/council`** — Run a Karpathy-style LLM council (3-stage multi-agent evaluation) on top of the existing o…
 - **`/jenkins-agent-l3-deploy`** — Deploy a docker-compose app via a Jenkins INBOUND AGENT running on the target server (no S…
 - **`/orca-dispatch-reference`** — Reference for Antigravity/OpenCode dispatch, skill installation, AgentMemory, RTK token pr…
@@ -43,6 +43,7 @@
 - **`/orca-onboard`** — Parallel codebase onboarding
 - **`/orca-sec-scans`** — Quét bảo mật mã nguồn bằng Trivy
 - **`/orca-workflow`** — Daily propose → gate → dispatch workflow with Orca
+- **`/tc-run`** — Có MỘT file test case đầy đủ (.xlsx nhiều sheet, cột Test Case ID/Description/Steps/Expect…
 - **`/trace-grader`** — Score the PATH an agent took (tool choice, ordering, retries, repeatability, grounding)
 - **`/wayfinder`** — Lập bản đồ cho một chunk việc QUÁ LỚN với một phiên agent và còn MÙ MỜ
 
@@ -213,6 +214,7 @@
 - `sweep-gate.py`
 - `sync-skills.py`
 - `sync-template.py`
+- `tc-xlsx.py`
 - `tidy.py`
 - `token-attrib.py`
 - `token-budget.py`
@@ -226,7 +228,7 @@
 - `wiki-sync.py`
 - `wikieval.py`
 
-## Neo bằng chứng — 232/232 năng lực có neo KHAI BÁO
+## Neo bằng chứng — 234/234 năng lực có neo KHAI BÁO
 **Đọc cho đúng: đây KHÔNG phải bằng chứng năng lực còn SỐNG.** Mỗi năng lực được map tất định tới một *điểm neo* bằng chứng trên đĩa (frontmatter `proof:` > rule-map > tests > self-test > golden > medic). Việc map là **tĩnh** — nó kiểm file/chuỗi có mặt, **không thực thi gì cả**. Nó bắt được ca 'năng lực này chẳng có test/golden/rule nào neo vào' (hữu ích thật), nhưng KHÔNG bắt được ca 'test có mà đỏ' hay 'engine có mà chết'. Muốn biết một dependency ngoài còn sống thì hỏi `harness/scripts/dep-health.py`. Chi tiết neo: `build-capabilities.py --capproof-json`.
 
 ## TRÙNG-ỨNG-VIÊN (18) — máy phát hiện, NGƯỜI phán (dedupe = vòng /propose riêng)
