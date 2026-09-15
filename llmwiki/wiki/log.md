@@ -1,52 +1,52 @@
 
 
-- 2026-09-12 23:40 — ingest 2 PRD Reprise từ raw/ → sources/120926-reprise-prd-work-continuity.md, sources/120926-reprise-graph-engine-prd.md (phiên /fdk orca-graph)
-
 <!-- log:auto:start -->
 
 ### 🤖 Log tự-động (code-logger, không do agent ghi)
 
 | Thời điểm | Event | Chi tiết |
 |---|---|---|
-| 2026-09-11 14:27:02 | `file.write` | harness/tests/install-seed-test.sh · tool=Edit · session=fe139181 · actor=agent · prev=89c9e0c55917ba48e66722890d51fca4d |
-| 2026-09-11 14:27:02 | `file.write` | harness/tests/install-seed-test.sh · tool=Edit · session=fe139181 · actor=agent · prev=c16cd5e781a73b6a96b6fc783fcb378ba |
-| 2026-09-11 14:28:54 | `file.write` | llmwiki/wiki/sources/draft/100926-install-seed-skipped-on-migrate.md · tool=Edit · session=fe139181 · actor=agent · prev |
-| 2026-09-11 14:28:54 | `file.write` | llmwiki/wiki/sources/draft/100926-install-seed-skipped-on-migrate.md · tool=Edit · session=fe139181 · actor=agent · prev |
-| 2026-09-11 14:28:55 | `file.write` | llmwiki/wiki/sources/draft/100926-install-seed-skipped-on-migrate.md · tool=Edit · session=fe139181 · actor=agent · prev |
-| 2026-09-11 14:28:55 | `file.write` | llmwiki/wiki/sources/draft/100926-install-seed-skipped-on-migrate.md · tool=Edit · session=fe139181 · actor=agent · prev |
-| 2026-09-11 14:28:57 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=fe139181 · actor=agent · prev=0199406097da453f5fae8cc8ce22e4e7a7abf |
-| 2026-09-11 14:28:57 | `file.write` | llmwiki/wiki/sources/ISSUES.md · tool=Edit · session=fe139181 · actor=agent · prev=862916c9ee8498137cf05d54ab6e1fe00f647 |
-| 2026-09-11 14:33:18 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=0 · prev=d60520ae75c919ed20fe098ec750dc1dd2fe3535af7589a5f4c8238a575c4082 · h=71f3 |
-| 2026-09-11 14:33:18 | `commit.reconcile` |  · actor=system · agent_n=3 · human_n=0 · prev=71f3a5ac3f102b97290320dbc4d0f5bd52607ca14d84880119c442aa31c41c77 · h=8846 |
-| 2026-09-11 14:35:54 | `uat.pass` |  · commit=abc0e77 · issue=GH#149 · phase=2-main-url · project=~/orca/overstack-uat-260911-1421 · orca_wt=uat-260911-1421 |
-| 2026-09-11 14:37:40 | `file.write` | llmwiki/wiki/sources/draft/110926-downstream-layout-awareness-PLAN.md · tool=Write · session=07a5e78f · actor=agent · pr |
-| 2026-09-11 14:37:40 | `file.write` | llmwiki/wiki/sources/draft/110926-downstream-layout-awareness-PLAN.md · tool=Write · session=07a5e78f · actor=agent · pr |
-| 2026-09-11 14:37:47 | `file.write` | llmwiki/wiki/sources/draft/110926-downstream-layout-awareness-PLAN.md · tool=Edit · session=07a5e78f · actor=agent · pre |
-| 2026-09-11 14:37:47 | `file.write` | llmwiki/wiki/sources/draft/110926-downstream-layout-awareness-PLAN.md · tool=Edit · session=07a5e78f · actor=agent · pre |
-| 2026-09-11 14:40:06 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=fe139181 · actor=agent · prev=9c32a0008b9c90a7bbd915f31f5d36fbfc |
-| 2026-09-11 14:40:06 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=fe139181 · actor=agent · prev=88639224c4bacf23de7cfac55fe555884e |
-| 2026-09-11 14:40:08 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=fe139181 · actor=agent · prev=5c219fa3d2ac1a5df6bff9d9617c6debe0 |
-| 2026-09-11 14:40:08 | `file.write` | fdk/tools/build-overstack-docs.py · tool=Edit · session=fe139181 · actor=agent · prev=29a3f0f7dd2dae09870dbb1216d7618c8e |
-| 2026-09-11 14:45:31 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=0 · prev=a18aa1b0c7df6192fece5df010a0324a1874233b863e00520428ba0de6e4e45a · h=bc93 |
-| 2026-09-12 12:07:47 | `file.write` | harness/scripts/orca-graph.py · tool=Write · session=3f868788 · actor=agent · prev=bc937d7276d39898115e456a37e929b389ce4 |
-| 2026-09-12 12:07:47 | `file.write` | harness/scripts/orca-graph.py · tool=Write · session=3f868788 · actor=agent · prev=9c036ec7b88687c7ba8ae723f85849fd3fa18 |
-| 2026-09-12 12:11:58 | `file.write` | fdk/tools/graph-viz.py · tool=Write · session=3f868788 · actor=agent · prev=2db8752e47b1c1ff9e402925892189c20073b25706e5 |
-| 2026-09-12 12:11:58 | `file.write` | fdk/tools/graph-viz.py · tool=Write · session=3f868788 · actor=agent · prev=8fbf70473096ec590758149be26a3f45b13173fa01f9 |
-| 2026-09-12 12:12:37 | `file.write` | fdk/tools/graph-atlas.py · tool=Write · session=3f868788 · actor=agent · prev=b2e453c28059cec9f00642b7cd5ff5d8139c66ec1b |
-| 2026-09-12 12:12:37 | `file.write` | fdk/tools/graph-atlas.py · tool=Write · session=3f868788 · actor=agent · prev=682769df1ca154a5beac1c1b3992ccc4e025146e7b |
-| 2026-09-12 12:14:20 | `file.write` | skills/orca-graph/SKILL.md · tool=Write · session=3f868788 · actor=agent · prev=1d26fe81b07ecc7d84d145cf2ac4ca9750c90b23 |
-| 2026-09-12 12:14:20 | `file.write` | skills/orca-graph/SKILL.md · tool=Write · session=3f868788 · actor=agent · prev=50b4cafa5ee30e7743828fe6bf3e34ab84e7eb07 |
-| 2026-09-12 12:14:44 | `file.write` | harness/tests/test_orca_graph.py · tool=Write · session=3f868788 · actor=agent · prev=2da880be6c6ca9f635364ad74eca7a3199 |
-| 2026-09-12 12:14:44 | `file.write` | harness/tests/test_orca_graph.py · tool=Write · session=3f868788 · actor=agent · prev=413cd3dfe431e362f569cb66b9cf65db63 |
-| 2026-09-12 16:41:58 | `file.write` | llmwiki/wiki/sources/draft/120926-orca-graph-v2-PLAN.md · tool=Write · session=3f868788 · actor=agent · prev=5d00fbb125d |
-| 2026-09-12 16:41:58 | `file.write` | llmwiki/wiki/sources/draft/120926-orca-graph-v2-PLAN.md · tool=Write · session=3f868788 · actor=agent · prev=7fa608d5c1d |
-| 2026-09-12 23:38:36 | `file.write` | llmwiki/wiki/sources/120926-reprise-prd-work-continuity.md · tool=Write · session=3f868788 · actor=agent · prev=b441129c |
-| 2026-09-12 23:38:36 | `file.write` | llmwiki/wiki/sources/120926-reprise-prd-work-continuity.md · tool=Write · session=3f868788 · actor=agent · prev=cba7b94c |
-| 2026-09-12 23:39:05 | `file.write` | llmwiki/wiki/sources/120926-reprise-graph-engine-prd.md · tool=Write · session=3f868788 · actor=agent · prev=0edc2bd31b9 |
-| 2026-09-12 23:39:05 | `file.write` | llmwiki/wiki/sources/120926-reprise-graph-engine-prd.md · tool=Write · session=3f868788 · actor=agent · prev=f4b22f240e6 |
-| 2026-09-12 23:39:36 | `file.write` | fdk/wiki/concepts/orca-graph.md · tool=Write · session=3f868788 · actor=agent · prev=0fcee687678d54fd215b57c4d6c9648d4e0 |
-| 2026-09-12 23:39:36 | `file.write` | fdk/wiki/concepts/orca-graph.md · tool=Write · session=3f868788 · actor=agent · prev=bbfc2eb6a0ff9c7bd26693d379ab16abed3 |
-| 2026-09-12 23:39:53 | `file.write` | fdk/wiki/sources/adr/ADR-018-orca-graph-file-based-graph-engine.md · tool=Write · session=3f868788 · actor=agent · prev= |
-| 2026-09-12 23:39:53 | `file.write` | fdk/wiki/sources/adr/ADR-018-orca-graph-file-based-graph-engine.md · tool=Write · session=3f868788 · actor=agent · prev= |
+| 2026-09-12 23:44:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/290726-ge-test.graph.json', 'harness/tests/test_orca_gra |
+| 2026-09-12 23:44:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['skills/plan/SKILL.md', 'llmwiki/wiki/sources/draft/120926-orca-graph-v |
+| 2026-09-12 23:47:50 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/stale.json'] · prev=0c21e895448888f5c795fe4cc614748f946ee |
+| 2026-09-12 23:47:50 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/090926-session-provenance.md'] · prev=4e92910ffc5 |
+| 2026-09-12 23:47:50 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['harness/metrics/.stop-debounce.json'] · prev=37f796a5bb3e5269e7fa1a526 |
+| 2026-09-14 14:01:55 | `file.write` | llmwiki/wiki/sources/draft/140926-orca-graph-daemon-PLAN.md · tool=Write · session=3f868788 · actor=agent · prev=9c79a9e |
+| 2026-09-14 14:01:55 | `file.write` | llmwiki/wiki/sources/draft/140926-orca-graph-daemon-PLAN.md · tool=Write · session=3f868788 · actor=agent · prev=5f7a3f4 |
+| 2026-09-14 14:02:54 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=1 · human=['llmwiki/graph/140926-orca-graph-daemon.graph.json'] · prev=6cd16b51ee7 |
+| 2026-09-14 14:03:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/140926-orca-graph-daemon.graph.json', 'llmwiki/wiki/inde |
+| 2026-09-14 14:05:18 | `file.write` | fdk/tools/build-control-room.py · tool=Write · session=3f868788 · actor=agent · prev=6c894737a8e0c079e024c51beb36e2c10e6 |
+| 2026-09-14 14:05:18 | `file.write` | fdk/tools/build-control-room.py · tool=Write · session=3f868788 · actor=agent · prev=a65e92413ae3ce79374d58ad02de3681ce1 |
+| 2026-09-14 14:11:56 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/skills.provenance.json', 'harness/scripts/orca-graph.py'] · prev=b |
+| 2026-09-14 14:11:56 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/CAPABILITIES.md', 'skills/orca-graph/SKILL.md'] · prev=2a77a97247c |
+| 2026-09-14 14:11:56 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=2 · human=['llmwiki/graph/140926-orca-graph-daemon.graph.json', 'fdk/tools/build-o |
+| 2026-09-14 14:11:56 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/skills/orchestrate/orca-graph.md'] · prev=92d1324d6d9aa44e26ae |
+| 2026-09-14 14:11:56 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/290726-graph-engineering.graph.json', 'harness/tests/tes |
+| 2026-09-14 15:47:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-control-room.py', 'harness/scripts/orca-graph.py'] · p |
+| 2026-09-14 20:32:02 | `file.write` | harness/tests/orca-graph-ui-smoke.mjs · tool=Write · session=3f868788 · actor=agent · prev=73d9f29028bb6f436034fc0a5ccab |
+| 2026-09-14 20:32:02 | `file.write` | harness/tests/orca-graph-ui-smoke.mjs · tool=Write · session=3f868788 · actor=agent · prev=bd54a8e3581e1f80a2b0416dc3eed |
+| 2026-09-14 20:37:37 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-control-room.py', 'harness/scripts/orca-graph.py'] · p |
+| 2026-09-14 20:48:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-control-room.py', 'harness/scripts/orca-graph.py'] · p |
+| 2026-09-14 20:52:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['fdk/tools/build-control-room.py'] · prev=e761fe5dccc9ac862db6a99eec0d7 |
+| 2026-09-14 20:52:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['fdk/tools/build-control-room.py'] · prev=004944ff4181bcf5a95d3c19c3858 |
+| 2026-09-14 20:58:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/build-control-room.py', 'fdk/skills.provenance.json', 'harne |
+| 2026-09-14 20:58:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['skills/orca-graph/SKILL.md'] · prev=c6e275217a2dbd8e2cbbdb8d040587c09b |
+| 2026-09-14 21:01:01 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/orca-graph.py', 'harness/tests/test_orca_graph.py'] ·  |
+| 2026-09-15 09:06:05 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['fdk/tools/build-control-room.py'] · prev=fcb322691aef52cc11ee5d7c604ec |
+| 2026-09-15 09:34:05 | `file.write` | llmwiki/wiki/sources/draft/150926-payroll-sit-ui-PLAN.md · tool=Write · session=3f868788 · actor=agent · prev=66625334ab |
+| 2026-09-15 09:34:05 | `file.write` | llmwiki/wiki/sources/draft/150926-payroll-sit-ui-PLAN.md · tool=Write · session=3f868788 · actor=agent · prev=10fe69d725 |
+| 2026-09-15 09:35:21 | `file.write` | harness/scripts/tc-xlsx.py · tool=Write · session=3f868788 · actor=agent · prev=32b06ad53af9c46b2ab2c05055668f3ab34eb03f |
+| 2026-09-15 09:35:21 | `file.write` | harness/scripts/tc-xlsx.py · tool=Write · session=3f868788 · actor=agent · prev=44b921ccdb5dcceb2396862fa3b9c2c55b84f38b |
+| 2026-09-15 09:36:51 | `file.write` | skills/tc-run/SKILL.md · tool=Write · session=3f868788 · actor=agent · prev=b0d8234b2379db6704f166927b25589f44d5066f5cf0 |
+| 2026-09-15 09:36:51 | `file.write` | skills/tc-run/SKILL.md · tool=Write · session=3f868788 · actor=agent · prev=17f67a6689a3b189f625a181898d758f69671c3083af |
+| 2026-09-15 09:38:15 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=2 · human=['fdk/tools/build-overstack-docs.py', 'llmwiki/wiki/index.md'] · prev=93 |
+| 2026-09-15 09:38:15 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=2 · human=['llmwiki/CLAUDE.md', 'llmwiki/graph/150926-payroll-sit-ui.graph.json']  |
+| 2026-09-15 09:38:15 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skills.provenance.json', 'harness/scripts/sync-skills.py', 'llmwik |
+| 2026-09-15 09:38:15 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/skills/orchestrate/tc-run.md'] · prev=aa4d3b1ed1222de742053b57 |
+| 2026-09-15 09:38:52 | `file.write` | harness/tests/test_tc_xlsx.py · tool=Write · session=3f868788 · actor=agent · prev=870b7a4c050ae6b65b6517b5f75921dba2537 |
+| 2026-09-15 09:38:52 | `file.write` | harness/tests/test_tc_xlsx.py · tool=Write · session=3f868788 · actor=agent · prev=b3b77d6c1896ed9971c3e34ee0c3a7ac3bbdd |
+| 2026-09-15 09:39:56 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=2 · human=['fdk/CAPABILITIES.md', 'harness/version.json'] · prev=aebd38afb297ee9f1 |
 
 <!-- log:auto:end -->
+
+- 2026-09-15 12:38 — hoà tan plannotator/effective-html (MIT) vào design-foundation.md (router theo dạng artifact, fidelity/trạng thái, plan traceability, verify trung thực) + ngữ pháp sơ đồ trong skills/diagram/SKILL.md (yêu cầu trực tiếp user, phiên orca-graph)

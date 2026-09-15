@@ -33,6 +33,25 @@ bản tốt trước đó** và nói rõ chỗ sai, tuyệt đối không nhả 
 
 Không chắc? Hỏi: *"cái tôi vẽ có TRỤC SỐ không?"* Có → biểu đồ. Không → sơ đồ.
 
+### Trong nhánh Sơ đồ — chọn đúng NGỮ PHÁP trước khi chọn engine
+
+Hỏi trước: *người xem phải trả lời được câu hỏi gì?* — câu hỏi quyết ngữ pháp, ngữ pháp
+mới quyết hình vẽ ra sao (HÒA TAN từ `plannotator/effective-html`, xem [[design-foundation]]):
+
+| Câu hỏi của người xem | Ngữ pháp | Ví dụ archify type |
+|---|---|---|
+| Có gì, nối với gì? | Topology / sơ đồ hệ thống | `architecture` |
+| Chuyện gì xảy ra theo thời gian? | Sequence / timeline | `sequence` |
+| Quyết định/biến đổi diễn ra thế nào? | Process flow | `workflow` |
+| Cái này đổi trạng thái ra sao? | State diagram | `lifecycle` |
+| Cái gì chứa/sở hữu cái gì? | Hierarchy / containment | `architecture` (nhánh lồng) |
+| Các phương án so sánh nhau thế nào? | Matrix / so sánh căn hàng | bảng, không cần archify |
+| Bao nhiêu / thường xuyên / nhanh cỡ nào? | Biểu đồ định lượng | → nhánh **Biểu đồ** bên dưới |
+
+Đừng nhồi hai câu hỏi vào một hình. Cần cả hai → hai hình (hoặc lớp bật/tắt), không phải
+một hình quá tải. Chọn xong ngữ pháp mới tới bước chọn engine (HTML/CSS, SVG, Canvas, WebGL)
+theo mục dưới.
+
 ## Nhánh SƠ ĐỒ — qua `archify`
 
 Engine ngoài, KÉO NGOÀI theo `[[adapt-modes]]`: ta **không** viết lại, chỉ ghim + gọi.

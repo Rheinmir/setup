@@ -38,7 +38,23 @@ Sàn không phụ thuộc verb hay gu — nó áp cho mọi output UI. Nguồn �
 
 Skill `frontend-design` chính thống của `anthropics/skills` được đối chiếu từng luật với sàn (T-260717-02, adapt_mode: dissolve). Kết quả: **4 cụm sàn thiếu** được absorb làm checkpoint — ba cụm default-AI-look có tên (kem+serif+đất-nung / gần-đen+acid / broadsheet), hero-là-thesis, signature-element (tiêu boldness đúng một chỗ), UX-writing theo hành động — và **6 cụm trùng** sàn không absorb lại. Delta đầy đủ: `skills/hallmark/references/frontend-design-delta.md`.
 
+## Đối chiếu effective-html (Plannotator) — 2026-09-15
+
+Repo `plannotator/effective-html` (MIT, sáu skill: `html` router + `design-artifact` + `html-wireframe`/`html-prototype`/`html-plan`/`html-diagram`) được đối chiếu với sàn (adapt_mode: dissolve — user yêu cầu trực tiếp "hoà tan hết, làm luật tham chiếu"). Trục của nó khác `frontend-design`: **chọn ĐÚNG DẠNG artifact HTML và chứng minh nó đủ trạng thái** trước khi tính tới thẩm mỹ — palette/typography là chuyện của mục trên, mục này là chuyện cấu trúc/hành vi.
+
+**Cụm trùng, không absorb lại:** phần thẩm mỹ chống-AI-slop của `design-artifact` (kem+serif+đất-nung, gần-đen+acid, gradient tím-xanh hero, font "an toàn" Inter/Space Grotesk, emoji làm section marker, `rounded-lg` rải khắp, thẻ có accent-bar, ép căn giữa toàn trang) đã nằm trong slop-test 57 cổng + 3 cụm default-AI-look đã absorb từ `frontend-design` ở trên — cùng một danh sách, khác cách diễn đạt.
+
+**Bốn cụm sàn thiếu, absorb làm luật mới:**
+
+1. **Router theo DẠNG, không theo trang.** Trước khi vào bước thị giác, xác định artifact đang là gì — report/tool (văn xuôi, giữ nguyên), wireframe (thử cấu trúc), prototype/mockup (thử hành vi hoặc thị giác), plan (giữ commitment nguồn), hay diagram (xem mục Đối chiếu ngữ pháp sơ đồ trong `skills/diagram/SKILL.md`). Sai dạng thì mọi luật thẩm mỹ phía sau đều lạc đề.
+2. **Kỷ luật độ nét (fidelity) hai đầu.** *Wireframe* phải CỐ Ý CHƯA XONG — grayscale, viền trơn, không gradient/shadow/minh hoạ — và khi cấu trúc còn mở, dựng 2–3 hướng khác nhau thật sự (đổi mô hình điều hướng/nhóm/mật độ, không phải đổi màu) trong CÙNG một file có bộ chọn gõ-bàn-phím được. *Prototype/mockup* ở đầu kia phải liệt kê trước rồi dựng đủ các trạng thái mà kịch bản thật sự chạm tới: loading, empty, error, success, disabled, mobile, cộng trạng thái riêng của miền — thiếu một trạng thái mà kịch bản chạm tới là artifact chưa xong, không phải "để sau".
+3. **Plan giữ nguyên commitment nguồn.** Một plan/roadmap render ra HTML không được tự bơm thêm progress-bar, badge trạng thái, hay tóm tắt kiểu dashboard khi nguồn không có số đó — đúng tinh thần chống-bịa-số đã có ở mục Honest copy, áp riêng cho thể loại plan. Phải tách rõ ba loại: quyết định đã chốt, giả định, câu hỏi còn mở; giữ đúng thứ tự và ngôn ngữ nguồn trừ khi user yêu cầu tổng hợp rộng hơn.
+4. **Verify trung thực, không lấy đọc-tĩnh thay test-trên-trình-duyệt.** Kiểm ở hai bề rộng màn hình, đi hết `Tab`/`Shift+Tab`/`Enter`/`Escape`, xác nhận dialog bẫy focus và trả focus về đúng nút đã mở nó, và soi màu chữ TÍNH RA (computed) trên từng nền — chữ kế thừa màu body giữa một vùng tối màu là lỗi hay lọt nhất. Không có công cụ trình duyệt thì phải NÓI RÕ phần chưa kiểm chứng được, không được ngầm coi đọc code là đã verify — cùng tinh thần "báo cáo của user thắng cổng xanh máy" đã có trong framework.
+
+Không absorb: cơ chế phát hành `tot`/`tot.page` của Plannotator (ngoài phạm vi, ta không dùng), và các file `agents/openai.yaml` (adapter riêng cho Codex, không áp dụng ở đây).
+
 ## Origin
 - Chưng cất từ `Nutlope/hallmark` (Together AI) — `skills/hallmark/references/slop-test.md` + `anti-patterns.md` (clone `scratchpad/hallmark/`, 2026-07-15).
 - Absorb qua `/propose` → `150726-hallmark-design-foundation` (T2), task `T-260715-02`. Đóng `p-23`.
+- Absorb `plannotator/effective-html` (MIT) 2026-09-15 qua `/orca-graph` (yêu cầu trực tiếp, adapt_mode dissolve) — clone tạm `scratchpad/effective-html-src/`, xoá sau khi chưng cất; luật mới ghi ở mục "Đối chiếu effective-html" trên và trong `skills/diagram/SKILL.md`.
 - **Commit:** _(verify-before-commit điền)_
