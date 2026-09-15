@@ -185,6 +185,8 @@ jobs:
         run: bash harness/tests/dot-layout-runtime-test.sh .
       - name: r3-worktree-hook-env — R3 đúng khi chạy trong hook git của linked worktree (GIT_DIR không GIT_WORK_TREE)
         run: bash harness/tests/r3-worktree-hook-env-test.sh .
+      - name: install-ps1 — Windows entry point (fail-open nếu runner không có pwsh)
+        run: bash harness/tests/install-ps1-test.sh
       - name: tests-wired — MỌI harness/tests/*-test.sh phải có step trong workflow này
         run: |
           for t in harness/tests/*-test.sh; do
