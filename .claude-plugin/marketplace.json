@@ -112,6 +112,7 @@
         "./skills/tour-guide",
         "./skills/tour-guide-supademo",
         "./skills/trace-grader",
+        "./skills/trim-prim",
         "./skills/uat-nonit-testcase",
         "./skills/verify-before-commit",
         "./skills/wayfinder",

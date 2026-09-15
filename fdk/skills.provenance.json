@@ -968,6 +968,13 @@
       "recorded": "2026-07-18",
       "source": "local-authored"
     },
+    "trim-prim": {
+      "files": {
+        "SKILL.md": "b81ab542f58c0e34878120ed379ce9dd668e3c444ea7510c3a77ae0cf35a535c"
+      },
+      "recorded": "2026-09-15",
+      "source": "local-authored"
+    },
     "uat-nonit-testcase": {
       "files": {
         "SKILL.md": "1766031c5b96c21447ceefc1da428a371db89ab7db2812238728e504e0da3224"
