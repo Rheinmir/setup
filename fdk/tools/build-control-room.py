@@ -143,7 +143,16 @@ def build_detail(dirs: list, out: Path) -> None:
 
 
 def _refresh(out: Path) -> None:
-    s = out.read_text(encoding="utf-8").replace('<meta name="viewport"', '<meta http-equiv="refresh" content="5"><meta name="viewport"', 1)
+    """Live bằng JS reload (meta refresh trên file:// không đáng tin trong Chrome — bài học 150926: tab hiện bản hôm qua
+    11 giờ) + đồng hồ "cập nhật N s trước" và banner đỏ khi trang cũ quá 20 s (daemon chết / không ghi)."""
+    gen_ms = int(time.time() * 1000)
+    js = f"""<script>(function(){{var G={gen_ms};var el=document.createElement('div');el.id='live';el.setAttribute('role','status');
+document.body.appendChild(el);function tick(){{var a=Math.round((Date.now()-G)/1000);el.textContent=a<20?'● cập nhật '+a+' s trước':'⚠ trang cũ '+a+' s — daemon không ghi? (orca-graph.py watch)';
+el.className=a<20?'ok':'stale'}}tick();setInterval(tick,1000);
+setInterval(function(){{if(document.visibilityState==='visible')location.reload()}},5000);}})();</script>
+<style>#live{{position:fixed;right:14px;bottom:12px;z-index:9;font-size:11px;padding:4px 10px;border-radius:999px;border:1px solid var(--border);background:var(--glass1);backdrop-filter:blur(12px);color:var(--t2)}}
+#live.ok{{color:#22c55e}}#live.stale{{color:#fff;background:#ef4444;border-color:#ef4444}}</style>"""
+    s = out.read_text(encoding="utf-8").replace('<meta name="viewport"', '<meta http-equiv="refresh" content="5"><meta name="viewport"', 1).replace("</body>", js + "</body>", 1)
     out.write_text(s, encoding="utf-8")
 
 
