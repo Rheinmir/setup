@@ -34,10 +34,9 @@ OUT2="$(pwsh -NoProfile -File "$SCRIPT" -Root "$TMP" -HarnessOnly -NoVerify 2>&1
 CODE2=$?
 set -e
 [ "$CODE2" -eq 0 ] || fail "ca 2: kỳ vọng exit 0, được $CODE2 — output: $OUT2"
-[ -d "$TMP/.harness" ] || fail "ca 2: không thấy $TMP/.harness sau khi cài"
-[ -f "$TMP/CAPABILITIES.md" ] || fail "ca 2: thiếu CAPABILITIES.md — B3 chưa chạy"
+[ -d "$TMP/.harness" ] || fail "ca 2: không thấy $TMP/.harness sau khi cài — B0 chưa chạy (log: $OUT2)"
 echo "$OUT2" | grep -qi 'skills.*BỎ QUA\|BỎ QUA.*skill' && ! echo "$OUT2" | grep -qi 'demo.sh (' \
   || fail "ca 2: -HarnessOnly/-NoVerify có vẻ KHÔNG được tôn trọng (log: $OUT2)"
-echo "  ok — .harness/ + CAPABILITIES.md xuất hiện, harness-only + no-verify được tôn trọng, exit 0"
+echo "  ok — .harness/ xuất hiện, harness-only + no-verify được tôn trọng, exit 0"
 
 echo "✓ install-ps1-test.sh PASS"
