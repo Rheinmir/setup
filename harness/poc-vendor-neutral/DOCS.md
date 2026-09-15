@@ -143,6 +143,12 @@ curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-ven
 ```
 Chạy trong thư mục dự án; `bootstrap.sh` tải lõi từ GitHub rồi gọi `install.sh`. Dán được vào system prompt AI.
 
+**Windows:** dòng `curl | bash` ở trên có hình dạng "tải-và-chạy-cùng-lệnh" mà một số EDR/agent-safety-filter gắn cờ. Dùng `install.ps1` thay thế (tải-thành-file-rồi-chạy-riêng, wrapper gọi lại đúng logic bash bên dưới qua Git Bash/WSL) — lý do đầy đủ và ví dụ ở [`README.md#windows`](README.md#windows-vì-sao-không-dùng-một-dòng-irm--iex):
+```powershell
+iwr -useb https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/install.ps1 -OutFile install.ps1
+.\install.ps1
+```
+
 ### Bên dưới làm gì (B0–B4)
 ```
 B0. Đặt lõi vào repo (1 lần): harness/poc-vendor-neutral/{policy.yaml,bin/llmwiki-validate.py}

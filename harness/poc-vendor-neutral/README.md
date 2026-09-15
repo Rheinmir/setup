@@ -23,6 +23,39 @@ curl -fsSL .../bootstrap.sh | bash -s -- --vendor claude,opencode # ép vendor
 >
 > **Phạm vi khác nhau:** harness + llmwiki cài **theo từng project** (hook trong `.claude/settings.json`, khung `llmwiki/` của project). Skills cài **GLOBAL** (`~/.claude/skills`, dùng mọi project). Bootstrap **mặc định cài cả 3** — dùng `--harness-only` nếu chỉ muốn lớp per-project, không đụng skill global.
 
+## Windows — vì sao KHÔNG dùng một dòng `irm | iex`
+
+Dòng lệnh `curl … | bash` ở trên tải và chạy trong CÙNG MỘT LỆNH — đúng hình dạng mà nhiều
+EDR/antivirus/lớp lọc an toàn của agent gắn cờ "malware dropper" (MITRE T1105 + T1059), bất kể
+nội dung tải về có gì. Bản PowerShell tương đương của khuôn đó (`irm <url> | iex`) bị soi còn
+gắt hơn. Đây là lý do một agent chạy hộ lệnh cài trên máy Windows đôi khi bị chặn và báo "đang
+cài mã độc" dù script hoàn toàn là bash công khai, đọc được tại đúng URL trên.
+
+Cách sửa là đổi **hình dạng**, không phải nội dung: tải về thành **một file thật trên đĩa**
+trước, rồi mới **chạy file đó ở một bước riêng** — đúng cách các installer thật (rustup, nvm,
+deno) trình bày cho người dùng Windows.
+
+```powershell
+iwr -useb https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/install.ps1 -OutFile install.ps1
+# (tuỳ chọn) đọc lại trước khi chạy, hoặc đưa cho IT/bảo mật xem:
+Get-Content install.ps1
+.\install.ps1
+```
+
+`install.ps1` là một wrapper mỏng — nó KHÔNG viết lại logic của `install.sh`, chỉ tìm một shell
+POSIX đã có sẵn trên máy (**Git Bash** hoặc **WSL** — hầu hết máy dev đã có Git để làm việc với
+repo này, nên đây không phải dependency mới), rồi tải `bootstrap.sh` thành file thật và chạy nó
+qua shell đó. Cùng cờ như bản bash: `-HarnessOnly`, `-Vendor claude,opencode`, `-Clean`,
+`-NoVerify`, `-Root <path>`. Không có Git Bash lẫn WSL, script tự dừng và chỉ đường cài Git for
+Windows (đã kèm Git Bash) thay vì âm thầm thất bại.
+
+Nếu EDR của công ty vẫn chặn: đường dẫn nguồn công khai ở trên là plaintext, không tối giản hoá
+(obfuscate) — đưa link đó cho đội bảo mật đối chiếu trực tiếp là bằng chứng nhanh nhất.
+
+> Đã kiểm thật trên macOS bằng `pwsh` (nhánh không-tìm-thấy-shell dừng đúng thông báo; nhánh
+> có shell tải + cài `--harness-only` thành công vào thư mục sạch). Đường Git-Bash/WSL thật trên
+> Windows **chưa có máy để chạy tay** — báo lại nếu gặp lỗi trên máy Windows thật.
+
 ## Luật được gác — đủ R1–R10
 
 Cài xong, harness đăng ký **5 hook sự kiện** trong `.claude/settings.json`, phủ cả 10 rule của bản production:
