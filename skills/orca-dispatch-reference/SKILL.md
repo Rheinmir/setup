@@ -24,6 +24,23 @@ Orca drive model bằng cách chạy một **agent CLI** trong terminal/worktree
 - `--agent <id>` bịa → `"Unknown TUI agent"` (validate TRƯỚC khi tạo worktree). Tập recognized cho `--inject` (live error): `claude · codex · gemini · droid`. Không có lệnh liệt kê — **picker UI là ground truth**.
 - **Cost-tier (luật):** rẻ / cơ học / **answer-only → opencode free**; reasoning đắt / tổng hợp / chairman → **Claude** (đắt nhất, để dành). Khớp split "Claude-nghĩ / CLI-rẻ-render" của `orca-workflow`.
 
+### Chain TRONG chính Claude — 4 model, 4 mức giá (đừng coi "Claude" là một khối)
+
+Picker "Claude" ở bảng trên gộp bốn model có giá lệch nhau tới 10 lần. Trước khi mặc định
+coi nhánh Claude là "đắt nhất, để dành", chọn đúng TIER bên trong nó — cùng luật rẻ/cơ học
+→ answer-only, đắt/tổng hợp → chairman, chỉ áp lại một tầng sâu hơn:
+
+| Model | Model ID | Input/Output $/1M (mốc `/claude-api`) | Dùng cho trong dispatch |
+|---|---|---|---|
+| Haiku 4.5 | `claude-haiku-4-5` | $1 / $5 | search/grep/list, sub-agent đọc-hàng-loạt, worker rẻ trong multiagent |
+| Sonnet 5 | `claude-sonnet-5` | $2 / $10 | build/CRUD/refactor tiêu chuẩn — mặc định khi KHÔNG ai chỉ định model |
+| Opus 5 | `claude-opus-5` | $5 / $25 | reasoning khó, review sâu, **advisor** cho executor Sonnet |
+| Fable 5.1 | `claude-fable-5-1` | $10 / $50 | chairman/tổng hợp cuối, quyết định kiến trúc, phiên agentic dài — đắt nhất trong 4, để dành |
+
+- **Giá đổi theo thời gian** — nguồn chân lý là bảng "Current Models" trong skill `/claude-api`, ĐỪNG chép số ở đây làm cứng. Bảng trên chỉ để XẾP HẠNG tương đối (Haiku < Sonnet < Opus < Fable), gọi `/claude-api` khi cần số thật.
+- Đổi model trong CÙNG một phiên (không mở phiên mới): `/model sonnet|opus|haiku|fable`.
+- **Multiagent nhiều Claude cùng lúc:** worker rẻ đọc-hàng-loạt = Haiku; executor mặc định = Sonnet; **advisor luôn phải ≥ executor** (Sonnet → Opus/Opus 4.8, không được thấp hơn — luật pairing cứng của advisor tool, request sai cặp trả 400).
+
 ## OpenCode — cheap dispatch (verified)
 
 **Free models ($0, opencode zen):** `opencode/big-pickle` · `deepseek-v4-flash-free` · `mimo-v2.5-free` · `nemotron-3-ultra-free` · `north-mini-code-free`.

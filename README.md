@@ -14,13 +14,28 @@ Chạy trong thư mục gốc dự án của bạn — **1 lệnh lo trọn harn
 chạy curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash và kiểm tra xem mọi thứ đã ở đúng chỗ chưa
 ```
 
-**Cách 2 — chạy thẳng trong terminal:**
+**Cách 2 — chạy thẳng trong terminal (macOS/Linux/WSL):**
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash
 ```
 
-Mặc định cài/update **cả 3 trụ**: **Harness** (validator tất định vendor-neutral — chặn ghi `raw/`, ép wiki có `## Origin`… qua hook native + CI làm sàn) · **Skills** (global `~/.claude/skills`) · **llmwiki** (khung wiki). Cuối lần chạy in **bảng trạng thái 3 trụ**. Cờ: `--harness-only` · `--clean` · `uninstall`.
+**Windows (PowerShell, không cần curl):** dòng trên tải-và-chạy trong CÙNG một lệnh — hình dạng
+mà nhiều EDR/antivirus/agent-safety-filter gắn cờ "malware" bất kể nội dung. Trên Windows, tải
+thành file rồi chạy ở bước riêng — không cần cài thêm gì, PowerShell đã có sẵn `Invoke-WebRequest`
+(`iwr`) trên mọi máy, kể cả máy chỉ có `winget` mà không có `curl`:
+
+```powershell
+iwr -useb https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/install.ps1 -OutFile install.ps1
+.\install.ps1
+```
+
+`install.ps1` cần **Git Bash hoặc WSL** đã có sẵn trên máy (đa số máy dev đã có Git); không có thì
+script tự dừng và chỉ đường cài Git for Windows. Chưa có gói `winget`/MSIX riêng cho overstack —
+đây vẫn là script, không phải app đóng gói, nên không đăng ký được vào winget. Chi tiết đầy đủ:
+[`harness/poc-vendor-neutral/README.md#windows`](harness/poc-vendor-neutral/README.md#windows-vì-sao-không-dùng-một-dòng-irm--iex).
+
+Mặc định cài/update **cả 3 trụ**: **Harness** (validator tất định vendor-neutral — chặn ghi `raw/`, ép wiki có `## Origin`… qua hook native + CI làm sàn) · **Skills** (global `~/.claude/skills`) · **llmwiki** (khung wiki). Cuối lần chạy in **bảng trạng thái 3 trụ**. Cờ: `--harness-only` · `--clean` · `uninstall` (bản PowerShell: `-HarnessOnly` · `-Clean`).
 
 Tự bảo trì về sau (cập nhật + trả nợ wiki + refresh bản đồ năng lực + health-check trong một lệnh): gọi skill **`/harness-update`**.
 

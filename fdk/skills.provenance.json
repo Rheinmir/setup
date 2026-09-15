@@ -749,9 +749,9 @@
     },
     "orca-dispatch-reference": {
       "files": {
-        "SKILL.md": "e9686c010280619826dd6aea52df2039155593dd5e8c465c77ce18811705e75a"
+        "SKILL.md": "bea5abb83a091f378486f69242d699524b7d5b6975a71cf60fab263982dec950"
       },
-      "recorded": "2026-07-04",
+      "recorded": "2026-09-15",
       "source": "local-authored"
     },
     "orca-eval": {
@@ -801,9 +801,9 @@
     },
     "orca-workflow": {
       "files": {
-        "SKILL.md": "e83cd4f545d2ed396a5b8265d6031bd843c1148edf22817c5957d66f5bc915a3"
+        "SKILL.md": "7c5899ab6cf1a4c69d7422e15ec5966d5576df0a9d29a3ca594aea51b66e0629"
       },
-      "recorded": "2026-08-03",
+      "recorded": "2026-09-15",
       "source": "local-authored"
     },
     "ovs-notes": {

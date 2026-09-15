@@ -116,8 +116,8 @@ orca terminal wait --for tui-idle && orca terminal read --title "OpenCode"
 | Viết boilerplate, CRUD | OpenCode | `opencode/big-pickle` ($0) |
 | Wiki ingest/lint | OpenCode | `opencode/big-pickle` ($0) |
 | Review diff, explain | agy | default |
-| Architectural decisions | Claude Code | sonnet-4-6 |
-| Debug lỗi khó | Claude Code | sonnet-4-6 |
+| Architectural decisions | Claude Code | Opus 5 (`claude-opus-5`) — xem chain Claude ở `/orca-dispatch-reference` |
+| Debug lỗi khó | Claude Code | Sonnet 5 (`claude-sonnet-5`) mặc định, nâng Opus 5 nếu đứng yên |
 | Frontend UI boilerplate | Kiro | default |
 | Cross-file refactor | Kiro | default |
 | PR review + suggest fixes | Copilot | gpt-4o (GitHub) |
