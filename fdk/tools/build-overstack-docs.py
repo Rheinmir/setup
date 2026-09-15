@@ -131,7 +131,7 @@ LOOP_GROUPS = {
          "playwright-verify": "eval"}),
     "orchestrate": (
         [("dispatch", "🐳 điều phối"), ("eval", "📊 đánh giá"), ("ops", "🚀 vận hành & deploy")],
-        {"orca-workflow": "dispatch", "orca-graph": "dispatch", "orca-onboard": "dispatch", "orchestration": "dispatch",
+        {"orca-workflow": "dispatch", "orca-graph": "dispatch", "tc-run": "dispatch", "orca-onboard": "dispatch", "orchestration": "dispatch",
          "orca-cli": "dispatch", "orca-dispatch-reference": "dispatch", "wayfinder": "dispatch",
          "orca-handover": "dispatch",
          "council": "eval", "trace-grader": "eval", "orca-eval": "eval",

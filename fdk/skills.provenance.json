@@ -926,6 +926,13 @@
       "recorded": "2026-07-18",
       "source": "local-authored"
     },
+    "tc-run": {
+      "files": {
+        "SKILL.md": "c1ab6540e14043fce55faed4561cae4430b9fba62d6817d108df2c1bb8ed6093"
+      },
+      "recorded": "2026-09-15",
+      "source": "local-authored"
+    },
     "teach-me": {
       "files": {
         "SKILL.md": "59232c2afc0858c316124e086f3a9638973a0fdf621a28ecaa4242cb514b76fd"

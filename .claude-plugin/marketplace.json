@@ -35,7 +35,8 @@
         "./skills/orca-issue",
         "./skills/orca-sec-scans",
         "./skills/orca-workflow",
-        "./skills/orca-graph"
+        "./skills/orca-graph",
+        "./skills/tc-run"
       ]
     },
     {

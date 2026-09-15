@@ -1,0 +1,397 @@
+{
+ "id": "150926-payroll-sit-ui",
+ "plan": "llmwiki/wiki/sources/draft/150926-payroll-sit-ui-PLAN.md",
+ "built": "2026-09-15T09:37:29+0700",
+ "nodes": [
+  {
+   "id": "t1",
+   "title": "Khảo sát app — URL, menu, phiên đăng nhập",
+   "files": [
+    "scratchpad/150926-payroll-sit-ui/app.json"
+   ],
+   "consumes": [
+    "URL do user cung cấp; tab trình duyệt đã đăng nhập."
+   ],
+   "produces": [
+    "`app.json = {url, logged_in, menus}`."
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "research",
+   "mode": "hitl",
+   "verify": "python3 -c \"import json;d=json.load(open('scratchpad/150926-payroll-sit-ui/app.json'));assert d['logged_in'] and d['url'].startswith('http')\"",
+   "spec_hash": "96cdff64c1164456",
+   "state": "blocked",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t2",
+   "title": "Lô 1 — TC - UI, Tích hợp & Báo cáo — TC-TH-086…TC-TH-004",
+   "files": [
+    "scratchpad/150926-payroll-sit-ui/results/lo1.json"
+   ],
+   "consumes": [
+    "`app.json` (Task 1)."
+   ],
+   "produces": [
+    "`results/lo1.json` 8 mục: TC-TH-086, TC-TH-085, TC-TH-094, TC-TH-088, TC-TH-090, TC-TH-083, TC-TH-001, TC-TH-004."
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "test",
+   "mode": "afk",
+   "verify": "python3 -c \"import json;r=json.load(open('scratchpad/150926-payroll-sit-ui/results/lo1.json'));assert len(r)==8 and all(x['status'] in ('PASS','FAIL','BLOCK') for x in r)\"",
+   "spec_hash": "824e452ff7ceda03",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t3",
+   "title": "Lô 2 — TC - UI, Tích hợp & Báo cáo — TC-TH-006…TC-TH-022",
+   "files": [
+    "scratchpad/150926-payroll-sit-ui/results/lo2.json"
+   ],
+   "consumes": [
+    "`app.json` (Task 1)."
+   ],
+   "produces": [
+    "`results/lo2.json` 8 mục: TC-TH-006, TC-TH-012, TC-TH-013, TC-TH-016, TC-TH-087, TC-TH-111, TC-TH-112, TC-TH-022."
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "test",
+   "mode": "afk",
+   "verify": "python3 -c \"import json;r=json.load(open('scratchpad/150926-payroll-sit-ui/results/lo2.json'));assert len(r)==8 and all(x['status'] in ('PASS','FAIL','BLOCK') for x in r)\"",
+   "spec_hash": "e8af07eb6e8e09cc",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t4",
+   "title": "Lô 3 — TC - UI, Tích hợp & Báo cáo — TC-TH-025…TC-TH-095",
+   "files": [
+    "scratchpad/150926-payroll-sit-ui/results/lo3.json"
+   ],
+   "consumes": [
+    "`app.json` (Task 1)."
+   ],
+   "produces": [
+    "`results/lo3.json` 8 mục: TC-TH-025, TC-TH-026, TC-TH-098, TC-TH-027, TC-TH-031, TC-TH-032, TC-TH-084, TC-TH-095."
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "test",
+   "mode": "afk",
+   "verify": "python3 -c \"import json;r=json.load(open('scratchpad/150926-payroll-sit-ui/results/lo3.json'));assert len(r)==8 and all(x['status'] in ('PASS','FAIL','BLOCK') for x in r)\"",
+   "spec_hash": "ed69917ed83ad9e9",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t5",
+   "title": "Lô 4 — TC - UI, Tích hợp & Báo cáo — TC-TH-035…TC-TH-046",
+   "files": [
+    "scratchpad/150926-payroll-sit-ui/results/lo4.json"
+   ],
+   "consumes": [
+    "`app.json` (Task 1)."
+   ],
+   "produces": [
+    "`results/lo4.json` 8 mục: TC-TH-035, TC-TH-037, TC-TH-038, TC-TH-041, TC-TH-042, TC-TH-044, TC-TH-045, TC-TH-046."
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "test",
+   "mode": "afk",
+   "verify": "python3 -c \"import json;r=json.load(open('scratchpad/150926-payroll-sit-ui/results/lo4.json'));assert len(r)==8 and all(x['status'] in ('PASS','FAIL','BLOCK') for x in r)\"",
+   "spec_hash": "323b3fe36f10d497",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t6",
+   "title": "Lô 5 — TC - UI, Tích hợp & Báo cáo — TC-TH-113…TC-TH-053",
+   "files": [
+    "scratchpad/150926-payroll-sit-ui/results/lo5.json"
+   ],
+   "consumes": [
+    "`app.json` (Task 1)."
+   ],
+   "produces": [
+    "`results/lo5.json` 8 mục: TC-TH-113, TC-TH-047, TC-TH-048, TC-TH-049, TC-TH-050, TC-TH-051, TC-TH-052, TC-TH-053."
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "test",
+   "mode": "afk",
+   "verify": "python3 -c \"import json;r=json.load(open('scratchpad/150926-payroll-sit-ui/results/lo5.json'));assert len(r)==8 and all(x['status'] in ('PASS','FAIL','BLOCK') for x in r)\"",
+   "spec_hash": "53fc6ceeae4f2ad2",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t7",
+   "title": "Lô 6 — TC - UI, Tích hợp & Báo cáo — TC-TH-054…TC-TH-061",
+   "files": [
+    "scratchpad/150926-payroll-sit-ui/results/lo6.json"
+   ],
+   "consumes": [
+    "`app.json` (Task 1)."
+   ],
+   "produces": [
+    "`results/lo6.json` 8 mục: TC-TH-054, TC-TH-055, TC-TH-056, TC-TH-057, TC-TH-058, TC-TH-059, TC-TH-060, TC-TH-061."
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "test",
+   "mode": "afk",
+   "verify": "python3 -c \"import json;r=json.load(open('scratchpad/150926-payroll-sit-ui/results/lo6.json'));assert len(r)==8 and all(x['status'] in ('PASS','FAIL','BLOCK') for x in r)\"",
+   "spec_hash": "aa533b817531b1c7",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t8",
+   "title": "Lô 7 — TC - UI, Tích hợp & Báo cáo — TC-TH-062…TC-TH-063",
+   "files": [
+    "scratchpad/150926-payroll-sit-ui/results/lo7.json"
+   ],
+   "consumes": [
+    "`app.json` (Task 1)."
+   ],
+   "produces": [
+    "`results/lo7.json` 2 mục: TC-TH-062, TC-TH-063."
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "test",
+   "mode": "afk",
+   "verify": "python3 -c \"import json;r=json.load(open('scratchpad/150926-payroll-sit-ui/results/lo7.json'));assert len(r)==2 and all(x['status'] in ('PASS','FAIL','BLOCK') for x in r)\"",
+   "spec_hash": "40f36335025d7824",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t9",
+   "title": "Lô 8 — TC - UI Sửa công thức (Auto) — TC-AU-001…TC-AU-008",
+   "files": [
+    "scratchpad/150926-payroll-sit-ui/results/lo8.json"
+   ],
+   "consumes": [
+    "`app.json` (Task 1)."
+   ],
+   "produces": [
+    "`results/lo8.json` 8 mục: TC-AU-001, TC-AU-002, TC-AU-003, TC-AU-004, TC-AU-005, TC-AU-006, TC-AU-007, TC-AU-008."
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "test",
+   "mode": "afk",
+   "verify": "python3 -c \"import json;r=json.load(open('scratchpad/150926-payroll-sit-ui/results/lo8.json'));assert len(r)==8 and all(x['status'] in ('PASS','FAIL','BLOCK') for x in r)\"",
+   "spec_hash": "d98cce0c3c9b38b8",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t10",
+   "title": "Lô 9 — TC - UI Sửa công thức (Auto) — TC-AU-009…TC-AU-012",
+   "files": [
+    "scratchpad/150926-payroll-sit-ui/results/lo9.json"
+   ],
+   "consumes": [
+    "`app.json` (Task 1)."
+   ],
+   "produces": [
+    "`results/lo9.json` 4 mục: TC-AU-009, TC-AU-010, TC-AU-011, TC-AU-012."
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "test",
+   "mode": "afk",
+   "verify": "python3 -c \"import json;r=json.load(open('scratchpad/150926-payroll-sit-ui/results/lo9.json'));assert len(r)==4 and all(x['status'] in ('PASS','FAIL','BLOCK') for x in r)\"",
+   "spec_hash": "3ed04d590be321ce",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t11",
+   "title": "Lô 10 — TC - UI Cơ bản & Thao tác — TC-UI-001…TC-UI-009",
+   "files": [
+    "scratchpad/150926-payroll-sit-ui/results/lo10.json"
+   ],
+   "consumes": [
+    "`app.json` (Task 1)."
+   ],
+   "produces": [
+    "`results/lo10.json` 6 mục: TC-UI-001, TC-UI-002, TC-UI-005, TC-UI-006, TC-UI-008, TC-UI-009."
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "test",
+   "mode": "afk",
+   "verify": "python3 -c \"import json;r=json.load(open('scratchpad/150926-payroll-sit-ui/results/lo10.json'));assert len(r)==6 and all(x['status'] in ('PASS','FAIL','BLOCK') for x in r)\"",
+   "spec_hash": "fd5b56e8f360ecf0",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t12",
+   "title": "Lô 11 — TC - Cấu hình & Phân quyền — TC-CFG-001…TC-CFG-009",
+   "files": [
+    "scratchpad/150926-payroll-sit-ui/results/lo11.json"
+   ],
+   "consumes": [
+    "`app.json` (Task 1)."
+   ],
+   "produces": [
+    "`results/lo11.json` 6 mục: TC-CFG-001, TC-CFG-004, TC-CFG-006, TC-CFG-007, TC-CFG-008, TC-CFG-009."
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "test",
+   "mode": "afk",
+   "verify": "python3 -c \"import json;r=json.load(open('scratchpad/150926-payroll-sit-ui/results/lo11.json'));assert len(r)==6 and all(x['status'] in ('PASS','FAIL','BLOCK') for x in r)\"",
+   "spec_hash": "084cd762a38fa52d",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t13",
+   "title": "Xuất 11 report tester-kit + tổng hợp",
+   "files": [
+    "scratchpad/150926-payroll-sit-ui/report-lo1.xlsx"
+   ],
+   "consumes": [
+    "mọi `results/*.json`."
+   ],
+   "produces": [
+    "report xlsx mỗi lô + `summary.md` (PASS/FAIL/BLOCK theo lô, TC cần người)."
+   ],
+   "deps": [
+    "t2",
+    "t3",
+    "t4",
+    "t5",
+    "t6",
+    "t7",
+    "t8",
+    "t9",
+    "t10",
+    "t11",
+    "t12"
+   ],
+   "deps_conf": "chắc",
+   "kind": "docs",
+   "mode": "afk",
+   "verify": "ls scratchpad/150926-payroll-sit-ui/report-lo1.xlsx scratchpad/150926-payroll-sit-ui/report-lo2.xlsx scratchpad/150926-payroll-sit-ui/report-lo3.xlsx scratchpad/150926-payroll-sit-ui/report-lo4.xlsx scratchpad/150926-payroll-sit-ui/report-lo5.xlsx scratchpad/150926-payroll-sit-ui/report-lo6.xlsx scratchpad/150926-payroll-sit-ui/report-lo7.xlsx scratchpad/150926-payroll-sit-ui/report-lo8.xlsx scratchpad/150926-payroll-sit-ui/report-lo9.xlsx scratchpad/150926-payroll-sit-ui/report-lo10.xlsx scratchpad/150926-payroll-sit-ui/report-lo11.xlsx scratchpad/150926-payroll-sit-ui/summary.md",
+   "spec_hash": "6675a1ad002173f5",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  }
+ ],
+ "layers": [
+  [
+   "t1"
+  ],
+  [
+   "t10",
+   "t11",
+   "t12",
+   "t2",
+   "t3",
+   "t4",
+   "t5",
+   "t6",
+   "t7",
+   "t8",
+   "t9"
+  ],
+  [
+   "t13"
+  ]
+ ],
+ "parent": null,
+ "depth": 0,
+ "plan_version": 3,
+ "superseded": [],
+ "max_parallel": 4,
+ "conflicts": [],
+ "links": [],
+ "control": "active",
+ "schema_version": 1,
+ "checksum": "17b8c98961164aff"
+}
