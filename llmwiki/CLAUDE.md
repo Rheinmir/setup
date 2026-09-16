@@ -122,6 +122,7 @@ Karpathy ở trên là "vì sao"; đây là "làm sao". (Chưng cất từ ponyt
 | `caveman-stats` | Show real token usage and estimated savings for the current session. | `skills/utils/caveman-stats.md` | utils |
 | `check-approve` | Sinh sẵn 1-liner để trace 1 lệnh approve/return/reject của DMS trên log BE… | `skills/utils/check-approve.md` | utils |
 | `cursor-animated-sites` | Build an interactive "cursor-animated walkthrough" page on top of the… | `skills/utils/cursor-animated-sites.md` | utils |
+| `design-prim` | Dọn slop UI/UX khi onboard 1 dự án bất kỳ — quét view, chụp playwright, trích thông số qua… | `skills/utils/design-prim.md` | utils |
 | `design-taste-frontend` | Anti-slop frontend skill for landing pages, portfolios, and redesigns. | `skills/utils/design-taste-frontend.md` | utils |
 | `design-taste-frontend-v1` | The original v1 taste-skill, preserved for projects depending on its exact… | `skills/utils/design-taste-frontend-v1.md` | utils |
 | `extract-site` | Extract and convert a website or docs site into clean markdown (full-code clone → see `web-clone`) | `skills/utils/extract-site.md` | utils |
