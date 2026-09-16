@@ -59,6 +59,7 @@
 - **`/caveman-stats`** — Show real token usage and estimated savings for the current session
 - **`/check-approve`** — Sinh sẵn 1-liner để trace 1 lệnh approve/return/reject của DMS trên log BE (docker) + FE p…
 - **`/cursor-animated-sites`** — Build an interactive "cursor-animated walkthrough" page on top of the /docs-site-macos gla…
+- **`/design-prim`** — Dọn slop UI/UX khi onboard 1 dự án bất kỳ
 - **`/design-taste-frontend`** — Anti-slop frontend skill for landing pages, portfolios, and redesigns
 - **`/design-taste-frontend-v1`** — The original v1 taste-skill, preserved for projects depending on its exact behavior
 - **`/diagram`** — Vẽ SƠ ĐỒ và BIỂU ĐỒ bằng máy, không để model tự bịa hình
@@ -97,7 +98,6 @@
 - **`/tidy`** — Dọn + validate kho nháp và render (wiki/sources/draft/*.md + llmwiki/html/*.html) khi phìn…
 - **`/tour-guide`** — Thêm một in-app product tour (spotlight onboarding overlay) tự viết, KHÔNG cần thư viện (k…
 - **`/tour-guide-supademo`** — Style thiết kế Supademo cho in-app product tour (dùng kèm skill tour-guide
-- **`/trim-prim`** — Dọn slop UI/UX khi onboard 1 dự án bất kỳ
 - **`/uat-nonit-testcase`** — Tạo bộ test case / checklist UAT cho người dùng nghiệp vụ NON-IT (C&B, kế toán, vận hành)
 - **`/web-clone`** — Clone a website
 - **`/web-crawl`** — Crawl/scrape a website or single page into clean LLM-ready MARKDOWN

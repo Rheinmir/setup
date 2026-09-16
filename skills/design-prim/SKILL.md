@@ -1,11 +1,11 @@
 ---
-name: trim-prim
-description: Dọn slop UI/UX khi onboard 1 dự án bất kỳ — quét view có sẵn, chụp playwright, trích bộ thông số thiết kế (PRODUCT.md/DESIGN.md) qua impeccable, khoá 1 hệ style xuyên suốt bằng hallmark, rồi quét lại bằng slop-test 6-trục + 58 gate cộng audit impeccable. Gọi khi user nói "dọn slop", "làm gọn UI dự án", "chuẩn hoá UI xuyên suốt", "onboard rồi làm sạch UI", "trim and prim", "/trim-prim".
+name: design-prim
+description: Dọn slop UI/UX khi onboard 1 dự án bất kỳ — quét view có sẵn, chụp playwright, trích bộ thông số thiết kế (PRODUCT.md/DESIGN.md) qua impeccable, khoá 1 hệ style xuyên suốt bằng hallmark, rồi quét lại bằng slop-test 6-trục + 58 gate cộng audit impeccable. Gọi khi user nói "dọn slop", "làm gọn UI dự án", "chuẩn hoá UI xuyên suốt", "onboard rồi làm sạch UI", "design prim", "/design-prim".
 ---
 
-# Skill: trim-prim
+# Skill: design-prim
 
-`trim` (cắt phần thừa, chống AI-slop) + `prim` (chuẩn chỉnh, đúng chuẩn impeccable) — vần "-im".
+`design` (bộ thông số thiết kế: PRODUCT.md/DESIGN.md) + `prim` (chuẩn chỉnh, đúng chuẩn impeccable, không xộc xệch).
 
 Nén 1 lần: `orca-onboard` (bỏ — quá nặng, hallmark tự quét token ở bước 4 rồi) + `playwright-verify` +
 `impeccable` (bundle `doyourmagic/impeccable`) + `hallmark` (sàn design + slop-test). Không viết lại

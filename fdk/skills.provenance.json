@@ -209,6 +209,13 @@
       "recorded": "2026-07-04",
       "source": "local-authored"
     },
+    "design-prim": {
+      "files": {
+        "SKILL.md": "9a09b94f3f3acd40bc4cb4cc2418ca4238046c2cf246ee430d2d45be3f1a0dc1"
+      },
+      "recorded": "2026-09-16",
+      "source": "local-authored"
+    },
     "design-taste-frontend": {
       "files": {
         "SKILL.md": "dd482730c278eafc3543a09f9995e165f79ecd8cf4140bb3317b4075128b2811"
@@ -966,13 +973,6 @@
         "SKILL.md": "b880d1bb8f65e2196d9194f3402a1ebdbac332bb7ffe92ac0cc8f8f0a40736c8"
       },
       "recorded": "2026-07-18",
-      "source": "local-authored"
-    },
-    "trim-prim": {
-      "files": {
-        "SKILL.md": "b81ab542f58c0e34878120ed379ce9dd668e3c444ea7510c3a77ae0cf35a535c"
-      },
-      "recorded": "2026-09-15",
       "source": "local-authored"
     },
     "uat-nonit-testcase": {
