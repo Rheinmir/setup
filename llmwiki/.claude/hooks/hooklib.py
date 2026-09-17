@@ -193,3 +193,34 @@ def audit(payload: dict, event: str) -> None:
             f.write(json.dumps(rec, ensure_ascii=False) + "\n")
     except Exception:
         pass  # audit không bao giờ được phép làm gãy phiên làm việc
+
+
+def orca_graph_running(root: str):
+    """Node nào của orca-graph đang `locked`/`dispatched` + đường dẫn TUYỆT ĐỐI bảng kanban —
+    dùng chung cho session_start.py (đầu phiên) và user_prompt_submit.py (mỗi lượt, feedback 170926:
+    user muốn link luôn hiện ở cuối response khi graph còn đang chạy, không chỉ đầu phiên).
+    Trả `([], None)` khi không có gì đang chạy hoặc thiếu overstack — fail-open, không raise."""
+    try:
+        ov = overstack_dir(root)
+        if not ov:
+            return [], None
+        graph_dir = pathlib.Path(ov) / "graph"
+        if not graph_dir.is_dir():
+            return [], None
+        running = []
+        for p in sorted(graph_dir.glob("*.graph.json")):
+            try:
+                g = json.loads(p.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            for n in g.get("nodes", []):
+                if n.get("state") in ("locked", "dispatched"):
+                    running.append(f"{g.get('id', p.stem)}/{n['id']}")
+        if not running:
+            return [], None
+        kanban = pathlib.Path(ov) / "html" / "control-room-kanban.html"
+        cockpit = pathlib.Path(ov) / "html" / "control-room.html"
+        link = kanban if kanban.is_file() else (cockpit if cockpit.is_file() else None)
+        return running, (link.resolve() if link else None)
+    except Exception:
+        return [], None

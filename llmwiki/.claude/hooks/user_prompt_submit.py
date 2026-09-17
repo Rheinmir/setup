@@ -17,7 +17,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from hooklib import audit, find_wiki_dir, project_dir, read_payload, resolve_tool
+from hooklib import audit, find_wiki_dir, orca_graph_running, project_dir, read_payload, resolve_tool
 
 EVERY = int(os.environ.get("LLMWIKI_DOCS_GATE_EVERY", "5") or "5")
 REPORT_EVERY = int(os.environ.get("OVERSTACK_SELF_REPORT_EVERY", "50") or "50")   # tự chấm hệ mỗi N lượt
@@ -105,6 +105,18 @@ def main() -> None:
         sys.exit(0)  # không phải project llmwiki → bỏ qua
 
     sid = payload.get("session_id") or "default"
+
+    # orca-graph có node đang locked/dispatched → nhắc MỖI LƯỢT (không throttle như docs-gate),
+    # kèm chỉ thị rõ IN LINK Ở CUỐI RESPONSE — feedback 170926: user muốn link luôn thấy được,
+    # không phải chỉ nằm im trong context của model. Fail-open tuyệt đối.
+    try:
+        running, link = orca_graph_running(str(root))
+        if running and link:
+            shown = ", ".join(running[:4]) + ("…" if len(running) > 4 else "")
+            emit(f"📋 [orca-graph] {len(running)} node đang chạy ({shown}). "
+                 f"IN đường dẫn này Ở CUỐI response cho user, dạng bấm được: file://{link}")
+    except Exception:
+        pass
 
     # Trần token-budget → "continue in new session" TỰ ĐỘNG (session-continue.py). Chạy TRƯỚC docs-gate:
     # vượt/sắp vượt trần thì prompt này bị chặn, bàn giao đã ghi + phiên mới đã mở — tiếp ở đó.

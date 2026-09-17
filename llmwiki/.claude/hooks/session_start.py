@@ -13,6 +13,7 @@ import sys
 from pathlib import Path
 
 from hooklib import HARNESS_HOME, audit, find_wiki_dir, overstack_dir, project_dir, read_payload, resolve_tool, stamp_path
+from hooklib import orca_graph_running as hooklib_orca_graph_running
 
 
 def find_health_check(root: Path):
@@ -288,6 +289,21 @@ def wikigraph_reminder(root: Path) -> None:
         pass
 
 
+def orca_graph_running(root: Path) -> None:
+    """orca-graph có node đang `locked`/`dispatched` → in đường dẫn TUYỆT ĐỐI của bảng dispatch
+    kanban ngay đầu phiên. Logic dùng chung với user_prompt_submit.py (mỗi lượt) nằm ở
+    `hooklib.orca_graph_running()` — chỗ này chỉ format print theo văn phong session_start."""
+    try:
+        running, link = hooklib_orca_graph_running(str(root))
+        if not running or not link:
+            return
+        shown = ", ".join(running[:4]) + ("…" if len(running) > 4 else "")
+        print(f"📋 [orca-graph] {len(running)} node đang chạy ({shown}) — bảng dispatch kanban:")
+        print(f"  file://{link}")
+    except Exception:
+        pass
+
+
 def downstream_map(root: Path) -> None:
     """Chỉ ở REPO FRAMEWORK: nhắc layout đang nhìn KHÁC layout máy khách. Không phải context FDK
     (ADR-004) — đây là orientation 7 dòng chống ảo giác đường dẫn, đo 2026-09-11 (hook câm ở dot)."""
@@ -331,6 +347,7 @@ def main() -> None:
 
     output_style(root)  # đầu phiên: chốt KIỂU nói chuyện (chat), trước khi nói gì
     orient(root)  # đầu phiên: cho agent BIẾT project có gì + nhắc query trước (chống 'lơ ngơ')
+    orca_graph_running(root)  # graph đang có node locked/dispatched → tự bề đường dẫn kanban, khỏi hỏi lại
     downstream_map(root)  # chỉ ở repo framework: layout đang thấy KHÁC layout máy khách (AP-7)
     recall(root, payload.get("session_id") or "")  # đầu phiên: chuỗi phiên gần nhất (episodic) — đóng vòng ghi→đọc của mem-rank
 
