@@ -56,6 +56,9 @@ harness/metrics/sweep-marker.json
 scratchpad/
 fdk/docs/superpowers/
 
+# node_modules cục bộ cho script bundle trong skill (vd docs-site-macos/scripts/) — cài lại bằng package.json cạnh nó
+node_modules/
+
 # flywheel success-flywheel raw history (local)
 harness/metrics/successes.jsonl
 # llmwiki/wiki/sources/draft/archive/ được TRACK từ 2026-09-09 (tidy, D1): archive phải travel theo clone

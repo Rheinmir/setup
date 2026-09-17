@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "T3 — Rà generator",
+    "output": "160926-theme-toggle-circle-reveal-motion-t3.html",
+    "viewBox": [
+      880,
+      480
+    ],
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "column_fit": "spread"
+  },
+  "participants": [
+    {
+      "id": "claude",
+      "type": "external",
+      "label": "Claude",
+      "sublabel": "phiên này"
+    },
+    {
+      "id": "gen",
+      "type": "backend",
+      "label": "build-overstack-docs.py",
+      "sublabel": "generator"
+    },
+    {
+      "id": "rules",
+      "type": "database",
+      "label": "_DARK_RULES",
+      "sublabel": "nguồn CSS"
+    }
+  ],
+  "messages": [
+    {
+      "id": "t3-m1",
+      "from": "claude",
+      "to": "gen",
+      "y": 170,
+      "label": "grep toàn file tìm JS flip()/theme-switch",
+      "variant": "default"
+    },
+    {
+      "id": "t3-m2",
+      "from": "gen",
+      "to": "rules",
+      "y": 212,
+      "label": "đối chiếu _DARK_RULES (chỉ CSS?)",
+      "variant": "default"
+    },
+    {
+      "id": "t3-m3",
+      "from": "gen",
+      "to": "claude",
+      "y": 254,
+      "label": "có JS trùng lặp ngoài nguồn → cảnh báo drift",
+      "variant": "security"
+    },
+    {
+      "id": "t3-m4",
+      "from": "claude",
+      "to": "gen",
+      "y": 296,
+      "label": "không có → ghi no-op kèm bằng chứng grep",
+      "variant": "emphasis"
+    }
+  ]
+}

@@ -45,7 +45,7 @@ task: T-260916-01
 - Produces: overlay `.theme-reveal` (`position:fixed;inset:0`), hàm `flip()` gọi `commit(next)` giữa lúc grow-animation `onfinish`, biến `busy` chặn double-click. Task 3 (generator) và Task 6 (companion HTML patch) đọc đúng contract này.
 
 **Depends:** —
-**Verify:** `grep -c "theme-reveal" skills/docs-site-macos/SKILL.md` (≥ 1)
+**Verify:** `grep -c "theme-reveal" skills/docs-site-macos/SKILL.md`
 
 - [x] **Step 1: đọc `flip()` cũ + kỹ thuật Ripple sẵn có** (dòng 196-226, 1014-1024 bản cũ) làm tham chiếu.
 - [x] **Step 2: viết overlay `.theme-reveal` + `flip()` mới**:
@@ -99,7 +99,7 @@ function flip(){
 - Consumes: nội dung canonical từ Task 1 (đã chốt).
 
 **Depends:** Task 1
-**Verify:** `diff skills/docs-site-macos/SKILL.md llmwiki/skills/utils/docs-site-macos.md` (rc 0, rỗng)
+**Verify:** `diff skills/docs-site-macos/SKILL.md llmwiki/skills/utils/docs-site-macos.md`
 
 - [x] **Step 1: copy canonical → mirror**:
 
@@ -203,7 +203,7 @@ python3 fdk/tools/build-overstack-docs.py --check
 - Produces: CLI `node verify-theme-motion.mjs <file.html>` → rc 0 PASS / rc 1 FAIL + danh sách lý do.
 
 **Depends:** Task 1
-**Verify:** `node skills/docs-site-macos/scripts/verify-theme-motion.mjs llmwiki/html/overstack.html` (cần `npm install --no-save @playwright/test` trước, chạy từ thư mục có `node_modules` trong chuỗi ancestor của script)
+**Verify:** `node skills/docs-site-macos/scripts/verify-theme-motion.mjs llmwiki/html/overstack.html`
 
 - [x] **Step 1: viết script** — assert overlay đúng toạ độ/màu, `data-theme` đổi SAU khi grow xong (không phải giữa chừng), overlay gỡ khỏi DOM sau fade, `localStorage` đúng; lượt 2 với `page.emulateMedia({reducedMotion:'reduce'})` assert không có spatial motion:
 
@@ -254,7 +254,7 @@ node verify-theme-motion.mjs ../llmwiki/html/overstack.html
 - Consumes: đường dẫn script từ Task 4, mô tả hành vi từ Task 1.
 
 **Depends:** Task 1, Task 4
-**Verify:** `diff skills/fdk/SKILL.md llmwiki/skills/utils/fdk.md` (rc 0, rỗng)
+**Verify:** `diff skills/fdk/SKILL.md llmwiki/skills/utils/fdk.md`
 
 - [x] **Step 1: thêm dòng luật mới vào `fdk.md`**:
 

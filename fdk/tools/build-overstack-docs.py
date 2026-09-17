@@ -142,7 +142,7 @@ LOOP_GROUPS = {
         {"docs-site-macos": "docs", "extract-site": "docs", "md-to-html": "docs",
          "web-crawl": "docs", "web-clone": "docs",
          "tour-guide": "taste", "tour-guide-supademo": "taste",
-         "brandkit": "taste", "hallmark": "taste", "design-prim": "taste", "prd-grade-fe": "taste", "design-taste-frontend": "taste", "design-taste-frontend-v1": "taste",
+         "brandkit": "taste", "hallmark": "taste", "design-prim": "taste", "dark-mode-maker": "taste", "prd-grade-fe": "taste", "design-taste-frontend": "taste", "design-taste-frontend-v1": "taste",
          "gpt-taste": "taste", "high-end-visual-design": "taste", "stitch-design-taste": "taste",
          "minimalist-ui": "taste", "industrial-brutalist-ui": "taste", "redesign-existing-projects": "taste",
          "cursor-animated-sites": "docs", "diagram": "docs",
@@ -279,7 +279,8 @@ nav a:active{transform:translateY(.5px)}
 .code-copy:active,.nav-toggle:active,.nav-close:active{transform:scale(.94)}
 
 /* theme-switch — NÚT GẠT sáng/tối, hàng footer dính ĐÁY sidebar (feedback 2026-07-06: đừng rải 2 góc, đừng chen dưới logo) */
-.theme-row{position:sticky;bottom:-18px;margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:8px;margin-left:-12px;margin-right:-12px;margin-bottom:-18px;padding:11px 16px;border-top:1px solid rgba(30,90,170,.14);background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(240,248,255,.65));backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4)}
+/* 160926: background:transparent (không phải fill riêng, không phải inherit), KHÔNG backdrop-filter riêng — .theme-row là con của nav (đã tự blur rồi); một backdrop-filter thứ 2 chồng lên tạo dải "kính mờ kép" nhìn như khối riêng dù 0 màu, bắt được bằng ảnh chụp thật (bug thật: "div này cho transparency luôn luôn đi chứ" / "tất cả các layer ở dưới vị trí này đều không màu cho tôi") */
+.theme-row{position:sticky;bottom:-18px;margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:8px;margin-left:-12px;margin-right:-12px;margin-bottom:-18px;padding:11px 16px;border-top:1px solid rgba(30,90,170,.14);background:transparent}
 .theme-row .lbl{font-size:10.5px;font-weight:600;letter-spacing:.02em;color:var(--t2)}
 .theme-switch{display:inline-flex;align-items:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .theme-switch .track{position:relative;width:50px;height:26px;border-radius:999px;background:linear-gradient(165deg,rgba(255,255,255,.6),rgba(255,255,255,.3));border:1px solid rgba(30,90,170,.2);box-shadow:inset 0 1px 3px rgba(30,90,170,.14);transition:background .2s,border-color .2s}
@@ -287,28 +288,32 @@ nav a:active{transform:translateY(.5px)}
 .theme-switch .track::after{content:'🌙';position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:11px}
 .theme-switch .knob{position:absolute;z-index:1;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(20,40,90,.3);transition:left .18s ease}
 .theme-switch.on .knob{left:26px}
-.theme-switch.on .track{background:linear-gradient(165deg,#2b3040,#191d27);border-color:rgba(120,160,220,.3)}
-.theme-switch:active .knob{transform:scale(.92)}"""
+.theme-switch.on .track{background:linear-gradient(165deg,#2c2c30,#19191b);border-color:rgba(255,255,255,.14)}
+.theme-switch:active .knob{transform:scale(.92)}
+.theme-reveal{filter:drop-shadow(0 0 1px rgba(255,255,255,.95)) drop-shadow(0 0 8px rgba(255,255,255,.5)) drop-shadow(0 0 30px var(--reveal-tint,rgba(10,132,255,.35)))}"""
 
 # ── Dark mode (issue #14) + toggle sáng/tối (feedback 2026-07-06) ──────────────
 # MỘT nguồn _DARK_RULES sinh RA HAI khối CSS (chống drift giữa 2 bản):
 #   (a) @media prefers-color-scheme — mặc định theo hệ, CHỈ khi user chưa chọn light
 #   (b) html[data-theme=dark]      — user bấm toggle chọn dark tường minh (localStorage)
 # Selector dùng "&" làm placeholder cho <html>; light = base CSS nên không cần khối riêng.
+# 160926: palette trung tính kiểu thị trường (GitHub Dark/Vercel/Linear) — bản trước ngả navy
+# (--border xanh bão hoà, nền/glass pha xanh), feedback thật "dở tệ, chọn lại theo thị trường".
+# Viền TRẮNG TRONG SUỐT thay vì màu bão hoà là đúng cách GitHub/Vercel/Linear vẽ chrome tối.
 _DARK_RULES = [
-    ("&", "--glass2:rgba(30,34,44,.72);--glass3:rgba(36,40,52,.9);"
-          "--edge:inset 0 1px 0 rgba(255,255,255,.06);--border:rgba(120,160,220,.18);"
-          "--t1:#e7e9ee;--t2:#9aa2b1;background:#0c0f16;scrollbar-color:transparent transparent"),
+    ("&", "--glass2:rgba(32,32,36,.72);--glass3:rgba(39,39,44,.9);"
+          "--edge:inset 0 1px 0 rgba(255,255,255,.06);--border:rgba(255,255,255,.10);"
+          "--t1:#f4f4f5;--t2:#a1a1aa;background:#09090b;scrollbar-color:transparent transparent"),
     ("& body", "color:var(--t1);background:radial-gradient(900px 500px at 12% -10%,rgba(10,132,255,.14),transparent 60%),"
                "radial-gradient(700px 420px at 95% 12%,rgba(88,86,214,.12),transparent 55%),"
-               "linear-gradient(180deg,#0d1017,#0a0d13)"),
-    ("& h1,& h2,& h3,& h4", "color:#f2f4f8"),
-    ("& nav", "background:rgba(18,21,28,.82)"),
+               "linear-gradient(180deg,#0a0a0c,#08080a)"),
+    ("& h1,& h2,& h3,& h4", "color:#f4f4f5"),
+    ("& nav", "background:rgba(20,20,23,.82)"),
     ("& table th,& table td", "border-color:var(--border)"),
     ("& table th", "background:rgba(255,255,255,.04)"),
     ("& .card,& .note,& .kpi .b,& .mm .node,& .diagram-box", "background:var(--glass2)"),
     ("& a", "color:#5fa8ff"),
-    ("& .theme-row", "border-top-color:var(--border);background:linear-gradient(180deg,rgba(24,28,38,.7),rgba(16,20,28,.85))"),
+    ("& .theme-row", "border-top-color:var(--border)"),  # background:transparent ở base đã tự lo, không cần override riêng
 ]
 
 
@@ -326,8 +331,37 @@ JS = r"""
 var sw=document.createElement('div');sw.className='theme-switch';sw.id='theme-toggle';sw.dataset.noRipple='1';sw.setAttribute('role','switch');sw.setAttribute('tabindex','0');sw.innerHTML='<span class="track"><span class="knob"></span></span>';
 var row=document.createElement('div');row.className='theme-row';var lb=document.createElement('span');lb.className='lbl';lb.textContent='Giao diện';row.appendChild(lb);row.appendChild(sw);nav.appendChild(row);
 function paint(){var dk=isDark();sw.classList.toggle('on',dk);sw.setAttribute('aria-checked',dk?'true':'false');sw.setAttribute('aria-label',dk?'Nút gạt giao diện: đang tối — gạt sang sáng':'Nút gạt giao diện: đang sáng — gạt sang tối');sw.title=sw.getAttribute('aria-label')}
-function flip(){var next=isDark()?'light':'dark';d.setAttribute('data-theme',next);try{localStorage.setItem(K,next)}catch(e){}paint()}
-sw.addEventListener('click',flip);sw.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '||e.key==='Spacebar'){e.preventDefault();flip()}});
+var busy=false;
+function commit(next){d.setAttribute('data-theme',next);try{localStorage.setItem(K,next)}catch(e){}paint()}
+function flip(e){
+  if(busy)return;var next=isDark()?'light':'dark';
+  var r=sw.getBoundingClientRect();
+  // điểm tỏa = con trỏ chuột lúc bấm, KẸP trong biên nút; Enter/Space (không toạ độ) -> tâm nút
+  var x=(e&&typeof e.clientX==='number')?Math.min(Math.max(e.clientX,r.left),r.right):r.left+r.width/2;
+  var y=(e&&typeof e.clientY==='number')?Math.min(Math.max(e.clientY,r.top),r.bottom):r.top+r.height/2;
+  var reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var bg=next==='dark'?'#09090b':'#f7fbff';
+  var tint=next==='dark'?'rgba(90,168,255,.28)':'rgba(10,132,255,.20)';
+  var canAnimate='animate' in document.createElement('div');
+  busy=true;
+  var el=document.createElement('div');el.className='theme-reveal';el.style.cssText='position:fixed;inset:0;z-index:300;pointer-events:none;will-change:clip-path;background:'+bg;
+  el.style.setProperty('--reveal-tint',tint);
+  document.body.appendChild(el);
+  if(reduced||!canAnimate){
+    el.style.cssText+=';opacity:0;transition:opacity .075s linear';
+    requestAnimationFrame(function(){el.style.opacity='1'});
+    setTimeout(function(){commit(next);el.style.opacity='0';setTimeout(function(){el.remove();busy=false},90)},90);
+    return;
+  }
+  var maxR=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y));
+  var grow=el.animate([{clipPath:'circle(0px at '+x+'px '+y+'px)'},{clipPath:'circle('+maxR+'px at '+x+'px '+y+'px)'}],{duration:560,easing:'cubic-bezier(.42,0,1,1)',fill:'forwards'});
+  grow.onfinish=function(){
+    commit(next);
+    var fadeOut=el.animate([{opacity:1},{opacity:0}],{duration:180,easing:'ease-out',fill:'forwards'});
+    fadeOut.onfinish=function(){el.remove();busy=false};
+  };
+}
+sw.addEventListener('click',flip);sw.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '||e.key==='Spacebar'){e.preventDefault();flip(e)}});
 try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',paint)}catch(e){}paint()})();
 (function(){const n=document.querySelector('nav');if(!n)return;const o=document.createElement('button');o.className='nav-toggle';o.textContent='☰';o.setAttribute('aria-label','Mở menu điều hướng');document.body.appendChild(o);const c=document.createElement('button');c.className='nav-close';c.textContent='✕';c.setAttribute('aria-label','Đóng menu điều hướng');n.appendChild(c);o.onclick=function(){document.body.classList.remove('nav-collapsed')};c.onclick=function(){document.body.classList.add('nav-collapsed')};if(matchMedia('(max-width:640px)').matches)document.body.classList.add('nav-collapsed')})();
 (function(){var ls=[].slice.call(document.querySelectorAll('nav a')),ss=[].slice.call(document.querySelectorAll('section[id]'));var ob=new IntersectionObserver(function(es){var a='';es.forEach(function(e){if(e.isIntersecting)a=e.target.id});if(a)ls.forEach(function(l){l.classList.toggle('active',l.getAttribute('href')==='#'+a)})},{rootMargin:'-40% 0px -55% 0px'});ss.forEach(function(s){ob.observe(s)})})();
@@ -340,13 +374,24 @@ try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',paint)}
 
 
 def accent_css(n: int) -> str:
-    out = []
+    out, dark = [], []
     for i in range(n):
         hexc, rgb = ACCENTS[i % len(ACCENTS)]
         out.append(f"#s{i} .tag{{background:rgba({rgb},.12);color:{hexc}}}"
                    f"#s{i} .card h4{{color:{hexc}}}#s{i} .card li::before{{color:{hexc}}}"
                    f".s{i}::before{{background:linear-gradient(180deg,rgba({rgb},.05),transparent 55%)}}")
-    return "\n".join(out)
+        # 160926: .tag rgba(...,.12) trên nền gần-đen của dark mode ra pill gần vô hình. Vòng sửa 1
+        # (chỉ nâng alpha nền+viền) chưa đủ vì color:hexc (chữ) cùng tông nền → đo Playwright ra
+        # 1.0-1.4:1. Vòng sửa 2 (nâng alpha nền lên .26 + chữ trắng) VẪN fail với accent sáng
+        # (teal/green/orange) — nền tint SÁNG (kênh G/R cao) ở alpha .26 làm mất chỗ tương phản
+        # cho chữ trắng đứng trên. Sửa đúng: GIỮ nền tối/mỏng (alpha .12, gần với nền trang), border
+        # đậm hơn (alpha .55) để định hình cái pill, chữ trắng đứng trên nền THẬT SỰ tối — không
+        # phụ thuộc kênh màu nào của accent. Đo lại bằng Playwright xác nhận ≥ 3.0:1 cả 6 accent.
+        dark.append(f"#s{i} .tag{{background:rgba({rgb},.12);border:1px solid rgba({rgb},.55);color:#f2f4f8}}")
+    dark_block = "\n".join(dark)
+    return ("\n".join(out)
+            + "\n@media (prefers-color-scheme: dark){\nhtml:not([data-theme=light]) " + dark_block.replace("\n", "\nhtml:not([data-theme=light]) ") + "\n}\n"
+            + "html[data-theme=dark] " + dark_block.replace("\n", "\nhtml[data-theme=dark] "))
 
 
 # ── sections (prose tay; bảng live tiêm vào) ──────────────────────────────────────────────

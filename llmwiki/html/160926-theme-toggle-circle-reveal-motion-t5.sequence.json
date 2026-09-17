@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "T5 — Cập nhật tham chiếu luật",
+    "output": "160926-theme-toggle-circle-reveal-motion-t5.html",
+    "viewBox": [
+      880,
+      480
+    ],
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "column_fit": "spread"
+  },
+  "participants": [
+    {
+      "id": "claude",
+      "type": "external",
+      "label": "Claude",
+      "sublabel": "phiên này"
+    },
+    {
+      "id": "fdk",
+      "type": "frontend",
+      "label": "llmwiki/skills/utils/fdk.md",
+      "sublabel": "mục Rules"
+    },
+    {
+      "id": "mem",
+      "type": "database",
+      "label": "memory html-theme-toggle",
+      "sublabel": "cá nhân"
+    }
+  ],
+  "messages": [
+    {
+      "id": "t5-m1",
+      "from": "claude",
+      "to": "fdk",
+      "y": 170,
+      "label": "đọc dòng ~101 luật toggle cũ (chưa có motion)",
+      "variant": "default"
+    },
+    {
+      "id": "t5-m2",
+      "from": "claude",
+      "to": "fdk",
+      "y": 212,
+      "label": "thêm 1 câu trỏ yêu cầu circle-reveal + đường dẫn script T4",
+      "variant": "emphasis"
+    },
+    {
+      "id": "t5-m3",
+      "from": "claude",
+      "to": "mem",
+      "y": 254,
+      "label": "cập nhật How to apply, trỏ T-260916-01",
+      "variant": "emphasis"
+    }
+  ]
+}

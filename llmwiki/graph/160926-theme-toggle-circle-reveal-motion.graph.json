@@ -1,0 +1,192 @@
+{
+ "id": "160926-theme-toggle-circle-reveal-motion",
+ "plan": "llmwiki/wiki/sources/draft/160926-theme-toggle-circle-reveal-motion-PLAN.md",
+ "built": "2026-09-16T15:26:11+0700",
+ "nodes": [
+  {
+   "id": "t1",
+   "title": "Viết snippet circle-reveal (canonical)",
+   "files": [
+    "skills/docs-site-macos/SKILL.md"
+   ],
+   "consumes": [],
+   "produces": [
+    "overlay `.theme-reveal` (`position:fixed;inset:0`), hàm `flip()` gọi `commit(next)` giữa lúc grow-animation `onfinish`, biến `busy` chặn double-click. Task 3 (generator) và Task 6 (companion HTML patch) đọc đúng contract này."
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "grep -c \"theme-reveal\" skills/docs-site-macos/SKILL.md",
+   "spec_hash": "2f104ec5955868a1",
+   "state": "done",
+   "gen": 3,
+   "rev": 10,
+   "attempts": 3,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "2f104ec5955868a1"
+  },
+  {
+   "id": "t2",
+   "title": "Đồng bộ mirror docs-site-macos",
+   "files": [
+    "llmwiki/skills/utils/docs-site-macos.md"
+   ],
+   "consumes": [
+    "nội dung canonical từ Task 1 (đã chốt)."
+   ],
+   "produces": [],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "diff skills/docs-site-macos/SKILL.md llmwiki/skills/utils/docs-site-macos.md",
+   "spec_hash": "636013cd81d75732",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "636013cd81d75732"
+  },
+  {
+   "id": "t3",
+   "title": "Rà + sửa generator",
+   "files": [
+    "fdk/tools/build-overstack-docs.py",
+    "llmwiki/html/overstack.html"
+   ],
+   "consumes": [
+    "contract `.theme-reveal`/`commit()`/`busy` từ Task 1."
+   ],
+   "produces": [],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/build-overstack-docs.py --check",
+   "spec_hash": "8988834371f8b4b8",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "8988834371f8b4b8"
+  },
+  {
+   "id": "t4",
+   "title": "Script Playwright nghiệm thu",
+   "files": [
+    "skills/docs-site-macos/scripts/verify-theme-motion.mjs"
+   ],
+   "consumes": [
+    "DOM contract từ Task 1 (`.theme-switch`, `.theme-reveal`, `data-theme`, key localStorage kết thúc `-theme`)."
+   ],
+   "produces": [
+    "CLI `node verify-theme-motion.mjs <file.html>` → rc 0 PASS / rc 1 FAIL + danh sách lý do."
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "node skills/docs-site-macos/scripts/verify-theme-motion.mjs llmwiki/html/overstack.html",
+   "spec_hash": "594dec80e27ec1dc",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "594dec80e27ec1dc"
+  },
+  {
+   "id": "t5",
+   "title": "Cập nhật tham chiếu luật",
+   "files": [
+    "llmwiki/skills/utils/fdk.md",
+    "skills/fdk/SKILL.md",
+    "/Users/giatran/.claude/projects/-Users-giatran-orca-setup-setup/memory/html-theme-toggle-required.md"
+   ],
+   "consumes": [
+    "đường dẫn script từ Task 4, mô tả hành vi từ Task 1."
+   ],
+   "produces": [],
+   "deps": [
+    "t1",
+    "t4"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "diff skills/fdk/SKILL.md llmwiki/skills/utils/fdk.md",
+   "spec_hash": "b05673be4bca2294",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "b05673be4bca2294"
+  },
+  {
+   "id": "t6",
+   "title": "Chứng minh thật trên companion HTML",
+   "files": [
+    "llmwiki/html/160926-theme-toggle-circle-reveal-motion-seq.html"
+   ],
+   "consumes": [
+    "contract circle-reveal từ Task 1, script từ Task 4."
+   ],
+   "produces": [],
+   "deps": [
+    "t1",
+    "t4"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "node skills/docs-site-macos/scripts/verify-theme-motion.mjs llmwiki/html/160926-theme-toggle-circle-reveal-motion-seq.html",
+   "spec_hash": "a56214d71e0923be",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "a56214d71e0923be"
+  }
+ ],
+ "layers": [
+  [
+   "t1"
+  ],
+  [
+   "t2",
+   "t3",
+   "t4"
+  ],
+  [
+   "t5",
+   "t6"
+  ]
+ ],
+ "parent": null,
+ "depth": 0,
+ "plan_version": 2,
+ "superseded": [],
+ "max_parallel": 4,
+ "conflicts": [],
+ "links": [],
+ "control": "active",
+ "schema_version": 1,
+ "checksum": "3d2c32a258ab832b"
+}

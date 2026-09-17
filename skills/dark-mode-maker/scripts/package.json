@@ -1,0 +1,9 @@
+{
+  "name": "docs-site-macos-scripts",
+  "private": true,
+  "type": "module",
+  "description": "Standalone verify scripts cho skill docs-site-macos — chạy trực tiếp bằng `node <file>.mjs`, không qua test runner.",
+  "devDependencies": {
+    "@playwright/test": "^1.63.0"
+  }
+}

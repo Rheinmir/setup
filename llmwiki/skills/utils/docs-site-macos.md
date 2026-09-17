@@ -418,6 +418,19 @@ For i in 0..N-1:
   #sec-{i} .card li::before { color: accent; }
   #sec-{i} .section-header h2 { color: dark; }
   .s-bg{i}::before { background: linear-gradient(180deg, gradient 0%, transparent 60%); }
+```
+
+⚠️ **`.tag` PHẢI có biến thể dark-mode riêng (bug thật 160926, không phải giả thuyết) — VÀ phải đổi cả màu CHỮ, không chỉ nền.** `.tag{background:accent tại 12%;color:accent}` đủ tương phản trên nền sáng, nhưng CÙNG công thức đó trên nền gần-đen (`#0c0f16`) ra pill gần vô hình + chữ mờ (đo bằng Playwright thật — `getComputedStyle` + tính contrast ratio WCAG, không phải chỉ nhìn ảnh chụp). Hai vòng sửa sai đã đo được, đừng lặp lại:
+- **Sai lần 1:** chỉ nâng alpha nền (`.22`) + viền, GIỮ NGUYÊN `color:accent` cho chữ → contrast đo được **1.0–1.4:1** (mù chữ thật sự, screenshot trông "có vẻ ổn" vì mắt bắt được viền pill, không bắt được chữ mờ).
+- **Sai lần 2:** nâng alpha nền lên `.26` + đổi chữ sang trắng → PASS với accent tối (blue/indigo/pink) nhưng vẫn **FAIL 2.0–2.3:1** với accent sáng (teal/green/orange) — nền tint càng đậm càng "ăn" mất chỗ tương phản cho chữ trắng, đặc biệt với accent có kênh G/R cao.
+- **Đúng:** GIỮ nền mỏng/tối (alpha `.12`, gần bằng nền trang thật), viền đậm hơn (`.55`) để định hình cái pill, chữ **trắng trung tính** (`#f2f4f8`, không phải màu accent) đứng trên nền THẬT SỰ tối — không phụ thuộc kênh màu của accent nào. Đo Playwright xác nhận **11–16:1** trên cả 6 accent:
+```css
+@media (prefers-color-scheme: dark){
+  html:not([data-theme=light]) #sec-{i} .tag{background:accent tại 12%;border:1px solid accent tại 55%;color:#f2f4f8}
+}
+html[data-theme=dark] #sec-{i} .tag{background:accent tại 12%;border:1px solid accent tại 55%;color:#f2f4f8}
+```
+`.card h4`/`li::before` không cần đổi (chữ trên nền tối ở đó vẫn đủ tương phản — đã đo, không phải giả định). Sinh trang bằng script? Giữ đúng nguyên tắc "một nguồn emit 2 khối" như `_theme_css()` — xem `accent_css()` trong `fdk/tools/build-overstack-docs.py`.
 
 
 ## Animated SVG Diagrams
@@ -977,53 +990,9 @@ pre.code-block,.foot-tree{font-family:var(--font-mono)}
 
 ## Theme Toggle sáng/tối (REQUIRED — feedback user 2026-07-06, KHÔNG được ép một mode)
 
-**Liên quan §Navigation (trên, dòng ~161):** `.theme-row` bên dưới là con trực tiếp của `nav` đã dựng ở đó, và đọc lại biến `--nav-pad-y` khai cùng chỗ — không lặp lại CSS `nav` ở đây.
+**Tách ra thành skill riêng `dark-mode-maker` (feedback 160926: "bê nguyên cái làm hiệu ứng dark/light mode thành 1 skill riêng").** Mọi trang sinh ra phải cho user TỰ CHỌN sáng/tối bằng nút gạt (switch) dính đáy sidebar/nav — `prefers-color-scheme` chỉ là mặc định ban đầu. **Load skill `dark-mode-maker` (Skill tool) để lấy đúng:** markup nút gạt + chống FOUC + palette dark-mode trung tính (không navy-tinted) + hiệu ứng circle-reveal tỏa từ con trỏ (kẹp trong biên nút) + crest-glow liquid-glass + nghiệm thu Playwright. Đừng chép lại CSS/JS ở đây — một nguồn, sửa một chỗ, tránh đúng con drift đã từng xảy ra giữa `SKILL.md` và `fdk/tools/build-overstack-docs.py`.
 
-Mọi trang sinh ra phải cho user TỰ CHỌN sáng/tối bằng một nút toggle — `prefers-color-scheme` chỉ là **mặc định ban đầu**, không phải quyết định cuối. Ép cứng dark (hoặc light) là vi phạm. Ba mảnh bắt buộc, không mảnh nào được thiếu:
-
-**1. CSS — dark là override theo token, viết MỘT lần dùng cho cả 2 ngả** (theo-hệ *khi user chưa chọn light*, và user-chọn-dark tường minh; light = base CSS nên không cần khối riêng):
-```css
-/* mặc định theo hệ — chỉ khi user CHƯA chọn light */
-@media (prefers-color-scheme: dark){
-  html:not([data-theme=light]){ --glass2:…; --border:…; --t1:…; --t2:…; background:#0c0f16 }
-  html:not([data-theme=light]) body{ … } /* prefix từng selector */
-}
-/* user bấm toggle chọn dark tường minh */
-html[data-theme=dark]{ /* CÙNG token như trên */ }
-html[data-theme=dark] body{ … }
-```
-Sinh trang bằng script? Giữ MỘT danh sách rule rồi emit 2 khối với 2 prefix (xem `_DARK_RULES` trong `fdk/tools/build-overstack-docs.py`) — chép tay 2 bản là mầm drift.
-
-**2. `<head>` — chống FOUC** (áp lựa chọn đã lưu TRƯỚC khi CSS render):
-```html
-<script>(function(){try{var t=localStorage.getItem("<tên-trang>-theme");
-if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}})();</script>
-```
-
-**3. NÚT GẠT (switch), KHÔNG phải chip icon rải góc** (feedback lần 3: chip 2 góc "không giống ai") — hàng footer **dính đáy sidebar/nav**: nhãn "Giao diện" bên trái + switch bên phải, vách ngăn mảnh phía trên. Track pill 50×26 có ☀️/🌙 hai đầu, knob trượt; `role="switch"` + `aria-checked` + Enter/Space toggle:
-
-⚠️ **Bài học 200826 — bug thật, không phải giả thuyết:** bản trước để `bottom:-<pad-nav>` là placeholder CHƯA resolve — LLM sinh trang phải tự đoán giá trị số khớp với padding của `nav` (§Navigation), quên/sai là nút gạt lệch khỏi đáy sidebar. Fix: đọc lại đúng biến `--nav-pad-y` đã khai ở `:root` trong §Navigation — KHÔNG hard-code lại số:
-```css
-.theme-row{position:sticky;bottom:calc(-1 * var(--nav-pad-y));margin-top:auto;display:flex;align-items:center;justify-content:space-between;
-  padding:11px 16px;border-top:1px solid rgba(30,90,170,.14);background:…glass…;backdrop-filter:blur(14px)}
-.theme-switch .track{display:inline-block;position:relative;width:50px;height:26px;border-radius:999px;…}
-.theme-switch .track::before{content:'☀️';left:6px;…} .theme-switch .track::after{content:'🌙';right:6px;…}
-.theme-switch .knob{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .18s}
-.theme-switch.on .knob{left:26px} .theme-switch.on .track{background:…dark…}
-```
-```js
-(function(){var K='<tên-trang>-theme',d=document.documentElement,nav=document.querySelector('nav');if(!nav)return;
-function isDark(){var t=d.getAttribute('data-theme');return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches}
-var sw=document.createElement('div');sw.className='theme-switch';sw.setAttribute('role','switch');sw.setAttribute('tabindex','0');
-sw.innerHTML='<span class="track"><span class="knob"></span></span>';
-var row=document.createElement('div');row.className='theme-row';
-var lb=document.createElement('span');lb.className='lbl';lb.textContent='Giao diện';row.appendChild(lb);row.appendChild(sw);nav.appendChild(row);
-function paint(){var dk=isDark();sw.classList.toggle('on',dk);sw.setAttribute('aria-checked',dk?'true':'false');
-  sw.setAttribute('aria-label',dk?'Nút gạt giao diện: đang tối — gạt sang sáng':'Nút gạt giao diện: đang sáng — gạt sang tối')}
-function flip(){var n=isDark()?'light':'dark';d.setAttribute('data-theme',n);try{localStorage.setItem(K,n)}catch(e){}paint()}
-sw.addEventListener('click',flip);sw.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();flip()}});paint()})();
-```
-Trang không có sidebar (landing một cột)? Đặt cùng hàng footer của trang, vẫn là NÚT GẠT có nhãn — tuyệt đối không quay lại chip icon trôi nổi ở góc.
+Sinh trang bằng script (`fdk/tools/build-overstack-docs.py`)? Vẫn giữ nguyên tắc "một nguồn emit 2 khối CSS" (`_theme_css()`/`_DARK_RULES`) — chỉ khác là nội dung token giờ theo palette của `dark-mode-maker` § Palette, không phải chép tay riêng ở đây.
 
 ## Accessibility & Document Head (REQUIRED)
 

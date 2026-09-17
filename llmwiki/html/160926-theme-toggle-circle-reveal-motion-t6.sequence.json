@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "T6 — Chứng minh thật",
+    "output": "160926-theme-toggle-circle-reveal-motion-t6.html",
+    "viewBox": [
+      880,
+      480
+    ],
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "column_fit": "spread"
+  },
+  "participants": [
+    {
+      "id": "claude",
+      "type": "external",
+      "label": "Claude",
+      "sublabel": "phiên này"
+    },
+    {
+      "id": "seq",
+      "type": "frontend",
+      "label": "Companion HTML",
+      "sublabel": "chính trang này"
+    },
+    {
+      "id": "pw",
+      "type": "backend",
+      "label": "verify-theme-motion.mjs",
+      "sublabel": "từ T4"
+    }
+  ],
+  "messages": [
+    {
+      "id": "t6-m1",
+      "from": "seq",
+      "to": "claude",
+      "y": 170,
+      "label": "companion HTML đã tồn tại (đang render)",
+      "variant": "default"
+    },
+    {
+      "id": "t6-m2",
+      "from": "claude",
+      "to": "seq",
+      "y": 212,
+      "label": "patch trang bằng snippet mới sau khi T1 xong",
+      "variant": "emphasis"
+    },
+    {
+      "id": "t6-m3",
+      "from": "claude",
+      "to": "pw",
+      "y": 254,
+      "label": "chạy verify-theme-motion.mjs trên trang đó",
+      "variant": "emphasis"
+    },
+    {
+      "id": "t6-m4",
+      "from": "pw",
+      "to": "claude",
+      "y": 296,
+      "label": "rc + log đính vào PLAN làm bằng chứng SC-004",
+      "variant": "return"
+    }
+  ]
+}

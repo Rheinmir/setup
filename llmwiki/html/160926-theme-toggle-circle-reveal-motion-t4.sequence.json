@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "T4 — Script Playwright nghiệm thu",
+    "output": "160926-theme-toggle-circle-reveal-motion-t4.html",
+    "viewBox": [
+      880,
+      564
+    ],
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "column_fit": "spread"
+  },
+  "participants": [
+    {
+      "id": "claude",
+      "type": "external",
+      "label": "Claude",
+      "sublabel": "phiên này"
+    },
+    {
+      "id": "pw",
+      "type": "backend",
+      "label": "Playwright (Chromium)",
+      "sublabel": "verify-theme-motion.mjs"
+    },
+    {
+      "id": "page",
+      "type": "frontend",
+      "label": "File HTML mục tiêu",
+      "sublabel": "do docs-site-macos sinh"
+    },
+    {
+      "id": "overlay",
+      "type": "frontend",
+      "label": ".theme-reveal overlay",
+      "sublabel": "từ T1"
+    }
+  ],
+  "messages": [
+    {
+      "id": "t4-m1",
+      "from": "claude",
+      "to": "pw",
+      "y": 170,
+      "label": "viết script mở file HTML bằng Chromium",
+      "variant": "emphasis"
+    },
+    {
+      "id": "t4-m2",
+      "from": "pw",
+      "to": "page",
+      "y": 212,
+      "label": "đọc data-theme ban đầu, bấm .theme-switch",
+      "variant": "default"
+    },
+    {
+      "id": "t4-m3",
+      "from": "page",
+      "to": "overlay",
+      "y": 254,
+      "label": "overlay xuất hiện tại toạ độ nút",
+      "variant": "emphasis"
+    },
+    {
+      "id": "t4-m4",
+      "from": "pw",
+      "to": "overlay",
+      "y": 296,
+      "label": "assert màu + kích thước phủ viền không",
+      "variant": "emphasis"
+    },
+    {
+      "id": "t4-m5",
+      "from": "pw",
+      "to": "page",
+      "y": 338,
+      "label": "assert data-theme + localStorage đã đổi",
+      "variant": "emphasis"
+    },
+    {
+      "id": "t4-m6",
+      "from": "overlay",
+      "to": "pw",
+      "y": 380,
+      "label": "overlay bị gỡ khỏi DOM sau fade",
+      "variant": "return"
+    },
+    {
+      "id": "t4-m7",
+      "from": "pw",
+      "to": "page",
+      "y": 422,
+      "label": "lặp lại với prefers-reduced-motion: reduce",
+      "variant": "security"
+    }
+  ]
+}

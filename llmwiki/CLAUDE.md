@@ -92,6 +92,7 @@ Karpathy ở trên là "vì sao"; đây là "làm sao". (Chưng cất từ ponyt
 | `sync-template` | Upstreaming template improvements to master repo | `skills/utils/sync-template.md` | utils |
 | `md-to-html` | User wants to render a professional HTML report | `skills/utils/md-to-html.md` | utils |
 | `docs-site-macos` | User wants macOS-style documentation site | `skills/utils/docs-site-macos.md` | utils |
+| `dark-mode-maker` | Circle-reveal khi chuyển dark/light mode — tỏa từ con trỏ (kẹp trong biên nút), palette trung tính thị trường, crest-glow liquid-glass, nghiệm thu Playwright. KHÁC docs-site-macos (module toggle dùng cho mọi trang, không riêng docs) | `skills/utils/dark-mode-maker.md` | utils |
 | `web-crawl` | Crawl/scrape a URL or site into LLM-ready markdown | `skills/utils/web-crawl.md` | utils |
 | `web-clone` | Clone a website — snapshot (1-file offline copy) or reconstruct (rebuild as editable Next.js code, canonical home for the full-clone pipeline) | `skills/utils/web-clone.md` | utils |
 | `fdk` | Đang phát triển CHÍNH framework (skill/rule/validator/hook/wiki) | `skills/utils/fdk.md` | utils |

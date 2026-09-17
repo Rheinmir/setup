@@ -57,6 +57,7 @@
         "./skills/diagram",
         "./skills/tidy",
         "./skills/docs-site-macos",
+        "./skills/dark-mode-maker",
         "./skills/doyourmagic",
         "./skills/extract-site",
         "./skills/fable5",

@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "T2 — Đồng bộ mirror",
+    "output": "160926-theme-toggle-circle-reveal-motion-t2.html",
+    "viewBox": [
+      880,
+      480
+    ],
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "column_fit": "spread"
+  },
+  "participants": [
+    {
+      "id": "claude",
+      "type": "external",
+      "label": "Claude",
+      "sublabel": "phiên này"
+    },
+    {
+      "id": "canon",
+      "type": "frontend",
+      "label": "docs-site-macos SKILL.md",
+      "sublabel": "canonical"
+    },
+    {
+      "id": "mirror",
+      "type": "frontend",
+      "label": "docs-site-macos.md",
+      "sublabel": "mirror llmwiki"
+    }
+  ],
+  "messages": [
+    {
+      "id": "t2-m1",
+      "from": "canon",
+      "to": "claude",
+      "y": 170,
+      "label": "canonical đã có snippet mới từ T1",
+      "variant": "default"
+    },
+    {
+      "id": "t2-m2",
+      "from": "claude",
+      "to": "mirror",
+      "y": 212,
+      "label": "copy nguyên văn canonical đè lên mirror",
+      "variant": "emphasis"
+    },
+    {
+      "id": "t2-m3",
+      "from": "mirror",
+      "to": "claude",
+      "y": 254,
+      "label": "diff canonical/mirror = rỗng (parity)",
+      "variant": "return"
+    }
+  ]
+}

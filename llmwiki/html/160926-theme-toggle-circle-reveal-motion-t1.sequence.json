@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "T1 — Viết snippet circle-reveal",
+    "output": "160926-theme-toggle-circle-reveal-motion-t1.html",
+    "viewBox": [
+      880,
+      522
+    ],
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "column_fit": "spread"
+  },
+  "participants": [
+    {
+      "id": "claude",
+      "type": "external",
+      "label": "Claude",
+      "sublabel": "phiên này"
+    },
+    {
+      "id": "skill",
+      "type": "frontend",
+      "label": "docs-site-macos/SKILL.md",
+      "sublabel": "canonical"
+    },
+    {
+      "id": "ripple",
+      "type": "frontend",
+      "label": "Ripple pattern",
+      "sublabel": "dòng 196-226"
+    },
+    {
+      "id": "flip",
+      "type": "backend",
+      "label": "flip()",
+      "sublabel": "toggle cũ"
+    }
+  ],
+  "messages": [
+    {
+      "id": "t1-m1",
+      "from": "claude",
+      "to": "flip",
+      "y": 160,
+      "label": "đọc flip() hiện tại (đổi data-theme tức thời)",
+      "variant": "default"
+    },
+    {
+      "id": "t1-m2",
+      "from": "claude",
+      "to": "ripple",
+      "y": 194,
+      "label": "đọc kỹ thuật Ripple có sẵn làm tham chiếu",
+      "variant": "default"
+    },
+    {
+      "id": "t1-m3",
+      "from": "claude",
+      "to": "skill",
+      "y": 228,
+      "label": "viết overlay .theme-reveal (fixed, inset:0)",
+      "variant": "emphasis"
+    },
+    {
+      "id": "t1-m4",
+      "from": "claude",
+      "to": "skill",
+      "y": 262,
+      "label": "gán màu nền = token MODE ĐÍCH",
+      "variant": "emphasis"
+    },
+    {
+      "id": "t1-m5",
+      "from": "claude",
+      "to": "skill",
+      "y": 296,
+      "label": "viết easing 2 pha (chậm đầu → nhanh-dứt-khoát)",
+      "variant": "emphasis"
+    },
+    {
+      "id": "t1-m6",
+      "from": "claude",
+      "to": "flip",
+      "y": 330,
+      "label": "bọc flip(): đổi data-theme TRƯỚC lúc fade",
+      "variant": "security"
+    },
+    {
+      "id": "t1-m7",
+      "from": "claude",
+      "to": "skill",
+      "y": 364,
+      "label": "thêm nhánh prefers-reduced-motion",
+      "variant": "emphasis"
+    },
+    {
+      "id": "t1-m8",
+      "from": "claude",
+      "to": "skill",
+      "y": 398,
+      "label": "ghi đè snippet mới vào mục Theme Toggle",
+      "variant": "emphasis"
+    }
+  ]
+}

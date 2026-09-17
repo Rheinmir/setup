@@ -1,7 +1,7 @@
 <!-- SINH BẰNG CODE: build-capabilities.py — ĐỪNG sửa tay; chạy lại để cập nhật. -->
 # CAPABILITIES — toàn bộ đồ nghề (luôn-mới, đếm từ đĩa)
 
-**89 skill · 20 rule · 26 fdk-tool · 75 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
+**90 skill · 20 rule · 26 fdk-tool · 75 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
 
 ## Skills (gọi bằng `/<tên>`)
 
@@ -47,7 +47,7 @@
 - **`/trace-grader`** — Score the PATH an agent took (tool choice, ordering, retries, repeatability, grounding)
 - **`/wayfinder`** — Lập bản đồ cho một chunk việc QUÁ LỚN với một phiên agent và còn MÙ MỜ
 
-### utils (53)
+### utils (54)
 - **`/agent-reach`** — MUST USE when user wants to research/search/look up/find anything on the internet
 - **`/brandkit`** — Premium brand-kit image generation skill for creating high-end brand-guidelines boards, lo…
 - **`/cavecrew`** — Decision guide for delegating to caveman-style subagents
@@ -59,6 +59,7 @@
 - **`/caveman-stats`** — Show real token usage and estimated savings for the current session
 - **`/check-approve`** — Sinh sẵn 1-liner để trace 1 lệnh approve/return/reject của DMS trên log BE (docker) + FE p…
 - **`/cursor-animated-sites`** — Build an interactive "cursor-animated walkthrough" page on top of the /docs-site-macos gla…
+- **`/dark-mode-maker`** — Circle-reveal (giọt nước rơi + crest-glow liquid-glass) khi chuyển dark/light mode
 - **`/design-prim`** — Dọn slop UI/UX khi onboard 1 dự án bất kỳ
 - **`/design-taste-frontend`** — Anti-slop frontend skill for landing pages, portfolios, and redesigns
 - **`/design-taste-frontend-v1`** — The original v1 taste-skill, preserved for projects depending on its exact behavior
@@ -229,7 +230,7 @@
 - `wiki-sync.py`
 - `wikieval.py`
 
-## Neo bằng chứng — 235/235 năng lực có neo KHAI BÁO
+## Neo bằng chứng — 236/236 năng lực có neo KHAI BÁO
 **Đọc cho đúng: đây KHÔNG phải bằng chứng năng lực còn SỐNG.** Mỗi năng lực được map tất định tới một *điểm neo* bằng chứng trên đĩa (frontmatter `proof:` > rule-map > tests > self-test > golden > medic). Việc map là **tĩnh** — nó kiểm file/chuỗi có mặt, **không thực thi gì cả**. Nó bắt được ca 'năng lực này chẳng có test/golden/rule nào neo vào' (hữu ích thật), nhưng KHÔNG bắt được ca 'test có mà đỏ' hay 'engine có mà chết'. Muốn biết một dependency ngoài còn sống thì hỏi `harness/scripts/dep-health.py`. Chi tiết neo: `build-capabilities.py --capproof-json`.
 
 ## TRÙNG-ỨNG-VIÊN (18) — máy phát hiện, NGƯỜI phán (dedupe = vòng /propose riêng)
