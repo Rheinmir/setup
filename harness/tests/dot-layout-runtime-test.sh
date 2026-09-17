@@ -5,6 +5,10 @@
 #   (b) stop KHÔNG được đẻ thư mục trần llmwiki/ hoặc harness/ cạnh .llmwiki/ .harness/ (GH#153)
 #   (c) stop phải ghi session-provenance vào .llmwiki/wiki/sources/ (đúng cây), và vẽ wiki-graph nếu engine có
 #   (d) CI sinh cho downstream không chứa đường trần llmwiki/ · harness/ ngoài harness-src và $HOME/.claude
+#   (e) orca-graph lock/set (dispatch inline, không qua run/watch) phải tự in path control-room-kanban.html
+#       TRỎ VÀO DỰ ÁN ĐANG GỌI, không phải thư mục global-install (đo gãy thật 2026-09-17: build-control-room.py
+#       suy ROOT theo hình dạng thư mục quanh __file__ — global install có CÙNG hình dạng fdk/tools/+harness/scripts/
+#       như repo framework nên nhận nhầm, path in ra trỏ vào ~/.claude/harness/llmwiki/... thay vì dự án)
 set -uo pipefail
 SRC="${1:?usage: dot-layout-runtime-test.sh <repo-root>}"
 HERE="$(cd "$(dirname "$0")" && pwd)"; source "$HERE/downstream-fixture.sh"
@@ -45,6 +49,16 @@ BARE="$(grep -nE '(^|[ "(=])(llmwiki|harness)/' "$CI" | grep -vE 'harness-src|HO
 [ -z "$BARE" ] \
   && ok "(d) CI downstream không có đường trần" \
   || bad "(d) CI downstream còn đường trần (skip im lặng ở dự án dot)" "$(head -3 <<<"$BARE" | tr '\n' ' ')"
+
+# (e) orca-graph lock/set inline (không qua run/watch) phải tự in kanban path trỏ ĐÚNG vào $FX (downstream)
+mkdir -p "$FX/.llmwiki/graph"
+printf -- '# t\n\n### Task 1: T1\n**Verify:** true\n' > "$FX/PLAN.md"
+( cd "$FX" && python3 "$GH/harness/scripts/orca-graph.py" --dir .llmwiki/graph build PLAN.md --id e5 \
+    && python3 "$GH/harness/scripts/orca-graph.py" --dir .llmwiki/graph lock e5 t1 ) >/dev/null 2>&1
+E5="$(cd "$FX" && python3 "$GH/harness/scripts/orca-graph.py" --dir .llmwiki/graph set e5 t1 done)"
+grep -qF "$FX/.llmwiki/html/control-room-kanban.html" <<<"$E5" \
+  && ok "(e) orca-graph set in kanban path trỏ vào dự án downstream" \
+  || bad "(e) kanban path sai/thiếu" "$(grep -m1 'control-room-kanban' <<<"$E5" || echo 'không in path nào')"
 
 printf '\ndot-layout-runtime: %d PASS · %d FAIL\n' "$PASS" "$FAIL"
 [ "$FAIL" = 0 ]

@@ -8,10 +8,33 @@ Daemon `orca-graph.py watch` gọi lại file này mỗi khi có graph đổi; t
 
 Usage: build-control-room.py [--dirs d1 d2 ...] [-o <overstack>/html/control-room.html]
 """
-import argparse, html, importlib.util, json, os, re, time
+import argparse, html, importlib.util, json, os, re, subprocess, time
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
+
+def detect_root() -> Path:
+    """Dự án đang GỌI (git-root của CWD, hoặc CWD) luôn thắng trước — script này chạy dưới subprocess
+    kế thừa cwd của orca-graph.py, cwd đó chính là dự án downstream cần regen.
+    KHÔNG được suy ROOT theo hình dạng thư mục quanh __file__ (có fdk/tools/+harness/scripts/ →
+    "chắc là framework repo"): bản global-install ở ~/.claude/harness/ có ĐÚNG hình dạng đó (cùng
+    cây fdk/tools + harness/scripts được install-harness.sh copy sang) nên heuristic ấy luôn khớp
+    nhầm và trỏ path về thư mục CÀI ĐẶT thay vì dự án đang chạy — bug đo thật 2026-09-17, path in ra
+    trỏ vào ~/.claude/harness/llmwiki/html/... thay vì <dự án>/.llmwiki/html/...
+    __file__.parents[2] chỉ dùng khi CWD không có git (hiếm: chạy ad-hoc ngoài mọi repo)."""
+    try:
+        r = subprocess.run(["git", "-C", str(Path.cwd()), "rev-parse", "--show-toplevel"],
+                           capture_output=True, text=True, timeout=3)
+        if r.returncode == 0 and r.stdout.strip():
+            return Path(r.stdout.strip())
+    except Exception:
+        pass
+    repo = Path(__file__).resolve().parents[2]
+    if (repo / "fdk" / "tools").is_dir() and (repo / "harness" / "scripts").is_dir():
+        return repo
+    return Path.cwd()
+
+
+ROOT = detect_root()
 
 
 def _load(name: str, cands: list):

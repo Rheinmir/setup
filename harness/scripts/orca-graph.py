@@ -515,6 +515,7 @@ def emit(st: Store, g: dict, nid: str, to: str, by="", note="", op_key="", gen=N
     append_jsonl(st.events_p, ev)
     st.save(fold(g, read_jsonl(st.events_p), st.d))
     print(f"{nid}: {frm} → {to} (gen {new_gen}, rev {rev0+1})")
+    regen_room()
     return True
 
 
@@ -751,7 +752,7 @@ def cmd_run(a):
     cmd_lock(a)
     g = st.load()
     emit(st, g, a.node, "dispatched", by=a.by, note=" ".join(a.cmd)[:120], op_key=f"run:{a.node}:{int(time.time()*1000)}")
-    registry_add(Path(a.dir)); spawn_daemon(); regen_room()
+    registry_add(Path(a.dir)); spawn_daemon()
     gen = {x["id"]: x for x in st.load()["nodes"]}[a.node]["gen"]
     lp = st.locks_d / a.node
     root = _git_root(Path.cwd())
@@ -771,17 +772,19 @@ def cmd_run(a):
             tag = "strict: revert" if a.strict else "⚠ ngoài phạm vi (files)"
             note += f" | {tag} {len(oos)}: {','.join(oos[:5])}"
     emit(st, g, a.node, to, by=a.by, note=note, op_key=f"run-end:{a.node}:{gen}", gen=gen)
-    cmd_unlock(a); registry_prune(); regen_room()
+    cmd_unlock(a); registry_prune()
     sys.exit(0 if to == "done" else p.returncode or 1)
 
 
 def regen_room() -> None:
-    """Vẽ lại cockpit (rẻ ~100 ms) — gọi ở mỗi lượt daemon và mỗi lần run bắt đầu/kết thúc để trang LIVE."""
+    """Vẽ lại cockpit (rẻ ~100 ms) — gọi ở MỌI lần state đổi (emit) + mỗi lượt daemon/run để trang LIVE.
+    stdout KHÔNG bị nuốt: build-control-room.py tự in 3 dòng `→ <path>` (cockpit/detail/kanban) —
+    đó là cách duy nhất path lộ ra cho user, không dựa vào model tự nhớ."""
     br = Path(__file__).resolve().parents[2] / "fdk/tools/build-control-room.py"
     if not br.exists():
         br = Path.home() / ".claude/harness/fdk/tools/build-control-room.py"
     if br.exists():
-        subprocess.call([sys.executable, str(br)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.call([sys.executable, str(br)], stderr=subprocess.DEVNULL)
 
 
 def watch_once(build_room: bool = True) -> int:
