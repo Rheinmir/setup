@@ -30,6 +30,7 @@ LOOP_MAP = {
     "verify-before-commit": "dev-loop", "build-now-adapt-later": "dev-loop", "ship": "dev-loop",
     "new-skill": "dev-loop", "loop-runner": "dev-loop", "failure-flywheel": "dev-loop", "wikieval": "dev-loop",
     "skill-provenance": "dev-loop", "qc-code": "dev-loop", "teach-me": "dev-loop",
+    "qc-uiux": "dev-loop", "visual-qa": "dev-loop",
     "doyourmagic": "dev-loop",
     # orchestrate
     "orca-dispatch-reference": "orchestrate", "orca-onboard": "orchestrate", "orca-issue": "orchestrate",
@@ -54,7 +55,7 @@ LOOP_MAP = {
     # GỠ 09/09/2026: orca-cli · orchestration · computer-use — trùng tên với skill Orca.app TỰ QUẢN.
     "jenkins-agent-l3-deploy": "orchestrate",
     "brandkit": "utils", "check-approve": "utils",
-    "design-taste-frontend": "utils", "design-taste-frontend-v1": "utils", "docs-site-macos": "utils",
+    "design-taste-frontend": "utils", "design-taste-frontend-v1": "utils", "docs-site-macos": "utils", "dark-mode-maker": "utils",
     "web-crawl": "utils", "web-clone": "utils", "hallmark": "utils", "design-prim": "utils", "prd-grade-fe": "utils", "diagram": "utils",
     "find-skills": "utils", "full-output-enforcement": "utils", "gpt-taste": "utils",
     "high-end-visual-design": "utils", "image-to-code": "utils", "imagegen-frontend-mobile": "utils",

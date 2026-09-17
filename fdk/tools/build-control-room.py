@@ -15,11 +15,10 @@ from pathlib import Path
 def detect_root() -> Path:
     """Dự án đang GỌI (git-root của CWD, hoặc CWD) luôn thắng trước — script này chạy dưới subprocess
     kế thừa cwd của orca-graph.py, cwd đó chính là dự án downstream cần regen.
-    KHÔNG được suy ROOT theo hình dạng thư mục quanh __file__ (có fdk/tools/+harness/scripts/ →
-    "chắc là framework repo"): bản global-install ở ~/.claude/harness/ có ĐÚNG hình dạng đó (cùng
-    cây fdk/tools + harness/scripts được install-harness.sh copy sang) nên heuristic ấy luôn khớp
-    nhầm và trỏ path về thư mục CÀI ĐẶT thay vì dự án đang chạy — bug đo thật 2026-09-17, path in ra
-    trỏ vào ~/.claude/harness/llmwiki/html/... thay vì <dự án>/.llmwiki/html/...
+    KHÔNG được suy ROOT theo hình dạng thư mục quanh __file__: bản global-install có ĐÚNG hình dạng
+    thư mục con của repo framework (được installer copy nguyên cây sang) nên heuristic đoán-theo-hình-dạng
+    luôn khớp nhầm, trỏ path về thư mục CÀI ĐẶT thay vì dự án đang chạy — bug đo thật 2026-09-17,
+    path in ra trỏ vào thư mục cài global thay vì `<dự án>/.llmwiki/html/...`.
     __file__.parents[2] chỉ dùng khi CWD không có git (hiếm: chạy ad-hoc ngoài mọi repo)."""
     try:
         r = subprocess.run(["git", "-C", str(Path.cwd()), "rev-parse", "--show-toplevel"],

@@ -67,12 +67,18 @@ def _sha256(p: Path) -> str:
     return h.hexdigest()
 
 
+SKIP_DIRS = {"node_modules", ".git", "__pycache__", ".venv", "venv"}   # build/cache — gitignored, không phải "nguồn" cần integrity-hash
+
+
 def skill_files(name: str) -> dict[str, str]:
-    """{relpath-trong-skill-dir: sha256} cho mọi file thường trong skills/<name>/."""
+    """{relpath-trong-skill-dir: sha256} cho mọi file thường trong skills/<name>/.
+    Bỏ SKIP_DIRS (vd node_modules): npm tự regen từ package-lock.json, không track git, nội dung
+    lệch giữa các lần cài (symlink .bin, .package-lock.json) → hash trên nó không tái lập được,
+    báo MODIFIED giả (đo thật 2026-09-17: dark-mode-maker/visual-qa 190+/194 file là node_modules)."""
     root = SKILLS / name
     out = {}
     for p in sorted(root.rglob("*")):
-        if p.is_file():
+        if p.is_file() and not (SKIP_DIRS & set(p.relative_to(root).parts)):
             out[str(p.relative_to(root))] = _sha256(p)
     return out
 
