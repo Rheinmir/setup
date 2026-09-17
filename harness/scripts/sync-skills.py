@@ -57,6 +57,7 @@ LOOP_MAP = {
     "brandkit": "utils", "check-approve": "utils",
     "design-taste-frontend": "utils", "design-taste-frontend-v1": "utils", "docs-site-macos": "utils", "dark-mode-maker": "utils",
     "web-crawl": "utils", "web-clone": "utils", "hallmark": "utils", "design-prim": "utils", "prd-grade-fe": "utils", "diagram": "utils",
+    "timeline": "utils", "blur": "utils",
     "find-skills": "utils", "full-output-enforcement": "utils", "gpt-taste": "utils",
     "high-end-visual-design": "utils", "image-to-code": "utils", "imagegen-frontend-mobile": "utils",
     "imagegen-frontend-web": "utils", "industrial-brutalist-ui": "utils", "join-project": "utils",

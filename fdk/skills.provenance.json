@@ -125,6 +125,16 @@
       "source": "https://github.com/Panniantong/agent-reach",
       "version": "1.5.0"
     },
+    "blur": {
+      "files": {
+        "SKILL.md": "3c1d56c2b58f6e71c4d76ba4f8b0b25541152d44121c14face74c79f1f0ee95f",
+        "assets/blur.css": "f6c45d93b23cbd79cba744d7e4e213ef213c1b6f9557b16976224701f69b4434",
+        "assets/blur.html": "2da19d6d0946e2d3fa92cde68ec4936511e2dc8aeaeb6ddcd2bf36d900ecc193",
+        "assets/blur.js": "b86cbf40b542cf62ea73b2e793467b7693fc6a4a0acd029237d5687125f42622"
+      },
+      "recorded": "2026-09-17",
+      "source": "local-authored"
+    },
     "brandkit": {
       "files": {
         "SKILL.md": "e54b2f5b06b3c7166c2ee90cccb172968337e505e21a99e608fd43b4f2e13e40"
@@ -916,6 +926,16 @@
         "SKILL.md": "71693efbb83a7c486307a022284c0d027cf9e5952fb7c7b66b97249b9bffd562"
       },
       "recorded": "2026-09-09",
+      "source": "local-authored"
+    },
+    "timeline": {
+      "files": {
+        "SKILL.md": "4b00e8774684c4b8bd197ccd8526364d663e24eab8b9edae005b4be4ab228946",
+        "assets/timeline.css": "e501b29acd0e2964f19828caa09b4aadf4658998635fd951877907267577e622",
+        "assets/timeline.html": "ec839a2017880173e19b5d13094ef349d2aca32141c6f6f8766d82cbae31a5a1",
+        "assets/timeline.js": "de3261121f2c22e8785318a070a14e9685b17ffcc121d49139ae9ea0107b68b3"
+      },
+      "recorded": "2026-09-17",
       "source": "local-authored"
     },
     "tour-guide": {

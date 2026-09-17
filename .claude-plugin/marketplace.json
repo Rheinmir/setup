@@ -46,6 +46,7 @@
       "strict": false,
       "skills": [
         "./skills/agent-reach",
+        "./skills/blur",
         "./skills/brandkit",
         "./skills/build-now-adapt-later",
         "./skills/check-approve",
@@ -112,6 +113,7 @@
         "./skills/stitch-design-taste",
         "./skills/sync-template",
         "./skills/teach-me",
+        "./skills/timeline",
         "./skills/tour-guide",
         "./skills/tour-guide-supademo",
         "./skills/trace-grader",
