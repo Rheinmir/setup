@@ -53,27 +53,29 @@ không phải suy đoán trong đầu. Runtime: `harness/scripts/orca-graph.py`.
 - `build --max-parallel N` (mặc định 4): `lock` từ chối khi số node đang chạy đã đủ (PRD §12.1).
 
 ## Daemon & control-room (PRD §8.4: lease 60 s · heartbeat 15 s · reaper 15 s)
-- `run <id> <node> [--hb 15] [--lease-sec 60] -- <lệnh agent>` — thay 4 lệnh gõ tay: lock ngắn → dispatched → spawn lệnh → heartbeat theo pid → exit 0 thành `done` (verify tự chạy), khác 0 thành `failed`. Node không có `verify` bị từ chối headless (`--allow-unverified` để ép). Tự ghi thư mục vào registry `~/.orca-graph/registry.json` và tự spawn daemon nếu chưa có (`ORCA_GRAPH_NO_DAEMON=1` để tắt, `ORCA_GRAPH_HOME` đổi thư mục nhà).
+- `run <id> <node> [--hb 15] [--lease-sec 60] [--strict] -- <lệnh agent>` — thay 4 lệnh gõ tay: lock ngắn → dispatched → spawn lệnh → heartbeat theo pid → exit 0 thành `done` (verify tự chạy), khác 0 thành `failed`. Node không có `verify` bị từ chối headless (`--allow-unverified` để ép). Tự ghi thư mục vào registry `~/.orca-graph/registry.json` và tự spawn daemon nếu chưa có (`ORCA_GRAPH_NO_DAEMON=1` để tắt, `ORCA_GRAPH_HOME` đổi thư mục nhà).
+- **Allow-list ghi (GH#162):** khi trong git repo, `run` diff file THẬT bị đổi (tracked sửa + untracked mới, so với NGAY TRƯỚC lúc spawn) với `files` khai của node. Ngoài phạm vi → mặc định chỉ CẢNH BÁO (ghi vào `note` của event `done`); `--strict` mới phục hồi cứng (untracked mới bị xoá, tracked sửa bị `git checkout` về HEAD). Không phải git repo (vd store nằm ngoài repo) → tự bỏ qua, không lỗi. Bookkeeping của CHÍNH orca-graph (`.graph.json`/`.events.jsonl`/`.locks/`) luôn bị loại khỏi diff, không tính là "agent ghi".
 - `watch [--once] [--interval 5] [--idle-sec 600]` — **một daemon cho cả máy**, lock `daemon.lock` theo pid. Mỗi lượt chỉ đọc các dir trong registry còn node chạy (chi phí theo số node chạy, không theo số dự án mở; đo 84 ms/lượt kể cả khởi động Python): reaper lease hết → `unknown` → có verify thì reconcile ngay; in bảng sống/chết; registry rỗng quá idle-sec thì tự thoát; graph đổi thì regen control-room.
 - `fdk/tools/build-control-room.py` → `llmwiki/html/control-room.html` — trang đầu tiên mở ra, data-first (chỉ đọc registry, graph.json, problem-tree, tokens.jsonl, audit-log): đang chạy gì toàn máy + trần, tiến độ từng graph + node kẹt, nợ mở, chi phí hôm nay + khoảng cách tự chấm/audit. Tự refresh 5 s; daemon regen mỗi lượt và mỗi lần `run` bắt đầu/kết thúc nên trang LIVE không cần server. Bậc 2 (server + bấm pause/cancel) và bậc 3 (nhúng Orca) chưa làm, chỉ làm khi bậc 1 dùng hằng ngày thấy thiếu.
 - Sống/chết ≠ đúng/sai: daemon chỉ biết process còn hay mất; `done` hay làm lại vẫn do `verify` quyết. Process sống mà treo thì heartbeat vẫn xanh — đặt `**Verify:**` idempotent và trần thời gian theo node.
 
 ## Ngoài phạm vi PRD (nói thẳng, không giả vờ có)
-PostgreSQL ledger, sandbox/runtime isolation, secret gateway, ngân sách tiền, LangGraph, integration queue/candidate hash, compensation cho effect ngoài. Tool này là file-based cho một máy; cần những thứ trên thì đó là engine khác, không phải nâng cấp orca-graph.
+PostgreSQL ledger, secret gateway, ngân sách tiền, LangGraph, integration queue/candidate hash, compensation cho effect ngoài, sandbox process-level (chạy lệnh agent trong container/VM riêng). Tool này là file-based cho một máy; cần những thứ trên thì đó là engine khác, không phải nâng cấp orca-graph. (Allow-list GHI file — khác sandbox process — đã có, xem `run --strict` ở trên và GH#162.)
 
 ## Máy state mỗi node
 `proposed → ready (mọi deps xong) → locked → dispatched → done | done_unverified | failed | unknown`; `blocked` = HITL chờ người.
 Ba chiều tách nhau: `state` (vòng đời) · `verified` (verify rc 0?) · `fresh` (upstream làm lại sau khi mình xong → `stale`, chỉ cảnh báo).
 Luật vay từ Reprise PRD: op_key idempotent · CAS `--if-rev` · generation chặn kết quả cũ · lease hết → `unknown` không phải `failed` · không verify thì không `done`.
+- `qc` (GH#163, tuỳ chọn — trường `**QC:**` trong PLAN.md, nằm trong `spec_hash` như `verify`): lệnh review ĐỘC LẬP chạy SAU `verify` rc=0, KHÔNG chạy bởi cùng lời gọi đã tự verify (`by != "reconcile"` ở `emit()`) — tách vai reviewer khỏi vai người/agent vừa tự verify. Fail thì: qua `run`/`set done` trực tiếp → `emit()` demote `done`→`done_unverified` (giống verify fail); qua `reconcile` → kết luận `ready` (reconcile tự quyết dứt khoát, không để lửng done_unverified). Không khai `**QC:**` → hành vi y hệt trước đây (tương thích ngược).
 
 ## Rules
-- **Lock chỉ kiểm soát DISPATCH**, không kiểm soát side-effect của agent đã chạy. Muốn cách ly thật → worktree riêng mỗi task.
+- **Lock kiểm soát DISPATCH; side-effect ghi file có allow-list MỀM** (GH#162) — xem `run --strict` ở trên. Allow-list KHÔNG thay thế cách ly process thật → worktree riêng mỗi task vẫn là lựa chọn khi cần cô lập hoàn toàn (chạy lệnh, biến môi trường, side-effect ngoài filesystem).
 - **Không dispatch node `blocked`** (HITL) cho CLI headless — nó sẽ đoán thay người rồi im lặng (bài học 250626, giao ~1/5).
 - **Mọi câu trả lời của model về graph phải qua `answer`** với nhãn + nguồn mở được. Không có nguồn → chọn `không-biết` (0.3) thay vì bịa (0).
 - Deps `gợi-ý` (suy luận) phải được user xác nhận hoặc khai `**Depends:**` trước khi dispatch lớp đó.
 - Không xoá/sửa tay `events.jsonl`; sai thì append event sửa. `graph.json` chỉ là cache — hỏng thì `build` lại, state fold từ events.
 - HTML sinh ra: toggle sáng/tối + full path + thuật ngữ có giải nghĩa (luật fdk) — 2 file vẽ đã lo, đừng viết HTML tay.
-- Không làm được (nói thẳng): coupling ngầm không lộ ra file; rollback tự động khi agent chết nửa chừng; sync 2 chiều với sổ Orca; atlas > ~500 node cần graphviz; lock chỉ chặn dispatch, không chặn effect ngoài.
+- Không làm được (nói thẳng): coupling ngầm không lộ ra file; rollback tự động khi agent chết nửa chừng; sync 2 chiều với sổ Orca; atlas > ~500 node cần graphviz; allow-list chỉ soát filesystem, không soát network/process/secret access.
 
 ## Recap
 `/orca-graph` = PLAN → graph.json có deps → `ask` trả lời 5 câu hỏi tất định → dispatch theo lớp có khoá/lease/gen → state bền append-only → `answer`/`audit` chấm model theo rubric 1/0/0.3/0.5/bịa=0 → HTML 1 graph + atlas 2D.

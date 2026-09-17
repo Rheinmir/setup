@@ -2,8 +2,8 @@
 type: issue
 kind: foundation
 title: "orca-graph không có allow-listed write paths per-task — lock chỉ kiểm soát dispatch"
-status: open
-assignee: <chưa gán>
+status: in-progress
+assignee: claude-sonnet-5
 dispatch: human
 entry: /fdk
 priority: P3
@@ -46,3 +46,6 @@ Chưa gán người cụ thể — đây là quyết định kiến trúc (có n
 
 ## Origin
 Raised bởi phiên Claude Code (2026-09-17) khi user đưa ảnh kiến trúc "Atlas dispatch pipeline" để so sánh với `/orca-graph`. Bằng chứng: `skills/orca-graph/SKILL.md` (đọc trực tiếp trong phiên), `fdk/wiki/sources/adr/ADR-018-orca-graph-file-based-graph-engine.md`. Không có council/report riêng cho việc này — suy luận từ so sánh kiến trúc, gắn nhãn gợi-ý.
+
+## Thi hành (2026-09-17)
+User dùng `/goal` chỉ thị trực tiếp implement (quyết định human đã có). Theo PLAN [[170926-orca-graph-write-sandbox-qc-gate-PLAN]], node `t1` trong graph `170926-orca-graph-write-sandbox-qc-gate` — `harness/scripts/orca-graph.py` (`_git_root`, `_changed_files`, `enforce_allowed_paths`, cờ `run --strict`). Test: `harness/tests/test_orca_graph.py::test_run_allowed_paths_warn` + `::test_run_allowed_paths_strict_revert`, cả 2 xanh (pytest 22/22 toàn suite). Sơ đồ thiết kế: `llmwiki/html/170926-orca-graph-gates-architecture.html` (archify workflow).

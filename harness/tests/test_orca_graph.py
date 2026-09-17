@@ -33,6 +33,26 @@ PLAN = """# X
 """
 
 
+QC_PLAN = """# Y
+### Task 1: A
+**Files:**
+- Tạo: `a.py`
+**Interfaces:**
+- Consumes: —
+- Produces: —
+**Verify:** `true`
+**QC:** `true`
+### Task 2: B
+**Files:**
+- Sửa: `b.py`
+**Interfaces:**
+- Consumes: —
+- Produces: —
+**Verify:** `true`
+**QC:** `false`
+"""
+
+
 def run(d, *args):
     return subprocess.run([sys.executable, str(SCRIPT), "--dir", str(d), *args], capture_output=True, text=True, cwd=ROOT)
 
@@ -41,6 +61,12 @@ def setup(tmp_path):
     p = tmp_path / "x-PLAN.md"; p.write_text(PLAN, encoding="utf-8")
     r = run(tmp_path, "build", str(p)); assert r.returncode == 0, r.stderr
     return "x"
+
+
+def setup_qc(tmp_path):
+    p = tmp_path / "y-PLAN.md"; p.write_text(QC_PLAN, encoding="utf-8")
+    r = run(tmp_path, "build", str(p)); assert r.returncode == 0, r.stderr
+    return "y"
 
 
 def test_build_layers_and_conflict(tmp_path):
@@ -191,6 +217,93 @@ def test_run_wrapper(tmp_path):
     assert r.returncode != 0 and "không có verify" in r.stderr                        # t3 không verify → từ chối headless
     r = subprocess.run([sys.executable, str(SCRIPT), "--dir", str(tmp_path), "run", gid, "t3", "--allow-unverified", "--", "false"], capture_output=True, text=True, cwd=ROOT, env=env)
     assert "→ failed" in r.stdout, r.stdout + r.stderr
+
+
+def _mk_repo_and_graph(tmp_path):
+    """git root = tmp_path; store orca-graph = tmp_path/store (KHÁC chỗ — đúng thực tế llmwiki/graph/ nested
+    trong repo, không phải repo root, tránh nhầm bookkeeping của chính engine với file agent ghi)."""
+    store = tmp_path / "store"; store.mkdir()
+    p = tmp_path / "x-PLAN.md"; p.write_text(PLAN, encoding="utf-8")
+    r = run(store, "build", str(p)); assert r.returncode == 0, r.stderr
+    subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "config", "user.email", "t@t"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "config", "user.name", "t"], cwd=tmp_path, check=True)
+    return "x", store
+
+
+def test_run_allowed_paths_warn(tmp_path):
+    """GH#162 mặc định: file ghi ngoài `files` khai (t1 chỉ khai a.py) → CẢNH BÁO trong note, không xoá."""
+    gid, store = _mk_repo_and_graph(tmp_path)
+    (tmp_path / "a.py").write_text("x=1\n")
+    subprocess.run(["git", "add", "-A"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "-c", "commit.gpgsign=false", "commit", "-q", "-m", "init"], cwd=tmp_path, check=True)
+    env = dict(os.environ, ORCA_GRAPH_HOME=str(tmp_path / "home"), ORCA_GRAPH_NO_DAEMON="1")
+    r = subprocess.run([sys.executable, str(SCRIPT), "--dir", str(store), "run", gid, "t1", "--hb", "0.2", "--",
+                         "sh", "-c", "echo z >> a.py && echo y > out-of-scope.py"],
+                        capture_output=True, text=True, cwd=tmp_path, env=env)
+    assert r.returncode == 0 and "→ done" in r.stdout, r.stdout + r.stderr
+    events = [json.loads(ln) for ln in (store / f"{gid}.events.jsonl").read_text().splitlines()]
+    last = [e for e in events if e["node"] == "t1" and e["to"] == "done"][-1]
+    assert "ngoài phạm vi" in last["note"] and "out-of-scope.py" in last["note"], last
+    assert (tmp_path / "out-of-scope.py").exists()   # mặc định chỉ cảnh báo, KHÔNG xoá
+
+
+def test_run_allowed_paths_strict_revert(tmp_path):
+    """GH#162 --strict: tracked ngoài phạm vi → git checkout phục hồi; untracked mới ngoài phạm vi → xoá."""
+    gid, store = _mk_repo_and_graph(tmp_path)
+    (tmp_path / "a.py").write_text("x=1\n"); (tmp_path / "b.py").write_text("y=1\n")
+    subprocess.run(["git", "add", "-A"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "-c", "commit.gpgsign=false", "commit", "-q", "-m", "init"], cwd=tmp_path, check=True)
+    env = dict(os.environ, ORCA_GRAPH_HOME=str(tmp_path / "home"), ORCA_GRAPH_NO_DAEMON="1")
+    r = subprocess.run([sys.executable, str(SCRIPT), "--dir", str(store), "run", gid, "t1", "--strict", "--hb", "0.2", "--",
+                         "sh", "-c", "echo z >> b.py && echo y > new-out.py"],
+                        capture_output=True, text=True, cwd=tmp_path, env=env)
+    assert r.returncode == 0 and "→ done" in r.stdout, r.stdout + r.stderr
+    assert not (tmp_path / "new-out.py").exists()          # untracked mới ngoài phạm vi → xoá
+    assert (tmp_path / "b.py").read_text() == "y=1\n"        # tracked ngoài phạm vi → checkout phục hồi HEAD
+
+
+def test_qc_field_parsed_and_in_spec_hash(tmp_path):
+    """GH#163: `**QC:**` parse đúng vào node['qc'], và nằm trong hợp đồng spec_hash (đổi qc → stale)."""
+    gid = setup_qc(tmp_path)
+    g = json.loads((tmp_path / f"{gid}.graph.json").read_text())
+    nodes = {n["id"]: n for n in g["nodes"]}
+    assert nodes["t1"]["qc"] == "true" and nodes["t2"]["qc"] == "false"
+    h_before = nodes["t2"]["spec_hash"]
+    p2 = tmp_path / "y-PLAN.md"; p2.write_text(QC_PLAN.replace("**QC:** `false`", "**QC:** `true`"), encoding="utf-8")
+    r = run(tmp_path, "build", str(p2), "--id", gid); assert r.returncode == 0, r.stderr
+    g2 = json.loads((tmp_path / f"{gid}.graph.json").read_text())
+    assert {n["id"]: n for n in g2["nodes"]}["t2"]["spec_hash"] != h_before   # đổi lệnh QC → hợp đồng đổi
+
+
+def test_qc_gate_blocks_done_via_run(tmp_path):
+    """GH#163: verify xanh nhưng qc đỏ → `run` KHÔNG cho done, tự demote qua emit() (giống cơ chế verify hiện có)."""
+    gid = setup_qc(tmp_path)
+    env = dict(os.environ, ORCA_GRAPH_HOME=str(tmp_path / "home"), ORCA_GRAPH_NO_DAEMON="1")
+    r = subprocess.run([sys.executable, str(SCRIPT), "--dir", str(tmp_path), "run", gid, "t2", "--hb", "0.2", "--", "true"],
+                        capture_output=True, text=True, cwd=ROOT, env=env)
+    assert "→ done_unverified" in r.stdout, r.stdout + r.stderr
+    events = [json.loads(ln) for ln in (tmp_path / f"{gid}.events.jsonl").read_text().splitlines()]
+    last = [e for e in events if e["node"] == "t2"][-1]
+    assert last["to"] == "done_unverified" and "qc rc=" in last["note"], last
+    # t1 (qc=true) phải qua trót lọt bình thường — chứng minh gate không chặn nhầm ca hợp lệ
+    r2 = subprocess.run([sys.executable, str(SCRIPT), "--dir", str(tmp_path), "run", gid, "t1", "--hb", "0.2", "--", "true"],
+                         capture_output=True, text=True, cwd=ROOT, env=env)
+    assert "→ done" in r2.stdout and "done_unverified" not in r2.stdout, r2.stdout + r2.stderr
+
+
+def test_qc_gate_blocks_done_via_reconcile(tmp_path):
+    """GH#163: reconcile tự chạy verify RỒI qc — qc fail thì kết luận `ready` (không phải done_unverified) và mở khoá."""
+    gid = setup_qc(tmp_path)
+    run(tmp_path, "lock", gid, "t2"); run(tmp_path, "set", gid, "t2", "dispatched", "--op-key", "k1")
+    r = run(tmp_path, "reconcile", gid, "t2")
+    assert "t2: dispatched → ready" in r.stdout, r.stdout + r.stderr
+    events = [json.loads(ln) for ln in (tmp_path / f"{gid}.events.jsonl").read_text().splitlines()]
+    assert "qc rc=1 FAIL" in events[-1]["note"], events[-1]
+    g = json.loads((tmp_path / f"{gid}.graph.json").read_text())
+    n = {x["id"]: x for x in g["nodes"]}["t2"]
+    assert n["state"] == "ready"
+    assert not (tmp_path / f"{gid}.locks" / "t2").exists()   # reconcile fail → mở khoá
 
 
 def test_watch_once(tmp_path):

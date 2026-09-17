@@ -1,0 +1,185 @@
+{
+ "id": "170926-orca-graph-write-sandbox-qc-gate",
+ "plan": "llmwiki/wiki/sources/draft/170926-orca-graph-write-sandbox-qc-gate-PLAN.md",
+ "built": "2026-09-17T09:52:50+0700",
+ "nodes": [
+  {
+   "id": "t1",
+   "title": "Allow-listed write paths trong `cmd_run` (GH#162)",
+   "files": [
+    "harness/scripts/orca-graph.py"
+   ],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "`_git_root()`, `_changed_files()`, `enforce_allowed_paths()`, cờ `--strict` trên `run`"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/setup/setup && rtk proxy python3 -m pytest harness/tests/test_orca_graph.py -k \"allowed_paths\" -q",
+   "spec_hash": "2da0c2190e250c93",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "2da0c2190e250c93"
+  },
+  {
+   "id": "t2",
+   "title": "Tách vai QC khỏi Verify — trường `**QC:**` + gate trong `emit()`/`cmd_reconcile` (GH#163)",
+   "files": [
+    "harness/scripts/orca-graph.py"
+   ],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "trường node `qc`, gate trong `emit()` + `cmd_reconcile`"
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/setup/setup && rtk proxy python3 -m pytest harness/tests/test_orca_graph.py -k \"qc_gate\" -q",
+   "spec_hash": "34011494487a5ce8",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "34011494487a5ce8"
+  },
+  {
+   "id": "t3",
+   "title": "Cập nhật tài liệu — SKILL.md máy state + Rules",
+   "files": [
+    "skills/orca-graph/SKILL.md"
+   ],
+   "consumes": [
+    "Task 1 Produces (`--strict`), Task 2 Produces (`**QC:**`)"
+   ],
+   "produces": [
+    "—"
+   ],
+   "deps": [
+    "t1",
+    "t2"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "grep -q \"QC:\" skills/orca-graph/SKILL.md && grep -q \"allow\" skills/orca-graph/SKILL.md",
+   "spec_hash": "76f719b96fba162a",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "76f719b96fba162a"
+  }
+ ],
+ "layers": [
+  [
+   "t1"
+  ],
+  [
+   "t2"
+  ],
+  [
+   "t3"
+  ]
+ ],
+ "parent": null,
+ "depth": 0,
+ "plan_version": 1,
+ "superseded": [],
+ "max_parallel": 4,
+ "conflicts": [],
+ "links": [
+  {
+   "to_graph": "120926-orca-graph-v2",
+   "to_node": "t1",
+   "via": [
+    "harness/scripts/orca-graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "120926-orca-graph-v2",
+   "to_node": "t2",
+   "via": [
+    "harness/scripts/orca-graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "120926-orca-graph-v2",
+   "to_node": "t3",
+   "via": [
+    "harness/scripts/orca-graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "120926-orca-graph-v2",
+   "to_node": "t4",
+   "via": [
+    "harness/scripts/orca-graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "120926-orca-graph-v2",
+   "to_node": "t5",
+   "via": [
+    "harness/scripts/orca-graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "120926-orca-graph-v2",
+   "to_node": "t7",
+   "via": [
+    "skills/orca-graph/SKILL.md"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "140926-orca-graph-daemon",
+   "to_node": "t1",
+   "via": [
+    "harness/scripts/orca-graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "140926-orca-graph-daemon",
+   "to_node": "t2",
+   "via": [
+    "harness/scripts/orca-graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "140926-orca-graph-daemon",
+   "to_node": "t3",
+   "via": [
+    "harness/scripts/orca-graph.py",
+    "skills/orca-graph/SKILL.md"
+   ],
+   "kind": "touches-same-file"
+  }
+ ],
+ "control": "active",
+ "schema_version": 1,
+ "checksum": "f25aeae5fe34513e"
+}

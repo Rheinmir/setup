@@ -2,8 +2,8 @@
 type: issue
 kind: feature-gap
 title: "orca-graph không tách vai QC khỏi Verify — verify: chỉ là 1 lệnh shell, không có reviewer độc lập"
-status: open
-assignee: <chưa gán>
+status: in-progress
+assignee: claude-sonnet-5
 dispatch: human
 entry: /fdk
 priority: P3
@@ -47,3 +47,6 @@ Chưa gán người cụ thể — quyết định kiến trúc (thêm chiều r
 
 ## Origin
 Raised bởi phiên Claude Code (2026-09-17) khi user đưa ảnh kiến trúc "Atlas dispatch pipeline" để so sánh với `/orca-graph`. Bằng chứng: `skills/orca-graph/SKILL.md` (đọc trực tiếp trong phiên), `harness/scripts/orca-graph.py` (đọc trực tiếp). Không có council/report riêng — suy luận từ so sánh kiến trúc, gắn nhãn gợi-ý.
+
+## Thi hành (2026-09-17)
+User dùng `/goal` chỉ thị trực tiếp implement (quyết định human đã có). Theo PLAN [[170926-orca-graph-write-sandbox-qc-gate-PLAN]], node `t2` trong graph `170926-orca-graph-write-sandbox-qc-gate` — trường `**QC:**` trong `parse_plan`, gate trong `emit()` (guard `by != "reconcile"`, giống pattern `verify`) + `cmd_reconcile` (quyết `ready` khi qc fail). Test: `harness/tests/test_orca_graph.py::test_qc_field_parsed_and_in_spec_hash`, `::test_qc_gate_blocks_done_via_run`, `::test_qc_gate_blocks_done_via_reconcile`, cả 3 xanh (pytest 22/22 toàn suite). Sơ đồ thiết kế: `llmwiki/html/170926-orca-graph-gates-architecture.html` (archify workflow).

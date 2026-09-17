@@ -209,7 +209,7 @@ def parse_plan(text: str) -> list:
         if m:
             cur = {"id": tid(m.group(1)), "num": tid(m.group(1)), "title": m.group(2).strip(), "files": [],
                    "consumes": [], "produces": [], "deps": [], "deps_conf": "chắc", "kind": "build",
-                   "mode": "afk", "verify": "", "produces_for": []}
+                   "mode": "afk", "verify": "", "qc": "", "produces_for": []}
             tasks.append(cur); continue
         if cur is None or ln.startswith("## "):
             if ln.startswith("## "):
@@ -219,7 +219,7 @@ def parse_plan(text: str) -> list:
         fm = re.match(r"^- (Tạo|Sửa|Test|Xoá|Create|Modify):\s*`([^`]+)`", s)
         if fm:
             cur["files"].append(fm.group(2).split(":")[0]); continue
-        for key, field in (("Depends", "deps_raw"), ("Kind", "kind"), ("Mode", "mode"), ("Verify", "verify")):
+        for key, field in (("Depends", "deps_raw"), ("Kind", "kind"), ("Mode", "mode"), ("Verify", "verify"), ("QC", "qc")):
             km = re.match(rf"^\*\*{key}:\*\*\s*(.*)$", s)
             if km:
                 cur[field] = km.group(1).strip().strip("`")
@@ -254,8 +254,9 @@ def parse_plan(text: str) -> list:
 
 
 def spec_hash(n: dict) -> str:
-    """Băm HỢP ĐỒNG của node (title/files/deps/verify/produces) — đổi là node đã-xong thành stale (PRD §7.3, §10.1)."""
-    return hashlib.sha256(json.dumps({k: n.get(k) for k in ("title", "files", "deps", "verify", "produces")}, sort_keys=True, ensure_ascii=False).encode()).hexdigest()[:16]
+    """Băm HỢP ĐỒNG của node (title/files/deps/verify/qc/produces) — đổi là node đã-xong thành stale (PRD §7.3, §10.1).
+    `qc` (GH#163) nằm trong hợp đồng giống `verify`: đổi lệnh QC cũng phải làm node done cũ thành stale."""
+    return hashlib.sha256(json.dumps({k: n.get(k) for k in ("title", "files", "deps", "verify", "qc", "produces")}, sort_keys=True, ensure_ascii=False).encode()).hexdigest()[:16]
 
 
 def toposort(nodes: dict) -> list:
@@ -503,6 +504,10 @@ def emit(st: Store, g: dict, nid: str, to: str, by="", note="", op_key="", gen=N
                 to = "done_unverified"; note = (note + f" verify rc={rc}").strip()
         if to == "done" and not n.get("verify"):
             to = "done_unverified"; note = (note + " (không có verify)").strip()
+        if to == "done" and n.get("qc") and by != "reconcile":
+            rc = subprocess.call(n["qc"], shell=True)
+            if rc != 0:
+                to = "done_unverified"; note = (note + f" qc rc={rc}").strip()
     new_gen = n["gen"] + 1 if to == "dispatched" else n["gen"]
     frm, rev0 = n["state"], n["rev"]
     ev = {"ts": now(), "node": nid, "from": frm, "to": to, "by": by, "op_key": op_key, "gen": new_gen, "rev": n["rev"] + 1, "note": note,
@@ -586,7 +591,14 @@ def cmd_reconcile(a):
         print(f"{a.node} không có verify → không tự kết luận được; cần người: set done_user_reported hoặc ready"); return
     rc = subprocess.call(n["verify"], shell=True)
     to = "done" if rc == 0 else "ready"
-    emit(st, g, a.node, to, by="reconcile", note=f"verify rc={rc}", op_key=f"reconcile:{a.node}:{n['gen']}:{rc}")
+    note = f"verify rc={rc}"
+    qrc = None
+    if to == "done" and n.get("qc"):
+        qrc = subprocess.call(n["qc"], shell=True)
+        if qrc != 0:
+            to = "ready"; note += f" | qc rc={qrc} FAIL"
+    op_key = f"reconcile:{a.node}:{n['gen']}:{rc}" + (f":{qrc}" if qrc is not None else "")
+    emit(st, g, a.node, to, by="reconcile", note=note, op_key=op_key)
     if to != "done":
         cmd_unlock(a)
 
@@ -684,6 +696,49 @@ def spawn_daemon() -> None:
                      stdout=open(home() / "watch.log", "a"), stderr=subprocess.STDOUT, start_new_session=True)
 
 
+def _git_root(cwd: Path):
+    """Repo git gốc của cwd, None nếu không trong git repo (vd tmp_path test) — bỏ qua enforcement khi None."""
+    try:
+        r = subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=cwd, capture_output=True, text=True)
+        return Path(r.stdout.strip()) if r.returncode == 0 else None
+    except OSError:
+        return None
+
+
+def _changed_files(root: Path) -> dict:
+    """{path: "M"|"??"} — tracked đã sửa vs untracked mới, đường dẫn tương đối gốc git (khớp quy ước `files` PLAN.md)."""
+    r = subprocess.run(["git", "status", "--porcelain"], cwd=root, capture_output=True, text=True)
+    out = {}
+    for ln in r.stdout.splitlines():
+        if len(ln) < 4:
+            continue
+        code, path = ln[:2], ln[3:].split(" -> ")[-1].strip()
+        if path:
+            out[path] = "??" if code.strip() == "??" else "M"
+    return out
+
+
+def enforce_allowed_paths(root: Path, before: dict, allowed: list, strict: bool, ignore_prefix: str = "") -> list:
+    """GH#162: chunk ghi NGOÀI `files` khai trong node — cảnh báo (mặc định) hoặc phục hồi cứng (--strict).
+    Chỉ xét file MỚI đổi trong lần chạy này (after − before), không đụng đổi có từ trước khi spawn.
+    `ignore_prefix` = thư mục store orca-graph (.graph.json/.events.jsonl/.locks) — bookkeeping của CHÍNH
+    engine, không phải agent tự ghi, heartbeat rewrite lock file liên tục trong lúc chạy sẽ tự lộ ra đây
+    nếu không loại trừ."""
+    after = _changed_files(root)
+    touched = {p: c for p, c in after.items() if p not in before and not (ignore_prefix and p.startswith(ignore_prefix))}
+    out_of_scope = [p for p in touched if p not in set(allowed)]
+    if out_of_scope and strict:
+        for p in out_of_scope:
+            if touched[p] == "??":
+                try:
+                    (root / p).unlink()
+                except OSError:
+                    pass
+            else:
+                subprocess.call(["git", "checkout", "--", p], cwd=root)
+    return out_of_scope
+
+
 def cmd_run(a):
     """Chạy MỘT node headless: lock ngắn → dispatched → spawn lệnh → heartbeat theo pid → done/failed tự động."""
     st = Store(Path(a.dir), a.id); g = st.load()
@@ -699,6 +754,8 @@ def cmd_run(a):
     registry_add(Path(a.dir)); spawn_daemon(); regen_room()
     gen = {x["id"]: x for x in st.load()["nodes"]}[a.node]["gen"]
     lp = st.locks_d / a.node
+    root = _git_root(Path.cwd())
+    before = _changed_files(root) if root else {}
     p = subprocess.Popen(a.cmd)
     while p.poll() is None:
         time.sleep(a.hb)
@@ -706,7 +763,14 @@ def cmd_run(a):
             lk = json.loads(lp.read_text()); lk["lease_until"] = time.time() + a.lease_sec; lk["pid"] = p.pid; atomic_write(lp, json.dumps(lk))
     g = st.load()
     to = "done" if p.returncode == 0 else "failed"
-    emit(st, g, a.node, to, by=a.by, note=f"rc={p.returncode}", op_key=f"run-end:{a.node}:{gen}", gen=gen)
+    note = f"rc={p.returncode}"
+    if to == "done" and root is not None and n.get("files"):
+        store_rel = os.path.relpath(str(Path(a.dir).resolve()), str(root))
+        oos = enforce_allowed_paths(root, before, n["files"], a.strict, ignore_prefix=store_rel + os.sep if not store_rel.startswith("..") else "")
+        if oos:
+            tag = "strict: revert" if a.strict else "⚠ ngoài phạm vi (files)"
+            note += f" | {tag} {len(oos)}: {','.join(oos[:5])}"
+    emit(st, g, a.node, to, by=a.by, note=note, op_key=f"run-end:{a.node}:{gen}", gen=gen)
     cmd_unlock(a); registry_prune(); regen_room()
     sys.exit(0 if to == "done" else p.returncode or 1)
 
@@ -888,6 +952,7 @@ def main(argv=None):
     p = sp.add_parser("show"); p.add_argument("id"); p.set_defaults(f=cmd_show)
     p = sp.add_parser("run"); p.add_argument("id"); p.add_argument("node")
     p.add_argument("--hb", type=float, default=15); p.add_argument("--lease-sec", type=int, default=60); p.add_argument("--allow-unverified", action="store_true"); p.add_argument("--by", default="")
+    p.add_argument("--strict", action="store_true", help="GH#162: phục hồi cứng file ghi ngoài `files` khai (mặc định chỉ cảnh báo trong note)")
     p.set_defaults(f=cmd_run)
     p = sp.add_parser("watch"); p.add_argument("--once", action="store_true"); p.add_argument("--interval", type=float, default=5); p.add_argument("--idle-sec", type=int, default=600); p.set_defaults(f=cmd_watch)
     p = sp.add_parser("lint"); p.add_argument("id"); p.set_defaults(f=cmd_lint)
