@@ -1,0 +1,419 @@
+{
+ "id": "180926-ship-scroll-originals",
+ "plan": "llmwiki/wiki/sources/draft/180926-ship-scroll-originals-PLAN.md",
+ "built": "2026-09-18T11:56:00+0700",
+ "nodes": [
+  {
+   "id": "t1",
+   "title": "ge-acceptance trỏ đúng đường dẫn PLAN đã archive",
+   "files": [
+    "harness/tests/ge-acceptance-test.sh"
+   ],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "—"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "fix",
+   "mode": "afk",
+   "verify": "bash harness/tests/ge-acceptance-test.sh .",
+   "qc": "",
+   "spec_hash": "069a5f4d791cd951",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "stale",
+   "verified": "verified",
+   "done_spec_hash": "960dc0317465744b"
+  },
+  {
+   "id": "t2",
+   "title": "ghi lại provenance cho skill tidy (thay đổi 1 dòng doc của phiên dọn draft)",
+   "files": [
+    "fdk/skills.provenance.json"
+   ],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "—"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "fix",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/skill-provenance.py check --ci",
+   "qc": "",
+   "spec_hash": "0324c0438abc82b3",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "stale",
+   "verified": "verified",
+   "done_spec_hash": "febd6ac1d6c9908e"
+  },
+  {
+   "id": "t3",
+   "title": "GH#166 — verify/QC của orca-graph chạy dưới bash, không phải sh",
+   "files": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "—"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "fix",
+   "mode": "afk",
+   "verify": "python3 -m pytest -q harness/tests/test_orca_graph.py",
+   "qc": "",
+   "spec_hash": "acc254ffd995b8d0",
+   "state": "done",
+   "gen": 1,
+   "rev": 4,
+   "attempts": 1,
+   "fresh": "stale",
+   "verified": "verified",
+   "done_spec_hash": "708c46aae427b1bb"
+  },
+  {
+   "id": "t4",
+   "title": "GH#162 + GH#163 — xác nhận đã implement (run --strict allow-list, trường **QC:**) rồi đóng issue",
+   "files": [
+    "llmwiki/wiki/sources/draft/170926-orca-graph-no-write-sandbox.md"
+   ],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "—"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "review",
+   "mode": "afk",
+   "verify": "grep -q -- '--strict' harness/scripts/orca-graph.py && grep -q '\"qc\"' harness/scripts/orca-graph.py",
+   "qc": "",
+   "spec_hash": "9aee5b3a6f9defc9",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "stale",
+   "verified": "verified",
+   "done_spec_hash": "9c13c91eb07c9d85"
+  },
+  {
+   "id": "t5",
+   "title": "ci-local xanh trọn 67/67",
+   "files": [
+    "fdk/tools/ci-local.py"
+   ],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "—"
+   ],
+   "deps": [
+    "t1",
+    "t2",
+    "t3"
+   ],
+   "deps_conf": "chắc",
+   "kind": "test",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/ci-local.py 2>&1 | tail -1 | grep -q '67/67'",
+   "qc": "",
+   "spec_hash": "2fb63803fb56ac1a",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "stale",
+   "verified": "verified",
+   "done_spec_hash": "fd93997533ca37c2"
+  },
+  {
+   "id": "t6",
+   "title": "commit A — scroll-effects bản gốc + query-proxy + egress + GH#166 + fix CI",
+   "files": [
+    "skills/scroll-effects/SKILL.md"
+   ],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "—"
+   ],
+   "deps": [
+    "t5"
+   ],
+   "deps_conf": "chắc",
+   "kind": "release",
+   "mode": "afk",
+   "verify": "git log -1 --format=%s | grep -q scroll",
+   "qc": "",
+   "spec_hash": "8cd0a0c3007f7378",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "stale",
+   "verified": "verified",
+   "done_spec_hash": "1e089ddd75e5bf9a"
+  },
+  {
+   "id": "t7",
+   "title": "commit B — dọn draft sprawl của phiên tidy (archive/need-review/provenance)",
+   "files": [
+    "llmwiki/wiki/index.md"
+   ],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "—"
+   ],
+   "deps": [
+    "t6"
+   ],
+   "deps_conf": "chắc",
+   "kind": "cleanup",
+   "mode": "afk",
+   "verify": "test -z \"$(git status --short -- llmwiki/wiki/sources/draft llmwiki/wiki/draft)\"",
+   "qc": "",
+   "spec_hash": "5b3690004f8eaf2a",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "5b3690004f8eaf2a"
+  },
+  {
+   "id": "t8",
+   "title": "push lên origin/orca",
+   "files": [
+    "fdk/tools/ci-local.py"
+   ],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "—"
+   ],
+   "deps": [
+    "t7"
+   ],
+   "deps_conf": "chắc",
+   "kind": "deploy",
+   "mode": "hitl",
+   "verify": "test \"$(git rev-parse HEAD)\" = \"$(git rev-parse origin/orca)\"",
+   "qc": "",
+   "spec_hash": "a6ce3b08aa60c741",
+   "state": "blocked",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t9",
+   "title": "GH#165 + GH#161 — CI remote xanh sau push thì đóng 2 issue ci-fail cũ",
+   "files": [
+    "llmwiki/wiki/sources/ISSUES.md"
+   ],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "—"
+   ],
+   "deps": [
+    "t8"
+   ],
+   "deps_conf": "chắc",
+   "kind": "review",
+   "mode": "hitl",
+   "verify": "gh run list --branch orca --limit 3 --json conclusion --jq '.[].conclusion' | grep -qv failure",
+   "qc": "",
+   "spec_hash": "ac213f994439efb2",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t10",
+   "title": "GH#160 — land skill br + 12 tool về canonical (cần file từ global harness máy gốc)",
+   "files": [
+    "skills/br/SKILL.md",
+    "fdk/tools/br-run.py"
+   ],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "—"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "migrate",
+   "mode": "hitl",
+   "verify": "test -f skills/br/SKILL.md && test -f fdk/tools/br-run.py",
+   "qc": "",
+   "spec_hash": "ec7c37d9db97b9a3",
+   "state": "blocked",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  }
+ ],
+ "layers": [
+  [
+   "t1",
+   "t10",
+   "t2",
+   "t3",
+   "t4"
+  ],
+  [
+   "t5"
+  ],
+  [
+   "t6"
+  ],
+  [
+   "t7"
+  ],
+  [
+   "t8"
+  ],
+  [
+   "t9"
+  ]
+ ],
+ "parent": null,
+ "depth": 0,
+ "plan_version": 4,
+ "superseded": [],
+ "max_parallel": 4,
+ "conflicts": [],
+ "links": [
+  {
+   "to_graph": "120926-orca-graph-v2",
+   "to_node": "t1",
+   "via": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "120926-orca-graph-v2",
+   "to_node": "t2",
+   "via": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "120926-orca-graph-v2",
+   "to_node": "t3",
+   "via": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "120926-orca-graph-v2",
+   "to_node": "t4",
+   "via": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "120926-orca-graph-v2",
+   "to_node": "t5",
+   "via": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "140926-orca-graph-daemon",
+   "to_node": "t1",
+   "via": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "140926-orca-graph-daemon",
+   "to_node": "t2",
+   "via": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "140926-orca-graph-daemon",
+   "to_node": "t3",
+   "via": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "170926-orca-graph-write-sandbox-qc-gate",
+   "to_node": "t1",
+   "via": [
+    "harness/scripts/orca-graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "170926-orca-graph-write-sandbox-qc-gate",
+   "to_node": "t2",
+   "via": [
+    "harness/scripts/orca-graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "290726-ge-test",
+   "to_node": "tt7",
+   "via": [
+    "harness/tests/ge-acceptance-test.sh"
+   ],
+   "kind": "touches-same-file"
+  }
+ ],
+ "control": "active",
+ "schema_version": 1,
+ "checksum": "72385542e350b6ec"
+}

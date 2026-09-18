@@ -158,7 +158,7 @@ def secondary_memory(root: str, session: str) -> None:
     để context/sửa-vụn được lưu durable + visualizable mà KHÔNG cần agent nhớ gõ tay (leverage
     Meadows #6 — cấu trúc luồng thông tin, không phải kỷ luật người). Mỗi lần dừng, khi phiên có
     SỬA thật (git dirty): (a) `scratch-log auto` tự điền why từ git nếu phiên chưa có why thủ công;
-    (b) `scratch-log distill` gom → sources/DDMMYY-session-provenance.md; (c) `memory-map` regenerate
+    (b) `scratch-log distill` gom → sources/provenance/DDMMYY-session-provenance.md; (c) `memory-map` regenerate
     llmwiki/html/memory-map.html; (d) `mem-rank episode` tự ghi episode có-cấu-trúc (did=commit subject,
     files=đổi trong phiên) vào tầng episodic — trước bản vá này layer này CHƯA từng được gọi tự động
     (memory.jsonl rỗng, phải gõ tay `/record-episode`); giờ mỗi phiên có sửa thật đều để lại 1 episode

@@ -53,6 +53,13 @@ assert "lonely-PLAN → giữ" 1 "$(echo "$out" | grep 'lonely-PLAN' | grep -c '
 assert "finished-PLAN → OUTDATED" 1 "$(echo "$out" | grep 'finished-PLAN' | grep -c 'OUTDATED')"
 rm "$D/010126-lonely-PLAN.md" "$D/010126-finished-PLAN.md"
 
+echo "[2d] draft GIỮ trích file đã chết → plan báo nội dung có thể outdated (không đổi action)"
+printf -- '---\ntype: draft\nstatus: proposed\n---\n# x\nsửa `harness/scripts/khong-ton-tai.py`\n' > "$D/010126-deadref.md"
+out=$(python3 "$TIDY" plan --root .)
+assert "deadref → cảnh báo ref chết" 1 "$(echo "$out" | grep -c 'ref chết: harness/scripts/khong-ton-tai.py')"
+assert "deadref vẫn GIỮ" 1 "$(echo "$out" | grep '010126-deadref.md' | grep -c 'TREO')"
+rm "$D/010126-deadref.md"
+
 echo "[3] D1: đích gitignored + file tracked → KHÔNG dời (bảo vệ khỏi xoá khỏi repo)"
 echo "llmwiki/wiki/sources/draft/archive/" > .gitignore; git add .gitignore; git -c core.hooksPath=/dev/null commit -qm ign
 python3 "$TIDY" apply --root . >/dev/null
@@ -69,6 +76,18 @@ assert "archive/INDEX.md có dòng" 1 "$(grep -c old-done "$H/archive/INDEX.md")
 echo "[5] check sau apply: 10 file → exit 0 (vòng khép)"
 set +e; python3 "$TIDY" check --root . >/dev/null; rc=$?; set -e
 assert "sau archive còn 10 → exit 0" 0 "$rc"
+
+echo "[5b] html archive kéo theo sidecar cùng stem; weekly-YYYY-Wnn được coi là report có ngày"
+printf '<html>x</html>' > "$H/010126-old-seq.html"; printf 'png' > "$H/010126-old-seq.visual-check.1440x900.dark.png"
+printf '{}' > "$H/010126-old-seq.spec.json"
+for n in 010326-a 010426-b; do printf '<html>r</html>' > "$H/$n.html"; done
+printf '<html>w</html>' > "$H/weekly-2025-W01.html"
+out=$(python3 "$TIDY" plan --root .)
+assert "weekly-2025-W01 → report cũ" 1 "$(echo "$out" | grep 'weekly-2025-W01' | grep -c 'report cũ')"
+python3 "$TIDY" apply --root . >/dev/null
+assert "png đi theo html" 1 "$([ -f "$H/archive/proposals/010126-old-seq.visual-check.1440x900.dark.png" ] && echo 1 || echo 0)"
+assert "json đi theo html" 1 "$([ -f "$H/archive/proposals/010126-old-seq.spec.json" ] && echo 1 || echo 0)"
+assert "không sidecar mồ côi ở html/" 0 "$(ls "$H" | grep -c '^010126-old-seq' || true)"
 
 echo "[6] GH#153: wiki .llmwiki thật (12 draft) + cây llmwiki/ lạc 1 file → đếm wiki thật, không '0 ok'"
 T2="$(mktemp -d)"; trap 'rm -rf "$TMP" "$T2"' EXIT
@@ -93,7 +112,7 @@ assert "--wiki-dir .llmwiki → rc=3 (đếm 12)" 3 "$rc"
 echo "[8] scratch-log distill ở repo .llmwiki → ghi .llmwiki/wiki/sources, không đẻ llmwiki/"
 rm -rf "$T2/llmwiki"
 (cd "$T2" && python3 "$HERE/../scripts/scratch-log.py" distill --session s1 --date 2026-09-11 >/dev/null)
-assert "provenance vào .llmwiki" 1 "$([ -f "$T2/.llmwiki/wiki/sources/110926-session-provenance.md" ] && echo 1 || echo 0)"
+assert "provenance vào .llmwiki" 1 "$([ -f "$T2/.llmwiki/wiki/sources/provenance/110926-session-provenance.md" ] && echo 1 || echo 0)"
 assert "không tạo llmwiki/" 0 "$([ -e "$T2/llmwiki" ] && echo 1 || echo 0)"
 T3="$(mktemp -d)"
 ( cd "$T3" && git init -q -b main && python3 "$HERE/../scripts/scratch-log.py" distill --date 2026-09-11 >/dev/null )

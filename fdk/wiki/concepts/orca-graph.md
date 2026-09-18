@@ -25,7 +25,7 @@ relations:
 
 ## Ba bộ phận
 
-**Runtime** `harness/scripts/orca-graph.py` đọc PLAN.md thành graph có lớp topo, cảnh báo hai node song song ghi cùng file, rồi cho orchestrator chạy vòng `next → lock → dispatched → done`. Khoá là file `O_EXCL` có lease; hết lease thì node về `unknown` chứ không tự thành `failed`. Mỗi lần giao lại tăng `gen`, kết quả mang gen cũ bị chặn. Từ bản v2, graph có cấp chứa mẹ con, deps xuyên graph, kiểm cycle in đường cụ thể, plan version khi build lại, và control pause/cancel phân biệt "đã yêu cầu" với "đã dừng".
+**Runtime** `harness/scripts/orca-graph.py` đọc PLAN.md thành graph có lớp topo, cảnh báo hai node song song ghi cùng file, rồi cho orchestrator chạy vòng `next → lock → dispatched → done`. Khoá là file `O_EXCL` có lease; hết lease thì node về `unknown` chứ không tự thành `failed`. Mỗi lần giao lại tăng `gen`, kết quả mang gen cũ bị chặn. Từ bản v2, graph có cấp chứa mẹ con, deps xuyên graph, kiểm cycle in đường cụ thể, plan version khi build lại, và control pause/cancel phân biệt "đã yêu cầu" với "đã dừng". Sau v2 có thêm ba lớp gác: `watch` chạy nền như daemon và `heartbeat` gia hạn lease cho node đang chạy dài (control-room đọc chung sổ); node khai `**QC:**` cạnh `**Verify:**`, không có vai QC riêng, và đổi lệnh QC cũng làm node mất hiệu lực như đổi verify (GH#163); `enforce_allowed_paths` so file đổi trước/sau lần chạy với `files` của node, mặc định cảnh báo, `--strict` phục hồi cứng (GH#162).
 
 **Hai file vẽ** `fdk/tools/graph-viz.py` (một graph, node hình tròn, bấm ra thẻ, lưới ẩn sau nút) và `fdk/tools/graph-atlas.py` (bản đồ 2D mọi graph, hàng là cấp chứa). Cả hai theo theme docs-site-macos, có toggle sáng tối và in đường dẫn thật.
 
@@ -44,3 +44,4 @@ Khoá chỉ kiểm soát dispatch, không kiểm soát side-effect của agent �
 - Yêu cầu user 12/09/2026 trong phiên /fdk: dựa trên orca-workflow tạo orca-graph, có rubric chấm câu trả lời của model.
 - Proposal: `scratchpad/120926-orca-graph-PROPOSAL.md` (duyệt cùng ngày). PLAN v2: `llmwiki/wiki/sources/draft/120926-orca-graph-v2-PLAN.md`, chạy bằng chính orca-graph.
 - Quyết định kiến trúc: [[ADR-018-orca-graph-file-based-graph-engine]]. Test: `harness/tests/test_orca_graph.py` 13 ca.
+- Bổ sung 2026-09-18 (lint dọn draft): daemon/heartbeat từ `140926-orca-graph-daemon-PLAN`, QC gate và giới hạn ghi từ `170926-orca-graph-no-separate-qc-role` + `170926-orca-graph-no-write-sandbox` (nay trong `draft/archive/`).

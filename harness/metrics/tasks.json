@@ -107,28 +107,38 @@
   "T-260703-01": {
     "id": "T-260703-01",
     "title": "030726-medic — cổng sức khoẻ tổng / tuyến phòng thủ cuối của framework (1 lệnh, tự-mở-coverage)",
-    "state": "proposed",
+    "state": "done",
     "created": "2026-07-03T14:30:57",
-    "updated": "2026-07-03T14:30:57",
+    "updated": "2026-09-18T09:53:50",
     "history": [
       {
         "state": "proposed",
         "ts": "2026-07-03T14:30:57",
         "note": "backfill 2026-08-03: suy tu status:'proposed' + git log cua llmwiki/wiki/sources/draft/030726-medic-cong-suc-khoe-tong.md"
+      },
+      {
+        "state": "done",
+        "ts": "2026-09-18T09:53:50",
+        "note": "lint 180926: đối chiếu code — đã hiện thực"
       }
     ]
   },
   "T-260703-02": {
     "id": "T-260703-02",
     "title": "030726-milestone-v106 — hardening (medic 17/17 + framework-touch hook) + query-implement",
-    "state": "proposed",
+    "state": "done",
     "created": "2026-07-03T19:46:38",
-    "updated": "2026-07-03T19:46:38",
+    "updated": "2026-09-18T09:53:50",
     "history": [
       {
         "state": "proposed",
         "ts": "2026-07-03T19:46:38",
         "note": "backfill 2026-08-03: suy tu status:'proposed' + git log cua llmwiki/wiki/sources/draft/030726-milestone-v106-harden.md"
+      },
+      {
+        "state": "done",
+        "ts": "2026-09-18T09:53:50",
+        "note": "lint 180926: đối chiếu code — đã hiện thực"
       }
     ]
   },
@@ -164,70 +174,95 @@
   "T-260703-03": {
     "id": "T-260703-03",
     "title": "030726-secondary-memory — bộ nhớ thứ cấp 3-tầng (auto scratch-log + view session/feature + journal-distill), file-first không RAG",
-    "state": "proposed",
+    "state": "done",
     "created": "2026-07-03T15:01:57",
-    "updated": "2026-07-03T15:01:57",
+    "updated": "2026-09-18T09:53:50",
     "history": [
       {
         "state": "proposed",
         "ts": "2026-07-03T15:01:57",
         "note": "backfill 2026-08-03: suy tu status:'proposed' + git log cua llmwiki/wiki/sources/draft/030726-secondary-memory.md"
+      },
+      {
+        "state": "done",
+        "ts": "2026-09-18T09:53:50",
+        "note": "lint 180926: đối chiếu code — đã hiện thực"
       }
     ]
   },
   "T-260714-01": {
     "id": "T-260714-01",
     "title": "propose-plan-split-superpowers",
-    "state": "proposed",
+    "state": "done",
     "created": "2026-07-18T17:08:01",
-    "updated": "2026-07-18T17:08:01",
+    "updated": "2026-09-18T09:53:50",
     "history": [
       {
         "state": "proposed",
         "ts": "2026-07-18T17:08:01",
         "note": "backfill 2026-08-03: suy tu status:'proposed' + git log cua llmwiki/wiki/sources/draft/140726-propose-plan-split-superpowers.md"
+      },
+      {
+        "state": "done",
+        "ts": "2026-09-18T09:53:50",
+        "note": "lint 180926: đối chiếu code — đã hiện thực"
       }
     ]
   },
   "T-260714-02": {
     "id": "T-260714-02",
     "title": "spec-kit-traceability",
-    "state": "proposed",
+    "state": "done",
     "created": "2026-07-14T23:00:38",
-    "updated": "2026-07-14T23:00:38",
+    "updated": "2026-09-18T09:53:50",
     "history": [
       {
         "state": "proposed",
         "ts": "2026-07-14T23:00:38",
         "note": "backfill 2026-08-03: suy tu status:'proposed' + git log cua llmwiki/wiki/sources/draft/140726-spec-kit-traceability.md"
+      },
+      {
+        "state": "done",
+        "ts": "2026-09-18T09:53:50",
+        "note": "lint 180926: đối chiếu code — đã hiện thực"
       }
     ]
   },
   "T-260717-01": {
     "id": "T-260717-01",
     "title": "Gộp gitignored-check trùng lặp trong okf-check.py về canonical index_sync",
-    "state": "proposed",
+    "state": "done",
     "created": "2026-07-17T10:36:48",
-    "updated": "2026-07-17T10:36:48",
+    "updated": "2026-09-18T09:53:50",
     "history": [
       {
         "state": "proposed",
         "ts": "2026-07-17T10:36:48",
         "note": "backfill 2026-08-03: suy tu status:'proposed' + git log cua llmwiki/wiki/sources/draft/170726-gitignored-dedupe.md"
+      },
+      {
+        "state": "done",
+        "ts": "2026-09-18T09:53:50",
+        "note": "lint 180926: đối chiếu code — đã hiện thực"
       }
     ]
   },
   "T-260719-02": {
     "id": "T-260719-02",
     "title": "Graph stack — bài học từ thread Grapuco: sửa 2, đo 3, nháp 1",
-    "state": "proposed",
+    "state": "done",
     "created": "2026-07-24T08:47:08",
-    "updated": "2026-07-24T08:47:08",
+    "updated": "2026-09-18T09:53:50",
     "history": [
       {
         "state": "proposed",
         "ts": "2026-07-24T08:47:08",
         "note": "backfill 2026-08-03: suy tu status:'proposed' + git log cua llmwiki/wiki/sources/draft/190726-graph-lessons-grapuco.md"
+      },
+      {
+        "state": "done",
+        "ts": "2026-09-18T09:53:50",
+        "note": "lint 180926: đối chiếu code — đã hiện thực"
       }
     ]
   },
@@ -248,14 +283,24 @@
   "T-260720-01": {
     "id": "T-260720-01",
     "title": "Pha 1 — nguyên thuỷ 'biết khi nào agent xong', gốc của 78% task không bao giờ được giao",
-    "state": "proposed",
+    "state": "done",
     "created": "2026-07-24T08:47:08",
-    "updated": "2026-07-24T08:47:08",
+    "updated": "2026-09-18T09:53:50",
     "history": [
       {
         "state": "proposed",
         "ts": "2026-07-24T08:47:08",
         "note": "backfill 2026-08-03: suy tu status:'proposed' + git log cua llmwiki/wiki/sources/draft/200726-orchestration-loop-closure.md"
+      },
+      {
+        "state": "done",
+        "ts": "2026-09-18T09:53:50",
+        "note": "lint 180926: đối chiếu code — đã hiện thực"
+      },
+      {
+        "state": "done",
+        "ts": "2026-09-18T09:53:50",
+        "note": "lint 180926: phân tích một lần, đã dùng xong"
       }
     ]
   },
@@ -408,14 +453,19 @@
   "T-260902-01": {
     "id": "T-260902-01",
     "title": "020926-sessionstart-episodic-recall — nudge tất định 1-2 dòng ở SessionStart, không auto-inject",
-    "state": "proposed",
+    "state": "done",
     "created": "2026-09-02T00:00:00",
-    "updated": "2026-09-02T00:00:00",
+    "updated": "2026-09-18T09:53:50",
     "history": [
       {
         "state": "proposed",
         "ts": "2026-09-02T00:00:00",
         "note": "backfill 2026-09-07 (GH#108): draft trỏ task chưa từng đăng ký trong store"
+      },
+      {
+        "state": "done",
+        "ts": "2026-09-18T09:53:50",
+        "note": "lint 180926: đối chiếu code — đã hiện thực"
       }
     ]
   },
@@ -444,6 +494,24 @@
         "state": "done",
         "ts": "2026-09-08T00:00:00",
         "note": "ship 1913bbc (viewport-check) + prd-grade-fe trong skills/"
+      }
+    ]
+  },
+  "T-260916-01": {
+    "id": "T-260916-01",
+    "title": "theme-toggle circle-reveal motion",
+    "state": "done",
+    "created": "2026-09-16T14:46:41",
+    "updated": "2026-09-18T09:53:50",
+    "history": [
+      {
+        "state": "proposed",
+        "ts": "2026-09-16T14:46:41"
+      },
+      {
+        "state": "done",
+        "ts": "2026-09-18T09:53:50",
+        "note": "lint 180926: đối chiếu code — đã hiện thực"
       }
     ]
   }

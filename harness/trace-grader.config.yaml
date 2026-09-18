@@ -17,10 +17,11 @@ verified: true           # VERIFIED 2026-06-28 (user "đồng ý"): deterministi
 
 # Tools an agent must NEVER use on a good path. Using one = high-severity flag →
 # a delivered run becomes "corrupt-success".
-forbidden_tools:         # ASSUMPTION — illustrative tool ids; replace with THIS
-  - force_push           #   project's real destructive/out-of-policy tool names
-  - rm_rf                #   (e.g. your actual tool registry: Bash-with-rm, prod
-  - prod_write           #   writers, raw-shell, unsandboxed exec, etc.).
+forbidden_tools: []      # empty: matches by TOOL NAME only (not command content),
+                         # so it can't catch `git push --force`/`rm -rf` run through
+                         # the generic Bash tool. No real MCP/tool in this project is
+                         # "never call it at all" out-of-policy yet (checked 2026-09-16:
+                         # no such name exists outside this file's own placeholders).
 
 # Retry-storm: more than this many CONSECUTIVE failures of the SAME tool = a
 # flakiness/thrash signal (medium severity).
@@ -35,10 +36,13 @@ step_budget: 25          # ASSUMPTION — depends on task complexity; calibrate 
 # Out-of-order / planning order. must_precede: [[A, B], ...] means every use of B
 # must have an earlier A in the same run (medium severity if violated).
 order_constraints:
-  must_precede:          # ASSUMPTION — encode YOUR project's sane ordering, e.g.
-    - [read, edit]       #   never edit a file you haven't read,
-    - [read, write]      #   never write before reading,
-    - [plan, act]        #   act only after a planning step exists.
+  must_precede: []       # real Claude Code tool names would be needed here (Read,
+                         # Edit, Write, Bash, ...), case-sensitive match. Left empty:
+                         # the one rule worth having — never Edit a file without
+                         # reading it first — is already always-on as the separate
+                         # grounding check (check_edited_without_read, below); a
+                         # [Write, ...] entry here would misfire on new-file writes,
+                         # which the engine deliberately treats as self-grounding.
 
 # ── QUARANTINED INFERENTIAL AXIS — the agent-as-judge rubric ──────────────────
 # This is the deeper unknown: scoring task-completion / tool-rationale / planning

@@ -477,7 +477,13 @@ def render_report(report: dict) -> str:
 
 # ───────────────────────────── SELF-TEST ─────────────────────────────────────
 def self_test() -> int:
-    cfg = load_config(str(DEFAULT_CONFIG_PATH))
+    # Hermetic: the fixture's synthetic tool names ("read"/"edit"/"force_push") are
+    # its OWN vocabulary, unrelated to this project's real tool names or its tuned
+    # adapter — self-test must not depend on harness/trace-grader.config.yaml.
+    cfg = json.loads(json.dumps(DEFAULT_CONFIG))
+    cfg["forbidden_tools"] = ["force_push"]
+    cfg["retry_threshold"] = 2
+    cfg["order_constraints"] = {"must_precede": [["read", "edit"]]}
     obj = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
     report = grade(runs_from_traces(obj), cfg)
     print(render_report(report))

@@ -192,7 +192,7 @@ mechanisms:
     live_probe: llmwiki/.claude/hooks/stop.py
     anchor_symbol: "setup::llmwiki/.claude/hooks/stop.py::_debounced"
     proof: harness/scripts/decision-liveness.py
-    confirmed: "2026-07-23"
+    confirmed: "2026-09-16"
 
   - id: code-graph-probe-boundary
     name: "code-graph probe boundary (thăm dò thay vì kiểm tồn tại)"
@@ -201,4 +201,4 @@ mechanisms:
     desc: "Quyết định 2026-07-20: quảng cáo một dependency ngoài (code-graph) phải THĂM DÒ nó (schema DB, tiến trình server, code server có mới không) — không chỉ kiểm file .is_file(). Neo vào adapter trong repo (dep-health.py), không trỏ thẳng ra graph-kit ngoài repo vì graph-kit không index được (KÉO NGOÀI không version hoá theo pin)."
     live_probe: harness/scripts/dep-health.py
     anchor_symbol: "setup::harness/scripts/dep-health.py::probe_code_graph"
-    confirmed: "2026-07-21"
+    confirmed: "2026-09-16"

@@ -7,3 +7,10 @@
 {"ts": "2026-09-09T20:14:24", "status": "drift", "sync_ms": 259, "sync_tokens": 0, "suspects": 120}
 {"ts": "2026-09-09T20:15:09", "status": "drift", "sync_ms": 236, "sync_tokens": 0, "suspects": 120}
 {"ts": "2026-09-10T15:34:32", "status": "drift", "sync_ms": 147, "sync_tokens": 0, "suspects": 91}
+{"ts": "2026-09-16T08:52:05", "status": "drift", "sync_ms": 234, "sync_tokens": 0, "suspects": 117}
+{"ts": "2026-09-16T08:52:26", "status": "drift", "sync_ms": 242, "sync_tokens": 0, "suspects": 117}
+{"ts": "2026-09-16T08:52:28", "status": "drift", "sync_ms": 165, "sync_tokens": 0, "suspects": 117}
+{"ts": "2026-09-16T11:17:15", "status": "drift", "sync_ms": 245, "sync_tokens": 0, "suspects": 118}
+{"ts": "2026-09-18T09:55:16", "status": "drift", "sync_ms": 226, "sync_tokens": 0, "suspects": 97}
+{"ts": "2026-09-18T09:55:27", "status": "drift", "sync_ms": 213, "sync_tokens": 0, "suspects": 97}
+{"ts": "2026-09-18T09:55:31", "status": "drift", "sync_ms": 163, "sync_tokens": 0, "suspects": 97}

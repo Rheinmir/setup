@@ -96,7 +96,22 @@ Test dựng sẵn tiền-đề mà thực tế không có → xanh giả, che AP
 
 **Cách chặn.** (1) Đường dẫn qua một nguồn: `overstack_paths.*` / `hooklib.*`; `bare_path_lint` đỏ khi ghi cứng. (2) Test hành vi trong fixture dot THẬT: `dot-layout-runtime-test.sh` (CI). (3) Đầu phiên ở repo framework in `[downstream-map]`; `/fdk` có mục "Bản đồ downstream". Liên hệ [[AP-1]] (reachability) và [[AP-6]] (test tự chống đỡ tín hiệu): AP-7 là test/code tự chống đỡ *cây thư mục*.
 
+## AP-8 · "Docs nói có vòng, runtime chưa từng chạy vòng"
+
+**Triệu chứng.** Proposal khẳng định "orca-workflow đã phủ ~80% yêu cầu", nhưng khi đếm sổ task thật (20/07/2026) thì 46/59 task (78%) chưa từng dispatch, 31 task `completed` mà không có bản ghi dispatch nào.
+
+**Vì sao sập.** Giao việc được, nhưng không biết lúc nào agent xong: `orca terminal wait --for tui-idle` timeout 90 giây trong khi việc xong sau vài giây, vì thứ đang chạy là shell chứ không phải agent. Giám sát một lần dispatch quá cực nên coordinator bỏ cuộc và làm inline. Vòng lặp không đóng được vì nó chưa từng được mở, và nó không được mở vì không quan sát được lúc kết thúc.
+
+**Cách chặn.** Đo sổ runtime trước khi tin mô tả (`harness/scripts/orca-reconcile.py`). Cơ chế nào cũng phải có tín hiệu "xong" quan sát được trước khi coi là có vòng. Liên hệ [[map-not-territory]].
+
+## AP-9 · Bịa số đo về người dùng hoặc thế giới
+
+**Triệu chứng.** Agent viết "tiết kiệm 40% thời gian" hay "user thường…" dù không đo gì. `claim-receipts` ban đầu chỉ bắt tham chiếu file/API chết, không bắt số liệu tự bịa.
+
+**Cách chặn.** Số liệu về người dùng hoặc thế giới phải kèm nguồn đo; không có thì ghi "chưa đo". Luật nằm ở `harness/claim-receipts.config.yaml` (phần observed-metric): heuristic chủ-thể + danh-từ-số-đo + thiếu dấu nguồn, hiện chỉ cảnh báo, chưa chặn.
+
 ## Origin
+- Bổ sung 2026-09-18 (lint dọn draft): AP-8 từ `200726-orchestration-loop-closure` + `200726-orchestration-triage`, AP-9 từ `110726-anti-fabrication-observed-metrics` (nay trong `draft/archive/`).
 - Chưng cất từ phiên dev 2026-07-05 (wiki-graph downstream): các instance GH#41/#43/#47/#49/**#51**.
 - Bổ sung 2026-07-08 (GH#70): AP-5 split-brain enablement + AP-6 test tự-chống-đỡ tín hiệu.
 - Bằng chứng: `llmwiki/html/council/council-report-028-seed42.html`, PR#42/#45/#49/#52; fix GH#70 ở

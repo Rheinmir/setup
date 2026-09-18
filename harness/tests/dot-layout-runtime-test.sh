@@ -3,7 +3,7 @@
 # Bốn bất biến (mỗi cái từng gãy thật, đo 2026-09-11):
 #   (a) session_start phải KÊU khi stamp lệch MAJOR với global (harness_integrity không được câm)
 #   (b) stop KHÔNG được đẻ thư mục trần llmwiki/ hoặc harness/ cạnh .llmwiki/ .harness/ (GH#153)
-#   (c) stop phải ghi session-provenance vào .llmwiki/wiki/sources/ (đúng cây), và vẽ wiki-graph nếu engine có
+#   (c) stop phải ghi session-provenance vào .llmwiki/wiki/sources/provenance/ (đúng cây), và vẽ wiki-graph nếu engine có
 #   (d) CI sinh cho downstream không chứa đường trần llmwiki/ · harness/ ngoài harness-src và $HOME/.claude
 #   (e) orca-graph lock/set (dispatch inline, không qua run/watch) phải tự in path control-room-kanban.html
 #       TRỎ VÀO DỰ ÁN ĐANG GỌI, không phải thư mục global-install (đo gãy thật 2026-09-17: build-control-room.py
@@ -34,8 +34,8 @@ echo '{"session_id":"t","stop_hook_active":false}' | CLAUDE_PROJECT_DIR="$FX" py
 [ ! -d "$FX/llmwiki" ] && [ ! -d "$FX/harness" ] \
   && ok "(b) không đẻ llmwiki/ hay harness/ trần" \
   || bad "(b) thư mục trần xuất hiện" "$(ls -d "$FX/llmwiki" "$FX/harness" 2>/dev/null | tr '\n' ' ')"
-ls "$FX/.llmwiki/wiki/sources/"*session-provenance*.md >/dev/null 2>&1 \
-  && ok "(c) session-provenance ghi vào .llmwiki/wiki/sources/" \
+ls "$FX/.llmwiki/wiki/sources/provenance/"*session-provenance*.md >/dev/null 2>&1 \
+  && ok "(c) session-provenance ghi vào .llmwiki/wiki/sources/provenance/" \
   || bad "(c) không có session-provenance dưới .llmwiki" "stop bỏ qua vì has_stamp đọc llmwiki/ trần?"
 if [ -f "$GH/fdk/tools/build-wiki-graph.py" ]; then
   [ -f "$FX/.llmwiki/html/wiki-graph.html" ] \

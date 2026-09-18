@@ -24,6 +24,7 @@ scratch-log; cây lạc thiếu index.md bị bỏ + báo, ≥2 wiki thật → 
 (build-docs-index, index_sync) tìm REPO-LOCAL rồi GLOBAL ~/.claude/harness — thiếu thì bỏ qua, không lỗi.
 """
 import argparse
+import datetime as _dt
 import fnmatch
 import json
 import os
@@ -132,7 +133,11 @@ def ignored(root: Path, path: Path) -> bool:
 def _date_key(name: str):
     m = re.match(r"(\d{2})(\d{2})(\d{2})-", name)
     if not m:
-        return None
+        w = re.search(r"(\d{4})-W(\d{2})", name)
+        if not w:
+            return None
+        d = _dt.date.fromisocalendar(int(w.group(1)), int(w.group(2)), 1)
+        return (d.year % 100) * 10000 + d.month * 100 + d.day
     dd, mm, yy = m.groups()
     return int(yy) * 10000 + int(mm) * 100 + int(dd)
 
@@ -347,8 +352,39 @@ def cmd_check(L: Layout, threshold: int, as_json: bool) -> int:
     return 3 if s["over"] else 0
 
 
+def content_drift(L: Layout, names) -> dict:
+    """Draft còn GIỮ nhưng nội dung có thể đã lệch thực tế: ref file trích dẫn không còn resolve
+    (claim-receipts) + cờ code-drift của wiki-sync trong stale.json. Advisory, không đổi action."""
+    try:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("claim_receipts", Path(__file__).with_name("claim-receipts.py"))
+        cr = importlib.util.module_from_spec(spec); spec.loader.exec_module(cr)
+        cfg = cr.load_config(L.root)
+    except Exception:
+        cr = None
+    try:
+        stale = json.loads((L.wiki / "stale.json").read_text(encoding="utf-8"))
+    except Exception:
+        stale = {}
+    res = {}
+    for n in names:
+        p = L.draft / n
+        notes = []
+        if cr and p.is_file():
+            _refs, dead, _m = cr.check(p.read_text(encoding="utf-8", errors="ignore"), L.root, cfg)
+            if dead:
+                notes.append(f"{len(dead)} ref chết: {', '.join(dead[:3])}{'…' if len(dead) > 3 else ''}")
+        s = stale.get(f"sources/draft/{n}")
+        if isinstance(s, dict) and s.get("action") == "code-drift":
+            notes.append(f"code đổi sau draft: {s.get('by')}")
+        if notes:
+            res[n] = notes
+    return res
+
+
 def cmd_plan(L: Layout, keep_dates=2):
     out = classify(L, keep_dates)
+    drift = content_drift(L, [n for n, (t, a, _) in out.items() if t == "draft" and a == "keep"])
     label = {"keep": "✅ GIỮ", "archive": "📦 ARCHIVE (dời vào archive/)",
              "promote?": "⬆️  PROMOTE? (agent đọc rồi quyết — tool không tự làm)"}
     s = summary(L, out)
@@ -361,6 +397,8 @@ def cmd_plan(L: Layout, keep_dates=2):
         print(f"{label[act]}  ({len(rows)})")
         for n, r in rows:
             print(f"    {n:<48} {r}")
+            for note in drift.get(n, []):
+                print(f"      ↳ ⚠ nội dung có thể outdated — {note}")
         print()
     print(f"→ keep {sum(1 for v in out.values() if v[1] == 'keep')} · archive "
           f"{sum(1 for v in out.values() if v[1] == 'archive')} · promote? {s['promote']}.  "
@@ -404,9 +442,15 @@ def cmd_apply(L: Layout, keep_dates=2):
         if kind == "draft":
             moved_rows[n] = dst
         print(f"  📦 {kind}/{n} → {dst.relative_to(L.wiki.parent)}  [{how}]")
+        if kind == "html":
+            # sidecar cùng stem (.png/.json/.spec.json/.sequence.json) đi theo html, không để mồ côi
+            for sc in sorted(base.glob(n[:-5] + ".*")):
+                if sc.is_file() and not sc.name.endswith(".html"):
+                    _move(L, sc, dst.parent / sc.name, trk, use_git)
     _rewrite_index(L, moved_rows)
     if skipped:
-        ig = L.draft_arc.relative_to(L.root)
+        ig = ", ".join(sorted({(L.html_arc if n.endswith(".html") else L.draft_arc).relative_to(L.root).as_posix()
+                               for n in skipped}))
         print(f"  ⚠ {len(skipped)} file TRACKED không dời vì đích bị .gitignore (dời = xoá khỏi repo): "
               f"{', '.join(skipped[:5])}{'…' if len(skipped) > 5 else ''}\n"
               f"    → bỏ dòng ignore cho `{ig}/` trong .gitignore rồi chạy lại (archive phải travel theo clone).")

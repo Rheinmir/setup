@@ -16,7 +16,7 @@ CLI:
   scratch-log.py note "<vì sao / context vụn>" [--file PATH] [--session ID] [--action edit]
         → append 1 entry vào harness/metrics/scratch-log.jsonl (append-only)
   scratch-log.py distill [--session ID] [--date YYYY-MM-DD]
-        → gom scratch-log + wiki-ledger theo phiên → sources/DDMMYY-session-provenance.md
+        → gom scratch-log + wiki-ledger theo phiên → sources/provenance/DDMMYY-session-provenance.md
            (distill KHÔNG xoá thô, chỉ trỏ về)
   scratch-log.py show [--session ID] [-n 20]   → in các entry gần nhất (đọc bằng mắt)
 """
@@ -193,7 +193,7 @@ def distill(args):
     ddmmyy = date  # DDMMYY khớp convention framework (030726)
     if len(date) == 10 and date[4] == "-":     # YYYY-MM-DD → DDMMYY
         ddmmyy = date[8:10] + date[5:7] + date[2:4]
-    out = wiki / "sources" / f"{ddmmyy}-session-provenance.md"
+    out = wiki / "sources" / "provenance" / f"{ddmmyy}-session-provenance.md"
     lines = [
         "---", "type: source",
         f'title: "session-provenance {sess[:8]} (auto-distill scratch-log)"',
