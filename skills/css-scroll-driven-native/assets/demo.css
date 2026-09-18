@@ -1,0 +1,178 @@
+/* css-scroll-driven-native — demo styles
+   Native CSS Scroll-Driven Animations API (animation-timeline: scroll()/view()).
+   ZERO JavaScript. Mọi animation nằm trong @supports + @media not (prefers-reduced-motion: reduce).
+   Bên NGOÀI hai khối đó là trạng thái TĨNH mặc định (fallback) — luôn hiện đủ nội dung. */
+
+:root {
+  --csdn-bg: #0f1115;
+  --csdn-fg: #eef1f6;
+  --csdn-muted: #9aa3b2;
+  --csdn-accent: #6ea8ff;
+  --csdn-card-bg: #1a1d24;
+  --csdn-border: #2a2e38;
+}
+
+* { box-sizing: border-box; }
+
+body.csdn-demo {
+  margin: 0;
+  background: var(--csdn-bg);
+  color: var(--csdn-fg);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.6;
+}
+
+.csdn-demo section {
+  padding: 4rem 1.5rem;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.csdn-demo h1 { font-size: 1.8rem; }
+.csdn-demo h2 { font-size: 1.3rem; color: var(--csdn-accent); }
+.csdn-demo p.csdn-support-note {
+  font-size: 0.85rem;
+  color: var(--csdn-muted);
+  border-left: 3px solid var(--csdn-accent);
+  padding-left: 0.75rem;
+}
+
+/* ---------------------------------------------------------------
+   1) Progress bar theo cuộn trang — animation-timeline: scroll(root)
+   Fallback mặc định: thanh TĨNH đầy 100% (không animation, không ẩn) */
+.csdn-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 4px;
+  width: 100%;
+  background: var(--csdn-accent);
+  transform: scaleX(1);
+  transform-origin: left;
+  z-index: 999;
+}
+
+@supports (animation-timeline: scroll()) {
+  @media not (prefers-reduced-motion: reduce) {
+    .csdn-progress {
+      transform: scaleX(0);
+      transform-origin: left;
+      animation-name: csdn-progress-scale;
+      animation-duration: 1ms; /* thời lượng thật do timeline điều khiển, giá trị này chỉ để kích hoạt engine */
+      animation-timeline: scroll(root);
+      animation-fill-mode: both;
+    }
+  }
+}
+
+@keyframes csdn-progress-scale {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+/* ---------------------------------------------------------------
+   2) Reveal-on-view khi phần tử vào khung nhìn — animation-timeline: view()
+   Fallback mặc định: card hiện đủ opacity:1, không dịch chuyển */
+.csdn-cards {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.csdn-card {
+  background: var(--csdn-card-bg);
+  border: 1px solid var(--csdn-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  opacity: 1;
+  transform: none;
+}
+
+@supports (animation-timeline: view()) {
+  @media not (prefers-reduced-motion: reduce) {
+    .csdn-card {
+      opacity: 0;
+      transform: translateY(24px);
+      animation-name: csdn-reveal-in;
+      animation-duration: 1ms;
+      animation-timeline: view();
+      animation-range: entry 0% cover 40%;
+      animation-fill-mode: both;
+    }
+  }
+}
+
+@keyframes csdn-reveal-in {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------------------------------------------------------------
+   3) Parallax nhẹ dùng view() — nền dịch khác tốc độ với nội dung
+   Fallback mặc định: nền tĩnh, nội dung tĩnh, không ẩn */
+.csdn-parallax {
+  position: relative;
+  height: 50vh;
+  min-height: 320px;
+  overflow: hidden;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.csdn-parallax-bg {
+  position: absolute;
+  inset: -10% -5%; /* dư biên để khi dịch chuyển không lộ mép trống */
+  background:
+    radial-gradient(circle at 30% 30%, #3a5fc4 0%, transparent 55%),
+    radial-gradient(circle at 70% 70%, #6ea8ff 0%, transparent 50%),
+    linear-gradient(160deg, #1a1d24, #11131a);
+  transform: none;
+}
+
+.csdn-parallax-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  background: rgba(15, 17, 21, 0.55);
+  padding: 1.25rem 1.75rem;
+  border-radius: 10px;
+  opacity: 1;
+  transform: none;
+}
+
+@supports (animation-timeline: view()) {
+  @media not (prefers-reduced-motion: reduce) {
+    .csdn-parallax-bg {
+      transform: translateY(-6%);
+      animation-name: csdn-parallax-bg-shift;
+      animation-duration: 1ms;
+      animation-timeline: view();
+      /* range RỘNG, trải suốt toàn bộ thời gian section đi qua viewport → trôi chậm */
+      animation-range: cover 0% cover 100%;
+      animation-fill-mode: both;
+    }
+
+    .csdn-parallax-content {
+      opacity: 0;
+      transform: translateY(16px);
+      animation-name: csdn-reveal-in;
+      animation-duration: 1ms;
+      animation-timeline: view();
+      /* range HẸP, khác biệt với nền → nội dung "chạy tới" nhanh hơn nền trôi */
+      animation-range: entry 0% cover 35%;
+      animation-fill-mode: both;
+    }
+  }
+}
+
+@keyframes csdn-parallax-bg-shift {
+  from { transform: translateY(-6%); }
+  to   { transform: translateY(6%); }
+}
+
+.csdn-filler {
+  color: var(--csdn-muted);
+  font-size: 0.9rem;
+}

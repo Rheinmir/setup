@@ -21,8 +21,12 @@ Lệnh:
   show <id>                         tóm tắt state
 Luật một dòng của rubric: đúng 1 · sai 0 · không-biết 0.3 · gợi-ý có nguồn thật 0.5 · bịa nguồn 0.
 """
-import argparse, hashlib, json, os, re, subprocess, sys, time
+import argparse, hashlib, json, os, re, shutil, subprocess, sys, time
 from pathlib import Path
+
+# GH#166: **Verify:**/**QC:** do người/agent viết theo thói quen bash; shell=True mặc định là /bin/sh → cú pháp
+# chỉ-bash (vd `<(...)`) fail rc=2 và bị đọc nhầm là verify đỏ. Có bash thì chạy bằng bash, không thì lùi về sh.
+SHELL = shutil.which("bash")
 
 SCHEMA = 1
 STATES = ["proposed", "ready", "locked", "dispatched", "done", "done_unverified",
@@ -499,13 +503,13 @@ def emit(st: Store, g: dict, nid: str, to: str, by="", note="", op_key="", gen=N
             append_jsonl(st.events_p, {"ts": now(), "kind": "stale_result", "node": nid, "gen": gen, "cur_gen": n["gen"], "by": by})
             print(f"STALE: kết quả gen {gen} ≠ gen hiện tại {n['gen']} — không publish"); return False
         if to == "done" and n.get("verify") and by != "reconcile":
-            rc = subprocess.call(n["verify"], shell=True)
+            rc = subprocess.call(n["verify"], shell=True, executable=SHELL)
             if rc != 0:
                 to = "done_unverified"; note = (note + f" verify rc={rc}").strip()
         if to == "done" and not n.get("verify"):
             to = "done_unverified"; note = (note + " (không có verify)").strip()
         if to == "done" and n.get("qc") and by != "reconcile":
-            rc = subprocess.call(n["qc"], shell=True)
+            rc = subprocess.call(n["qc"], shell=True, executable=SHELL)
             if rc != 0:
                 to = "done_unverified"; note = (note + f" qc rc={rc}").strip()
     new_gen = n["gen"] + 1 if to == "dispatched" else n["gen"]
@@ -590,12 +594,12 @@ def cmd_reconcile(a):
     n = {x["id"]: x for x in g["nodes"]}[a.node]
     if not n.get("verify"):
         print(f"{a.node} không có verify → không tự kết luận được; cần người: set done_user_reported hoặc ready"); return
-    rc = subprocess.call(n["verify"], shell=True)
+    rc = subprocess.call(n["verify"], shell=True, executable=SHELL)
     to = "done" if rc == 0 else "ready"
     note = f"verify rc={rc}"
     qrc = None
     if to == "done" and n.get("qc"):
-        qrc = subprocess.call(n["qc"], shell=True)
+        qrc = subprocess.call(n["qc"], shell=True, executable=SHELL)
         if qrc != 0:
             to = "ready"; note += f" | qc rc={qrc} FAIL"
     op_key = f"reconcile:{a.node}:{n['gen']}:{rc}" + (f":{qrc}" if qrc is not None else "")
@@ -803,7 +807,7 @@ def watch_once(build_room: bool = True) -> int:
                 changed = True; g = st.load()
             for n in g["nodes"]:
                 if n["state"] == "unknown" and n.get("verify"):
-                    rc = subprocess.call(n["verify"], shell=True)
+                    rc = subprocess.call(n["verify"], shell=True, executable=SHELL)
                     emit(st, g, n["id"], "done" if rc == 0 else "ready", by="reconcile", note=f"watch reconcile rc={rc}", op_key=f"reconcile:{n['id']}:{n['gen']}:{rc}")
                     print(f"  reconcile {gid}/{n['id']} → {'done' if rc == 0 else 'ready'}"); changed = True; g = st.load()
                 if n["state"] in ("locked", "dispatched"):
@@ -883,7 +887,7 @@ def check_evidence(e: str, st: Store, g: dict) -> bool:
         nodes = {n["id"]: n for n in gg["nodes"]}
         return m.group(3) in nodes and m.group(2) in nodes[m.group(3)]["deps"]
     if kind in ("absence", "cmd"):   # lệnh đã chạy — chạy lại phải KHÔNG lỗi cú pháp (rc≠127); absence: output rỗng
-        r = subprocess.run(body, shell=True, capture_output=True, text=True)
+        r = subprocess.run(body, shell=True, executable=SHELL, capture_output=True, text=True)
         return r.returncode != 127 and (kind == "cmd" or not r.stdout.strip())
     return False
 

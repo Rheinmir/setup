@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mask-reveal-transition — demo 2 biến thể</title>
+<link rel="stylesheet" href="mask-reveal-transition.css">
+</head>
+<body>
+<main class="mrt-demo">
+  <section>
+    <h1>mask-reveal-transition</h1>
+    <p class="mrt-note">Cuộn xuống để xem 2 biến thể: vòng loang lộ ảnh theo scroll, và cột ảnh pin sticky đổi theo panel chữ đang đọc.</p>
+  </section>
+
+  <section class="mrt-blob-stage" data-mrt-blob>
+    <h2>Biến thể 1 — Blob/ink mask reveal</h2>
+    <p class="mrt-note">Ảnh dưới lộ dần qua một vòng loang trên ảnh trên, tâm cố định giữa khung, bán kính tăng theo % cuộn qua section này.</p>
+    <div class="mrt-blob-frame">
+      <img class="mrt-blob-under" src="https://picsum.photos/seed/mrt-b/960/600" alt="Ảnh lộ dần khi cuộn">
+      <img class="mrt-blob-over" src="https://picsum.photos/seed/mrt-a/960/600" alt="Ảnh nền, loang dần để lộ ảnh dưới">
+    </div>
+  </section>
+
+  <section>
+    <h2>Biến thể 2 — Pinned split-screen mask reveal</h2>
+    <p class="mrt-note">Cột ảnh bên trái pin lại (position: sticky) trong khi đọc 3 đoạn chữ bên phải — ảnh đổi qua vòng loang mỗi khi panel chữ đang đọc đổi.</p>
+    <div class="mrt-split-section" data-mrt-split>
+      <div class="mrt-split-sticky">
+        <img class="mrt-split-under" alt="Ảnh minh hoạ cho đoạn đang đọc">
+        <img class="mrt-split-over" alt="">
+      </div>
+      <div class="mrt-split-scroll">
+        <article class="mrt-split-panel" data-mrt-panel data-mrt-src="https://picsum.photos/seed/mrt-1/960/1200">
+          <h3>Chương 1</h3>
+          <p>Đoạn văn đầu tiên. Khi phần tử này chiếm quá nửa khung nhìn, ảnh bên trái đổi sang ảnh của chương 1.</p>
+        </article>
+        <article class="mrt-split-panel" data-mrt-panel data-mrt-src="https://picsum.photos/seed/mrt-2/960/1200">
+          <h3>Chương 2</h3>
+          <p>Đoạn văn thứ hai. Vòng loang mở ra từ tâm khung ảnh, lộ dần ảnh mới nằm phía dưới.</p>
+        </article>
+        <article class="mrt-split-panel" data-mrt-panel data-mrt-src="https://picsum.photos/seed/mrt-3/960/1200">
+          <h3>Chương 3</h3>
+          <p>Đoạn văn thứ ba. Hết section, ảnh bên trái ngừng pin và cuộn tiếp theo trang.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="mrt-note">Hết demo.</p>
+  </section>
+</main>
+<script src="mask-reveal-transition.js"></script>
+</body>
+</html>

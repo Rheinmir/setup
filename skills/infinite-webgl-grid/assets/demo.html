@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Infinite WebGL Grid — demo</title>
+<link rel="stylesheet" href="demo.css" />
+<!--
+  importmap trỏ CDN CHỈ để demo chạy độc lập không cần bundler.
+  Khi wire vào dự án thật: `npm install three`, xoá importmap này,
+  đổi `import * as THREE from 'three'` trong demo.js sang import qua bundler.
+-->
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.169.0/build/three.module.js" } }
+</script>
+</head>
+<body>
+  <div id="grid-root"></div>
+  <div class="hint">Kéo hoặc cuộn (wheel) để duyệt lưới ảnh vô hạn</div>
+  <script type="module" src="demo.js"></script>
+</body>
+</html>

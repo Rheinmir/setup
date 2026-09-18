@@ -45,7 +45,9 @@ hdr() { printf '\n\033[1m── %s\033[0m\n' "$1"; }
 TMP=$(mktemp -d); trap 'rm -rf "$TMP"' EXIT
 
 PAGE="concepts/commit-dag-hub.md"
-SPEC="llmwiki/wiki/sources/draft/290726-graph-engineering-PLAN.md"
+# /tidy dời draft đã xong vào draft/archive/… → tìm theo tên, không ghi cứng thư mục
+SPEC="$(find llmwiki/wiki/sources/draft -name 290726-graph-engineering-PLAN.md 2>/dev/null | head -1)"
+SPEC="${SPEC:-llmwiki/wiki/sources/draft/290726-graph-engineering-PLAN.md}"
 EXPECT_LINKS="${EXPECT_LINKS:-6}"
 
 # Mắt xích 6 chỉ có nghĩa khi cổng biết nói KHÔNG: verdict đúng schema phải qua,

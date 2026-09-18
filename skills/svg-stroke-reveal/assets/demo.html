@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>svg-stroke-reveal — demo 2 mode</title>
+<link rel="stylesheet" href="svg-stroke-reveal.css">
+</head>
+<body>
+<main class="svgr-demo">
+  <section>
+    <h1>svg-stroke-reveal</h1>
+    <p class="svgr-note">Cuộn xuống để xem 2 biến thể: logo vẽ 1 lần khi vào viewport, và path vẽ liên tục theo % cuộn.</p>
+  </section>
+
+  <section>
+    <h2>Mode "once" — logo/chữ ký, vẽ 1 lần</h2>
+    <p class="svgr-note">3 path con, stagger transition-delay theo thứ tự trong DOM (path 1 vẽ trước, path 3 vẽ sau).</p>
+    <svg data-svgr="once" viewBox="0 0 200 120" width="200" height="120" aria-hidden="true">
+      <path d="M20,60 L70,60" />
+      <path d="M90,20 L90,100 M90,20 L130,60 L90,100" />
+      <path d="M150,20 A40,40 0 1 1 149,20 Z" />
+    </svg>
+  </section>
+
+  <section class="svgr-scroll-stage">
+    <div>
+      <h2>Mode "scroll" — hành trình vẽ theo tiến trình cuộn</h2>
+      <svg data-svgr="scroll" viewBox="0 0 400 120" width="400" height="120" aria-hidden="true">
+        <path d="M10,100 C 80,20 120,20 160,60 S 260,110 320,40 S 380,10 390,20" />
+      </svg>
+    </div>
+  </section>
+
+  <section>
+    <p class="svgr-note">Hết demo. Nét trên đã vẽ đầy khi cuộn qua khung sticky phía trên.</p>
+  </section>
+</main>
+<script src="svg-stroke-reveal.js"></script>
+</body>
+</html>

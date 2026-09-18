@@ -1,0 +1,42 @@
+/* svg-stroke-reveal — gốc viết tay, vanilla. Không animate bằng CSS keyframes cố định
+   độ dài — dashoffset luôn set từ JS theo length thật của từng path (getTotalLength). */
+:root {
+  --svgr-fg: #1a1a1a;
+  --svgr-muted: #666;
+  --svgr-stroke: #2563eb;
+  --svgr-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --svgr-duration: 1.4s;
+}
+
+.svgr-demo { max-width: 720px; margin: 0 auto; padding: 40px 20px 50vh; color: var(--svgr-fg); font: 16px/1.7 system-ui, sans-serif; }
+.svgr-demo section { padding: 56px 0; border-top: 1px solid #e5e5e5; }
+.svgr-demo p.svgr-note { color: var(--svgr-muted); font-size: 0.9em; }
+
+/* khung chứa path — width/height đồng nhất theo viewBox, KHÔNG scale lệch trục */
+[data-svgr] path {
+  fill: none;
+  stroke: var(--svgr-stroke);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* mode="once": JS set dashoffset=length lúc init (ẩn), rồi đổi về 0 khi vào viewport —
+   transition CSS làm phần "vẽ dần"; transition-delay stagger theo thứ tự path do JS gán --svgr-i */
+[data-svgr="once"] path {
+  transition: stroke-dashoffset var(--svgr-duration) var(--svgr-ease);
+  transition-delay: calc(var(--svgr-i, 0) * 160ms);
+}
+
+/* mode="scroll": dashoffset được JS ghi trực tiếp mỗi frame theo % cuộn qua viewport —
+   KHÔNG dùng transition ở đây, transition sẽ làm nét trễ nhịp so với vị trí cuộn thật */
+[data-svgr="scroll"] path {
+  transition: none;
+}
+
+.svgr-scroll-stage { height: 160vh; display: flex; align-items: center; justify-content: center; }
+.svgr-scroll-stage svg { position: sticky; top: 30vh; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-svgr] path { transition: none !important; }
+}

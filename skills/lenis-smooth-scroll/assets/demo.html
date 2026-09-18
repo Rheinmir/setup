@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>lenis-smooth-scroll — demo</title>
+<link rel="stylesheet" href="lenis-demo.css">
+<!-- CDN cho demo. Trong dự án thật, khuyến nghị cài qua npm (xem SKILL.md Rules). -->
+<script src="https://unpkg.com/lenis@1/dist/lenis.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+</head>
+<body>
+<div class="ls-badge" data-ls-badge>khởi tạo…</div>
+
+<section class="ls-hero">
+  <h1 data-ls-reveal>Cuộn mượt kiểu vật lý</h1>
+  <p data-ls-reveal>Lenis lái nền cuộn, GSAP ScrollTrigger ăn theo cùng một nhịp thời gian — không lệch pha, không giật khi quay lại tab.</p>
+</section>
+
+<section class="ls-section">
+  <h2 data-ls-reveal>Section 1</h2>
+  <p data-ls-reveal data-speed="0.12">Layer này trôi lệch nhẹ (data-speed 0.12) khi cuộn qua, dùng chung driver Lenis/GSAP ở trên — không thêm scroll listener riêng.</p>
+</section>
+
+<section class="ls-section">
+  <h2 data-ls-reveal>Section 2</h2>
+  <p data-ls-reveal data-speed="-0.08">Layer khác trôi ngược nhẹ (data-speed -0.08) để tạo chiều sâu.</p>
+</section>
+
+<section class="ls-section">
+  <h2 data-ls-reveal>Section 3</h2>
+  <p data-ls-reveal>Tắt "Reduce motion" trong hệ điều hành để so sánh: khi bật, trang này bỏ hẳn Lenis, dùng cuộn gốc trình duyệt.</p>
+</section>
+
+<script src="lenis-demo.js"></script>
+</body>
+</html>

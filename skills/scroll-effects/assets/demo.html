@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>scroll-effects — demo 7 pattern gốc</title>
+<link rel="stylesheet" href="scroll-effects.css">
+</head>
+<body>
+<header data-se-nav><span class="brand">scroll-effects demo</span></header>
+<main class="se-demo">
+  <section>
+    <h2 data-se-stagger><span>Hiệu ứng cuộn,</span><span>nhẹ như không,</span><span>hiện đúng lúc.</span></h2>
+    <p data-se-reveal>Cuộn xuống để thấy từng pattern lộ dần. Tất cả code trong trang này là bản gốc viết tay cho skill này.</p>
+  </section>
+  <section>
+    <p data-se-highlight>Khi đoạn văn này vào khung nhìn, <mark>cụm ý chính được quét sáng</mark> để dẫn mắt người đọc, rồi mới đọc tiếp phần còn lại của câu dài này.</p>
+  </section>
+  <div class="se-layout">
+    <nav data-se-toc aria-label="Mục lục">
+      <a href="#s1">Mục một</a><a href="#s2">Mục hai</a><a href="#s3">Mục ba</a>
+    </nav>
+    <div>
+      <section id="s1" data-se-reveal><h3>Mục một</h3><p>Nội dung mục một. Link mục lục bên trái sáng theo section đang đọc (scrollspy).</p></section>
+      <section id="s2" data-se-reveal><h3>Mục hai</h3><p>Nội dung mục hai. Observer dùng rootMargin -40%/-55% để chỉ một section active tại một thời điểm.</p></section>
+      <section id="s3" data-se-reveal><h3>Mục ba</h3><p>Nội dung mục ba. Hết mục lục demo.</p></section>
+    </div>
+  </div>
+  <section>
+    <div class="se-parallax-stage">
+      <div data-se-parallax="0.15">Lớp này trôi chậm hơn cuộn (speed 0.15) — tạo chiều sâu nhẹ.</div>
+    </div>
+  </section>
+</main>
+<button data-se-top aria-label="Về đầu trang">↑</button>
+<script src="scroll-effects.js"></script>
+</body>
+</html>

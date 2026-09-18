@@ -346,3 +346,14 @@ if __name__ == "__main__":
             with tempfile.TemporaryDirectory() as d:
                 fn(Path(d)) if fn.__code__.co_argcount else fn()
             print("ok", name)
+
+
+def test_verify_runs_under_bash_gh166(tmp_path):
+    """GH#166: `**Verify:**` dùng cú pháp chỉ-bash (process substitution) phải chạy được — trước đây shell=True = /bin/sh → rc=2."""
+    p = tmp_path / "z-PLAN.md"
+    p.write_text("# Z\n### Task 1: A\n**Files:**\n- Tạo: `a.py`\n**Verify:** `cat < <(echo ok) >/dev/null`\n", encoding="utf-8")
+    assert run(tmp_path, "build", str(p)).returncode == 0
+    env = dict(os.environ, ORCA_GRAPH_HOME=str(tmp_path / "home"), ORCA_GRAPH_NO_DAEMON="1")
+    r = subprocess.run([sys.executable, str(SCRIPT), "--dir", str(tmp_path), "run", "z", "t1", "--hb", "0.2", "--", "true"],
+                       capture_output=True, text=True, cwd=ROOT, env=env)
+    assert "→ done_unverified" not in r.stdout and "→ done" in r.stdout, r.stdout + r.stderr

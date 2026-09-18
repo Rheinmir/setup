@@ -1,0 +1,30 @@
+/* lenis-smooth-scroll demo — gốc viết tay. Chỉ style trình bày, cơ chế nằm ở lenis-demo.js. */
+:root {
+  --ls-fg: #1a1a1a;
+  --ls-muted: #666;
+  --ls-accent: #2563eb;
+  --ls-bg-alt: #f3f4f6;
+  --ls-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+body { margin: 0; color: var(--ls-fg); font: 16px/1.7 system-ui, sans-serif; }
+
+.ls-hero { min-height: 90vh; display: flex; flex-direction: column; justify-content: center; padding: 0 24px; }
+.ls-hero h1 { font-size: clamp(2rem, 6vw, 3.5rem); margin: 0 0 12px; }
+.ls-hero p { color: var(--ls-muted); max-width: 46ch; }
+
+.ls-section { min-height: 70vh; padding: 80px 24px; border-top: 1px solid #e5e5e5; }
+.ls-section:nth-child(even) { background: var(--ls-bg-alt); }
+
+/* stagger reveal khi Lenis cuộn qua — [data-speed] điều khiển tốc độ track lệch của layer,
+   .is-in điều khiển việc hiện; hai việc độc lập nhau. */
+[data-ls-reveal] { opacity: 0; transform: translateY(28px); transition: opacity 0.7s var(--ls-ease), transform 0.7s var(--ls-ease); }
+[data-ls-reveal].is-in { opacity: 1; transform: none; }
+[data-ls-reveal]:nth-child(2) { transition-delay: 0.08s; }
+[data-ls-reveal]:nth-child(3) { transition-delay: 0.16s; }
+
+.ls-badge { position: fixed; right: 16px; bottom: 16px; z-index: 60; font-size: 12px; padding: 6px 10px; border-radius: 999px; background: #111; color: #fff; opacity: 0.85; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-ls-reveal] { opacity: 1; transform: none; transition: none; }
+}

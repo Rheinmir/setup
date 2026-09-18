@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gsap-scrolltrigger-pin — demo pin + horizontal scroll</title>
+<link rel="stylesheet" href="gsap-scrolltrigger-pin.css">
+</head>
+<body>
+
+<div class="hp-filler">
+  <p>Cuộn xuống — section bên dưới sẽ PIN lại và cuộn dọc chuyển thành cuộn ngang.</p>
+</div>
+
+<section class="hp-section" data-hp-section>
+  <div class="hp-pin">
+    <div class="hp-track" data-hp-track>
+      <div class="hp-slide" data-hp-slide>Slide 1</div>
+      <div class="hp-slide" data-hp-slide>Slide 2</div>
+      <div class="hp-slide" data-hp-slide>Slide 3</div>
+      <div class="hp-slide" data-hp-slide>Slide 4</div>
+      <div class="hp-slide" data-hp-slide>Slide 5</div>
+    </div>
+  </div>
+</section>
+
+<div class="hp-filler">
+  <p>Hết slide ngang — cuộn dọc tiếp tục bình thường.</p>
+</div>
+
+<!-- GSAP + ScrollTrigger qua CDN (xem SKILL.md để cài npm) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="gsap-scrolltrigger-pin.js"></script>
+</body>
+</html>

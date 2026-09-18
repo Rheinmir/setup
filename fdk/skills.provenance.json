@@ -212,6 +212,15 @@
       "recorded": "2026-07-18",
       "source": "local-authored"
     },
+    "css-scroll-driven-native": {
+      "files": {
+        "SKILL.md": "05f90bbf0246c2875b5c6ecf8d876287b556e1a99366fe21107b0a252c58aea1",
+        "assets/demo.css": "846267738363c61f5364b7a1a135b0258b9b6c9c1cd3d572f1a416fbbe6da87c",
+        "assets/demo.html": "eb9c561ca2a15bc73bbf4da142d7e0b21a6a71a5e6ab50d22de923fda2817897"
+      },
+      "recorded": "2026-09-18",
+      "source": "local-authored"
+    },
     "cursor-animated-sites": {
       "files": {
         "SKILL.md": "71c0664c53e5f518a6987bed814d7e87d7fcdce4e20f36e82538a62ea559b02a"
@@ -358,6 +367,16 @@
         "SKILL.md": "9feabecafa00c0b3b92929b7a78dde5b4ded93e379e7f6daafa6936ab5970d2a"
       },
       "recorded": "2026-09-07",
+      "source": "local-authored"
+    },
+    "gsap-scrolltrigger-pin": {
+      "files": {
+        "SKILL.md": "66db7f85792d033d19548390847f8ed75691a2cfedd23bd3a77038efe2664b71",
+        "assets/demo.html": "1cde488956b5b361bd12b8cf016960ccf6c1f07c452ea3d0218e89751cf03d34",
+        "assets/gsap-scrolltrigger-pin.css": "92b0baf2f9592931ac0b47f61ef8a11f66032e5437360c8496397e78e3e5912d",
+        "assets/gsap-scrolltrigger-pin.js": "4f2a56dec6c37f90c691975c7eb14732d88828c1f659e81bed1d59196fcad79e"
+      },
+      "recorded": "2026-09-18",
       "source": "local-authored"
     },
     "hallmark": {
@@ -543,6 +562,16 @@
       "recorded": "2026-07-18",
       "source": "local-authored"
     },
+    "infinite-webgl-grid": {
+      "files": {
+        "SKILL.md": "5d903ab609d08c33d4d400cbc7705524838c202b2ab76b8a3864efabc940953a",
+        "assets/demo.css": "bc3958c1606b69eba7261d244825acc513cc290861c1fc0ba967b32a6436f214",
+        "assets/demo.html": "0dc9a31ad8499913e03ba9d4976bc75ada4746a921deb514b17a5e0fed2ccd90",
+        "assets/demo.js": "a83f8a1464f78bdc87cca852f0c33eef8a547af7c0b1335c9b4938201e44ad4e"
+      },
+      "recorded": "2026-09-18",
+      "source": "local-authored"
+    },
     "ingest": {
       "files": {
         "SKILL.md": "fca92465d5894dc32e01319f74023b8b99b0183320cda681b772e00958fbce6f"
@@ -664,6 +693,16 @@
       "recorded": "2026-09-17",
       "source": "https://github.com/mvanhorn/last30days-skill"
     },
+    "lenis-smooth-scroll": {
+      "files": {
+        "SKILL.md": "7ef32f27e35695b998000164bb94b4beedc0152768cb80238af744606324d151",
+        "assets/demo.html": "f9dbfdb0dbc87cfb6150b55bb508ad318e6d83a399348f59fa1d909fec5cce49",
+        "assets/lenis-demo.css": "7ce58890869c1b63d8d89ea4576d1e81931ab8d83f66caaed2acdd20f608d347",
+        "assets/lenis-demo.js": "5c504682db96c3714e53793494f736cc5a2b845f32708ef752464fc27ec0d236"
+      },
+      "recorded": "2026-09-18",
+      "source": "local-authored"
+    },
     "lint": {
       "files": {
         "SKILL.md": "98a7a12bfc2d09673df9157ffee40ca256e197946044fdee06afffc80c9a957f"
@@ -676,6 +715,16 @@
         "SKILL.md": "f2c2ea6a033f04a84027b6eb12c1808134c2d29828348fa6c2971b9f3491dd82"
       },
       "recorded": "2026-07-18",
+      "source": "local-authored"
+    },
+    "mask-reveal-transition": {
+      "files": {
+        "SKILL.md": "b7cbc22bf71778b91fa655bcb3fc08f1094ec5f168432941079d546056ce44fd",
+        "assets/demo.html": "25a8a22731fd91ba726b61ad530ddd6581e8d85cfdae5e4181750c8c7f8df998",
+        "assets/mask-reveal-transition.css": "f432895e747f2bf90e478cbb5121ba7c6b7f2421b6c95cba402bb7d30250c9b5",
+        "assets/mask-reveal-transition.js": "c5ca7563fe39beab1da3be0a88581c3f33b1756b46e2642e6c5257287614a7fb"
+      },
+      "recorded": "2026-09-18",
       "source": "local-authored"
     },
     "md-to-html": {
@@ -872,6 +921,16 @@
       "recorded": "2026-07-04",
       "source": "local-authored"
     },
+    "scroll-effects": {
+      "files": {
+        "SKILL.md": "e9313a553b790c777ec3b3a3b2df4e14dd9bf5b3a7bce6ef74e12193a3ddf190",
+        "assets/demo.html": "73a4d88615cdb47367959fd85fd2eca5bd0e549fcc240bccb14e0d50e5c7c395",
+        "assets/scroll-effects.css": "d319b82dc2971f825869c94075b07ad745a49dcba42ac30fd7adfd4024229601",
+        "assets/scroll-effects.js": "670b8cc07afd4b0fd61ee03ccab36b4fb3bc3f760d0d37edfeaaf4768376c760"
+      },
+      "recorded": "2026-09-18",
+      "source": "local-authored"
+    },
     "ship": {
       "files": {
         "SKILL.md": "6268efbc797cd96c4029c6d2dd161ad87a8ecfe1117a30444ee1d712c6981cd9"
@@ -900,6 +959,16 @@
       "recorded": "2026-07-18",
       "source": "local-authored"
     },
+    "svg-stroke-reveal": {
+      "files": {
+        "SKILL.md": "773c54c4fc2357bd4c50047041fb19a8c8dc1a130107f5dd65138f679f11fad8",
+        "assets/demo.html": "e973d3ce380f0574452665293b4f7c54073ef6990d19b3e290cead77b023b60f",
+        "assets/svg-stroke-reveal.css": "8f3f492659afcdc39e701fc87af60575ca40ba04ea134f87bd11fb4261c4298b",
+        "assets/svg-stroke-reveal.js": "3a01b9427e294b3d99cd546aafdb8c9f42f8d6688f56e46577d71a58ce6bca5d"
+      },
+      "recorded": "2026-09-18",
+      "source": "local-authored"
+    },
     "sync-template": {
       "files": {
         "SKILL.md": "589fa3e50e1a20da98b59c34d9e438a180212304f11086184a7f9f7ca3033299"
@@ -921,11 +990,21 @@
       "recorded": "2026-09-11",
       "source": "local-authored"
     },
+    "threejs-particle-morph": {
+      "files": {
+        "SKILL.md": "74c4e548a83e8c5701cdd57e5cf6198efb7228e97d37f08da1090f290bea561e",
+        "assets/demo.css": "4c2866ae8d2c8917d862559a1c6a80bab18d8e7bfb5df111af6839d85d10da54",
+        "assets/demo.html": "f76a442ed2ef71cdd7242c32d051e04b944f7f54609b7cb0e58f9e5a70e89494",
+        "assets/demo.js": "d10ed448ae31e6280fe6a0ab2a509140eaedc2b1337d38a73a09924366532e26"
+      },
+      "recorded": "2026-09-18",
+      "source": "local-authored"
+    },
     "tidy": {
       "files": {
-        "SKILL.md": "71693efbb83a7c486307a022284c0d027cf9e5952fb7c7b66b97249b9bffd562"
+        "SKILL.md": "a5988f303533c92900a2df3d0515ae43d580ca8f28a6940ed18cf62424f8d05d"
       },
-      "recorded": "2026-09-09",
+      "recorded": "2026-09-18",
       "source": "local-authored"
     },
     "timeline": {

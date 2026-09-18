@@ -24,7 +24,10 @@ egress:
   # — thêm resource khác thì thêm dòng khác, để mỗi lần mở đều là một quyết định.
   # +2026-08-09: thêm resource ctd-opus khi chuyển provider mặc định sang nó. Vẫn theo lệ
   # trên — liệt kê từng host, không wildcard.
+  # +2026-09-18: thêm freefrontend.com + codepen.io + cdpn.io — user yêu cầu chép NGUYÊN code gốc
+  # (pen public CodePen = MIT) cho các skill hiệu ứng; guard chặn làm skill phải viết lại cùi.
   allow_domains: [github.com, raw.githubusercontent.com,
+                  freefrontend.com, codepen.io, cdpn.io, assets.codepen.io,
                   askctd-resource.services.ai.azure.com,
                   askctd-resource.openai.azure.com,
                   ctd-opus-resource.services.ai.azure.com,

@@ -1,0 +1,73 @@
+/* gsap-scrolltrigger-pin — cơ chế pin + horizontal scroll, viết gốc */
+
+.hp-section {
+  position: relative;
+}
+
+.hp-pin {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.hp-track {
+  display: flex;
+  height: 100%;
+  width: max-content;
+  will-change: transform;
+}
+
+.hp-slide {
+  flex: 0 0 100vw;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+/* prefers-reduced-motion: GSAP không init pin/scrub (xem .js) —
+   CSS chuyển .hp-pin thành khung cuộn ngang thường, không pin, không transform */
+@media (prefers-reduced-motion: reduce) {
+  .hp-pin {
+    height: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .hp-track {
+    transform: none !important;
+  }
+
+  .hp-slide {
+    scroll-snap-align: start;
+  }
+}
+
+/* ---- demo styling (không phải phần cơ chế, chỉ để xem demo cho đẹp) ---- */
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #0b0b12;
+  color: #f2f2f5;
+}
+
+.hp-filler {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.hp-slide {
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  font-weight: 600;
+}
+
+.hp-slide:nth-child(odd) { background: #1b1b2b; }
+.hp-slide:nth-child(even) { background: #23233a; }

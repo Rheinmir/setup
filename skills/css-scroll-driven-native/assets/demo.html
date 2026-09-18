@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>css-scroll-driven-native — demo (zero JS)</title>
+<link rel="stylesheet" href="demo.css">
+</head>
+<body class="csdn-demo">
+
+  <!-- 1) Progress bar theo cuộn trang -->
+  <div class="csdn-progress" aria-hidden="true"></div>
+
+  <section>
+    <h1>Native CSS Scroll-Driven Animations — demo (0 JavaScript)</h1>
+    <p class="csdn-support-note">
+      Thanh mỏng trên cùng chạy theo <code>animation-timeline: scroll(root)</code>.
+      Trình duyệt chưa hỗ trợ: thanh vẫn hiện TĨNH (đầy 100%), không animation, không mất nội dung —
+      xem <code>@supports (animation-timeline: scroll())</code> trong <code>demo.css</code>.
+      Kiểm tra hỗ trợ thật trước khi dùng production tại
+      <a href="https://caniuse.com/css-scroll-driven-animations" target="_blank" rel="noopener">caniuse.com/css-scroll-driven-animations</a>
+      — API đang rollout nhanh, đừng tin số liệu cứng ghi trong tài liệu này.
+    </p>
+    <p>Cuộn xuống để xem 3 cơ chế: progress bar (trên cùng), reveal-on-view (card bên dưới), và parallax nhẹ (khối màu cuối trang).</p>
+  </section>
+
+  <section>
+    <p class="csdn-filler">Đoạn đệm để có chiều cao cuộn — kéo xuống tiếp.</p>
+    <p class="csdn-filler">Đoạn đệm để có chiều cao cuộn — kéo xuống tiếp.</p>
+    <p class="csdn-filler">Đoạn đệm để có chiều cao cuộn — kéo xuống tiếp.</p>
+  </section>
+
+  <!-- 2) Reveal-on-view khi phần tử vào khung nhìn -->
+  <section>
+    <h2>2. Reveal-on-view — <code>animation-timeline: view()</code></h2>
+    <p>Mỗi card dùng <code>animation-range: entry 0% cover 40%</code>: opacity/translateY chạy theo % phần tử đã đi vào viewport, không cần IntersectionObserver.</p>
+    <div class="csdn-cards">
+      <article class="csdn-card">
+        <h3>Card 1</h3>
+        <p>Hiện dần khi cuộn tới, không JavaScript.</p>
+      </article>
+      <article class="csdn-card">
+        <h3>Card 2</h3>
+        <p>Cùng cơ chế, thời điểm khác vì vị trí khác nhau trong viewport.</p>
+      </article>
+      <article class="csdn-card">
+        <h3>Card 3</h3>
+        <p>Fallback: hiện sẵn opacity:1, không ẩn nội dung khi trình duyệt chưa hỗ trợ.</p>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <p class="csdn-filler">Đoạn đệm để có chiều cao cuộn — kéo xuống tiếp.</p>
+    <p class="csdn-filler">Đoạn đệm để có chiều cao cuộn — kéo xuống tiếp.</p>
+  </section>
+
+  <!-- 3) Parallax nhẹ dùng view() -->
+  <section>
+    <h2>3. Parallax nhẹ — nền và nội dung dùng <code>animation-range</code> khác nhau</h2>
+    <div class="csdn-parallax">
+      <div class="csdn-parallax-bg" aria-hidden="true"></div>
+      <div class="csdn-parallax-content">
+        <p>Nền trôi chậm suốt <code>cover 0% cover 100%</code>, khối chữ này chỉ chạy nhanh trong <code>entry 0% cover 35%</code>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="csdn-filler">Cuối trang — hết đoạn đệm cuộn.</p>
+  </section>
+
+</body>
+</html>

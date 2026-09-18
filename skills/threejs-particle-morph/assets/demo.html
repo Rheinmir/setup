@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Three.js Particle Morph — demo</title>
+<link rel="stylesheet" href="demo.css" />
+<!--
+  importmap để demo chạy ĐỘC LẬP không cần bundler (bản three mới, không pin cũ).
+  Production: `npm install three`, xoá importmap này, import 'three' qua bundler thật.
+-->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.169.0/build/three.module.js"
+  }
+}
+</script>
+</head>
+<body>
+  <p class="morph-note">
+    Cuộn xuống để particle hội tụ thành ảnh/logo. Demo tự vẽ chữ mẫu lên canvas ẩn để sample
+    (không phụ thuộc mạng) — đổi <code>imageUrl</code> trong <code>demo.js</code> để sample từ
+    ảnh thật.
+  </p>
+
+  <div class="morph-stage">
+    <canvas id="morph-canvas"></canvas>
+  </div>
+
+  <!-- Chiều cao khoảng này quyết định quãng cuộn để progress đi từ 0 -> 1 -->
+  <div class="morph-scroll-spacer" aria-hidden="true"></div>
+
+  <script type="module" src="demo.js"></script>
+</body>
+</html>

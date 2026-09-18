@@ -62,7 +62,8 @@ def load_pages(wikis):
         if not w.is_dir():
             continue
         for p in sorted(w.rglob("*.md")):
-            if p.name in SKIP or "/draft/" in str(p) or "/evals/" in str(p):
+            # provenance/ = log phiên tự sinh (stop-hook), nhiễu truy hồi — không phải tri thức
+            if p.name in SKIP or any(d in str(p) for d in ("/draft/", "/evals/", "/provenance/")):
                 continue
             text = p.read_text(encoding="utf-8", errors="ignore")
             pages.append({"stem": p.stem, "full": text, "head": _headings(text),
