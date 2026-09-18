@@ -23,3 +23,5 @@
 {"ts": "2026-09-18T11:49:30+0700", "node": "t7", "from": "locked", "to": "dispatched", "by": "giatran", "op_key": "180926-ship-scroll-originals-t7-d1", "gen": 1, "rev": 2, "note": "", "spec_hash": "5b3690004f8eaf2a", "plan_version": 3}
 {"ts": "2026-09-18T11:50:26+0700", "node": "t7", "from": "dispatched", "to": "done", "by": "giatran", "op_key": "180926-ship-scroll-originals-t7-done1", "gen": 1, "rev": 3, "note": "", "spec_hash": "5b3690004f8eaf2a", "plan_version": 3}
 {"ts": "2026-09-18T11:56:00+0700", "kind": "plan.rebuilt", "node": "-", "from": 3, "to": 4, "changed": [], "removed": [], "op_key": "rebuild:4"}
+{"ts": "2026-09-18T11:59:11+0700", "node": "t8", "from": "blocked", "to": "done", "by": "giatran", "op_key": "180926-ship-scroll-originals-t8-done1", "gen": 0, "rev": 1, "note": "", "spec_hash": "a6ce3b08aa60c741", "plan_version": 4}
+{"ts": "2026-09-18T12:01:36+0700", "node": "t9", "from": "blocked", "to": "done", "by": "giatran", "op_key": "180926-ship-scroll-originals-t9-done1", "gen": 0, "rev": 1, "note": "", "spec_hash": "ac213f994439efb2", "plan_version": 4}

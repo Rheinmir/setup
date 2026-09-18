@@ -2,7 +2,7 @@
 type: issue
 kind: tech-debt
 title: "orca-graph verify chạy qua `subprocess.call(..., shell=True)` = POSIX sh, cú pháp bash (process substitution) fail âm thầm rc=2"
-status: open
+status: done
 assignee: "@Rheinmir"
 dispatch: Claude
 entry: /fdk
@@ -47,9 +47,9 @@ Một trong hai, chọn một:
 Khuyến nghị hướng 1 (đổi executable) vì ít bất ngờ hơn cho agent viết PLAN — họ vốn quen viết bash.
 
 ## Tiêu chí HOÀN THÀNH
-- [ ] Chọn 1 trong 2 hướng trên (hoặc cả hai) và áp dụng.
-- [ ] Test tái hiện: PLAN có `**Verify:** node --check /dev/stdin < <(echo "1+1")` chạy qua `orca-graph.py set ... done` → rc=0 (nếu chọn hướng 1) hoặc SKILL.md có dòng cảnh báo hiển nhiên (nếu chọn hướng 2).
-- [ ] Không phá hành vi hiện có của các PLAN.md khác đang dùng verify POSIX thuần.
+- [x] Chọn 1 trong 2 hướng trên (hoặc cả hai) và áp dụng.
+- [x] Test tái hiện: PLAN có `**Verify:** node --check /dev/stdin < <(echo "1+1")` chạy qua `orca-graph.py set ... done` → rc=0 (nếu chọn hướng 1) hoặc SKILL.md có dòng cảnh báo hiển nhiên (nếu chọn hướng 2).
+- [x] Không phá hành vi hiện có của các PLAN.md khác đang dùng verify POSIX thuần.
 
 ## Assign & lý do
 `@Rheinmir` — chủ ledger `setup` (repo framework gốc), nơi `orca-graph.py`/skill sống. `dispatch: Claude`, `entry: /fdk` vì đây là sửa lỗi hẹp, có tái hiện rõ, không cần quyết định thiết kế lớn.

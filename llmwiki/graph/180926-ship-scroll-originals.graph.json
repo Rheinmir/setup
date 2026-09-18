@@ -222,12 +222,13 @@
    "verify": "test \"$(git rev-parse HEAD)\" = \"$(git rev-parse origin/orca)\"",
    "qc": "",
    "spec_hash": "a6ce3b08aa60c741",
-   "state": "blocked",
+   "state": "done",
    "gen": 0,
-   "rev": 0,
+   "rev": 1,
    "attempts": 0,
    "fresh": "current",
-   "verified": "unverified"
+   "verified": "verified",
+   "done_spec_hash": "a6ce3b08aa60c741"
   },
   {
    "id": "t9",
@@ -250,12 +251,13 @@
    "verify": "gh run list --branch orca --limit 3 --json conclusion --jq '.[].conclusion' | grep -qv failure",
    "qc": "",
    "spec_hash": "ac213f994439efb2",
-   "state": "proposed",
+   "state": "done",
    "gen": 0,
-   "rev": 0,
+   "rev": 1,
    "attempts": 0,
    "fresh": "current",
-   "verified": "unverified"
+   "verified": "verified",
+   "done_spec_hash": "ac213f994439efb2"
   },
   {
    "id": "t10",
@@ -415,5 +417,5 @@
  ],
  "control": "active",
  "schema_version": 1,
- "checksum": "72385542e350b6ec"
+ "checksum": "1014860c1646a8d7"
 }
