@@ -31,7 +31,7 @@ LOOP_MAP = {
     "new-skill": "dev-loop", "loop-runner": "dev-loop", "failure-flywheel": "dev-loop", "wikieval": "dev-loop",
     "skill-provenance": "dev-loop", "qc-code": "dev-loop", "teach-me": "dev-loop",
     "qc-uiux": "dev-loop", "visual-qa": "dev-loop",
-    "doyourmagic": "dev-loop",
+    "doyourmagic": "dev-loop", "br": "dev-loop",
     # orchestrate
     "orca-dispatch-reference": "orchestrate", "orca-onboard": "orchestrate", "orca-issue": "orchestrate",
     "orca-handover": "orchestrate",

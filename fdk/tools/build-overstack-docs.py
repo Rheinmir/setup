@@ -126,7 +126,7 @@ LOOP_GROUPS = {
         {"propose": "edit", "plan": "edit", "qc-code": "edit", "qc-uiux": "edit", "visual-qa": "edit", "teach-me": "edit", "impact-check": "edit", "safe-change": "edit", "verify-before-commit": "edit",
          "build-now-adapt-later": "edit",
          "new-project-setup": "build", "onboard-codebase": "build", "new-skill": "build",
-         "skill-provenance": "build", "doyourmagic": "build",
+         "skill-provenance": "build", "doyourmagic": "build", "br": "build",
          "wikieval": "eval", "ship": "eval", "loop-runner": "eval", "failure-flywheel": "eval",
          "playwright-verify": "eval"}),
     "orchestrate": (

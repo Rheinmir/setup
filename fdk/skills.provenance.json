@@ -135,6 +135,19 @@
       "recorded": "2026-09-17",
       "source": "local-authored"
     },
+    "br": {
+      "files": {
+        "SKILL.md": "2d299b6923fa4244f3f1e84ee4d188d88cca00a9c5b1ccdb27e63f17e5453655",
+        "assets/defaults.yaml": "8753bb2b49dbe53c8d1ec5df9ed22eccb643a07238dbfdd06737be665cfa353e",
+        "assets/design-template.md": "830734ed57b5f2b504204bec3c7d0958e8f5dcc91faee74708a80959c4eaad89",
+        "assets/frame-template.md": "253427bbec120ea572ff2f0dbe3ff442b928f18854f86916cac5dbf45443f00d",
+        "assets/queue.example.yaml": "5567b7015f7fb694aa0295acedce4f4850efa52e97083a65a23e9e6afa2eed57",
+        "assets/revise-prompt.md": "f088c244213d969ae0282f9ce737f605f4468732406251f6e1b1219d12b9f6c1",
+        "assets/spec-template.md": "c1a0f3bbf30d8d98c81b5cbdd5ea4c1be30f5a910150f1b9446d1e624c8a10b4"
+      },
+      "recorded": "2026-09-18",
+      "source": "local-authored"
+    },
     "brandkit": {
       "files": {
         "SKILL.md": "e54b2f5b06b3c7166c2ee90cccb172968337e505e21a99e608fd43b4f2e13e40"
@@ -851,17 +864,18 @@
     },
     "prd-grade-fe": {
       "files": {
-        "SKILL.md": "27eebff21ce3902fc6d8d6fa1045cc85ce57d42fd9d9e3cb9a71ff4c70e75375",
+        "SKILL.md": "f568bcd9f776e8893f2b0b098c3f8963c1950759ad768ade8d22bda7c31f9a4c",
         "references/impeccable-audit.md": "052a2fa1c52962fdd340f6c615b7b185f9ff6ef7d737c5b879fcc1f11da8f5e4",
         "references/intake.md": "424e768222f1d6166fb02449f8cd25d347c31401f8f8487a93f7563d34a2d62c",
         "references/presets/macos-glass.design.md": "9ebfad6079fbe224b065745a1504c0dcf26b09e52ef2cc82312816540ef763d1",
         "references/presets/macos-glass.evidence.md": "4b5104161e05bfe576343fc44e8f8974c1e5e7d636e81870c5a4cc7a7ce35c3a",
         "references/presets/macos-glass.probe.html": "75e3ce3984495964a872c6f33784ee50fe939537b652afa2dbe6bf7cd00c5c52",
+        "scripts/badge-consistency.py": "21b3ac1e9e0c5fd4a9799055294dfc9dfd917380459ff05951e6895dba3ba3f7",
         "scripts/design-sync.py": "26b2f0a395b78283f3427241c827ece8426660d870bf8eab1257c0ab1a87877a",
-        "scripts/fe-gate.sh": "f6ece5c45b9a48d23215c26e8ab9333e71b495f050057f3a81b520a6ccb9c467",
+        "scripts/fe-gate.sh": "77a29e080dbc81fe5d64bab89d795399abff55aa5aabb18d6ecde75f037530dd",
         "scripts/viewport-check.mjs": "faa40944739d264a724c61e8523970e2abd183e4d1dae5e6df1cfced338c0ff4"
       },
-      "recorded": "2026-09-09",
+      "recorded": "2026-09-18",
       "source": "local-authored"
     },
     "propose": {

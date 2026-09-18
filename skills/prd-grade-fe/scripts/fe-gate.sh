@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # fe-gate — cổng tất định trước khi giao UI (/prd-grade-fe pha 4).
-# Exit: 0 xanh · 1 impeccable lỗi vận hành · 2 có finding hoặc viewport đỏ · 3 skipped (thiếu node/mạng) · 4 target thiếu
+# Exit: 0 xanh · 1 impeccable lỗi vận hành · 2 có finding (impeccable hoặc badge-consistency.py) hoặc viewport đỏ · 3 skipped (thiếu node/mạng) · 4 target thiếu
 # Bẫy đã đo trên impeccable@3.6.1: target không tồn tại → "Warning: cannot access" rồi rc 0 (giả sạch) → assert ở đây trước.
 # JSON (--json) ra stdout là MẢNG PHẲNG: {antipattern,name,severity,file,line,snippet}. npx gộp stderr vào stdout nên chỉ tin --json.
 set -u
@@ -28,6 +28,8 @@ gate() {
       for(const x of f) console.log(`${x.antipattern}\t${x.file}:${x.line}\t${(x.snippet||x.name||"").slice(0,90)}`);
       require("fs").writeFileSync(process.env.REP||"fe-gate.report.json",JSON.stringify({detect_rc:Number(process.env.RC),findings:f},null,1));
     })' || return 1
+  # GH#164: badge cùng file phải cùng pattern (icon/dot · rounded-* · hằng token) — impeccable không có rule này.
+  python3 "$HERE/badge-consistency.py" "$@" || { echo "fe-gate: badge lệch pattern trong cùng file (xem dòng trên)"; rc=2; }
   [ $rc = 2 ] && { echo "fe-gate: rc 2 — có finding, sửa rồi chạy lại (tối đa 3 vòng)"; return 2; }
   if [ $noview = 0 ]; then
     node "$HERE/viewport-check.mjs" "$@" || { echo "fe-gate: viewport đỏ (scroll ngang ở 320/375/414/768)"; return 2; }

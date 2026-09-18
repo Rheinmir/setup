@@ -1,7 +1,7 @@
 <!-- SINH BẰNG CODE: build-capabilities.py — ĐỪNG sửa tay; chạy lại để cập nhật. -->
 # CAPABILITIES — toàn bộ đồ nghề (luôn-mới, đếm từ đĩa)
 
-**102 skill · 20 rule · 26 fdk-tool · 75 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
+**103 skill · 20 rule · 38 fdk-tool · 75 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
 
 ## Skills (gọi bằng `/<tên>`)
 
@@ -12,7 +12,8 @@
 - **`/record-episode`** — Ghi một SESSION EPISODE có cấu trúc (tầng nhớ episodic) vào memory store để phiên sau truy…
 - **`/wiki-room`** — Mở room (subagent 1 tầng) nạp chi tiết wiki khi context phiên chính đã rot
 
-### dev-loop (20)
+### dev-loop (21)
+- **`/br`** — Hub MỘT TÊN cho dây chuyền sản xuất kiểu Ralph (GH#15): biến tài liệu thô của user thành s…
 - **`/build-now-adapt-later`** — When a task is blocked by missing or unverified information (an undocumented protocol, an …
 - **`/doyourmagic`** — Given a freshly-cloned external repo/tool, run clone→explore→verify→write to produce a bun…
 - **`/failure-flywheel`** — Capture each agent failure, bucket and count it deterministically, and when a failure clas…
@@ -139,17 +140,29 @@
 
 ## FDK tools (`python3 fdk/tools/<x>`)
 - `artifacts.py`
+- `br-contract.py`
+- `br-fill.py`
+- `br-find.py`
+- `br-prompts.py`
+- `br-queue.py`
+- `br-rail.py`
+- `br-revise.py`
+- `br-run.py`
+- `br-sync.py`
 - `build-capabilities.py`
 - `build-cheatsheet.py`
 - `build-control-room.py`
 - `build-docs-index.py`
 - `build-health-dashboard.py`
+- `build-line-status.py`
 - `build-overstack-docs.py`
 - `build-skill-search.py`
 - `build-wiki-graph.py`
+- `checkpoint.py`
 - `ci-local.py`
 - `code-state.py`
 - `code_imports.py`
+- `frame-lint.py`
 - `frontend-antipattern.py`
 - `graph-atlas.py`
 - `graph-viz.py`
@@ -242,10 +255,10 @@
 - `wiki-sync.py`
 - `wikieval.py`
 
-## Neo bằng chứng — 248/248 năng lực có neo KHAI BÁO
+## Neo bằng chứng — 261/261 năng lực có neo KHAI BÁO
 **Đọc cho đúng: đây KHÔNG phải bằng chứng năng lực còn SỐNG.** Mỗi năng lực được map tất định tới một *điểm neo* bằng chứng trên đĩa (frontmatter `proof:` > rule-map > tests > self-test > golden > medic). Việc map là **tĩnh** — nó kiểm file/chuỗi có mặt, **không thực thi gì cả**. Nó bắt được ca 'năng lực này chẳng có test/golden/rule nào neo vào' (hữu ích thật), nhưng KHÔNG bắt được ca 'test có mà đỏ' hay 'engine có mà chết'. Muốn biết một dependency ngoài còn sống thì hỏi `harness/scripts/dep-health.py`. Chi tiết neo: `build-capabilities.py --capproof-json`.
 
-## TRÙNG-ỨNG-VIÊN (18) — máy phát hiện, NGƯỜI phán (dedupe = vòng /propose riêng)
+## TRÙNG-ỨNG-VIÊN (19) — máy phát hiện, NGƯỜI phán (dedupe = vòng /propose riêng)
 - `mech:medic` ↔ `mech:medic-mirror` — name-token: medic
 - `script:failure-flywheel.py` ↔ `script:flywheel.py` — name-token: flywheel
 - `script:failure-flywheel.py` ↔ `script:success-flywheel.py` — desc-jaccard 0.50
@@ -263,6 +276,7 @@
 - `skill:caveman` ↔ `skill:caveman-review` — name-token: caveman
 - `skill:caveman` ↔ `skill:caveman-stats` — name-token: caveman
 - `skill:design-taste-frontend` ↔ `skill:design-taste-frontend-v1` — name-token: design+frontend
+- `skill:lint` ↔ `tool:frame-lint.py` — name-token: lint
 - `skill:tour-guide` ↔ `skill:tour-guide-supademo` — name-token: guide+tour
 
 ## Origin

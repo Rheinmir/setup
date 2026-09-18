@@ -14,6 +14,7 @@ Hub mỏng. Không sở hữu luật thiết kế: thẩm mỹ là của **hallm
 |---|---|
 | `scripts/design-sync.py` | `design.md` là nguồn chân lý: block ```css :root{}``` → frontmatter YAML (impeccable đọc) + `tokens.css`. `--check` rc 1 khi drift. |
 | `scripts/fe-gate.sh` | Cổng trước khi giao: assert target tồn tại → `detect --json` → rc 0/1/2 đúng nghĩa → `viewport-check.mjs` 320/375/414/768. Exit 0 xanh · 1 lỗi impeccable · 2 finding/viewport đỏ · 3 skipped (thiếu node/mạng) · 4 target thiếu. |
+| `scripts/badge-consistency.py` | Rule tất định impeccable không có (GH#164): trong MỘT file, badge trạng thái (`render*Badge`/`*Status*`/`*Pill*`/span pill) phải cùng chữ ký icon-hay-dot · `rounded-*` · hằng token (`STATUS_GLASS`); badge lệch đa số (≥2) → `file:line`, fe-gate tính là finding rc 2. |
 | `references/presets/macos-glass.design.md` | Preset mặc định đã qua detect rc 0; bằng chứng ở `macos-glass.evidence.md`. |
 | `references/intake.md` | Route A/B/C → `design.md`. |
 | `references/impeccable-audit.md` | Rubric audit (5 trục /20) · harden · polish, distill có nguồn. |
@@ -57,6 +58,7 @@ python3 $SKILL/scripts/design-sync.py --check 2>/dev/null; echo sync-rc=$?
 
 ### Pha 4 — Gate (máy trước, người sau)
 1. `bash $SKILL/scripts/fe-gate.sh <output.html …>`; đọc bảng `antipattern | file:line | snippet` và `fe-gate.report.json`.
+   - Dòng `badge lệch pattern so với N badge anh em` = badge-consistency: sửa badge lệch theo anh em (đa số), không sửa ngược.
    - rc 2 → sửa đúng finding (đổi token trong `design.md` → sync lại, hoặc sửa markup) → chạy lại. **Tối đa 3 vòng.** Ghi số finding từng vòng để đưa vào report.
    - rc 1 / 3 / 4 → dừng, ghi nguyên nhân. Không có đường nào từ 1/3/4 tới "sạch".
 2. Nạp `references/impeccable-audit.md`: chấm 5 trục /20, liệt kê P0–P3; làm checklist Harden rồi Polish. **P0 phải = 0.**
@@ -72,7 +74,7 @@ Report gồm, theo thứ tự: (1) suy luận/đáp án Pha 1; (2) Genre/Macrost
 - Vòng sửa quá 3 mà còn finding → giao kèm bảng dư và nói thẳng; hoặc waiver có lý do trong `.impeccable/config.json` (`{"ignores":[...]}`) được nêu trong report. Không ignore lén.
 - Thiếu node/mạng → report ghi `skipped: <lý do>`, exit gate ≠ 0. Không có ngoại lệ "chắc cũng ổn".
 - `design.md` đã tồn tại → không ghi đè; đổi hệ thì AMEND `## Variants` (no-overwrite policy của hallmark design-md).
-- Self-check khi sửa skill: `python3 $SKILL/scripts/design-sync.py --self-test && bash $SKILL/scripts/fe-gate.sh --self-test`, rồi `bash fdk/tools/sync-skill.sh prd-grade-fe`.
+- Self-check khi sửa skill: `python3 $SKILL/scripts/design-sync.py --self-test && python3 $SKILL/scripts/badge-consistency.py --self-test && bash $SKILL/scripts/fe-gate.sh --self-test`, rồi `bash fdk/tools/sync-skill.sh prd-grade-fe`.
 
 ## Ví dụ gọi
 ```

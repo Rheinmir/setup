@@ -147,10 +147,9 @@ gh issue close 161 165 --comment "CI xanh lại sau push"
 ```
 **Verify:** `gh run list --branch orca --limit 3 --json conclusion --jq '.[].conclusion' | grep -qv failure`
 
-### Task 10: GH#160 — land skill br + 12 tool về canonical (cần file từ global harness máy gốc)
+### Task 10: GH#160 — land skill br + 12 tool về canonical (nguồn: ~/.claude/skills/br + ~/.claude/harness/fdk/tools)
 **Thoả:** — (PLAN vận hành, không có SPEC FR-xxx; nguồn yêu cầu ở ## Origin)
 **Kind:** migrate
-**Mode:** hitl
 **Depends:** —
 **Files:**
 - Tạo: `skills/br/SKILL.md`
@@ -162,6 +161,20 @@ gh issue close 161 165 --comment "CI xanh lại sau push"
 # cần máy gốc có global harness chứa skill br — copy về canonical rồi record provenance
 ```
 **Verify:** `test -f skills/br/SKILL.md && test -f fdk/tools/br-run.py`
+
+### Task 11: GH#164 — rule tất định bắt badge lệch pattern trong cùng 1 file
+**Thoả:** — (PLAN vận hành, không có SPEC FR-xxx; nguồn yêu cầu ở mục Origin)
+**Kind:** fix
+**Depends:** —
+**Files:**
+- Tạo: `skills/prd-grade-fe/scripts/badge-consistency.py`
+**Interfaces:**
+- Consumes: —
+- Produces: `badge-consistency.py <file...>` rc 1 + cảnh báo khi badge cùng file lệch pattern
+```bash
+python3 skills/prd-grade-fe/scripts/badge-consistency.py --self-test
+```
+**Verify:** `python3 skills/prd-grade-fe/scripts/badge-consistency.py --self-test`
 
 ## Origin
 - Phiên 0d1b17dc (18/09/2026) nối tiếp handover 43638fd4; user: "lưu mấy task này vào /orca-graph và kéo issue về bổ sung vào graph".

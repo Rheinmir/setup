@@ -47,6 +47,7 @@
       "skills": [
         "./skills/agent-reach",
         "./skills/blur",
+        "./skills/br",
         "./skills/brandkit",
         "./skills/build-now-adapt-later",
         "./skills/check-approve",
