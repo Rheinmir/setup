@@ -35,12 +35,6 @@
   "ts": "2026-09-18T09:55:31",
   "session": null
  },
- "concepts/skill-craft.md": {
-  "by": "fdk/CAPABILITIES.md",
-  "action": "code-drift",
-  "ts": "2026-09-18T09:55:31",
-  "session": null
- },
  "concepts/provenance-log.md": {
   "by": "harness/metrics/provenance-log.jsonl (+2)",
   "action": "code-drift",
@@ -1078,5 +1072,11 @@
   "action": "code-drift",
   "ts": "2026-09-18T09:55:31",
   "session": null
+ },
+ "sources/190926-skill-design-standard-swh-prd.md": {
+  "by": "concepts/skill-craft.md",
+  "action": "modify",
+  "ts": "2026-09-19T10:42:19",
+  "session": "9398848d"
  }
 }

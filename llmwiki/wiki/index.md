@@ -140,6 +140,7 @@
 | [100926-install-seed-skipped-on-migrate](sources/draft/archive/analysis/100926-install-seed-skipped-on-migrate.md) | issue | Issue: install-harness.sh chỉ seed khung llmwiki ở MODE=new |
 | [100926-r3-index-sync-precommit](sources/draft/archive/analysis/100926-r3-index-sync-precommit.md) | issue | Issue: R3 index-sync chỉ CI bắt — thêm hook pre-commit khi đổi file wiki (GH#150) |
 | [100926-recall-skipped-downstream](sources/draft/archive/analysis/100926-recall-skipped-downstream.md) | issue | Issue: recall/okf-scan không chạy ở bản cài thiếu .template-manifest.json (GH#151) |
+| [190926-session-provenance](sources/provenance/190926-session-provenance.md) | source | session-provenance 9398848d — auto-distill |
 <!-- index:auto:end -->
 | [140726-propose-plan-split-superpowers](sources/draft/archive/analysis/140726-propose-plan-split-superpowers.md) | draft | Tách vòng đời đề xuất thành SPEC (/propose, người duyệt) và PLAN (/plan mới, agent mù thi hành), mở rộng R7 cắn cả hai |
 | [110726-shipped-vs-documented-parity](sources/draft/archive/analysis/110726-shipped-vs-documented-parity.md) | draft | Issue: tài liệu hứa 74 skill nhưng npx chỉ giao 67 trong im lặng — cần cổng so hứa với giao ở fresh-install-smoke --remote |
