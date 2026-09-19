@@ -27,7 +27,7 @@ egress:
   # +2026-09-18: thêm freefrontend.com + codepen.io + cdpn.io — user yêu cầu chép NGUYÊN code gốc
   # (pen public CodePen = MIT) cho các skill hiệu ứng; guard chặn làm skill phải viết lại cùi.
   allow_domains: [github.com, raw.githubusercontent.com,
-                  freefrontend.com, codepen.io, cdpn.io, assets.codepen.io,
+                  freefrontend.com, codepen.io, cdpn.io, assets.codepen.io, api.cloudflare.com,
                   askctd-resource.services.ai.azure.com,
                   askctd-resource.openai.azure.com,
                   ctd-opus-resource.services.ai.azure.com,
