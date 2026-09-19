@@ -262,6 +262,13 @@ def session_touched_files(root: str, transcript_path: str):
                                  capture_output=True, text=True, timeout=10).stdout
             top = subprocess.run(["git", "-C", root, "rev-parse", "--show-toplevel"],
                                  capture_output=True, text=True, timeout=5).stdout.strip() or root
+            # file thuộc commit tạo TRONG phiên — đã commit thì rời git status nhưng user vẫn cần xem
+            log = subprocess.run(["git", "-C", root, "log", f"--since=@{int(start)}", "--name-only", "--format="],
+                                 capture_output=True, text=True, timeout=10).stdout
+            for rel in log.splitlines():
+                p = os.path.join(top, rel.strip())
+                if rel.strip() and os.path.isfile(p):
+                    seen.add(os.path.abspath(p))
             for ent in out.split("\0"):
                 if len(ent) > 3 and ent[:2] != " D" and ent[0] != "D":
                     p = os.path.join(top, ent[3:])
@@ -270,14 +277,27 @@ def session_touched_files(root: str, transcript_path: str):
         except Exception:
             pass
     files = [p for p in seen if os.path.isfile(p) and not any(n in p for n in _TOUCHED_NOISE)]
-    return sorted(files, key=os.path.getmtime, reverse=True)
+    return sorted(files, key=lambda p: (_touched_rank(p), -os.path.getmtime(p)))
+
+
+def _touched_rank(p: str) -> int:
+    """Thứ tự user muốn xem (feedback 190926): HTML trong llmwiki → graph → PLAN → còn lại."""
+    q = p.replace(os.sep, "/")
+    in_wiki = "/llmwiki/" in q or "/.llmwiki/" in q
+    if in_wiki and "/graph/" in q:
+        return 1
+    if in_wiki and q.endswith(".html"):
+        return 0
+    if q.endswith("-PLAN.md"):
+        return 2
+    return 3
 
 
 def touched_message(files, cap: int = TOUCHED_CAP) -> str:
     """Khối text cho user: tối đa `cap` link file:// (mới nhất trước), dư thì ghi '+N file nữa'."""
     if not files:
         return ""
-    lines = [f"📂 [R21] {len(files)} file phiên này tạo/sửa (mới nhất trước):"]
+    lines = [f"📂 [R21] {len(files)} file phiên này tạo/sửa (HTML llmwiki → graph → PLAN → còn lại; mới nhất trước):"]
     lines += [f"  file://{p}" for p in files[:cap]]
     if len(files) > cap:
         lines.append(f"  … +{len(files) - cap} file nữa (trần {cap} — OVERSTACK_TOUCHED_CAP)")

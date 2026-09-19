@@ -253,7 +253,7 @@ rules:
     id: R21
     name: touched-paths
     kind: hook_event
-    statement: "Stop: cuối MỖI lượt, hook in cho user (systemMessage — hiện thẳng ở UI, 0 token của model) đường dẫn tuyệt đối dạng file:// của mọi file phiên này tạo/sửa, mới nhất trước, TRẦN 40 link (dư thì ghi +N). Nguồn: Write/Edit trong transcript + git status có mtime >= mốc đầu phiên (bắt cả sửa qua Bash). Tắt: OVERSTACK_TOUCHED_PATHS=0; đổi trần: OVERSTACK_TOUCHED_CAP."
+    statement: "Stop: cuối MỖI lượt, hook in cho user (systemMessage — hiện thẳng ở UI, 0 token của model) đường dẫn tuyệt đối dạng file:// của mọi file phiên này tạo/sửa, thứ tự HTML llmwiki → graph → PLAN → còn lại (trong nhóm mới nhất trước), TRẦN 40 link (dư thì ghi +N). Nguồn: Write/Edit trong transcript + git status có mtime >= mốc đầu phiên (bắt cả sửa qua Bash) + file thuộc commit tạo trong phiên. Tắt: OVERSTACK_TOUCHED_PATHS=0; đổi trần: OVERSTACK_TOUCHED_CAP."
     enforce_at: [session]
     event: Stop
     event_action: stop                     # chạy CHUNG Stop hook với R3 (stop.py) — cùng lệnh harness-events.py stop

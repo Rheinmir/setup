@@ -181,7 +181,7 @@ rules:
   - id: R21
     name: touched-paths
     validator: stop.py
-    statement: "Stop: cuối MỖI lượt, hook in cho user (systemMessage, 0 token của model) đường dẫn tuyệt đối file:// của mọi file phiên này tạo/sửa, mới nhất trước, trần 40 link (dư ghi +N). Nguồn: Write/Edit trong transcript + git status mtime >= mốc đầu phiên. Tắt OVERSTACK_TOUCHED_PATHS=0; trần OVERSTACK_TOUCHED_CAP."
+    statement: "Stop: cuối MỖI lượt, hook in cho user (systemMessage, 0 token của model) đường dẫn tuyệt đối file:// của mọi file phiên này tạo/sửa, thứ tự HTML llmwiki → graph → PLAN → còn lại (trong nhóm mới nhất trước), trần 40 link (dư ghi +N). Nguồn: Write/Edit trong transcript + git status mtime >= mốc đầu phiên + file thuộc commit tạo trong phiên. Tắt OVERSTACK_TOUCHED_PATHS=0; trần OVERSTACK_TOUCHED_CAP."
     enforce_at: [session]
     event: Stop
     event_action: stop

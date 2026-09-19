@@ -42,3 +42,22 @@ def test_cap_40():
     msg = hooklib.touched_message(files)
     assert msg.count("file://") == 40 and "+5 file nữa" in msg
     assert hooklib.touched_message([]) == ""
+
+
+def test_order_html_graph_plan_rest(tmp_path):
+    import hooklib as hl
+    fs = {}
+    for rel in ("fdk/tools/x.py", "llmwiki/wiki/sources/draft/190926-a-PLAN.md", "llmwiki/graph/g.graph.html",
+                "llmwiki/html/report.html"):
+        p = tmp_path / rel; p.parent.mkdir(parents=True, exist_ok=True); p.write_text("x"); fs[rel] = str(p)
+    order = sorted(fs.values(), key=lambda p: (hl._touched_rank(p), 0))
+    assert [Path(p).name for p in order] == ["report.html", "g.graph.html", "190926-a-PLAN.md", "x.py"]
+
+
+def test_committed_in_session_still_listed(tmp_path):
+    repo = _repo(tmp_path / "repo")
+    (repo / "done.py").write_text("x")
+    subprocess.run(["git", "-C", str(repo), "add", "done.py"], check=True)
+    subprocess.run(["git", "-C", str(repo), "-c", "user.email=t@t", "-c", "user.name=t", "commit", "-qm", "c"], check=True)
+    files = hooklib.session_touched_files(str(repo), str(_transcript(tmp_path, tmp_path / "khac.md")))  # done.py KHÔNG có trong transcript
+    assert "done.py" in {Path(f).name for f in files}
