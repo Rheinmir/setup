@@ -157,3 +157,8 @@ cc4f999ad |
 | 2026-09-19 14:07:12 | `file.write` | llmwiki/wiki/sources/draft/190926-swh-reuse-layer-PLAN.md · tool=Write · session= · actor=agent · prev=666b3c4f7f53cbac3 |
 
 <!-- log:auto:end -->
+
+## 2026-09-19 — fdk-uat — ship SWH v1.1 Reuse Layer (66cd426)
+- PHA 1 canary (3 biến override): 3 trụ ✓ · test-broad 80/80 · npx ghi mới 103 skill · `new-skill` bản mới có `reuse_decision` · `skill-reuse.py` ở engine global · catalog KHÔNG ship (framework-only, đúng thiết kế; `new-skill.py` không có ở engine global nên không ghi rác) · orchestration skills reachable · worktree Orca `uat-260919-1422` assert thấy.
+- PHA 2 main-URL (không override, ref `rheinmir/setup#orca`): sentinel khớp lượt 1 · test-broad 80/80 · `reuse_decision` có trong skill cài · `skill-reuse.py` global.
+- Canary đã xoá.
