@@ -34,7 +34,8 @@ def main() -> None:
     skills_dir = sys.argv[2] if len(sys.argv) > 2 else os.path.join(ROOT, "skills")
 
     data = {}
-    for p in sorted(glob.glob(os.path.join(skills_dir, "*", "SKILL.md"))):
+    for p in sorted(glob.glob(os.path.join(skills_dir, "*", "SKILL.md"))
+                    + glob.glob(os.path.join(skills_dir, "external", "*", "SKILL.md"))):
         name = os.path.basename(os.path.dirname(p))
         with open(p, encoding="utf-8") as f:
             data[name] = f.read()

@@ -173,7 +173,7 @@ def self_test():
     # engine load được + mọi golden có expected là skill THẬT trên đĩa.
     mod = _load_search()
     index = mod.build_index(str(SKILLS_DIR))
-    on_disk = {d.name for d in SKILLS_DIR.iterdir() if (d / "SKILL.md").exists()}
+    on_disk = {d.name for d in [*SKILLS_DIR.iterdir(), *SKILLS_DIR.glob("external/*/")] if (d / "SKILL.md").exists()}
     for g in load_goldens():
         for s in g["expected"]:
             assert s in on_disk, f"golden {g['id']}: expected '{s}' không phải skill thật"

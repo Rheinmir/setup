@@ -11,7 +11,8 @@ cd "$(git rev-parse --show-toplevel)"
 
 fail=0
 for name in "$@"; do
-  src="skills/$name/SKILL.md"
+  base="skills/$name"; [ -f "$base/SKILL.md" ] || base="skills/external/$name"   # external = skill kéo từ upstream
+  src="$base/SKILL.md"
   if [ ! -f "$src" ]; then echo "✗ $name: thiếu canonical $src"; fail=1; continue; fi
 
   mirror=$(ls llmwiki/skills/*/"$name".md 2>/dev/null | head -1 || true)
@@ -26,7 +27,7 @@ for name in "$@"; do
   cp "$src" "$inst" && echo "✓ $name → $inst"
   # skill có scripts/ references/ assets/ → bản cài phải mang theo, không thì SKILL.md trỏ vào hư không (prd-grade-fe 080926)
   for sub in scripts references assets; do
-    [ -d "skills/$name/$sub" ] && rsync -a --delete "skills/$name/$sub/" "$HOME/.claude/skills/$name/$sub/" && echo "✓ $name/$sub → ~/.claude/skills/$name/$sub"
+    [ -d "$base/$sub" ] && rsync -a --delete "$base/$sub/" "$HOME/.claude/skills/$name/$sub/" && echo "✓ $name/$sub → ~/.claude/skills/$name/$sub"
   done
 
   # verify parity — sync mà không kiểm là vòng phản hồi cụt

@@ -78,7 +78,8 @@ def loop_of(name):
 def pairs():
     """(name, skills_src_path, llmwiki_target_path) cho mọi skill canonical."""
     out = []
-    for d in sorted(SKILLS.iterdir()):
+    # skills/external/<tên>/ = skill kéo từ upstream (category riêng, concept solid-what-how) — vẫn mirror
+    for d in sorted(list(SKILLS.iterdir()) + list((SKILLS / "external").glob("*/"))):
         src = d / "SKILL.md"
         if d.is_dir() and src.is_file():
             out.append((d.name, src, LLMWIKI / loop_of(d.name) / f"{d.name}.md"))

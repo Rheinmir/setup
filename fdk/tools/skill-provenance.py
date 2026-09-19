@@ -57,6 +57,12 @@ def _resolve_skills_dir(repo: Path) -> Path:
 
 
 SKILLS = _resolve_skills_dir(REPO)
+
+
+def _dir(name: str) -> Path:
+    """skills/<tên>/ hoặc skills/external/<tên>/ (skill kéo từ upstream — category riêng)."""
+    ext = SKILLS / "external" / name
+    return ext if (ext / "SKILL.md").exists() else SKILLS / name
 STORE = REPO / "fdk" / "skills.provenance.json"
 SCHEMA = "skill-provenance/v1"
 
@@ -75,7 +81,7 @@ def skill_files(name: str) -> dict[str, str]:
     Bỏ SKIP_DIRS (vd node_modules): npm tự regen từ package-lock.json, không track git, nội dung
     lệch giữa các lần cài (symlink .bin, .package-lock.json) → hash trên nó không tái lập được,
     báo MODIFIED giả (đo thật 2026-09-17: dark-mode-maker/visual-qa 190+/194 file là node_modules)."""
-    root = SKILLS / name
+    root = _dir(name)
     out = {}
     for p in sorted(root.rglob("*")):
         if p.is_file() and not (SKIP_DIRS & set(p.relative_to(root).parts)):
@@ -98,7 +104,7 @@ def save_store(data: dict) -> None:
 
 
 def on_disk_skills() -> list[str]:
-    return sorted(d.name for d in SKILLS.iterdir()
+    return sorted(d.name for d in [*SKILLS.iterdir(), *SKILLS.glob("external/*/")]
                   if d.is_dir() and (d / "SKILL.md").exists())
 
 
@@ -112,7 +118,7 @@ def cmd_record(a) -> int:
         names = [a.name]
     today = date.today().isoformat()
     for name in names:
-        if not (SKILLS / name / "SKILL.md").exists():
+        if not (_dir(name) / "SKILL.md").exists():
             sys.exit(f"✗ skills/{name}/SKILL.md không tồn tại")
         # --all backfill: không đè source đã có (giữ nguồn thật đã ghi trước đó)
         if a.all and name in data["skills"] and data["skills"][name].get("source"):

@@ -21,7 +21,8 @@ import bnal_metrics
 
 _FALLBACK = {"verified": False, "sweep_threshold": 12,
              "counted_globs": ["harness/scripts/*.py", "harness/*.config.yaml",
-                               "harness/validators/*.py", "skills/*/SKILL.md"]}
+                               "harness/validators/*.py", "skills/*/SKILL.md",
+                               "skills/external/*/SKILL.md"]}
 _MARKER = "sweep-marker.json"
 
 

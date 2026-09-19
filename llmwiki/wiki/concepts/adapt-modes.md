@@ -31,6 +31,7 @@ Hai trục phân loại:
 - **Travel**: chỉ **recipe** đi theo git; engine cài global (`~/.agents/skills`); **state máy-local KHÔNG travel**.
 - **Chọn khi**: công cụ lớn/nặng, đổi nhanh, không muốn ôm chục-nghìn-LOC, chấp nhận phụ thuộc ngoài.
 - **Ví dụ**: `last30days` (mvanhorn), `agent-reach` (Panniantong) — đăng ký ở `travel-policy.yaml` Tầng 1 `research_reach`.
+- **Chỗ nằm trong repo**: `skills/external/<tên>/` — category riêng cho mọi skill KÉO NGOÀI (23 skill: taste-skill, caveman, find-skills, last30days, agent-reach), provenance ghi `adapt_mode: external-pull` + `category: external`. Vẫn cài xuống downstream qua `npx skills add` (CLI quét sâu một cấp dưới `skills/`); không viết lại theo chuẩn [[solid-what-how]] vì lần kéo upstream kế tiếp sẽ đè mất (19/09/2026).
 - **Giá phải trả**: phụ thuộc mạng/upstream; state máy-local (yt-dlp/ffmpeg/Node/mcporter + cookie login + API key) phải **tái lập mỗi máy** bằng `agent-reach doctor` / `install --safe` (self-heal). Đây là ranh giới `build-now-adapt-later`.
 
 ## Kiểu 3 — NHÚNG-SỞ-HỮU (vendor / fork-in) — điểm giữa

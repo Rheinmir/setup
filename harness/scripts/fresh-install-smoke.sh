@@ -91,7 +91,8 @@ echo "${Y}parity hứa↔giao:${X}"
 SK_DIR="${AGENTS_SKILLS_DIR:-$REAL_HOME/.agents/skills}"
 if [ -d "$SK_DIR" ]; then
   dropped=""
-  for sk in "$ROOT"/skills/*/SKILL.md; do
+  for sk in "$ROOT"/skills/*/SKILL.md "$ROOT"/skills/external/*/SKILL.md; do
+    [ -f "$sk" ] || continue
     n="$(basename "$(dirname "$sk")")"
     [ "$n" = "fdk" ] && continue                      # cố ý không ship xuống user (ADR-004)
     [ -d "$SK_DIR/$n" ] || dropped="$dropped $n"

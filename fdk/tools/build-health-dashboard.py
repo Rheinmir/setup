@@ -306,7 +306,7 @@ def main():
 
     # 2) counts strip (live file scan)
     counts = {
-        "skills": count_dirs("skills/*/"),
+        "skills": len(glob.glob(str(ROOT / "skills/*/SKILL.md")) + glob.glob(str(ROOT / "skills/external/*/SKILL.md"))),
         "validators": count_glob("harness/validators/*.py"),
         "hooks": count_glob("llmwiki/.claude/hooks/*.py"),
         "rules": count_rules(),
@@ -340,7 +340,7 @@ def main():
         metric_html(counts["adrs"], "ADRs", "sources/adr"),
     ])
     drift_rows = "\n".join([
-        drift_row("skills/ directories", "ls -d skills/*/", truth, "nguồn chân lý — đếm thư mục skill thật", truth, is_truth=True),
+        drift_row("skills/ directories", "ls skills/*/SKILL.md skills/external/*/SKILL.md", truth, "nguồn chân lý — đếm thư mục skill thật", truth, is_truth=True),
         drift_row("marketplace.json entries", ".claude-plugin/marketplace.json", drift["marketplace"], "skill được khai trong plugin npx", truth),
         drift_row("AGENT.md skill-table rows", "llmwiki/AGENT.md", drift["agent"], "bảng router cho agent", truth),
         drift_row("CLAUDE.md skill-table rows", "llmwiki/CLAUDE.md", drift["claude"], "bảng router cho Claude", truth),

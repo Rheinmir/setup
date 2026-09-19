@@ -64,7 +64,7 @@ def _parse(fm):
 def _skills():
     """(tên skill, description) — đổi trigger = downstream cần biết."""
     out = []
-    for sk in sorted((ROOT / "skills").glob("*/SKILL.md")):
+    for sk in sorted([*(ROOT / "skills").glob("*/SKILL.md"), *(ROOT / "skills").glob("external/*/SKILL.md")]):
         d, _ = _parse(_frontmatter(sk.read_text(encoding="utf-8", errors="ignore")))
         desc = str((d or {}).get("description", ""))[:200]
         out.append(f"skill:{sk.parent.name}:{desc}")
@@ -74,7 +74,7 @@ def _skills():
 def unshippable():
     """Skill có frontmatter YAML HỎNG → CLI drop im lặng → không bao giờ tới người dùng."""
     bad = []
-    for sk in sorted((ROOT / "skills").glob("*/SKILL.md")):
+    for sk in sorted([*(ROOT / "skills").glob("*/SKILL.md"), *(ROOT / "skills").glob("external/*/SKILL.md")]):
         d, err = _parse(_frontmatter(sk.read_text(encoding="utf-8", errors="ignore")))
         if err:
             bad.append((sk.parent.name, err))

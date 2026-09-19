@@ -13,6 +13,7 @@ counted_globs:                    # ASSUMPTION (not verified) — cái gì tính
   - "harness/*.config.yaml"
   - "harness/validators/*.py"
   - "skills/*/SKILL.md"
+  - "skills/external/*/SKILL.md"
 
 # ADAPT-CHECKLIST (finalize khi có nhịp dev thật):
 #   1. Quan sát vài chu kỳ build→sweep; chỉnh sweep_threshold cho khớp (đừng nhắc quá dày/thưa).

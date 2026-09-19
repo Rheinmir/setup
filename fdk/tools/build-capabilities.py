@@ -217,7 +217,7 @@ def capproof(root: Path) -> dict:
     if src is None:
         return {"schema": "capproof/v1", "downstream": True}
     items, descs = {}, {}
-    for d in sorted(skills_dir(root).glob("*/")):
+    for d in sorted([*skills_dir(root).glob("*/"), *skills_dir(root).glob("external/*/")]):
         sk = d / "SKILL.md"
         if sk.is_file():
             body = sk.read_text(encoding="utf-8", errors="ignore")
@@ -274,7 +274,7 @@ def build(root: Path) -> str:
     repo = is_framework_repo(root)
     loops = load_loops(root)
     skills = []
-    for d in sorted(skills_dir(root).glob("*/")):
+    for d in sorted([*skills_dir(root).glob("*/"), *skills_dir(root).glob("external/*/")]):
         name = d.name
         sk = d / "SKILL.md"
         if sk.is_file():

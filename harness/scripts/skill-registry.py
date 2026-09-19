@@ -126,7 +126,7 @@ def build():
     agent = table_skills(REPO / "llmwiki" / "AGENT.md")
     claude = table_skills(REPO / "llmwiki" / "CLAUDE.md")
     entries = []
-    for d in sorted((REPO / "skills").iterdir()):
+    for d in sorted(list((REPO / "skills").iterdir()) + list((REPO / "skills" / "external").glob("*/"))):
         src = d / "SKILL.md"
         if not (d.is_dir() and src.is_file()):
             continue

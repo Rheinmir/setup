@@ -185,7 +185,8 @@ def main():
     ap.add_argument("--ci", action="store_true")
     a = ap.parse_args()
 
-    rows = [analyze(p) for p in sorted(glob.glob(os.path.join(a.skills_dir, "*", "SKILL.md")))]
+    rows = [analyze(p) for p in sorted(glob.glob(os.path.join(a.skills_dir, "*", "SKILL.md"))
+                                        + glob.glob(os.path.join(a.skills_dir, "external", "*", "SKILL.md")))]
     if not rows:
         print(f"skill-health: không thấy skill nào trong {a.skills_dir}/", file=sys.stderr)
         sys.exit(0)

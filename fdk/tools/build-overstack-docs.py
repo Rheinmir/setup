@@ -69,7 +69,7 @@ def skills_by_loop(root: Path):
         sk_dir = Path.home() / ".claude" / "skills"
     by = {}
     n = 0
-    for d in sorted(sk_dir.glob("*/")):
+    for d in sorted([*sk_dir.glob("*/"), *sk_dir.glob("external/*/")]):
         sk = d / "SKILL.md"
         if not sk.is_file():
             continue
@@ -960,7 +960,7 @@ def sections(root: Path):
     _n_val = len(list((root / "harness" / "validators").glob("*.py"))) if (root / "harness" / "validators").is_dir() else 0
     _n_hook = len(list((root / "llmwiki" / ".claude" / "hooks").glob("*.py"))) if (root / "llmwiki" / ".claude" / "hooks").is_dir() else 0
     _facts = [  # CHỈ FACT ỔN ĐỊNH (đổi thì regen cùng commit → docs-probe xanh); mỗi dòng có nguồn + lệnh
-        ("skill", n_sk, "đĩa", "ls skills/*/SKILL.md | wc -l"),
+        ("skill", n_sk, "đĩa", "ls skills/*/SKILL.md skills/external/*/SKILL.md | wc -l"),
         ("rule", n_rules, "policy", "grep -c 'id: R' harness/poc-vendor-neutral/policy.yaml"),
         ("validator", _n_val, "đĩa", "ls harness/validators/*.py | wc -l"),
         ("hook", _n_hook, "đĩa", "ls llmwiki/.claude/hooks/*.py | wc -l"),

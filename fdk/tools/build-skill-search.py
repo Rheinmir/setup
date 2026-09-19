@@ -133,7 +133,8 @@ def load_skills(skills_dir):
     clickable `KNOWN` set, which is keyed by skill name.
     """
     merged = {}
-    for path in sorted(glob.glob(os.path.join(skills_dir, "*", "SKILL.md"))):
+    for path in sorted(glob.glob(os.path.join(skills_dir, "*", "SKILL.md"))
+                       + glob.glob(os.path.join(skills_dir, "external", "*", "SKILL.md"))):
         text = open(path, encoding="utf-8").read()
         fm = parse_frontmatter(text)
         name = fm.get("name") or os.path.basename(os.path.dirname(path))
