@@ -1,0 +1,303 @@
+{
+ "id": "190926-swh-reuse-layer",
+ "plan": "llmwiki/wiki/sources/draft/190926-swh-reuse-layer-PLAN.md",
+ "built": "2026-09-19T14:07:12+0700",
+ "nodes": [
+  {
+   "id": "t1",
+   "title": "catalog + seed pattern/template (swh.reuse/1)",
+   "files": [
+    "fdk/skill-catalog/catalog.json",
+    "fdk/skill-catalog/patterns/P01-evidence-to-artifact.md",
+    "fdk/skill-catalog/templates/T00-compact.md"
+   ],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "`catalog.json` = `{\"schema_version\":\"swh.reuse/1\",\"assets\":[{asset_id,kind,version,status,path,effect_class,problem_tags,applicable_when,not_applicable_when,params:{name:{type,required,enum?,min?,max?}},evidence:\"limited_evidence\"}]}`"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 -c \"import json;d=json.load(open('fdk/skill-catalog/catalog.json'));assert d['schema_version']=='swh.reuse/1' and len(d['assets'])>=6\"",
+   "qc": "",
+   "spec_hash": "04019d823c410a2d",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "04019d823c410a2d"
+  },
+  {
+   "id": "t2",
+   "title": "skill-reuse.py — search · decide · resolve · render",
+   "files": [
+    "fdk/tools/skill-reuse.py",
+    "harness/tests/test_skill_reuse.py"
+   ],
+   "consumes": [
+    "`fdk/skill-catalog/catalog.json`"
+   ],
+   "produces": [
+    "`search(contract) -> list[dict]` (lọc cứng status∈{active} + effect_class khớp TRƯỚC, rồi xếp hạng theo tag, tối đa 3) · `resolve(recipe) -> lock` (sha256 từng asset, cycle/độ sâu ≤ 3 → `DEPENDENCY_CYCLE`/`DEPTH_LIMIT`) · `render(template_text, params, schema) -> str` (lỗi `INVALID_PARAMETER`/`UNRESOLVED_SLOT`) · CLI `search|decide|resolve|render`"
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 -m pytest -q harness/tests/test_skill_reuse.py",
+   "qc": "",
+   "spec_hash": "dbfbe760209dd835",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "dbfbe760209dd835"
+  },
+  {
+   "id": "t3",
+   "title": "new-skill.py dùng catalog + ghi reuse_decision + recipe",
+   "files": [
+    "fdk/tools/new-skill.py",
+    "skills/new-skill/SKILL.md",
+    "fdk/skill-catalog/recipes/.keep"
+   ],
+   "consumes": [
+    "`skill-reuse.search/resolve/render`"
+   ],
+   "produces": [
+    "`new-skill.py <name> --loop L --desc D [--from <asset_id> --params p.json]`; không `--from` → in top-3 gợi ý từ catalog, ghi decision `scratch` (hoặc `catalog_unavailable` nếu không đọc được catalog); `--from` → render + ghi `fdk/skill-catalog/recipes/<name>.recipe.json` (lock_status resolved, sha256 base)"
+   ],
+   "deps": [
+    "t2"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 -m pytest -q harness/tests/test_skill_reuse.py -k new_skill",
+   "qc": "",
+   "spec_hash": "edae0232a53ccc27",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "edae0232a53ccc27"
+  },
+  {
+   "id": "t4",
+   "title": "swh-lint — SWH-PLACEHOLDER + SWH-LOCK",
+   "files": [
+    "fdk/tools/swh-lint.py",
+    "harness/tests/test_swh_lint.py"
+   ],
+   "consumes": [
+    "`fdk/skill-catalog/recipes/<skill>.recipe.json` (nếu có)"
+   ],
+   "produces": [
+    "finding `SWH-PLACEHOLDER` (còn `${...}` hoặc marker việc-chưa-điền của template T00 ngoài khối code) và `SWH-LOCK` (recipe unresolved hoặc sha256 base ≠ file hiện tại — RE-04)"
+   ],
+   "deps": [
+    "t2"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 -m pytest -q harness/tests/test_swh_lint.py && python3 fdk/tools/swh-lint.py --ci",
+   "qc": "",
+   "spec_hash": "681ab611c61cc893",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "681ab611c61cc893"
+  },
+  {
+   "id": "t5",
+   "title": "ledger chi phí authoring (mức manual)",
+   "files": [
+    "fdk/tools/skill-reuse.py",
+    "harness/tests/test_skill_reuse.py"
+   ],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "`harness/metrics/skill-authoring.jsonl` (event_id idempotent, skill, decision, minutes, outcome); `report` in median/p75/n theo decision, `benefit_unproven` khi thiếu baseline scratch cùng cohort; ví dụ hòa vốn F=12, scratch=8, reuse=3 → 3 lần (RU-08 QA)"
+   ],
+   "deps": [
+    "t3"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 -m pytest -q harness/tests/test_skill_reuse.py -k ledger",
+   "qc": "",
+   "spec_hash": "f894ec20360dd853",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "f894ec20360dd853"
+  },
+  {
+   "id": "t6",
+   "title": "nối cổng + tài liệu (CI, medic, concept, fdk skill)",
+   "files": [
+    ".github/workflows/harness.yml",
+    "skills/fdk/SKILL.md",
+    "llmwiki/wiki/concepts/solid-what-how.md"
+   ],
+   "consumes": [
+    "Task 2–5"
+   ],
+   "produces": [
+    "CI chạy `test_skill_reuse.py`; mechanism `skill-reuse`; hướng dẫn author trỏ tới catalog"
+   ],
+   "deps": [
+    "t4",
+    "t5"
+   ],
+   "deps_conf": "chắc",
+   "kind": "infra",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/ci-local.py",
+   "qc": "",
+   "spec_hash": "dab0503b8889074c",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "dab0503b8889074c"
+  },
+  {
+   "id": "t7",
+   "title": "kiểm trước /ship — ci-local + /fdk-uat canary (HITL)",
+   "files": [
+    "harness/version.json"
+   ],
+   "consumes": [
+    "toàn bộ task trước"
+   ],
+   "produces": [
+    "biên lai ci-local + UAT canary/main-URL"
+   ],
+   "deps": [
+    "t6"
+   ],
+   "deps_conf": "chắc",
+   "kind": "release",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/ci-local.py",
+   "qc": "",
+   "spec_hash": "338b58bff364cf9a",
+   "state": "dispatched",
+   "gen": 1,
+   "rev": 2,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "unverified"
+  }
+ ],
+ "layers": [
+  [
+   "t1"
+  ],
+  [
+   "t2"
+  ],
+  [
+   "t3",
+   "t4"
+  ],
+  [
+   "t5"
+  ],
+  [
+   "t6"
+  ],
+  [
+   "t7"
+  ]
+ ],
+ "parent": {
+  "graph": "190926-swh-skill-standardize",
+  "node": "t1"
+ },
+ "depth": 1,
+ "plan_version": 2,
+ "superseded": [],
+ "max_parallel": 4,
+ "conflicts": [],
+ "links": [
+  {
+   "to_graph": "160926-theme-toggle-circle-reveal-motion",
+   "to_node": "t5",
+   "via": [
+    "skills/fdk/SKILL.md"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "190926-swh-skill-standardize",
+   "to_node": "t1",
+   "via": [
+    "llmwiki/wiki/concepts/solid-what-how.md"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "190926-swh-skill-standardize",
+   "to_node": "t2",
+   "via": [
+    "fdk/tools/swh-lint.py",
+    "harness/tests/test_swh_lint.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "190926-swh-skill-standardize",
+   "to_node": "t3",
+   "via": [
+    "fdk/tools/new-skill.py",
+    "skills/fdk/SKILL.md",
+    "skills/new-skill/SKILL.md"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "190926-swh-skill-standardize",
+   "to_node": "t15",
+   "via": [
+    ".github/workflows/harness.yml"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "190926-swh-skill-standardize",
+   "to_node": "t17",
+   "via": [
+    "harness/version.json"
+   ],
+   "kind": "touches-same-file"
+  }
+ ],
+ "control": "active",
+ "schema_version": 1,
+ "checksum": "3e05d56c4dc72844"
+}

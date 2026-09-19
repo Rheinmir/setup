@@ -53,6 +53,17 @@ Blocking rules SWH-001…014 (thiếu WHAT/HOW, thiếu contract, thiếu main p
 - Phạm vi migrate = skill **native** trong `skills/`. 23 skill kéo từ upstream (taste-skill, caveman, find-skills, last30days, agent-reach) chuyển vào category riêng `skills/external/`, vẫn cài xuống downstream qua `npx skills add` (CLI quét sâu một cấp dưới `skills/`), không viết lại theo SWH vì mỗi lần kéo upstream sẽ đè mất. hallmark, fable5 và i-have-adhd có gốc upstream nhưng đã sửa nhiều ở local nên tính là native (user chốt 19/09/2026).
 - Migrate giữ nguyên hành vi: chỉ sắp lại nội dung đã có vào WHAT/HOW, bổ sung contract/ví dụ còn thiếu, không đổi scope (PRD §15.2).
 
+## Reuse Layer (v1.1) — skill kế tiếp kế thừa phần đã chuẩn hoá
+
+Lời hứa: lần tạo skill sau tái dùng được workflow, contract, test và cách xử lý lỗi đã chuẩn hoá của lần trước, nên **chi phí biên** (MC, chi phí tăng thêm cho một episode mới) có thể giảm. Đây là giả thuyết phải đo, không phải bảo đảm: tổng chi phí chia đều (AC) giảm không chứng minh MC giảm.
+
+- **Sáu loại tài sản:** pattern (bài toán lặp + bất biến), template (khung có tham số typed), component (một trách nhiệm), test pack, recipe (skill này ghép gì, pin version + hash), skill instance.
+- **Kế thừa bằng composition + delta**, không bằng chuỗi override: skill = base template + component chọn + domain delta. Core contract đóng băng; chỉ đổi qua tham số có schema, slot có contract, nhánh đã khai, và delta có test riêng. Delta không được giảm bảo đảm của core.
+- **Mỗi lần tạo skill ghi một `reuse_decision`:** reuse, compose, scratch hoặc catalog_unavailable, kèm lý do. Không ép reuse để tăng tỉ lệ; mẫu không có lợi thì chọn scratch, và scratch vẫn phải qua mọi cổng SWH.
+- **Recipe pin hash chính xác**; bytes đổi mà cùng version thì hash mismatch và report cũ mất hiệu lực. Recipe còn `lock_status: unresolved` hoặc còn placeholder `${...}` thì không được phát hành.
+- **Đo trung thực:** thiếu baseline thì ghi `benefit_unproven`; episode thất bại vẫn tính vào mẫu số.
+- **Hiện thực trong overstack (mức local MVP, 19/09/2026):** catalog `fdk/skill-catalog/` (P01 · P02 candidate · P03, template T00 compact · T01 evidence-to-artifact · T02 pure-transform), tool `fdk/tools/skill-reuse.py` (search · render · verify · episode · report), `new-skill.py --from` ghi recipe vào `fdk/skill-catalog/recipes/`, `swh-lint` thêm SWH-PLACEHOLDER và SWH-LOCK. Chưa làm: promotion tự động, upgrade/quarantine lan truyền, pilot đo chi phí có baseline.
+
 ## Origin
-- **Source:** `raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md` (PRD v1.0, 19/09/2026), tóm tắt tại [[190926-skill-design-standard-swh-prd]].
+- **Source:** `raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md` (PRD v1.0) và `raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD (1).md` (v1.1 Reuse Layer), 19/09/2026, tóm tắt tại [[190926-skill-design-standard-swh-prd]].
 - **Date:** 2026-09-19

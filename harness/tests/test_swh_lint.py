@@ -95,7 +95,13 @@ def test_template_new_skill_passes_structure():
     spec = importlib.util.spec_from_file_location("newskill", ROOT / "fdk/tools/new-skill.py")
     ns = importlib.util.module_from_spec(spec); spec.loader.exec_module(ns)
     body = ns.render("demo-x", "Demo: làm X khi Y")
-    assert rules(body) == set(), rules(body)
+    assert rules(body) == {"SWH-PLACEHOLDER"}, rules(body)            # khung đúng hình, chỉ còn chờ điền
+    assert rules(body.replace("⟨TODO⟩", "x")) == set()
+
+
+def test_placeholder_slot_and_inline_code_exempt():
+    assert "SWH-PLACEHOLDER" in rules(GOOD.replace("Làm X khi Y.", "Làm ${outcome}."))
+    assert rules(GOOD.replace("Làm X khi Y.", "Làm X khi `${VAR}` có.")) == set()
 
 
 def test_heading_inside_code_fence_does_not_cut_section():

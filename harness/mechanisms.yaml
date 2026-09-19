@@ -218,3 +218,11 @@ mechanisms:
     live_probe: fdk/tools/swh-lint.py
     anchor_symbol: "setup::fdk/tools/swh-lint.py::check"
     confirmed: "2026-09-19"
+  - id: skill-reuse
+    name: "skill-reuse (Reuse Layer SWH v1.1 — catalog pattern/template, recipe pin sha256)"
+    kind: tool
+    surface: [mechanism, maintain]
+    desc: "Skill mới kế thừa phần đã chuẩn hoá qua fdk/skill-catalog: search lọc cứng effect/status TRƯỚC khi xếp hạng, render placeholder typed không eval, recipe pin sha256 (swh-lint SWH-LOCK bắt bytes đổi cùng version), mỗi lần new-skill ghi reuse_decision, ledger chi phí authoring báo benefit_unproven khi thiếu baseline. Seed limited_evidence — chưa claim tiết kiệm."
+    live_probe: fdk/tools/skill-reuse.py
+    anchor_symbol: "setup::fdk/tools/skill-reuse.py::render"
+    confirmed: "2026-09-19"

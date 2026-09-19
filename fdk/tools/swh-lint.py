@@ -16,6 +16,7 @@ Dùng:
 """
 import argparse
 import hashlib
+import importlib.util
 import json
 import re
 import subprocess
@@ -54,6 +55,8 @@ def check(text):
         out.append(("SWH-004", "HOW thiếu mục Branches (bảng guard/rejoin hoặc ghi rõ 'không có nhánh phụ')"))
     if how.strip() and not (re.search(r"positive|đúng", lh) and re.search(r"boundary|failure|biên|lỗi", lh)):
         out.append(("SWH-011", "HOW thiếu ví dụ positive + boundary/failure có expected result"))
+    if re.search(r"\$\{\w+\}|⟨TODO⟩", re.sub(r"`[^`\n]*`", "", bare)):
+        out.append(("SWH-PLACEHOLDER", "còn placeholder chưa điền (${slot} của template hoặc ⟨TODO⟩ của khung T00)"))
     if STANDARD not in front:
         out.append(("SWH-META", f"frontmatter thiếu metadata.design-standard: \"{STANDARD}\""))
     return out
@@ -74,6 +77,17 @@ def lost_tokens(old, new):
     return sorted(t for t in preserve_tokens(old) if t not in new)
 
 
+def reuse_lock_errors(skill):
+    """SWH-LOCK (Reuse Layer v1.1, RE-04): recipe reuse phải resolved và sha256 base khớp bytes hiện tại."""
+    try:
+        spec = importlib.util.spec_from_file_location("skill_reuse", Path(__file__).resolve().parent / "skill-reuse.py")
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        return mod.verify(skill)
+    except Exception:
+        return []   # không có Reuse Layer (vd kit cũ) → không kiểm được, không bịa lỗi
+
+
 def package_hash(d):
     h = hashlib.sha256()
     for f in sorted(p for p in d.rglob("*") if p.is_file()):
@@ -89,6 +103,8 @@ def git_show(rev, rel):
 def report(d, preserve=None):
     text = (d / "SKILL.md").read_text(encoding="utf-8")
     findings = [{"rule_id": r, "severity": "blocking", "message": m} for r, m in check(text)]
+    for err in reuse_lock_errors(d.name):
+        findings.append({"rule_id": "SWH-LOCK", "severity": "blocking", "message": err})
     if preserve:
         old = git_show(preserve, f"skills/{d.name}/SKILL.md")
         lost = lost_tokens(old, text) if old else []

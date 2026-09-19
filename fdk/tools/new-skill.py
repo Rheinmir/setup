@@ -20,6 +20,7 @@ Usage:
     --dry-run  print what WOULD be created (full file body + next steps); write nothing
 """
 import argparse
+import json
 import importlib.util
 import re
 import sys
@@ -61,7 +62,7 @@ def yaml_scalar(s: str) -> str:
 
 def render(name: str, desc: str) -> str:
     """The SKILL.md body — khung compact solid-what-how/1 (concept llmwiki/wiki/concepts/solid-what-how.md).
-    Written ONCE, then byte-for-byte to both trees. Qua được `swh-lint` cấu trúc; TODO phải điền trước release."""
+    Written ONCE, then byte-for-byte to both trees. Qua được `swh-lint` cấu trúc; ⟨TODO⟩ phải điền trước release."""
     return f"""---
 name: {name}
 description: {yaml_scalar(desc)}
@@ -76,44 +77,55 @@ metadata:
 
 ### Purpose và context
 <!-- `description` ở trên là thứ router khớp — giữ trigger phrase cụ thể ở đó. -->
-- Purpose: TODO một câu outcome — skill giúp xong việc gì.
-- Trigger: TODO 2–3 câu user nên kích hoạt; non-goals: TODO việc gần nghĩa KHÔNG thuộc skill.
+- Purpose: ⟨TODO⟩ một câu outcome — skill giúp xong việc gì.
+- Trigger: ⟨TODO⟩ 2–3 câu user nên kích hoạt; non-goals: ⟨TODO⟩ việc gần nghĩa KHÔNG thuộc skill.
 
 ### Mental model
-TODO thực thể → quan hệ → luồng khái niệm (vd `Input → Check → Artifact → Evidence`).
+⟨TODO⟩ thực thể → quan hệ → luồng khái niệm (vd `Input → Check → Artifact → Evidence`).
 
 ### Input và output contract
 | | Field | Required? | Ý nghĩa |
 |---|---|---|---|
-| In | TODO | có | TODO |
-| Out | TODO | — | TODO — "xong" nghĩa là gì, bằng chứng nào |
+| In | ⟨TODO⟩ | có | ⟨TODO⟩ |
+| Out | ⟨TODO⟩ | — | ⟨TODO⟩ — "xong" nghĩa là gì, bằng chứng nào |
 
 ### Rules và capabilities
-- RULE-01 (MUST): TODO bất biến kiểm được, không phá dù chọn HOW nào.
-- Capabilities: TODO năng lực trừu tượng cần đọc/ghi/kiểm — không ghi cứng tên CLI/provider ở đây.
+- RULE-01 (MUST): ⟨TODO⟩ bất biến kiểm được, không phá dù chọn HOW nào.
+- Capabilities: ⟨TODO⟩ năng lực trừu tượng cần đọc/ghi/kiểm — không ghi cứng tên CLI/provider ở đây.
 
 ### Failure boundaries
-TODO khi nào clarify / partial / blocked / failed — và kết quả hợp lệ của từng trường hợp.
+⟨TODO⟩ khi nào clarify / partial / blocked / failed — và kết quả hợp lệ của từng trường hợp.
 
 ## HOW
 
 ### Main workflow
 | Step | Type | Inputs | Action | Outputs/exit | Failure/next |
 |---|---|---|---|---|---|
-| W01 | deterministic | TODO | TODO preflight: kiểm input/scope/tool | TODO | thiếu input → blocked |
-| W02 | judgment | TODO | TODO | TODO | TODO → W03 |
-| W03 | deterministic | TODO | TODO kiểm kết quả | PASS → giao | FAIL → sửa 1 lần rồi dừng |
+| W01 | deterministic | ⟨TODO⟩ | ⟨TODO⟩ preflight: kiểm input/scope/tool | ⟨TODO⟩ | thiếu input → blocked |
+| W02 | judgment | ⟨TODO⟩ | ⟨TODO⟩ | ⟨TODO⟩ | ⟨TODO⟩ → W03 |
+| W03 | deterministic | ⟨TODO⟩ | ⟨TODO⟩ kiểm kết quả | PASS → giao | FAIL → sửa 1 lần rồi dừng |
 
 ### Branches
 Không có nhánh phụ trong version này. <!-- hoặc bảng: ID | kind | guard | effect | skip | failure | rejoin -->
 
 ### Validation và stopping
-TODO phần nào kiểm bằng code (lệnh + rc), phần nào cần review; trần lần sửa/retry.
+⟨TODO⟩ phần nào kiểm bằng code (lệnh + rc), phần nào cần review; trần lần sửa/retry.
 
 ### Examples
-- Positive: TODO input hợp lệ → expected output.
-- Boundary/failure: TODO input thiếu/sai → expected status (blocked/partial) + lý do.
+- Positive: ⟨TODO⟩ input hợp lệ → expected output.
+- Boundary/failure: ⟨TODO⟩ input thiếu/sai → expected status (blocked/partial) + lý do.
 """
+
+
+def _load_reuse():
+    """importlib-load skill-reuse.py (tên có dấu `-`). Fail-open → None ⇒ decision catalog_unavailable."""
+    try:
+        spec = importlib.util.spec_from_file_location("skill_reuse", Path(__file__).resolve().parent / "skill-reuse.py")
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        return mod
+    except Exception:
+        return None
 
 
 def rel(p: Path) -> str:
@@ -143,7 +155,7 @@ def similarity_hits(name: str, desc: str, k: int = 3):
         query = name.replace("-", " ") + " " + desc
         # bỏ chính nó khỏi kết quả (khi chạy lại trên skill đã tồn tại)
         return [h for h in mod.score_query(index, query, k + 1) if h[0] != name][:k]
-    except Exception:
+    except (Exception, SystemExit):     # build_index sys.exit khi skills/ rỗng — vẫn phải fail-open
         return None
 
 
@@ -206,6 +218,10 @@ def main() -> None:
                     help="one-line description WITH trigger phrases (drives router matching)")
     ap.add_argument("--dry-run", action="store_true",
                     help="print what would be created (incl. full body); write nothing")
+    ap.add_argument("--from", dest="base", metavar="ASSET_ID",
+                    help="sinh từ template trong fdk/skill-catalog (vd evidence-to-artifact) — Reuse Layer SWH v1.1")
+    ap.add_argument("--params", help="JSON tham số typed cho --from (skill_name/discovery_description tự điền)")
+    ap.add_argument("--reason", default="", help="lý do chọn scratch/mẫu — ghi vào reuse_decision")
     ap.add_argument("--strict", action="store_true",
                     help="exit 1 (không scaffold) nếu trùng năng lực trên ngưỡng — cho CI/agent")
     args = ap.parse_args()
@@ -228,7 +244,35 @@ def main() -> None:
     if warned and args.strict:
         sys.exit("✗ --strict: trùng năng lực trên ngưỡng — phân biệt description rồi chạy lại.")
 
-    body = render(name, args.desc)
+    # Reuse Layer (SWH v1.1 §22): tìm mẫu TRƯỚC, luôn ghi reuse_decision — scratch cũng là quyết định.
+    sr = _load_reuse()
+    try:
+        hits = sr.search(args.desc) if sr else None
+    except Exception:
+        hits = None
+    if hits is None:
+        decision = "catalog_unavailable"
+    elif args.base:
+        decision = "reuse"
+    else:
+        decision = "scratch"
+        if hits:
+            print("\nMẫu trong catalog (chọn bằng --from <asset_id> --params p.json):")
+            for h in hits:
+                print(f"  {h['score']:>2}  {h['asset_id']:<24} {h['applicable_when'][:70]}")
+    params = {}
+    if decision == "reuse":
+        asset = sr.load_catalog().get(args.base)
+        if asset is None or asset.get("kind") != "template":
+            sys.exit(f"✗ --from {args.base}: không phải template active trong catalog")
+        params = json.loads(Path(args.params).read_text(encoding="utf-8")) if args.params else {}
+        params.update(skill_name=name, discovery_description=args.desc)
+        try:
+            body = sr.render((sr.CATALOG_DIR / asset["path"]).read_text(encoding="utf-8"), params, asset.get("params", {}))
+        except sr.ReuseError as e:
+            sys.exit(f"✗ {e.code}: {e.detail}")
+    else:
+        body = render(name, args.desc)
     tag = "[dry-run] would create" if args.dry_run else "✓ created"
 
     if args.dry_run:
@@ -241,6 +285,10 @@ def main() -> None:
         skill_md.write_text(body, encoding="utf-8")
         mirror_md.parent.mkdir(parents=True, exist_ok=True)
         mirror_md.write_text(body, encoding="utf-8")  # byte-identical: same string, both trees
+        if sr:
+            rp = sr.write_recipe(name, decision, [h["asset_id"] for h in (hits or [])], reason=args.reason,
+                                 base=args.base if decision == "reuse" else None, params=params or None)
+            print(f"✓ reuse_decision={decision}  {rel(rp)}")
 
     print(f"\n{tag}  {rel(skill_md)}")
     print(f"{tag}  {rel(mirror_md)}  (mirror — byte-identical, sync-skills enforces parity)")

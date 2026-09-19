@@ -32,10 +32,23 @@ PRD 1.181 dòng (21 phần) đặt chuẩn `solid-what-how/1` (SWH): mọi skill
 | §15 | Quy trình migrate legacy: baseline hành vi trước, tách câu vào WHAT/HOW, không đổi scope, có rollback | Áp cho đợt migrate skill native |
 | §16–19 | 24 yêu cầu SS-R01…24, 24 ticket SS-01…24, 36 scenario EV-01…36, ước lượng 62 ngày công | Backlog dựng năng lực ở quy mô team, không phải điều kiện để viết một skill đúng chuẩn |
 
+## Bản v1.1 — Reuse Layer (§22–29)
+
+Bản `raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD (1).md` (1.741 dòng) giữ nguyên §1–21 và thêm lớp **tái sử dụng pattern/template theo contract**, mục tiêu là chi phí biên tạo skill kế tiếp giảm dần. PRD nói rõ đây là mục tiêu cần đo, không phải quy luật bảo đảm. Chi tiết cơ chế ở [[solid-what-how]] mục Reuse Layer.
+
+| Mục | Nội dung | Ghi chú áp dụng |
+|---|---|---|
+| §22 | Chính sách: mỗi lần tạo/chuẩn hoá skill phải ghi `reuse_decision` (reuse · compose · scratch · catalog_unavailable); công thức `C_total`, AC (bình quân) ≠ MC (biên); ví dụ hòa vốn 3 lần (4 lần khi tính maintenance) là giả định | Chưa có catalog thì ghi `catalog_unavailable`, không chặn việc |
+| §23 | Sáu loại tài sản: pattern · template · component · test pack · recipe · skill instance; kế thừa bằng composition + delta, độ sâu tối đa 3 cạnh; frozen core + typed slots | Không dùng cờ `skip_validation` để "mở rộng" |
+| §24 | Catalog manifest JSON trong repo (không cần vector DB); vòng đời candidate → reviewed → validated → active → deprecated → retired, có quarantined; lọc quyền/contract TRƯỚC khi xếp hạng | Seed mới chỉ được nhãn `limited_evidence` |
+| §25 | Luồng R01–R09 (intake → discover → decide → resolve → instantiate → specialize → validate → commit → observe); module Catalog/Resolver/Composer/Validator/Registry/Feedback/Upgrader | Là contract nội bộ đề xuất, chưa có CLI thật |
+| §26–27 | Seed P01 evidence→artifact, P02 verified external effect, P03 pure transform; template T01, T02; metrics tách authoring/runtime, pilot tối thiểu 10 episode | Tuyên bố "tiết kiệm" cần baseline, thiếu thì `benefit_unproven` |
+| §28–29 | 12 ticket RU-01…12 (25 ngày công, tổng 87); 4 mức rollout manual seed → local MVP → managed → measured; 16 ca demo RE-01…16 | Lát cắt khởi đầu hợp lý là mức manual seed / local MVP |
+
 ## Cách overstack dùng nguồn này (19/09/2026)
 
 User yêu cầu chuẩn hoá toàn bộ skill native theo SWH qua luồng `/fdk`, tách skill kéo từ upstream vào category riêng (vẫn cài xuống downstream), kiểm kỹ trước `/ship`, và đưa toàn bộ việc vào `/orca-graph`. Lát cắt áp dụng ngay: template compact, lint cấu trúc SWH (profile documented), migrate theo lô. Registry, trusted receipt, runtime enforcement (SS-11, SS-16, SS-18 bản đầy đủ) để sau, không claim đã có.
 
 ## Origin
-- Nguồn thô: `llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md` (user đưa ngày 19/09/2026 qua `/ingest`).
+- Nguồn thô: `llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md` (v1.0) và `llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD (1).md` (v1.1, cùng ngày), user đưa ngày 19/09/2026 qua `/ingest`.
 - Concept chính chủ: [[solid-what-how]]; liên quan [[skill-craft]], [[adapt-modes]].

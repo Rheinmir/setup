@@ -21,6 +21,7 @@ session: 9398848d-8060-435d-9d59-31d4dfd861ab
 - `concepts/skill-craft.md`
 - `concepts/solid-what-how.md`
 - `sources/190926-skill-design-standard-swh-prd.md`
+- `sources/draft/190926-swh-reuse-layer-PLAN.md`
 - `sources/draft/190926-swh-skill-standardize-PLAN.md`
 
 ## Origin

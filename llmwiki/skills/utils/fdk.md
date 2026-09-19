@@ -118,6 +118,7 @@ Nguồn máy-đọc: `harness/downstream-contract.yaml` → `layout_map`. Luật
 ### Distill / author một skill (dùng ở project bất kỳ)
 - Skill native theo chuẩn **solid-what-how/1 (SWH)**: frontmatter `name` + `description` + `metadata.design-standard: "solid-what-how/1"`, rồi **`## WHAT`** (purpose/trigger/non-goals · mental model · input/output contract · rules có ID · failure boundaries) và **`## HOW`** (bảng main workflow W01… có exit/next · branches hoặc ghi rõ "không có nhánh phụ" · validation/stopping · ví dụ positive + boundary). Khung đầy đủ: concept `solid-what-how` (repo framework) hoặc sinh bằng `new-skill.py`.
 - `description` phải **đủ trigger** — nêu rõ KHI NÀO gọi (từ khoá, tình huống); đây là thứ router dùng để chọn skill.
+- **Tìm mẫu trước khi viết (Reuse Layer SWH v1.1)** nếu có catalog: `python3 fdk/tools/skill-reuse.py search --desc "<việc>"` → khớp contract thì `new-skill.py <tên> --from <asset_id> --params p.json` (render template typed + pin sha256); không khớp thì scratch kèm `--reason`. Mỗi lần tạo skill đều để lại `reuse_decision`; reuse không miễn cổng nào.
 - Kiểm hình dạng nếu có tool: `python3 fdk/tools/swh-lint.py --skills <tên> --ci` (cấu trúc thôi; hành vi vẫn phải thử bằng câu mẫu). Skill kéo từ upstream nằm ở `skills/external/`, không viết lại theo SWH.
 - Giữ **self-contained**: đừng trỏ tới file chỉ có ở 1 repo; nếu cần thì ghi "nếu file X có mặt thì…".
 - Sau khi viết: thử 1–2 câu mẫu xem skill có được trigger đúng không.

@@ -52,7 +52,7 @@ Adding a skill touches four places — the canonical `skills/<name>/SKILL.md`, i
 | Step | Type | Inputs | Action | Outputs/exit | Failure/next |
 |---|---|---|---|---|---|
 | W01 | judgment | yêu cầu user | chốt `<name>`, `--loop`, `--desc` giàu trigger | 3 input | mơ hồ → hỏi |
-| W02 | effect | 3 input | `new-skill.py --dry-run` rồi chạy thật | 2 file khung | tên trùng → blocked |
+| W02 | effect | 3 input | `new-skill.py --dry-run` (in mẫu catalog khớp) rồi chạy thật — có mẫu hợp thì `--from <asset_id> --params p.json` | 2 file + recipe `reuse_decision` | tên trùng → blocked · tham số sai → INVALID_PARAMETER |
 | W03 | judgment | khung | điền mọi TODO của WHAT/HOW, chạy `swh-lint` | skill đạt cấu trúc | đỏ → sửa, lặp W03 |
 | W04 | effect | skill | `sync-skills.py` để mirror khớp | mirror giống hệt | — |
 | W05 | effect | dòng tool in ra | đăng ký LOOP_MAP, marketplace, bảng AGENT/CLAUDE | 3 bề mặt | — |
@@ -86,9 +86,11 @@ Chi tiết từng bước (nguồn chân lý cho W01–W06):
 | ID | Kind | Guard | Hành vi | Skip / failure | Rejoin |
 |---|---|---|---|---|---|
 | B01 | conditional_required | skill chỉ-gọi-tay | thêm `disable-model-invocation: true`, rút `--desc` thành một dòng người đọc | skill model-invoked → skip | W02 |
+| B03 | user_optional | catalog có template khớp contract (lọc effect trước, xếp hạng sau) | `--from` render template typed + pin sha256 vào `fdk/skill-catalog/recipes/<name>.recipe.json`; không hợp thì scratch kèm `--reason` | catalog không đọc được → decision `catalog_unavailable`, vẫn sinh khung compact | W03 |
 | B02 | recovery | BM25 báo trùng năng lực | đổi tên dạng biến thể + làm description khác biệt, hoặc sửa skill có sẵn | `--strict` → dừng | W01 |
 
 ### Validation và stopping
+Mỗi lần chạy đều ghi `reuse_decision` (reuse · scratch · catalog_unavailable) — Reuse Layer SWH v1.1, catalog `fdk/skill-catalog/`, tool `fdk/tools/skill-reuse.py`. Reuse không miễn cổng nào: skill sinh từ template vẫn phải qua `swh-lint`.
 Xong khi `swh-lint --skills <name> --ci`, `sync-skills.py --check` và `skill-registry.py --check` đều rc 0. Hành vi thật (skill có được gọi đúng không) thử bằng 1–2 câu mẫu, lint không chứng minh được.
 
 ### Examples

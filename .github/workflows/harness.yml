@@ -140,7 +140,7 @@ jobs:
       - name: swh-lint + goal-hook + touched-paths (R21) — test hành vi
         run: |
           pip install pytest --quiet
-          python3 -m pytest -q harness/tests/test_swh_lint.py harness/tests/test_goal_hook.py harness/tests/test_touched_paths.py
+          python3 -m pytest -q harness/tests/test_swh_lint.py harness/tests/test_goal_hook.py harness/tests/test_touched_paths.py harness/tests/test_skill_reuse.py
       - name: harness-update — T1-T4 cài/refresh trong repo tạm cô lập
         run: bash harness/tests/harness-update-test.sh .
       - name: openclaude-install — detect/merge/idempotency trong HOME cô lập

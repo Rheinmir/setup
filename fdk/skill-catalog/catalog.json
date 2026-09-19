@@ -1,0 +1,250 @@
+{
+  "schema_version": "swh.reuse/1",
+  "note": "Catalog Reuse Layer SWH v1.1 (PRD §23–24). Framework-only (fdk/), không ship xuống dự án khách. Seed = limited_evidence: chưa đo tiết kiệm.",
+  "assets": [
+    {
+      "asset_id": "compact",
+      "kind": "template",
+      "version": "1.0.0",
+      "status": "active",
+      "path": "templates/T00-compact.md",
+      "effect_class": "file_only",
+      "problem_tags": [
+        "generic",
+        "compact",
+        "scratch"
+      ],
+      "applicable_when": "skill mới không khớp pattern nào — khung WHAT/HOW trống để điền tay",
+      "not_applicable_when": "đã có template chuyên biệt khớp contract",
+      "params": {
+        "skill_name": {
+          "type": "str",
+          "required": true
+        },
+        "discovery_description": {
+          "type": "str",
+          "required": true
+        }
+      },
+      "evidence": "limited_evidence",
+      "depends": []
+    },
+    {
+      "asset_id": "evidence-to-artifact",
+      "kind": "template",
+      "version": "1.0.0",
+      "status": "active",
+      "path": "templates/T01-evidence-to-artifact.md",
+      "effect_class": "file_only",
+      "problem_tags": [
+        "evidence",
+        "source",
+        "artifact",
+        "draft",
+        "report",
+        "tickets",
+        "wiki",
+        "ingest",
+        "summary",
+        "plan"
+      ],
+      "applicable_when": "đọc nguồn rồi sinh artifact file có truy vết nguồn",
+      "not_applicable_when": "cần publish/push ra hệ thống ngoài (P02) hoặc chuyển đổi thuần (T02)",
+      "params": {
+        "skill_name": {
+          "type": "str",
+          "required": true
+        },
+        "discovery_description": {
+          "type": "str",
+          "required": true
+        },
+        "outcome": {
+          "type": "str",
+          "required": true
+        },
+        "applicability": {
+          "type": "str",
+          "required": true
+        },
+        "non_goals": {
+          "type": "str",
+          "required": true
+        },
+        "input_contract": {
+          "type": "str",
+          "required": true
+        },
+        "output_contract": {
+          "type": "str",
+          "required": true
+        },
+        "requested_formats": {
+          "type": "str",
+          "required": true
+        },
+        "domain_invariants": {
+          "type": "str",
+          "required": true
+        },
+        "source_reader": {
+          "type": "str",
+          "required": true
+        },
+        "proposal_rubric": {
+          "type": "str",
+          "required": true
+        },
+        "domain_validator": {
+          "type": "str",
+          "required": true
+        },
+        "repair_limit": {
+          "type": "int",
+          "required": true,
+          "min": 0,
+          "max": 2
+        },
+        "branch_table": {
+          "type": "str",
+          "required": true,
+          "default": "Không có nhánh phụ trong version này.",
+          "multiline": true
+        },
+        "example_positive": {
+          "type": "str",
+          "required": true
+        },
+        "example_boundary": {
+          "type": "str",
+          "required": true
+        }
+      },
+      "evidence": "limited_evidence",
+      "depends": [
+        "P01"
+      ]
+    },
+    {
+      "asset_id": "pure-transform",
+      "kind": "template",
+      "version": "1.0.0",
+      "status": "active",
+      "path": "templates/T02-pure-transform.md",
+      "effect_class": "none",
+      "problem_tags": [
+        "transform",
+        "convert",
+        "render",
+        "format",
+        "csv",
+        "json",
+        "markdown",
+        "html",
+        "schema"
+      ],
+      "applicable_when": "chuyển dữ liệu có cấu trúc theo mapping tường minh, không cần model phán đoán",
+      "not_applicable_when": "cần đọc hiểu nghĩa nguồn (T01)",
+      "params": {
+        "skill_name": {
+          "type": "str",
+          "required": true
+        },
+        "discovery_description": {
+          "type": "str",
+          "required": true
+        },
+        "input_schema": {
+          "type": "str",
+          "required": true
+        },
+        "output_schema": {
+          "type": "str",
+          "required": true
+        },
+        "mapping": {
+          "type": "str",
+          "required": true
+        },
+        "applicability": {
+          "type": "str",
+          "required": true
+        },
+        "encoding": {
+          "type": "str",
+          "required": true,
+          "enum": [
+            "utf-8",
+            "utf-16",
+            "latin-1"
+          ],
+          "default": "utf-8"
+        },
+        "max_records": {
+          "type": "int",
+          "required": true,
+          "min": 1,
+          "max": 1000000
+        },
+        "example_positive": {
+          "type": "str",
+          "required": true
+        },
+        "example_boundary": {
+          "type": "str",
+          "required": true
+        }
+      },
+      "evidence": "limited_evidence",
+      "depends": [
+        "P03"
+      ]
+    },
+    {
+      "asset_id": "P01",
+      "kind": "pattern",
+      "version": "1.0.0",
+      "status": "active",
+      "path": "patterns/P01-evidence-to-artifact.md",
+      "effect_class": "file_only",
+      "problem_tags": [
+        "evidence",
+        "artifact"
+      ],
+      "evidence": "limited_evidence",
+      "depends": []
+    },
+    {
+      "asset_id": "P02",
+      "kind": "pattern",
+      "version": "1.0.0",
+      "status": "candidate",
+      "path": "patterns/P02-verified-external-effect.md",
+      "effect_class": "external",
+      "problem_tags": [
+        "publish",
+        "push",
+        "issue",
+        "external",
+        "effect"
+      ],
+      "evidence": "limited_evidence",
+      "depends": [],
+      "status_reason": "host chỉ documented — chưa enforce admission tại dispatch (PRD §26.2)"
+    },
+    {
+      "asset_id": "P03",
+      "kind": "pattern",
+      "version": "1.0.0",
+      "status": "active",
+      "path": "patterns/P03-pure-transform.md",
+      "effect_class": "none",
+      "problem_tags": [
+        "transform",
+        "render"
+      ],
+      "evidence": "limited_evidence",
+      "depends": []
+    }
+  ]
+}

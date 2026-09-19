@@ -30,7 +30,8 @@
    "attempts": 1,
    "fresh": "current",
    "verified": "verified",
-   "done_spec_hash": "9ee15dfe73a50a2d"
+   "done_spec_hash": "9ee15dfe73a50a2d",
+   "child_graph": "190926-swh-reuse-layer"
   },
   {
    "id": "t2",
@@ -504,12 +505,13 @@
    "verify": "python3 fdk/tools/ci-local.py",
    "qc": "",
    "spec_hash": "1cd5f30153c3a296",
-   "state": "dispatched",
+   "state": "done",
    "gen": 1,
-   "rev": 2,
+   "rev": 3,
    "attempts": 1,
    "fresh": "current",
-   "verified": "unverified"
+   "verified": "verified",
+   "done_spec_hash": "1cd5f30153c3a296"
   },
   {
    "id": "t18",
@@ -611,5 +613,5 @@
  ],
  "control": "active",
  "schema_version": 1,
- "checksum": "b8cc67481326439e"
+ "checksum": "261f9643146c7ad6"
 }
