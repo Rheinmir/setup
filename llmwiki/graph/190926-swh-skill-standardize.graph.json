@@ -1,0 +1,615 @@
+{
+ "id": "190926-swh-skill-standardize",
+ "plan": "llmwiki/wiki/sources/draft/190926-swh-skill-standardize-PLAN.md",
+ "built": "2026-09-19T11:58:06+0700",
+ "nodes": [
+  {
+   "id": "t1",
+   "title": "ingest PRD SWH vào wiki",
+   "files": [
+    "llmwiki/wiki/concepts/solid-what-how.md",
+    "llmwiki/wiki/sources/190926-skill-design-standard-swh-prd.md",
+    "llmwiki/wiki/concepts/skill-craft.md"
+   ],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "concept `solid-what-how` (chuẩn chính chủ các task sau trỏ tới)"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "wiki",
+   "mode": "afk",
+   "verify": "test -f llmwiki/wiki/concepts/solid-what-how.md && test -f llmwiki/wiki/sources/190926-skill-design-standard-swh-prd.md",
+   "qc": "",
+   "spec_hash": "9ee15dfe73a50a2d",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "9ee15dfe73a50a2d"
+  },
+  {
+   "id": "t2",
+   "title": "swh-lint — lint cấu trúc SWH (profile documented) + test",
+   "files": [
+    "fdk/tools/swh-lint.py",
+    "harness/tests/test_swh_lint.py"
+   ],
+   "consumes": [
+    "`skills/<tên>/SKILL.md`"
+   ],
+   "produces": [
+    "`swh-lint.py [--skills a,b] [--ci] [--json] [--preserve REV]` → report `swh.report/1` mỗi skill (package_hash sha256 của thư mục skill, structural pass|fail, behavioral `review_required`, runtime `not_claimed`); bỏ qua `skills/external/`; rc 1 khi `--ci` và có blocking finding"
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 -m pytest -q harness/tests/test_swh_lint.py",
+   "qc": "",
+   "spec_hash": "0486508c5b74a7cb",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "0486508c5b74a7cb"
+  },
+  {
+   "id": "t3",
+   "title": "template compact SWH cho skill mới",
+   "files": [
+    "fdk/tools/new-skill.py",
+    "skills/new-skill/SKILL.md",
+    "skills/fdk/SKILL.md"
+   ],
+   "consumes": [
+    "swh-lint (Task 2)"
+   ],
+   "produces": [
+    "`new-skill.py <tên>` sinh SKILL.md qua được swh-lint cấu trúc sau khi điền placeholder"
+   ],
+   "deps": [
+    "t2"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 -m pytest -q harness/tests/test_swh_lint.py -k template",
+   "qc": "",
+   "spec_hash": "7b7f32580a6e8e21",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "7b7f32580a6e8e21"
+  },
+  {
+   "id": "t4",
+   "title": "category skills/external/ — resolver chung + di chuyển 23 skill ngoài + provenance đúng nguồn",
+   "files": [
+    "harness/scripts/skill_dirs.py",
+    "fdk/skills.provenance.json",
+    "llmwiki/wiki/concepts/adapt-modes.md"
+   ],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "`skill_dirs.iter_skill_dirs()`; layout `skills/external/`"
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "migrate",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/skill-provenance.py check --ci && bash harness/tests/dot-layout-runtime-test.sh . && python3 harness/scripts/sync-skills.py --check",
+   "qc": "",
+   "spec_hash": "f7f1abb30457be85",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "f7f1abb30457be85"
+  },
+  {
+   "id": "t5",
+   "title": "pilot migrate 3 skill (ingest, medic, ship) — chốt văn phong trước khi fan-out",
+   "files": [
+    "skills/ingest/SKILL.md"
+   ],
+   "consumes": [
+    "swh-lint, template"
+   ],
+   "produces": [
+    "3 skill mẫu đã duyệt — brief của Task 6–13 trỏ tới làm chuẩn"
+   ],
+   "deps": [
+    "t2",
+    "t3"
+   ],
+   "deps_conf": "chắc",
+   "kind": "migrate",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/swh-lint.py --skills ingest,medic,ship --ci --preserve HEAD",
+   "qc": "",
+   "spec_hash": "e48d43ddf93d444c",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "e48d43ddf93d444c"
+  },
+  {
+   "id": "t6",
+   "title": "migrate lô 1 — docs-site-macos, hallmark (expanded profile: tách references/)",
+   "files": [
+    "skills/docs-site-macos/SKILL.md"
+   ],
+   "consumes": [
+    "`fdk/tools/swh-lint.py` (Task 2), template (Task 3), 3 bản pilot (Task 5) làm mẫu văn phong"
+   ],
+   "produces": [
+    "SKILL.md compact SWH (`## WHAT` / `## HOW`), không đổi `name`/`description`"
+   ],
+   "deps": [
+    "t5"
+   ],
+   "deps_conf": "chắc",
+   "kind": "migrate",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/swh-lint.py --skills docs-site-macos,hallmark --ci --preserve HEAD",
+   "qc": "",
+   "spec_hash": "f85d6f2c98ea02f4",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "f85d6f2c98ea02f4"
+  },
+  {
+   "id": "t7",
+   "title": "migrate lô 2 — fable5, md-to-html, orca-issue, orca-onboard, qc-uiux, threejs-particle-morph, wiki-room, wikieval",
+   "files": [
+    "skills/{fable5,md-to-html,orca-issue,orca-onboard,qc-uiux,threejs-particle-morph,wiki-room,wikieval}/SKILL.md"
+   ],
+   "consumes": [
+    "`fdk/tools/swh-lint.py` (Task 2), template (Task 3), 3 bản pilot (Task 5) làm mẫu văn phong"
+   ],
+   "produces": [
+    "SKILL.md compact SWH (`## WHAT` / `## HOW`), không đổi `name`/`description`"
+   ],
+   "deps": [
+    "t5"
+   ],
+   "deps_conf": "chắc",
+   "kind": "migrate",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/swh-lint.py --skills fable5,md-to-html,orca-issue,orca-onboard,qc-uiux,threejs-particle-morph,wiki-room,wikieval --ci --preserve HEAD",
+   "qc": "",
+   "spec_hash": "b6f6dde2d26e0f2b",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "b6f6dde2d26e0f2b"
+  },
+  {
+   "id": "t8",
+   "title": "migrate lô 3 — blur, check-approve, css-scroll-driven-native, extract-site, graph-mode, jenkins-agent-l3-deploy, orca-eval, qc-code, query, skill-provenance, tour-guide-supademo",
+   "files": [
+    "skills/{blur,check-approve,css-scroll-driven-native,extract-site,graph-mode,jenkins-agent-l3-deploy,orca-eval,qc-code,query,skill-provenance,tour-guide-supademo}/SKILL.md"
+   ],
+   "consumes": [
+    "`fdk/tools/swh-lint.py` (Task 2), template (Task 3), 3 bản pilot (Task 5) làm mẫu văn phong"
+   ],
+   "produces": [
+    "SKILL.md compact SWH (`## WHAT` / `## HOW`), không đổi `name`/`description`"
+   ],
+   "deps": [
+    "t5"
+   ],
+   "deps_conf": "chắc",
+   "kind": "migrate",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/swh-lint.py --skills blur,check-approve,css-scroll-driven-native,extract-site,graph-mode,jenkins-agent-l3-deploy,orca-eval,qc-code,query,skill-provenance,tour-guide-supademo --ci --preserve HEAD",
+   "qc": "",
+   "spec_hash": "2a9dd556d25ae3e3",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "2a9dd556d25ae3e3"
+  },
+  {
+   "id": "t9",
+   "title": "migrate lô 4 — i-have-adhd, failure-flywheel, fdk-uat, harness-tour, join-project, lenis-smooth-scroll, orca-workflow, playwright-verify, record-episode",
+   "files": [
+    "skills/{i-have-adhd,failure-flywheel,fdk-uat,harness-tour,join-project,lenis-smooth-scroll,orca-workflow,playwright-verify,record-episode}/SKILL.md"
+   ],
+   "consumes": [
+    "`fdk/tools/swh-lint.py` (Task 2), template (Task 3), 3 bản pilot (Task 5) làm mẫu văn phong"
+   ],
+   "produces": [
+    "SKILL.md compact SWH (`## WHAT` / `## HOW`), không đổi `name`/`description`"
+   ],
+   "deps": [
+    "t5"
+   ],
+   "deps_conf": "chắc",
+   "kind": "migrate",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/swh-lint.py --skills i-have-adhd,failure-flywheel,fdk-uat,harness-tour,join-project,lenis-smooth-scroll,orca-workflow,playwright-verify,record-episode --ci --preserve HEAD",
+   "qc": "",
+   "spec_hash": "086bdb68f25031d2",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "086bdb68f25031d2"
+  },
+  {
+   "id": "t10",
+   "title": "migrate lô 5 — dark-mode-maker, doyourmagic, health-check, infinite-webgl-grid, orca-handover, ovs-notes, prd-grade-fe, propose, safe-change, tour-guide, wayfinder",
+   "files": [
+    "skills/{dark-mode-maker,doyourmagic,health-check,infinite-webgl-grid,orca-handover,ovs-notes,prd-grade-fe,propose,safe-change,tour-guide,wayfinder}/SKILL.md"
+   ],
+   "consumes": [
+    "`fdk/tools/swh-lint.py` (Task 2), template (Task 3), 3 bản pilot (Task 5) làm mẫu văn phong"
+   ],
+   "produces": [
+    "SKILL.md compact SWH (`## WHAT` / `## HOW`), không đổi `name`/`description`"
+   ],
+   "deps": [
+    "t5"
+   ],
+   "deps_conf": "chắc",
+   "kind": "migrate",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/swh-lint.py --skills dark-mode-maker,doyourmagic,health-check,infinite-webgl-grid,orca-handover,ovs-notes,prd-grade-fe,propose,safe-change,tour-guide,wayfinder --ci --preserve HEAD",
+   "qc": "",
+   "spec_hash": "032d945c6e94677e",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "032d945c6e94677e"
+  },
+  {
+   "id": "t11",
+   "title": "migrate lô 6 — diagram, impact-check, loop-runner, new-project-setup, orca-graph, orca-sec-scans, scroll-effects, sync-template, timeline, uat-nonit-testcase, web-crawl",
+   "files": [
+    "skills/{diagram,impact-check,loop-runner,new-project-setup,orca-graph,orca-sec-scans,scroll-effects,sync-template,timeline,uat-nonit-testcase,web-crawl}/SKILL.md"
+   ],
+   "consumes": [
+    "`fdk/tools/swh-lint.py` (Task 2), template (Task 3), 3 bản pilot (Task 5) làm mẫu văn phong"
+   ],
+   "produces": [
+    "SKILL.md compact SWH (`## WHAT` / `## HOW`), không đổi `name`/`description`"
+   ],
+   "deps": [
+    "t5"
+   ],
+   "deps_conf": "chắc",
+   "kind": "migrate",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/swh-lint.py --skills diagram,impact-check,loop-runner,new-project-setup,orca-graph,orca-sec-scans,scroll-effects,sync-template,timeline,uat-nonit-testcase,web-crawl --ci --preserve HEAD",
+   "qc": "",
+   "spec_hash": "b248914718219e51",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "b248914718219e51"
+  },
+  {
+   "id": "t12",
+   "title": "migrate lô 7 — cursor-animated-sites, design-prim, fdk, frontier-scan, gsap-scrolltrigger-pin, harness-update, lint, orca-dispatch-reference, raise-issue, svg-stroke-reveal, teach-me, visual-qa",
+   "files": [
+    "skills/{cursor-animated-sites,design-prim,fdk,frontier-scan,gsap-scrolltrigger-pin,harness-update,lint,orca-dispatch-reference,raise-issue,svg-stroke-reveal,teach-me,visual-qa}/SKILL.md"
+   ],
+   "consumes": [
+    "`fdk/tools/swh-lint.py` (Task 2), template (Task 3), 3 bản pilot (Task 5) làm mẫu văn phong"
+   ],
+   "produces": [
+    "SKILL.md compact SWH (`## WHAT` / `## HOW`), không đổi `name`/`description`"
+   ],
+   "deps": [
+    "t5",
+    "t3"
+   ],
+   "deps_conf": "chắc",
+   "kind": "migrate",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/swh-lint.py --skills cursor-animated-sites,design-prim,fdk,frontier-scan,gsap-scrolltrigger-pin,harness-update,lint,orca-dispatch-reference,raise-issue,svg-stroke-reveal,teach-me,visual-qa --ci --preserve HEAD",
+   "qc": "",
+   "spec_hash": "2987b8b346521fa3",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "2987b8b346521fa3"
+  },
+  {
+   "id": "t13",
+   "title": "migrate lô 8 — br, build-now-adapt-later, council, mask-reveal-transition, onboard-codebase, plan, snapshot-push, tc-run, tidy, trace-grader, verify-before-commit, web-clone",
+   "files": [
+    "skills/{br,build-now-adapt-later,council,mask-reveal-transition,onboard-codebase,plan,snapshot-push,tc-run,tidy,trace-grader,verify-before-commit,web-clone}/SKILL.md"
+   ],
+   "consumes": [
+    "`fdk/tools/swh-lint.py` (Task 2), template (Task 3), 3 bản pilot (Task 5) làm mẫu văn phong"
+   ],
+   "produces": [
+    "SKILL.md compact SWH (`## WHAT` / `## HOW`), không đổi `name`/`description`"
+   ],
+   "deps": [
+    "t5"
+   ],
+   "deps_conf": "chắc",
+   "kind": "migrate",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/swh-lint.py --skills br,build-now-adapt-later,council,mask-reveal-transition,onboard-codebase,plan,snapshot-push,tc-run,tidy,trace-grader,verify-before-commit,web-clone --ci --preserve HEAD",
+   "qc": "",
+   "spec_hash": "ee3ea4b30d236ff4",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "ee3ea4b30d236ff4"
+  },
+  {
+   "id": "t14",
+   "title": "hook từ khoá \"goal\" → tự kèm orca-graph (visualize được, graph update bình thường)",
+   "files": [
+    "llmwiki/.claude/hooks/user_prompt_submit.py",
+    "harness/tests/test_goal_hook.py"
+   ],
+   "consumes": [
+    "prompt user (UserPromptSubmit)"
+   ],
+   "produces": [
+    "khi prompt chứa từ khoá `goal` (nguyên từ, không phân biệt hoa thường, bỏ qua trong khối code) → hook inject chỉ thị: dựng/cập nhật graph cho goal qua `/orca-graph` (`build` lần đầu, `build` lại = `plan_version+1` khi goal đổi) rồi `graph-viz.py` → HTML; nếu đã có graph của goal thì in đường dẫn HTML hiện có. Hook chỉ inject, không tự chạy tác vụ nặng; tắt được bằng `OVERSTACK_GOAL_HOOK=0`."
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 -m pytest -q harness/tests/test_goal_hook.py",
+   "qc": "",
+   "spec_hash": "ecf74e6e664781d4",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "ecf74e6e664781d4"
+  },
+  {
+   "id": "t15",
+   "title": "cổng CI — swh-lint --ci trong harness.yml + medic",
+   "files": [
+    ".github/workflows/harness.yml",
+    "fdk/tools/medic.py"
+   ],
+   "consumes": [
+    "`swh-lint.py --ci`"
+   ],
+   "produces": [
+    "bước CI mới trong harness.yml; medic in dòng SWH"
+   ],
+   "deps": [
+    "t6",
+    "t7",
+    "t8",
+    "t9",
+    "t10",
+    "t11",
+    "t12",
+    "t13",
+    "t4"
+   ],
+   "deps_conf": "chắc",
+   "kind": "infra",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/swh-lint.py --ci",
+   "qc": "",
+   "spec_hash": "ee18a1b66c440e97",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "ee18a1b66c440e97"
+  },
+  {
+   "id": "t16",
+   "title": "đồng bộ mirror, CAPABILITIES, search index, provenance",
+   "files": [
+    "llmwiki/skills/**"
+   ],
+   "consumes": [
+    "skill đã migrate + layout `skills/external/`"
+   ],
+   "produces": [
+    "mirror/CAPABILITIES/search/provenance khớp"
+   ],
+   "deps": [
+    "t15",
+    "t14"
+   ],
+   "deps_conf": "chắc",
+   "kind": "cleanup",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/skill-provenance.py check --ci && python3 harness/scripts/sync-skills.py --check",
+   "qc": "",
+   "spec_hash": "27aaaf34d4eee872",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "27aaaf34d4eee872"
+  },
+  {
+   "id": "t17",
+   "title": "kiểm trước /ship — ci-local toàn bộ + /fdk-uat canary (HITL, user duyệt push)",
+   "files": [
+    "harness/version.json"
+   ],
+   "consumes": [
+    "toàn bộ task trước"
+   ],
+   "produces": [
+    "biên lai ci-local + UAT canary; version bump"
+   ],
+   "deps": [
+    "t16"
+   ],
+   "deps_conf": "chắc",
+   "kind": "release",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/ci-local.py",
+   "qc": "",
+   "spec_hash": "1cd5f30153c3a296",
+   "state": "dispatched",
+   "gen": 1,
+   "rev": 2,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t18",
+   "title": "R21 touched-paths — Stop hook in path file sửa/mới của phiên (trần 40 link)",
+   "files": [
+    "llmwiki/.claude/hooks/hooklib.py",
+    "harness/poc-vendor-neutral/policy.yaml",
+    "harness/tests/test_touched_paths.py"
+   ],
+   "consumes": [
+    "transcript (Write/Edit) + `git status` mtime"
+   ],
+   "produces": [
+    "`hooklib.session_touched_files(root, transcript) -> list[str]`, `hooklib.touched_message(files, cap=40) -> str`; Stop in `{\"systemMessage\": ...}` khi exit 0"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 -m pytest -q harness/tests/test_touched_paths.py",
+   "qc": "",
+   "spec_hash": "e09735b6b2dfb24d",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "e09735b6b2dfb24d"
+  }
+ ],
+ "layers": [
+  [
+   "t1",
+   "t14",
+   "t18"
+  ],
+  [
+   "t2",
+   "t4"
+  ],
+  [
+   "t3"
+  ],
+  [
+   "t5"
+  ],
+  [
+   "t10",
+   "t11",
+   "t12",
+   "t13",
+   "t6",
+   "t7",
+   "t8",
+   "t9"
+  ],
+  [
+   "t15"
+  ],
+  [
+   "t16"
+  ],
+  [
+   "t17"
+  ]
+ ],
+ "parent": null,
+ "depth": 0,
+ "plan_version": 3,
+ "superseded": [],
+ "max_parallel": 4,
+ "conflicts": [],
+ "links": [
+  {
+   "to_graph": "160926-theme-toggle-circle-reveal-motion",
+   "to_node": "t1",
+   "via": [
+    "skills/docs-site-macos/SKILL.md"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "160926-theme-toggle-circle-reveal-motion",
+   "to_node": "t5",
+   "via": [
+    "skills/fdk/SKILL.md"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "180926-ship-scroll-originals",
+   "to_node": "t2",
+   "via": [
+    "fdk/skills.provenance.json"
+   ],
+   "kind": "touches-same-file"
+  }
+ ],
+ "control": "active",
+ "schema_version": 1,
+ "checksum": "b8cc67481326439e"
+}

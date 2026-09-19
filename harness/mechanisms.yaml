@@ -202,3 +202,19 @@ mechanisms:
     live_probe: harness/scripts/dep-health.py
     anchor_symbol: "setup::harness/scripts/dep-health.py::probe_code_graph"
     confirmed: "2026-09-16"
+  - id: touched-paths
+    name: "touched-paths R21 (Stop in path file đã sửa/mới, trần 40)"
+    kind: hook
+    surface: [mechanism]
+    desc: "Cuối mỗi lượt, Stop hook in cho user link file:// tuyệt đối của mọi file phiên này tạo/sửa (mới nhất trước, trần 40) qua systemMessage — người xem mở file ngay, không phải hỏi 'path đâu'. Feedback 19/09/2026."
+    live_probe: llmwiki/.claude/hooks/stop.py
+    anchor_symbol: "setup::llmwiki/.claude/hooks/hooklib.py::session_touched_files"
+    confirmed: "2026-09-19"
+  - id: swh-lint
+    name: "swh-lint (skill native theo solid-what-how/1)"
+    kind: tool
+    surface: [mechanism, maintain]
+    desc: "Lint CẤU TRÚC chuẩn SWH cho mọi skill native (WHAT/HOW, contract, branches, ví dụ positive+boundary; --preserve chặn migrate làm mất lệnh/path). Chạy trong CI harness.yml + medic probe swh. Chỉ chứng minh hình dạng — hành vi luôn review_required. Skill kéo từ upstream ở skills/external/ không bị lint."
+    live_probe: fdk/tools/swh-lint.py
+    anchor_symbol: "setup::fdk/tools/swh-lint.py::check"
+    confirmed: "2026-09-19"

@@ -9,7 +9,7 @@ import subprocess
 import sys
 import time
 
-from hooklib import audit, code_log, find_validators, harness_dir, overstack_dir, project_dir, read_payload, resolve_tool, run_validator, scope_config, stamp_path
+from hooklib import audit, code_log, find_validators, harness_dir, overstack_dir, project_dir, read_payload, resolve_tool, run_validator, scope_config, stamp_path, session_touched_files, touched_message
 
 
 # file code (đa ngôn ngữ) trong git-status → trigger regen phần code-graph của wiki-graph.
@@ -441,5 +441,23 @@ def main() -> None:
     sys.exit(0)
 
 
+def _emit_touched(payload: dict) -> None:
+    """R21: exit 0 nào cũng in danh sách path cho USER (systemMessage — hiện thẳng ở UI, 0 token
+    của model). Exit 2 (đang chặn dừng) thì bỏ: lượt dừng thật kế tiếp sẽ in."""
+    try:
+        msg = touched_message(session_touched_files(project_dir(payload), payload.get("transcript_path") or ""))
+        if msg:
+            print(json.dumps({"systemMessage": msg}, ensure_ascii=False))
+    except Exception:
+        pass
+
+
 if __name__ == "__main__":
-    main()
+    _payload = read_payload()
+    read_payload = lambda: _payload  # noqa: E731 — main() đọc lại payload; stdin chỉ đọc được 1 lần
+    try:
+        main()
+    except SystemExit as e:
+        if e.code in (0, None) and os.environ.get("OVERSTACK_TOUCHED_PATHS") != "0":
+            _emit_touched(_payload)
+        raise

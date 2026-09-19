@@ -13,11 +13,13 @@ Fail-open tuyệt đối: lỗi gì cũng exit 0, không bao giờ chặn prompt
 """
 import json
 import os
+import re
 import subprocess
 import sys
 from pathlib import Path
 
-from hooklib import audit, find_wiki_dir, orca_graph_running, project_dir, read_payload, resolve_tool
+from hooklib import (audit, find_wiki_dir, orca_graph_running, overstack_dir, project_dir, read_payload,
+                     resolve_tool)
 
 EVERY = int(os.environ.get("LLMWIKI_DOCS_GATE_EVERY", "5") or "5")
 REPORT_EVERY = int(os.environ.get("OVERSTACK_SELF_REPORT_EVERY", "50") or "50")   # tự chấm hệ mỗi N lượt
@@ -71,6 +73,23 @@ def emit(msg: str) -> None:
     }}, ensure_ascii=False))
 
 
+GOAL_RE = re.compile(r"(?<![\w-])goal(?![\w-])", re.I)
+
+
+def goal_directive(prompt, atlas=""):
+    """Prompt có từ khoá `goal` (nguyên từ, ngoài khối code) → chỉ thị kèm /orca-graph để goal
+    visualize được. Hook chỉ INJECT, không tự chạy build. Tắt: OVERSTACK_GOAL_HOOK=0."""
+    if os.environ.get("OVERSTACK_GOAL_HOOK") == "0":
+        return None
+    if not GOAL_RE.search(re.sub(r"```.*?```", "", prompt or "", flags=re.S)):
+        return None
+    msg = ("🎯 [goal→orca-graph] Prompt có từ khoá goal: đưa goal này vào /orca-graph để nó visualize được — "
+           "chưa có PLAN thì /plan rồi `orca-graph.py build <PLAN.md>`; goal đã có graph thì SỬA PLAN rồi "
+           "`build` lại (plan_version+1, giữ lịch sử, không tạo graph mới); xong chạy "
+           "`fdk/tools/graph-viz.py <graph.json>` và in link HTML cho user.")
+    return msg + (f" Atlas mọi graph: file://{atlas}" if atlas else "")
+
+
 def build_gate(n: int, every: int, need_docs: bool, need_eval: bool) -> str:
     miss = ([] if not need_docs else ["**tài liệu**"]) + ([] if not need_eval else ["**đánh giá/eval**"])
     lines = [
@@ -115,6 +134,14 @@ def main() -> None:
             shown = ", ".join(running[:4]) + ("…" if len(running) > 4 else "")
             emit(f"📋 [orca-graph] {len(running)} node đang chạy ({shown}). "
                  f"IN đường dẫn này Ở CUỐI response cho user, dạng bấm được: file://{link}")
+    except Exception:
+        pass
+
+    try:
+        atlas = Path(overstack_dir(str(root)) or root) / "graph" / "atlas.html"   # layout dot/không-dot đều đúng
+        g = goal_directive(payload.get("prompt", ""), str(atlas) if atlas.is_file() else "")
+        if g:
+            emit(g)
     except Exception:
         pass
 

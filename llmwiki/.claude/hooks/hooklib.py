@@ -224,3 +224,61 @@ def orca_graph_running(root: str):
         return running, (link.resolve() if link else None)
     except Exception:
         return [], None
+
+
+# R21 touched-paths (feedback 190926 "path đâu mà coi?"): cuối mỗi lượt hook Stop in cho USER
+# đường dẫn tuyệt đối các file phiên này tạo/sửa — người xem mở được ngay, không phải hỏi lại.
+TOUCHED_CAP = int(os.environ.get("OVERSTACK_TOUCHED_CAP", "40") or "40")
+_TOUCHED_NOISE = ("harness/metrics/", ".claude/audit/", "/.locks/", ".events.jsonl")  # bare-path: ok — mẫu substring lọc nhiễu, khớp cả harness/ lẫn .harness/ downstream
+
+
+def session_touched_files(root: str, transcript_path: str):
+    """Path tuyệt đối file phiên này tạo/sửa, mới nhất trước.
+    Nguồn 1 (chắc): file_path của tool Write/Edit/NotebookEdit trong transcript.
+    Nguồn 2 (bắt cả sửa qua Bash): file trong `git status` có mtime >= mốc bắt đầu phiên.
+    Fail-open: lỗi gì cũng trả list rỗng."""
+    start, seen = None, set()
+    try:
+        for line in open(transcript_path, encoding="utf-8", errors="ignore"):
+            try:
+                r = json.loads(line)
+            except Exception:
+                continue
+            ts = r.get("timestamp")
+            if ts and start is None:
+                start = datetime.datetime.fromisoformat(ts.replace("Z", "+00:00")).timestamp()
+            msg = r.get("message") if isinstance(r.get("message"), dict) else {}
+            for c in msg.get("content") or []:
+                if isinstance(c, dict) and c.get("type") == "tool_use" and \
+                        c.get("name") in ("Write", "Edit", "NotebookEdit"):
+                    fp = (c.get("input") or {}).get("file_path") or (c.get("input") or {}).get("notebook_path")
+                    if fp:
+                        seen.add(os.path.abspath(fp))
+    except Exception:
+        pass
+    if start is not None:
+        try:
+            out = subprocess.run(["git", "-C", root, "status", "--porcelain", "-uall", "-z"],
+                                 capture_output=True, text=True, timeout=10).stdout
+            top = subprocess.run(["git", "-C", root, "rev-parse", "--show-toplevel"],
+                                 capture_output=True, text=True, timeout=5).stdout.strip() or root
+            for ent in out.split("\0"):
+                if len(ent) > 3 and ent[:2] != " D" and ent[0] != "D":
+                    p = os.path.join(top, ent[3:])
+                    if os.path.isfile(p) and os.path.getmtime(p) >= start:
+                        seen.add(os.path.abspath(p))
+        except Exception:
+            pass
+    files = [p for p in seen if os.path.isfile(p) and not any(n in p for n in _TOUCHED_NOISE)]
+    return sorted(files, key=os.path.getmtime, reverse=True)
+
+
+def touched_message(files, cap: int = TOUCHED_CAP) -> str:
+    """Khối text cho user: tối đa `cap` link file:// (mới nhất trước), dư thì ghi '+N file nữa'."""
+    if not files:
+        return ""
+    lines = [f"📂 [R21] {len(files)} file phiên này tạo/sửa (mới nhất trước):"]
+    lines += [f"  file://{p}" for p in files[:cap]]
+    if len(files) > cap:
+        lines.append(f"  … +{len(files) - cap} file nữa (trần {cap} — OVERSTACK_TOUCHED_CAP)")
+    return "\n".join(lines)

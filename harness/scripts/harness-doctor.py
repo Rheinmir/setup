@@ -511,6 +511,37 @@ def build_r17(base):
                     ("no-fw:no-node", "1" if m1 == m0 else "0", "1")])
 
 
+def build_r21(base):
+    # R21: Stop phải liệt kê file phiên này sửa (BAD: file mới → PHẢI có trong list) và im với
+    # file cũ trước phiên (GOOD: không liệt kê); trần 40 link.
+    import time
+    if str(HOOKS_DIR) not in sys.path:
+        sys.path.insert(0, str(HOOKS_DIR))
+    try:
+        import hooklib as hl
+    except Exception as e:
+        return _dark("side-effect", "hooklib import failed: %s" % e)
+    r = base / "repo"
+    r.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["git", "init", "-q", str(r)], capture_output=True)
+    _w(r / "old.txt", "x")
+    os.utime(r / "old.txt", (time.time() - 3600,) * 2)
+    _w(r / "new.py", "x")
+    ts = time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime(time.time() - 60)) + ".000Z"
+    tp = base / "t.jsonl"
+    _w(tp, json.dumps({"type": "user", "timestamp": ts, "message": {"content": "x"}}))
+    names = {pathlib_name(f) for f in hl.session_touched_files(str(r), str(tp))}
+    capped = hl.touched_message(["/x/%d" % i for i in range(45)]).count("file://")
+    return _result("side-effect", "hooks",
+                   [("new-file:listed", "1" if "new.py" in names else "0", "1"),
+                    ("old-file:silent", "1" if "old.txt" not in names else "0", "1"),
+                    ("cap:40", str(capped), "40")])
+
+
+def pathlib_name(p):
+    return os.path.basename(p)
+
+
 # ── Tier 5: aggregate / documentary gate (wiring present + referenced) ──────
 def build_r19(base):
     # R19: chuoi ket luan phai cham dut o nut CHUNG CU. BAD = la la mot suy luan nua (phai BAT);
@@ -580,6 +611,7 @@ RULES = [
     ("R18", "plan-executable", build_r18),
     ("R19", "evidence-terminal", build_r19),
     ("R20", "html-docs-shell", build_r20),
+    ("R21", "touched-paths", build_r21),
 ]
 
 

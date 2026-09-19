@@ -177,3 +177,12 @@ rules:
     applies_to: [write]
     scope: "**/html/*.html (miễn chính artifact archify)"
     note: "PostToolUse nhánh .html cùng R16 (llmwiki/.claude/hooks/post_tool_use.py). Nguồn: GH#155 (trang 11 mục không menu vì agent chỉ bắt chước look docs-site-macos) + GH#154 (sơ đồ nhúng preset signal-flow lệch theme)."
+
+  - id: R21
+    name: touched-paths
+    validator: stop.py
+    statement: "Stop: cuối MỖI lượt, hook in cho user (systemMessage, 0 token của model) đường dẫn tuyệt đối file:// của mọi file phiên này tạo/sửa, mới nhất trước, trần 40 link (dư ghi +N). Nguồn: Write/Edit trong transcript + git status mtime >= mốc đầu phiên. Tắt OVERSTACK_TOUCHED_PATHS=0; trần OVERSTACK_TOUCHED_CAP."
+    enforce_at: [session]
+    event: Stop
+    event_action: stop
+    note: "llmwiki/.claude/hooks/stop.py::_emit_touched · hooklib.session_touched_files/touched_message. Nguồn: feedback user 19/09/2026 'path đâu mà coi?'."

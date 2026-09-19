@@ -249,6 +249,17 @@ rules:
     handler: "harness-events.py session-end · llmwiki/.claude/hooks/session_end.py::flush_problem_tree. Đích: tắt app bình thường thì cây truy vết vẫn nằm đúng chỗ (feedback 020726)."
     blocking: false
 
+  touched_paths:
+    id: R21
+    name: touched-paths
+    kind: hook_event
+    statement: "Stop: cuối MỖI lượt, hook in cho user (systemMessage — hiện thẳng ở UI, 0 token của model) đường dẫn tuyệt đối dạng file:// của mọi file phiên này tạo/sửa, mới nhất trước, TRẦN 40 link (dư thì ghi +N). Nguồn: Write/Edit trong transcript + git status có mtime >= mốc đầu phiên (bắt cả sửa qua Bash). Tắt: OVERSTACK_TOUCHED_PATHS=0; đổi trần: OVERSTACK_TOUCHED_CAP."
+    enforce_at: [session]
+    event: Stop
+    event_action: stop                     # chạy CHUNG Stop hook với R3 (stop.py) — cùng lệnh harness-events.py stop
+    handler: "llmwiki/.claude/hooks/stop.py::_emit_touched · hooklib.session_touched_files/touched_message. Nguồn: feedback user 19/09/2026 'path đâu mà coi?'."
+    blocking: false
+
   html_docs_shell:
     id: R20
     name: html-docs-shell
