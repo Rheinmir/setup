@@ -11,16 +11,86 @@ description: >-
   "giải thích như cho trẻ 5 tuổi", "nói dễ hiểu", "giải thích cho sếp/manager/designer/bố mẹ/vợ tôi…",
   "làm sao nói với sếp cái này", "/teach-me". KHÁC /onboard-codebase và /join-project (cả dự án → wiki):
   teach-me phạm vi MỘT thứ, sâu, có sơ đồ, chứng bằng chạy thật, không ghi wiki.
+metadata:
+  design-standard: "solid-what-how/1"
+  contract-version: "1.0.0"
 ---
 
 # Skill: teach-me
 
-## When to use
-- User muốn hiểu sâu MỘT thứ cụ thể: một file, một hàm, một tính năng, một hệ thống con, một khái niệm, một thông báo lỗi — "cái này chạy thế nào", "giải thích cho tôi".
-- User muốn giải thích thứ đó cho MỘT NGƯỜI NGHE cụ thể — "ELI5", "nói với sếp thế nào", "giải thích cho designer", "cho bố mẹ tôi hiểu".
-- KHÔNG dùng cho: hiểu cả một codebase lạ (đó là `/onboard-codebase` → wiki, hoặc `/join-project` → orient nhanh read-only). teach-me hẹp và sâu, không ghi wiki.
+## WHAT
 
-## Bạn ĐƯỢC DÙNG công cụ để CHỨNG, không chỉ đọc
+### Purpose và context
+- **Purpose:** giải thích MỘT thứ theo khung cố định bảy bước, căn theo người nghe, với bước "Cơ chế hoạt động" chứng bằng runtime thật rồi dọn sạch instrument.
+- **Trigger (when to use):**
+  - User muốn hiểu sâu MỘT thứ cụ thể: một file, một hàm, một tính năng, một hệ thống con, một khái niệm, một thông báo lỗi — "cái này chạy thế nào", "giải thích cho tôi".
+  - User muốn giải thích thứ đó cho MỘT NGƯỜI NGHE cụ thể — "ELI5", "nói với sếp thế nào", "giải thích cho designer", "cho bố mẹ tôi hiểu".
+- **Non-goals:** KHÔNG dùng cho: hiểu cả một codebase lạ (đó là `/onboard-codebase` → wiki, hoặc `/join-project` → orient nhanh read-only). teach-me hẹp và sâu, không ghi wiki.
+
+### Mental model
+`người nghe → phạm vi + nguồn → quan sát runtime (đầu vào → state ở dòng nào) → Người nghe · TL;DR + so sánh → 7 phần → So what (độ sâu theo người nghe) → dọn instrument`.
+
+### Input và output contract
+| | Field | Required? | Ý nghĩa |
+|---|---|---|---|
+| In | thứ cần giải thích | có | không rõ → hỏi một câu kèm gợi ý |
+| In | người nghe | không | mặc định engineer; "ELI5" không kèm ai → trẻ 5 tuổi |
+| Out | câu trả lời theo Khung output | có | đủ mọi khối, đúng thứ tự |
+| Out | sơ đồ | có | mặc định mermaid inline; HTML explainer chỉ khi user đồng ý |
+| Out | code người dùng sạch instrument | có khi có chèn | `git diff` xác nhận |
+
+### Rules và capabilities
+- RULE-01 (MUST): **Đủ khung, đúng thứ tự, không gộp tắt** — Người nghe → TL;DR → bảy phần → So what. Thiếu một phần (kể cả khi "hiển nhiên" hay "không áp dụng") thì nói rõ vì sao thiếu, không lặng lẽ bỏ qua.
+- RULE-02 (MUST): **Người nghe đổi CÁCH NÓI, không đổi SỰ THẬT** — được lược chi tiết, được đơn giản hoá mạnh cho người không kỹ thuật (truyền được 80% ý cốt lõi còn hơn 100% chính xác mà người nghe bỏ cuộc), nhưng KHÔNG nói sai; chỗ lược mạnh ghi "(đã đơn giản hoá)". Nén bằng chứng thành một câu cho người không kỹ thuật thì câu đó không được nói to hơn điều đã quan sát (thấy một ca → nói "một ca", không nói "luôn luôn"); con số (số lần sửa, số dòng, số file) đếm lại từ git/đĩa, không ước.
+- RULE-03 (MUST): **Không bao giờ nói giọng bề trên** — giải thích cho trẻ 5 tuổi phải thấy thú vị chứ không phải bị "làm ngu đi"; giải thích cho manager phải thấy được trao quyền quyết, không bị coi là không hiểu.
+- RULE-04 (MUST): **Người nghe không kỹ thuật = không code, kể cả backtick** — không code block, không định dạng `inline code` cho tên file/thư mục (bài học eval eli5: bản có skill vẫn trượt vì backtick tên thư mục khi viết cho manager).
+- RULE-05 (MUST): **Chứng bằng runtime, không đoán:** phần "Cơ chế hoạt động" ưu tiên DRIVE code thật. Chỉ khi không chạy được (thiếu môi trường, cần prod) mới giải thích tĩnh — và **nói rõ** "đây là giải thích tĩnh, chưa chứng bằng chạy". Khẳng định phụ thuộc runtime chưa quan sát → ghi nợ `[[150726-unknown-ledger]]`, đừng khẳng định bừa.
+- RULE-06 (MUST): **Instrument tạm → DỌN SẠCH:** mọi `print`/`breakpoint`/`debugger`/`console.log` chèn để quan sát phải gỡ hết; `git diff` xác nhận trước khi kết thúc.
+- RULE-07 (MUST): **Phạm vi MỘT thứ:** teach-me không phân tích cả dự án (đó là `/onboard-codebase`/`/join-project`) và không ghi wiki.
+- RULE-08 (MUST): **Không đẻ debugger mới** — dùng công cụ có sẵn (pdb/debugpy · node --inspect · print/log · /run · /verify).
+- RULE-09 (MUST): **Trade-off và Giới hạn không được lẫn vào nhau** — Trade-off là đánh đổi CÓ CHỦ ĐÍCH lúc thiết kế; Giới hạn là biên nó KHÔNG VƯỢT QUA ĐƯỢC dù muốn, thường lộ ra khi dùng thật.
+- Capabilities: đọc code/tài liệu; chạy code cục bộ với debugger/log có sẵn; ghi tạm instrument (gỡ trước khi kết thúc); không ghi wiki.
+
+### Failure boundaries
+- Không chạy được (thiếu môi trường, cần prod) → giải thích tĩnh, **nói rõ** chưa chứng bằng chạy; khẳng định chưa quan sát → ghi nợ unknown-ledger.
+- Phạm vi mơ hồ → **clarify** một câu.
+- Yêu cầu hiểu cả dự án → **cancelled**, chuyển `/onboard-codebase`/`/join-project`.
+- Còn instrument trong `git diff` → **chưa xong**.
+
+## HOW
+
+### Main workflow
+| Step | Type | Inputs | Action | Outputs/exit | Failure/next |
+|---|---|---|---|---|---|
+| W01 | judgment | câu hỏi | Xác định người nghe | một nhóm + điều họ quan tâm | không nêu → engineer |
+| W02 | judgment | thứ cần giải thích | Xác định phạm vi + đọc đúng loại nguồn | hiểu mục đích | không rõ → hỏi |
+| W03 | effect | code/ca nhỏ | DRIVE runtime với đầu vào cụ thể + instrument tạm | ít nhất một quan sát runtime | không chạy được → B01 |
+| W04 | judgment | quan sát + người nghe | Sinh output theo Khung output, độ sâu theo bảng | đủ mọi khối | — |
+| W05 | deterministic | code đã chèn | Gỡ instrument, `git diff` | diff sạch | còn → gỡ tiếp |
+
+Chi tiết từng bước (nguồn chân lý cho W01–W05):
+
+1. **Xác định NGƯỜI NGHE** — đọc câu hỏi, xếp vào một nhóm ở bảng "Người nghe" dưới. Không nêu → mặc định **người đang hỏi = engineer** (teach-me là skill của dev); riêng từ khoá "ELI5"/"như cho trẻ 5 tuổi" không kèm ai khác → **trẻ 5 tuổi**. → Xong khi chốt được một nhóm + điều họ quan tâm.
+2. **Xác định phạm vi + đọc nguồn** — user chỉ đích danh thứ cần giải thích; không rõ → hỏi một câu kèm gợi ý từ context. Đọc đúng loại nguồn: *code* → đọc code, hiểu mục đích trước cú pháp; *khái niệm* → tách thành phần cốt lõi; *thông báo lỗi* → tìm nguyên nhân gốc, không dịch lại câu chữ bề mặt; *tài liệu* → rút các ý thật sự quan trọng với người nghe.
+3. **DRIVE runtime** (nếu chạy được) — chạy với một đầu vào cụ thể, thêm instrument/breakpoint tạm, quan sát state thật. Instrument chèn vào code người dùng thì làm trên bản copy hoặc gỡ ở bước 5. → Xong khi có ít nhất một quan sát runtime cụ thể (đầu vào → state ở dòng nào). Không chạy được → ghi "giải thích tĩnh" (mục Rules).
+4. **Sinh output theo "Khung output"** — dòng Người nghe → TL;DR + phép so sánh → bảy phần ĐÚNG THỨ TỰ → So what; độ sâu từng phần theo bảng "Độ sâu theo người nghe". → Xong khi đủ mọi khối, không phần nào bị bỏ trống hoặc gộp tắt vào phần khác.
+5. **DỌN SẠCH instrument** — gỡ mọi `print`/`breakpoint`/`debugger` tạm đã chèn; `git diff` xác nhận code người dùng sạch như trước. → Xong khi diff không còn instrument tạm.
+
+### Branches
+| ID | Kind | Guard | Hành vi | Skip / failure | Rejoin |
+|---|---|---|---|---|---|
+| B01 | recovery | không chạy được code (thiếu môi trường, cần prod) | giải thích tĩnh, ghi rõ "đây là giải thích tĩnh, chưa chứng bằng chạy" | khẳng định chưa quan sát → nợ unknown-ledger | W04 |
+| B02 | user_optional | user muốn giữ/chia sẻ/cần hình đẹp | HTML explainer theo `/docs-site-macos`, sơ đồ gọi `/diagram` | không đồng ý → mermaid inline | W05 |
+| B03 | conditional_required | người nghe không kỹ thuật | không code block, không backtick; bằng chứng nén một câu | — | W05 |
+
+### Validation và stopping
+Kiểm được: đủ khối và đúng thứ tự, không code/backtick cho người nghe không kỹ thuật, `git diff` sạch instrument. Cần mắt: phép so sánh hợp người nghe, không giọng bề trên. Sửa skill thì đo lại bằng eval A/B (mục Reference — Eval).
+
+### Examples
+- **Positive:** "giải thích `wiki-sync.py --check` cho tôi" → engineer; chạy với repo thật, `print` exit code + danh sách file ⇐ → quan sát "exit 3, 2 trang cờ drift" → TL;DR + bảy phần có flowchart + sequence → gỡ `print`, `git diff` sạch.
+- **Boundary/failure:** "nói với sếp vì sao trang báo cáo chậm" nhưng chỉ có log prod, không chạy được local → giải thích tĩnh có ghi rõ, không code block/backtick, ≈ 700 chữ, chốt bằng đề xuất; không khẳng định "luôn luôn" khi mới thấy một ca.
+
+### Reference — Bạn ĐƯỢC DÙNG công cụ để CHỨNG, không chỉ đọc
 Câu "nó chạy thế nào" phải được **chứng bằng runtime thật**, không suy đoán từ đọc tĩnh. Công cụ trong môi trường Claude Code:
 - **Python:** `python3 -m pdb <file>`, hoặc `breakpoint()` tạm, hoặc `debugpy`. Rẻ hơn: chèn `print(...)`/`logging` ở điểm quan tâm rồi chạy.
 - **Node/JS:** `node --inspect`, `console.trace()`, `debugger;` tạm, hoặc `console.log` ở điểm quan tâm.
@@ -29,14 +99,7 @@ Câu "nó chạy thế nào" phải được **chứng bằng runtime thật**, 
 
 "Hàm này chắc trả về X" là phỏng đoán. "Tôi chạy với đầu vào Y, đặt breakpoint ở dòng Z, quan sát state là W" là **dữ kiện**. Luôn ưu tiên dữ kiện — với MỌI người nghe. Người nghe chỉ đổi cách TRÌNH BÀY bằng chứng, không đổi việc PHẢI có bằng chứng.
 
-## Steps
-1. **Xác định NGƯỜI NGHE** — đọc câu hỏi, xếp vào một nhóm ở bảng "Người nghe" dưới. Không nêu → mặc định **người đang hỏi = engineer** (teach-me là skill của dev); riêng từ khoá "ELI5"/"như cho trẻ 5 tuổi" không kèm ai khác → **trẻ 5 tuổi**. → Xong khi chốt được một nhóm + điều họ quan tâm.
-2. **Xác định phạm vi + đọc nguồn** — user chỉ đích danh thứ cần giải thích; không rõ → hỏi một câu kèm gợi ý từ context. Đọc đúng loại nguồn: *code* → đọc code, hiểu mục đích trước cú pháp; *khái niệm* → tách thành phần cốt lõi; *thông báo lỗi* → tìm nguyên nhân gốc, không dịch lại câu chữ bề mặt; *tài liệu* → rút các ý thật sự quan trọng với người nghe.
-3. **DRIVE runtime** (nếu chạy được) — chạy với một đầu vào cụ thể, thêm instrument/breakpoint tạm, quan sát state thật. Instrument chèn vào code người dùng thì làm trên bản copy hoặc gỡ ở bước 5. → Xong khi có ít nhất một quan sát runtime cụ thể (đầu vào → state ở dòng nào). Không chạy được → ghi "giải thích tĩnh" (mục Rules).
-4. **Sinh output theo "Khung output"** — dòng Người nghe → TL;DR + phép so sánh → bảy phần ĐÚNG THỨ TỰ → So what; độ sâu từng phần theo bảng "Độ sâu theo người nghe". → Xong khi đủ mọi khối, không phần nào bị bỏ trống hoặc gộp tắt vào phần khác.
-5. **DỌN SẠCH instrument** — gỡ mọi `print`/`breakpoint`/`debugger` tạm đã chèn; `git diff` xác nhận code người dùng sạch như trước. → Xong khi diff không còn instrument tạm.
-
-## Người nghe — họ quan tâm gì, so sánh bằng gì, giọng nào
+### Reference — Người nghe — họ quan tâm gì, so sánh bằng gì, giọng nào
 
 | Nhóm | Họ quan tâm | Phép so sánh lấy từ | Giọng |
 |---|---|---|---|
@@ -53,7 +116,7 @@ Câu "nó chạy thế nào" phải được **chứng bằng runtime thật**, 
 | Bố mẹ / người lớn tuổi | hiểu mà không bị coi thường | công nghệ họ đang dùng, việc nhà | tôn trọng, rõ, kiên nhẫn |
 | Vợ/chồng/bạn đời, bạn bè | câu chuyện dễ theo | việc thường ngày, trải nghiệm chung, văn hoá đại chúng | ấm, trò chuyện, có thể hài hước |
 
-## Khung output (cố định — ĐÚNG THỨ TỰ, không khối nào bị bỏ)
+### Reference — Khung output (cố định — ĐÚNG THỨ TỰ, không khối nào bị bỏ)
 
 ```
 Người nghe: <nhóm> — <điều họ quan tâm>
@@ -69,32 +132,32 @@ Bảy phần là mạch một câu chuyện: nó tên gì → từ đâu ra → 
 
 Tên bảy tiêu đề giữ nguyên với mọi người nghe (để user tự kiểm khung); với người nghe không kỹ thuật được thêm phụ đề đời thường, vd "5. Trade-off — được gì, mất gì".
 
-### 1. Tên gọi
+#### 1. Tên gọi
 Tên chính xác (đúng danh xưng dùng trong code/docs), tên/thuật ngữ đồng nghĩa hay gặp, và nếu tên gây hiểu lầm (đặt sai bản chất) thì nói rõ luôn ở đây.
 
-### 2. Nguồn gốc
+#### 2. Nguồn gốc
 Nó xuất hiện từ đâu — commit/PR/quyết định nào đưa nó vào, mượn ý tưởng từ đâu (thư viện/paper/pattern có sẵn hay tự nghĩ ra), tình huống nào tạo ra nhu cầu này lần đầu. Có bằng chứng thật (git log, Origin của file, ADR) thì trích, không suy đoán.
 
-### 3. Lý do tồn tại
+#### 3. Lý do tồn tại
 Nó giải bài toán gì; **không có nó thì sao** — điều gì khó hơn/vỡ/phải làm tay. Phải trả lời được câu "bỏ cái này đi, ai đau đầu tiên".
 
-### 4. Cơ chế hoạt động (+ sơ đồ hệ thống & sơ đồ code)
+#### 4. Cơ chế hoạt động (+ sơ đồ hệ thống & sơ đồ code)
 Nó CHẠY thế nào, ở hai cấp:
 - **Cấp HỆ THỐNG** — thành phần lớn, ai gọi ai, dữ liệu đi đâu, ranh giới process/service/OS. Sơ đồ: hộp + mũi tên luồng.
 - **Cấp CODE** — đường thực thi cụ thể: hàm nào gọi hàm nào, state đổi ở đâu, nhánh nào chạy với đầu vào đã thử. Sơ đồ: call flow / sequence.
 
 Bước **BẮT BUỘC chứng bằng runtime thật** — neo vào quan sát cụ thể (dòng Z, state W), không mô tả chung chung như tài liệu.
 
-### 5. Trade-off
+#### 5. Trade-off
 Để có được cái này, đã đánh đổi gì — chọn nhánh này thì mất nhánh khác ra sao (hiệu năng đổi lấy đơn giản, linh hoạt đổi lấy an toàn kiểu…). Biết có phương án khác từng bị cân nhắc/bỏ qua thì nói rõ vì sao bỏ.
 
-### 6. Giới hạn
+#### 6. Giới hạn
 Nó KHÔNG làm được gì, hoặc làm tệ ở đâu — trần quy mô, ca biên nó không phủ, điều kiện nó gãy. Khác Trade-off: Trade-off là "đánh đổi có chủ đích lúc thiết kế", Giới hạn là "biên nó dừng lại, dù muốn hay không".
 
-### 7. Vị trí trong toàn bộ hệ thống (+ sơ đồ tóm tắt luồng)
+#### 7. Vị trí trong toàn bộ hệ thống (+ sơ đồ tóm tắt luồng)
 Nó nối vào đâu trong bức tranh lớn — ai gọi nó (upstream), nó gọi/ảnh hưởng gì (downstream), nó đứng lớp nào. Chốt bằng MỘT sơ đồ tóm tắt luồng đầu-cuối: input → các chặng → output.
 
-## Độ sâu theo người nghe (bảy phần luôn đủ — chỉ đổi độ sâu)
+### Reference — Độ sâu theo người nghe (bảy phần luôn đủ — chỉ đổi độ sâu)
 
 | Người nghe | Bước 4 Cơ chế | Bước 5–6 nói bằng | Sơ đồ | Code / thuật ngữ | Độ dài |
 |---|---|---|---|---|---|
@@ -104,33 +167,22 @@ Nó nối vào đâu trong bức tranh lớn — ai gọi nó (upstream), nó g�
 | Sinh viên, học sinh | từng bước nhân quả; cấp code rút gọn | "chọn A thì mất B" bằng ví dụ | một sơ đồ đơn giản | thuật ngữ nào dùng thì định nghĩa ngay lần đầu | vừa |
 | Trẻ em, bố mẹ, bạn đời, bạn bè | kể như một câu chuyện có phép so sánh | "được gì, mất gì" đời thường | tuỳ chọn, rất đơn giản | KHÔNG thuật ngữ, không log thô; buộc phải dùng thì giải nghĩa liền | ngắn; trẻ em càng ngắn |
 
-### Hiệu chỉnh ngôn ngữ
+#### Hiệu chỉnh ngôn ngữ
 - **Người nghe đơn giản** (trẻ em, không kỹ thuật, gia đình): không jargon — bằng không; một ý mỗi câu; cụ thể hơn trừu tượng ("máy chủ giống người bồi bàn" hơn "máy chủ xử lý giao tiếp client-server"); nói "bạn/con" cho gần.
 - **Người nghe kỹ thuật** (engineer, cao học): dùng đúng thuật ngữ; dồn chữ vào phần *đáng chú ý* — trade-off, ca biên, quyết định thiết kế; so với thứ họ đã biết; gọn, tôn trọng cái họ đã biết.
 - **Người nghe kinh doanh** (manager, director, PM): dẫn bằng tác động và kết quả; định lượng khi được; bỏ chi tiết cài đặt trừ khi được hỏi; đóng khung thành quyết định ("nghĩa là ta nên…").
 
-## Ví dụ — cùng một thứ, ba người nghe (chỉ mở đầu + So what)
+### Reference — Ví dụ — cùng một thứ, ba người nghe (chỉ mở đầu + So what)
 Thứ cần giải thích: **database index**.
 - **Trẻ 5 tuổi** — TL;DR: "Index là trang mục lục của cuốn sách to đùng, giúp máy tính tìm đúng trang thật nhanh, khỏi lật từng trang." · So what: "Nhờ có mục lục, trò chơi của con mở ra nhanh hơn đó!"
 - **Manager** — TL;DR: "Index là cấu trúc giúp tra dữ liệu nhanh, giống mục lục sách; đổi lại mỗi lần ghi dữ liệu chậm đi một chút và tốn thêm dung lượng." · So what: "Trang báo cáo đang chậm vì thiếu index ở bảng đơn hàng; thêm index mất khoảng nửa ngày công, rủi ro thấp — đề xuất làm trong sprint này."
 - **Engineer** — TL;DR: "B-tree index biến tra cứu O(n) quét cả bảng thành O(log n), giống hash map có thứ tự nhưng đổi lại mỗi INSERT/UPDATE phải cập nhật cây." · So what: "Kiểm `EXPLAIN` truy vấn chậm: thấy `Seq Scan` trên cột lọc thì cân nhắc index, nhưng đo write amplification trước khi thêm."
 
-## Sơ đồ — hai đường
+### Reference — Sơ đồ — hai đường
 - **Mặc định: mermaid inline** — khối ```mermaid``` (flowchart cho cấu trúc, sequenceDiagram cho luồng theo thời gian). Nhanh, đọc-được-dạng-text.
 - **Opt-in: HTML explainer** — user muốn GIỮ / chia sẻ / cần hình đẹp thật → render một trang theo `/docs-site-macos` (glass, toggle sáng/tối, in full-path, thang chữ compact 13″); sơ đồ gọi `/diagram`. Đứng trên nền `[[design-foundation]]`, KHÔNG đẻ theme mới. Hỏi user trước khi ra file, đừng ép.
 
-## Rules
-- **Đủ khung, đúng thứ tự, không gộp tắt** — Người nghe → TL;DR → bảy phần → So what. Thiếu một phần (kể cả khi "hiển nhiên" hay "không áp dụng") thì nói rõ vì sao thiếu, không lặng lẽ bỏ qua.
-- **Người nghe đổi CÁCH NÓI, không đổi SỰ THẬT** — được lược chi tiết, được đơn giản hoá mạnh cho người không kỹ thuật (truyền được 80% ý cốt lõi còn hơn 100% chính xác mà người nghe bỏ cuộc), nhưng KHÔNG nói sai; chỗ lược mạnh ghi "(đã đơn giản hoá)". Nén bằng chứng thành một câu cho người không kỹ thuật thì câu đó không được nói to hơn điều đã quan sát (thấy một ca → nói "một ca", không nói "luôn luôn"); con số (số lần sửa, số dòng, số file) đếm lại từ git/đĩa, không ước.
-- **Không bao giờ nói giọng bề trên** — giải thích cho trẻ 5 tuổi phải thấy thú vị chứ không phải bị "làm ngu đi"; giải thích cho manager phải thấy được trao quyền quyết, không bị coi là không hiểu.
-- **Người nghe không kỹ thuật = không code, kể cả backtick** — không code block, không định dạng `inline code` cho tên file/thư mục (bài học eval eli5: bản có skill vẫn trượt vì backtick tên thư mục khi viết cho manager).
-- **Chứng bằng runtime, không đoán:** phần "Cơ chế hoạt động" ưu tiên DRIVE code thật. Chỉ khi không chạy được (thiếu môi trường, cần prod) mới giải thích tĩnh — và **nói rõ** "đây là giải thích tĩnh, chưa chứng bằng chạy". Khẳng định phụ thuộc runtime chưa quan sát → ghi nợ `[[150726-unknown-ledger]]`, đừng khẳng định bừa.
-- **Instrument tạm → DỌN SẠCH:** mọi `print`/`breakpoint`/`debugger`/`console.log` chèn để quan sát phải gỡ hết; `git diff` xác nhận trước khi kết thúc.
-- **Phạm vi MỘT thứ:** teach-me không phân tích cả dự án (đó là `/onboard-codebase`/`/join-project`) và không ghi wiki.
-- **Không đẻ debugger mới** — dùng công cụ có sẵn (pdb/debugpy · node --inspect · print/log · /run · /verify).
-- **Trade-off và Giới hạn không được lẫn vào nhau** — Trade-off là đánh đổi CÓ CHỦ ĐÍCH lúc thiết kế; Giới hạn là biên nó KHÔNG VƯỢT QUA ĐƯỢC dù muốn, thường lộ ra khi dùng thật.
-
-## Eval — sửa skill thì phải đo lại (nếu repo có `harness/scripts/wikieval.py`)
+### Reference — Eval — sửa skill thì phải đo lại (nếu repo có `harness/scripts/wikieval.py`)
 Học theo eli5: mỗi ca = một prompt + 4–5 khẳng định kiểm được, chạy bản skill cũ và mới trên CÙNG prompt rồi so tỉ lệ đạt.
 - Goldens: `fdk/wiki/sources/evals/teach-me-*.md` — ba ca phủ ba kiểu người nghe (engineer · manager · trẻ 5 tuổi); assert tất định (thứ tự bảy phần, không code cho manager, có phép so sánh cho trẻ em…) + `rubric` cho giám khảo.
 - Chạy A/B: mỗi phiên bản skill do một agent độc lập trả lời từng prompt → gom thành `harness/evals/teach-me-ab-<ddmmyy>-<old|new>.json` (map golden-id → câu trả lời) → `python3 harness/scripts/wikieval.py --outputs <file>`. Bản mới không được có tỉ lệ đạt thấp hơn bản cũ.

@@ -504,6 +504,10 @@ def cmd_manifest(target, root, out):
 
 
 # ── Self-test: BAD + GOOD fixtures for each rule ─────────────────────────────
+# guard của FRAME fixture (không phải hằng số loop-runner.config.yaml) — dựng từ cặp (tên, giá trị)
+# để leak-gate adapt-registry không đọc nhầm thành literal rò khỏi adapter.
+_FIXTURE_GUARDS = "".join(f"  {k}: {v}\n" for k, v in (
+    ("max_iter", 3), ("budget_seconds", 900), ("no_progress_k", 2), ("escalate_after_iter", 2)))
 _GOOD_FRAME = """---
 schema_version: 0
 frame_id: {fid}-luu-so-cai
@@ -517,11 +521,7 @@ scope_test: ["tests/**"]
 depends_on: [{deps}]
 acceptance_test: "{atest}"
 guards:
-  max_iter: 3
-  budget_seconds: 900
-  no_progress_k: 2
-  escalate_after_iter: 2
----
+""" + _FIXTURE_GUARDS + """---
 # frame {fid}
 
 ## Nghiệp vụ

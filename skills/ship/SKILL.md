@@ -1,18 +1,72 @@
 ---
 name: ship
 description: "Workflow chốt PUSH/RELEASE/PR/MR — gọi khi user nhắc 'release'/'push'/'ship'/'lên release'/'mở PR'/'tạo MR'. Chạy CHECKLIST điều kiện TRƯỚC khi đẩy: (1) medic --ci (cổng sức khoẻ: luật cắn/drift/docs/code/eval), (2) UAT /fdk-uat qua remote thật nếu diff có năng lực mới (chỉ release/pr/mr, medic --ci không chứng minh được đường curl), (3) git sạch (scratchpad/ephemeral không track), (4) selftest, (5) version x.x.x+1 từ tag gần nhất (chỉ mức release), (6) patch note/PR-body trung thực (Added/Fixed/Removed/Known-limitations, KHÔNG phóng đại). Hỗ trợ 5 mức: 'ship push' = chỉ push không tag; 'ship release' = push + tag vX.Y.Z + release notes; 'ship pr' = push nhánh + gh pr create (GitHub); 'ship mr' = push nhánh + glab mr create (GitLab); 'ship merge' = liệt kê PR/MR ĐẾN của repo theo remote, kéo nhánh về, chạy gate+test, chỉ merge nếu XANH. STOP chờ duyệt trước bước side-effect. Trigger: /ship, 'release', 'push', 'ship', 'mở PR', 'tạo MR', 'ship pr', 'ship mr', 'ship merge', 'gom PR về merge', 'merge PR nếu test xanh', 'chuẩn bị push', 'lên release', 'checklist trước push', 'đủ điều kiện push chưa'."
+metadata:
+  design-standard: "solid-what-how/1"
+  contract-version: "1.0.0"
 ---
 
 # Skill: ship
 
 > Workflow chốt quanh remote. Chạy checklist điều kiện, DỪNG chờ duyệt trước mọi bước side-effect (push/tag/PR/MR/merge). Năm mức — 4 mức ĐẨY ĐI (outbound) + 1 mức GOM VỀ (inbound): **push** (đủ mọi bước, không tag) · **release** (push + tag `vX.Y.Z` + release notes) · **pr** (push nhánh + mở Pull Request GitHub qua `gh`) · **mr** (push nhánh + mở Merge Request GitLab qua `glab`) · **merge** (liệt kê PR/MR *đến* → kéo nhánh về → gate+test → merge nếu xanh).
 
-## When to use
+## WHAT
+
+### Purpose và context
+- **Purpose:** đưa thay đổi ra remote (push/release/PR/MR) hoặc gom PR/MR đến về (merge) CHỈ sau khi checklist điều kiện xanh, và dừng chờ duyệt trước mọi side-effect.
+- **Trigger (when to use):**
 - User nhắc "release" / "push" / "ship" / "lên release" / "chuẩn bị push" / "đủ điều kiện push chưa" / "mở PR" / "tạo MR".
 - Trước khi đẩy code lên remote, cắt một release, hoặc mở PR/MR để review-then-merge.
 - Muốn duyệt-rồi-merge các PR/MR đang mở của repo: "gom PR về merge" / "merge PR nếu test xanh" / "ship merge".
+- **Non-goals:** không tự sửa lỗi gate (việc của `/medic` + skill sửa), không tự đóng issue, không tự cài/auth `gh`/`glab`.
 
-## Steps
+### Mental model
+`mức (push · release · pr · mr · merge) → gate sức khoẻ (medic --ci + ci-local) → UAT remote (chỉ release/pr/mr có năng lực mới) → git sạch → selftest → [version + patch note] → checklist → DỪNG duyệt → side-effect → [UAT pha 2]`. Các mức khác nhau ở **bước cuối**, không ở checklist.
+
+### Input và output contract
+| | Field | Required? | Ý nghĩa |
+|---|---|---|---|
+| In | mức | không (mặc định = push) | `push` · `release` · `pr` · `mr` · `merge` — user mô tả phạm vi, không cần nhớ cờ |
+| In | duyệt của user | có, trước mọi side-effect | "yes" tường minh cho push/tag/release/PR/MR/merge/canary |
+| Out | checklist + lệnh đề xuất | có | kết quả từng bước gate, UAT pha 1 hoặc lý do skip, commit msg, lệnh cuối |
+| Out | văn bản | theo mức | `release` → `RELEASE-vX.Y.Z.md`; `pr`/`mr` → PR/MR body; `push` → chỉ commit msg; `merge` → báo cáo test + quyết định |
+| Out | side-effect | chỉ sau duyệt | push / tag / release / PR / MR / merge đã thực thi |
+
+### Rules và capabilities
+- RULE-01 (MUST): **Không push khi `medic --ci` đỏ** — trừ khi user override tường minh; kể cả override phải ghi lý do vào patch note.
+- RULE-02 (MUST): **Patch note không phóng đại** — Known-limitations là bắt buộc nếu có phần chưa xong.
+- RULE-03 (MUST): **Mức khác nhau ở BƯỚC CUỐI, không ở checklist:** mọi mức đều qua gate sức khoẻ; chỉ khác sản phẩm cuối (tag / release / PR / MR / merge). Đừng tag khi user nói "pr"/"mr"; đừng mở PR khi user chỉ nói "push".
+- RULE-04 (MUST): **`medic --ci` xanh KHÔNG chứng minh đường remote chạy được — đó là việc của `/fdk-uat`.** `release`/`pr`/`mr` có năng lực mới BẮT BUỘC qua UAT pha 1 (canary) trước khi đề xuất bước 7; bỏ qua chỉ khi diff xác nhận không thêm năng lực gì user thấy, và phải ghi lý do. Quyết định đã cháy thật 2026-09-17: mọi push trước đó (kể cả `6c839d8`) chỉ qua `medic --ci`/`ci-local`, chưa từng qua UAT remote thật.
+- RULE-05 (MUST): **Mức `merge` — TEST là điều kiện merge, không phải hình thức:** phải kéo nhánh về + chạy `medic --ci` + test THẬT trước khi merge; đỏ thì tuyệt đối KHÔNG merge, để nguyên cho tác giả. Một-tại-một, không merge gộp mù nhiều PR cùng lúc.
+- RULE-06 (MUST): **PR/MR body cùng luật patch note:** giọng người-dùng, Known-limitations bắt buộc nếu có phần nửa vời. Không SHA/tên hàm nội bộ. KHÔNG `Closes #N` tự động.
+- RULE-07 (MUST): **Side-effect cần "yes":** push/tag/release/PR/MR là hành động khó lùi (outward-facing) → luôn STOP show lệnh, chờ duyệt; không commit/PR-body AI-attribution (theo fdk).
+- RULE-08 (MUST): **Không tự cài/auth `gh`/`glab`:** thiếu công cụ → DỪNG, báo user; đừng đoán host.
+- RULE-09 (MUST): Compose, đừng đẻ lại: dùng `medic` cho sức khoẻ, `git tag` cho version, `gh`/`glab` cho PR/MR — skill này chỉ điều phối checklist.
+- Capabilities: đọc repo + chạy gate cục bộ; ghi remote (push/tag/PR/MR/merge) CHỈ qua công cụ đã auth và sau duyệt.
+
+### Failure boundaries
+- Gate đỏ (`medic --ci` / `ci-local` / `freshinstall`) → **blocked**, in chỗ hở + lệnh sửa, không push.
+- UAT FAIL ở pha nào → **failed**, dừng ship, xoá canary; pha 2 FAIL → gỡ commit khỏi remote theo `/fdk-uat` bước 5.
+- Không chắc diff có "năng lực mới" hay bậc version → **clarify** (hỏi user), không tự quyết.
+- Thiếu `gh`/`glab` hoặc chưa auth → **blocked**, báo user cài + login.
+- Mức `merge`: PR đỏ → không merge PR đó (**partial** cho cả lô), báo lý do.
+
+## HOW
+
+### Main workflow
+| Step | Type | Inputs | Action | Outputs/exit | Failure/next |
+|---|---|---|---|---|---|
+| W01 | deterministic | repo | Cổng sức khoẻ `medic --ci` rồi `python3 fdk/tools/ci-local.py` (gồm probe `freshinstall`) | rc 0 | đỏ → blocked |
+| W02 | effect | diff, mức | UAT `/fdk-uat` pha 1 — chỉ `release`/`pr`/`mr` có năng lực mới (B02) | PASS hoặc lý do skip | FAIL → failed |
+| W03 | deterministic | worktree | Git sạch: `git status --short`, rác ephemeral không track | sạch | bẩn → dọn rồi lặp W03 |
+| W04 | deterministic | diff | Selftest/kiểm nhanh engine đụng tới | rc 0 | đỏ → blocked |
+| W05 | judgment | tag gần nhất | Version `vX.Y.(Z+1)` — chỉ `release` (B01) | tag đề xuất | không chắc bậc → clarify |
+| W06 | judgment | `git log`, scratch-log | Patch note / PR-MR body trung thực, Known-limitations bắt buộc nếu có phần nửa vời | văn bản | — |
+| W07 | deterministic | kết quả W01–W06 | Hiện checklist + đề xuất lệnh, **DỪNG chờ duyệt** | "yes" | không duyệt → cancelled |
+| W08 | effect | duyệt | Thực thi theo mức; nếu W02 đã chạy thì UAT pha 2 ngay sau đó | side-effect + receipt | pha 2 FAIL → gỡ commit |
+
+Chi tiết từng bước (nguồn chân lý cho W01–W08):
+
 Mô tả phạm vi thay vì nhớ cờ: **"push"** (chỉ đẩy) · **"release"** (đẩy + tag + notes) · **"pr"** (đẩy nhánh + Pull Request GitHub) · **"mr"** (đẩy nhánh + Merge Request GitLab) · **"merge"** (gom PR/MR đến → test → merge). Mặc định = push.
 
 Mức `push/release/pr/mr` (ĐẨY ĐI) chạy bước 1-8 dưới. Mức `merge` (GOM VỀ) chạy nhánh riêng ở step 8 (đọc mục "Mức merge").
@@ -45,6 +99,13 @@ Bước 1, 3-4 áp dụng cho MỌI mức. Bước 2 (UAT) CHỈ `release`/`pr`/
    - **Chọn công cụ theo remote:** `git remote get-url origin` chứa `github.com`→`gh`, `gitlab`→`glab`. `ship pr`/`ship mr` ép rõ công cụ; nếu công cụ chưa cài/chưa auth (`gh auth status` / `glab auth status`) thì DỪNG, báo user cài+login (không tự làm).
    - **KHÔNG tự chèn `Closes #N`/`Fixes #N`** vào PR/MR body trừ khi user yêu cầu tường minh — để user giữ quyền đóng issue tay.
 
+### Branches
+| ID | Kind | Guard | Hành vi | Skip / failure | Rejoin |
+|---|---|---|---|---|---|
+| B01 | conditional_required | mức = `release` | W05 version + tag `vX.Y.Z` + release notes | mức khác → skip | W06 |
+| B02 | conditional_required | mức ∈ {release, pr, mr} VÀ diff có năng lực mới | UAT pha 1 trước W07, pha 2 sau W08 | bugfix/refactor nội bộ → skip, ghi lý do vào checklist; không chắc → clarify | W03 |
+| B03 | user_optional | mức = `merge` | Vòng GOM VỀ riêng (mục dưới), bỏ W02, W05–W06 | PR đỏ → không merge PR đó | báo cáo tổng |
+
 ### Mức `merge` (GOM VỀ — duyệt-rồi-merge PR/MR đến)
 Không viết note/tag. Bỏ qua bước 2, 5-6; thay bằng vòng test-per-request:
 1. **Chọn công cụ theo remote** (như trên): `github.com`→`gh`, `gitlab`→`glab`. Chưa auth → DỪNG báo user.
@@ -59,13 +120,10 @@ Không viết note/tag. Bỏ qua bước 2, 5-6; thay bằng vòng test-per-requ
    d. Sau merge: quay lại nhánh gốc (`git checkout <nhánh-cũ>`), dọn nhánh tạm.
 4. **Báo cáo tổng:** mỗi PR/MR → đã-merge / bỏ-qua-vì-đỏ (kèm lý do) / bỏ-qua-vì-user.
 
-## Rules
-- **Không push khi `medic --ci` đỏ** — trừ khi user override tường minh; kể cả override phải ghi lý do vào patch note.
-- **Patch note không phóng đại** — Known-limitations là bắt buộc nếu có phần chưa xong.
-- **Mức khác nhau ở BƯỚC CUỐI, không ở checklist:** mọi mức đều qua gate sức khoẻ; chỉ khác sản phẩm cuối (tag / release / PR / MR / merge). Đừng tag khi user nói "pr"/"mr"; đừng mở PR khi user chỉ nói "push".
-- **`medic --ci` xanh KHÔNG chứng minh đường remote chạy được — đó là việc của `/fdk-uat`.** `release`/`pr`/`mr` có năng lực mới BẮT BUỘC qua UAT pha 1 (canary) trước khi đề xuất bước 7; bỏ qua chỉ khi diff xác nhận không thêm năng lực gì user thấy, và phải ghi lý do. Quyết định đã cháy thật 2026-09-17: mọi push trước đó (kể cả `6c839d8`) chỉ qua `medic --ci`/`ci-local`, chưa từng qua UAT remote thật.
-- **Mức `merge` — TEST là điều kiện merge, không phải hình thức:** phải kéo nhánh về + chạy `medic --ci` + test THẬT trước khi merge; đỏ thì tuyệt đối KHÔNG merge, để nguyên cho tác giả. Một-tại-một, không merge gộp mù nhiều PR cùng lúc.
-- **PR/MR body cùng luật patch note:** giọng người-dùng, Known-limitations bắt buộc nếu có phần nửa vời. Không SHA/tên hàm nội bộ. KHÔNG `Closes #N` tự động.
-- **Side-effect cần "yes":** push/tag/release/PR/MR là hành động khó lùi (outward-facing) → luôn STOP show lệnh, chờ duyệt; không commit/PR-body AI-attribution (theo fdk).
-- **Không tự cài/auth `gh`/`glab`:** thiếu công cụ → DỪNG, báo user; đừng đoán host.
-- Compose, đừng đẻ lại: dùng `medic` cho sức khoẻ, `git tag` cho version, `gh`/`glab` cho PR/MR — skill này chỉ điều phối checklist.
+### Validation và stopping
+Điều kiện đi tiếp là rc của công cụ (medic, ci-local, fdk-uat, test), không phải model tự đánh giá. Mọi side-effect dừng ở W07 chờ "yes"; mức `merge` dừng chờ duyệt từng PR. Không retry push/tag tự động khi lỗi mạng — báo user.
+
+### Examples
+- **Positive:** "ship push" sau khi sửa doc → W01 xanh, B02 skip (không năng lực mới, ghi lý do), W03–W04 xanh → checklist + `git push` → user "yes" → push.
+- **Boundary/failure:** "ship pr" có skill mới nhưng `ci-local` đỏ 1 job → blocked ở W01, in job đỏ + lệnh sửa, không push nhánh, không mở PR.
+- **Boundary:** "ship merge" có 2 PR, PR #2 test đỏ → merge #1 sau duyệt, bỏ #2 kèm lý do (partial).

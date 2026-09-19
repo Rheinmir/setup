@@ -6,19 +6,62 @@ description: >-
   độ dài — "short" = 3 cảnh (R1·R2·R3), "full" = 10 (R1–R10). Tự phát hiện PoC vendor-neutral
   (cách CHÍNH) hay harness production. Tự dọn sạch demo. Trigger: "harness tour", "xem harness
   làm gì", "/harness-tour", "test short", "test full".
+metadata:
+  design-standard: "solid-what-how/1"
+  contract-version: "1.0.0"
 ---
 
 # Skill: harness-tour
 
-## Purpose
-Cho user THẤY (không phải đọc) harness hoạt động: bạn — Claude — cố tình vi phạm rule trên project thật,
-bị **hook chặn theo thời gian thực**, và tường thuật lại. Kết thúc không để lại rác.
+## WHAT
 
-## Chọn độ dài tour (đọc ARGUMENTS)
+### Purpose và context
+- **Purpose:** Cho user THẤY (không phải đọc) harness hoạt động: bạn — Claude — cố tình vi phạm rule trên project thật, bị **hook chặn theo thời gian thực**, và tường thuật lại. Kết thúc không để lại rác.
+- **Trigger (when to use):** user gõ `/harness-tour` hoặc nói "harness tour", "xem harness làm gì", "test short", "test full" (`disable-model-invocation: true` — chỉ chạy khi user gọi). Hai độ dài: SHORT (mặc định, R1·R2·R3) và FULL (R1–R10).
+- **Non-goals:** không cài/sửa harness (chỉ gợi ý lệnh cài khi MISSING), không diễn giả khi không có hook, không đụng file có sẵn của project, không thay `demo.sh`/`test-broad.sh` (bản máy-diễn không cần phiên).
+
+### Mental model
+`ARGUMENTS → độ dài (SHORT|FULL) → pre-check harness (POC|PROD|MISSING) → mỗi cảnh: tường thuật → vi phạm có chủ đích trên path map 1-rule → hook chặn live → trích nguyên văn → khắc phục → dọn dẹp tour-demo* + row index cùng lượt → kết màn trích audit.jsonl`. Rule chia 3 nhóm: chặn-live (R1,R2,R3,R5,R7,R9) · ghi/nhắc không chặn (R4,R8,R10) · tầng repo (R6).
+
+### Input và output contract
+| | Field | Required? | Ý nghĩa |
+|---|---|---|---|
+| In | ARGUMENTS | không | chứa `full`/`10`/"đầy đủ" → FULL; còn lại → SHORT |
+| In | session mở ở root project đã cài harness | có | `.claude/settings.json` phải được load, không thì MISSING |
+| Out | tường thuật + stderr chặn trích nguyên văn mỗi cảnh | có | vd `[R1 no-write-raw] …`, `[R3 index-sync] …` |
+| Out | project sạch | có | mọi `tour-demo*` đã PASS bị xoá + row index tương ứng; artifact harness giữ nguyên |
+| Out | kết màn | có | tóm rule vừa chặn + `cat` vài dòng cuối `.claude/audit/*.jsonl`; FULL thêm bảng 10 rule |
+
+### Rules và capabilities
+- RULE-01 (MUST): Mỗi cảnh: tường thuật → vi phạm → **trích nguyên văn lý do chặn** → khắc phục. Không diễn tắt.
+- RULE-02 (MUST): Chỉ đụng file tên `tour-demo*`; tuyệt đối không sửa/xóa file có sẵn của project.
+- RULE-03 (MUST): Một cảnh đáng-lẽ-chặn mà KHÔNG bị chặn → **dừng tour, báo "hàng rào hỏng ở rule X"** — đó là bug thật cần xử lý
+  (KHÔNG áp dụng cho nhóm không-chặn R4/R6/R8/R10 — chúng vốn không block).
+- Capabilities: ghi/xoá file demo `tour-demo*` trong `llmwiki/` + sửa `wiki/index.md` (row demo); đọc artifact audit; chạy script harness cục bộ. Phụ thuộc hook của host (PreToolUse/Stop) — không có hook thì không diễn.
+
+### Failure boundaries
+- Pre-check không in gì → **blocked** (MISSING): DỪNG, gợi ý lệnh cài PoC + mở session mới tại root, không diễn giả.
+- Cảnh đáng-lẽ-chặn mà không bị chặn → **failed**: dừng tour, báo "hàng rào hỏng ở rule X" (trừ R4/R6/R8/R10).
+- Dọn dẹp xoá file mà sót row index → Stop hook R3 chặn chính lượt dọn → xoá row trong cùng lượt rồi kết thúc.
+
+## HOW
+
+### Main workflow
+| Step | Type | Inputs | Action | Outputs/exit | Failure/next |
+|---|---|---|---|---|---|
+| W01 | deterministic | ARGUMENTS | Chọn độ dài tour | SHORT hoặc FULL | — |
+| W02 | deterministic | root session | Pre-check harness (lệnh `grep`/`test` dưới) | POC / PROD | không in gì → MISSING, dừng |
+| W03 | effect | map path → rule | Diễn kịch bản SHORT (3 cảnh) hoặc FULL (R1–R10) tuần tự, tường thuật TRƯỚC mỗi cảnh | stderr chặn trích nguyên văn + file PASS | không bị chặn → dừng, báo hàng rào hỏng |
+| W04 | effect | file tour-demo* đã PASS | Dọn dẹp cùng một lượt: xoá file + row index | project sạch | Stop R3 chặn → xoá row còn sót |
+| W05 | deterministic | audit | Kết màn: tóm rule + `cat` `.claude/audit/*.jsonl` | báo cáo | — |
+
+Chi tiết từng bước (nguồn chân lý cho W01–W05):
+
+#### Chọn độ dài tour (đọc ARGUMENTS)
 - Chứa `full` / `10` / "đầy đủ" → **FULL** (R1–R10).
 - Còn lại (mặc định, hay `short`/`3`) → **SHORT** (3 cảnh: R1 · R2 · R3).
 
-## Pre-check — phát hiện harness nào đang sống trong session
+#### Pre-check — phát hiện harness nào đang sống trong session
 Chạy ở ROOT của session:
 ```bash
 { grep -q llmwiki-validate .claude/settings.json 2>/dev/null && test -f harness/poc-vendor-neutral/bin/llmwiki-validate.py && echo POC; }
@@ -36,13 +79,13 @@ test -f llmwiki/.claude/hooks/pre_tool_use.py && echo PROD
 > Hook chỉ chặn khi session **load `.claude/settings.json` ở đúng root project đã cài**. Mở session ở repo nguồn /
 > root khác → không có hook → tour KHÔNG diễn (diễn mà không bị chặn = dàn dựng, cấm).
 
-## Harness là HOOK, KHÔNG phải MCP (giải thích nếu user hỏi "sao /mcp không thấy")
+#### Harness là HOOK, KHÔNG phải MCP (giải thích nếu user hỏi "sao /mcp không thấy")
 Lớp chặn là **PreToolUse hook** → kiểm bằng `/hooks` hoặc khối `hooks` trong `.claude/settings.json`, KHÔNG ở `/mcp`.
 MCP là thứ khác (tool cho model gọi). PoC: hook gọi `llmwiki-validate claude-hook`. Production: `pre_tool_use.py`…
 
 ---
 
-## Bảng map path → rule (DÙNG ĐÚNG path để mỗi cảnh chỉ kích 1 rule)
+#### Bảng map path → rule (DÙNG ĐÚNG path để mỗi cảnh chỉ kích 1 rule)
 Nhiều rule cùng soi `wiki/` → chọn sai path là 2 rule cùng chặn, rối. Map chuẩn (theo `policy.yaml`):
 
 | Rule | File để vi phạm | Vì sao CHỈ rule đó kích |
@@ -62,7 +105,7 @@ Tầng repo: **R6** (pre-commit + CI `.github/workflows/harness.yml` + skill `/v
 
 ---
 
-## KỊCH BẢN SHORT (mặc định) — 3 cảnh, diễn TUẦN TỰ, tường thuật TRƯỚC mỗi cảnh
+#### KỊCH BẢN SHORT (mặc định) — 3 cảnh, diễn TUẦN TỰ, tường thuật TRƯỚC mỗi cảnh
 
 **Mở màn:** "Tôi sẽ cố tình vi phạm 3 rule. Xem hook chặn tôi theo thời gian thực — không phải tôi tự nhường."
 
@@ -84,7 +127,7 @@ Tầng repo: **R6** (pre-commit + CI `.github/workflows/harness.yml` + skill `/v
 
 ---
 
-## KỊCH BẢN FULL (khi ARGUMENTS có `full`) — R1–R10 tuần tự
+#### KỊCH BẢN FULL (khi ARGUMENTS có `full`) — R1–R10 tuần tự
 
 Diễn 6 cảnh **chặn-live** (R1,R2,R3,R5,R7,R9) + 3 cái **không-chặn cho xem artifact** (R4,R8,R10) + 1 cái **repo** (R6).
 Nói rõ trước nhóm không-chặn: "3 rule sau KHÔNG chặn lúc gõ — chúng GHI/NHẮC; tôi sẽ chỉ artifact làm bằng."
@@ -114,7 +157,7 @@ Nói rõ trước nhóm không-chặn: "3 rule sau KHÔNG chặn lúc gõ — ch
 
 ---
 
-## Dọn dẹp (BẮT BUỘC — cùng một lượt, kẻo R3 chặn)
+#### Dọn dẹp (BẮT BUỘC — cùng một lượt, kẻo R3 chặn)
 Xóa MỌI file `tour-demo*` đã **PASS** (được tạo) **và** xóa row tương ứng trong `wiki/index.md` **trong cùng lượt**
 (xóa file mà để row → index lệch → Stop hook chặn chính lượt dọn):
 - SHORT: `wiki/sources/draft/tour-demo.md` + row của nó.
@@ -125,8 +168,17 @@ Xóa MỌI file `tour-demo*` đã **PASS** (được tạo) **và** xóa row tư
 
 **Kết màn:** tóm 1 đoạn các rule vừa chặn + "mọi tool call vừa rồi nằm trong `.claude/audit/*.jsonl` — máy ghi, tôi không quên được" (cat vài dòng cuối). Bản máy-diễn không cần phiên: `bash harness/poc-vendor-neutral/demo.sh` (13 assertion) · `test-broad.sh` (63).
 
-## Rules
-- Mỗi cảnh: tường thuật → vi phạm → **trích nguyên văn lý do chặn** → khắc phục. Không diễn tắt.
-- Chỉ đụng file tên `tour-demo*`; tuyệt đối không sửa/xóa file có sẵn của project.
-- Một cảnh đáng-lẽ-chặn mà KHÔNG bị chặn → **dừng tour, báo "hàng rào hỏng ở rule X"** — đó là bug thật cần xử lý
-  (KHÔNG áp dụng cho nhóm không-chặn R4/R6/R8/R10 — chúng vốn không block).
+### Branches
+| ID | Kind | Guard | Hành vi | Skip / failure | Rejoin |
+|---|---|---|---|---|---|
+| B01 | user_optional | ARGUMENTS có `full` / `10` / "đầy đủ" | KỊCH BẢN FULL R1–R10 thay SHORT | mặc định → SHORT | W04 |
+| B02 | conditional_required | pre-check in `PROD` | diễn y hệt, chỉ khác tên hook script (`pre_tool_use.py`/`post_tool_use.py`/`stop.py`), R1 có thể chặn qua `permissions.deny` | — | W03 |
+| B03 | recovery | pre-check không in gì (MISSING) | DỪNG, gợi ý lệnh curl `bootstrap.sh` PoC (khối Pre-check) rồi mở session MỚI tại root project | không diễn | kết thúc |
+| B04 | user_optional | user hỏi "sao /mcp không thấy" | giải thích harness là HOOK (kiểm `/hooks`), không phải MCP | — | W03 |
+
+### Validation và stopping
+Mỗi cảnh chặn-live chỉ tính khi hook thật trả exit 2 và stderr được trích nguyên văn; không retry sau chặn (trừ bước khắc phục đã định). Tour dừng ngay khi một rule chặn-live không chặn. Xong khi không còn `tour-demo*` và `wiki/index.md` khớp.
+
+### Examples
+- **Positive:** `/harness-tour` trên project đã cài PoC → pre-check in `POC` → Write `llmwiki/raw/tour-demo.md` bị chặn `[R1 no-write-raw] …` → R2 chặn rồi PASS sau khi thêm `## Origin` → kết lượt bị Stop `[R3 index-sync] …` → thêm row → dọn `wiki/sources/draft/tour-demo.md` + row cùng lượt.
+- **Boundary/failure:** `/harness-tour full` mở ở repo nguồn (không load `.claude/settings.json` của project) → pre-check không in gì → MISSING, dừng, gợi ý lệnh curl bootstrap + mở session mới; không diễn cảnh nào.

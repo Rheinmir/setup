@@ -8,16 +8,58 @@ description: >-
   không vòng lặp re-run. Trigger: "tự bảo trì framework", "self-maintain", "migrate harness",
   "update harness", "update overstack", "nâng cấp harness", "cài harness vào dự án cũ",
   "/harness-update".
+metadata:
+  design-standard: "solid-what-how/1"
+  contract-version: "1.0.0"
 ---
 
 # Skill: harness-update
 
-## Purpose
-Một lệnh gọi là xong cho dự án CŨ: cài/update harness stack (L0–L4) và tự động trả nợ wiki legacy thay user. KHÔNG dùng cho project chưa có gì + cần populate wiki từ code — đó là `/new-project-setup` (case A).
+## WHAT
+
+### Purpose và context
+- **Purpose:** Một lệnh gọi là xong cho dự án CŨ: cài/update harness stack (L0–L4) và tự động trả nợ wiki legacy thay user.
+- **Trigger (when to use):** "tự bảo trì framework", "self-maintain", "migrate harness", "update harness", "update overstack", "nâng cấp harness", "cài harness vào dự án cũ", "/harness-update" — dự án có llmwiki cũ cần migrate (case B) hoặc đã có harness cần update (case C).
+- **Non-goals:** KHÔNG dùng cho project chưa có gì + cần populate wiki từ code — đó là `/new-project-setup` (case A). Không chữa lỗi hạ tầng (network, python3, validator hỏng).
 
 **< 30s:** dùng cờ `--self-heal` — installer tự backfill nợ (Origin + index + OKF) ngay trong process rồi re-audit 1 lần. Agent chỉ gọi 1 lệnh, đọc 1 kết quả, báo cáo. KHÔNG còn vòng lặp re-run phía agent (đó là cái làm chậm bản cũ — xem [[230626-harness-update-sub30s]]).
 
-## Steps
+### Mental model
+`installer --self-heal (1 process: cài L0–L4 → audit → backfill → re-audit → activate + smoke) → rc (0 sạch · 3 nợ còn lại · khác = hạ tầng) → nghiệm thu + refresh CAPABILITIES + log → báo cáo 4 ý`.
+
+### Input và output contract
+| | Field | Required? | Ý nghĩa |
+|---|---|---|---|
+| In | dự án đích (thư mục hiện tại) | có | có llmwiki cũ (case B) hoặc harness cũ (case C) |
+| In | `harness/scripts/install-harness.sh` | không | thiếu thì clone template `rheinmir/setup` nhánh `orca` |
+| Out | harness L0–L4 đã cài + nợ wiki đã backfill | có | rc=0 là sạch |
+| Out | `CAPABILITIES.md` sinh lại | khi có build-capabilities | bản cũ không có → bỏ qua |
+| Out | dòng log `llmwiki/wiki/log.md` + báo cáo 4 ý | có | số backfill lấy từ dòng `[audit] backfill xong` |
+
+### Rules và capabilities
+- RULE-01 (MUST): Backfill là THÊM, không bao giờ sửa/xóa nội dung wiki có sẵn (self-heal trong installer giữ đúng quy tắc này).
+- RULE-02 (MUST): Không đụng `raw/` dưới mọi hình thức.
+- RULE-03 (MUST): rc=3 (nợ còn lại) cần user/skill xử 1 lần; rc khác (hạ tầng) là việc của user — phân biệt rõ, không cố chữa lỗi hạ tầng.
+- RULE-04 (MUST): Không cờ `--self-heal` → installer chạy y hệt hành vi cũ (audit rồi exit 3 nếu nợ) — backward-compatible.
+- RULE-05 (MUST): Case A (chưa có llmwiki, cần đọc code populate wiki) → chuyển hướng sang `/new-project-setup`.
+- Capabilities: chạy installer cục bộ (có thể clone template qua mạng); ghi harness + wiki (chỉ thêm) + log; không ghi `raw/`.
+
+### Failure boundaries
+- `rc=3` → **partial**: danh sách nợ nằm trong output, sửa thủ công 1 lần rồi chạy lại W01.
+- `rc` khác (1/4) → **blocked** (hạ tầng): DỪNG, báo user nguyên văn, không tự đoán.
+- Dự án chưa có llmwiki (case A) → **cancelled** ở skill này, chuyển `/new-project-setup`.
+
+## HOW
+
+### Main workflow
+| Step | Type | Inputs | Action | Outputs/exit | Failure/next |
+|---|---|---|---|---|---|
+| W01 | effect | dự án đích | Chạy installer 1 lần với `--self-heal` (thiếu nguồn thì clone template) | output + rc | — |
+| W02 | deterministic | rc | Đọc exit code, KHÔNG vòng lặp re-run | rc=0 → W03 | rc=3 → B01; rc khác → blocked |
+| W03 | effect | output W01 | Nghiệm thu ⛔×3 + refresh CAPABILITIES + health-check tuỳ chọn + log | log + CAPABILITIES | không có build-capabilities → bỏ qua |
+| W04 | deterministic | kết quả | Báo cáo user đủ 4 ý | báo cáo | — |
+
+Chi tiết từng bước (nguồn chân lý cho W01–W04):
 
 **1. Chạy installer 1 lần với `--self-heal` (tự detect migrate/update; thiếu nguồn thì clone template):**
 ```bash
@@ -45,9 +87,16 @@ Installer tự làm trọn gói: cài L0–L4 → audit (Origin/index/OKF gộp 
 - Nhắc: **mở session mới thì hooks mới load**
 - Mời: `/harness-tour` để xem hàng rào cắn trực quan
 
-## Rules
-- Backfill là THÊM, không bao giờ sửa/xóa nội dung wiki có sẵn (self-heal trong installer giữ đúng quy tắc này).
-- Không đụng `raw/` dưới mọi hình thức.
-- rc=3 (nợ còn lại) cần user/skill xử 1 lần; rc khác (hạ tầng) là việc của user — phân biệt rõ, không cố chữa lỗi hạ tầng.
-- Không cờ `--self-heal` → installer chạy y hệt hành vi cũ (audit rồi exit 3 nếu nợ) — backward-compatible.
-- Case A (chưa có llmwiki, cần đọc code populate wiki) → chuyển hướng sang `/new-project-setup`.
+### Branches
+| ID | Kind | Guard | Hành vi | Skip / failure | Rejoin |
+|---|---|---|---|---|---|
+| B01 | recovery | `rc=3` | sửa thủ công 1 lần các nợ self-heal không tự sửa được (danh sách trong output) | vẫn rc=3 → báo user | W01 |
+| B02 | capability_optional | có `build-capabilities.py` (bản deploy hoặc repo framework) | sinh lại `CAPABILITIES.md` | bản cũ không có → bỏ qua, không lỗi | W03 |
+| B03 | user_optional | muốn xác nhận rào còn cắn | `/health-check` | bỏ qua | W03 |
+
+### Validation và stopping
+Verdict do rc của installer (tất định) + bảng "Harness tự kiểm" có ⛔×3. Tối đa một vòng B01 → W01; rc khác 0/3 dừng ngay.
+
+### Examples
+- **Positive:** dự án có llmwiki cũ thiếu `## Origin` ở 12 trang → `install-harness.sh . --self-heal` → `[audit] backfill xong — Origin:12 index:0 OKF:0`, rc=0 → log + báo cáo "migrate, backfill 12 file, mở session mới để hooks load".
+- **Boundary/failure:** máy không có `python3` → rc=1 → DỪNG, báo user nguyên văn lỗi, không tự cài hay chạy lại.

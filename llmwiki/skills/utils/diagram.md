@@ -11,6 +11,9 @@ description: >-
   "turn this into a diagram", "convert Mermaid", "diff two flows". Bao cả hai họ —
   sơ đồ QUAN HỆ/LUỒNG (hộp + mũi tên) và biểu đồ DỮ LIỆU (số liệu). KHÔNG dùng cho
   màn hình UI/landing page — đó là `hallmark`.
+metadata:
+  design-standard: "solid-what-how/1"
+  contract-version: "1.0.0"
 ---
 
 # diagram — vẽ đúng bằng máy, không để model bịa hình
@@ -23,7 +26,58 @@ bản tốt trước đó** và nói rõ chỗ sai, tuyệt đối không nhả 
 Đó cũng là lý do skill này tồn tại thay vì để model tự vẽ SVG: một cái hình sai trông vẫn
 "có vẻ được", nên lỗi bố cục là loại lỗi đi lọt xa nhất.
 
-## Chọn nhánh trước khi làm bất cứ gì
+## WHAT
+
+### Purpose và context
+- **Purpose:** vẽ SƠ ĐỒ (quan hệ/luồng) và BIỂU ĐỒ (số liệu) bằng code tất định — model chỉ điền tờ khai có schema, máy dựng hình và tự soi bố cục; hỏng thì giữ bản tốt trước đó và nói rõ chỗ sai.
+- **Trigger (when to use):** user nói "vẽ sơ đồ", "vẽ biểu đồ", "vẽ luồng", "sơ đồ kiến trúc", "luồng xử lý", "flow", "graph", "chart", "trực quan hoá", "so sánh hai luồng", "draw a diagram", "sequence diagram", "state machine", "dependency graph", "plot", "dashboard", "convert Mermaid", "diff two flows" (danh sách đủ ở `description`).
+- **Non-goals:** KHÔNG dùng cho màn hình UI/landing page — đó là `hallmark`. Không vẽ tay toạ độ SVG cho hình mới. Không thay generator cho sơ đồ trong tài liệu tự sinh.
+
+### Mental model
+`câu hỏi người xem → có TRỤC SỐ? → Sơ đồ (ngữ pháp → archify) hoặc Biểu đồ (dataviz + 5 luật lieflat) → file HTML → cổng nhà (frontend-antipattern, tuỳ chọn visual-receipt) → giao nguyên tử (xanh mới thay, đỏ giữ bản cũ)`. Model điền logic; code dựng hình; cổng tất định quyết đạt/không.
+
+### Input và output contract
+| | Field | Required? | Ý nghĩa |
+|---|---|---|---|
+| In | mô tả luồng/quan hệ hoặc số liệu | có | câu hỏi người xem cần trả lời |
+| In | loại sơ đồ | không | `architecture`, `workflow`, `sequence`, `dataflow`, `lifecycle`; bỏ trống thì engine đoán |
+| In | Mermaid có sẵn | không | dán vào, archify vẽ lại |
+| In | neo mã thật | không | `sources[]` + `meta.repository` + `--repo-root` (SHA đủ 40 ký tự) |
+| Out | file HTML tự chứa | có | sơ đồ hoặc biểu đồ, qua cổng nhà |
+| Out | verdict cổng | có | rc của `frontend-antipattern.py` (0 sạch, 1 FAIL, 2 chỉ WARN); tuỳ chọn `visual-receipt.py` (0 pass, 1 fail, 2 BỎ QUA) + 4 ảnh + biên lai JSON + contact sheet |
+
+### Rules và capabilities
+- RULE-01 (MUST): **Model không vẽ.** Model điền tờ khai; code dựng hình. Thấy mình đang gõ toạ độ SVG bằng tay cho một hình mới là đã đi sai nhánh.
+- RULE-02 (MUST): **Không nhả hình rác.** Bản mới không qua cổng thì giữ bản tốt cũ, báo rõ chỗ sai. Generator của repo này đã làm đúng vậy (`_deliver` trong `build-overstack-docs.py`: render ra file tạm, chạy cổng trên file tạm, xanh mới `os.replace`).
+- RULE-03 (MUST): **BỎ QUA ≠ SẠCH.** Thiếu Chrome, thiếu mạng, thiếu engine → nói "bỏ qua", tuyệt đối không báo "đạt". Một cổng nói dối mà vẫn xanh tệ hơn không có cổng.
+- RULE-04 (MUST): **Đừng bê ràng buộc phong cách của engine ngoài về làm luật nhà.** Đo trước: archify đòi mũi tên thẳng ngang/dọc, nhưng sơ đồ của repo này cố ý toả nan quạt (6·4·10 đường chéo hợp lệ ở ba sơ đồ) — nên luật đó bị loại khi hấp thụ, còn ba luật hình học kia thì nhận.
+- RULE-05 (MUST): **Sơ đồ trong tài liệu tự sinh thì dùng generator, đừng gọi agent.** Mỗi sơ đồ vẽ qua chat tốn một lượt agent, mãi mãi; code sinh SVG tốn 0. Chỉ dùng nhánh chat cho hình mới hoặc hình dùng một lần.
+- Capabilities: gọi engine vẽ sơ đồ tất định và engine biểu đồ; chạy cổng tĩnh 0-token trên file HTML; tuỳ chọn chạy trình duyệt thật chụp + đo request; ghi file đích theo giao nguyên tử.
+
+### Failure boundaries
+- Không rõ có trục số hay không → **clarify** (hỏi "cái tôi vẽ có TRỤC SỐ không?").
+- Yêu cầu là màn hình sản phẩm → **blocked**, chuyển `hallmark`.
+- Biểu đồ vi phạm kỷ luật (cắt trục, glow/3-D trên data mark, dữ liệu quá mỏng) → **từ chối/hạ cấp** có lý do, đưa phương án trung thực.
+- `deliver` đỏ hoặc cổng FAIL → **failed**, file đích vẫn là bản tốt CŨ; báo chỗ sai.
+- Thiếu Chrome/mạng/engine → **BỎ QUA**, không bao giờ báo "đạt" (RULE-03).
+- Neo mã sai (SHA không đủ 40 ký tự, `origin` không khớp) → **blocked** (fail-closed).
+
+## HOW
+
+### Main workflow
+| Step | Type | Inputs | Action | Outputs/exit | Failure/next |
+|---|---|---|---|---|---|
+| W01 | judgment | yêu cầu | Chọn nhánh: có TRỤC SỐ → Biểu đồ; không → Sơ đồ; màn hình → `hallmark` | nhánh | UI → blocked; mơ hồ → clarify |
+| W02 | judgment | câu hỏi người xem | Sơ đồ: chọn NGỮ PHÁP (topology, sequence, process, state, hierarchy, matrix); một câu hỏi một hình | archify type | hai câu hỏi → hai hình |
+| W03 | effect | tờ khai | Sơ đồ: gọi archify bằng ngôn ngữ tự nhiên hoặc `node ~/.agents/skills/archify/bin/archify.mjs` (B01) | file HTML | rc 1 → failed, bản cũ giữ nguyên |
+| W04 | effect | số liệu | Biểu đồ: nạp `dataviz` trước dòng code đầu tiên + 5 luật lieflat (B02) | file HTML | vi phạm kỷ luật → từ chối/hạ cấp |
+| W05 | deterministic | file HTML | Cổng nhà `python3 fdk/tools/frontend-antipattern.py <file.html>` | rc 0 | 1 → sửa tờ khai, lặp W03/W04 |
+| W06 | deterministic | file HTML | Tuỳ chọn bằng chứng trình duyệt `python3 fdk/tools/visual-receipt.py <file.html>` (B03) | ảnh + biên lai | 2 → báo BỎ QUA, không báo đạt |
+| W07 | effect | file đã qua cổng | Giao nguyên tử: xanh mới thay file đích; đỏ giữ bản tốt cũ + báo chỗ sai | file đích | — |
+
+Chi tiết từng bước (nguồn chân lý cho W01–W07):
+
+#### Chọn nhánh trước khi làm bất cứ gì
 
 | Bạn đang thể hiện cái gì | Nhánh | Engine |
 |---|---|---|
@@ -33,7 +87,7 @@ bản tốt trước đó** và nói rõ chỗ sai, tuyệt đối không nhả 
 
 Không chắc? Hỏi: *"cái tôi vẽ có TRỤC SỐ không?"* Có → biểu đồ. Không → sơ đồ.
 
-### Trong nhánh Sơ đồ — chọn đúng NGỮ PHÁP trước khi chọn engine
+##### Trong nhánh Sơ đồ — chọn đúng NGỮ PHÁP trước khi chọn engine
 
 Hỏi trước: *người xem phải trả lời được câu hỏi gì?* — câu hỏi quyết ngữ pháp, ngữ pháp
 mới quyết hình vẽ ra sao (HÒA TAN từ `plannotator/effective-html`, xem [[design-foundation]]):
@@ -52,7 +106,7 @@ mới quyết hình vẽ ra sao (HÒA TAN từ `plannotator/effective-html`, xem
 một hình quá tải. Chọn xong ngữ pháp mới tới bước chọn engine (HTML/CSS, SVG, Canvas, WebGL)
 theo mục dưới.
 
-## Nhánh SƠ ĐỒ — qua `archify`
+#### Nhánh SƠ ĐỒ — qua `archify`
 
 Engine ngoài, KÉO NGOÀI theo `[[adapt-modes]]`: ta **không** viết lại, chỉ ghim + gọi.
 Cài: `npx skills add Rheinmir/archify -g -s archify` (đích thật là `~/.agents/skills/archify`).
@@ -108,7 +162,7 @@ Sơ đồ kiến trúc cần bám mã thật thì khai `sources[]` (path + kho�
 + `--repo-root`. Cổng đó **fail-closed**: revision phải là SHA đủ 40 ký tự, `--repo-root` phải
 là top-level checkout có `origin` khớp. Neo sai thì nó từ chối vẽ.
 
-## Nhánh BIỂU ĐỒ — `dataviz` + kỷ luật lieflat-charts
+#### Nhánh BIỂU ĐỒ — `dataviz` + kỷ luật lieflat-charts
 
 Nạp skill `dataviz` **trước khi viết dòng code biểu đồ đầu tiên**, ở mọi môi trường (HTML,
 SVG, matplotlib/plotly/d3/Recharts, hay ảnh PNG sẽ render). Cộng năm luật hấp thụ từ
@@ -127,7 +181,7 @@ SVG, matplotlib/plotly/d3/Recharts, hay ảnh PNG sẽ render). Cộng năm lu�
 5. **Render tất định.** Cấm `Math.random()` trong biểu đồ — refresh hai lần phải ra đúng một
    hình. Cả file một hệ màu; trộn hai hệ là làm lại.
 
-## Sau khi có file HTML — chạy cổng của NHÀ
+#### Sau khi có file HTML — chạy cổng của NHÀ
 
 Engine ngoài gác bố cục của nó; cổng dưới đây gác thứ nó không biết: quy ước của repo này.
 
@@ -156,21 +210,22 @@ sheet để **người** chấm. Nó kiểm trong trình duyệt thật ba thứ
 ngang, lỗi console, và **mọi request thoát ra ngoài** — tức tính tự-chứa đo bằng hành vi chứ
 không bằng chuỗi trong file.
 
-## Rules
+### Branches
+| ID | Kind | Guard | Hành vi | Skip / failure | Rejoin |
+|---|---|---|---|---|---|
+| B01 | conditional_required | không có trục số (quan hệ, luồng, trình tự) | nhánh Sơ đồ qua archify (KÉO NGOÀI, fork `Rheinmir/archify`) | archify chưa cài → cài `npx skills add Rheinmir/archify -g -s archify`; exit 2 do thiếu Chrome → BỎ QUA, không đạt | W05 |
+| B02 | conditional_required | có trục số | nhánh Biểu đồ qua `dataviz` + 5 luật lieflat | yêu cầu vi phạm luật → từ chối, đưa ba cách trung thực | W05 |
+| B03 | capability_optional | cần bằng chứng trình duyệt thật và có Chrome | `visual-receipt.py`: 4 ảnh, biên lai JSON, contact sheet cho người chấm | không Chrome → rc 2 BỎ QUA | W07 |
+| B04 | user_optional | sơ đồ kiến trúc phải bám mã thật | khai `sources[]` + `meta.repository` + `--repo-root` | neo sai → engine từ chối vẽ (fail-closed) | W03 |
+| B05 | conditional_required | sơ đồ nằm trong tài liệu tự sinh | dùng generator của repo (vd `build-overstack-docs.py`), không gọi agent | hình mới hoặc dùng một lần → nhánh chat | W05 |
 
-- **Model không vẽ.** Model điền tờ khai; code dựng hình. Thấy mình đang gõ toạ độ SVG bằng
-  tay cho một hình mới là đã đi sai nhánh.
-- **Không nhả hình rác.** Bản mới không qua cổng thì giữ bản tốt cũ, báo rõ chỗ sai. Generator
-  của repo này đã làm đúng vậy (`_deliver` trong `build-overstack-docs.py`: render ra file tạm,
-  chạy cổng trên file tạm, xanh mới `os.replace`).
-- **BỎ QUA ≠ SẠCH.** Thiếu Chrome, thiếu mạng, thiếu engine → nói "bỏ qua", tuyệt đối không
-  báo "đạt". Một cổng nói dối mà vẫn xanh tệ hơn không có cổng.
-- **Đừng bê ràng buộc phong cách của engine ngoài về làm luật nhà.** Đo trước: archify đòi mũi
-  tên thẳng ngang/dọc, nhưng sơ đồ của repo này cố ý toả nan quạt (6·4·10 đường chéo hợp lệ ở
-  ba sơ đồ) — nên luật đó bị loại khi hấp thụ, còn ba luật hình học kia thì nhận.
-- **Sơ đồ trong tài liệu tự sinh thì dùng generator, đừng gọi agent.** Mỗi sơ đồ vẽ qua chat
-  tốn một lượt agent, mãi mãi; code sinh SVG tốn 0. Chỉ dùng nhánh chat cho hình mới hoặc hình
-  dùng một lần.
+### Validation và stopping
+Tất định: rc của `frontend-antipattern.py` (hình học, accessibility + tự chứa, neo `data-src`) và `visual-receipt.py` (tràn ngang, lỗi console, request ra ngoài); với archify, rc 1 là thất bại thật, rc 2 vừa là lỗi cách dùng vừa là visual-check bỏ qua nên phải rẽ nhánh có chủ đích. Cần người: contact sheet của visual-receipt; với `lifecycle` bấm node đọc Semantic Passport, thấy `No connected relationships` là rỗng ruột dù cổng xanh. Dừng khi cổng xanh và file đích đã thay; đỏ thì giữ bản cũ và báo.
+
+### Examples
+- **Positive:** "vẽ luồng Browser -> API -> Redis cache -> PostgreSQL fallback" → không trục số → Sơ đồ, ngữ pháp topology → `Use Archify to draw: Browser -> API -> Redis cache -> PostgreSQL fallback.` → `frontend-antipattern.py` rc 0 → giao file HTML preset `macos`.
+- **Boundary/failure:** "vẽ biểu đồ doanh thu, cắt trục cho thấy tăng mạnh" → nhánh Biểu đồ, broken axis bị từ chối (luật lieflat 1), đưa ba cách trung thực; tiêu đề là kết luận, không phải "Biểu đồ cột doanh thu".
+- **Boundary:** lifecycle đặt lane `outcome` → rơi dải giữa đè nhau → đổi thành `terminal` và `viewBox[1] ≥ 630`; nếu `deliver` vẫn đỏ thì file đích là bản tốt cũ, không soi nó như bản mới.
 
 ## Origin
 

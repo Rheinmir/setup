@@ -15,6 +15,9 @@ description: >-
   (llmwiki/html/council/council-report-NNN-seed<seed>.html) — opinion cards
   (persona name + lens), a blind-vote table, and a dashboard. Isolated in
   try/except so a render bug never kills the core transcript.
+metadata:
+  design-standard: "solid-what-how/1"
+  contract-version: "1.0.0"
 ---
 
 # Skill: council
@@ -26,6 +29,14 @@ A deterministic harness around Andrej Karpathy's `llm-council`
 Opinions", Stage 2 "Review" (anonymized peer-rank), Stage 3 "Final Response"
 (chairman) — wired onto orca orchestration.
 
+## WHAT
+
+### Purpose và context
+- **Purpose:** chạy một hội đồng LLM kiểu Karpathy 3 stage trên orca orchestration — N seat trả lời độc lập, chấm chéo MÙ (ẩn danh), chairman tổng hợp — kèm transcript tất định và report HTML bắt buộc (Stage 4).
+- **Trigger (when to use):** Hard questions where one model's answer is risky and you want a panel + an audit trail of who-ranked-what, with the favour-your-own bias removed by blinding. For a single quick answer, just ask one model. Lời gọi: "run a council", "llm-council", "panel of models", "blind peer-rank these answers", "ensemble + chairman", hoặc `/council`.
+- **Non-goals:** không dùng cho câu hỏi nhanh một đáp án; `council.py` không gọi model; không chọn model cho seat (việc của adapter `harness/council.config.yaml`); report không thêm phán xét mới ngoài transcript.
+
+### Mental model
 Split of labour:
 
 - **`harness/scripts/council.py`** owns the DETERMINISTIC protocol and never
@@ -40,48 +51,57 @@ Split of labour:
   `# ASSUMPTION (not verified)`. The engine never branches on these — it only
   stamps them into the transcript. Finalize the council by editing this one file.
 
-## When to use
+`question → Stage 1 answers.json → Stage 2a blind packet (A/B/C + presentation order) → Stage 2b judges.json → Stage 2c transcript (mean-rank, dissent, chairman_brief) → Stage 3 chairman_synthesis → Stage 4 HTML report versioned`.
 
-Hard questions where one model's answer is risky and you want a panel + an
-audit trail of who-ranked-what, with the favour-your-own bias removed by
-blinding. For a single quick answer, just ask one model.
+### Input và output contract
+| | Field | Required? | Ý nghĩa |
+|---|---|---|---|
+| In | câu hỏi | có | cùng một câu cho mọi seat; `--question` để hiện trên report |
+| In | `harness/council.config.yaml` | có | seats / judges / chairman (`verified: false`) |
+| In | roster persona (`--case` / `--profile` / `--personas`) | không | lens góc nhìn thêm vào prompt Stage-1 |
+| In | `--seed N` | không | seed anchor guard, ghi đè `anchor_seed` |
+| Out | `answers.json` · `judges.json` | có | `[{"id","author","text"}]` · `[{"judge","ranking":[...]}]` |
+| Out | `scratchpad/council-<slug>/council.packet.{json,md}` + `council.transcript.{json,md}` | có | blind packet; consensus, winner, dissent, `chairman_brief`, `chairman_synthesis` |
+| Out | `llmwiki/html/council/council-report-NNN-seed<seed>.html` | có (bắt buộc) | report versioned, không ghi đè; `latest.html` con trỏ |
 
-## Persona lenses — góc nhìn "vĩ nhân" (optional, ADDITIVE)
+### Rules và capabilities
+- RULE-01 (MUST): **NGÔN NGỮ (bắt buộc):** mọi seat/judge/chairman PHẢI trả lời bằng **tiếng Việt CÓ DẤU đầy đủ**; chèn câu này vào MỌI prompt Stage-1/Stage-2/Stage-3.
+- RULE-02 (MUST): Output run luôn dưới `scratchpad/council-<slug>/` — never bare `run/` or a repo-root folder.
+- RULE-03 (MUST): Blindness, not exclusion, is the guard — judge chỉ thấy nhãn A/B/C, theo presentation order của mình.
+- RULE-04 (MUST): Roster luôn cài **≥1 cặp đối-trọng**; size lẻ (3/5) để mean-rank không hoà.
+- RULE-05 (MUST): Stage-4 HTML luôn render; lỗi renderer chỉ WARN, KHÔNG bao giờ giết lệnh `rank` hay `transcript.{json,md}`.
+- RULE-06 (MUST): `council.py` never calls a model; engine never branches on config values — chỉ stamp vào transcript.
+- Capabilities: dispatch model generation qua lớp orchestration (seat/judge/chairman); tính toán protocol tất định cục bộ; ghi file transcript + HTML; không mạng/CDN cho report.
 
-Mặc định mỗi seat = một MODEL trả lời. Lớp persona thêm **đa-dạng GÓC NHÌN**: mỗi seat đội một
-**lens** (Feynman / Munger / Taleb / Rams …) — quan trọng khi đa-dạng-model bị hạn chế (chỉ có ít
-provider). Engine `council.py` KHÔNG đổi: persona chỉ là chữ nhét vào prompt Stage-1.
+### Failure boundaries
+- `council.py selftest` không exit 0, hoặc `orca status --json` không có runtime chạy → **blocked**, không chạy council.
+- Seat trả lời không dấu → report cũng mất dấu (render trung thực) → nhắc lại RULE-01 và chạy lại seat đó.
+- Thiếu judges → `rank` chỉ phát blind packet rồi dừng (**partial**, chờ Stage 2b).
+- Renderer HTML lỗi → WARN, transcript vẫn có (**partial** cho Stage 4, chạy lại `render`).
+- Roster thiếu cặp đối-trọng → cảnh báo stderr; gõ sai case/persona → gợi ý gần nhất, không fail trơ.
 
-**Quên tên ai / cú pháp gì?** `council.py roster --list` (hoặc `roster` trống) in hết **case (theo VIỆC) · profile · 18 persona** — chọn `--case` theo việc, không cần nhớ tên.
-**Nhớ nhầm vẫn gọi chính xác được:** khớp theo TÊN lẫn id, không phân biệt hoa/thường (`--personas Feynman,Taleb` ok); gõ sai → **gợi ý gần nhất** (`--case risks` → "ý bạn là 'risk'?"), không fail trơ.
+## HOW
 
-**Bốc 3-5 người theo case (thuần code, log-được):**
-```bash
-python3 harness/scripts/council.py roster --list                 # catalog: case/profile/persona
-python3 harness/scripts/council.py roster --case risk            # 3 ghế, có ≥1 cặp đối-trọng
-python3 harness/scripts/council.py roster --case ml-ai --size 5  # 5 ghế
-python3 harness/scripts/council.py roster --profile lean         # 5 người execution-lean
-python3 harness/scripts/council.py roster --personas feynman,taleb,rams --json
-```
-- Case tag: `design · strategy · debug · risk · product · decision · simplify · ml-ai` (bảng trong `harness/council.personas.yaml`).
-- **Luật:** roster luôn cài **≥1 cặp đối-trọng** (chống phòng vọng âm); thiếu → cảnh báo ở stderr. Size lẻ (3/5) để mean-rank không hoà.
-- Thư viện: 18 persona + 13 cặp đối-trọng (nguồn `github.com/0xNyk/council-of-high-intelligence`).
+### Main workflow
+| Step | Type | Inputs | Action | Outputs/exit | Failure/next |
+|---|---|---|---|---|---|
+| W01 | deterministic | repo, runtime | Preconditions: `council.py selftest`, `orca status --json`, config có seats/judges/chairman | đủ điều kiện | thiếu → blocked |
+| W02 | effect | câu hỏi (+ lens) | Stage 1 — dispatch một worker mỗi seat, gom `answers.json` | `answers.json` | seat lỗi/không dấu → chạy lại seat |
+| W03 | deterministic | `answers.json` | Stage 2a — `council.py prepare` | blind packet | — |
+| W04 | effect | packet | Stage 2b — dispatch judge với câu trả lời mù theo presentation order, gom `judges.json` | `judges.json` | — |
+| W05 | deterministic | answers + judges | Stage 2c — `council.py rank` (tự ghi Stage-4 HTML) | transcript + report | render lỗi → WARN, B02 |
+| W06 | effect | `chairman_brief` | Stage 3 — dispatch chairman, dán `chairman_synthesis` vào transcript | transcript đủ | — |
+| W07 | deterministic | transcript | Stage 4 — `council.py render <transcript.json>` để report có synthesis | report versioned mới | lỗi → WARN, transcript giữ nguyên |
 
-**Dùng trong protocol:** sau khi bốc roster, gán mỗi persona vào một seat — có 2 cách:
-1. **Động (khuyên):** orchestrator lấy output `roster --json`, với mỗi seat chèn lens vào prompt Stage-1: *"Trả lời qua lăng kính \<name>: \<lens>. \<sig>."*
-2. **Cố định:** điền field `persona:` mỗi seat trong `harness/council.config.yaml`.
+Chi tiết từng bước (nguồn chân lý cho W01–W07):
 
-Roster + lý do bốc (case, cặp tension) **ghi vào transcript** để auditable (Trụ 5). Phần "model nào fill seat" vẫn là unknown đã quarantine ở `council.config.yaml` (`verified`) — persona-lens độc lập với nó.
-
-## Preconditions
-
+#### Preconditions
 - `python3 harness/scripts/council.py selftest` exits 0 (engine is healthy).
 - `orca status --json` shows a running runtime; orchestration enabled.
 - Seats/judges/chairman set in `harness/council.config.yaml`.
 
-## Protocol (maps each stage to an orca dispatch)
-
-### Stage 1 — First Opinions (orchestration generates)
+#### Protocol (maps each stage to an orca dispatch)
+##### Stage 1 — First Opinions (orchestration generates)
 Dispatch one worker per seat in `council.config.yaml`, same question to each.
 
 > **NGÔN NGỮ (bắt buộc):** mọi seat/judge/chairman PHẢI trả lời bằng **tiếng Việt
@@ -100,7 +120,7 @@ orca orchestration check --wait --types worker_done --timeout-ms 300000 --json
 Collect the replies into `answers.json` — `[{"id","author","text"}, ...]`, where
 `author` is the seat id (the real identity; it gets stripped next).
 
-### Stage 2a — blind packet (council.py is deterministic)
+##### Stage 2a — blind packet (council.py is deterministic)
 ```bash
 python3 harness/scripts/council.py prepare answers.json --config harness/council.config.yaml --out scratchpad/council-<slug>/
 ```
@@ -113,7 +133,7 @@ answers relabelled A/B/C with authors
 removed, plus each judge's **presentation order** from the anchor guard. Show
 each judge its answers in its row's order to cancel position bias.
 
-### Stage 2b — Review (orchestration generates)
+##### Stage 2b — Review (orchestration generates)
 Dispatch each judge in `council.config.yaml` the BLIND answers, in that judge's
 presentation order. Ask each to return a ranking of the **labels** (best first).
 Collect into `judges.json` — `[{"judge","ranking":["B","A","C"]}, ...]`.
@@ -121,14 +141,14 @@ Collect into `judges.json` — `[{"judge","ranking":["B","A","C"]}, ...]`.
 > Blindness, not exclusion, is the guard: a judge may be a seat, but it cannot
 > recognise its own answer, so it cannot play favourites.
 
-### Stage 2c — aggregate (council.py is deterministic)
+##### Stage 2c — aggregate (council.py is deterministic)
 ```bash
 python3 harness/scripts/council.py rank answers.json --judges judges.json --config harness/council.config.yaml --out scratchpad/council-<slug>/
 ```
 Writes `scratchpad/council-<slug>/council.transcript.{json,md}`: mean-rank consensus, the winner, the
 dissent table (most-contested answer), and a `chairman_brief`.
 
-### Stage 3 — Final Response (orchestration generates)
+##### Stage 3 — Final Response (orchestration generates)
 Dispatch the chairman the `chairman_brief` from the transcript (consensus order +
 the dissent points it must resolve). Its synthesis is the final answer; paste it
 back under `chairman_synthesis` in the transcript for the record, then
@@ -136,7 +156,7 @@ back under `chairman_synthesis` in the transcript for the record, then
 synthesis shown** (the report auto-written during `rank` has an empty synthesis
 because `rank` rebuilds from answers+judges only).
 
-### Stage 4 — HTML report (MANDATORY, tự render trong council.py, offline)
+##### Stage 4 — HTML report (MANDATORY, tự render trong council.py, offline)
 **Luôn render — không cần cờ, không phụ thuộc skill ngoài.** Mỗi lần `rank` thành
 công, `render_report_html(t, personas)` (nằm ngay trong `council.py`) ghi **một
 `.html` versioned** — `llmwiki/html/council/council-report-NNN-seed<seed>.html`
@@ -167,8 +187,47 @@ Trang có đúng ba section, theo thứ tự:
 Vì mọi số liệu lấy từ transcript đã deterministic, report chỉ là lớp trình bày —
 không thêm phán xét mới. Same transcript → cùng HTML.
 
-## council.py commands
+### Branches
+| ID | Kind | Guard | Hành vi | Skip / failure | Rejoin |
+|---|---|---|---|---|---|
+| B01 | user_optional | muốn đa dạng GÓC NHÌN (ít provider) | bốc roster persona (mục Persona lenses dưới), chèn lens vào prompt Stage-1 (động) hoặc field `persona:` trong config (cố định); roster + lý do ghi vào transcript | không bốc → seat = model thuần | W02 |
+| B02 | recovery | report HTML lỗi hoặc cần hiện `chairman_synthesis` | chạy lại `council.py render <transcript.json>` → versioned file mới | renderer vẫn lỗi → WARN, transcript là nguồn | kết thúc |
+| B03 | conditional_required | chạy `rank` không có `--judges` | chỉ phát blind packet rồi dừng | — | W04 |
 
+### Validation và stopping
+Tất định: `selftest` (12 checks) chứng minh cùng `answers.json` + `judges.json` + seed → transcript byte-identical; report chỉ là lớp trình bày của transcript. Cần review: chất lượng synthesis của chairman. Dừng sau W07 khi report có synthesis.
+
+### Examples
+- **Positive:** "run a council: có nên tách monorepo không" với `roster --case decision` 3 ghế → 3 seat trả lời tiếng Việt có dấu → `prepare` ra A/B/C → 3 judge rank → `rank --out scratchpad/council-monorepo/` ra winner + dissent → chairman tổng hợp → `render` ghi `council-report-NNN-seed<seed>.html` có synthesis.
+- **Boundary/failure:** `council.py selftest` exit khác 0 → dừng ở W01, không dispatch seat nào. Renderer lỗi trong `rank` → chỉ WARN, `council.transcript.json` vẫn được ghi, chạy lại `render` sau.
+
+### Reference — Persona lenses — góc nhìn "vĩ nhân" (optional, ADDITIVE)
+Mặc định mỗi seat = một MODEL trả lời. Lớp persona thêm **đa-dạng GÓC NHÌN**: mỗi seat đội một
+**lens** (Feynman / Munger / Taleb / Rams …) — quan trọng khi đa-dạng-model bị hạn chế (chỉ có ít
+provider). Engine `council.py` KHÔNG đổi: persona chỉ là chữ nhét vào prompt Stage-1.
+
+**Quên tên ai / cú pháp gì?** `council.py roster --list` (hoặc `roster` trống) in hết **case (theo VIỆC) · profile · 18 persona** — chọn `--case` theo việc, không cần nhớ tên.
+**Nhớ nhầm vẫn gọi chính xác được:** khớp theo TÊN lẫn id, không phân biệt hoa/thường (`--personas Feynman,Taleb` ok); gõ sai → **gợi ý gần nhất** (`--case risks` → "ý bạn là 'risk'?"), không fail trơ.
+
+**Bốc 3-5 người theo case (thuần code, log-được):**
+```bash
+python3 harness/scripts/council.py roster --list                 # catalog: case/profile/persona
+python3 harness/scripts/council.py roster --case risk            # 3 ghế, có ≥1 cặp đối-trọng
+python3 harness/scripts/council.py roster --case ml-ai --size 5  # 5 ghế
+python3 harness/scripts/council.py roster --profile lean         # 5 người execution-lean
+python3 harness/scripts/council.py roster --personas feynman,taleb,rams --json
+```
+- Case tag: `design · strategy · debug · risk · product · decision · simplify · ml-ai` (bảng trong `harness/council.personas.yaml`).
+- **Luật:** roster luôn cài **≥1 cặp đối-trọng** (chống phòng vọng âm); thiếu → cảnh báo ở stderr. Size lẻ (3/5) để mean-rank không hoà.
+- Thư viện: 18 persona + 13 cặp đối-trọng (nguồn `github.com/0xNyk/council-of-high-intelligence`).
+
+**Dùng trong protocol:** sau khi bốc roster, gán mỗi persona vào một seat — có 2 cách:
+1. **Động (khuyên):** orchestrator lấy output `roster --json`, với mỗi seat chèn lens vào prompt Stage-1: *"Trả lời qua lăng kính \<name>: \<lens>. \<sig>."*
+2. **Cố định:** điền field `persona:` mỗi seat trong `harness/council.config.yaml`.
+
+Roster + lý do bốc (case, cặp tension) **ghi vào transcript** để auditable (Trụ 5). Phần "model nào fill seat" vẫn là unknown đã quarantine ở `council.config.yaml` (`verified`) — persona-lens độc lập với nó.
+
+### Reference — council.py commands
 | Command | Does |
 |---------|------|
 | `rank <answers.json> --judges <judges.json>` | full aggregation → transcript.json + .md |
@@ -184,8 +243,7 @@ Flags: `--seed N` (anchor-guard seed; overrides config `anchor_seed`),
 `--question "..."` (câu hỏi thật hiện trên report; bỏ trống → ẩn dòng question).
 Stage-4 HTML versioned luôn ghi vào `llmwiki/html/council/` — no flag needed.
 
-## Adapter boundary (build-now-adapt-later)
-
+### Reference — Adapter boundary (build-now-adapt-later)
 - **Contract (built + tested now):** the json schemas (`answers.json`,
   `judges.json`, transcript) and all the deterministic ops in `council.py`.
 - **Quarantine (`verified: false`):** model identities in
@@ -193,8 +251,7 @@ Stage-4 HTML versioned luôn ghi vào `llmwiki/html/council/` — no flag needed
 - **Adapt later (one file):** edit seats/judges/chairman in the config, run a
   real council, then flip `verified: true`. No engine change.
 
-## Determinism guarantees
-
+### Reference — Determinism guarantees
 Same `answers.json` + `judges.json` + seed → byte-identical transcript every
 run. Anonymization depends on `sha256(id)`, not input order or author, so neither
 position nor authorship leaks. The anchor guard is seeded per judge from the

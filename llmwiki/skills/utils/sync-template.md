@@ -2,18 +2,72 @@
 name: sync-template
 disable-model-invocation: true
 description: Sync structural improvements between project and master template repo
+metadata:
+  design-standard: "solid-what-how/1"
+  contract-version: "1.0.0"
 ---
 
 # Skill: sync-template
 
-## Purpose
-Sync structural/template improvements between project and `https://github.com/Rheinmir/setup.git`.
+## WHAT
 
-## When to use
-- **Upstream**: Improved template locally → save to Master.
-- **Downstream**: Master has newer fixes → bring into project.
+### Purpose và context
+- **Purpose:** Sync structural/template improvements between project and `https://github.com/Rheinmir/setup.git`.
+- **Trigger (when to use):**
+  - **Upstream**: Improved template locally → save to Master.
+  - **Downstream**: Master has newer fixes → bring into project.
+- **Non-goals:** không sync `.env`, credentials, business docs; không tự `--strategy pull` để rút ngắn thời gian; không `git clone` template; không tự kích hoạt (`disable-model-invocation: true`); Antigravity không chạy được skill này (sandbox chặn tool).
 
-## FAST PATH — downstream 1 lệnh `--full` (< 30s, mặc định)
+### Mental model
+Downstream mặc định: `version.json + manifest remote → phân loại hash 3 mốc (disk ↔ R0 remote_synced ↔ remote hiện tại) → NEW/UPDATE tự PULL · KEPT giữ · CONFLICT giữ local + lưu bản remote → OKF backfill → fingerprint → cài skill 3 chỗ → verify 3 vị trí → log`. Upstream / migrate / debug đi MANUAL STEPS 0–8 với điểm STOP hỏi user ở Step 5.
+
+### Input và output contract
+| | Field | Required? | Ý nghĩa |
+|---|---|---|---|
+| In | hướng sync | có | downstream (mặc định, FAST PATH) hoặc upstream (MANUAL) |
+| In | `.template-manifest.json` + `harness/version.json` | có | inclusion list, remote URL, `branch`, `remote_synced` |
+| In | `--branch`, `--strategy pull`, `--dry-run`, `--json` | không | đổi branch, lấy remote cho CONFLICT, xem trước, output máy đọc |
+| In | quyết định user | khi CONFLICT hoặc Step 5 | lấy remote hay giữ local; pull/push file nào |
+| Out | file template đã sync + OKF backfill | có | file wiki cũ convert bold→YAML |
+| Out | `harness/version.json` refresh | có | fingerprint sau OKF + `template_version` + `remote_synced` |
+| Out | skill cài ở `.claude/commands/`, `~/.claude/skills/`, `~/.claude/commands/` | downstream | verify 3 vị trí |
+| Out | report + exit code | có | 0 sạch, 1 lỗi tải/OKF/verify, 3 CONFLICT cần quyết |
+| Out | dòng `wiki/log.md` + draft output report | có | script tự ghi log khi `--full` |
+
+### Rules và capabilities
+- RULE-01 (MUST): NEVER sync `.env`, credentials, business docs.
+- RULE-02 (MUST): ALWAYS audit remote branches — non-default may be newest.
+- RULE-03 (MUST): ALWAYS show diff for `[CONFLICT]` → wait for instruction.
+- RULE-04 (MUST): NEVER `cp -R` — file by file.
+- RULE-05 (MUST): **Step 3 every sync** — detect old `skills/`, offer migrate.
+- RULE-06 (MUST): **Step 7 every downstream sync** — install all 3 Claude Code locations.
+- RULE-07 (MUST): `[NEW]`: add to manifest BEFORE upstream commit.
+- RULE-08 (MUST): `[MISSING]`: add to manifest AFTER downstream copy.
+- RULE-09 (MUST): Frontmatter: `name:` + `description:` for skills; `description:` only for slash commands.
+- RULE-10 (MUST): Skip `README.md`, `index.md`, `log.md`, no-Purpose/Steps files.
+- Capabilities: đọc remote template (HTTP/GitHub API); ghi file trong project + thư mục skill/command cấp user; đẩy lên remote template khi upstream (chỉ sau duyệt).
+
+### Failure boundaries
+- CONFLICT (cả hai cùng đổi) → giữ local, lưu bản remote ra `/tmp/sync-template-conflicts/`, exit 3 → **clarify** với user.
+- Lỗi tải / OKF / verify → exit 1 → **failed**, sửa `✗` trước khi xong.
+- Branch remote không rõ cái nào mới nhất → **clarify**, hỏi user branch nào.
+- health-check `OK` → không cần sync, dừng (**succeeded** no-op).
+- Old `skills/` layout → đề xuất migrate, **confirm** trước khi xoá.
+
+## HOW
+
+### Main workflow
+| Step | Type | Inputs | Action | Outputs/exit | Failure/next |
+|---|---|---|---|---|---|
+| W01 | judgment | yêu cầu | Chọn đường: downstream thường → FAST PATH `--full`; upstream, migrate cấu trúc cũ, debug → MANUAL (B01) | đường đi | — |
+| W02 | effect | manifest, remote | `python3 harness/scripts/sync-template.py --full` MỘT lần (sync + OKF + fingerprint + cài 3 chỗ + verify + log) | report | exit 1 → failed; exit 3 → W03 |
+| W03 | judgment | report | Đọc report; CONFLICT muốn lấy remote → chạy lại `--strategy pull`; branch khác → `--branch` | quyết định | không rõ → hỏi user |
+| W04 | deterministic | report | Không gọi thêm okf-check, health-check, vòng verify, không tự sửa log | báo cáo cho user | — |
+| W05 | effect | kết quả | Output Report draft | draft + index + log | 0 artefact → skip |
+
+Chi tiết từng bước (nguồn chân lý cho W01–W05 và nhánh MANUAL):
+
+#### FAST PATH — downstream 1 lệnh `--full` (< 30s, mặc định)
 
 Downstream sync là **1 script non-interactive tự chứa**. Gọi **1 lần** với `--full` → mọi bước
 hậu-sync (Step 6a/6b/8 + ghi log) chạy trong CÙNG process. Agent đọc 1 report rồi báo cáo —
@@ -47,24 +101,24 @@ Quy trình tự động trong script (`--full`): fetch remote `version.json`+`ma
 
 ---
 
-## MANUAL STEPS (fallback — upstream, migrate cấu trúc cũ, hoặc debug)
+#### MANUAL STEPS (fallback — upstream, migrate cấu trúc cũ, hoặc debug)
 
-### Step 0: Pre-flight — health-check (chẩn đoán trước khi sync)
+##### Step 0: Pre-flight — health-check (chẩn đoán trước khi sync)
 Chạy `/health-check` (`python3 harness/scripts/health-check.py --root .`) để biết NÊN sync hướng nào:
 - `NEEDS-SYNC` (behind/missing) → downstream (kéo về).
 - `DRIFT` (đã sửa local) → upstream (đẩy lên) hoặc revert.
 - `OK` → không cần sync, dừng.
 
-### Step 1: Load Manifest
+##### Step 1: Load Manifest
 Read `.template-manifest.json` — inclusion list + remote URL.
 
-### Step 2: Fetch & Branch Audit
+##### Step 2: Fetch & Branch Audit
 - **CRITICAL**: List all remote branches: `gh api repos/<owner>/<repo>/branches`.
 - Check commit date per branch — don't assume `master`/`main` is newest.
 - Unclear → ask user which branch.
 - Fetch via `gh api` + `curl` — no `git clone`.
 
-### Step 3: Detect Old Structure Migration
+##### Step 3: Detect Old Structure Migration
 Check for **old `skills/` layout** needing migration to `llmwiki/`:
 
 ```bash
@@ -84,7 +138,7 @@ Check for **old `skills/` layout** needing migration to `llmwiki/`:
 3. Content matches → old stale, safe to remove.
 4. Show migration table → confirm before delete.
 
-### Step 4: Compare Manifest Files
+##### Step 4: Compare Manifest Files
 `diff` local vs remote for each file in `includes`:
 
 ```bash
@@ -102,10 +156,10 @@ Status:
 - `NEW` — local only → upstream candidate
 - `ABSENT` — neither
 
-### Step 5: Sync Plan
+##### Step 5: Sync Plan
 Show table. **STOP** → ask user: pull all / push all / specific files / direction per DIFF.
 
-### Step 6: Execute
+##### Step 6: Execute
 - **Downstream**: `mkdir -p` → `curl -sfL <url> -o <local_path>` → update `wiki/log.md`
 - **Upstream**: commit + push via `gh`/`git`
 - File by file — no `cp -R`
@@ -114,7 +168,7 @@ Show table. **STOP** → ask user: pull all / push all / specific files / direct
 > script đã OKF-backfill + refresh fingerprint + verify + ghi log trong process. Các bước dưới chỉ
 > dùng khi chạy MANUAL (debug / upstream / migrate cấu trúc cũ), không phải sau `--full`.
 
-### Step 6a: OKF backfill *(MANUAL — `--full` đã làm)*
+##### Step 6a: OKF backfill *(MANUAL — `--full` đã làm)*
 Template/skill mới có thể nâng định dạng wiki (vd chuẩn OKF v0.1). Sau khi pull, convert mọi file content cũ còn dùng pseudo-frontmatter dạng bold `**Type:**` sang YAML frontmatter để khỏi vướng R9:
 ```bash
 python3 harness/scripts/okf-check.py --check      # exit 3 = có file chưa đạt OKF
@@ -123,7 +177,7 @@ python3 harness/scripts/okf-check.py --migrate    # convert bold → YAML (chỉ
 - Idempotent — file đã có `---` frontmatter được bỏ qua. Reserved (index/log/README/decisions/_template…) tự miễn.
 - Sau migrate: chạy lại `--check` đến khi `DAT CHUAN OKF v0.1`, rồi cập nhật index/log như mọi thay đổi wiki.
 
-### Step 6b: Refresh version fingerprint *(MANUAL — `--full` đã làm)*
+##### Step 6b: Refresh version fingerprint *(MANUAL — `--full` đã làm)*
 Nội dung pattern vừa đổi → cập nhật lại `harness/version.json` để health-check khỏi báo DRIFT giả:
 ```bash
 python3 harness/scripts/health-check.py --update   # KHÔNG --bump ở project con
@@ -131,7 +185,7 @@ python3 harness/scripts/health-check.py --update   # KHÔNG --bump ở project c
 - `--bump major|minor|patch` CHỈ chạy ở repo template `Rheinmir/setup` khi PHÁT HÀNH version pattern mới.
 - Upstream sync ở repo template: sau khi push, chạy `--update --bump <part>` rồi commit `harness/version.json`.
 
-### Step 7: Install as Native Skills *(runs every downstream sync)*
+##### Step 7: Install as Native Skills *(runs every downstream sync)*
 
 Collect skill files synced (under `llmwiki/skills/` in manifest). Skip: `README.md`, `index.md`, `log.md`, no-`## Purpose`/`## Steps` files.
 
@@ -164,7 +218,7 @@ Install cả 3. Report:
 | ...            | ...                       | ...               | ...                 |
 ```
 
-### Step 8: Verify & Finalize
+##### Step 8: Verify & Finalize
 ```bash
 for name in <skill-list>; do
   [ -f ".claude/commands/$name.md" ]          && echo "✓ proj  $name" || echo "✗ proj  $name"
@@ -173,7 +227,23 @@ done
 ```
 Fix `✗` before done. No restart needed.
 
-## Agent Compatibility
+### Branches
+| ID | Kind | Guard | Hành vi | Skip / failure | Rejoin |
+|---|---|---|---|---|---|
+| B01 | conditional_required | cần upstream, migrate cấu trúc `skills/` cũ, hoặc debug | chạy MANUAL STEPS 0–8, STOP hỏi user ở Step 5 | downstream thường → FAST PATH | W05 |
+| B02 | recovery | exit 3 CONFLICT và user chọn lấy remote | chạy lại `--strategy pull` (ghi đè, backup `.local-bak`) | user giữ local → không làm gì | W04 |
+| B03 | conditional_required | branch remote khác `version.json:branch` | `--branch <tên>` sau khi audit branch (Step 2) | — | W02 |
+| B04 | user_optional | muốn xem trước | `--dry-run` (kèm `--full` để xem OKF sẽ migrate gì) | — | W02 |
+| B05 | conditional_required | phát hiện old `skills/` layout (Step 3) | hiện bảng migration, confirm rồi mới xoá | user từ chối → giữ | W05 |
+
+### Validation và stopping
+Tất định: exit code script (0/1/3), self-verify 3 vị trí cài, `okf-check.py --check` ra `DAT CHUAN OKF v0.1` (MANUAL), vòng `[ -f … ]` Step 8 không còn `✗`. Dừng sau MỘT lần `--full` khi exit 0; exit 3 dừng chờ user quyết; MANUAL dừng ở Step 5 chờ duyệt.
+
+### Examples
+- **Positive:** project con, Master có fix mới → `python3 harness/scripts/sync-template.py --full` → 2 UPDATE tự PULL, 1 KEPT giữ nguyên, OKF migrate 3 file, verify 3 vị trí ✓, exit 0 trong < 1s → báo report, không chạy thêm lệnh nào.
+- **Boundary/failure:** file `llmwiki/skills/dev-loop/ship.md` sửa ở cả local và remote → CONFLICT, giữ local, bản remote ở `/tmp/sync-template-conflicts/`, exit 3 → hiện diff, chờ user; không tự `--strategy pull`.
+
+### Reference — Agent Compatibility
 
 | Agent | Run? | Reason |
 |-------|------|--------|
@@ -181,25 +251,11 @@ Fix `✗` before done. No restart needed.
 | OpenCode | Yes | Full tool access |
 | Antigravity | No | Sandbox blocks file/command tools |
 
-## Rules
-- NEVER sync `.env`, credentials, business docs.
-- ALWAYS audit remote branches — non-default may be newest.
-- ALWAYS show diff for `[CONFLICT]` → wait for instruction.
-- NEVER `cp -R` — file by file.
-- **Step 3 every sync** — detect old `skills/`, offer migrate.
-- **Step 7 every downstream sync** — install all 3 Claude Code locations.
-- `[NEW]`: add to manifest BEFORE upstream commit.
-- `[MISSING]`: add to manifest AFTER downstream copy.
-- Frontmatter: `name:` + `description:` for skills; `description:` only for slash commands.
-- Skip `README.md`, `index.md`, `log.md`, no-Purpose/Steps files.
-
----
-
-## Output Report
+### Delivery — Output Report
 
 After all main skill tasks complete, write a propose draft to the wiki.
 
-### Steps
+#### Steps
 
 **1. Build the filename:**
 - Format: `DDMMYY-<ten>.md`
@@ -209,6 +265,14 @@ After all main skill tasks complete, write a propose draft to the wiki.
 **2. Write** `llmwiki/wiki/sources/draft/DDMMYY-<ten>.md`:
 
 ```
+---
+type: draft
+title: "DDMMYY-<ten>"
+status: proposed
+tags: [<skill-name>, output-report]
+timestamp: YYYY-MM-DD
+---
+
 # DDMMYY-<ten>
 **Type:** draft
 **Status:** proposed
@@ -240,3 +304,4 @@ After all main skill tasks complete, write a propose draft to the wiki.
 - `llmwiki/wiki/log.md` — append: `## YYYY-MM-DD — <skill-name> — <ten>`
 
 > Skip only when the skill produces zero artefacts and zero decisions (e.g., a pure display mode like `/caveman-stats`).
+

@@ -8,19 +8,67 @@ description: >-
   git mv (TRACKED, không xoá, không giết draft còn proposed), KEEP canonical — rồi RE-INDEX. Gọi tay
   bất cứ lúc nào, hoặc khi đầu phiên báo "[tidy] draft/ có N file (> 10)". Trigger — "tidy",
   "dọn nháp", "dọn docs", "draft quá nhiều", "archive draft", "quét nháp lỗi thời", "/tidy".
+metadata:
+  design-standard: "solid-what-how/1"
+  contract-version: "1.0.0"
 ---
 
 # Skill: tidy
 
-## When to use
-- Đầu phiên thấy `🧹 [tidy] draft/ có N file .md tầng gốc (> ngưỡng 10)` — hook `session_start.py` hỏi user; user ĐỒNG Ý → chạy skill này. User TỪ CHỐI → bỏ qua, không hỏi lại trong phiên.
-- User tự gọi `/tidy` khi thấy `draft/` hoặc `llmwiki/html/` lộn xộn, khó tìm, sợ mất bản chất quý.
-- `/lint` bước 8c (docs-sprawl pulse) hoặc `medic` probe `tidy` báo warn.
+## WHAT
 
-## Vì sao 3 tầng (không chỉ "merge")
-Cái QUÝ trong nháp là **quyết định / bài học / pattern** — nó phải lên **wiki** (concept/ADR, travel + được commit + được index). Còn nháp đã thi hành xong và render html là lịch sử → **archive** (giữ, không xoá). Tool tất định lo đếm + phân loại + dời + index; phần đọc-hiểu để promote là việc của agent.
+### Purpose và context
+- **Purpose:** dọn + validate kho nháp và render (`wiki/sources/draft/*.md` + `llmwiki/html/*.html`) khi phình to: PROMOTE bản chất quý lên wiki, ARCHIVE nháp đã xong (tracked, không xoá), KEEP canonical, rồi RE-INDEX.
+- **Trigger (when to use):**
+  - Đầu phiên thấy `🧹 [tidy] draft/ có N file .md tầng gốc (> ngưỡng 10)` — hook `session_start.py` hỏi user; user ĐỒNG Ý → chạy skill này. User TỪ CHỐI → bỏ qua, không hỏi lại trong phiên.
+  - User tự gọi `/tidy` khi thấy `draft/` hoặc `llmwiki/html/` lộn xộn, khó tìm, sợ mất bản chất quý.
+  - `/lint` bước 8c (docs-sprawl pulse) hoặc `medic` probe `tidy` báo warn.
+- **Non-goals:** không xoá nháp, không archive draft còn sống chỉ vì cũ, không "sửa cho đúng chuẩn" file đã nằm trong `archive/`.
 
-## Steps
+### Mental model
+Vì sao 3 tầng (không chỉ "merge"): Cái QUÝ trong nháp là **quyết định / bài học / pattern** — nó phải lên **wiki** (concept/ADR, travel + được commit + được index). Còn nháp đã thi hành xong và render html là lịch sử → **archive** (giữ, không xoá). Tool tất định lo đếm + phân loại + dời + index; phần đọc-hiểu để promote là việc của agent.
+
+`draft/ + html/ → check (đếm) → plan (KEEP · ARCHIVE · PROMOTE?) → agent promote → apply (git mv vào archive/<nhóm>/) → re-index → verify + commit`.
+
+### Input và output contract
+| | Field | Required? | Ý nghĩa |
+|---|---|---|---|
+| In | `--threshold N` / env `OVERSTACK_DRAFT_THRESHOLD` | không (mặc định 10) | ngưỡng số file `.md` tầng gốc |
+| In | `--keep-dates N` | không (mặc định 2) | số mốc ngày html report giữ lại |
+| In | `--root .` | không | dùng khi downstream không có `harness/` |
+| Out | bảng plan | có | KEEP / ARCHIVE / PROMOTE? kèm lý do từng file |
+| Out | ADR/concept mới trong wiki | theo nội dung | bản chất quý đã promote, có `## Origin` |
+| Out | rename vào `archive/<proposals/superseded/analysis/reports>/` + index | có (khi apply) | git thấy rename, không delete |
+
+### Rules và capabilities
+- RULE-01 (MUST): **PROMOTE trước APPLY.** Archive giờ TRACKED nên promote-sau vẫn làm được, nhưng đừng để bản chất chôn dưới `archive/` mà không ai biết.
+- RULE-02 (MUST): **Archive = DỜI, KHÔNG XOÁ.** Không bao giờ `rm` nháp; `git mv` giữ history (`git log --follow`).
+- RULE-03 (MUST): **Tuổi không phải lý do archive** một draft còn `status: proposed/open/implementing`. Chỉ status/task đã xong (hoặc PLAN/seq đi theo SPEC đã archive) mới archive. Muốn dọn draft treo → người quyết, đổi status, chạy lại.
+- RULE-04 (MUST): Canonical (`overstack.html`, `index.html`, `wiki-graph.html`, `*-cheatsheet`, `*-health-dashboard`, `problem-tree`, `line-status`) không bao giờ archive. Html report có ngày: giữ 2 mốc ngày gần nhất (`--keep-dates N`), cũ hơn archive — html là render, không áp cho `.md`.
+- RULE-05 (MUST): Vai rõ: **tool** = đếm/phân loại/dời/re-index (tất định, 0 token); **agent** = promote (đọc-hiểu). Không lẫn.
+- RULE-06 (MUST): Wiki entry mới phải có `## Origin` + frontmatter `type` (R2/R9); cập nhật `wiki/index.md` + `wiki/log.md` (R3).
+- RULE-07 (MUST): Validator R7/R9/R18 và `wiki-health`/`index_sync` **bỏ qua `archive/`** (nháp đông cứng) — đừng "sửa cho đúng chuẩn" file trong archive, chúng là lịch sử.
+- Capabilities: đọc draft/html + frontmatter; dời file bằng git (tracked rename); ghi wiki (ADR/concept/index/log); chạy kiểm wiki-health/index_sync cục bộ.
+
+### Failure boundaries
+- `check` exit 3 = vượt ngưỡng → đi tiếp plan; dưới ngưỡng và user không tự gọi → dừng, không có gì dọn.
+- Draft treo (`status: proposed/open…`) → **clarify**: hỏi user làm-tiếp hay reject, không tự archive.
+- Đích archive bị `.gitignore` → tool **từ chối dời** (chủ ý), in dòng gitignore cần bỏ → **blocked** cho file đó.
+- `wiki-health --fail-on broken` hoặc `index_sync` đỏ → **failed**, sửa trước khi commit.
+
+## HOW
+
+### Main workflow
+| Step | Type | Inputs | Action | Outputs/exit | Failure/next |
+|---|---|---|---|---|---|
+| W01 | deterministic | `draft/` | Check (0 token, không đụng file): `tidy.py check` | exit 3 = vượt ngưỡng | dưới ngưỡng → dừng trừ khi user tự gọi |
+| W02 | deterministic | draft + html | Plan (dry-run): `tidy.py plan`, đọc kỹ cột lý do | bảng KEEP/ARCHIVE/PROMOTE? | draft treo → B01; cờ outdated → B02 |
+| W03 | judgment | mục PROMOTE? + ARCHIVE có quyết định | PROMOTE bản chất quý vào wiki TRƯỚC khi apply | ADR/concept + index + log | đã có trong wiki → chỉ archive |
+| W04 | effect | plan | Apply: `tidy.py apply` — git mv vào archive + re-index | rename + index | đích gitignored → B03 |
+| W05 | deterministic | worktree | Verify + commit: `git status`, `wiki-health`, `index_sync` | commit + log | đỏ → sửa, lặp W05 |
+
+Chi tiết từng bước (nguồn chân lý cho W01–W05, bước 0–4):
+
 0. **Check (0 token, không đụng file):**
    ```bash
    python3 harness/scripts/tidy.py check          # downstream không có harness/: python3 ~/.claude/harness/harness/scripts/tidy.py check --root .
@@ -36,14 +84,19 @@ Cái QUÝ trong nháp là **quyết định / bài học / pattern** — nó ph�
    - Tool **từ chối dời file tracked khi đích bị `.gitignore`** (dời = xoá khỏi repo) và in dòng gitignore cần bỏ. Đây là chủ ý, không phải lỗi.
 4. **Verify + commit:** `git status` chỉ thấy rename/`archive/INDEX.md`; `python3 harness/scripts/wiki-health.py --wiki-dir llmwiki/wiki --fail-on broken` sạch (wikilink trỏ stem trong archive/ = resolved-frozen, không broken); `index_sync` xanh. Commit gồm ADR/concept mới promote + các rename. Append `wiki/log.md`.
 
-## Rules
-- **PROMOTE trước APPLY.** Archive giờ TRACKED nên promote-sau vẫn làm được, nhưng đừng để bản chất chôn dưới `archive/` mà không ai biết.
-- **Archive = DỜI, KHÔNG XOÁ.** Không bao giờ `rm` nháp; `git mv` giữ history (`git log --follow`).
-- **Tuổi không phải lý do archive** một draft còn `status: proposed/open/implementing`. Chỉ status/task đã xong (hoặc PLAN/seq đi theo SPEC đã archive) mới archive. Muốn dọn draft treo → người quyết, đổi status, chạy lại.
-- Canonical (`overstack.html`, `index.html`, `wiki-graph.html`, `*-cheatsheet`, `*-health-dashboard`, `problem-tree`, `line-status`) không bao giờ archive. Html report có ngày: giữ 2 mốc ngày gần nhất (`--keep-dates N`), cũ hơn archive — html là render, không áp cho `.md`.
-- Vai rõ: **tool** = đếm/phân loại/dời/re-index (tất định, 0 token); **agent** = promote (đọc-hiểu). Không lẫn.
-- Wiki entry mới phải có `## Origin` + frontmatter `type` (R2/R9); cập nhật `wiki/index.md` + `wiki/log.md` (R3).
-- Validator R7/R9/R18 và `wiki-health`/`index_sync` **bỏ qua `archive/`** (nháp đông cứng) — đừng "sửa cho đúng chuẩn" file trong archive, chúng là lịch sử.
+### Branches
+| ID | Kind | Guard | Hành vi | Skip / failure | Rejoin |
+|---|---|---|---|---|---|
+| B01 | conditional_required | plan báo `⏱ TREO — status proposed/open…` | giữ; muốn dọn thì hỏi user làm-tiếp hay reject, đổi `status:` rồi chạy lại plan | user không quyết → KEEP | W02 |
+| B02 | conditional_required | dòng `↳ ⚠ nội dung có thể outdated` dưới draft GIỮ | đối chiếu code: (a) xong → đổi status + archive, (b) còn làm → sửa đúng câu sai, (c) bỏ → `rejected` hoặc dời `need-review/` | dương tính giả (đường dẫn ví dụ) → giữ nguyên | W03 |
+| B03 | recovery | tool từ chối dời vì đích bị `.gitignore` | báo user dòng gitignore cần bỏ; không lách bằng xoá | user không bỏ → file đó ở yên | W04 |
 
-## Test tất định
+### Validation và stopping
+Tất định: `bash harness/tests/tidy-test.sh` (mục Test tất định dưới), `wiki-health --fail-on broken` sạch, `index_sync` xanh, `git status` chỉ thấy rename/`archive/INDEX.md`. Cần review: quyết định PROMOTE (agent đọc-hiểu). Dừng sau W05 commit; không lặp apply nhiều lần trong một phiên nếu plan không đổi.
+
+### Examples
+- **Positive:** đầu phiên báo `[tidy] draft/ có 57 file`, user đồng ý → plan: 40 ARCHIVE (status done), 4 PROMOTE?, 13 KEEP → agent viết 1 ADR cho quyết định chưa có trong wiki → `tidy.py apply` → `git status` chỉ thấy rename → `wiki-health` sạch → commit.
+- **Boundary/failure:** draft `status: proposed` 3 tháng tuổi → plan đánh `⏱ TREO`, KHÔNG archive; hỏi user làm-tiếp hay reject. Đích `archive/reports/` bị gitignore → apply từ chối dời file tracked đó và in dòng gitignore cần bỏ.
+
+### Test tất định
 `bash harness/tests/tidy-test.sh` — 11 assertion: ngưỡng `>10` (thư mục con không tính), status done → archive, proposed cũ → keep, đích gitignored → không dời, đích tracked → git rename, vòng khép về exit 0.

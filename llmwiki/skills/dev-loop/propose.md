@@ -1,25 +1,74 @@
 ---
 name: propose
 description: Plan a feature before coding — draft in wiki/sources/draft/, stop for approval
+metadata:
+  design-standard: "solid-what-how/1"
+  contract-version: "1.0.0"
 ---
 
 # Skill: propose
 
-## Purpose
-Plan feature/change before writing code. Surfaces impact on existing functionality, gets alignment before implementation.
+## WHAT
 
-## When to use
-- New feature, endpoint, component, or behaviour requested
-- Change touches shared/core code
-- Scope unclear or multi-interpretable
+### Purpose và context
+- **Purpose:** Plan feature/change before writing code. Surfaces impact on existing functionality, gets alignment before implementation.
+- **Trigger (when to use):**
+  - New feature, endpoint, component, or behaviour requested
+  - Change touches shared/core code
+  - Scope unclear or multi-interpretable
+- **Non-goals:** không viết code (STOP ở cổng duyệt); không sinh kế hoạch thi hành code-level (đó là `/plan`, chạy SAU khi SPEC được duyệt); không phỏng vấn user trừ khi được yêu cầu (`/br interview`).
 
-## What this skill produces — and what it deliberately does NOT
+### Mental model
+`request → force-query wiki (Context) → unknowns → impact + side-effect → Approaches (2–3, chọn có lý do) → SPEC draft .md (FR/SC id, Assumptions (default)/[CẦN LÀM RÕ]) + companion .html (sơ đồ archify mỗi task + prose) → self-review → STOP cổng duyệt → /plan`.
+
+#### What this skill produces — and what it deliberately does NOT
 `/propose` sinh **SPEC** (bản thiết kế): thứ **NGƯỜI** đọc để bấm duyệt ở cổng. Nó KHÔNG phải kế hoạch thi hành.
 Kế hoạch code-level (đường dẫn chính xác, chữ ký hàm, test, code từng bước) là việc của skill **`/plan`**, chạy SAU khi SPEC được duyệt.
 
 Lý do tách (đối chiếu `obra/superpowers`, tỷ lệ spec:plan ≈ 1:8 — 82–511 dòng so với 673–2621 dòng): nếu nhồi code-level vào SPEC thì draft phình tới mức người duyệt không đọc nổi thứ mình đang duyệt, và **cổng duyệt mất tác dụng**. Hai văn bản, hai người đọc.
 
-## Steps
+### Input và output contract
+| | Field | Required? | Ý nghĩa |
+|---|---|---|---|
+| In | yêu cầu feature/change | có | restate một câu ở bước 1 |
+| In | wiki (`concepts/`, `entities/`, `sources/adr/`, `decisions.md`) | có | force-query trước khi draft |
+| Out | `llmwiki/wiki/sources/draft/DDMMYY-feature-name-module.md` | có | frontmatter `type: draft`, đủ các mục R7 (Context, Global constraints, Non-goals, Approaches, Plan, FR, SC, Assumptions, Agent Task Assignment, Sequence diagram, Self-review) |
+| Out | `llmwiki/html/DDMMYY-feature-name-seq.html` + spec/artifact archify mỗi task | có | sơ đồ engine + prose đầy đủ mỗi task, link hai chiều |
+| Out | dòng `llmwiki/wiki/index.md` + `llmwiki/wiki/log.md` | có | |
+| Out | task id `T-YYMMDD-NN` | không (fail-open) | frontmatter `task:` |
+| Out | draft output report | có (trừ khi 0 artifact) | mục Delivery |
+
+### Rules và capabilities
+- RULE-01 (MUST): **OKF v0.1 (R9):** the draft starts with a YAML frontmatter block (`---`) with `type: draft` (+ optional `title`/`status`/`tags`/`timestamp`/`task`); copy `sources/draft/_template.md`. Keep `**Status:** proposed` in the body so R7 can gate it.
+- RULE-02 (MUST): Never begin implementation during this skill.
+- RULE-03 (MUST): The proposal is a PAIR: `.md` + `.html` (one diagram per task). Validator R7 blocks incomplete proposals at write and commit — fix before asking for approval.
+- RULE-04 (MUST): If impact list empty, state explicitly "No existing code affected."
+- RULE-05 (MUST): If multiple approaches exist, present with tradeoffs — do not pick silently.
+- Capabilities: đọc wiki + repo (tra fact); ghi draft + trang HTML + spec sơ đồ trong wiki; render sơ đồ qua engine vẽ; ghi sổ unknown và task id (fail-open); không ghi code sản phẩm.
+
+### Failure boundaries
+- SPEC còn `[CẦN LÀM RÕ]` chưa trả lời → **blocked** ở cổng duyệt (R7-n).
+- Draft thiếu mục R7 (Context/Global constraints/placeholder…) → validator chặn khi ghi và khi commit; sửa trước khi xin duyệt.
+- Render sơ đồ còn đỏ sau 2 vòng sửa spec → **dừng hỏi user**, không lặp validate.
+- `code-logger.py --task` lỗi/thiếu → in "bỏ qua", để trống `task:`, không chặn (fail-open).
+- User chưa duyệt → **dừng** ở bước 9; không dispatch khi chưa có PLAN.
+
+## HOW
+
+### Main workflow
+| Step | Type | Inputs | Action | Outputs/exit | Failure/next |
+|---|---|---|---|---|---|
+| W01 | deterministic | wiki | Bước 0 force-query wiki → `## Context` | context + cite | — |
+| W02 | judgment | request | Bước 0b tìm unknowns; phân fact (tra) / decision (`(default)` · find-out-later · `[CẦN LÀM RÕ]`) | danh sách unknown đã xếp tầng | tầng hỏng-kiến-trúc → `[CẦN LÀM RÕ]` |
+| W03 | judgment | request, repo | Bước 1–5: restate, impact, side-effect, plan tối thiểu, success criteria | nội dung SPEC | impact rỗng → ghi "No existing code affected." |
+| W04 | effect | W01–W03 | Bước 6: ghi draft `.md` đủ mục R7 + task id + index/log | draft trên đĩa | R7 chặn → sửa |
+| W05 | effect | Plan | Bước 7: companion HTML — spec archify mỗi task, render một lệnh shell, nhúng iframe + prose, shell `docs-site-macos` | `.html` + artifact | đỏ sau 2 vòng → dừng hỏi |
+| W06 | judgment | draft | Bước 8: self-review 3 mắt lưới, sửa tại chỗ | `## Self-review` | — |
+| W07 | effect | draft + html | Bước 9: STOP, hiện draft + URL HTML, chờ duyệt | duyệt / chuyển hướng | không duyệt → cancelled/redirect |
+| W08 | effect | SPEC duyệt | Bước 10: bàn giao `/plan` | PLAN | — |
+
+Chi tiết từng bước (nguồn chân lý cho W01–W08):
+
 0. **Force-query wiki TRƯỚC khi draft** — query/đọc wiki (`concepts/`, `entities/`, `sources/adr/`, `decisions.md`) tìm concept/ADR/quyết định liên quan; tóm tắt vào `## Context` của draft + cite `[[wikilink]]`/path. KHÔNG propose "mù" (R7-f chặn draft thiếu `## Context` có nội dung).
 0b. **Tìm unknowns TRƯỚC khi draft** (map ≠ territory, GH#40 — xem `fdk/wiki/concepts/map-not-territory.md`): model càng mạnh càng lấp chỗ mơ hồ bằng câu trả lời tự tin. Trước khi viết một dòng SPEC, liệt kê ngắn "để làm đúng việc này tôi CHƯA biết gì?" — soi 5 chỗ bản đồ hay nói dối: (a) ý định ngầm của người yêu cầu, (b) quy ước tribal không có trong wiki hay `CLAUDE.md`, (c) hình dạng dữ liệu thật (schema, sample, biên), (d) môi trường chạy (version, env, quyền), (e) thứ đã đổi kể từ lần wiki được viết. Mỗi unknown đi vào đúng tầng của `## Assumptions` bên dưới: fact → tra; decision rủi ro thấp → `(default)`; cần kiểm lại → `(default, find-out-later → unknown-ledger)`; hỏng-kiến-trúc-nếu-sai → `[CẦN LÀM RÕ]`. Không có unknown nào là dấu hiệu chưa tìm, không phải dấu hiệu đã hiểu.
 1. Restate request in one sentence to confirm understanding.
@@ -37,7 +86,7 @@ Lý do tách (đối chiếu `obra/superpowers`, tỷ lệ spec:plan ≈ 1:8 —
    - `## Success criteria (SC)` — **id ổn định** cho từng tiêu chí: `**SC-001**: …`. Xem mục "Tiêu chí phải đo NGƯỜI, không đo MÁY" bên dưới.
    - `## Assumptions` — mọi trường **user không nói mà model tự điền**, mỗi dòng gắn tag **`(default)`**. Xem mục "Tự điền hay hỏi" bên dưới.
 
-## Fact hay decision — tra trước, hỏi sau, tự điền phần giữa
+#### Fact hay decision — tra trước, hỏi sau, tự điền phần giữa
 Có một câu hỏi đứng **trước** cả "tự điền hay hỏi": **đây là một FACT hay một DECISION?**
 
 - **Fact** — có câu trả lời đúng, tra được bằng cách khám phá môi trường: đọc file, chạy lệnh, grep, xem `git remote -v`, đọc `package.json`. → **TRA, tuyệt đối không hỏi.** Hỏi user một thứ mà công cụ trả lời được là lãng phí lượt của họ, và làm họ tưởng bạn không biết đọc môi trường.
@@ -47,7 +96,7 @@ Ranh giới: nếu bạn *có thể* tìm ra bằng một lệnh, đó là fact 
 
 **Lựa chọn THIẾT KẾ user không nói = decision rủi ro thấp → fill từ nền, đừng hỏi.** Khi brief đụng UI mà user không nói rõ macrostructure, theme, type-pairing, hay màu anchor, ĐỪNG phỏng vấn — fill mặc định hợp brief từ catalog `[[design-foundation]]` (nguồn: `skills/hallmark/references/macrostructures/` + `references/genres/`), gắn tag `(default)`, và **ghi tên macrostructure + theme đã chọn vào `## Assumptions`**. User liếc là biết máy chọn gì, đổi một dòng nếu không thích. Chọn sai macrostructure thì sửa nhanh — nó không phải auth hay tiền. Đây là nguồn tham chiếu để fill unknown thiết kế, cắm vào đúng hệ `(default)` này. (Brief mang creative-intent mà không theme nào hợp → hallmark tự sang nhánh Custom; vẫn 6 discipline + slop-test.)
 
-## Tự điền hay hỏi — mặc định là TỰ ĐIỀN
+#### Tự điền hay hỏi — mặc định là TỰ ĐIỀN
 User đã mô tả hết những gì họ biết. Đừng phỏng vấn họ về thứ họ không biết — **tự điền mặc định hợp lý, rồi KHAI RA là mình điền**:
 
 - **`(default)`** — model tự chọn. Cứ chạy tiếp, không hỏi. Người duyệt liếc `## Assumptions` là phân biệt được ngay đâu là lời họ, đâu là lời máy, và sửa dòng nào họ không đồng ý.
@@ -67,7 +116,7 @@ Sai cái nút màu thì sửa ba mươi giây. Sai cơ chế auth thì cái `(de
 
 **Interview dạng chọn-đáp-án LUÔN có một đáp án cuối: "điền mặc định bây giờ, tìm hiểu sau (ghi nợ unknown)".** User không chắc, không muốn dừng để nghĩ, nhưng cũng không muốn model đoán thầm → chọn đáp án này: model điền default hợp lý ngay (việc chạy tiếp) và ghi một unknown vào sổ để trả nợ sau. Đây là đường thoát cho mọi câu user chưa sẵn sàng trả lời mà vẫn giữ được truy vết — không ép trả lời, không đoán im lặng.
 
-## Trả nợ unknown — khi có thông tin thật
+#### Trả nợ unknown — khi có thông tin thật
 Một unknown đã ghi (`(default, find-out-later)`) không phải để quên. Khi có thông tin thật:
 1. **Điền giá trị đúng vào SPEC/PLAN nguồn** — thay dòng `(default, find-out-later → …)` bằng giá trị thật.
 2. **Đóng sổ:** `python3 harness/scripts/unknown-ledger.py --resolve --file unknown-<nguồn>.md --id U-NN --value "<giá trị đúng>" --fixed "<sửa ở đâu>" --date <YYYY-MM-DD>`. Sổ giữ **cả** giá-trị-đã-fill lẫn giá-trị-đúng (audit — sáu tháng sau biết model đã đoán gì, đúng không, sửa ở đâu).
@@ -79,7 +128,7 @@ Nợ mở hiện ra ở `/lint` (báo cáo, không chặn) — `unknown-ledger.p
 - **Một câu một lượt.** Chờ trả lời rồi mới hỏi câu sau. Hỏi chùm làm người ta hoang mang và trả lời qua loa.
 - **Luôn kèm phương án khuyến nghị**, đặt đầu tiên, để user gật một tiếng ("đồng ý" / "cái đầu") là xong thay vì phải tự soạn câu trả lời.
 
-## Tiêu chí phải đo NGƯỜI, không đo MÁY
+#### Tiêu chí phải đo NGƯỜI, không đo MÁY
 `SC-xxx` phải **đo được** và **không dính công nghệ** — nói người dùng nhận được gì, không nói cái máy làm gì:
 
 - ✅ "User hoàn tất tạo tài khoản dưới 2 phút" · "chịu 1000 người đồng thời không suy giảm" · "giảm 50% ticket hỗ trợ về X"
@@ -104,20 +153,27 @@ Cách kiểm ở tầng máy **vẫn ghi**, nhưng ghi như **bằng chứng** c
 9. STOP. No code. Show the draft content + the HTML preview URL. Wait for user to approve or redirect.
 10. **Sau khi user DUYỆT** — bàn giao sang `/plan` (Skill tool → `plan`) để mở rộng SPEC này thành `DDMMYY-<tên>-PLAN.md` thi hành được. Đừng dispatch task khi chưa có PLAN: agent CLI rẻ chạy headless không thừa hưởng context nào và không hỏi lại được — nó chỉ có đúng thứ ta bơm vào (bài học 250626: giao hàng ~1/5 khi brief mỏng).
 
-## Rules
-- **OKF v0.1 (R9):** the draft starts with a YAML frontmatter block (`---`) with `type: draft` (+ optional `title`/`status`/`tags`/`timestamp`/`task`); copy `sources/draft/_template.md`. Keep `**Status:** proposed` in the body so R7 can gate it.
-- Never begin implementation during this skill.
-- The proposal is a PAIR: `.md` + `.html` (one diagram per task). Validator R7 blocks incomplete proposals at write and commit — fix before asking for approval.
-- If impact list empty, state explicitly "No existing code affected."
-- If multiple approaches exist, present with tradeoffs — do not pick silently.
+### Branches
+| ID | Kind | Guard | Hành vi | Skip / failure | Rejoin |
+|---|---|---|---|---|---|
+| B01 | user_optional | user yêu cầu interview (`/br interview`) | hỏi tối đa 5 câu (Impact × Uncertainty), một câu một lượt, kèm khuyến nghị + đáp án "điền mặc định bây giờ, tìm hiểu sau" | không yêu cầu → tự điền `(default)` | W03 |
+| B02 | conditional_required | default có rủi ro, biết sẽ phải kiểm lại | `(default, find-out-later → …)` + `unknown-ledger.py --add` lấy `U-NN` | — | W03 |
+| B03 | recovery | có thông tin thật cho một unknown đã ghi | điền giá trị đúng vào SPEC/PLAN + `unknown-ledger.py --resolve …`; default sai đã đẻ code → `/orca-issue` hoặc `/raise-issue` | — | ngoài vòng chính |
+| B04 | capability_optional | chạy trong luồng orchestrated | render `.html` từ `## Render brief` có thể giao CLI rẻ (xem `orca-workflow`) | standalone → Claude render trực tiếp | W06 |
+| B05 | conditional_required | brief đụng UI mà user không nói macrostructure/theme | fill từ `[[design-foundation]]`, ghi tên macrostructure + theme vào `## Assumptions` | — | W03 |
 
----
+### Validation và stopping
+Validator R7 (các nhánh R7-c/f/g/h/n), R18, R20 chặn tất định lúc ghi và commit; self-review 3 mắt lưới là phần review. Vòng sửa spec sơ đồ trần 2. Skill luôn dừng ở W07 — không có đường nào tới code.
 
-## Output Report
+### Examples
+- **Positive:** "thêm nút duyệt nhanh vào màn hình approval" → query wiki ra ADR liên quan, Assumptions ghi màu nút `(default)`, draft `260425-new-approval-button-fe.md` + `260425-new-approval-button-seq.html` có sơ đồ archify mỗi task → self-review sạch → STOP, hiện draft + URL, chờ duyệt.
+- **Boundary/failure:** request "cho khách xem lịch sử thanh toán" mà không rõ ai được đọc dữ liệu → SPEC ghi `[CẦN LÀM RÕ: role nào được xem lịch sử thanh toán của người khác?]` → R7-n chặn cổng duyệt tới khi user trả lời.
+
+### Delivery — Output Report
 
 After all main skill tasks complete, write a propose draft to the wiki.
 
-### Steps
+#### Steps
 
 **1. Build the filename:**
 - Format: `DDMMYY-<ten>.md`
@@ -127,6 +183,14 @@ After all main skill tasks complete, write a propose draft to the wiki.
 **2. Write** `llmwiki/wiki/sources/draft/DDMMYY-<ten>.md`:
 
 ```
+---
+type: draft
+title: "DDMMYY-<ten>"
+status: proposed
+tags: [<skill-name>, output-report]
+timestamp: YYYY-MM-DD
+---
+
 # DDMMYY-<ten>
 **Type:** draft
 **Status:** proposed

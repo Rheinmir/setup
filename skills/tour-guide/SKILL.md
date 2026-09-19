@@ -9,19 +9,64 @@ description: >
   tour", "product tour", "walkthrough", "tour kiểu bonbon", hoặc invoke /tour-guide. Hợp với
   React/Next.js + Tailwind. Mỗi route tự định nghĩa danh sách điểm dừng (spots); phần tử được
   đánh dấu bằng thuộc tính data-tour ổn định.
+metadata:
+  design-standard: "solid-what-how/1"
+  contract-version: "1.0.0"
 ---
 
 # tour-guide — In-app spotlight tour (no library)
 
 Pattern đã chạy thật trong bonbon DMS. Một component duy nhất + quy ước `data-tour` + mảng `spots` mỗi route.
 
-## Cách hoạt động
+## WHAT
+
+### Purpose và context
+- **Purpose:** thêm một in-app product tour (spotlight onboarding overlay) tự viết, 0 thư viện: lớp tối + khoét spotlight quanh từng phần tử theo CSS selector, tooltip nhãn, pill "tap để đóng" ở khoảng trống lớn nhất, responsive mobile/desktop.
+- **Trigger (when to use):** user muốn "thêm tour guide", "onboarding tour", "hướng dẫn trong app", "spotlight tour", "product tour", "walkthrough", "tour kiểu bonbon", hoặc invoke `/tour-guide`. Hợp với React/Next.js + Tailwind.
+- **Non-goals:** không dùng thư viện tour (joyride/intro.js/driver.js); không phải tour nhiều bước next/prev — một overlay hiện mọi điểm dừng của route, click đâu cũng đóng.
+
+### Mental model
 1. Đánh dấu phần tử cần highlight bằng `data-tour="..."` (ổn định hơn class).
 2. Một state `tourActive` + nút trigger (vd tap logo) bật/tắt.
 3. Mỗi route khai báo `spots: TourSpot[]` (selector + label) truyền vào `<TourGuide>`.
 4. Component đo DOM, vẽ SVG dim + spotlight cutout + tooltip, click đâu cũng đóng.
 
-## Bước 1 — Component (copy nguyên file)
+### Input và output contract
+| | Field | Required? | Ý nghĩa |
+|---|---|---|---|
+| In | app React/Next.js (+ Tailwind) | có | nơi đặt component |
+| In | danh sách điểm dừng mỗi route (`selector` + `label`, tuỳ `labelSide`/`spotlightOnly`/`tooltipOnly`) | có | mảng `spots: TourSpot[]` |
+| In | 6 token màu brand + `dismissText` | không | mặc định trong `TOUR_THEME` / prop |
+| Out | `components/ui/tour-guide.tsx` (hoặc nơi tương đương) | có | copy nguyên file, 0 dependency ngoài React |
+| Out | thuộc tính `data-tour` trên phần tử + state `tourActive` + nút trigger + `<TourGuide>` mỗi route | có | tour bật/tắt được |
+
+### Rules và capabilities
+Bản gốc không có mục Rules riêng — các luật dưới gom từ "Cách hoạt động", Bước 1–2 và Gotchas (giữ ý nguyên văn):
+- RULE-01 (MUST): Không thư viện tour — copy nguyên file component, 0 dependency ngoài React; chỉ chỉnh 6 token màu trong `TOUR_THEME` và `dismissText` qua prop.
+- RULE-02 (MUST): Dùng `data-tour` thay vì class — class hay đổi do refactor/Tailwind; `data-tour` bền.
+- RULE-03 (MUST): **Lock scroll:** set `document.body.style.overflow='hidden'` khi active, nhớ khôi phục khi đóng (đã handle trong cleanup).
+- RULE-04 (MUST): **Click-to-close:** toàn overlay `onClick={onClose}`; tooltip/hint là `pointer-events-none` nên không chặn click đóng.
+- RULE-05 (SHOULD): **Đo trễ 300ms:** chờ layout/animation ổn định trước khi đo. Nếu list load async, mở tour sau khi data có (hoặc gọi remeasure).
+- Capabilities: sửa code frontend của app (thêm component, thuộc tính, state); đo DOM runtime.
+
+### Failure boundaries
+- Selector không khớp / phần tử khuất hoặc off-screen → spot tự bị bỏ qua (không lỗi) — nếu mọi spot bị bỏ thì tour trống: **failed**, kiểm lại `data-tour` hoặc thời điểm mở tour.
+- App có lớp z-index cao hơn `z-[500]` → overlay bị che: nâng z-index.
+- App không phải React → **clarify**: component là TSX/React, cần port.
+
+## HOW
+
+### Main workflow
+| Step | Type | Inputs | Action | Outputs/exit | Failure/next |
+|---|---|---|---|---|---|
+| W01 | effect | app | Bước 1: tạo `components/ui/tour-guide.tsx` (copy nguyên file), chỉnh `TOUR_THEME` | component | — |
+| W02 | effect | phần tử cần highlight | Bước 2: thêm `data-tour="..."` | selector ổn định | — |
+| W03 | effect | route | Bước 3: state `tourActive` + nút trigger + mảng `SPOTS` + `<TourGuide>` | tour chạy trên route | layout 2 dạng → B01 |
+| W04 | judgment | trang chạy | Mở tour, kiểm spotlight/tooltip/pill đúng chỗ trên mobile + desktop, click đâu cũng đóng, scroll khôi phục | tour đạt | spot mất → kiểm Gotchas |
+
+Chi tiết từng bước (nguồn chân lý cho W01–W04):
+
+#### Bước 1 — Component (copy nguyên file)
 
 Tạo `components/ui/tour-guide.tsx` (hoặc nơi tương đương). 0 dependency ngoài React.
 Chỉnh 6 token màu trong `TOUR_THEME` cho khớp brand; `dismissText` đổi qua prop.
@@ -190,7 +235,7 @@ export function TourGuide({
 }
 ```
 
-## Bước 2 — Đánh dấu phần tử bằng `data-tour`
+#### Bước 2 — Đánh dấu phần tử bằng `data-tour`
 
 Trên các phần tử muốn highlight, thêm attribute ổn định:
 ```tsx
@@ -200,7 +245,7 @@ Trên các phần tử muốn highlight, thêm attribute ổn định:
 ```
 > Dùng `data-tour` thay vì class — class hay đổi do refactor/Tailwind; `data-tour` bền.
 
-## Bước 3 — Wire vào route (state + trigger + spots)
+#### Bước 3 — Wire vào route (state + trigger + spots)
 
 ```tsx
 import { TourGuide, type TourSpot } from "@/components/ui/tour-guide";
@@ -220,7 +265,21 @@ const SPOTS = useMemo<TourSpot[]>(() => [
 <TourGuide active={tourActive} onClose={() => setTourActive(false)} spots={SPOTS} dismissText="Nhấn bất kỳ đâu để đóng" />
 ```
 
-## TourSpot — tham chiếu
+### Branches
+| ID | Kind | Guard | Hành vi | Skip / failure | Rejoin |
+|---|---|---|---|---|---|
+| B01 | conditional_required | layout mobile và desktop khác nhau | khai 2 mảng spots (selector `data-tour='desktop-*'` riêng), chọn theo `window.innerWidth >= 768` (hoặc `useMediaQuery`) | trộn 1 mảng vẫn chạy vì `measure()` bỏ phần tử ẩn | W04 |
+| B02 | conditional_required | list load async | mở tour sau khi data có (hoặc gọi remeasure) | — | W04 |
+| B03 | user_optional | phần tử quá to / chỉ cần một kiểu | `tooltipOnly` (không khoét) hoặc `spotlightOnly` + `label: ""` (không tooltip) | — | W04 |
+
+### Validation và stopping
+Kiểm bằng mắt trên trang chạy thật ở cả hai bề rộng (< 768 và ≥ 768): mỗi spot có cutout/tooltip đúng phần tử, pill nằm ở khoảng trống, click bất kỳ đâu đóng, `body.style.overflow` khôi phục sau khi đóng. Dừng khi mọi route đã khai spots hiện đúng.
+
+### Examples
+- **Positive:** màn danh sách đơn có logo, ô tìm kiếm, dòng đơn, nút duyệt → gắn `data-tour` 4 chỗ, `SPOTS` như Bước 3 → tap logo mở tour: 4 spotlight kèm nhãn, pill "Nhấn bất kỳ đâu để đóng" ở vùng trống, tap đóng và trang cuộn lại được.
+- **Boundary/failure:** mở tour ngay khi list còn đang fetch → spot `[data-tour='list-item']` chưa có trong DOM nên bị `measure()` bỏ, tour thiếu điểm → mở tour sau khi data về (B02).
+
+### Reference — TourSpot
 | field | ý nghĩa |
 |---|---|
 | `selector` | CSS selector (ưu tiên `[data-tour='x']`); element không tồn tại/khuất → tự bỏ qua |
@@ -229,10 +288,10 @@ const SPOTS = useMemo<TourSpot[]>(() => [
 | `spotlightOnly` | khoét spotlight, KHÔNG tooltip |
 | `tooltipOnly` | tooltip nổi, KHÔNG khoét (cho phần tử quá to / desktop) |
 
-## Mobile vs Desktop
+### Reference — Mobile vs Desktop
 Vì layout 2 dạng khác nhau, khai báo 2 mảng spots (selector `data-tour='desktop-*'` riêng) rồi chọn theo `window.innerWidth >= 768` (hoặc `useMediaQuery`). Phần tử desktop ẩn trên mobile sẽ tự bị `measure()` bỏ qua, nên trộn chung 1 mảng cũng chạy — nhưng tách rõ ràng dễ chỉnh nhãn hơn.
 
-## Gotchas
+### Reference — Gotchas
 - **z-index:** overlay `z-[500]`, tooltip/hint `z-[501]`. Nâng nếu app có thứ cao hơn.
 - **Đo trễ 300ms:** chờ layout/animation ổn định trước khi đo. Nếu list load async, mở tour sau khi data có (hoặc gọi remeasure).
 - **Lock scroll:** set `document.body.style.overflow='hidden'` khi active, nhớ khôi phục khi đóng (đã handle trong cleanup).

@@ -5,6 +5,9 @@ requires:
   - name: docs-site-macos
     source: rheinmir/setup@orca
     install: "npx skills add rheinmir/setup@orca --skill docs-site-macos --global -y"
+metadata:
+  design-standard: "solid-what-how/1"
+  contract-version: "1.0.0"
 ---
 
 # orca-onboard
@@ -13,17 +16,86 @@ requires:
 
 Onboard codebase via distilled understand-anything pipeline (graph + git history, no plugin), then domain enrichment + wiki + HTML.
 
-## Triggers
+## WHAT
+
+### Purpose và context
+- **Purpose:** onboard một codebase bất kỳ thành tri thức dùng được: knowledge graph (scan + git history + batch analyze + layers/tour, không plugin), domain graph (domain → flow → step), wiki `llmwiki/wiki/` và trang HTML docs — phần reasoning ở Claude main thread, phần cơ học dispatch sang opencode + DeepSeek Flash v4.
+- **Trigger (when to use):** "onboard codebase", "analyze codebase", "knowledge graph", "guided tour", `/orca-onboard`.
+- **Non-goals:** không cài plugin Understand-Anything; không dispatch reasoning (domain, architecture, layers/tour) ra opencode/agy; không tự viết HTML thô (luôn qua skeleton v2); không bịa file path hay file:line; không nhân bản cú pháp dispatch (nguồn chân lý là `orca-dispatch-reference`).
+
+### Mental model
+`Phase 0 pre-flight/bootstrap → Phase 0.5 GATE (draft + dispatch board → user duyệt) → Phase 1 graph (scan → git history → analyze → merge → layers+tour → validate → [code-graph index]) → Phase 2 domain graph → Phase 3 wiki → Phase 4 HTML (JSON → skeleton v2 → wiki-graph vector) → output report`. Draft `llmwiki/wiki/draft/orca/<DATE>-onboard-<slug>.md` là sổ trạng thái: mỗi phase `pending → in-progress → done`, resume đọc lại từ đó.
+
+### Input và output contract
+| | Field | Required? | Ý nghĩa |
+|---|---|---|---|
+| In | `<path>` | không (mặc định `.`) | thư mục dự án đích; `@<draft>` = resume từ draft có sẵn |
+| In | `--full` | không | xoá `.overstack/graph/` rồi rebuild |
+| In | `--update` | không | chỉ phân tích lại file đổi từ lần chạy trước (cần graph + `meta.json` có sẵn) |
+| In | `--language <lang>` | không | ngôn ngữ output (vi, en, zh, ...) |
+| In | `--skip-wiki` | không | bỏ sinh wiki |
+| In | duyệt của user ở Phase 0.5 | có | sau khi dispatch board + nội dung propose đã in ra terminal |
+| In | `opencode`, skill `docs-site-macos` | có | thiếu → Phase 0 exit 1 kèm lệnh cài |
+| Out | `.overstack/graph/knowledge-graph.json`, `ONBOARDING.md`, `meta.json` | có | Phase 1 (gate cuối Phase 1 kiểm 2 file đầu) |
+| Out | `.overstack/onboard/intermediate/domain-graph.json` | có | Phase 2 |
+| Out | `llmwiki/wiki/` (index, concepts, entities) | có trừ `--skip-wiki` | Phase 3; mọi trang có `## Origin` + dòng index |
+| Out | `llmwiki/html/onboarding-<slug>.html` + `llmwiki/html/wiki-graph.html` | có (vector fail-open) | Phase 4 |
+| Out | draft trạng thái + dòng index/log | có | cập nhật sau MỖI phase |
+
+"Xong" = 4 phase `done` trong draft, HTML tồn tại, output report ghi.
+
+### Rules và capabilities
+- RULE-01 (MUST): **DO NOT run Phase 0.5 or Phases 1–4 until Phase 0 completes.** Thứ tự cứng không đảo: Phase 0 (verify `llmwiki/` tồn tại) → Phase 0.5 (tạo draft TRƯỚC rồi mới hỏi user) → Phases 1–4.
+- RULE-02 (MUST): `llmwiki/` thiếu → bootstrap ở Phase 0, NEVER defer; bootstrap fail → STOP hoàn toàn, báo lỗi.
+- RULE-03 (MUST): Sau MỖI phase → cập nhật status draft NGAY, không dồn tới cuối.
+- RULE-04 (MUST): Dispatch board + nội dung propose PHẢI in qua bash (thấy trong terminal) trước câu hỏi gate; dòng Agent Task Assignment trong draft phải khớp board.
+- RULE-05 (MUST): **Reasoning tasks MUST stay in Claude main thread. NO reasoning to opencode/agy.** opencode + DeepSeek: template fill, wiki render, HTML only.
+- RULE-06 (MUST): **READ BEFORE ACT** — each phase reads all inputs in `READ FIRST` block before any action. Never ask user about something already in a file.
+- RULE-07 (MUST): **NO full `knowledge-graph.json` reads after Phase 1** — use `ONBOARDING.md` instead.
+- RULE-08 (MUST): Real file paths only — never fabricate; domain graph only references real file:line, verify against code.
+- RULE-09 (MUST): Wiki: wikilink format `[[page-name]]`; tour: 5-15 steps, start with project overview.
+- RULE-10 (MUST): Phase 4 KHÔNG bao giờ tự viết HTML thô — luôn qua skeleton v2.
+- RULE-11 (MUST): code-graph chỉ index khi `dep-health.py --json` báo `status == "ok"` — khai báo trong config ≠ server sống.
+- Capabilities: đọc repo đích + lịch sử VCS; chạy script cục bộ (bash/python); dispatch LLM rẻ cho việc cơ học; ghi `.overstack/`, `llmwiki/`; mạng để bootstrap/cài phụ thuộc.
+
+### Failure boundaries
+- Thiếu dependency (opencode, docs-site-macos) hoặc project root không tồn tại → **blocked** (exit 1 + lệnh cài).
+- `--update` mà chưa có graph/`meta.json` → **blocked**, bảo chạy không `--update` trước.
+- Bootstrap fail → **failed**, STOP hoàn toàn.
+- User không duyệt ở gate → **cancelled**, chỉ còn draft.
+- Batch analyze fail 2 lần → bỏ batch, ghi PHASE_WARNINGS → **partial** graph (partial graph > no graph).
+- Phase 1 gate thiếu `knowledge-graph.json`/`ONBOARDING.md` → **failed** Phase 1.
+- Không có entry point HTTP/CLI/event → domains rỗng (succeeded hẹp).
+- Vẽ `wiki-graph.html` lỗi → fail-open, không chặn onboard.
+
+## HOW
+
+### Main workflow
+| Step | Type | Inputs | Action | Outputs/exit | Failure/next |
+|---|---|---|---|---|---|
+| W01 | deterministic | args, máy | **Phase 0** — dependency check, resume/root, update mode, bootstrap llmwiki+harness, tạo dirs, đếm file, probe agent | biến môi trường + `files.txt` | thiếu dep/root → exit 1 |
+| W02 | effect | kết quả W01 | **Phase 0.5 Gate** — tạo draft TRƯỚC, index+log, in dispatch board + propose, hỏi user | draft `pending`, duyệt | không duyệt → cancelled |
+| W03 | deterministic | repo | **Phase 1** 1.1 SCAN + 1.2 GIT HISTORY (bash) + 1.3 ANALYZE (static parse; opencode chỉ enrich) + 1.4 MERGE (python) | `assembled-graph.json` | batch fail → retry 1 → bỏ, PHASE_WARNINGS |
+| W04 | judgment | assembled graph, dir tree, README | 1.5 LAYERS + TOUR (Claude main thread) | layers + tour 5-15 bước | — |
+| W05 | deterministic | graph | 1.6 VALIDATE + SAVE + gate cuối Phase 1 | `knowledge-graph.json`, `meta.json`, `ONBOARDING.md` | thiếu file → exit 1 |
+| W06 | judgment | `ONBOARDING.md`, layers | **Phase 2** domain enrichment (Claude) | `domain-graph.json` | không entry point → domains rỗng |
+| W07 | effect | ONBOARDING + domain graph | **Phase 3** wiki (opencode, template fill) | `llmwiki/wiki/` | opencode lỗi → Claude fallback |
+| W08 | effect | ONBOARDING + domain graph + skeleton | **Phase 4** STEP A JSON → STEP B fill skeleton (python) → STEP C vector | HTML + `wiki-graph.html` | skeleton thiếu → exit 1; vector lỗi → fail-open |
+| W09 | effect | kết quả | Output Report + cập nhật status + sync push | draft cuối, index/log | — |
+
+Chi tiết từng bước (nguồn chân lý cho W01–W09):
+
+#### Triggers
 - "onboard codebase", "analyze codebase", "knowledge graph", "guided tour"
 
-## Options
+#### Options
 - `--full` — Delete `.overstack/graph/` and rebuild
 - `--update` — Incremental: re-analyze only changed files since last run
 - `--language <lang>` — Output language (vi, en, zh, ...)
 - `--skip-wiki` — Skip wiki generation
 - `<path>` — Target directory (default: `.`)
 
-## Progress
+#### Progress
 ```
 [Phase 1/4] Graph generation (scan + git history + batch analyze + layers/tour)...
 [Phase 2/4] Domain enrichment (Claude)...
@@ -33,7 +105,7 @@ Onboard codebase via distilled understand-anything pipeline (graph + git history
 
 ---
 
-## ⚠️ HARD RULES
+#### ⚠️ HARD RULES
 
 ⛔ **DO NOT run Phase 0.5 or Phases 1–4 until Phase 0 completes.**
 
@@ -48,7 +120,7 @@ Onboard codebase via distilled understand-anything pipeline (graph + git history
 
 ---
 
-## Dispatch Rules
+#### Dispatch Rules
 
 ```
 TASK TYPE          → AGENT               → MODEL
@@ -66,7 +138,7 @@ Wiki / HTML render → opencode            → opencode/deepseek-v4-flash-free
 
 ---
 
-## Agent Binaries
+#### Agent Binaries
 
 | Agent | Binary | Default model | Check |
 |-------|--------|--------------|-------|
@@ -86,7 +158,7 @@ echo "$SPEC" | opencode --model opencode/deepseek-v4-flash-free
 
 ---
 
-## Status Update Helper
+#### Status Update Helper
 
 ```bash
 update_phase_status() {
@@ -103,7 +175,7 @@ update_phase_status() {
 
 ---
 
-## Phase 0 — Pre-flight & Setup
+#### Phase 0 — Pre-flight & Setup
 
 ```bash
 # --- 1. Dependency check (agy optional — Phase 1 dùng distilled pipeline, không cần agy) ---
@@ -222,7 +294,7 @@ fi
 
 ---
 
-## Phase 0.5 — Gate
+#### Phase 0.5 — Gate
 
 **Required: create draft file FIRST, then ask user. Never reverse this order.**
 
@@ -349,7 +421,7 @@ Ask for confirmation before continuing.
 
 ---
 
-## Phase 1 — Graph Generation (distilled understand-anything — KHÔNG cần plugin)
+#### Phase 1 — Graph Generation (distilled understand-anything — KHÔNG cần plugin)
 
 **Pipeline:** scan (bash) → git history (bash) → batch analyze (opencode + DeepSeek) → merge (python) → layers + tour (Claude main thread) → validate + save (python + Claude). Phương pháp distill từ Understand-Anything; mọi prompt/schema nằm ngay dưới đây — không dispatch `/understand`, không cài plugin.
 
@@ -369,7 +441,7 @@ Ask for confirmation before continuing.
 | Yes | `--update` | re-analyze only `git diff <meta.gitCommitHash>..HEAD --name-only` files, merge into existing graph |
 | Yes | `--full` | delete `.overstack/graph/`, full pipeline |
 
-### 1.1 SCAN (bash — no LLM)
+##### 1.1 SCAN (bash — no LLM)
 
 ```bash
 mkdir -p "$PROJECT_ROOT/.overstack/graph" "$PROJECT_ROOT/.overstack/onboard/tmp"
@@ -379,7 +451,7 @@ git -C "$PROJECT_ROOT" ls-files > "$PROJECT_ROOT/.overstack/onboard/tmp/files.tx
 # Detect entry point: src/index.ts, main.py, app.py, main.go, src/main.rs, cmd/*/main.go, manage.py, __main__.py...
 ```
 
-### 1.2 GIT HISTORY (bash — no LLM)
+##### 1.2 GIT HISTORY (bash — no LLM)
 
 Tín hiệu lịch sử git làm giàu graph — thứ phân tích tĩnh không có:
 
@@ -398,7 +470,7 @@ git -C "$PROJECT_ROOT" log --since="90 days ago" --pretty=format:'%s' | head -50
 
 Áp dụng: top churn → tag node `hot`; trong recent.txt → tag `recent`; cặp co-change ≥3 → edge `related` (weight 0.5); tour + ONBOARDING ưu tiên file `hot`; recent-subjects cho mục "What's being worked on".
 
-### 1.3 ANALYZE — PRIMARY: static parse (0 token) · opencode chỉ để enrich
+##### 1.3 ANALYZE — PRIMARY: static parse (0 token) · opencode chỉ để enrich
 
 **Mặc định dùng python static parse** (bài học run 120626-zca-bridge — vừa rẻ vừa deterministic):
 regex `import/export ... from` + `require()` → resolve relative path → edges `imports`;
@@ -420,17 +492,17 @@ opencode run "$BATCH_SPEC" --model opencode/deepseek-v4-flash-free < /dev/null
 
 Tối đa 5 batch song song. Batch fail → retry 1 lần → fail nữa thì bỏ qua, ghi PHASE_WARNINGS (partial graph > no graph). opencode unavailable → Claude main thread tự analyze batch.
 
-### 1.4 MERGE + NORMALIZE (python inline — no LLM)
+##### 1.4 MERGE + NORMALIZE (python inline — no LLM)
 
 Claude viết script `.overstack/onboard/tmp/merge.py` (logic distill từ merge-batch-graphs.py của Understand-Anything): đọc mọi `batch-*.json` → gộp nodes/edges → chuẩn hoá ID prefix (bỏ double-prefix, thêm prefix thiếu) → dedupe node theo id (giữ bản cuối), edge theo (source,target,type) → drop edge dangling (log stderr) → thêm edges `related` từ co-change (1.2) → ghi `assembled-graph.json`.
 
-### 1.5 LAYERS + TOUR (Claude main thread — REASONING, không dispatch)
+##### 1.5 LAYERS + TOUR (Claude main thread — REASONING, không dispatch)
 
 Từ assembled-graph + dir tree + README:
 - **Layers:** `[{id: "layer:<kebab>", name, description, nodeIds[]}]` — mỗi file-level node thuộc ĐÚNG MỘT layer; cấu trúc thư mục là bằng chứng mạnh nhất.
 - **Tour:** 5-15 bước `[{order, title, description, nodeIds[]}]` — bước 1 luôn là project overview (README), theo entry point, ưu tiên file `hot`; kể cùng câu chuyện README kể nhưng qua code thật.
 
-### 1.6 VALIDATE + SAVE (python + Claude)
+##### 1.6 VALIDATE + SAVE (python + Claude)
 
 Validate deterministic (script): không duplicate node ID, không dangling edge, mọi file node trong đúng 1 layer, tour nodeIds tồn tại, đếm orphan. Sửa tự động được thì sửa (drop dangling, fill default), còn lại ghi warning — partial graph vẫn save.
 
@@ -441,7 +513,7 @@ Ghi:
 
 Cuối: xoá `batch-*.json`, báo summary (files analyzed, nodes/edges by type, layers, tour steps, warnings).
 
-### Schema (distill từ Understand-Anything)
+##### Schema (distill từ Understand-Anything)
 
 - **Node types:** `file, function, class, module, concept, config, document, service, table, endpoint, pipeline, schema, resource` — ID: `<type>:<relpath>[:<name>]`
 - **Edge types chính:** imports, exports, contains, inherits, implements, calls, reads_from, writes_to, depends_on, tested_by, configures, related, documents, deploys, triggers, routes, defines_schema
@@ -457,7 +529,7 @@ echo "✅ Phase 1 done"
 # update_phase_status "Phase 1 —" "done"
 ```
 
-### 1.7 CODE-GRAPH MCP INDEX (optional — chỉ khi server `code-graph` có trong mcpServers)
+##### 1.7 CODE-GRAPH MCP INDEX (optional — chỉ khi server `code-graph` có trong mcpServers)
 
 Tầng truy vấn quan hệ code **chính xác theo line** bổ sung cho graph distill ở trên: `search_symbols`, `get_callers/callees` cho impact-check tức thì. Server `code-graph` (`~/.claude.json → mcpServers`) ghi 1 db SQLite mỗi repo tại `<repo>/.graph-agent/index.db`.
 
@@ -480,7 +552,7 @@ echo "[1.7] code-graph: gọi reindex_repo cho mỗi repo code có manifest"
 
 ---
 
-## Phase 2 — Domain Enrichment
+#### Phase 2 — Domain Enrichment
 
 **Agent:** Claude main thread (no dispatch) | **Model:** Sonnet
 
@@ -541,7 +613,7 @@ fi
 
 ---
 
-## Phase 3 — Wiki Generation
+#### Phase 3 — Wiki Generation
 
 **Agent:** opencode | **Model:** `opencode/deepseek-v4-flash-free`
 
@@ -596,7 +668,7 @@ fi
 
 ---
 
-## Phase 4 — HTML Docs (skeleton v2 + JSON island)
+#### Phase 4 — HTML Docs (skeleton v2 + JSON island)
 
 **Agent:** assemble JSON = opencode (mechanical) / Claude fallback · **fill skeleton = python (no LLM)**
 
@@ -694,7 +766,7 @@ echo "→ http://localhost:8765/llmwiki/html/onboarding-${PROJECT_SLUG}.html"
 
 ---
 
-## Rules
+#### Rules
 
 - **READ BEFORE ACT** — each phase reads all inputs in `READ FIRST` block before any action. Never ask user about something already in a file.
 - **NO full `knowledge-graph.json` reads after Phase 1** — use `ONBOARDING.md` instead
@@ -704,7 +776,7 @@ echo "→ http://localhost:8765/llmwiki/html/onboarding-${PROJECT_SLUG}.html"
 - Tour: 5-15 steps, start with project overview
 - Reasoning tasks (domain, architecture): Claude main thread only
 
-## Errors
+#### Errors
 
 - Phase 1 batch fail (opencode) → retry 1 lần, fail nữa → Claude main thread tự analyze batch đó; ghi PHASE_WARNINGS
 - Phase 1 fail (no graph) → kiểm tra batch-*.json có tồn tại không; merge script lỗi → đọc stderr, sửa, chạy lại
@@ -714,7 +786,7 @@ echo "→ http://localhost:8765/llmwiki/html/onboarding-${PROJECT_SLUG}.html"
 
 ---
 
-## Output Report
+#### Output Report
 
 After all phases complete, write propose draft to wiki.
 
@@ -786,7 +858,7 @@ timestamp: YYYY-MM-DD
 
 ---
 
-## Output Report
+#### Output Report
 
 After all phases complete, write propose draft to wiki.
 
@@ -851,3 +923,23 @@ proposed: YYYY-MM-DD
   ```
 
 > Skip Output Report only if skill produced zero artefacts and zero decisions.
+
+### Branches
+| ID | Kind | Guard | Hành vi | Skip / failure | Rejoin |
+|---|---|---|---|---|---|
+| B01 | user_optional | `@<draft>` (RESUME_MODE) | đọc status từng phase từ draft, phase `done` thì skip | draft thiếu `Project root:` → root rỗng → exit 1 | phase đầu tiên chưa `done` |
+| B02 | user_optional | `--update` + graph có sẵn | chỉ re-analyze file đổi, merge vào graph/domain/wiki cũ | chưa có graph/`meta.json` → exit 1; `changedFiles` rỗng → full rebuild | W03 |
+| B03 | user_optional | `--full` | xoá `.overstack/graph/`, full pipeline | — | W03 |
+| B04 | conditional_required | graph có sẵn, không cờ | skip Phase 1, dùng graph cũ | — | W06 |
+| B05 | capability_optional | code-graph `dep-health.py --json` báo `status == "ok"` | 1.7 CODE-GRAPH MCP INDEX: `reindex_repo` mỗi repo code, verify `get_stats()` >0, ghi `concepts/code-graph-nav.md` | `degraded`/`absent` → skip | W06 |
+| B06 | recovery | opencode unavailable/treo ở 1.3, Phase 3, Phase 4 STEP A | Claude main thread tự làm (analyze batch / wiki / assemble JSON) — Phase 4 vẫn qua skeleton | Phase 4 fail hẳn → invoke `docs-site-macos` trực tiếp | bước kế tiếp của phase đó |
+| B07 | user_optional | `--skip-wiki` | bỏ Phase 3 | — | W08 |
+| B08 | conditional_required | repo mono (`N_SVC ≤ 1`) | `modules:[]`, `docker:null` → skeleton tự ẩn tab Modules/Docker | multi-service → có tab Docker | W08 |
+
+### Validation và stopping
+Kiểm tất định bằng script: gate cuối Phase 1 (2 file bắt buộc), validate graph 1.6 (không duplicate ID, không dangling edge, mỗi file node đúng 1 layer, tour nodeIds tồn tại), assert thay hết `{{TITLE}}`/`{{ONBOARD_JSON}}` ở STEP B, `ls "$OUT"` ở cuối Phase 4. Cần review: layers/tour, domain graph (đối chiếu file:line thật), chất lượng wiki. Dừng khi 4 phase `done` trong draft; retry batch tối đa 1 lần.
+
+### Examples
+- **Positive:** `/orca-onboard ~/code/zca-bridge` trên repo 180 file, có opencode → draft + dispatch board in terminal → user "ok" → graph 180 node + 7 layer + tour 9 bước → `domain-graph.json` 3 domain → wiki concepts/entities → `llmwiki/html/onboarding-zca-bridge.html` + `wiki-graph.html`; draft 4 phase `done`.
+- **Boundary/failure:** `/orca-onboard --update` trên repo chưa từng onboard → Phase 0 in "❌ --update requires existing graph. Run without --update first." và exit 1, không tạo draft.
+- **Boundary:** opencode treo ở Phase 4 STEP A → Claude tự viết `onboard.json` theo schema skeleton rồi chạy STEP B; không viết HTML thô.

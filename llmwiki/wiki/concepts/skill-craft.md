@@ -78,6 +78,7 @@ Săn cơ hội refactor để dùng từ dẫn. Một bộ ba trải ra ở ba c
 - **Cắt context load** là đòn bẩy tác động *mọi phiên, mãi mãi* — đo được trước/sau.
 - **`/new-skill`** phải trỏ tới concept này bằng context pointer, để mỗi skill mới sinh ra đã theo chuẩn.
 - **`/lint`** biến các mục trên thành **số đo tất định**: đếm token description, tìm skill thiếu completion criterion, đo tỉ lệ negation, phát hiện sprawl và duplication. Một dữ kiện ("skill này 340 dòng, 0 completion criterion, 61% câu là câu cấm") đổi được hành vi; một lời khuyên ("hãy viết gọn") thì không.
+- **Khung bắt buộc** của mỗi skill native (hai lớp WHAT/HOW, contract, ví dụ positive + boundary) nằm ở [[solid-what-how]]; skill-craft là bộ từ vựng để viết từng lớp cho gọn và đoán được.
 
 ## Origin
 - Chưng cất từ `mattpocock/skills` — `skills/productivity/writing-great-skills/SKILL.md` + `GLOSSARY.md` (clone tại `scratchpad/mattpocock-skills/`, 2026-07-15).

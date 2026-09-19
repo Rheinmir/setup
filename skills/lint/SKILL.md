@@ -1,14 +1,65 @@
 ---
 name: lint
 description: Periodic wiki health check — orphans, missing links, contradictions, stale (wiki→wiki VÀ code→wiki drift), index gaps. Bước 0 là cổng no-op tất định (wiki-sync, 0 token) — code không đổi kể từ neo thì kết luận "wiki current" và dừng sớm hợp lệ.
+metadata:
+  design-standard: "solid-what-how/1"
+  contract-version: "1.0.0"
 ---
 
 # Skill: lint
 
-## When to invoke
-After every 10 ingests, or when wiki stale/inconsistent, hoặc session_start báo `[wiki-sync] code đã đổi N commit`.
+## WHAT
 
-## Steps
+### Purpose và context
+- **Purpose:** Periodic wiki health check — orphans, missing links, contradictions, stale (wiki→wiki VÀ code→wiki drift), index gaps; mở đầu bằng cổng no-op tất định (wiki-sync, 0 token).
+- **Trigger (when to invoke):** After every 10 ingests, or when wiki stale/inconsistent, hoặc session_start báo `[wiki-sync] code đã đổi N commit`.
+- **Non-goals:** không chọn phe khi hai trang mâu thuẫn (flag cho người); không tự đoán trigger nâng cấp cho marker `shortcut:`; không tự dời draft (đó là `/tidy`, có gate người duyệt); không sửa lấy có khi wiki đã current.
+
+### Mental model
+`wiki-sync --check (0 current · 3 drift · 2 chưa neo) → [hồ sơ cờ ⚑: events → scratch-log → provenance-log] → [docs-impact-plan + phân loại drift 4 nhánh] → quét nội-wiki (orphan · link · contradiction · stale · index · empty · Origin) → pulse báo-cáo-không-chặn (shortcut · unknown · skill-health · usage · tidy · claim-receipts · decision-liveness) → log → chốt neo`.
+
+### Input và output contract
+| | Field | Required? | Ý nghĩa |
+|---|---|---|---|
+| In | `llmwiki/wiki/` + neo wiki-sync | có | neo mất → exit 2, làm trọn rồi chốt neo |
+| In | `harness/scripts/*` (hoặc bản global `~/.claude/harness/harness/scripts/`) | có | downstream không có harness/ trong repo dùng bản global |
+| In | `fdk/tools/skill-usage.py` | không | chỉ repo framework; downstream bỏ qua bước đó |
+| Out | sửa tại chỗ: missing links, index gaps; trang stale sửa surgical | theo kết quả | truy về một thay-đổi-code cụ thể |
+| Out | danh sách flag (contradiction, orphan, empty, Origin thiếu, pulse) | có | chờ người quyết |
+| Out | dòng `## YYYY-MM-DD — lint` trong `llmwiki/wiki/log.md` + neo mới | có | kể cả khi no-op |
+| Out | draft output report | có (trừ khi 0 artifact) | mục Delivery |
+
+### Rules và capabilities
+- RULE-01 (MUST): Fix automatically: missing links (step 2), index gaps (step 5).
+- RULE-02 (MUST): Flag, not resolve: contradictions, orphans, empty pages — need human decision.
+- RULE-03 (MUST): **Surgical update** (distill openwiki 060726): sửa trang stale = thay đúng câu sai, KHÔNG viết lại trang còn đúng; ưu tiên sửa 1 câu hơn thêm 1 đoạn.
+- RULE-04 (MUST): **Soft diff budget**: <5 file code đổi → sửa tối đa 1–2 trang wiki; thấy cần sửa >3 trang → dừng lại tự vấn vì sao trước khi sửa rộng.
+- RULE-05 (MUST): **Cấm formatting-only edit**: không reformat bảng, không chuẩn hoá dòng trống/wording khi nội dung xung quanh không sai — diff nhiễu là nợ cho reviewer.
+- RULE-06 (MUST): **Canonical home**: mỗi concept một trang chính chủ; trang khác chỉ nhắc ngắn + `[[wikilink]]`, không nhân bản giải thích.
+- RULE-07 (MUST): **No-op hợp lệ**: "wiki đã current, không sửa gì" là một kết quả lint thành công — ghi log rồi dừng, đừng sửa lấy có.
+- Capabilities: đọc wiki + metrics cục bộ; chạy script tất định 0-token; ghi trang wiki (surgical), index, log, neo sync.
+
+### Failure boundaries
+- Exit 0 và mục đích là "wiki có khớp code không" → dừng sớm, **succeeded** (no-op hợp lệ).
+- Trang nghi stale không truy được về thay đổi code nào → KHÔNG đụng.
+- Cần sửa >3 trang cho <5 file code đổi → dừng lại tự vấn trước khi sửa rộng (**clarify**).
+- Contradiction → flag cho người, không tự chọn winner.
+- Hồ sơ why rỗng → ghi "hồ sơ mỏng, cần mở diff" thay vì im.
+
+## HOW
+
+### Main workflow
+| Step | Type | Inputs | Action | Outputs/exit | Failure/next |
+|---|---|---|---|---|---|
+| W01 | deterministic | neo wiki-sync | Bước 0: `wiki-sync.py --check` | exit 0 / 3 / 2 | 0 + mục đích khớp-code → dừng; 3 → B01; 2 → B02 |
+| W02 | deterministic | file code "⇐" | Bước 0b + 8f: hồ sơ cờ ⚑ (events, scratch-log, provenance-log) | `phiên · ts · why` | why rỗng → ghi "hồ sơ mỏng" |
+| W03 | deterministic | wiki | Bước 1–7: orphans, missing links, contradictions, stale, index, empty, Origin | sửa 2 và 5, flag phần còn lại | — |
+| W04 | deterministic | repo | Bước 8–8f: pulse báo cáo không chặn | danh sách flag | script/đường dẫn không có → bỏ qua bước đó |
+| W05 | effect | kết quả | Bước 9: append log | dòng log | — |
+| W06 | effect | wiki đã rà | Bước 10: `wiki-sync.py --mark-synced` | neo mới | nội dung không đổi → không ghi |
+| W07 | effect | kết quả | Output report draft (mục Delivery) | draft + index + log | 0 artifact → skip |
+
+Chi tiết từng bước (nguồn chân lý cho W01–W07):
 
 0. **Code-drift gate (0 token)** — `RUN: python3 harness/scripts/wiki-sync.py --check` (downstream không có harness/ trong repo thì dùng bản global: `python3 ~/.claude/harness/harness/scripts/wiki-sync.py --check --root .`).
 
@@ -60,22 +111,26 @@ After every 10 ingests, or when wiki stale/inconsistent, hoặc session_start b�
 
 10. **Chốt neo** — `RUN: python3 harness/scripts/wiki-sync.py --mark-synced` (hoặc bản global như bước 0). Chỉ ghi khi nội dung wiki thực sự đổi (content-hash); tự xoá cờ `code-drift` đã rà. Vòng phản hồi phải khép: không chốt neo = lần check sau báo drift giả.
 
-## Rules
-- Fix automatically: missing links (step 2), index gaps (step 5).
-- Flag, not resolve: contradictions, orphans, empty pages — need human decision.
-- **Surgical update** (distill openwiki 060726): sửa trang stale = thay đúng câu sai, KHÔNG viết lại trang còn đúng; ưu tiên sửa 1 câu hơn thêm 1 đoạn.
-- **Soft diff budget**: <5 file code đổi → sửa tối đa 1–2 trang wiki; thấy cần sửa >3 trang → dừng lại tự vấn vì sao trước khi sửa rộng.
-- **Cấm formatting-only edit**: không reformat bảng, không chuẩn hoá dòng trống/wording khi nội dung xung quanh không sai — diff nhiễu là nợ cho reviewer.
-- **Canonical home**: mỗi concept một trang chính chủ; trang khác chỉ nhắc ngắn + `[[wikilink]]`, không nhân bản giải thích.
-- **No-op hợp lệ**: "wiki đã current, không sửa gì" là một kết quả lint thành công — ghi log rồi dừng, đừng sửa lấy có.
+### Branches
+| ID | Kind | Guard | Hành vi | Skip / failure | Rejoin |
+|---|---|---|---|---|---|
+| B01 | conditional_required | bước 0 exit 3 (`drift`) | docs-impact-plan + phân loại contradiction / superseding / progression / equivalence trước khi sửa | trang không truy được → không đụng | W03 |
+| B02 | conditional_required | bước 0 exit 2 (chưa có neo / neo mất hiệu lực) | làm trọn lint rồi chốt neo ở bước 10 | — | W03 |
+| B03 | user_optional | bước 0 exit 0 nhưng vẫn muốn quét sức khoẻ nội-wiki | đi tiếp bước 1 | không muốn → dừng "wiki đã current" | W03 |
+| B04 | capability_optional | downstream không có `harness/` hoặc `fdk/tools` trong repo | dùng bản global `~/.claude/harness/...`; không có `fdk/tools` hoặc `harness/mechanisms.yaml` → bỏ qua bước đó | — | W04 |
 
----
+### Validation và stopping
+Exit code wiki-sync quyết điểm vào (tất định); các pulse 8–8f chỉ báo cáo. Sau lint chốt neo để lần check sau không báo drift giả. Dừng sớm hợp lệ khi exit 0.
 
-## Output Report
+### Examples
+- **Positive:** session_start báo `[wiki-sync] code đã đổi 3 commit` → bước 0 exit 3, cờ 1 trang ⇐ `harness/scripts/tidy.py` → hồ sơ why cho thấy đổi ngưỡng draft → phân loại superseding → thêm `invalid_at` + `invalidated_by`, sửa 1 câu → log + `--mark-synced`.
+- **Boundary/failure:** bước 0 exit 0 và user chỉ hỏi "wiki có khớp code không" → dừng, trả lời "wiki đã current", ghi log, không sửa trang nào.
+
+### Delivery — Output Report
 
 After all main skill tasks complete, write a propose draft to the wiki.
 
-### Steps
+#### Steps
 
 **1. Build the filename:**
 - Format: `DDMMYY-<ten>.md`
@@ -85,6 +140,14 @@ After all main skill tasks complete, write a propose draft to the wiki.
 **2. Write** `llmwiki/wiki/sources/draft/DDMMYY-<ten>.md`:
 
 ```
+---
+type: draft
+title: "DDMMYY-<ten>"
+status: proposed
+tags: [<skill-name>, output-report]
+timestamp: YYYY-MM-DD
+---
+
 # DDMMYY-<ten>
 **Type:** draft
 **Status:** proposed

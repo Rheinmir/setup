@@ -13,6 +13,9 @@ description: >-
   Gọi khi user nói "br", "interview", "phỏng vấn yêu cầu", "soạn BR", "slice frame",
   "chạy frame", "qc frame", "audit ui mockup", "trạng thái dây chuyền", "ralph pipeline",
   hoặc invoke /br. User chỉ mô tả PHẠM VI, không cần nhớ lệnh con.
+metadata:
+  design-standard: "solid-what-how/1"
+  contract-version: "1.0.0"
 ---
 
 # Skill: br — dây chuyền sản xuất Ralph (BR-kỹ → frames → loop có harness)
@@ -26,11 +29,68 @@ description: >-
 > phải nhớ nhiều lệnh. Nền tảng: council 028 (thin-slice, người-trong-vòng-lặp) +
 > council 031/032 (loop v1 với 6 điều kiện bắt buộc — winner Taleb mean-rank 1.0).
 
-## When to use
-- User có tài liệu yêu cầu (thô/không cấu trúc) và muốn biến thành sản phẩm có kỷ luật.
-- User nói: interview / phỏng vấn yêu cầu / soạn BR / slice frame / chạy frame / trạng thái dây chuyền / ralph.
+## WHAT
 
-## Đồ nghề tất định (đã build + selftest — KHÔNG viết lại)
+### Purpose và context
+- **Purpose:** biến tài liệu yêu cầu thô của user thành sản phẩm có kỷ luật qua dây chuyền BR-kỹ → frames → loop có harness, mọi frame và clause truy ngược về `br/BR.md`.
+- **Trigger (when to use):**
+  - User có tài liệu yêu cầu (thô/không cấu trúc) và muốn biến thành sản phẩm có kỷ luật.
+  - User nói: interview / phỏng vấn yêu cầu / soạn BR / slice frame / chạy frame / trạng thái dây chuyền / ralph.
+- **Non-goals:** không ghi vào `llmwiki/raw/`; không viết lại đồ nghề tất định đã build (`frame-lint.py`, `loop-runner.py`, `build-line-status.py`…); không tự commit/merge thay người; không sửa UI tay ngoài `/br run`; không hook auto-fire.
+
+### Mental model
+`llmwiki/raw/ → interview (spec-filled S1–S10 + câu hỏi hỏi-bù) → compile (BR.md có clause_id + "Giả định đang gánh" + BR.clauses.json) → slice (frames có depends_on, frame-lint gác) → run (loop-runner 6 phanh, commit per-frame, sổ trace) → qc / find / status (truy ngược lỗi→frame→clause)`. User chỉ mô tả PHẠM VI; hub chọn mode.
+
+### Input và output contract
+| | Field | Required? | Ý nghĩa |
+|---|---|---|---|
+| In | tài liệu thô trong `llmwiki/raw/` | có (mode interview) | chỉ đọc; trống → hỏi user bỏ tài liệu vào |
+| In | `br/interview/NNN-answers.md` đã điền | có (mode compile) | câu trả lời thật của user theo field-id |
+| In | phạm vi user mô tả | có | interview · compile · slice · run · find · qc · status · sync · contract · rail |
+| In | cờ `--proactive` · `--lens-fill` · `--ack-tier` · `--worktree` · `--dry-run` | không | nhánh tuỳ chọn (xem Branches) |
+| Out | `br/spec-filled.md`, `br/interview/NNN-{questions.html,answers.md}` | mode interview | field có `status` + `provenance` |
+| Out | `br/BR.md`, `br/BR.clauses.json`, `br/DESIGN.md` (nếu có UI) | mode compile | check-contract xanh |
+| Out | `br/frames/*.md`, `br/frames/index.md`, `br/prompts.md` | mode slice | frame-lint xanh |
+| Out | commit `frame(<id>)`, `br/frames/<id>.run.json`, `.checkpoints.jsonl` | mode run | tóm tắt một dòng + medic |
+| Out | `br/line-status.{json,html}` + `llmwiki/html/line-status.html` | mode status | tóm tắt 3 dòng |
+
+### Rules và capabilities
+- RULE-01 (MUST): **Người là cổng cuối** — KHÔNG tự commit/merge output frame; dry-run + người duyệt (council 028).
+- RULE-02 (MUST): **Phanh bất khả xâm phạm** — không bao giờ nâng max_iter hay tắt guard "để nó xong". Thừa phanh rẻ hơn thiếu phanh (council 031/032).
+- RULE-03 (MUST): **Prompt-dặn KHÔNG phải lớp an toàn** — scope-jail/test-hash là code tất định (loop-runner guard 5/6), không phải lời dặn trong prompt (council 5/5 ghế).
+- RULE-04 (MUST): **Lens-fill luôn `verified: false`** — không trộn với câu trả lời thật; luôn hiện ở bảng "Giả định đang gánh".
+- RULE-05 (MUST): **Slicer người-trong-vòng-lặp** ở đợt đầu — chưa full-auto (lỗi slicer là lỗi tương quan, blast-radius = toàn BR).
+- RULE-06 (MUST): **File-first, on-demand** — mọi artifact là file travel-được; skill gọi tay, KHÔNG hook auto-fire (ADR-004).
+- RULE-07 (MUST): HTML sinh ra cho người xem phải giải nghĩa thuật ngữ + in full-path (R16).
+- Capabilities: đọc tài liệu thô + codebase; ghi artifact dưới `br/`; chạy tool tất định (lint, loop, monitor) cục bộ; gọi adapter model có tools bó hẹp; tạo issue ở tracker ngoài chỉ sau xác nhận.
+
+### Failure boundaries
+- `llmwiki/raw/` trống → **clarify**: hỏi user bỏ tài liệu vào.
+- `br-fill.py check-contract` ĐỎ → compile **failed**, sửa BR tới khi xanh.
+- `frame-lint.py check` đỏ, hoặc working-tree bẩn → `/br run` **blocked** (từ chối chạy).
+- Frame `tier: compensable/irreversible` chưa có `--ack-tier` → **blocked** (TIER-GATE).
+- Điều kiện KILL (vd diff-jail cắn ≥2 lần / test-hash cắn 1 lần) → **cancelled** cả run, không cứu, không nâng phanh.
+- Frame đỏ → nhánh dưới `status: blocked` (**partial**), nhánh không liên quan vẫn chạy.
+- Kiểm UI không có FILE ẢNH thật + `MANIFEST.json` → coi là **failed** (chưa từng làm).
+
+## HOW
+
+### Main workflow
+| Step | Type | Inputs | Action | Outputs/exit | Failure/next |
+|---|---|---|---|---|---|
+| W01 | judgment | lời user | Chọn mode theo phạm vi user mô tả (hub 1-tên) | mode | mơ hồ → hỏi lại |
+| W02 | judgment | `llmwiki/raw/` + spec-template | Mode 1 interview: bóc raw vào S1–S10, gap-diff, sinh questions.html + answers.md | 2 file NNN | raw trống → clarify; `--proactive` → B01 |
+| W03 | deterministic | — | **STOP** — user mở HTML + điền answers.md | answers đã điền | `--lens-fill` → B02 |
+| W04 | judgment | spec-filled + answers | Mode 2 compile: BR.md + BR.clauses.json (+ DESIGN.md nếu có UI) | BR | — |
+| W05 | deterministic | BR | Gate `br-fill.py check-contract` | xanh | đỏ → sửa BR, lặp W05 |
+| W06 | judgment | BR.md | Mode 3 slice: đề xuất lát cắt, **STOP cho user duyệt TỪNG lát**, ghi frame theo template | frames + index | — |
+| W07 | deterministic | frames | Gác `frame-lint.py check` + `br-prompts.py sync` | lint xanh | đỏ → sửa frame, lặp W07 |
+| W08 | effect | frame | Mode 4 run: `br-run.py run` (tier-gate, lint, tree sạch, loop-runner, commit, run_log_ref, sổ trace) | commit frame + run log | đỏ → chặn nhánh dưới; KILL → vứt run |
+| W09 | deterministic | frames + run log + BR | Mode 5 status: `build-line-status.py build` + tóm tắt 3 dòng | line-status.html | lỗi rơi vào assumed → quay W02 vòng sau |
+
+Chi tiết từng bước (nguồn chân lý cho W01–W09 và mọi mode phụ):
+
+#### Đồ nghề tất định (đã build + selftest — KHÔNG viết lại)
 | Tool | Việc | selftest |
 |------|------|----------|
 | `skills/br/assets/spec-template.md` | bộ specs chuẩn S1–S10 (khung tham chiếu mọi project) | — |
@@ -44,7 +104,7 @@ Runtime artifacts sống ở `br/` tại gốc project (không phải trong skil
 `br/interview/NNN-{questions.html,answers.md}`, `br/BR.md`, `br/BR.clauses.json`, `br/frames/*.md`,
 `br/frames/index.md`, `br/frames/<id>.run.json`, `br/line-status.{json,html}`.
 
-## Mode 1 — `/br interview`
+#### Mode 1 — `/br interview`
 1. Đọc TẤT CẢ file trong `llmwiki/raw/` (chỉ đọc — luật cấm ghi raw/). Nếu trống → hỏi user bỏ tài liệu vào.
 2. Đối chiếu bộ specs chuẩn `skills/br/assets/spec-template.md`: bóc thông tin từ raw map vào từng field S1–S10 → ghi `br/spec-filled.md`. MỖI field ghi `status` (`filled|missing|conflict|assumed`) + `provenance` (`raw:<file>`).
 3. Gap-diff: field `missing`/`conflict` → sinh bộ câu hỏi. **Mỗi field là MỘT spec rõ (rigor /orca-workflow):** câu hỏi nêu field LÀM GÌ + "trả lời thế nào là ĐỦ" (tiêu chí chấp nhận của field), không hỏi mơ hồ. Ghi 2 file (cùng số thứ tự NNN):
@@ -56,14 +116,14 @@ Runtime artifacts sống ở `br/` tại gốc project (không phải trong skil
 4. **STOP** — báo user mở HTML xem + điền answers.md.
 5. Nếu user bật `--lens-fill` (hoặc nói "cho chuyên gia điền mục chưa chắc"): bốc lens bằng `python3 harness/scripts/council.py roster --case product --json`, điền các field `missing` mà user đánh dấu "không chắc" → mỗi field đóng dấu `filled_by: lens:<tên>` + `verified: false`. KHÔNG trộn với câu trả lời thật của user.
 
-## Mode 2 — `/br compile`
+#### Mode 2 — `/br compile`
 1. Đọc `br/spec-filled.md` + `br/interview/*-answers.md` đã điền.
 2. Sinh `br/BR.md`: mỗi điều khoản có `clause_id` (kế thừa field-id, vd `S4.2`) + provenance (`raw|user|lens:<tên>`). Đầu file là bảng **"Giả định đang gánh"** liệt kê mọi clause `lens`/`assumed` (fail-fast: nhìn một phát biết đang cược gì).
    - **Sản phẩm có UI (S7.5)**: chốt một clause NFR (vd `N01 giao-diện`) TRỎ tới `br/DESIGN.md`, KHÔNG chép luật design vào BR. Đồng thời copy `skills/br/assets/design-template.md` → `br/DESIGN.md` và điền §1/§2/§4/§6/§7 cho sản phẩm (giữ nguyên §3/§5 kế thừa). BR = *phải có theme/design*; DESIGN.md = *design trông ra sao*.
 3. Sinh `br/BR.clauses.json`: `{clause_id: {provenance, assumed: bool, fields: ["S4.2", …]}}` — `fields` khai field spec S1–S10 mà clause hiện thực (khoá của checksum hợp đồng); monitor (`/br status`) đọc file này để tô cam clause assumed. Bảng "Giả định đang gánh" **nhóm theo nguồn fill** (`default` / `spec-kit` / `lens`) để người duyệt thấy đang cược gì từ đâu.
 4. **Gate checksum hợp đồng (vá G1 — council c9dc13d):** `python3 fdk/tools/br-fill.py check-contract --root .` — mọi required field S1–S10 phải có clause đối ứng; ĐỎ là compile FAIL, sửa BR cho tới khi xanh, không có chuyện "compile xong mà hợp đồng thủng".
 
-## Mode 3 — `/br slice`
+#### Mode 3 — `/br slice`
 1. Đọc `br/BR.md`. ĐỀ XUẤT danh sách lát cắt: mỗi lát = {clause_ids, scope_code dự kiến (≤3 file), scope_test, acceptance_test, **depends_on**}. **STOP cho user duyệt/sửa/gộp/tách TỪNG lát** (người-trong-vòng-lặp — chốt chặn lỗi tương quan slicer). Lô đầu ≤ 3–5 frame.
    - **`depends_on` là bắt buộc nghĩ, không bắt buộc có** (GH#75, distill Atomic Task Graph): dây chuyền là ĐỒ THỊ chứ không phải danh sách. Frame B khai `depends_on: [frame-A]` khi B *không thể xanh* nếu A chưa xanh (B gọi API/store/schema A dựng). Không dựa ai → `depends_on: []`. Khai đúng thì được ba thứ miễn phí ở mode 4: thứ tự chạy tự đúng, frame đỏ tự chặn nhánh dưới, và sửa một frame chỉ phải chạy lại đúng nhánh của nó. Khai bừa (nối cho "có vẻ hợp lý") thì mất song song và tạo chờ giả — chỉ nối khi có phụ thuộc THẬT.
 2. Ghi `br/frames/frame-NNN-<slug>.md` **THEO TEMPLATE `skills/br/assets/frame-template.md`** (schema v0 + 5 section body bắt buộc: Nghiệp vụ · Input/Output · **Spec (FR/SC)** · Tiêu chí nghiệm thu · Ngoài phạm vi — viết cho NGƯỜI VỀ SAU đọc-hiểu, frame-lint R7 gác cứng: frame_id phải có slug nghiệp vụ, muc_tieu không được generic, mỗi frame có FR-id/SC-id rõ, section không được rỗng) + `parent_br_hash = sha256(br/BR.md)`.
@@ -73,7 +133,7 @@ Runtime artifacts sống ở `br/` tại gốc project (không phải trong skil
    - **Mỗi tính năng phải có một lát NỐI DÂY** tới điểm khởi động, và frame UI phải nghiệm thu bằng test đi qua giao diện thật (e2e/route-shots), không bằng unit test của module đứng riêng.
 5. `python3 fdk/tools/br-prompts.py sync` — bổ sung mục prompt cho các frame mới vào sổ `br/prompts.md` (user sửa tay được ngay).
 
-## Mode 4 — `/br run <frame>`
+#### Mode 4 — `/br run <frame>`
 **Cách gọi tất định (đã wire — mặc định IN-PLACE, MỘT cây làm việc duy nhất):**
 ```
 python3 fdk/tools/br-run.py run br/frames/<frame>.md --root .
@@ -112,7 +172,7 @@ Bước thủ công tương đương (nếu cần tinh chỉnh tay):
    - **FINAL SCOPE SWEEP**: mọi lần loop dừng (kể cả PROTECT_VIOLATION), loop-runner revert sạch mọi file ngoài `scope_code` → worktree LUÔN scope-clean, `changed_files` LUÔN ⊆ `scope_code`. Kiểm soát hoàn toàn, không chỉ dựa lời dặn prompt.
    - `--commit-on-success` chỉ commit khi verdict=SUCCESS VÀ scope_clean; message gắn `frame_id` → `git blame` truy đúng frame. `--baseline` = commit gốc để tính diff (thường HEAD của worktree lúc bắt đầu).
 
-### Prompt & queue (chạy nhiều frame, resume được)
+##### Prompt & queue (chạy nhiều frame, resume được)
 - **📒 SỔ PROMPT TỔNG (nguồn ƯU TIÊN #1, user sửa tay không cần model)**: `br/prompts.md` — MỘT file, mỗi frame một mục `## <frame_id>`. Mở ra, tìm frame, sửa/THÊM nội dung thoải mái (placeholder `{{...}}` giữ nguyên để máy điền lúc chạy). `python3 fdk/tools/br-prompts.py sync` tự thêm mục cho frame mới, KHÔNG BAO GIỜ đè mục đã sửa tay (chạy sau mỗi `/br slice`); `list`/`get <frame_id>` để tra. Thứ tự ưu tiên khi run: **sổ prompt > queue inline > prompt_file > template mặc định**.
 - **Template gốc (seed cho sổ)**: `skills/br/assets/revise-prompt.md`. Adapter `fdk/tools/br-revise.py` render nguồn thắng cuộc → gọi `claude -p` (tools bó hẹp). Xem prompt sẽ gửi: `br-revise.py run --frame <f> --verify "<cmd>" --print`.
 - **File QUEUE** (`br/queue.yaml`, mẫu `skills/br/assets/queue.example.yaml`): DANH SÁCH frame để chạy tuần tự; mỗi mục hoặc `prompt_file:` (trỏ file template) HOẶC `prompt:` (ghi text trực tiếp, vẫn hỗ trợ placeholder). Driver `fdk/tools/br-queue.py run --queue br/queue.yaml` chạy từng mục, ghi `status` back sau MỖI mục → **chạy lại queue = bỏ qua `done`, chạy tiếp** (resume). `--dry-run` xem mỗi mục dùng prompt nào; `list` xem trạng thái.
@@ -121,7 +181,7 @@ Bước thủ công tương đương (nếu cần tinh chỉnh tay):
 5. Loop dừng → in **tóm tắt MỘT DÒNG** (verdict · số vòng · diffstat · lệnh verify cuối) + chạy `python3 fdk/tools/medic.py --ci`. **STOP** — người đọc diff trong worktree, tự quyết merge/chạy-tiếp/vứt.
 6. Điền `run_log_ref` + `outcome` vào frame + registry. Ghi lesson (kể cả điều KHÔNG xảy ra — phanh nào chưa từng cắn).
 
-## Mode 4b — `/br find <file-hoặc-từ-khoá>` — trỏ vào chỗ lỗi, ra frame/prompt phụ trách
+#### Mode 4b — `/br find <file-hoặc-từ-khoá>` — trỏ vào chỗ lỗi, ra frame/prompt phụ trách
 Luồng người thường: bật app → thấy lỗi → trỏ vào khúc đó:
 ```
 python3 fdk/tools/br-find.py "src/auth/login.py"     # theo file
@@ -129,7 +189,7 @@ python3 fdk/tools/br-find.py "đăng nhập"              # theo từ khoá / cl
 ```
 In ra: frame phụ trách (khớp theo file THẬT đã đổi > scope_code > từ khoá) · điều khoản BR · **prompt nằm ở đâu** (inline trong queue.yaml / prompt_file / template mặc định) · lệnh chạy lại ĐÚNG frame đó sau khi sửa prompt. Hoạt động được vì R6 exclusive-scope (frame-lint) ép mỗi file chỉ thuộc MỘT frame tại một thời điểm — file đã đổi chủ qua lease thì frame phụ trách là người thuê sau cùng (`_manifest.json`), còn lịch sử thì `git blame` theo commit `frame(<id>)`.
 
-## Mode 4c — `/br qc [frame]` — audit senior QC (LLM 4-mục) trên mockup/frame
+#### Mode 4c — `/br qc [frame]` — audit senior QC (LLM 4-mục) trên mockup/frame
 Sau khi có mockup/frame xanh, chạy CẶP MẮT SENIOR (đắt=LLM, gọi tay — phần rẻ tất định đã tự chạy sau mỗi `/br run`):
 - **Code:** gọi `/qc-code` (Skill tool → `qc-code`) soi diff frame — 4 mục security/performance/naming/logic + sinh test tái hiện `qc-*`.
 - **UI/UX:** gọi `/qc-uiux` (Skill tool → `qc-uiux`) audit mockup — 4 mục a11y/hierarchy/consistency/antipattern; phần đo được (contrast/tap-target/overlap/misalign/missing-label) chạy qua engine visual-qa headless:
@@ -138,23 +198,46 @@ Sau khi có mockup/frame xanh, chạy CẶP MẮT SENIOR (đắt=LLM, gọi tay 
   ```
 - Verdict CẦN SỬA → sửa trước khi chốt frame. **Advisory** — verdict LLM là ý kiến; số đo engine + test `qc-*` mới gác cứng (đã tự chạy ở `/br run` và `verify-before-commit` bước 3b). Không có frame chỉ định → audit các route mockup hiện có.
 
-## Mode 5 — `/br status`
+#### Mode 5 — `/br status`
 1. `python3 fdk/tools/build-line-status.py build --root .` → `br/line-status.json` + `llmwiki/html/line-status.html`.
 2. In tóm tắt 3 dòng (tổng quan trạng thái · frame đáng chú ý nhất · đường dẫn HTML). Trang cho truy ngược lỗi→frame→clause; clause assumed tô cam → quay `/br interview` vòng sau nếu lỗi rơi vào assumed.
 
-## Mode 6 — `/br sync` (frame ↔ GitHub sub-issue)
+#### Mode 6 — `/br sync` (frame ↔ GitHub sub-issue)
 Distill `automazeio/ccpm`: mỗi frame → một GitHub sub-issue để team thấy tiến độ + hand-off. KHÔNG làm lại provenance (clause_id/manifest đã sâu hơn ccpm); chỉ lớp đồng bộ mỏng trên `gh`.
 1. `python3 fdk/tools/br-sync.py sync br/frames --root . --repo <owner/repo> --dry-run` — LUÔN dry-run trước (không gọi gh, không ghi mapping).
 2. Bỏ `--dry-run` khi chắc → tạo sub-issue cho frame chưa map, ghi `br/frames/issue-mapping.json`. Idempotent. `--epic` tạo epic-issue. `status`/`selftest` có sẵn.
 3. Tạo issue là hành động ra-ngoài repo → xác nhận trước khi bỏ `--dry-run`.
 
-## Mode 7 — `/br contract` (UI Contract chốt thực hiện, md+html)
+#### Mode 7 — `/br contract` (UI Contract chốt thực hiện, md+html)
 Tách trục CODE (frame) khỏi trục HIỂN THỊ (screen/route). Chuẩn mọi dự án:
 1. Frame khai `ui_role: none|screen|panel|widget|form|action` + `ui_screen` (frame-template) + section "## UI hoạt động ra sao".
 2. `br/ui-layout.yaml`: `nav_style` + `screens[]` (id·title·**route thật**·frames[]). Sửa file này gom màn KHÔNG đụng frame.
 3. `python3 fdk/tools/br-contract.py build br/frames --layout br/ui-layout.yaml --root .` → `br/UI-CONTRACT.md` + `.html`. Bảng frame·làm gì·ui_role·màn·route·clause·acceptance + đếm frame/màn/route + cảnh báo lệch. `selftest` có sẵn.
 
-## Stream UI thống nhất + Spec rõ ràng (distill hallmark + orca-workflow)
+### Branches
+| ID | Kind | Guard | Hành vi | Skip / failure | Rejoin |
+|---|---|---|---|---|---|
+| B01 | user_optional | `--proactive` (gọi tắt `/br auto`) ở interview | `br-fill.py fill` đề xuất máy điền (`verified: false`) + ≤5 câu hỏi thật theo Impact × Uncertainty; carve-out không nhận giá trị máy | vượt trần → lens-fill | W03 |
+| B02 | user_optional | `--lens-fill` hoặc "cho chuyên gia điền mục chưa chắc" | `council.py roster --case product --json`, điền field missing user đánh dấu không chắc, đóng dấu `filled_by: lens:<tên>` + `verified: false` | không trộn với câu trả lời thật | W04 |
+| B03 | conditional_required | sản phẩm có UI (S7.5) | clause NFR trỏ `br/DESIGN.md`; copy `design-template.md` → `br/DESIGN.md`, điền §1/§2/§4/§6/§7 | không có UI → skip | W05 |
+| B04 | conditional_required | frame có `ui_role` khác none | `/design-twice` trước khi code; `acceptance_test` là visual-qa `route-shots.mjs --assert` | thiếu mục `## Thiết kế (design-twice)` → frame chưa xong | W08 |
+| B05 | conditional_required | frame khai `tier: compensable` hoặc `irreversible` | chặn cho tới khi chạy lại với `--ack-tier` | không ack → không chạy | W08 |
+| B06 | capability_optional | cần cô lập thư mục thật sự (hiếm) | thêm `--worktree`, hoặc bước thủ công tương đương (worktree riêng từ `baseline_ref`) | — | W08 |
+| B07 | user_optional | chạy nhiều frame / sửa một frame | `br-queue.py run --queue br/queue.yaml` theo topo order; `affected <frame_id> --reset` chạy lại đúng nhánh | frame đỏ chặn nhánh dưới | W09 |
+| B08 | user_optional | `/br find <file-hoặc-từ-khoá>` | Mode 4b: `br-find.py` in frame phụ trách + clause + chỗ prompt + lệnh chạy lại | — | W08 (sửa prompt rồi chạy lại) |
+| B09 | user_optional | `/br qc [frame]` | Mode 4c: `/qc-code` + `/qc-uiux` (advisory); verdict CẦN SỬA → sửa trước khi chốt frame | — | W08 |
+| B10 | user_optional | `/br sync` | Mode 6: `br-sync.py sync --dry-run` trước, xác nhận rồi mới bỏ `--dry-run` | không xác nhận → dừng ở dry-run | kết thúc |
+| B11 | user_optional | `/br contract` | Mode 7: `br-contract.py build` → `br/UI-CONTRACT.md` + `.html` | — | kết thúc |
+| B12 | user_optional | `/br rail off` hoặc `skip` | tắt gate MỀM (R7 content · visual-qa UI · assumption-gate) qua `frame-lint … --soft-off`; phanh cứng giữ nguyên | skip tự bật lại sau 1 lần | W08 |
+
+### Validation và stopping
+Tất định: `frame-lint.py check` (7 luật), `br-fill.py check-contract`, loop-runner 6 phanh + FINAL SCOPE SWEEP, `medic.py --ci` sau mỗi loop, selftest của từng tool (`frame-lint.py selftest`, `loop-runner.py selftest`, `build-line-status.py selftest`, `br-revise.py selftest`, `br-queue.py selftest`). Cần review (người là cổng cuối): duyệt answers, duyệt TỪNG lát ở slice, đọc diff frame rồi tự quyết merge/chạy-tiếp/vứt. Mode dừng ở các điểm **STOP** đã ghi; loop dừng theo phanh, không nâng phanh.
+
+### Examples
+- **Positive:** user bỏ 3 file yêu cầu vào `llmwiki/raw/`, nói "soạn BR" → interview sinh `br/interview/001-questions.html` hỏi 7 field thiếu → user điền → compile ra `br/BR.md` + check-contract xanh → slice đề xuất 4 lát, user duyệt → `frame-lint.py check br/frames --root .` xanh → `br-run.py run br/frames/frame-001-dang-nhap.md --root .` → SUCCESS, commit `frame(frame-001-dang-nhap): …`, tóm tắt một dòng + medic.
+- **Boundary/failure:** `/br run` khi `git status --porcelain` không rỗng → từ chối chạy. Frame gửi mail khai `tier: irreversible` → TIER-GATE chặn tới khi `--ack-tier`. Frame-003 đỏ → frame-004 (`depends_on: [frame-003]`) thành `status: blocked`, frame-005 không liên quan vẫn chạy.
+
+### Reference — Stream UI thống nhất + Spec rõ ràng (distill hallmark + orca-workflow)
 Hai lỗ hổng của dây chuyền nhiều-frame, vá bằng hai cơ chế distill:
 
 **A. UI/UX thống nhất XUYÊN FRAME (distill `hallmark`).** Mỗi frame chạy độc lập qua loop-runner → dễ mỗi frame một kiểu, mockup chắp vá. Cơ chế hallmark: **`br/DESIGN.md` = HỆ TOKEN KHOÁ**, đọc trước và đè mọi lựa chọn; **luật ĐẢO NGƯỢC** — frame phải GIỐNG nhau (chia sẻ hệ), không đa dạng hoá; **locked-token** — mọi màu/font/spacing trỏ token có tên (`var(--…)`), CẤM inline. Áp vào /br:
@@ -166,8 +249,7 @@ Hai lỗ hổng của dây chuyền nhiều-frame, vá bằng hai cơ chế dist
 - **Frame:** frame-template có section `## Spec (FR/SC)` (frame-lint R7 gác cứng) — mỗi frame khai FR-id (hệ thống PHẢI…) + SC-id (đo NGƯỜI), acceptance_test là bằng chứng của SC, mỗi dòng nghiệm thu truy về một FR. Frame thiếu FR/SC rõ = chưa xong, y như interview thiếu field.
 - **Interview:** mỗi field S1–S10 hỏi ra phải là MỘT spec rõ — câu hỏi nêu field làm gì + tiêu chí "trả lời thế nào là ĐỦ" (không hỏi mơ hồ). Field còn `missing/assumed` = spec chưa đủ, hiện ở bảng "Giả định đang gánh" để không trôi.
 
-## Vòng THIẾT KẾ cho frame UI (skill `/design-twice`) — chạy TRƯỚC khi code
-
+### Reference — Vòng THIẾT KẾ cho frame UI (skill `/design-twice`) — chạy TRƯỚC khi code
 **Bắt buộc với mọi frame `ui_role≠none`:** trước khi viết một dòng code UI, chạy `/design-twice`
 để có **2–3 phương án KHÁC NHAU TẬN GỐC**, so sánh, chọn 1, rồi ghi mục `## Thiết kế (design-twice)`
 vào chính frame (3 phương án + phương án chọn + lý do + ý ghép từ bản thua).
@@ -179,7 +261,7 @@ vào chính frame (3 phương án + phương án chọn + lý do + ý ghép từ
 - Frame UI **thiếu mục `## Thiết kế (design-twice)` = chưa xong** (R7 content coi là thiếu nội dung).
 - Thiết kế xong mới tới `## UI hoạt động ra sao` → code → gate `/visual-qa` bên dưới.
 
-## Vòng tự-kiểm THỊ GIÁC cho frame UI (skill `/visual-qa`)
+### Reference — Vòng tự-kiểm THỊ GIÁC cho frame UI (skill `/visual-qa`)
 **Nguyên tắc (không phải luật re-check riêng):** sửa UI = edit spec + code CỦA FRAME đó rồi
 `/br run` lại. Muốn "chạy lại frame là tự re-verify UI" thì **`acceptance_test` của frame UI
 phải CHÍNH LÀ visual-qa** — test hit vào UI, không phải unit-test cạnh bên. Đây là điểm đòn bẩy
@@ -188,21 +270,12 @@ cao: không cần dặn agent "nhớ kiểm lại", vì loop verify của chính
 - Sau green, agent `Read` ảnh (skill `/visual-qa`) → `FINDINGS.md` (route·mức·cách sửa) → mỗi finding là một sửa spec+code của frame → `/br run` lại. Bắt lỗi theme/brand/empty-state unit-test không thấy; dùng khi extension MCP lỗi localhost.
 - **Cấm sửa UI tay ngoài `/br run`** (nợ p28 05/07): sửa tay = mất gate + không re-verify. Mọi sửa UI phải qua frame.
 
-## Rail — công tắc harness của dây chuyền (`/br rail on|off|skip`)
+### Reference — Rail — công tắc harness của dây chuyền (`/br rail on|off|skip`)
 "On the rails" = đang trong tầm gác. **MẶC ĐỊNH ON — auto-on cả phiên khi dùng /br.**
 - `python3 fdk/tools/br-rail.py status --root .` → trạng thái + **LUÔN nhắc bật/tắt được**.
 - `on` (gác đủ) · `off` (tắt gate MỀM tới khi bật lại) · `skip` (bỏ gate mềm ĐÚNG 1 lần rồi tự bật lại + cảnh báo).
 - **AN TOÀN (bất biến):** off/skip CHỈ tắt **gate mềm** — R7 content · visual-qa UI · assumption-gate. **PHANH CỨNG** (diff-jail · test-hash · scope-clean) + cấu trúc R1–R6 + hook bảo mật KHÔNG BAO GIỜ tắt qua đây.
 - **Wiring:** đầu `/br run`, đọc `br-rail.py consume` → nếu off/skip thì gọi `frame-lint … --soft-off` (bỏ R7+assumption), loop-runner phanh cứng vẫn nguyên; IN trạng thái Rail + dòng nhắc mỗi lần chạy.
 
-## Bằng chứng > lời (luật kiểm UI — feedback 2026-07-13)
+### Reference — Bằng chứng > lời (luật kiểm UI — feedback 2026-07-13)
 Kiểm UI/thị giác chỉ hợp lệ khi có **FILE ẢNH thật + `MANIFEST.json`** liệt kê route→ảnh→bytes (skill `/visual-qa`). **Không có file = CHƯA TỪNG LÀM = fail**, bất kể model nói gì. Sau khi sửa UI phải chụp LẠI + đọc lại trước khi green. Cấm "cho pass" bằng suy luận. (Cũng là luật /fdk.)
-
-## Rules
-- **Người là cổng cuối** — KHÔNG tự commit/merge output frame; dry-run + người duyệt (council 028).
-- **Phanh bất khả xâm phạm** — không bao giờ nâng max_iter hay tắt guard "để nó xong". Thừa phanh rẻ hơn thiếu phanh (council 031/032).
-- **Prompt-dặn KHÔNG phải lớp an toàn** — scope-jail/test-hash là code tất định (loop-runner guard 5/6), không phải lời dặn trong prompt (council 5/5 ghế).
-- **Lens-fill luôn `verified: false`** — không trộn với câu trả lời thật; luôn hiện ở bảng "Giả định đang gánh".
-- **Slicer người-trong-vòng-lặp** ở đợt đầu — chưa full-auto (lỗi slicer là lỗi tương quan, blast-radius = toàn BR).
-- **File-first, on-demand** — mọi artifact là file travel-được; skill gọi tay, KHÔNG hook auto-fire (ADR-004).
-- HTML sinh ra cho người xem phải giải nghĩa thuật ngữ + in full-path (R16).

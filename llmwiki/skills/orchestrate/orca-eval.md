@@ -2,29 +2,59 @@
 name: orca-eval
 disable-model-invocation: true
 description: Quét N session Claude Code gần nhất, distill best practices thành report md + đề xuất action cải tiến quy trình
+metadata:
+  design-standard: "solid-what-how/1"
+  contract-version: "1.0.0"
 ---
 
 # Skill: orca-eval
 
-## Purpose
+## WHAT
 
-Vòng tự cải thiện quy trình: đọc lại session logs → rút best practice / anti-pattern → report md → đề xuất hành động (promote thành skill, sửa CLAUDE.md, thêm hook…). Report là **đề xuất** — mọi action phải qua `propose` → gate, không tự thực hiện.
+### Purpose và context
+- **Purpose:** Vòng tự cải thiện quy trình: đọc lại session logs → rút best practice / anti-pattern → report md → đề xuất hành động (promote thành skill, sửa CLAUDE.md, thêm hook…). Report là **đề xuất** — mọi action phải qua `propose` → gate, không tự thực hiện.
+- **Trigger (when to use):**
+  - `/orca-eval [N]` — N = số session gần nhất cần quét (vd 5/10/15)
+  - Không có N → chỉ quét session hiện tại
+  - User nói "đánh giá session", "rút best practice", "tối ưu quy trình từ lịch sử"
+- **Non-goals:** không tự thực hiện action (promote skill, sửa CLAUDE.md, thêm hook); không sửa/xoá session log; không auto-trigger mỗi 30 session (Phase 2, chưa nằm trong skill này).
 
-## Triggers
+### Mental model
+`*.jsonl session logs → orca-eval-scan.sh digest (prompts · tool errors · lệnh lặp) → 4 tín hiệu (Correction · Repetition · Friction · Win) → finding → đúng 1 action (promote-to-skill · update-CLAUDE.md · add-hook · keep · ignore) → report draft → DỪNG chờ duyệt`.
 
-- `/orca-eval [N]` — N = số session gần nhất cần quét (vd 5/10/15)
-- Không có N → chỉ quét session hiện tại
-- User nói "đánh giá session", "rút best practice", "tối ưu quy trình từ lịch sử"
+### Input và output contract
+| | Field | Required? | Ý nghĩa |
+|---|---|---|---|
+| In | `N` | không | số session gần nhất theo mtime `*.jsonl`; default = session hiện tại |
+| In | session logs `~/.claude/projects/<project-slug>/*.jsonl` | có | chỉ đọc |
+| Out | `llmwiki/wiki/draft/orca/DDMMYY-eval-report.md` | có | theo Report template |
+| Out | `wiki/index.md` + `wiki/log.md` cập nhật | có | — |
+| Out | bảng action hiển thị cho user | có | "xong" = user đã thấy bảng; action chưa thực thi |
 
-## Input
+### Rules và capabilities
+- RULE-01 (MUST): Read-only với session logs — không sửa/xóa `*.jsonl`.
+- RULE-02 (MUST): KHÔNG nạp nguyên transcript — 1 session có thể hàng trăm KB; đọc qua digest của scanner.
+- RULE-03 (MUST): Mỗi finding gắn đúng 1 action; action chỉ thực hiện sau khi user duyệt (qua `propose` nếu là thay đổi code/skill).
+- RULE-04 (MUST): Format JSONL của Claude Code không có spec công khai — scanner fail thì fallback session hiện tại và báo rõ, không sinh report rỗng.
+- Capabilities: đọc session log cục bộ qua scanner; ghi draft wiki + index + log. Không mạng, không sửa code/config.
 
-| Tham số | Ý nghĩa | Default |
-|---------|---------|---------|
-| `N` | Số session gần nhất (theo mtime của `*.jsonl`) | session hiện tại |
+### Failure boundaries
+- Scanner fail → **partial**: fallback session hiện tại, báo rõ; không sinh report rỗng.
+- Không có tín hiệu nào → report ghi rõ 0 finding (không bịa finding).
+- User chưa duyệt → action ở trạng thái **proposed**, skill dừng.
 
-Session logs nằm tại `~/.claude/projects/<project-slug>/*.jsonl` — slug là cwd với `/` thay bằng `-` (vd `-Users-giatran-orca-workspaces-setup-evaluation`).
+## HOW
 
-## Steps
+### Main workflow
+| Step | Type | Inputs | Action | Outputs/exit | Failure/next |
+|---|---|---|---|---|---|
+| W01 | deterministic | `N` | Scan: `skills/orca-eval/assets/orca-eval-scan.sh [N]` từ repo root | digest | fail → B01 |
+| W02 | judgment | digest | Distill 4 loại tín hiệu | danh sách finding + bằng chứng | — |
+| W03 | effect | finding | Report theo template + cập nhật index/log | draft report | — |
+| W04 | judgment | finding | Action proposal: bảng action cho user, **DỪNG** | bảng action | không duyệt → dừng |
+
+Chi tiết từng bước (nguồn chân lý cho W01–W04):
+
 
 1. **Scan** — chạy `skills/orca-eval/assets/orca-eval-scan.sh [N]` từ repo root. Script trả về digest gọn (user prompts, tool errors, lệnh Bash lặp lại). KHÔNG nạp nguyên transcript — 1 session có thể hàng trăm KB.
 2. **Distill** — từ digest, tìm 4 loại tín hiệu:
@@ -35,9 +65,39 @@ Session logs nằm tại `~/.claude/projects/<project-slug>/*.jsonl` — slug l�
 3. **Report** — ghi `llmwiki/wiki/draft/orca/DDMMYY-eval-report.md` theo template dưới. Cập nhật `wiki/index.md` + `wiki/log.md`.
 4. **Action proposal** — mỗi finding gắn đúng 1 action: `promote-to-skill` / `update-CLAUDE.md` / `add-hook` / `keep` / `ignore`. Hiển thị bảng action cho user. **DỪNG** — action chỉ thực hiện sau khi user duyệt (qua `propose` nếu là thay đổi code/skill).
 
-## Report template
+#### Input
+
+| Tham số | Ý nghĩa | Default |
+|---------|---------|---------|
+| `N` | Số session gần nhất (theo mtime của `*.jsonl`) | session hiện tại |
+
+Session logs nằm tại `~/.claude/projects/<project-slug>/*.jsonl` — slug là cwd với `/` thay bằng `-` (vd `-Users-giatran-orca-workspaces-setup-evaluation`).
+
+
+### Branches
+| ID | Kind | Guard | Hành vi | Skip / failure | Rejoin |
+|---|---|---|---|---|---|
+| B01 | recovery | scanner fail (format JSONL đổi) | fallback session hiện tại, báo rõ trong report | không có gì để quét → báo, không sinh report rỗng | W02 |
+| B02 | conditional_required | action là thay đổi code/skill và user duyệt | chuyển qua `propose` → gate | user không duyệt → dừng | — |
+
+### Validation và stopping
+Scanner là tất định; phân loại tín hiệu là judgment — mỗi finding phải có bằng chứng (session + trích dẫn ngắn) trong bảng. Dừng cứng ở W04 chờ user duyệt.
+
+### Examples
+- **Positive:** `/orca-eval 10` → scan 10 `*.jsonl` mới nhất → phát hiện user 4 lần sửa "dùng ./scratchpad/ không /private/tmp" (Correction) → finding gắn `update-CLAUDE.md`; report `llmwiki/wiki/draft/orca/DDMMYY-eval-report.md` + bảng action, DỪNG.
+- **Boundary/failure:** `orca-eval-scan.sh` lỗi vì đổi format JSONL → fallback session hiện tại, report ghi rõ scanner fail; không có tín hiệu nào → báo 0 finding, không sinh report rỗng.
+
+### Reference — Report template
 
 ```markdown
+---
+type: draft
+title: "DDMMYY-eval-report"
+status: proposed
+tags: [<skill-name>, output-report]
+timestamp: YYYY-MM-DD
+---
+
 # DDMMYY-eval-report
 **Type:** draft
 **Status:** proposed
@@ -58,13 +118,13 @@ Session logs nằm tại `~/.claude/projects/<project-slug>/*.jsonl` — slug l�
 - **Generated by:** /orca-eval
 ```
 
-## Giới hạn
+### Reference — Giới hạn
 
 - Read-only với session logs — không sửa/xóa `*.jsonl`.
 - Format JSONL của Claude Code không có spec công khai — scanner fail thì fallback session hiện tại và báo rõ, không sinh report rỗng.
 - Auto-trigger mỗi 30 session: **Phase 2** (cần Stop-hook + counter), chưa nằm trong skill này.
 
-## References (community — claimed 2026-06-11)
+### Reference — References (community — claimed 2026-06-11)
 
 | Repo | Áp dụng được gì |
 |------|-----------------|

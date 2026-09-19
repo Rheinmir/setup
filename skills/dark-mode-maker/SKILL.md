@@ -1,19 +1,68 @@
 ---
 name: dark-mode-maker
 description: Circle-reveal (giọt nước rơi + crest-glow liquid-glass) khi chuyển dark/light mode — nút gạt switch, overlay tỏa từ VỊ TRÍ CON TRỎ (kẹp trong biên nút), palette dark-mode trung tính kiểu thị trường (GitHub Dark/Vercel/Linear), nghiệm thu bằng Playwright thật. Gọi khi user nói 'làm dark mode', 'theme toggle', 'chuyển sáng tối', 'circle reveal', 'hiệu ứng đổi giao diện', hoặc /dark-mode-maker. KHÁC docs-site-macos (đó là sàn trang tài liệu macOS, dark-mode-maker là module toggle dùng được cho MỌI trang HTML).
+metadata:
+  design-standard: "solid-what-how/1"
+  contract-version: "1.0.0"
 ---
 
 # Skill: dark-mode-maker
 
 Module độc lập, tách ra từ `docs-site-macos` (feedback 160926: "bê nguyên cái làm hiệu ứng dark/light mode thành 1 skill riêng"). Dùng được cho BẤT KỲ trang HTML nào cần nút chuyển dark/light — không chỉ trang docs-site-macos.
 
-## When to use
-- Trang cần nút chuyển dark/light (mọi trang HTML sinh cho người xem, theo luật `html-theme-toggle-required`).
-- User nói "làm dark mode", "theme toggle", "chuyển sáng tối", "circle reveal", "hiệu ứng đổi giao diện".
-- `docs-site-macos` § Theme Toggle trỏ vào đây thay vì nhúng lại toàn bộ CSS/JS.
-- KHÔNG dùng để chọn xem trang có BẮT BUỘC phải có toggle hay không — đó là luật `html-theme-toggle-required` (`/fdk` § Rules), skill này chỉ lo PHẦN "chuyển thế nào" sau khi đã quyết có toggle.
+## WHAT
 
-## Contract (markup tối thiểu)
+### Purpose và context
+- **Purpose:** gắn vào một trang HTML nút gạt dark/light có circle-reveal tỏa từ vị trí con trỏ (kẹp trong biên nút) + crest-glow, palette dark trung tính kiểu thị trường, chống FOUC, nghiệm thu bằng Playwright thật.
+- **Trigger (when to use):**
+  - Trang cần nút chuyển dark/light (mọi trang HTML sinh cho người xem, theo luật `html-theme-toggle-required`).
+  - User nói "làm dark mode", "theme toggle", "chuyển sáng tối", "circle reveal", "hiệu ứng đổi giao diện".
+  - `docs-site-macos` § Theme Toggle trỏ vào đây thay vì nhúng lại toàn bộ CSS/JS.
+- **Non-goals:**
+  - KHÔNG dùng để chọn xem trang có BẮT BUỘC phải có toggle hay không — đó là luật `html-theme-toggle-required` (`/fdk` § Rules), skill này chỉ lo PHẦN "chuyển thế nào" sau khi đã quyết có toggle.
+  - Không phải sàn trang tài liệu (đó là `docs-site-macos`).
+
+### Mental model
+`<nav> có sẵn → JS chèn .theme-row > .lbl + .theme-switch → click (clientX/Y kẹp trong biên nút) → overlay .theme-reveal (nền MODE ĐÍCH) clip-path circle lan + drop-shadow crest trên CHÍNH nó → phủ hết → commit data-theme + localStorage → fade → gỡ overlay`. Reduced-motion → crossfade ≤150ms, không spatial.
+
+### Input và output contract
+| | Field | Required? | Ý nghĩa |
+|---|---|---|---|
+| In | trang HTML có `<nav>` (hoặc container tương đương) chứa link điều hướng | có | nút gạt tự chèn vào cuối bằng JS |
+| In | `<tên-trang>` (khoá localStorage) + màu nền light/dark thật của trang | có | thay vào snippet FOUC + JS (§4) |
+| In | trang không có sidebar | không | đặt cùng hàng footer của trang, vẫn là nút gạt có nhãn |
+| Out | CSS switch + script FOUC + JS reveal + palette dark trung tính trong trang | có | giữ nguyên tên class `.theme-row`/`.theme-switch`/`.theme-reveal` |
+| Out | kết quả `verify-theme-motion.mjs` | có | assert overlay đúng toạ độ + màu, commit sau phủ, gỡ DOM, nhánh reduced-motion |
+
+### Rules và capabilities
+- RULE-01 (MUST): KHÔNG spawn phần tử phụ độc lập cho hiệu ứng gợn — dùng `filter:drop-shadow` nhiều lớp trên CHÍNH `.theme-reveal` (xem §4, lý do lag + lệch đồng bộ đã đo được).
+- RULE-02 (MUST): KHÔNG `backdrop-filter` trên `.theme-row` (xem §1) và KHÔNG override `background` riêng cho nó ở khối dark-mode.
+- RULE-03 (MUST): Điểm tỏa LUÔN kẹp trong biên nút (`getBoundingClientRect()` của `.theme-switch`) — không bao giờ vọt ra ngoài dù con trỏ đang ở đâu trên màn hình lúc bấm.
+- RULE-04 (MUST): Palette dark-mode trung tính (§3) — không thêm màu bão hoà vào nền/viền/chữ nền tảng; accent giữ nguyên một màu duy nhất.
+- RULE-05 (MUST): `docs-site-macos` (và mọi skill sinh HTML khác cần toggle) trỏ VÀO skill này thay vì nhúng lại CSS/JS — một nguồn, sửa một chỗ.
+- Capabilities: sửa CSS/JS/markup của trang HTML đích; cài tạm dependency trình duyệt headless và chạy script nghiệm thu.
+
+### Failure boundaries
+- Trang không có `<nav>`/container → script `return` sớm, không có toggle → **clarify** container đặt nút (hoặc hàng footer trang).
+- Script nghiệm thu đỏ (overlay sai toạ độ/màu, commit trước khi phủ, overlay không gỡ, reduced-motion còn `clip-path`) → **failed**, sửa rồi chạy lại.
+- User chê chậm dù đã cắt duration → **clarify**/chuyển nhánh instant (v5), không cố hạ TOTAL_MS mãi.
+- Câu hỏi "trang có BẮT BUỘC toggle không" → ngoài phạm vi, theo luật `html-theme-toggle-required`.
+
+## HOW
+
+### Main workflow
+| Step | Type | Inputs | Action | Outputs/exit | Failure/next |
+|---|---|---|---|---|---|
+| W01 | deterministic | trang | Kiểm contract markup: có `<nav>` chứa link | container xác định | không có → B02 |
+| W02 | effect | trang | §1 Nút gạt: CSS `.theme-row` sticky, `background:transparent`, không `backdrop-filter` | switch CSS | — |
+| W03 | effect | `<tên-trang>` | §2 Chống FOUC: script đọc localStorage đặt `data-theme` sớm | không nháy | — |
+| W04 | effect | trang | §3 Palette dark trung tính (bảng token) | token dark | — |
+| W05 | effect | màu nền thật | §4 Circle-reveal + crest-glow: CSS `.theme-reveal` + JS (đổi `<tên-trang>`, 2 màu + 2 tint) | toggle chạy | user đòi instant → B03 |
+| W06 | deterministic | file HTML | Nghiệm thu: `node skills/dark-mode-maker/scripts/verify-theme-motion.mjs <file.html>` | PASS | FAIL → sửa, lặp W06 |
+
+Chi tiết từng bước (nguồn chân lý cho W01–W06):
+
+#### Contract (markup tối thiểu)
 
 Cần một `<nav>` (hoặc container tương đương) chứa link điều hướng — nút gạt tự chèn vào cuối bằng JS, không cần viết tay markup:
 
@@ -23,7 +72,7 @@ Cần một `<nav>` (hoặc container tương đương) chứa link điều hư�
 
 JS tự tạo `.theme-row > .lbl + .theme-switch`, đặt `data-theme` lên `<html>`, lưu `localStorage`. Không đổi tên các class này — script nghiệm thu (`scripts/verify-theme-motion.mjs`) bám đúng vào chúng.
 
-## 1. Nút gạt (switch)
+#### 1. Nút gạt (switch)
 
 Hàng footer **dính đáy** container cha (`position:sticky`), nhãn trái + switch phải, vách ngăn mảnh phía trên — KHÔNG chip icon rải góc:
 
@@ -44,14 +93,14 @@ Hàng footer **dính đáy** container cha (`position:sticky`), nhãn trái + sw
 - **Sai lần 3 — giữ `backdrop-filter:blur` "cho chắc":** dù nền đã transparent thật (đo `rgba(0,0,0,0)`), một lớp blur RIÊNG chồng lên đúng vùng cha-đã-tự-blur tạo dải "kính mờ kép" nhìn như khối riêng dù 0 màu — bắt được bằng ảnh chụp thật, không phải suy đoán.
 - **Đúng:** `background:transparent`, KHÔNG `backdrop-filter` trên `.theme-row`. Để lộ thẳng pixel cha đã render, không tự vẽ/tự blur gì thêm.
 
-## 2. Chống FOUC
+#### 2. Chống FOUC
 
 ```html
 <script>(function(){try{var t=localStorage.getItem("<tên-trang>-theme");
 if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}})();</script>
 ```
 
-## 3. Palette dark-mode — trung tính kiểu thị trường, KHÔNG navy-tinted (bài học 160926)
+#### 3. Palette dark-mode — trung tính kiểu thị trường, KHÔNG navy-tinted (bài học 160926)
 
 Bản đầu dùng nền `#0c0f16` + border `rgba(120,160,220,.18)` (xanh navy đậm) — feedback thật: *"chọn màu dark mode... vẫn dở tệ, chọn lại bộ màu theo thị trường đi"*. Tham chiếu 3 sản phẩm dark-mode được đánh giá tốt nhất hiện nay (GitHub Dark, Vercel/Geist, Linear): nền TRUNG TÍNH gần đen (không ngả xanh), viền TRẮNG TRONG SUỐT (không viền màu bão hoà), giữ ĐÚNG MỘT accent màu (ở đây là xanh hệ thống Apple `#0a84ff`) làm điểm nhấn — không rải màu bão hoà vào chrome/border:
 
@@ -70,7 +119,7 @@ Bản đầu dùng nền `#0c0f16` + border `rgba(120,160,220,.18)` (xanh navy �
 
 Accent (`#0a84ff`, tag 6-màu Apple secondary) **giữ nguyên** — không phải phần "dở tệ", đó là điểm nhấn có chủ đích. Chỉ nền/viền/chữ trung tính là phần cần trung tính hoá.
 
-## 4. Circle-reveal + crest-glow (REQUIRED) — tỏa từ CON TRỎ, kẹp trong biên nút
+#### 4. Circle-reveal + crest-glow (REQUIRED) — tỏa từ CON TRỎ, kẹp trong biên nút
 
 **Nguồn gốc điểm tỏa: vị trí con trỏ chuột lúc bấm, kẹp (clamp) trong biên nút** (bài học 160926 — trước tỏa từ tâm nút, cố định): dùng toạ độ click thật (`e.clientX/clientY`), giới hạn trong `getBoundingClientRect()` của nút — bấm lệch về mép trái/phải nút thì điểm tỏa theo đúng mép đó, không vọt ra ngoài nút. Phím Enter/Space (không có toạ độ chuột) rơi về tâm nút.
 
@@ -159,7 +208,7 @@ paint()})();
 
 Trang không có sidebar (landing một cột)? Đặt cùng hàng footer của trang, vẫn là NÚT GẠT có nhãn — tuyệt đối không quay lại chip icon trôi nổi ở góc.
 
-## Nghiệm thu tự động
+#### Nghiệm thu tự động
 
 ```bash
 npm install --no-save @playwright/test   # cài tạm, không cần lưu vào package.json
@@ -168,9 +217,16 @@ node skills/dark-mode-maker/scripts/verify-theme-motion.mjs <file.html>
 
 Assert: overlay `.theme-reveal` xuất hiện đúng toạ độ con trỏ (kẹp trong biên nút) + màu nền MODE ĐÍCH; `data-theme`/`localStorage` đổi SAU khi phủ hết viewport; overlay tự gỡ khỏi DOM sau fade; nhánh `prefers-reduced-motion: reduce` không có `clip-path` lan (crossfade phẳng, không spatial motion).
 
-## Rules
-- KHÔNG spawn phần tử phụ độc lập cho hiệu ứng gợn — dùng `filter:drop-shadow` nhiều lớp trên CHÍNH `.theme-reveal` (xem §4, lý do lag + lệch đồng bộ đã đo được).
-- KHÔNG `backdrop-filter` trên `.theme-row` (xem §1) và KHÔNG override `background` riêng cho nó ở khối dark-mode.
-- Điểm tỏa LUÔN kẹp trong biên nút (`getBoundingClientRect()` của `.theme-switch`) — không bao giờ vọt ra ngoài dù con trỏ đang ở đâu trên màn hình lúc bấm.
-- Palette dark-mode trung tính (§3) — không thêm màu bão hoà vào nền/viền/chữ nền tảng; accent giữ nguyên một màu duy nhất.
-- `docs-site-macos` (và mọi skill sinh HTML khác cần toggle) trỏ VÀO skill này thay vì nhúng lại CSS/JS — một nguồn, sửa một chỗ.
+### Branches
+| ID | Kind | Guard | Hành vi | Skip / failure | Rejoin |
+|---|---|---|---|---|---|
+| B01 | conditional_required | `prefers-reduced-motion: reduce` hoặc không có `el.animate` | crossfade ≤150ms, không `clip-path` lan, không crest-glow (fallback trong JS §4) | — | W06 |
+| B02 | conditional_required | trang không có sidebar (landing một cột) | đặt cùng hàng footer của trang, vẫn là NÚT GẠT có nhãn, không chip icon góc | — | W02 |
+| B03 | user_optional | user đòi "instant" (bài học v5) | bỏ HẲN overlay + `el.animate`, `flip()` chỉ còn `commit(next)`, xoá CSS `.theme-reveal` nếu không còn dùng | — | W06 |
+
+### Validation và stopping
+Nghiệm thu tất định bằng `scripts/verify-theme-motion.mjs` trên trình duyệt thật (không hardcode mốc ms — chờ event `finish`). Dừng khi script PASS; thẩm mỹ (tông palette, tốc độ cảm nhận) cần user duyệt bằng mắt.
+
+### Examples
+- **Positive:** trang showcase `site/index.html` có `<nav>` sidebar → thêm CSS §1 + FOUC §2 (khoá `site-theme`) + palette §3 + JS §4 → `node skills/dark-mode-maker/scripts/verify-theme-motion.mjs site/index.html` PASS: overlay tỏa từ đúng điểm click trong nút, `data-theme` đổi sau khi phủ hết, overlay gỡ khỏi DOM.
+- **Boundary/failure:** giữ `backdrop-filter:blur` trên `.theme-row` "cho chắc" → ảnh chụp lộ dải kính mờ kép như khối riêng → vi phạm RULE-02, bỏ `backdrop-filter`, để `background:transparent`.

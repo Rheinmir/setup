@@ -60,28 +60,59 @@ def yaml_scalar(s: str) -> str:
 
 
 def render(name: str, desc: str) -> str:
-    """The SKILL.md body. Written ONCE, then byte-for-byte to both trees."""
+    """The SKILL.md body — khung compact solid-what-how/1 (concept llmwiki/wiki/concepts/solid-what-how.md).
+    Written ONCE, then byte-for-byte to both trees. Qua được `swh-lint` cấu trúc; TODO phải điền trước release."""
     return f"""---
 name: {name}
 description: {yaml_scalar(desc)}
+metadata:
+  design-standard: "solid-what-how/1"
+  contract-version: "1.0.0"
 ---
 
 # Skill: {name}
 
-## When to use
-<!-- The `description` above is what the skill router matches on — keep concrete
-     trigger phrases there. Below, spell out the situations that should invoke this skill. -->
-- TODO: a user phrasing / situation that should trigger this skill
-- TODO: another trigger
+## WHAT
 
-## Steps
-1. TODO: first concrete, verifiable step.
-2. TODO: next step.
-3. TODO: confirm the result, then hand off to the next skill if any.
+### Purpose và context
+<!-- `description` ở trên là thứ router khớp — giữ trigger phrase cụ thể ở đó. -->
+- Purpose: TODO một câu outcome — skill giúp xong việc gì.
+- Trigger: TODO 2–3 câu user nên kích hoạt; non-goals: TODO việc gần nghĩa KHÔNG thuộc skill.
 
-## Rules
-- TODO: a hard constraint or anti-pattern this skill must respect.
-- Touch only what the task requires — no opportunistic changes.
+### Mental model
+TODO thực thể → quan hệ → luồng khái niệm (vd `Input → Check → Artifact → Evidence`).
+
+### Input và output contract
+| | Field | Required? | Ý nghĩa |
+|---|---|---|---|
+| In | TODO | có | TODO |
+| Out | TODO | — | TODO — "xong" nghĩa là gì, bằng chứng nào |
+
+### Rules và capabilities
+- RULE-01 (MUST): TODO bất biến kiểm được, không phá dù chọn HOW nào.
+- Capabilities: TODO năng lực trừu tượng cần đọc/ghi/kiểm — không ghi cứng tên CLI/provider ở đây.
+
+### Failure boundaries
+TODO khi nào clarify / partial / blocked / failed — và kết quả hợp lệ của từng trường hợp.
+
+## HOW
+
+### Main workflow
+| Step | Type | Inputs | Action | Outputs/exit | Failure/next |
+|---|---|---|---|---|---|
+| W01 | deterministic | TODO | TODO preflight: kiểm input/scope/tool | TODO | thiếu input → blocked |
+| W02 | judgment | TODO | TODO | TODO | TODO → W03 |
+| W03 | deterministic | TODO | TODO kiểm kết quả | PASS → giao | FAIL → sửa 1 lần rồi dừng |
+
+### Branches
+Không có nhánh phụ trong version này. <!-- hoặc bảng: ID | kind | guard | effect | skip | failure | rejoin -->
+
+### Validation và stopping
+TODO phần nào kiểm bằng code (lệnh + rc), phần nào cần review; trần lần sửa/retry.
+
+### Examples
+- Positive: TODO input hợp lệ → expected output.
+- Boundary/failure: TODO input thiếu/sai → expected status (blocked/partial) + lý do.
 """
 
 

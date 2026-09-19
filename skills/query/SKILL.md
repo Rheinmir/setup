@@ -1,17 +1,64 @@
 ---
 name: query
 description: Synthesize answer from wiki; persist new insights as wiki entries. Trả lời kèm mục Evidence trích dẫn edge ID (eid) của các cạnh trong đồ thị wiki thật sự chống lưng kết luận — dùng khi cần biết "căn cứ nào", "trích dẫn cạnh nào", "đường đi trong graph", "cite evidence".
+metadata:
+  design-standard: "solid-what-how/1"
+  contract-version: "1.0.0"
 ---
 
 # Skill: query
 
-## Purpose
-Answer question by synthesizing wiki knowledge. Valuable findings not in wiki become new pages, compounding knowledge over time.
+## WHAT
 
-## When to invoke
-When user asks question requiring synthesis across multiple wiki pages or raw sources.
+### Purpose và context
+- **Purpose:** Answer question by synthesizing wiki knowledge. Valuable findings not in wiki become new pages, compounding knowledge over time.
+- **Trigger (when to invoke):** When user asks question requiring synthesis across multiple wiki pages or raw sources; hoặc khi cần biết "căn cứ nào", "trích dẫn cạnh nào", "đường đi trong graph", "cite evidence".
+- **Non-goals:** không trả lời bằng kiến thức ngoài wiki/`raw/` (không bịa fact); không tự ingest cả nguồn (gap → gọi `ingest`); không sửa cờ drift của trang (việc của `/lint`/`wiki-sync`).
 
-## Steps — progressive disclosure 3 tầng (ĐỪNG nạp cả trang ở bước 1)
+### Mental model
+`câu hỏi → Tầng 0 mem-rank (episodic) → Tầng 1 rg xếp hạng theo độ phủ term → Tầng 2 Read full top-N → Tầng 3 wikilinks → cổng drift → tổng hợp → [trang wiki mới nếu insight mới] → log + telemetry → Evidence (eid cạnh)`.
+
+### Input và output contract
+| | Field | Required? | Ý nghĩa |
+|---|---|---|---|
+| In | câu hỏi | có | cần tổng hợp nhiều trang wiki / raw |
+| Out | câu trả lời | có | cảnh báo `⚑ CẢNH BÁO DRIFT` (nếu có) đặt đầu câu trả lời |
+| Out | mục `## Evidence` | có | eid cạnh thật sự chống lưng, hoặc `Evidence: none (page-level only)` |
+| Out | trang wiki mới + index + log | chỉ khi có insight mới | concept hoặc source |
+| Out | dòng `wiki/log.md` + bản ghi `query-log.py` | có | log `## YYYY-MM-DD — query — <question summary>`; telemetry fail-open |
+| Out | output report draft | có (trừ khi 0 artifact) | mục Delivery |
+
+### Rules và capabilities
+- RULE-01 (MUST): **OKF v0.1 (R9):** any new wiki page starts with a YAML frontmatter block (`---`) with a non-empty `type`; copy the matching `_template.md` and keep the `## Origin` section.
+- RULE-02 (MUST): Never invent facts. Synthesize from wiki and `raw/` only.
+- RULE-03 (SHOULD): Query revealing gap (missing entity, missing concept) should trigger `ingest` of relevant `raw/` source if one exists.
+- RULE-04 (MUST): Progressive disclosure — ĐỪNG nạp cả trang ở bước 1; chỉ Read full top-N.
+- RULE-05 (MUST): Cảnh báo drift phải được chuyển nguyên văn vào câu trả lời — không nuốt, không từ chối trả lời.
+- Capabilities: đọc wiki + `raw/` + tầng nhớ episodic + wiki graph; ghi trang wiki mới, index, log, telemetry. Code-graph cho câu hỏi về code.
+
+### Failure boundaries
+- Wiki và `raw/` không có thông tin → nói rõ không có căn cứ (**partial**), không bịa.
+- Không cạnh nào chống lưng → `Evidence: none (page-level only)`.
+- Trang đọc bị cờ drift → vẫn trả lời, kèm cảnh báo đầu câu trả lời.
+- Script tầng 0 / drift / telemetry lỗi → fail-open, bỏ qua bước đó, không gãy phiên.
+
+## HOW
+
+### Main workflow
+| Step | Type | Inputs | Action | Outputs/exit | Failure/next |
+|---|---|---|---|---|---|
+| W01 | deterministic | câu hỏi | Tầng 0 `mem-rank.py retrieve` | top-k memory/episode | NOOP → bỏ qua |
+| W02 | deterministic | câu hỏi | Tầng 1 `rg` xếp hạng theo độ phủ term (code → `search_symbols`) | danh sách slug | — |
+| W03 | effect | top-N | Tầng 2 Read full top-N (~5); Tầng 3 lần wikilinks nếu cần | nội dung trang | — |
+| W04 | deterministic | slug đã đọc | Cổng drift `wiki-sync.py --flags-for` | cảnh báo hoặc im lặng | luôn exit 0 |
+| W05 | judgment | nội dung | Thiếu → check `raw/`; tổng hợp và trả lời | câu trả lời | không có căn cứ → partial |
+| W06 | judgment | câu trả lời | Insight mới? → tạo trang + index + log | trang mới / skip | không → skip |
+| W07 | effect | kết quả | Log `wiki/log.md` + telemetry `query-log.py --record` | log + bản ghi | fail-open |
+| W08 | deterministic | trang căn cứ | `wiki-graph.py cite <page>` → mục `## Evidence` | eid cạnh | none → page-level only |
+
+Chi tiết từng bước (nguồn chân lý cho W01–W08):
+
+#### Steps — progressive disclosure 3 tầng (ĐỪNG nạp cả trang ở bước 1)
 > Nguyên tắc: quét RẺ để xếp hạng trước, chỉ ĐỌC FULL vài trang cao điểm. Đo trên bộ golden
 > `wiki/sources/evals/retrieval/` cho thấy cách này giữ nguyên recall mà cắt ~65% token so với
 > "đọc mọi trang khớp" (baseline L0). Kiểm chứng: `retrieval-eval.py --check`.
@@ -52,18 +99,30 @@ When user asks question requiring synthesis across multiple wiki pages or raw so
    ```
    Không cạnh nào chống lưng → ghi thẳng `Evidence: none (page-level only)`. Trung thực hơn bịa một đường đi. Cạnh có kiểu (`supports`/`contradicts`/`supersedes`/`derives-from`/`depends-on`) khai trong frontmatter `relations:` của trang, mạnh hơn `wikilink` trần vì nó nói RÕ quan hệ.
 
-## Rules
-- **OKF v0.1 (R9):** any new wiki page starts with a YAML frontmatter block (`---`) with a non-empty `type`; copy the matching `_template.md` and keep the `## Origin` section.
-- Never invent facts. Synthesize from wiki and `raw/` only.
-- Query revealing gap (missing entity, missing concept) should trigger `ingest` of relevant `raw/` source if one exists.
+
+### Branches
+| ID | Kind | Guard | Hành vi | Skip / failure | Rejoin |
+|---|---|---|---|---|---|
+| B01 | conditional_required | câu hỏi về code | dùng code-graph MCP (`search_symbols`) thay `rg` ở Tầng 1 | — | W03 |
+| B02 | conditional_required | có dòng `⚑ CẢNH BÁO DRIFT` | chuyển nguyên văn vào đầu câu trả lời | im lặng → skip | W05 |
+| B03 | conditional_required | downstream không có `harness/` trong repo | dùng bản global `~/.claude/harness/harness/scripts/wiki-sync.py --root .` | — | W05 |
+| B04 | conditional_required | câu trả lời có insight mới không có trong wiki | tạo trang concept/source + index + log (OKF) | không → skip | W07 |
+| B05 | conditional_required | query lộ gap và có nguồn `raw/` liên quan | gọi `ingest` nguồn đó | không có nguồn → ghi gap | W07 |
+
+### Validation và stopping
+Tất định: `retrieval-eval.py --check` đo recall/token của progressive disclosure; `wiki-graph.py cite` sinh eid thật. Judgment: tổng hợp và đánh giá "insight mới". Dừng sau W08 + Delivery; không mở thêm trang ngoài top-N "cho chắc".
+
+### Examples
+- **Positive:** "vì sao adapt-modes tách 3 kiểu absorb?" → rg xếp hạng, Read `concepts/adapt-modes.md` + 2 trang cao điểm, drift im lặng → trả lời + `## Evidence` liệt kê `e:4b65f8c5  concepts/decision-anchoring.md -> concepts/adapt-modes.md  (wikilink)`; không insight mới → không tạo trang.
+- **Boundary/failure:** trang đọc bị cờ code-drift → câu trả lời mở đầu bằng dòng `⚑ CẢNH BÁO DRIFT` nguyên văn rồi mới trả lời; không cạnh nào chống lưng → `Evidence: none (page-level only)`.
 
 ---
 
-## Output Report
+### Delivery — Output Report
 
 After all main skill tasks complete, write a propose draft to the wiki.
 
-### Steps
+#### Steps
 
 **1. Build the filename:**
 - Format: `DDMMYY-<ten>.md`
@@ -73,6 +132,14 @@ After all main skill tasks complete, write a propose draft to the wiki.
 **2. Write** `llmwiki/wiki/sources/draft/DDMMYY-<ten>.md`:
 
 ```
+---
+type: draft
+title: "DDMMYY-<ten>"
+status: proposed
+tags: [<skill-name>, output-report]
+timestamp: YYYY-MM-DD
+---
+
 # DDMMYY-<ten>
 **Type:** draft
 **Status:** proposed

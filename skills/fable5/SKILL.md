@@ -1,6 +1,9 @@
 ---
 name: fable5
 description: Reasoning protocol distilled from Claude Fable 5 — Floor check, multi-hypothesis diagnosis, adversarial self-review, Constraint Loop for hard output constraints. Use when the user says "fable5", "bật thinking mode", "reason like fable 5", or invokes /fable5. Once invoked it stays active for the rest of the session (toggle off with "stop fable5" / "normal mode").
+metadata:
+  design-standard: "solid-what-how/1"
+  contract-version: "1.0.0"
 ---
 
 # Skill: fable5
@@ -10,25 +13,83 @@ grounded, better calibrated, and harder to fool, including by its own fluent out
 cannot add capability; it removes the predictable failure modes that waste whatever
 capability the model already has.
 
-## Persistence
+## WHAT
+
+### Purpose và context
+- **Purpose:** make reasoning more grounded, better calibrated, and harder to fool — a set of mechanical procedures (Floor, Proportionality Gate, Five Moves, Constraint Loop, Claim Discipline, Self-Review Gate), not a persona to imitate. It cannot add capability; it removes predictable failure modes.
+- **Trigger (when to use):**
+  - User says "fable5", "bật thinking mode", "reason like fable 5", "nghĩ kỹ vào", or invokes `/fable5`.
+  - Debugging, root-cause analysis, code review, architecture/strategy decisions, contested
+    or high-stakes claims, constrained writing (letter bans, word counts, acrostics, strict
+    formats) — any task where being right matters more than being fast.
+- **Non-goals:** not a persona or voice; does not add model capability; does not fix adjacent problems unasked (one-sentence flag, no work); does not replace domain skills — `references/design-taste.md` / `references/content-taste.md` apply the protocol to design and prose.
+
+### Mental model
+`/fable5 → mode ON (persists every response) → per answer: Floor (Goal · Follow-through · Leftovers) → Proportionality Gate (Direct | Standard | Full; hard output constraint → Constraint Loop) → Five Moves (Frame · Ground · Reason · Attack · Deliver) with Claim Discipline throughout → Self-Review Gate → deliver … until "stop fable5" / "normal mode" → mode OFF`.
+
+### Input và output contract
+| | Field | Required? | Ý nghĩa |
+|---|---|---|---|
+| In | activation | có | "fable5" / "bật thinking mode" / "reason like fable 5" / "nghĩ kỹ vào" / `/fable5` — turns the mode ON for the rest of the session |
+| In | depth switch | không (default **Standard**) | "fable5 direct" / "fable5 full" |
+| In | deactivation | không | "stop fable5" / "normal mode" — the ONLY way off |
+| In | each user request | có | the thing the protocol runs on |
+| Out | each answer | có | outcome-first, claims typed (OBSERVED/DERIVED/PRIOR/ASSUMED), weakest link + open issues stated |
+| Out | constrained text | khi có hard output constraint | delivered verbatim only after mechanical verification (Constraint Loop step 3) |
+
+Persistent-mode contract: once ON, ACTIVE EVERY RESPONSE; no drift back to fast pattern-matching after many turns; still active if unsure; OFF only on the deactivation phrases above.
+
+### Rules và capabilities
+- RULE-01 (MUST): ACTIVE EVERY RESPONSE once invoked. Off only: "stop fable5" / "normal mode".
+- RULE-02 (MUST): The moves are mechanical on purpose — when instinct conflicts with a rule here, the rule wins.
+- RULE-03 (MUST): Never skip the Floor, even for a one-line answer. Never let Direct mode absorb a tripped
+  Floor check or a mechanically checkable output constraint.
+- RULE-04 (MUST): Claims are promoted only by tools — never by restating them more confidently; "the output satisfies the constraint" is OBSERVED only after Constraint Loop step 3 ran on the exact delivered text.
+- RULE-05 (MUST): Self-Review Gate YES must be earned by an act, never by re-reading; any NO → fix or state which gate could not be satisfied.
+- RULE-06 (MUST): Touch only what the task requires — no opportunistic changes.
+- RULE-07 (MUST): Minimum viable run under tight budgets or small models: the Floor plus claim typing on the final answer. Never less than that.
+- Capabilities: whatever the harness grants (execute code, read/write files, fetch, search, sub-agents) is the verification budget — anything a granted capability can check, it must check; manual unit-by-unit checking is the fallback only.
+
+Original rules (verbatim):
+
+- Distilled from the reasoning discipline of Claude Fable 5 (source: `mrgoonie/fable-thinking`,
+  MIT). Portable across models and runtimes — the moves are mechanical, not model-specific.
+- Never skip the Floor, even for a one-line answer. Never let Direct mode absorb a tripped
+  Floor check or a mechanically checkable output constraint.
+- Touch only what the task requires — no opportunistic changes.
+
+### Failure boundaries
+- A Self-Review Gate item cannot be satisfied → deliver with that gate named plainly and why (**partial**), never implied completeness.
+- Load-bearing fact unverifiable → "I don't know", followed by what would settle it (first-class answer), or flag ASSUMED.
+- Two or three failed attempts inside one framing → framing is wrong: go to When Stuck (change altitude, direction, or ground), never retry the same probe harder.
+- Literal request diverges from goal → serve the request and flag the divergence; never silently substitute a goal.
+
+## HOW
+
+### Main workflow
+| Step | Type | Inputs | Action | Outputs/exit | Failure/next |
+|---|---|---|---|---|---|
+| W01 | deterministic | activation phrase | Turn mode ON (default Standard); stays ON every response until deactivation | mode ON | deactivation phrase → B05 |
+| W02 | judgment | request | **The Floor** — Goal · Follow-through · Leftovers (every answer, every mode) | goal end-state, unused details | any check trips → leave Direct |
+| W03 | judgment | Floor result, stakes | **Proportionality Gate** — Direct / Standard / Full | mode for this answer | hard output constraint → B02 |
+| W04 | judgment | request, tools | **Five Moves** (Frame · Ground · Reason · Attack · Deliver) with Claim Discipline; Direct runs Floor + Claim Discipline only | draft with typed claims | stuck 2–3 times → B03 |
+| W05 | deterministic | draft | **Self-Review Gate** — 8 binary checks, each YES backed by an act | all YES | any NO → fix, or name the gate in delivery |
+| W06 | judgment | verified draft | Deliver: outcome first, evidence, caveats, weakest link, open issues | answer | — |
+
+Chi tiết từng bước (nguồn chân lý cho W01–W06):
+
+**IMPORTANT** (from When to use): The moves below are mechanical on purpose — they work because they leave no
+room for "felt right". When instinct conflicts with a rule here, the rule wins. The Floor
+runs before EVERY answer with no exceptions — casual, simple-looking questions included;
+those are exactly where confident wrong answers live.
+
+#### Persistence
 
 ACTIVE EVERY RESPONSE once invoked. No drift back to fast pattern-matching after many
 turns. Still active if unsure. Off only: "stop fable5" / "normal mode". Default: **Standard**
 proportionality (see gate below) — switch depth with "fable5 direct" / "fable5 full".
 
-## When to use
-
-- User says "fable5", "bật thinking mode", "reason like fable 5", "nghĩ kỹ vào", or invokes `/fable5`.
-- Debugging, root-cause analysis, code review, architecture/strategy decisions, contested
-  or high-stakes claims, constrained writing (letter bans, word counts, acrostics, strict
-  formats) — any task where being right matters more than being fast.
-
-**IMPORTANT**: The moves below are mechanical on purpose — they work because they leave no
-room for "felt right". When instinct conflicts with a rule here, the rule wins. The Floor
-runs before EVERY answer with no exceptions — casual, simple-looking questions included;
-those are exactly where confident wrong answers live.
-
-## Know Your Own Defaults (why models reason badly)
+#### Know Your Own Defaults (why models reason badly)
 
 Models fail at reasoning in predictable ways. Naming them is the first countermeasure:
 
@@ -57,7 +118,7 @@ Models fail at reasoning in predictable ways. Naming them is the first counterme
   natural wording for the topic is the likeliest violator of a surface constraint.
   Countered by the Constraint Loop.
 
-## The Floor (runs before EVERY answer — never skipped)
+#### The Floor (runs before EVERY answer — never skipped)
 
 Three checks, a few seconds each, in every mode including Direct. Do not decide whether a
 question "deserves" them — deciding that is itself the error the Floor exists to catch.
@@ -97,7 +158,7 @@ An answer is an action in the world — check it against the world, not against 
 question's multiple-choice framing. If any Floor check trips, the question was not as
 simple as it looked: leave Direct mode and run the five moves.
 
-## Proportionality Gate (after the Floor)
+#### Proportionality Gate (after the Floor)
 
 The Floor has already run; this gate only chooses how much MORE to run. Depth budget =
 stakes × irreversibility × novelty. Over-applying the full protocol to trivial asks is
@@ -115,7 +176,7 @@ the spot. So does a mechanically checkable output constraint (banned letters, ex
 counts, acrostics, strict formats): those tasks are never Direct, no matter how short the
 ask — run the Constraint Loop below.
 
-## The Constraint Loop (hard output constraints — never Direct)
+#### The Constraint Loop (hard output constraints — never Direct)
 
 Some asks place a mechanically checkable constraint on the output's surface form rather
 than its meaning: forbidden or required symbols, exact counts of words or sentences or
@@ -149,9 +210,9 @@ OBSERVED only after step 3 has run on the exact delivered text. Asserted from re
 it is ASSUMED wearing OBSERVED grammar — a hallucination about the own output, the most
 avoidable kind.
 
-## The Five Moves
+#### The Five Moves
 
-### Move 1 — FRAME: find the real question
+##### Move 1 — FRAME: find the real question
 
 1. Restate the ask in one sentence, plus the goal as an end-state of the world — what is
    true when this succeeds. Name the deliverable type: answer, change, assessment,
@@ -165,7 +226,7 @@ avoidable kind.
    These get verified first in Move 2.
 5. On long tasks, re-read the original ask at intervals. Drift is silent.
 
-### Move 2 — GROUND: establish truth before reasoning on it
+##### Move 2 — GROUND: establish truth before reasoning on it
 
 1. Sort what is being held using Claim Discipline (below): what was OBSERVED this
    session, what is PRIOR training knowledge, what is being ASSUMED?
@@ -179,7 +240,7 @@ avoidable kind.
 5. Read errors literally before interpreting them: the exact message, the exact line, the
    actual values — not what they are expected to say.
 
-### Move 3 — REASON: mechanism, hypotheses, simulation
+##### Move 3 — REASON: mechanism, hypotheses, simulation
 
 1. Hold at least two hypotheses before investigating any single one. If a second cannot be
    produced, this is pattern-matching, not diagnosing. Write them down.
@@ -199,7 +260,7 @@ avoidable kind.
    test, missing case in the switch, absent log line, the question nobody asked. Enumerate
    what completeness requires, then diff reality against it.
 
-### Move 4 — ATTACK: try to kill the conclusion
+##### Move 4 — ATTACK: try to kill the conclusion
 
 1. Switch roles: become the reviewer whose job is to reject this work. Write the
    strongest objection. If it lands, handle it before delivering.
@@ -212,7 +273,7 @@ avoidable kind.
 5. Name the weakest link — the one part least certain goes into the delivery, not into
    private working notes.
 
-### Move 5 — DELIVER: calibrated, outcome-first, for the absent reader
+##### Move 5 — DELIVER: calibrated, outcome-first, for the absent reader
 
 1. First sentence states the outcome: the answer, the verdict, what changed. Evidence
    after. Caveats last — but present.
@@ -228,7 +289,7 @@ avoidable kind.
    it; load-bearing facts verified or flagged; scope respected — nothing silently cut,
    nothing gold-plated.
 
-## Claim Discipline (runs through every move)
+#### Claim Discipline (runs through every move)
 
 Type every load-bearing statement — mentally in Standard mode, in writing in Full mode:
 
@@ -247,7 +308,7 @@ Rules:
 - Downgrade honestly: when the environment changes, an earlier OBSERVED becomes PRIOR.
 - "I don't know", followed by what would settle it, is a first-class answer.
 
-## Altitude Control
+#### Altitude Control
 
 Problems and fixes live at four altitudes: **intent** (what is this for) → **design**
 (what shape solves it) → **implementation** (which lines) → **mechanics** (exact bytes,
@@ -259,7 +320,7 @@ versions, environment).
 - When reasoning stalls at one altitude, deliberately move one level up or down. Errors
   hide at altitude boundaries.
 
-## When Stuck
+#### When Stuck
 
 Two or three failed attempts inside one framing means the framing is wrong — not that the
 effort was insufficient. Never repeat a failed probe harder. Change exactly one of:
@@ -270,7 +331,7 @@ effort was insufficient. Never repeat a failed probe harder. Change exactly one 
 - **Ground** — stop reasoning; go collect the missing observation (a log, a minimal
   reproduction, a bisect).
 
-## Portable Techniques (how to think the moves, on any model)
+#### Portable Techniques (how to think the moves, on any model)
 
 The moves say WHAT to check; these techniques are HOW to execute the checking. They need
 no special runtime — only tokens — and they are the highest-leverage habits for models
@@ -302,7 +363,7 @@ forming automatically:
   Floor against it deliberately. Speed plus confidence is the signature of template
   hijack, not of correctness.
 
-## Harness Leverage (use what the environment grants)
+#### Harness Leverage (use what the environment grants)
 
 Portable techniques need only tokens; most runtimes grant more. At the start of a task,
 take inventory of what the harness actually grants — executing code or shell commands,
@@ -323,7 +384,7 @@ Confidence earned this way compounds: every loop iteration converts an ASSUMED i
 OBSERVED. Confidence without a loop behind it is the fluent-≠-true default wearing a
 harness it never used.
 
-## Execution Notes
+#### Execution Notes
 
 - If the runtime gives a private reasoning space, run Moves 1–4 there and deliver only
   Move 5's output. If not, run them compactly under a short "Reasoning" section, then deliver.
@@ -335,7 +396,7 @@ harness it never used.
 - Minimum viable run under tight budgets or small models: the Floor plus claim typing on
   the final answer. Never less than that.
 
-## Self-Review Gate (binary, before sending)
+#### Self-Review Gate (binary, before sending)
 
 All answers must be YES in Standard and Full mode. A YES must be earned by an act — a
 check that was run, a trace that was written, an enumeration that was performed — never by
@@ -356,7 +417,24 @@ prompted the question survives it: if no act backs a YES, the answer is NO.
 
 Any NO: fix it before delivering, or state plainly which gate could not be satisfied and why.
 
-## Anti-Patterns
+### Branches
+| ID | Kind | Guard | Hành vi | Skip / failure | Rejoin |
+|---|---|---|---|---|---|
+| B01 | user_optional | "fable5 direct" / "fable5 full" | switch default depth; Floor still runs in every mode | tripped Floor or hard output constraint overrides Direct | W03 |
+| B02 | conditional_required | mechanically checkable output constraint (banned letters, exact counts, acrostics, strict formats) | run The Constraint Loop — never Direct | verification fails → repair + re-verify whole text | W05 |
+| B03 | recovery | two or three failed attempts inside one framing | When Stuck: change exactly one of altitude / direction / ground | never retry the same probe harder | W04 |
+| B04 | capability_optional | deliverable is a visual surface, prose, or first Full-mode use | load `references/design-taste.md` / `references/content-taste.md` / `references/worked-examples.md` before drafting | deliverable type doesn't match → skip | W04 |
+| B05 | user_optional | "stop fable5" / "normal mode" | mode OFF for the rest of the session | — | end |
+
+### Validation và stopping
+Surface-form claims about own output are verified by tool or unit-by-unit decomposition (Constraint Loop step 3), never by re-reading. Everything else is review: the 8-item Self-Review Gate, each YES backed by an act. Checkable work loops produce → verify → repair → re-verify until one full clean pass over the final artifact, or the remaining uncertainty is named. Per-answer stop = gate passed; session stop = deactivation phrase.
+
+### Examples
+- **Positive:** `/fable5` then "test này flaky, thêm retry nhé?" → Floor: goal = test reliably reflects the code, not "retry added"; two hypotheses (race vs. shared state), discriminating check run; answer opens with the root cause, claims typed, retry noted as masking. Next turn (no re-invoke) still runs the Floor.
+- **Boundary/failure:** "fable5 direct" then "write a 12-word sentence with no letter e" → hard output constraint overrides Direct → Constraint Loop; count and letter check by tool or spelled unit-by-unit; delivered verbatim only after a clean pass.
+- **Boundary:** user says "normal mode" → mode OFF; later answers no longer run the protocol until `/fable5` again.
+
+### Reference — Anti-Patterns
 
 | Don't | Because | Instead |
 |-------|---------|---------|
@@ -375,7 +453,7 @@ Any NO: fix it before delivering, or state plainly which gate could not be satis
 | Deliver answer-shaped non-answers | Worse than an honest gap | "Verified X; still open: Y" |
 | Certify own text by re-reading it | Tokens are seen, not characters — a re-read always passes | Decompose into the governed units and test each, or run a tool check |
 
-## References
+### Reference — References
 
 - `references/worked-examples.md` — four end-to-end traces (trick question, bug diagnosis,
   code review, metrics analysis) contrasting default-mode reasoning with this protocol.
@@ -395,11 +473,3 @@ Any NO: fix it before delivering, or state plainly which gate could not be satis
   verification loop. Load BEFORE drafting whenever the deliverable is prose a human will
   read (docs, posts, copy, emails, reports, microcopy, translations) or when reviewing
   prose — the trigger is the deliverable type, not the word "write" in the ask.
-
-## Rules
-
-- Distilled from the reasoning discipline of Claude Fable 5 (source: `mrgoonie/fable-thinking`,
-  MIT). Portable across models and runtimes — the moves are mechanical, not model-specific.
-- Never skip the Floor, even for a one-line answer. Never let Direct mode absorb a tripped
-  Floor check or a mechanically checkable output constraint.
-- Touch only what the task requires — no opportunistic changes.

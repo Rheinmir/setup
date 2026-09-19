@@ -203,6 +203,7 @@ PROBE_MECH_MAP = {
     "selfstate": "code-state", "capsurface": "capsurface",
     "capproof": "capproof", "provenance": "provenance-scope",
     "orchestration": None, "deps": None, "wikisummary": None, "tidy": None,
+    "swh": "swh-lint",
 }
 
 
@@ -252,7 +253,7 @@ def p_narrative():
     canary = []
     skdir = ROOT / "skills"
     if skdir.is_dir():
-        for sk in sorted(skdir.glob("*/SKILL.md")):
+        for sk in sorted([*skdir.glob("*/SKILL.md"), *skdir.glob("external/*/SKILL.md")]):
             head = sk.read_text(encoding="utf-8", errors="ignore")[:600].lower()
             nm = sk.parent.name
             if any(k in head for k in KW) and nm not in known:
@@ -536,6 +537,25 @@ def p_tidy():
     return "ok", f"draft/ {s.get('draft_top')} file ≤ ngưỡng {s.get('threshold')}", ""
 
 
+
+def p_swh():
+    """Skill native phải theo solid-what-how/1 (concept [[solid-what-how]]).
+    Chỉ đo CẤU TRÚC — hành vi luôn review_required, không suy ra PASS từ lint."""
+    t = ROOT / "fdk/tools/swh-lint.py"
+    if not t.exists():
+        return "skip", "swh-lint.py chưa có", ""
+    rc, out = sh([PY, str(t), "--json"], timeout=60)
+    try:
+        reps = json.loads(out)
+    except Exception:
+        return "skip", "swh-lint --json không parse được", ""
+    bad = [r["skill_id"] for r in reps if r["structural"] == "fail"]
+    if bad:
+        return ("fail", f"{len(bad)}/{len(reps)} skill native chưa theo SWH: {', '.join(bad[:5])}",
+                "python3 fdk/tools/swh-lint.py  (xem finding) — skill mới sinh bằng new-skill.py đã có khung")
+    return "ok", f"{len(reps)}/{len(reps)} skill native đạt cấu trúc SWH (hành vi: review_required)", ""
+
+
 PROBES = [
     ("rules",    ["rules", "luật", "bite"],      p_rules),
     ("tidy",     ["tidy", "docs", "draft", "sprawl", "archive"], p_tidy),
@@ -556,6 +576,7 @@ PROBES = [
     ("capsurface", ["capsurface", "version", "capabilities", "bump", "downstream"], p_capsurface),
     ("capproof", ["capproof", "proof", "unproven", "ratchet", "dup"], p_capproof),
     ("provenance", ["provenance", "supply-chain", "external-pull", "tamper"], p_provenance),
+    ("swh", ["swh", "skill", "solid", "what-how", "standard"], p_swh),
     ("orchestration", ["orchestration", "orca", "dispatch", "task", "treo"], p_orchestration),
     ("deps", ["deps", "dependency", "code-graph", "orca", "mcp", "ngoài"], p_deps),
 ]

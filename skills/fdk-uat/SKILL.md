@@ -12,25 +12,86 @@ description: >-
   Gọi khi user nói "uat", "test thật", "test downstream", "kiểm tra người mới cài có chạy không",
   "acceptance", "/fdk-uat", hoặc trước khi công bố một bản có năng lực mới. KHÁC medic --ci và
   fresh-install-smoke (cả hai cài từ working-tree qua file:// nên KHÔNG chứng minh được đường remote).
+metadata:
+  design-standard: "solid-what-how/1"
+  contract-version: "1.0.0"
 ---
 
 # Skill: fdk-uat
 
-## Vấn đề nó giải
+## WHAT
+
+### Purpose và context
+- **Purpose:** nghiệm thu một bản framework sắp phát hành ở tầng "người mới `curl` về": dựng dự án TRỐNG, cài overstack qua đường remote thật, kiểm năng lực MỚI của chính bản đó tới tay người dùng — qua HAI PHA (canary trước merge, main-URL smoke ngay sau merge); fail thì gỡ khỏi remote.
+- **Trigger (when to use):**
+- Sắp công bố một bản có **năng lực mới** (skill mới, rule mới, engine mới).
+- Nghi ngờ "doc hứa mà user không nhận được" (lớp lỗi GH#77).
+- Sau khi `medic --ci` đã xanh — UAT là tầng TRÊN nó, không thay thế nó.
+  - User nói "uat", "test thật", "test downstream", "kiểm tra người mới cài có chạy không", "acceptance", `/fdk-uat`; hoặc `/ship` mức release/pr/mr có năng lực mới.
+- **Non-goals:** không thay `medic --ci` (UAT là tầng TRÊN nó), không phải `fresh-install-smoke --local` (working-tree `file://`), không live-run model LLM thật (trần cố ý — acceptance làm tay), không sửa lỗi tìm thấy (gỡ + ghi problem-tree).
+
+Bối cảnh — vấn đề nó giải (nguyên văn):
+
 `medic --ci` và `fresh-install-smoke --local` cài từ **working-tree** qua `file://`. Chúng chứng minh "code trong máy tôi lành", **không** chứng minh "người lạ `curl` về là chạy được". Hai thứ khác nhau: tarball thiếu file, `.gitignore` nuốt mất thứ cần ship, skill hỏng frontmatter bị CLI bỏ qua trong im lặng, engine global không refresh — mọi lỗi này chỉ lộ ra trên **đường remote thật**.
 
 Đường remote chỉ tồn tại **sau khi push** — nhưng không nhất thiết là push lên **nhánh chính**. Một nhánh tạm cũng có raw URL. Nghịch lý con-gà-quả-trứng biến mất, với một điều kiện: phải override **cả ba** biến nguồn, vì `install.sh` mặc định kéo skill từ nhánh chính.
 
 Và canary vẫn **không đủ**: nó chạy với ref khác + biến override, nên **mù** với chính các giá trị *mặc định* — mà mặc định là chỗ chứa chuỗi tên nhánh hardcode. Nên phải có pha hai: chạy **đúng cái lệnh người mới gõ**, không override gì cả.
 
-## When to use
-- Sắp công bố một bản có **năng lực mới** (skill mới, rule mới, engine mới).
-- Nghi ngờ "doc hứa mà user không nhận được" (lớp lỗi GH#77).
-- Sau khi `medic --ci` đã xanh — UAT là tầng TRÊN nó, không thay thế nó.
+### Mental model
+`medic --ci xanh → khai checklist năng lực mới (mỗi dòng = một lệnh) → PHA 1: push HEAD:uat/<ts> → dự án trống curl từ raw canary (HARNESS_BASE + REPO_RAW + SKILLS_REF) → UAT checklist + workspace Orca thật (assert) → PHA 2: push nhánh chính → chờ sentinel CDN → đúng lệnh README không override → smoke → PASS chốt | FAIL gỡ (revert/reset --force-with-lease) + problem-tree`. Canary kiểm NỘI DUNG; main-URL smoke kiểm GIÁ TRỊ MẶC ĐỊNH.
 
-## Steps
+### Input và output contract
+| | Field | Required? | Ý nghĩa |
+|---|---|---|---|
+| In | repo framework, `medic --ci` xanh, git sạch | có | tiền đề bước 0; đỏ thì không push |
+| In | `<owner>/<repo>` + nhánh chính | có | dựng `RAW` + `SKILLS_REF` |
+| In | checklist năng lực mới | có | viết trước khi push; không khai thành lệnh được = không tính |
+| In | duyệt push (canary / nhánh chính) | có | push là side-effect remote |
+| In | `--keep` | không | giữ dự án UAT để soi |
+| Out | `BASE` + danh sách commit sắp đẩy | có | mốc gỡ nếu fail |
+| Out | kết quả UAT từng mục (số đo thật) | có | 3 trụ · test-broad PASS · năng lực mới · orchestration-ready · worktree Orca assert · layout dot |
+| Out | verdict | có | PASS → log vào `wiki/log.md`; FAIL → commit đã gỡ khỏi remote + node `status: open` trong `llmwiki/html/fdk-problem-tree.html` |
+| Out | nhánh canary | — | đã xoá ở CẢ HAI lối ra |
 
-### 0. Tiền đề — không được bỏ
+### Rules và capabilities
+- RULE-01 (MUST): **Nhánh chính KHÔNG BAO GIỜ nhận bản chưa qua canary.** Pha 1 tồn tại để điều đó đúng.
+- RULE-02 (MUST): **Canary KHÔNG thay được main-URL smoke.** Nó chạy với ref khác + biến override → mù với các giá trị mặc định, mà mặc định chính là chỗ hardcode tên nhánh. Bỏ pha 2 là bỏ đúng thứ người dùng thật chạm vào.
+- RULE-03 (MUST): **Không bao giờ push rồi bỏ mặc.** Đã push để UAT thì phải chạy UAT trong cùng phiên. Push xong đi ngủ là để lại một bản chưa nghiệm thu cho người khác kéo về.
+- RULE-04 (MUST): **Dọn nhánh canary ở CẢ HAI lối ra** (pass và fail). Bước 0 liệt kê `git branch -r | grep uat/` để dọn rác của phiên chết giữa chừng.
+- RULE-05 (MUST): **CDN propagate không đồng đều — CHỜ SENTINEL, đừng đo ngay sau push.** `raw.githubusercontent` có thể trả file A đã mới còn file B còn cũ trong cùng một lần cài → bản lai, và cổng báo đỏ giả (hoặc xanh giả, nguy hiểm hơn). Poll một chuỗi CHỈ có ở bản mới cho tới khi raw trả đúng, rồi mới đo. Đo được thật ngày 2026-07-14: engine mới + policy cũ → test-broad 72/74, luật mới không cắn; chờ vài phút rồi chạy lại → 74/74.
+- RULE-06 (MUST): **Không đếm skill/rule bằng trí nhớ** — đếm LIVE trong dự án vừa cài. Con số trên đĩa repo **không** phải con số tới tay người dùng (đã cháy: doc báo 74 skill, installer giao 67 — 7 skill hỏng frontmatter bị CLI nuốt im lặng).
+- RULE-07 (MUST): **Rule mới phải CẮN, không chỉ có mặt.** File `policy.yaml` có dòng luật ≠ luật chặn được. Luôn test bằng một file BAD thật.
+- RULE-08 (MUST): **Trần (ceiling) cố ý:** UAT headless không spin được model LLM, nên "`/orchestration` chạy được" chỉ kiểm ở mức tất định (cài đủ + reachable + ping runtime). Live-run bằng model thật vẫn là acceptance làm tay.
+- RULE-09 (MUST): Fail thì **gỡ**, không "để đó sửa sau". Remote là thứ người khác kéo về.
+- RULE-10 (MUST): **Workspace Orca hiện thật là BẮT BUỘC, có assert kiểm tên, không phải "tuỳ chọn thấy được bằng mắt".** Bị nhắc lặp lại 2 lần (2026-07-21, 2026-07-24) vì trước đây ghi là tuỳ chọn nên bị bỏ qua khi chạy vội — filesystem-only test KHÔNG tính là UAT hoàn chỉnh dù mọi lệnh CLI khác xanh hết.
+- Capabilities: chạy gate cục bộ; push/xoá nhánh remote và revert/reset nhánh chính (cần quyền ghi remote); tải từ raw CDN; tạo dự án tạm + đăng ký repo/worktree trong Orca; ghi log wiki + problem-tree.
+
+### Failure boundaries
+- `medic --ci` đỏ / git bẩn → **blocked** ở bước 0, không push.
+- Không khai được năng lực mới thành lệnh → **clarify**: đó là lời hứa suông, không tính.
+- PHA 1 FAIL → **failed**, xoá canary; nhánh chính chưa bị bẩn.
+- Assert worktree Orca không thấy tên → **failed** tạm: DỪNG, không báo PASS, sửa `worktree create` rồi verify lại.
+- Sentinel CDN hết 30 lượt chưa mới → chưa đo (không kết luận đỏ/xanh); grep-verify MARK trên file local trước.
+- PHA 2 FAIL → **failed**, gỡ commit ngay (bước 5) + ghi problem-tree.
+
+## HOW
+
+### Main workflow
+| Step | Type | Inputs | Action | Outputs/exit | Failure/next |
+|---|---|---|---|---|---|
+| W01 | deterministic | repo | Bước 0 — tiền đề: `medic --ci`, `git status --short`, `git log origin/<nhánh>..HEAD`, ghi `BASE` | mốc BASE | đỏ/bẩn → blocked |
+| W02 | judgment | diff | Bước 1 — khai checklist năng lực mới, mỗi dòng một lệnh | checklist | không thành lệnh → bỏ dòng đó |
+| W03 | effect | HEAD | Bước 2 — PHA 1: push `HEAD:uat/<ts>`, dựng dự án trống, curl từ raw canary với cả 3 biến | dự án UAT | thiếu `SKILLS_REF` = UAT ảo giác |
+| W04 | deterministic | dự án UAT | Bước 3 — chạy checklist (3 trụ, test-broad, năng lực mới, orchestration, workspace Orca + assert, layout dot) | PASS/FAIL | FAIL → xoá canary, dừng (B01) |
+| W05 | effect | PASS pha 1 | Bước 4 — PHA 2: push nhánh chính, xoá canary, chờ sentinel CDN, chạy đúng lệnh README không override, smoke ~1 phút | PASS/FAIL | FAIL → W06 |
+| W06 | effect | FAIL pha 2 | Bước 5 — gỡ commit (revert hoặc reset `--force-with-lease`) + ghi problem-tree (B02) | remote sạch | — |
+| W07 | effect | PASS | Bước 6 — chốt: dọn dự án UAT (hoặc `--keep`), ghi số đo vào `wiki/log.md` | bản đã nghiệm thu | — |
+
+Chi tiết từng bước (nguồn chân lý cho W01–W07):
+
+
+#### 0. Tiền đề — không được bỏ
 ```bash
 python3 fdk/tools/medic.py --ci          # PHẢI xanh. Đỏ mà vẫn push là cố ý đẩy rác lên remote.
 git status --short                        # sạch (không untracked lạc)
@@ -38,7 +99,7 @@ git log --oneline origin/<nhánh>..HEAD    # in ĐÚNG những commit sắp đ�
 ```
 **Ghi lại `BASE=$(git rev-parse origin/<nhánh>)`** — mốc để quay về.
 
-### 1. Khai năng lực mới của bản này (checklist UAT)
+#### 1. Khai năng lực mới của bản này (checklist UAT)
 Trước khi push, viết ra **cụ thể** bản này hứa gì mới. Mỗi dòng phải kiểm được bằng lệnh:
 - Skill mới → `~/.claude/skills/<tên>/SKILL.md` tồn tại sau khi cài, và có trong `CAPABILITIES.md` của dự án mới.
 - Rule mới → phải **CẮN THẬT** trong dự án mới (viết một file BAD → bị chặn; file GOOD → qua).
@@ -46,7 +107,7 @@ Trước khi push, viết ra **cụ thể** bản này hứa gì mới. Mỗi d�
 
 Không khai được thành lệnh thì **không tính là năng lực** — đó là lời hứa suông.
 
-### 2. PHA 1 — nhánh CANARY (nhánh chính KHÔNG nhận gì cả)
+#### 2. PHA 1 — nhánh CANARY (nhánh chính KHÔNG nhận gì cả)
 Đường remote chỉ tồn tại sau khi push — nhưng **không nhất thiết phải push lên nhánh chính**. Một nhánh tạm cũng có raw URL, và `curl` không quan tâm nhánh nào.
 
 ```bash
@@ -75,7 +136,7 @@ Chạy checklist bước 3. **PASS** → sang pha 2. **FAIL** → xoá canary, n
 git push origin --delete "$CANARY"
 ```
 
-### 3. UAT — chạy checklist bước 1 trong dự án ĐÓ
+#### 3. UAT — chạy checklist bước 1 trong dự án ĐÓ
 Tối thiểu, theo `fdk/docs/fresh-install-gate.md`:
 1. **3 trụ có mặt:** `.harness/poc-vendor-neutral/policy.yaml` · `.claude/settings.json` · `.pre-commit-config.yaml` · `.llmwiki/wiki/index.md` · `CAPABILITIES.md`.
 2. **Harness cắn thật:** `bash .harness/poc-vendor-neutral/test-broad.sh` → PASS (validator GOOD-pass / BAD-block).
@@ -102,7 +163,7 @@ print(f'✓ worktree \"$WT_NAME\" hiện thật trong Orca — {names}')
 Assertion FAIL ở đây → **DỪNG, không được tiếp tục báo PASS cho user** — quay lại sửa lệnh `worktree create` (thường do `--repo` sai định dạng selector hoặc `repo add` chưa commit) rồi verify lại. Đây chính là gate cấu trúc thay cho việc "phải nhớ tự giác dựng workspace mỗi lần" — nhớ tay đã fail 2 lần liền (2026-07-21, 2026-07-24), giờ ép bằng assert.
 6. **Layout đúng chuẩn dot:** không tồn tại `llmwiki/` hay `harness/` trần ở gốc dự án UAT — chỉ `.llmwiki/` · `.harness/` (AP-7 layout hallucination).
 
-### 4. PHA 2 — main-URL smoke, NGAY SAU merge (canary KHÔNG thay được bước này)
+#### 4. PHA 2 — main-URL smoke, NGAY SAU merge (canary KHÔNG thay được bước này)
 Pha 1 chạy với **ref khác** và **ba biến override** → nó **mù** với chính các giá trị **mặc định**. Mà mặc định là chỗ chứa chuỗi nhánh hardcode (`bootstrap.sh` `BASE=`, `install.sh` `REPO_RAW=`, `SKILLS_REF=`). Chỉ pha này kiểm được **đúng cái lệnh người mới thật sự gõ**.
 
 ```bash
@@ -136,7 +197,7 @@ Rút gọn (~1 phút): 3 trụ có mặt · `bash .harness/poc-vendor-neutral/te
 
 **FAIL → gỡ ngay** (bước 5). Cửa sổ rủi ro của nhánh chính thu từ "cả bài UAT dài" xuống "một lần smoke ~1 phút".
 
-### 5. KHÔNG PASS → gỡ commit khỏi remote NGAY
+#### 5. KHÔNG PASS → gỡ commit khỏi remote NGAY
 Chỉ dùng khi PHA 2 đỏ (hoặc ai đó đã lỡ push thẳng, bỏ qua canary). Chọn theo tình huống:
 ```bash
 # (a) Nhánh chia sẻ / đã có người kéo → REVERT (không viết lại lịch sử):
@@ -149,22 +210,26 @@ git reset --hard "$BASE" && git push --force-with-lease origin <nhánh>
 
 Gỡ xong: ghi lại **vì sao fail** vào `llmwiki/html/fdk-problem-tree.html` (node mới, `status: open`) — thất bại UAT là dữ liệu, không phải chuyện xấu hổ.
 
-### 6. PASS → chốt
+#### 6. PASS → chốt
 - Dọn dự án UAT (hoặc giữ lại `--keep` nếu cần soi).
 - Ghi kết quả (số đo thật, không phải lời hứa) vào `wiki/log.md`.
 - Bản trên remote coi như đã được nghiệm thu ở tầng "người mới cài".
 
-## Rules
-- **Nhánh chính KHÔNG BAO GIỜ nhận bản chưa qua canary.** Pha 1 tồn tại để điều đó đúng.
-- **Canary KHÔNG thay được main-URL smoke.** Nó chạy với ref khác + biến override → mù với các giá trị mặc định, mà mặc định chính là chỗ hardcode tên nhánh. Bỏ pha 2 là bỏ đúng thứ người dùng thật chạm vào.
-- **Không bao giờ push rồi bỏ mặc.** Đã push để UAT thì phải chạy UAT trong cùng phiên. Push xong đi ngủ là để lại một bản chưa nghiệm thu cho người khác kéo về.
-- **Dọn nhánh canary ở CẢ HAI lối ra** (pass và fail). Bước 0 liệt kê `git branch -r | grep uat/` để dọn rác của phiên chết giữa chừng.
-- **CDN propagate không đồng đều — CHỜ SENTINEL, đừng đo ngay sau push.** `raw.githubusercontent` có thể trả file A đã mới còn file B còn cũ trong cùng một lần cài → bản lai, và cổng báo đỏ giả (hoặc xanh giả, nguy hiểm hơn). Poll một chuỗi CHỈ có ở bản mới cho tới khi raw trả đúng, rồi mới đo. Đo được thật ngày 2026-07-14: engine mới + policy cũ → test-broad 72/74, luật mới không cắn; chờ vài phút rồi chạy lại → 74/74.
-- **Không đếm skill/rule bằng trí nhớ** — đếm LIVE trong dự án vừa cài. Con số trên đĩa repo **không** phải con số tới tay người dùng (đã cháy: doc báo 74 skill, installer giao 67 — 7 skill hỏng frontmatter bị CLI nuốt im lặng).
-- **Rule mới phải CẮN, không chỉ có mặt.** File `policy.yaml` có dòng luật ≠ luật chặn được. Luôn test bằng một file BAD thật.
-- **Trần (ceiling) cố ý:** UAT headless không spin được model LLM, nên "`/orchestration` chạy được" chỉ kiểm ở mức tất định (cài đủ + reachable + ping runtime). Live-run bằng model thật vẫn là acceptance làm tay.
-- Fail thì **gỡ**, không "để đó sửa sau". Remote là thứ người khác kéo về.
-- **Workspace Orca hiện thật là BẮT BUỘC, có assert kiểm tên, không phải "tuỳ chọn thấy được bằng mắt".** Bị nhắc lặp lại 2 lần (2026-07-21, 2026-07-24) vì trước đây ghi là tuỳ chọn nên bị bỏ qua khi chạy vội — filesystem-only test KHÔNG tính là UAT hoàn chỉnh dù mọi lệnh CLI khác xanh hết.
+### Branches
+| ID | Kind | Guard | Hành vi | Skip / failure | Rejoin |
+|---|---|---|---|---|---|
+| B01 | recovery | PHA 1 FAIL | `git push origin --delete "$CANARY"`; nhánh chính không đụng | — | kết thúc (failed) |
+| B02 | recovery | PHA 2 FAIL (hoặc lỡ push thẳng bỏ canary) | nhánh chia sẻ → `git revert --no-edit <sha>..HEAD`; nhánh riêng chưa ai kéo → `git reset --hard "$BASE"` + `--force-with-lease`; ghi node problem-tree | không bao giờ `--force` trần | kết thúc (failed) |
+| B03 | recovery | assert worktree Orca FAIL | DỪNG, sửa `--repo` selector / commit trước `repo add`, verify lại | không được báo PASS | W04 mục 5 |
+| B04 | user_optional | `--keep` | giữ dự án UAT để soi thay vì dọn | — | W07 |
+| B05 | recovery | bước 0 liệt kê `git branch -r` thấy còn nhánh `uat/` cũ | dọn canary rác của phiên chết giữa chừng | — | W01 |
+
+### Validation và stopping
+PASS chỉ khi mọi mục checklist bước 3 xanh bằng lệnh (kể cả assert worktree tên `$WT_NAME`) VÀ smoke pha 2 xanh sau sentinel. Đếm skill/rule LIVE trong dự án vừa cài, không theo trí nhớ. Sentinel poll tối đa 30 × 10s. Không bao giờ push rồi bỏ mặc: UAT chạy trong cùng phiên.
+
+### Examples
+- **Positive:** bản thêm skill `record-episode` → checklist "`~/.claude/skills/record-episode/SKILL.md` tồn tại + có trong `CAPABILITIES.md`" → push `uat/260919-1030`, curl với `SKILLS_REF="<owner>/<repo>#uat/260919-1030"` → test-broad PASS, skill reachable, `orca worktree list` thấy `uat-260919-1030` → push nhánh chính, sentinel khớp, smoke không override PASS → xoá canary, ghi `wiki/log.md`.
+- **Boundary/failure:** PHA 2 đo ngay sau push không chờ sentinel → engine mới + `policy.yaml` cũ → test-broad 72/74, luật mới không cắn → đây là đỏ GIẢ: chờ sentinel rồi đo lại (74/74). Nếu sau sentinel vẫn đỏ → gỡ commit bằng revert, ghi node `status: open`.
 
 ## Origin
 - Luồng distill từ `fdk/docs/fresh-install-gate.md` (§ "Luồng chuẩn: dựng workspace Orca mới rồi test fresh-install") + yêu cầu của user 2026-07-14: cho phép push trước để test thật, không pass thì gỡ commit khỏi remote.
