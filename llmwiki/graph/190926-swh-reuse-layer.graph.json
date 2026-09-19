@@ -206,12 +206,13 @@
    "verify": "python3 fdk/tools/ci-local.py",
    "qc": "",
    "spec_hash": "338b58bff364cf9a",
-   "state": "dispatched",
+   "state": "done",
    "gen": 1,
-   "rev": 2,
+   "rev": 3,
    "attempts": 1,
    "fresh": "current",
-   "verified": "unverified"
+   "verified": "verified",
+   "done_spec_hash": "338b58bff364cf9a"
   }
  ],
  "layers": [
@@ -299,5 +300,5 @@
  ],
  "control": "active",
  "schema_version": 1,
- "checksum": "3e05d56c4dc72844"
+ "checksum": "8b01b551206c3d93"
 }
