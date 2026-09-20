@@ -538,6 +538,7 @@ def build_r21(base):
                    [("new-file:listed", "1" if "new.py" in names else "0", "1"),
                     ("old-file:silent", "1" if "old.txt" not in names else "0", "1"),
                     ("reader-cap:15", str(capped), "15"),
+                    ("servers:clickable", "1" if "http://localhost:3000/  ⇄  https://a.vn" in hl.servers_message([{"url": "http://localhost:3000/", "what": "x", "public": ["https://a.vn"]}]) else "0", "1"),
                     ("non-reader:grouped-no-link", "1" if "file://" not in other and "code / script: 5" in other else "0", "1")])
 
 

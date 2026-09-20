@@ -82,3 +82,34 @@ def test_committed_in_session_still_listed(tmp_path):
     subprocess.run(["git", "-C", str(repo), "-c", "user.email=t@t", "-c", "user.name=t", "commit", "-qm", "c"], check=True)
     files = hooklib.session_touched_files(str(repo), str(_transcript(tmp_path, tmp_path / "khac.md")))  # done.py KHÔNG có trong transcript
     assert "done.py" in {Path(f).name for f in files}
+
+
+def test_running_servers_lists_project_listeners_with_clickable_url(tmp_path):
+    """Feedback 200926: Stop kèm link server ĐANG CHẠY. Server có cwd TRONG dự án → có link; ngoài dự án → không."""
+    import shutil, socket
+    if not shutil.which("lsof"):
+        import pytest; pytest.skip("không có lsof")
+    def free_port():
+        s = socket.socket(); s.bind(("127.0.0.1", 0)); p = s.getsockname()[1]; s.close(); return p
+    root = tmp_path / "proj"; (root / "site").mkdir(parents=True); outside = tmp_path / "other"; outside.mkdir()
+    pin, pout = free_port(), free_port()
+    procs = [subprocess.Popen([sys.executable, "-m", "http.server", str(pin), "--bind", "127.0.0.1"], cwd=root / "site", stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL),
+             subprocess.Popen([sys.executable, "-m", "http.server", str(pout), "--bind", "127.0.0.1"], cwd=outside, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)]
+    try:
+        for _ in range(50):
+            urls = [s["url"] for s in hooklib.running_servers(str(root))]
+            if f"http://localhost:{pin}/" in urls:
+                break
+            time.sleep(0.1)
+        assert f"http://localhost:{pin}/" in urls and f"http://localhost:{pout}/" not in urls, urls
+        srv = next(s for s in hooklib.running_servers(str(root)) if s["url"].endswith(f":{pin}/"))
+        assert "http.server" in srv["what"] and "site" in srv["what"]                  # ghi rõ nó LÀ GÌ, chạy ở đâu
+    finally:
+        for q in procs:
+            q.terminate()
+
+
+def test_servers_message_shows_public_link_next_to_localhost():
+    msg = hooklib.servers_message([{"url": "http://localhost:3000/", "what": "node server.js · chạy ở web/", "public": ["https://app.example.vn"]}])
+    assert "http://localhost:3000/  ⇄  https://app.example.vn" in msg and "node server.js" in msg
+    assert hooklib.servers_message([]) == ""

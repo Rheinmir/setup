@@ -9,7 +9,7 @@ import subprocess
 import sys
 import time
 
-from hooklib import audit, code_log, find_validators, harness_dir, overstack_dir, project_dir, read_payload, resolve_tool, run_validator, scope_config, stamp_path, session_touched_files, touched_message
+from hooklib import running_servers, servers_message, audit, code_log, find_validators, harness_dir, overstack_dir, project_dir, read_payload, resolve_tool, run_validator, scope_config, stamp_path, session_touched_files, touched_message
 
 
 # file code (đa ngôn ngữ) trong git-status → trigger regen phần code-graph của wiki-graph.
@@ -445,7 +445,10 @@ def _emit_touched(payload: dict) -> None:
     """R21: exit 0 nào cũng in danh sách path cho USER (systemMessage — hiện thẳng ở UI, 0 token
     của model). Exit 2 (đang chặn dừng) thì bỏ: lượt dừng thật kế tiếp sẽ in."""
     try:
-        msg = touched_message(session_touched_files(project_dir(payload), payload.get("transcript_path") or ""))
+        root = project_dir(payload)
+        msg = touched_message(session_touched_files(root, payload.get("transcript_path") or ""))
+        if os.environ.get("OVERSTACK_TOUCHED_SERVERS") != "0":          # link server đang chạy: localhost trong dự án + hostname thật qua tunnel
+            msg = "\n".join(x for x in (msg, servers_message(running_servers(root))) if x)
         if msg:
             print(json.dumps({"systemMessage": msg}, ensure_ascii=False))
     except Exception:

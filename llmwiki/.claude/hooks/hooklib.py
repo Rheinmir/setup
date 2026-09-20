@@ -356,3 +356,55 @@ def touched_message(files, cap: int = TOUCHED_CAP) -> str:
                 b = groups[name]
                 lines.append(f"  · {name}: {len(b)} — {', '.join(b[:3])}{' …' if len(b) > 3 else ''}")
     return "\n".join(lines)
+
+
+# R21 phần server (feedback 200926 "stop hook kèm link các server hiện tại localhost hoặc link thật"): cuối lượt in luôn
+# cái gì ĐANG CHẠY để bấm mở — khỏi hỏi "port mấy?". Chỉ đọc (lsof/ps + file config tunnel), không mở kết nối nào.
+def running_servers(root: str):
+    """[{url, what, public[]}] — process đang LISTEN có cwd nằm trong dự án; kèm hostname thật nếu một cloudflared đang chạy
+    trỏ ingress về đúng port đó. Thêm các hostname tunnel đang sống của máy (trỏ dịch vụ ngoài) ở cuối. Fail-open → []."""
+    def sh(args, t=4):
+        try:
+            return subprocess.run(args, capture_output=True, text=True, timeout=t).stdout
+        except Exception:
+            return ""
+    root = os.path.realpath(root)
+    tunnels = []                                   # (hostname, service)
+    for ln in sh(["ps", "-axo", "args="]).splitlines():
+        m = re.search(r"cloudflared\b.*--config[ =](\S+)", ln)
+        if m:
+            try:
+                cfg = open(os.path.expanduser(m.group(1)), encoding="utf-8", errors="ignore").read()
+            except Exception:
+                continue
+            tunnels += re.findall(r"hostname:\s*(\S+)\s*\n\s*service:\s*(\S+)", cfg)
+    out, pid = [], None
+    ports = {}                                     # pid → {port}
+    for ln in sh(["lsof", "-nP", "-iTCP", "-sTCP:LISTEN", "-Fpn"]).splitlines():
+        if ln.startswith("p"):
+            pid = ln[1:]
+        elif ln.startswith("n") and pid and ln.rsplit(":", 1)[-1].isdigit():
+            ports.setdefault(pid, set()).add(int(ln.rsplit(":", 1)[-1]))
+    for pid, ps_ in ports.items():
+        cwd = next((x[1:] for x in sh(["lsof", "-a", "-p", pid, "-d", "cwd", "-Fn"]).splitlines() if x.startswith("n")), "")
+        rc = os.path.realpath(cwd) if cwd else ""
+        if not rc or not (rc == root or rc.startswith(root + os.sep)):
+            continue
+        cmd = " ".join(os.path.basename(a) if i == 0 else a for i, a in enumerate(sh(["ps", "-p", pid, "-o", "args="]).split()))[:70]
+        for port in sorted(ps_):
+            pub = [f"https://{h}" for h, s in tunnels if re.search(rf"(localhost|127\.0\.0\.1):{port}\b", s)]
+            out.append({"url": f"http://localhost:{port}/", "what": f"{cmd} · chạy ở {os.path.relpath(rc, root) or '.'}/", "public": pub})
+    used = {u for s in out for u in s["public"]}
+    for h, s in tunnels:
+        if f"https://{h}" not in used and not re.search(r"localhost|127\.0\.0\.1", s):
+            out.append({"url": f"https://{h}", "what": f"link thật qua tunnel của máy này → {s}", "public": []})
+    return out
+
+
+def servers_message(servers) -> str:
+    if not servers:
+        return ""
+    lines = [f"🌐 [R21] {len(servers)} server đang chạy (bấm mở):"]
+    for s in servers:
+        lines.append(f"  • {s['url']}" + "".join(f"  ⇄  {u}" for u in s["public"]) + f"\n      {s['what']}")
+    return "\n".join(lines)
