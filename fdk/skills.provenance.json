@@ -839,12 +839,15 @@
       "source": "local-authored"
     },
     "orca-graph": {
+      "adapt_mode": "external-pull",
+      "category": "orchestrate",
+      "commit": "61025d0f54e35d8cad46dde5118887a2dfabe8c7",
       "files": {
-        "SKILL.md": "ce712fe14c13203c1e6c78a0d603b8c0a85fc8ffb4c79631b177a96f267e0541",
-        "assets/kind-glyphs.json": "5b9fd7a4769104a29915c9107390228b669b93df8c93c5ca4b256a1555a50c7f"
+        "SKILL.md": "40a2bb78fc6fa57a08d9349923f69154bc971731b20bcf98d14f481af8fe3083"
       },
-      "recorded": "2026-09-19",
-      "source": "local-authored"
+      "recorded": "2026-09-20",
+      "source": "https://github.com/Rheinmir/orca-graph",
+      "version": "3.0.1"
     },
     "orca-handover": {
       "files": {

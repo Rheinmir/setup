@@ -30,7 +30,9 @@ command -v pwsh >/dev/null 2>&1 || { echo "⚠ bỏ qua ca 2: không có pwsh tr
 echo "== ca 2 (động): có bash (đóng vai Git Bash trên Windows thật) — LUÔN trong thư mục cô lập =="
 TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
 set +e
-OUT2="$(pwsh -NoProfile -File "$SCRIPT" -Root "$TMP" -HarnessOnly -NoVerify 2>&1)"
+# ORCA_GRAPH_SKIP (biến, không phải cờ -NoGraph): install.ps1 tải install.sh từ REMOTE — bản remote cũ hơn working tree
+# sẽ từ chối cờ lạ, còn biến môi trường thì bản nào cũng chịu. Mục đích: test không clone module orca-graph về ~ thật.
+OUT2="$(ORCA_GRAPH_SKIP=1 pwsh -NoProfile -File "$SCRIPT" -Root "$TMP" -HarnessOnly -NoVerify 2>&1)"
 CODE2=$?
 set -e
 [ "$CODE2" -eq 0 ] || fail "ca 2: kỳ vọng exit 0, được $CODE2 — output: $OUT2"

@@ -5,6 +5,14 @@
 make_downstream_fixture() {
   local SRC; SRC="$(cd "${1:?repo-root}" && pwd)"
   FX_TMP="$(mktemp -d)"
+  # Engine orca-graph sống ở repo riêng: lấy bản ĐÃ CÀI trên máy làm nguồn local (chụp TRƯỚC khi đổi HOME) để fixture
+  # vẫn kín mạng; máy chưa cài thì bỏ module (shim sẽ báo rc 3 — ca (e) của dot-layout-runtime tự skip).
+  local OG_REAL; OG_REAL="$(cd "${ORCA_GRAPH_REPO:-$HOME/.orca-graph/repo}" 2>/dev/null && pwd -P || true)"
+  if [ -n "$OG_REAL" ] && git -C "$OG_REAL" rev-parse --git-dir >/dev/null 2>&1; then
+    export ORCA_GRAPH_REPO="$OG_REAL" ORCA_GRAPH_REF="$(git -C "$OG_REAL" rev-parse --abbrev-ref HEAD)"
+  else
+    export ORCA_GRAPH_SKIP=1
+  fi
   export HOME="$FX_TMP/home"; mkdir -p "$HOME"
   FX="$FX_TMP/proj"; GH="$HOME/.claude/harness"
   mkdir -p "$FX"; git -C "$FX" init -q

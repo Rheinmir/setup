@@ -38,6 +38,10 @@ PostgreSQL ledger với `SKIP LOCKED`, sandbox và isolation runtime, secret gat
 
 PLAN triển khai chính bản nâng cấp này được chạy qua orca-graph. Lệnh `lint` bắt được node t7 thiếu Verify. Nguyên nhân là parser coi dòng `## ` bên trong khối code của PLAN là hết task. Cổng tất định bắt lỗi mà mắt người bỏ qua, đúng tinh thần bất biến 12 của PRD.
 
+## Bản kế tiếp
+
+PRD đã lên v1.1 ngày 20/09/2026, thêm §22–30 (edge có lý do, resource claims, verifier packet, discovery, cost envelope). Phần chênh nằm ở [[200926-reprise-graph-engine-prd-v11]]; file raw v1.0 đã được user thay bằng bản v1.1.
+
 ## Origin
 
 - Nguồn thô: `llmwiki/raw/Reprise-Graph-Engine-Full-Cycle-PRD.md` (user đưa ngày 12/09/2026, yêu cầu "triển khai xong PRD thì dùng").

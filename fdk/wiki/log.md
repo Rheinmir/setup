@@ -329,3 +329,8 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 - 2026-09-15 14:30 — session `3f868788` — 42 tool calls — files: 00-New-Project.md, 150926-payroll-sit-ui-PLAN.md, DOCS.md, README.md, SKILL.md, design-foundation.md, harness.yml, index.md …
 - 2026-09-19 11:52 — session `0d1b17dc` — 2 tool calls — files: self-host-vercel-cloudflare-recipe.md
 - 2026-09-19 11:52 — session `0d1b17dc` — 2 tool calls — files: self-host-vercel-cloudflare-recipe.md
+
+## 2026-09-20 — update — orca-graph v3 + tách repo engine
+
+- sửa `concepts/orca-graph.md` — mục "Bản v3": lý do cạnh + audit-edges, resource claims, lý do chờ, add-node, eval VT; engine tách sang `Rheinmir/orca-graph`, framework giữ shim + mirror skill (KÉO NGOÀI)
+- sửa `index.md` — dòng orca-graph ghi thêm v3

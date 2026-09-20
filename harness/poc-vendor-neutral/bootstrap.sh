@@ -11,6 +11,10 @@
 #   ... | bash -s -- --vendor claude,opencode
 #   ... | bash -s -- --clean          # cài mới = gỡ cũ rồi cài
 #   ... | bash -s -- --no-verify
+#   ... | bash -s -- --no-graph       # KHÔNG kéo module orca-graph (repo riêng Rheinmir/orca-graph)
+#
+# Module orca-graph: mặc định ĐÃ TICK. Chạy trong terminal → hiện checklist, Enter là kéo đủ (gõ số để bỏ tick);
+# agent/CI chạy (không terminal) → kéo luôn, không hỏi. Đổi nhánh/tag engine: ORCA_GRAPH_REF=<ref>.
 #
 # Đổi nguồn/branch: HARNESS_BASE=https://raw.githubusercontent.com/<owner>/<repo>/<branch>/harness/poc-vendor-neutral
 set -euo pipefail

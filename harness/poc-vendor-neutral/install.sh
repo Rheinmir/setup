@@ -7,12 +7,18 @@
 #   project_root  thư mục dự án đích (mặc định: thư mục hiện tại)
 #   --vendor      ép danh sách vendor; bỏ qua → tự DÒ (.claude/ · opencode.json · .cursor/ · .kiro/ · .codex)
 #   --no-verify   bỏ bước chạy demo.sh + test-broad.sh
+#   --no-graph    KHÔNG kéo module orca-graph (repo riêng Rheinmir/orca-graph). Mặc định: option này ĐÃ TICK —
+#                 có terminal thì hiện checklist, Enter là kéo; không terminal (agent/CI chạy curl|bash) thì kéo luôn.
+#   --with-graph  kéo orca-graph, không hỏi (agent chạy trong terminal CÓ pty — vd terminal Orca — nên dùng cờ này hoặc
+#                 OVERSTACK_NONINTERACTIVE=1, nếu không checklist sẽ chờ 60s rồi mới tự Enter)
 #
 # Idempotent. CI + pre-commit luôn cài (sàn đảm bảo); adapter chỉ cài cho vendor có mặt.
 set -euo pipefail
 
 SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"   # nguồn = poc-vendor-neutral/
 ROOT="."; VENDORS=""; VERIFY=1; CLEAN=0; WITH_SKILLS=0; WITH_WIKI=0
+WITH_GRAPH=""   # "" = chưa quyết → checklist (mặc định tick) · 1 = kéo · 0 = bỏ
+[ -n "${ORCA_GRAPH_SKIP:-}" ] && WITH_GRAPH=0   # knob cho test/fixture cần cài kín mạng; người dùng thật dùng --no-graph
 # GH_HOME phải định nghĩa ở TOP LEVEL: trước đây nó chỉ được gán trong nhánh
 # `if [ "$WITH_WIKI" = 1 ]`, nhưng dòng BC="$GH_HOME/hooks/build-capabilities.py" ở dưới lại
 # nằm NGOÀI nhánh đó — nên cài KHÔNG kèm --with-wiki là `set -u` giết script ngay
@@ -25,6 +31,8 @@ while [ $# -gt 0 ]; do
     --clean) CLEAN=1; shift;;
     --with-skills) WITH_SKILLS=1; shift;;
     --with-wiki) WITH_WIKI=1; shift;;
+    --with-graph) WITH_GRAPH=1; shift;;
+    --no-graph) WITH_GRAPH=0; shift;;
     --full) WITH_SKILLS=1; WITH_WIKI=1; shift;;   # đủ 3 trụ: harness + skills + llmwiki
     -*) echo "tham số lạ: $1" >&2; exit 1;;
     *) ROOT="$1"; shift;;
@@ -386,6 +394,54 @@ if [ "$WITH_SKILLS" = 1 ]; then
   fi
 fi
 
+# ── MODULE TUỲ CHỌN sống ở REPO RIÊNG — chỉ kéo khi được tick; mặc định ĐÃ TICK, Enter là kéo đủ ──────────
+# orca-graph (engine đồ thị phân việc) tách khỏi repo này từ v1.3.110 để có lịch sử + test + eval riêng. Trong
+# overstack chỉ còn SHIM ở đường dẫn cũ (harness/scripts/orca-graph.py, fdk/tools/graph-{viz,atlas}.py) trỏ sang
+# ~/.orca-graph/repo/engine. Không kéo thì mọi thứ khác vẫn chạy; riêng /orca-graph sẽ in lệnh cài rồi dừng (rc 3).
+# Thêm module mới: nối một dòng vào MODS + một nhánh trong install_module — checklist tự dài ra.
+MODS=("graph|orca-graph — engine đồ thị phân việc: /orca-graph, /tc-run, control-room (github.com/Rheinmir/orca-graph)")
+mod_get(){ case "$1" in graph) printf '%s' "$WITH_GRAPH";; esac; }
+mod_set(){ case "$1" in graph) WITH_GRAPH="$2";; esac; }
+for m in "${MODS[@]}"; do k="${m%%|*}"; [ -n "$(mod_get "$k")" ] || { mod_set "$k" 1; ASK_MODS=1; }; done
+# Chỉ hỏi khi NGƯỜI đang ngồi trước terminal: stdout là tty VÀ mở được /dev/tty (stdin của `curl | bash` là pipe nên
+# không đọc từ stdin). Agent/CI/test (stdout bị redirect, không tty) → giữ mặc định đã tick, TUYỆT ĐỐI không treo chờ nhập.
+if [ "${ASK_MODS:-0}" = 1 ] && [ -z "${CI:-}" ] && [ -z "${OVERSTACK_NONINTERACTIVE:-}" ] && [ -t 1 ] && ( : </dev/tty ) 2>/dev/null; then
+  while :; do
+    echo ""; log "Module tuỳ chọn (repo riêng — CHỈ tải mục được tick):"
+    i=0; for m in "${MODS[@]}"; do i=$((i+1)); k="${m%%|*}"
+      printf '     [%s] %d. %s\n' "$([ "$(mod_get "$k")" = 1 ] && echo x || echo ' ')" "$i" "${m#*|}"; done
+    printf '     Enter = cài các mục đang tick · gõ số để tick/bỏ · n = bỏ hết   (60s không gõ = Enter) > '
+    ans=""; read -r -t 60 ans </dev/tty || true
+    case "$ans" in
+      "") break;;
+      n|N) for m in "${MODS[@]}"; do mod_set "${m%%|*}" 0; done; break;;
+      *[!0-9]*|????*) warn "  không hiểu '$ans'";;                    # ????* : số quá dài làm `[ -ge ]` báo lỗi thô
+      *) ans=$((10#$ans))                                           # 10# : "08" không bị đọc thành bát phân
+         if [ "$ans" -ge 1 ] && [ "$ans" -le "${#MODS[@]}" ]; then k="${MODS[$((ans-1))]%%|*}"; mod_set "$k" $((1 - $(mod_get "$k"))); else warn "  không có mục $ans"; fi;;
+    esac
+  done
+fi
+GRAPH_STATUS="— BỎ QUA         → cài sau: curl -fsSL https://raw.githubusercontent.com/Rheinmir/orca-graph/main/install.sh | bash"
+if [ "$WITH_GRAPH" = 1 ]; then
+  OG_REF="${ORCA_GRAPH_REF:-main}"
+  log "+ kéo module orca-graph (ref: $OG_REF)"
+  OGI=""; OGI_TMP=""
+  if [ -n "${ORCA_GRAPH_REPO:-}" ] && [ -f "${ORCA_GRAPH_REPO}/install.sh" ]; then
+    OGI="$ORCA_GRAPH_REPO/install.sh"                       # nguồn local (test/fixture/dev) — không đụng mạng
+  else
+    OGI_TMP="$(mktemp)"
+    curl -fsSL "https://raw.githubusercontent.com/Rheinmir/orca-graph/$OG_REF/install.sh" -o "$OGI_TMP" 2>/dev/null && OGI="$OGI_TMP"
+  fi
+  # skill /orca-graph: khi cài kèm bộ skill của overstack thì bản mirror đã đi qua npx → không copy lần hai
+  if [ -n "$OGI" ] && ORCA_GRAPH_REF="$OG_REF" bash "$OGI" $([ "$WITH_SKILLS" = 1 ] && echo --no-skill) 2>&1 | sed 's/^/    /'; then
+    GRAPH_STATUS="✓ cài/cập nhật   (~/.orca-graph/repo — repo riêng, shim ở đường dẫn cũ)"
+  else
+    warn "  kéo orca-graph lỗi (mạng?) — fail-open, không chặn install. Chạy tay: curl -fsSL https://raw.githubusercontent.com/Rheinmir/orca-graph/main/install.sh | bash"
+    GRAPH_STATUS="✗ LỖI khi kéo    → chạy tay lệnh ở trên"
+  fi
+  [ -n "$OGI_TMP" ] && rm -f "$OGI_TMP"
+fi
+
 # ── BẢN ĐỒ NĂNG LỰC CHO MODEL (ADR-005) — mắt xích cuối, đừng bỏ ──────────────────────
 # Hook orientation (session_start.py) nói với agent "dự án này có CAPABILITIES.md — bản đồ
 # skill/tool đang có". Nhưng nếu KHÔNG AI SINH file đó, hook chẳng có gì để khoe và agent vào
@@ -438,6 +494,7 @@ fi
 if [ "$WITH_SKILLS" = 0 ] || [ "$WITH_WIKI" = 0 ]; then
   warn "  ► Muốn CẢ 3 trụ trong 1 lệnh: chạy lại với  --full"
 fi
+log    "  + module orca-graph  $GRAPH_STATUS"
 log    "═════════════════════════════════════════"
 echo "   • Claude: mở session mới (hoặc /hooks reload) để hook có hiệu lực."
 echo "   • CI chạy khi push lên GitHub. Sửa luật: harness/poc-vendor-neutral/policy.yaml → chạy lại install.sh (hoặc gen-converters.py)."

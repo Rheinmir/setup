@@ -81,3 +81,4 @@ llmwiki/handover/
 
 # orca-graph: lockfile runtime, không track
 llmwiki/graph/*.locks/
+llmwiki/graph/.admission.lock*

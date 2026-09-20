@@ -3,7 +3,7 @@ name: orca-graph
 description: Phân việc dạng ĐỒ THỊ PHỤ THUỘC trên PLAN.md — trả lời 5 câu hỏi (task này cần việc gì · cái gì chạy song song · phụ thuộc vào gì · tồn tại để làm gì trong graph · liên hệ graph cũ) bằng tool tất định, dispatch theo lớp topo có KHOÁ + lease + generation, state lưu bền append-only (events.jsonl), 2 file python vẽ (1 graph / atlas 2D mọi graph), mọi câu trả lời của model gắn nhãn chắc|gợi-ý|không-biết + nguồn, audit bịa=0. Gọi khi user nói "orca-graph", "graph phân việc", "task nào song song", "phụ thuộc gì", "vẽ graph task", "dispatch theo graph", "/orca-graph".
 metadata:
   design-standard: "solid-what-how/1"
-  contract-version: "1.0.0"
+  contract-version: "1.1.0"
 ---
 
 # Skill: orca-graph
@@ -11,6 +11,11 @@ metadata:
 Nhánh của `orca-workflow`: cùng propose → gate → plan → dispatch, nhưng **deps là DỮ LIỆU** (graph.json),
 không phải suy đoán trong đầu. Runtime: `harness/scripts/orca-graph.py`. Vẽ: `fdk/tools/graph-viz.py`
 (1 graph) + `fdk/tools/graph-atlas.py` (atlas 2D). Store mặc định `llmwiki/graph/`.
+
+**Engine sống ở repo riêng** `https://github.com/Rheinmir/orca-graph` (test + bộ eval VT + lịch sử riêng), cài vào
+`~/.orca-graph/repo/`. Ba đường dẫn ở trên trong overstack là **shim** trỏ sang engine đó — lệnh gõ y như cũ. Shim báo
+"chưa cài engine" (rc 3) → chạy đúng lệnh nó in ra: `curl -fsSL https://raw.githubusercontent.com/Rheinmir/orca-graph/main/install.sh | bash`.
+Không có overstack: gọi thẳng `~/.orca-graph/bin/orca-graph`.
 
 ## WHAT
 
@@ -21,6 +26,7 @@ không phải suy đoán trong đầu. Runtime: `harness/scripts/orca-graph.py`.
   - Dispatch nhiều agent và cần khoá để 2 agent không giành cùng task / ghi cùng file.
   - Việc còn dở nhiều phiên: state phải sống qua crash, không được "nhớ trong đầu".
 - **Non-goals:** KHÔNG dùng cho sự cố (→ `orca-issue`), không dùng khi chưa có PLAN (→ `/propose` rồi `/plan`).
+  Ngoài phạm vi PRD v1.1 (nói thẳng): item pipeline bền có outbox/backpressure, layered fan-in theo token, anchor registry, routing model theo eval floor, scale proposal, seen ledger cho discovery — xem `evals/vt-matrix.json` của repo engine: 13/28 kịch bản VT ghi `out_of_scope` kèm lý do.
   Ngoài phạm vi PRD (nói thẳng, không giả vờ có): PostgreSQL ledger, secret gateway, ngân sách tiền, LangGraph, integration queue/candidate hash, compensation cho effect ngoài, sandbox process-level (chạy lệnh agent trong container/VM riêng). Tool này là file-based cho một máy; cần những thứ trên thì đó là engine khác, không phải nâng cấp orca-graph. (Allow-list GHI file — khác sandbox process — đã có, xem `run --strict` ở mục Reference — Daemon & control-room bên dưới và GH#162.)
 
 ### Mental model
@@ -35,7 +41,9 @@ Luật vay từ Reprise PRD: op_key idempotent · CAS `--if-rev` · generation c
 ### Input và output contract
 | | Field | Required? | Ý nghĩa |
 |---|---|---|---|
-| In | `PLAN.md` | có | ≥ 3 task; dòng `**Depends:**`, `**Verify:**`, tuỳ chọn `**Kind:**`, `**QC:**`; chưa có → gọi skill `plan` |
+| In | `PLAN.md` | có | ≥ 3 task; dòng `**Depends:**`, `**Verify:**`, tuỳ chọn `**Kind:**`, `**QC:**`, `**Resources:**`; chưa có → gọi skill `plan` |
+| In | lý do cạnh | nên có | `**Depends:** Task 1 (data), Task 2 (preference)` — reason ∈ data · contract · acceptance · effect_order · control (cạnh CỨNG) · preference (chỉ do thứ tự viết) |
+| In | claim tài nguyên | khi dùng chung | `**Resources:** db-migration(exclusive), api-x(shared), llm(capacity:2)` — thiếu mode = exclusive |
 | In | store | không | mặc định `llmwiki/graph/` |
 | In | `--parent <gid>/<node>` | không | gắn graph con vào node graph mẹ |
 | In | agent + lệnh agent | khi dispatch | tên agent cho `lock --by`; lệnh cho `run … --` |
@@ -52,6 +60,9 @@ Luật vay từ Reprise PRD: op_key idempotent · CAS `--if-rev` · generation c
 - RULE-04 (MUST): Deps `gợi-ý` (suy luận) phải được user xác nhận hoặc khai `**Depends:**` trước khi dispatch lớp đó.
 - RULE-05 (MUST): Không xoá/sửa tay `events.jsonl`; sai thì append event sửa. `graph.json` chỉ là cache — hỏng thì `build` lại, state fold từ events.
 - RULE-06 (MUST): HTML sinh ra: toggle sáng/tối + full path + thuật ngữ có giải nghĩa (luật fdk) — 2 file vẽ đã lo, đừng viết HTML tay.
+- RULE-08 (MUST): **Tranh chấp tài nguyên KHÔNG phải cạnh DAG** (PRD v1.1 §23.2). Hai task độc lập dùng chung nhánh tích hợp / schema DB / cổng test / quota API → khai `**Resources:**`, để `lock` tuần tự hoá lúc chạy; ĐỪNG thêm `**Depends:**` giả. Worktree riêng không miễn claim.
+- RULE-09 (MUST): `audit-edges` chỉ ĐỌC và chỉ ĐỀ XUẤT. Cạnh thiếu lý do (`EDGE_UNJUSTIFIED`) thì GIỮ và hỏi user; "không thấy dependency" không bằng "đã chứng minh độc lập". Bỏ cạnh = user đồng ý → sửa PLAN → build lại.
+- RULE-10 (MUST): User yêu cầu THÊM việc vào graph đang chạy → `add-node` (nó sửa PLAN gốc rồi build lại, `plan_version + 1`, lịch sử giữ nguyên). Cấm vá tay `graph.json`; cấm tạo graph mới cho cùng một goal.
 - RULE-07 (MUST): Không làm được (nói thẳng): coupling ngầm không lộ ra file; rollback tự động khi agent chết nửa chừng; sync 2 chiều với sổ Orca; atlas > ~500 node cần graphviz; allow-list chỉ soát filesystem, không soát network/process/secret access.
 - Capabilities: đọc PLAN và file dự án; ghi store graph append-only + khoá file; spawn và theo dõi process agent (heartbeat theo pid); chạy lệnh verify/qc; đọc diff git để soát allow-list; sinh HTML tĩnh. Mirror một chiều sang sổ điều phối ngoài là tuỳ chọn.
 
@@ -72,6 +83,7 @@ Luật vay từ Reprise PRD: op_key idempotent · CAS `--if-rev` · generation c
 | W01 | deterministic | repo có harness | Bước 0: pre-work sweep `pull-gate-sweep.sh` | sweep xong | không harness → bỏ |
 | W02 | judgment | PLAN | Bước 1: PLAN có chưa; chưa → skill `plan`; điền Depends + Verify thật | PLAN.md | thiếu Depends → tool suy, nhãn gợi-ý |
 | W03 | deterministic | PLAN.md | Bước 2: `python3 harness/scripts/orca-graph.py build <PLAN.md>` | graph.json + cảnh báo cycle, xung đột file | xung đột → thêm Depends hoặc chấp nhận có lý do |
+| W03b | deterministic | graph.json | Bước 2b: `audit-edges <id>` — cạnh thiếu lý do, cạnh preference bỏ được, critical path trước/sau | bảng finding (chỉ đọc) | `EDGE_UNJUSTIFIED` → hỏi user lý do, điền vào Depends |
 | W04 | judgment | graph | Bước 3: 5 câu hỏi bằng `ask` trước, model sau qua `answer` kèm nhãn + nguồn | answer có nhãn | không nguồn → không-biết |
 | W05 | effect | graph.json | Bước 4: vẽ `graph-viz.py` → gửi HTML cho user duyệt (`gate-create`) | HTML + gate | kind lạ → B06 |
 | W06 | effect | graph đã duyệt | Bước 5: vòng `next` → `lock` → `set dispatched` → dispatch → `set done` tới khi `next` báo hoàn tất | node done | lease hết → B05 |
@@ -88,8 +100,8 @@ Chi tiết từng bước (nguồn chân lý cho W01–W07; bước 0–6 ứng 
      `answer <id> <n> --q why --label chắc|gợi-ý|không-biết --score S --evidence file:path:line edge:a->b event:<op_key> absence:<lệnh> --text "..."`.
    - Rubric (user chốt 2026-09-12): đúng **1** · sai **0** · không-biết **0.3** · gợi-ý có nguồn thật **0.5** · **bịa nguồn 0**. Không chắc → nói `gợi-ý`/`không-biết`, đừng gắn `chắc`.
 4. **Vẽ + gate:** `python3 fdk/tools/graph-viz.py llmwiki/graph/<id>.graph.json` → gửi HTML cho user duyệt (`gate-create` như orca-workflow).
-   - Node trên đồ thị vẽ theo **kind** của task (`**Kind:** build|test|fix|research|docs|design|review|security|infra|data|migrate|deploy|release|cleanup|integration|wiki` trong PLAN.md, mặc định `build`) — icon + shape + màu nền tra ở `skills/orca-graph/assets/kind-glyphs.json` (sổ mặc định, sửa/thêm tại đây là DÙNG CHUNG mọi graph). Viền node vẫn là **state** (không đụng).
-   - `kind` lạ chưa có trong sổ → tool tự sinh tạm (monogram + màu/hình theo hash, ghi vào `kind-glyphs.local.json` cùng thư mục) và **in cảnh báo ra stderr**. Thấy cảnh báo này → **hỏi user** có muốn `/raise-issue` để submit glyph mới vào `kind-glyphs.json` không; đừng tự ý thêm vào sổ mặc định mà không hỏi.
+   - Node trên đồ thị vẽ theo **kind** của task (`**Kind:** build|test|fix|research|docs|design|review|security|infra|data|migrate|deploy|release|cleanup|integration|wiki` trong PLAN.md, mặc định `build`) — icon + shape + màu nền tra ở `engine/kind-glyphs.json` của repo engine (`~/.orca-graph/repo/engine/`; sổ mặc định DÙNG CHUNG mọi graph — sửa/thêm qua PR vào repo đó). Viền node vẫn là **state** (không đụng).
+   - `kind` lạ chưa có trong sổ → tool tự sinh tạm (monogram + màu/hình theo hash, ghi vào `~/.orca-graph/kind-glyphs.local.json` — máy-local, không bẩn git clone của engine) và **in cảnh báo ra stderr**. Thấy cảnh báo này → **hỏi user** có muốn `/raise-issue` để submit glyph mới vào `kind-glyphs.json` không; đừng tự ý thêm vào sổ mặc định mà không hỏi.
 5. **Vòng chạy** (lặp tới khi `next` báo hoàn tất):
    ```
    next <id>                                  # node ready = chạy song song NGAY; blocked = HITL, KHÔNG dispatch headless
@@ -111,6 +123,8 @@ Chi tiết từng bước (nguồn chân lý cho W01–W07; bước 0–6 ứng 
 | B05 | recovery | agent im lặng quá lease | `next` đẩy node về `unknown` → `reconcile <id> <n>` chạy verify rồi mới lock lại | tối đa 3 attempt rồi failed | W06 |
 | B06 | conditional_required | `kind` lạ chưa có trong `kind-glyphs.json` | tool sinh glyph tạm vào `kind-glyphs.local.json` + cảnh báo stderr → hỏi user có `/raise-issue` glyph mới không | không tự thêm vào sổ mặc định | W05 |
 | B07 | user_optional | muốn mirror sang sổ Orca | `sync-orca <id> --run` (một chiều) | — | W06 |
+| B09 | user_optional | user yêu cầu thêm việc / "vẽ thêm node" khi graph đã có | `add-node <id> --title … [--depends t1:data] [--blocks t5] [--files …] [--verify …] [--kind …] [--resources …]` → in `+ tN`, build lại, vẽ lại HTML, đưa link cho user | sinh cycle / > 20 node / dep lạ → tool từ chối, PLAN nguyên vẹn | W05 |
+| B10 | recovery | `lock` báo `chờ RESOURCE` | node khác đang giữ claim xung đột → làm node ready khác trước, `ask <id> waiting` xem ai giữ; lock lại khi node kia xong | không tự `unlock` node của agent khác | W06 |
 | B08 | conditional_required | node khai `**QC:**` | chạy QC độc lập sau verify rc 0; fail → `done_unverified` (run/set) hoặc `ready` (reconcile) | không khai → hành vi cũ | W06 |
 
 ### Validation và stopping
@@ -127,9 +141,24 @@ Tất định: `done` chỉ khi `verify` rc 0 (và QC nếu khai); lease/generat
 - Deps xuyên graph: `**Depends:** other-graph/t3` — thoả khi node đó xong ở graph kia. `check-cycles [dir]` gộp mọi graph, in ĐƯỜNG cycle cụ thể (`a/t2 → b/t3 → a/t2`), rc 2 (PRD §5.3).
 - `lint <id>` — leaf đủ hợp đồng chưa (PRD §4.4): title · files · produces · verify · deps rõ. `build --strict` rc 2 nếu thiếu verify/files.
 
+### Reference — Topology có lý do & tài nguyên có chủ (PRD v1.1 §23)
+- **Depends parse NGHIÊM:** token không resolve được (ghi chú chen vào sau dấu `—`, `Task 1 và Task 2`, task không tồn tại, dep xuyên graph sai dạng `<gid>/<tid>`) là LỖI `build`, không bị nuốt — cạnh biến mất im lặng thì node ready sớm mà không ai thấy. Ngăn bằng `,` hoặc `;`; ghi chú để ở dòng khác.
+- **Lý do cạnh:** `**Depends:** Task 1 (data), other-graph/t3 (control)`. Năm lớp cứng (data · contract · acceptance · effect_order · control) không bỏ được dù không truyền artifact — cổng duyệt không mang payload vẫn là cạnh thật. `preference` = chỉ do thứ tự viết. Reason KHÔNG nằm trong `spec_hash`: gắn lý do cho graph đang chạy không làm node đã xong thành stale.
+- `audit-edges <id> [--json] [--strict]` — dry-run. Mã finding: `EDGE_UNJUSTIFIED` (khai Depends mà thiếu lý do → giữ) · `EDGE_INFERRED` (deps suy luận) · `PREFERENCE_REMOVABLE` (đề xuất bỏ) · `PREFERENCE_HAS_HIDDEN_CONSTRAINT` (ghi preference nhưng Consumes/Verify/QC của downstream nhắc tới Task, file hoặc output của upstream, hoặc hai node cùng ghi một file → giữ; so CHUỖI nên coupling không lộ ra chữ thì không bắt được). In critical path **đếm theo node** (unit-weight, KHÔNG phải thời lượng), số lớp và tập chạy-ngay trước/sau. `--strict` rc 2 khi còn `EDGE_UNJUSTIFIED`.
+- **Resource claims:** key do tool chuẩn hoá (lowercase + normpath) nên alias khác chữ vẫn là một tài nguyên. `lock` lấy HẾT claim hoặc không lấy gì (không giữ A chờ B), soi mọi graph trong cùng store, chạy dưới một mutex admission. `exclusive` chặn mọi claim cùng key; `capacity:N` = KÍCH THƯỚC POOL của key — mỗi node đang giữ key (kể cả `shared`) chiếm 1 slot, các node khai N khác nhau thì lấy N nhỏ nhất (không phụ thuộc thứ tự lock, `shared` không lách được quota); `shared` thuần chỉ bị exclusive hoặc pool đầy chặn. Lease hết ở graph KHÁC cũng được reaper quét khi `lock`/`next` (claim không kẹt xuyên graph); `unlock` tay một node đang chạy đưa nó về `unknown` — reconcile trước khi lock lại. `build` in `ℹ … cùng claim` cho cặp song song — thông tin, không phải lỗi.
+- `ask <id> waiting` — mỗi node chưa chạy kèm MỘT lý do: `data` (chờ upstream) · `gate` (HITL, cổng control/acceptance, verify chưa xanh, unknown chờ reconcile) · `resource` (claim bị giữ, nêu ai giữ) · `queue` (max_parallel đầy) · `control` (pause/cancel) · `retry` (hết 3 attempt) · `none`. `next` in thêm dòng cho node **ready nhưng chưa lock được** — ready ≠ admitted.
+- Lớp topo (`ask parallel`) là **hình chiếu để giải thích**, không phải rào: node đủ deps là ready ngay dù node khác cùng lớp với upstream của nó chưa xong.
+
+### Reference — Định danh, vòng khô, ngân sách lần gọi (PRD v1.1 §24–27)
+- `reconcile-items --expected A,B,C --verdicts rows.jsonl [--universe N]` — ghép verdict (`supported|refuted|inconclusive`) theo `item_id`, không theo vị trí. `{A,A,B}` đủ 3 dòng vẫn THIẾU C → rc 2. Dòng `verdict: null` hoặc `status` ≠ ok = outcome thiếu CÓ ID (`errored_ids`), không bị lọc mất, không tính refuted; cùng item vừa có verdict vừa có dòng lỗi → `CONFLICTING_OUTCOME`; manifest rỗng cần `--allow-empty`; thiếu file verdict là lỗi, không phải "0 dòng". `coverage` tách hai mẫu số: xong/đã-chọn và đã-chọn/toàn-tập (`unknown` khi không biết — không báo 100%). Dùng khi fan-out một lô item (vd `/tc-run`) rồi gom kết quả.
+- `dry-streak --prev N --complete 0|1 --new N` — vòng discovery khô chỉ tính khi vòng HOÀN TẤT và không có ứng viên mới; vòng lỗi reset về 0. Khô = heuristic dừng, không chứng minh đã rà hết.
+- `cost-envelope <id> [--reviewers N] [--max-attempts N]` — đếm LẦN GỌI model trước dispatch: planner 1 + worker/node afk + reviewer × node có QC + synthesis 1; `max_calls` nhân trần retry; `expected` ghi unknown khi chưa có số đo. Verify shell = 0 token nhưng vẫn tốn CPU, báo riêng. Đừng nói "N agent" thay tổng call.
+
 ### Reference — Replan không phá lịch sử (PRD §10)
 - `build` lại trên graph đã có = `plan_version + 1`; node bị bỏ vào `superseded[]` (giữ state cuối), node đổi hợp đồng (`spec_hash` = title/files/deps/verify/produces) mà đã xong → `fresh=stale` (chỉ cảnh báo, không lùi state).
 - Kết quả cũ: `set done --plan-version N` với N ≠ hiện tại → STALE, không publish (invariant 2).
+- `run` nhớ `plan_version` lúc dispatch: replan xảy ra GIỮA lúc agent chạy → kết quả là STALE, node về `ready` để làm lại theo spec mới (rc ≠ 0).
+- `add-node` là replan một-node: chạy dưới mutex admission (hai lệnh song song không đè nhau), nhìn PLAN đúng như parser (bỏ qua code fence), mọi field phải MỘT dòng, `--blocks` từ chối node đang `locked|dispatched`, PLAN phải khớp graph (sửa tay thì `build` trước); id mới không tái dùng id node đã bị bỏ; `--blocks t5` chèn node mới TRƯỚC t5 (nối vào dòng Depends của t5, chưa có thì thêm). Build lại graph CON mà quên `--parent` vẫn giữ liên kết mẹ cũ.
 
 ### Reference — Control (PRD §8.3, invariant 11)
 - `control <id> pause|resume|cancel|status`. "Yêu cầu" ≠ "đã dừng": `pause_requested` chỉ thành `paused` khi không còn node `locked|dispatched`; `next`/`lock` không cấp node mới khi không `active`. `cancelled` không resume — build plan version mới.

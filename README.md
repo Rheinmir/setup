@@ -37,6 +37,16 @@ script tự dừng và chỉ đường cài Git for Windows. Chưa có gói `win
 
 Mặc định cài/update **cả 3 trụ**: **Harness** (validator tất định vendor-neutral — chặn ghi `raw/`, ép wiki có `## Origin`… qua hook native + CI làm sàn) · **Skills** (global `~/.claude/skills`) · **llmwiki** (khung wiki). Cuối lần chạy in **bảng trạng thái 3 trụ**. Cờ: `--harness-only` · `--clean` · `uninstall` (bản PowerShell: `-HarnessOnly` · `-Clean`).
 
+**Module tuỳ chọn — orca-graph.** Engine đồ thị phân việc (`/orca-graph`, `/tc-run`, control-room) sống ở repo riêng [`Rheinmir/orca-graph`](https://github.com/Rheinmir/orca-graph) để có lịch sử, test và bộ eval riêng; trình cài chỉ kéo nó khi option được tick. Option này **đã tick sẵn**: chạy trong terminal sẽ thấy checklist dưới đây, **chỉ cần Enter là kéo đủ**; gõ `1` để bỏ tick, `n` để bỏ hết. Agent hoặc CI chạy (không có terminal) thì kéo luôn, không hỏi.
+
+```
+[install] Module tuỳ chọn (repo riêng — CHỈ tải mục được tick):
+     [x] 1. orca-graph — engine đồ thị phân việc: /orca-graph, /tc-run, control-room (github.com/Rheinmir/orca-graph)
+     Enter = cài các mục đang tick · gõ số để tick/bỏ · n = bỏ hết   (60s không gõ = Enter) >
+```
+
+Bỏ hẳn bằng cờ `--no-graph` (PowerShell: `-NoGraph`); ghim nhánh/tag engine bằng `ORCA_GRAPH_REF=<ref>`. Engine nằm ở `~/.orca-graph/repo/`, trong overstack chỉ còn shim ở đường dẫn cũ nên lệnh gõ không đổi. Bỏ qua lúc cài thì về sau `/orca-graph` sẽ in đúng một lệnh để cài bù.
+
 Tự bảo trì về sau (cập nhật + trả nợ wiki + refresh bản đồ năng lực + health-check trong một lệnh): gọi skill **`/harness-update`**.
 
 ## 📖 Tài liệu chính thức (cho người đọc)

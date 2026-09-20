@@ -22,7 +22,7 @@
 | [250626-walkthroughs](html/250626-walkthroughs.html) | index | 2026-06-25 |
 | [rule-registry](concepts/rule-registry.md) | concept | 2026-06-27 — Registry R1..R12 (1 trang) + 2 policy.yaml + R6=verify-before-commit |
 | [fdk](concepts/fdk.md) | concept | 2026-06-27 — Framework Development Kit: front-door + pre-flight + module map (không miss rule, không dẫm module cũ) |
-| [orca-graph](concepts/orca-graph.md) | concept | 2026-09-12 — phân việc dạng đồ thị phụ thuộc: runtime khoá/lease/generation/state bền + 2 file vẽ + sổ câu trả lời model có audit (bịa = 0); v2 thêm cấp chứa, cycle xuyên graph, replan, control |
+| [orca-graph](concepts/orca-graph.md) | concept | 2026-09-12 — phân việc dạng đồ thị phụ thuộc: runtime khoá/lease/generation/state bền + 2 file vẽ + sổ câu trả lời model có audit (bịa = 0); v2 thêm cấp chứa, cycle xuyên graph, replan, control; v3 thêm lý do cạnh + audit-edges, resource claims, lý do chờ, add-node, eval VT — engine tách sang repo Rheinmir/orca-graph, framework giữ shim |
 | [ADR-001-policy-as-source-of-truth](sources/adr/ADR-001-policy-as-source-of-truth.md) | decision | 2026-06-27 — policy.yaml nguồn chân lý, thin-adapter (case R11) |
 | [ADR-002-pull-before-change-gates](sources/adr/ADR-002-pull-before-change-gates.md) | decision | 2026-06-27 — R12 git-level+orchestrator, bỏ per-edit, đa-vendor/đa-subrepo |
 | [ADR-003-skill-as-single-source-of-truth](sources/adr/ADR-003-skill-as-single-source-of-truth.md) | decision | 2026-06-27 — skill con = SoT, orchestrator delegate; Claude nghĩ / CLI rẻ render |

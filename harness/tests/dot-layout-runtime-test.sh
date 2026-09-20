@@ -51,6 +51,9 @@ BARE="$(grep -nE '(^|[ "(=])(llmwiki|harness)/' "$CI" | grep -vE 'harness-src|HO
   || bad "(d) CI downstream còn đường trần (skip im lặng ở dự án dot)" "$(head -3 <<<"$BARE" | tr '\n' ' ')"
 
 # (e) orca-graph lock/set inline (không qua run/watch) phải tự in kanban path trỏ ĐÚNG vào $FX (downstream)
+if [ ! -f "$HOME/.orca-graph/repo/engine/orca-graph.py" ]; then
+  echo "  SKIP  (e) máy chưa cài engine orca-graph (repo riêng) — fixture không có nguồn local để kéo"
+else
 mkdir -p "$FX/.llmwiki/graph"
 printf -- '# t\n\n### Task 1: T1\n**Verify:** true\n' > "$FX/PLAN.md"
 ( cd "$FX" && python3 "$GH/harness/scripts/orca-graph.py" --dir .llmwiki/graph build PLAN.md --id e5 \
@@ -59,6 +62,7 @@ E5="$(cd "$FX" && python3 "$GH/harness/scripts/orca-graph.py" --dir .llmwiki/gra
 grep -qF "$FX/.llmwiki/html/control-room-kanban.html" <<<"$E5" \
   && ok "(e) orca-graph set in kanban path trỏ vào dự án downstream" \
   || bad "(e) kanban path sai/thiếu" "$(grep -m1 'control-room-kanban' <<<"$E5" || echo 'không in path nào')"
+fi
 
 printf '\ndot-layout-runtime: %d PASS · %d FAIL\n' "$PASS" "$FAIL"
 [ "$FAIL" = 0 ]

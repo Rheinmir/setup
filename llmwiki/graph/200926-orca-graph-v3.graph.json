@@ -1,0 +1,620 @@
+{
+ "id": "200926-orca-graph-v3",
+ "plan": "llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md",
+ "built": "2026-09-20T09:42:12+0700",
+ "nodes": [
+  {
+   "id": "t1",
+   "title": "edge reason_class + lệnh audit-edges",
+   "files": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "node có `dep_reasons: {dep_id: reason_class}`; cú pháp PLAN `**Depends:** Task 1 (data), Task 2 (preference)`; lệnh `audit-edges <id> [--json]` in `EDGE_UNJUSTIFIED`, cạnh preference đề xuất bỏ, critical path đơn vị trước/sau (dùng bởi Task 3, Task 6, Task 7)"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 -m pytest -q harness/tests/test_orca_graph.py -k \"edge or VT01 or VT02\"",
+   "qc": "",
+   "resources": [
+    {
+     "key": "engine-source",
+     "mode": "exclusive"
+    }
+   ],
+   "spec_hash": "f86132a1e1a89e6c",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "f86132a1e1a89e6c"
+  },
+  {
+   "id": "t2",
+   "title": "resource claims — admission lúc lock",
+   "files": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "consumes": [
+    "parser của Task 1"
+   ],
+   "produces": [
+    "node có `resources: [{key, mode}]` từ `**Resources:** db-migration(exclusive), api-x(shared)`; `lock` từ chối khi claim xung đột đang được node locked/dispatched giữ (kể cả graph khác cùng store); hàm `resource_blockers(g, node, d)` (dùng bởi Task 3, Task 6)"
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 -m pytest -q harness/tests/test_orca_graph.py -k \"resource or VT03 or VT04\"",
+   "qc": "",
+   "dep_reasons": {
+    "t1": "data"
+   },
+   "resources": [
+    {
+     "key": "engine-source",
+     "mode": "exclusive"
+    }
+   ],
+   "spec_hash": "f9e0def52c29ae62",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "f9e0def52c29ae62"
+  },
+  {
+   "id": "t3",
+   "title": "ask waiting — phân loại lý do chờ",
+   "files": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "consumes": [
+    "`resource_blockers` của Task 2"
+   ],
+   "produces": [
+    "`ask <id> waiting` và `next` in mỗi node chưa chạy kèm lý do `data | gate | resource | queue | control | retry` (PRD §28.4)"
+   ],
+   "deps": [
+    "t2"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 -m pytest -q harness/tests/test_orca_graph.py -k \"waiting\"",
+   "qc": "",
+   "dep_reasons": {
+    "t2": "data"
+   },
+   "resources": [
+    {
+     "key": "engine-source",
+     "mode": "exclusive"
+    }
+   ],
+   "spec_hash": "34e0de109d5dd621",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "34e0de109d5dd621"
+  },
+  {
+   "id": "t4",
+   "title": "add-node — thêm node vào graph theo yêu cầu user",
+   "files": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "consumes": [
+    "`cmd_build` (replan giữ lịch sử)"
+   ],
+   "produces": [
+    "`add-node <id> --title T [--depends t1:data,t2] [--files a,b] [--verify CMD] [--kind K] [--resources k(mode)] [--mode hitl]` → append khối `### Task N:` vào PLAN.md gốc rồi build lại (plan_version + 1), in id node mới; từ chối khi sinh cycle hoặc vượt 20 node, PLAN giữ nguyên khi từ chối"
+   ],
+   "deps": [
+    "t3"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 -m pytest -q harness/tests/test_orca_graph.py -k \"add_node\"",
+   "qc": "",
+   "dep_reasons": {
+    "t3": "preference"
+   },
+   "resources": [
+    {
+     "key": "engine-source",
+     "mode": "exclusive"
+    }
+   ],
+   "spec_hash": "943376ec46dd3c5a",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "943376ec46dd3c5a"
+  },
+  {
+   "id": "t5",
+   "title": "identity reconcile + dry streak + cost envelope",
+   "files": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "hàm `reconcile_verdicts`, `next_dry_streak` nguyên văn PRD §25.5/§26.4; lệnh `reconcile-items --expected A,B,C --verdicts file.jsonl` (rc 2 khi thiếu/lỗi giao thức), `dry-streak --prev N --complete 0|1 --new N`, `cost-envelope <id> [--reviewers N] [--max-attempts N]` (20 node có QC → 42; 3 reviewer → 82)"
+   ],
+   "deps": [
+    "t4"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 -m pytest -q harness/tests/test_orca_graph.py -k \"VT09 or VT10 or VT17 or VT19 or VT23\"",
+   "qc": "",
+   "dep_reasons": {
+    "t4": "preference"
+   },
+   "resources": [
+    {
+     "key": "engine-source",
+     "mode": "exclusive"
+    }
+   ],
+   "spec_hash": "e3a62d7ca7be421d",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "e3a62d7ca7be421d"
+  },
+  {
+   "id": "t6",
+   "title": "graph-viz vẽ lý do cạnh + resource",
+   "files": [
+    "fdk/tools/graph-viz.py"
+   ],
+   "consumes": [
+    "`dep_reasons`, `resources` của Task 1, Task 2"
+   ],
+   "produces": [
+    "cạnh preference vẽ nét đứt, tooltip/nhãn cạnh ghi reason_class, panel node hiện resources; graph cũ không có field mới vẫn vẽ như trước"
+   ],
+   "deps": [
+    "t2"
+   ],
+   "deps_conf": "chắc",
+   "kind": "design",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/graph-viz.py llmwiki/graph/200926-orca-graph-v3.graph.json && grep -q \"preference\" llmwiki/graph/200926-orca-graph-v3.graph.html",
+   "qc": "",
+   "dep_reasons": {
+    "t2": "data"
+   },
+   "spec_hash": "9819ce420531dd44",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "9819ce420531dd44"
+  },
+  {
+   "id": "t7",
+   "title": "bộ eval VT — ma trận + scoreboard",
+   "files": [
+    "harness/tests/orca-graph-evals/vt-matrix.json",
+    "harness/tests/orca-graph-evals/run.py"
+   ],
+   "consumes": [
+    "test có mã VT của Task 1–5"
+   ],
+   "produces": [
+    "`vt-matrix.json` = 28 dòng `{id, behavior, status: covered|out_of_scope, test?, reason?}`; `run.py` chạy pytest theo từng VT covered, ghi `scoreboard.json` `{ts, engine_sha, covered, passed, out_of_scope, rows[]}`, rc 1 khi có VT covered mà đỏ"
+   ],
+   "deps": [
+    "t5"
+   ],
+   "deps_conf": "chắc",
+   "kind": "test",
+   "mode": "afk",
+   "verify": "python3 harness/tests/orca-graph-evals/run.py --check",
+   "qc": "",
+   "dep_reasons": {
+    "t5": "data"
+   },
+   "spec_hash": "47ecad9ac79c0380",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "47ecad9ac79c0380"
+  },
+  {
+   "id": "t8",
+   "title": "tách repo Rheinmir/orca-graph + shim ở setup",
+   "files": [
+    "harness/scripts/orca-graph.py",
+    "fdk/tools/graph-viz.py",
+    "fdk/tools/graph-atlas.py",
+    "harness/tests/test_orca_graph.py",
+    "harness/tests/orca-graph-ui-smoke.mjs"
+   ],
+   "consumes": [
+    "engine + test + eval của Task 1–7"
+   ],
+   "produces": [
+    "repo `Rheinmir/orca-graph` (`engine/`, `skills/orca-graph/`, `tests/`, `evals/`, `install.sh`, CI, README, VERSION); shim ở setup tìm engine theo `$ORCA_GRAPH_ENGINE_DIR` rồi `~/.orca-graph/repo/engine/`, thiếu thì in đúng một lệnh cài và rc 3; `__file__` giữ là đường shim để `overstack_paths` và control-room vẫn giải đúng"
+   ],
+   "deps": [
+    "t6",
+    "t7"
+   ],
+   "deps_conf": "chắc",
+   "kind": "migrate",
+   "mode": "afk",
+   "verify": "python3 harness/scripts/orca-graph.py --dir llmwiki/graph show 200926-orca-graph-v3 >/dev/null && cd \"$HOME/.orca-graph/repo\" && python3 -m pytest -q tests && python3 evals/run.py --check",
+   "qc": "",
+   "dep_reasons": {
+    "t6": "effect_order",
+    "t7": "effect_order"
+   },
+   "spec_hash": "48e5267e132c0a78",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "48e5267e132c0a78"
+  },
+  {
+   "id": "t9",
+   "title": "install — option orca-graph tick sẵn, Enter là kéo đủ",
+   "files": [
+    "harness/poc-vendor-neutral/install.sh",
+    "harness/poc-vendor-neutral/bootstrap.sh",
+    "harness/poc-vendor-neutral/install.ps1",
+    "README.md",
+    "harness/tests/install-graph-option-test.sh"
+   ],
+   "consumes": [
+    "`install.sh` của repo orca-graph (Task 8)"
+   ],
+   "produces": [
+    "khi có TTY, install in checklist `[x] orca-graph` và chờ Enter (gõ `n` để bỏ); không TTY (curl | bash do agent chạy) thì mặc định kéo; cờ `--no-graph` và biến `ORCA_GRAPH_REF`; bảng trạng thái cuối có dòng orca-graph"
+   ],
+   "deps": [
+    "t8"
+   ],
+   "deps_conf": "chắc",
+   "kind": "infra",
+   "mode": "afk",
+   "verify": "bash harness/tests/install-graph-option-test.sh",
+   "qc": "",
+   "dep_reasons": {
+    "t8": "contract"
+   },
+   "spec_hash": "d159e0e3dbd3f117",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "d159e0e3dbd3f117"
+  },
+  {
+   "id": "t10",
+   "title": "SKILL + mirror + provenance + wiki",
+   "files": [
+    "skills/orca-graph/SKILL.md",
+    "llmwiki/skills/orchestrate/orca-graph.md",
+    "fdk/skills.provenance.json",
+    "fdk/wiki/concepts/orca-graph.md"
+   ],
+   "consumes": [
+    "lệnh mới của Task 1–5, repo của Task 8"
+   ],
+   "produces": [
+    "SKILL mô tả `audit-edges`, `**Resources:**`, `ask waiting`, `add-node`, `reconcile-items`, `cost-envelope`; provenance `adapt_mode: external-pull` trỏ repo mới; concept orca-graph cập nhật v3"
+   ],
+   "deps": [
+    "t8"
+   ],
+   "deps_conf": "chắc",
+   "kind": "docs",
+   "mode": "afk",
+   "verify": "grep -q \"add-node\" skills/orca-graph/SKILL.md && grep -q \"audit-edges\" llmwiki/skills/orchestrate/orca-graph.md && python3 -c \"import json;assert json.load(open('fdk/skills.provenance.json'))['skills']['orca-graph']['adapt_mode']=='external-pull'\"",
+   "qc": "",
+   "dep_reasons": {
+    "t8": "data"
+   },
+   "spec_hash": "da9579d7927b1282",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "da9579d7927b1282"
+  },
+  {
+   "id": "t11",
+   "title": "review kỹ + sửa finding",
+   "files": [
+    "llmwiki/wiki/sources/draft/200926-orca-graph-v3-review.md"
+   ],
+   "consumes": [
+    "toàn bộ diff của Task 1–10 ở cả hai repo"
+   ],
+   "produces": [
+    "báo cáo review (finding, mức, đã sửa hay hoãn có lý do); test và eval vẫn xanh sau khi sửa"
+   ],
+   "deps": [
+    "t9",
+    "t10"
+   ],
+   "deps_conf": "chắc",
+   "kind": "review",
+   "mode": "afk",
+   "verify": "test -s llmwiki/wiki/sources/draft/200926-orca-graph-v3-review.md && cd \"$HOME/.orca-graph/repo\" && python3 -m pytest -q tests",
+   "qc": "",
+   "dep_reasons": {
+    "t9": "acceptance",
+    "t10": "acceptance"
+   },
+   "spec_hash": "efc6a4cd03c89822",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "efc6a4cd03c89822"
+  },
+  {
+   "id": "t12",
+   "title": "ship — push repo mới + /ship setup",
+   "files": [
+    "llmwiki/wiki/log.md"
+   ],
+   "consumes": [
+    "hai repo đã review"
+   ],
+   "produces": [
+    "`Rheinmir/orca-graph` public có tag `v3.0.0`; nhánh `orca` của setup đã push; cài thử từ remote thật kéo được engine"
+   ],
+   "deps": [
+    "t11"
+   ],
+   "deps_conf": "chắc",
+   "kind": "release",
+   "mode": "afk",
+   "verify": "gh repo view Rheinmir/orca-graph --json name -q .name && test -z \"$(git log origin/orca..HEAD --oneline)\"",
+   "qc": "",
+   "dep_reasons": {
+    "t11": "acceptance"
+   },
+   "spec_hash": "ebf38aaf92642e49",
+   "state": "dispatched",
+   "gen": 1,
+   "rev": 2,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "unverified"
+  }
+ ],
+ "layers": [
+  [
+   "t1"
+  ],
+  [
+   "t2"
+  ],
+  [
+   "t3",
+   "t6"
+  ],
+  [
+   "t4"
+  ],
+  [
+   "t5"
+  ],
+  [
+   "t7"
+  ],
+  [
+   "t8"
+  ],
+  [
+   "t10",
+   "t9"
+  ],
+  [
+   "t11"
+  ],
+  [
+   "t12"
+  ]
+ ],
+ "parent": null,
+ "depth": 0,
+ "plan_version": 2,
+ "superseded": [],
+ "max_parallel": 4,
+ "conflicts": [],
+ "resource_conflicts": [],
+ "links": [
+  {
+   "to_graph": "120926-orca-graph-v2",
+   "to_node": "t1",
+   "via": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "120926-orca-graph-v2",
+   "to_node": "t2",
+   "via": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "120926-orca-graph-v2",
+   "to_node": "t3",
+   "via": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "120926-orca-graph-v2",
+   "to_node": "t4",
+   "via": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "120926-orca-graph-v2",
+   "to_node": "t5",
+   "via": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "120926-orca-graph-v2",
+   "to_node": "t6",
+   "via": [
+    "fdk/tools/graph-atlas.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "120926-orca-graph-v2",
+   "to_node": "t7",
+   "via": [
+    "skills/orca-graph/SKILL.md"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "140926-orca-graph-daemon",
+   "to_node": "t1",
+   "via": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "140926-orca-graph-daemon",
+   "to_node": "t2",
+   "via": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "140926-orca-graph-daemon",
+   "to_node": "t3",
+   "via": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py",
+    "skills/orca-graph/SKILL.md"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "170926-orca-graph-write-sandbox-qc-gate",
+   "to_node": "t1",
+   "via": [
+    "harness/scripts/orca-graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "170926-orca-graph-write-sandbox-qc-gate",
+   "to_node": "t2",
+   "via": [
+    "harness/scripts/orca-graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "170926-orca-graph-write-sandbox-qc-gate",
+   "to_node": "t3",
+   "via": [
+    "skills/orca-graph/SKILL.md"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "180926-ship-scroll-originals",
+   "to_node": "t2",
+   "via": [
+    "fdk/skills.provenance.json"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "180926-ship-scroll-originals",
+   "to_node": "t3",
+   "via": [
+    "harness/scripts/orca-graph.py",
+    "harness/tests/test_orca_graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "190926-swh-skill-standardize",
+   "to_node": "t4",
+   "via": [
+    "fdk/skills.provenance.json"
+   ],
+   "kind": "touches-same-file"
+  }
+ ],
+ "control": "active",
+ "schema_version": 1,
+ "checksum": "3f79b3b4dd4b1dca"
+}

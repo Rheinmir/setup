@@ -23,6 +23,9 @@
   Ep danh sach vendor, vd "claude,opencode". Bo qua de tu do.
 .PARAMETER Clean
   Cai moi = go ban cu roi cai.
+.PARAMETER NoGraph
+  Khong keo module orca-graph (repo rieng Rheinmir/orca-graph). Mac dinh: option nay DA TICK -
+  co terminal thi hien checklist, Enter la keo du.
 .PARAMETER NoVerify
   Bo buoc chay demo.sh + test-broad.sh sau khi cai.
 .PARAMETER Base
@@ -39,6 +42,7 @@ param(
   [string]$Vendor,
   [switch]$Clean,
   [switch]$NoVerify,
+  [switch]$NoGraph,
   [string]$Base = "https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral"
 )
 
@@ -79,6 +83,7 @@ if ($HarnessOnly) { $bootstrapArgs += "--harness-only" }
 if ($Vendor)      { $bootstrapArgs += "--vendor", $Vendor }
 if ($Clean)       { $bootstrapArgs += "--clean" }
 if ($NoVerify)    { $bootstrapArgs += "--no-verify" }
+if ($NoGraph)     { $bootstrapArgs += "--no-graph" }
 
 $scriptText = Get-Content -Raw -Path $tmp
 if ($Base -ne "https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral") {

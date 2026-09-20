@@ -261,7 +261,7 @@
 ## Neo bằng chứng — 267/267 năng lực có neo KHAI BÁO
 **Đọc cho đúng: đây KHÔNG phải bằng chứng năng lực còn SỐNG.** Mỗi năng lực được map tất định tới một *điểm neo* bằng chứng trên đĩa (frontmatter `proof:` > rule-map > tests > self-test > golden > medic). Việc map là **tĩnh** — nó kiểm file/chuỗi có mặt, **không thực thi gì cả**. Nó bắt được ca 'năng lực này chẳng có test/golden/rule nào neo vào' (hữu ích thật), nhưng KHÔNG bắt được ca 'test có mà đỏ' hay 'engine có mà chết'. Muốn biết một dependency ngoài còn sống thì hỏi `harness/scripts/dep-health.py`. Chi tiết neo: `build-capabilities.py --capproof-json`.
 
-## TRÙNG-ỨNG-VIÊN (20) — máy phát hiện, NGƯỜI phán (dedupe = vòng /propose riêng)
+## TRÙNG-ỨNG-VIÊN (23) — máy phát hiện, NGƯỜI phán (dedupe = vòng /propose riêng)
 - `mech:medic` ↔ `mech:medic-mirror` — name-token: medic
 - `script:failure-flywheel.py` ↔ `script:flywheel.py` — name-token: flywheel
 - `script:failure-flywheel.py` ↔ `script:success-flywheel.py` — desc-jaccard 0.50
@@ -270,6 +270,8 @@
 - `script:frontier.py` ↔ `skill:frontier-scan` — name-token: frontier
 - `script:harness-lint.py` ↔ `skill:lint` — name-token: lint
 - `script:orca-dispatch.py` ↔ `skill:orca-dispatch-reference` — name-token: dispatch
+- `script:orca-graph.py` ↔ `tool:graph-atlas.py` — desc-jaccard 0.90
+- `script:orca-graph.py` ↔ `tool:graph-viz.py` — desc-jaccard 1.00
 - `script:query-log.py` ↔ `skill:query` — name-token: query
 - `script:query-proxy.py` ↔ `skill:query` — name-token: query
 - `script:wiki-graph.py` ↔ `tool:build-wiki-graph.py` — name-token: graph
@@ -282,6 +284,7 @@
 - `skill:lint` ↔ `tool:frame-lint.py` — name-token: lint
 - `skill:lint` ↔ `tool:swh-lint.py` — name-token: lint
 - `skill:tour-guide` ↔ `skill:tour-guide-supademo` — name-token: guide+tour
+- `tool:graph-atlas.py` ↔ `tool:graph-viz.py` — desc-jaccard 0.90
 
 ## Origin
 - Sinh bằng `fdk/tools/build-capabilities.py` từ đĩa (skills/, policy.yaml, fdk/tools/, harness/scripts/, sync-skills LOOP_MAP). KHÔNG hardcode.
