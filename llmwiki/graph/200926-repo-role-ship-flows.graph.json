@@ -286,12 +286,13 @@
     "t12": "acceptance"
    },
    "spec_hash": "8004919708e050b5",
-   "state": "dispatched",
+   "state": "done",
    "gen": 1,
-   "rev": 2,
+   "rev": 3,
    "attempts": 1,
    "fresh": "current",
-   "verified": "unverified"
+   "verified": "verified",
+   "done_spec_hash": "8004919708e050b5"
   },
   {
    "id": "t9",
@@ -651,5 +652,5 @@
  ],
  "control": "active",
  "schema_version": 1,
- "checksum": "ca654a598fbb39c6"
+ "checksum": "ceec4530628d9c0b"
 }
