@@ -57,13 +57,23 @@ STYLE_ID = "ovs-font"
 def apply(html: str) -> str:
     """Gắn font mặc định vào MỘT trang HTML hoàn chỉnh — generator gọi đúng một dòng ngay trước khi ghi file.
     Chèn <style id="ovs-font"> ở CUỐI <head> để thắng cascade: token `--font-text/--font-display` trang tự khai ở trên bị đè,
-    `body` nhận Lexend Deca weight 300; chỗ nào trang đã đặt font-weight riêng (tiêu đề 600, nhãn 500…) giữ nguyên và lấy nét THẬT
-    từ trục wght của font nhúng. Stack hệ thống chép tay cho phần chữ (`-apple-system,…`) được trỏ về token. Idempotent."""
-    if f'id="{STYLE_ID}"' in html or "</head>" not in html:
-        return html
+    `body` nhận Lexend Deca weight 300; chỗ nào trang đã đặt font-weight riêng giữ nguyên và lấy nét THẬT từ trục wght.
+    Stack hệ thống chép tay (`-apple-system,…`) CHỈ được trỏ về token khi nằm trong khối <style> của <head> — bản đầu quét regex
+    trên TOÀN trang và (review 20/09/2026) đã: làm hỏng 2 iframe srcdoc trong overstack.html (tài liệu con không có `--font-text`),
+    cắt đôi stack có `"Segoe UI"`, và ăn mất nháy đóng của chuỗi JS. Stack kết thúc bằng `monospace` không bị đụng. Idempotent."""
     import re
-    html = re.sub(r"font-family:\s*-apple-system,[^;}\"]*", "font-family:var(--font-text)", html)
-    return html.replace("</head>", f'<style id="{STYLE_ID}">{head_css()}</style></head>', 1)
+    if f'id="{STYLE_ID}"' in html:
+        return html
+    m = re.search(r"</head\s*>", html, re.I)
+    if not m:
+        return html
+    head, rest = html[:m.start()], html[m.start():]
+    def fix_css(sm):
+        css = re.sub(r"font-family:\s*-apple-system[^;{}]*",
+                     lambda f: f.group(0) if "monospace" in f.group(0) else "font-family:var(--font-text)", sm.group(2))
+        return sm.group(1) + css + sm.group(3)
+    head = re.sub(r"(<style\b[^>]*>)(.*?)(</style\s*>)", fix_css, head, flags=re.I | re.S)
+    return head + f'<style id="{STYLE_ID}">{head_css()}</style>' + rest
 
 
 MARK = f"font-family:'{FAMILY}'"           # chuỗi html-font-lint tìm trong trang đã sinh
@@ -111,7 +121,7 @@ if __name__ == "__main__":
             if not f.is_file():
                 print(f"✗ không thấy {f}"); rc = 1; continue
             src = f.read_text(encoding="utf-8"); out = apply(src)
-            if "</head>" not in src:
+            if not __import__("re").search(r"</head\s*>", src, __import__("re").I):
                 print(f"✗ {f}: không có </head> — không phải trang HTML hoàn chỉnh"); rc = 1
             elif out == src:
                 print(f"· {f}: đã có font (bỏ qua)")

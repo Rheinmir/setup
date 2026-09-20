@@ -54,13 +54,21 @@ case_B3(){ box b3; boot --with-wiki || true
   { [ $rc = 5 ] && grep -q "bootstrap.sh" "$LOG" && [ ! -d "$B/proj/harness/scripts" ] && [ ! -d "$B/proj/llmwiki" ]; } \
     && ok "B3 /harness-update kiểu cũ trên dot-layout: DỪNG rc 5, chỉ lệnh bootstrap, không chép engine / không mọc llmwiki/ trần" || no "B3 rc=$rc"; }
 
-case_C1(){ for how in declared inferred; do box "c1$how"; P="$B/proj"; mkdir -p "$P/fdk/wiki" "$P/.github/workflows" "$P/.claude"
+case_C1(){ for how in declared inferred; do box "c1$how"; P="$B/proj"; mkdir -p "$P/.github/workflows" "$P/.claude"
     echo "name: REAL-CI" > "$P/.github/workflows/harness.yml"; echo '{"mine":1}' > "$P/.claude/settings.json"
-    [ $how = declared ] && echo "repo_role: framework" > "$P/.overstack.yaml"
+    # declared: CHỈ có nhãn, KHÔNG có fdk/wiki → chứng minh nhánh ĐỌC NHÃN (review 20/09: bản đầu để cả hai nên phá sed vẫn PASS)
+    if [ $how = declared ]; then echo 'repo_role: "framework"   # có nháy vẫn phải nhận' > "$P/.overstack.yaml"; WANT="repo_role: framework trong"; else mkdir -p "$P/fdk/wiki"; touch "$P/fdk/wiki/index.md"; WANT="chưa khai repo_role"; fi
     git -C "$P" add -A >/dev/null 2>&1; git -C "$P" -c user.name=t -c user.email=t@t commit -qm base
     ( cd "$P" && HOME="$B/home" bash "$SRC/harness/poc-vendor-neutral/install.sh" . --no-verify ) >"$LOG" 2>&1; rc=$?
-    { [ $rc = 3 ] && [ -z "$(git -C "$P" status --porcelain)" ] && grep -q "REPO FRAMEWORK" "$LOG"; } && ok "C1 ($how): installer từ chối repo framework, 0 file đổi" || no "C1 ($how) rc=$rc đổi: $(git -C "$P" status --porcelain | head -3 | tr '\n' ' ')"
-  done; }
+    { [ $rc = 3 ] && [ -z "$(git -C "$P" status --porcelain)" ] && grep -q "REPO FRAMEWORK" "$LOG" && grep -q "$WANT" "$LOG"; } && ok "C1 ($how): installer từ chối repo framework, 0 file đổi" || no "C1 ($how) rc=$rc đổi: $(git -C "$P" status --porcelain | head -3 | tr '\n' ' ')"
+  done
+  # ép cờ: người bảo trì CỐ Ý cài vào repo framework → phải chạy (và KHÔNG dán nhãn downstream đè lên)
+  ( cd "$P" && HOME="$B/home" ORCA_GRAPH_SKIP=1 bash "$SRC/harness/poc-vendor-neutral/install.sh" . --no-verify --i-know-this-is-the-framework ) >"$LOG" 2>&1; rc=$?
+  { [ $rc = 0 ] && ! grep -q "repo_role: downstream" "$P/.overstack.yaml" 2>/dev/null; } && ok "C1 (ép cờ): chạy được, không bị dán nhãn downstream" || no "C1 (ép cờ) rc=$rc"
+  # C1b: .overstack.yaml sẵn có THIẾU newline cuối → dòng nhãn không được dính vào dòng trước
+  box c1b; printf 'wiki_dir: .llmwiki/wiki' > "$B/proj/.overstack.yaml"
+  ( cd "$B/proj" && HOME="$B/home" ORCA_GRAPH_SKIP=1 bash "$SRC/harness/poc-vendor-neutral/install.sh" . --no-verify ) >"$LOG" 2>&1
+  [ "$(cat "$B/proj/.overstack.yaml")" = "$(printf 'wiki_dir: .llmwiki/wiki\nrepo_role: downstream')" ] && ok "C1b: thêm nhãn không làm hỏng dòng cuối thiếu newline" || no "C1b: $(tr '\n' '|' < "$B/proj/.overstack.yaml")"; }
 
 CASES=("$@"); [ ${#CASES[@]} -gt 0 ] || CASES=(A3 A7 B1 B3 C1)
 for c in "${CASES[@]}"; do if declare -F "case_$c" >/dev/null; then "case_$c"; else echo "ca lạ: $c (có: A3 A7 B1 B3 C1)"; FAIL=$((FAIL+1)); fi; done

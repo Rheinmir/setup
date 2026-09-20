@@ -841,13 +841,13 @@
     "orca-graph": {
       "adapt_mode": "external-pull",
       "category": "orchestrate",
-      "commit": "7b2badcdc0b60a244d5ee3142a51f501f43ed289",
+      "commit": "ba3d8c02a72e7f6c4b149bb7a7000cdd4208aa8b",
       "files": {
         "SKILL.md": "40a2bb78fc6fa57a08d9349923f69154bc971731b20bcf98d14f481af8fe3083"
       },
       "recorded": "2026-09-20",
       "source": "https://github.com/Rheinmir/orca-graph",
-      "version": "3.0.3"
+      "version": "3.0.4"
     },
     "orca-handover": {
       "files": {
@@ -865,7 +865,7 @@
     },
     "orca-onboard": {
       "files": {
-        "SKILL.md": "7a15ccfef5eb68a7ad21c5fb60dcf549ccf2e36733e50889003877f1b33e13be",
+        "SKILL.md": "a7b441defe93ea544fe5e3900d06856d1751fb83e4e749e7d80d08c5de31891a",
         "assets/docs-site-skeleton.html": "ce1f0fd874f9d723aabb62455ab19f6e9ac3d14a5841cd3d92818654475c5238"
       },
       "recorded": "2026-09-20",

@@ -31,7 +31,7 @@ def parity() -> int:
     import os
     eng = Path(os.environ.get("ORCA_GRAPH_ENGINE_DIR") or Path(os.environ.get("ORCA_GRAPH_INSTALL_DIR") or Path.home() / ".orca-graph/repo") / "engine")
     if not (eng / "html_font.py").is_file():
-        print(f"SKIP parity: chưa có engine orca-graph ≥ 3.0.3 ở {eng}"); return 0
+        print(f"SKIP parity: chưa có engine orca-graph ≥ 3.0.3 ở {eng}"); return 4      # rc RIÊNG: caller không được đếm SKIP là PASS
     mine, theirs = _load(HERE / "html_font.py"), _load(eng / "html_font.py")
     bad = [k for k in ("FONT_TEXT", "FONT_MONO", "WEIGHT_TEXT", "WEIGHT_STRONG", "STYLE_ID") if getattr(mine, k) != getattr(theirs, k, None)]
     if (HERE / "html_font_data.py").read_bytes() != (eng / "html_font_data.py").read_bytes():

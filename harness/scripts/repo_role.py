@@ -20,14 +20,19 @@ from pathlib import Path
 
 ROLES = ("framework", "module", "downstream", "foreign")
 MACHINE = Path(os.environ.get("OVERSTACK_HARNESS_HOME") or Path.home() / ".claude" / "harness") / "repo-roles.json"
-_KEY = re.compile(r"^repo_role:\s*([A-Za-z_-]+)\s*(?:#.*)?$", re.M)
+# [ \t]* chứ KHÔNG phải \s*: \s khớp cả xuống dòng → `--set` từng nuốt mất dòng trống + comment ngay dưới, và `repo_role:\nframework` bị đọc thành nhãn.
+_KEY = re.compile(r"^repo_role:[ \t]*[\"']?([A-Za-z_-]+)[\"']?[ \t]*(?:#.*)?$", re.M)
 
 
 def _remote(root: Path) -> str:
     try:
         r = subprocess.run(["git", "-C", str(root), "remote", "get-url", "origin"], capture_output=True, text=True, timeout=3)
         u = r.stdout.strip()
-        return re.sub(r"\.git$", "", re.sub(r"^(git@|https?://)([^:/]+)[:/]", r"\2/", u)).lower() if r.returncode == 0 else ""
+        if r.returncode != 0 or not u:
+            return ""
+        # mọi dạng của CÙNG một repo phải ra CÙNG một khoá: git@host:A/B.git · https://host/A/B/ · ssh://git@host/A/B.git · https://user@host/A/B.git
+        u = re.sub(r"^(?:\w+://)?(?:[^@/]+@)?([^:/]+)(?::\d+)?[:/]", r"\1/", u)
+        return re.sub(r"\.git$", "", u.rstrip("/")).lower()
     except Exception:
         return ""
 

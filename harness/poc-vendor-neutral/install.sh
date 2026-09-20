@@ -51,7 +51,7 @@ warn(){ printf '\033[1;33m[install]\033[0m %s\n' "$*"; }
 # thư mục: `repo_role:` trong .overstack.yaml; thiếu nhãn mới lùi về dấu hiệu fdk/wiki. Tự chứa bằng bash vì bootstrap
 # (curl) không tải repo_role.py.
 # `|| true`: dự án mới CHƯA có .overstack.yaml → sed rc≠0 → dưới `set -e` + pipefail cả installer chết IM LẶNG (rc 1, 0 dòng log).
-ROLE_DECL="$( { sed -nE 's/^repo_role:[[:space:]]*([A-Za-z_-]+).*/\1/p' "$ROOT/.overstack.yaml" 2>/dev/null || true; } | head -1)"
+ROLE_DECL="$( { sed -nE "s/^repo_role:[[:space:]]*[\"']?([A-Za-z_-]+).*/\1/p" "$ROOT/.overstack.yaml" 2>/dev/null || true; } | head -1)"
 if [ "$FORCE_FRAMEWORK" != 1 ] && { [ "$ROLE_DECL" = framework ] || { [ -z "$ROLE_DECL" ] && [ -d "$ROOT/fdk/wiki" ]; }; }; then
   printf '\033[1;31m[install]\033[0m %s\n' "DỪNG — $ROOT là REPO FRAMEWORK ($([ -n "$ROLE_DECL" ] && echo 'repo_role: framework trong .overstack.yaml' || echo 'có fdk/wiki/, chưa khai repo_role'))." >&2
   echo "           Installer sẽ ghi đè .github/workflows/harness.yml và .claude/settings.json của chính framework — chưa ghi gì cả." >&2
@@ -507,6 +507,8 @@ fi
 # Nhãn loại repo (repo_role) — /ship và các công cụ khác đọc nhãn này thay vì đoán theo hình dạng thư mục.
 # Chỉ THÊM khi chưa có khoá; không đè lựa chọn của user; repo framework (ép cờ) không bị dán nhãn downstream.
 if [ ! -d "$ROOT/fdk/wiki" ] && ! grep -qE '^repo_role:' "$ROOT/.overstack.yaml" 2>/dev/null; then
+  # file sẵn có mà dòng cuối THIẾU newline thì append sẽ dính vào nó (`wiki_dir: xrepo_role: …`) → hỏng cấu hình của user
+  [ -s "$ROOT/.overstack.yaml" ] && [ -n "$(tail -c1 "$ROOT/.overstack.yaml")" ] && echo >> "$ROOT/.overstack.yaml"
   printf 'repo_role: downstream\n' >> "$ROOT/.overstack.yaml" && log "  ✓ .overstack.yaml: repo_role: downstream (đổi tay nếu sai: framework | module | downstream)"
 fi
 log    "═══════════ TRẠNG THÁI 3 TRỤ ═══════════"

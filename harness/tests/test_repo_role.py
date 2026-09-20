@@ -54,3 +54,20 @@ def test_set_writes_yaml_but_foreign_never_touches_the_repo(tmp_path):
 
 def test_this_repo_and_plain_output(tmp_path):
     assert rr(ROOT).stdout.strip() == "framework"
+
+
+def test_review_V1_V2_set_keeps_comments_and_remote_forms_share_one_key(tmp_path):
+    d = mk(tmp_path, "keep"); y = d / ".overstack.yaml"
+    y.write_text("repo_role: module\n\n# ghi chú quan trọng\nwiki_dir: x\n")
+    assert rr(d, "--set", "downstream").returncode == 0
+    assert y.read_text() == "repo_role: downstream\n\n# ghi chú quan trọng\nwiki_dir: x\n"     # \s* từng nuốt dòng trống + comment
+    y.write_text("repo_role:\nframework\n")
+    assert json.loads(rr(d, "--json").stdout)["source"] != "declared"                            # giá trị ở DÒNG DƯỚI không phải nhãn
+    y.write_text('repo_role: "module"\n')
+    assert json.loads(rr(d, "--json").stdout)["role"] == "module"                                # nhãn có nháy vẫn nhận
+    spec = importlib.util.spec_from_file_location("repo_role", SCRIPT); m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+    keys = set()
+    for url in ("git@github.com:A/B.git", "https://github.com/A/B", "ssh://git@github.com/A/B.git", "https://user@github.com/A/B.git", "https://github.com/A/B/"):
+        r = mk(tmp_path, "r%d" % len(keys | {url}) + str(abs(hash(url)) % 9999)); subprocess.run(["git", "-C", str(r), "remote", "add", "origin", url], check=True)
+        keys.add(m._remote(r))
+    assert keys == {"github.com/a/b"}, keys

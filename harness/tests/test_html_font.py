@@ -37,3 +37,18 @@ def test_embedded_font_covers_vietnamese_and_keeps_the_weight_axis():
     assert not missing, missing
     ax = f["fvar"].axes[0]
     assert (ax.axisTag, ax.minValue, ax.maxValue) == ("wght", 300.0, 700.0)   # 300 cho nội dung, nét đậm THẬT cho tiêu đề
+
+
+def test_review_C2_apply_only_touches_css_in_head_never_body_js_or_srcdoc():
+    """Hồi quy review 20/09/2026: regex quét toàn trang từng phá iframe srcdoc, cắt đôi stack có "Segoe UI", ăn nháy đóng chuỗi JS."""
+    page = ('<html><HEAD><style>body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:red}'
+            'code{font-family:-apple-system-mono,ui-monospace,monospace}</style></HEAD><body>'
+            "<iframe srcdoc=\"&lt;style&gt;body{font-family:-apple-system,sans-serif}&lt;/style&gt;\"></iframe>"
+            "<script>el.style.cssText='font-family:-apple-system,sans-serif';go();var t=`<span style='font-family:-apple-system,sans-serif'>${x}</span>`;var s='</head>';</script></body></html>")
+    out = hf.apply(page)
+    assert 'body{font-family:var(--font-text);color:red}' in out                      # stack trong <head> → token, KHÔNG để sót đuôi `"Segoe UI",…`
+    assert "code{font-family:-apple-system-mono,ui-monospace,monospace}" in out          # mono không bị đụng
+    assert "srcdoc=\"&lt;style&gt;body{font-family:-apple-system,sans-serif}" in out      # tài liệu con trong iframe: nguyên vẹn
+    assert "el.style.cssText='font-family:-apple-system,sans-serif';go();" in out and "${x}</span>`" in out   # JS nguyên vẹn
+    assert out.count('id="ovs-font"') == 1 and out.index('id="ovs-font"') < out.index("<body>")   # chèn vào </HEAD> THẬT (không phân biệt hoa thường), không phải chuỗi '</head>' trong JS
+    assert hf.apply(out) == out

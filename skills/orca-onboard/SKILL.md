@@ -244,14 +244,18 @@ GLOBAL_HARNESS=false
   && GLOBAL_HARNESS=true
 echo "[harness] global=$GLOBAL_HARNESS project=$([ -d "$PROJECT_ROOT/harness" ] && echo yes || echo no)"
 
-if [ ! -d "$PROJECT_ROOT/llmwiki" ] || { [ "$GLOBAL_HARNESS" = "false" ] && [ ! -d "$PROJECT_ROOT/harness" ]; }; then
+if [ -f "$PROJECT_ROOT/.llmwiki/.harness-stamp" ]; then
+  # Dự án layout DOT (cài bằng bootstrap v4): wiki ở .llmwiki/, engine ở GLOBAL — KHÔNG chép llmwiki/ trần, KHÔNG gọi đường per-project
+  # (install-harness.sh sẽ tự dừng rc 5). Thiếu/cũ thì cập nhật bằng: curl -fsSL …/harness/poc-vendor-neutral/bootstrap.sh | bash
+  echo "[orca-onboard] dự án dot-layout đã có overstack (.llmwiki/.harness-stamp) — bỏ qua bootstrap"
+elif [ ! -d "$PROJECT_ROOT/llmwiki" ] || { [ "$GLOBAL_HARNESS" = "false" ] && [ ! -d "$PROJECT_ROOT/harness" ]; }; then
   echo "[orca-onboard] bootstrapping llmwiki + harness..."
   git clone https://github.com/rheinmir/setup.git /tmp/orca-llmwiki-bootstrap --depth 1 -b orca -q
   [ ! -d "$PROJECT_ROOT/llmwiki" ] && cp -r /tmp/orca-llmwiki-bootstrap/llmwiki "$PROJECT_ROOT/llmwiki"
   if [ "$GLOBAL_HARNESS" = "false" ] && [ ! -d "$PROJECT_ROOT/harness" ]; then
     bash /tmp/orca-llmwiki-bootstrap/harness/scripts/install-harness.sh "$PROJECT_ROOT" \
       && echo "[orca-onboard] harness installed OK" \
-      || echo "[WARN] harness install failed/denied — user chạy 1 trong 2: 'install-harness.sh .' (per-project, cho team) hoặc 'install-harness.sh --global' (cả máy, khuyên dùng cho máy dev)"
+      || echo "[WARN] harness install failed/denied — đường khuyên dùng: curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash (cài global + kéo orca-graph); hoặc 'install-harness.sh --global'"
   fi
   rm -rf /tmp/orca-llmwiki-bootstrap
   echo "[orca-onboard] bootstrap done"
