@@ -52,6 +52,17 @@ STATUS_COLOR = {
 _STALL_VERDICTS = {"NO_PROGRESS", "TIMEOUT", "MAX_ITER", "ESCALATE"}
 
 
+
+def _ovs_font(html: str) -> str:
+    """Font mặc định của mọi HTML framework sinh ra = Lexend Deca Light, NHÚNG (nguồn duy nhất: fdk/tools/html_font.py)."""
+    import importlib.util
+    here = Path(__file__).resolve()
+    for c in (here.with_name("html_font.py"), here.parents[2] / "fdk" / "tools" / "html_font.py", Path.home() / ".claude/harness/fdk/tools/html_font.py"):
+        if c.is_file():
+            s = importlib.util.spec_from_file_location("html_font", c); m = importlib.util.module_from_spec(s); s.loader.exec_module(m)
+            return m.apply(html)
+    return html
+
 def derive_status(frame, runlog):
     """Fixed rules — the ONLY place a frame's state is decided. No model involved."""
     outcome = (frame.get("outcome") or "").strip().lower()
@@ -387,7 +398,7 @@ def build(root, frames_dir=None, out_json=None, out_html=None, check=False):
     out_json.parent.mkdir(parents=True, exist_ok=True)
     out_html.parent.mkdir(parents=True, exist_ok=True)
     out_json.write_text(new_json, encoding="utf-8")
-    out_html.write_text(new_html, encoding="utf-8")
+    out_html.write_text(_ovs_font(new_html), encoding="utf-8")
     print(f"[build-line-status] wrote {out_json}")
     print(f"[build-line-status] wrote {out_html}  ({model['total_frames']} frame, "
           f"{model['assumed_clause_count']} assumed clause)")

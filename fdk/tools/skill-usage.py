@@ -37,6 +37,18 @@ PROJECTS_DIR = Path.home() / ".claude" / "projects"
 FALLBACK_TRANSCRIPTS = PROJECTS_DIR / "-Users-giatran-orca-setup-setup"
 
 
+
+def _ovs_font(html: str) -> str:
+    """Font mặc định của mọi HTML framework sinh ra = Lexend Deca Light, NHÚNG (nguồn duy nhất: fdk/tools/html_font.py)."""
+    import importlib.util
+    from pathlib import Path as _P
+    here = _P(__file__).resolve()
+    for c in (here.with_name("html_font.py"), here.parents[2] / "fdk" / "tools" / "html_font.py", _P.home() / ".claude/harness/fdk/tools/html_font.py"):
+        if c.is_file():
+            s = importlib.util.spec_from_file_location("html_font", c); m = importlib.util.module_from_spec(s); s.loader.exec_module(m)
+            return m.apply(html)
+    return html
+
 def encode_project_dir(path: Path) -> str:
     """Claude Code mã hoá cwd → tên thư mục transcript: mọi '/' và '.' thành '-'."""
     s = str(path.resolve())
@@ -406,7 +418,7 @@ def main():
     if not args.no_html:
         HTML_DIR.mkdir(parents=True, exist_ok=True)
         out = HTML_DIR / f"weekly-{target}.html"
-        out.write_text(render_html(rep), encoding="utf-8")
+        out.write_text(_ovs_font(render_html(rep)), encoding="utf-8")
         print(f"✅ Dashboard: {out.relative_to(ROOT)}")
     return 0
 

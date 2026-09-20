@@ -61,7 +61,15 @@ metadata:
 
 Chi tiết từng bước (nguồn chân lý cho W01–W04):
 
-**1. Chạy installer 1 lần với `--self-heal` (tự detect migrate/update; thiếu nguồn thì clone template):**
+**1. Chọn đường theo LAYOUT rồi chạy installer đúng 1 lần:**
+
+- **Dự án downstream layout dot** (có `.llmwiki/.harness-stamp` — mọi máy cài từ v4): engine sống ở GLOBAL, nên cập nhật = chạy lại bootstrap. Nó refresh `~/.claude/harness` khi version lệch, kéo/cập nhật engine **orca-graph** cùng chuyến với shim, đóng lại stamp, và KHÔNG chép engine vào dự án:
+```bash
+curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash
+```
+  Gọi nhầm `install-harness.sh . --self-heal` ở layout này → script tự DỪNG rc 5 và in đúng lệnh trên (đo 20/09/2026: đường cũ không cập nhật global mà còn chép 77 script vào dự án). Agent chạy trong terminal có pty: thêm `-s -- --with-graph` để khỏi chờ checklist 60 giây.
+- **Repo framework** (`repo_role: framework`): KHÔNG chạy installer vào đây — installer tự từ chối rc 3. Cập nhật framework = `git pull`.
+- **Layout cũ trần** (`llmwiki/` + `harness/` nằm trong dự án, chưa có stamp) — đường `--self-heal` (tự detect migrate/update; thiếu nguồn thì clone template):
 ```bash
 test -f harness/scripts/install-harness.sh \
   && bash harness/scripts/install-harness.sh . --self-heal \

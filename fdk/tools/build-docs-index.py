@@ -37,6 +37,17 @@ TYPE_LABEL = {"all": "Tất cả", "seq": "Sequence", "docs": "Docs",
               "cheatsheet": "Cheatsheet", "report": "Report"}
 
 
+
+def _ovs_font(html: str) -> str:
+    """Font mặc định của mọi HTML framework sinh ra = Lexend Deca Light, NHÚNG (nguồn duy nhất: fdk/tools/html_font.py)."""
+    import importlib.util
+    here = Path(__file__).resolve()
+    for c in (here.with_name("html_font.py"), here.parents[2] / "fdk" / "tools" / "html_font.py", Path.home() / ".claude/harness/fdk/tools/html_font.py"):
+        if c.is_file():
+            s = importlib.util.spec_from_file_location("html_font", c); m = importlib.util.module_from_spec(s); s.loader.exec_module(m)
+            return m.apply(html)
+    return html
+
 def esc(s: str) -> str:
     return escape(str(s), quote=True)
 
@@ -373,7 +384,7 @@ self-contained, offline-proof (0 request ngoài) · quét <code>llmwiki/html/*.h
 </body>
 </html>
 """
-    OUT.write_text(html, encoding="utf-8")
+    OUT.write_text(_ovs_font(html), encoding="utf-8")
     print(f"✓ index.html: {total} trang ({superseded_n} superseded) · "
           f"by-type {{{', '.join(f'{t}:{type_counts.get(t, 0)}' for t in TYPE_ORDER[1:])}}}")
     print(f"  → {OUT.relative_to(ROOT)} · {len(html) / 1024:.1f} KB · tổng nguồn {human(total_bytes)}")

@@ -1,0 +1,3 @@
+# Nhãn loại repo — /ship, installer và các công cụ overstack ĐỌC nhãn này thay vì đoán theo hình dạng thư mục.
+# framework | module | downstream | foreign — xem harness/scripts/repo_role.py
+repo_role: framework        # /ship đi luồng framework; installer TỪ CHỐI ghi vào repo này

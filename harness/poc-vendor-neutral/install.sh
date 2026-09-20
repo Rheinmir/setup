@@ -17,6 +17,7 @@ set -euo pipefail
 
 SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"   # nguồn = poc-vendor-neutral/
 ROOT="."; VENDORS=""; VERIFY=1; CLEAN=0; WITH_SKILLS=0; WITH_WIKI=0
+FORCE_FRAMEWORK=0
 WITH_GRAPH=""   # "" = chưa quyết → checklist (mặc định tick) · 1 = kéo · 0 = bỏ
 [ -n "${ORCA_GRAPH_SKIP:-}" ] && WITH_GRAPH=0   # knob cho test/fixture cần cài kín mạng; người dùng thật dùng --no-graph
 # GH_HOME phải định nghĩa ở TOP LEVEL: trước đây nó chỉ được gán trong nhánh
@@ -33,17 +34,63 @@ while [ $# -gt 0 ]; do
     --with-wiki) WITH_WIKI=1; shift;;
     --with-graph) WITH_GRAPH=1; shift;;
     --no-graph) WITH_GRAPH=0; shift;;
+    --i-know-this-is-the-framework) FORCE_FRAMEWORK=1; shift;;
     --full) WITH_SKILLS=1; WITH_WIKI=1; shift;;   # đủ 3 trụ: harness + skills + llmwiki
     -*) echo "tham số lạ: $1" >&2; exit 1;;
     *) ROOT="$1"; shift;;
   esac
 done
 ROOT="$(cd "$ROOT" && pwd)"
+# log/warn định nghĩa Ở ĐÂY, trước mọi khối dùng tới: gọi `log` khi chưa định nghĩa là chạy nhầm /usr/bin/log của macOS.
+log(){ printf '\033[1;32m[install]\033[0m %s\n' "$*"; }
+warn(){ printf '\033[1;33m[install]\033[0m %s\n' "$*"; }
+# ── CHẶN TRƯỚC KHI GHI BẤT CỨ THỨ GÌ: đích là REPO FRAMEWORK ────────────────────────────────────────────
+# Installer viết cho dự án downstream: nó SINH ĐÈ .github/workflows/harness.yml (bản CI rút gọn cho máy khách) và
+# .claude/settings.json. Chạy nhầm trong repo framework = mất CI của chính framework (đo 20/09/2026 11:10: harness.yml
+# −202 dòng, settings.json +67 dòng — trước đây chỉ bước migrate layout biết né repo này). Nhãn khai báo thắng hình dạng
+# thư mục: `repo_role:` trong .overstack.yaml; thiếu nhãn mới lùi về dấu hiệu fdk/wiki. Tự chứa bằng bash vì bootstrap
+# (curl) không tải repo_role.py.
+# `|| true`: dự án mới CHƯA có .overstack.yaml → sed rc≠0 → dưới `set -e` + pipefail cả installer chết IM LẶNG (rc 1, 0 dòng log).
+ROLE_DECL="$( { sed -nE 's/^repo_role:[[:space:]]*([A-Za-z_-]+).*/\1/p' "$ROOT/.overstack.yaml" 2>/dev/null || true; } | head -1)"
+if [ "$FORCE_FRAMEWORK" != 1 ] && { [ "$ROLE_DECL" = framework ] || { [ -z "$ROLE_DECL" ] && [ -d "$ROOT/fdk/wiki" ]; }; }; then
+  printf '\033[1;31m[install]\033[0m %s\n' "DỪNG — $ROOT là REPO FRAMEWORK ($([ -n "$ROLE_DECL" ] && echo 'repo_role: framework trong .overstack.yaml' || echo 'có fdk/wiki/, chưa khai repo_role'))." >&2
+  echo "           Installer sẽ ghi đè .github/workflows/harness.yml và .claude/settings.json của chính framework — chưa ghi gì cả." >&2
+  echo "           Muốn thử installer: chạy trong một thư mục dự án khác (vd mktemp -d). Cố ý thì thêm cờ --i-know-this-is-the-framework." >&2
+  exit 3
+fi
+# ── MODULE TUỲ CHỌN sống ở REPO RIÊNG — chỉ kéo khi được tick; mặc định ĐÃ TICK, Enter là kéo đủ ──────────
+# orca-graph (engine đồ thị phân việc) tách khỏi repo này từ v1.3.110 để có lịch sử + test + eval riêng. Trong
+# overstack chỉ còn SHIM ở đường dẫn cũ (harness/scripts/orca-graph.py, fdk/tools/graph-{viz,atlas}.py) trỏ sang
+# ~/.orca-graph/repo/engine. Không kéo thì mọi thứ khác vẫn chạy; riêng /orca-graph sẽ in lệnh cài rồi dừng (rc 3).
+# Thêm module mới: nối một dòng vào MODS + một nhánh trong install_module — checklist tự dài ra.
+MODS=("graph|orca-graph — engine đồ thị phân việc: /orca-graph, /tc-run, control-room (github.com/Rheinmir/orca-graph)")
+mod_get(){ case "$1" in graph) printf '%s' "$WITH_GRAPH";; esac; }
+mod_set(){ case "$1" in graph) WITH_GRAPH="$2";; esac; }
+for m in "${MODS[@]}"; do k="${m%%|*}"; [ -n "$(mod_get "$k")" ] || { mod_set "$k" 1; ASK_MODS=1; }; done
+# Chỉ hỏi khi NGƯỜI đang ngồi trước terminal: stdout là tty VÀ mở được /dev/tty (stdin của `curl | bash` là pipe nên
+# không đọc từ stdin). Agent/CI/test (stdout bị redirect, không tty) → giữ mặc định đã tick, TUYỆT ĐỐI không treo chờ nhập.
+if [ "${ASK_MODS:-0}" = 1 ] && [ -z "${CI:-}" ] && [ -z "${OVERSTACK_NONINTERACTIVE:-}" ] && [ -t 1 ] && ( : </dev/tty ) 2>/dev/null; then
+  while :; do
+    echo ""; log "Module tuỳ chọn (repo riêng — CHỈ tải mục được tick):"
+    i=0; for m in "${MODS[@]}"; do i=$((i+1)); k="${m%%|*}"
+      printf '     [%s] %d. %s\n' "$([ "$(mod_get "$k")" = 1 ] && echo x || echo ' ')" "$i" "${m#*|}"; done
+    printf '     Enter = cài các mục đang tick · gõ số để tick/bỏ · n = bỏ hết   (60s không gõ = Enter) > '
+    ans=""; read -r -t 60 ans </dev/tty || true
+    case "$ans" in
+      "") break;;
+      n|N) for m in "${MODS[@]}"; do mod_set "${m%%|*}" 0; done; break;;
+      *[!0-9]*|????*) warn "  không hiểu '$ans'";;                    # ????* : số quá dài làm `[ -ge ]` báo lỗi thô
+      *) ans=$((10#$ans))                                           # 10# : "08" không bị đọc thành bát phân
+         if [ "$ans" -ge 1 ] && [ "$ans" -le "${#MODS[@]}" ]; then k="${MODS[$((ans-1))]%%|*}"; mod_set "$k" $((1 - $(mod_get "$k"))); else warn "  không có mục $ans"; fi;;
+    esac
+  done
+fi
+# Quyết định xong → truyền xuống install-harness.sh --global (nơi copy shim và kéo engine CÙNG CHUYẾN) bằng biến môi trường.
+[ "$WITH_GRAPH" = 1 ] || export ORCA_GRAPH_SKIP=1
+GLOBAL_RAN=0
 # GH#142: chụp git-status TRƯỚC khi ghi — cuối install liệt kê file TRACKED bị installer ghi đè,
 # để cây bẩn "từ bên ngoài" không bị nhầm là sửa của người dùng.
 PRE_STATUS="$(git -C "$ROOT" status --porcelain 2>/dev/null || true)"
-log(){ printf '\033[1;32m[install]\033[0m %s\n' "$*"; }
-warn(){ printf '\033[1;33m[install]\033[0m %s\n' "$*"; }
 has(){ case ",$VENDORS," in *",$1,"*) return 0;; *) return 1;; esac; }
 
 # ─── Chuẩn thư mục: ẩn sau dấu chấm (đề xuất 040926-downstream-dot-layout) ───
@@ -338,7 +385,8 @@ if [ "$WITH_WIKI" = 1 ]; then
         curl -fsSL "$REPO_RAW/harness/scripts/install-harness.sh" -o "$IH" 2>/dev/null || IH=""
       fi
       if [ -n "$IH" ] && [ -f "$IH" ]; then
-        bash "$IH" --global || warn "  cài global lỗi — chạy tay: install-harness.sh --global (fail-open, không chặn install)"
+        GLOBAL_RAN=1
+    bash "$IH" --global || warn "  cài global lỗi — chạy tay: install-harness.sh --global (fail-open, không chặn install)"
       else
         warn "  không tải được install-harness.sh (mạng?) — cài tay: $REPO_RAW/harness/scripts/install-harness.sh --global"
       fi
@@ -394,35 +442,12 @@ if [ "$WITH_SKILLS" = 1 ]; then
   fi
 fi
 
-# ── MODULE TUỲ CHỌN sống ở REPO RIÊNG — chỉ kéo khi được tick; mặc định ĐÃ TICK, Enter là kéo đủ ──────────
-# orca-graph (engine đồ thị phân việc) tách khỏi repo này từ v1.3.110 để có lịch sử + test + eval riêng. Trong
-# overstack chỉ còn SHIM ở đường dẫn cũ (harness/scripts/orca-graph.py, fdk/tools/graph-{viz,atlas}.py) trỏ sang
-# ~/.orca-graph/repo/engine. Không kéo thì mọi thứ khác vẫn chạy; riêng /orca-graph sẽ in lệnh cài rồi dừng (rc 3).
-# Thêm module mới: nối một dòng vào MODS + một nhánh trong install_module — checklist tự dài ra.
-MODS=("graph|orca-graph — engine đồ thị phân việc: /orca-graph, /tc-run, control-room (github.com/Rheinmir/orca-graph)")
-mod_get(){ case "$1" in graph) printf '%s' "$WITH_GRAPH";; esac; }
-mod_set(){ case "$1" in graph) WITH_GRAPH="$2";; esac; }
-for m in "${MODS[@]}"; do k="${m%%|*}"; [ -n "$(mod_get "$k")" ] || { mod_set "$k" 1; ASK_MODS=1; }; done
-# Chỉ hỏi khi NGƯỜI đang ngồi trước terminal: stdout là tty VÀ mở được /dev/tty (stdin của `curl | bash` là pipe nên
-# không đọc từ stdin). Agent/CI/test (stdout bị redirect, không tty) → giữ mặc định đã tick, TUYỆT ĐỐI không treo chờ nhập.
-if [ "${ASK_MODS:-0}" = 1 ] && [ -z "${CI:-}" ] && [ -z "${OVERSTACK_NONINTERACTIVE:-}" ] && [ -t 1 ] && ( : </dev/tty ) 2>/dev/null; then
-  while :; do
-    echo ""; log "Module tuỳ chọn (repo riêng — CHỈ tải mục được tick):"
-    i=0; for m in "${MODS[@]}"; do i=$((i+1)); k="${m%%|*}"
-      printf '     [%s] %d. %s\n' "$([ "$(mod_get "$k")" = 1 ] && echo x || echo ' ')" "$i" "${m#*|}"; done
-    printf '     Enter = cài các mục đang tick · gõ số để tick/bỏ · n = bỏ hết   (60s không gõ = Enter) > '
-    ans=""; read -r -t 60 ans </dev/tty || true
-    case "$ans" in
-      "") break;;
-      n|N) for m in "${MODS[@]}"; do mod_set "${m%%|*}" 0; done; break;;
-      *[!0-9]*|????*) warn "  không hiểu '$ans'";;                    # ????* : số quá dài làm `[ -ge ]` báo lỗi thô
-      *) ans=$((10#$ans))                                           # 10# : "08" không bị đọc thành bát phân
-         if [ "$ans" -ge 1 ] && [ "$ans" -le "${#MODS[@]}" ]; then k="${MODS[$((ans-1))]%%|*}"; mod_set "$k" $((1 - $(mod_get "$k"))); else warn "  không có mục $ans"; fi;;
-    esac
-  done
-fi
 GRAPH_STATUS="— BỎ QUA         → cài sau: curl -fsSL https://raw.githubusercontent.com/Rheinmir/orca-graph/main/install.sh | bash"
-if [ "$WITH_GRAPH" = 1 ]; then
+OG_ENGINE="${ORCA_GRAPH_INSTALL_DIR:-$HOME/.orca-graph/repo}/engine/orca-graph.py"
+if [ "$WITH_GRAPH" = 1 ] && [ "$GLOBAL_RAN" = 1 ] && [ -f "$OG_ENGINE" ]; then
+  # install-harness.sh --global vừa kéo/cập nhật engine cùng chuyến với shim → không kéo lần hai
+  GRAPH_STATUS="✓ cài/cập nhật   (~/.orca-graph/repo — repo riêng, tới cùng chuyến với shim)"
+elif [ "$WITH_GRAPH" = 1 ]; then
   OG_REF="${ORCA_GRAPH_REF:-main}"
   log "+ kéo module orca-graph (ref: $OG_REF)"
   OGI=""; OGI_TMP=""
@@ -478,6 +503,11 @@ if git -C "$ROOT" rev-parse --git-dir >/dev/null 2>&1; then
     printf '%s\n' "$TOUCHED" | sed 's/^/           /'
     warn "  → xem: git diff -- <file> · commit riêng: git commit -am 'chore(harness): update v${TV:-?}'"
   fi
+fi
+# Nhãn loại repo (repo_role) — /ship và các công cụ khác đọc nhãn này thay vì đoán theo hình dạng thư mục.
+# Chỉ THÊM khi chưa có khoá; không đè lựa chọn của user; repo framework (ép cờ) không bị dán nhãn downstream.
+if [ ! -d "$ROOT/fdk/wiki" ] && ! grep -qE '^repo_role:' "$ROOT/.overstack.yaml" 2>/dev/null; then
+  printf 'repo_role: downstream\n' >> "$ROOT/.overstack.yaml" && log "  ✓ .overstack.yaml: repo_role: downstream (đổi tay nếu sai: framework | module | downstream)"
 fi
 log    "═══════════ TRẠNG THÁI 3 TRỤ ═══════════"
 log    "  1. Harness  ✓ cài/cập nhật   (per-project: hook validate + CI + R1–R10)"

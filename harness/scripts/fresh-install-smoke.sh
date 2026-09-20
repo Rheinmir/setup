@@ -56,7 +56,15 @@ echo "${B}fresh-install-smoke${X} — mode=$MODE  ·  cô lập tại $TARGET"
 # nhớ HOME thật cho các kiểm skill (skill global chỉ npx cài được, fixture không có) rồi
 # cô lập HOME cho phần harness ở chế độ local (khỏi soi ~/.claude/harness thật của máy dev).
 REAL_HOME="$HOME"
+# Module orca-graph sống ở repo riêng. Chế độ local phải KÍN MẠNG + tất định → lấy bản engine đã cài trên máy làm nguồn
+# (chụp TRƯỚC khi đổi HOME); máy chưa cài thì ca (G) tự SKIP. Chế độ remote đi đúng đường người-mới: kéo từ GitHub.
+OG_LOCAL="$(cd "${ORCA_GRAPH_REPO:-$REAL_HOME/.orca-graph/repo}" 2>/dev/null && pwd -P || true)"
 if [ "$MODE" = "local" ]; then
+  if [ -n "$OG_LOCAL" ] && git -C "$OG_LOCAL" rev-parse --git-dir >/dev/null 2>&1; then
+    export ORCA_GRAPH_REPO="$OG_LOCAL" ORCA_GRAPH_REF="$(git -C "$OG_LOCAL" rev-parse --abbrev-ref HEAD)"
+  else
+    export ORCA_GRAPH_SKIP=1
+  fi
   export HOME="$TARGET.home"; mkdir -p "$HOME"
 fi
 
@@ -175,6 +183,23 @@ for s in $(contract_list must_reach_skills 2>/dev/null || echo "orca-dispatch-re
   if [ -e "$SK/$s" ] || [ -e "$SK/$s/SKILL.md" ]; then ok "skill '$s' reachable"
   else bad "skill '$s' THIẾU global ($SK) — cài: npx skills add rheinmir/setup#orca --global --all"; fi
 done
+
+# ── (G) module orca-graph TỚI NƠI: shim ở đường dẫn cũ phải chạy được engine thật ───────────────────────
+# Trước 20/09/2026 KHÔNG cổng nào kiểm điều này: shim đi theo mọi đường copy engine, còn engine thật chỉ được kéo ở một đường
+# → có đường cài để lại "/orca-graph: chưa cài engine" mà smoke, medic và UAT vẫn xanh.
+echo "${Y}orca-graph (module repo riêng):${X}"
+OGS="$HOME/.claude/harness/harness/scripts/orca-graph.py"
+if [ -n "${ORCA_GRAPH_SKIP:-}" ]; then
+  skip "máy này chưa có bản engine local làm nguồn kín mạng — bỏ qua (chạy --remote để kiểm đường thật)"
+elif [ ! -f "$OGS" ]; then
+  bad "global harness thiếu shim orca-graph.py ($OGS)"
+else
+  OGV="$(python3 "$OGS" --version 2>&1 | head -1)"
+  case "$OGV" in
+    orca-graph\ [0-9]*) ok "engine tới nơi qua shim: $OGV";;
+    *) bad "shim có nhưng ENGINE KHÔNG TỚI: $OGV";;
+  esac
+fi
 
 # ── (F) runtime ping — env-dependent, SKIP-không-fail (ceiling) ──────────────
 if command -v orca >/dev/null 2>&1 || command -v orca-ide >/dev/null 2>&1; then

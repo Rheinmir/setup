@@ -46,6 +46,17 @@ CHECKS = [
 ]
 
 
+
+def _ovs_font(html: str) -> str:
+    """Font mặc định của mọi HTML framework sinh ra = Lexend Deca Light, NHÚNG (nguồn duy nhất: fdk/tools/html_font.py)."""
+    import importlib.util
+    here = Path(__file__).resolve()
+    for c in (here.with_name("html_font.py"), here.parents[2] / "fdk" / "tools" / "html_font.py", Path.home() / ".claude/harness/fdk/tools/html_font.py"):
+        if c.is_file():
+            s = importlib.util.spec_from_file_location("html_font", c); m = importlib.util.module_from_spec(s); s.loader.exec_module(m)
+            return m.apply(html)
+    return html
+
 def first_line(text, skip_brace=False):
     for ln in (text or "").splitlines():
         s = ln.strip()
@@ -430,7 +441,7 @@ self-contained, offline-proof (0 request ngoài) &middot; generated {GENERATED}.
 """
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(html, encoding="utf-8")
+    OUT.write_text(_ovs_font(html), encoding="utf-8")
 
     # ── console summary
     print(f"✓ wrote {OUT.relative_to(ROOT)}  ({len(html.encode('utf-8'))//1024} KB)")

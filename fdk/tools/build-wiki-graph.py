@@ -52,6 +52,17 @@ for _cand in (Path(__file__).resolve().parents[2] / "harness/scripts/overstack_p
 INCLUDE_UNTRACKED = False
 
 
+
+def _ovs_font(html: str) -> str:
+    """Font mặc định của mọi HTML framework sinh ra = Lexend Deca Light, NHÚNG (nguồn duy nhất: fdk/tools/html_font.py)."""
+    import importlib.util
+    here = Path(__file__).resolve()
+    for c in (here.with_name("html_font.py"), here.parents[2] / "fdk" / "tools" / "html_font.py", Path.home() / ".claude/harness/fdk/tools/html_font.py"):
+        if c.is_file():
+            s = importlib.util.spec_from_file_location("html_font", c); m = importlib.util.module_from_spec(s); s.loader.exec_module(m)
+            return m.apply(html)
+    return html
+
 def _in_git(root, path) -> bool:
     if INCLUDE_UNTRACKED or _op is None or root is None:
         return True
@@ -903,7 +914,7 @@ def main() -> None:
     out = Path(a.out).resolve() if a.out else Path("llmwiki/html").resolve() / default_name
     out.parent.mkdir(parents=True, exist_ok=True)
     render = build_static if a.static else build_html
-    out.write_text(render(ptag, str(out), nodes, edges, ledger, stale), encoding="utf-8")
+    out.write_text(_ovs_font(render(ptag, str(out), nodes, edges, ledger, stale)), encoding="utf-8")
     if a.json:                     # dump nodes/edges thô cho eval/scoring (cùng dữ liệu graph vừa vẽ)
         Path(a.json).resolve().write_text(
             json.dumps({"nodes": nodes, "edges": edges,

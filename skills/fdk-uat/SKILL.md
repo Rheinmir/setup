@@ -142,6 +142,7 @@ Tối thiểu, theo `fdk/docs/fresh-install-gate.md`:
 2. **Harness cắn thật:** `bash .harness/poc-vendor-neutral/test-broad.sh` → PASS (validator GOOD-pass / BAD-block).
 3. **Năng lực MỚI tới tay** — phần riêng của bản này (checklist bước 1). Đây là mục hay bị bỏ nhất, và cũng là mục duy nhất chứng minh bản MỚI có giá trị.
 4. **Orchestration-ready:** skill `orchestration` / `orca-cli` / `orca-dispatch-reference` reachable.
+5. **Module repo riêng tới nơi (orca-graph):** `python3 ~/.claude/harness/harness/scripts/orca-graph.py --version` trong HOME của dự án trống phải in `orca-graph X.Y.Z` (rc 0). rc 3 = shim tới mà engine không tới → FAIL, kể cả khi mọi thứ khác xanh. Cài với `--no-graph` thì kỳ vọng NGƯỢC LẠI: rc 3 kèm đúng một lệnh cài. `fresh-install-smoke.sh` mục (G) kiểm tự động; UAT ghi kết quả vào checklist.
 5. **BẮT BUỘC (không phải tuỳ chọn — feedback 2026-07-24, lần thứ 2 bị nhắc vì skip bước này): dựng workspace Orca thật + TỰ VERIFY nó hiện trong app, đừng chỉ chạy filesystem-level.** Chỉ curl-cài vào một thư mục tạm rồi test bằng CLI KHÔNG tính là UAT hoàn chỉnh — user không thấy được gì, "không visual = không dùng được". Đây là cổng CỨNG: UAT KHÔNG được coi là PASS nếu bỏ qua bước này.
 ```bash
 WT_NAME="uat-$(date +%y%m%d-%H%M)"                          # tên xác định, dùng để verify ở bước sau

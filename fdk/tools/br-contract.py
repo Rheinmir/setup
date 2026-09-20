@@ -39,6 +39,17 @@ ROLE_ORDER = ["screen", "form", "panel", "widget", "action", "none"]
 
 
 # ── core (pure, testable) ───────────────────────────────────────────────────
+
+def _ovs_font(html: str) -> str:
+    """Font mặc định của mọi HTML framework sinh ra = Lexend Deca Light, NHÚNG (nguồn duy nhất: fdk/tools/html_font.py)."""
+    import importlib.util
+    here = Path(__file__).resolve()
+    for c in (here.with_name("html_font.py"), here.parents[2] / "fdk" / "tools" / "html_font.py", Path.home() / ".claude/harness/fdk/tools/html_font.py"):
+        if c.is_file():
+            s = importlib.util.spec_from_file_location("html_font", c); m = importlib.util.module_from_spec(s); s.loader.exec_module(m)
+            return m.apply(html)
+    return html
+
 def _load_frames(frames_dir):
     out = {}
     for f in sorted(Path(frames_dir).glob("*.md")):
@@ -275,7 +286,7 @@ def cmd_build(frames_dir, layout, root, out_md, out_html):
     c = build_contract(frames_dir, layout, root)
     Path(out_md).write_text(render_md(c, project), encoding="utf-8")
     html_abs = str(Path(out_html).resolve())
-    Path(out_html).write_text(render_html(c, project, html_abs), encoding="utf-8")
+    Path(out_html).write_text(_ovs_font(render_html(c, project, html_abs)), encoding="utf-8")
     cc = c["counts"]
     print(f"  contract: {cc['frames']} frame · {cc['screens']} màn · {cc['routes']} route "
           f"· {len(c['warnings'])} lệch")

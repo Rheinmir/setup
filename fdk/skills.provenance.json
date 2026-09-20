@@ -302,11 +302,11 @@
     },
     "docs-site-macos": {
       "files": {
-        "SKILL.md": "de34b239cf07de0c401a83db5ec17e9f407768ac41097ecf41298b1e718df62e",
+        "SKILL.md": "66a5f69ce2970ae61111e77ba5f9ea0898b25816dd47131a471b67bd3c5ee57e",
         "vendor/README.md": "637090466e5c66282a3e092751982f95f05eeca3ebf3f7eadc29596960ced445",
         "vendor/beautiful-mermaid.min.js.gz.b64": "89e9982b5e5b5f06c7b07ed44ee525df4e8fa5372b93c70bc79cd492acf29b37"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-09-20",
       "source": "local-authored"
     },
     "doyourmagic": {
@@ -363,9 +363,9 @@
     },
     "fdk-uat": {
       "files": {
-        "SKILL.md": "4c516217a6248d3247a71a827192ea8f676a4ed4b1552e0fa39accf1e101819e"
+        "SKILL.md": "518560e6ad033a206f66e4d747d51880c0df1b8b4f68dbd0345c7987e27838a0"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-09-20",
       "source": "local-authored"
     },
     "find-skills": {
@@ -541,9 +541,9 @@
     },
     "harness-update": {
       "files": {
-        "SKILL.md": "4d76c97c51271631dbadea57765bc410367b03bb9ebb570b5641ab6312470f58"
+        "SKILL.md": "a2c4eab7e8744dfec1e5e83ebe42fb3db8b4751b19ff3ed7c9936593345a0a81"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-09-20",
       "source": "local-authored"
     },
     "health-check": {
@@ -841,13 +841,13 @@
     "orca-graph": {
       "adapt_mode": "external-pull",
       "category": "orchestrate",
-      "commit": "bd262bd16cad4ac841096b532f97bfc11ff4d352",
+      "commit": "7b2badcdc0b60a244d5ee3142a51f501f43ed289",
       "files": {
         "SKILL.md": "40a2bb78fc6fa57a08d9349923f69154bc971731b20bcf98d14f481af8fe3083"
       },
       "recorded": "2026-09-20",
       "source": "https://github.com/Rheinmir/orca-graph",
-      "version": "3.0.2"
+      "version": "3.0.3"
     },
     "orca-handover": {
       "files": {
@@ -866,9 +866,9 @@
     "orca-onboard": {
       "files": {
         "SKILL.md": "7a15ccfef5eb68a7ad21c5fb60dcf549ccf2e36733e50889003877f1b33e13be",
-        "assets/docs-site-skeleton.html": "7a031c6a9d4940775b684a1a2d6dcb09c9a339ac796ea6d315ba930b94ba6113"
+        "assets/docs-site-skeleton.html": "ce1f0fd874f9d723aabb62455ab19f6e9ac3d14a5841cd3d92818654475c5238"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-09-20",
       "source": "local-authored"
     },
     "orca-sec-scans": {
@@ -993,9 +993,9 @@
     },
     "ship": {
       "files": {
-        "SKILL.md": "e66a6ecd20e8ddbc020afbc950021c02f94afab0016fc8882ddd83000bd14e38"
+        "SKILL.md": "7db25447ff680647b165d1c9cab5e85590a154096b1b620f8a8cf10b9ab15eea"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-09-20",
       "source": "local-authored"
     },
     "skill-provenance": {

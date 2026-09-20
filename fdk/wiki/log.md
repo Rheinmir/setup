@@ -334,3 +334,8 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 
 - sửa `concepts/orca-graph.md` — mục "Bản v3": lý do cạnh + audit-edges, resource claims, lý do chờ, add-node, eval VT; engine tách sang `Rheinmir/orca-graph`, framework giữ shim + mirror skill (KÉO NGOÀI)
 - sửa `index.md` — dòng orca-graph ghi thêm v3
+
+## 2026-09-20 — update — repo_role · luồng cài đặt · font mặc định
+
+- tạo `concepts/install-update-flows.md` — bảng luồng A/B/C/D, mỗi ô một ca test hoặc ghi rõ chưa làm; hai gốc đã sửa
+- sửa `index.md` — thêm dòng install-update-flows

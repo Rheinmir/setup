@@ -1,0 +1,655 @@
+{
+ "id": "200926-repo-role-ship-flows",
+ "plan": "llmwiki/wiki/sources/draft/200926-repo-role-ship-flows-PLAN.md",
+ "built": "2026-09-20T20:10:37+0700",
+ "nodes": [
+  {
+   "id": "t1",
+   "title": "repo_role.py — đọc nhãn, suy luận có bằng chứng",
+   "files": [
+    "harness/scripts/repo_role.py",
+    "harness/tests/test_repo_role.py"
+   ],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "`resolve(root) -> {\"role\", \"source\": \"declared|inferred|machine\", \"evidence\": [..]}`; CLI `repo_role.py [root] [--json] [--set ROLE]` (dùng bởi Task 2, Task 3, Task 4)"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 -m pytest -q harness/tests/test_repo_role.py",
+   "qc": "",
+   "spec_hash": "cd7b66bf31a96642",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "cd7b66bf31a96642"
+  },
+  {
+   "id": "t2",
+   "title": "gắn nhãn cho các repo đang có + installer ghi nhãn downstream",
+   "files": [
+    ".overstack.yaml",
+    "harness/poc-vendor-neutral/install.sh"
+   ],
+   "consumes": [
+    "`repo_role.py --set`"
+   ],
+   "produces": [
+    "repo framework khai `repo_role: framework`; repo engine khai `repo_role: module` kèm `upstream_pin: {repo: Rheinmir/setup, file: fdk/skills.provenance.json, key: orca-graph}` (commit ở repo engine); dự án mới cài có `repo_role: downstream` trong `.overstack.yaml` (không đè nếu đã có khoá này)"
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "infra",
+   "mode": "afk",
+   "verify": "test \"$(python3 harness/scripts/repo_role.py . --json | python3 -c 'import json,sys;d=json.load(sys.stdin);print(d[\"role\"],d[\"source\"])')\" = \"framework declared\"",
+   "qc": "",
+   "dep_reasons": {
+    "t1": "contract"
+   },
+   "resources": [
+    {
+     "key": "installer-files",
+     "mode": "exclusive"
+    }
+   ],
+   "spec_hash": "2e0ceb4ca03d8a46",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "2e0ceb4ca03d8a46"
+  },
+  {
+   "id": "t3",
+   "title": "/ship rẽ luồng theo repo_role",
+   "files": [
+    "skills/ship/SKILL.md",
+    "llmwiki/skills/dev-loop/ship.md"
+   ],
+   "consumes": [
+    "`repo_role.py --json`"
+   ],
+   "produces": [
+    "bước W00 \"xác định repo_role, in ra, thiếu nhãn thì hỏi rồi `--set`\"; bảng gate theo role; cờ `--as <role>`; luật \"đọc rc gate trước khi push, cấm nối `;`\"; luồng `module` có bước cuối \"re-pin ở framework\"; luồng `foreign` chỉ `pr`/`mr`, không `push` nhánh chính"
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "docs",
+   "mode": "afk",
+   "verify": "grep -q \"repo_role\" skills/ship/SKILL.md && grep -q \"foreign\" skills/ship/SKILL.md && python3 fdk/tools/swh-lint.py --ci",
+   "qc": "",
+   "dep_reasons": {
+    "t1": "contract"
+   },
+   "spec_hash": "d0159f105dfb9777",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "d0159f105dfb9777"
+  },
+  {
+   "id": "t4",
+   "title": "installer từ chối ghi vào repo framework",
+   "files": [
+    "harness/poc-vendor-neutral/install.sh",
+    "harness/scripts/install-harness.sh"
+   ],
+   "consumes": [
+    "`repo_role.resolve`"
+   ],
+   "produces": [
+    "gặp role `framework` → in lý do + lệnh đúng (`/harness-update` không áp cho repo này) và thoát rc 3 TRƯỚC khi ghi bất cứ file nào; cờ `--i-know-this-is-the-framework` để ép"
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "fix",
+   "mode": "afk",
+   "verify": "bash harness/tests/install-flows-test.sh C1",
+   "qc": "",
+   "dep_reasons": {
+    "t1": "data"
+   },
+   "resources": [
+    {
+     "key": "installer-files",
+     "mode": "exclusive"
+    }
+   ],
+   "spec_hash": "92640aaf04553e26",
+   "state": "done",
+   "gen": 1,
+   "rev": 4,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "92640aaf04553e26"
+  },
+  {
+   "id": "t5",
+   "title": "kéo engine orca-graph ở đúng chỗ copy shim",
+   "files": [
+    "harness/scripts/install-harness.sh",
+    "harness/poc-vendor-neutral/install.sh"
+   ],
+   "consumes": [
+    "`install.sh` của repo engine"
+   ],
+   "produces": [
+    "hàm `ensure_orca_graph` trong nhánh `--global` của `install-harness.sh` — chưa có engine thì kéo, có rồi thì cập nhật, `ORCA_GRAPH_SKIP=1` thì bỏ, fail-open; `install.sh` chạy checklist TRƯỚC khi gọi global và export `ORCA_GRAPH_SKIP` theo lựa chọn; khối kéo ở `install.sh` chỉ còn cho ca `--harness-only`"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "fix",
+   "mode": "afk",
+   "verify": "bash harness/tests/install-flows-test.sh A7 B3",
+   "qc": "",
+   "resources": [
+    {
+     "key": "installer-files",
+     "mode": "exclusive"
+    }
+   ],
+   "spec_hash": "6d688a3cc61f789d",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "6d688a3cc61f789d"
+  },
+  {
+   "id": "t6",
+   "title": "cổng kiểm \"engine tới nơi\" trong smoke và UAT",
+   "files": [
+    "harness/scripts/fresh-install-smoke.sh",
+    "skills/fdk-uat/SKILL.md",
+    "llmwiki/skills/utils/fdk-uat.md"
+   ],
+   "consumes": [
+    "máy vừa cài theo đường người-mới"
+   ],
+   "produces": [
+    "assert sau cài `python3 <global>/harness/scripts/orca-graph.py --version` rc 0 và in `orca-graph <X.Y.Z>`; ca `--no-graph` thì assert rc 3 kèm lệnh cài; UAT ghi bước này vào checklist"
+   ],
+   "deps": [
+    "t5"
+   ],
+   "deps_conf": "chắc",
+   "kind": "test",
+   "mode": "afk",
+   "verify": "bash harness/scripts/fresh-install-smoke.sh --local",
+   "qc": "",
+   "dep_reasons": {
+    "t5": "acceptance"
+   },
+   "spec_hash": "d42deb7354f2af2d",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "d42deb7354f2af2d"
+  },
+  {
+   "id": "t7",
+   "title": "install-flows-test — mỗi ô của bảng luồng là một ca",
+   "files": [
+    "harness/tests/install-flows-test.sh",
+    ".github/workflows/harness.yml"
+   ],
+   "consumes": [
+    "installer sau Task 4, Task 5"
+   ],
+   "produces": [
+    "ca `A3 A7 B1 B3 B4 C1` chạy kín mạng trong HOME cô lập (engine lấy từ bản cài local), gọi được từng ca theo tên; không ca nào để lại daemon hay ghi registry thật; step CI tương ứng"
+   ],
+   "deps": [
+    "t4",
+    "t5",
+    "t13"
+   ],
+   "deps_conf": "chắc",
+   "kind": "test",
+   "mode": "afk",
+   "verify": "bash harness/tests/install-flows-test.sh",
+   "qc": "",
+   "dep_reasons": {
+    "t4": "acceptance",
+    "t5": "acceptance"
+   },
+   "resources": [
+    {
+     "key": "ci-workflow",
+     "mode": "exclusive"
+    }
+   ],
+   "spec_hash": "b253267606751123",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "b253267606751123"
+  },
+  {
+   "id": "t8",
+   "title": "bảng luồng thành trang wiki + review + ship",
+   "files": [
+    "fdk/wiki/concepts/install-update-flows.md",
+    "fdk/wiki/index.md",
+    "fdk/wiki/log.md"
+   ],
+   "consumes": [
+    "kết quả Task 1–7"
+   ],
+   "produces": [
+    "trang concept giữ bảng A/B/C/D (mỗi ô trỏ ca test hoặc ghi \"chưa làm, vì sao\"); review độc lập phần installer; ship bằng chính luồng `framework` mới của `/ship`"
+   ],
+   "deps": [
+    "t2",
+    "t3",
+    "t6",
+    "t7",
+    "t12"
+   ],
+   "deps_conf": "chắc",
+   "kind": "release",
+   "mode": "afk",
+   "verify": "test -s fdk/wiki/concepts/install-update-flows.md && grep -q \"install-update-flows\" fdk/wiki/index.md",
+   "qc": "",
+   "dep_reasons": {
+    "t2": "data",
+    "t3": "acceptance",
+    "t6": "acceptance",
+    "t7": "acceptance",
+    "t12": "acceptance"
+   },
+   "spec_hash": "8004919708e050b5",
+   "state": "dispatched",
+   "gen": 1,
+   "rev": 2,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t9",
+   "title": "html_font.py — một nguồn token font + cách nạp Lexend Deca Light",
+   "files": [
+    "fdk/tools/html_font.py",
+    "harness/tests/test_html_font.py"
+   ],
+   "consumes": [
+    "quyết định user về cách nạp font — (a) `<link>` Google Fonts + fallback hệ thống: nhẹ, nhưng mở offline thì rơi về font hệ thống; (b) nhúng woff2 subset latin + vietnamese dạng base64 vào từng trang: tự chứa, offline vẫn đúng font, mỗi trang nặng thêm cỡ vài chục KB (số thật đo ở bước này); (c) lai: nhúng cho trang framework tự sinh, link cho trang do skill/agent sinh"
+   ],
+   "produces": [
+    "`FONT_TEXT`, `FONT_DISPLAY`, `FONT_MONO` (chuỗi font-family), `head_css(mode)` trả khối `<link>`/`@font-face` + `:root{--font-text:…;--font-display:…}`, hằng `WEIGHT_TEXT = 300` (dùng bởi Task 10, Task 11, Task 12)"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "hitl",
+   "verify": "python3 -m pytest -q harness/tests/test_html_font.py",
+   "qc": "",
+   "spec_hash": "5a878236c3eba181",
+   "state": "done",
+   "gen": 1,
+   "rev": 4,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "5a878236c3eba181"
+  },
+  {
+   "id": "t10",
+   "title": "áp token font vào mọi generator HTML của framework",
+   "files": [
+    "fdk/tools/build-overstack-docs.py",
+    "fdk/tools/build-docs-index.py",
+    "fdk/tools/build-health-dashboard.py",
+    "fdk/tools/build-line-status.py",
+    "fdk/tools/build-wiki-graph.py",
+    "fdk/tools/build-control-room.py",
+    "fdk/tools/br-contract.py",
+    "fdk/tools/council.py"
+   ],
+   "consumes": [
+    "`html_font.head_css`, `FONT_TEXT`"
+   ],
+   "produces": [
+    "mọi generator lấy font từ `html_font` (không còn chuỗi `-apple-system,…` chép tay cho phần nội dung); `body{font-weight:300}`; chữ đậm/tiêu đề giữ tương phản (strong ≥ 500); regen lại các trang đang track"
+   ],
+   "deps": [
+    "t9"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/build-overstack-docs.py >/dev/null && grep -q \"Lexend Deca\" llmwiki/html/overstack.html && python3 fdk/tools/medic.py --ci",
+   "qc": "",
+   "dep_reasons": {
+    "t9": "contract"
+   },
+   "spec_hash": "d78c6dc735b4f611",
+   "state": "done",
+   "gen": 1,
+   "rev": 4,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "d78c6dc735b4f611"
+  },
+  {
+   "id": "t11",
+   "title": "áp font vào engine graph-viz (repo module) và template của skill",
+   "files": [
+    "skills/docs-site-macos/SKILL.md",
+    "llmwiki/skills/utils/docs-site-macos.md",
+    "skills/orca-onboard/assets/docs-site-skeleton.html",
+    "fdk/skills.provenance.json"
+   ],
+   "consumes": [
+    "giá trị token của Task 9 (repo engine KHÔNG import được từ framework → chép HẰNG SỐ, ghi rõ nguồn; đổi ở framework thì test của Task 12 bắt lệch)"
+   ],
+   "produces": [
+    "`engine/graph-viz.py` của `Rheinmir/orca-graph` dùng cùng `--font-text` + weight 300 (commit, test, tag ở repo engine theo luồng `module`, rồi re-pin provenance ở đây); template `docs-site-macos` và skeleton `orca-onboard` khai token mới nên trang agent dựng từ đó cũng ra Lexend Deca Light. NGOÀI phạm vi, nói thẳng: `hallmark`/`prd-grade-fe` sinh UI SẢN PHẨM theo `design.md` của từng dự án — không ép font framework lên đó"
+   ],
+   "deps": [
+    "t9"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "grep -q \"Lexend Deca\" skills/docs-site-macos/SKILL.md && grep -q \"Lexend Deca\" \"$HOME/.orca-graph/repo/engine/graph-viz.py\" && python3 fdk/tools/swh-lint.py --ci",
+   "qc": "",
+   "dep_reasons": {
+    "t9": "contract"
+   },
+   "spec_hash": "920d74f33f27007f",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "920d74f33f27007f"
+  },
+  {
+   "id": "t12",
+   "title": "cổng html-font-lint + nghiệm thu bằng mắt",
+   "files": [
+    "fdk/tools/html-font-lint.py",
+    "harness/tests/html-font-lint-test.sh",
+    ".github/workflows/harness.yml"
+   ],
+   "consumes": [
+    "mọi `.html` framework sinh ra đang track + hằng số trong engine"
+   ],
+   "produces": [
+    "lint rc 2 khi một trang framework sinh không khai `'Lexend Deca'` cho `--font-text`/`body`, hoặc hằng số ở engine lệch `html_font.FONT_TEXT`; ảnh chụp Playwright 3 trang (overstack, 1 graph, control-room) ở cả sáng và tối, kiểm chữ Việt đủ dấu, weight 300 không làm chữ xám trên nền tối kém tương phản (đo contrast AA)"
+   ],
+   "deps": [
+    "t10",
+    "t11"
+   ],
+   "deps_conf": "chắc",
+   "kind": "test",
+   "mode": "afk",
+   "verify": "bash harness/tests/html-font-lint-test.sh",
+   "qc": "",
+   "dep_reasons": {
+    "t10": "acceptance",
+    "t11": "acceptance"
+   },
+   "resources": [
+    {
+     "key": "ci-workflow",
+     "mode": "exclusive"
+    }
+   ],
+   "spec_hash": "bed6219fc4e8cc34",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "bed6219fc4e8cc34"
+  },
+  {
+   "id": "t13",
+   "title": "harness-update đi đúng đường v4: cập nhật GLOBAL qua bootstrap, không chép engine vào dự án dot-layout",
+   "files": [
+    "skills/harness-update/SKILL.md",
+    "llmwiki/skills/utils/harness-update.md",
+    "harness/scripts/install-harness.sh"
+   ],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "per-project mode gặp dự án dot-layout (.llmwiki/.harness-stamp) thì DỪNG rc 3 + chỉ lệnh bootstrap; skill /harness-update gọi bootstrap (refresh global + engine + stamp) rồi mới self-heal nợ wiki"
+   ],
+   "deps": [
+    "t5"
+   ],
+   "deps_conf": "chắc",
+   "kind": "fix",
+   "mode": "afk",
+   "verify": "bash harness/tests/install-flows-test.sh B3",
+   "qc": "",
+   "dep_reasons": {
+    "t5": "data"
+   },
+   "resources": [
+    {
+     "key": "installer-files",
+     "mode": "exclusive"
+    }
+   ],
+   "spec_hash": "ac14980fb999ff60",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "ac14980fb999ff60"
+  }
+ ],
+ "layers": [
+  [
+   "t1",
+   "t5",
+   "t9"
+  ],
+  [
+   "t10",
+   "t11",
+   "t13",
+   "t2",
+   "t3",
+   "t4",
+   "t6"
+  ],
+  [
+   "t12",
+   "t7"
+  ],
+  [
+   "t8"
+  ]
+ ],
+ "parent": null,
+ "depth": 0,
+ "plan_version": 4,
+ "superseded": [],
+ "max_parallel": 4,
+ "conflicts": [
+  {
+   "a": "t13",
+   "b": "t4",
+   "files": [
+    "harness/scripts/install-harness.sh"
+   ]
+  },
+  {
+   "a": "t2",
+   "b": "t4",
+   "files": [
+    "harness/poc-vendor-neutral/install.sh"
+   ]
+  },
+  {
+   "a": "t12",
+   "b": "t7",
+   "files": [
+    ".github/workflows/harness.yml"
+   ]
+  }
+ ],
+ "resource_conflicts": [
+  {
+   "a": "t13",
+   "b": "t2",
+   "keys": [
+    "installer-files"
+   ]
+  },
+  {
+   "a": "t13",
+   "b": "t4",
+   "keys": [
+    "installer-files"
+   ]
+  },
+  {
+   "a": "t2",
+   "b": "t4",
+   "keys": [
+    "installer-files"
+   ]
+  },
+  {
+   "a": "t12",
+   "b": "t7",
+   "keys": [
+    "ci-workflow"
+   ]
+  }
+ ],
+ "links": [
+  {
+   "to_graph": "140926-orca-graph-daemon",
+   "to_node": "t3",
+   "via": [
+    "fdk/tools/build-control-room.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "160926-theme-toggle-circle-reveal-motion",
+   "to_node": "t1",
+   "via": [
+    "skills/docs-site-macos/SKILL.md"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "160926-theme-toggle-circle-reveal-motion",
+   "to_node": "t2",
+   "via": [
+    "llmwiki/skills/utils/docs-site-macos.md"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "160926-theme-toggle-circle-reveal-motion",
+   "to_node": "t3",
+   "via": [
+    "fdk/tools/build-overstack-docs.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "180926-ship-scroll-originals",
+   "to_node": "t2",
+   "via": [
+    "fdk/skills.provenance.json"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "190926-swh-reuse-layer",
+   "to_node": "t6",
+   "via": [
+    ".github/workflows/harness.yml"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "190926-swh-skill-standardize",
+   "to_node": "t4",
+   "via": [
+    "fdk/skills.provenance.json"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "190926-swh-skill-standardize",
+   "to_node": "t6",
+   "via": [
+    "skills/docs-site-macos/SKILL.md"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "190926-swh-skill-standardize",
+   "to_node": "t15",
+   "via": [
+    ".github/workflows/harness.yml"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "200926-orca-graph-v3",
+   "to_node": "t9",
+   "via": [
+    "harness/poc-vendor-neutral/install.sh"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "200926-orca-graph-v3",
+   "to_node": "t10",
+   "via": [
+    "fdk/skills.provenance.json"
+   ],
+   "kind": "touches-same-file"
+  }
+ ],
+ "control": "active",
+ "schema_version": 1,
+ "checksum": "ca654a598fbb39c6"
+}

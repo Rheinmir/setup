@@ -12,6 +12,17 @@ import argparse, html, importlib.util, json, os, re, subprocess, time
 from pathlib import Path
 
 
+
+def _ovs_font(html: str) -> str:
+    """Font mặc định của mọi HTML framework sinh ra = Lexend Deca Light, NHÚNG (nguồn duy nhất: fdk/tools/html_font.py)."""
+    import importlib.util
+    here = Path(__file__).resolve()
+    for c in (here.with_name("html_font.py"), here.parents[2] / "fdk" / "tools" / "html_font.py", Path.home() / ".claude/harness/fdk/tools/html_font.py"):
+        if c.is_file():
+            s = importlib.util.spec_from_file_location("html_font", c); m = importlib.util.module_from_spec(s); s.loader.exec_module(m)
+            return m.apply(html)
+    return html
+
 def detect_root() -> Path:
     """Dự án đang GỌI (git-root của CWD, hoặc CWD) luôn thắng trước — script này chạy dưới subprocess
     kế thừa cwd của orca-graph.py, cwd đó chính là dự án downstream cần regen.
@@ -189,7 +200,7 @@ setInterval(function(){{if(document.visibilityState==='visible')location.reload(
 <style>#live{{position:fixed;right:14px;bottom:12px;z-index:9;font-size:11px;padding:4px 10px;border-radius:999px;border:1px solid var(--border);background:var(--glass1);backdrop-filter:blur(12px);color:var(--t2);max-width:min(92vw,720px)}}
 #live.ok{{color:#22c55e}}#live.idle{{color:var(--t2)}}#live.stale{{color:#fff;background:#ef4444;border-color:#ef4444}}</style>"""
     s = out.read_text(encoding="utf-8").replace('<meta name="viewport"', '<meta http-equiv="refresh" content="5"><meta name="viewport"', 1).replace("</body>", js + "</body>", 1)
-    out.write_text(s, encoding="utf-8")
+    out.write_text(_ovs_font(s), encoding="utf-8")
 
 
 # ---------- COCKPIT: board-first, mọi thứ trong MỘT màn hình; ô nào tràn thì cắt + "→ chi tiết" ----------

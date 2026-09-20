@@ -517,3 +517,547 @@ cc4f999ad |
 | 2026-09-20 10:11:35 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-review.md · tool=Write · session=cad381c4 · actor=agent · prev=62c6d54d4 |
 
 <!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-19 14:07:12 | `file.write` | llmwiki/wiki/sources/draft/190926-swh-reuse-layer-PLAN.md · tool=Write · session= · actor=agent · prev=666b3c4f7f53cbac3 |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/mechanisms.yaml', 'llmwiki/wiki/concepts/solid-what-how.md', ' |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/skills/utils/fdk.md', 'fdk/skills.provenance.json', 'fdk/tools |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/wiki/sources/190926-skill-design-standard-swh-prd.md', 'fdk/sk |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/graph/190926-swh-reuse-layer.graph.json', 'fdk/tools/swh-lint. |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skill-catalog/patterns/P01-evidence-to-artifact.md', 'llmwiki/wiki |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skill-catalog/catalog.json', 'llmwiki/wiki/sources/provenance/1909 |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/tests/test_skill_reuse.py', 'harness/tests/test_swh_lint.py']  |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/skill-catalog/patterns/P02-verified-external-effect.md', 'harness/ |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['skills/new-skill/SKILL.md'] · prev=7bebcaa764d25e1d51917f7e794d8d699b2 |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/graph/190926-swh-skill-standardize.graph.json', 'llmwiki/skill |
+| 2026-09-19 14:23:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=b4cc4946eb3081b1e9e181ed8f26d8cb80d71df99 |
+| 2026-09-19 14:26:26 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/190926-swh-reuse-layer.graph.json'] · prev=5d022070010c5 |
+| 2026-09-19 14:47:33 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/policy.yaml', 'harness/poc-vendor-neutral/policy.yaml', 'harne |
+| 2026-09-20 09:33:07 | `file.write` | llmwiki/wiki/sources/200926-reprise-graph-engine-prd-v11.md · tool=Write · session=cad381c4 · actor=agent · prev=8e7153b |
+| 2026-09-20 09:33:07 | `file.write` | llmwiki/wiki/sources/200926-reprise-graph-engine-prd-v11.md · tool=Write · session=cad381c4 · actor=agent · prev=bdba815 |
+| 2026-09-20 09:34:32 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=25ec67e67bf |
+| 2026-09-20 09:34:32 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=4519e7d368b |
+| 2026-09-20 10:11:35 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-review.md · tool=Write · session=cad381c4 · actor=agent · prev=02fd87d1c |
+| 2026-09-20 10:11:35 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-review.md · tool=Write · session=cad381c4 · actor=agent · prev=62c6d54d4 |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'fdk/tools/graph-atlas.py'] · prev=b8920e2befc |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/install-graph-option-test.sh', 'fdk/CAPABILITIES.md', 'f |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json', 'skills/orca-graph/SKI |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=36348c2b300889276b5e555e3b837f154b8b99222 |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=3 · human=['llmwiki/skills/orchestrate/orca-graph.md', 'harness/tests/test_control |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/poc-vendor-neutral/bootstrap.sh', 'llmwiki/raw/Reprise-Graph-E |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=2 · human=['fdk/skills.provenance.json', 'llmwiki/wiki/sources/120926-reprise-grap |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/graph-viz.py', 'harness/version.json', 'fdk/wiki/log.md', 'h |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=c3d45 |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/skills/orchestrate/orca-graph.md', 'harness/tests/test_control |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/poc-vendor-neutral/bootstrap.sh', 'llmwiki/raw/Reprise-Graph-E |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=2e2e35da508a0d55ca0a98b31865def3b7e458b99 |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=5dc0b |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skills.provenance.json', 'llmwiki/wiki/sources/draft/200926-orca-g |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json', 'skills/orca-graph/SKI |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'fdk/tools/graph-atlas.py'] · prev=4895a42370f |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/install-graph-option-test.sh', 'fdk/CAPABILITIES.md', 'f |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/graph-viz.py', 'harness/version.json', 'fdk/wiki/log.md', 'h |
+| 2026-09-20 10:30:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json'] · prev=17ab501d02c248c |
+| 2026-09-20 10:30:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=f65c1 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-19 14:07:12 | `file.write` | llmwiki/wiki/sources/draft/190926-swh-reuse-layer-PLAN.md · tool=Write · session= · actor=agent · prev=666b3c4f7f53cbac3 |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/mechanisms.yaml', 'llmwiki/wiki/concepts/solid-what-how.md', ' |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/skills/utils/fdk.md', 'fdk/skills.provenance.json', 'fdk/tools |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/wiki/sources/190926-skill-design-standard-swh-prd.md', 'fdk/sk |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/graph/190926-swh-reuse-layer.graph.json', 'fdk/tools/swh-lint. |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skill-catalog/patterns/P01-evidence-to-artifact.md', 'llmwiki/wiki |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skill-catalog/catalog.json', 'llmwiki/wiki/sources/provenance/1909 |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/tests/test_skill_reuse.py', 'harness/tests/test_swh_lint.py']  |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/skill-catalog/patterns/P02-verified-external-effect.md', 'harness/ |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['skills/new-skill/SKILL.md'] · prev=7bebcaa764d25e1d51917f7e794d8d699b2 |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/graph/190926-swh-skill-standardize.graph.json', 'llmwiki/skill |
+| 2026-09-19 14:23:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=b4cc4946eb3081b1e9e181ed8f26d8cb80d71df99 |
+| 2026-09-19 14:26:26 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/190926-swh-reuse-layer.graph.json'] · prev=5d022070010c5 |
+| 2026-09-19 14:47:33 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/policy.yaml', 'harness/poc-vendor-neutral/policy.yaml', 'harne |
+| 2026-09-20 09:33:07 | `file.write` | llmwiki/wiki/sources/200926-reprise-graph-engine-prd-v11.md · tool=Write · session=cad381c4 · actor=agent · prev=8e7153b |
+| 2026-09-20 09:33:07 | `file.write` | llmwiki/wiki/sources/200926-reprise-graph-engine-prd-v11.md · tool=Write · session=cad381c4 · actor=agent · prev=bdba815 |
+| 2026-09-20 09:34:32 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=25ec67e67bf |
+| 2026-09-20 09:34:32 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=4519e7d368b |
+| 2026-09-20 10:11:35 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-review.md · tool=Write · session=cad381c4 · actor=agent · prev=02fd87d1c |
+| 2026-09-20 10:11:35 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-review.md · tool=Write · session=cad381c4 · actor=agent · prev=62c6d54d4 |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'fdk/tools/graph-atlas.py'] · prev=b8920e2befc |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/install-graph-option-test.sh', 'fdk/CAPABILITIES.md', 'f |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json', 'skills/orca-graph/SKI |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=36348c2b300889276b5e555e3b837f154b8b99222 |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=3 · human=['llmwiki/skills/orchestrate/orca-graph.md', 'harness/tests/test_control |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/poc-vendor-neutral/bootstrap.sh', 'llmwiki/raw/Reprise-Graph-E |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=2 · human=['fdk/skills.provenance.json', 'llmwiki/wiki/sources/120926-reprise-grap |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/graph-viz.py', 'harness/version.json', 'fdk/wiki/log.md', 'h |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=c3d45 |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/skills/orchestrate/orca-graph.md', 'harness/tests/test_control |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/poc-vendor-neutral/bootstrap.sh', 'llmwiki/raw/Reprise-Graph-E |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=2e2e35da508a0d55ca0a98b31865def3b7e458b99 |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=5dc0b |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skills.provenance.json', 'llmwiki/wiki/sources/draft/200926-orca-g |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json', 'skills/orca-graph/SKI |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'fdk/tools/graph-atlas.py'] · prev=4895a42370f |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/install-graph-option-test.sh', 'fdk/CAPABILITIES.md', 'f |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/graph-viz.py', 'harness/version.json', 'fdk/wiki/log.md', 'h |
+| 2026-09-20 10:30:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json'] · prev=17ab501d02c248c |
+| 2026-09-20 10:30:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=f65c1 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/mechanisms.yaml', 'llmwiki/wiki/concepts/solid-what-how.md', ' |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/skills/utils/fdk.md', 'fdk/skills.provenance.json', 'fdk/tools |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/wiki/sources/190926-skill-design-standard-swh-prd.md', 'fdk/sk |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/graph/190926-swh-reuse-layer.graph.json', 'fdk/tools/swh-lint. |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skill-catalog/patterns/P01-evidence-to-artifact.md', 'llmwiki/wiki |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skill-catalog/catalog.json', 'llmwiki/wiki/sources/provenance/1909 |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/tests/test_skill_reuse.py', 'harness/tests/test_swh_lint.py']  |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/skill-catalog/patterns/P02-verified-external-effect.md', 'harness/ |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['skills/new-skill/SKILL.md'] · prev=7bebcaa764d25e1d51917f7e794d8d699b2 |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/graph/190926-swh-skill-standardize.graph.json', 'llmwiki/skill |
+| 2026-09-19 14:23:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=b4cc4946eb3081b1e9e181ed8f26d8cb80d71df99 |
+| 2026-09-19 14:26:26 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/190926-swh-reuse-layer.graph.json'] · prev=5d022070010c5 |
+| 2026-09-19 14:47:33 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/policy.yaml', 'harness/poc-vendor-neutral/policy.yaml', 'harne |
+| 2026-09-20 09:33:07 | `file.write` | llmwiki/wiki/sources/200926-reprise-graph-engine-prd-v11.md · tool=Write · session=cad381c4 · actor=agent · prev=8e7153b |
+| 2026-09-20 09:33:07 | `file.write` | llmwiki/wiki/sources/200926-reprise-graph-engine-prd-v11.md · tool=Write · session=cad381c4 · actor=agent · prev=bdba815 |
+| 2026-09-20 09:34:32 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=25ec67e67bf |
+| 2026-09-20 09:34:32 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=4519e7d368b |
+| 2026-09-20 10:11:35 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-review.md · tool=Write · session=cad381c4 · actor=agent · prev=02fd87d1c |
+| 2026-09-20 10:11:35 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-review.md · tool=Write · session=cad381c4 · actor=agent · prev=62c6d54d4 |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'fdk/tools/graph-atlas.py'] · prev=b8920e2befc |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/install-graph-option-test.sh', 'fdk/CAPABILITIES.md', 'f |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json', 'skills/orca-graph/SKI |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=36348c2b300889276b5e555e3b837f154b8b99222 |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=3 · human=['llmwiki/skills/orchestrate/orca-graph.md', 'harness/tests/test_control |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/poc-vendor-neutral/bootstrap.sh', 'llmwiki/raw/Reprise-Graph-E |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=2 · human=['fdk/skills.provenance.json', 'llmwiki/wiki/sources/120926-reprise-grap |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/graph-viz.py', 'harness/version.json', 'fdk/wiki/log.md', 'h |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=c3d45 |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/skills/orchestrate/orca-graph.md', 'harness/tests/test_control |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/poc-vendor-neutral/bootstrap.sh', 'llmwiki/raw/Reprise-Graph-E |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=2e2e35da508a0d55ca0a98b31865def3b7e458b99 |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=5dc0b |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skills.provenance.json', 'llmwiki/wiki/sources/draft/200926-orca-g |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json', 'skills/orca-graph/SKI |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'fdk/tools/graph-atlas.py'] · prev=4895a42370f |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/install-graph-option-test.sh', 'fdk/CAPABILITIES.md', 'f |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/graph-viz.py', 'harness/version.json', 'fdk/wiki/log.md', 'h |
+| 2026-09-20 10:30:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json'] · prev=17ab501d02c248c |
+| 2026-09-20 10:30:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=f65c1 |
+| 2026-09-20 10:53:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/graph-atlas.py', 'fdk/tools/graph-viz.py', 'harness/scripts/ |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/mechanisms.yaml', 'llmwiki/wiki/concepts/solid-what-how.md', ' |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/skills/utils/fdk.md', 'fdk/skills.provenance.json', 'fdk/tools |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/wiki/sources/190926-skill-design-standard-swh-prd.md', 'fdk/sk |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/graph/190926-swh-reuse-layer.graph.json', 'fdk/tools/swh-lint. |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skill-catalog/patterns/P01-evidence-to-artifact.md', 'llmwiki/wiki |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skill-catalog/catalog.json', 'llmwiki/wiki/sources/provenance/1909 |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/tests/test_skill_reuse.py', 'harness/tests/test_swh_lint.py']  |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/skill-catalog/patterns/P02-verified-external-effect.md', 'harness/ |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['skills/new-skill/SKILL.md'] · prev=7bebcaa764d25e1d51917f7e794d8d699b2 |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/graph/190926-swh-skill-standardize.graph.json', 'llmwiki/skill |
+| 2026-09-19 14:23:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=b4cc4946eb3081b1e9e181ed8f26d8cb80d71df99 |
+| 2026-09-19 14:26:26 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/190926-swh-reuse-layer.graph.json'] · prev=5d022070010c5 |
+| 2026-09-19 14:47:33 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/policy.yaml', 'harness/poc-vendor-neutral/policy.yaml', 'harne |
+| 2026-09-20 09:33:07 | `file.write` | llmwiki/wiki/sources/200926-reprise-graph-engine-prd-v11.md · tool=Write · session=cad381c4 · actor=agent · prev=8e7153b |
+| 2026-09-20 09:33:07 | `file.write` | llmwiki/wiki/sources/200926-reprise-graph-engine-prd-v11.md · tool=Write · session=cad381c4 · actor=agent · prev=bdba815 |
+| 2026-09-20 09:34:32 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=25ec67e67bf |
+| 2026-09-20 09:34:32 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=4519e7d368b |
+| 2026-09-20 10:11:35 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-review.md · tool=Write · session=cad381c4 · actor=agent · prev=02fd87d1c |
+| 2026-09-20 10:11:35 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-review.md · tool=Write · session=cad381c4 · actor=agent · prev=62c6d54d4 |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'fdk/tools/graph-atlas.py'] · prev=b8920e2befc |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/install-graph-option-test.sh', 'fdk/CAPABILITIES.md', 'f |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json', 'skills/orca-graph/SKI |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=36348c2b300889276b5e555e3b837f154b8b99222 |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=3 · human=['llmwiki/skills/orchestrate/orca-graph.md', 'harness/tests/test_control |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/poc-vendor-neutral/bootstrap.sh', 'llmwiki/raw/Reprise-Graph-E |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=2 · human=['fdk/skills.provenance.json', 'llmwiki/wiki/sources/120926-reprise-grap |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/graph-viz.py', 'harness/version.json', 'fdk/wiki/log.md', 'h |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=c3d45 |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/skills/orchestrate/orca-graph.md', 'harness/tests/test_control |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/poc-vendor-neutral/bootstrap.sh', 'llmwiki/raw/Reprise-Graph-E |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=2e2e35da508a0d55ca0a98b31865def3b7e458b99 |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=5dc0b |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skills.provenance.json', 'llmwiki/wiki/sources/draft/200926-orca-g |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json', 'skills/orca-graph/SKI |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'fdk/tools/graph-atlas.py'] · prev=4895a42370f |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/install-graph-option-test.sh', 'fdk/CAPABILITIES.md', 'f |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/graph-viz.py', 'harness/version.json', 'fdk/wiki/log.md', 'h |
+| 2026-09-20 10:30:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json'] · prev=17ab501d02c248c |
+| 2026-09-20 10:30:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=f65c1 |
+| 2026-09-20 10:53:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/graph-atlas.py', 'fdk/tools/graph-viz.py', 'harness/scripts/ |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/mechanisms.yaml', 'llmwiki/wiki/concepts/solid-what-how.md', ' |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/skills/utils/fdk.md', 'fdk/skills.provenance.json', 'fdk/tools |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/wiki/sources/190926-skill-design-standard-swh-prd.md', 'fdk/sk |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/graph/190926-swh-reuse-layer.graph.json', 'fdk/tools/swh-lint. |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skill-catalog/patterns/P01-evidence-to-artifact.md', 'llmwiki/wiki |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skill-catalog/catalog.json', 'llmwiki/wiki/sources/provenance/1909 |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/tests/test_skill_reuse.py', 'harness/tests/test_swh_lint.py']  |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/skill-catalog/patterns/P02-verified-external-effect.md', 'harness/ |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['skills/new-skill/SKILL.md'] · prev=7bebcaa764d25e1d51917f7e794d8d699b2 |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/graph/190926-swh-skill-standardize.graph.json', 'llmwiki/skill |
+| 2026-09-19 14:23:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=b4cc4946eb3081b1e9e181ed8f26d8cb80d71df99 |
+| 2026-09-19 14:26:26 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/190926-swh-reuse-layer.graph.json'] · prev=5d022070010c5 |
+| 2026-09-19 14:47:33 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/policy.yaml', 'harness/poc-vendor-neutral/policy.yaml', 'harne |
+| 2026-09-20 09:33:07 | `file.write` | llmwiki/wiki/sources/200926-reprise-graph-engine-prd-v11.md · tool=Write · session=cad381c4 · actor=agent · prev=8e7153b |
+| 2026-09-20 09:33:07 | `file.write` | llmwiki/wiki/sources/200926-reprise-graph-engine-prd-v11.md · tool=Write · session=cad381c4 · actor=agent · prev=bdba815 |
+| 2026-09-20 09:34:32 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=25ec67e67bf |
+| 2026-09-20 09:34:32 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=4519e7d368b |
+| 2026-09-20 10:11:35 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-review.md · tool=Write · session=cad381c4 · actor=agent · prev=02fd87d1c |
+| 2026-09-20 10:11:35 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-review.md · tool=Write · session=cad381c4 · actor=agent · prev=62c6d54d4 |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'fdk/tools/graph-atlas.py'] · prev=b8920e2befc |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/install-graph-option-test.sh', 'fdk/CAPABILITIES.md', 'f |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json', 'skills/orca-graph/SKI |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=36348c2b300889276b5e555e3b837f154b8b99222 |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=3 · human=['llmwiki/skills/orchestrate/orca-graph.md', 'harness/tests/test_control |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/poc-vendor-neutral/bootstrap.sh', 'llmwiki/raw/Reprise-Graph-E |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=2 · human=['fdk/skills.provenance.json', 'llmwiki/wiki/sources/120926-reprise-grap |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/graph-viz.py', 'harness/version.json', 'fdk/wiki/log.md', 'h |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=c3d45 |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/skills/orchestrate/orca-graph.md', 'harness/tests/test_control |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/poc-vendor-neutral/bootstrap.sh', 'llmwiki/raw/Reprise-Graph-E |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=2e2e35da508a0d55ca0a98b31865def3b7e458b99 |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=5dc0b |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skills.provenance.json', 'llmwiki/wiki/sources/draft/200926-orca-g |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json', 'skills/orca-graph/SKI |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'fdk/tools/graph-atlas.py'] · prev=4895a42370f |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/install-graph-option-test.sh', 'fdk/CAPABILITIES.md', 'f |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/graph-viz.py', 'harness/version.json', 'fdk/wiki/log.md', 'h |
+| 2026-09-20 10:30:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json'] · prev=17ab501d02c248c |
+| 2026-09-20 10:30:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=f65c1 |
+| 2026-09-20 10:53:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/graph-atlas.py', 'fdk/tools/graph-viz.py', 'harness/scripts/ |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/mechanisms.yaml', 'llmwiki/wiki/concepts/solid-what-how.md', ' |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/skills/utils/fdk.md', 'fdk/skills.provenance.json', 'fdk/tools |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/wiki/sources/190926-skill-design-standard-swh-prd.md', 'fdk/sk |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/graph/190926-swh-reuse-layer.graph.json', 'fdk/tools/swh-lint. |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skill-catalog/patterns/P01-evidence-to-artifact.md', 'llmwiki/wiki |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skill-catalog/catalog.json', 'llmwiki/wiki/sources/provenance/1909 |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/tests/test_skill_reuse.py', 'harness/tests/test_swh_lint.py']  |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/skill-catalog/patterns/P02-verified-external-effect.md', 'harness/ |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['skills/new-skill/SKILL.md'] · prev=7bebcaa764d25e1d51917f7e794d8d699b2 |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/graph/190926-swh-skill-standardize.graph.json', 'llmwiki/skill |
+| 2026-09-19 14:23:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=b4cc4946eb3081b1e9e181ed8f26d8cb80d71df99 |
+| 2026-09-19 14:26:26 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/190926-swh-reuse-layer.graph.json'] · prev=5d022070010c5 |
+| 2026-09-19 14:47:33 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/policy.yaml', 'harness/poc-vendor-neutral/policy.yaml', 'harne |
+| 2026-09-20 09:33:07 | `file.write` | llmwiki/wiki/sources/200926-reprise-graph-engine-prd-v11.md · tool=Write · session=cad381c4 · actor=agent · prev=8e7153b |
+| 2026-09-20 09:33:07 | `file.write` | llmwiki/wiki/sources/200926-reprise-graph-engine-prd-v11.md · tool=Write · session=cad381c4 · actor=agent · prev=bdba815 |
+| 2026-09-20 09:34:32 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=25ec67e67bf |
+| 2026-09-20 09:34:32 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=4519e7d368b |
+| 2026-09-20 10:11:35 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-review.md · tool=Write · session=cad381c4 · actor=agent · prev=02fd87d1c |
+| 2026-09-20 10:11:35 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-review.md · tool=Write · session=cad381c4 · actor=agent · prev=62c6d54d4 |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'fdk/tools/graph-atlas.py'] · prev=b8920e2befc |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/install-graph-option-test.sh', 'fdk/CAPABILITIES.md', 'f |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json', 'skills/orca-graph/SKI |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=36348c2b300889276b5e555e3b837f154b8b99222 |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=3 · human=['llmwiki/skills/orchestrate/orca-graph.md', 'harness/tests/test_control |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/poc-vendor-neutral/bootstrap.sh', 'llmwiki/raw/Reprise-Graph-E |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=2 · human=['fdk/skills.provenance.json', 'llmwiki/wiki/sources/120926-reprise-grap |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/graph-viz.py', 'harness/version.json', 'fdk/wiki/log.md', 'h |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=c3d45 |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/skills/orchestrate/orca-graph.md', 'harness/tests/test_control |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/poc-vendor-neutral/bootstrap.sh', 'llmwiki/raw/Reprise-Graph-E |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=2e2e35da508a0d55ca0a98b31865def3b7e458b99 |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=5dc0b |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skills.provenance.json', 'llmwiki/wiki/sources/draft/200926-orca-g |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json', 'skills/orca-graph/SKI |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'fdk/tools/graph-atlas.py'] · prev=4895a42370f |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/install-graph-option-test.sh', 'fdk/CAPABILITIES.md', 'f |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/graph-viz.py', 'harness/version.json', 'fdk/wiki/log.md', 'h |
+| 2026-09-20 10:30:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json'] · prev=17ab501d02c248c |
+| 2026-09-20 10:30:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=f65c1 |
+| 2026-09-20 10:53:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/graph-atlas.py', 'fdk/tools/graph-viz.py', 'harness/scripts/ |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/graph/190926-swh-reuse-layer.graph.json', 'fdk/tools/swh-lint. |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skill-catalog/patterns/P01-evidence-to-artifact.md', 'llmwiki/wiki |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skill-catalog/catalog.json', 'llmwiki/wiki/sources/provenance/1909 |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/tests/test_skill_reuse.py', 'harness/tests/test_swh_lint.py']  |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/skill-catalog/patterns/P02-verified-external-effect.md', 'harness/ |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['skills/new-skill/SKILL.md'] · prev=7bebcaa764d25e1d51917f7e794d8d699b2 |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/graph/190926-swh-skill-standardize.graph.json', 'llmwiki/skill |
+| 2026-09-19 14:23:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=b4cc4946eb3081b1e9e181ed8f26d8cb80d71df99 |
+| 2026-09-19 14:26:26 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/190926-swh-reuse-layer.graph.json'] · prev=5d022070010c5 |
+| 2026-09-19 14:47:33 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/policy.yaml', 'harness/poc-vendor-neutral/policy.yaml', 'harne |
+| 2026-09-20 09:33:07 | `file.write` | llmwiki/wiki/sources/200926-reprise-graph-engine-prd-v11.md · tool=Write · session=cad381c4 · actor=agent · prev=8e7153b |
+| 2026-09-20 09:33:07 | `file.write` | llmwiki/wiki/sources/200926-reprise-graph-engine-prd-v11.md · tool=Write · session=cad381c4 · actor=agent · prev=bdba815 |
+| 2026-09-20 09:34:32 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=25ec67e67bf |
+| 2026-09-20 09:34:32 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=4519e7d368b |
+| 2026-09-20 10:11:35 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-review.md · tool=Write · session=cad381c4 · actor=agent · prev=02fd87d1c |
+| 2026-09-20 10:11:35 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-review.md · tool=Write · session=cad381c4 · actor=agent · prev=62c6d54d4 |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'fdk/tools/graph-atlas.py'] · prev=b8920e2befc |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/install-graph-option-test.sh', 'fdk/CAPABILITIES.md', 'f |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json', 'skills/orca-graph/SKI |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=36348c2b300889276b5e555e3b837f154b8b99222 |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=3 · human=['llmwiki/skills/orchestrate/orca-graph.md', 'harness/tests/test_control |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/poc-vendor-neutral/bootstrap.sh', 'llmwiki/raw/Reprise-Graph-E |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=2 · human=['fdk/skills.provenance.json', 'llmwiki/wiki/sources/120926-reprise-grap |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/graph-viz.py', 'harness/version.json', 'fdk/wiki/log.md', 'h |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=c3d45 |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/skills/orchestrate/orca-graph.md', 'harness/tests/test_control |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/poc-vendor-neutral/bootstrap.sh', 'llmwiki/raw/Reprise-Graph-E |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=2e2e35da508a0d55ca0a98b31865def3b7e458b99 |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=5dc0b |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skills.provenance.json', 'llmwiki/wiki/sources/draft/200926-orca-g |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json', 'skills/orca-graph/SKI |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'fdk/tools/graph-atlas.py'] · prev=4895a42370f |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/install-graph-option-test.sh', 'fdk/CAPABILITIES.md', 'f |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/graph-viz.py', 'harness/version.json', 'fdk/wiki/log.md', 'h |
+| 2026-09-20 10:30:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json'] · prev=17ab501d02c248c |
+| 2026-09-20 10:30:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=f65c1 |
+| 2026-09-20 10:53:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/graph-atlas.py', 'fdk/tools/graph-viz.py', 'harness/scripts/ |
+| 2026-09-20 11:10:55 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/provenance/200926-sessio |
+| 2026-09-20 11:17:30 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/policy.yaml', 'harness/poc-vendor-neutral/policy.yaml', 'harne |
+| 2026-09-20 11:18:37 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['harness/scripts/harness-doctor.py'] · prev=289cf637a3edbb270e4c25fc301 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skill-catalog/patterns/P01-evidence-to-artifact.md', 'llmwiki/wiki |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skill-catalog/catalog.json', 'llmwiki/wiki/sources/provenance/1909 |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/tests/test_skill_reuse.py', 'harness/tests/test_swh_lint.py']  |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/skill-catalog/patterns/P02-verified-external-effect.md', 'harness/ |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['skills/new-skill/SKILL.md'] · prev=7bebcaa764d25e1d51917f7e794d8d699b2 |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/graph/190926-swh-skill-standardize.graph.json', 'llmwiki/skill |
+| 2026-09-19 14:23:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=b4cc4946eb3081b1e9e181ed8f26d8cb80d71df99 |
+| 2026-09-19 14:26:26 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/190926-swh-reuse-layer.graph.json'] · prev=5d022070010c5 |
+| 2026-09-19 14:47:33 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/policy.yaml', 'harness/poc-vendor-neutral/policy.yaml', 'harne |
+| 2026-09-20 09:33:07 | `file.write` | llmwiki/wiki/sources/200926-reprise-graph-engine-prd-v11.md · tool=Write · session=cad381c4 · actor=agent · prev=8e7153b |
+| 2026-09-20 09:33:07 | `file.write` | llmwiki/wiki/sources/200926-reprise-graph-engine-prd-v11.md · tool=Write · session=cad381c4 · actor=agent · prev=bdba815 |
+| 2026-09-20 09:34:32 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=25ec67e67bf |
+| 2026-09-20 09:34:32 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=4519e7d368b |
+| 2026-09-20 10:11:35 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-review.md · tool=Write · session=cad381c4 · actor=agent · prev=02fd87d1c |
+| 2026-09-20 10:11:35 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-review.md · tool=Write · session=cad381c4 · actor=agent · prev=62c6d54d4 |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'fdk/tools/graph-atlas.py'] · prev=b8920e2befc |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/install-graph-option-test.sh', 'fdk/CAPABILITIES.md', 'f |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json', 'skills/orca-graph/SKI |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=36348c2b300889276b5e555e3b837f154b8b99222 |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=3 · human=['llmwiki/skills/orchestrate/orca-graph.md', 'harness/tests/test_control |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/poc-vendor-neutral/bootstrap.sh', 'llmwiki/raw/Reprise-Graph-E |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=2 · human=['fdk/skills.provenance.json', 'llmwiki/wiki/sources/120926-reprise-grap |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/graph-viz.py', 'harness/version.json', 'fdk/wiki/log.md', 'h |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=c3d45 |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/skills/orchestrate/orca-graph.md', 'harness/tests/test_control |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/poc-vendor-neutral/bootstrap.sh', 'llmwiki/raw/Reprise-Graph-E |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=2e2e35da508a0d55ca0a98b31865def3b7e458b99 |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=5dc0b |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skills.provenance.json', 'llmwiki/wiki/sources/draft/200926-orca-g |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json', 'skills/orca-graph/SKI |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'fdk/tools/graph-atlas.py'] · prev=4895a42370f |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/install-graph-option-test.sh', 'fdk/CAPABILITIES.md', 'f |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/graph-viz.py', 'harness/version.json', 'fdk/wiki/log.md', 'h |
+| 2026-09-20 10:30:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json'] · prev=17ab501d02c248c |
+| 2026-09-20 10:30:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=f65c1 |
+| 2026-09-20 10:53:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/graph-atlas.py', 'fdk/tools/graph-viz.py', 'harness/scripts/ |
+| 2026-09-20 11:10:55 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/provenance/200926-sessio |
+| 2026-09-20 11:17:30 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/policy.yaml', 'harness/poc-vendor-neutral/policy.yaml', 'harne |
+| 2026-09-20 11:18:37 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['harness/scripts/harness-doctor.py'] · prev=289cf637a3edbb270e4c25fc301 |
+| 2026-09-20 13:44:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['harness/version.json'] · prev=8789b6767dab81b07e6ad855492dc8fa4a43e1d2 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skill-catalog/patterns/P01-evidence-to-artifact.md', 'llmwiki/wiki |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skill-catalog/catalog.json', 'llmwiki/wiki/sources/provenance/1909 |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/tests/test_skill_reuse.py', 'harness/tests/test_swh_lint.py']  |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/skill-catalog/patterns/P02-verified-external-effect.md', 'harness/ |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['skills/new-skill/SKILL.md'] · prev=7bebcaa764d25e1d51917f7e794d8d699b2 |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/graph/190926-swh-skill-standardize.graph.json', 'llmwiki/skill |
+| 2026-09-19 14:23:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=b4cc4946eb3081b1e9e181ed8f26d8cb80d71df99 |
+| 2026-09-19 14:26:26 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/190926-swh-reuse-layer.graph.json'] · prev=5d022070010c5 |
+| 2026-09-19 14:47:33 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/policy.yaml', 'harness/poc-vendor-neutral/policy.yaml', 'harne |
+| 2026-09-20 09:33:07 | `file.write` | llmwiki/wiki/sources/200926-reprise-graph-engine-prd-v11.md · tool=Write · session=cad381c4 · actor=agent · prev=8e7153b |
+| 2026-09-20 09:33:07 | `file.write` | llmwiki/wiki/sources/200926-reprise-graph-engine-prd-v11.md · tool=Write · session=cad381c4 · actor=agent · prev=bdba815 |
+| 2026-09-20 09:34:32 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=25ec67e67bf |
+| 2026-09-20 09:34:32 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=4519e7d368b |
+| 2026-09-20 10:11:35 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-review.md · tool=Write · session=cad381c4 · actor=agent · prev=02fd87d1c |
+| 2026-09-20 10:11:35 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-review.md · tool=Write · session=cad381c4 · actor=agent · prev=62c6d54d4 |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'fdk/tools/graph-atlas.py'] · prev=b8920e2befc |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/install-graph-option-test.sh', 'fdk/CAPABILITIES.md', 'f |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json', 'skills/orca-graph/SKI |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=36348c2b300889276b5e555e3b837f154b8b99222 |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=3 · human=['llmwiki/skills/orchestrate/orca-graph.md', 'harness/tests/test_control |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/poc-vendor-neutral/bootstrap.sh', 'llmwiki/raw/Reprise-Graph-E |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=2 · human=['fdk/skills.provenance.json', 'llmwiki/wiki/sources/120926-reprise-grap |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/graph-viz.py', 'harness/version.json', 'fdk/wiki/log.md', 'h |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=c3d45 |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/skills/orchestrate/orca-graph.md', 'harness/tests/test_control |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/poc-vendor-neutral/bootstrap.sh', 'llmwiki/raw/Reprise-Graph-E |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=2e2e35da508a0d55ca0a98b31865def3b7e458b99 |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=5dc0b |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skills.provenance.json', 'llmwiki/wiki/sources/draft/200926-orca-g |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json', 'skills/orca-graph/SKI |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'fdk/tools/graph-atlas.py'] · prev=4895a42370f |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/install-graph-option-test.sh', 'fdk/CAPABILITIES.md', 'f |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/graph-viz.py', 'harness/version.json', 'fdk/wiki/log.md', 'h |
+| 2026-09-20 10:30:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json'] · prev=17ab501d02c248c |
+| 2026-09-20 10:30:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=f65c1 |
+| 2026-09-20 10:53:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/graph-atlas.py', 'fdk/tools/graph-viz.py', 'harness/scripts/ |
+| 2026-09-20 11:10:55 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/provenance/200926-sessio |
+| 2026-09-20 11:17:30 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/policy.yaml', 'harness/poc-vendor-neutral/policy.yaml', 'harne |
+| 2026-09-20 11:18:37 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['harness/scripts/harness-doctor.py'] · prev=289cf637a3edbb270e4c25fc301 |
+| 2026-09-20 13:44:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['harness/version.json'] · prev=8789b6767dab81b07e6ad855492dc8fa4a43e1d2 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/tests/test_skill_reuse.py', 'harness/tests/test_swh_lint.py']  |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/skill-catalog/patterns/P02-verified-external-effect.md', 'harness/ |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['skills/new-skill/SKILL.md'] · prev=7bebcaa764d25e1d51917f7e794d8d699b2 |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/graph/190926-swh-skill-standardize.graph.json', 'llmwiki/skill |
+| 2026-09-19 14:23:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=b4cc4946eb3081b1e9e181ed8f26d8cb80d71df99 |
+| 2026-09-19 14:26:26 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/190926-swh-reuse-layer.graph.json'] · prev=5d022070010c5 |
+| 2026-09-19 14:47:33 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/policy.yaml', 'harness/poc-vendor-neutral/policy.yaml', 'harne |
+| 2026-09-20 09:33:07 | `file.write` | llmwiki/wiki/sources/200926-reprise-graph-engine-prd-v11.md · tool=Write · session=cad381c4 · actor=agent · prev=8e7153b |
+| 2026-09-20 09:33:07 | `file.write` | llmwiki/wiki/sources/200926-reprise-graph-engine-prd-v11.md · tool=Write · session=cad381c4 · actor=agent · prev=bdba815 |
+| 2026-09-20 09:34:32 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=25ec67e67bf |
+| 2026-09-20 09:34:32 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=4519e7d368b |
+| 2026-09-20 10:11:35 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-review.md · tool=Write · session=cad381c4 · actor=agent · prev=02fd87d1c |
+| 2026-09-20 10:11:35 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-review.md · tool=Write · session=cad381c4 · actor=agent · prev=62c6d54d4 |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'fdk/tools/graph-atlas.py'] · prev=b8920e2befc |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/install-graph-option-test.sh', 'fdk/CAPABILITIES.md', 'f |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json', 'skills/orca-graph/SKI |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=36348c2b300889276b5e555e3b837f154b8b99222 |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=3 · human=['llmwiki/skills/orchestrate/orca-graph.md', 'harness/tests/test_control |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/poc-vendor-neutral/bootstrap.sh', 'llmwiki/raw/Reprise-Graph-E |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=2 · human=['fdk/skills.provenance.json', 'llmwiki/wiki/sources/120926-reprise-grap |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/graph-viz.py', 'harness/version.json', 'fdk/wiki/log.md', 'h |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=c3d45 |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/skills/orchestrate/orca-graph.md', 'harness/tests/test_control |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/poc-vendor-neutral/bootstrap.sh', 'llmwiki/raw/Reprise-Graph-E |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=2e2e35da508a0d55ca0a98b31865def3b7e458b99 |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=5dc0b |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skills.provenance.json', 'llmwiki/wiki/sources/draft/200926-orca-g |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json', 'skills/orca-graph/SKI |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'fdk/tools/graph-atlas.py'] · prev=4895a42370f |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/install-graph-option-test.sh', 'fdk/CAPABILITIES.md', 'f |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/graph-viz.py', 'harness/version.json', 'fdk/wiki/log.md', 'h |
+| 2026-09-20 10:30:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json'] · prev=17ab501d02c248c |
+| 2026-09-20 10:30:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=f65c1 |
+| 2026-09-20 10:53:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/graph-atlas.py', 'fdk/tools/graph-viz.py', 'harness/scripts/ |
+| 2026-09-20 11:10:55 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/provenance/200926-sessio |
+| 2026-09-20 11:17:30 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/policy.yaml', 'harness/poc-vendor-neutral/policy.yaml', 'harne |
+| 2026-09-20 11:18:37 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['harness/scripts/harness-doctor.py'] · prev=289cf637a3edbb270e4c25fc301 |
+| 2026-09-20 13:44:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['harness/version.json'] · prev=8789b6767dab81b07e6ad855492dc8fa4a43e1d2 |
+| 2026-09-20 15:18:59 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/poc-vendor-neutral/policy.yaml', 'llmwiki/.claude/hooks/hookli |
+| 2026-09-20 15:18:59 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/scripts/harness-doctor.py', 'harness/policy.yaml', 'harness/ve |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['skills/new-skill/SKILL.md'] · prev=7bebcaa764d25e1d51917f7e794d8d699b2 |
+| 2026-09-19 14:21:22 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/graph/190926-swh-skill-standardize.graph.json', 'llmwiki/skill |
+| 2026-09-19 14:23:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=b4cc4946eb3081b1e9e181ed8f26d8cb80d71df99 |
+| 2026-09-19 14:26:26 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/190926-swh-reuse-layer.graph.json'] · prev=5d022070010c5 |
+| 2026-09-19 14:47:33 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/policy.yaml', 'harness/poc-vendor-neutral/policy.yaml', 'harne |
+| 2026-09-20 09:33:07 | `file.write` | llmwiki/wiki/sources/200926-reprise-graph-engine-prd-v11.md · tool=Write · session=cad381c4 · actor=agent · prev=8e7153b |
+| 2026-09-20 09:33:07 | `file.write` | llmwiki/wiki/sources/200926-reprise-graph-engine-prd-v11.md · tool=Write · session=cad381c4 · actor=agent · prev=bdba815 |
+| 2026-09-20 09:34:32 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=25ec67e67bf |
+| 2026-09-20 09:34:32 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=4519e7d368b |
+| 2026-09-20 10:11:35 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-review.md · tool=Write · session=cad381c4 · actor=agent · prev=02fd87d1c |
+| 2026-09-20 10:11:35 | `file.write` | llmwiki/wiki/sources/draft/200926-orca-graph-v3-review.md · tool=Write · session=cad381c4 · actor=agent · prev=62c6d54d4 |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'fdk/tools/graph-atlas.py'] · prev=b8920e2befc |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/install-graph-option-test.sh', 'fdk/CAPABILITIES.md', 'f |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json', 'skills/orca-graph/SKI |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=36348c2b300889276b5e555e3b837f154b8b99222 |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=3 · human=['llmwiki/skills/orchestrate/orca-graph.md', 'harness/tests/test_control |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/poc-vendor-neutral/bootstrap.sh', 'llmwiki/raw/Reprise-Graph-E |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=1 · human_n=2 · human=['fdk/skills.provenance.json', 'llmwiki/wiki/sources/120926-reprise-grap |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/graph-viz.py', 'harness/version.json', 'fdk/wiki/log.md', 'h |
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=c3d45 |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/skills/orchestrate/orca-graph.md', 'harness/tests/test_control |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/poc-vendor-neutral/bootstrap.sh', 'llmwiki/raw/Reprise-Graph-E |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=2e2e35da508a0d55ca0a98b31865def3b7e458b99 |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=5dc0b |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skills.provenance.json', 'llmwiki/wiki/sources/draft/200926-orca-g |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json', 'skills/orca-graph/SKI |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'fdk/tools/graph-atlas.py'] · prev=4895a42370f |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/install-graph-option-test.sh', 'fdk/CAPABILITIES.md', 'f |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/graph-viz.py', 'harness/version.json', 'fdk/wiki/log.md', 'h |
+| 2026-09-20 10:30:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json'] · prev=17ab501d02c248c |
+| 2026-09-20 10:30:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=f65c1 |
+| 2026-09-20 10:53:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/graph-atlas.py', 'fdk/tools/graph-viz.py', 'harness/scripts/ |
+| 2026-09-20 11:10:55 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/provenance/200926-sessio |
+| 2026-09-20 11:17:30 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/policy.yaml', 'harness/poc-vendor-neutral/policy.yaml', 'harne |
+| 2026-09-20 11:18:37 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['harness/scripts/harness-doctor.py'] · prev=289cf637a3edbb270e4c25fc301 |
+| 2026-09-20 13:44:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['harness/version.json'] · prev=8789b6767dab81b07e6ad855492dc8fa4a43e1d2 |
+| 2026-09-20 15:18:59 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/poc-vendor-neutral/policy.yaml', 'llmwiki/.claude/hooks/hookli |
+| 2026-09-20 15:18:59 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/scripts/harness-doctor.py', 'harness/policy.yaml', 'harness/ve |
+| 2026-09-20 15:47:59 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skills.provenance.json', 'fdk/tools/build-control-room.py', 'harne |
+| 2026-09-20 15:52:30 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/build-control-room.py', 'harness/tests/dot-layout-runtime-te |
+
+<!-- log:auto:end -->
+
+## 2026-09-20 — orca-graph — repo_role + font Lexend Deca Light + luồng cài
+
+- tạo `sources/draft/200926-repo-role-ship-flows-PLAN.md` — PLAN 13 task, graph `200926-repo-role-ship-flows`
+- sửa `index.md` — thêm dòng draft trên

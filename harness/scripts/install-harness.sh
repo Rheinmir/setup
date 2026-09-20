@@ -205,6 +205,31 @@ harness/scripts/dispatch-verify.py
   log "GLOBAL: gỡ $n tool framework_only khỏi $GH — tầng 3 chỉ chạy ở repo framework"
   log "GLOBAL-SHARED engine: fdk/tools + harness/scripts + validators + *.yaml + version.json → $GH/ (mọi project dùng chung)"
 
+  # ── orca-graph: shim vừa được copy ở trên (harness/scripts/orca-graph.py, fdk/tools/graph-{viz,atlas}.py) — ENGINE THẬT
+  # sống ở repo riêng và phải tới CÙNG CHUYẾN. Trước đây việc kéo engine chỉ nằm ở poc-vendor-neutral/install.sh, nên mọi đường
+  # KHÔNG đi qua nó — /harness-update (--self-heal), --all-subrepos, gọi thẳng script này — để lại shim không có engine:
+  # /orca-graph chết "chưa cài engine" ngay sau khi UPDATE (tái hiện 20/09/2026). Đặt ở ĐÂY = một chỗ cho mọi đường.
+  # Tôn trọng lựa chọn của user: ORCA_GRAPH_SKIP=1 (install.sh export khi user bỏ tick / --no-graph) thì không kéo.
+  # Fail-open: không mạng thì cảnh báo + in lệnh cài tay, KHÔNG làm hỏng việc cài harness.
+  ensure_orca_graph() {
+    if [ -n "${ORCA_GRAPH_SKIP:-}" ]; then log "orca-graph: bỏ qua (ORCA_GRAPH_SKIP) — /orca-graph sẽ in lệnh cài khi được gọi"; return 0; fi
+    local ogi="" tmp=""
+    if [ -n "${ORCA_GRAPH_REPO:-}" ] && [ -f "${ORCA_GRAPH_REPO}/install.sh" ]; then
+      ogi="$ORCA_GRAPH_REPO/install.sh"                     # nguồn local (test/fixture/dev) — không đụng mạng
+    else
+      tmp="$(mktemp)"
+      curl -fsSL "https://raw.githubusercontent.com/Rheinmir/orca-graph/${ORCA_GRAPH_REF:-main}/install.sh" -o "$tmp" 2>/dev/null && ogi="$tmp"
+    fi
+    if [ -n "$ogi" ] && bash "$ogi" --no-skill 2>&1 | sed 's/^/    /'; then
+      log "orca-graph: engine tới cùng chuyến với shim"
+    else
+      warn "orca-graph: KHÔNG kéo được engine (mạng?) — shim đã cài nên /orca-graph sẽ báo thiếu. Cài tay: curl -fsSL https://raw.githubusercontent.com/Rheinmir/orca-graph/main/install.sh | bash"
+    fi
+    [ -n "$tmp" ] && rm -f "$tmp"
+    return 0
+  }
+  ensure_orca_graph
+
   SETTINGS="$HOME/.claude/settings.json"
   [ -f "$SETTINGS" ] && cp "$SETTINGS" "$SETTINGS.bak.$(date +%s)" || echo '{}' > "$SETTINGS"
   python3 - << 'PYEOF'
@@ -481,6 +506,18 @@ PYEOF
   [ "$RC" = "2" ] && log "GLOBAL smoke OK: no_write_raw chặn đúng (rc=2)" || { warn "GLOBAL smoke FAIL (rc=$RC)"; exit 4; }
   log "GLOBAL HOÀN TẤT — restart session hoặc mở /hooks để reload. Per-project vẫn cần cho team (commit harness/ vào repo)."
   exit 0
+fi
+
+# ---------- 0.9. Dự án downstream layout DOT (v4 global-shared) KHÔNG đi đường per-project này ----------
+# Từ v4 engine sống ở ~/.claude/harness (GLOBAL), dự án chỉ giữ .llmwiki/ + .harness-stamp. Đường per-project bên dưới là bộ cài
+# đời trước: nó mkdir `llmwiki/` TRẦN và chép ~77 script vào `harness/scripts` của dự án — đúng thứ poc-vendor-neutral/install.sh
+# đang gỡ (U10) — mà KHÔNG hề cập nhật global. Đo 20/09/2026 trên máy ở 1.3.109: chạy `. --self-heal` xong global vẫn 1.3.109,
+# engine cũ nguyên, dự án mọc thêm harness/scripts 77 file. /harness-update từng trỏ vào đây → "update" mà không update gì.
+if [ -f "$ROOT/.llmwiki/.harness-stamp" ] && [ ! -d "$ROOT/fdk/wiki" ] && [ "${OVERSTACK_LEGACY_PER_PROJECT:-0}" != 1 ]; then
+  warn "DỪNG — $ROOT là dự án downstream layout dot (.llmwiki/.harness-stamp): cập nhật đi qua BOOTSTRAP, không qua đường per-project này."
+  warn "  chạy:  curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash"
+  warn "  (nó refresh engine GLOBAL + kéo orca-graph cùng chuyến + đóng lại stamp; không chép engine vào dự án). Chưa ghi gì cả."
+  exit 5
 fi
 
 # ---------- 1. Detect mode ----------

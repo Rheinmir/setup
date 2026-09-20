@@ -22,6 +22,18 @@ import sys
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 
+
+def _ovs_font(html: str) -> str:
+    """Font mặc định của mọi HTML framework sinh ra = Lexend Deca Light, NHÚNG (nguồn duy nhất: fdk/tools/html_font.py)."""
+    import importlib.util
+    from pathlib import Path as _P
+    here = _P(__file__).resolve()
+    for c in (here.with_name("html_font.py"), here.parents[2] / "fdk" / "tools" / "html_font.py", _P.home() / ".claude/harness/fdk/tools/html_font.py"):
+        if c.is_file():
+            s = importlib.util.spec_from_file_location("html_font", c); m = importlib.util.module_from_spec(s); s.loader.exec_module(m)
+            return m.apply(html)
+    return html
+
 def find_html() -> str:
     cands = sorted(glob.glob(os.path.join(ROOT, "llmwiki", "html", "*skills-cheatsheet.html")))
     if not cands:
@@ -53,7 +65,7 @@ def main() -> None:
         sys.exit("Trang HTML không có <script> chính để chèn block data trước nó.")
     html = html[:idx] + block + "\n" + html[idx:]
     with open(html_path, "w", encoding="utf-8") as f:
-        f.write(html)
+        f.write(_ovs_font(html))
 
     print(f"✓ embed {len(data)} skill · payload {len(payload)//1024} KB · "
           f"{os.path.relpath(html_path, ROOT)} now {len(html)//1024} KB")

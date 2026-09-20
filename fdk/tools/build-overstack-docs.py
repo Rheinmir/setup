@@ -17,6 +17,17 @@ import sys
 from pathlib import Path
 
 
+
+def _ovs_font(html: str) -> str:
+    """Font mặc định của mọi HTML framework sinh ra = Lexend Deca Light, NHÚNG (nguồn duy nhất: fdk/tools/html_font.py)."""
+    import importlib.util
+    here = Path(__file__).resolve()
+    for c in (here.with_name("html_font.py"), here.parents[2] / "fdk" / "tools" / "html_font.py", Path.home() / ".claude/harness/fdk/tools/html_font.py"):
+        if c.is_file():
+            s = importlib.util.spec_from_file_location("html_font", c); m = importlib.util.module_from_spec(s); s.loader.exec_module(m)
+            return m.apply(html)
+    return html
+
 def detect_root() -> Path:
     repo = Path(__file__).resolve().parents[2]
     if (repo / "llmwiki").is_dir():
@@ -1155,7 +1166,7 @@ def render(root: Path) -> str:
 
 
 def main():
-    content = render(ROOT)
+    content = _ovs_font(render(ROOT))
     if UNCLASSIFIED:   # hỏi-1-lần: nhắc dev khai nhóm cho skill mới (rồi nó tự vào mind map)
         skills = ", ".join(f"{n} ({lp})" for lp, n in sorted(UNCLASSIFIED))
         print(f"[build-overstack-docs] ⚠ {len(UNCLASSIFIED)} skill chưa phân nhóm mind map "

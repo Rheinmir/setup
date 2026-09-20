@@ -3,7 +3,7 @@ name: ship
 description: "Workflow chốt PUSH/RELEASE/PR/MR — gọi khi user nhắc 'release'/'push'/'ship'/'lên release'/'mở PR'/'tạo MR'. Chạy CHECKLIST điều kiện TRƯỚC khi đẩy: (1) medic --ci (cổng sức khoẻ: luật cắn/drift/docs/code/eval), (2) UAT /fdk-uat qua remote thật nếu diff có năng lực mới (chỉ release/pr/mr, medic --ci không chứng minh được đường curl), (3) git sạch (scratchpad/ephemeral không track), (4) selftest, (5) version x.x.x+1 từ tag gần nhất (chỉ mức release), (6) patch note/PR-body trung thực (Added/Fixed/Removed/Known-limitations, KHÔNG phóng đại). Hỗ trợ 5 mức: 'ship push' = chỉ push không tag; 'ship release' = push + tag vX.Y.Z + release notes; 'ship pr' = push nhánh + gh pr create (GitHub); 'ship mr' = push nhánh + glab mr create (GitLab); 'ship merge' = liệt kê PR/MR ĐẾN của repo theo remote, kéo nhánh về, chạy gate+test, chỉ merge nếu XANH. STOP chờ duyệt trước bước side-effect. Trigger: /ship, 'release', 'push', 'ship', 'mở PR', 'tạo MR', 'ship pr', 'ship mr', 'ship merge', 'gom PR về merge', 'merge PR nếu test xanh', 'chuẩn bị push', 'lên release', 'checklist trước push', 'đủ điều kiện push chưa'."
 metadata:
   design-standard: "solid-what-how/1"
-  contract-version: "1.0.0"
+  contract-version: "1.1.0"
 ---
 
 # Skill: ship
@@ -21,11 +21,13 @@ metadata:
 - **Non-goals:** không tự sửa lỗi gate (việc của `/medic` + skill sửa), không tự đóng issue, không tự cài/auth `gh`/`glab`.
 
 ### Mental model
+`repo_role (framework · module · downstream · foreign) → bảng gate của ĐÚNG loại repo → ` rồi mới tới chuỗi chung:
 `mức (push · release · pr · mr · merge) → gate sức khoẻ (medic --ci + ci-local) → UAT remote (chỉ release/pr/mr có năng lực mới) → git sạch → selftest → [version + patch note] → checklist → DỪNG duyệt → side-effect → [UAT pha 2]`. Các mức khác nhau ở **bước cuối**, không ở checklist.
 
 ### Input và output contract
 | | Field | Required? | Ý nghĩa |
 |---|---|---|---|
+| In | `repo_role` | tự đọc | `python3 harness/scripts/repo_role.py . --json` (máy khách: `~/.claude/harness/harness/scripts/repo_role.py`) — nhãn KHAI BÁO trong `.overstack.yaml`; thiếu thì suy kèm bằng chứng rồi HỎI user một lần và `--set`; ép tay lần này: `ship <mức> --as <role>` |
 | In | mức | không (mặc định = push) | `push` · `release` · `pr` · `mr` · `merge` — user mô tả phạm vi, không cần nhớ cờ |
 | In | duyệt của user | có, trước mọi side-effect | "yes" tường minh cho push/tag/release/PR/MR/merge/canary |
 | Out | checklist + lệnh đề xuất | có | kết quả từng bước gate, UAT pha 1 hoặc lý do skip, commit msg, lệnh cuối |
@@ -41,6 +43,9 @@ metadata:
 - RULE-06 (MUST): **PR/MR body cùng luật patch note:** giọng người-dùng, Known-limitations bắt buộc nếu có phần nửa vời. Không SHA/tên hàm nội bộ. KHÔNG `Closes #N` tự động.
 - RULE-07 (MUST): **Side-effect cần "yes":** push/tag/release/PR/MR là hành động khó lùi (outward-facing) → luôn STOP show lệnh, chờ duyệt; không commit/PR-body AI-attribution (theo fdk).
 - RULE-08 (MUST): **Không tự cài/auth `gh`/`glab`:** thiếu công cụ → DỪNG, báo user; đừng đoán host.
+- RULE-10 (MUST): **Biết mình đang ở LOẠI repo nào trước khi chạy bất cứ gate nào.** Dòng đầu tiên của checklist luôn là `🏷 repo_role=<role> (khai báo | sổ máy | suy luận | ép tay)`. Nguồn `suy luận` → hỏi user xác nhận rồi ghi nhãn (`repo_role.py . --set <role>`; riêng `foreign` ghi vào sổ MÁY, không đụng repo người khác). Gate của loại repo này KHÔNG áp cho loại khác: `ci-local`/`capability-stamp`/UAT chỉ có nghĩa ở `framework`; chạy chúng ở `module`/`downstream` là chấm nhầm, bỏ chúng ở `framework` là hở. Bài học 20/09/2026: `/ship` một-luồng khiến việc ship repo engine phải tự nhớ quy trình khác hẳn.
+- RULE-11 (MUST): **ĐỌC rc của gate rồi mới đẩy.** Lệnh push/tag đứng ở một bước RIÊNG sau khi đã in và đọc `rc=`; cấm nối gate với push bằng `;` hay ống `| tail` (nuốt rc). Hai lần cháy cùng ngày 20/09/2026: push `c83b065` khi `medic` đang đỏ, và tag `v3.0.1` khi `install-test` báo FAIL — cả hai do nối lệnh. Ở `framework` khi working tree có file lạ chưa commit (vd bị tool khác ghi đè), chạy gate trên CHECKOUT SẠCH của commit (`git worktree add --detach <tmp> HEAD`) để không chấm nhầm workflow.
+- RULE-12 (MUST): **`foreign` = khách trong nhà người khác.** Chỉ mức `pr`/`mr`, không `push` thẳng nhánh mặc định; theo luật commit/CI của HỌ (đọc CONTRIBUTING, không áp R15 hay luật overstack); KHÔNG cài, không ghi `.overstack.yaml`, không thêm file cấu hình nào của ta vào repo.
 - RULE-09 (MUST): Compose, đừng đẻ lại: dùng `medic` cho sức khoẻ, `git tag` cho version, `gh`/`glab` cho PR/MR — skill này chỉ điều phối checklist.
 - Capabilities: đọc repo + chạy gate cục bộ; ghi remote (push/tag/PR/MR/merge) CHỈ qua công cụ đã auth và sau duyệt.
 
@@ -56,6 +61,7 @@ metadata:
 ### Main workflow
 | Step | Type | Inputs | Action | Outputs/exit | Failure/next |
 |---|---|---|---|---|---|
+| W00 | deterministic | repo | `repo_role.py . --json` → in `🏷 repo_role=…`; nguồn `inferred` thì hỏi user + `--set`; chọn cột gate ở bảng "Luồng theo repo_role" | role + bảng gate | role không hợp lệ → blocked |
 | W01 | deterministic | repo | Cổng sức khoẻ `medic --ci` rồi `python3 fdk/tools/ci-local.py` (gồm probe `freshinstall`) | rc 0 | đỏ → blocked |
 | W02 | effect | diff, mức | UAT `/fdk-uat` pha 1 — chỉ `release`/`pr`/`mr` có năng lực mới (B02) | PASS hoặc lý do skip | FAIL → failed |
 | W03 | deterministic | worktree | Git sạch: `git status --short`, rác ephemeral không track | sạch | bẩn → dọn rồi lặp W03 |
@@ -99,6 +105,15 @@ Bước 1, 3-4 áp dụng cho MỌI mức. Bước 2 (UAT) CHỈ `release`/`pr`/
    - **Chọn công cụ theo remote:** `git remote get-url origin` chứa `github.com`→`gh`, `gitlab`→`glab`. `ship pr`/`ship mr` ép rõ công cụ; nếu công cụ chưa cài/chưa auth (`gh auth status` / `glab auth status`) thì DỪNG, báo user cài+login (không tự làm).
    - **KHÔNG tự chèn `Closes #N`/`Fixes #N`** vào PR/MR body trừ khi user yêu cầu tường minh — để user giữ quyền đóng issue tay.
 
+### Luồng theo repo_role (W00 chọn MỘT cột; W01–W08 bên trên mô tả cột `framework`)
+| Bước | `framework` (Rheinmir/setup) | `module` (orca-graph, uiux-asset…) | `downstream` (dự án có `.llmwiki/`) | `foreign` (repo người khác) |
+|---|---|---|---|---|
+| Gate | `medic --ci` → `ci-local` (trên checkout sạch nếu cây có file lạ) | **commit trước** → test + eval + install-test CỦA CHÍNH NÓ (đọc từng rc; install-test clone từ HEAD nên chưa commit là chưa test) | test của dự án + `llmwiki-validate` + `medic` (chế độ downstream) | git sạch + test/CI của họ |
+| UAT remote | khi diff có năng lực mới (B02) | smoke cài từ remote sau khi push (`install.sh` của module vào HOME tạm) | không | không |
+| Version | `capability-stamp.py --update` KHI thứ đi xuống máy khách đổi (hook, shim, installer, tool global) — sha bề mặt không đổi vẫn phải bump, nếu không máy đã ở bản hiện tại sẽ không refresh | bump `VERSION` + hằng trong code + `CHANGELOG` | theo dự án | theo họ |
+| Bước cuối | push (· tag/PR theo mức) | push → CHỜ CI xanh → tag + release → **re-pin ở framework** (`upstream_pin` trong `.overstack.yaml`: copy SKILL nếu đổi → `sync-skills.py` → ghi `commit`/`version` vào `fdk/skills.provenance.json` → ship framework) | push / pr | CHỈ pr / mr |
+| Cấm | installer ghi vào repo này (tự từ chối rc 3) | `ci-local`, `capability-stamp` | đẩy file của framework, UAT, stamp | cài đặt, ghi cấu hình overstack, AI-attribution trái luật của họ |
+
 ### Branches
 | ID | Kind | Guard | Hành vi | Skip / failure | Rejoin |
 |---|---|---|---|---|---|
@@ -124,6 +139,8 @@ Không viết note/tag. Bỏ qua bước 2, 5-6; thay bằng vòng test-per-requ
 Điều kiện đi tiếp là rc của công cụ (medic, ci-local, fdk-uat, test), không phải model tự đánh giá. Mọi side-effect dừng ở W07 chờ "yes"; mức `merge` dừng chờ duyệt từng PR. Không retry push/tag tự động khi lỗi mạng — báo user.
 
 ### Examples
+- **Positive (module):** ở repo `orca-graph` gõ "ship release" → W00 in `🏷 repo_role=module (khai báo)` → commit → `pytest tests` rc 0 → `evals/run.py` rc 0 → `tests/install-test.sh` rc 0 → bump `VERSION` → DỪNG duyệt → push → CI xanh → tag + release → nhắc bước re-pin ở `Rheinmir/setup` theo `upstream_pin`.
+- **Boundary (foreign):** ở một repo không có stamp, không nhãn → W00 in `🏷 repo_role=foreign (suy luận: không có fdk/wiki, không có .harness-stamp)` → hỏi user xác nhận → chỉ đề xuất `ship pr`, đọc CONTRIBUTING của họ, không ghi file nào của overstack.
 - **Positive:** "ship push" sau khi sửa doc → W01 xanh, B02 skip (không năng lực mới, ghi lý do), W03–W04 xanh → checklist + `git push` → user "yes" → push.
 - **Boundary/failure:** "ship pr" có skill mới nhưng `ci-local` đỏ 1 job → blocked ở W01, in job đỏ + lệnh sửa, không push nhánh, không mở PR.
 - **Boundary:** "ship merge" có 2 PR, PR #2 test đỏ → merge #1 sau duyệt, bỏ #2 kèm lý do (partial).

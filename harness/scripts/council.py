@@ -72,6 +72,18 @@ GENERATOR = "council.py/1.0"
 # --------------------------------------------------------------------------- #
 # helpers
 # --------------------------------------------------------------------------- #
+
+def _ovs_font(html: str) -> str:
+    """Font mặc định của mọi HTML framework sinh ra = Lexend Deca Light, NHÚNG (nguồn duy nhất: fdk/tools/html_font.py)."""
+    import importlib.util
+    from pathlib import Path as _P
+    here = _P(__file__).resolve()
+    for c in (here.with_name("html_font.py"), here.parents[2] / "fdk" / "tools" / "html_font.py", _P.home() / ".claude/harness/fdk/tools/html_font.py"):
+        if c.is_file():
+            s = importlib.util.spec_from_file_location("html_font", c); m = importlib.util.module_from_spec(s); s.loader.exec_module(m)
+            return m.apply(html)
+    return html
+
 def _die(msg: str) -> "None":
     print(f"[council] error: {msg}", file=sys.stderr)
     sys.exit(2)
@@ -733,7 +745,7 @@ def _write_report(t, config, seed):
     ONLY the layout (`render_report_html`); cor owns the mechanical invariants."""
     html_dir = Path(__file__).resolve().parents[2] / "llmwiki" / "html" / "council"
     path, idx = cor.write_versioned(
-        lambda: render_report_html(t, _load_persona_meta(config)),
+        lambda: _ovs_font(render_report_html(t, _load_persona_meta(config))),
         html_dir, "council-report", f"seed{seed}")
     if path is not None:
         print(f"[council] wrote {path} (Stage-4 HTML #{idx:03d})")

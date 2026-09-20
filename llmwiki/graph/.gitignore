@@ -1,0 +1,3 @@
+# orca-graph runtime — không track
+.admission.lock*
+*.locks/
