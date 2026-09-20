@@ -140,6 +140,8 @@
 | [100926-install-seed-skipped-on-migrate](sources/draft/archive/analysis/100926-install-seed-skipped-on-migrate.md) | issue | Issue: install-harness.sh chỉ seed khung llmwiki ở MODE=new |
 | [100926-r3-index-sync-precommit](sources/draft/archive/analysis/100926-r3-index-sync-precommit.md) | issue | Issue: R3 index-sync chỉ CI bắt — thêm hook pre-commit khi đổi file wiki (GH#150) |
 | [100926-recall-skipped-downstream](sources/draft/archive/analysis/100926-recall-skipped-downstream.md) | issue | Issue: recall/okf-scan không chạy ở bản cài thiếu .template-manifest.json (GH#151) |
+| [200926-session-provenance](sources/provenance/200926-session-provenance.md) | source | session-provenance cad381c4 — auto-distill phiên ingest PRD Reprise v1.1, nâng orca-graph lên v3, tách engine sang repo Rheinmir/orca-graph và thêm option cài tick sẵn |
+| [090926-docs-curate-threshold-gate](sources/draft/archive/proposals/090926-docs-curate-threshold-gate.md) | draft | Đề xuất đã triển khai: draft/ vượt 10 file thì SessionStart hỏi có dọn không (quét outdated → ingest/promote → cold archive); tiền thân của skill /tidy |
 | [190926-session-provenance](sources/provenance/190926-session-provenance.md) | source | session-provenance 9398848d — auto-distill |
 <!-- index:auto:end -->
 | [140726-propose-plan-split-superpowers](sources/draft/archive/analysis/140726-propose-plan-split-superpowers.md) | draft | Tách vòng đời đề xuất thành SPEC (/propose, người duyệt) và PLAN (/plan mới, agent mù thi hành), mở rộng R7 cắn cả hai |
