@@ -513,7 +513,7 @@ def build_r17(base):
 
 def build_r21(base):
     # R21: Stop phải liệt kê file phiên này sửa (BAD: file mới → PHẢI có trong list) và im với
-    # file cũ trước phiên (GOOD: không liệt kê); trần 40 link.
+    # file cũ trước phiên (GOOD: không liệt kê); trang người-đọc trần 15 link, file khác gom nhóm không link.
     import time
     if str(HOOKS_DIR) not in sys.path:
         sys.path.insert(0, str(HOOKS_DIR))
@@ -531,11 +531,14 @@ def build_r21(base):
     tp = base / "t.jsonl"
     _w(tp, json.dumps({"type": "user", "timestamp": ts, "message": {"content": "x"}}))
     names = {pathlib_name(f) for f in hl.session_touched_files(str(r), str(tp))}
-    capped = hl.touched_message(["/x/%d" % i for i in range(45)]).count("file://")
+    # Từ 200926: link CHỈ cho trang người-đọc trong wiki (trần 15); file khác gom nhóm, KHÔNG được có link.
+    capped = hl.touched_message(["/x/llmwiki/wiki/sources/s%d.md" % i for i in range(45)]).count("file://")
+    other = hl.touched_message(["/x/harness/scripts/e%d.py" % i for i in range(5)])
     return _result("side-effect", "hooks",
                    [("new-file:listed", "1" if "new.py" in names else "0", "1"),
                     ("old-file:silent", "1" if "old.txt" not in names else "0", "1"),
-                    ("cap:40", str(capped), "40")])
+                    ("reader-cap:15", str(capped), "15"),
+                    ("non-reader:grouped-no-link", "1" if "file://" not in other and "code / script: 5" in other else "0", "1")])
 
 
 def pathlib_name(p):
