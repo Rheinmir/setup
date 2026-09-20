@@ -163,19 +163,30 @@ def build_detail(dirs: list, out: Path) -> None:
         viz.page("Control room · chi tiết", nav, main, out, pagekey="control-room", desc="Bản đầy đủ của cockpit")
     finally:
         viz.CSS = old_css
-    _refresh(out); print(f"→ {out}  (chi tiết · {len(graphs)} graph)")
+    _refresh(out, graphs); print(f"→ {out}  (chi tiết · {len(graphs)} graph)")
 
 
-def _refresh(out: Path) -> None:
+def _refresh(out: Path, graphs: list = ()) -> None:
     """Live bằng JS reload (meta refresh trên file:// không đáng tin trong Chrome — bài học 150926: tab hiện bản hôm qua
-    11 giờ) + đồng hồ "cập nhật N s trước" và banner đỏ khi trang cũ quá 20 s (daemon chết / không ghi)."""
+    11 giờ) + nhãn trạng thái góc phải. Trang là ẢNH CHỤP: chỉ được vẽ lại khi state đổi hoặc daemon `watch` còn sống.
+    Feedback 200926 "control room chết trong âm thầm": bản cũ cứ quá 20 s là đỏ "daemon không ghi?" — kể cả khi KHÔNG có gì
+    chạy (daemon cố ý tự thoát sau 10 phút rảnh) → đỏ vĩnh viễn, vô nghĩa, không nói phải làm gì. Nay tách 3 tình huống:
+      rảnh   (0 node chạy)                 → xám: "ảnh chụp lúc HH:MM — không có node chạy, state không đổi từ đó" (KHÔNG phải lỗi)
+      sống   (có node chạy, trang mới <20s) → xanh
+      CHẾT   (có node chạy, trang cũ ≥20s)  → đỏ + đúng một lệnh để bật lại daemon"""
     gen_ms = int(time.time() * 1000)
-    js = f"""<script>(function(){{var G={gen_ms};var el=document.createElement('div');el.id='live';el.setAttribute('role','status');
-document.body.appendChild(el);function tick(){{var a=Math.round((Date.now()-G)/1000);el.textContent=a<20?'● cập nhật '+a+' s trước':'⚠ trang cũ '+a+' s — daemon không ghi? (orca-graph.py watch)';
-el.className=a<20?'ok':'stale'}}tick();setInterval(tick,1000);
+    running = sum(1 for g in graphs for n in g["nodes"] if n["state"] in ("locked", "dispatched"))
+    pid = og.daemon_alive()
+    at = time.strftime("%H:%M:%S")
+    js = f"""<script>(function(){{var G={gen_ms},RUN={running},PID={pid or 0};var el=document.createElement('div');el.id='live';el.setAttribute('role','status');
+document.body.appendChild(el);function tick(){{var a=Math.round((Date.now()-G)/1000);
+if(RUN===0){{el.textContent='○ ảnh chụp lúc {at} — không có node chạy, state không đổi từ đó'+(PID?'':' · daemon nghỉ (tự bật khi có node chạy)');el.className='idle';return}}
+if(a<20){{el.textContent='● '+RUN+' node đang chạy · cập nhật '+a+' s trước'+(PID?' · daemon pid '+PID:'');el.className='ok';return}}
+el.textContent='⚠ '+RUN+' node đang chạy nhưng trang đứng '+a+' s — daemon đã chết. Bật lại: python3 harness/scripts/orca-graph.py watch';el.className='stale'}}
+tick();setInterval(tick,1000);
 setInterval(function(){{if(document.visibilityState==='visible')location.reload()}},5000);}})();</script>
-<style>#live{{position:fixed;right:14px;bottom:12px;z-index:9;font-size:11px;padding:4px 10px;border-radius:999px;border:1px solid var(--border);background:var(--glass1);backdrop-filter:blur(12px);color:var(--t2)}}
-#live.ok{{color:#22c55e}}#live.stale{{color:#fff;background:#ef4444;border-color:#ef4444}}</style>"""
+<style>#live{{position:fixed;right:14px;bottom:12px;z-index:9;font-size:11px;padding:4px 10px;border-radius:999px;border:1px solid var(--border);background:var(--glass1);backdrop-filter:blur(12px);color:var(--t2);max-width:min(92vw,720px)}}
+#live.ok{{color:#22c55e}}#live.idle{{color:var(--t2)}}#live.stale{{color:#fff;background:#ef4444;border-color:#ef4444}}</style>"""
     s = out.read_text(encoding="utf-8").replace('<meta name="viewport"', '<meta http-equiv="refresh" content="5"><meta name="viewport"', 1).replace("</body>", js + "</body>", 1)
     out.write_text(s, encoding="utf-8")
 
@@ -297,7 +308,7 @@ def build_cockpit(dirs: list, out: Path, detail_name: str = "control-room-detail
         viz.page("Cockpit · overstack", nav, p_run + p_stuck + p_prog + p_debt + p_cost, out, pagekey="control-room", desc="Board-first: đang chạy · kẹt · tiến độ · nợ · chi phí trong một màn hình")
     finally:
         viz.CSS = old_css
-    _refresh(out); print(f"→ {out}  (cockpit · {len(graphs)} graph, {n_run} chạy, {n_stuck} kẹt)")
+    _refresh(out, graphs); print(f"→ {out}  (cockpit · {len(graphs)} graph, {n_run} chạy, {n_stuck} kẹt)")
 
 
 # ---------- KANBAN: bảng dispatch (cần làm/đang làm/chưa verify/chặn/xong) + hàng thẻ worker ----------
@@ -421,7 +432,7 @@ def build_kanban(dirs: list, out: Path, detail_name: str = "control-room-detail.
         viz.page("Bảng dispatch · kanban", nav, main, out, pagekey="control-room", desc="Kanban node theo state thật (claim lock/dispatch/QC) + worker đang bận hay idle")
     finally:
         viz.CSS = old_css
-    _refresh(out); print(f"→ {out}  (kanban · {len(graphs)} graph, {n_total} node, {len(agents)} worker)")
+    _refresh(out, graphs); print(f"→ {out}  (kanban · {len(graphs)} graph, {n_total} node, {len(agents)} worker)")
 
 
 def build(dirs: list, out: Path) -> None:
