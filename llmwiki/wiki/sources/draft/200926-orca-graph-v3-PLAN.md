@@ -24,6 +24,7 @@ Ngoài phạm vi (nói thẳng): item pipeline bền có outbox và backpressure
 
 ### Task 1: edge reason_class + lệnh audit-edges
 **Kind:** build
+**Thoả:** GX-R01, GX-R02 (PRD v1.1 §23.2–23.3) · VT-01, VT-02
 **Depends:** —
 **Files:**
 - Sửa: `harness/scripts/orca-graph.py`
@@ -45,6 +46,7 @@ python3 harness/scripts/orca-graph.py audit-edges <id> [--json] [--strict]   # -
 
 ### Task 2: resource claims — admission lúc lock
 **Kind:** build
+**Thoả:** GX-R03 (§23.4) · VT-03, VT-04
 **Depends:** Task 1 (data)
 **Files:**
 - Sửa: `harness/scripts/orca-graph.py`
@@ -62,6 +64,7 @@ def admission_mutex(d: Path, wait: float = 15.0):               # contextmanager
 
 ### Task 3: ask waiting — phân loại lý do chờ
 **Kind:** build
+**Thoả:** GX-R15 phần lý do chờ (§28.4, §8.4 ready ≠ admitted)
 **Depends:** Task 2 (data)
 **Files:**
 - Sửa: `harness/scripts/orca-graph.py`
@@ -80,6 +83,7 @@ python3 harness/scripts/orca-graph.py ask <id> waiting
 
 ### Task 4: add-node — thêm node vào graph theo yêu cầu user
 **Kind:** build
+**Thoả:** yêu cầu user 20/09 (3): thêm được node vào graph khi user yêu cầu · PRD §10 replan giữ lịch sử
 **Depends:** Task 3 (preference)
 **Files:**
 - Sửa: `harness/scripts/orca-graph.py`
@@ -97,6 +101,7 @@ python3 harness/scripts/orca-graph.py add-node <id> --title "Viết changelog" -
 
 ### Task 5: identity reconcile + dry streak + cost envelope
 **Kind:** build
+**Thoả:** GX-R04, GX-R06 phần identity (§24.1, §25.5) · GX-R10 phần dry streak (§26.4) · GX-R12 phần đếm call (§27.2) · VT-09, VT-10, VT-17, VT-19, VT-23, VT-28
 **Depends:** Task 4 (preference)
 **Files:**
 - Sửa: `harness/scripts/orca-graph.py`
@@ -119,6 +124,7 @@ python3 harness/scripts/orca-graph.py cost-envelope <id> --reviewers 3
 
 ### Task 6: graph-viz vẽ lý do cạnh + resource
 **Kind:** design
+**Thoả:** GX-R15 phần hiển thị (§28.4): nhìn ra cạnh nào là preference, cổng nào là gate, node giữ tài nguyên gì
 **Depends:** Task 2 (data)
 **Files:**
 - Sửa: `fdk/tools/graph-viz.py`
@@ -135,6 +141,7 @@ if reason == "preference":
 
 ### Task 7: bộ eval VT — ma trận + scoreboard
 **Kind:** test
+**Thoả:** yêu cầu user 20/09 (2): theo dõi + eval được · PRD §30.1 ma trận VT-01…28, §30.2 release gates
 **Depends:** Task 5 (data)
 **Files:**
 - Tạo: `harness/tests/orca-graph-evals/vt-matrix.json`
@@ -152,6 +159,7 @@ python3 evals/run.py --check     # ghép VT-09 ↔ mọi testcase có "VT09" tro
 
 ### Task 8: tách repo Rheinmir/orca-graph + shim ở setup
 **Kind:** migrate
+**Thoả:** yêu cầu user 20/09 (2): tách HẲN module graph sang repo riêng
 **Depends:** Task 6 (effect_order), Task 7 (effect_order)
 **Files:**
 - Tạo: `harness/scripts/orca-graph.py` (shim thay engine)
@@ -174,6 +182,7 @@ exec(compile(_real.read_text(encoding="utf-8"), str(_real), "exec"), globals())
 
 ### Task 9: install — option orca-graph tick sẵn, Enter là kéo đủ
 **Kind:** infra
+**Thoả:** yêu cầu user 20/09 (4): install hiện option đã tick sẵn, Enter là kéo đủ; chỉ kéo khi cần
 **Depends:** Task 8 (contract)
 **Files:**
 - Sửa: `harness/poc-vendor-neutral/install.sh`
@@ -194,6 +203,7 @@ MODS=("graph|orca-graph — engine đồ thị phân việc …")     # checklis
 
 ### Task 10: SKILL + mirror + provenance + wiki
 **Kind:** docs
+**Thoả:** luật KÉO NGOÀI của framework (mirror SKILL + provenance pin) · AGENT.md: wiki chỉ cập nhật sau khi code xong
 **Depends:** Task 8 (data)
 **Files:**
 - Sửa: `skills/orca-graph/SKILL.md`
@@ -213,6 +223,7 @@ python3 harness/scripts/sync-skills.py && python3 fdk/tools/skill-provenance.py 
 
 ### Task 11: review kỹ + sửa finding
 **Kind:** review
+**Thoả:** yêu cầu user: review kỹ càng trước khi đóng gói · PRD §25 reviewer context riêng, chỉ nhận finding tái hiện được
 **Depends:** Task 9 (acceptance), Task 10 (acceptance)
 **Files:**
 - Tạo: `llmwiki/wiki/sources/draft/200926-orca-graph-v3-review.md`
@@ -228,6 +239,7 @@ python3 fdk/tools/medic.py --ci && python3 fdk/tools/ci-local.py                
 
 ### Task 12: ship — push repo mới + /ship setup
 **Kind:** release
+**Thoả:** yêu cầu user: đóng gói và /ship lên remote · ship RULE-04: chứng minh đường remote bằng smoke người-mới, không chỉ medic
 **Depends:** Task 11 (acceptance)
 **Files:**
 - Sửa: `llmwiki/wiki/log.md`

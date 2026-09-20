@@ -425,12 +425,13 @@
     "t11": "acceptance"
    },
    "spec_hash": "ebf38aaf92642e49",
-   "state": "dispatched",
+   "state": "done",
    "gen": 1,
-   "rev": 2,
+   "rev": 3,
    "attempts": 1,
    "fresh": "current",
-   "verified": "unverified"
+   "verified": "verified",
+   "done_spec_hash": "ebf38aaf92642e49"
   }
  ],
  "layers": [
@@ -616,5 +617,5 @@
  ],
  "control": "active",
  "schema_version": 1,
- "checksum": "3f79b3b4dd4b1dca"
+ "checksum": "f2ef70f9fa4878c7"
 }
