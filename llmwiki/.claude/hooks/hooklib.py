@@ -6,6 +6,7 @@ import datetime
 import json
 import os
 import pathlib
+import re
 import subprocess
 import sys
 
@@ -228,7 +229,7 @@ def orca_graph_running(root: str):
 
 # R21 touched-paths (feedback 190926 "path đâu mà coi?"): cuối mỗi lượt hook Stop in cho USER
 # đường dẫn tuyệt đối các file phiên này tạo/sửa — người xem mở được ngay, không phải hỏi lại.
-TOUCHED_CAP = int(os.environ.get("OVERSTACK_TOUCHED_CAP", "40") or "40")
+TOUCHED_CAP = int(os.environ.get("OVERSTACK_TOUCHED_CAP", "15") or "15")
 _TOUCHED_NOISE = ("harness/metrics/", ".claude/audit/", "/.locks/", ".events.jsonl")  # bare-path: ok — mẫu substring lọc nhiễu, khớp cả harness/ lẫn .harness/ downstream
 
 
@@ -293,12 +294,65 @@ def _touched_rank(p: str) -> int:
     return 3
 
 
+# Feedback 200926: "40 file ở Stop annoying — thứ tôi cần đọc là .md/.html định dạng NGƯỜI ĐỌC sinh ra trong wiki; mỗi dòng path
+# phải ghi nó LÀ GÌ; dòng khác show ra thì ít nhất cho biết nó VỀ cái gì". → link chỉ cho trang người-đọc trong wiki (kèm tiêu đề
+# thật lấy từ frontmatter/<title>), phần còn lại gom theo nhóm: nhãn + số lượng + vài tên, không rải từng path.
+_READER_SKIP = ("/index.md", "/log.md", "/_template.md", "/README.md", "/provenance/", "/atlas.html", "/control-room",
+                "/overstack.html", "/skills/", "/raw/")     # sổ máy / trang tự sinh lại mỗi lượt — không phải thứ người ngồi đọc
+_GROUPS = (("test", ("/tests/", "^test_", "-test.sh", ".spec.")),      # "^x" = TÊN FILE bắt đầu bằng x (so cả path thì thư mục tên test_* khớp nhầm) ("skill (hướng dẫn cho agent)", ("/skills/", "SKILL.md")),
+           ("dữ liệu graph / sổ máy", (".graph.json", ".jsonl", "/graph/", "/index.md", "/log.md", "/provenance/", "ledger")),
+           ("trang tự sinh lại", ("/atlas.html", "/control-room", "/overstack.html", "CAPABILITIES.md")),
+           ("CI / cấu hình", (".yml", ".yaml", ".json", ".toml", ".gitignore", "/.github/")),
+           ("nguồn thô raw/", ("/raw/",)), ("code / script", (".py", ".sh", ".ps1", ".js", ".mjs", ".ts", ".tsx", ".css")),
+           ("tài liệu ngoài wiki", (".md", ".html")))
+
+
+def _is_reader_page(p: str) -> bool:
+    q = p.replace(os.sep, "/")
+    in_wiki = any(s in q for s in ("/llmwiki/", "/.llmwiki/", "/fdk/wiki/"))
+    return in_wiki and q.endswith((".md", ".html")) and not any(s in q for s in _READER_SKIP)
+
+
+def _page_title(p: str, limit: int = 110) -> str:
+    """Trang này LÀ GÌ: frontmatter `title:` → heading `# ` đầu tiên (.md) · <title> (.html). Không đọc được → chuỗi rỗng."""
+    try:
+        head = open(p, encoding="utf-8", errors="ignore").read(6000)
+    except Exception:
+        return ""
+    m = (re.search(r"<title[^>]*>(.*?)</title>", head, re.I | re.S) if p.endswith(".html")
+         else re.search(r"^title:\s*(.+)$", head, re.M) or re.search(r"^#\s+(.+)$", head, re.M))
+    s = re.sub(r"\s+", " ", m.group(1)).strip().strip("\"'") if m else ""
+    return s if len(s) <= limit else s[:limit - 1].rstrip() + "…"
+
+
+def _group_of(p: str) -> str:
+    q = p.replace(os.sep, "/"); base = q.rsplit("/", 1)[-1]
+    hit = lambda x: base.startswith(x[1:]) if x.startswith("^") else x in q
+    return next((name for name, pats in _GROUPS if any(hit(x) for x in pats)), "khác")
+
+
 def touched_message(files, cap: int = TOUCHED_CAP) -> str:
-    """Khối text cho user: tối đa `cap` link file:// (mới nhất trước), dư thì ghi '+N file nữa'."""
+    """Khối text cho user. (1) Trang NGƯỜI ĐỌC trong wiki: mỗi dòng = tiêu đề thật + link file:// (tối đa `cap`).
+    (2) Mọi thứ còn lại: MỘT dòng mỗi nhóm — nhóm gì · bao nhiêu file · vài tên — không rải path."""
     if not files:
         return ""
-    lines = [f"📂 [R21] {len(files)} file phiên này tạo/sửa (HTML llmwiki → graph → PLAN → còn lại; mới nhất trước):"]
-    lines += [f"  file://{p}" for p in files[:cap]]
-    if len(files) > cap:
-        lines.append(f"  … +{len(files) - cap} file nữa (trần {cap} — OVERSTACK_TOUCHED_CAP)")
+    pages = [p for p in files if _is_reader_page(p)]
+    rest = [p for p in files if p not in set(pages)]
+    lines = []
+    if pages:
+        lines.append(f"📖 [R21] {len(pages)} trang để ĐỌC phiên này tạo/sửa (HTML → graph → PLAN → còn lại):")
+        for p in pages[:cap]:
+            kind = "HTML" if p.endswith(".html") else "PLAN" if p.endswith("-PLAN.md") else "md"
+            lines.append(f"  • [{kind}] {_page_title(p) or os.path.basename(p)}\n      file://{p}")
+        if len(pages) > cap:
+            lines.append(f"  … +{len(pages) - cap} trang nữa (trần {cap} — OVERSTACK_TOUCHED_CAP)")
+    if rest:
+        groups = {}
+        for p in rest:
+            groups.setdefault(_group_of(p), []).append(os.path.basename(p))
+        lines.append(f"🗂 {len(rest)} file khác (không cần mở — tóm theo nhóm):")
+        for name, _ in _GROUPS + (("khác", ()),):
+            if name in groups:
+                b = groups[name]
+                lines.append(f"  · {name}: {len(b)} — {', '.join(b[:3])}{' …' if len(b) > 3 else ''}")
     return "\n".join(lines)

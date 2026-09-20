@@ -253,7 +253,7 @@ rules:
     id: R21
     name: touched-paths
     kind: hook_event
-    statement: "Stop: cuối MỖI lượt, hook in cho user (systemMessage — hiện thẳng ở UI, 0 token của model) đường dẫn tuyệt đối dạng file:// của mọi file phiên này tạo/sửa, thứ tự HTML llmwiki → graph → PLAN → còn lại (trong nhóm mới nhất trước), TRẦN 40 link (dư thì ghi +N). Nguồn: Write/Edit trong transcript + git status có mtime >= mốc đầu phiên (bắt cả sửa qua Bash) + file thuộc commit tạo trong phiên. Tắt: OVERSTACK_TOUCHED_PATHS=0; đổi trần: OVERSTACK_TOUCHED_CAP."
+    statement: "Stop: cuối MỖI lượt, hook in cho user (systemMessage, 0 token của model) hai khối. (1) Trang NGƯỜI ĐỌC phiên này tạo/sửa trong wiki (.md/.html dưới llmwiki/, .llmwiki/, fdk/wiki/ — trừ index/log/provenance/raw/skills và trang tự sinh lại như atlas, control-room, overstack.html): mỗi dòng ghi TIÊU ĐỀ THẬT của trang (frontmatter title hoặc <title>) kèm link file:// tuyệt đối, thứ tự HTML → graph → PLAN → còn lại, trần 15 (dư ghi +N). (2) Mọi file khác KHÔNG rải path: một dòng mỗi nhóm (test · skill · dữ liệu graph/sổ máy · trang tự sinh lại · CI/cấu hình · raw · code · tài liệu ngoài wiki · khác) gồm nhãn + số lượng + tối đa 3 tên. Nguồn: Write/Edit trong transcript + git status mtime >= mốc đầu phiên + file thuộc commit tạo trong phiên. Tắt OVERSTACK_TOUCHED_PATHS=0; trần OVERSTACK_TOUCHED_CAP."
     enforce_at: [session]
     event: Stop
     event_action: stop                     # chạy CHUNG Stop hook với R3 (stop.py) — cùng lệnh harness-events.py stop
