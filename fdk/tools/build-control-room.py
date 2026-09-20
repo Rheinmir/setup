@@ -178,11 +178,12 @@ def _refresh(out: Path, graphs: list = ()) -> None:
     running = sum(1 for g in graphs for n in g["nodes"] if n["state"] in ("locked", "dispatched"))
     pid = og.daemon_alive()
     at = time.strftime("%H:%M:%S")
+    WATCH = str(og.__file__).replace("\\", "/").replace("'", "")     # đường THẬT của engine trên máy này (repo framework ≠ máy khách ≠ global)
     js = f"""<script>(function(){{var G={gen_ms},RUN={running},PID={pid or 0};var el=document.createElement('div');el.id='live';el.setAttribute('role','status');
 document.body.appendChild(el);function tick(){{var a=Math.round((Date.now()-G)/1000);
 if(RUN===0){{el.textContent='○ ảnh chụp lúc {at} — không có node chạy, state không đổi từ đó'+(PID?'':' · daemon nghỉ (tự bật khi có node chạy)');el.className='idle';return}}
 if(a<20){{el.textContent='● '+RUN+' node đang chạy · cập nhật '+a+' s trước'+(PID?' · daemon pid '+PID:'');el.className='ok';return}}
-el.textContent='⚠ '+RUN+' node đang chạy nhưng trang đứng '+a+' s — daemon đã chết. Bật lại: python3 harness/scripts/orca-graph.py watch';el.className='stale'}}
+el.textContent='⚠ '+RUN+' node đang chạy nhưng trang đứng '+a+' s — daemon đã chết. Bật lại: python3 {WATCH} watch';el.className='stale'}}
 tick();setInterval(tick,1000);
 setInterval(function(){{if(document.visibilityState==='visible')location.reload()}},5000);}})();</script>
 <style>#live{{position:fixed;right:14px;bottom:12px;z-index:9;font-size:11px;padding:4px 10px;border-radius:999px;border:1px solid var(--border);background:var(--glass1);backdrop-filter:blur(12px);color:var(--t2);max-width:min(92vw,720px)}}

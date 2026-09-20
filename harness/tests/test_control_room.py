@@ -25,7 +25,10 @@ PLAN = """# X
 
 
 def run(d, *args):
-    return subprocess.run([sys.executable, str(SCRIPT), "--dir", str(d), *args], capture_output=True, text=True, cwd=ROOT)
+    # HOME của orca-graph + daemon phải CÔ LẬP: từ engine 3.0.2 `lock` đăng ký store vào registry và bật daemon `watch` —
+    # không cô lập thì test ghi thư mục tạm vào ~/.orca-graph/registry.json THẬT và để lại daemon thật (đo 200926).
+    env = dict(os.environ, ORCA_GRAPH_HOME=str(Path(d) / "og-home"), ORCA_GRAPH_NO_DAEMON="1")
+    return subprocess.run([sys.executable, str(SCRIPT), "--dir", str(d), *args], capture_output=True, text=True, cwd=ROOT, env=env)
 
 
 def setup(tmp_path):

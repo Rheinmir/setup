@@ -54,6 +54,7 @@ BARE="$(grep -nE '(^|[ "(=])(llmwiki|harness)/' "$CI" | grep -vE 'harness-src|HO
 if [ ! -f "$HOME/.orca-graph/repo/engine/orca-graph.py" ]; then
   echo "  SKIP  (e) máy chưa cài engine orca-graph (repo riêng) — fixture không có nguồn local để kéo"
 else
+export ORCA_GRAPH_NO_DAEMON=1   # engine ≥3.0.2: `lock` bật daemon watch — test không được để lại daemon sống sau khi xoá fixture
 mkdir -p "$FX/.llmwiki/graph"
 printf -- '# t\n\n### Task 1: T1\n**Verify:** true\n' > "$FX/PLAN.md"
 ( cd "$FX" && python3 "$GH/harness/scripts/orca-graph.py" --dir .llmwiki/graph build PLAN.md --id e5 \
