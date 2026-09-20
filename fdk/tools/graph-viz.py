@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """SHIM — graph-viz.py đã tách sang repo riêng https://github.com/Rheinmir/orca-graph (engine + test + eval VT).
 
+MUỐN SỬA LOGIC GRAPH → KHÔNG sửa ở đây. Sửa ở repo engine (bản dev thường ở ../orca-graph hoặc clone mới), đọc AGENTS.md
+của repo đó: nó liệt kê cái gì thuộc engine, cái gì thuộc overstack, và quy trình re-pin provenance sau khi sửa.
+
 File này giữ ĐÚNG đường dẫn cũ để skill, hook, control-room và máy khách không phải đổi gì: nó tìm engine thật rồi chạy
 engine đó TRONG globals của chính nó. `__file__` vì thế vẫn là đường shim → mọi lookup quanh `__file__` của engine
 (overstack_paths, build-control-room, graph-viz cạnh graph-atlas) giải theo layout overstack như trước; import bằng
