@@ -339,3 +339,13 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 
 - tạo `concepts/install-update-flows.md` — bảng luồng A/B/C/D, mỗi ô một ca test hoặc ghi rõ chưa làm; hai gốc đã sửa
 - sửa `index.md` — thêm dòng install-update-flows
+
+## 2026-09-21 — update — framework tự bắt slop của chính nó
+
+- tạo `sources/200926-archify-renderer-fixes.md` — vá renderer ở fork archify (icon đè chữ, chữ mờ, khối dính); kèm nợ bảng delta
+- sửa `index.md` — thêm dòng 200926-archify-renderer-fixes
+- cổng tĩnh `frontend-antipattern --all` đổi từ danh sách tên ghi cứng sang QUÉT THƯ MỤC (26 → 38 file); dọn 23 FAIL về 0
+- cổng chạy-thật miễn `:disabled` và `[data-ovs-deemphasized]` (làm mờ có chủ ý phải tự khai, không đoán theo opacity)
+- luật R22 `html-slop` gác lúc GHI (PostToolUse nhánh .html) + fire-drill BAD/GOOD trong harness-doctor
+- `medic` probe frontend chạy `--all`; step CI sinh trang rồi chạy cả hai cổng trên 21 trang framework sinh
+- engine orca-graph 3.1.2 → 3.1.4: daemon vẽ đè cockpit bằng builder global cũ; chip `<code>` xếp dọc dính nhau

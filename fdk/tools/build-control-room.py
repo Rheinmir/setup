@@ -205,7 +205,7 @@ setInterval(function(){{if(document.visibilityState==='visible')location.reload(
 
 # ---------- COCKPIT: board-first, mọi thứ trong MỘT màn hình; ô nào tràn thì cắt + "→ chi tiết" ----------
 COCKPIT_CSS = """
-main a{color:var(--accent);text-decoration:none}main a:hover{text-decoration:underline}
+main a{color:var(--accent-ink,var(--ovs-accent,#0059b8));text-decoration:none}main a:hover{text-decoration:underline}
 nav{position:sticky;inset:auto;top:0;width:auto;height:auto;flex-direction:row;align-items:center;gap:6px;padding:8px 14px;border-right:0;border-bottom:1px solid var(--border);overflow:visible;z-index:5}
 nav::before{display:none}body{padding-left:0!important}nav .brand{padding:0 10px 0 0;font-size:12px}
 nav a{padding:5px 9px;border-left:0;border-radius:8px;font-size:11.5px}nav .grp{display:none}nav .nav-close,.nav-toggle{display:none}
@@ -215,7 +215,7 @@ nav .theme-row{position:static;margin-left:auto;padding:0 0 0 12px;border:0;back
 main{max-width:none;padding:10px 14px 8px;height:calc(100vh - 50px);display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:minmax(0,1.15fr) minmax(0,1fr);gap:10px}
 .panel{display:flex;flex-direction:column;min-height:0;padding:10px 12px}.panel h2{margin:0 0 6px;font-size:12.5px;display:flex;align-items:center;gap:8px}
 .panel h2 .badge{margin-left:auto;font-size:10.5px}.panel .body{overflow:auto;min-height:0;flex:1}.panel table{font-size:11.5px;border-radius:10px}.panel th,.panel td{padding:5px 8px}
-.panel .more{font-size:11px;color:var(--accent);text-decoration:none;margin-top:6px;align-self:flex-end}
+.panel .more{font-size:11px;color:var(--accent-ink,var(--ovs-accent,#0059b8));text-decoration:none;margin-top:6px;align-self:flex-end}
 .p-run{grid-column:span 7}.p-stuck{grid-column:span 5}.p-prog{grid-column:span 4}.p-debt{grid-column:span 5}.p-cost{grid-column:span 3}
 .stuck-row{display:flex;gap:8px;align-items:center;padding:6px 4px;border-bottom:1px solid var(--border);font-size:11.5px}.stuck-row:last-child{border:0}
 .stuck-row .st{padding:1px 7px;border-radius:999px;color:#fff;font-size:10px;white-space:nowrap}.stuck-row .who{color:var(--t2);white-space:nowrap}
@@ -235,9 +235,9 @@ KANBAN_CSS = """
 .agent-card.busy{border-color:var(--accent);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 0 0 1px var(--accent)}
 .klanes{display:grid;grid-template-columns:repeat(5,minmax(210px,1fr));gap:12px;overflow-x:auto;padding-bottom:6px}
 .klane{background:var(--glass1);border:1px solid var(--border);border-radius:var(--r);padding:10px;min-height:120px}
-.klane h3{margin:0 0 2px;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;display:flex;justify-content:space-between;align-items:center}
+.klane h3{margin:0 0 2px;font-size:13px;font-weight:500;display:flex;justify-content:space-between;align-items:center}
 .klane .hint{font-size:10.5px;color:var(--t2);margin:0 0 10px}
-.kcard{background:var(--glass3);border:1px solid var(--border);border-left:3px solid var(--edge);border-radius:10px;padding:8px 10px;margin-bottom:8px;font-size:12px}
+.kcard{background:var(--glass3);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:8px;font-size:12px}.kstate{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}.klane h3 .kstate{width:9px;height:9px}
 .kcard .kid{font-weight:600;font-size:11.5px}.kcard .ktier{font-size:9.5px;margin-left:5px;padding:0 5px}
 .kcard .ktitle{margin:3px 0 4px}
 .kcard .kdeps{font-size:10.5px;color:var(--t2)}
@@ -278,7 +278,7 @@ def build_cockpit(dirs: list, out: Path, detail_name: str = "control-room-detail
     for g in graphs:
         for n in g["nodes"]:
             if n["state"] in STUCK:
-                stuck.append(f'<div class="stuck-row"><span class="st" style="background:{viz.STATE_COLOR[n["state"]]}">{html.escape(viz.STATE_VI[n["state"]].split(" (")[0])}</span>'
+                stuck.append(f'<div class="stuck-row"><span class="st st-badge" style="{viz.state_badge_style(n["state"])}">{html.escape(viz.STATE_VI[n["state"]].split(" (")[0])}</span>'
                              f'<code>{html.escape(proj_name(g["_dir"]))}/{html.escape(g["id"])}/{n["id"]}</code><span>{html.escape(n["title"][:34])}</span>'
                              f'<span class="who">{"reconcile" if n["state"] == "unknown" and n.get("verify") else "cần người"}</span></div>')
     n_stuck = len(stuck); stuck, stuck_more = _trim(stuck, 7, "tien-do", detail_name)
@@ -419,13 +419,13 @@ def build_kanban(dirs: list, out: Path, detail_name: str = "control-room-detail.
                           f'<b>{html.escape(owner_by)}</b> {html.escape(owner_src or "")}</div>') if owner_by else '<div class="kowner">— chưa ai chạm</div>'
             deps = ", ".join(n.get("deps") or []) or "—"
             lanes_nodes[lane].append(
-                f'<div class="kcard" style="border-left-color:{viz.STATE_COLOR[n["state"]]}">'
-                f'<div><span class="kid">{html.escape(gid)}/{html.escape(n["id"])}</span><span class="ktier badge">{html.escape(n.get("kind") or "build")}</span></div>'
+                f'<div class="kcard">'   # trạng thái = CHẤM màu cạnh id (trước là sọc viền trái — slop, và trùng với chấm ở dòng owner)
+                f'<div><span class="kstate" style="background:{viz.STATE_COLOR[n["state"]]}" title="{html.escape(n["state"])}"></span><span class="kid">{html.escape(gid)}/{html.escape(n["id"])}</span><span class="ktier badge">{html.escape(n.get("kind") or "build")}</span></div>'
                 f'<div class="ktitle">{html.escape(n["title"][:70])}</div>'
                 f'<div class="kdeps">← {html.escape(deps)}</div>{owner_html}</div>')
     n_done, n_doing, n_total = len(lanes_nodes["done"]), len(lanes_nodes["doing"]), sum(len(v) for v in lanes_nodes.values())
     lanes_html = "".join(
-        f'<div class="klane" style="border-top:3px solid {color}"><h3>{html.escape(label)}<span class="badge">{len(lanes_nodes[key])}</span></h3>'
+        f'<div class="klane"><h3><span class="kstate" style="background:{color}"></span>{html.escape(label)}<span class="badge">{len(lanes_nodes[key])}</span></h3>'
         f'<div class="hint">{html.escape(hint)}</div>{"".join(lanes_nodes[key]) or "<div class=sub>Trống.</div>"}</div>'
         for key, label, hint, _, color in LANES)
     agents_html = "".join(

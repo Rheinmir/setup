@@ -18,6 +18,63 @@ from pathlib import Path
 
 
 
+def _ovs_base_mod():
+    import importlib.util
+    here = Path(__file__).resolve()
+    for c in (here.with_name("html_base.py"), Path.home() / ".claude/harness/fdk/tools/html_base.py"):
+        if c.is_file():
+            s = importlib.util.spec_from_file_location("html_base", c); m = importlib.util.module_from_spec(s); s.loader.exec_module(m); return m
+    return None
+
+
+def _ovs_follow(child_html: str) -> str:
+    m = _ovs_base_mod()
+    return m.to_follow(m.apply(child_html)) if m else child_html
+
+
+# Nhãn trong sơ đồ SVG viết tay ghi cứng màu (khảo sát 20/09/2026: 81 chỗ) → chìm trên nền khối,
+# thấp nhất 2,13:1 ở chế độ sáng và 2,70:1 ở chế độ tối.
+# KHÔNG dùng token đổi theo chế độ: nhãn nằm trên HÌNH KHỐI có màu ghi cứng (không đổi theo sáng/tối),
+# nên chữ cũng phải là màu CỐ ĐỊNH, chỉ hạ độ sáng để đạt 4,5:1 trên nền khối sáng nhất lẫn trung tính.
+# Giữ nguyên sắc (đỏ vẫn đỏ, xanh lá vẫn xanh lá) — chỉ tối đi.
+_SVG_TEXT_INK = {
+    "#0a84ff": "#054280", "#5856d6": "#39378a", "#30b0c7": "#144852",
+    "#28a745": "#124c20", "#34c759": "#144c22",
+    "#f08c00": "#613900",
+    "#e0264b": "#81162b", "#ff2d55": "#81172b",
+    "#4a4a55": "#41414b",
+}
+
+
+def _svg_text_tokens(html: str) -> str:
+    """Chỉ đụng fill của <text> (nhãn chữ). Màu của hình khối giữ nguyên — chúng là NỀN, không phải chữ."""
+    import re as _re
+
+    def one(m):
+        tag = m.group(0)
+        return _re.sub(r'fill="(#[0-9a-fA-F]{3,6})"',
+                       lambda f: 'fill="%s"' % _SVG_TEXT_INK.get(f.group(1).lower(), f.group(1)), tag)
+
+    html = _re.sub(r"<text\b[^>]*>", one, html)
+
+    # Nền pha trong suốt (#RRGGBBAA) lấy nền TRANG làm đáy → ở chế độ tối nó thành khối tối, chữ tối
+    # trên khối tối (huy hiệu 2 chữ cái trong sơ đồ persona: 1,37:1). Trộn sẵn lên trắng thành màu ĐẶC,
+    # nền khối không còn phụ thuộc chế độ.
+    def flat(m):
+        r, g, b, al = (int(m.group(1)[i:i + 2], 16) for i in (0, 2, 4, 6))
+        k = al / 255
+        return 'fill="#%02x%02x%02x"' % tuple(round(c * k + 255 * (1 - k)) for c in (r, g, b))
+
+    html = _re.sub(r'fill="#([0-9a-fA-F]{8})"', flat, html)
+    # Sơ đồ viết tay dùng khối màu ghi cứng (không đổi theo chế độ). Ở chế độ tối, nhãn nằm NGOÀI khối
+    # rơi xuống nền trang tối → chữ tối trên nền tối. Cho mỗi sơ đồ một mặt sáng cố định: nền khối và
+    # nhãn lại cùng hệ, đọc được ở cả hai chế độ mà không phải token-hoá toàn bộ hình.
+    css = '<style id="ovs-svg-canvas">svg[role="img"]{background:#f4f7fb;border-radius:12px}</style>'
+    if 'id="ovs-svg-canvas"' not in html:
+        html = _re.sub(r"</head\s*>", css + "</head>", html, count=1, flags=_re.I)
+    return html
+
+
 def _ovs_font(html: str) -> str:
     """Font mặc định của mọi HTML framework sinh ra = Lexend Deca Light, NHÚNG (nguồn duy nhất: fdk/tools/html_font.py)."""
     import importlib.util
@@ -25,7 +82,13 @@ def _ovs_font(html: str) -> str:
     for c in (here.with_name("html_font.py"), here.parents[2] / "fdk" / "tools" / "html_font.py", Path.home() / ".claude/harness/fdk/tools/html_font.py"):
         if c.is_file():
             s = importlib.util.spec_from_file_location("html_font", c); m = importlib.util.module_from_spec(s); s.loader.exec_module(m)
-            return m.apply(html)
+            out = m.apply(html)
+            hb = _ovs_base_mod()          # trang này có toggle RIÊNG → phải tự báo theme cho các iframe nhúng (memory-map, skill-whiteboard)
+            if hb and "<iframe" in out and 'id="ovs-parent-notify"' not in out:
+                k = out.rfind("</body>")
+                if k >= 0:
+                    out = out[:k] + f'<script id="ovs-parent-notify">{hb.PARENT_NOTIFY_JS}</script>' + out[k:]
+            return out
     return html
 
 def detect_root() -> Path:
@@ -261,7 +324,7 @@ footer{max-width:1080px;margin:0 auto;padding:26px 24px 60px;font-size:12px;colo
 .mm .node:hover{transform:translateY(-1px);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 6px 20px rgba(20,40,90,.12)}
 .mm .node .nm{font-size:13px;font-weight:700;letter-spacing:-.01em}
 .mm .node .ds{font-size:10.5px;color:var(--t2);font-weight:500}
-.mm .node .ct{font-size:10px;color:#fff;font-weight:700;padding:1px 7px;border-radius:999px;position:absolute;top:-8px;right:-8px;background:#0a84ff}
+.mm .node .ct{font-size:10px;color:#fff;font-weight:700;padding:1px 7px;border-radius:999px;position:absolute;top:-8px;right:-8px;background:#0059b8}
 .mm .node.has-children::after{content:'';position:absolute;right:-7px;top:50%;width:6px;height:6px;border-right:2px solid var(--t2);border-bottom:2px solid var(--t2);transform:translateY(-50%) rotate(-45deg);opacity:.5}
 .mm .node.collapsed-parent::after{transform:translateY(-50%) rotate(45deg)}
 .mm .node.root{background:linear-gradient(135deg,rgba(10,132,255,.16),rgba(88,86,214,.14));border-color:rgba(10,132,255,.4)}
@@ -270,17 +333,17 @@ footer{max-width:1080px;margin:0 auto;padding:26px 24px 60px;font-size:12px;colo
 .mm-links{position:absolute;top:0;left:0;pointer-events:none;overflow:visible;z-index:0}
 .mm-links path{fill:none;stroke-width:2.2;opacity:.55;stroke-linecap:round}
 .mm .tree{position:relative;z-index:1}
-.mm .b-wiki .nm{color:#1f8a9c}.mm .b-wiki .ct{background:#30b0c7}.mm .b-wiki.node{border-color:rgba(48,176,199,.4)}
-.mm .b-dev .nm{color:#5856d6}.mm .b-dev .ct{background:#5856d6}.mm .b-dev.node{border-color:rgba(88,86,214,.4)}
-.mm .b-orch .nm{color:#e07b00}.mm .b-orch .ct{background:#ff9500}.mm .b-orch.node{border-color:rgba(255,149,0,.42)}
-.mm .b-utils .nm{color:#1e8e3e}.mm .b-utils .ct{background:#34c759}.mm .b-utils.node{border-color:rgba(52,199,89,.4)}
-.mm .b-rule .nm{color:#e0264b}.mm .b-rule .ct{background:#ff2d55}.mm .b-rule.node{border-color:rgba(255,45,85,.4)}
-.mm .g0 .nm{color:#0a5ec7}.mm .g0 .ct{background:#0a84ff}.mm .g0.node{border-color:rgba(10,132,255,.4)}
-.mm .g1 .nm{color:#1f8a9c}.mm .g1 .ct{background:#30b0c7}.mm .g1.node{border-color:rgba(48,176,199,.4)}
+.mm .b-wiki .nm{color:#1f8a9c}.mm .b-wiki .ct{background:#0b6472}.mm .b-wiki.node{border-color:rgba(48,176,199,.4)}
+.mm .b-dev .nm{color:#5856d6}.mm .b-dev .ct{background:#4338ca}.mm .b-dev.node{border-color:rgba(88,86,214,.4)}
+.mm .b-orch .nm{color:#e07b00}.mm .b-orch .ct{background:#954508}.mm .b-orch.node{border-color:rgba(255,149,0,.42)}
+.mm .b-utils .nm{color:#1e8e3e}.mm .b-utils .ct{background:#0f6a2f}.mm .b-utils.node{border-color:rgba(52,199,89,.4)}
+.mm .b-rule .nm{color:#e0264b}.mm .b-rule .ct{background:#d82648}.mm .b-rule.node{border-color:rgba(255,45,85,.4)}
+.mm .g0 .nm{color:#0a5ec7}.mm .g0 .ct{background:#0870d8}.mm .g0.node{border-color:rgba(10,132,255,.4)}
+.mm .g1 .nm{color:#1f8a9c}.mm .g1 .ct{background:#217b8b}.mm .g1.node{border-color:rgba(48,176,199,.4)}
 .mm .g2 .nm{color:#5856d6}.mm .g2 .ct{background:#5856d6}.mm .g2.node{border-color:rgba(88,86,214,.4)}
-.mm .g3 .nm{color:#1e8e3e}.mm .g3 .ct{background:#34c759}.mm .g3.node{border-color:rgba(52,199,89,.4)}
-.mm .g4 .nm{color:#c77f00}.mm .g4 .ct{background:#ff9500}.mm .g4.node{border-color:rgba(255,149,0,.42)}
-.mm .g5 .nm{color:#c81e4a}.mm .g5 .ct{background:#ff2d55}.mm .g5.node{border-color:rgba(255,45,85,.4)}
+.mm .g3 .nm{color:#1e8e3e}.mm .g3 .ct{background:#217f38}.mm .g3.node{border-color:rgba(52,199,89,.4)}
+.mm .g4 .nm{color:#c77f00}.mm .g4 .ct{background:#a35f00}.mm .g4.node{border-color:rgba(255,149,0,.42)}
+.mm .g5 .nm{color:#c81e4a}.mm .g5 .ct{background:#d82648}.mm .g5.node{border-color:rgba(255,45,85,.4)}
 /* ── redesign upgrades (a11y focus · orphan-fix · smooth-scroll · tabular số) ── */
 html{scroll-behavior:smooth}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
@@ -560,7 +623,7 @@ def sections(root: Path):
          _subtree("b-rule", "verified:true — đã chốt", "đã verify; self-test giữ trung thực", _bt, count=len(_bt))],
         count=len(_bf) + len(_bt)))
 
-    mindmap_html = ('<div class="mm"><div class="mm-canvas"><svg class="mm-links"></svg>'
+    mindmap_html = ('<div class="mm"><div class="mm-canvas"><svg class="mm-links" aria-hidden="true"></svg>'
                     '<div class="tree"><div class="row">'
                     + _node("root has-children", "overstack", "gõ /<tên> để gọi · %d rule" % n_rules, n_sk)
                     + '<div class="children">' + "".join(branches) + '</div></div></div></div></div>')
@@ -1081,7 +1144,7 @@ def sections(root: Path):
         f = root / "llmwiki" / "html" / fname
         if not f.is_file():
             continue
-        doc = f.read_text(encoding="utf-8").replace("&", "&amp;").replace('"', "&quot;")
+        doc = _ovs_follow(f.read_text(encoding="utf-8")).replace("&", "&amp;").replace('"', "&quot;")   # bản NHÚNG: không nút riêng, theo theme trang mẹ
         emb.append(f'<h3>{title}</h3><p class="lead">{why}</p>'
                    f'<iframe title="{title}" style="width:100%;height:640px;border:1px solid '
                    f'var(--line,#d8e2f0);border-radius:12px;background:#fff" '
@@ -1166,7 +1229,7 @@ def render(root: Path) -> str:
 
 
 def main():
-    content = _ovs_font(render(ROOT))
+    content = _ovs_font(_svg_text_tokens(render(ROOT)))
     if UNCLASSIFIED:   # hỏi-1-lần: nhắc dev khai nhóm cho skill mới (rồi nó tự vào mind map)
         skills = ", ".join(f"{n} ({lp})" for lp, n in sorted(UNCLASSIFIED))
         print(f"[build-overstack-docs] ⚠ {len(UNCLASSIFIED)} skill chưa phân nhóm mind map "

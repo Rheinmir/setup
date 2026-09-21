@@ -1,0 +1,676 @@
+{
+ "id": "200926-self-slop-gate",
+ "plan": "llmwiki/wiki/sources/draft/200926-self-slop-gate-PLAN.md",
+ "built": "2026-09-20T22:04:48+0700",
+ "nodes": [
+  {
+   "id": "t1",
+   "title": "cổng tĩnh — thêm luật và mở phạm vi ra MỌI trang framework sinh",
+   "files": [
+    "fdk/tools/frontend-antipattern.py",
+    "harness/tests/test_frontend_antipattern_slop.py"
+   ],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "luật mới `[FAIL] side-stripe` (border-left ≥3px màu trên thẻ, `::before`/`::after` rộng ≤6px cao 100% có nền màu, `box-shadow: inset Npx 0 0 <màu>`), `[FAIL] no-theme-toggle` (trang không có cơ chế `data-theme` + nút), `[WARN→FAIL sau Task 4] uppercase-misuse` (`text-transform:uppercase` trên h1–h4, button, mục menu, hoặc thiếu `letter-spacing`); cờ `--all` = quét mọi trang framework sinh (danh sách từ hàm `framework_pages()`), `--count` in số đếm theo luật để ghi baseline (dùng bởi Task 2, Task 4, Task 9)"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 -m pytest -q harness/tests/test_frontend_antipattern_slop.py",
+   "qc": "",
+   "spec_hash": "dda7cf0e344f7d59",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "dda7cf0e344f7d59"
+  },
+  {
+   "id": "t2",
+   "title": "cổng chạy-thật bằng Playwright — chữ chìm, khối dính, icon đè chữ, toggle hoạt động",
+   "files": [
+    "fdk/tools/html-visual-gate.mjs",
+    "harness/tests/html-visual-gate-test.sh"
+   ],
+   "consumes": [
+    "Playwright toàn cục (`NODE_PATH=$(npm root -g)`); không có thì SKIP có đếm, trên CI là FAIL"
+   ],
+   "produces": [
+    "`html-visual-gate.mjs <trang…> [--json] [--shots <dir>]` rc 2 khi có lỗi. Mỗi trang × {light, dark}: (a) chữ có tương phản < 4,5:1 (chữ ≥24px: 3:1), bỏ qua chữ `aria-hidden`; (b) hai khối có nền/viền riêng xếp dọc cách nhau < 8px, hoặc khối con chạm mép khối cha (padding < 8px); (c) hộp chữ giao với hộp icon/svg cùng node > 2px; (d) bấm toggle thì độ sáng nền đổi chiều, tải lại vẫn giữ; (e) trang khai có kính thì phần tử kính phải có `backdrop-filter` khác none ở CẢ hai chế độ. Có fixture xấu cho TỪNG luật để chứng minh luật cắn (dùng bởi Task 9, Task 10)"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "bash harness/tests/html-visual-gate-test.sh",
+   "qc": "",
+   "spec_hash": "d29d709bf7787b13",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "d29d709bf7787b13"
+  },
+  {
+   "id": "t3",
+   "title": "ghi baseline ĐỎ — số đếm theo luật trên trạng thái hiện tại",
+   "files": [
+    "fdk/wiki/sources/200926-slop-baseline.md"
+   ],
+   "consumes": [
+    "`frontend-antipattern.py --all --count`, `html-visual-gate.mjs --json`"
+   ],
+   "produces": [
+    "bảng số đếm theo luật × trang TRƯỚC khi sửa + bộ ảnh \"trước\" ở `scratchpad/slop-before/` (dùng bởi Task 10)"
+   ],
+   "deps": [
+    "t1",
+    "t2"
+   ],
+   "deps_conf": "chắc",
+   "kind": "test",
+   "mode": "afk",
+   "verify": "test -s fdk/wiki/sources/200926-slop-baseline.md && grep -q \"side-stripe\" fdk/wiki/sources/200926-slop-baseline.md",
+   "qc": "",
+   "dep_reasons": {
+    "t1": "data",
+    "t2": "data"
+   },
+   "spec_hash": "b728fb2e797be905",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "b728fb2e797be905"
+  },
+  {
+   "id": "t4",
+   "title": "html_base.py — một lớp nền chung (màu sáng/tối, khoảng cách, thẻ kính, toggle, quy ước viết hoa)",
+   "files": [
+    "fdk/tools/html_base.py",
+    "harness/tests/test_html_base.py",
+    "fdk/tools/html_font.py"
+   ],
+   "consumes": [
+    "`html_font.head_css()`"
+   ],
+   "produces": [
+    "`apply(html, *, toggle=True) -> str` (gộp font + nền, idempotent, chỉ chèn vào `<head>` thật và cuối `<body>`); token `--ovs-bg/-surface/-ink/-ink2/-border/-accent` cho hai chế độ, thang `--sp-1…6` (4·8·12·16·24·32), lớp `.ovs-card` (kính, KHÔNG sọc), `.ovs-eyebrow` (chỗ DUY NHẤT được uppercase), nút toggle truy cập được bằng bàn phím, script chống nháy đặt `data-theme` trước khi vẽ (dùng bởi Task 5–8)"
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "design",
+   "mode": "afk",
+   "verify": "python3 -m pytest -q harness/tests/test_html_base.py harness/tests/test_html_font.py",
+   "qc": "",
+   "dep_reasons": {
+    "t1": "contract"
+   },
+   "spec_hash": "6c5e6beb82f2fdfd",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "6c5e6beb82f2fdfd"
+  },
+  {
+   "id": "t5",
+   "title": "generator không có dark mode — docs-index · health-dashboard · cheatsheet",
+   "files": [
+    "fdk/tools/build-docs-index.py",
+    "fdk/tools/build-health-dashboard.py",
+    "fdk/tools/build-cheatsheet.py"
+   ],
+   "consumes": [
+    "token + toggle của Task 4"
+   ],
+   "produces": [
+    "ba trang dùng token hai chế độ, bỏ sọc viền thẻ (phân loại bằng chấm/nhãn), tiêu đề hết gradient-text, viết hoa theo quy ước"
+   ],
+   "deps": [
+    "t4"
+   ],
+   "deps_conf": "chắc",
+   "kind": "fix",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/build-docs-index.py >/dev/null && python3 fdk/tools/build-health-dashboard.py >/dev/null && python3 fdk/tools/frontend-antipattern.py llmwiki/html/index.html llmwiki/html/280626-health-dashboard.html",
+   "qc": "",
+   "dep_reasons": {
+    "t4": "contract"
+   },
+   "resources": [
+    {
+     "key": "generator-css",
+     "mode": "exclusive"
+    }
+   ],
+   "spec_hash": "bff13fee37745712",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "bff13fee37745712"
+  },
+  {
+   "id": "t6",
+   "title": "control-room + problem-tree — 184 thẻ sọc",
+   "files": [
+    "fdk/tools/build-control-room.py",
+    "fdk/tools/build-wiki-graph.py"
+   ],
+   "consumes": [
+    "`.ovs-card`, token trạng thái"
+   ],
+   "produces": [
+    "thẻ kanban và node problem-tree phân loại bằng chấm trạng thái + nhãn, không sọc; khoảng cách theo thang `--sp-*`"
+   ],
+   "deps": [
+    "t4"
+   ],
+   "deps_conf": "chắc",
+   "kind": "fix",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/build-control-room.py >/dev/null && python3 fdk/tools/frontend-antipattern.py llmwiki/html/control-room.html llmwiki/html/control-room-kanban.html llmwiki/html/control-room-detail.html",
+   "qc": "",
+   "dep_reasons": {
+    "t4": "contract"
+   },
+   "resources": [
+    {
+     "key": "generator-css",
+     "mode": "exclusive"
+    }
+   ],
+   "spec_hash": "9f8b84869e0b7f71",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "9f8b84869e0b7f71"
+  },
+  {
+   "id": "t7",
+   "title": "overstack.html + các trang con nhúng (memory-map, skill-whiteboard, wiki-graph-static)",
+   "files": [
+    "fdk/tools/build-overstack-docs.py",
+    "fdk/tools/memory-map.py",
+    "fdk/tools/whiteboard-skill-map.py"
+   ],
+   "consumes": [
+    "`html_base.apply`"
+   ],
+   "produces": [
+    "nhãn mục đạt 4,5:1 ở cả hai chế độ; trang con nhận lớp nền + theme đồng bộ với trang mẹ (srcdoc được `apply` TRƯỚC khi escape vào thuộc tính)"
+   ],
+   "deps": [
+    "t4"
+   ],
+   "deps_conf": "chắc",
+   "kind": "fix",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/build-overstack-docs.py >/dev/null && python3 fdk/tools/frontend-antipattern.py llmwiki/html/overstack.html",
+   "qc": "",
+   "dep_reasons": {
+    "t4": "contract"
+   },
+   "resources": [
+    {
+     "key": "generator-css",
+     "mode": "exclusive"
+    }
+   ],
+   "spec_hash": "4500410083f94688",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "4500410083f94688"
+  },
+  {
+   "id": "t8",
+   "title": "engine orca-graph (repo module) — graph + atlas theo lớp nền",
+   "files": [
+    "fdk/skills.provenance.json"
+   ],
+   "consumes": [
+    "bản sao `html_base.py` (chép sang `engine/` như `html_font.py`)"
+   ],
+   "produces": [
+    "`Rheinmir/orca-graph` bản 3.1.0 — `graph-viz.py` gọi `html_base.apply`, sửa mọi finding của hai cổng trên trang graph/atlas; ship theo luồng `module` (commit → test + eval + install-test đọc rc → push → CI xanh → tag) rồi re-pin ở đây; parity kiểm cả `html_base.py`"
+   ],
+   "deps": [
+    "t4"
+   ],
+   "deps_conf": "chắc",
+   "kind": "fix",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/html-font-lint.py --parity && python3 fdk/tools/frontend-antipattern.py llmwiki/graph/200926-self-slop-gate.graph.html",
+   "qc": "",
+   "dep_reasons": {
+    "t4": "contract"
+   },
+   "spec_hash": "de5d6a88d2bb0ed0",
+   "state": "done",
+   "gen": 1,
+   "rev": 4,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "de5d6a88d2bb0ed0"
+  },
+  {
+   "id": "t9",
+   "title": "archify (fork của ta) — icon đè chữ, nhãn vùng mờ, viết hoa lộn",
+   "files": [
+    "fdk/wiki/sources/200926-archify-renderer-fixes.md"
+   ],
+   "consumes": [
+    "`html-visual-gate.mjs` luật (a)(c)"
+   ],
+   "produces": [
+    "bản sửa ở `Rheinmir/archify` (đệm chữ tránh icon, màu nhãn vùng đạt 4,5:1 ở dark, một quy ước viết hoa cho thanh công cụ); cài lại skill; sinh lại các trang sơ đồ cục bộ; trang nguồn ghi commit của fork. Không truy cập được fork → node `blocked`, ghi lý do, KHÔNG sửa bản cài tại chỗ rồi coi như xong"
+   ],
+   "deps": [
+    "t2"
+   ],
+   "deps_conf": "chắc",
+   "kind": "fix",
+   "mode": "afk",
+   "verify": "test -s fdk/wiki/sources/200926-archify-renderer-fixes.md",
+   "qc": "",
+   "dep_reasons": {
+    "t2": "acceptance"
+   },
+   "spec_hash": "93e86babdaa6e4d4",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "93e86babdaa6e4d4"
+  },
+  {
+   "id": "t10",
+   "title": "khuôn của skill + vá bản cục bộ các trang agent dựng tay",
+   "files": [
+    "skills/docs-site-macos/SKILL.md",
+    "llmwiki/skills/utils/docs-site-macos.md",
+    "skills/orca-onboard/assets/docs-site-skeleton.html",
+    "fdk/tools/html-slop-fix.py"
+   ],
+   "consumes": [
+    "luật của Task 1, lớp nền của Task 4"
+   ],
+   "produces": [
+    "khuôn bỏ gradient-text, callout không sọc, bước bắt buộc \"chạy hai cổng trước khi giao\"; `html-slop-fix.py <trang…>` vá máy-làm-được (bỏ sọc viền, gradient-text → màu đặc, chèn lớp nền + toggle) và IN danh sách thứ không vá tự động được"
+   ],
+   "deps": [
+    "t4"
+   ],
+   "deps_conf": "chắc",
+   "kind": "fix",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/frontend-antipattern.py skills/orca-onboard/assets/docs-site-skeleton.html && python3 fdk/tools/swh-lint.py --ci",
+   "qc": "",
+   "dep_reasons": {
+    "t4": "contract"
+   },
+   "spec_hash": "34b4af2a6ef62ee3",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "34b4af2a6ef62ee3"
+  },
+  {
+   "id": "t11",
+   "title": "framework TỰ BẮT chính nó — medic, CI và hook lúc ghi",
+   "files": [
+    "fdk/tools/medic.py",
+    ".github/workflows/harness.yml",
+    "harness/validators/html_slop.py",
+    "llmwiki/.claude/hooks/post_tool_use.py",
+    "harness/policy.yaml",
+    "harness/poc-vendor-neutral/policy.yaml",
+    "harness/scripts/harness-doctor.py"
+   ],
+   "consumes": [
+    "hai cổng của Task 1, Task 2"
+   ],
+   "produces": [
+    "probe `frontend` của medic chạy `--all` (không còn một trang); step CI sinh trang vào thư mục tạm rồi chạy cả hai cổng; luật mới R22 `html-slop` ở PostToolUse nhánh `.html`: agent GHI một trang có sọc viền / gradient-text / thiếu toggle thì bị chặn ngay lúc ghi (rc 2) kèm lệnh sửa; fire-drill BAD/GOOD trong harness-doctor"
+   ],
+   "deps": [
+    "t5",
+    "t6",
+    "t7",
+    "t8",
+    "t10"
+   ],
+   "deps_conf": "chắc",
+   "kind": "infra",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/medic.py --ci && python3 harness/scripts/harness-doctor.py >/dev/null",
+   "qc": "",
+   "dep_reasons": {
+    "t5": "acceptance",
+    "t6": "acceptance",
+    "t7": "acceptance",
+    "t8": "acceptance",
+    "t10": "acceptance"
+   },
+   "resources": [
+    {
+     "key": "ci-workflow",
+     "mode": "exclusive"
+    }
+   ],
+   "spec_hash": "43552073d3a2dc63",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "43552073d3a2dc63"
+  },
+  {
+   "id": "t12",
+   "title": "trang ảnh TRƯỚC/SAU để user nghiệm thu bằng mắt",
+   "files": [
+    "fdk/tools/build-slop-gallery.py"
+   ],
+   "consumes": [
+    "ảnh \"trước\" của Task 3 + ảnh \"sau\" chụp lại cùng khung"
+   ],
+   "produces": [
+    "`llmwiki/html/200926-slop-before-after.html` — mỗi trang một hàng: trước/sau × sáng/tối, số finding trước → sau; trang này tự qua cả hai cổng. User xem và nói ổn / chỉ chỗ chưa ổn"
+   ],
+   "deps": [
+    "t3",
+    "t11",
+    "t9"
+   ],
+   "deps_conf": "chắc",
+   "kind": "docs",
+   "mode": "hitl",
+   "verify": "test -s llmwiki/html/200926-slop-before-after.html && python3 fdk/tools/frontend-antipattern.py llmwiki/html/200926-slop-before-after.html",
+   "qc": "",
+   "dep_reasons": {
+    "t3": "data",
+    "t11": "acceptance",
+    "t9": "acceptance"
+   },
+   "spec_hash": "267d6e56959ca664",
+   "state": "done",
+   "gen": 1,
+   "rev": 2,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "267d6e56959ca664"
+  },
+  {
+   "id": "t13",
+   "title": "review độc lập + ship ba repo",
+   "files": [
+    "llmwiki/wiki/sources/draft/200926-self-slop-gate-review.md",
+    "fdk/wiki/index.md",
+    "fdk/wiki/log.md"
+   ],
+   "consumes": [
+    "mọi thay đổi của Task 1–12"
+   ],
+   "produces": [
+    "reviewer context riêng soi hai cổng (có ca PASS giả không) và lớp nền (có phá trang nào không); ship `framework` (medic + ci-local trên checkout sạch, stamp bump), `module` orca-graph, fork archify; smoke máy khách: trang sinh ở downstream qua cả hai cổng"
+   ],
+   "deps": [
+    "t12"
+   ],
+   "deps_conf": "chắc",
+   "kind": "release",
+   "mode": "afk",
+   "verify": "test -s llmwiki/wiki/sources/draft/200926-self-slop-gate-review.md && test -z \"$(git log origin/orca..HEAD --oneline)\"",
+   "qc": "",
+   "dep_reasons": {
+    "t12": "acceptance"
+   },
+   "spec_hash": "ad794a1691a56ec6",
+   "state": "dispatched",
+   "gen": 1,
+   "rev": 2,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "unverified"
+  }
+ ],
+ "layers": [
+  [
+   "t1",
+   "t2"
+  ],
+  [
+   "t3",
+   "t4",
+   "t9"
+  ],
+  [
+   "t10",
+   "t5",
+   "t6",
+   "t7",
+   "t8"
+  ],
+  [
+   "t11"
+  ],
+  [
+   "t12"
+  ],
+  [
+   "t13"
+  ]
+ ],
+ "parent": null,
+ "depth": 0,
+ "plan_version": 1,
+ "superseded": [],
+ "max_parallel": 4,
+ "conflicts": [],
+ "resource_conflicts": [
+  {
+   "a": "t5",
+   "b": "t6",
+   "keys": [
+    "generator-css"
+   ]
+  },
+  {
+   "a": "t5",
+   "b": "t7",
+   "keys": [
+    "generator-css"
+   ]
+  },
+  {
+   "a": "t6",
+   "b": "t7",
+   "keys": [
+    "generator-css"
+   ]
+  }
+ ],
+ "links": [
+  {
+   "to_graph": "140926-orca-graph-daemon",
+   "to_node": "t3",
+   "via": [
+    "fdk/tools/build-control-room.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "160926-theme-toggle-circle-reveal-motion",
+   "to_node": "t1",
+   "via": [
+    "skills/docs-site-macos/SKILL.md"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "160926-theme-toggle-circle-reveal-motion",
+   "to_node": "t2",
+   "via": [
+    "llmwiki/skills/utils/docs-site-macos.md"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "160926-theme-toggle-circle-reveal-motion",
+   "to_node": "t3",
+   "via": [
+    "fdk/tools/build-overstack-docs.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "180926-ship-scroll-originals",
+   "to_node": "t2",
+   "via": [
+    "fdk/skills.provenance.json"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "190926-swh-reuse-layer",
+   "to_node": "t6",
+   "via": [
+    ".github/workflows/harness.yml"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "190926-swh-skill-standardize",
+   "to_node": "t4",
+   "via": [
+    "fdk/skills.provenance.json"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "190926-swh-skill-standardize",
+   "to_node": "t6",
+   "via": [
+    "skills/docs-site-macos/SKILL.md"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "190926-swh-skill-standardize",
+   "to_node": "t15",
+   "via": [
+    ".github/workflows/harness.yml",
+    "fdk/tools/medic.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "190926-swh-skill-standardize",
+   "to_node": "t18",
+   "via": [
+    "harness/poc-vendor-neutral/policy.yaml"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "200926-orca-graph-v3",
+   "to_node": "t10",
+   "via": [
+    "fdk/skills.provenance.json"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "200926-repo-role-ship-flows",
+   "to_node": "t7",
+   "via": [
+    ".github/workflows/harness.yml"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "200926-repo-role-ship-flows",
+   "to_node": "t8",
+   "via": [
+    "fdk/wiki/index.md",
+    "fdk/wiki/log.md"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "200926-repo-role-ship-flows",
+   "to_node": "t9",
+   "via": [
+    "fdk/tools/html_font.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "200926-repo-role-ship-flows",
+   "to_node": "t10",
+   "via": [
+    "fdk/tools/build-control-room.py",
+    "fdk/tools/build-docs-index.py",
+    "fdk/tools/build-health-dashboard.py",
+    "fdk/tools/build-overstack-docs.py",
+    "fdk/tools/build-wiki-graph.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "200926-repo-role-ship-flows",
+   "to_node": "t11",
+   "via": [
+    "fdk/skills.provenance.json",
+    "llmwiki/skills/utils/docs-site-macos.md",
+    "skills/docs-site-macos/SKILL.md",
+    "skills/orca-onboard/assets/docs-site-skeleton.html"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "200926-repo-role-ship-flows",
+   "to_node": "t12",
+   "via": [
+    ".github/workflows/harness.yml"
+   ],
+   "kind": "touches-same-file"
+  }
+ ],
+ "control": "active",
+ "schema_version": 1,
+ "checksum": "9ef88f3ad3c9fb63"
+}

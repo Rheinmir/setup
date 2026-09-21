@@ -62,6 +62,8 @@ Output is a self-contained `.html` file (no JS libraries, no build step).
 - RULE-09 (MUST): **Playwright Audit REQUIRED** trước khi báo user; FAIL → sửa rồi audit lại, không giao trang đỏ.
 - RULE-10 (MUST): Thang cỡ chữ COMPACT cho màn 13″ — giảm chứ không tăng size.
 - RULE-11 (MUST): Sơ đồ archify nhúng qua `<iframe>` (khung vừa nội dung + link "Mở sơ đồ riêng ↗"), để trống `meta.visual_preset` (luật R20).
+- RULE-12 (MUST): **KHÔNG gradient-text, KHÔNG sọc viền một cạnh** — `background-clip:text` (chữ tô gradient) và `border-left/right: ≥3px solid <màu>` trên thẻ/nút/callout là hai dấu hiệu AI-generated bị cổng tĩnh chặn cứng. Nhấn chữ bằng weight hoặc màu đặc; phân loại callout bằng chấm màu, nhãn, hoặc nền nhạt toàn thẻ (viền thì đều bốn cạnh).
+- RULE-13 (MUST): **Chạy HAI CỔNG trước khi giao** — `python3 fdk/tools/frontend-antipattern.py <trang>` (tĩnh) và `NODE_PATH=$(npm root -g) node fdk/tools/html-visual-gate.mjs <trang>` (chạy thật: chữ chìm < 4,5:1, khối dính < 8px, icon đè chữ, toggle, kính ở cả hai chế độ). Cổng đỏ thì SỬA rồi chạy lại; vá máy-làm-được bằng `python3 fdk/tools/html-slop-fix.py <trang>`. Không báo xong khi còn cổng đỏ.
 - Capabilities: đọc nội dung nguồn; ghi file HTML vào thư mục output của dự án; chạy HTTP server cục bộ; điều khiển trình duyệt headless để đo DOM/console/ảnh chụp; ghi draft + index + log của wiki.
 
 ### Failure boundaries
@@ -70,6 +72,7 @@ Output is a self-contained `.html` file (no JS libraries, no build step).
 - Chưa có `@playwright/test` → cài theo `/playwright-verify` rồi mới audit; không bỏ bước audit.
 - Port 8765 đã bận → coi như server đang chạy, bỏ qua bước start (không phải lỗi).
 - Mở iframe archify qua `file://` không đo được chiều cao → **partial** chấp nhận được: khung giữ 1000px, link "Mở sơ đồ riêng ↗" là đường thay thế; muốn vừa khít thì mở qua Auto-Host.
+- Cổng tĩnh hoặc cổng chạy-thật còn đỏ → **blocked**: chạy `html-slop-fix.py` cho phần máy vá được, phần còn lại sửa tay, rồi chạy lại cả hai; không giao trang còn finding.
 - Trình duyệt không có `DecompressionStream` → Mermaid engine không render (`__bmReady` reject) — xem mục Mermaid Diagram Engine.
 
 ## HOW

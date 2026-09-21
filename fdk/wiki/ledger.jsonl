@@ -37,3 +37,5 @@
 {"ts": "2026-09-18T09:54:30", "session": "831f8c3a", "action": "modify", "target": "concepts/framework-dev-antipatterns.md", "tool": "Edit"}
 {"ts": "2026-09-18T09:54:37", "session": "831f8c3a", "action": "modify", "target": "concepts/framework-dev-antipatterns.md", "tool": "Edit"}
 {"ts": "2026-09-18T09:54:37", "session": "831f8c3a", "action": "modify", "target": "concepts/framework-dev-antipatterns.md", "tool": "Edit"}
+{"ts": "2026-09-20T20:13:18", "session": "cad381c4", "action": "add", "target": "concepts/install-update-flows.md", "tool": "Write"}
+{"ts": "2026-09-20T20:13:18", "session": "cad381c4", "action": "add", "target": "concepts/install-update-flows.md", "tool": "Write"}

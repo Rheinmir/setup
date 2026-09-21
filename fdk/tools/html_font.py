@@ -54,7 +54,7 @@ def head_css() -> str:
 STYLE_ID = "ovs-font"
 
 
-def apply(html: str) -> str:
+def apply(html: str, *, _from_base: bool = False) -> str:
     """Gắn font mặc định vào MỘT trang HTML hoàn chỉnh — generator gọi đúng một dòng ngay trước khi ghi file.
     Chèn <style id="ovs-font"> ở CUỐI <head> để thắng cascade: token `--font-text/--font-display` trang tự khai ở trên bị đè,
     `body` nhận Lexend Deca weight 300; chỗ nào trang đã đặt font-weight riêng giữ nguyên và lấy nét THẬT từ trục wght.
@@ -62,6 +62,12 @@ def apply(html: str) -> str:
     trên TOÀN trang và (review 20/09/2026) đã: làm hỏng 2 iframe srcdoc trong overstack.html (tài liệu con không có `--font-text`),
     cắt đôi stack có `"Segoe UI"`, và ăn mất nháy đóng của chuỗi JS. Stack kết thúc bằng `monospace` không bị đụng. Idempotent."""
     import re
+    if not _from_base:                         # generator vẫn gọi html_font.apply() như cũ → chuyển tiếp sang LỚP NỀN (font + token + toggle).
+        base = HERE / "html_base.py"           # không có html_base (bản sao cũ ở repo engine) → chỉ gắn font như trước
+        if base.is_file():
+            import importlib.util
+            s = importlib.util.spec_from_file_location("ovs_html_base", base); m = importlib.util.module_from_spec(s); s.loader.exec_module(m)
+            return m.apply(html)
     if f'id="{STYLE_ID}"' in html:
         return html
     m = re.search(r"</head\s*>", html, re.I)

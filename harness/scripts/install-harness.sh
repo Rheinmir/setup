@@ -153,6 +153,9 @@ if [ "${1:-}" = "--global" ]; then
   # KHÔNG copy vào từng repo. code_imports.py đi cùng build-wiki-graph.py (copy nguyên thư mục).
   mkdir -p "$GH/fdk/tools" "$GH/harness/scripts" "$GH/harness/validators" "$GH/llmwiki/personas"
   cp "$SRC/fdk/tools/"*.py         "$GH/fdk/tools/"        2>/dev/null || true
+  # Tool KHÔNG-python cũng phải xuống máy khách: html-visual-gate.mjs là cổng chạy-thật (Playwright).
+  # Bỏ sót thì downstream chỉ có cổng tĩnh và không ai biết — smoke 21/09/2026 bắt đúng ca này.
+  cp "$SRC/fdk/tools/"*.mjs        "$GH/fdk/tools/"        2>/dev/null || true
   cp "$SRC/harness/scripts/"*.py   "$GH/harness/scripts/"  2>/dev/null || true
   # personas travel theo engine (archetype.py --get đọc posture; UAT canary 260718 bắt preamble rỗng)
   cp "$SRC/llmwiki/personas/"*.md  "$GH/llmwiki/personas/" 2>/dev/null || true
@@ -608,6 +611,28 @@ fi
 mkdir -p "$ROOT/llmwiki/html"
 cp "$SRC/llmwiki/html/overstack.html" "$ROOT/llmwiki/html/overstack.html" 2>/dev/null \
   || cp "${TMP_SYNC:-/nonexistent}/llmwiki/html/overstack.html" "$ROOT/llmwiki/html/overstack.html" 2>/dev/null || true
+# Trang overstack.html được DỰNG ở repo framework nên neo bằng chứng (`data-src`) trỏ vào cây thư mục
+# framework (llmwiki/… · harness/… · .github/…). Ở máy khách cây khác (dot layout) và nhiều file không
+# tồn tại → cổng tĩnh báo "sơ đồ đang nói dối về code". Dịch neo sang layout đích, neo nào vẫn không có
+# thì GỠ hẳn (giữ node, bỏ lời khai sai) — im lặng để đó là để trang nói dối.
+python3 - "$ROOT" <<'PYEOF' || true
+import re, sys
+from pathlib import Path
+root = Path(sys.argv[1])
+page = next((p for p in (root / "llmwiki/html/overstack.html", root / ".llmwiki/html/overstack.html") if p.is_file()), None)
+if page:
+    wiki = ".llmwiki" if (root / ".llmwiki").is_dir() else "llmwiki"
+    harn = ".harness" if (root / ".harness").is_dir() else "harness"
+    def fix(m):
+        raw = m.group(1)
+        cand = raw.replace("llmwiki/", wiki + "/", 1).replace("harness/", harn + "/", 1) \
+            if raw.startswith(("llmwiki/", "harness/")) else raw
+        if (root / cand).exists():
+            return 'data-src="%s"' % cand
+        return ""
+    t = page.read_text(encoding="utf-8", errors="replace")
+    page.write_text(re.sub(r'\sdata-src="([^"]+)"', fix, t), encoding="utf-8")
+PYEOF
 printf '# runtime data — khong commit\naudit/\n' > "$ROOT/llmwiki/.claude/.gitignore"
 
 SETTINGS="$ROOT/llmwiki/.claude/settings.json"

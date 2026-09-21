@@ -178,6 +178,15 @@ rules:
     scope: "**/html/*.html (miễn chính artifact archify)"
     note: "PostToolUse nhánh .html cùng R16 (llmwiki/.claude/hooks/post_tool_use.py). Nguồn: GH#155 (trang 11 mục không menu vì agent chỉ bắt chước look docs-site-macos) + GH#154 (sơ đồ nhúng preset signal-flow lệch theme)."
 
+  - id: R22
+    name: html-slop
+    validator: html_slop.py
+    statement: 'Trang HTML nằm trực tiếp trong một thư mục html/ không được mang ba dấu hiệu AI-slop mà cổng tĩnh đã có luật: (a) sọc viền MÀU một cạnh (border-left|right >= 3px solid màu bão hoà) trên thẻ/nút/callout; (b) gradient-text (background-clip:text + chữ trong suốt); (c) thiếu chế độ tối (không [data-theme=dark], không prefers-color-scheme). Artifact archify được miễn (viewer tự chứa, như R16/R20).'
+    enforce_at: [session]
+    applies_to: [write]
+    scope: "**/html/*.html (miễn chính artifact archify)"
+    note: "PostToolUse nhánh .html cùng R16/R20. Validator GỌI fdk/tools/frontend-antipattern.py chứ không chép regex, nên hai cổng không lệch luật; vá máy-làm-được bằng fdk/tools/html-slop-fix.py. Nguồn: user 20/09/2026 'cơ chế bắt slop bắt buộc chưa tự bắt nó' — medic trước đó chỉ soi 1 trang nên luôn xanh."
+
   - id: R21
     name: touched-paths
     validator: stop.py

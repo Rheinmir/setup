@@ -178,12 +178,14 @@ def p_frontend():
     chk = ROOT / "fdk/tools/frontend-antipattern.py"
     if not chk.exists():
         return "skip", "chưa có frontend-antipattern.py", ""
-    rc, out = sh([PY, str(chk)], timeout=30)
+    # --all: soi MỌI trang framework sinh. Trước 20/09/2026 probe này chạy không tham số nên chỉ soi
+    # đúng một trang → luôn xanh trong khi 26 trang khác đỏ (user báo: "cơ chế bắt slop chưa tự bắt nó").
+    rc, out = sh([PY, str(chk), "--all"], timeout=120)
     tail = next((ln.strip() for ln in reversed(out.splitlines()) if ln.strip()), "")
     if rc == 1:
-        return "fail", tail or "có anti-pattern frontend", "python3 fdk/tools/frontend-antipattern.py  # xem chi tiết"
+        return "fail", tail or "có anti-pattern frontend", "python3 fdk/tools/frontend-antipattern.py --all  # xem chi tiết"
     if rc == 2:
-        return "warn", tail or "có cảnh báo frontend", "python3 fdk/tools/frontend-antipattern.py"
+        return "warn", tail or "có cảnh báo frontend", "python3 fdk/tools/frontend-antipattern.py --all"
     return "ok", "HTML sinh sạch anti-pattern frontend", ""
 
 

@@ -1062,3 +1062,199 @@ cc4f999ad |
 - tạo `sources/draft/200926-repo-role-ship-flows-PLAN.md` — PLAN 13 task, graph `200926-repo-role-ship-flows`
 - sửa `index.md` — thêm dòng draft trên
 - tạo `sources/draft/200926-repo-role-ship-flows-review.md` — báo cáo review độc lập trước khi push
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=c3d45 |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/skills/orchestrate/orca-graph.md', 'harness/tests/test_control |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/poc-vendor-neutral/bootstrap.sh', 'llmwiki/raw/Reprise-Graph-E |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=2e2e35da508a0d55ca0a98b31865def3b7e458b99 |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=5dc0b |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skills.provenance.json', 'llmwiki/wiki/sources/draft/200926-orca-g |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json', 'skills/orca-graph/SKI |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'fdk/tools/graph-atlas.py'] · prev=4895a42370f |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/install-graph-option-test.sh', 'fdk/CAPABILITIES.md', 'f |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/graph-viz.py', 'harness/version.json', 'fdk/wiki/log.md', 'h |
+| 2026-09-20 10:30:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json'] · prev=17ab501d02c248c |
+| 2026-09-20 10:30:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=f65c1 |
+| 2026-09-20 10:53:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/graph-atlas.py', 'fdk/tools/graph-viz.py', 'harness/scripts/ |
+| 2026-09-20 11:10:55 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/provenance/200926-sessio |
+| 2026-09-20 11:17:30 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/policy.yaml', 'harness/poc-vendor-neutral/policy.yaml', 'harne |
+| 2026-09-20 11:18:37 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['harness/scripts/harness-doctor.py'] · prev=289cf637a3edbb270e4c25fc301 |
+| 2026-09-20 13:44:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['harness/version.json'] · prev=8789b6767dab81b07e6ad855492dc8fa4a43e1d2 |
+| 2026-09-20 15:18:59 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/poc-vendor-neutral/policy.yaml', 'llmwiki/.claude/hooks/hookli |
+| 2026-09-20 15:18:59 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/scripts/harness-doctor.py', 'harness/policy.yaml', 'harness/ve |
+| 2026-09-20 15:47:59 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skills.provenance.json', 'fdk/tools/build-control-room.py', 'harne |
+| 2026-09-20 15:52:30 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/build-control-room.py', 'harness/tests/dot-layout-runtime-te |
+| 2026-09-20 19:41:31 | `file.write` | llmwiki/wiki/sources/draft/200926-repo-role-ship-flows-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=c7e4 |
+| 2026-09-20 19:41:31 | `file.write` | llmwiki/wiki/sources/draft/200926-repo-role-ship-flows-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=1535 |
+| 2026-09-20 20:13:18 | `file.write` | fdk/wiki/concepts/install-update-flows.md · tool=Write · session=cad381c4 · actor=agent · prev=0da33f2848a09716055efbfa8 |
+| 2026-09-20 20:13:18 | `file.write` | fdk/wiki/concepts/install-update-flows.md · tool=Write · session=cad381c4 · actor=agent · prev=850599d72b2a11293929b9fcf |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/build-health-dashboard.py', 'harness/scripts/repo_role.py',  |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/html_font.py', 'fdk/tools/skill-usage.py', 'skills/docs-site |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-overstack-docs.py', 'fdk/skills.provenance.json', 'fdk |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/wiki/log.md', 'harness/scripts/council.py', 'harness/poc-vendo |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=1 · human=['harness/scripts/fresh-install-smoke.sh'] · prev=5384207534398e6cbf375e |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/br-contract.py', 'harness/tests/install-flows-test.sh', 'fdk |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/graph/200926-repo-role-ship-flows.graph.json', 'llmwiki/skills |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/skills/utils/harness-update.md', 'llmwiki/skills/dev-loop/ship |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['harness/version.json', 'fdk/wiki/index.md', 'fdk/wiki/log.md', 'fdk/CA |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/build-control-room.py', 'skills/harness-update/SKILL.md', 'h |
+| 2026-09-20 20:24:28 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/test_repo_role.py', 'fdk/tools/html-font-lint.py', 'harn |
+| 2026-09-20 20:24:28 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/html_font.py', 'llmwiki/wiki/log.md', 'harness/tests/install |
+| 2026-09-20 20:24:28 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['skills/orca-onboard/SKILL.md', 'harness/tests/test_html_font.py'] · pr |
+| 2026-09-20 20:24:28 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/wiki/sources/draft/200926-repo-role-ship-flows-review.md', 'll |
+| 2026-09-20 20:35:24 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/200926-repo-role-ship-flows.graph.json'] · prev=9015dfe7 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=c3d45 |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/skills/orchestrate/orca-graph.md', 'harness/tests/test_control |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/poc-vendor-neutral/bootstrap.sh', 'llmwiki/raw/Reprise-Graph-E |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=2e2e35da508a0d55ca0a98b31865def3b7e458b99 |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=5dc0b |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skills.provenance.json', 'llmwiki/wiki/sources/draft/200926-orca-g |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json', 'skills/orca-graph/SKI |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'fdk/tools/graph-atlas.py'] · prev=4895a42370f |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/install-graph-option-test.sh', 'fdk/CAPABILITIES.md', 'f |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/graph-viz.py', 'harness/version.json', 'fdk/wiki/log.md', 'h |
+| 2026-09-20 10:30:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json'] · prev=17ab501d02c248c |
+| 2026-09-20 10:30:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=f65c1 |
+| 2026-09-20 10:53:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/graph-atlas.py', 'fdk/tools/graph-viz.py', 'harness/scripts/ |
+| 2026-09-20 11:10:55 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/provenance/200926-sessio |
+| 2026-09-20 11:17:30 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/policy.yaml', 'harness/poc-vendor-neutral/policy.yaml', 'harne |
+| 2026-09-20 11:18:37 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['harness/scripts/harness-doctor.py'] · prev=289cf637a3edbb270e4c25fc301 |
+| 2026-09-20 13:44:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['harness/version.json'] · prev=8789b6767dab81b07e6ad855492dc8fa4a43e1d2 |
+| 2026-09-20 15:18:59 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/poc-vendor-neutral/policy.yaml', 'llmwiki/.claude/hooks/hookli |
+| 2026-09-20 15:18:59 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/scripts/harness-doctor.py', 'harness/policy.yaml', 'harness/ve |
+| 2026-09-20 15:47:59 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skills.provenance.json', 'fdk/tools/build-control-room.py', 'harne |
+| 2026-09-20 15:52:30 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/build-control-room.py', 'harness/tests/dot-layout-runtime-te |
+| 2026-09-20 19:41:31 | `file.write` | llmwiki/wiki/sources/draft/200926-repo-role-ship-flows-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=c7e4 |
+| 2026-09-20 19:41:31 | `file.write` | llmwiki/wiki/sources/draft/200926-repo-role-ship-flows-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=1535 |
+| 2026-09-20 20:13:18 | `file.write` | fdk/wiki/concepts/install-update-flows.md · tool=Write · session=cad381c4 · actor=agent · prev=0da33f2848a09716055efbfa8 |
+| 2026-09-20 20:13:18 | `file.write` | fdk/wiki/concepts/install-update-flows.md · tool=Write · session=cad381c4 · actor=agent · prev=850599d72b2a11293929b9fcf |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/build-health-dashboard.py', 'harness/scripts/repo_role.py',  |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/html_font.py', 'fdk/tools/skill-usage.py', 'skills/docs-site |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-overstack-docs.py', 'fdk/skills.provenance.json', 'fdk |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/wiki/log.md', 'harness/scripts/council.py', 'harness/poc-vendo |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=1 · human=['harness/scripts/fresh-install-smoke.sh'] · prev=5384207534398e6cbf375e |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/br-contract.py', 'harness/tests/install-flows-test.sh', 'fdk |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/graph/200926-repo-role-ship-flows.graph.json', 'llmwiki/skills |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/skills/utils/harness-update.md', 'llmwiki/skills/dev-loop/ship |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['harness/version.json', 'fdk/wiki/index.md', 'fdk/wiki/log.md', 'fdk/CA |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/build-control-room.py', 'skills/harness-update/SKILL.md', 'h |
+| 2026-09-20 20:24:28 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/test_repo_role.py', 'fdk/tools/html-font-lint.py', 'harn |
+| 2026-09-20 20:24:28 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/html_font.py', 'llmwiki/wiki/log.md', 'harness/tests/install |
+| 2026-09-20 20:24:28 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['skills/orca-onboard/SKILL.md', 'harness/tests/test_html_font.py'] · pr |
+| 2026-09-20 20:24:28 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/wiki/sources/draft/200926-repo-role-ship-flows-review.md', 'll |
+| 2026-09-20 20:35:24 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/200926-repo-role-ship-flows.graph.json'] · prev=9015dfe7 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-20 10:23:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=c3d45 |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/skills/orchestrate/orca-graph.md', 'harness/tests/test_control |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/poc-vendor-neutral/bootstrap.sh', 'llmwiki/raw/Reprise-Graph-E |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=2e2e35da508a0d55ca0a98b31865def3b7e458b99 |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=5dc0b |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skills.provenance.json', 'llmwiki/wiki/sources/draft/200926-orca-g |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json', 'skills/orca-graph/SKI |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'fdk/tools/graph-atlas.py'] · prev=4895a42370f |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/install-graph-option-test.sh', 'fdk/CAPABILITIES.md', 'f |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/graph-viz.py', 'harness/version.json', 'fdk/wiki/log.md', 'h |
+| 2026-09-20 10:30:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json'] · prev=17ab501d02c248c |
+| 2026-09-20 10:30:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=f65c1 |
+| 2026-09-20 10:53:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/graph-atlas.py', 'fdk/tools/graph-viz.py', 'harness/scripts/ |
+| 2026-09-20 11:10:55 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/provenance/200926-sessio |
+| 2026-09-20 11:17:30 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/policy.yaml', 'harness/poc-vendor-neutral/policy.yaml', 'harne |
+| 2026-09-20 11:18:37 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['harness/scripts/harness-doctor.py'] · prev=289cf637a3edbb270e4c25fc301 |
+| 2026-09-20 13:44:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['harness/version.json'] · prev=8789b6767dab81b07e6ad855492dc8fa4a43e1d2 |
+| 2026-09-20 15:18:59 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/poc-vendor-neutral/policy.yaml', 'llmwiki/.claude/hooks/hookli |
+| 2026-09-20 15:18:59 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/scripts/harness-doctor.py', 'harness/policy.yaml', 'harness/ve |
+| 2026-09-20 15:47:59 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skills.provenance.json', 'fdk/tools/build-control-room.py', 'harne |
+| 2026-09-20 15:52:30 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/build-control-room.py', 'harness/tests/dot-layout-runtime-te |
+| 2026-09-20 19:41:31 | `file.write` | llmwiki/wiki/sources/draft/200926-repo-role-ship-flows-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=c7e4 |
+| 2026-09-20 19:41:31 | `file.write` | llmwiki/wiki/sources/draft/200926-repo-role-ship-flows-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=1535 |
+| 2026-09-20 20:13:18 | `file.write` | fdk/wiki/concepts/install-update-flows.md · tool=Write · session=cad381c4 · actor=agent · prev=0da33f2848a09716055efbfa8 |
+| 2026-09-20 20:13:18 | `file.write` | fdk/wiki/concepts/install-update-flows.md · tool=Write · session=cad381c4 · actor=agent · prev=850599d72b2a11293929b9fcf |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/build-health-dashboard.py', 'harness/scripts/repo_role.py',  |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/html_font.py', 'fdk/tools/skill-usage.py', 'skills/docs-site |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-overstack-docs.py', 'fdk/skills.provenance.json', 'fdk |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/wiki/log.md', 'harness/scripts/council.py', 'harness/poc-vendo |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=1 · human=['harness/scripts/fresh-install-smoke.sh'] · prev=5384207534398e6cbf375e |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/br-contract.py', 'harness/tests/install-flows-test.sh', 'fdk |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/graph/200926-repo-role-ship-flows.graph.json', 'llmwiki/skills |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/skills/utils/harness-update.md', 'llmwiki/skills/dev-loop/ship |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['harness/version.json', 'fdk/wiki/index.md', 'fdk/wiki/log.md', 'fdk/CA |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/build-control-room.py', 'skills/harness-update/SKILL.md', 'h |
+| 2026-09-20 20:24:28 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/test_repo_role.py', 'fdk/tools/html-font-lint.py', 'harn |
+| 2026-09-20 20:24:28 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/html_font.py', 'llmwiki/wiki/log.md', 'harness/tests/install |
+| 2026-09-20 20:24:28 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['skills/orca-onboard/SKILL.md', 'harness/tests/test_html_font.py'] · pr |
+| 2026-09-20 20:24:28 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/wiki/sources/draft/200926-repo-role-ship-flows-review.md', 'll |
+| 2026-09-20 20:35:24 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/200926-repo-role-ship-flows.graph.json'] · prev=9015dfe7 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/poc-vendor-neutral/bootstrap.sh', 'llmwiki/raw/Reprise-Graph-E |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/log.md'] · prev=2e2e35da508a0d55ca0a98b31865def3b7e458b99 |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=5dc0b |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skills.provenance.json', 'llmwiki/wiki/sources/draft/200926-orca-g |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json', 'skills/orca-graph/SKI |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'fdk/tools/graph-atlas.py'] · prev=4895a42370f |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/install-graph-option-test.sh', 'fdk/CAPABILITIES.md', 'f |
+| 2026-09-20 10:23:54 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/graph-viz.py', 'harness/version.json', 'fdk/wiki/log.md', 'h |
+| 2026-09-20 10:30:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/200926-orca-graph-v3.graph.json'] · prev=17ab501d02c248c |
+| 2026-09-20 10:30:36 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/200926-orca-graph-v3-PLAN.md'] · prev=f65c1 |
+| 2026-09-20 10:53:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/graph-atlas.py', 'fdk/tools/graph-viz.py', 'harness/scripts/ |
+| 2026-09-20 11:10:55 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/provenance/200926-sessio |
+| 2026-09-20 11:17:30 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/policy.yaml', 'harness/poc-vendor-neutral/policy.yaml', 'harne |
+| 2026-09-20 11:18:37 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['harness/scripts/harness-doctor.py'] · prev=289cf637a3edbb270e4c25fc301 |
+| 2026-09-20 13:44:10 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['harness/version.json'] · prev=8789b6767dab81b07e6ad855492dc8fa4a43e1d2 |
+| 2026-09-20 15:18:59 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/poc-vendor-neutral/policy.yaml', 'llmwiki/.claude/hooks/hookli |
+| 2026-09-20 15:18:59 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/scripts/harness-doctor.py', 'harness/policy.yaml', 'harness/ve |
+| 2026-09-20 15:47:59 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skills.provenance.json', 'fdk/tools/build-control-room.py', 'harne |
+| 2026-09-20 15:52:30 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/build-control-room.py', 'harness/tests/dot-layout-runtime-te |
+| 2026-09-20 19:41:31 | `file.write` | llmwiki/wiki/sources/draft/200926-repo-role-ship-flows-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=c7e4 |
+| 2026-09-20 19:41:31 | `file.write` | llmwiki/wiki/sources/draft/200926-repo-role-ship-flows-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=1535 |
+| 2026-09-20 20:13:18 | `file.write` | fdk/wiki/concepts/install-update-flows.md · tool=Write · session=cad381c4 · actor=agent · prev=0da33f2848a09716055efbfa8 |
+| 2026-09-20 20:13:18 | `file.write` | fdk/wiki/concepts/install-update-flows.md · tool=Write · session=cad381c4 · actor=agent · prev=850599d72b2a11293929b9fcf |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/build-health-dashboard.py', 'harness/scripts/repo_role.py',  |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/html_font.py', 'fdk/tools/skill-usage.py', 'skills/docs-site |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-overstack-docs.py', 'fdk/skills.provenance.json', 'fdk |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/wiki/log.md', 'harness/scripts/council.py', 'harness/poc-vendo |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=1 · human=['harness/scripts/fresh-install-smoke.sh'] · prev=5384207534398e6cbf375e |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/br-contract.py', 'harness/tests/install-flows-test.sh', 'fdk |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/graph/200926-repo-role-ship-flows.graph.json', 'llmwiki/skills |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/skills/utils/harness-update.md', 'llmwiki/skills/dev-loop/ship |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['harness/version.json', 'fdk/wiki/index.md', 'fdk/wiki/log.md', 'fdk/CA |
+| 2026-09-20 20:14:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/build-control-room.py', 'skills/harness-update/SKILL.md', 'h |
+| 2026-09-20 20:24:28 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/test_repo_role.py', 'fdk/tools/html-font-lint.py', 'harn |
+| 2026-09-20 20:24:28 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/html_font.py', 'llmwiki/wiki/log.md', 'harness/tests/install |
+| 2026-09-20 20:24:28 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['skills/orca-onboard/SKILL.md', 'harness/tests/test_html_font.py'] · pr |
+| 2026-09-20 20:24:28 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['llmwiki/wiki/sources/draft/200926-repo-role-ship-flows-review.md', 'll |
+| 2026-09-20 20:35:24 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/200926-repo-role-ship-flows.graph.json'] · prev=9015dfe7 |
+| 2026-09-20 22:04:42 | `file.write` | llmwiki/wiki/sources/draft/200926-self-slop-gate-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=74da84e56c |
+| 2026-09-20 22:04:42 | `file.write` | llmwiki/wiki/sources/draft/200926-self-slop-gate-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=eb354d3851 |
+
+<!-- log:auto:end -->

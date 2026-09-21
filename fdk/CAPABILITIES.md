@@ -1,7 +1,7 @@
 <!-- SINH BẰNG CODE: build-capabilities.py — ĐỪNG sửa tay; chạy lại để cập nhật. -->
 # CAPABILITIES — toàn bộ đồ nghề (luôn-mới, đếm từ đĩa)
 
-**103 skill · 21 rule · 43 fdk-tool · 76 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
+**103 skill · 22 rule · 46 fdk-tool · 76 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
 
 ## Skills (gọi bằng `/<tên>`)
 
@@ -138,6 +138,7 @@
 - **R19** — evidence-terminal
 - **R20** — html-docs-shell
 - **R21** — touched-paths
+- **R22** — html-slop
 
 ## FDK tools (`python3 fdk/tools/<x>`)
 - `artifacts.py`
@@ -158,6 +159,7 @@
 - `build-line-status.py`
 - `build-overstack-docs.py`
 - `build-skill-search.py`
+- `build-slop-gallery.py`
 - `build-wiki-graph.py`
 - `checkpoint.py`
 - `ci-local.py`
@@ -168,6 +170,8 @@
 - `graph-atlas.py`
 - `graph-viz.py`
 - `html-font-lint.py`
+- `html-slop-fix.py`
+- `html_base.py`
 - `html_font.py`
 - `html_font_data.py`
 - `medic.py`
@@ -262,10 +266,10 @@
 - `wiki-sync.py`
 - `wikieval.py`
 
-## Neo bằng chứng — 271/271 năng lực có neo KHAI BÁO
+## Neo bằng chứng — 275/275 năng lực có neo KHAI BÁO
 **Đọc cho đúng: đây KHÔNG phải bằng chứng năng lực còn SỐNG.** Mỗi năng lực được map tất định tới một *điểm neo* bằng chứng trên đĩa (frontmatter `proof:` > rule-map > tests > self-test > golden > medic). Việc map là **tĩnh** — nó kiểm file/chuỗi có mặt, **không thực thi gì cả**. Nó bắt được ca 'năng lực này chẳng có test/golden/rule nào neo vào' (hữu ích thật), nhưng KHÔNG bắt được ca 'test có mà đỏ' hay 'engine có mà chết'. Muốn biết một dependency ngoài còn sống thì hỏi `harness/scripts/dep-health.py`. Chi tiết neo: `build-capabilities.py --capproof-json`.
 
-## TRÙNG-ỨNG-VIÊN (26) — máy phát hiện, NGƯỜI phán (dedupe = vòng /propose riêng)
+## TRÙNG-ỨNG-VIÊN (27) — máy phát hiện, NGƯỜI phán (dedupe = vòng /propose riêng)
 - `mech:medic` ↔ `mech:medic-mirror` — name-token: medic
 - `script:failure-flywheel.py` ↔ `script:flywheel.py` — name-token: flywheel
 - `script:failure-flywheel.py` ↔ `script:success-flywheel.py` — desc-jaccard 0.50
@@ -291,6 +295,7 @@
 - `skill:tour-guide` ↔ `skill:tour-guide-supademo` — name-token: guide+tour
 - `tool:graph-atlas.py` ↔ `tool:graph-viz.py` — desc-jaccard 0.90
 - `tool:html-font-lint.py` ↔ `tool:html_font.py` — name-token: font+html
+- `tool:html_base.py` ↔ `tool:html_font.py` — desc-jaccard 0.50
 - `tool:html_font.py` ↔ `tool:html_font_data.py` — name-token: font+html
 
 ## Origin

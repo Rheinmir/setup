@@ -21,6 +21,18 @@ ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "llmwiki" / "html" / "skill-whiteboard.html"
 
 
+
+def _ovs_font(html: str) -> str:
+    """Lớp nền chung của mọi HTML framework sinh ra (font Lexend Deca Light nhúng + token sáng/tối + nút đổi giao diện) — nguồn: fdk/tools/html_base.py."""
+    import importlib.util
+    from pathlib import Path as _P
+    here = _P(__file__).resolve()
+    for c in (here.with_name("html_font.py"), here.parents[2] / "fdk" / "tools" / "html_font.py", _P.home() / ".claude/harness/fdk/tools/html_font.py"):
+        if c.is_file():
+            s = importlib.util.spec_from_file_location("html_font", c); m = importlib.util.module_from_spec(s); s.loader.exec_module(m)
+            return m.apply(html)
+    return html
+
 def _load(modpath, name):
     spec = importlib.util.spec_from_file_location(name, ROOT / modpath)
     m = importlib.util.module_from_spec(spec)
@@ -108,7 +120,7 @@ def main():
             return 2
         print("skill-whiteboard.html khớp đĩa ✓")
         return 0
-    OUT.write_text(html, encoding="utf-8")
+    OUT.write_text(_ovs_font(html), encoding="utf-8")
     print(f"✓ wrote {OUT.relative_to(ROOT)} ({len(html)} bytes) — đồ thị {'tĩnh' if static else 'JS'} qua build-wiki-graph engine")
     return 0
 

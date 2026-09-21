@@ -36,6 +36,11 @@ def parity() -> int:
     bad = [k for k in ("FONT_TEXT", "FONT_MONO", "WEIGHT_TEXT", "WEIGHT_STRONG", "STYLE_ID") if getattr(mine, k) != getattr(theirs, k, None)]
     if (HERE / "html_font_data.py").read_bytes() != (eng / "html_font_data.py").read_bytes():
         bad.append("html_font_data.py (file font nhúng)")
+    if (eng / "html_base.py").is_file():             # engine ≥ 3.1.0 mang cả LỚP NỀN — token sáng/tối phải khớp, không thì trang graph lệch màu với phần còn lại
+        mb, tb = _load(HERE / "html_base.py"), _load(eng / "html_base.py")
+        bad += [f"html_base.{k}" for k in ("LIGHT", "DARK", "KEY", "STYLE_ID") if getattr(mb, k) != getattr(tb, k, None)]
+    else:
+        bad.append("html_base.py (engine < 3.1.0 — cập nhật engine)")
     if bad:
         print(f"✗ bản sao ở engine LỆCH nguồn framework: {bad} — chép đè fdk/tools/html_font*.py sang {eng} rồi ship repo engine"); return 2
     print(f"✓ parity: engine ({eng}) khớp nguồn framework"); return 0

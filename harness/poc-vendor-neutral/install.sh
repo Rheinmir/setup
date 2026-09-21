@@ -333,6 +333,28 @@ if [ "$WITH_WIKI" = 1 ]; then
     REPO_RAW="${REPO_RAW:-https://raw.githubusercontent.com/Rheinmir/setup/orca}"
     mkdir -p "$ROOT/$OVERSTACK_DIR/html"
     if curl -fsSL "$REPO_RAW/llmwiki/html/overstack.html" -o "$ROOT/$OVERSTACK_DIR/html/overstack.html" 2>/dev/null; then
+      # Trang này DỰNG ở repo framework nên neo bằng chứng (data-src) trỏ vào cây thư mục framework
+      # (llmwiki/… · harness/… · .github/…). Máy khách có cây khác và thiếu nhiều file → cổng tĩnh báo
+      # "sơ đồ đang nói dối về code". Dịch neo sang layout đích; neo nào vẫn không có thì GỠ (giữ node,
+      # bỏ lời khai sai). Đo 21/09/2026 trên fixture downstream: 3 FAIL → 0.
+      python3 - "$ROOT" "$OVERSTACK_DIR" <<'PYEOF' 2>/dev/null || true
+import re, sys
+from pathlib import Path
+root, wiki = Path(sys.argv[1]), sys.argv[2]
+page = root / wiki / "html" / "overstack.html"
+harn = ".harness" if (root / ".harness").is_dir() else "harness"
+if page.is_file():
+    def fix(m):
+        raw = m.group(1)
+        cand = raw
+        if raw.startswith("llmwiki/"):
+            cand = wiki + raw[len("llmwiki"):]
+        elif raw.startswith("harness/"):
+            cand = harn + raw[len("harness"):]
+        return ' data-src="%s"' % cand if (root / cand).exists() else ""
+    page.write_text(re.sub(r'\sdata-src="([^"]+)"', fix, page.read_text(encoding="utf-8", errors="replace")),
+                    encoding="utf-8")
+PYEOF
       log "  ✓ $OVERSTACK_DIR/html/overstack.html (tài liệu overstack — mở bằng trình duyệt)"
     else
       warn "  overstack.html chưa tải được (mạng?) → lấy tay: $REPO_RAW/llmwiki/html/overstack.html"

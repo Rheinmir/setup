@@ -25,6 +25,18 @@ except Exception:
     _harness_dir = None
 
 
+
+def _ovs_font(html: str) -> str:
+    """Lớp nền chung của mọi HTML framework sinh ra (font Lexend Deca Light nhúng + token sáng/tối + nút đổi giao diện) — nguồn: fdk/tools/html_base.py."""
+    import importlib.util
+    from pathlib import Path as _P
+    here = _P(__file__).resolve()
+    for c in (here.with_name("html_font.py"), here.parents[2] / "fdk" / "tools" / "html_font.py", _P.home() / ".claude/harness/fdk/tools/html_font.py"):
+        if c.is_file():
+            s = importlib.util.spec_from_file_location("html_font", c); m = importlib.util.module_from_spec(s); s.loader.exec_module(m)
+            return m.apply(html)
+    return html
+
 def _metrics_dir(root) -> Path:
     return (_harness_dir(root) if _harness_dir else Path(root) / "harness") / "metrics"
 
@@ -135,7 +147,7 @@ def main():
         print("memory-map: chưa có dữ liệu (scratch-log/ledger/events trống)")
         return 0
     fn = WG.build_static if "--static" in sys.argv else WG.build_html
-    OUT.write_text(fn("memory", str(OUT), nodes, edges, [], {}), encoding="utf-8")
+    OUT.write_text(_ovs_font(fn("memory", str(OUT), nodes, edges, [], {})), encoding="utf-8")
     n_sess = sum(1 for n in nodes if n["type"] == "session")
     print(f"✓ wrote {OUT.relative_to(ROOT)} — {n_sess} phiên, {len(nodes)-n_sess} file, {len(edges)} cạnh (reuse build-wiki-graph)")
     return 0

@@ -85,6 +85,39 @@ jobs:
           # 2. chiến lược query (proxy L1 tất định) không hồi quy hit@k / phình token so baseline L0 đã commit
           python3 harness/scripts/query-proxy.py --mode L1 --topn 5 --out "$RUNNER_TEMP/retrieval-L1.json"
           python3 harness/scripts/retrieval-eval.py --outputs "$RUNNER_TEMP/retrieval-L1.json" --check
+      # R22 html-slop. Cổng TĨNH soi cả thư mục (mọi trang .html trong llmwiki/html và llmwiki/graph,
+      # trừ artifact archify). Cổng CHẠY-THẬT chỉ soi trang do CHÍNH lần chạy này SINH RA — trang viết tay
+      # cũ còn nợ tương phản (xem 200926-self-slop-gate-review.md), gác chúng ở đây là khoá CI vì nợ lịch sử.
+      # rc 4 (thiếu Playwright) là SKIP CÓ TÊN, không được đếm là PASS.
+      - name: html-slop — sinh trang rồi chạy CẢ HAI cổng (tĩnh + chạy thật)
+        run: |
+          set -euo pipefail
+          # Danh sách TRANG SINH của framework (chỉ build-control-room in `→ path`, các builder khác im lặng
+          # nên không suy ra được từ stdout). wiki-graph.html để NGOÀI: trang 5.548 node mất hơn 30s để tải
+          # nên cổng chạy-thật timeout — nợ đã ghi ở 200926-self-slop-gate-review.md, không bịt bằng cách bỏ cổng.
+          for t in build-docs-index build-health-dashboard build-control-room build-overstack-docs build-wiki-graph; do
+            python3 "fdk/tools/$t.py" >/dev/null 2>&1 || true
+          done
+          python3 fdk/tools/frontend-antipattern.py --all
+          python3 harness/validators/html_slop.py --self-test
+          : > "$RUNNER_TEMP/gen.txt"
+          for f in llmwiki/html/index.html llmwiki/html/280626-health-dashboard.html \
+                   llmwiki/html/control-room.html llmwiki/html/control-room-detail.html \
+                   llmwiki/html/control-room-kanban.html llmwiki/html/overstack.html \
+                   llmwiki/graph/*.html; do
+            [ -f "$f" ] && printf '%s\n' "$f" >> "$RUNNER_TEMP/gen.txt"
+          done
+          echo "trang sinh được gác:"; cat "$RUNNER_TEMP/gen.txt"
+          if [ ! -s "$RUNNER_TEMP/gen.txt" ]; then echo "SKIP cổng chạy-thật: không có trang sinh"; exit 0; fi
+          if npm i -g playwright >/dev/null 2>&1 && npx playwright install --with-deps chromium >/dev/null 2>&1; then
+            rc=0
+            NODE_PATH=$(npm root -g) xargs node fdk/tools/html-visual-gate.mjs < "$RUNNER_TEMP/gen.txt" || rc=$?
+            if [ "$rc" = 4 ]; then echo "SKIP cổng chạy-thật: không có Playwright"; else exit "$rc"; fi
+          else
+            echo "SKIP cổng chạy-thật: không cài được Chromium trên runner"
+          fi
+      - name: downstream slop-gate — trang sinh Ở MÁY KHÁCH qua cả hai cổng
+        run: bash harness/tests/downstream-slop-gate-test.sh
       - name: code-health — Trụ 4 cổng CI tất định không-LLM (mọi .py compile; ruff nếu có)
         run: |
           pip install ruff --quiet || echo "ruff không cài được — chạy floor compile"

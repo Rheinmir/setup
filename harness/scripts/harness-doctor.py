@@ -300,6 +300,22 @@ def build_r20(base):
     return _content("html_docs_shell.py", fixture(bad, good))
 
 
+def build_r22(base):
+    # R22: slop nhìn thấy được. Fixture phải có CSS THẬT (>400 ký tự) vì luật no-dark-mode bỏ qua
+    # trang tí hon; bản GOOD mang đủ chế độ tối + nút đổi để không dính luôn luật no-theme-toggle.
+    bad = base / "llmwiki" / "html" / "slop-bad.html"
+    good = base / "llmwiki" / "html" / "slop-good.html"
+    bulk = "".join(".r%d{padding:%dpx;margin:%dpx;line-height:1.5;letter-spacing:0}" % (i, i, i) for i in range(20))
+    dark = "[data-theme=dark]{--bg:#0b1220;--ink:#e6edf5}"
+    btn = ('<button id="theme-toggle" onclick="document.documentElement.setAttribute(\'data-theme\',\'dark\');'
+           'localStorage.setItem(\'theme\',\'dark\')">theme</button>')
+    _w(bad, "<!doctype html><html><head><style>%s.card{border-left:3px solid #0a84ff}</style></head>"
+            "<body><div class=card>x</div></body></html>" % bulk)
+    _w(good, "<!doctype html><html><head><style>%s%s.card{border:1px solid #e2e8f0}</style></head>"
+             "<body>%s<div class=card>x</div></body></html>" % (bulk, dark, btn))
+    return _content("html_slop.py", fixture(bad, good))
+
+
 # ── Tier 1b: argv-only / custom-flag content validators ─────────────────────
 def build_r13(base):
     # R13: architecture row in decisions.md must reference an ADR-N (or (no-adr: …)).
@@ -616,6 +632,7 @@ RULES = [
     ("R19", "evidence-terminal", build_r19),
     ("R20", "html-docs-shell", build_r20),
     ("R21", "touched-paths", build_r21),
+    ("R22", "html-slop", build_r22),
 ]
 
 
