@@ -5,10 +5,15 @@
 //   tight      hai khối có nền/viền riêng xếp dọc dính nhau (< 8px), hoặc chữ chạm mép khối cha (padding < 6px)
 //   overlap    hộp chữ giao với hộp icon/svg anh em trong cùng một node (> 2px mỗi chiều)
 //   stripe     sọc màu một cạnh vẽ bằng ::before/::after (cổng tĩnh chỉ thấy border-left / inset)
+//   rounded-edge  phần tử ĐÃ bo góc (> 0.5px) mà 1–3 cạnh có viền màu nhấn lệch màu (> 40) hoặc dày ≥ 1.5× cạnh còn lại (đo CẢ sáng lẫn tối)
+//   horizontal-scroll  trang cuộn ngang ở bề rộng 320/375/768/1360 (scrollWidth > clientWidth + 1)
+//   clickable-wrap     nút / tab / link điều hướng (nav a, footer a, a.btn) bẻ chữ thành ≥ 2 dòng ở 320 hoặc 1360; bỏ qua link trong <p>
+//   italic-display     chữ hiển thị (h1–h6 hoặc ≥ 24px) in nghiêng — phủ chỗ cổng tĩnh sót (class tiêu đề, <em> sau thẻ khác)
+//   uppercase-tight-leading  chữ HOA ≥ 24px có line-height < 1.0 × cỡ chữ (dòng HOA dính nhau)
 //   toggle     có nút đổi sáng/tối; bấm thì nền đổi chiều sáng; tải lại vẫn giữ
 //   glass      phần tử khai kính (backdrop-filter) phải còn kính ở CẢ hai chế độ
 // Usage: NODE_PATH=$(npm root -g) node html-visual-gate.mjs <trang.html …> [--json] [--shots <dir>] [--only contrast,tight]
-// Exit: 0 sạch · 2 có lỗi · 4 không có Playwright (SKIP có tên — caller không được đếm là PASS).
+// Exit: 0 sạch (có thể kèm dòng ⚠ WARN: horizontal-scroll, clickable-wrap) · 2 có lỗi · 4 không có Playwright (SKIP có tên — caller không được đếm là PASS).
 // Sinh ra 20/09/2026 sau khi bộ đo nháp trả 0 ở hai cột mà user thấy lỗi bằng mắt: mỗi luật ở đây có fixture XẤU chứng minh nó cắn
 // (harness/tests/html-visual-gate-test.sh).
 import { pathToFileURL } from 'url';
@@ -42,7 +47,7 @@ const MEASURE = () => {
   const pageDark = (() => { const l = lum(getComputedStyle(document.body).backgroundColor); const h = lum(getComputedStyle(document.documentElement).backgroundColor); const base = (l && l.a > .5) ? l.L : (h && h.a > .5 ? h.L : null); return base === null ? document.documentElement.getAttribute('data-theme') === 'dark' : base < 0.3; })();
   const bgL = el => { const layers = []; for (let n = el; n; n = n.parentElement) { const cs = getComputedStyle(n); const l = lum(cs.backgroundColor); if (l && l.a > 0.02) layers.push(l); if (cs.backgroundImage && cs.backgroundImage !== 'none' && /gradient/.test(cs.backgroundImage)) { const g = cs.backgroundImage.match(/rgba?\([^)]*\)/g); if (g) { const ls = g.map(lum).filter(x => x && x.a > 0.3); if (ls.length) layers.push({ L: ls.reduce((s, x) => s + x.L, 0) / ls.length, a: Math.max(...ls.map(x => x.a)) * 0.9 }); } } }
     let L = pageDark ? 0.012 : 0.96; for (const l of layers.reverse()) L = l.L * l.a + L * (1 - l.a); return L; };
-  const out = { contrast: [], tight: [], overlap: [], stripe: [], glass: 0, texts: 0, pageDark };
+  const out = { contrast: [], tight: [], overlap: [], stripe: [], rounded_edge: [], italic_display: [], upper_tight: [], glass: 0, texts: 0, pageDark };
   const seenText = new Set();
   for (const el of document.querySelectorAll('body *')) {
     if (!vis(el) || el.closest('[aria-hidden="true"],svg,script,style,noscript')) continue;
@@ -96,12 +101,42 @@ const MEASURE = () => {
       if (w > 0 && w <= 6 && h >= r.height * 0.6 && (sat(cs.backgroundColor) > 0.35 || /gradient/.test(cs.backgroundImage)) && out.stripe.length < 60) out.stripe.push({ el: name(el), via: ps, w }); }
     const cs = getComputedStyle(el); for (const side of ['Left', 'Right']) { const w = parseFloat(cs['border' + side + 'Width']), others = ['Top', 'Bottom', side === 'Left' ? 'Right' : 'Left'].map(s => parseFloat(cs['border' + s + 'Width']));
       if (w >= 3 && w >= 2 * Math.max(...others, 0.5) && sat(cs['border' + side + 'Color']) > 0.35 && out.stripe.length < 60) out.stripe.push({ el: name(el), via: 'border-' + side.toLowerCase(), w }); } }
+  // rounded-edge: đọc computed style (đã qua cascade) — bo góc + cạnh màu nhấn lệch (PLAN 210926 t6)
+  const SIDES = ['Top', 'Right', 'Bottom', 'Left'];
+  for (const el of document.querySelectorAll('body *')) { if (!vis(el) || el.closest('svg')) continue; const cs = getComputedStyle(el);
+    if (!['TopLeft', 'TopRight', 'BottomRight', 'BottomLeft'].some(k => parseFloat(cs['border' + k + 'Radius']) > 0.5)) continue;
+    { const rr = el.getBoundingClientRect(), half = Math.min(rr.width, rr.height) / 2 - 1; // phần tử TRÒN (spinner, avatar) — không phải thẻ có sọc (review t9 F3)
+      if (['TopLeft', 'TopRight', 'BottomRight', 'BottomLeft'].every(k => parseFloat(cs['border' + k + 'Radius']) >= half || /%/.test(cs['border' + k + 'Radius']) && parseFloat(cs['border' + k + 'Radius']) >= 50)) continue; }
+    const sig = SIDES.map(s => { const w = parseFloat(cs['border' + s + 'Width']), st = cs['border' + s + 'Style']; return w > 0 && st !== 'none' && st !== 'hidden' ? { c: norm(cs['border' + s + 'Color']), w } : null; });
+    // ngưỡng t5: màu nhấn sat > 0.35; lệch = khác màu > 40 (kênh RGB lệch nhiều nhất) hoặc dày ≥ 1.5× — 1–3 cạnh, kề hay đối diện
+    const rgb = c => ((c || '').match(/[\d.]+/g) || []).slice(0, 3).map(Number), dRGB = (x, y) => { const a = rgb(x), b = rgb(y); return Math.max(...a.map((v, i) => Math.abs(v - b[i]))); };
+    const hit = sig.some(a => { if (!a || sat(a.c) <= 0.35) return false; const odd = sig.map((b, j) => b && b.c === a.c && b.w === a.w ? j : -1).filter(j => j >= 0);
+      if (odd.length === 4) return false; const rest = sig.filter((b, j) => b && !odd.includes(j));
+      return rest.every(b => dRGB(a.c, b.c) > 40) || a.w >= 1.5 * Math.max(0, ...rest.map(b => b.w)); });
+    if (hit && out.rounded_edge.length < 60) out.rounded_edge.push(name(el)); }
+  // italic-display + uppercase-tight-leading (PLAN 210926 t7): chữ HIỂN THỊ có text trực tiếp
+  for (const el of document.querySelectorAll('body *')) { if (!vis(el) || el.closest('svg,script,style,[aria-hidden="true"]')) continue;
+    if (![...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim().length > 1)) continue; const cs = getComputedStyle(el), px = parseFloat(cs.fontSize);
+    if ((/^H[1-6]$/.test(el.tagName) || px >= 24) && /italic|oblique/.test(cs.fontStyle) && out.italic_display.length < 40) out.italic_display.push(name(el));
+    const lh = parseFloat(cs.lineHeight);   // 'normal' → NaN → bỏ qua
+    if (cs.textTransform === 'uppercase' && px >= 24 && lh / px < 1 && out.upper_tight.length < 40) out.upper_tight.push(`${name(el)} (${(lh / px).toFixed(2)})`); }
   out.glass = [...document.querySelectorAll('body *')].filter(e => { const cs = getComputedStyle(e); return vis(e) && ((cs.backdropFilter && cs.backdropFilter !== 'none') || (cs.webkitBackdropFilter && cs.webkitBackdropFilter !== 'none')); }).length;
   out.bodyL = (() => { const l = lum(getComputedStyle(document.body).backgroundColor), h = lum(getComputedStyle(document.documentElement).backgroundColor); return (l && l.a > .5) ? l.L : (h && h.a > .5 ? h.L : null); })();
   return out;
 };
 
+// horizontal-scroll + clickable-wrap: đo lại ở từng bề rộng (resize cùng trang, không tải lại)
+const LAYOUT = () => { const d = document.documentElement, wrap = [];
+  for (const el of document.querySelectorAll('button,[role=button],[role=tab],nav a,footer a,a.btn')) { if (el.closest('p,[aria-hidden="true"]')) continue;
+    const r = el.getBoundingClientRect(), cs = getComputedStyle(el); if (r.width < 2 || r.height < 2 || cs.visibility === 'hidden' || el.textContent.trim().length < 2) continue;
+    const rg = document.createRange(); rg.selectNodeContents(el); const rs = [...rg.getClientRects()].filter(x => x.width > 1 && x.height > 1).sort((a, b) => a.top - b.top);
+    // số dòng = số cụm rect KHÔNG chồng nhau theo chiều dọc (icon căn giữa cùng dòng với chữ không bị đếm thành dòng mới)
+    let lines = 0, bot = -Infinity; for (const x of rs) { if (x.top >= bot - 1) { lines++; bot = x.bottom; } else bot = Math.max(bot, x.bottom); }
+    if (lines >= 2 && wrap.length < 40) wrap.push((el.tagName.toLowerCase() + (typeof el.className === 'string' && el.className ? '.' + el.className.trim().split(/\s+/)[0] : '')) + ' "' + el.textContent.trim().slice(0, 24) + '"'); }
+  return { over: d.scrollWidth - d.clientWidth, wrap }; };
+const WIDTHS = [320, 375, 768, 1360], WRAP_AT = [320, 1360];
 const TOGGLE_SEL = '.theme-switch,[data-theme-toggle],.theme-toggle,#theme-toggle,#themeToggle,[aria-label*="giao diện" i],[aria-label*="theme" i],[class*="theme-t"],[id*="theme"]';
+const on = k => !only.length || only.includes(k);
 const b = await chromium.launch(); const report = []; let bad = 0;
 for (const file of pages) { const abs = resolve(file); const row = { page: file, findings: {} };
   if (!existsSync(abs)) { row.error = 'không tồn tại'; bad++; report.push(row); continue; }
@@ -127,6 +162,10 @@ for (const file of pages) { const abs = resolve(file); const row = { page: file,
       if (cr < c.need) verified.push({ ...c, ratio: +cr.toFixed(2), by: 'pixel' }); }
     m.contrast = verified.concat(m.contrast.slice(90).filter(c => !c.svg)); row.findings[theme] = m;
     if (shots) await p.screenshot({ path: `${shots}/${basename(file, '.html')}-${theme}.png` });
+    if (theme === 'light' && (on('horizontal-scroll') || on('clickable-wrap'))) { row.hscroll = []; row.wrap = [];
+      for (const w of WIDTHS) { await p.setViewportSize({ width: w, height: 900 }); await p.waitForTimeout(150); const l = await p.evaluate(LAYOUT);
+        if (l.over > 1) row.hscroll.push({ w, over: l.over }); if (WRAP_AT.includes(w)) for (const x of l.wrap) row.wrap.push(`${x} @${w}`); }
+      await p.setViewportSize({ width: 1360, height: 900 }); await p.waitForTimeout(150); }
     if (theme === 'light') { // toggle: bấm → nền đổi chiều; tải lại → giữ
       // phần tử NHÌN THẤY đầu tiên khớp selector (selector rộng còn khớp cả <script id="…theme…"> / <meta name="theme-color"> trong <head>)
       let tg = null; for (const h of await p.$$(TOGGLE_SEL)) { if (await h.evaluate(e => { const r = e.getBoundingClientRect(); return r.width > 4 && r.height > 4 && !/^(script|style|meta|link|template)$/i.test(e.tagName); })) { tg = h; break; } }
@@ -139,19 +178,29 @@ for (const file of pages) { const abs = resolve(file); const row = { page: file,
         row.toggle = Math.abs(before - after) < 0.25 ? 'NO-EFFECT' : (kept !== attr ? 'NOT-PERSISTED' : 'ok'); } }
     await ctx.close(); }
   const L = row.findings.light, D = row.findings.dark; const probs = [];
-  const on = k => !only.length || only.includes(k);
   if (on('contrast')) for (const [t, m] of [['sáng', L], ['tối', D]]) if (m.contrast.length) probs.push(`contrast(${t}): ${m.contrast.length} chữ chìm — vd "${m.contrast[0].text}" ${m.contrast[0].ratio}:1 (cần ${m.contrast[0].need}) ở ${m.contrast[0].el}`);
   if (on('tight') && L.tight.length) probs.push(`tight: ${L.tight.length} chỗ — vd ${L.tight[0].a} ↔ ${L.tight[0].b} (${L.tight[0].kind}, ${L.tight[0].gap}px)`);
   if (on('overlap') && (L.overlap.length || D.overlap.length)) { const o = (L.overlap[0] || D.overlap[0]); probs.push(`overlap: ${Math.max(L.overlap.length, D.overlap.length)} icon đè chữ — vd "${o.text}" trong ${o.node} (${o.ox}×${o.oy}px)`); }
   if (on('stripe') && L.stripe.length) probs.push(`stripe: ${L.stripe.length} sọc màu một cạnh — vd ${L.stripe[0].el} (${L.stripe[0].via})`);
+  if (on('rounded-edge') && (L.rounded_edge.length || D.rounded_edge.length)) probs.push(`rounded-edge: ${Math.max(L.rounded_edge.length, D.rounded_edge.length)} phần tử bo góc có cạnh màu — vd ${L.rounded_edge[0] || D.rounded_edge[0]}${L.rounded_edge.length ? '' : ' (chỉ ở tối)'}`);
+  // WARN (in ⚠, KHÔNG đổi exit code — mọi caller coi rc≠0 là đỏ). Đo t7 21/09/2026 trên 39 trang của --all:
+  //   horizontal-scroll 33 trang (viewer orca-graph từ engine repo riêng tràn ở 320/375; bảng/sơ đồ rộng) → nợ lớn → WARN.
+  //   clickable-wrap    10 trang, báo giả thấy rõ: thẻ node role=button nhiều dòng CÓ CHỦ Ý (overstack.html), link tên file dài
+  //                     trong danh sách (atlas, *.graph.html) → WARN.
+  //   italic-display, uppercase-tight-leading: 0 trang → FAIL (tất định, không nợ).  ponytail: nâng WARN lên FAIL khi nợ về 0.
+  const warns = [];
+  if (on('horizontal-scroll') && row.hscroll.length) warns.push(`horizontal-scroll: cuộn ngang ở ${row.hscroll.map(h => h.w + 'px (+' + h.over + ')').join(', ')}`);
+  if (on('clickable-wrap') && row.wrap.length) warns.push(`clickable-wrap: ${row.wrap.length} nút/link bẻ dòng — vd ${row.wrap[0]}`);
+  if (on('italic-display') && L.italic_display.length) probs.push(`italic-display: ${L.italic_display.length} chữ hiển thị in nghiêng — vd ${L.italic_display[0]}`);
+  if (on('uppercase-tight-leading') && L.upper_tight.length) probs.push(`uppercase-tight-leading: ${L.upper_tight.length} chữ HOA lớn dòng dính — vd ${L.upper_tight[0]}`);
   if (on('toggle') && row.toggle !== 'ok' && row.toggle !== 'follows-parent') probs.push(`toggle: ${row.toggle}`);
   if (on('toggle') && row.toggle === 'ok' && L.bodyL !== null && D.bodyL !== null && Math.abs(L.bodyL - D.bodyL) < 0.25) probs.push('toggle: sáng và tối cho CÙNG một nền');
   if (on('glass') && L.glass > 0 && D.glass === 0) probs.push(`glass: sáng có ${L.glass} lớp kính, tối mất hết`);
   if (on('glass') && D.glass > 0 && L.glass === 0) probs.push(`glass: tối có ${D.glass} lớp kính, sáng mất hết`);
   const je = [...L.jsErrors, ...D.jsErrors]; if (je.length) probs.push(`js: ${je[0]}`);
-  row.problems = probs; if (probs.length) bad++; report.push(row); }
+  row.problems = probs; row.warnings = warns; if (probs.length) bad++; report.push(row); }
 await b.close();
-if (asJson) console.log(JSON.stringify(report.map(r => ({ page: r.page, toggle: r.toggle, problems: r.problems, light: r.findings.light && { contrast: r.findings.light.contrast, tight: r.findings.light.tight, overlap: r.findings.light.overlap, stripe: r.findings.light.stripe, glass: r.findings.light.glass }, dark: r.findings.dark && { contrast: r.findings.dark.contrast, overlap: r.findings.dark.overlap, glass: r.findings.dark.glass } })), null, 1));
-else { for (const r of report) { console.log(`${r.problems && r.problems.length ? '✗' : '✓'} ${r.page}${r.error ? ' — ' + r.error : ''}`); for (const q of r.problems || []) console.log('    ' + q); }
+if (asJson) console.log(JSON.stringify(report.map(r => ({ page: r.page, toggle: r.toggle, problems: r.problems, warnings: r.warnings, light: r.findings.light && { contrast: r.findings.light.contrast, tight: r.findings.light.tight, overlap: r.findings.light.overlap, stripe: r.findings.light.stripe, rounded_edge: r.findings.light.rounded_edge, italic_display: r.findings.light.italic_display, upper_tight: r.findings.light.upper_tight, glass: r.findings.light.glass }, hscroll: r.hscroll, wrap: r.wrap, dark: r.findings.dark && { contrast: r.findings.dark.contrast, rounded_edge: r.findings.dark.rounded_edge, overlap: r.findings.dark.overlap, glass: r.findings.dark.glass } })), null, 1));
+else { for (const r of report) { console.log(`${r.problems && r.problems.length ? '✗' : '✓'} ${r.page}${r.error ? ' — ' + r.error : ''}`); for (const q of r.problems || []) console.log('    ' + q); for (const q of r.warnings || []) console.log('    ⚠ ' + q); }
   console.log(`html-visual-gate: ${report.length - bad}/${report.length} trang đạt`); }
 process.exit(bad ? 2 : 0);

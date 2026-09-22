@@ -230,7 +230,7 @@ jobs:
           [ -d "$HOME/.orca-graph/repo/.git" ] || curl -fsSL https://raw.githubusercontent.com/Rheinmir/orca-graph/main/install.sh | bash -s -- --no-skill
           bash harness/tests/install-graph-option-test.sh
           python3 -m pytest -q harness/tests/test_control_room.py
-      - name: html-font-lint — mọi HTML framework sinh ra = Lexend Deca Light NHÚNG (generator · engine qua shim · parity bản sao ở engine · template skill)
+      - name: html-font-lint — mọi HTML framework sinh ra = Be Vietnam Pro NHÚNG (generator · engine qua shim · parity bản sao ở engine · template skill)
         run: |
           python3 -m pytest -q harness/tests/test_html_font.py harness/tests/test_repo_role.py
           bash harness/tests/html-font-lint-test.sh

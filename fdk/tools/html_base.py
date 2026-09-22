@@ -61,7 +61,10 @@ def base_css(*, family_dark: bool) -> str:
           ".ovs-theme:focus-visible{outline:2px solid var(--ovs-accent);outline-offset:2px}"
           ".ovs-theme i{width:14px;height:14px;border-radius:50%;box-shadow:inset -4px -3px 0 0 currentColor;display:inline-block}"
           "html[data-theme=dark] .ovs-theme i{box-shadow:none;background:currentColor}"
-          "@media print{.ovs-theme{display:none}}")
+          "@media print{.ovs-theme{display:none}}"
+          # người dùng bật "giảm chuyển động" ở hệ điều hành → tắt mọi hiệu ứng trên MỌI trang sinh ra (luật reduced-motion-missing, 21/09/2026)
+          "@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;"
+          "transition-duration:.01ms!important;scroll-behavior:auto!important}}")
 
 
 # Chống nháy: chạy TRƯỚC khi trình duyệt vẽ — đặt data-theme từ lựa chọn đã nhớ, chưa có thì theo hệ điều hành.
@@ -96,8 +99,11 @@ def has_own_theme(html: str) -> bool:
 
 
 def apply(html: str, *, toggle: bool = True, fix=None) -> str:
-    if f'id="{STYLE_ID}"' in html:
-        return html
+    if f'id="{STYLE_ID}"' in html:                                  # lớp nền đã có (template/trang cũ): LÀM MỚI khối nền + khối font về bản hiện tại
+        def _fresh(m):                                              # giữ lựa chọn family_dark của lần chèn đầu (khối cũ có luật body tối hay không)
+            return f'<style id="{STYLE_ID}">{base_css(family_dark="html[data-theme=dark] body{" in m.group(0))}</style>'
+        html = re.sub(rf'<style id="{STYLE_ID}">.*?</style\s*>', _fresh, html, count=1, flags=re.S)
+        return _font_mod().apply(html, _from_base=True)
     # Tự VÁ slop máy-làm-được trước khi gắn lớp nền (mặc định BẬT khi có html-slop-fix.py cạnh file này — repo engine không mang
     # công cụ vá nên ở đó tự tắt): generator nào còn màu ghi cứng/sọc/gradient-text cũng ra trang sạch, không chờ ai nhớ chạy tay.
     fixer = HERE / "html-slop-fix.py"

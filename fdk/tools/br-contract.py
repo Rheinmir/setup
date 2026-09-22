@@ -41,7 +41,7 @@ ROLE_ORDER = ["screen", "form", "panel", "widget", "action", "none"]
 # ── core (pure, testable) ───────────────────────────────────────────────────
 
 def _ovs_font(html: str) -> str:
-    """Font mặc định của mọi HTML framework sinh ra = Lexend Deca Light, NHÚNG (nguồn duy nhất: fdk/tools/html_font.py)."""
+    """Font mặc định của mọi HTML framework sinh ra = Be Vietnam Pro, NHÚNG (nguồn duy nhất: fdk/tools/html_font.py)."""
     import importlib.util
     here = Path(__file__).resolve()
     for c in (here.with_name("html_font.py"), here.parents[2] / "fdk" / "tools" / "html_font.py", Path.home() / ".claude/harness/fdk/tools/html_font.py"):

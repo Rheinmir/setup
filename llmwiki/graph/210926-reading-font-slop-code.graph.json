@@ -1,0 +1,302 @@
+{
+ "id": "210926-reading-font-slop-code",
+ "plan": "llmwiki/wiki/sources/draft/210926-reading-font-slop-code-PLAN.md",
+ "built": "2026-09-22T08:34:41+0700",
+ "nodes": [
+  {
+   "id": "t1",
+   "title": "lấy và cắt font Be Vietnam Pro, đo cỡ để chốt số weight nhúng",
+   "files": [],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "các file `BeVietnamPro-<w>-vi.woff2` (subset latin + tiếng Việt) + bảng cỡ từng weight; bộ weight nhúng (mặc định 400/600/800 nếu 5 weight vượt 150 KB tổng)"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "research",
+   "mode": "afk",
+   "verify": "ls fdk/tools/assets/fonts/BeVietnamPro-*-vi.woff2 && test -s fdk/tools/assets/fonts/BeVietnamPro-NOTICE.txt",
+   "qc": "",
+   "spec_hash": "805d8d1edfd0c734",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "805d8d1edfd0c734"
+  },
+  {
+   "id": "t2",
+   "title": "đổi nguồn font html_font.py sang Be Vietnam Pro",
+   "files": [],
+   "consumes": [
+    "woff2 của Task 1"
+   ],
+   "produces": [
+    "`FAMILY=\"Be Vietnam Pro\"`, một `@font-face` mỗi weight, token `--fw-text:400` · `--fw-strong:600` · `--fw-heading:700` · `--ls-heading` âm theo theme; `--rebuild` nhận nhiều file; `head_css()`/`apply()` giữ nguyên chữ ký"
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/html_font.py --check && python3 -m pytest -q harness/tests/test_html_font.py harness/tests/test_html_base.py",
+   "qc": "",
+   "dep_reasons": {
+    "t1": "data"
+   },
+   "spec_hash": "70605c470dccd0a5",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "70605c470dccd0a5"
+  },
+  {
+   "id": "t3",
+   "title": "lint font, tài liệu và skill theo font mới",
+   "files": [],
+   "consumes": [
+    "hằng `FAMILY`, `MARK` của Task 2"
+   ],
+   "produces": [
+    "xem Verify"
+   ],
+   "deps": [
+    "t2"
+   ],
+   "deps_conf": "chắc",
+   "kind": "docs",
+   "mode": "afk",
+   "verify": "bash harness/tests/html-font-lint-test.sh && ! grep -n \"Lexend\" fdk/tools/html-font-lint.py skills/docs-site-macos/SKILL.md fdk/CAPABILITIES.md",
+   "qc": "",
+   "dep_reasons": {
+    "t2": "contract"
+   },
+   "spec_hash": "17ae4a4611468083",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "17ae4a4611468083"
+  },
+  {
+   "id": "t4",
+   "title": "bản sao font ở repo engine orca-graph",
+   "files": [],
+   "consumes": [
+    "`html_font.py` + `html_font_data.py` của Task 2"
+   ],
+   "produces": [
+    "xem Verify"
+   ],
+   "deps": [
+    "t2"
+   ],
+   "deps_conf": "chắc",
+   "kind": "integration",
+   "mode": "afk",
+   "verify": "cmp fdk/tools/html_font_data.py ~/.orca-graph/repo/engine/html_font_data.py && cd ~/.orca-graph/repo && python3 -m pytest -q tests/test_orca_graph.py -k font",
+   "qc": "",
+   "dep_reasons": {
+    "t2": "contract"
+   },
+   "spec_hash": "b803b825424abd53",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "b803b825424abd53"
+  },
+  {
+   "id": "t5",
+   "title": "nghiên cứu — luật slop nào kiểm được thuần bằng code",
+   "files": [],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "bảng phân loại từng gate trong `skills/hallmark/references/slop-test.md` + luật hai cổng hiện có thành ba cột: tĩnh (regex/CSS parse) · chạy thật (computed style/hình học) · cần mắt; mỗi dòng nêu cách đo, đã có luật chưa, rủi ro báo giả; danh sách luật code-được CHƯA cài cho Task 7"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "research",
+   "mode": "afk",
+   "verify": "test -s fdk/wiki/sources/210926-slop-code-checkable.md && grep -q \"bo tròn\" fdk/wiki/sources/210926-slop-code-checkable.md",
+   "qc": "",
+   "spec_hash": "0360d473996376cb",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "0360d473996376cb"
+  },
+  {
+   "id": "t6",
+   "title": "luật 'bo tròn không thêm cạnh màu' ở cả hai cổng",
+   "files": [],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "luật tĩnh `rounded-edge` (gộp khai báo theo selector, bắt cả `border-left-color` đè lên viền đều) + luật chạy thật `rounded-edge` (getComputedStyle: radius > 0 và cạnh lệch màu/độ dày, không miễn blockquote); fixture XẤU cắn, fixture TỐT sạch"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 -m pytest -q harness/tests/test_frontend_antipattern_slop.py && bash harness/tests/html-visual-gate-test.sh",
+   "qc": "",
+   "spec_hash": "e123d16b77dbe896",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "e123d16b77dbe896"
+  },
+  {
+   "id": "t7",
+   "title": "cài các luật code-được còn thiếu mà Task 5 tìm ra",
+   "files": [],
+   "consumes": [
+    "danh sách luật chưa cài của Task 5"
+   ],
+   "produces": [
+    "mỗi luật mới có fixture XẤU cắn + TỐT sạch"
+   ],
+   "deps": [
+    "t5",
+    "t6"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 -m pytest -q harness/tests/test_frontend_antipattern_slop.py && bash harness/tests/html-visual-gate-test.sh",
+   "qc": "",
+   "dep_reasons": {
+    "t5": "data",
+    "t6": "effect_order"
+   },
+   "spec_hash": "75871d7b57934a10",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "75871d7b57934a10"
+  },
+  {
+   "id": "t8",
+   "title": "sinh lại mọi trang, hai cổng xanh, trang ảnh trước/sau",
+   "files": [],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "mọi trang generator sinh lại bằng font mới, hai cổng về 0, trang so sánh ảnh sáng/tối trước-sau"
+   ],
+   "deps": [
+    "t2",
+    "t3",
+    "t4",
+    "t7"
+   ],
+   "deps_conf": "chắc",
+   "kind": "test",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/frontend-antipattern.py --all >/dev/null; [ $? -ne 1 ] && bash harness/tests/html-font-lint-test.sh && test -s llmwiki/html/210926-font-slop-before-after.html",
+   "qc": "",
+   "dep_reasons": {
+    "t2": "data",
+    "t3": "acceptance",
+    "t4": "acceptance",
+    "t7": "acceptance"
+   },
+   "spec_hash": "93a90c0dac48bc65",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "93a90c0dac48bc65"
+  },
+  {
+   "id": "t9",
+   "title": "review độc lập + medic --ci trước khi đẩy",
+   "files": [],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "xem Verify"
+   ],
+   "deps": [
+    "t8"
+   ],
+   "deps_conf": "chắc",
+   "kind": "review",
+   "mode": "afk",
+   "verify": "test -s llmwiki/wiki/sources/draft/210926-reading-font-slop-code-review.md && python3 fdk/tools/medic.py --ci",
+   "qc": "",
+   "dep_reasons": {
+    "t8": "acceptance"
+   },
+   "spec_hash": "82ee18ef5a9a3d97",
+   "state": "done",
+   "gen": 1,
+   "rev": 4,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "82ee18ef5a9a3d97"
+  }
+ ],
+ "layers": [
+  [
+   "t1",
+   "t5",
+   "t6"
+  ],
+  [
+   "t2",
+   "t7"
+  ],
+  [
+   "t3",
+   "t4"
+  ],
+  [
+   "t8"
+  ],
+  [
+   "t9"
+  ]
+ ],
+ "parent": null,
+ "depth": 0,
+ "plan_version": 4,
+ "superseded": [],
+ "max_parallel": 4,
+ "conflicts": [],
+ "resource_conflicts": [],
+ "links": [],
+ "control": "active",
+ "schema_version": 1,
+ "checksum": "a3f01285b14711d9"
+}

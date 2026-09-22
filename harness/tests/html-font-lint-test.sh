@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# html-font-lint-test — luật "mọi HTML framework sinh ra = Lexend Deca Light, NHÚNG" được GÁC, không dựa vào nhớ.
+# html-font-lint-test — luật "mọi HTML framework sinh ra = Be Vietnam Pro, NHÚNG" được GÁC, không dựa vào nhớ.
 #   (1) trang do GENERATOR của framework sinh (đang track) đều đạt        (2) engine orca-graph qua shim: graph + atlas đạt
 #   (3) bản sao html_font ở repo engine khớp nguồn framework (--parity)   (4) template skill khai đúng font / skeleton đã nhúng
 #   (5) ÂM TÍNH: trang thiếu font → rc 2 + chỉ lệnh sửa; --apply sửa được và idempotent
@@ -27,7 +27,7 @@ if python3 harness/scripts/orca-graph.py --version >/dev/null 2>&1; then
   case $prc in 0) ok "(3) $(tail -1 "$T/3.log")";; 4) sk "(3) $(tail -1 "$T/3.log")";; *) no "(3) $(tail -1 "$T/3.log")";; esac
 else sk "(2)(3) chưa cài engine orca-graph"; fi
 
-{ grep -q "'Lexend Deca'" skills/docs-site-macos/SKILL.md && grep -q "html_font.py --apply" skills/docs-site-macos/SKILL.md \
+{ grep -q "'Be Vietnam Pro'" skills/docs-site-macos/SKILL.md && grep -q "html_font.py --apply" skills/docs-site-macos/SKILL.md \
   && $LINT skills/orca-onboard/assets/docs-site-skeleton.html >/dev/null 2>&1; } && ok "(4) template docs-site-macos khai font + bước --apply; skeleton orca-onboard đã nhúng" || no "(4) template skill"
 
 printf '<html><head><style>body{font-family:-apple-system,sans-serif}</style></head><body>Đường dẫn</body></html>' > "$T/bad.html"

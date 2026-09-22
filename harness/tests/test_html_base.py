@@ -61,3 +61,17 @@ def test_applied_page_passes_the_runtime_gate_in_both_themes(tmp_path):
     if r.returncode == 4:
         pytest.skip("không có Playwright")
     assert r.returncode == 0, r.stdout[-700:]
+
+
+def test_base_css_honours_reduced_motion_on_every_page():
+    """Luật reduced-motion-missing (21/09/2026): lớp nền tắt hiệu ứng khi hệ điều hành bật giảm chuyển động."""
+    assert "@media (prefers-reduced-motion: reduce)" in hb.base_css(family_dark=True)
+
+
+def test_apply_refreshes_a_stale_base_block_in_templates():
+    """Template nhúng sẵn lớp nền CŨ (problem-tree, 21/09/2026) không được 'bỏ qua vì đã có' — phải nhận CSS nền hiện tại."""
+    page = hb.apply("<html><head><title>t</title></head><body><p>x</p></body></html>")
+    stale = page.replace("@media (prefers-reduced-motion: reduce)", "@media (x-old)")
+    out = hb.apply(stale)
+    assert "@media (prefers-reduced-motion: reduce)" in out and out.count(f'id="{hb.STYLE_ID}"') == 1
+    assert hb.apply(out) == out

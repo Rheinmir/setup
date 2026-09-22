@@ -16,9 +16,10 @@ body{margin:0;padding:32px;background:var(--bg);color:var(--ink);font:16px/1.5 s
 document.querySelector(".theme-switch").addEventListener("click",function(){var n=d.getAttribute("data-theme")==="dark"?"light":"dark";d.setAttribute("data-theme",n);try{localStorage.setItem(k,n)}catch(e){}})})()</script>
 BODY</body></html>'
 mk(){ local f="$T/$1.html"; local h="${BASE/EXTRA_CSS/$2}"; printf '%s' "${h/BODY/$3}" > "$f"; echo "$f"; }
-expect(){ # expect <tên> <file> <chuỗi phải có | OK>
+expect(){ # expect <tên> <file> <chuỗi phải có | OK> [WARN = phải có dòng ⚠ mà rc vẫn 0]
   local out; out="$($GATE "$2" 2>&1)"; local rc=$?
-  if [ "$3" = OK ]; then { [ $rc = 0 ]; } && ok "$1: trang tốt qua sạch" || no "$1: trang tốt bị bắt nhầm — $(echo "$out" | sed -n 2,4p | tr '\n' ' ')"
+  if [ "$3" = OK ]; then { [ $rc = 0 ] && ! grep -q "⚠" <<<"$out"; } && ok "$1: trang tốt qua sạch" || no "$1: trang tốt bị bắt nhầm — $(echo "$out" | sed -n 2,4p | tr '\n' ' ')"
+  elif [ "${4:-}" = WARN ]; then { [ $rc = 0 ] && grep -q "⚠ $3" <<<"$out"; } && ok "$1: cảnh báo (WARN, rc 0) ($(grep -m1 "$3" <<<"$out" | sed 's/^ *//' | cut -c1-90))" || no "$1: KHÔNG cảnh báo '$3' dạng WARN rc 0 (rc=$rc) — $(echo "$out" | tail -3 | tr '\n' ' ')"
   else { [ $rc = 2 ] && grep -q "$3" <<<"$out"; } && ok "$1: bắt được ($(grep -m1 "$3" <<<"$out" | sed 's/^ *//' | cut -c1-90))" || no "$1: KHÔNG bắt được '$3' (rc=$rc) — $(echo "$out" | tail -3 | tr '\n' ' ')"; fi; }
 
 expect good     "$(mk good '' '<div class="card"><h2>Tiêu đề</h2><p>Nội dung đủ tương phản ở cả hai chế độ.</p></div><div class="card"><p>Thẻ thứ hai cách thẻ trên 16px.</p></div>')" OK
@@ -28,8 +29,24 @@ expect tight    "$(mk tight '.card.t{margin:0}' '<div class="card t"><p>Khối m
 expect tight-pad "$(mk pad '.np{padding:0}' '<div class="card np">Chữ chạm sát mép thẻ,<br>không có khoảng thở nào cả,<br>ba dòng liền</div>')" "padding quá hẹp"
 expect stripe-before "$(mk sb '.s::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#30b0c7;border-radius:12px 0 0 12px}' '<div class="card s"><p>Thẻ có sọc vẽ bằng ::before</p></div>')" "stripe:"
 expect stripe-border "$(mk sl '.l{border-left:4px solid #0a84ff}' '<div class="card l"><p>Thẻ có border-left màu</p></div>')" "stripe:"
+expect rounded-edge-color "$(mk rc '.rc{border-left-color:#2563eb}' '<div class="card rc"><p>Thẻ bo góc, viền 1px nhưng cạnh trái đổi màu</p></div>')" "rounded-edge:"
+expect rounded-edge-top "$(mk rt '.rt{border-top:3px solid #e23b2d}' '<div class="card rt"><p>Thẻ bo góc có cạnh trên màu đỏ</p></div>')" "rounded-edge:"
+expect rounded-edge-divider "$(mk rd '.dv{border:0;border-bottom:1px solid #9aa3b0}' '<div class="card dv"><p>Thẻ bo góc chỉ có đường kẻ xám dưới đáy</p></div>')" OK
+expect rounded-edge-opposite "$(mk ro '.ro{border-left:3px solid #e23b2d;border-right:3px solid #e23b2d}' '<div class="card ro"><p>Thẻ bo góc có hai cạnh đối diện màu</p></div>')" "rounded-edge:"
+expect rounded-edge-tab "$(mk rtab '.tab{border:1px solid var(--bd);border-bottom:2px solid #0a84ff;border-radius:8px 8px 0 0;padding:8px 12px;display:inline-block;background:var(--card)}' '<div class="card"><span class="tab">Tab đang chọn</span></div>')" "rounded-edge:"
+expect rounded-edge-dark "$(mk rdk '[data-theme="dark"] .rk{border-left-color:#3b82f6}' '<div class="card rk"><p>Cạnh màu chỉ hiện ở chế độ tối</p></div>')" "rounded-edge:.*chỉ ở tối"
+expect rounded-edge-spinner "$(mk rsp '.sp{width:40px;height:40px;border:3px solid #e5e5e5;border-top-color:#0a84ff;border-radius:50%}' '<div class="card"><div class="sp"></div><p>Đang tải</p></div>')" OK
 expect overlap  "$(mk ov '.n{position:relative;height:60px}.n svg{position:absolute;left:14px;top:14px}.n span{position:absolute;left:18px;top:16px}' '<div class="card n"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#0a84ff"/></svg><span>Task PLAN.md</span></div>')" "overlap:"
 expect overlap-svg "$(mk ovs '' '<div class="card"><svg width="300" height="80" viewBox="0 0 300 80" role="img"><title>n</title><g><rect x="10" y="10" width="120" height="50" fill="none" stroke="#888"/><g aria-hidden="true" class="semantic-sigil" transform="translate(16 16)"><circle cx="8" cy="8" r="8" fill="#0a84ff"/></g><text x="20" y="30" font-size="13" fill="currentColor">Task PLAN.md</text></g></svg></div>')" "overlap:"
+# PLAN 210926 t7 — bốn luật đo ở trình duyệt thật (fixture theo fdk/wiki/sources/210926-slop-code-checkable.md mục 3)
+expect hscroll "$(mk hs '' '<div style="width:1200px;height:10px"></div>')" "horizontal-scroll:.*320px" WARN
+expect hscroll-ok "$(mk hso '' '<div style="max-width:100%;width:1200px;height:10px"></div>')" OK
+expect clickable-wrap "$(mk cw 'a{color:inherit}' '<nav style="width:80px"><a href="#">Bắt đầu dùng miễn phí ngay</a></nav>')" "clickable-wrap:" WARN
+expect clickable-wrap-ok "$(mk cwo 'a{color:inherit}' '<nav style="width:80px"><a href="#" style="white-space:nowrap">Dùng thử</a></nav><p style="width:80px">Đoạn văn có <a href="#">liên kết dài bẻ dòng trong câu</a> thì được tha</p>')" OK
+expect italic-display "$(mk it '' '<p class="hero__title" style="font-size:40px;font-style:italic">Tiêu đề</p>')" "italic-display:"
+expect italic-display-ok "$(mk ito '' '<p class="hero__title" style="font-size:40px;font-weight:700">Tiêu đề</p><p>Chữ thân <em>nghiêng</em> thì được</p>')" OK
+expect upper-tight "$(mk ut '' '<h2 style="font-size:48px;line-height:.94;text-transform:uppercase">HAI DÒNG, KHÁC NHAU</h2>')" "uppercase-tight-leading:"
+expect upper-tight-ok "$(mk uto '' '<h2 style="font-size:48px;line-height:1.05;text-transform:uppercase">HAI DÒNG, KHÁC NHAU</h2>')" OK
 # toggle: bỏ hẳn nút / nút bấm không đổi gì
 NOTOGGLE="${BASE/<button class=\"theme-switch\" aria-label=\"Đổi giao diện\">Giao diện<\/button>/}"; NOTOGGLE="${NOTOGGLE/document.querySelector(\".theme-switch\").addEventListener/0&&document.addEventListener}"
 h="${NOTOGGLE/EXTRA_CSS/}"; printf '%s' "${h/BODY/<div class=\"card\"><p>Trang không có nút đổi giao diện</p></div>}" > "$T/notoggle.html"; expect toggle-missing "$T/notoggle.html" "toggle: MISSING"

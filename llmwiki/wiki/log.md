@@ -1258,3 +1258,297 @@ cc4f999ad |
 | 2026-09-20 22:04:42 | `file.write` | llmwiki/wiki/sources/draft/200926-self-slop-gate-PLAN.md · tool=Write · session=cad381c4 · actor=agent · prev=eb354d3851 |
 
 <!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/sources/draft/200926-self-slop-gate-review.md', 'fdk/wiki |
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/test_html_slop_fix.py', 'llmwiki/graph/200926-self-slop- |
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/tests/downstream-slop-gate-test.sh', 'skills/docs-site-macos/S |
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/frontend-antipattern.py', 'fdk/tools/build-overstack-docs.py |
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['llmwiki/graph/scroll-batch.graph.json', 'fdk/tools/html-font-lint.py', |
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/html_base.py', 'fdk/CAPABILITIES.md', 'harness/validators/ht |
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/wiki/sources/200926-slop-baseline.md', 'fdk/tools/medic.py', 'llmw |
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['harness/poc-vendor-neutral/install.sh', 'fdk/tools/build-docs-index.py |
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/harness-doctor.py', 'llmwiki/wiki/sources/provenance/2 |
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/poc-vendor-neutral/policy.yaml', 'fdk/tools/html_font.py', 'll |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/test_html_slop_fix.py', 'llmwiki/graph/200926-self-slop- |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/sources/draft/200926-self-slop-gate-review.md', 'fdk/wiki |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/poc-vendor-neutral/policy.yaml', 'fdk/tools/html_font.py', 'll |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/tests/downstream-slop-gate-test.sh', 'skills/docs-site-macos/S |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/wiki/sources/200926-slop-baseline.md', 'fdk/tools/medic.py', 'llmw |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/harness-doctor.py', 'llmwiki/wiki/sources/provenance/2 |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['llmwiki/graph/scroll-batch.graph.json', 'fdk/tools/html-font-lint.py', |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/frontend-antipattern.py', 'fdk/tools/build-overstack-docs.py |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['harness/poc-vendor-neutral/install.sh', 'fdk/tools/build-docs-index.py |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/html_base.py', 'fdk/CAPABILITIES.md', 'harness/validators/ht |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/sources/draft/200926-self-slop-gate-review.md', 'fdk/wiki |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/frontend-antipattern.py', 'fdk/tools/build-overstack-docs.py |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/poc-vendor-neutral/policy.yaml', 'fdk/tools/html_font.py', 'll |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/wiki/sources/200926-slop-baseline.md', 'fdk/tools/medic.py', 'llmw |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/test_html_slop_fix.py', 'llmwiki/graph/200926-self-slop- |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['harness/poc-vendor-neutral/install.sh', 'fdk/tools/build-docs-index.py |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/tests/downstream-slop-gate-test.sh', 'skills/docs-site-macos/S |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/html_base.py', 'fdk/CAPABILITIES.md', 'harness/validators/ht |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['llmwiki/graph/scroll-batch.graph.json', 'fdk/tools/html-font-lint.py', |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/harness-doctor.py', 'llmwiki/wiki/sources/provenance/2 |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/test_html_slop_fix.py', 'llmwiki/graph/200926-self-slop- |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/frontend-antipattern.py', 'fdk/tools/build-overstack-docs.py |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/sources/draft/200926-self-slop-gate-review.md', 'fdk/wiki |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/harness-doctor.py', 'llmwiki/wiki/sources/provenance/2 |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['harness/poc-vendor-neutral/install.sh', 'fdk/tools/build-docs-index.py |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/tests/downstream-slop-gate-test.sh', 'skills/docs-site-macos/S |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['llmwiki/graph/scroll-batch.graph.json', 'fdk/tools/html-font-lint.py', |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/wiki/sources/200926-slop-baseline.md', 'fdk/tools/medic.py', 'llmw |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/html_base.py', 'fdk/CAPABILITIES.md', 'harness/validators/ht |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/poc-vendor-neutral/policy.yaml', 'fdk/tools/html_font.py', 'll |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/sources/draft/200926-self-slop-gate-review.md', 'fdk/wiki |
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/test_html_slop_fix.py', 'llmwiki/graph/200926-self-slop- |
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/tests/downstream-slop-gate-test.sh', 'skills/docs-site-macos/S |
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/frontend-antipattern.py', 'fdk/tools/build-overstack-docs.py |
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['llmwiki/graph/scroll-batch.graph.json', 'fdk/tools/html-font-lint.py', |
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/html_base.py', 'fdk/CAPABILITIES.md', 'harness/validators/ht |
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/wiki/sources/200926-slop-baseline.md', 'fdk/tools/medic.py', 'llmw |
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['harness/poc-vendor-neutral/install.sh', 'fdk/tools/build-docs-index.py |
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/harness-doctor.py', 'llmwiki/wiki/sources/provenance/2 |
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/poc-vendor-neutral/policy.yaml', 'fdk/tools/html_font.py', 'll |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/test_html_slop_fix.py', 'llmwiki/graph/200926-self-slop- |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/sources/draft/200926-self-slop-gate-review.md', 'fdk/wiki |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/poc-vendor-neutral/policy.yaml', 'fdk/tools/html_font.py', 'll |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/tests/downstream-slop-gate-test.sh', 'skills/docs-site-macos/S |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/wiki/sources/200926-slop-baseline.md', 'fdk/tools/medic.py', 'llmw |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/harness-doctor.py', 'llmwiki/wiki/sources/provenance/2 |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['llmwiki/graph/scroll-batch.graph.json', 'fdk/tools/html-font-lint.py', |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/frontend-antipattern.py', 'fdk/tools/build-overstack-docs.py |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['harness/poc-vendor-neutral/install.sh', 'fdk/tools/build-docs-index.py |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/html_base.py', 'fdk/CAPABILITIES.md', 'harness/validators/ht |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/sources/draft/200926-self-slop-gate-review.md', 'fdk/wiki |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/frontend-antipattern.py', 'fdk/tools/build-overstack-docs.py |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/poc-vendor-neutral/policy.yaml', 'fdk/tools/html_font.py', 'll |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/wiki/sources/200926-slop-baseline.md', 'fdk/tools/medic.py', 'llmw |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/test_html_slop_fix.py', 'llmwiki/graph/200926-self-slop- |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['harness/poc-vendor-neutral/install.sh', 'fdk/tools/build-docs-index.py |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/tests/downstream-slop-gate-test.sh', 'skills/docs-site-macos/S |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/html_base.py', 'fdk/CAPABILITIES.md', 'harness/validators/ht |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['llmwiki/graph/scroll-batch.graph.json', 'fdk/tools/html-font-lint.py', |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/harness-doctor.py', 'llmwiki/wiki/sources/provenance/2 |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/test_html_slop_fix.py', 'llmwiki/graph/200926-self-slop- |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/frontend-antipattern.py', 'fdk/tools/build-overstack-docs.py |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/sources/draft/200926-self-slop-gate-review.md', 'fdk/wiki |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/harness-doctor.py', 'llmwiki/wiki/sources/provenance/2 |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['harness/poc-vendor-neutral/install.sh', 'fdk/tools/build-docs-index.py |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/tests/downstream-slop-gate-test.sh', 'skills/docs-site-macos/S |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['llmwiki/graph/scroll-batch.graph.json', 'fdk/tools/html-font-lint.py', |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/wiki/sources/200926-slop-baseline.md', 'fdk/tools/medic.py', 'llmw |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/html_base.py', 'fdk/CAPABILITIES.md', 'harness/validators/ht |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/poc-vendor-neutral/policy.yaml', 'fdk/tools/html_font.py', 'll |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/sources/draft/200926-self-slop-gate-review.md', 'fdk/wiki |
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/test_html_slop_fix.py', 'llmwiki/graph/200926-self-slop- |
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/tests/downstream-slop-gate-test.sh', 'skills/docs-site-macos/S |
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/frontend-antipattern.py', 'fdk/tools/build-overstack-docs.py |
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['llmwiki/graph/scroll-batch.graph.json', 'fdk/tools/html-font-lint.py', |
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/html_base.py', 'fdk/CAPABILITIES.md', 'harness/validators/ht |
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/wiki/sources/200926-slop-baseline.md', 'fdk/tools/medic.py', 'llmw |
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['harness/poc-vendor-neutral/install.sh', 'fdk/tools/build-docs-index.py |
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/harness-doctor.py', 'llmwiki/wiki/sources/provenance/2 |
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/poc-vendor-neutral/policy.yaml', 'fdk/tools/html_font.py', 'll |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/test_html_slop_fix.py', 'llmwiki/graph/200926-self-slop- |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/sources/draft/200926-self-slop-gate-review.md', 'fdk/wiki |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/poc-vendor-neutral/policy.yaml', 'fdk/tools/html_font.py', 'll |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/tests/downstream-slop-gate-test.sh', 'skills/docs-site-macos/S |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/wiki/sources/200926-slop-baseline.md', 'fdk/tools/medic.py', 'llmw |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/harness-doctor.py', 'llmwiki/wiki/sources/provenance/2 |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['llmwiki/graph/scroll-batch.graph.json', 'fdk/tools/html-font-lint.py', |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/frontend-antipattern.py', 'fdk/tools/build-overstack-docs.py |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['harness/poc-vendor-neutral/install.sh', 'fdk/tools/build-docs-index.py |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/html_base.py', 'fdk/CAPABILITIES.md', 'harness/validators/ht |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/sources/draft/200926-self-slop-gate-review.md', 'fdk/wiki |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/frontend-antipattern.py', 'fdk/tools/build-overstack-docs.py |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/poc-vendor-neutral/policy.yaml', 'fdk/tools/html_font.py', 'll |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/wiki/sources/200926-slop-baseline.md', 'fdk/tools/medic.py', 'llmw |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/test_html_slop_fix.py', 'llmwiki/graph/200926-self-slop- |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['harness/poc-vendor-neutral/install.sh', 'fdk/tools/build-docs-index.py |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/tests/downstream-slop-gate-test.sh', 'skills/docs-site-macos/S |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/html_base.py', 'fdk/CAPABILITIES.md', 'harness/validators/ht |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['llmwiki/graph/scroll-batch.graph.json', 'fdk/tools/html-font-lint.py', |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/harness-doctor.py', 'llmwiki/wiki/sources/provenance/2 |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/test_html_slop_fix.py', 'llmwiki/graph/200926-self-slop- |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/frontend-antipattern.py', 'fdk/tools/build-overstack-docs.py |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/sources/draft/200926-self-slop-gate-review.md', 'fdk/wiki |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/harness-doctor.py', 'llmwiki/wiki/sources/provenance/2 |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['harness/poc-vendor-neutral/install.sh', 'fdk/tools/build-docs-index.py |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/tests/downstream-slop-gate-test.sh', 'skills/docs-site-macos/S |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['llmwiki/graph/scroll-batch.graph.json', 'fdk/tools/html-font-lint.py', |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/wiki/sources/200926-slop-baseline.md', 'fdk/tools/medic.py', 'llmw |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/html_base.py', 'fdk/CAPABILITIES.md', 'harness/validators/ht |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/poc-vendor-neutral/policy.yaml', 'fdk/tools/html_font.py', 'll |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/harness-doctor.py', 'llmwiki/wiki/sources/provenance/2 |
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/poc-vendor-neutral/policy.yaml', 'fdk/tools/html_font.py', 'll |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/test_html_slop_fix.py', 'llmwiki/graph/200926-self-slop- |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/sources/draft/200926-self-slop-gate-review.md', 'fdk/wiki |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/poc-vendor-neutral/policy.yaml', 'fdk/tools/html_font.py', 'll |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/tests/downstream-slop-gate-test.sh', 'skills/docs-site-macos/S |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/wiki/sources/200926-slop-baseline.md', 'fdk/tools/medic.py', 'llmw |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/harness-doctor.py', 'llmwiki/wiki/sources/provenance/2 |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['llmwiki/graph/scroll-batch.graph.json', 'fdk/tools/html-font-lint.py', |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/frontend-antipattern.py', 'fdk/tools/build-overstack-docs.py |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['harness/poc-vendor-neutral/install.sh', 'fdk/tools/build-docs-index.py |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/html_base.py', 'fdk/CAPABILITIES.md', 'harness/validators/ht |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/sources/draft/200926-self-slop-gate-review.md', 'fdk/wiki |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/frontend-antipattern.py', 'fdk/tools/build-overstack-docs.py |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/poc-vendor-neutral/policy.yaml', 'fdk/tools/html_font.py', 'll |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/wiki/sources/200926-slop-baseline.md', 'fdk/tools/medic.py', 'llmw |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/test_html_slop_fix.py', 'llmwiki/graph/200926-self-slop- |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['harness/poc-vendor-neutral/install.sh', 'fdk/tools/build-docs-index.py |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/tests/downstream-slop-gate-test.sh', 'skills/docs-site-macos/S |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/html_base.py', 'fdk/CAPABILITIES.md', 'harness/validators/ht |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['llmwiki/graph/scroll-batch.graph.json', 'fdk/tools/html-font-lint.py', |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/harness-doctor.py', 'llmwiki/wiki/sources/provenance/2 |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/test_html_slop_fix.py', 'llmwiki/graph/200926-self-slop- |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/frontend-antipattern.py', 'fdk/tools/build-overstack-docs.py |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/sources/draft/200926-self-slop-gate-review.md', 'fdk/wiki |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/harness-doctor.py', 'llmwiki/wiki/sources/provenance/2 |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['harness/poc-vendor-neutral/install.sh', 'fdk/tools/build-docs-index.py |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/tests/downstream-slop-gate-test.sh', 'skills/docs-site-macos/S |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['llmwiki/graph/scroll-batch.graph.json', 'fdk/tools/html-font-lint.py', |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/wiki/sources/200926-slop-baseline.md', 'fdk/tools/medic.py', 'llmw |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/html_base.py', 'fdk/CAPABILITIES.md', 'harness/validators/ht |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/poc-vendor-neutral/policy.yaml', 'fdk/tools/html_font.py', 'll |
+| 2026-09-21 15:13:53 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ccae481574cefa7961cff9f728b6903399 |
+| 2026-09-21 15:13:53 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=c2a8a41ac7d0cf1f3894fc3edfc959023f |
+| 2026-09-21 15:14:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=19363b895f387eed3b0125ce2b2c46489b |
+| 2026-09-21 15:14:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=8323e880f19d39c4a6321ac871155dc30e |
+| 2026-09-21 15:16:16 | `file.write` | fdk/wiki/sources/210926-slop-code-checkable.md · tool=Write · session=d3f387e6 · actor=agent · prev=6e44075fa0fc7594609b |
+| 2026-09-21 15:16:16 | `file.write` | fdk/wiki/sources/210926-slop-code-checkable.md · tool=Write · session=d3f387e6 · actor=agent · prev=1c22bc7d7a4c11702222 |
+| 2026-09-21 15:30:07 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=02403098f24463bb50003b0f97d099a529 |
+| 2026-09-21 15:30:07 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=0f33dce1862a1276b592a3a2f0437fc0b2 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/harness-doctor.py', 'llmwiki/wiki/sources/provenance/2 |
+| 2026-09-21 14:29:02 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/poc-vendor-neutral/policy.yaml', 'fdk/tools/html_font.py', 'll |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/test_html_slop_fix.py', 'llmwiki/graph/200926-self-slop- |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/sources/draft/200926-self-slop-gate-review.md', 'fdk/wiki |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/poc-vendor-neutral/policy.yaml', 'fdk/tools/html_font.py', 'll |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/tests/downstream-slop-gate-test.sh', 'skills/docs-site-macos/S |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/wiki/sources/200926-slop-baseline.md', 'fdk/tools/medic.py', 'llmw |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/harness-doctor.py', 'llmwiki/wiki/sources/provenance/2 |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['llmwiki/graph/scroll-batch.graph.json', 'fdk/tools/html-font-lint.py', |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/frontend-antipattern.py', 'fdk/tools/build-overstack-docs.py |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['harness/poc-vendor-neutral/install.sh', 'fdk/tools/build-docs-index.py |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/html_base.py', 'fdk/CAPABILITIES.md', 'harness/validators/ht |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/sources/draft/200926-self-slop-gate-review.md', 'fdk/wiki |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/frontend-antipattern.py', 'fdk/tools/build-overstack-docs.py |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/poc-vendor-neutral/policy.yaml', 'fdk/tools/html_font.py', 'll |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/wiki/sources/200926-slop-baseline.md', 'fdk/tools/medic.py', 'llmw |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/test_html_slop_fix.py', 'llmwiki/graph/200926-self-slop- |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['harness/poc-vendor-neutral/install.sh', 'fdk/tools/build-docs-index.py |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/tests/downstream-slop-gate-test.sh', 'skills/docs-site-macos/S |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/html_base.py', 'fdk/CAPABILITIES.md', 'harness/validators/ht |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['llmwiki/graph/scroll-batch.graph.json', 'fdk/tools/html-font-lint.py', |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/harness-doctor.py', 'llmwiki/wiki/sources/provenance/2 |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/test_html_slop_fix.py', 'llmwiki/graph/200926-self-slop- |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/frontend-antipattern.py', 'fdk/tools/build-overstack-docs.py |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/sources/draft/200926-self-slop-gate-review.md', 'fdk/wiki |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/harness-doctor.py', 'llmwiki/wiki/sources/provenance/2 |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['harness/poc-vendor-neutral/install.sh', 'fdk/tools/build-docs-index.py |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/tests/downstream-slop-gate-test.sh', 'skills/docs-site-macos/S |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['llmwiki/graph/scroll-batch.graph.json', 'fdk/tools/html-font-lint.py', |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/wiki/sources/200926-slop-baseline.md', 'fdk/tools/medic.py', 'llmw |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/html_base.py', 'fdk/CAPABILITIES.md', 'harness/validators/ht |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/poc-vendor-neutral/policy.yaml', 'fdk/tools/html_font.py', 'll |
+| 2026-09-21 15:13:53 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ccae481574cefa7961cff9f728b6903399 |
+| 2026-09-21 15:13:53 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=c2a8a41ac7d0cf1f3894fc3edfc959023f |
+| 2026-09-21 15:14:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=19363b895f387eed3b0125ce2b2c46489b |
+| 2026-09-21 15:14:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=8323e880f19d39c4a6321ac871155dc30e |
+| 2026-09-21 15:16:16 | `file.write` | fdk/wiki/sources/210926-slop-code-checkable.md · tool=Write · session=d3f387e6 · actor=agent · prev=6e44075fa0fc7594609b |
+| 2026-09-21 15:16:16 | `file.write` | fdk/wiki/sources/210926-slop-code-checkable.md · tool=Write · session=d3f387e6 · actor=agent · prev=1c22bc7d7a4c11702222 |
+| 2026-09-21 15:30:07 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=02403098f24463bb50003b0f97d099a529 |
+| 2026-09-21 15:30:07 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=0f33dce1862a1276b592a3a2f0437fc0b2 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/test_html_slop_fix.py', 'llmwiki/graph/200926-self-slop- |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/sources/draft/200926-self-slop-gate-review.md', 'fdk/wiki |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/poc-vendor-neutral/policy.yaml', 'fdk/tools/html_font.py', 'll |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/tests/downstream-slop-gate-test.sh', 'skills/docs-site-macos/S |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/wiki/sources/200926-slop-baseline.md', 'fdk/tools/medic.py', 'llmw |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/harness-doctor.py', 'llmwiki/wiki/sources/provenance/2 |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['llmwiki/graph/scroll-batch.graph.json', 'fdk/tools/html-font-lint.py', |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/frontend-antipattern.py', 'fdk/tools/build-overstack-docs.py |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['harness/poc-vendor-neutral/install.sh', 'fdk/tools/build-docs-index.py |
+| 2026-09-21 14:29:20 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/html_base.py', 'fdk/CAPABILITIES.md', 'harness/validators/ht |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/sources/draft/200926-self-slop-gate-review.md', 'fdk/wiki |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/frontend-antipattern.py', 'fdk/tools/build-overstack-docs.py |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/poc-vendor-neutral/policy.yaml', 'fdk/tools/html_font.py', 'll |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/wiki/sources/200926-slop-baseline.md', 'fdk/tools/medic.py', 'llmw |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/test_html_slop_fix.py', 'llmwiki/graph/200926-self-slop- |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['harness/poc-vendor-neutral/install.sh', 'fdk/tools/build-docs-index.py |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/tests/downstream-slop-gate-test.sh', 'skills/docs-site-macos/S |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/html_base.py', 'fdk/CAPABILITIES.md', 'harness/validators/ht |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['llmwiki/graph/scroll-batch.graph.json', 'fdk/tools/html-font-lint.py', |
+| 2026-09-21 14:29:27 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/harness-doctor.py', 'llmwiki/wiki/sources/provenance/2 |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/test_html_slop_fix.py', 'llmwiki/graph/200926-self-slop- |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/tools/frontend-antipattern.py', 'fdk/tools/build-overstack-docs.py |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/sources/draft/200926-self-slop-gate-review.md', 'fdk/wiki |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/harness-doctor.py', 'llmwiki/wiki/sources/provenance/2 |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['harness/poc-vendor-neutral/install.sh', 'fdk/tools/build-docs-index.py |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['harness/tests/downstream-slop-gate-test.sh', 'skills/docs-site-macos/S |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['llmwiki/graph/scroll-batch.graph.json', 'fdk/tools/html-font-lint.py', |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/wiki/sources/200926-slop-baseline.md', 'fdk/tools/medic.py', 'llmw |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/html_base.py', 'fdk/CAPABILITIES.md', 'harness/validators/ht |
+| 2026-09-21 14:29:38 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/poc-vendor-neutral/policy.yaml', 'fdk/tools/html_font.py', 'll |
+| 2026-09-21 15:13:53 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ccae481574cefa7961cff9f728b6903399 |
+| 2026-09-21 15:13:53 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=c2a8a41ac7d0cf1f3894fc3edfc959023f |
+| 2026-09-21 15:14:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=19363b895f387eed3b0125ce2b2c46489b |
+| 2026-09-21 15:14:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=8323e880f19d39c4a6321ac871155dc30e |
+| 2026-09-21 15:16:16 | `file.write` | fdk/wiki/sources/210926-slop-code-checkable.md · tool=Write · session=d3f387e6 · actor=agent · prev=6e44075fa0fc7594609b |
+| 2026-09-21 15:16:16 | `file.write` | fdk/wiki/sources/210926-slop-code-checkable.md · tool=Write · session=d3f387e6 · actor=agent · prev=1c22bc7d7a4c11702222 |
+| 2026-09-21 15:30:07 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=02403098f24463bb50003b0f97d099a529 |
+| 2026-09-21 15:30:07 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=0f33dce1862a1276b592a3a2f0437fc0b2 |
+| 2026-09-21 16:05:46 | `file.write` | llmwiki/wiki/sources/draft/210926-reading-font-slop-code-review.md · tool=Write · session=d3f387e6 · actor=agent · prev= |
+| 2026-09-21 16:05:46 | `file.write` | llmwiki/wiki/sources/draft/210926-reading-font-slop-code-review.md · tool=Write · session=d3f387e6 · actor=agent · prev= |
+
+<!-- log:auto:end -->

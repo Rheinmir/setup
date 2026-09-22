@@ -78,10 +78,10 @@ Output is a self-contained `.html` file (no JS libraries, no build step).
 ## HOW
 
 
-### Font mặc định — Lexend Deca Light, NHÚNG (MUST, user chốt 20/09/2026)
-Mọi trang HTML do overstack sinh ra dùng **Lexend Deca weight 300** cho phần nội dung; chữ đậm/tiêu đề lấy nét thật từ cùng font (trục 300–700); `--font-mono` cho code giữ nguyên. Font được **nhúng base64 vào chính trang** (~49 KB) để mở `file://` không mạng vẫn đúng font — KHÔNG dùng `<link>` Google Fonts, KHÔNG tự dán chuỗi base64 bằng tay. Việc của bạn gồm đúng hai bước:
-1. Trong CSS của trang: `body{font-family:var(--font-text);font-weight:300}` và `--font-display` trỏ về `var(--font-text)` (đừng khai stack hệ thống riêng cho tiêu đề).
-2. **Sau khi ghi xong file**, chạy một lệnh (idempotent, in `✓ … nhúng Lexend Deca Light`):
+### Font mặc định — Be Vietnam Pro, NHÚNG (MUST, user chốt 20/09/2026, đổi font 21/09/2026)
+Mọi trang HTML do overstack sinh ra dùng **Be Vietnam Pro** (theme đọc kiểu Vietcetera): nội dung 400, chữ đậm 600, tiêu đề 800 với `letter-spacing:var(--ls-heading)` âm; ba file tĩnh 400/600/800, xin 500 ra 400, xin 700 ra 800 — nét thật; `--font-mono` cho code giữ nguyên. Font được **nhúng base64 vào chính trang** (~130 KB) để mở `file://` không mạng vẫn đúng font — KHÔNG dùng `<link>` Google Fonts, KHÔNG tự dán chuỗi base64 bằng tay. Việc của bạn gồm đúng hai bước:
+1. Trong CSS của trang: `body{font-family:var(--font-text);font-weight:var(--fw-text)}` và `--font-display` trỏ về `var(--font-text)` (đừng khai stack hệ thống riêng cho tiêu đề).
+2. **Sau khi ghi xong file**, chạy một lệnh (idempotent, in `✓ … nhúng Be Vietnam Pro`):
 ```bash
 python3 fdk/tools/html_font.py --apply <trang.html> [trang-khác.html …]      # máy khách: python3 ~/.claude/harness/fdk/tools/html_font.py --apply …
 ```
@@ -1074,8 +1074,8 @@ System fonts ONLY — NO Google Fonts `<link>`, no `@import`, no webfont downloa
 
 ```css
 :root{
-  --font-text: 'Lexend Deca', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;  /* font mặc định của overstack: Lexend Deca LIGHT (300) — file font được NHÚNG ở bước cuối, xem 'Font mặc định' */
-  --font-display: var(--font-text);  /* tiêu đề cùng họ Lexend Deca; đậm nhạt chỉnh bằng font-weight 400–600 */
+  --font-text: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;  /* font mặc định của overstack: Be Vietnam Pro 400 — file font được NHÚNG ở bước cuối, xem 'Font mặc định' */
+  --font-display: var(--font-text);  /* tiêu đề cùng họ Be Vietnam Pro; đậm nhạt chỉ dùng 400 / 600 / 800 (weight đã nhúng) */
   --font-mono: 'SF Mono', ui-monospace, 'SFMono-Regular', Menlo, 'Roboto Mono', Consolas, monospace;
 }
 body{font-family:var(--font-text)}

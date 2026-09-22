@@ -55,3 +55,59 @@ def test_all_scope_covers_every_framework_page_not_just_overstack():
     assert "overstack.html" in pages and len(pages) >= 2
     r = subprocess.run([sys.executable, str(TOOL), "--self-test"], capture_output=True, text=True)
     assert r.returncode == 0, r.stdout[-400:]
+
+
+def test_rounded_edge_catches_what_side_stripe_misses_and_spares_uniform_or_unrounded():
+    bad = {
+        "cascade": ".card{border-radius:12px}.x{color:red}.card{border-left:4px solid #e23b2d}",
+        "longhand-color": ".card{border:1px solid #ddd;border-left-color:#2563eb;border-radius:10px}",
+        "var-accent": ".card{border-left:3px solid var(--accent);border-radius:8px}",
+        "top": ".card{border-top:2px solid #0a84ff;border-radius:0 0 8px 8px}",
+        "inline-start": ".card{border-inline-start:3px solid var(--accent);border-top-left-radius:6px}",
+        "blockquote": "blockquote{border-left:4px solid #0a84ff;border-radius:8px}",
+        "media-cascade": ".card{border-radius:12px}@media (min-width:1px){.card{border-left:4px solid #e23b2d}}",
+        "thicker": ".card{border:1px solid var(--accent);border-left-width:4px;border-radius:8px}",
+        "opposite": ".card{border-left:3px solid #e23b2d;border-right:3px solid #e23b2d;border-radius:8px}",
+        "tab-active": ".tab.active{border:1px solid #d0d0d4;border-bottom:2px solid var(--accent);border-radius:8px 8px 0 0}",
+        "three-sides": ".tab{border:2px solid #0a84ff;border-bottom:0;border-radius:8px 8px 0 0}",
+    }
+    for name, css in bad.items():
+        assert "rounded-edge" in rules(DARK + css, TOGGLE), name
+    assert "rounded-edge" in rules(DARK, TOGGLE + '<div style="border-radius:8px;border-left:4px solid red">x</div>')
+    good = (".card{border:1px solid var(--line);border-radius:12px}", ".card{border-left:4px solid red}",
+            ".card{border-bottom:1px solid #e5e5e5;border-radius:8px}", ".card{border-radius:0;border-left:4px solid red}",
+            ".avatar{border-radius:50%}", ".avatar{border-radius:50%;border:2px solid #0a84ff}",
+            ".sp{border:3px solid #e5e5e5;border-top-color:#0a84ff;border-radius:50%}",          # spinner tải (review t9 F3)
+            ".tab{border-bottom:1px solid color-mix(in srgb, var(--ink) 12%, transparent);border-radius:8px}",   # kẻ xám pha màu (F5)
+            ".card{border:1px solid #ddd;border-left:1px dashed #ddd;border-radius:8px}",
+            ".card{border-bottom:1px solid hsl(220 0% 80%);border-radius:8px}", ".card{border-top:1px solid oklch(0.85 0 0);border-radius:8px}",
+            ".card{border:1px solid #0a84ff;border-left-width:1.2px;border-radius:8px}")
+    for ok in good:
+        assert "rounded-edge" not in rules(DARK + ok, TOGGLE), ok
+    # side-stripe giữ nguyên hành vi: cạnh màu KHÔNG bo tròn vẫn do side-stripe bắt
+    assert "side-stripe" in rules(DARK + ".card{border-left:4px solid red}", TOGGLE)
+
+
+def _levels(css, body=TOGGLE):
+    html = f"<html><head><style>{PAD}{DARK}{css}</style></head><body>{body}</body></html>"
+    return {f["rule"]: f["level"] for f in fap._scan_text(html) if f.get("rule")}
+
+
+def test_transition_all_caught_in_css_inline_and_tailwind_class_but_listed_properties_spared():
+    assert _levels(".btn{transition:all .2s}").get("transition-all") == "FAIL"
+    assert _levels(".btn{transition-property:all}").get("transition-all") == "FAIL"
+    assert "transition-all" in _levels("", TOGGLE + '<a style="transition: all 150ms">x</a>')
+    assert "transition-all" in _levels("", TOGGLE + '<button class="px-2 transition-all duration-200">x</button>')
+    for ok in (".btn{transition:background-color .2s,color .2s}", ".btn{transition:allow .2s}", ".btn{--transition:all}"):
+        assert "transition-all" not in _levels(ok), ok
+    assert "transition-all" not in _levels("", TOGGLE + "<p>đừng dùng <code>transition-all</code></p>")   # văn xuôi không phải vi phạm
+
+
+def test_reduced_motion_missing_fails_on_animation_warns_on_transform_and_spares_pages_with_media_query():
+    anim = "@keyframes f{to{transform:rotate(1turn)}}.s{animation:f 1s infinite}"
+    assert _levels(anim).get("reduced-motion-missing") == "FAIL"
+    assert _levels(".s{animation-name:spin}").get("reduced-motion-missing") == "FAIL"
+    assert _levels(".card{transition:transform .2s}").get("reduced-motion-missing") == "WARN"
+    for ok in (anim + "@media (prefers-reduced-motion:reduce){.s{animation:none}}", ".s{animation:none}",
+               ".card{transition:opacity .2s}", ".card{transition:transform .2s}@media (prefers-reduced-motion: reduce){.card{transition:none}}"):
+        assert "reduced-motion-missing" not in _levels(ok), ok

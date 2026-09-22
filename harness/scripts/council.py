@@ -74,7 +74,7 @@ GENERATOR = "council.py/1.0"
 # --------------------------------------------------------------------------- #
 
 def _ovs_font(html: str) -> str:
-    """Font mặc định của mọi HTML framework sinh ra = Lexend Deca Light, NHÚNG (nguồn duy nhất: fdk/tools/html_font.py)."""
+    """Font mặc định của mọi HTML framework sinh ra = Be Vietnam Pro, NHÚNG (nguồn duy nhất: fdk/tools/html_font.py)."""
     import importlib.util
     from pathlib import Path as _P
     here = _P(__file__).resolve()

@@ -29,6 +29,11 @@ không nhìn NỘI DUNG lỗi. Bắt các bẫy rẻ-tiền, tất định làm 
          hoặc số dòng vượt độ dài file → sơ đồ đang NÓI DỐI về code. Fail-closed có chủ ý:
          không khai thì không bị hỏi; đã khai thì phải đúng.
 
+  Chuyển động (PLAN 210926 t7, slop-test #10 / #27):
+  [FAIL] transition-all: `transition: all` / class `transition-all` → liệt kê đúng thuộc tính.
+  [FAIL] reduced-motion-missing: có @keyframes/animation mà thiếu @media (prefers-reduced-motion).
+  [WARN]   … cùng luật khi chỉ có `transition: transform` (nợ 20 trang lúc cắm).
+
 Exit: 0 sạch · 1 có FAIL · 2 chỉ WARN (medic map: 1→fail, 2→warn, 0→ok). Fail-open:
 thiếu file → sạch (không chặn). Mặc định quét llmwiki/html/overstack.html; nhận path khác qua arg.
 
@@ -324,6 +329,74 @@ def _is_neutral_color(c: str) -> bool:
     return max(r, g, b) - min(r, g, b) < 28
 
 
+# ── rounded-edge (21/09/2026, PLAN 210926 t6): "đã bo tròn thì không thêm cạnh màu". Khác side-stripe: xét SAU khi gộp khai báo theo
+# selector (cascade), hiểu border-*-color / border-inline-start / border-top, và KHÔNG miễn blockquote.
+_SIDES = ("top", "right", "bottom", "left")
+_SIDE_ALIAS = {"inline-start": "left", "inline-end": "right", "block-start": "top", "block-end": "bottom"}
+_BSTYLES = {"none", "hidden", "solid", "dashed", "dotted", "double", "groove", "ridge", "inset", "outset"}
+_BORDER_DECL = re.compile(r"(?<![\w-])border(?:-(top|right|bottom|left|inline-start|inline-end|block-start|block-end))?(?:-(width|style|color))?\s*:\s*([^;}]+)", re.I)
+_RADIUS_DECL = re.compile(r"(?<![\w-])border(?:-[a-z]+-[a-z]+)?-radius\s*:\s*([^;}]+)", re.I)
+
+
+def _px(tok: str):
+    m = re.match(r"(\d*\.?\d+)(px|rem|em)?$", tok)
+    return float(m.group(1)) * (16 if m.group(2) in ("rem", "em") else 1) if m else {"thin": 1, "medium": 3, "thick": 5}.get(tok)
+
+
+def _box4(vals):
+    vals = (vals + [None] * 4)[:4] if vals else [None] * 4
+    t, r, b, l = vals[0], vals[1] or vals[0], vals[2] or vals[0], vals[3] or vals[1] or vals[0]
+    return dict(zip(_SIDES, (t, r, b, l)))
+
+
+def _rounded_edge(decl: str):
+    """Trả về cạnh lệch (vd 'left', 'left+right') nếu khối có bo góc > 0 mà 1–3 cạnh mang viền MÀU NHẤN khác màu hoặc dày ≥ 1.5×
+    phần còn lại; None nếu sạch. `decl` là khai báo ĐÃ GỘP theo selector, đọc theo thứ tự (khai sau đè khai trước)."""
+    if not any(("var(" in v) or any(float(n) > 0 for n in re.findall(r"\d*\.?\d+", v)) for v in _RADIUS_DECL.findall(decl)):
+        return None
+    if any(re.search(r"(?<![\d.])50%|\b(?:9{3,}|\d{4,})px", v) for v in _RADIUS_DECL.findall(decl)):
+        return None                             # phần tử TRÒN (spinner tải: border-top-color nhấn trên vòng xám, avatar) — không phải thẻ có sọc (review t9 F3)
+    side = {s: {"w": 3.0, "s": "none", "c": "currentcolor"} for s in _SIDES}
+    for m in _BORDER_DECL.finditer(decl):
+        where, prop, val = (m.group(1) or "").lower(), (m.group(2) or "").lower(), m.group(3).strip().lower()
+        targets = [_SIDE_ALIAS.get(where, where)] if where else list(_SIDES)
+        toks = re.findall(r"[\w-]+\([^)]*\)|\S+", val.replace("!important", ""))
+        if prop:
+            key = prop[0]
+            per = {t: (toks[0] if toks else "") for t in targets} if where else _box4(toks)
+            for t in targets:
+                v = per[t] or ""
+                side[t][key] = (_px(v) or 0.0) if key == "w" else v
+        else:                                   # shorthand: thiếu style = none, thiếu width = medium, thiếu màu = currentcolor
+            w, st, col = 3.0, "none", []
+            for tk in toks:
+                if _px(tk) is not None and not col: w = _px(tk)
+                elif tk in _BSTYLES: st = tk
+                else: col.append(tk)
+            for t in targets:
+                side[t] = {"w": w, "s": st, "c": " ".join(col) or "currentcolor"}
+    sig = {s: (d["c"], d["w"]) if d["w"] > 0 and d["s"] not in ("none", "hidden") else None for s, d in side.items()}
+    for cand in {v for v in sig.values() if v}:
+        odd = [s for s in _SIDES if sig[s] == cand]
+        if len(odd) == 4 or _neutral_edge(cand[0]):      # 1–3 cạnh, kề hay đối diện đều tính
+            continue
+        rest = [sig[s] for s in _SIDES if s not in odd and sig[s]]
+        if all(r[0] != cand[0] for r in rest) or cand[1] >= 1.5 * max((r[1] for r in rest), default=0):
+            return "+".join(odd)
+    return None
+
+
+def _neutral_edge(c: str) -> bool:
+    """_is_neutral_color + xám viết bằng hsl(H 0% L) / oklch(L ~0 H) — riêng cho rounded-edge để KHÔNG đổi hành vi side-stripe."""
+    if "color-mix(" in c.lower():
+        return True                              # ponytail: tĩnh không tính được color-mix (đường kẻ xám pha ink) → để cổng chạy thật quyết (review t9 F5)
+    m = re.match(r"\s*(hsla?|oklch)\(\s*([\d.]+%?)[,\s]+([\d.]+%?)", c.lower())
+    if m:
+        v = float(m.group(3).rstrip("%"))
+        return v < 10 if m.group(1).startswith("hsl") else (v < 0.4 if m.group(3).endswith("%") else v < 0.02)
+    return _is_neutral_color(c)
+
+
 def scan_slop(html: str, styles: str, rel: str) -> list:
     out = []
     add = lambda level, rule, msg, snip: out.append({"level": level, "rule": rule, "file": rel, "msg": msg, "snippet": snip[:110]})
@@ -350,6 +423,17 @@ def scan_slop(html: str, styles: str, rel: str) -> list:
     if stripes:
         add("FAIL", "side-stripe", f"sọc viền MÀU một cạnh trên thẻ/nút/callout ({len(stripes)} chỗ) — AI-tell hàng đầu. Phân loại bằng chấm màu, nhãn, "
             "hoặc nền nhạt toàn thẻ; viền thì đều bốn cạnh.", stripes[0])
+    merged = {}                               # cascade: gộp khai báo theo selector chuẩn hoá (kể cả luật trong @media)
+    for sel, decl in css_rules(styles):
+        for one in sel.split(","):
+            key = " ".join(one.split())
+            if key and not key.startswith("@"):
+                merged[key] = merged.get(key, "") + ";" + decl
+    edges = [f"{k[-70:]} ({e})" for k, d in merged.items() if (e := _rounded_edge(d))]
+    edges += [f'style="{m.group(1)[:70]}" ({e})' for m in re.finditer(r'style\s*=\s*"([^"]*)"', html, re.I) if (e := _rounded_edge(m.group(1)))]
+    if edges:
+        add("FAIL", "rounded-edge", f"đã bo tròn còn thêm cạnh MÀU ({len(edges)} chỗ) — góc bo làm sọc màu cong dị, lộ AI-tell. Bỏ cạnh màu "
+            "(dùng chấm màu/nhãn/nền nhạt) hoặc viền đều bốn cạnh.", edges[0])
     # ── sáng/tối: luật repo — mọi HTML phải có toggle + nhớ lựa chọn (feedback user nhắc nhiều lần) ──
     if len(styles) > 400:                     # trang có CSS thật (bỏ trang chuyển hướng / fixture tí hon)
         has_dark = bool(re.search(r"\[data-theme\s*=\s*[\"']?dark|prefers-color-scheme\s*:\s*dark|\.dark\b|\[data-mode", styles, re.I))
@@ -376,7 +460,33 @@ def scan_slop(html: str, styles: str, rel: str) -> list:
     if bad_up:
         add("WARN", "uppercase-misuse", f"viết HOA lệch quy ước ({len(bad_up)} chỗ) — chỉ NHÃN NHỎ (eyebrow, tiêu đề nhóm, tiêu đề cột) được "
             "uppercase và bắt buộc kèm letter-spacing; tiêu đề, nút, mục menu viết thường hoa đầu câu.", bad_up[0])
+    # ── transition-all (slop-test #10, PLAN 210926 t7): animate MỌI thuộc tính → layout/màu nhảy theo, giật và tốn repaint ──
+    t_all = [m.group(0) for m in _TRANS_ALL.finditer(styles)]
+    t_all += [f'class="{m.group(1)[:60]}"' for m in re.finditer(r'class\s*=\s*["\']([^"\']*)', html, re.I) if _TW_TRANS_ALL.search(m.group(1))]
+    if t_all:
+        add("FAIL", "transition-all", f"`transition: all` ({len(t_all)} chỗ) — liệt kê đúng thuộc tính cần chuyển (background-color, opacity, transform…).",
+            t_all[0])
+    # ── reduced-motion-missing (slop-test #27): trang có chuyển động mà không tôn trọng người tắt chuyển động ở hệ điều hành ──
+    if not _REDUCED.search(styles):
+        mo = _ANIM.search(styles) or _TF_TRANS.search(styles)
+        if mo:
+            add("FAIL" if _ANIM.search(styles) else "WARN", "reduced-motion-missing", "trang có chuyển động (@keyframes / animation / transition "
+                "transform) nhưng thiếu `@media (prefers-reduced-motion: reduce)` — người bị say chuyển động không tắt được.", mo.group(0))
     return out
+
+
+# t7 (21/09/2026) — ĐO TRƯỚC khi cài, trên 39 trang của --all:
+#   transition-all          1 trang (design-pattern-v3) → FAIL: regex chỉ khớp đúng `transition: all`, gần như không báo giả.
+#   reduced-motion-missing  0 trang có @keyframes/animation mà thiếu media query → FAIL cho nhánh đó;
+#                           20 trang chỉ có `transition: transform` (hover nhấc thẻ, pan/zoom của viewer orca-graph — engine ở repo
+#                           riêng) → WARN: chuyển động ngắn do người dùng tự kích, báo giả đáng kể. Sau đó (t8) html_base.py chèn media query
+#                           vào MỌI trang sinh ra → 20 → 0; nhánh WARN giờ chỉ còn bắn trên trang dựng tay / dự án khách không qua lớp nền.
+#   ponytail: nâng nhánh transform lên FAIL khi trang dự án khách cũng về 0.
+_TRANS_ALL = re.compile(r"(?<![\w-])transition(?:-property)?\s*:\s*all\b", re.I)
+_TW_TRANS_ALL = re.compile(r"(?<![\w-])transition-all(?![\w-])")
+_ANIM = re.compile(r"@keyframes\b|(?<![\w-])animation(?:-name)?\s*:\s*(?!none\b)[^;}\s]", re.I)
+_TF_TRANS = re.compile(r"(?<![\w-])transition(?:-property)?\s*:[^;}]*\btransform\b", re.I)
+_REDUCED = re.compile(r"@media[^{]*prefers-reduced-motion", re.I)
 
 
 _ARCHIFY_RE = re.compile(r"\barchify \d+\.\d+")

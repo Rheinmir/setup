@@ -459,12 +459,13 @@
     "t12": "acceptance"
    },
    "spec_hash": "ad794a1691a56ec6",
-   "state": "dispatched",
+   "state": "done",
    "gen": 1,
-   "rev": 2,
+   "rev": 3,
    "attempts": 1,
    "fresh": "current",
-   "verified": "unverified"
+   "verified": "verified",
+   "done_spec_hash": "ad794a1691a56ec6"
   }
  ],
  "layers": [
@@ -672,5 +673,5 @@
  ],
  "control": "active",
  "schema_version": 1,
- "checksum": "9ef88f3ad3c9fb63"
+ "checksum": "9666e61e25cc8872"
 }

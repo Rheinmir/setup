@@ -18,6 +18,7 @@ session: 0d1b17dc-cb01-4889-81a6-d9b1c16fbfae
 ## File chạm trong phiên
 
 - `.claude-plugin/marketplace.json`
+- `sources/draft/180926-ship-scroll-originals-PLAN.md`
 
 ## Origin
 - **Session:** `0d1b17dc-cb01-4889-81a6-d9b1c16fbfae`

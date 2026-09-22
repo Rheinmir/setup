@@ -302,11 +302,11 @@
     },
     "docs-site-macos": {
       "files": {
-        "SKILL.md": "8ae69600893855925a670cb4729d1b7f60689abddecdc38574fca76c2e47f8d1",
+        "SKILL.md": "e894d456139689d461e40c51d4e960804ff58eb19ad531d806b385af3187edcd",
         "vendor/README.md": "637090466e5c66282a3e092751982f95f05eeca3ebf3f7eadc29596960ced445",
         "vendor/beautiful-mermaid.min.js.gz.b64": "89e9982b5e5b5f06c7b07ed44ee525df4e8fa5372b93c70bc79cd492acf29b37"
       },
-      "recorded": "2026-09-20",
+      "recorded": "2026-09-22",
       "source": "local-authored"
     },
     "doyourmagic": {
@@ -841,13 +841,13 @@
     "orca-graph": {
       "adapt_mode": "external-pull",
       "category": "orchestrate",
-      "commit": "7b6eae7a366f9d35750161c85b3e309e3e98231f",
+      "commit": "2aefd05a5f381fddd1de46f6c260c99fb6c76c0d",
       "files": {
         "SKILL.md": "40a2bb78fc6fa57a08d9349923f69154bc971731b20bcf98d14f481af8fe3083"
       },
-      "recorded": "2026-09-21",
+      "recorded": "2026-09-22",
       "source": "https://github.com/Rheinmir/orca-graph",
-      "version": "3.1.4"
+      "version": "3.2.0"
     },
     "orca-handover": {
       "files": {
@@ -866,9 +866,9 @@
     "orca-onboard": {
       "files": {
         "SKILL.md": "a7b441defe93ea544fe5e3900d06856d1751fb83e4e749e7d80d08c5de31891a",
-        "assets/docs-site-skeleton.html": "f44910b058a92de863d9e57df1bb7ac1bd0b91256173c7754e2d8971a9d401e3"
+        "assets/docs-site-skeleton.html": "2eaa2c325acfb93e0bc4c7f2726793a8435a2a4bfd905d5f498ddd7cd7cc5c22"
       },
-      "recorded": "2026-09-20",
+      "recorded": "2026-09-22",
       "source": "local-authored"
     },
     "orca-sec-scans": {

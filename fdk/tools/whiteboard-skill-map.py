@@ -23,7 +23,7 @@ OUT = ROOT / "llmwiki" / "html" / "skill-whiteboard.html"
 
 
 def _ovs_font(html: str) -> str:
-    """Lớp nền chung của mọi HTML framework sinh ra (font Lexend Deca Light nhúng + token sáng/tối + nút đổi giao diện) — nguồn: fdk/tools/html_base.py."""
+    """Lớp nền chung của mọi HTML framework sinh ra (font Be Vietnam Pro nhúng + token sáng/tối + nút đổi giao diện) — nguồn: fdk/tools/html_base.py."""
     import importlib.util
     from pathlib import Path as _P
     here = _P(__file__).resolve()

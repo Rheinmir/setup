@@ -57,9 +57,10 @@ def main() -> None:
         sys.exit(0)
 
     # R16: HTML report phải tự khai đường dẫn của mình · R20: vỏ trang tài liệu (menu khi >3 mục,
-    # sơ đồ archify nhúng cùng theme) — gác ở chỗ ghi nên đúng bất kể skill nào sinh trang (GH#155).
+    # sơ đồ archify nhúng cùng theme) · R22: slop nhìn thấy được (sọc viền một cạnh, gradient-text,
+    # thiếu chế độ tối) — gác ở chỗ ghi nên đúng bất kể skill nào sinh trang (GH#155).
     if fp.endswith(".html"):
-        for name in ("report_show_path.py", "html_docs_shell.py"):
+        for name in ("report_show_path.py", "html_docs_shell.py", "html_slop.py"):
             if not (vdir / name).is_file():
                 continue  # bộ validators cũ chưa có luật này → bỏ, không chặn nhầm
             rc, err = run_validator(name, {"action": "write", "file_path": fp}, vdir)
