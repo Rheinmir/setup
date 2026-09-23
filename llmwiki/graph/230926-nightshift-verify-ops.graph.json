@@ -1,0 +1,448 @@
+{
+ "id": "230926-nightshift-verify-ops",
+ "plan": "llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md",
+ "built": "2026-09-23T15:49:28+0700",
+ "nodes": [
+  {
+   "id": "t1",
+   "title": "N14 — Một adapter model thật",
+   "files": [
+    "src/nightshift/providers/chosen_provider.py",
+    "tests/test_real_provider_contract.py"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (contract §06 tương ứng)"
+   ],
+   "produces": [
+    "module theo ticket N14 + test xanh"
+   ],
+   "deps": [
+    "230926-nightshift-core/t7",
+    "230926-nightshift-core/t10",
+    "230926-nightshift-core/t13"
+   ],
+   "deps_conf": "chắc",
+   "kind": "integration",
+   "mode": "hitl",
+   "verify": "cd /Users/giatran/orca/nightshift && python3.11 -m unittest tests.test_real_provider_contract -v",
+   "qc": "",
+   "dep_reasons": {
+    "230926-nightshift-core/t7": "data",
+    "230926-nightshift-core/t10": "data",
+    "230926-nightshift-core/t13": "data"
+   },
+   "spec_hash": "cf66e3cc604b6c11",
+   "state": "blocked",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t2",
+   "title": "N15 — Verifier độc lập và frozen oracle",
+   "files": [
+    "src/nightshift/verification/runner.py",
+    "src/nightshift/verification/receipt.py",
+    "tests/test_verification.py"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (contract §06 tương ứng)"
+   ],
+   "produces": [
+    "module theo ticket N15 + test xanh"
+   ],
+   "deps": [
+    "230926-nightshift-core/t10",
+    "230926-nightshift-core/t12",
+    "230926-nightshift-core/t13"
+   ],
+   "deps_conf": "chắc",
+   "kind": "test",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/nightshift && python3.11 -m unittest tests.test_verification -v",
+   "qc": "",
+   "dep_reasons": {
+    "230926-nightshift-core/t10": "data",
+    "230926-nightshift-core/t12": "data",
+    "230926-nightshift-core/t13": "data"
+   },
+   "spec_hash": "d79d9a879d8c3d16",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "d79d9a879d8c3d16"
+  },
+  {
+   "id": "t3",
+   "title": "N16 — Integration coordinator",
+   "files": [
+    "src/nightshift/integration/coordinator.py",
+    "tests/test_integration.py"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (contract §06 tương ứng)"
+   ],
+   "produces": [
+    "module theo ticket N16 + test xanh"
+   ],
+   "deps": [
+    "230926-nightshift-core/t4",
+    "230926-nightshift-core/t12",
+    "t2"
+   ],
+   "deps_conf": "chắc",
+   "kind": "integration",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/nightshift && python3.11 -m unittest tests.test_integration -v",
+   "qc": "",
+   "dep_reasons": {
+    "230926-nightshift-core/t4": "data",
+    "230926-nightshift-core/t12": "data",
+    "t2": "data"
+   },
+   "spec_hash": "e5c7420b616d91ba",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "e5c7420b616d91ba"
+  },
+  {
+   "id": "t4",
+   "title": "N17 — Retry và no-progress classifier",
+   "files": [
+    "src/nightshift/recovery/retry.py",
+    "tests/test_retry.py"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (contract §06 tương ứng)"
+   ],
+   "produces": [
+    "module theo ticket N17 + test xanh"
+   ],
+   "deps": [
+    "230926-nightshift-core/t7",
+    "230926-nightshift-core/t13",
+    "t2"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/nightshift && python3.11 -m unittest tests.test_retry -v",
+   "qc": "",
+   "dep_reasons": {
+    "230926-nightshift-core/t7": "data",
+    "230926-nightshift-core/t13": "data",
+    "t2": "data"
+   },
+   "spec_hash": "fc32c33f4992a561",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "fc32c33f4992a561"
+  },
+  {
+   "id": "t5",
+   "title": "N18 — Crash recovery và reconciliation",
+   "files": [
+    "src/nightshift/recovery/reconcile.py",
+    "tests/test_crash_matrix.py"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (contract §06 tương ứng)"
+   ],
+   "produces": [
+    "module theo ticket N18 + test xanh"
+   ],
+   "deps": [
+    "230926-nightshift-core/t4",
+    "230926-nightshift-core/t6",
+    "t3",
+    "t4"
+   ],
+   "deps_conf": "chắc",
+   "kind": "fix",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/nightshift && python3.11 -m unittest tests.test_crash_matrix -v",
+   "qc": "",
+   "dep_reasons": {
+    "230926-nightshift-core/t4": "data",
+    "230926-nightshift-core/t6": "data",
+    "t3": "data",
+    "t4": "data"
+   },
+   "spec_hash": "446cbcbc8ad0c673",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "446cbcbc8ad0c673"
+  },
+  {
+   "id": "t6",
+   "title": "N19 — Report sáng hôm sau",
+   "files": [
+    "src/nightshift/reporting/report.py",
+    "src/nightshift/reporting/report.html",
+    "tests/test_report.py"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (contract §06 tương ứng)"
+   ],
+   "produces": [
+    "module theo ticket N19 + test xanh"
+   ],
+   "deps": [
+    "230926-nightshift-core/t3",
+    "t2"
+   ],
+   "deps_conf": "chắc",
+   "kind": "docs",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/nightshift && python3.11 -m unittest tests.test_report -v",
+   "qc": "",
+   "dep_reasons": {
+    "230926-nightshift-core/t3": "data",
+    "t2": "data"
+   },
+   "spec_hash": "66d75ff9ad3d9a92",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "66d75ff9ad3d9a92"
+  },
+  {
+   "id": "t7",
+   "title": "N20 — CLI/control và run locking",
+   "files": [
+    "src/nightshift/cli.py",
+    "tests/test_cli.py"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (contract §06 tương ứng)"
+   ],
+   "produces": [
+    "module theo ticket N20 + test xanh"
+   ],
+   "deps": [
+    "230926-nightshift-core/t8",
+    "230926-nightshift-core/t9",
+    "t6"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/nightshift && python3.11 -m unittest tests.test_cli -v",
+   "qc": "",
+   "dep_reasons": {
+    "230926-nightshift-core/t8": "data",
+    "230926-nightshift-core/t9": "data",
+    "t6": "data"
+   },
+   "spec_hash": "a0b97b0d1f4d117e",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "a0b97b0d1f4d117e"
+  },
+  {
+   "id": "t8",
+   "title": "N21 — Import/export adapter Overstack tùy chọn",
+   "files": [
+    "src/nightshift/adapters/overstack_import.py",
+    "tests/test_optional_import.py"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (contract §06 tương ứng)"
+   ],
+   "produces": [
+    "module theo ticket N21 + test xanh"
+   ],
+   "deps": [
+    "230926-nightshift-core/t2",
+    "t7"
+   ],
+   "deps_conf": "chắc",
+   "kind": "integration",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/nightshift && python3.11 -m unittest tests.test_optional_import -v",
+   "qc": "",
+   "dep_reasons": {
+    "230926-nightshift-core/t2": "data",
+    "t7": "data"
+   },
+   "spec_hash": "1506b64e2b2578ab",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "1506b64e2b2578ab"
+  },
+  {
+   "id": "t9",
+   "title": "N22 — Chaos và contract test suite",
+   "files": [
+    "tests/chaos/",
+    "tests/contracts/",
+    "scripts/run-chaos.sh"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (contract §06 tương ứng)"
+   ],
+   "produces": [
+    "module theo ticket N22 + test xanh"
+   ],
+   "deps": [
+    "t5",
+    "t7"
+   ],
+   "deps_conf": "chắc",
+   "kind": "test",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/nightshift && bash scripts/run-chaos.sh",
+   "qc": "",
+   "dep_reasons": {
+    "t5": "data",
+    "t7": "data"
+   },
+   "spec_hash": "d217ba2a03a61b62",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "d217ba2a03a61b62"
+  },
+  {
+   "id": "t10",
+   "title": "N23 — Packaging, service và canary",
+   "files": [
+    "deploy/nightshift.service",
+    "deploy/README.md",
+    "scripts/canary.sh"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (contract §06 tương ứng)"
+   ],
+   "produces": [
+    "module theo ticket N23 + test xanh"
+   ],
+   "deps": [
+    "230926-nightshift-core/t10",
+    "t1",
+    "t9"
+   ],
+   "deps_conf": "chắc",
+   "kind": "deploy",
+   "mode": "hitl",
+   "verify": "cd /Users/giatran/orca/nightshift && bash scripts/canary.sh --check",
+   "qc": "",
+   "dep_reasons": {
+    "230926-nightshift-core/t10": "data",
+    "t1": "data",
+    "t9": "data"
+   },
+   "spec_hash": "9a2164b85d2fc0ea",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t11",
+   "title": "N24 — UAT và bàn giao vận hành",
+   "files": [
+    "docs/operator-runbook.md",
+    "docs/uat.md",
+    "release-receipt.json"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (contract §06 tương ứng)"
+   ],
+   "produces": [
+    "module theo ticket N24 + test xanh"
+   ],
+   "deps": [
+    "t6",
+    "t8",
+    "t10"
+   ],
+   "deps_conf": "chắc",
+   "kind": "release",
+   "mode": "hitl",
+   "verify": "cd /Users/giatran/orca/nightshift && bash scripts/canary.sh --check",
+   "qc": "",
+   "dep_reasons": {
+    "t6": "data",
+    "t8": "data",
+    "t10": "data"
+   },
+   "spec_hash": "0b5671ab74348850",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  }
+ ],
+ "layers": [
+  [
+   "t1",
+   "t2"
+  ],
+  [
+   "t3",
+   "t4",
+   "t6"
+  ],
+  [
+   "t5",
+   "t7"
+  ],
+  [
+   "t8",
+   "t9"
+  ],
+  [
+   "t10"
+  ],
+  [
+   "t11"
+  ]
+ ],
+ "parent": null,
+ "depth": 0,
+ "plan_version": 4,
+ "superseded": [],
+ "max_parallel": 3,
+ "conflicts": [],
+ "resource_conflicts": [],
+ "links": [],
+ "control": "active",
+ "schema_version": 1,
+ "checksum": "1a540749d3bbf38e"
+}
