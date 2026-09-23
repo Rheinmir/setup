@@ -1,0 +1,487 @@
+{
+ "id": "230926-rie-m2-lifecycle-product",
+ "plan": "llmwiki/wiki/sources/draft/230926-rie-m2-lifecycle-product-PLAN.md",
+ "built": "2026-09-23T11:31:42+0700",
+ "nodes": [
+  {
+   "id": "t1",
+   "title": "RI-14 — RGE Handoff, idempotency và reconcile",
+   "files": [
+    "handoff/",
+    "tests/qc/qc-14.test.ts"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (xem **Output** của ticket đó trong PRD §16)"
+   ],
+   "produces": [
+    "end-to-end adapter với fake runtime fault harness và real conformance + `tests/qc/qc-14.test.ts` xanh"
+   ],
+   "deps": [
+    "230926-rie-m1-clarify-core/t3",
+    "230926-rie-m1-clarify-core/t4",
+    "230926-rie-m1-clarify-core/t13"
+   ],
+   "deps_conf": "chắc",
+   "kind": "integration",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/reprise-intent-engine && pnpm vitest run tests/qc/qc-14",
+   "qc": "",
+   "dep_reasons": {
+    "230926-rie-m1-clarify-core/t3": "data",
+    "230926-rie-m1-clarify-core/t4": "data",
+    "230926-rie-m1-clarify-core/t13": "data"
+   },
+   "spec_hash": "5a9d312efed2dde8",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t2",
+   "title": "RI-15 — Semantic change và impact proposal",
+   "files": [
+    "changes/",
+    "tests/qc/qc-15.test.ts"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (xem **Output** của ticket đó trong PRD §16)"
+   ],
+   "produces": [
+    "change proposal workflow và history UI contract + `tests/qc/qc-15.test.ts` xanh"
+   ],
+   "deps": [
+    "230926-rie-m1-clarify-core/t9",
+    "230926-rie-m1-clarify-core/t12",
+    "230926-rie-m1-clarify-core/t13",
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "integration",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/reprise-intent-engine && pnpm vitest run tests/qc/qc-15",
+   "qc": "",
+   "dep_reasons": {
+    "230926-rie-m1-clarify-core/t9": "data",
+    "230926-rie-m1-clarify-core/t12": "data",
+    "230926-rie-m1-clarify-core/t13": "data",
+    "t1": "data"
+   },
+   "spec_hash": "7703c34ba2c816ff",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t3",
+   "title": "RI-16 — Child clarification coalescing và resolution fan-out",
+   "files": [
+    "handoff/discovery",
+    "changes/requirement-map",
+    "tests/qc/qc-16.test.ts"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (xem **Output** của ticket đó trong PRD §16)"
+   ],
+   "produces": [
+    "aggregate clarification inbox nối RGE + `tests/qc/qc-16.test.ts` xanh"
+   ],
+   "deps": [
+    "230926-rie-m1-clarify-core/t8",
+    "230926-rie-m1-clarify-core/t10",
+    "t1",
+    "t2"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/reprise-intent-engine && pnpm vitest run tests/qc/qc-16",
+   "qc": "",
+   "dep_reasons": {
+    "230926-rie-m1-clarify-core/t8": "data",
+    "230926-rie-m1-clarify-core/t10": "data",
+    "t1": "data",
+    "t2": "data"
+   },
+   "spec_hash": "04b62f09b805e2dd",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t4",
+   "title": "RI-17 — SWH profiles, template pins và reuse fallback",
+   "files": [
+    "src/ri17/",
+    "tests/qc/qc-17.test.ts"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (xem **Output** của ticket đó trong PRD §16)"
+   ],
+   "produces": [
+    "profile definitions + conformance reports, chưa tự publish + `tests/qc/qc-17.test.ts` xanh"
+   ],
+   "deps": [
+    "230926-rie-m1-clarify-core/t1",
+    "230926-rie-m1-clarify-core/t7",
+    "230926-rie-m1-clarify-core/t10",
+    "230926-rie-m1-clarify-core/t12",
+    "230926-rie-m1-clarify-core/t13"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/reprise-intent-engine && pnpm vitest run tests/qc/qc-17",
+   "qc": "",
+   "dep_reasons": {
+    "230926-rie-m1-clarify-core/t1": "data",
+    "230926-rie-m1-clarify-core/t7": "data",
+    "230926-rie-m1-clarify-core/t10": "data",
+    "230926-rie-m1-clarify-core/t12": "data",
+    "230926-rie-m1-clarify-core/t13": "data"
+   },
+   "spec_hash": "8b6d278b49dcd88c",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t5",
+   "title": "RI-18 — API commands, conflicts và late reply routing",
+   "files": [
+    "api/",
+    "tests/qc/qc-18.test.ts"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (xem **Output** của ticket đó trong PRD §16)"
+   ],
+   "produces": [
+    "API contracts và examples cho frontend + `tests/qc/qc-18.test.ts` xanh"
+   ],
+   "deps": [
+    "230926-rie-m1-clarify-core/t2",
+    "230926-rie-m1-clarify-core/t3",
+    "230926-rie-m1-clarify-core/t10",
+    "230926-rie-m1-clarify-core/t13",
+    "t1",
+    "t2"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/reprise-intent-engine && pnpm vitest run tests/qc/qc-18",
+   "qc": "",
+   "dep_reasons": {
+    "230926-rie-m1-clarify-core/t2": "data",
+    "230926-rie-m1-clarify-core/t3": "data",
+    "230926-rie-m1-clarify-core/t10": "data",
+    "230926-rie-m1-clarify-core/t13": "data",
+    "t1": "data",
+    "t2": "data"
+   },
+   "spec_hash": "644255869bc1b6b7",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t6",
+   "title": "RI-19 — UI intake, questions, brief diff và progress",
+   "files": [
+    "ui/",
+    "tests/qc/qc-19.test.ts"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (xem **Output** của ticket đó trong PRD §16)"
+   ],
+   "produces": [
+    "usable intake screen nối API + `tests/qc/qc-19.test.ts` xanh"
+   ],
+   "deps": [
+    "230926-rie-m1-clarify-core/t11",
+    "t3",
+    "t5"
+   ],
+   "deps_conf": "chắc",
+   "kind": "design",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/reprise-intent-engine && pnpm vitest run tests/qc/qc-19",
+   "qc": "",
+   "dep_reasons": {
+    "230926-rie-m1-clarify-core/t11": "data",
+    "t3": "data",
+    "t5": "data"
+   },
+   "spec_hash": "fcb014c61596feb5",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t7",
+   "title": "RI-20 — Stop controller, fallback và invalidation",
+   "files": [
+    "stop/",
+    "tests/qc/qc-20.test.ts"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (xem **Output** của ticket đó trong PRD §16)"
+   ],
+   "produces": [
+    "error/stop contracts, operator commands + `tests/qc/qc-20.test.ts` xanh"
+   ],
+   "deps": [
+    "230926-rie-m1-clarify-core/t4",
+    "230926-rie-m1-clarify-core/t5",
+    "230926-rie-m1-clarify-core/t10",
+    "230926-rie-m1-clarify-core/t12",
+    "t1",
+    "t2"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/reprise-intent-engine && pnpm vitest run tests/qc/qc-20",
+   "qc": "",
+   "dep_reasons": {
+    "230926-rie-m1-clarify-core/t4": "data",
+    "230926-rie-m1-clarify-core/t5": "data",
+    "230926-rie-m1-clarify-core/t10": "data",
+    "230926-rie-m1-clarify-core/t12": "data",
+    "t1": "data",
+    "t2": "data"
+   },
+   "spec_hash": "47f64be729c6d29f",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t8",
+   "title": "RI-21 — Golden semantic evaluation và grader rules",
+   "files": [
+    "tests/evaluation/",
+    "tests/qc/qc-21.test.ts"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (xem **Output** của ticket đó trong PRD §16)"
+   ],
+   "produces": [
+    "evaluation runner/report + development/selection/holdout split + `tests/qc/qc-21.test.ts` xanh"
+   ],
+   "deps": [
+    "230926-rie-m1-clarify-core/t7",
+    "230926-rie-m1-clarify-core/t8",
+    "230926-rie-m1-clarify-core/t10",
+    "230926-rie-m1-clarify-core/t12",
+    "230926-rie-m1-clarify-core/t13",
+    "t4"
+   ],
+   "deps_conf": "chắc",
+   "kind": "test",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/reprise-intent-engine && pnpm vitest run tests/qc/qc-21",
+   "qc": "",
+   "dep_reasons": {
+    "230926-rie-m1-clarify-core/t7": "data",
+    "230926-rie-m1-clarify-core/t8": "data",
+    "230926-rie-m1-clarify-core/t10": "data",
+    "230926-rie-m1-clarify-core/t12": "data",
+    "230926-rie-m1-clarify-core/t13": "data",
+    "t4": "data"
+   },
+   "spec_hash": "944bb8a7f080d3f0",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t9",
+   "title": "RI-22 — Fault và cross-engine integration suite",
+   "files": [
+    "tests/contract/",
+    "tests/scenario/",
+    "tests/qc/qc-22.test.ts"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (xem **Output** của ticket đó trong PRD §16)"
+   ],
+   "produces": [
+    "integration evidence gắn exact revisions/capabilities + `tests/qc/qc-22.test.ts` xanh"
+   ],
+   "deps": [
+    "230926-rie-m1-clarify-core/t3",
+    "230926-rie-m1-clarify-core/t4",
+    "t1",
+    "t2",
+    "t3",
+    "t5",
+    "t7",
+    "t8"
+   ],
+   "deps_conf": "chắc",
+   "kind": "test",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/reprise-intent-engine && pnpm vitest run tests/qc/qc-22",
+   "qc": "",
+   "dep_reasons": {
+    "230926-rie-m1-clarify-core/t3": "data",
+    "230926-rie-m1-clarify-core/t4": "data",
+    "t1": "data",
+    "t2": "data",
+    "t3": "data",
+    "t5": "data",
+    "t7": "data",
+    "t8": "data"
+   },
+   "spec_hash": "58c8232b29d8d90d",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t10",
+   "title": "RI-23 — Telemetry, economics và Evolve signals",
+   "files": [
+    "projections/telemetry",
+    "tests/qc/qc-23.test.ts"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (xem **Output** của ticket đó trong PRD §16)"
+   ],
+   "produces": [
+    "metrics dashboard/report + minimized signal schema + `tests/qc/qc-23.test.ts` xanh"
+   ],
+   "deps": [
+    "230926-rie-m1-clarify-core/t4",
+    "230926-rie-m1-clarify-core/t10",
+    "t1",
+    "t4",
+    "t6",
+    "t8"
+   ],
+   "deps_conf": "chắc",
+   "kind": "data",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/reprise-intent-engine && pnpm vitest run tests/qc/qc-23",
+   "qc": "",
+   "dep_reasons": {
+    "230926-rie-m1-clarify-core/t4": "data",
+    "230926-rie-m1-clarify-core/t10": "data",
+    "t1": "data",
+    "t4": "data",
+    "t6": "data",
+    "t8": "data"
+   },
+   "spec_hash": "b4e9f772d753ec86",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t11",
+   "title": "RI-24 — Pilot, runbook và release decision",
+   "files": [
+    "release/",
+    "tests/qc/qc-24.test.ts"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (xem **Output** của ticket đó trong PRD §16)"
+   ],
+   "produces": [
+    "pilot dossier, runbook và release checklist có results + `tests/qc/qc-24.test.ts` xanh"
+   ],
+   "deps": [
+    "t6",
+    "t7",
+    "t8",
+    "t9",
+    "t10"
+   ],
+   "deps_conf": "chắc",
+   "kind": "release",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/reprise-intent-engine && pnpm vitest run tests/qc/qc-24",
+   "qc": "",
+   "dep_reasons": {
+    "t6": "data",
+    "t7": "data",
+    "t8": "data",
+    "t9": "data",
+    "t10": "data"
+   },
+   "spec_hash": "e07bc68ca332ea56",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  }
+ ],
+ "layers": [
+  [
+   "t1",
+   "t4"
+  ],
+  [
+   "t2",
+   "t8"
+  ],
+  [
+   "t3",
+   "t5",
+   "t7"
+  ],
+  [
+   "t6",
+   "t9"
+  ],
+  [
+   "t10"
+  ],
+  [
+   "t11"
+  ]
+ ],
+ "parent": null,
+ "depth": 0,
+ "plan_version": 2,
+ "superseded": [],
+ "max_parallel": 4,
+ "conflicts": [],
+ "resource_conflicts": [],
+ "links": [],
+ "control": "active",
+ "schema_version": 1,
+ "checksum": "121c1ae12feb6316"
+}

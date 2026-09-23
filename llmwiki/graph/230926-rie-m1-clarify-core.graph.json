@@ -1,0 +1,506 @@
+{
+ "id": "230926-rie-m1-clarify-core",
+ "plan": "llmwiki/wiki/sources/draft/230926-rie-m1-clarify-core-PLAN.md",
+ "built": "2026-09-23T11:31:42+0700",
+ "nodes": [
+  {
+   "id": "t1",
+   "title": "RI-01 — Domain contracts và fixture vocabulary",
+   "files": [
+    "contracts/",
+    "tests/fixtures/",
+    "tests/qc/qc-01.test.ts"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (xem **Output** của ticket đó trong PRD §16)"
+   ],
+   "produces": [
+    "schema package, glossary, valid/invalid fixtures + `tests/qc/qc-01.test.ts` xanh"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/reprise-intent-engine && pnpm vitest run tests/qc/qc-01",
+   "qc": "",
+   "spec_hash": "a11a4b3244502331",
+   "state": "ready",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t2",
+   "title": "RI-02 — Ingress và idempotent event reception",
+   "files": [
+    "ingestion/",
+    "tests/qc/qc-02.test.ts"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (xem **Output** của ticket đó trong PRD §16)"
+   ],
+   "produces": [
+    "ingress command handler dùng StorePort fake trước + `tests/qc/qc-02.test.ts` xanh"
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/reprise-intent-engine && pnpm vitest run tests/qc/qc-02",
+   "qc": "",
+   "dep_reasons": {
+    "t1": "data"
+   },
+   "spec_hash": "c3ce45b3491b536a",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t3",
+   "title": "RI-03 — Durable store, CAS và transactional outbox",
+   "files": [
+    "handoff/outbox",
+    "tests/qc/qc-03.test.ts"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (xem **Output** của ticket đó trong PRD §16)"
+   ],
+   "produces": [
+    "store adapter + migration và crash fixture + `tests/qc/qc-03.test.ts` xanh"
+   ],
+   "deps": [
+    "t1",
+    "t2"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/reprise-intent-engine && pnpm vitest run tests/qc/qc-03",
+   "qc": "",
+   "dep_reasons": {
+    "t1": "data",
+    "t2": "data"
+   },
+   "spec_hash": "271b94b70b3b67a8",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t4",
+   "title": "RI-04 — RuntimePort và budget binding",
+   "files": [
+    "adapters/runtime",
+    "adapters/policy",
+    "tests/qc/qc-04.test.ts"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (xem **Output** của ticket đó trong PRD §16)"
+   ],
+   "produces": [
+    "conformance suite và capability matrix + `tests/qc/qc-04.test.ts` xanh"
+   ],
+   "deps": [
+    "t1",
+    "t3"
+   ],
+   "deps_conf": "chắc",
+   "kind": "infra",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/reprise-intent-engine && pnpm vitest run tests/qc/qc-04",
+   "qc": "",
+   "dep_reasons": {
+    "t1": "data",
+    "t3": "data"
+   },
+   "spec_hash": "df7777f032bcb855",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t5",
+   "title": "RI-05 — Scoped context và source manifest",
+   "files": [
+    "context/",
+    "tests/qc/qc-05.test.ts"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (xem **Output** của ticket đó trong PRD §16)"
+   ],
+   "produces": [
+    "ContextReadPort adapter + context packet builder + `tests/qc/qc-05.test.ts` xanh"
+   ],
+   "deps": [
+    "t1",
+    "t3",
+    "t4"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/reprise-intent-engine && pnpm vitest run tests/qc/qc-05",
+   "qc": "",
+   "dep_reasons": {
+    "t1": "data",
+    "t3": "data",
+    "t4": "data"
+   },
+   "spec_hash": "c6747f0321436bb6",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t6",
+   "title": "RI-06 — Resolver cho “cái trước”, tiếp việc và corrections",
+   "files": [
+    "ingestion/reference-resolution",
+    "tests/qc/qc-06.test.ts"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (xem **Output** của ticket đó trong PRD §16)"
+   ],
+   "produces": [
+    "resolver result có alternatives/source refs và typed status + `tests/qc/qc-06.test.ts` xanh"
+   ],
+   "deps": [
+    "t2",
+    "t5"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/reprise-intent-engine && pnpm vitest run tests/qc/qc-06",
+   "qc": "",
+   "dep_reasons": {
+    "t2": "data",
+    "t5": "data"
+   },
+   "spec_hash": "fa4bd275054301cb",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t7",
+   "title": "RI-07 — Extractor có schema, provenance và bounded repair",
+   "files": [
+    "extraction/",
+    "tests/qc/qc-07.test.ts"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (xem **Output** của ticket đó trong PRD §16)"
+   ],
+   "produces": [
+    "extractor pipeline + tagged atoms + `tests/qc/qc-07.test.ts` xanh"
+   ],
+   "deps": [
+    "t1",
+    "t4",
+    "t5",
+    "t6"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/reprise-intent-engine && pnpm vitest run tests/qc/qc-07",
+   "qc": "",
+   "dep_reasons": {
+    "t1": "data",
+    "t4": "data",
+    "t5": "data",
+    "t6": "data"
+   },
+   "spec_hash": "fa4edd76d874d235",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t8",
+   "title": "RI-08 — Ambiguity Map và conflict classifier",
+   "files": [
+    "ambiguity/",
+    "tests/qc/qc-08.test.ts"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (xem **Output** của ticket đó trong PRD §16)"
+   ],
+   "produces": [
+    "map có resolution route và evidence + `tests/qc/qc-08.test.ts` xanh"
+   ],
+   "deps": [
+    "t6",
+    "t7"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/reprise-intent-engine && pnpm vitest run tests/qc/qc-08",
+   "qc": "",
+   "dep_reasons": {
+    "t6": "data",
+    "t7": "data"
+   },
+   "spec_hash": "b9539ccd4af5f2d9",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t9",
+   "title": "RI-09 — Decision và Assumption Ledger",
+   "files": [
+    "decisions/",
+    "tests/qc/qc-09.test.ts"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (xem **Output** của ticket đó trong PRD §16)"
+   ],
+   "produces": [
+    "lifecycle service + typed decision commands + `tests/qc/qc-09.test.ts` xanh"
+   ],
+   "deps": [
+    "t3",
+    "t7",
+    "t8"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/reprise-intent-engine && pnpm vitest run tests/qc/qc-09",
+   "qc": "",
+   "dep_reasons": {
+    "t3": "data",
+    "t7": "data",
+    "t8": "data"
+   },
+   "spec_hash": "c759252519638870",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t10",
+   "title": "RI-10 — Question Planner và xử lý replies từng phần",
+   "files": [
+    "interaction/questions",
+    "tests/qc/qc-10.test.ts"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (xem **Output** của ticket đó trong PRD §16)"
+   ],
+   "produces": [
+    "batch lifecycle và response mapper + `tests/qc/qc-10.test.ts` xanh"
+   ],
+   "deps": [
+    "t8",
+    "t9"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/reprise-intent-engine && pnpm vitest run tests/qc/qc-10",
+   "qc": "",
+   "dep_reasons": {
+    "t8": "data",
+    "t9": "data"
+   },
+   "spec_hash": "f1cf19581e9733a9",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t11",
+   "title": "RI-11 — Draft Probe có scope và learning objective",
+   "files": [
+    "interaction/probes",
+    "tests/qc/qc-11.test.ts"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (xem **Output** của ticket đó trong PRD §16)"
+   ],
+   "produces": [
+    "probe contract, renderer hoặc Graph draft adapter request + `tests/qc/qc-11.test.ts` xanh"
+   ],
+   "deps": [
+    "t4",
+    "t9",
+    "t10"
+   ],
+   "deps_conf": "chắc",
+   "kind": "research",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/reprise-intent-engine && pnpm vitest run tests/qc/qc-11",
+   "qc": "",
+   "dep_reasons": {
+    "t4": "data",
+    "t9": "data",
+    "t10": "data"
+   },
+   "spec_hash": "57cd4fb277bda1f4",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t12",
+   "title": "RI-12 — Phase/slice Readiness Gate",
+   "files": [
+    "readiness/",
+    "tests/qc/qc-12.test.ts"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (xem **Output** của ticket đó trong PRD §16)"
+   ],
+   "produces": [
+    "gate library và per-slice report + `tests/qc/qc-12.test.ts` xanh"
+   ],
+   "deps": [
+    "t4",
+    "t8",
+    "t9"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/reprise-intent-engine && pnpm vitest run tests/qc/qc-12",
+   "qc": "",
+   "dep_reasons": {
+    "t4": "data",
+    "t8": "data",
+    "t9": "data"
+   },
+   "spec_hash": "1fb2aa3c9c128f58",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  },
+  {
+   "id": "t13",
+   "title": "RI-13 — Brief compiler, coverage và immutable seal",
+   "files": [
+    "briefs/",
+    "tests/qc/qc-13.test.ts"
+   ],
+   "consumes": [
+    "output của các task ở dòng Depends (xem **Output** của ticket đó trong PRD §16)"
+   ],
+   "produces": [
+    "Markdown/read projection và machine contract cùng nguồn dữ liệu + `tests/qc/qc-13.test.ts` xanh"
+   ],
+   "deps": [
+    "t3",
+    "t7",
+    "t9",
+    "t12"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/reprise-intent-engine && pnpm vitest run tests/qc/qc-13",
+   "qc": "",
+   "dep_reasons": {
+    "t3": "data",
+    "t7": "data",
+    "t9": "data",
+    "t12": "data"
+   },
+   "spec_hash": "bad60dc2dec0a653",
+   "state": "proposed",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  }
+ ],
+ "layers": [
+  [
+   "t1"
+  ],
+  [
+   "t2"
+  ],
+  [
+   "t3"
+  ],
+  [
+   "t4"
+  ],
+  [
+   "t5"
+  ],
+  [
+   "t6"
+  ],
+  [
+   "t7"
+  ],
+  [
+   "t8"
+  ],
+  [
+   "t9"
+  ],
+  [
+   "t10",
+   "t12"
+  ],
+  [
+   "t11",
+   "t13"
+  ]
+ ],
+ "parent": null,
+ "depth": 0,
+ "plan_version": 2,
+ "superseded": [],
+ "max_parallel": 4,
+ "conflicts": [],
+ "resource_conflicts": [],
+ "links": [],
+ "control": "active",
+ "schema_version": 1,
+ "checksum": "f6de67e07f0e0859"
+}

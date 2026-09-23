@@ -3966,3 +3966,101 @@ cc4f999ad |
 | 2026-09-23 10:52:45 | `file.write` | llmwiki/wiki/sources/230926-reprise-intent-engine-prd.md · tool=Write · session=745ad856 · actor=agent · prev=6f9b8a5b7a |
 
 <!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-23 11:17:03 | `commit.reconcile` |  · actor=system · agent_n=3 · human_n=3 · human=['llmwiki/raw/pattern-resourse/design-tip-of-someone-on-internet.md', 'h |
+| 2026-09-23 11:17:03 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=5 · human=['harness/metrics/.stop-debounce.json', 'fdk/tools/html_font_data.py', ' |
+| 2026-09-23 11:17:03 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:17:03 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['harness/metrics/guardrails/failure-spec-violation.md', 'llmwiki/wiki/s |
+| 2026-09-23 11:17:03 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=9 · human=['llmwiki/wiki/index.md', 'skills/hallmark/SKILL.md', 'fdk/wiki/sources/ |
+| 2026-09-23 11:17:03 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/graph/220926-docs-shell-kit.graph.json', 'harness/tests/html-v |
+| 2026-09-23 11:17:03 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:17:03 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=12 · human=['fdk/tools/build-wiki-graph.py', 'llmwiki/raw/validate-data.md', 'llmw |
+| 2026-09-23 11:17:03 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['llmwiki/raw/prd/Reprise-Graph-Engine-Full-Cycle-PRD (1).md', 'llmwiki/ |
+| 2026-09-23 11:17:03 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=11 · human=['harness/tests/test_design_showcase.py', 'fdk/tools/html_shell.py', 'h |
+| 2026-09-23 11:18:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=9 · human=['llmwiki/wiki/index.md', 'skills/hallmark/SKILL.md', 'fdk/wiki/sources/ |
+| 2026-09-23 11:18:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=12 · human=['fdk/tools/build-wiki-graph.py', 'llmwiki/raw/validate-data.md', 'llmw |
+| 2026-09-23 11:18:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:18:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/docs-shell-survey.py', 'llmwiki/wiki/sources/230926-reprise- |
+| 2026-09-23 11:18:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['harness/metrics/guardrails/failure-spec-violation.md', 'llmwiki/wiki/s |
+| 2026-09-23 11:18:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:18:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=11 · human=['harness/tests/test_design_showcase.py', 'fdk/tools/html_shell.py', 'h |
+| 2026-09-23 11:18:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['llmwiki/raw/prd/Reprise-Graph-Engine-Full-Cycle-PRD (1).md', 'llmwiki/ |
+| 2026-09-23 11:18:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['fdk/tools/spacing-survey.py', 'harness/metrics/.stop-debounce.json', ' |
+| 2026-09-23 11:18:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/graph/220926-docs-shell-kit.graph.json', 'harness/tests/html-v |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['fdk/tools/spacing-survey.py', 'harness/metrics/.stop-debounce.json', ' |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=12 · human=['fdk/tools/build-wiki-graph.py', 'llmwiki/raw/validate-data.md', 'llmw |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['llmwiki/raw/prd/Reprise-Graph-Engine-Full-Cycle-PRD (1).md', 'llmwiki/ |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=11 · human=['harness/tests/test_design_showcase.py', 'fdk/tools/html_shell.py', 'h |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['harness/metrics/guardrails/failure-spec-violation.md', 'llmwiki/wiki/s |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=9 · human=['llmwiki/wiki/index.md', 'skills/hallmark/SKILL.md', 'fdk/wiki/sources/ |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/docs-shell-survey.py', 'llmwiki/wiki/sources/230926-reprise- |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/graph/220926-docs-shell-kit.graph.json', 'harness/tests/html-v |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=11 · human=['harness/tests/test_design_showcase.py', 'fdk/tools/html_shell.py', 'h |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/graph/220926-docs-shell-kit.graph.json', 'harness/tests/html-v |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/docs-shell-survey.py', 'llmwiki/wiki/sources/230926-reprise- |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=9 · human=['llmwiki/wiki/index.md', 'skills/hallmark/SKILL.md', 'fdk/wiki/sources/ |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=12 · human=['fdk/tools/build-wiki-graph.py', 'llmwiki/raw/validate-data.md', 'llmw |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['harness/metrics/guardrails/failure-spec-violation.md', 'llmwiki/wiki/s |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['fdk/tools/spacing-survey.py', 'harness/metrics/.stop-debounce.json', ' |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['llmwiki/raw/prd/Reprise-Graph-Engine-Full-Cycle-PRD (1).md', 'llmwiki/ |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-23 11:17:03 | `commit.reconcile` |  · actor=system · agent_n=3 · human_n=3 · human=['llmwiki/raw/pattern-resourse/design-tip-of-someone-on-internet.md', 'h |
+| 2026-09-23 11:17:03 | `commit.reconcile` |  · actor=system · agent_n=2 · human_n=5 · human=['harness/metrics/.stop-debounce.json', 'fdk/tools/html_font_data.py', ' |
+| 2026-09-23 11:17:03 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:17:03 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['harness/metrics/guardrails/failure-spec-violation.md', 'llmwiki/wiki/s |
+| 2026-09-23 11:17:03 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=9 · human=['llmwiki/wiki/index.md', 'skills/hallmark/SKILL.md', 'fdk/wiki/sources/ |
+| 2026-09-23 11:17:03 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/graph/220926-docs-shell-kit.graph.json', 'harness/tests/html-v |
+| 2026-09-23 11:17:03 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:17:03 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=12 · human=['fdk/tools/build-wiki-graph.py', 'llmwiki/raw/validate-data.md', 'llmw |
+| 2026-09-23 11:17:03 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['llmwiki/raw/prd/Reprise-Graph-Engine-Full-Cycle-PRD (1).md', 'llmwiki/ |
+| 2026-09-23 11:17:03 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=11 · human=['harness/tests/test_design_showcase.py', 'fdk/tools/html_shell.py', 'h |
+| 2026-09-23 11:18:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=9 · human=['llmwiki/wiki/index.md', 'skills/hallmark/SKILL.md', 'fdk/wiki/sources/ |
+| 2026-09-23 11:18:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=12 · human=['fdk/tools/build-wiki-graph.py', 'llmwiki/raw/validate-data.md', 'llmw |
+| 2026-09-23 11:18:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:18:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/docs-shell-survey.py', 'llmwiki/wiki/sources/230926-reprise- |
+| 2026-09-23 11:18:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['harness/metrics/guardrails/failure-spec-violation.md', 'llmwiki/wiki/s |
+| 2026-09-23 11:18:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:18:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=11 · human=['harness/tests/test_design_showcase.py', 'fdk/tools/html_shell.py', 'h |
+| 2026-09-23 11:18:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['llmwiki/raw/prd/Reprise-Graph-Engine-Full-Cycle-PRD (1).md', 'llmwiki/ |
+| 2026-09-23 11:18:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['fdk/tools/spacing-survey.py', 'harness/metrics/.stop-debounce.json', ' |
+| 2026-09-23 11:18:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/graph/220926-docs-shell-kit.graph.json', 'harness/tests/html-v |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['fdk/tools/spacing-survey.py', 'harness/metrics/.stop-debounce.json', ' |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=12 · human=['fdk/tools/build-wiki-graph.py', 'llmwiki/raw/validate-data.md', 'llmw |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['llmwiki/raw/prd/Reprise-Graph-Engine-Full-Cycle-PRD (1).md', 'llmwiki/ |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=11 · human=['harness/tests/test_design_showcase.py', 'fdk/tools/html_shell.py', 'h |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['harness/metrics/guardrails/failure-spec-violation.md', 'llmwiki/wiki/s |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=9 · human=['llmwiki/wiki/index.md', 'skills/hallmark/SKILL.md', 'fdk/wiki/sources/ |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/docs-shell-survey.py', 'llmwiki/wiki/sources/230926-reprise- |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/graph/220926-docs-shell-kit.graph.json', 'harness/tests/html-v |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=11 · human=['harness/tests/test_design_showcase.py', 'fdk/tools/html_shell.py', 'h |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/graph/220926-docs-shell-kit.graph.json', 'harness/tests/html-v |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/docs-shell-survey.py', 'llmwiki/wiki/sources/230926-reprise- |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=9 · human=['llmwiki/wiki/index.md', 'skills/hallmark/SKILL.md', 'fdk/wiki/sources/ |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=12 · human=['fdk/tools/build-wiki-graph.py', 'llmwiki/raw/validate-data.md', 'llmw |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['harness/metrics/guardrails/failure-spec-violation.md', 'llmwiki/wiki/s |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['fdk/tools/spacing-survey.py', 'harness/metrics/.stop-debounce.json', ' |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['llmwiki/raw/prd/Reprise-Graph-Engine-Full-Cycle-PRD (1).md', 'llmwiki/ |
+
+<!-- log:auto:end -->
