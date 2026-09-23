@@ -12,7 +12,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from hooklib import HARNESS_HOME, audit, find_wiki_dir, overstack_dir, project_dir, read_payload, resolve_tool, stamp_path
+from hooklib import HARNESS_HOME, audit, find_wiki_dir, harness_dir, overstack_dir, project_dir, read_payload, resolve_tool, stamp_path
 from hooklib import orca_graph_running as hooklib_orca_graph_running
 
 
@@ -131,6 +131,29 @@ def output_style(root: Path) -> None:
                       "trước hành động phá huỷ → xác nhận đã; và TÀI LIỆU người đọc "
                       "(ADR/proposal/README/report/HTML) vẫn theo luật văn xuôi đầy đủ của CLAUDE.md.")
                 return
+    except Exception:
+        pass
+
+
+def learned_guardrails(root: Path) -> None:
+    """Thẻ chỉ dẫn máy GÓI từ lỗi lặp >= ngưỡng (flywheel `pack_guardrail`) — user 23/09/2026:
+    "bugs hoặc failed hay error cứ hơn 2 lần thì sẽ được gói lại thành instruction dùng cho lần kế".
+    In tiêu đề + triệu chứng gần nhất; agent mở file khi làm việc cùng loại. Fail-open."""
+    try:
+        d = harness_dir(str(root)) / "metrics" / "guardrails"   # downstream là .harness/ — KHÔNG ghi cứng
+        if not d.is_dir():
+            return
+        cards = sorted((c for c in d.glob("*.md") if c.name != "INDEX.md"),
+                       key=lambda c: c.stat().st_mtime, reverse=True)[:5]
+        if not cards:
+            return
+        print("🧯 [đã học] lỗi lặp đã được gói thành chỉ dẫn — ĐỌC trước khi làm việc cùng loại:")
+        for c in cards:
+            lines = c.read_text(encoding="utf-8", errors="ignore").splitlines()
+            head = lines[0].lstrip("# ").strip()
+            sym = next((l.split("**Triệu chứng:**")[-1].strip() for l in lines if "**Triệu chứng:**" in l), "")
+            print(f"  • {head} — {sym[:110]}")
+            print(f"    {c.relative_to(root)}")
     except Exception:
         pass
 
@@ -347,6 +370,7 @@ def main() -> None:
 
     output_style(root)  # đầu phiên: chốt KIỂU nói chuyện (chat), trước khi nói gì
     orient(root)  # đầu phiên: cho agent BIẾT project có gì + nhắc query trước (chống 'lơ ngơ')
+    learned_guardrails(root)  # lỗi lặp > 2 lần đã được gói thành chỉ dẫn → nạp lại cho phiên này
     orca_graph_running(root)  # graph đang có node locked/dispatched → tự bề đường dẫn kanban, khỏi hỏi lại
     downstream_map(root)  # chỉ ở repo framework: layout đang thấy KHÁC layout máy khách (AP-7)
     recall(root, payload.get("session_id") or "")  # đầu phiên: chuỗi phiên gần nhất (episodic) — đóng vòng ghi→đọc của mem-rank

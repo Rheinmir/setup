@@ -1,0 +1,371 @@
+{
+ "id": "220926-design-showcase",
+ "plan": "llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md",
+ "built": "2026-09-22T16:55:55+0700",
+ "nodes": [
+  {
+   "id": "t1",
+   "title": "Kiểm kê luật thiết kế thành danh sách máy đọc được",
+   "files": [
+    "fdk/tools/showcase_rules.py"
+   ],
+   "consumes": [],
+   "produces": [
+    "`RULES: dict[id → {\"gate\": \"visual|static|doc\", \"level\": \"FAIL|WARN|MUST\", \"text\": str}]` gom từ `html-visual-gate.mjs` (header), `frontend-antipattern.py`, mục MUST của `skills/docs-site-macos/SKILL.md`, RULE-14 + \"Defaults khi user không nói\" của `design-default.md`"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "research",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/showcase_rules.py | grep -c . | awk '$1>=20{exit 0}{exit 1}'",
+   "qc": "",
+   "spec_hash": "458e47ec1d140b34",
+   "state": "done",
+   "gen": 0,
+   "rev": 2,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "458e47ec1d140b34"
+  },
+  {
+   "id": "t2",
+   "title": "Builder + khung trang + index",
+   "files": [
+    "fdk/tools/build-design-showcase.py"
+   ],
+   "consumes": [
+    "`showcase_rules.RULES`"
+   ],
+   "produces": [
+    "`Block = dict(id, title, group, rules: list[str], html, css, js, note)`; builder gom `BLOCKS` từ mọi `showcase_*.py` có biến `BLOCKS`; CLI `--list`, `--get <id>`, `--out <path>` (mặc định `skills/hallmark/references/design-showcase.html`)"
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/build-design-showcase.py --out scratchpad/sc.html && grep -c 'data-block=' scratchpad/sc.html",
+   "qc": "",
+   "dep_reasons": {
+    "t1": "data"
+   },
+   "spec_hash": "f9364efd68c202ed",
+   "state": "done",
+   "gen": 0,
+   "rev": 2,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "f9364efd68c202ed"
+  },
+  {
+   "id": "t3",
+   "title": "Khối bố cục — cột 1/2/3/4 responsive, sidebar chuẩn, topbar, thang chữ, thang khoảng cách",
+   "files": [
+    "fdk/tools/showcase_layout.py"
+   ],
+   "consumes": [
+    "kiểu `Block` của Task 2"
+   ],
+   "produces": [
+    "`BLOCKS` gồm `grid-1`…`grid-4` (điểm gãy 1360/1024/768/375 và cách cột rơi xuống), `sidebar`, `topbar`, `type-scale`, `spacing-scale`, `measure`"
+   ],
+   "deps": [
+    "t2"
+   ],
+   "deps_conf": "chắc",
+   "kind": "design",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/build-design-showcase.py --list | grep -c -E 'grid-[1-4]|sidebar' | awk '$1>=5{exit 0}{exit 1}'",
+   "qc": "",
+   "dep_reasons": {
+    "t2": "contract"
+   },
+   "spec_hash": "3529fbcafd2936ad",
+   "state": "done",
+   "gen": 0,
+   "rev": 2,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "3529fbcafd2936ad"
+  },
+  {
+   "id": "t4",
+   "title": "Khối thành phần — thẻ, list mặc định, kanban, nút/CTA, tab, disclosure, dialog, bảng, form, toggle",
+   "files": [
+    "fdk/tools/showcase_components.py"
+   ],
+   "consumes": [
+    "kiểu `Block` của Task 2"
+   ],
+   "produces": [
+    "`BLOCKS` gồm `card`, `list`, `kanban` (thẻ cố định size, bấm mở dialog), `button`, `tabs`, `disclosure`, `dialog`, `table`, `form`, `theme-toggle`, `status-dot`"
+   ],
+   "deps": [
+    "t2"
+   ],
+   "deps_conf": "chắc",
+   "kind": "design",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/build-design-showcase.py --get kanban | grep -q 'kanban'",
+   "qc": "",
+   "dep_reasons": {
+    "t2": "contract"
+   },
+   "spec_hash": "a795ecad4951d6ad",
+   "state": "done",
+   "gen": 0,
+   "rev": 2,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "a795ecad4951d6ad"
+  },
+  {
+   "id": "t5",
+   "title": "Khối motion mặc định + hướng dẫn sử dụng + trạng thái rỗng/tải/lỗi",
+   "files": [
+    "fdk/tools/showcase_motion.py"
+   ],
+   "consumes": [
+    "kiểu `Block` của Task 2"
+   ],
+   "produces": [
+    "`BLOCKS` gồm `motion-reveal` (ease-out ≤ 240ms), `motion-theme` (circle-reveal), `reduced-motion`, `guide-steps` (hướng dẫn sử dụng từng bước), `empty-state`, `loading`, `error-state`, `progress-read`"
+   ],
+   "deps": [
+    "t2"
+   ],
+   "deps_conf": "chắc",
+   "kind": "design",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/build-design-showcase.py --get guide-steps | grep -q 'guide'",
+   "qc": "",
+   "dep_reasons": {
+    "t2": "contract"
+   },
+   "spec_hash": "0bb14b7e243ce129",
+   "state": "done",
+   "gen": 0,
+   "rev": 2,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "0bb14b7e243ce129"
+  },
+  {
+   "id": "t6",
+   "title": "Khối graph + chart theo quy ước `diagram`",
+   "files": [
+    "fdk/tools/showcase_dataviz.py"
+   ],
+   "consumes": [
+    "kiểu `Block` của Task 2"
+   ],
+   "produces": [
+    "`BLOCKS` gồm `chart-bar`, `chart-line`, `stat-tile`, `graph-flow` (hộp + mũi tên), `mind-map`; SVG inline, màu từ token, chữ cùng font, đọc được ở cả hai chế độ"
+   ],
+   "deps": [
+    "t2"
+   ],
+   "deps_conf": "chắc",
+   "kind": "design",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/build-design-showcase.py --get chart-bar | grep -q '<svg'",
+   "qc": "",
+   "dep_reasons": {
+    "t2": "contract"
+   },
+   "spec_hash": "60dcb69af0f374ea",
+   "state": "done",
+   "gen": 0,
+   "rev": 2,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "60dcb69af0f374ea"
+  },
+  {
+   "id": "t7",
+   "title": "Cổng tự gác — trang qua mọi luật và phủ mọi luật",
+   "files": [
+    "harness/tests/test_design_showcase.py",
+    "harness/tests/html-visual-gate-test.sh"
+   ],
+   "consumes": [
+    "builder + `showcase_rules.RULES`"
+   ],
+   "produces": [
+    "test (a) mọi luật trong RULES có ≥ 1 khối khai trong `data-rules` (luật mới thêm mà chưa có mẫu → đỏ); (b) id khối duy nhất, `--get` mọi id rc 0; (c) trang committed khớp bản build lại (không trôi); (d) html-visual-gate trên trang: 0 FAIL; frontend-antipattern: 0 finding"
+   ],
+   "deps": [
+    "t3",
+    "t4",
+    "t5",
+    "t6"
+   ],
+   "deps_conf": "chắc",
+   "kind": "test",
+   "mode": "afk",
+   "verify": "python3 -m pytest -q harness/tests/test_design_showcase.py && node fdk/tools/html-visual-gate.mjs skills/hallmark/references/design-showcase.html",
+   "qc": "",
+   "dep_reasons": {
+    "t3": "acceptance",
+    "t4": "acceptance",
+    "t5": "acceptance",
+    "t6": "acceptance"
+   },
+   "spec_hash": "e4dc424d2c2d9377",
+   "state": "done",
+   "gen": 0,
+   "rev": 2,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "e4dc424d2c2d9377"
+  },
+  {
+   "id": "t8",
+   "title": "Nối vào luật + luồng audit + downstream",
+   "files": [
+    "skills/hallmark/SKILL.md",
+    "skills/hallmark/references/design-default.md",
+    "skills/qc-uiux/SKILL.md",
+    "skills/docs-site-macos/SKILL.md",
+    "fdk/CAPABILITIES.md"
+   ],
+   "consumes": [
+    "đường dẫn trang + CLI `--get` của Task 2"
+   ],
+   "produces": [
+    "skill chỉ tới showcase; builder chạy được ở layout máy khách"
+   ],
+   "deps": [
+    "t7"
+   ],
+   "deps_conf": "chắc",
+   "kind": "docs",
+   "mode": "afk",
+   "verify": "grep -q design-showcase skills/hallmark/SKILL.md && grep -q design-showcase skills/qc-uiux/SKILL.md && bash harness/tests/dot-layout-runtime-test.sh .",
+   "qc": "",
+   "dep_reasons": {
+    "t7": "acceptance"
+   },
+   "spec_hash": "e8ec12f46365ae62",
+   "state": "done",
+   "gen": 0,
+   "rev": 2,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "e8ec12f46365ae62"
+  },
+  {
+   "id": "t9",
+   "title": "Duyệt bằng mắt (người)",
+   "files": [
+    "scratchpad/showcase-shots/"
+   ],
+   "consumes": [
+    "trang đã qua Task 7"
+   ],
+   "produces": [
+    "6 ảnh (sáng/tối × 375 · 768 · 1360) + lời chốt của user"
+   ],
+   "deps": [
+    "t7"
+   ],
+   "deps_conf": "chắc",
+   "kind": "review",
+   "mode": "afk",
+   "verify": "ls scratchpad/showcase-shots/*.png | grep -c . | awk '$1>=6{exit 0}{exit 1}'",
+   "qc": "",
+   "dep_reasons": {
+    "t7": "acceptance"
+   },
+   "spec_hash": "d35397d183984a35",
+   "state": "ready",
+   "gen": 0,
+   "rev": 0,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "unverified"
+  }
+ ],
+ "layers": [
+  [
+   "t1"
+  ],
+  [
+   "t2"
+  ],
+  [
+   "t3",
+   "t4",
+   "t5",
+   "t6"
+  ],
+  [
+   "t7"
+  ],
+  [
+   "t8",
+   "t9"
+  ]
+ ],
+ "parent": null,
+ "depth": 0,
+ "plan_version": 2,
+ "superseded": [],
+ "max_parallel": 4,
+ "conflicts": [],
+ "resource_conflicts": [],
+ "links": [
+  {
+   "to_graph": "160926-theme-toggle-circle-reveal-motion",
+   "to_node": "t1",
+   "via": [
+    "skills/docs-site-macos/SKILL.md"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "190926-swh-skill-standardize",
+   "to_node": "t6",
+   "via": [
+    "skills/docs-site-macos/SKILL.md"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "200926-repo-role-ship-flows",
+   "to_node": "t11",
+   "via": [
+    "skills/docs-site-macos/SKILL.md"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "200926-self-slop-gate",
+   "to_node": "t2",
+   "via": [
+    "harness/tests/html-visual-gate-test.sh"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "200926-self-slop-gate",
+   "to_node": "t10",
+   "via": [
+    "skills/docs-site-macos/SKILL.md"
+   ],
+   "kind": "touches-same-file"
+  }
+ ],
+ "control": "active",
+ "schema_version": 1,
+ "checksum": "ffb0521be6714423"
+}

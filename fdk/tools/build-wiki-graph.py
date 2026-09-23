@@ -324,7 +324,7 @@ def build_static(primary: str, out_abs: str, nodes, edges, ledger, stale):
         rel_count[e["rel"]] = rel_count.get(e["rel"], 0) + 1
     filt_rows = "".join(
         f'<label class="lg"><input type="checkbox" class="filt" id="f-{r}">'
-        f'<span style="color:{c}">●</span> {REL_VI[r]} ({rel_count.get(r,0)})</label>' for r, c in REL_COLORS.items())
+        f'<span style="color:{c}">●</span> {REL_VI[r][:1].upper() + REL_VI[r][1:]} ({rel_count.get(r,0)})</label>' for r, c in REL_COLORS.items())   # nhãn viết hoa chữ đầu (sentence-case)
     filt_css = "\n".join(
         f'.page:has(#f-{r}:checked) path.rel-{r}{{display:inline}}' for r in REL_COLORS)
     return f"""<!DOCTYPE html><html lang="vi"><head>
@@ -496,7 +496,7 @@ def build_html(primary: str, out_abs: str, nodes, edges, ledger, stale):
         rel_count[e["rel"]] = rel_count.get(e["rel"], 0) + 1
     legend = "".join(
         f'<label class="lg{" zero" if rel_count.get(r,0)==0 else ""}" data-rel="{r}">'
-        f'<input type="checkbox"><span style="color:{c}">●</span> {REL_VI[r]}'
+        f'<input type="checkbox"><span style="color:{c}">●</span> {REL_VI[r][:1].upper() + REL_VI[r][1:]}'
         f'<span class="cnt">{rel_count.get(r,0)}</span></label>'
         for r, c in REL_COLORS.items())
     wikis = sorted({n["wiki"] for n in nodes})

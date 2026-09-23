@@ -1,7 +1,7 @@
 <!-- SINH BẰNG CODE: build-capabilities.py — ĐỪNG sửa tay; chạy lại để cập nhật. -->
 # CAPABILITIES — toàn bộ đồ nghề (luôn-mới, đếm từ đĩa)
 
-**103 skill · 22 rule · 46 fdk-tool · 76 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
+**103 skill · 22 rule · 56 fdk-tool · 76 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
 
 ## Skills (gọi bằng `/<tên>`)
 
@@ -154,6 +154,7 @@
 - `build-capabilities.py`
 - `build-cheatsheet.py`
 - `build-control-room.py`
+- `build-design-showcase.py`
 - `build-docs-index.py`
 - `build-health-dashboard.py`
 - `build-line-status.py`
@@ -165,6 +166,7 @@
 - `ci-local.py`
 - `code-state.py`
 - `code_imports.py`
+- `docs-shell-survey.py`
 - `frame-lint.py`
 - `frontend-antipattern.py`
 - `graph-atlas.py`
@@ -174,13 +176,21 @@
 - `html_base.py`
 - `html_font.py`
 - `html_font_data.py`
+- `html_shell.py`
+- `html_shell_vendor.py`
 - `medic.py`
 - `memory-map.py`
 - `new-skill.py`
 - `prose-antipattern.py`
+- `showcase_components.py`
+- `showcase_dataviz.py`
+- `showcase_layout.py`
+- `showcase_motion.py`
+- `showcase_rules.py`
 - `skill-provenance.py`
 - `skill-reuse.py`
 - `skill-usage.py`
+- `spacing-survey.py`
 - `supply-watch.py`
 - `swh-lint.py`
 - `ui-detect.py`
@@ -266,10 +276,10 @@
 - `wiki-sync.py`
 - `wikieval.py`
 
-## Neo bằng chứng — 275/275 năng lực có neo KHAI BÁO
+## Neo bằng chứng — 285/285 năng lực có neo KHAI BÁO
 **Đọc cho đúng: đây KHÔNG phải bằng chứng năng lực còn SỐNG.** Mỗi năng lực được map tất định tới một *điểm neo* bằng chứng trên đĩa (frontmatter `proof:` > rule-map > tests > self-test > golden > medic). Việc map là **tĩnh** — nó kiểm file/chuỗi có mặt, **không thực thi gì cả**. Nó bắt được ca 'năng lực này chẳng có test/golden/rule nào neo vào' (hữu ích thật), nhưng KHÔNG bắt được ca 'test có mà đỏ' hay 'engine có mà chết'. Muốn biết một dependency ngoài còn sống thì hỏi `harness/scripts/dep-health.py`. Chi tiết neo: `build-capabilities.py --capproof-json`.
 
-## TRÙNG-ỨNG-VIÊN (27) — máy phát hiện, NGƯỜI phán (dedupe = vòng /propose riêng)
+## TRÙNG-ỨNG-VIÊN (29) — máy phát hiện, NGƯỜI phán (dedupe = vòng /propose riêng)
 - `mech:medic` ↔ `mech:medic-mirror` — name-token: medic
 - `script:failure-flywheel.py` ↔ `script:flywheel.py` — name-token: flywheel
 - `script:failure-flywheel.py` ↔ `script:success-flywheel.py` — desc-jaccard 0.50
@@ -293,10 +303,12 @@
 - `skill:lint` ↔ `tool:html-font-lint.py` — name-token: lint
 - `skill:lint` ↔ `tool:swh-lint.py` — name-token: lint
 - `skill:tour-guide` ↔ `skill:tour-guide-supademo` — name-token: guide+tour
+- `tool:docs-shell-survey.py` ↔ `tool:html_shell.py` — desc-jaccard 0.50
 - `tool:graph-atlas.py` ↔ `tool:graph-viz.py` — desc-jaccard 0.90
 - `tool:html-font-lint.py` ↔ `tool:html_font.py` — name-token: font+html
 - `tool:html_base.py` ↔ `tool:html_font.py` — desc-jaccard 0.50
 - `tool:html_font.py` ↔ `tool:html_font_data.py` — name-token: font+html
+- `tool:html_shell.py` ↔ `tool:html_shell_vendor.py` — name-token: html+shell
 
 ## Origin
 - Sinh bằng `fdk/tools/build-capabilities.py` từ đĩa (skills/, policy.yaml, fdk/tools/, harness/scripts/, sync-skills LOOP_MAP). KHÔNG hardcode.

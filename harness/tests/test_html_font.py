@@ -11,11 +11,15 @@ hf = importlib.util.module_from_spec(_s); _s.loader.exec_module(hf)
 
 def test_head_css_embeds_three_static_weights_and_sets_400_as_content_default():
     css = hf.head_css()
-    assert css.count("@font-face") == 3 and "src:url(data:font/woff2;base64," in css
+    assert css.count("@font-face") == 6 and "src:url(data:font/woff2;base64," in css        # nội dung ×3 + tiêu đề Newsreader ×1 + Lexend chart ×2
     assert all(f"font-weight:{w};" in css for w in (400, 600, 800))
     assert "fonts.googleapis.com" not in css and "http" not in css            # nhúng hết — trang không gọi ra ngoài
     assert "--font-text:'Be Vietnam Pro'," in css and "font-weight:var(--fw-text)" in css and "--fw-text:400" in css
-    assert "--fw-heading:800" in css and "h1,h2{letter-spacing:var(--ls-heading)}" in css
+    assert "--fw-heading:600" in css and "h1,h2{letter-spacing:var(--ls-heading)}" in css
+    # TIÊU ĐỀ tách họ riêng (user chốt 22/09/2026): Newsreader nhúng, có fallback serif, và h1–h4 trỏ về --font-display
+    assert "--font-display:'Newsreader'," in css and "serif" in hf.FONT_DISPLAY
+    assert "font-family:'Newsreader';font-style:normal;font-weight:600" in css
+    assert "h1,h2,h3,h4{font-family:var(--font-display);font-weight:var(--fw-heading)}" in css
     assert "sans-serif" in hf.FONT_TEXT                                       # luôn có fallback hệ thống
     assert "Vietnam" not in hf.FONT_MONO and "code,pre,kbd,samp{font-family:var(--font-mono)}" in css   # code giữ mono
     assert hf.MARK in css
@@ -27,7 +31,8 @@ def test_data_module_is_in_sync_with_the_woff2_asset():
     assert all(hf.woff2(w).is_file() for w in hf.WEIGHTS)                    # repo framework PHẢI mang woff2 gốc — thiếu thì --check chỉ tự-nhất-quán (review t9 F2)
     assert subprocess.run([sys.executable, str(ROOT / "fdk/tools/html_font.py"), "--check"], capture_output=True).returncode == 0
     raws = [base64.b64decode(b) for b in hf._load_b64().values()]
-    assert all(r[:4] == b"wOF2" for r in raws) and sum(map(len, raws)) < 150_000   # trần PLAN 210926: 3 weight < 150 KB (≈ 200 KB base64/trang)
+    raws += [base64.b64decode(b) for b in hf._load_data().CHART_B64.values()]
+    assert all(r[:4] == b"wOF2" for r in raws) and sum(map(len, raws)) < 150_000   # trần PLAN 210926: Be Vietnam Pro ×3 + Lexend chart ×2 < 150 KB
     assert (ROOT / "fdk/tools/assets/fonts/BeVietnamPro-NOTICE.txt").read_text(encoding="utf-8").count("Open Font License") >= 1
 
 
@@ -61,5 +66,19 @@ def test_apply_refreshes_a_stale_embedded_font_block_instead_of_skipping_it():
     """Đổi font 21/09/2026: template/skeleton nhúng sẵn khối font CŨ; bản trước coi 'đã có id' là xong → kẹt Lexend mãi."""
     stale = "<html><head><style id=\"ovs-font\">@font-face{font-family:'Lexend Deca'}</style></head><body>x</body></html>"
     out = hf.apply(stale)
-    assert "Lexend" not in out and hf.MARK in out and out.count('id="ovs-font"') == 1
+    assert "font-family:'Lexend Deca'}</style>" not in out and hf.MARK in out and out.count('id="ovs-font"') == 1
     assert hf.apply(out) == out
+
+
+def test_chart_text_uses_lexend_light_and_bold_maps_to_regular():
+    """User chốt 22/09/2026: trong sơ đồ/graph mặc định Lexend Deca Light, đậm = Lexend Deca thường (Regular).
+    Hai bản TĨNH chia theo dải độ đậm — không ép font-weight (bản ép làm nhãn đậm của graph mất đậm)."""
+    css = hf.head_css()
+    assert "font-weight:1 499" in css and "font-weight:500 1000" in css and css.count(f"font-family:'{hf.CHART_FAMILY}'") >= 2
+    assert "--font-chart:'Lexend Deca'" in css and "font-synthesis:none" in hf.chart_css()
+    assert "font-weight" not in hf.chart_css()                                # KHÔNG ép — để dải @font-face quyết nét
+    ft = pytest.importorskip("fontTools.ttLib"); pytest.importorskip("brotli")
+    for w, b in hf._load_data().CHART_B64.items():
+        f = ft.TTFont(io.BytesIO(base64.b64decode(b)))
+        assert f["OS/2"].usWeightClass == w and "fvar" not in f                 # bản tĩnh: trình duyệt không vẽ được 700 từ nó
+        assert all(ord(c) in f.getBestCmap() for c in "Đườngữợỹ")

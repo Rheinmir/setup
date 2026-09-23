@@ -13,6 +13,7 @@ Capture/config/JSONL plumbing comes from bnal_metrics + bnal_config (shared).
   flywheel.py --kind K record <key> "<summary>" [--score N] [--detail ...]
   flywheel.py --kind K --report
   flywheel.py --kind K --draft <key> [--date YYYY-MM-DD]
+  flywheel.py --kind K --guardrails                  # gói mọi lớp >= ngưỡng thành thẻ chỉ dẫn đọc ở phiên sau
   flywheel.py --kind K --self-test
 The ONE adapter per kind = harness/<kind>-flywheel.config.yaml (verified:false). Distil model
 absent → --draft emits a human-TODO stub, never auto-promotes.
@@ -55,6 +56,10 @@ def record(root, k, key, summary, score=None, detail=None):
     if detail:
         rec["detail"] = detail.strip()
     bnal_metrics.append(root, k["metrics"], rec, comment=f"flywheel {k['config']} raw history (local)")
+    try:                       # đủ ngưỡng → GÓI ngay thành chỉ dẫn cho lần sau (fail-open: capture không được vỡ)
+        pack_guardrail(root, k, rec[k["field"]])
+    except Exception:
+        pass
     return rec
 
 
@@ -152,6 +157,61 @@ def draft(root, k, key, date_str=DEFAULT_DATE):
     return out, f"drafted {k['artifact']} STUB {out} from {n} '{key}' {k['item']}s — STOPS for human approval."
 
 
+GUARD_DIR = "guardrails"          # harness/metrics/guardrails/ — MÁY quản lý (không phải wiki: không cần Origin/index)
+
+
+def guardrail_path(root, k, key):
+    return Path(root) / "harness" / "metrics" / GUARD_DIR / f"{k['slug_prefix']}-{_slug(key)}.md"
+
+
+def pack_guardrail(root, k, key, cfg=None):
+    """Lớp lỗi/win lặp >= ngưỡng → GÓI thành thẻ chỉ dẫn cho LẦN SAU (user 23/09/2026: "bugs/failed/error
+    hơn 2 lần thì gói lại thành instruction dùng cho lần kế"). Thẻ chỉ CHƯNG CẤT từ chính các dòng đã ghi
+    (triệu chứng + cách sửa đã dùng) — không bịa luật mới; phần thành rule/skill chính thức vẫn đi qua
+    `--draft` → `/propose` → người duyệt. Fail-open: gói hỏng không được làm vỡ capture."""
+    cfg = cfg or _cfg(root, k)
+    rt = int(cfg.get("recurrence_threshold", 3))
+    rows = [r for r in _rows(root, k, cfg) if (r.get(k["field"]) or "uncategorized") == key]
+    if len(rows) < rt:
+        return None
+    out = guardrail_path(root, k, key)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    last = rows[-1]
+    md = [f"# Chỉ dẫn đã học — {key} ({len(rows)}×)", "",
+          f"Lớp `{key}` lặp {len(rows)} lần (ngưỡng {rt}). Thẻ này do máy gói từ chính các lần đã ghi; đọc TRƯỚC khi làm việc cùng loại.",
+          "", "## Lần gần nhất", f"- **Triệu chứng:** {(last.get('summary') or '').strip()}"]
+    if last.get("detail"):
+        md.append(f"- **Đã sửa bằng:** {last['detail'].strip()}")
+    md += ["", f"## Các lần đã gặp ({len(rows)})", "", "| Khi | Triệu chứng | Cách sửa đã dùng |", "|---|---|---|"]
+    for r in rows[-8:]:
+        c = lambda t: (t or "").replace("|", "\\|").replace("\n", " ").strip()[:150]
+        md.append(f"| {(r.get('ts') or '')[:16].replace('T', ' ')} | {c(r.get('summary'))} | {c(r.get('detail')) or '—'} |")
+    md += ["", "## Trạng thái", "- `đã học, CHƯA duyệt` — đây là chỉ dẫn đọc-để-nhớ, KHÔNG phải luật cắn được.",
+           f"- Thành luật/skill chính thức: `flywheel.py --kind {'success' if k['scored'] else 'failure'} --draft {key}` rồi `/propose`.", ""]
+    out.write_text("\n".join(md), encoding="utf-8")
+    _write_index(root)
+    return out
+
+
+def _write_index(root):
+    d = Path(root) / "harness" / "metrics" / GUARD_DIR
+    cards = sorted(d.glob("*.md"))
+    rows = []
+    for c in cards:
+        if c.name == "INDEX.md":
+            continue
+        head = c.read_text(encoding="utf-8", errors="ignore").splitlines()[0].lstrip("# ").strip()
+        rows.append(f"- [{head}]({c.name})")
+    (d / "INDEX.md").write_text("# Chỉ dẫn đã học (máy gói, đọc đầu phiên)\n\n" + "\n".join(rows) + "\n", encoding="utf-8")
+
+
+def guardrails(root, k):
+    """Gói lại TẤT CẢ lớp đã đủ ngưỡng (dùng khi đổi ngưỡng hoặc mới bật cơ chế)."""
+    cfg = _cfg(root, k)
+    made = [p for key, g in leaderboard(root, k, cfg) if (p := pack_guardrail(root, k, key, cfg))]
+    return made
+
+
 def self_test(k):
     import tempfile
     with tempfile.TemporaryDirectory() as d:
@@ -167,6 +227,9 @@ def self_test(k):
         ok = "demo" in rep and "DRAFT" in rep and (not k["scored"] or "weak" not in rep)
         out, _ = draft(root, k, "demo")
         ok = ok and out is not None and out.exists()
+        g = guardrail_path(root, k, "demo")          # record() đã tự gói khi chạm ngưỡng (2 trong self-test)
+        ok = ok and g.exists() and "2×" in g.read_text(encoding="utf-8")
+        ok = ok and (g.parent / "INDEX.md").exists()
     print(f"flywheel[{k['field']}] self-test:", "PASS" if ok else "FAIL")
     return 0 if ok else 1
 
@@ -195,6 +258,12 @@ def main():
 
     if "--self-test" in args:
         sys.exit(self_test(k))
+    if "--guardrails" in args:      # gói lại mọi lớp đã đủ ngưỡng thành thẻ chỉ dẫn (record() tự gói khi chạm ngưỡng)
+        made = guardrails(root, k)
+        print(f"{len(made)} thẻ chỉ dẫn trong harness/metrics/{GUARD_DIR}/:" if made else "chưa lớp nào đủ ngưỡng")
+        for m in made:
+            print("  →", m)
+        sys.exit(0)
     if "--report" in args:
         print(report(root, k)); return
     if "--draft" in args:

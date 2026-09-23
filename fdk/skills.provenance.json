@@ -302,11 +302,11 @@
     },
     "docs-site-macos": {
       "files": {
-        "SKILL.md": "e894d456139689d461e40c51d4e960804ff58eb19ad531d806b385af3187edcd",
+        "SKILL.md": "822db4121f79882720c9bab14e6327882e9a6eaa0fd90206767b730207c562a9",
         "vendor/README.md": "637090466e5c66282a3e092751982f95f05eeca3ebf3f7eadc29596960ced445",
         "vendor/beautiful-mermaid.min.js.gz.b64": "89e9982b5e5b5f06c7b07ed44ee525df4e8fa5372b93c70bc79cd492acf29b37"
       },
-      "recorded": "2026-09-22",
+      "recorded": "2026-09-23",
       "source": "local-authored"
     },
     "doyourmagic": {
@@ -349,9 +349,9 @@
     },
     "failure-flywheel": {
       "files": {
-        "SKILL.md": "19980d59bf8ff5d7f2d951833319ebfcb0fd9f23c77f1aa245097a079f23e711"
+        "SKILL.md": "3cab73d6896fd2abcf2f8a4e806d96a9c0f0dcd23ba7d6042dd97d47f5dcce9b"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-09-23",
       "source": "local-authored"
     },
     "fdk": {
@@ -421,7 +421,7 @@
     },
     "hallmark": {
       "files": {
-        "SKILL.md": "8262e390fee8fc0fa626aff222aa69004f6eccf53490505da47c02711a25008e",
+        "SKILL.md": "0a7d7dd20db0c903727794eb474cf7bd8ef798a8d9225b22fc563442a4a9af54",
         "references/anti-patterns.md": "1c66f41d68ac32303d52ea49a1d475b212162ff7b38884a0b31774958b4561df",
         "references/assets.md": "60929b3dc2258b69caf3012d99d174e1ad73da9645263db81a9b271cd6fd7d61",
         "references/color.md": "31c470d16ceb17ccce290cbdd00b9e9a88f2094df8eaaefb67c86ec1e1cdb876",
@@ -480,7 +480,9 @@
         "references/copy.md": "703cdbf81fbef6f71d90596a32041d2a33a46fb71ba07ccf5ede6b4b1471d347",
         "references/custom-craft.md": "417ff74cd83e1fea50c41948c53e18365269b880806ef4f31d9e0ebda0f99246",
         "references/custom-theme.md": "a5026a0b00f69180ba9c24acec6e717bae0fb6e01daf998e8e900c57958a9eea",
+        "references/design-default.md": "953633ab6866837002ce178cca754c5063200d0d0870a2ed5afa145060b62d99",
         "references/design-md.md": "a9368b64dd9b6e53e8c707830ce28fd8601d3195a81647ea46b6995aa3556b3c",
+        "references/design-showcase.html": "809ccfbc7372b49e6121fc04168e5bbf50edc792f88535ba0d06d41fde258a76",
         "references/export-formats.md": "de0a73d9bec7a31abbd0cbbf1ecd51c2e440f1f3fdc08f476a343959ca6c22f3",
         "references/floating-nav.md": "c8c80f6560700bf6ee6baf28b81ec1539e9ff920d885624707de5fe8803c25d1",
         "references/frontend-design-delta.md": "23682d648dad8db82a5fb6d9c75c2d6e22d3fa673b3bda2a63e414f8b4ea93ea",
@@ -529,7 +531,7 @@
         "references/verbs/audit.md": "0a5b484453f1697a8675a7020df9159d0b4ce22f059b873501bfd82c26d6a31a",
         "references/verbs/redesign.md": "c2830f3b7d68e9622f55d376048a5a454c5ef59d309a211e716d1142e86acbdf"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-09-23",
       "source": "local-authored"
     },
     "harness-tour": {
@@ -866,7 +868,7 @@
     "orca-onboard": {
       "files": {
         "SKILL.md": "a7b441defe93ea544fe5e3900d06856d1751fb83e4e749e7d80d08c5de31891a",
-        "assets/docs-site-skeleton.html": "2eaa2c325acfb93e0bc4c7f2726793a8435a2a4bfd905d5f498ddd7cd7cc5c22"
+        "assets/docs-site-skeleton.html": "f4196154239a537aa2b369a8ff2fbf48bc010a7f6a829971cbc0e728f96e683f"
       },
       "recorded": "2026-09-22",
       "source": "local-authored"
@@ -938,10 +940,10 @@
     },
     "qc-uiux": {
       "files": {
-        "SKILL.md": "2c1d9277549cfeac31c59dd22dfead831ead375f316cb2a2fd99a3720a755600",
+        "SKILL.md": "102f6460f7d571ea6073b96406b6d462a90a47c9ada408265b35b3539e330ebe",
         "references/list-control-checklist.md": "68046d11190060a99187ded96b30aa39ef9543e3446a501d7ee50648626a3110"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-09-23",
       "source": "local-authored"
     },
     "query": {

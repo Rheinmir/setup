@@ -10,6 +10,12 @@
     của bản cài). Agent hay chép `visual_preset: signal-flow` từ archify/examples → font mono lệch
     trang. Thoát: <meta name="overstack-preset" content="<preset>"> khi user YÊU CẦU preset đó.
 
+(c) PLAN 220926 — trang docs-shell (sidebar có `.logo` + ≥4 neo `#…`) phải đủ bộ khung MUST của docs-site-macos:
+    icon tile trong sidebar, skip-link, <main id="main">, favicon inline, scroll spy, ripple, mind map, sơ đồ kéo-thả.
+    Trước đây chỉ là văn xuôi trong skill → 0/5 trang đủ. Lớp nền (`html_font.py --apply`) tự chèn hết → chặn kèm đúng
+    lệnh đó. CHECKS chép từ fdk/tools/docs-shell-survey.py (máy khách: validators và tools ở hai thư mục khác nhau);
+    test_html_docs_shell.py gác hai bản không lệch.
+
 Phạm vi: file .html nằm TRỰC TIẾP trong một thư mục `html/` (`*/html/*.html`). Miễn: chính artifact
 archify (viewer tự chứa — cùng cách miễn R16/R7).
 
@@ -28,6 +34,62 @@ NAV_OFF_RE = re.compile(r"""<meta\s+name=["']overstack-nav["']\s+content=["']non
 IFRAME_RE = re.compile(r"""<iframe\b[^>]*?\bsrc\s*=\s*["']([^"'#?]+\.html)""", re.I)
 PRESET_RE = re.compile(r"""\sdata-preset=["']([a-z0-9-]+)["']""")   # thuộc tính phần tử, không phải selector CSS
 PRESET_OK_RE = re.compile(r"""<meta\s+name=["']overstack-preset["']\s+content=["']([a-z0-9-]+)["']""", re.I)
+
+
+def _nav(text: str) -> str:
+    m = re.search(r"<nav\b.*?</nav>", text, re.S)
+    return m.group(0) if m else ""
+
+
+def is_docs_shell(text: str) -> bool:
+    n = _nav(text)
+    return 'class="logo' in n and len(re.findall(r'<a\b(?![^>]*class="[^"]*\blogo)[^>]*href="#[^"]', n)) >= 4
+
+
+SHELL_CHECKS = {
+    "icon-tile":  lambda h: bool(re.search(r'class="ic\b|class="nav-ic|<span[^>]*class="[^"]*\bico', _nav(h))),
+    "skip-link":  lambda h: "skip-link" in h,
+    "main-id":    lambda h: bool(re.search(r'<main\b|\bid="main"', h)),          # <main> id bất kỳ (skip-link trỏ đúng id đó)
+    "favicon":    lambda h: bool(re.search(r'<link\b[^>]*\brel="(?:shortcut )?icon"', h)),   # thứ tự thuộc tính / file favicon đều nhận
+    "nav-toggle": lambda h: "nav-toggle" in h,
+    "scroll-spy": lambda h: "IntersectionObserver" in h,
+    "ripple":     lambda h: "ripple" in h,
+    "mind-map":   lambda h: bool(re.search(r'mind-?map|class="mm"', h, re.I)),
+    "draggable":  lambda h: "diagram-box" not in h or bool(re.search(r"dataset\.draggable|data-draggable|initDraggableDiagrams", h)),
+}
+
+
+MANUAL = {"nav-toggle"}   # lớp nền (fdk/tools/html_shell.py) KHÔNG tự chèn — thông báo không được hứa "--apply là xong"
+
+
+def wrap_blocked(html: str) -> bool:
+    """Chép từ fdk/tools/html_shell.py — khi True lớp nền KHÔNG bọc <main> (sẽ gãy CSS/parser) → main-id, skip-link phải dựng tay."""
+    css = " ".join(re.findall(r"<style\b[^>]*>(.*?)</style>", html, re.S | re.I))
+    if re.search(r"(?<![\w-])body\s*>\s*[\w.#*:\[]|(?<![\w-])nav\s*[~+]", css):
+        return True
+    n = html.find("<nav"); h = html.rfind("<header", 0, n) if n >= 0 else -1
+    return h >= 0 and html.find("</header>", h) > html.find("</nav>")
+
+
+def shell_problem(path: str, text: str):
+    if not is_docs_shell(text) or re.search(r'<meta\s+name="overstack-shell"\s+content="none"', text):
+        return None
+    gaps = [k for k, ok in SHELL_CHECKS.items() if not ok(text)]
+    if not gaps:
+        return None
+    manual = set(MANUAL) | ({"main-id", "skip-link"} if "main-id" in gaps and wrap_blocked(text) else set())
+    auto = [g for g in gaps if g not in manual]
+    msg = f"trang tài liệu thiếu bộ khung MUST của docs-site-macos: {', '.join(gaps)}."
+    if auto:
+        msg += (f" Lớp nền tự chèn {', '.join(auto)} — chạy: python3 ~/.claude/harness/fdk/tools/html_font.py --apply {path}"
+                "  (repo framework: python3 fdk/tools/html_font.py --apply …).")
+    if "nav-toggle" in gaps:
+        msg += " nav-toggle phải dựng tay theo §Navigation của /docs-site-macos (.nav-toggle + .nav-close) — lớp nền không chèn vì đụng bố cục riêng."
+    if "main-id" in gaps and "main-id" in manual:
+        msg += (" main-id + skip-link phải dựng tay: bọc nội dung trong <main id=\"main\"> sẽ gãy trang này (CSS `body >`/`nav ~`/`nav +`"
+                " hoặc nav nằm trong <header>).")
+    msg += " Trang cố ý không theo khung → <meta name=\"overstack-shell\" content=\"none\"> kèm lý do."
+    return msg
 
 
 def is_archify(text: str) -> bool:
@@ -83,7 +145,7 @@ def check(path: str) -> None:
         return
     if is_archify(text):
         return
-    errs = [e for e in (nav_problem(text), preset_problem(path, text)) if e]
+    errs = [e for e in (nav_problem(text), preset_problem(path, text), shell_problem(path, text)) if e]
     if errs:
         for e in errs:
             print(f"[R20 html-docs-shell] {path}: {e}", file=sys.stderr)
@@ -117,11 +179,16 @@ def self_test():
     assert not blocked(nav + secs + '<iframe src="t2.html"></iframe>'), "preset macos phải qua"
     assert not blocked('<meta name="overstack-preset" content="signal-flow">' + nav + secs
                        + '<iframe src="t1.html"></iframe>'), "preset user yêu cầu (meta) phải qua"
+    shell = ('<nav><div class="logo">T</div>' + "".join(f'<a href="#s{i}">S{i}</a>' for i in range(5)) + "</nav>")
+    assert blocked(shell + secs), "docs-shell thiếu bộ khung phải bị chặn (c)"
+    full = ('<link rel="icon" href="data:x"><a class="skip-link"></a>' + shell.replace('<a href', '<a class="ic" href')
+            + '<main id="main"></main>nav-toggle IntersectionObserver ripple <div class="mm"></div>' + secs)
+    assert not blocked(full), "docs-shell đủ khung phải qua (c)"
     sub = d / "council"
     sub.mkdir()
     (sub / "x.html").write_text(secs, encoding="utf-8")
     check(str(sub / "x.html"))  # ngoài */html/*.html → bỏ qua, không exit
-    print("html_docs_shell --self-test: 9/9 ok")
+    print("html_docs_shell --self-test: 11/11 ok")
 
 
 def main() -> None:

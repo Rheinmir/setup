@@ -44,7 +44,12 @@ def _vars(d: dict) -> str:
 def base_css(*, family_dark: bool) -> str:
     dark = _vars(DARK) + (_FAMILY_DARK.format(**DARK) if family_dark else "")
     return (
-        f":root{{{_vars(LIGHT)}--sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:24px;--sp-6:32px;--ovs-r:14px;color-scheme:light}}"
+        f":root{{{_vars(LIGHT)}--sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:24px;--sp-6:32px;--sp-7:40px;--sp-8:48px;--sp-9:64px;--sp-10:80px;--sp-11:96px;"
+        f"--lh-body:1.75;--lh-heading:1.25;--measure:35em;--ovs-r:14px;color-scheme:light}}"
+        # nhịp chữ mặc định (PLAN 220926-spacing-system, chuẩn WCAG 1.4.12/USWDS): :where = độ ưu tiên 0 → trang tự đặt vẫn thắng
+        ":where(p,li,dd,blockquote){line-height:var(--lh-body)}:where(h1,h2,h3){line-height:var(--lh-heading)}"
+        # sentence-case cho MỌI tiêu đề, kể cả tiêu đề JS sinh lúc chạy (phép vá HTML không với tới) — :where = trang tự đặt vẫn thắng
+        ":where(h1,h2,h3,h4,h5,h6,summary,legend)::first-letter{text-transform:uppercase}"
         f"html[data-theme=dark]{{{dark}color-scheme:dark}}"
         + ("html[data-theme=dark] body{background:var(--ovs-bg);color:var(--ovs-ink)}" if family_dark else "")
         + ".ovs-card{background:var(--ovs-surface);border:1px solid var(--ovs-border);border-radius:var(--ovs-r);padding:var(--sp-4);"
@@ -67,9 +72,10 @@ def base_css(*, family_dark: bool) -> str:
           "transition-duration:.01ms!important;scroll-behavior:auto!important}}")
 
 
-# Chống nháy: chạy TRƯỚC khi trình duyệt vẽ — đặt data-theme từ lựa chọn đã nhớ, chưa có thì theo hệ điều hành.
+# Chống nháy: chạy TRƯỚC khi trình duyệt vẽ — đặt data-theme từ lựa chọn đã nhớ, chưa có thì SÁNG (mặc định framework,
+# user chốt 22/09/2026: "kêu mặc định lightmode cơ mà" — không theo prefers-color-scheme của hệ điều hành).
 BOOT_JS = ("(function(){try{var d=document.documentElement,s=localStorage.getItem('%s');"
-           "d.setAttribute('data-theme',s||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'))}catch(e){"
+           "d.setAttribute('data-theme',s==='dark'?'dark':'light')}catch(e){"
            "document.documentElement.setAttribute('data-theme','light')}})()" % KEY)
 TOGGLE_HTML = ('<button type="button" class="ovs-theme" role="switch" aria-label="Đổi giao diện sáng / tối" title="Đổi giao diện sáng / tối">'
                '<i aria-hidden="true"></i><span></span></button>')
@@ -82,7 +88,7 @@ TOGGLE_JS = ("(function(){var d=document.documentElement,b=document.querySelecto
 # Trang CON trong iframe: không có nút; lấy theme của trang mẹ lúc mở (cùng origin thì đọc thẳng) và nghe postMessage khi mẹ đổi.
 FOLLOW_JS = ("(function(){var d=document.documentElement;function set(t){if(t==='dark'||t==='light')d.setAttribute('data-theme',t)}"
              "try{set(parent.document.documentElement.getAttribute('data-theme'))}catch(e){}"
-             "if(!d.getAttribute('data-theme'))set(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');"
+             "if(!d.getAttribute('data-theme'))set('light');"
              "window.addEventListener('message',function(e){if(e.data&&e.data.ovsTheme)set(e.data.ovsTheme)})})()")
 
 
@@ -98,12 +104,29 @@ def has_own_theme(html: str) -> bool:
     return dark_css and toggler
 
 
+def _shell(html: str) -> str:
+    """Bộ khung trang tài liệu (html_shell.py, PLAN 220926) — chỉ khi file có mặt; engine không mang file này nên trang graph không đổi."""
+    f = HERE / "html_shell.py"
+    if not f.is_file():
+        return html
+    try:                                   # lỗi ở bộ khung trên trang lạ KHÔNG được làm sập mọi generator (review t8 #10)
+        s = importlib.util.spec_from_file_location("ovs_html_shell", f); m = importlib.util.module_from_spec(s); s.loader.exec_module(m)
+        return m.apply(html)
+    except Exception as e:                 # noqa: BLE001 — fail-open có tên
+        sys.stderr.write(f"[html_base] bỏ qua bộ khung trang tài liệu: {type(e).__name__}: {e}\n")
+        return html
+
+
 def apply(html: str, *, toggle: bool = True, fix=None) -> str:
     if f'id="{STYLE_ID}"' in html:                                  # lớp nền đã có (template/trang cũ): LÀM MỚI khối nền + khối font về bản hiện tại
         def _fresh(m):                                              # giữ lựa chọn family_dark của lần chèn đầu (khối cũ có luật body tối hay không)
             return f'<style id="{STYLE_ID}">{base_css(family_dark="html[data-theme=dark] body{" in m.group(0))}</style>'
         html = re.sub(rf'<style id="{STYLE_ID}">.*?</style\s*>', _fresh, html, count=1, flags=re.S)
-        return _font_mod().apply(html, _from_base=True)
+        fixer = HERE / "html-slop-fix.py"              # vá lại cả trang ĐÃ có lớp nền — trước 22/09 nhánh này bỏ qua vá, nên phép vá
+        if (fix is None and fixer.is_file()) or fix:  # mới (khoảng cách về thang) không bao giờ tới trang cũ. Mọi phép vá idempotent.
+            s_ = importlib.util.spec_from_file_location("ovs_slop_fix", fixer); fm = importlib.util.module_from_spec(s_); s_.loader.exec_module(fm)
+            html = fm.fix_markup(html, [])
+        return _shell(_font_mod().apply(html, _from_base=True))
     # Tự VÁ slop máy-làm-được trước khi gắn lớp nền (mặc định BẬT khi có html-slop-fix.py cạnh file này — repo engine không mang
     # công cụ vá nên ở đó tự tắt): generator nào còn màu ghi cứng/sọc/gradient-text cũng ra trang sạch, không chờ ai nhớ chạy tay.
     fixer = HERE / "html-slop-fix.py"
@@ -140,7 +163,7 @@ def apply(html: str, *, toggle: bool = True, fix=None) -> str:
     if bodies:                                                      # </body> CUỐI CÙNG — cái trước có thể nằm trong srcdoc/JS
         i = bodies[-1].start()
         html = html[:i] + TOGGLE_HTML + f"<script>{TOGGLE_JS}</script>" + html[i:]
-    return html
+    return _shell(html)
 
 
 def to_follow(html: str) -> str:
@@ -161,7 +184,7 @@ def to_follow(html: str) -> str:
 # Trang MẸ có toggle RIÊNG (overstack, graph-viz): báo theme cho mọi iframe con mỗi khi data-theme đổi và khi iframe vừa tải xong.
 # (iframe sandbox không cùng origin nên con KHÔNG đọc được trang mẹ — chỉ còn đường postMessage.)
 PARENT_NOTIFY_JS = ("(function(){var d=document.documentElement;function cur(){var t=d.getAttribute('data-theme');"
-                    "return t==='dark'||t==='light'?t:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}"
+                    "return t==='dark'?'dark':'light'}"
                     "function tell(f){try{f.contentWindow.postMessage({ovsTheme:cur()},'*')}catch(e){}}"
                     "function all(){[].forEach.call(document.querySelectorAll('iframe'),tell)}"
                     "new MutationObserver(all).observe(d,{attributes:true,attributeFilter:['data-theme']});"

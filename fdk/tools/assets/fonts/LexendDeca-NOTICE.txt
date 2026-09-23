@@ -1,0 +1,8 @@
+Lexend Deca — Copyright 2019 The Lexend Project Authors (https://github.com/googlefonts/lexend)
+This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://scripts.sil.org/OFL
+
+Hai file LexendDeca-300-vi.woff2 và LexendDeca-400-vi.woff2 ở thư mục này là bản SUBSET (latin + latin-ext + tiếng Việt), cắt từ
+LexendDeca-VariableFont_wght.ttf và cố định trục wght tại 300 / 400 bằng fontTools (xem html_font.py --rebuild). Dùng cho chữ trong
+sơ đồ/graph (user chốt 22/09/2026: mặc định Light, đậm = Regular).
+SIL Open Font License 1.1 cho phép nhúng và phân phối lại bản sửa đổi, miễn giữ thông báo này và không bán riêng font.
+Toàn văn giấy phép: https://openfontlicense.org

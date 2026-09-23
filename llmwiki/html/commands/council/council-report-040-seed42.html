@@ -1,0 +1,155 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Council Stage-4 report — blind peer-rank. Deterministic từ council.transcript.json.">
+<title>Council · báo cáo Stage-4</title><link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23232028'/><path d='M8 22h16M16 7l7 5H9z' stroke='%23c9a24b' stroke-width='2' fill='none' stroke-linejoin='round'/></svg>">
+<style>
+:root{--paper:#f4f1ea;--ink:#26221c;--dim:#7a7266;--faint:#a79e90;--line:rgba(60,52,40,.13);
+ --card:rgba(255,253,249,.74);--stroke:rgba(255,255,255,.9);--accent:#8a6d2f;--shadow:24px 40px 24px rgba(60,48,28,.10)}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;font:15px/1.6 Georgia,Cambria,"Times New Roman",ui-serif,serif;color:var(--ink);background:var(--paper);
+ background-image:radial-gradient(120% 80% at 15% -5%,rgba(214,198,160,.35),transparent 55%),radial-gradient(90% 70% at 100% 0%,rgba(150,168,178,.22),transparent 50%);
+ min-height:100dvh;-webkit-font-smoothing:antialiased}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:99;opacity:.5;mix-blend-mode:multiply;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.045'/%3E%3C/svg%3E")}
+.wrap{max-width:940px;margin:0 auto;padding:56px 22px 90px}
+.tabnum{font-variant-numeric:tabular-nums}
+.body-sans{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.eyebrow{font:600 12px/1 ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+h1{font-weight:600;font-size:clamp(30px,5vw,44px);line-height:1.04;letter-spacing:-.015em;margin:12px 0 10px;text-wrap:balance;max-width:22ch}
+.q{color:var(--dim);font-size:16px;max-width:60ch;text-wrap:pretty}
+.meta{margin-top:14px;font:500 12.5px/1 ui-monospace,Menlo,monospace;color:var(--faint)}
+.warn{background:rgba(176,106,44,.09);border:1px solid rgba(176,106,44,.32);border-left:3px solid #b06a2c;border-radius:13px;
+ padding:14px 16px;margin:26px 0 8px;font-size:13.5px;color:#5f4a2e;font-family:ui-sans-serif,system-ui,sans-serif}
+.sect{margin:46px 0 18px;display:flex;align-items:baseline;gap:14px}
+.sect .n{font-size:26px;color:var(--accent);line-height:1} .sect h2{font-weight:600;font-size:21px;margin:0;letter-spacing:-.01em}
+.sect .rule{flex:1;height:1px;background:var(--line)}
+.pcard{background:var(--card);border:1px solid var(--stroke);border-radius:20px;padding:22px 24px;margin:18px 0;position:relative;overflow:hidden;
+ box-shadow:0 1px 0 rgba(255,255,255,.7) inset,var(--shadow);transition:transform .28s cubic-bezier(.2,.7,.2,1),box-shadow .28s}
+.pcard:hover{transform:translateY(-3px);box-shadow:0 1px 0 rgba(255,255,255,.8) inset,32px 54px 30px rgba(60,48,28,.14)}
+.phead{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.pav{width:46px;height:46px;border-radius:14px;color:#fff;font-weight:600;font-size:20px;display:grid;place-items:center;flex:0 0 46px;font-family:ui-sans-serif,system-ui,sans-serif}
+.pname{font-size:19px;font-weight:700;letter-spacing:-.01em;font-family:ui-sans-serif,system-ui,-apple-system,sans-serif}
+.plens{margin-top:3px;font:italic 500 13px/1.35 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+ color:var(--ac);opacity:.92}
+.rankpill{font:600 11.5px/1 ui-monospace,Menlo,monospace;color:var(--dim);margin-left:6px}
+.blindtag{margin-left:auto;align-self:flex-start;font:600 11px/1 ui-monospace,Menlo,monospace;color:var(--ac);
+ border:1px solid var(--ac);border-radius:7px;padding:5px 9px}
+.ansbody{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:14px;line-height:1.66;max-width:66ch}
+.ansbody p{margin:9px 0;color:#3a342c}
+.ansbody .lead{font-size:14px;font-weight:600;color:var(--ink);margin:0 0 9px}
+.ansbody b.pt{font-weight:600;color:var(--ink)} .lead b.pt{font-weight:700}
+.ansbody p:first-child{margin-top:0}
+ol.ans{margin:10px 0 2px;padding-left:0;list-style:none;counter-reset:a}
+ol.ans li{position:relative;padding-left:30px;margin-bottom:11px;line-height:1.62}
+ol.ans li::before{counter-increment:a;content:counter(a);position:absolute;left:0;top:1px;width:18px;height:18px;border-radius:6px;
+ background:var(--ac);color:#fff;font:700 11px/18px ui-monospace,Menlo,monospace;text-align:center}
+.tblwrap{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:rgba(255,253,249,.6);box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;font-size:13.5px;font-family:ui-sans-serif,system-ui,sans-serif}
+th,td{text-align:left;padding:12px 15px;border-bottom:1px solid var(--line)} tbody tr:last-child td{border-bottom:0}
+tbody tr{transition:background .18s} tbody tr:hover{background:rgba(138,109,47,.06)}
+th{color:var(--faint);font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.06em;background:rgba(60,52,40,.03)}
+.mono{font-family:ui-monospace,Menlo,monospace} .dim{color:var(--dim)}
+.chip{display:inline-flex;align-items:center;gap:6px;background:color-mix(in srgb,var(--c) 12%,var(--paper));
+ border:1px solid color-mix(in srgb,var(--c) 55%,transparent);color:var(--c);border-radius:9px;padding:5px 11px;margin:9px 8px 0 0;
+ font:600 12.5px/1 ui-sans-serif,system-ui,sans-serif;transition:transform .2s}
+.chip:hover{transform:translateY(-2px)} .chip::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c)}
+.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin:0 0 18px}
+@media(max-width:640px){.kpi{grid-template-columns:1fr}}
+.kpi div{background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:16px 18px;box-shadow:var(--shadow);transition:transform .26s}
+.kpi div:hover{transform:translateY(-3px)}
+.kpi b{display:block;font-size:22px;font-weight:600;margin:5px 0 3px;text-transform:capitalize}
+.kpi span{color:var(--faint);font:600 10.5px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.07em}
+.kpi em{font-style:normal;color:var(--dim);font-size:12px;font-family:ui-sans-serif,system-ui,sans-serif}
+.synth{background:linear-gradient(158deg,rgba(138,109,47,.10),rgba(63,125,116,.06));border:1px solid rgba(138,109,47,.26);
+ border-radius:20px;padding:24px 26px;margin-top:16px;box-shadow:var(--shadow)}
+.synth .lbl{font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.09em;color:var(--accent)}
+.synth p{margin:7px 0;font-size:13.5px;line-height:1.6;font-family:ui-sans-serif,system-ui,sans-serif}
+ul.synlist{margin:6px 0 10px;padding:0;list-style:none;counter-reset:s;font-family:ui-sans-serif,system-ui,sans-serif}
+ul.synlist li{position:relative;padding-left:26px;margin-bottom:8px;font-size:13.5px;line-height:1.55}
+ul.synlist li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:0;width:18px;height:18px;border-radius:6px;
+ background:var(--accent);color:#fff;font:700 11px/18px ui-monospace,Menlo,monospace;text-align:center}
+.reveal{margin-top:16px} .reveal .lbl{font:600 11px/1 ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--faint)}
+footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);color:var(--faint);font-size:12.5px;text-align:center;
+ font-family:ui-sans-serif,system-ui,sans-serif}
+a:focus-visible,tr:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+</style></head><body><div class="wrap">
+<header>
+  <div class="eyebrow">🏛 Council · Stage-4</div>
+  <h1>Hội đồng chấm mù</h1>
+  <p class="q">Overstack có nên nhúng sandbox không? Policy-layer containment có thay được isolation thật, hay là ảo tưởng an toàn?</p>
+  <div class="meta tabnum">seed 42 · council.py/1.0 · 3 giám khảo · 5 ghế</div>
+</header>
+
+<section><div class="sect"><span class="n tabnum">1</span><h2>Ý kiến hội đồng</h2><span class="rule"></span></div>
+    <article class="pcard" style="--ac:#4a6d99">
+      <div class="phead">
+        <div class="pav" style="background:#4a6d99">I</div>
+        <div><div class="pname">Ilya Sutskever <span class="rankpill tabnum">🥇 #1 · mean 1.0</span></div><div class="plens">Biên giới scaling &amp; an toàn AI</div></div>
+        <div class="blindtag">nhãn D</div>
+      </div>
+      <div class="ansbody"><p><b class="pt">Đúng ở (a)</b>: overstack là HARNESS không phải RUNTIME; nhúng Firecracker là nhầm lẫn tầng, sẽ ship một VM tồi thay vì policy tốt. <b class="pt">Tự huyễn hoặc ở (c)(d)</b>: chặn tại PreToolUse KHÔNG phải containment mà là MEDIATION.</p><p>Mediation giả định agent chỉ hành động qua tool bạn thấy được. <b class="pt">Ngưỡng vỡ</b>: ngày agent viết một script rồi bảo Bash chạy nó — R-rule thấy &#x27;lệnh bash hợp lệ&#x27;, kernel thấy process có TOÀN BỘ quyền user.</p><p><b class="pt">ĐỊNH LÝ</b>: lớp phòng thủ nằm trong CÙNG MIỀN TIN CẬY với thứ nó phòng thủ thì KHÔNG PHẢI phòng thủ. Hook cùng UID, cùng filesystem, cùng network — là gờ giảm tốc, không phải tường.</p><p>17 R-rule chặn được LỖI, không chặn được Ý ĐỊNH — mà prompt injection chính là ý định người ngoài cấy vào. <b class="pt">Ngưỡng năng lực làm policy-text sụp</b>: khi agent (i) sinh+thực thi code tự viết, (ii) có network egress tuỳ ý, (iii) chạy nhiều bước không người xem.</p><p>Overstack ĐÃ CÓ ĐỦ CẢ BA — bạn đã ở bên kia ngưỡng rồi, chỉ chưa bị khai thác. <b class="pt">PHƯƠNG ÁN 3</b>: isolation MƯỢN TỪ HĐH, không từ VM. macOS sandbox-exec; Linux bwrap/seccomp+user-namespace.</p><p>Không daemon, không image, không root — chính xác giá trị lõi. <b class="pt">Egress</b>: chạy agent dưới UID phụ, firewall theo UID/cgroup — enforce THẬT, không phải YAML mô tả điều ước.</p><p>Repo ship kèm profile; clone về mở folder vẫn coi được; thứ đổi chỉ là ENTRYPOINT. <b class="pt">Đây là (b) làm cho đúng</b>: không &#x27;detect &amp; nương&#x27; mà CUNG CẤP isolation bằng primitive kernel.</p><p><b class="pt">Đánh đổi SAI</b>: tiện dụng là chi phí của BẠN, blast radius là chi phí của HỌ — không phải trade-off mà là EXTERNALITY. Phải fail loud, từ chối tool có side-effect trừ khi user gõ cờ chấp nhận.</p><p><b class="pt">KHUYẾN NGHỊ</b>: giữ (a), làm (c) nhưng gọi đúng tên là MEDIATION, và ship ngay sandbox-exec/bwrap profile + egress theo UID làm entrypoint mặc định.</p></div>
+    </article>
+    <article class="pcard" style="--ac:#3f7d74">
+      <div class="phead">
+        <div class="pav" style="background:#3f7d74">C</div>
+        <div><div class="pname">Charlie Munger <span class="rankpill tabnum">🥈 #2 · mean 2.0</span></div><div class="plens">Đa mô hình &amp; nghịch đảo</div></div>
+        <div class="blindtag">nhãn B</div>
+      </div>
+      <div class="ansbody"><p>Đúng về HƯỚNG, huyễn hoặc về MỨC ĐỘ TỰ TIN. <b class="pt">NGHỊCH ĐẢO</b>: muốn overstack thân bại danh liệt thì làm gì?</p><p>Ship framework chạy thẳng trên host, tuyên bố &#x27;có 17 R-rule + inject-scan&#x27;, rồi một hôm skill kéo từ repo lạ đọc ~/.ssh/id_rsa và POST đi. Chết KHÔNG phải vì thiếu VM, mà vì ĐÃ HỨA AN TOÀN.</p><p>Cái sai là gói nó thành &#x27;containment bằng policy&#x27; — chính cái TÊN đó là cái bẫy. <b class="pt">Policy KHÔNG thay isolation</b>: isolation là CƠ CHẾ (kernel cưỡng chế, không cần đoán ý đồ); policy PreToolUse là HÀNG RÀO GIẤY — chỉ chặn cái nó KỊP NGHĨ RA TÊN.</p><p>Kẻ tấn công không cần thắng 17 rule, chỉ cần 1 lối chưa được đặt tên: subprocess trong script hợp lệ, symlink, git config core.pager, npm postinstall, hook do chính agent viết ra. Bề mặt tấn công của policy = TRÍ TƯỞNG TƯỢNG CỦA TÁC GIẢ POLICY.</p><p><b class="pt">ĐỘNG CƠ LỆCH</b>: (i) nhúng sandbox tốn nhiều tháng và phá đúng câu marketing đẹp nhất -&gt; động cơ mạnh để kết luận policy là đủ; (ii) policy DEMO ĐƯỢC NGAY (harness-tour chặn R1-R10 rất đã mắt) -&gt; thưởng cho VẺ NGOÀI an toàn, không thưởng an toàn; (iii) chưa ai bị hack nên &#x27;chưa thấy quan tài&#x27;. Ba cái cộng lại là công thức chuẩn của TỰ LỪA DỐI.</p><p>Show me the incentive, I&#x27;ll show you the outcome. <b class="pt">PHƯƠNG ÁN 3 rẻ</b>: isolation MƯỢN TỪ OS, không mang theo. seatbelt/sandbox-exec (macOS), bwrap/landlock (Linux) — có sẵn trong OS, không daemon/image/root.</p><p>Ship một PROFILE TEXT (vẫn là file phẳng, đọc được!) + launcher. Travel-ability giữ nguyên 100%.</p><p><b class="pt">Đây là (b) nhưng NGHIÊM TÚC</b>: không chỉ detect &amp; cảnh báo mà CHỦ ĐỘNG DỰNG hộp từ nguyên liệu có sẵn. Cảnh báo suông là chuyển rủi ro sang user rồi gọi đó là tính năng.</p><p><b class="pt">Đánh đổi SAI</b>: tiện-dụng là lợi ích của TÁC GIẢ, rủi ro là chi phí của NGƯỜI KHÁC — cán cân đó không phải của bạn để cân. <b class="pt">KHUYẾN NGHỊ</b>: làm (b)(c) nhưng TÁCH issue sandbox riêng và đổi tên khỏi &#x27;containment bằng policy&#x27; <b class="pt">thành &#x27;defense-in-depth</b>: policy + sandbox mượn-OS, mặc định BẬT&#x27;.</p></div>
+    </article>
+    <article class="pcard" style="--ac:#b06a2c">
+      <div class="phead">
+        <div class="pav" style="background:#b06a2c">M</div>
+        <div><div class="pname">Marcus Aurelius <span class="rankpill tabnum">🌱 #3 · mean 3.333333</span></div><div class="plens">Bền bỉ &amp; minh định đạo đức</div></div>
+        <div class="blindtag">nhãn A</div>
+      </div>
+      <div class="ansbody"><p>Đúng ở (a),(b),(d). TỰ HUYỄN HOẶC Ở (c) — không phải ở hành động mà ở CÁCH GỌI TÊN.</p><p>Siết PreToolUse từ quét sang chặn là việc tốt, phải làm. Nhưng gọi nó là &#x27;containment&#x27; là NÓI DỐI CHÍNH MÌNH.</p><p>Nó là HYGIENE, không phải CONTAINMENT. Một R-rule chặn ghi sai vùng không ngăn được &#x27;curl | sh&#x27; mà chính user đã approve.</p><p>Hook chạy cùng UID, cùng filesystem, cùng network với thứ nó canh — người gác cổng ở TRONG nhà, không phải ngoài cửa. Sai lầm không nằm ở kiến trúc, mà ở việc ĐẶT CHO SỰ BẤT LỰC MỘT CÁI TÊN NGHE NHƯ NĂNG LỰC.</p><p>Policy KHÔNG thay isolation — ảo tưởng an toàn NGUY HIỂM HƠN SỰ TRẦN TRỤI THÀNH THẬT. Người biết mình chạy trần trụi sẽ tự đề phòng; người tin mình &#x27;được containment bằng policy&#x27; sẽ HẠ CẢNH GIÁC.</p><p>Ta gây hại nhiều nhất không khi ta yếu, mà khi ta khiến người khác TƯỞNG ta mạnh. <b class="pt">RANH GIỚI KIỂM SOÁT</b>: quyền QUYẾT ĐỊNH luật là của ta; quyền CƯỠNG CHẾ luật là của KERNEL.</p><p>Ta không có kernel, vậy ta không có cưỡng chế. Chấp nhận điều đó.</p><p><b class="pt">PHƯƠNG ÁN 3</b>: isolation KHÔNG PHẢI TÀI SẢN CỦA REPO. File phẳng vẫn phẳng khi đọc TỪ TRONG sandbox.</p><p>Cái phá travel-ability là NHÚNG RUNTIME, không phải CHẠY TRONG RUNTIME. Ship boundary.sh mỏng, ưu tiên cơ chế SẴN CÓ trên host: sandbox-exec (macOS), bwrap/systemd-run (Linux), seatbelt của chính Claude Code.</p><p>Repo vẫn là folder; isolation là CHẾ ĐỘ KHỞI CHẠY, không phải DEPENDENCY. NGHĨA VỤ TÁC GIẢ đúng ba điều:</p><ol class='ans'><li>MẶC ĐỊNH AN TOÀN — ai không đọc README vẫn không cháy nhà;</li><li>THÔNG BÁO TRUNG THỰC — nói ĐÚNG mức bảo vệ thật, không gọi policy là VM;</li><li>ĐƯỜNG THOÁT RẺ — bật isolation là một CỜ, không phải một cuộc DI CƯ. <b class="pt">Cái KHÔNG thuộc tầm kiểm soát</b>: user chọn chạy trần trụi SAU KHI đã được cảnh báo rõ — đó là quyền của họ. Nhưng chỉ SAU KHI ba nghĩa vụ trên đã tròn; trước đó, IM LẶNG LÀ LỖI CỦA TA. <b class="pt">KHUYẾN NGHỊ</b>: nhận (a)(b)(d), giữ (c) nhưng ĐỔI TÊN khỏi chữ &#x27;containment&#x27;, và ship boundary.sh dùng sandbox có sẵn của host làm MẶC ĐỊNH-BẬT với cờ tắt rõ ràng.</li></ol></div>
+    </article>
+    <article class="pcard" style="--ac:#7a5c86">
+      <div class="phead">
+        <div class="pav" style="background:#7a5c86">N</div>
+        <div><div class="pname">Nassim Taleb <span class="rankpill tabnum">#4 #4 · mean 3.666667</span></div><div class="plens">Phản mong manh &amp; rủi ro đuôi</div></div>
+        <div class="blindtag">nhãn E</div>
+      </div>
+      <div class="ansbody"><p>ĐÚNG một nửa, nửa sai là nửa chết người. <b class="pt">Đúng</b>: không nhúng VM vào framework file-phẳng (via negativa).</p><p><b class="pt">Tự huyễn hoặc</b>: gọi (c) là &#x27;thay thế&#x27;. Policy chỉ GIẢM TẦN SUẤT; sandbox GIẢM HẬU QUẢ — khác nhau về BẢN CHẤT.</p><p><b class="pt">Gộp (d) là tội lỗi nhận thức lớn nhất</b>: khiến tưởng đã trả xong nợ đuôi khi mới trả nợ trung bình. <b class="pt">Policy KHÔNG thay isolation</b>: PreToolUse chạy CÙNG tiến trình, CÙNG quyền, CÙNG bề mặt tấn công với thứ nó gác — người gác cổng đứng TRONG nhà.</p><p>Allow-list là whitelist của cái ĐÃ BIẾT; rủi ro đuôi sống ở cái CHƯA BIẾT. <b class="pt">Đó là bán quyền chọn</b>: thu phí nhỏ đều đặn, gánh lỗ vô hạn một lần.</p><p><b class="pt">Tệ hơn</b>: policy tạo cảm giác an toàn -&gt; hiệu ứng Peltzman, user chạy trần trụi tự tin hơn. Trần trụi mà BIẾT mình trần trụi còn an toàn hơn.</p><p><b class="pt">PHƯƠNG ÁN 3 = BARBELL</b>: cực an toàn (file phẳng, đọc-thuần, travel) giữ nguyên 100%; cực rủi ro (mọi thứ THỰC THI) phải chạy trong sandbox host cấp, framework TỪ CHỐI CHẠY nếu không có, trừ khi user gõ cờ chấp nhận. <b class="pt">Đây là (b) nhưng CÓ RĂNG</b>: fail-closed, không fail-warn.</p><p>Cảnh báo là thứ người ta bấm OK. Repo vẫn mở-folder-ra-coi vì ĐỌC không cần sandbox, chỉ CHẠY mới cần.</p><p><b class="pt">Đánh đổi SAI ở chỗ AI GÁNH RỦI RO</b>: tối ưu tiện dụng cho mình, ship rủi ro đuôi xuống máy người khác — không có skin in the game trên cái đuôi đó. <b class="pt">KHUYẾN NGHỊ</b>: tách (d) thành hai issue, giữ (b) nhưng chuyển từ cảnh báo sang FAIL-CLOSED mặc định, ngừng gọi (c) là &#x27;thay thế&#x27; cho isolation.</p></div>
+    </article>
+    <article class="pcard" style="--ac:#4a6d99">
+      <div class="phead">
+        <div class="pav" style="background:#4a6d99">D</div>
+        <div><div class="pname">Daniel Kahneman <span class="rankpill tabnum">#5 #5 · mean 5.0</span></div><div class="plens">Thiên kiến nhận thức</div></div>
+        <div class="blindtag">nhãn C</div>
+      </div>
+      <div class="ansbody"><p>Đúng một nửa, và nửa đúng đó đang CHE nửa sai. <b class="pt">Để ý CẤU TRÚC lập luận</b>: kết luận (a) &#x27;không nhúng sandbox&#x27; xuất hiện TRƯỚC, rồi (b)(c)(d) mới sinh ra để phục vụ nó — <b class="pt">dấu vân tay của MOTIVATED REASONING</b>: System 1 chọn đáp án, System 2 làm luật sư biện hộ.</p><p>Ba dấu hiệu:</p><ol class='ans'><li><b class="pt">SUNK COST + IKEA EFFECT</b>: 17 R-rule, inject-scan, egress-guard là công sức lớn; người đã dựng lớp policy định giá nó cao hơn giá thị trường. &#x27;(c) siết QUÉT-&gt;CHẶN&#x27; là leo dốc trên chính ngọn đồi mình đang đứng (availability).</li><li><b class="pt">WYSIATI</b>: &#x27;phá travel-ability&#x27; được nêu như SỰ THẬT HIỂN NHIÊN, không kèm phản chứng nào. Không ai thử --sandbox opt-in, không ai đo. Kết luận rút từ bằng chứng KHÔNG HỀ TỒN TẠI.</li><li><b class="pt">Gộp (d) là SUBSTITUTION kinh điển</b>: câu hỏi khó &#x27;làm sao có isolation thật?&#x27; bị đổi thầm sang câu dễ &#x27;làm sao mô tả lại phạm vi cho gọn?&#x27;. Đóng một issue bằng cách ĐẶT LẠI TIÊU ĐỀ là kế toán tinh thần, không phải kỹ thuật. <b class="pt">Policy KHÔNG thay isolation</b>: R-rule ở PreToolUse tức code do model điều khiển chạy trong CÙNG CÂY TIN CẬY với thứ nó phải chặn; prompt injection tấn công chính lớp quyết định đó. Policy kiểm soát Ý ĐỊNH ĐÃ KHAI BÁO, không kiểm soát NĂNG LỰC. Isolation là MẤT NĂNG LỰC — syscall không tồn tại thì không lời lẽ nào gọi được nó. <b class="pt">Tệ hơn</b>: RISK COMPENSATION — policy càng trông đầy đủ, user càng chạy trần trụi mà yên tâm. Framework có 17 luật khiến người ta cảnh giác ÍT HƠN framework thẳng thắn nói &#x27;tôi không cô lập gì cả&#x27;. PHƯƠNG ÁN 3 tầm thường đến mức chính sự tầm thường là BẰNG CHỨNG BIAS: sandbox OPT-IN, không nhúng. --sandbox chỉ đổi NƠI LỆNH CHẠY, không đổi HÌNH DẠNG REPO. Travel-ability nói về ARTIFACT; sandbox nói về EXECUTION. Chúng TRỰC GIAO. Việc chúng bị trộn làm một là FRAMING EFFECT do tác giả tự dựng; &#x27;phá bản chất framework&#x27; đang dùng như LÁ CHẮN BẢN SẮC — biến lựa chọn kỹ thuật thành câu hỏi &#x27;tôi là ai&#x27;, vì phản biện bản sắc đau hơn phản biện kiến trúc. <b class="pt">Đánh đổi SAI</b>: người chịu rủi ro không phải người ra quyết định; tiện dụng là frequent/visible/MINE, thiệt hại là rare/invisible/THEIRS. <b class="pt">KHUYẾN NGHỊ</b>: giữ (b), làm (c), BÁC (a) và (d) — ship sandbox opt-in (sandbox-exec/bwrap) như một cờ EXECUTION không đụng cấu trúc file, tách lại hai issue riêng, và cho tới khi có nó, in cảnh báo trung thực rằng overstack chạy KHÔNG cô lập.</li></ol></div>
+    </article></section>
+<section><div class="sect"><span class="n tabnum">2</span><h2>Bỏ phiếu kín</h2><span class="rule"></span></div>
+<div class="tblwrap"><table><thead><tr><th>Giám khảo</th><th>Xếp hạng (nhãn ẩn)</th><th>Thứ tự trình bày · chống thiên vị vị trí</th></tr></thead><tbody><tr><td>seat-1</td><td class="mono">D › B › A › E › C</td><td class="mono dim">C → E → D → B → A</td></tr><tr><td>seat-2</td><td class="mono">D › B › E › A › C</td><td class="mono dim">B → D → A → C → E</td></tr><tr><td>seat-3</td><td class="mono">D › B › A › E › C</td><td class="mono dim">A → C → B → D → E</td></tr></tbody></table></div>
+<div class="reveal"><span class="lbl">Bản lộ danh — chỉ lộ ở cuối</span><br><span class="chip" style="--c:#4a6d99">D = Ilya Sutskever</span><span class="chip" style="--c:#3f7d74">B = Charlie Munger</span><span class="chip" style="--c:#b06a2c">A = Marcus Aurelius</span><span class="chip" style="--c:#7a5c86">E = Nassim Taleb</span><span class="chip" style="--c:#4a6d99">C = Daniel Kahneman</span></div></section>
+<section><div class="sect"><span class="n tabnum">3</span><h2>Dashboard chốt</h2><span class="rule"></span></div>
+<div class="kpi">
+ <div><span>Quán quân</span><b>🥇 Ilya Sutskever</b><em class="tabnum">nhãn D · điểm TB 1.0</em></div>
+ <div><span>Gây tranh cãi nhất</span><b>Marcus Aurelius</b><em class="tabnum">nhãn A · phân tán 0.222222</em></div>
+ <div><span>Đồng thuận</span><b class="tabnum">3 GK</b><em>phân hoá</em></div>
+</div>
+<div class="tblwrap"><table><thead><tr><th>Nhãn ẩn</th><th>Uỷ viên</th><th>Điểm hạng TB</th><th>Hạng từng GK</th></tr></thead><tbody><tr><td class="mono"><b>D</b></td><td>🥇 Ilya Sutskever</td><td class="mono tabnum">1.0</td><td class="mono dim tabnum">[1, 1, 1]</td></tr><tr><td class="mono"><b>B</b></td><td>🥈 Charlie Munger</td><td class="mono tabnum">2.0</td><td class="mono dim tabnum">[2, 2, 2]</td></tr><tr><td class="mono"><b>A</b></td><td>🌱 Marcus Aurelius</td><td class="mono tabnum">3.333333</td><td class="mono dim tabnum">[3, 4, 3]</td></tr><tr><td class="mono"><b>E</b></td><td> Nassim Taleb</td><td class="mono tabnum">3.666667</td><td class="mono dim tabnum">[4, 3, 4]</td></tr><tr><td class="mono"><b>C</b></td><td> Daniel Kahneman</td><td class="mono tabnum">5.0</td><td class="mono dim tabnum">[5, 5, 5]</td></tr></tbody></table></div>
+<div class='synth' style='--ac:var(--accent)'><span class='lbl'>Chairman synthesis — câu trả lời chốt</span><p><b class="pt">PHÁN QUYẾT</b>: Đề xuất ban đầu SAI ở điểm cốt tử. 5/5 ủy viên bác, 3/3 judge nhất trí.</p><p>1) LỖI KHÁI NIỆM GỐC — trộn hai thứ TRỰC GIAO. Travel-ability nói về ARTIFACT (hình dạng repo: file phẳng, clone về mở folder ra coi được).</p><p>Sandbox nói về EXECUTION (nơi lệnh chạy). Chúng độc lập nhau. &quot;Nhúng sandbox sẽ phá mở-folder-ra-coi&quot; là một FRAMING sai do chính tác giả dựng lên: cái phá travel-ability là NHÚNG RUNTIME (Firecracker/gVisor/image/daemon), KHÔNG PHẢI CHẠY TRONG RUNTIME.</p><p>File phẳng vẫn phẳng khi được đọc từ trong sandbox. <b class="pt">Kahneman gọi đúng tên</b>: cụm &quot;phá bản chất framework&quot; đang bị dùng làm LÁ CHẮN BẢN SẮC để né việc khó.</p><p>2) POLICY-LAYER KHÔNG PHẢI CONTAINMENT — nó là MEDIATION. <b class="pt">Định lý (Ilya)</b>: lớp phòng thủ nằm trong CÙNG MIỀN TIN CẬY với thứ nó phòng thủ thì KHÔNG PHẢI phòng thủ.</p><p>Hook PreToolUse chạy cùng UID, cùng filesystem, cùng network với agent. Người gác cổng đứng TRONG nhà.
+- Policy GIẢM TẦN SUẤT; isolation GIẢM HẬU QUẢ (Taleb).</p><p>Khác nhau về BẢN CHẤT, không thay thế nhau.
+- Bề mặt tấn công của policy = TRÍ TƯỞNG TƯỢNG CỦA TÁC GIẢ POLICY (Munger). Kẻ tấn công không cần thắng 17 R-rule, chỉ cần 1 lối chưa được đặt tên: subprocess trong script hợp lệ, symlink, git config core.pager, npm postinstall, hook do chính agent viết ra.
+- NGƯỠNG ĐÃ VỠ: policy-text sụp khi agent (i) sinh + thực thi code tự viết, (ii) có egress tuỳ ý, (iii) chạy nhiều bước không người xem.</p><p>Overstack ĐÃ CÓ ĐỦ CẢ BA — đã ở bên kia ngưỡng, chỉ là chưa bị khai thác.
+- NGUY HIỂM KÉP: gọi mediation là &quot;containment&quot; tạo RISK COMPENSATION (Peltzman) — user tin mình được bảo vệ nên chạy trần trụi tự tin hơn. Trần trụi mà BIẾT mình trần trụi còn an toàn hơn.</p><p>3) PHƯƠNG ÁN THỨ BA (thắng cuộc) — ISOLATION MƯỢN TỪ OS, KHÔNG TỪ VM. Dùng primitive có SẴN trong kernel, không daemon / không image / không root — <b class="pt">đúng y giá trị lõi</b>:
+- macOS: sandbox-exec (seatbelt).</p><p><b class="pt">Linux</b>: bwrap (bubblewrap) / landlock / seccomp + user-namespace.
+- Egress cưỡng chế THẬT: chạy agent dưới UID phụ + firewall theo UID/cgroup — thay cho egress-guard.yaml vốn chỉ là &quot;YAML mô tả điều ước&quot;.
+- Repo ship kèm PROFILE TEXT (bản thân nó vẫn là file phẳng, đọc được!) + một launcher mỏng (boundary.sh).
+- Isolation trở thành CHẾ ĐỘ KHỞI CHẠY, không phải DEPENDENCY. Travel-ability giữ nguyên 100%.</p><p><b class="pt">Đây là (b) làm cho ĐÚNG</b>: không phải &quot;detect &amp; nương &amp; cảnh báo&quot;, mà CHỦ ĐỘNG DỰNG hộp từ nguyên liệu có sẵn trên máy. 4) MẶC ĐỊNH PHẢI FAIL-CLOSED, KHÔNG FAIL-WARN.
+&quot;Cảnh báo là thứ người ta bấm OK&quot; (Taleb).</p><p>Mặc định BẬT isolation; không dựng được hộp thì TỪ CHỐI chạy các tool có side-effect, trừ khi user gõ một cờ tường minh chấp nhận phơi nhiễm host. Đường thoát phải là MỘT CỜ, không phải một cuộc di cư (Aurelius).</p><p>5) ĐẠO ĐỨC: ĐÂY LÀ EXTERNALITY, KHÔNG PHẢI TRADE-OFF. Tiện dụng là lợi ích của TÁC GIẢ (frequent, visible, mine); tail-risk là chi phí của NGƯỜI DÙNG (rare, invisible, theirs).</p><p>Cán cân đó không phải của tác giả để cân. Nghĩa vụ tối thiểu đúng ba điều:</p><ol class='ans'><li>mặc định an toàn — ai không đọc README vẫn không cháy nhà;</li><li>thông báo TRUNG THỰC về mức bảo vệ thật, không gọi policy là VM;</li><li>đường thoát rẻ.
+
+<b class="pt">QUYẾT ĐỊNH THI HÀNH</b>:
+- BÁC (a) như đã phát biểu: không nhúng VM là đúng, nhưng &quot;không có isolation&quot; là sai. Có isolation — mượn kernel.
+- BÁC (d): TÁCH lại thành HAI issue. Gộp chúng là substitution bias — đổi câu hỏi khó (&quot;làm sao có isolation thật?&quot;) sang câu dễ (&quot;làm sao mô tả phạm vi cho gọn?&quot;). Đóng issue bằng cách đặt lại tiêu đề là kế toán tinh thần, không phải kỹ thuật.
+  * Issue #A — <b class="pt">Execution isolation mượn-OS</b>: boundary.sh + seatbelt/bwrap profile + egress theo UID/cgroup, mặc định BẬT, fail-closed.
+  * Issue #B — <b class="pt">Runtime mediation</b>: siết inject-scan/egress từ QUÉT sang CHẶN tại PreToolUse (allow-list tool/path).
+- GIỮ (c) nhưng ĐỔI TÊN: không bao giờ gọi nó là &quot;containment&quot;. Nó là MEDIATION / HYGIENE. Đặt cho sự bất lực một cái tên nghe như năng lực chính là bước đầu của con đường thân bại danh liệt.
+
+<b class="pt">Bất đồng đáng ghi (most-contested</b>: Aurelius): mức nghĩa vụ đạo đức — có được phép để user tự chịu sau khi cảnh báo không. <b class="pt">Hội đồng ngả về</b>: CHỈ SAU KHI mặc định-an-toàn đã tròn; trước đó im lặng là lỗi của tác giả, không phải lựa chọn của user.</li></ol></div>
+</section>
+<footer>Mọi số liệu từ council.transcript.json — report chỉ là lớp trình bày, không thêm phán xét mới.</footer>
+</div></body></html>

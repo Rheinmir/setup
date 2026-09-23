@@ -164,7 +164,7 @@ def _collect(dirs: list):
 def build_detail(dirs: list, out: Path) -> None:
     """Trang CHI TIẾT (dài, cuộn) — mở từ cockpit khi một ô không đủ chỗ."""
     reg, dirs, graphs = _collect(dirs)
-    nav = ('<div class="brand">control room · chi tiết</div><a href="control-room.html">← Cockpit</a><a href="#chay">Đang chạy</a><a href="#tien-do">Tiến độ</a><a href="#no">Nợ mở</a><a href="#chi-phi">Hôm nay</a>'
+    nav = ('<div class="brand">Control room · chi tiết</div><a href="control-room.html">← Cockpit</a><a href="#chay">Đang chạy</a><a href="#tien-do">Tiến độ</a><a href="#no">Nợ mở</a><a href="#chi-phi">Hôm nay</a>'
            '<div class="grp">Trang khác</div><a href="control-room-kanban.html">Bảng dispatch (kanban)</a><a href="orca-graph/atlas.html">Atlas graph</a><a href="fdk-problem-tree.html">Problem tree</a><a href="overstack.html">Overstack</a>')
     main = (f'<h1>Control room — chi tiết</h1><div class="sub">Trang data-first: chỉ đọc registry orca-graph, graph.json, problem-tree, tokens.jsonl, audit-log. Tự refresh 15 s. '
             f'Thư mục đang theo dõi: {", ".join(f"<code>{html.escape(d)}</code>" for d in dirs)}. Daemon: {"pid " + str(og.daemon_alive()) if og.daemon_alive() else "không chạy"}.</div>'
@@ -207,7 +207,7 @@ setInterval(function(){{if(document.visibilityState==='visible')location.reload(
 COCKPIT_CSS = """
 main a{color:var(--accent-ink,var(--ovs-accent,#0059b8));text-decoration:none}main a:hover{text-decoration:underline}
 nav{position:sticky;inset:auto;top:0;width:auto;height:auto;flex-direction:row;align-items:center;gap:6px;padding:8px 14px;border-right:0;border-bottom:1px solid var(--border);overflow:visible;z-index:5}
-nav::before{display:none}body{padding-left:0!important}nav .brand{padding:0 10px 0 0;font-size:12px}
+nav::before{display:none}body{padding-left:0!important}nav .brand{padding:0 12px 0 0;font-size:15px;font-weight:700}
 nav a{padding:5px 9px;border-left:0;border-radius:8px;font-size:11.5px}nav .grp{display:none}nav .nav-close,.nav-toggle{display:none}
 nav .kpi{display:flex;gap:6px;flex-wrap:wrap;margin-left:6px}nav .kpi .chip{padding:3px 9px;font-size:11px}
 body.nav-collapsed nav{transform:none}  /* cockpit không có sidebar để đóng — localStorage navCollapsed từ trang khác không được kéo thanh trên ra ngoài */
@@ -229,19 +229,20 @@ KANBAN_CSS = """
 .kboard-head .kpi-big{display:flex;gap:22px;align-items:baseline}
 .kboard-head .kpi-big b{font-size:26px}.kboard-head .kpi-big span{font-size:10.5px;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;display:block;text-align:center}
 .agents{display:flex;gap:10px;flex-wrap:wrap}
-.agent-card{flex:1 1 160px;min-width:150px;padding:10px 12px}
-.agent-card .id{font-weight:600;font-size:12.5px}
+.agent-card{flex:0 0 180px;height:64px;overflow:hidden;padding:10px 12px}
+.agent-card .id,.agent-card .st{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.agent-card .id{font-weight:600;font-size:12.5px}
 .agent-card .st{font-size:11px;color:var(--t2);margin-top:3px}
 .agent-card.busy{border-color:var(--accent);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 0 0 1px var(--accent)}
 .klanes{display:grid;grid-template-columns:repeat(5,minmax(210px,1fr));gap:12px;overflow-x:auto;padding-bottom:6px}
 .klane{background:var(--glass1);border:1px solid var(--border);border-radius:var(--r);padding:10px;min-height:120px}
 .klane h3{margin:0 0 2px;font-size:13px;font-weight:500;display:flex;justify-content:space-between;align-items:center}
 .klane .hint{font-size:10.5px;color:var(--t2);margin:0 0 10px}
-.kcard{background:var(--glass3);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:8px;font-size:12px}.kstate{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}.klane h3 .kstate{width:9px;height:9px}
+.kcard{background:var(--glass3);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:8px;font-size:12px;height:124px;overflow:hidden;display:flex;flex-direction:column}.kstate{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}.klane h3 .kstate{width:9px;height:9px}
 .kcard .kid{font-weight:600;font-size:11.5px}.kcard .ktier{font-size:9.5px;margin-left:5px;padding:0 5px}
-.kcard .ktitle{margin:3px 0 4px}
+.kcard .ktitle{margin:4px 0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.kcard>div{flex:none}.kcard>div:first-child,.kcard .kdeps,.kcard .kowner{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kcard{cursor:pointer}.kcard:hover,.kcard:focus-visible{border-color:var(--accent)}#kdlg{border:1px solid var(--border);border-radius:14px;padding:24px;max-width:min(560px,calc(100% - 32px));background:var(--ovs-bg,#fff);color:inherit;box-shadow:0 24px 64px rgba(0,0,0,.25)}#kdlg::backdrop{background:rgba(0,0,0,.35)}#kdlg .kbody{font-size:14px;line-height:1.6}#kdlg .ktitle{font-size:16px;margin:8px 0 12px}#kdlg .kowner,#kdlg .kdeps{margin-top:8px}#kdlg .kclose{margin-top:16px;padding:8px 16px;border:1px solid var(--border);border-radius:999px;background:none;color:inherit;cursor:pointer}
 .kcard .kdeps{font-size:10.5px;color:var(--t2)}
-.kcard .kowner{display:flex;align-items:center;gap:5px;margin-top:5px;font-size:10.5px;color:var(--t2)}
+.kcard .kowner{display:flex;align-items:center;gap:5px;margin-top:auto;font-size:10.5px;color:var(--t2)}
 .kcard .kowner .dot{width:6px;height:6px;border-radius:50%;flex:none}
 @media (max-width:900px){.klanes{grid-template-columns:1fr}}
 """
@@ -312,7 +313,7 @@ def build_cockpit(dirs: list, out: Path, detail_name: str = "control-room-detail
     p_cost = (f'<section class="card panel p-cost"><h2 id="chi-phi">Chi phí & audit</h2><div class="body"><div class="kv"><span class="lb">{len(toks)} session gần nhất</span><b>${usd:,.2f}</b><span class="lb">output tokens</span><b>{tout:,}</b></div>'
               f'<div class="sub" style="margin:8px 0 4px">Model tự chấm vs audit</div>{gap_html}</div><a class="more" href="{detail_name}#chi-phi">→ chi tiết</a></section>')
     kanban_name = detail_name.replace("-detail.html", "-kanban.html")
-    nav = (f'<div class="brand">cockpit</div><div class="kpi"><span class="chip">daemon <b>{"pid " + str(pid) if pid else "tắt"}</b></span><span class="chip">chạy <b>{n_run}/{cap}</b></span>'
+    nav = (f'<div class="brand">Cockpit</div><div class="kpi"><span class="chip">daemon <b>{"pid " + str(pid) if pid else "tắt"}</b></span><span class="chip">chạy <b>{n_run}/{cap}</b></span>'
            f'<span class="chip">kẹt <b>{n_stuck}</b></span><span class="chip">graph <b>{len(graphs)}</b></span><span class="chip">nợ <b>{n_open}</b></span></div>'
            f'<a href="#chay">Đang chạy</a><a href="#tien-do">Tiến độ</a><a href="#no">Nợ mở</a><a href="#chi-phi">Hôm nay</a><a href="{detail_name}">Chi tiết ↗</a><a href="{kanban_name}">Bảng dispatch (kanban) ↗</a><a href="orca-graph/atlas.html">Atlas</a><a href="fdk-problem-tree.html">Problem tree</a>')
     old_css = viz.CSS; viz.CSS = old_css + COCKPIT_CSS
@@ -419,7 +420,7 @@ def build_kanban(dirs: list, out: Path, detail_name: str = "control-room-detail.
                           f'<b>{html.escape(owner_by)}</b> {html.escape(owner_src or "")}</div>') if owner_by else '<div class="kowner">— chưa ai chạm</div>'
             deps = ", ".join(n.get("deps") or []) or "—"
             lanes_nodes[lane].append(
-                f'<div class="kcard">'   # trạng thái = CHẤM màu cạnh id (trước là sọc viền trái — slop, và trùng với chấm ở dòng owner)
+                f'<div class="kcard" tabindex="0" role="button" aria-haspopup="dialog" data-full="{html.escape(n["title"])}">'   # bấm = mở chi tiết (thẻ cố định size, luật kanban-uniform) · trạng thái = CHẤM màu cạnh id (trước là sọc viền trái — slop, và trùng với chấm ở dòng owner)
                 f'<div><span class="kstate" style="background:{viz.STATE_COLOR[n["state"]]}" title="{html.escape(n["state"])}"></span><span class="kid">{html.escape(gid)}/{html.escape(n["id"])}</span><span class="ktier badge">{html.escape(n.get("kind") or "build")}</span></div>'
                 f'<div class="ktitle">{html.escape(n["title"][:70])}</div>'
                 f'<div class="kdeps">← {html.escape(deps)}</div>{owner_html}</div>')
@@ -436,8 +437,14 @@ def build_kanban(dirs: list, out: Path, detail_name: str = "control-room-detail.
             f'<div class="kboard-head"><div class="agents">{agents_html}</div>'
             f'<div class="kpi-big"><div><b>{n_done}</b><span>xong</span></div><div><b>{n_doing}</b><span>đang chạy</span></div>'
             f'<div><b>{n_total}</b><span>tổng node</span></div></div></div>'
-            f'<div class="klanes">{lanes_html}</div>')
-    nav = ('<div class="brand">bảng dispatch · kanban</div><a href="control-room.html">← Cockpit</a><a href="' + detail_name + '">Chi tiết</a>'
+            f'<div class="klanes">{lanes_html}</div>'
+            # chi tiết thẻ: MỘT dialog dùng chung, chép nội dung thẻ + tiêu đề đầy đủ (thẻ trên bảng giữ nguyên kích thước)
+            '<dialog id="kdlg" aria-label="Chi tiết thẻ"><div class="kbody"></div><form method="dialog"><button class="kclose">Đóng</button></form></dialog>'
+            '<script>(()=>{const d=document.getElementById("kdlg"),b=d.querySelector(".kbody");'
+            'const open=c=>{b.innerHTML=c.innerHTML;const t=b.querySelector(".ktitle");if(t)t.textContent=c.dataset.full;d.showModal()};'
+            'document.addEventListener("click",e=>{const c=e.target.closest(".kcard");if(c)open(c)});'
+            'document.addEventListener("keydown",e=>{const c=e.target.closest&&e.target.closest(".kcard");if(c&&(e.key==="Enter"||e.key===" ")){e.preventDefault();open(c)}})})()</script>')
+    nav = ('<div class="brand">Bảng dispatch · kanban</div><a href="control-room.html">← Cockpit</a><a href="' + detail_name + '">Chi tiết</a>'
            '<div class="grp">Trang khác</div><a href="orca-graph/atlas.html">Atlas graph</a><a href="fdk-problem-tree.html">Problem tree</a><a href="overstack.html">Overstack</a>')
     old_css = viz.CSS; viz.CSS = old_css + KANBAN_CSS
     try:

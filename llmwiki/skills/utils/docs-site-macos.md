@@ -78,14 +78,29 @@ Output is a self-contained `.html` file (no JS libraries, no build step).
 ## HOW
 
 
-### Font mặc định — Be Vietnam Pro, NHÚNG (MUST, user chốt 20/09/2026, đổi font 21/09/2026)
-Mọi trang HTML do overstack sinh ra dùng **Be Vietnam Pro** (theme đọc kiểu Vietcetera): nội dung 400, chữ đậm 600, tiêu đề 800 với `letter-spacing:var(--ls-heading)` âm; ba file tĩnh 400/600/800, xin 500 ra 400, xin 700 ra 800 — nét thật; `--font-mono` cho code giữ nguyên. Font được **nhúng base64 vào chính trang** (~130 KB) để mở `file://` không mạng vẫn đúng font — KHÔNG dùng `<link>` Google Fonts, KHÔNG tự dán chuỗi base64 bằng tay. Việc của bạn gồm đúng hai bước:
-1. Trong CSS của trang: `body{font-family:var(--font-text);font-weight:var(--fw-text)}` và `--font-display` trỏ về `var(--font-text)` (đừng khai stack hệ thống riêng cho tiêu đề).
+### Font mặc định — NHÚNG hai họ (MUST, user chốt 20/09/2026 · đổi nội dung 21/09 · đổi TIÊU ĐỀ 22/09/2026)
+**Tiêu đề dùng Newsreader 600** (serif kiểu báo, `--font-display`, `--fw-heading:600`, `--ls-heading:-.01em`; một file tĩnh cắt tại wght 600 / opsz 24 — user chọn sau khi so sáu font trên cùng mẫu tiếng Việt). Nội dung dùng **Be Vietnam Pro**: 400, chữ đậm 600; ba file tĩnh 400/600/800, xin 500 ra 400, xin 700 ra 800 — nét thật; **chữ trong sơ đồ/graph** (`svg` · `.diagram-box` · `.mm` · `.graph`) dùng **Lexend Deca: mặc định Light, đậm = Regular** (user chốt 22/09/2026 — hai bản tĩnh chia theo dải độ đậm, `--font-chart`); `--font-mono` cho code giữ nguyên. Font được **nhúng base64 vào chính trang** (~175 KB) để mở `file://` không mạng vẫn đúng font — KHÔNG dùng `<link>` Google Fonts, KHÔNG tự dán chuỗi base64 bằng tay. Việc của bạn gồm đúng hai bước:
+1. Trong CSS của trang: `body{font-family:var(--font-text);font-weight:var(--fw-text)}`; tiêu đề và tên trang dùng `font-family:var(--font-display);font-weight:var(--fw-heading)` (đừng khai stack hệ thống riêng, đừng ghi cứng 800).
 2. **Sau khi ghi xong file**, chạy một lệnh (idempotent, in `✓ … nhúng Be Vietnam Pro`):
 ```bash
 python3 fdk/tools/html_font.py --apply <trang.html> [trang-khác.html …]      # máy khách: python3 ~/.claude/harness/fdk/tools/html_font.py --apply …
 ```
 Chưa chạy bước 2 = trang rơi về font hệ thống → CHƯA xong. Kiểm nhanh: `grep -c 'id="ovs-font"' <trang.html>` phải ra `1`.
+
+**Bước 2 còn tự gắn bộ khung (PLAN 220926)** cho trang có sidebar `.logo` + ≥4 neo `#…`: icon tile cho mọi `nav a` chưa có `.ic` (icon chọn theo từ khoá tên mục, số thứ tự "01 ·" vào `title`), mục active = viên nền + chấm màu, vạch tiến độ đọc, skip-link, `<main id="main">`, favicon inline, scroll spy, ripple, mind map sinh từ h2/h3 (khi trang chưa có `.mm`), JS kéo-thả cho `.diagram-box`. Nguồn: `fdk/tools/html_shell.py`; CSS/JS mind map + kéo-thả là bản NGUYÊN VĂN của skill này (`html_shell.py --sync`). Chỉ `.nav-toggle`/`.nav-close` vẫn phải dựng tay. Luật R20 chặn trang thiếu khung kèm đúng lệnh `--apply`.
+
+### Hệ khoảng cách và nhịp chữ (MUST, PLAN 220926-spacing-system — nguồn `fdk/wiki/sources/220926-spacing-standards.md`)
+- **Một thang duy nhất** cho padding/margin/gap: 2 · 4 · 8 · 12 · 16 · 20 · 24 · 32 · 40 · 48 · 64 · 80 · 96 px (IBM Carbon + Tailwind), dùng token `--sp-1…--sp-11` của lớp nền. Không 5, 6, 9, 10, 13, 14px. `html_font.py --apply` tự bẻ giá trị lệch về bậc gần nhất; cổng tĩnh `spacing-off-scale` chặn trang chưa qua bước đó.
+- **Line-height:** chữ nội dung 1,55–1,6 (`--lh-body`), MỘT giá trị cho mọi đoạn/mục; tiêu đề 1,1–1,3 (`--lh-heading`). Dưới 1,5 cho đoạn nhiều dòng là lỗi (`line-height-body`).
+- **Độ dài dòng:** đoạn chữ ≤ 80 ký tự (WCAG 1.4.8), mục tiêu `max-width:var(--measure)` = 34em (Baymard; ≈ 68 ký tự thật — `70ch` cho ~89 ký tự vì `ch` là độ rộng chữ số "0", rộng hơn chữ trung bình).
+- **Proximity:** khoảng TRÊN tiêu đề ≥ 1,5 lần khoảng DƯỚI (USWDS) — tiêu đề thuộc về phần chữ phía sau. Mẫu tốt đã đo: 26px trên / 12px dưới.
+- **Phân tầng nhãn sidebar:** tên trang · nhãn nhóm · mục phải khác nhau ở ≥ 2 trong 4 thuộc tính (cỡ, đậm, màu, hoa/thường) — luật `hierarchy-flat`. Mục nav 13–14px đậm 600 màu chữ chính; nhãn nhóm chữ hoa nhỏ giãn chữ.
+- **Vùng bấm** ≥ 24×24px (WCAG 2.5.8).
+- **Thang tiêu đề to → nhỏ** (MUST): h1 > h2 > h3 > h4 (mặc định lớp font: 32 · 24 · 20 · 17px) và không nhỏ hơn chữ nội dung; **tên trang ≥ 1,2 × mục nav/tab** (sidebar: logo 18px, mục 13px) — luật `heading-scale`, `title-scale`.
+- **Viết hoa chữ đầu** (MUST) cho tiêu đề, nhãn, nút, tab, mục nav (`sentence-case`; lớp nền tự sửa khi `--apply`). Tên riêng muốn giữ chữ thường: `data-case="keep"`.
+- **Kanban một style, thẻ cố định kích thước** (MUST): mọi thẻ trên bảng cùng style và cùng rộng/cao; tiêu đề `line-clamp:2`, dòng phụ `ellipsis`, bấm thẻ mở chi tiết — luật `kanban-uniform`.
+- **Code mẫu** cho sidebar, lưới, kanban, list, motion, chart…: trang `skills/hallmark/references/design-showcase.html` (máy khách: `~/.claude/skills/hallmark/references/design-showcase.html`); lấy khối bằng `python3 fdk/tools/build-design-showcase.py --get <id>` (máy khách: `python3 ~/.claude/harness/fdk/tools/build-design-showcase.py --get <id>`; `--list` in index).
+- **Khoảng nghỉ cho mắt** (MUST): màn đầu chỉ tóm tắt, chi tiết hiện khi bấm (`<details>`, popup, nút tóm tắt); đừng đặt ngang hàng hàng chục viên/chip/nút — luật `eye-rest`. Khác chuẩn vì yêu cầu đặc biệt → `<meta name="overstack-exempt" content="…" data-reason="…">`.
 
 ### Main workflow
 | Step | Type | Inputs | Action | Outputs/exit | Failure/next |
@@ -281,11 +296,11 @@ nav::before{content:'';position:absolute;inset:0;pointer-events:none;
     radial-gradient(220px 160px at 18% 4%,rgba(255,255,255,.55),transparent 70%),
     linear-gradient(115deg,rgba(255,255,255,.28) 0%,transparent 28%,transparent 72%,rgba(255,255,255,.14) 100%)}
 nav>*{position:relative}
-nav .logo{margin:0 0 12px;padding:6px 10px;
+nav .logo{margin:0 0 12px;padding:8px 12px;
   background:linear-gradient(135deg,#0a84ff,#64b5f7);-webkit-background-clip:text;background-clip:text;color:transparent}
 nav a{padding:8px 12px;border-radius:10px;font-size:13px;position:relative;overflow:hidden}
 nav a.active{color:#0a84ff;background:rgba(10,132,255,.08);font-weight:600}
-body{padding-left:200px}
+body{padding-left:192px}
 @media(max-width:640px){
   body{padding-left:0}                       /* sidebar overlay, không chiếm column */
   nav{box-shadow:0 8px 30px rgba(0,0,0,.14)} /* nổi trên content khi mở */
@@ -458,22 +473,26 @@ Mọi docs site PHẢI kèm **một mind map collapsible kiểu NotebookLM** tó
 
 **CSS** (trong `<style>`; `--ink2`/`--border` từ design system; `.b-0..b-4` cycle Apple secondary cho `.nm`+`.ct`+border — JS dùng CÙNG màu cho đường cong):
 ```css
-.mm{overflow-x:auto;padding:14px 4px 6px}
+.mm{overflow-x:auto;padding:16px 4px 8px}
 .mm-canvas{position:relative;width:max-content}
 .mm-links{position:absolute;top:0;left:0;pointer-events:none;overflow:visible;z-index:0}
 .mm-links path{fill:none;stroke-width:2.2;opacity:.55;stroke-linecap:round}
 .mm .tree{position:relative;z-index:1}
-.mm .tree,.mm .children{display:flex;flex-direction:column;gap:9px;justify-content:center}
+.mm .tree,.mm .children{display:flex;flex-direction:column;gap:8px;justify-content:center}
 .mm .row{display:flex;align-items:center;gap:48px;position:relative}
 .mm .children{position:relative}.mm .children.collapsed{display:none}
-.mm .node{position:relative;display:inline-flex;flex-direction:column;gap:1px;padding:7px 13px;border-radius:13px;cursor:default;white-space:nowrap;background:rgba(255,255,255,.72);backdrop-filter:blur(7px) saturate(1.1);border:1px solid var(--border);box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 3px 14px rgba(20,40,90,.07);transition:transform .12s}
+.mm .node{position:relative;display:inline-flex;flex-direction:column;gap:1px;padding:8px 12px;border-radius:13px;cursor:default;white-space:nowrap;background:rgba(255,255,255,.72);backdrop-filter:blur(7px) saturate(1.1);border:1px solid var(--border);box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 3px 14px rgba(20,40,90,.07);transition:transform .12s}
 .mm .node.has-children{cursor:pointer}.mm .node:hover{transform:translateY(-1px)}
 .mm .node .nm{font-size:13px;font-weight:700;letter-spacing:-.01em}.mm .node .ds{font-size:10.5px;color:var(--ink2)}
-.mm .node .ct{font-size:10px;color:#fff;font-weight:700;padding:1px 7px;border-radius:999px;position:absolute;top:-8px;right:-8px;background:#0a84ff}
+.mm .node .ct{font-size:10px;color:#fff;font-weight:700;padding:1px 8px;border-radius:999px;position:absolute;top:-8px;right:-8px;background:#0058d0}
 .mm .node.has-children::after{content:'';position:absolute;right:-7px;top:50%;width:6px;height:6px;border-right:2px solid var(--ink2);border-bottom:2px solid var(--ink2);transform:translateY(-50%) rotate(-45deg);opacity:.5}
 .mm .node.collapsed-parent::after{transform:translateY(-50%) rotate(45deg)}
 .mm .node.root{background:linear-gradient(135deg,rgba(10,132,255,.16),rgba(88,86,214,.14));border-color:rgba(10,132,255,.4)}
+html[data-theme=dark] .mm .node{background:rgba(30,42,64,.72);border-color:rgba(120,160,220,.28);box-shadow:none}
+html[data-theme=dark] .mm .node .nm{color:#e6e9f0}
+@media (prefers-color-scheme:dark){html:not([data-theme=light]) .mm .node{background:rgba(30,42,64,.72);border-color:rgba(120,160,220,.28);box-shadow:none}html:not([data-theme=light]) .mm .node .nm{color:#e6e9f0}}
 ```
+Đo Playwright 22/09/2026: bản cũ `.ct` trắng trên `#0a84ff` = 3,67:1 ở 10px và node KHÔNG có biến thể tối (chữ 1,56:1 trên nền tối) → nay `#0058d0` + khối tối ở trên.
 (KHÔNG còn connector thẳng `.row::before`/`.children::before` — đường nối do JS vẽ bezier vào `<svg class="mm-links">`.)
 
 **JS** (vẽ bezier màu theo nhánh + mặc định ĐÓNG nhánh `.cat` + click toggle + redraw — trong `<script>`):
@@ -500,7 +519,7 @@ The gradient overlay is a `::before` pseudo-element:
 /* Generate one .s-bgN::before per section index, cycling through 6 colors */
 ```
 
-Section padding: `padding: 64px 24px 72px; max-width: 1100px; margin: 0 auto;`
+Section padding: `padding: 64px 24px 80px; max-width: 1100px; margin: 0 auto;`
 
 #### CSS Generator Pattern
 
@@ -589,11 +608,11 @@ CSS — replace the old static `.diagram-box` rule with:
 .dnode:hover>rect:first-of-type{filter:drop-shadow(0 3px 8px rgba(0,0,0,.18))}
 .diagram-hint{position:absolute;top:8px;right:12px;z-index:5;font-size:10px;color:#4a4a55;
   background:rgba(255,255,255,.75);border:1px solid rgba(0,0,0,.05);border-radius:20px;
-  padding:3px 10px;white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none}
+  padding:4px 12px;white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none}
 .diagram-box:hover .diagram-hint{opacity:.9}
 .diagram-reset{position:absolute;bottom:8px;right:10px;z-index:5;font-size:11px;
   background:rgba(255,255,255,.85);border:1px solid rgba(0,0,0,.08);border-radius:8px;
-  padding:3px 9px;cursor:pointer;color:#4a4a55;opacity:0;transition:opacity .2s}
+  padding:4px 8px;cursor:pointer;color:#4a4a55;opacity:0;transition:opacity .2s}
 .diagram-box:hover .diagram-reset{opacity:1}
 .diagram-reset:hover{background:#fff;color:#0f0f12}
 /* resize grip kiểu macOS: 3 vạch chéo trong tam giác góc — ẨN mặc định, hover mới hiện.
@@ -1021,8 +1040,8 @@ liền mạch). Đây là cách cho "đọc tuần tự + bấm để đào sâu
 <div class="md-wrap"><ul class="md-list" role="listbox"></ul><div class="card md-detail"></div></div>
 ```
 ```css
-.md-wrap{display:grid;grid-template-columns:268px 1fr;gap:18px}
-.md-list li{padding:11px 13px;border-radius:13px;cursor:pointer;margin-bottom:8px;background:var(--glass-2);
+.md-wrap{display:grid;grid-template-columns:268px 1fr;gap:20px}
+.md-list li{padding:12px 12px;border-radius:13px;cursor:pointer;margin-bottom:8px;background:var(--glass-2);
   backdrop-filter:blur(var(--blur-2));border:1px solid var(--border);box-shadow:var(--edge-hi);transition:.16s}
 .md-list li:hover{transform:translateX(3px)}
 .md-list li[aria-selected=true]{background:linear-gradient(120deg,rgba(255,255,255,.92),rgba(244,242,255,.85));border-color:#cdc4ff}
@@ -1120,7 +1139,7 @@ Add Open Graph (`og:title`/`og:description`/`og:image`) only when the page is me
 <a class="skip-link" href="#main">Skip to content</a>
 ```
 ```css
-.skip-link{position:fixed;top:8px;left:8px;z-index:200;padding:8px 14px;border-radius:10px;
+.skip-link{position:fixed;top:8px;left:8px;z-index:200;padding:8px 16px;border-radius:10px;
   background:var(--glass-1);backdrop-filter:blur(var(--blur-1));border:1px solid var(--border);
   transform:translateY(-150%);transition:transform .2s}
 .skip-link:focus-visible{transform:translateY(0)}
@@ -1163,7 +1182,7 @@ Luật "inline SVG" ở §Best Practices áp cho sơ đồ TỰ VẼ trong trang
 
 ```css
 .archify-embed{display:block;width:100%;height:1000px;border:0;border-radius:14px;background:transparent}
-.embed-open{display:inline-block;margin-top:6px;font-size:12px}
+.embed-open{display:inline-block;margin-top:8px;font-size:12px}
 ```
 
 ```js
@@ -1313,7 +1332,7 @@ Keep the chrome (traffic-light header), the system-font stack (`var(--font-text)
 
 ```css
 .checklist { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-.checklist li { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--text-2); cursor: pointer; }
+.checklist li { display: flex; align-items: flex-start; gap: 12px; font-size: 13px; color: var(--text-2); cursor: pointer; }
 .checklist li::before { display: none; }
 .checklist input[type="checkbox"] {
   width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid #cbd5e1;

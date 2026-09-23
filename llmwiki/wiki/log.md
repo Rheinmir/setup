@@ -1552,3 +1552,2417 @@ cc4f999ad |
 | 2026-09-21 16:05:46 | `file.write` | llmwiki/wiki/sources/draft/210926-reading-font-slop-code-review.md · tool=Write · session=d3f387e6 · actor=agent · prev= |
 
 <!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=0 |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=3 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=0 |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=3 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=0 |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=3 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=0 |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=3 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=0 |
+| 2026-09-22 08:34:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=3 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=3 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=3 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=3 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=3 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=3 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=3 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=3 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=3 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=3 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=3 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=3 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:17 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:18 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=29527956 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=2fcd004f |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=29527956 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=2fcd004f |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=29527956 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=2fcd004f |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=29527956 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=2fcd004f |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=29527956 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=2fcd004f |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=29527956 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=2fcd004f |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=29527956 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=2fcd004f |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=88b413e1c14 |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f56d2b5cee |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=e594e054fe736a4 |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=0f65c2096764c22 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=29527956 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=2fcd004f |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=88b413e1c14 |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f56d2b5cee |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=e594e054fe736a4 |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=0f65c2096764c22 |
+
+<!-- log:auto:end -->
+
+## 2026-09-22 — ingest + orca-graph — Reprise-CoCanvas-Product-Grade-PRD.md
+
+- tạo `sources/220926-reprise-cocanvas-prd.md` — tóm tắt PRD (ba lớp, ADR-001/002/003, ChangeSet, commit Git/DB, phạm vi C0/C1/C2) và cách bẻ backlog
+- tạo `sources/draft/220926-cocanvas-m1-foundation-PLAN.md`, `…-m2-agent-design-PLAN.md`, `…-m3-chain-release-PLAN.md` — 28 ticket CC thành 10/10/8 task, cạnh xuyên graph có lý do
+- build 3 graph trong `llmwiki/graph/` + HTML + atlas; check-cycles OK, audit-edges --strict rc 0, lint đủ hợp đồng
+- sửa `index.md` — thêm dòng source CoCanvas
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=29527956 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=2fcd004f |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=88b413e1c14 |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f56d2b5cee |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=e594e054fe736a4 |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=0f65c2096764c22 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=29527956 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=2fcd004f |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=88b413e1c14 |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f56d2b5cee |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=e594e054fe736a4 |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=0f65c2096764c22 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=29527956 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=2fcd004f |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=88b413e1c14 |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f56d2b5cee |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=e594e054fe736a4 |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=0f65c2096764c22 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=a |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=29527956 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=2fcd004f |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=88b413e1c14 |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f56d2b5cee |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=e594e054fe736a4 |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=0f65c2096764c22 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=29527956 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=2fcd004f |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=88b413e1c14 |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f56d2b5cee |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=e594e054fe736a4 |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=0f65c2096764c22 |
+| 2026-09-22 16:25:10 | `file.write` | skills/hallmark/references/design-default.md · tool=Write · session=745ad856 · actor=agent · prev=d86878658546957ce67242 |
+| 2026-09-22 16:25:10 | `file.write` | skills/hallmark/references/design-default.md · tool=Write · session=745ad856 · actor=agent · prev=68354e595da68c1cf2666e |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:25 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=29527956 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=2fcd004f |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=88b413e1c14 |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f56d2b5cee |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=e594e054fe736a4 |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=0f65c2096764c22 |
+| 2026-09-22 16:25:10 | `file.write` | skills/hallmark/references/design-default.md · tool=Write · session=745ad856 · actor=agent · prev=d86878658546957ce67242 |
+| 2026-09-22 16:25:10 | `file.write` | skills/hallmark/references/design-default.md · tool=Write · session=745ad856 · actor=agent · prev=68354e595da68c1cf2666e |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/210926-reading-font-slop-code.graph.json', 'llmwiki/.cla |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-docs-index.py', 'llmwiki/wiki/sources/draft/210926-rea |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=29527956 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=2fcd004f |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=88b413e1c14 |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f56d2b5cee |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=e594e054fe736a4 |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=0f65c2096764c22 |
+| 2026-09-22 16:25:10 | `file.write` | skills/hallmark/references/design-default.md · tool=Write · session=745ad856 · actor=agent · prev=d86878658546957ce67242 |
+| 2026-09-22 16:25:10 | `file.write` | skills/hallmark/references/design-default.md · tool=Write · session=745ad856 · actor=agent · prev=68354e595da68c1cf2666e |
+| 2026-09-22 16:37:55 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Write · session=745ad856 · actor=agent · prev=1ba3ac1c5 |
+| 2026-09-22 16:37:55 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Write · session=745ad856 · actor=agent · prev=66bf52073 |
+
+<!-- log:auto:end -->
+
+## 2026-09-22 — tách dự án — Reprise CoCanvas ra repo riêng
+
+- xoá `sources/220926-reprise-cocanvas-prd.md` và 3 PLAN `sources/draft/220926-cocanvas-*-PLAN.md`, bỏ 4 dòng tương ứng trong `index.md`, xoá 3 graph `llmwiki/graph/220926-cocanvas-*`
+- lý do: user muốn CoCanvas là dự án riêng; toàn bộ đã chuyển sang `/Users/giatran/orca/reprise-cocanvas` (commit 01d59b1: docs/prd, docs/prd-summary.md, docs/research, plan/ + store orca-graph `plan/graph/`)
+- giữ nguyên `llmwiki/raw/prd/Reprise-CoCanvas-Product-Grade-PRD.md` (luật: không ghi vào raw/)
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=29527956 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=2fcd004f |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=88b413e1c14 |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f56d2b5cee |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=e594e054fe736a4 |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=0f65c2096764c22 |
+| 2026-09-22 16:25:10 | `file.write` | skills/hallmark/references/design-default.md · tool=Write · session=745ad856 · actor=agent · prev=d86878658546957ce67242 |
+| 2026-09-22 16:25:10 | `file.write` | skills/hallmark/references/design-default.md · tool=Write · session=745ad856 · actor=agent · prev=68354e595da68c1cf2666e |
+| 2026-09-22 16:37:55 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Write · session=745ad856 · actor=agent · prev=1ba3ac1c5 |
+| 2026-09-22 16:37:55 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Write · session=745ad856 · actor=agent · prev=66bf52073 |
+| 2026-09-22 16:41:51 | `file.write` | fdk/tools/showcase_rules.py · tool=Write · session=745ad856 · actor=agent · prev=50da73717b359e133886881858515b1f16ffa5b |
+| 2026-09-22 16:41:51 | `file.write` | fdk/tools/showcase_rules.py · tool=Write · session=745ad856 · actor=agent · prev=1d6596296b98394864485bdfb8c4f30fb8b3ce8 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/skills/utils/docs-site-macos.md', 'harness/tests/html-font-lin |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['harness/tests/html-visual-gate-test.sh', 'skills/docs-site-macos/SKILL |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['fdk/tools/build-health-dashboard.py', 'fdk/tools/build-line-status.py' |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/tools/frontend-antipattern.py', 'llmwiki/wiki/index.md', 'fdk/tool |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=29527956 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=2fcd004f |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=88b413e1c14 |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f56d2b5cee |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=e594e054fe736a4 |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=0f65c2096764c22 |
+| 2026-09-22 16:25:10 | `file.write` | skills/hallmark/references/design-default.md · tool=Write · session=745ad856 · actor=agent · prev=d86878658546957ce67242 |
+| 2026-09-22 16:25:10 | `file.write` | skills/hallmark/references/design-default.md · tool=Write · session=745ad856 · actor=agent · prev=68354e595da68c1cf2666e |
+| 2026-09-22 16:37:55 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Write · session=745ad856 · actor=agent · prev=1ba3ac1c5 |
+| 2026-09-22 16:37:55 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Write · session=745ad856 · actor=agent · prev=66bf52073 |
+| 2026-09-22 16:41:51 | `file.write` | fdk/tools/showcase_rules.py · tool=Write · session=745ad856 · actor=agent · prev=50da73717b359e133886881858515b1f16ffa5b |
+| 2026-09-22 16:41:51 | `file.write` | fdk/tools/showcase_rules.py · tool=Write · session=745ad856 · actor=agent · prev=1d6596296b98394864485bdfb8c4f30fb8b3ce8 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=29527956 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=2fcd004f |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=88b413e1c14 |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f56d2b5cee |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=e594e054fe736a4 |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=0f65c2096764c22 |
+| 2026-09-22 16:25:10 | `file.write` | skills/hallmark/references/design-default.md · tool=Write · session=745ad856 · actor=agent · prev=d86878658546957ce67242 |
+| 2026-09-22 16:25:10 | `file.write` | skills/hallmark/references/design-default.md · tool=Write · session=745ad856 · actor=agent · prev=68354e595da68c1cf2666e |
+| 2026-09-22 16:37:55 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Write · session=745ad856 · actor=agent · prev=1ba3ac1c5 |
+| 2026-09-22 16:37:55 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Write · session=745ad856 · actor=agent · prev=66bf52073 |
+| 2026-09-22 16:41:51 | `file.write` | fdk/tools/showcase_rules.py · tool=Write · session=745ad856 · actor=agent · prev=50da73717b359e133886881858515b1f16ffa5b |
+| 2026-09-22 16:41:51 | `file.write` | fdk/tools/showcase_rules.py · tool=Write · session=745ad856 · actor=agent · prev=1d6596296b98394864485bdfb8c4f30fb8b3ce8 |
+| 2026-09-22 16:43:36 | `file.write` | fdk/tools/build-design-showcase.py · tool=Write · session=745ad856 · actor=agent · prev=3946de2df8e5ac2fab6c1337c3a91cc5 |
+| 2026-09-22 16:43:36 | `file.write` | fdk/tools/build-design-showcase.py · tool=Write · session=745ad856 · actor=agent · prev=5aa2eb5ee915739d8a3f5cf8db7c52cf |
+| 2026-09-22 16:44:24 | `file.write` | fdk/tools/showcase_layout.py · tool=Write · session=745ad856 · actor=agent · prev=e05edb2574172b08b0f3d3928b20be4bbb679d |
+| 2026-09-22 16:44:24 | `file.write` | fdk/tools/showcase_layout.py · tool=Write · session=745ad856 · actor=agent · prev=950ad5790a68b2bff82229b1b5031b4feecd05 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['fdk/tools/build-wiki-graph.py', 'fdk/skills.provenance.json'] · prev=5 |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/scripts/council.py', 'llmwiki/wiki/sources/provenance/200926-s |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/whiteboard-skill-map.py', 'fdk/tools/html-font-lint.py', 'll |
+| 2026-09-22 08:34:45 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/wiki/index.md', 'fdk/tools/skill-usage.py', 'fdk/wiki/sources/2109 |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=df7ab982e36c470627221c3ed |
+| 2026-09-22 08:38:13 | `file.write` | harness/tests/windows-portability-test.sh · tool=Write · session=d3f387e6 · actor=agent · prev=53bac14ad2b663b4721f92b43 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=0b181eef94efcada4b54abbf954007c60512 |
+| 2026-09-22 09:27:16 | `file.write` | fdk/tools/docs-shell-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=9de9abf1ad8e778ed90eb42dc1fbd1fba63c |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=b406264701702a6438a0743231ce9aadc585a96f93f |
+| 2026-09-22 09:30:06 | `file.write` | fdk/tools/html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=75ed8b0ab16becda4ef6eb44f05a0fb8d7d9aca0867 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=29527956 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=2fcd004f |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=88b413e1c14 |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f56d2b5cee |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=e594e054fe736a4 |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=0f65c2096764c22 |
+| 2026-09-22 16:25:10 | `file.write` | skills/hallmark/references/design-default.md · tool=Write · session=745ad856 · actor=agent · prev=d86878658546957ce67242 |
+| 2026-09-22 16:25:10 | `file.write` | skills/hallmark/references/design-default.md · tool=Write · session=745ad856 · actor=agent · prev=68354e595da68c1cf2666e |
+| 2026-09-22 16:37:55 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Write · session=745ad856 · actor=agent · prev=1ba3ac1c5 |
+| 2026-09-22 16:37:55 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Write · session=745ad856 · actor=agent · prev=66bf52073 |
+| 2026-09-22 16:41:51 | `file.write` | fdk/tools/showcase_rules.py · tool=Write · session=745ad856 · actor=agent · prev=50da73717b359e133886881858515b1f16ffa5b |
+| 2026-09-22 16:41:51 | `file.write` | fdk/tools/showcase_rules.py · tool=Write · session=745ad856 · actor=agent · prev=1d6596296b98394864485bdfb8c4f30fb8b3ce8 |
+| 2026-09-22 16:43:36 | `file.write` | fdk/tools/build-design-showcase.py · tool=Write · session=745ad856 · actor=agent · prev=3946de2df8e5ac2fab6c1337c3a91cc5 |
+| 2026-09-22 16:43:36 | `file.write` | fdk/tools/build-design-showcase.py · tool=Write · session=745ad856 · actor=agent · prev=5aa2eb5ee915739d8a3f5cf8db7c52cf |
+| 2026-09-22 16:44:24 | `file.write` | fdk/tools/showcase_layout.py · tool=Write · session=745ad856 · actor=agent · prev=e05edb2574172b08b0f3d3928b20be4bbb679d |
+| 2026-09-22 16:44:24 | `file.write` | fdk/tools/showcase_layout.py · tool=Write · session=745ad856 · actor=agent · prev=950ad5790a68b2bff82229b1b5031b4feecd05 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=29527956 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=2fcd004f |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=88b413e1c14 |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f56d2b5cee |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=e594e054fe736a4 |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=0f65c2096764c22 |
+| 2026-09-22 16:25:10 | `file.write` | skills/hallmark/references/design-default.md · tool=Write · session=745ad856 · actor=agent · prev=d86878658546957ce67242 |
+| 2026-09-22 16:25:10 | `file.write` | skills/hallmark/references/design-default.md · tool=Write · session=745ad856 · actor=agent · prev=68354e595da68c1cf2666e |
+| 2026-09-22 16:37:55 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Write · session=745ad856 · actor=agent · prev=1ba3ac1c5 |
+| 2026-09-22 16:37:55 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Write · session=745ad856 · actor=agent · prev=66bf52073 |
+| 2026-09-22 16:41:51 | `file.write` | fdk/tools/showcase_rules.py · tool=Write · session=745ad856 · actor=agent · prev=50da73717b359e133886881858515b1f16ffa5b |
+| 2026-09-22 16:41:51 | `file.write` | fdk/tools/showcase_rules.py · tool=Write · session=745ad856 · actor=agent · prev=1d6596296b98394864485bdfb8c4f30fb8b3ce8 |
+| 2026-09-22 16:43:36 | `file.write` | fdk/tools/build-design-showcase.py · tool=Write · session=745ad856 · actor=agent · prev=3946de2df8e5ac2fab6c1337c3a91cc5 |
+| 2026-09-22 16:43:36 | `file.write` | fdk/tools/build-design-showcase.py · tool=Write · session=745ad856 · actor=agent · prev=5aa2eb5ee915739d8a3f5cf8db7c52cf |
+| 2026-09-22 16:44:24 | `file.write` | fdk/tools/showcase_layout.py · tool=Write · session=745ad856 · actor=agent · prev=e05edb2574172b08b0f3d3928b20be4bbb679d |
+| 2026-09-22 16:44:24 | `file.write` | fdk/tools/showcase_layout.py · tool=Write · session=745ad856 · actor=agent · prev=950ad5790a68b2bff82229b1b5031b4feecd05 |
+| 2026-09-22 16:47:22 | `file.write` | fdk/tools/showcase_components.py · tool=Write · session=745ad856 · actor=agent · prev=c49dc91cfc0fc69a77178537e77ddcb9de |
+| 2026-09-22 16:47:22 | `file.write` | fdk/tools/showcase_components.py · tool=Write · session=745ad856 · actor=agent · prev=5f836cf0e7a5daf6ff245d6cb4f2cd4d62 |
+| 2026-09-22 16:48:44 | `file.write` | fdk/tools/showcase_motion.py · tool=Write · session=745ad856 · actor=agent · prev=1dbccd76c3bfdda8f5631a4ad140920f135c84 |
+| 2026-09-22 16:48:44 | `file.write` | fdk/tools/showcase_motion.py · tool=Write · session=745ad856 · actor=agent · prev=2e8ceb22d7f18ac9a828327a9545152d8c5585 |
+| 2026-09-22 16:50:05 | `file.write` | fdk/tools/showcase_dataviz.py · tool=Write · session=745ad856 · actor=agent · prev=f5c9a0ef66e5111b115e76568fef1b732d63d |
+| 2026-09-22 16:50:05 | `file.write` | fdk/tools/showcase_dataviz.py · tool=Write · session=745ad856 · actor=agent · prev=d6b66a56fbc76f1a06dd5e83a275005dfb242 |
+| 2026-09-22 16:51:36 | `file.write` | harness/tests/test_design_showcase.py · tool=Write · session=745ad856 · actor=agent · prev=fc59fbd03f199d3bb6f0ac13a01f5 |
+| 2026-09-22 16:51:36 | `file.write` | harness/tests/test_design_showcase.py · tool=Write · session=745ad856 · actor=agent · prev=64126c4d5c7a3cc59ec599f6173bb |
+| 2026-09-22 16:55:53 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Edit · session=745ad856 · actor=agent · prev=6fd5616b59 |
+| 2026-09-22 16:55:53 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Edit · session=745ad856 · actor=agent · prev=bb51201fea |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=29527956 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=2fcd004f |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=88b413e1c14 |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f56d2b5cee |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=e594e054fe736a4 |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=0f65c2096764c22 |
+| 2026-09-22 16:25:10 | `file.write` | skills/hallmark/references/design-default.md · tool=Write · session=745ad856 · actor=agent · prev=d86878658546957ce67242 |
+| 2026-09-22 16:25:10 | `file.write` | skills/hallmark/references/design-default.md · tool=Write · session=745ad856 · actor=agent · prev=68354e595da68c1cf2666e |
+| 2026-09-22 16:37:55 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Write · session=745ad856 · actor=agent · prev=1ba3ac1c5 |
+| 2026-09-22 16:37:55 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Write · session=745ad856 · actor=agent · prev=66bf52073 |
+| 2026-09-22 16:41:51 | `file.write` | fdk/tools/showcase_rules.py · tool=Write · session=745ad856 · actor=agent · prev=50da73717b359e133886881858515b1f16ffa5b |
+| 2026-09-22 16:41:51 | `file.write` | fdk/tools/showcase_rules.py · tool=Write · session=745ad856 · actor=agent · prev=1d6596296b98394864485bdfb8c4f30fb8b3ce8 |
+| 2026-09-22 16:43:36 | `file.write` | fdk/tools/build-design-showcase.py · tool=Write · session=745ad856 · actor=agent · prev=3946de2df8e5ac2fab6c1337c3a91cc5 |
+| 2026-09-22 16:43:36 | `file.write` | fdk/tools/build-design-showcase.py · tool=Write · session=745ad856 · actor=agent · prev=5aa2eb5ee915739d8a3f5cf8db7c52cf |
+| 2026-09-22 16:44:24 | `file.write` | fdk/tools/showcase_layout.py · tool=Write · session=745ad856 · actor=agent · prev=e05edb2574172b08b0f3d3928b20be4bbb679d |
+| 2026-09-22 16:44:24 | `file.write` | fdk/tools/showcase_layout.py · tool=Write · session=745ad856 · actor=agent · prev=950ad5790a68b2bff82229b1b5031b4feecd05 |
+| 2026-09-22 16:47:22 | `file.write` | fdk/tools/showcase_components.py · tool=Write · session=745ad856 · actor=agent · prev=c49dc91cfc0fc69a77178537e77ddcb9de |
+| 2026-09-22 16:47:22 | `file.write` | fdk/tools/showcase_components.py · tool=Write · session=745ad856 · actor=agent · prev=5f836cf0e7a5daf6ff245d6cb4f2cd4d62 |
+| 2026-09-22 16:48:44 | `file.write` | fdk/tools/showcase_motion.py · tool=Write · session=745ad856 · actor=agent · prev=1dbccd76c3bfdda8f5631a4ad140920f135c84 |
+| 2026-09-22 16:48:44 | `file.write` | fdk/tools/showcase_motion.py · tool=Write · session=745ad856 · actor=agent · prev=2e8ceb22d7f18ac9a828327a9545152d8c5585 |
+| 2026-09-22 16:50:05 | `file.write` | fdk/tools/showcase_dataviz.py · tool=Write · session=745ad856 · actor=agent · prev=f5c9a0ef66e5111b115e76568fef1b732d63d |
+| 2026-09-22 16:50:05 | `file.write` | fdk/tools/showcase_dataviz.py · tool=Write · session=745ad856 · actor=agent · prev=d6b66a56fbc76f1a06dd5e83a275005dfb242 |
+| 2026-09-22 16:51:36 | `file.write` | harness/tests/test_design_showcase.py · tool=Write · session=745ad856 · actor=agent · prev=fc59fbd03f199d3bb6f0ac13a01f5 |
+| 2026-09-22 16:51:36 | `file.write` | harness/tests/test_design_showcase.py · tool=Write · session=745ad856 · actor=agent · prev=64126c4d5c7a3cc59ec599f6173bb |
+| 2026-09-22 16:55:53 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Edit · session=745ad856 · actor=agent · prev=6fd5616b59 |
+| 2026-09-22 16:55:53 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Edit · session=745ad856 · actor=agent · prev=bb51201fea |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=29527956 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=2fcd004f |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=88b413e1c14 |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f56d2b5cee |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=e594e054fe736a4 |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=0f65c2096764c22 |
+| 2026-09-22 16:25:10 | `file.write` | skills/hallmark/references/design-default.md · tool=Write · session=745ad856 · actor=agent · prev=d86878658546957ce67242 |
+| 2026-09-22 16:25:10 | `file.write` | skills/hallmark/references/design-default.md · tool=Write · session=745ad856 · actor=agent · prev=68354e595da68c1cf2666e |
+| 2026-09-22 16:37:55 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Write · session=745ad856 · actor=agent · prev=1ba3ac1c5 |
+| 2026-09-22 16:37:55 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Write · session=745ad856 · actor=agent · prev=66bf52073 |
+| 2026-09-22 16:41:51 | `file.write` | fdk/tools/showcase_rules.py · tool=Write · session=745ad856 · actor=agent · prev=50da73717b359e133886881858515b1f16ffa5b |
+| 2026-09-22 16:41:51 | `file.write` | fdk/tools/showcase_rules.py · tool=Write · session=745ad856 · actor=agent · prev=1d6596296b98394864485bdfb8c4f30fb8b3ce8 |
+| 2026-09-22 16:43:36 | `file.write` | fdk/tools/build-design-showcase.py · tool=Write · session=745ad856 · actor=agent · prev=3946de2df8e5ac2fab6c1337c3a91cc5 |
+| 2026-09-22 16:43:36 | `file.write` | fdk/tools/build-design-showcase.py · tool=Write · session=745ad856 · actor=agent · prev=5aa2eb5ee915739d8a3f5cf8db7c52cf |
+| 2026-09-22 16:44:24 | `file.write` | fdk/tools/showcase_layout.py · tool=Write · session=745ad856 · actor=agent · prev=e05edb2574172b08b0f3d3928b20be4bbb679d |
+| 2026-09-22 16:44:24 | `file.write` | fdk/tools/showcase_layout.py · tool=Write · session=745ad856 · actor=agent · prev=950ad5790a68b2bff82229b1b5031b4feecd05 |
+| 2026-09-22 16:47:22 | `file.write` | fdk/tools/showcase_components.py · tool=Write · session=745ad856 · actor=agent · prev=c49dc91cfc0fc69a77178537e77ddcb9de |
+| 2026-09-22 16:47:22 | `file.write` | fdk/tools/showcase_components.py · tool=Write · session=745ad856 · actor=agent · prev=5f836cf0e7a5daf6ff245d6cb4f2cd4d62 |
+| 2026-09-22 16:48:44 | `file.write` | fdk/tools/showcase_motion.py · tool=Write · session=745ad856 · actor=agent · prev=1dbccd76c3bfdda8f5631a4ad140920f135c84 |
+| 2026-09-22 16:48:44 | `file.write` | fdk/tools/showcase_motion.py · tool=Write · session=745ad856 · actor=agent · prev=2e8ceb22d7f18ac9a828327a9545152d8c5585 |
+| 2026-09-22 16:50:05 | `file.write` | fdk/tools/showcase_dataviz.py · tool=Write · session=745ad856 · actor=agent · prev=f5c9a0ef66e5111b115e76568fef1b732d63d |
+| 2026-09-22 16:50:05 | `file.write` | fdk/tools/showcase_dataviz.py · tool=Write · session=745ad856 · actor=agent · prev=d6b66a56fbc76f1a06dd5e83a275005dfb242 |
+| 2026-09-22 16:51:36 | `file.write` | harness/tests/test_design_showcase.py · tool=Write · session=745ad856 · actor=agent · prev=fc59fbd03f199d3bb6f0ac13a01f5 |
+| 2026-09-22 16:51:36 | `file.write` | harness/tests/test_design_showcase.py · tool=Write · session=745ad856 · actor=agent · prev=64126c4d5c7a3cc59ec599f6173bb |
+| 2026-09-22 16:55:53 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Edit · session=745ad856 · actor=agent · prev=6fd5616b59 |
+| 2026-09-22 16:55:53 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Edit · session=745ad856 · actor=agent · prev=bb51201fea |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=29527956 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=2fcd004f |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=88b413e1c14 |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f56d2b5cee |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=e594e054fe736a4 |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=0f65c2096764c22 |
+| 2026-09-22 16:25:10 | `file.write` | skills/hallmark/references/design-default.md · tool=Write · session=745ad856 · actor=agent · prev=d86878658546957ce67242 |
+| 2026-09-22 16:25:10 | `file.write` | skills/hallmark/references/design-default.md · tool=Write · session=745ad856 · actor=agent · prev=68354e595da68c1cf2666e |
+| 2026-09-22 16:37:55 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Write · session=745ad856 · actor=agent · prev=1ba3ac1c5 |
+| 2026-09-22 16:37:55 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Write · session=745ad856 · actor=agent · prev=66bf52073 |
+| 2026-09-22 16:41:51 | `file.write` | fdk/tools/showcase_rules.py · tool=Write · session=745ad856 · actor=agent · prev=50da73717b359e133886881858515b1f16ffa5b |
+| 2026-09-22 16:41:51 | `file.write` | fdk/tools/showcase_rules.py · tool=Write · session=745ad856 · actor=agent · prev=1d6596296b98394864485bdfb8c4f30fb8b3ce8 |
+| 2026-09-22 16:43:36 | `file.write` | fdk/tools/build-design-showcase.py · tool=Write · session=745ad856 · actor=agent · prev=3946de2df8e5ac2fab6c1337c3a91cc5 |
+| 2026-09-22 16:43:36 | `file.write` | fdk/tools/build-design-showcase.py · tool=Write · session=745ad856 · actor=agent · prev=5aa2eb5ee915739d8a3f5cf8db7c52cf |
+| 2026-09-22 16:44:24 | `file.write` | fdk/tools/showcase_layout.py · tool=Write · session=745ad856 · actor=agent · prev=e05edb2574172b08b0f3d3928b20be4bbb679d |
+| 2026-09-22 16:44:24 | `file.write` | fdk/tools/showcase_layout.py · tool=Write · session=745ad856 · actor=agent · prev=950ad5790a68b2bff82229b1b5031b4feecd05 |
+| 2026-09-22 16:47:22 | `file.write` | fdk/tools/showcase_components.py · tool=Write · session=745ad856 · actor=agent · prev=c49dc91cfc0fc69a77178537e77ddcb9de |
+| 2026-09-22 16:47:22 | `file.write` | fdk/tools/showcase_components.py · tool=Write · session=745ad856 · actor=agent · prev=5f836cf0e7a5daf6ff245d6cb4f2cd4d62 |
+| 2026-09-22 16:48:44 | `file.write` | fdk/tools/showcase_motion.py · tool=Write · session=745ad856 · actor=agent · prev=1dbccd76c3bfdda8f5631a4ad140920f135c84 |
+| 2026-09-22 16:48:44 | `file.write` | fdk/tools/showcase_motion.py · tool=Write · session=745ad856 · actor=agent · prev=2e8ceb22d7f18ac9a828327a9545152d8c5585 |
+| 2026-09-22 16:50:05 | `file.write` | fdk/tools/showcase_dataviz.py · tool=Write · session=745ad856 · actor=agent · prev=f5c9a0ef66e5111b115e76568fef1b732d63d |
+| 2026-09-22 16:50:05 | `file.write` | fdk/tools/showcase_dataviz.py · tool=Write · session=745ad856 · actor=agent · prev=d6b66a56fbc76f1a06dd5e83a275005dfb242 |
+| 2026-09-22 16:51:36 | `file.write` | harness/tests/test_design_showcase.py · tool=Write · session=745ad856 · actor=agent · prev=fc59fbd03f199d3bb6f0ac13a01f5 |
+| 2026-09-22 16:51:36 | `file.write` | harness/tests/test_design_showcase.py · tool=Write · session=745ad856 · actor=agent · prev=64126c4d5c7a3cc59ec599f6173bb |
+| 2026-09-22 16:55:53 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Edit · session=745ad856 · actor=agent · prev=6fd5616b59 |
+| 2026-09-22 16:55:53 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Edit · session=745ad856 · actor=agent · prev=bb51201fea |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=29527956 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=2fcd004f |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=88b413e1c14 |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f56d2b5cee |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=e594e054fe736a4 |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=0f65c2096764c22 |
+| 2026-09-22 16:25:10 | `file.write` | skills/hallmark/references/design-default.md · tool=Write · session=745ad856 · actor=agent · prev=d86878658546957ce67242 |
+| 2026-09-22 16:25:10 | `file.write` | skills/hallmark/references/design-default.md · tool=Write · session=745ad856 · actor=agent · prev=68354e595da68c1cf2666e |
+| 2026-09-22 16:37:55 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Write · session=745ad856 · actor=agent · prev=1ba3ac1c5 |
+| 2026-09-22 16:37:55 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Write · session=745ad856 · actor=agent · prev=66bf52073 |
+| 2026-09-22 16:41:51 | `file.write` | fdk/tools/showcase_rules.py · tool=Write · session=745ad856 · actor=agent · prev=50da73717b359e133886881858515b1f16ffa5b |
+| 2026-09-22 16:41:51 | `file.write` | fdk/tools/showcase_rules.py · tool=Write · session=745ad856 · actor=agent · prev=1d6596296b98394864485bdfb8c4f30fb8b3ce8 |
+| 2026-09-22 16:43:36 | `file.write` | fdk/tools/build-design-showcase.py · tool=Write · session=745ad856 · actor=agent · prev=3946de2df8e5ac2fab6c1337c3a91cc5 |
+| 2026-09-22 16:43:36 | `file.write` | fdk/tools/build-design-showcase.py · tool=Write · session=745ad856 · actor=agent · prev=5aa2eb5ee915739d8a3f5cf8db7c52cf |
+| 2026-09-22 16:44:24 | `file.write` | fdk/tools/showcase_layout.py · tool=Write · session=745ad856 · actor=agent · prev=e05edb2574172b08b0f3d3928b20be4bbb679d |
+| 2026-09-22 16:44:24 | `file.write` | fdk/tools/showcase_layout.py · tool=Write · session=745ad856 · actor=agent · prev=950ad5790a68b2bff82229b1b5031b4feecd05 |
+| 2026-09-22 16:47:22 | `file.write` | fdk/tools/showcase_components.py · tool=Write · session=745ad856 · actor=agent · prev=c49dc91cfc0fc69a77178537e77ddcb9de |
+| 2026-09-22 16:47:22 | `file.write` | fdk/tools/showcase_components.py · tool=Write · session=745ad856 · actor=agent · prev=5f836cf0e7a5daf6ff245d6cb4f2cd4d62 |
+| 2026-09-22 16:48:44 | `file.write` | fdk/tools/showcase_motion.py · tool=Write · session=745ad856 · actor=agent · prev=1dbccd76c3bfdda8f5631a4ad140920f135c84 |
+| 2026-09-22 16:48:44 | `file.write` | fdk/tools/showcase_motion.py · tool=Write · session=745ad856 · actor=agent · prev=2e8ceb22d7f18ac9a828327a9545152d8c5585 |
+| 2026-09-22 16:50:05 | `file.write` | fdk/tools/showcase_dataviz.py · tool=Write · session=745ad856 · actor=agent · prev=f5c9a0ef66e5111b115e76568fef1b732d63d |
+| 2026-09-22 16:50:05 | `file.write` | fdk/tools/showcase_dataviz.py · tool=Write · session=745ad856 · actor=agent · prev=d6b66a56fbc76f1a06dd5e83a275005dfb242 |
+| 2026-09-22 16:51:36 | `file.write` | harness/tests/test_design_showcase.py · tool=Write · session=745ad856 · actor=agent · prev=fc59fbd03f199d3bb6f0ac13a01f5 |
+| 2026-09-22 16:51:36 | `file.write` | harness/tests/test_design_showcase.py · tool=Write · session=745ad856 · actor=agent · prev=64126c4d5c7a3cc59ec599f6173bb |
+| 2026-09-22 16:55:53 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Edit · session=745ad856 · actor=agent · prev=6fd5616b59 |
+| 2026-09-22 16:55:53 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Edit · session=745ad856 · actor=agent · prev=bb51201fea |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=3e615801d31acbd6d8a26e945a7d16b198 |
+| 2026-09-22 09:35:23 | `file.write` | harness/tests/test_html_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=04e906a298ba4954dd6e6a39aa0efe78c1 |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=29527956 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=2fcd004f |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=88b413e1c14 |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f56d2b5cee |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=e594e054fe736a4 |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=0f65c2096764c22 |
+| 2026-09-22 16:25:10 | `file.write` | skills/hallmark/references/design-default.md · tool=Write · session=745ad856 · actor=agent · prev=d86878658546957ce67242 |
+| 2026-09-22 16:25:10 | `file.write` | skills/hallmark/references/design-default.md · tool=Write · session=745ad856 · actor=agent · prev=68354e595da68c1cf2666e |
+| 2026-09-22 16:37:55 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Write · session=745ad856 · actor=agent · prev=1ba3ac1c5 |
+| 2026-09-22 16:37:55 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Write · session=745ad856 · actor=agent · prev=66bf52073 |
+| 2026-09-22 16:41:51 | `file.write` | fdk/tools/showcase_rules.py · tool=Write · session=745ad856 · actor=agent · prev=50da73717b359e133886881858515b1f16ffa5b |
+| 2026-09-22 16:41:51 | `file.write` | fdk/tools/showcase_rules.py · tool=Write · session=745ad856 · actor=agent · prev=1d6596296b98394864485bdfb8c4f30fb8b3ce8 |
+| 2026-09-22 16:43:36 | `file.write` | fdk/tools/build-design-showcase.py · tool=Write · session=745ad856 · actor=agent · prev=3946de2df8e5ac2fab6c1337c3a91cc5 |
+| 2026-09-22 16:43:36 | `file.write` | fdk/tools/build-design-showcase.py · tool=Write · session=745ad856 · actor=agent · prev=5aa2eb5ee915739d8a3f5cf8db7c52cf |
+| 2026-09-22 16:44:24 | `file.write` | fdk/tools/showcase_layout.py · tool=Write · session=745ad856 · actor=agent · prev=e05edb2574172b08b0f3d3928b20be4bbb679d |
+| 2026-09-22 16:44:24 | `file.write` | fdk/tools/showcase_layout.py · tool=Write · session=745ad856 · actor=agent · prev=950ad5790a68b2bff82229b1b5031b4feecd05 |
+| 2026-09-22 16:47:22 | `file.write` | fdk/tools/showcase_components.py · tool=Write · session=745ad856 · actor=agent · prev=c49dc91cfc0fc69a77178537e77ddcb9de |
+| 2026-09-22 16:47:22 | `file.write` | fdk/tools/showcase_components.py · tool=Write · session=745ad856 · actor=agent · prev=5f836cf0e7a5daf6ff245d6cb4f2cd4d62 |
+| 2026-09-22 16:48:44 | `file.write` | fdk/tools/showcase_motion.py · tool=Write · session=745ad856 · actor=agent · prev=1dbccd76c3bfdda8f5631a4ad140920f135c84 |
+| 2026-09-22 16:48:44 | `file.write` | fdk/tools/showcase_motion.py · tool=Write · session=745ad856 · actor=agent · prev=2e8ceb22d7f18ac9a828327a9545152d8c5585 |
+| 2026-09-22 16:50:05 | `file.write` | fdk/tools/showcase_dataviz.py · tool=Write · session=745ad856 · actor=agent · prev=f5c9a0ef66e5111b115e76568fef1b732d63d |
+| 2026-09-22 16:50:05 | `file.write` | fdk/tools/showcase_dataviz.py · tool=Write · session=745ad856 · actor=agent · prev=d6b66a56fbc76f1a06dd5e83a275005dfb242 |
+| 2026-09-22 16:51:36 | `file.write` | harness/tests/test_design_showcase.py · tool=Write · session=745ad856 · actor=agent · prev=fc59fbd03f199d3bb6f0ac13a01f5 |
+| 2026-09-22 16:51:36 | `file.write` | harness/tests/test_design_showcase.py · tool=Write · session=745ad856 · actor=agent · prev=64126c4d5c7a3cc59ec599f6173bb |
+| 2026-09-22 16:55:53 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Edit · session=745ad856 · actor=agent · prev=6fd5616b59 |
+| 2026-09-22 16:55:53 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Edit · session=745ad856 · actor=agent · prev=bb51201fea |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=f0770a7294bb3300e65d26cba0ace |
+| 2026-09-22 09:37:45 | `file.write` | harness/tests/test_html_docs_shell.py · tool=Write · session=d3f387e6 · actor=agent · prev=fc1fb9a35d3981f3ed322b89f2d94 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=0547b656 |
+| 2026-09-22 09:50:45 | `file.write` | llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=486f1dd5 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f6247e47395644c0d7722 |
+| 2026-09-22 13:28:12 | `file.write` | fdk/wiki/sources/220926-spacing-standards.md · tool=Write · session=d3f387e6 · actor=agent · prev=489dc1f394296f9393600c |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=563edf8767292242254051fe556a503455b08e8 |
+| 2026-09-22 13:29:30 | `file.write` | fdk/tools/spacing-survey.py · tool=Write · session=d3f387e6 · actor=agent · prev=e99b7c2c5f994f062d1b90873184f2c50bf2af2 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=031f7cf1ec2afcfedbabf81b7764792c70 |
+| 2026-09-22 13:33:05 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ff240abe10db845ec9f45ae99ae754c970 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=a6b6a2c34943aa2a9a7dd8331cf8c1b827 |
+| 2026-09-22 13:33:08 | `file.write` | fdk/tools/frontend-antipattern.py · tool=Edit · session=d3f387e6 · actor=agent · prev=ac5b83971aec156eb2251b86732a459667 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=29527956 |
+| 2026-09-22 14:23:04 | `file.write` | llmwiki/wiki/sources/draft/220926-spacing-system-review.md · tool=Write · session=d3f387e6 · actor=agent · prev=2fcd004f |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=88b413e1c14 |
+| 2026-09-22 16:14:31 | `file.write` | llmwiki/wiki/sources/draft/220926-minimal-disclosure.md · tool=Write · session=d3f387e6 · actor=agent · prev=9f56d2b5cee |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=e594e054fe736a4 |
+| 2026-09-22 16:14:41 | `file.write` | llmwiki/wiki/sources/220926-reprise-cocanvas-prd.md · tool=Write · session=d138699e · actor=agent · prev=0f65c2096764c22 |
+| 2026-09-22 16:25:10 | `file.write` | skills/hallmark/references/design-default.md · tool=Write · session=745ad856 · actor=agent · prev=d86878658546957ce67242 |
+| 2026-09-22 16:25:10 | `file.write` | skills/hallmark/references/design-default.md · tool=Write · session=745ad856 · actor=agent · prev=68354e595da68c1cf2666e |
+| 2026-09-22 16:37:55 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Write · session=745ad856 · actor=agent · prev=1ba3ac1c5 |
+| 2026-09-22 16:37:55 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Write · session=745ad856 · actor=agent · prev=66bf52073 |
+| 2026-09-22 16:41:51 | `file.write` | fdk/tools/showcase_rules.py · tool=Write · session=745ad856 · actor=agent · prev=50da73717b359e133886881858515b1f16ffa5b |
+| 2026-09-22 16:41:51 | `file.write` | fdk/tools/showcase_rules.py · tool=Write · session=745ad856 · actor=agent · prev=1d6596296b98394864485bdfb8c4f30fb8b3ce8 |
+| 2026-09-22 16:43:36 | `file.write` | fdk/tools/build-design-showcase.py · tool=Write · session=745ad856 · actor=agent · prev=3946de2df8e5ac2fab6c1337c3a91cc5 |
+| 2026-09-22 16:43:36 | `file.write` | fdk/tools/build-design-showcase.py · tool=Write · session=745ad856 · actor=agent · prev=5aa2eb5ee915739d8a3f5cf8db7c52cf |
+| 2026-09-22 16:44:24 | `file.write` | fdk/tools/showcase_layout.py · tool=Write · session=745ad856 · actor=agent · prev=e05edb2574172b08b0f3d3928b20be4bbb679d |
+| 2026-09-22 16:44:24 | `file.write` | fdk/tools/showcase_layout.py · tool=Write · session=745ad856 · actor=agent · prev=950ad5790a68b2bff82229b1b5031b4feecd05 |
+| 2026-09-22 16:47:22 | `file.write` | fdk/tools/showcase_components.py · tool=Write · session=745ad856 · actor=agent · prev=c49dc91cfc0fc69a77178537e77ddcb9de |
+| 2026-09-22 16:47:22 | `file.write` | fdk/tools/showcase_components.py · tool=Write · session=745ad856 · actor=agent · prev=5f836cf0e7a5daf6ff245d6cb4f2cd4d62 |
+| 2026-09-22 16:48:44 | `file.write` | fdk/tools/showcase_motion.py · tool=Write · session=745ad856 · actor=agent · prev=1dbccd76c3bfdda8f5631a4ad140920f135c84 |
+| 2026-09-22 16:48:44 | `file.write` | fdk/tools/showcase_motion.py · tool=Write · session=745ad856 · actor=agent · prev=2e8ceb22d7f18ac9a828327a9545152d8c5585 |
+| 2026-09-22 16:50:05 | `file.write` | fdk/tools/showcase_dataviz.py · tool=Write · session=745ad856 · actor=agent · prev=f5c9a0ef66e5111b115e76568fef1b732d63d |
+| 2026-09-22 16:50:05 | `file.write` | fdk/tools/showcase_dataviz.py · tool=Write · session=745ad856 · actor=agent · prev=d6b66a56fbc76f1a06dd5e83a275005dfb242 |
+| 2026-09-22 16:51:36 | `file.write` | harness/tests/test_design_showcase.py · tool=Write · session=745ad856 · actor=agent · prev=fc59fbd03f199d3bb6f0ac13a01f5 |
+| 2026-09-22 16:51:36 | `file.write` | harness/tests/test_design_showcase.py · tool=Write · session=745ad856 · actor=agent · prev=64126c4d5c7a3cc59ec599f6173bb |
+| 2026-09-22 16:55:53 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Edit · session=745ad856 · actor=agent · prev=6fd5616b59 |
+| 2026-09-22 16:55:53 | `file.write` | llmwiki/wiki/sources/draft/220926-design-showcase-PLAN.md · tool=Edit · session=745ad856 · actor=agent · prev=bb51201fea |
+| 2026-09-23 10:52:45 | `file.write` | llmwiki/wiki/sources/230926-reprise-intent-engine-prd.md · tool=Write · session=745ad856 · actor=agent · prev=9cdc6c6d18 |
+| 2026-09-23 10:52:45 | `file.write` | llmwiki/wiki/sources/230926-reprise-intent-engine-prd.md · tool=Write · session=745ad856 · actor=agent · prev=6f9b8a5b7a |
+
+<!-- log:auto:end -->

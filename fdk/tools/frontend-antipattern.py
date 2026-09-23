@@ -34,6 +34,10 @@ không nhìn NỘI DUNG lỗi. Bắt các bẫy rẻ-tiền, tất định làm 
   [FAIL] reduced-motion-missing: có @keyframes/animation mà thiếu @media (prefers-reduced-motion).
   [WARN]   … cùng luật khi chỉ có `transition: transform` (nợ 20 trang lúc cắm).
 
+  Khoảng cách (PLAN 220926 t4, chuẩn fdk/wiki/sources/220926-spacing-standards.md):
+  [FAIL] spacing-off-scale: padding/margin/gap px/rem ngoài thang 2·4·8·12·16·20·24·32·40·48·64·80·96 (<2px viền mảnh được tha; >96: bội 16).
+         Nhịp chữ / độ dài dòng / proximity / tầng nhãn nav / vùng bấm cần dựng hình → html-visual-gate.mjs.
+
 Exit: 0 sạch · 1 có FAIL · 2 chỉ WARN (medic map: 1→fail, 2→warn, 0→ok). Fail-open:
 thiếu file → sạch (không chặn). Mặc định quét llmwiki/html/overstack.html; nhận path khác qua arg.
 
@@ -294,7 +298,7 @@ def scan_svg(html: str, rel: str) -> list:
 # những thứ user chỉ ra trên trang do CHÍNH generator của framework sinh: sọc viền màu một cạnh, trang không đổi được sáng/tối,
 # viết HOA mỗi chỗ một kiểu. Cùng nguyên tắc cũ: CHỈ soi CSS trong <style>/style="", không soi văn xuôi nhắc tới chúng.
 def css_rules(styles: str):
-    """(selector, declarations) của từng luật CSS. KHÔNG dùng regex `([^{}]+)\{…\}`: trên khối dài không có ngoặc (font nhúng base64
+    """(selector, declarations) của từng luật CSS. KHÔNG dùng regex `([^{}]+){…}`: trên khối dài không có ngoặc (font nhúng base64
     ~49 KB trong @font-face) nó chạy O(n²) và treo cổng — đo 20/09/2026. Tách theo `}` là tuyến tính; luật lồng trong @media vẫn đúng
     vì selector là phần sau dấu `{` CUỐI của đoạn."""
     styles = re.sub(r"url\(\s*data:[^)]*\)", "url()", styles)
@@ -452,6 +456,8 @@ def scan_slop(html: str, styles: str, rel: str) -> list:
     bad_up = []
     for sel, decl in css_rules(styles):
         if _UPPER.search(decl):
+            if "::first-letter" in sel or ":first-letter" in sel:
+                continue  # hoa CHỮ ĐẦU (luật sentence-case, lớp nền chèn) — không phải viết HOA cả chữ
             sel_s = " ".join(sel.split())[-60:]
             if _UPPER_BAD_SEL.search(sel_s):
                 bad_up.append(f"{sel_s} (tiêu đề/nút/mục menu không viết HOA)")
@@ -472,6 +478,37 @@ def scan_slop(html: str, styles: str, rel: str) -> list:
         if mo:
             add("FAIL" if _ANIM.search(styles) else "WARN", "reduced-motion-missing", "trang có chuyển động (@keyframes / animation / transition "
                 "transform) nhưng thiếu `@media (prefers-reduced-motion: reduce)` — người bị say chuyển động không tắt được.", mo.group(0))
+    # ── spacing-off-scale (PLAN 220926 t4): padding/margin/gap phải nằm trên MỘT thang (Carbon + Tailwind) ──
+    off = _spacing_off(_page_css(html))
+    if off:
+        add("FAIL", "spacing-off-scale", f"khoảng cách NGOÀI thang ({len(off)} giá trị, {len(set(off))} khác nhau) — padding/margin/gap chỉ dùng "
+            f"<2 (viền mảnh)·2·4·8·12·16·20·24·32·40·48·64·80·96px (>96: bội 16). Tự bẻ về bậc gần nhất: `python3 fdk/tools/html-slop-fix.py {rel}` "
+            "(hoặc html_font.py --apply). Chuẩn: fdk/wiki/sources/220926-spacing-standards.md.",
+            "vd " + ", ".join(f"{v:g}px" for v in sorted(set(off))[:8]))
+    return out
+
+
+# spacing-off-scale — chép TỐI THIỂU logic của spacing-survey.py (values/on_scale/off_scale): máy khách copy phẳng fdk/tools nên không
+# import chéo tool; test_frontend_antipattern_slop so khớp hai bản trên chuỗi mẫu. Bỏ khối <style id="ovs-…"> (token của lớp nền),
+# data-URI, và giá trị em/%/vw/calc/clamp/min/max/var (phụ thuộc ngữ cảnh — cổng chạy thật đo trên px đã tính).
+_SP_SCALE = (0, 1, 2, 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96)
+_SP_PROP = re.compile(r"(?<![\w-])(?:padding|margin|gap|row-gap|column-gap)(?:-(?:top|right|bottom|left|inline|block)(?:-(?:start|end))?)?\s*:\s*([^;}]+)", re.I)   # không phân biệt hoa thường — khớp phép vá (review t8 #5)
+
+
+def _page_css(html: str) -> str:
+    css = " ".join(re.findall(r"<style\b(?![^>]*\bid=\"ovs-)[^>]*>(.*?)</style>", html, re.S | re.I))
+    return re.sub(r"url\(\s*data:[^)]*\)", "", css)
+
+
+def _spacing_off(css: str) -> list:
+    out = []
+    for v in _SP_PROP.findall(css):
+        if re.search(r"calc\(|clamp\(|min\(|max\(|var\(", v, re.I):
+            continue
+        for n, u in re.findall(r"(-?\d*\.?\d+)(px|rem)\b", v, re.I):
+            px = round(abs(float(n)) * (16 if u.lower() == "rem" else 1), 2)
+            if not (px < 2 or px in _SP_SCALE or (px > 96 and px % 16 == 0)):   # < 2px = viền/khe mảnh
+                out.append(px)
     return out
 
 
@@ -566,6 +603,8 @@ def scan(path: Path) -> list:
     out += scan_svg_geometry(html, str(rel))
     # [WARN] prose lọt <pre> — chữ Việt có dấu ở dòng không-comment
     for block in PRE.findall(html):
+        if re.search(r'class="[^"]*\blanguage-(?:html|css|js|javascript|json|svg)\b', block):
+            continue  # mẫu code UI (showcase): chuỗi tiếng Việt là DỮ LIỆU của mẫu, không phải lệnh shell bị lẫn câu văn
         text = _unesc(TAG.sub("", block))
         for ln in text.splitlines():
             s = ln.strip()

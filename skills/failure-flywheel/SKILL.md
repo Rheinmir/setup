@@ -83,6 +83,17 @@ python3 harness/scripts/failure-flywheel.py --draft <category> [--date YYYY-MM-D
 3. For an eligible class, `--draft <category>`. It writes a valid draft STUB (OKF frontmatter + `## Origin`, deliberately no `## Plan` so it passes the R7 gate as a seed) containing a templated "TODO: distill rule from these N failures" + the failure list.
 4. The stub STOPS for you. Run `/propose` to turn it into a complete, gated rule/skill. FailureFlywheel never auto-promotes — the gate stays human.
 
+#### Gói thành chỉ dẫn cho lần sau (user 23/09/2026)
+
+Lớp lỗi chạm `recurrence_threshold` (mặc định 3 — tức **quá 2 lần**) thì `record()` TỰ gói ngay thành một thẻ chỉ dẫn:
+
+```bash
+harness/metrics/guardrails/failure-<lớp>.md     # máy gói, có INDEX.md; được commit để phiên/máy khác cùng học
+python3 harness/scripts/flywheel.py --kind failure --guardrails   # gói lại toàn bộ lớp đã đủ ngưỡng
+```
+
+Thẻ chỉ CHƯNG CẤT từ chính các dòng đã ghi (triệu chứng + cách sửa đã dùng + số lần + lần gần nhất) — không bịa luật mới. Hook `session_start` in 5 thẻ mới nhất ở đầu MỖI phiên (mục `🧯 [đã học]`), nên lần kế tiếp agent đọc được trước khi làm việc cùng loại. Thẻ mang trạng thái `đã học, CHƯA duyệt`: nó là chỉ dẫn đọc-để-nhớ, KHÔNG cắn được ở CI. Muốn thành luật/skill chính thức thì vẫn `--draft` rồi `/propose` — cổng người giữ nguyên (RULE-02).
+
 #### The adapter boundary (build-now-adapt-later)
 Everything above is deterministic and built now. The ONE quarantined unknown is `harness/failure-flywheel.config.yaml` (`verified: false`): the recurrence threshold and taxonomy are best-guesses, and the "distill failures -> rule" model is absent. While it is unset, `--draft` inserts a human-TODO stub instead of an auto-written rule. Finalize later by editing only that one file — calibrate the threshold, name a distill model, flip `verified: true`.
 

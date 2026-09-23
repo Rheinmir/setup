@@ -111,3 +111,24 @@ def test_reduced_motion_missing_fails_on_animation_warns_on_transform_and_spares
     for ok in (anim + "@media (prefers-reduced-motion:reduce){.s{animation:none}}", ".s{animation:none}",
                ".card{transition:opacity .2s}", ".card{transition:transform .2s}@media (prefers-reduced-motion: reduce){.card{transition:none}}"):
         assert "reduced-motion-missing" not in _levels(ok), ok
+
+
+def test_spacing_off_scale_catches_off_grid_px_rem_and_spares_scale_relative_and_framework_tokens():
+    for bad in (".card{padding:10px 14px}", ".card{margin:0.375rem}", ".x{gap:18px}", ".x{margin-inline-start:6px}",
+                ".x{row-gap:13px}", ".x{margin:100px}", "@media (min-width:1px){.x{padding-top:5px}}"):
+        assert "spacing-off-scale" in rules(DARK + bad, TOGGLE), bad
+    assert _levels(".card{padding:10px}").get("spacing-off-scale") == "FAIL"
+    for ok in (".card{padding:8px 16px}", ".x{gap:1.5rem;margin:0 auto}", ".x{margin:112px}", ".x{padding:1em 5% 2vw}",
+               ".x{padding:calc(10px + 1em)}", ".x{margin:clamp(10px,2vw,30px)}", ".x{gap:var(--sp,10px)}", ".x{inset:10px;top:13px}", ".x{padding:.05rem 1.5px}",
+               ".x{background:url(data:image/svg+xml;padding:13px)}"):
+        assert "spacing-off-scale" not in rules(DARK + ok, TOGGLE), ok
+    assert "spacing-off-scale" not in rules(DARK, TOGGLE, '<style id="ovs-base">.a{padding:10px}</style>')   # token lớp nền
+
+
+def test_spacing_off_scale_matches_spacing_survey_on_samples():
+    _t = importlib.util.spec_from_file_location("ssv", ROOT / "fdk/tools/spacing-survey.py"); ssv = importlib.util.module_from_spec(_t); _t.loader.exec_module(ssv)
+    for s in (".a{padding:10px 14px;margin:0 auto}", ".b{gap:1.125rem;row-gap:6px;column-gap:24px}", ".c{margin:-7px 0 112px;padding-left:100px}",
+              ".d{padding:calc(3px + 1em)}", ".e{margin-block-end:.5rem;margin-inline:0.3rem}", ".f{padding:1.5px 2px;margin:.05rem 3px}"):
+        assert sorted(fap._spacing_off(s)) == sorted(ssv.off_scale(s)), s
+    html = '<style id="ovs-x">.a{padding:10px}</style><style>.b{padding:6px;background:url(data:x;margin:3px)}</style>'
+    assert fap._page_css(html) == ssv.page_css(html)

@@ -8,6 +8,12 @@ Chỉ đụng CSS trong các khối <style> của <head> (không đụng JS, kh�
   4. chữ nhấn           `color:#0a84ff | #0a5ec7 | #5856d6` → `var(--ovs-accent)` (đạt 4,5:1 ở cả hai chế độ; #0a84ff chỉ để tô MẢNG)
   5. chữ nhỏ hạ opacity `small{…opacity:.N}` → bỏ opacity (chữ phụ đã nhạt sẵn, hạ nữa là chìm)
      màu HEX ghi cứng  nền gần-trắng → `var(--ovs-surface2,…)` · chữ đen/xám → `var(--ovs-ink/--ovs-ink2,…)`; màu bão hoà giữ nguyên
+  7. khoảng cách        padding/margin/gap `px`/`rem` ngoài thang (2·4·8·12·16·20·24·32·40·48·64·80·96) → bậc GẦN NHẤT (hoà → bậc
+                        lớn hơn: chật là triệu chứng slop); line-height < 1,5 trên luật chữ NỘI DUNG (p, li, dd, td, body, .desc…) →
+                        `var(--lh-body,1.6)`. Nguồn chuẩn: fdk/wiki/sources/220926-spacing-standards.md (Carbon, Tailwind, WCAG, USWDS).
+  8. chữ hoa đầu câu    tiêu đề h1–h6, nút, summary, th, label, tab, tên trang (.brand/.logo), mục <a> trong <nav> bắt đầu bằng chữ
+                        thường → viết hoa chữ đầu. Tha định danh (có số hoặc - _ . / : @), tên riêng (overstack, npm, git…), chữ trong
+                        code/pre/script. Cùng quy tắc với luật `sentence-case` của cổng chạy thật (user 22/09/2026).
   6. lớp nền            html_base.apply(): token sáng/tối, nút đổi giao diện nếu trang chưa có, chống nháy, font, tắt ligature trong code
 Xong thì chạy lại cổng tĩnh và IN những gì còn lại cần NGƯỜI sửa — không giả vờ sạch.
 
@@ -22,6 +28,65 @@ HERE = Path(__file__).resolve().parent
 
 def _load(name, fname):
     s = importlib.util.spec_from_file_location(name, HERE / fname); m = importlib.util.module_from_spec(s); s.loader.exec_module(m); return m
+
+
+SCALE_PX = (2, 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96)
+_SPACE = re.compile(r"((?<![\w-])(?:padding|margin|gap|row-gap|column-gap)(?:-(?:top|right|bottom|left|inline|block)(?:-(?:start|end))?)?\s*:\s*)([^;}]+)", re.I)
+_BODY_SEL = re.compile(r"(?:^|[\s>+~,(])(?:p|li|dd|td|body|blockquote)(?![\w-])|\.(?:desc|description|lead|body|prose)(?![\w-])", re.I)   # theo TỪ (review t8: .text-muted/.lead-in/.summary bị nâng nhầm)
+_NOT_BODY = re.compile(r"\bh[1-6]\b|btn|button|badge|chip|tag|pill|nav|sidebar|menu|toolbar|label|logo|brand|kbd|code|icon|num|count|::?(?:before|after)", re.I)
+
+
+def snap(px: float) -> float:
+    """Bậc gần nhất của thang; giữ giá trị < 2px (viền/khe mảnh); > 96 → bội số 16 gần nhất. Hoà → bậc lớn hơn."""
+    a = abs(px)
+    if a < 2:                                  # viền/khe mảnh (0,5–1,9px, hay sinh từ rem) — không phải khoảng cách, giữ nguyên
+        return px
+    if a > 96:
+        v = round(a / 16) * 16
+    else:
+        v = min(SCALE_PX, key=lambda s: (abs(s - a), -s if px >= 0 else s))   # hoà: dương → lớn hơn (thoáng), âm → gần 0 (review t8)
+    return v if px >= 0 else -v
+
+
+def _snap_value(val: str) -> tuple:
+    if re.search(r"calc\(|clamp\(|min\(|max\(|var\(", val):
+        return val, 0
+    n = 0
+    def one(m):
+        nonlocal n
+        num, unit = float(m.group(1)), m.group(2)
+        px = num * (16 if unit == "rem" else 1)
+        sp = snap(px)
+        if abs(sp - px) < 0.01:
+            return m.group(0)
+        n += 1
+        return f"{sp / 16:g}rem" if unit == "rem" else f"{sp:g}px"
+    return re.sub(r"(-?\d*\.?\d+)(px|rem)\b", one, val), n
+
+
+def fix_spacing(css: str) -> tuple:
+    """Phép vá 7 — trả (css, số giá trị bẻ về thang, số line-height nâng)."""
+    ns = nl = 0
+    def sp(m):
+        nonlocal ns
+        v, k = _snap_value(m.group(2)); ns += k
+        return m.group(1) + v
+    out = []
+    for chunk in re.split(r"(\})", css):
+        if "{" not in chunk:
+            out.append(chunk); continue
+        pre, decl = chunk.rsplit("{", 1)
+        sel = pre.rsplit("{", 1)[-1].rsplit(";", 1)[-1]
+        decl = _SPACE.sub(sp, decl)
+        if _BODY_SEL.search(sel) and not _NOT_BODY.search(sel):
+            def lh(m):
+                nonlocal nl
+                if float(m.group(1)) < 1.5:
+                    nl += 1; return m.group(0)[: m.start(1) - m.start(0)] + "var(--lh-body,1.6)"
+                return m.group(0)
+            decl = re.sub(r"(?<![\w-])line-height\s*:\s*(\d*\.?\d+)(?=\s*(?:;|$|!))", lh, decl)
+        out.append(pre + "{" + decl)
+    return "".join(out), ns, nl
 
 
 def fix_css(css: str, log: list) -> str:
@@ -92,6 +157,13 @@ def fix_css(css: str, log: list) -> str:
         return m.group(0)
     css = re.sub(r"(background(?:-color)?\s*:\s*)rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*[\d.]+\s*)?\)(?=\s*[;}!])", tint, css)
     def ink(m):
+        # cùng khối khai báo có NỀN màu cố định (viên trạng thái: ink_on() đã chọn chữ đạt tương phản với nền đó) → giữ nguyên:
+        # token --ovs-ink đổi theo theme sẽ ra chữ sáng trên nền cam ở chế độ tối (control-room 22/09: 2,26:1).
+        a = max(css.rfind(c, 0, m.start()) for c in '{"\'')
+        z = min([i for i in (css.find(c, m.end()) for c in '}"\'') if i >= 0] or [len(css)])
+        fb = re.search(r"background(?:-color)?\s*:\s*(#[0-9a-fA-F]{3,8})\b", css[a:z])
+        if fb and _hex(fb.group(1))[0] <= 0.70:
+            return m.group(0)
         L, S = _hex(m.group(2))
         if S < 0.72 and L < 0.10:
             cnt["ink"] += 1; return f"{m.group(1)}var(--ovs-ink,{m.group(2)})"
@@ -102,31 +174,65 @@ def fix_css(css: str, log: list) -> str:
         return m.group(0)
     css = re.sub(r"((?<![-\w])color\s*:\s*)(#[0-9a-fA-F]{3,8})(?=\s*[;}!\"'])", ink, css)
     note(cnt["bg"], "nền hex gần-trắng → --ovs-surface2"); note(cnt["ink"], "chữ hex đen/xám → --ovs-ink/--ovs-ink2"); note(cnt["sem"], "màu nhấn/trạng thái → trộn mực (chữ) · nền pha → token ngữ nghĩa")
+    css, ns, nl = fix_spacing(css)
+    note(ns, "khoảng cách ngoài thang → bậc gần nhất"); note(nl, "line-height chữ nội dung < 1,5 → --lh-body")
     for k, v in data.items():
         css = css.replace(k, v)
     return css
 
 
+_PROTECT = re.compile(r"<script\b.*?</script\s*>|<pre\b.*?</pre\s*>|<code\b.*?</code\s*>|<textarea\b.*?</textarea\s*>"
+                      r"|\ssrcdoc\s*=\s*(?:\"[^\"]*\"|'[^']*')", re.I | re.S)
+_INLINE = re.compile(r"(<[a-zA-Z][\w-]*\b[^<>]*?\sstyle\s*=\s*\")([^\"]*)(\")")   # CHỈ thuộc tính style trong THẺ MỞ (không data-style, không văn xuôi)
+
+
+_IDENT = re.compile(r"[\d\-_./:@]")
+_BRANDS = {"overstack", "orca", "llmwiki", "npm", "npx", "git", "gh", "curl", "claude", "iphone", "macos", "ios"}
+_CASE_TAG = re.compile(r"(<label\b[^>]*>\s*<input\b[^>]*>\s*|<(?:h[1-6]|button|summary|th|legend|label)\b[^>]*>|<(?:div|span|a)\b[^>]*class=\"[^\"]*\b(?:brand|logo)\b[^\"]*\"[^>]*>"
+                       r"|<[a-z]+\b[^>]*role=\"tab\"[^>]*>)([^<]*)", re.I)
+
+
+def _cap(text: str) -> str:
+    m = re.match(r"^([^\w]*)(\w)", text, re.U)                  # bỏ qua ký hiệu/emoji/khoảng trắng đầu (⤢, ←, ✓…)
+    if not m or not m.group(2).isalpha() or not m.group(2).islower():
+        return text
+    tok = text[m.start(2):].split()[0] if text[m.start(2):].split() else ""
+    if _IDENT.search(tok) or re.sub(r"[^\w]", "", tok.lower()) in _BRANDS:
+        return text
+    return text[:m.start(2)] + m.group(2).upper() + text[m.end(2):]
+
+
+def fix_case(html: str) -> tuple:
+    """Phép vá 8 — chạy trên HTML ĐÃ chừa script/pre/code/srcdoc. Trả (html, số chỗ sửa)."""
+    n = 0
+    def one(m):
+        nonlocal n
+        if 'data-case="keep"' in m.group(1):                      # lối thoát: tên riêng muốn giữ chữ thường
+            return m.group(0)
+        t = _cap(m.group(2)); n += t != m.group(2)
+        return m.group(1) + t
+    html = _CASE_TAG.sub(one, html)
+    def nav(m):                                                    # <a> chỉ khi nằm trong <nav>
+        return re.sub(r"(<a\b[^>]*>)([^<]*)", lambda a: a.group(0) if 'data-case="keep"' in a.group(1) else a.group(1) + _cap(a.group(2)), m.group(0))
+    before = html
+    html = re.sub(r"<nav\b.*?</nav>", nav, html, flags=re.S | re.I)
+    n += sum(1 for x, y in zip(re.findall(r"<nav\b.*?</nav>", before, re.S | re.I), re.findall(r"<nav\b.*?</nav>", html, re.S | re.I)) if x != y)
+    return html, n
+
+
 def fix_markup(html: str, log: list) -> str:
-    """Chỉ VÁ (CSS trong <head> + style="" trong body), KHÔNG gắn lớp nền — html_base.apply gọi hàm này trước khi chèn token."""
-    m = re.search(r"</head\s*>", html, re.I)
-    if not m:
-        # head NGẦM ĐỊNH (HTML5 cho phép bỏ thẻ): coi mọi thứ trước phần tử nội dung đầu tiên là head.
-        m = re.search(r"<style\b|<body\b|<main\b|<h1\b|<div\b", html, re.I)
-        if not m:
-            log.append("không có </head> — bỏ qua"); return html
-    head, rest = html[:m.start()], html[m.start():]
-    # Khối <style> có thể nằm NGOÀI head (trang head ngầm định, hoặc style đặt cuối body). Vá cả hai phần.
-    # An toàn với iframe srcdoc: nội dung srcdoc là HTML đã escape (&lt;style&gt;) nên regex này không chạm tới.
-    sty = lambda s: re.sub(r"(<style\b(?![^>]*\bid=\"ovs-)[^>]*>)(.*?)(</style\s*>)",
-                           lambda x: x.group(1) + fix_css(x.group(2), log) + x.group(3), s, flags=re.I | re.S)
-    head = sty(head)
-    rest = sty(rest)
-    def inline(seg):
-        return re.sub(r'(style\s*=\s*")([^"]*)(")', lambda a: a.group(1) + fix_css("x{" + a.group(2) + "}", [])[2:-1] + a.group(3), seg)
-    parts = re.split(r"(<script\b.*?</script\s*>)", rest, flags=re.I | re.S)
-    rest = "".join(p if p.lower().startswith("<script") else inline(p) for p in parts)
-    return head + rest
+    """Chỉ VÁ (CSS trong <style> + style="" trong thẻ mở), KHÔNG gắn lớp nền — html_base.apply gọi hàm này trước khi chèn token.
+    Chừa nguyên script · pre · code · textarea · srcdoc (review t8 22/09/2026: bản trước vá cả `<style>` nằm trong chuỗi JS, ví dụ
+    code đã escape và srcdoc nháy đơn — nay html_base gọi hàm này MỖI lần làm mới trang nên phải tuyệt đối không chạm chúng)."""
+    keep = []
+    html = _PROTECT.sub(lambda m: keep.append(m.group(0)) or f"\x00P{len(keep) - 1}\x00", html)
+    html = re.sub(r"(<style\b(?![^>]*\bid=\"ovs-)[^>]*>)(.*?)(</style\s*>)",
+                  lambda x: x.group(1) + fix_css(x.group(2), log) + x.group(3), html, flags=re.I | re.S)
+    html = _INLINE.sub(lambda a: a.group(1) + fix_css("x{" + a.group(2) + "}", [])[2:-1] + a.group(3), html)
+    html, nc = fix_case(html)
+    if nc:
+        log.append(f"{nc}× chữ thường đầu nhãn/tiêu đề → viết hoa")
+    return re.sub(r"\x00P(\d+)\x00", lambda m: keep[int(m.group(1))], html)
 
 
 def fix_page(html: str, *, follow: bool, log: list) -> str:

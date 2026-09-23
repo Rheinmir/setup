@@ -1,0 +1,287 @@
+{
+ "id": "220926-docs-shell-kit",
+ "plan": "llmwiki/wiki/sources/draft/220926-docs-shell-kit-PLAN.md",
+ "built": "2026-09-22T09:28:34+0700",
+ "nodes": [
+  {
+   "id": "t1",
+   "title": "chốt phạm vi docs-shell và biến khảo sát thành bộ đo có số đỏ",
+   "files": [],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "`docs-shell-survey.py [--all] [--json]` — nhận diện trang docs-shell (có `<nav>` chứa `.logo` + ≥ 4 link `#sec-`), in bảng thiếu theo quy định; rc 2 khi có thiếu. Bảng baseline + danh sách trang loại trừ kèm lý do."
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "research",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/docs-shell-survey.py --all >/dev/null; [ $? -ne 1 ] && test -s fdk/wiki/sources/220926-docs-shell-baseline.md",
+   "qc": "",
+   "spec_hash": "6bcf6bf0cf486c46",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "6bcf6bf0cf486c46"
+  },
+  {
+   "id": "t2",
+   "title": "lớp nền chèn khung a11y + điều hướng cho trang docs-shell",
+   "files": [],
+   "consumes": [
+    "`is_docs_shell()` của Task 1 (chép logic, không import chéo tool)"
+   ],
+   "produces": [
+    "`html_base.apply()` chèn khi THIẾU: `<a class=\"skip-link\" href=\"#main\">`, `id=\"main\"` cho vùng nội dung chính, `<link rel=\"icon\" href=\"data:image/svg+xml,…\">`, cặp `.nav-toggle`/`.nav-close` + JS; khối `<style id=\"ovs-shell\">` + `<script id=\"ovs-shell-js\">` làm mới được"
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 -m pytest -q harness/tests/test_html_shell.py harness/tests/test_html_base.py",
+   "qc": "",
+   "dep_reasons": {
+    "t1": "contract"
+   },
+   "spec_hash": "21d5a0ae0041b019",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "21d5a0ae0041b019"
+  },
+  {
+   "id": "t3",
+   "title": "sidebar làm lại — icon tile, chip số, viên active, scroll spy, ripple, vạch tiến độ",
+   "files": [],
+   "consumes": [
+    "khối `ovs-shell` của Task 2"
+   ],
+   "produces": [
+    "mỗi `nav a` thiếu `.ic` được gắn icon SVG line (tra từ khoá tên mục → bộ icon nhỏ; không khớp thì monogram) trong tile màu theo accent section; tiền tố \"01 ·\" tách thành chip số mono mờ; mục active = viên nền đậm + chấm màu (KHÔNG sọc cạnh); scroll spy IntersectionObserver; ripple; vạch tiến độ đọc ở đáy nav"
+   ],
+   "deps": [
+    "t2"
+   ],
+   "deps_conf": "chắc",
+   "kind": "design",
+   "mode": "afk",
+   "verify": "python3 -m pytest -q harness/tests/test_html_shell.py && bash harness/tests/html-visual-gate-test.sh",
+   "qc": "",
+   "dep_reasons": {
+    "t2": "contract"
+   },
+   "spec_hash": "49f1c2f5e8abc424",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "49f1c2f5e8abc424"
+  },
+  {
+   "id": "t4",
+   "title": "sơ đồ kéo-thả và mind map tự sinh cho trang docs-shell",
+   "files": [],
+   "consumes": [
+    "khối `ovs-shell` của Task 2"
+   ],
+   "produces": [
+    "trong `html_shell.apply()` — mind map collapsible sinh từ cây h2/h3 của chính trang (chèn sau hero, chỉ khi trang chưa có); JS node-draggable của skill gắn cho `.diagram-box` chưa có `data-draggable`."
+   ],
+   "deps": [
+    "t2",
+    "t3"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 -m pytest -q harness/tests/test_html_shell.py",
+   "qc": "",
+   "dep_reasons": {
+    "t2": "contract",
+    "t3": "effect_order"
+   },
+   "spec_hash": "2cbcf094dafb100a",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "2cbcf094dafb100a"
+  },
+  {
+   "id": "t5",
+   "title": "luật gác cho phần máy không tự chèn được",
+   "files": [],
+   "consumes": [
+    "bộ đo Task 1"
+   ],
+   "produces": [
+    "R20 báo WARN khi trang docs-shell (không qua lớp nền) thiếu thành phần MUST, kèm lệnh sửa `html_font.py --apply`; fire-drill BAD (trang tay thiếu) → WARN, GOOD (sau apply) → sạch"
+   ],
+   "deps": [
+    "t1",
+    "t3",
+    "t4"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 -m pytest -q harness/tests/test_html_docs_shell.py",
+   "qc": "",
+   "dep_reasons": {
+    "t1": "data",
+    "t3": "effect_order",
+    "t4": "effect_order"
+   },
+   "spec_hash": "936d8b5b72c5218d",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "936d8b5b72c5218d"
+  },
+  {
+   "id": "t6",
+   "title": "bản sao engine, skill và tài liệu",
+   "files": [],
+   "consumes": [
+    "`html_base.py` sau Task 3–4"
+   ],
+   "produces": [
+    "engine khớp parity; SKILL ghi rõ phần nào lớp nền tự gắn khi chạy `html_font.py --apply`"
+   ],
+   "deps": [
+    "t3",
+    "t4"
+   ],
+   "deps_conf": "chắc",
+   "kind": "integration",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/html-font-lint.py --parity",
+   "qc": "",
+   "dep_reasons": {
+    "t3": "contract",
+    "t4": "contract"
+   },
+   "spec_hash": "db076c1b4ed9c4e2",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "db076c1b4ed9c4e2"
+  },
+  {
+   "id": "t7",
+   "title": "áp cho mọi trang, khảo sát về 0, hai cổng xanh, ảnh trước/sau",
+   "files": [],
+   "consumes": [
+    "mọi task trên"
+   ],
+   "produces": [
+    "mọi trang docs-shell qua `html_font.py --apply`, `docs-shell-survey --all` rc 0, trang ảnh trước/sau (sidebar downstream-layout sáng/tối + 2 trang khác)"
+   ],
+   "deps": [
+    "t5",
+    "t6"
+   ],
+   "deps_conf": "chắc",
+   "kind": "test",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/docs-shell-survey.py --all && python3 fdk/tools/frontend-antipattern.py --all >/dev/null; [ $? -ne 1 ] && test -s llmwiki/html/220926-docs-shell-before-after.html",
+   "qc": "",
+   "dep_reasons": {
+    "t5": "acceptance",
+    "t6": "acceptance"
+   },
+   "spec_hash": "1a13bbb6945d7721",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "1a13bbb6945d7721"
+  },
+  {
+   "id": "t8",
+   "title": "review độc lập + medic --ci",
+   "files": [],
+   "consumes": [
+    "toàn bộ diff"
+   ],
+   "produces": [
+    "báo cáo finding theo mức chặn / nên sửa / ghi nhận"
+   ],
+   "deps": [
+    "t7"
+   ],
+   "deps_conf": "chắc",
+   "kind": "review",
+   "mode": "afk",
+   "verify": "test -s llmwiki/wiki/sources/draft/220926-docs-shell-kit-review.md && python3 fdk/tools/medic.py --ci",
+   "qc": "",
+   "dep_reasons": {
+    "t7": "acceptance"
+   },
+   "spec_hash": "25f10e3732509e70",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "25f10e3732509e70"
+  }
+ ],
+ "layers": [
+  [
+   "t1"
+  ],
+  [
+   "t2"
+  ],
+  [
+   "t3"
+  ],
+  [
+   "t4"
+  ],
+  [
+   "t5",
+   "t6"
+  ],
+  [
+   "t7"
+  ],
+  [
+   "t8"
+  ]
+ ],
+ "parent": null,
+ "depth": 0,
+ "plan_version": 2,
+ "superseded": [],
+ "max_parallel": 4,
+ "conflicts": [],
+ "resource_conflicts": [],
+ "links": [],
+ "control": "active",
+ "schema_version": 1,
+ "checksum": "7089bd62767b5ed2"
+}

@@ -98,7 +98,10 @@ jobs:
           for t in build-docs-index build-health-dashboard build-control-room build-overstack-docs build-wiki-graph; do
             python3 "fdk/tools/$t.py" >/dev/null 2>&1 || true
           done
-          python3 fdk/tools/frontend-antipattern.py --all
+          # rc 1 = có FAIL → đỏ · rc 2 = chỉ WARN (nợ cũ: SVG thiếu role, prose lọt code) → qua, như medic map 2→warn.
+          # Trước đây `set -e` biến WARN thành đỏ: CI harness đỏ từ 8fb5ef2 mà không có FAIL nào.
+          rc=0; python3 fdk/tools/frontend-antipattern.py --all || rc=$?
+          [ "$rc" = 1 ] && { echo "::error::cổng tĩnh có FAIL"; exit 1; }
           python3 harness/validators/html_slop.py --self-test
           : > "$RUNNER_TEMP/gen.txt"
           for f in llmwiki/html/index.html llmwiki/html/280626-health-dashboard.html \
@@ -236,6 +239,8 @@ jobs:
           bash harness/tests/html-font-lint-test.sh
       - name: install-flows — mỗi ô của bảng luồng cài/cập nhật là một ca (A3 A7 B1 B3 C1); B1 tự SKIP trên checkout nông
         run: bash harness/tests/install-flows-test.sh
+      - name: windows-portability — cài trọn dưới stdout cp1252 + HOME trống (GH#168/#169)
+        run: bash harness/tests/windows-portability-test.sh
       - name: install-ps1 — Windows entry point (fail-open nếu runner không có pwsh)
         run: bash harness/tests/install-ps1-test.sh
       - name: tests-wired — MỌI harness/tests/*-test.sh phải có step trong workflow này

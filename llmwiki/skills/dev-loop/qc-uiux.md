@@ -91,6 +91,14 @@ Mặc định soi **UI đang có** — các route/trang mockup vừa dựng. Use
 Soi (phần lớn ĐO ĐƯỢC — engine bắt): **contrast** (chữ thường ≥4.5:1, chữ lớn ≥3:1, control/viền/icon ≥3:1 — WCAG 2.2 AA) · **tap-target** (control tương tác ≥24×24px CSS là sàn AA 2.5.8; khuyến 44/48px mobile) · **focus-visible** (có vòng focus rõ, tương phản ≥3:1) · **missing-label** (nút/icon/link screen-reader đọc rỗng — thiếu aria-label/text). Đây là ranh giới tiếp cận — không lười (a11y là LUẬT, không phải gu). Lưu ý: chỉ ~30% tiêu chí WCAG tự-động được → phần còn lại (keyboard trap, thứ tự focus, alt có NGHĨA) là mắt người.
 
 ##### 2. Visual hierarchy — điểm/10 · lỗi nặng nhất · cách sửa
+**Luật đo được (engine `fdk/tools/html-visual-gate.mjs`, PLAN 220926 — user 22/09/2026), chạy TRƯỚC khi LLM chấm mục này:**
+- `heading-scale` (FAIL): các cấp tiêu đề có mặt phải to → nhỏ (h1 > h2 > h3 > h4) và không nhỏ hơn chữ nội dung.
+- `title-scale` (FAIL): tên trang (brand/logo/h1) ≥ 1,2 × chữ lớn nhất của mục nav và tab chọn nội dung.
+- `sentence-case` (FAIL): tiêu đề, nhãn, nút, tab, mục nav viết hoa chữ đầu (tha định danh có số/-_./:@, tên riêng, chữ trong code; giữ chữ thường có chủ đích bằng `data-case="keep"`).
+- `eye-rest` (WARN): phải có KHOẢNG NGHỈ CHO MẮT — màn đầu ≤ 55% là chữ/khối và không dải dày liền > 520px thiếu khoảng trống ≥ 24px; ngưỡng heuristic của framework. Nhồi nhiều thứ ngang hàng lên một màn (6 viên trạng thái + 3 chip + 3 nút trên một thanh) là lỗi dù từng thứ đúng — gộp, và để phần chi tiết hiện khi bấm (NN/g progressive disclosure).
+- `kanban-uniform` (FAIL): bảng kanban (≥ 2 cột `lane|kanban|[data-kanban-lane]`) — mọi thẻ cùng rộng + cùng cao (±2px) và cùng style (nền · viền · bo · padding · font); thẻ cố định kích thước, bấm mới xem chi tiết.
+- **Chuẩn so sánh:** mỗi phần UI đang audit có khối cùng loại trong trang mẫu `skills/hallmark/references/design-showcase.html` (máy khách: `~/.claude/skills/hallmark/references/design-showcase.html`). Lấy khối bằng `python3 fdk/tools/build-design-showcase.py --get <id>` (máy khách: `python3 ~/.claude/harness/fdk/tools/build-design-showcase.py --get <id>`; `--list` in index) rồi so từng điểm (kích thước, trạng thái, token màu, motion); lệch mà trang không khai miễn trừ = lỗi, ghi rõ id khối chuẩn trong "cách sửa".
+- Yêu cầu đặc biệt thì trang TỰ KHAI: `<meta name="overstack-exempt" content="heading-scale,…" data-reason="…">` — audit phải đọc lý do, không tự miễn.
 Soi (mắt LLM): **nút trông như nút, link trông như link, heading phân cấp kích cỡ rõ** (bắt user phải "giải mã" giao diện = fail) · **CTA rõ ràng** (hành động chính nổi bật, không mơ hồ) · **content density** (không nhồi quá nhiều lên một màn — quá tải = mất hierarchy). Chỉ ra đâu là điểm mắt dừng ĐẦU TIÊN và nó có đúng là hành động chính không.
 
 ##### 3. Consistency (design-system) — điểm/10 · lỗi nặng nhất · bảng drift

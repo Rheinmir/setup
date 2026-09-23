@@ -12,8 +12,20 @@
 //   uppercase-tight-leading  chữ HOA ≥ 24px có line-height < 1.0 × cỡ chữ (dòng HOA dính nhau)
 //   toggle     có nút đổi sáng/tối; bấm thì nền đổi chiều sáng; tải lại vẫn giữ
 //   glass      phần tử khai kính (backdrop-filter) phải còn kính ở CẢ hai chế độ
+//   Nhịp chữ & khoảng cách (PLAN 220926 t4, fdk/wiki/sources/220926-spacing-standards.md) — đo một lượt ở chế độ sáng:
+//   line-height-body   FAIL  p/li/dd/blockquote/td có chữ trực tiếp, ≥ 2 dòng, line-height/font-size < 1.45 (bỏ nav, button, svg, pre/code)
+//   measure-too-wide   WARN  p ≥ 3 dòng, ký tự/dòng THẬT (số ký tự ÷ số dòng) > 85 (WCAG 1.4.8: ≤ 80; token --measure 34em)
+//   heading-proximity  WARN  h2/h3 có anh em trước & sau: khoảng trên < 1.5 × khoảng dưới (USWDS)
+//   hierarchy-flat     FAIL  nhãn trong <nav> (class grp|group|brand|logo|eyebrow|section-title, h2–h6) khác `nav a` gần nhất < 2/4 thuộc tính
+//   sentence-case      FAIL  tiêu đề/nhãn/nút/tab/mục nav viết hoa chữ đầu (tha định danh, tên riêng, code, data-case="keep")
+//   heading-scale      FAIL  cấp tiêu đề có mặt to → nhỏ (h1 > h2 > h3 > h4) và không nhỏ hơn chữ nội dung
+//   title-scale        FAIL  tên trang (brand/logo/h1) ≥ 1,2 × chữ lớn nhất của mục nav/tab
+//   eye-rest           WARN  màn đầu ≤ 55% là chữ/khối, không dải dày liền > 520px thiếu khoảng trống ≥ 24px
+//   line-over-text     FAIL  phần tử có định vị (absolute/fixed/sticky), mảnh ≤ 6px, có màu, cắt ngang chữ không thuộc nó (vạch tiến độ đè mục)
+//   kanban-uniform     FAIL  bảng kanban (≥ 2 cột lane|kanban|[data-kanban-lane]): mọi thẻ cùng rộng + cao (±2px) và cùng style
+//   tap-target         WARN  nav a / button / [role=button] < 24×24 (WCAG 2.5.8); tha link trong p, li ngoài nav, aria-hidden
 // Usage: NODE_PATH=$(npm root -g) node html-visual-gate.mjs <trang.html …> [--json] [--shots <dir>] [--only contrast,tight]
-// Exit: 0 sạch (có thể kèm dòng ⚠ WARN: horizontal-scroll, clickable-wrap) · 2 có lỗi · 4 không có Playwright (SKIP có tên — caller không được đếm là PASS).
+// Exit: 0 sạch (có thể kèm dòng ⚠ WARN: horizontal-scroll, clickable-wrap, measure-too-wide, heading-proximity, tap-target) · 2 có lỗi · 4 không có Playwright (SKIP có tên — caller không được đếm là PASS).
 // Sinh ra 20/09/2026 sau khi bộ đo nháp trả 0 ở hai cột mà user thấy lỗi bằng mắt: mỗi luật ở đây có fixture XẤU chứng minh nó cắn
 // (harness/tests/html-visual-gate-test.sh).
 import { pathToFileURL } from 'url';
@@ -35,7 +47,7 @@ const pages = argv.filter((a, i) => !a.startsWith('--') && !['--shots', '--only'
 if (!pages.length) { console.error('cần ít nhất một trang .html'); process.exit(1); }
 if (shots) mkdirSync(shots, { recursive: true });
 
-const MEASURE = () => {
+const MEASURE = (theme) => {
   // Mọi định dạng màu (rgb, oklab do color-mix sinh ra, color(srgb …), tên màu) → RGBA thật bằng canvas của trình duyệt. Đọc số thô từ
   // chuỗi `oklab(0.82 -0.02 -0.07)` như RGB là SAI (20/09/2026: báo nhầm chữ sáng thành 1.2:1).
   const _cv = document.createElement('canvas'); _cv.width = _cv.height = 1; const _cx = _cv.getContext('2d', { willReadFrequently: true }); const _memo = new Map();
@@ -120,6 +132,128 @@ const MEASURE = () => {
     if ((/^H[1-6]$/.test(el.tagName) || px >= 24) && /italic|oblique/.test(cs.fontStyle) && out.italic_display.length < 40) out.italic_display.push(name(el));
     const lh = parseFloat(cs.lineHeight);   // 'normal' → NaN → bỏ qua
     if (cs.textTransform === 'uppercase' && px >= 24 && lh / px < 1 && out.upper_tight.length < 40) out.upper_tight.push(`${name(el)} (${(lh / px).toFixed(2)})`); }
+  // Nhịp chữ & khoảng cách (PLAN 220926 t4, chuẩn fdk/wiki/sources/220926-spacing-standards.md) — đo MỘT lượt ở chế độ sáng.
+  Object.assign(out, { line_body: [], measure: [], heading_prox: [], hier_flat: [], tap: [] });
+  if (theme === 'light') {
+    const ownText = el => [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim().length > 1);
+    const box = (el, cs) => { const r = el.getBoundingClientRect(), f = k => parseFloat(cs[k]) || 0;
+      return { h: r.height - f('paddingTop') - f('paddingBottom') - f('borderTopWidth') - f('borderBottomWidth'), w: r.width - f('paddingLeft') - f('paddingRight') - f('borderLeftWidth') - f('borderRightWidth') }; };
+    const lhOf = cs => { const v = parseFloat(cs.lineHeight); return isNaN(v) ? 1.2 * parseFloat(cs.fontSize) : v; };   // 'normal' ≈ 1.2 (Chromium, font sans thường)
+    // line-height-body: chữ nội dung ≥ 2 dòng phải giãn ≥ 1.5 (ngưỡng 1.45 trừ sai số làm tròn px)
+    for (const el of document.querySelectorAll('p,li,dd,blockquote,td')) { if (!vis(el) || !ownText(el) || el.closest('nav,button,svg,pre,code,[aria-hidden="true"]')) continue;
+      const cs = getComputedStyle(el), fs = parseFloat(cs.fontSize), lh = lhOf(cs), b = box(el, cs);
+      if (b.h > 1.8 * lh && lh / fs < 1.45 && out.line_body.length < 40) out.line_body.push(`${name(el)} (${(lh / fs).toFixed(2)})`);
+      // measure-too-wide: ký tự/dòng THẬT = số ký tự ÷ số dòng hiển thị (WCAG 1.4.8: ≤ 80). Bản đầu ước lượng bề rộng ÷ 0,5em —
+      // lệch với token độ dài dòng vì chữ trung bình hẹp hơn 0,5em giả định (token nay là --measure:34em ≈ 68 ký tự thật). Đo đoạn ≥ 3 dòng
+      // (dòng cuối ngắn kéo trung bình xuống ít hơn) và bỏ dòng cuối khỏi mẫu số.
+      const lines = Math.round(b.h / lh), chars = el.textContent.replace(/\s+/g, ' ').trim().length;
+      if (el.tagName === 'P' && lines >= 3 && chars / (lines - 0.5) > 85 && out.measure.length < 40) out.measure.push(`${name(el)} (~${Math.round(chars / (lines - 0.5))} ký tự/dòng)`); }
+    // heading-proximity: khoảng trên tiêu đề ≥ 1.5 × khoảng dưới (USWDS) — đo khoảng HÌNH HỌC thật (đã gồm margin collapse)
+    const sib = (el, dir) => { for (let n = el[dir]; n; n = n[dir]) if (vis(n)) return n; return null; };
+    for (const h of document.querySelectorAll('h2,h3')) { if (!vis(h) || h.closest('svg,nav,[aria-hidden="true"]') || /absolute|fixed/.test(getComputedStyle(h).position)) continue;
+      const pr = sib(h, 'previousElementSibling'), nx = sib(h, 'nextElementSibling'); if (!pr || !nx) continue;
+      const a = pr.getBoundingClientRect(), r = h.getBoundingClientRect(), c = nx.getBoundingClientRect();
+      const above = r.top - a.bottom, below = c.top - r.bottom; if (above < -1 || below <= 0) continue;   // không xếp dọc (lưới/flex ngang) → bỏ
+      if (above < 1.5 * below && out.heading_prox.length < 40) out.heading_prox.push(`${name(h)} "${h.textContent.trim().slice(0, 24)}" trên ${Math.round(above)}px < 1.5 × dưới ${Math.round(below)}px`); }
+    // hierarchy-flat: nhãn trong <nav> phải khác mục liên kết gần nhất ở ≥ 2/4 thuộc tính (cỡ · độ đậm · màu · hoa/thường)
+    const rgb = c => ((norm(c) || '').match(/[\d.]+/g) || []).slice(0, 3).map(Number);
+    for (const nav of document.querySelectorAll('nav')) { const links = [...nav.querySelectorAll('a')].filter(vis);
+      for (const lb of nav.querySelectorAll('*')) { const cls = typeof lb.className === 'string' ? lb.className : '';
+        if (!(/^H[2-6]$/.test(lb.tagName) || /grp|group|brand|logo|eyebrow|section-title/i.test(cls)) || !vis(lb) || !ownText(lb) || lb.querySelector('a')) continue;
+        const r = lb.getBoundingClientRect(), cands = links.filter(a => a !== lb && !a.contains(lb) && !lb.contains(a)); if (!cands.length) continue;
+        const d = a => { const q = a.getBoundingClientRect(); return Math.hypot(q.left + q.width / 2 - r.left - r.width / 2, q.top + q.height / 2 - r.top - r.height / 2); };
+        const ln = cands.reduce((x, y) => d(y) < d(x) ? y : x), A = getComputedStyle(lb), B = getComputedStyle(ln), ca = rgb(A.color), cb = rgb(B.color);
+        const diff = [Math.abs(parseFloat(A.fontSize) - parseFloat(B.fontSize)) >= 1, Math.abs(+A.fontWeight - +B.fontWeight) >= 100,
+          Math.max(...ca.map((v, i) => Math.abs(v - cb[i]))) > 40, (A.textTransform === 'uppercase') !== (B.textTransform === 'uppercase')].filter(Boolean).length;
+        // ĐỘ NỔI (user 22/09 trên sidebar kanban: nhãn nhóm 'cần nổi bật hơn bằng màu tương phản hẳn'): khác mà CHÌM hơn vẫn là phẳng —
+        // nhãn không được tương phản thấp hơn mục, và phải đậm hơn (≥ +100) hoặc to hơn mục.
+        const crOf = el => { const l = lum(getComputedStyle(el).color), bg = bgL(el); if (!l) return 0; const hi = Math.max(l.L, bg), lo = Math.min(l.L, bg); return (hi + .05) / (lo + .05); };
+        const dim = crOf(lb) < crOf(ln) - 0.3 && !(sat(A.color) > 0.35 && crOf(lb) >= 4.5),   // màu NHẤN đạt AA = cách nổi hợp lệ (brand tô accent)
+               weak = +A.fontWeight < +B.fontWeight + 100 && parseFloat(A.fontSize) <= parseFloat(B.fontSize);
+        if ((diff < 2 || dim || weak) && out.hier_flat.length < 40) out.hier_flat.push(`${name(lb)} "${lb.textContent.trim().slice(0, 20)}" vs ${name(ln)}: cỡ ${A.fontSize}/${B.fontSize} · đậm ${A.fontWeight}/${B.fontWeight} · tương phản ${crOf(lb).toFixed(1)}/${crOf(ln).toFixed(1)} · ${A.textTransform}/${B.textTransform} (${diff}/4 khác${dim ? ' · CHÌM hơn mục' : ''}${weak ? ' · không đậm/to hơn mục' : ''})`); } }
+    // tap-target: vùng bấm ≥ 24×24 (WCAG 2.5.8) — tha link trong câu chữ (p, li ngoài nav) và phần tử aria-hidden
+    for (const el of document.querySelectorAll('nav a,button,[role=button]')) { if (!vis(el) || el.closest('p,[aria-hidden="true"]') || (el.closest('li') && !el.closest('nav'))) continue;
+      const r = el.getBoundingClientRect(); if ((r.height < 24 || r.width < 24) && out.tap.length < 40) out.tap.push(`${name(el)} "${el.textContent.trim().slice(0, 20)}" ${Math.round(r.width)}×${Math.round(r.height)}`); }
+    // ── PLAN 220926 (user 22/09): chữ hoa đầu câu · tiêu đề to hơn nav/tab · các cấp tiêu đề to → nhỏ · khoảng nghỉ cho mắt.
+    // Miễn khi trang TỰ KHAI yêu cầu đặc biệt: <meta name="overstack-exempt" content="sentence-case,heading-scale,…" data-reason="…">
+    const ex = new Set(((document.querySelector('meta[name="overstack-exempt"]') || {}).content || '').split(/[\s,]+/).filter(Boolean));
+    Object.assign(out, { sent_case: [], head_scale: [], title_scale: [], eye_rest: [] });
+    const fsOf = el => parseFloat(getComputedStyle(el).fontSize);
+    // sentence-case: nhãn/tiêu đề/mục nav/tab/nút bắt đầu bằng chữ THƯỜNG. Tha: định danh (có số, -, _, ., /, :, @), text-transform hoa, trong code.
+    if (!ex.has('sentence-case')) {
+      const IDENT = /[\d\-_.\/:@]/, BRANDS = new Set(['overstack', 'orca', 'llmwiki', 'npm', 'npx', 'git', 'gh', 'curl', 'claude', 'iphone', 'macos', 'ios']);
+      for (const el of document.querySelectorAll('h1,h2,h3,h4,h5,h6,nav a,.brand,.logo,[role=tab],.tabs button,button,th,summary,legend,label')) {
+        if (!vis(el) || el.closest('code,pre,kbd,svg,[aria-hidden="true"],[data-case="keep"]')) continue; const cs = getComputedStyle(el);
+        if (/uppercase|capitalize/.test(cs.textTransform) || getComputedStyle(el, '::first-letter').textTransform === 'uppercase') continue;
+        const txt = (el.innerText || '').trim().replace(/^[^\p{L}\p{N}]+/u, ''); if (!txt) continue;
+        const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, { acceptNode: n => n.textContent.trim() ? 1 : 3 }); const first = w.nextNode();
+        if (first && first.parentElement.closest('code,kbd,samp')) continue;       // mở đầu bằng định danh trong <code> — không phải câu
+        const tok = txt.split(/\s+/)[0], ch = txt[0];
+        if (ch === ch.toUpperCase() || ch !== ch.toLowerCase() || IDENT.test(tok) || BRANDS.has(tok.toLowerCase().replace(/[^\p{L}]/gu, ''))) continue;
+        if (out.sent_case.length < 40) out.sent_case.push(`${name(el)} "${txt.slice(0, 28)}"`); } }
+    // heading-scale: cấp tiêu đề có mặt phải to → nhỏ (h1 > h2 > h3 > h4, lấy cỡ LỚN NHẤT mỗi cấp, chênh ≥ 1px) và tiêu đề ≥ cỡ chữ nội dung
+    if (!ex.has('heading-scale')) {
+      const lv = [1, 2, 3, 4, 5, 6].map(n => [...document.querySelectorAll('h' + n)].filter(e => vis(e) && !e.closest('nav,svg,[aria-hidden="true"]')).map(fsOf)).map(a => a.length ? Math.max(...a) : null);
+      const pres = lv.map((v, i) => [i + 1, v]).filter(x => x[1] != null);
+      for (let k = 1; k < pres.length; k++) if (pres[k][1] >= pres[k - 1][1] - 0.5 && out.head_scale.length < 10) out.head_scale.push(`h${pres[k][0]} ${pres[k][1]}px ≥ h${pres[k - 1][0]} ${pres[k - 1][1]}px`);
+      // cỡ chữ NỘI DUNG = cỡ chiếm nhiều ký tự nhất trong p/li (bỏ câu lead/hero/deck — lead to hơn tiêu đề thẻ là thiết kế bình thường)
+      const tally = {}; for (const e of document.querySelectorAll('p,li')) { if (!vis(e) || e.closest('nav,header,.hero,.lead,.deck,.intro,svg') || /lead|deck|intro/.test(e.className)) continue;
+        const k = fsOf(e); tally[k] = (tally[k] || 0) + (e.innerText || '').length; }
+      const bs = Object.keys(tally).length ? +Object.entries(tally).sort((a, b) => b[1] - a[1])[0][0] : null;
+      if (bs && pres.length) { const [n, v] = pres[pres.length - 1]; if (v < bs && out.head_scale.length < 10) out.head_scale.push(`h${n} ${v}px nhỏ hơn chữ nội dung ${bs}px`); } }
+    // title-scale: tên trang (.brand/.logo trong nav, hoặc h1) ≥ 1,2 × chữ lớn nhất của mục nav / tab chọn nội dung
+    if (!ex.has('title-scale')) {
+      const items = [...document.querySelectorAll('nav a,[role=tab],.tabs button,.tabs a')].filter(e => vis(e) && !/brand|logo/.test(e.className)).map(fsOf);
+      const mx = items.length ? Math.max(...items) : 0;
+      for (const t of [...document.querySelectorAll('nav .brand, nav .logo, h1')].filter(vis).slice(0, 3)) { const f = fsOf(t);
+        if (mx && f < 1.2 * mx && out.title_scale.length < 5) out.title_scale.push(`${name(t)} "${(t.innerText || '').trim().slice(0, 24)}" ${f}px < 1,2 × mục nav/tab ${mx}px`); } }
+    // eye-rest: màn đầu (vùng nội dung, bỏ sidebar) — "mực" (chữ + khối có nền/viền) ≤ 55% và không dải dày liền > 520px thiếu khoảng trống ≥ 24px.
+    // Ngưỡng HEURISTIC của framework (không có chuẩn công khai): hiệu chỉnh 22/09/2026 — theme đọc Vietcetera 30%/212px qua; control-room 90%/760px trượt.
+    if (!ex.has('eye-rest')) {
+      const H = innerHeight, W = innerWidth, navE = document.querySelector('nav'), nr = navE && navE.getBoundingClientRect();
+      const x0 = nr && nr.height > H * .6 && nr.width < W * .4 ? nr.right : 0, gw = Math.ceil((W - x0) / 8), gh = Math.ceil(H / 8);
+      const grid = new Uint8Array(gw * gh), rows = new Uint8Array(Math.ceil(H / 4));
+      const paint = r => { const a = Math.max(0, Math.floor((r.left - x0) / 8)), c = Math.min(gw - 1, Math.floor((r.right - x0) / 8)), t = Math.max(0, Math.floor(r.top / 8)), d = Math.min(gh - 1, Math.floor(r.bottom / 8));
+        for (let y = t; y <= d; y++) for (let x = a; x <= c; x++) grid[y * gw + x] = 1; for (let y = Math.max(0, Math.floor(r.top / 4)); y <= Math.min(rows.length - 1, Math.floor(r.bottom / 4)); y++) rows[y] = 1; };
+      for (const el of document.querySelectorAll('body *')) { if ((navE && navE.contains(el)) || el.closest('.ovs-theme')) continue; const cs = getComputedStyle(el); if (cs.visibility === 'hidden' || +cs.opacity < .1 || cs.display === 'none') continue;
+        for (const n of el.childNodes) if (n.nodeType === 3 && n.textContent.trim()) { const rg = document.createRange(); rg.selectNodeContents(n); for (const q of rg.getClientRects()) if (q.bottom > 0 && q.top < H && q.right > x0) paint(q); }
+        const r = el.getBoundingClientRect(); if (r.bottom <= 0 || r.top >= H || r.right <= x0) continue;
+        const bg = cs.backgroundColor; if ((bg && !/rgba?\(0, 0, 0, 0\)|transparent/.test(bg) && r.width < W * .9) || (parseFloat(cs.borderTopWidth) > 0 && cs.borderTopStyle !== 'none' && r.width > 40 && r.height > 20)) paint(r); }
+      const ink = grid.reduce((a, v) => a + v, 0) / grid.length; let run = 0, best = 0, gap = 0;
+      for (const v of rows) { if (v) { if (gap * 4 >= 24) run = 0; run += 1 + (gap * 4 < 24 ? gap : 0); gap = 0; best = Math.max(best, run); } else gap++; }
+      if (ink > 0.55) out.eye_rest.push(`màn đầu ${Math.round(ink * 100)}% là chữ/khối (trần 55%)`);
+      if (best * 4 > 520) out.eye_rest.push(`dải dày liền ${best * 4}px không có khoảng trống ≥ 24px (trần 520px)`); }
+    // line-over-text (user 22/09, ảnh sidebar showcase: vạch tiến độ absolute trong sidebar cuộn cắt ngang mục "Chấm trạng thái"):
+    // phần tử CÓ ĐỊNH VỊ (absolute/fixed/sticky), mảnh (cạnh ngắn ≤ 6px, cạnh dài ≥ 24px), có màu (nền/viền của nó hoặc con),
+    // giao với hộp chữ KHÔNG thuộc nó > 2px ngang và > 1px dọc → vạch đè chữ. Khối dính đáy có nền đặc che chữ khi cuộn là bình thường (không mảnh).
+    out.line_text = [];
+    if (!ex.has('line-over-text')) {
+      const painted = e => [e, ...e.querySelectorAll('*')].some(x => { const c = getComputedStyle(x), q = x.getBoundingClientRect();
+        return q.width > 0 && q.height > 0 && ((c.backgroundColor && !/rgba?\(0, 0, 0, 0\)|transparent/.test(c.backgroundColor)) || (parseFloat(c.borderTopWidth) > 0 && c.borderTopStyle !== 'none')); });
+      const lines = [...document.querySelectorAll('body *')].filter(e => { const c = getComputedStyle(e); if (!/absolute|fixed|sticky/.test(c.position) || c.visibility === 'hidden' || +c.opacity < .1) return false;
+        const r = e.getBoundingClientRect(); return Math.min(r.width, r.height) <= 6 && Math.max(r.width, r.height) >= 24 && r.bottom > 0 && r.top < innerHeight && painted(e); });
+      if (lines.length) { const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, { acceptNode: n => n.textContent.trim() ? 1 : 3 });
+        for (let n; (n = w.nextNode()) && out.line_text.length < 10;) { const pe = n.parentElement; if (!pe || !vis(pe)) continue;
+          const rg = document.createRange(); rg.selectNodeContents(n);
+          for (const q of rg.getClientRects()) for (const l of lines) { if (l.contains(pe)) continue; const r = l.getBoundingClientRect();
+            const ox = Math.min(r.right, q.right) - Math.max(r.left, q.left), oy = Math.min(r.bottom, q.bottom) - Math.max(r.top, q.top);
+            if (ox > 2 && oy > 1 && !out.line_text.some(x => x.startsWith(name(l)))) out.line_text.push(`${name(l)} ${Math.round(r.width)}×${Math.round(r.height)} cắt chữ "${n.textContent.trim().slice(0, 24)}"`); } } } }
+    // kanban-uniform (user 22/09: "làm kanban thì luôn chung 1 style và thẻ phải luôn size cố định"): bảng = ≥ 2 cột anh em
+    // (class chứa lane|kanban|swimlane hoặc [data-kanban-lane]); thẻ = con trực tiếp của cột mang class lặp nhiều nhất (bỏ tiêu đề/gợi ý).
+    // MỌI thẻ trên bảng phải cùng rộng + cùng cao (±2px) và cùng style (nền · viền · bo · padding · cỡ/họ chữ).
+    out.kanban = [];
+    if (!ex.has('kanban-uniform')) {
+      const sig = el => { const s = getComputedStyle(el); return [s.backgroundColor, s.borderTopWidth, s.borderTopColor, s.borderRadius, s.paddingTop, s.paddingLeft, s.fontSize, s.fontFamily].join(' | '); };
+      const boards = new Set(); for (const l of document.querySelectorAll('[class*=lane],[class*=kanban] > *,[data-kanban-lane]')) if (vis(l) && l.parentElement) boards.add(l.parentElement);
+      for (const bd of boards) { const lanes = [...bd.children].filter(c => vis(c) && (c.hasAttribute('data-kanban-lane') || /lane|kanban|col/i.test(c.className || ''))); if (lanes.length < 2) continue;
+        const tally = {}; for (const ln of lanes) for (const c of ln.children) if (vis(c) && !/^H[1-6]$/.test(c.tagName) && typeof c.className === 'string' && c.className.trim()) { const k = c.className.trim().split(/\s+/)[0]; tally[k] = (tally[k] || 0) + 1; }
+        const top = Object.entries(tally).sort((a, b) => b[1] - a[1])[0]; if (!top || top[1] < 2) continue;
+        const cards = lanes.flatMap(ln => [...ln.children].filter(c => vis(c) && typeof c.className === 'string' && c.className.trim().split(/\s+/)[0] === top[0]));
+        const rs = cards.map(c => c.getBoundingClientRect()), ws = rs.map(r => r.width), hs = rs.map(r => r.height), tag = `${name(bd)} .${top[0]} ×${cards.length}`;
+        if (Math.max(...ws) - Math.min(...ws) > 2) out.kanban.push(`${tag}: rộng lệch ${Math.round(Math.min(...ws))}–${Math.round(Math.max(...ws))}px`);
+        if (Math.max(...hs) - Math.min(...hs) > 2) out.kanban.push(`${tag}: cao lệch ${Math.round(Math.min(...hs))}–${Math.round(Math.max(...hs))}px (đặt height cố định + cắt chữ bằng line-clamp)`);
+        const sg = new Set(cards.map(sig)); if (sg.size > 1) out.kanban.push(`${tag}: ${sg.size} style khác nhau — vd ${[...sg].slice(0, 2).join(' ≠ ')}`); } }
+  }
   out.glass = [...document.querySelectorAll('body *')].filter(e => { const cs = getComputedStyle(e); return vis(e) && ((cs.backdropFilter && cs.backdropFilter !== 'none') || (cs.webkitBackdropFilter && cs.webkitBackdropFilter !== 'none')); }).length;
   out.bodyL = (() => { const l = lum(getComputedStyle(document.body).backgroundColor), h = lum(getComputedStyle(document.documentElement).backgroundColor); return (l && l.a > .5) ? l.L : (h && h.a > .5 ? h.L : null); })();
   return out;
@@ -128,6 +262,7 @@ const MEASURE = () => {
 // horizontal-scroll + clickable-wrap: đo lại ở từng bề rộng (resize cùng trang, không tải lại)
 const LAYOUT = () => { const d = document.documentElement, wrap = [];
   for (const el of document.querySelectorAll('button,[role=button],[role=tab],nav a,footer a,a.btn')) { if (el.closest('p,[aria-hidden="true"]')) continue;
+    if (el.querySelector(':scope > div, :scope > p')) continue;   // THẺ bấm được (kanban, node) nhiều dòng là thiết kế — luật này cho NHÃN nút/link
     const r = el.getBoundingClientRect(), cs = getComputedStyle(el); if (r.width < 2 || r.height < 2 || cs.visibility === 'hidden' || el.textContent.trim().length < 2) continue;
     const rg = document.createRange(); rg.selectNodeContents(el); const rs = [...rg.getClientRects()].filter(x => x.width > 1 && x.height > 1).sort((a, b) => a.top - b.top);
     // số dòng = số cụm rect KHÔNG chồng nhau theo chiều dọc (icon căn giữa cùng dòng với chữ không bị đếm thành dòng mới)
@@ -146,7 +281,7 @@ for (const file of pages) { const abs = resolve(file); const row = { page: file,
     await p.addInitScript(t => { try { for (const k of ['theme', 'ovs-theme', 'color-scheme', 'og-theme']) if (localStorage.getItem(k) === null) localStorage.setItem(k, t); } catch (e) {} }, theme);
     await p.goto(pathToFileURL(abs).href, { waitUntil: 'load', timeout: 30000 }).catch(e => errs.push('goto: ' + e.message.slice(0, 80)));
     await p.evaluate(t => { const d = document.documentElement; if (d.getAttribute('data-theme') !== t) d.setAttribute('data-theme', t); return document.fonts.ready; }, theme); await p.waitForTimeout(250);
-    const m = await p.evaluate(MEASURE); m.jsErrors = errs;
+    const m = await p.evaluate(MEASURE, theme); m.jsErrors = errs;
     // Xác minh bằng ĐIỂM ẢNH: nền ước lượng từ CSS sai khi có lớp giả (::before), backdrop-filter, ảnh nền cố định… Chụp đúng ô chứa chữ,
     // lấy màu CHIẾM NHIỀU NHẤT làm nền thật rồi tính lại; chỉ giữ finding khi điểm ảnh cũng xác nhận. (20/09/2026: bản ước lượng báo nhầm
     // logo đọc rõ mồn một là 2.05:1.)
@@ -193,6 +328,19 @@ for (const file of pages) { const abs = resolve(file); const row = { page: file,
   if (on('clickable-wrap') && row.wrap.length) warns.push(`clickable-wrap: ${row.wrap.length} nút/link bẻ dòng — vd ${row.wrap[0]}`);
   if (on('italic-display') && L.italic_display.length) probs.push(`italic-display: ${L.italic_display.length} chữ hiển thị in nghiêng — vd ${L.italic_display[0]}`);
   if (on('uppercase-tight-leading') && L.upper_tight.length) probs.push(`uppercase-tight-leading: ${L.upper_tight.length} chữ HOA lớn dòng dính — vd ${L.upper_tight[0]}`);
+  // PLAN 220926 t4: line-height-body + hierarchy-flat FAIL (chuẩn đo được, lỗi thật); measure-too-wide (đếm ký tự thật),
+  // heading-proximity (bố cục lưới dễ báo giả), tap-target (chưa tính ngoại lệ khoảng cách của WCAG 2.5.8) → WARN.
+  if (on('line-height-body') && L.line_body.length) probs.push(`line-height-body: ${L.line_body.length} khối chữ nhiều dòng giãn < 1.5 — vd ${L.line_body[0]}`);
+  if (on('hierarchy-flat') && L.hier_flat.length) probs.push(`hierarchy-flat: ${L.hier_flat.length} nhãn nav không NỔI hơn mục (< 2/4 khác biệt, chìm hơn, hoặc không đậm/to hơn) — vd ${L.hier_flat[0]}`);
+  if (on('measure-too-wide') && L.measure.length) warns.push(`measure-too-wide: ${L.measure.length} đoạn quá dài dòng (đếm ký tự thật, chuẩn ≤ 80 ký tự — dùng max-width:var(--measure)) — vd ${L.measure[0]}`);
+  if (on('sentence-case') && L.sent_case && L.sent_case.length) probs.push(`sentence-case: ${L.sent_case.length} nhãn/tiêu đề bắt đầu bằng chữ thường — viết hoa chữ đầu (trừ định danh/tên riêng) — vd ${L.sent_case[0]}`);
+  if (on('heading-scale') && L.head_scale && L.head_scale.length) probs.push(`heading-scale: cấp tiêu đề không to → nhỏ — ${L.head_scale.join(' · ')}`);
+  if (on('title-scale') && L.title_scale && L.title_scale.length) probs.push(`title-scale: tên trang không lớn hơn mục nav/tab — ${L.title_scale[0]}`);
+  if (on('line-over-text') && L.line_text && L.line_text.length) probs.push(`line-over-text: vạch mảnh có định vị đè lên chữ — ${L.line_text.slice(0, 3).join(' · ')}`);
+  if (on('kanban-uniform') && L.kanban && L.kanban.length) probs.push(`kanban-uniform: thẻ kanban không đồng nhất — ${L.kanban.slice(0, 3).join(' · ')}`);
+  if (on('eye-rest') && L.eye_rest && L.eye_rest.length) warns.push(`eye-rest: không có khoảng nghỉ cho mắt — ${L.eye_rest.join(' · ')}`);
+  if (on('heading-proximity') && L.heading_prox.length) warns.push(`heading-proximity: ${L.heading_prox.length} tiêu đề gần đoạn TRÊN hơn đoạn dưới — vd ${L.heading_prox[0]}`);
+  if (on('tap-target') && L.tap.length) warns.push(`tap-target: ${L.tap.length} vùng bấm < 24×24 — vd ${L.tap[0]}`);
   if (on('toggle') && row.toggle !== 'ok' && row.toggle !== 'follows-parent') probs.push(`toggle: ${row.toggle}`);
   if (on('toggle') && row.toggle === 'ok' && L.bodyL !== null && D.bodyL !== null && Math.abs(L.bodyL - D.bodyL) < 0.25) probs.push('toggle: sáng và tối cho CÙNG một nền');
   if (on('glass') && L.glass > 0 && D.glass === 0) probs.push(`glass: sáng có ${L.glass} lớp kính, tối mất hết`);
@@ -200,7 +348,7 @@ for (const file of pages) { const abs = resolve(file); const row = { page: file,
   const je = [...L.jsErrors, ...D.jsErrors]; if (je.length) probs.push(`js: ${je[0]}`);
   row.problems = probs; row.warnings = warns; if (probs.length) bad++; report.push(row); }
 await b.close();
-if (asJson) console.log(JSON.stringify(report.map(r => ({ page: r.page, toggle: r.toggle, problems: r.problems, warnings: r.warnings, light: r.findings.light && { contrast: r.findings.light.contrast, tight: r.findings.light.tight, overlap: r.findings.light.overlap, stripe: r.findings.light.stripe, rounded_edge: r.findings.light.rounded_edge, italic_display: r.findings.light.italic_display, upper_tight: r.findings.light.upper_tight, glass: r.findings.light.glass }, hscroll: r.hscroll, wrap: r.wrap, dark: r.findings.dark && { contrast: r.findings.dark.contrast, rounded_edge: r.findings.dark.rounded_edge, overlap: r.findings.dark.overlap, glass: r.findings.dark.glass } })), null, 1));
+if (asJson) console.log(JSON.stringify(report.map(r => ({ page: r.page, toggle: r.toggle, problems: r.problems, warnings: r.warnings, light: r.findings.light && { contrast: r.findings.light.contrast, tight: r.findings.light.tight, overlap: r.findings.light.overlap, stripe: r.findings.light.stripe, rounded_edge: r.findings.light.rounded_edge, italic_display: r.findings.light.italic_display, upper_tight: r.findings.light.upper_tight, line_body: r.findings.light.line_body, measure: r.findings.light.measure, heading_prox: r.findings.light.heading_prox, hier_flat: r.findings.light.hier_flat, tap: r.findings.light.tap, sent_case: r.findings.light.sent_case, head_scale: r.findings.light.head_scale, title_scale: r.findings.light.title_scale, eye_rest: r.findings.light.eye_rest, glass: r.findings.light.glass }, hscroll: r.hscroll, wrap: r.wrap, dark: r.findings.dark && { contrast: r.findings.dark.contrast, rounded_edge: r.findings.dark.rounded_edge, overlap: r.findings.dark.overlap, glass: r.findings.dark.glass } })), null, 1));
 else { for (const r of report) { console.log(`${r.problems && r.problems.length ? '✗' : '✓'} ${r.page}${r.error ? ' — ' + r.error : ''}`); for (const q of r.problems || []) console.log('    ' + q); for (const q of r.warnings || []) console.log('    ⚠ ' + q); }
   console.log(`html-visual-gate: ${report.length - bad}/${report.length} trang đạt`); }
 process.exit(bad ? 2 : 0);

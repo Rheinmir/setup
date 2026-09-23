@@ -1,20 +1,25 @@
 #!/usr/bin/env python3
 """html_font — MỘT nguồn token font cho mọi HTML do framework sinh ra (việc user giao 20/09/2026, đổi font 21/09/2026).
 
-Nội dung dùng **Be Vietnam Pro** (theme đọc kiểu Vietcetera, user chốt 21/09/2026): body 400, chữ đậm 600, tiêu đề 800 siết
+TIÊU ĐỀ dùng **Newsreader 600** (serif kiểu báo; user chốt 22/09/2026 sau khi so sáu font trên cùng một mẫu tiếng Việt) — nhúng MỘT
+file tĩnh cắt tại wght 600 / opsz 24. Nội dung dùng **Be Vietnam Pro** (theme đọc kiểu Vietcetera, user chốt 21/09/2026): body 400, chữ đậm 600, tiêu đề 800 siết
 letter-spacing âm. Be Vietnam Pro KHÔNG có bản variable → nhúng BA file tĩnh 400/600/800 (≈95 KB; đủ 5 weight là 160 KB — quá trần
 150 KB của PLAN 210926). Trang xin 500 thì trình duyệt lấy 400, xin 700 lấy 800 (luật khớp font CSS) — nét THẬT, không giả đậm.
-`--font-mono` cho code GIỮ font hệ thống. Font được NHÚNG base64 vào từng trang (user chốt "nhúng hết"): trang mở bằng file://,
+Chữ trong SƠ ĐỒ/GRAPH (svg · .diagram-box · .mm · .graph) dùng **Lexend Deca**: mặc định Light 300, đậm = Regular 400 (user chốt
+22/09/2026). Hai bản TĨNH cùng tên họ — mọi độ đậm < 500 ra Light, ≥ 500 ra Regular, `font-synthesis:none` cấm đậm giả — nên
+"đậm = Lexend thường" là luật cứng (bản variable sẽ vẽ đúng 700 khi trang xin 700). `--font-mono` cho code GIỮ font hệ thống. Font được NHÚNG base64 vào từng trang (user chốt "nhúng hết"): trang mở bằng file://,
 không mạng vẫn đúng font, không gọi ra fonts.googleapis.com. Luôn có fallback hệ thống phía sau.
 
     from html_font import head_css, FONT_TEXT       # generator: chèn head_css() vào <style> ĐẦU TIÊN của trang
     html_font.py --apply trang.html [trang2.html…]  # trang do SKILL/agent dựng tay: nhúng font tại chỗ (idempotent) — gọi SAU khi ghi trang
     html_font.py --check                            # data module khớp các file woff2?  (rc 1 khi lệch)
-    html_font.py --rebuild <dir chứa BeVietnamPro-{Regular,SemiBold,ExtraBold}.ttf>   # cắt lại subset + sinh lại data module (cần fontTools + brotli)
+    html_font.py --rebuild <dir BeVietnamPro-*.ttf> [LexendDeca-VariableFont_wght.ttf]   # cắt lại subset + sinh lại data module (cần fontTools + brotli)
 
 Dữ liệu base64 nằm ở `html_font_data.py` (file .py để đi cùng đợt copy `fdk/tools/*.py` xuống ~/.claude/harness — asset nhị phân
 không được installer copy). Giấy phép SIL OFL 1.1: `assets/fonts/BeVietnamPro-NOTICE.txt`.
 """
+from __future__ import annotations
+
 import base64, hashlib, sys
 from pathlib import Path
 
@@ -23,20 +28,36 @@ FONTS = HERE / "assets" / "fonts"
 WEIGHTS = (400, 600, 800)
 _SRC = {400: "Regular", 600: "SemiBold", 800: "ExtraBold"}
 DATA = HERE / "html_font_data.py"
+CHART_FAMILY = "Lexend Deca"
+CHART_WEIGHTS = (300, 400)            # Light cho mặc định · Regular cho đậm
+CHART_SCOPE = ":is(svg,.diagram-box,.mm,.graph)"
+
+DISPLAY_FAMILY = "Newsreader"          # TIÊU ĐỀ (user chốt 22/09/2026 sau khi so 6 font: "E · Newsreader 600")
+DISPLAY_WEIGHTS = (600,)
+DISPLAY_OPSZ = 24                      # trục optical size cố định cho cỡ tiêu đề 20–32px
+DISPLAY_FALLBACK = "Georgia,'Times New Roman',serif"
 
 FAMILY = "Be Vietnam Pro"
 FALLBACK = "-apple-system,BlinkMacSystemFont,'Segoe UI','Roboto','Helvetica Neue',sans-serif"
 FONT_TEXT = f"'{FAMILY}',{FALLBACK}"
-FONT_DISPLAY = FONT_TEXT
+FONT_DISPLAY = f"'{DISPLAY_FAMILY}',{DISPLAY_FALLBACK}"
 FONT_MONO = "ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,monospace"
 WEIGHT_TEXT = 400          # nội dung — như theme mẫu
 WEIGHT_STRONG = 600        # <strong>/<b>/th
-WEIGHT_HEADING = 800       # tiêu đề: nét đậm nhất đã nhúng
-TRACK_HEADING = "-.03em"   # CHỈ h1/h2: theme siết -.035 → -.055em ở tiêu đề lớn; h3/h4 (~16px) siết vào là dính chữ (soát ảnh 21/09)
+WEIGHT_HEADING = 600       # tiêu đề: Newsreader SemiBold (serif — 800 của sans cũ đọc nặng, user 22/09 "font này cũng lởm luôn")
+TRACK_HEADING = "-.01em"   # CHỈ h1/h2: theme siết -.035 → -.055em ở tiêu đề lớn; h3/h4 (~16px) siết vào là dính chữ (soát ảnh 21/09)
 
 
 def woff2(w: int) -> Path:
     return FONTS / f"BeVietnamPro-{w}-vi.woff2"
+
+
+def display_woff2(w: int) -> Path:
+    return FONTS / f"Newsreader-{w}-vi.woff2"
+
+
+def chart_woff2(w: int) -> Path:
+    return FONTS / f"LexendDeca-{w}-vi.woff2"
 
 
 def _load_data():
@@ -55,14 +76,43 @@ def font_face() -> str:
                    f"src:url(data:font/woff2;base64,{b}) format('woff2')}}" for w, b in sorted(_load_b64().items()))
 
 
+def display_face() -> str:
+    b = _load_data().DISPLAY_B64
+    return "".join(f"@font-face{{font-family:'{DISPLAY_FAMILY}';font-style:normal;font-weight:{w};font-display:swap;"
+                   f"src:url(data:font/woff2;base64,{b[w]}) format('woff2')}}" for w in DISPLAY_WEIGHTS)
+
+
+def chart_face() -> str:
+    """Hai @font-face 'Lexend Deca' TĨNH: dải 1–499 → Light, 500–1000 → Regular (xin 600/700/bold vẫn ra Regular)."""
+    b = _load_data().CHART_B64
+    rng = {300: "1 499", 400: "500 1000"}
+    return "".join(f"@font-face{{font-family:'{CHART_FAMILY}';font-style:normal;font-weight:{rng[w]};font-display:swap;"
+                   f"src:url(data:font/woff2;base64,{b[w]}) format('woff2')}}" for w in CHART_WEIGHTS)
+
+
+def chart_css() -> str:
+    """Chữ trong sơ đồ/graph → họ 'Lexend Deca' (hai bản tĩnh). KHÔNG ép font-weight: độ đậm trang tự đặt được giữ nguyên, và
+    chính dải của hai @font-face quyết nét — chữ thường (≤499) ra Light, chữ đậm (≥500) ra Regular. Bản đầu ép 300 rồi đẩy thẻ đậm
+    lên 500 → rule chèn SAU thắng rule đậm cùng độ ưu tiên của trang, nhãn node graph mất đậm (soát ảnh 22/09/2026).
+    Chữ code bên trong giữ mono. `font-synthesis:none` — không cho trình duyệt tô đậm giả trên bản Regular."""
+    sc = CHART_SCOPE
+    return f"{sc},{sc} :not(code,pre,kbd,samp,code *){{font-family:var(--font-chart);font-synthesis:none}}"
+
+
 def head_css() -> str:
     """Khối CSS đặt ĐẦU <style> của trang: @font-face nhúng + token + mặc định cho nội dung. Trang có khai `--font-text`/
     `--font-display` riêng ở SAU thì phải bỏ đi (hoặc trỏ về var này) — html-font-lint gác."""
-    return (font_face() +
-            f":root{{--font-text:{FONT_TEXT};--font-display:{FONT_DISPLAY};--font-mono:{FONT_MONO};--fw-text:{WEIGHT_TEXT};--fw-strong:{WEIGHT_STRONG};--fw-heading:{WEIGHT_HEADING};--ls-heading:{TRACK_HEADING}}}"
+    return (font_face() + display_face() + chart_face() +
+            f":root{{--font-chart:'{CHART_FAMILY}',{FALLBACK};--font-text:{FONT_TEXT};--font-display:{FONT_DISPLAY};--font-mono:{FONT_MONO};--fw-text:{WEIGHT_TEXT};--fw-strong:{WEIGHT_STRONG};--fw-heading:{WEIGHT_HEADING};--ls-heading:{TRACK_HEADING}}}"
             f"html,body{{font-family:var(--font-text);font-weight:var(--fw-text)}}"
             f"strong,b,th{{font-weight:var(--fw-strong)}}h1,h2,h3,h4{{font-family:var(--font-display);font-weight:var(--fw-heading)}}h1,h2{{letter-spacing:var(--ls-heading)}}"
-            f"code,pre,kbd,samp{{font-family:var(--font-mono)}}")
+            f"code,pre,kbd,samp{{font-family:var(--font-mono)}}"
+            # thang tiêu đề MẶC ĐỊNH to → nhỏ (user 22/09/2026 "các cấp header phải thêm chuẩn từ to tới nhỏ"); :where = độ ưu tiên 0
+            # → trang tự đặt vẫn thắng, và luật heading-scale của cổng chạy thật bắt khi thứ tự sai
+            f":where(h1){{font-size:2.5rem;line-height:1.25}}:where(h2){{font-size:1.75rem;line-height:1.42;margin:40px 0 24px}}"
+            f":where(h3){{font-size:1.375rem;line-height:1.55;margin:32px 0 16px}}:where(h4){{font-size:1.125rem;line-height:1.5;margin:24px 0 12px}}"
+            f":where(p,ul,ol,blockquote){{margin:0 0 24px}}"
+            + chart_css())
 
 
 STYLE_ID = "ovs-font"
@@ -106,6 +156,17 @@ def _write_data(raw: dict) -> None:
     for w, r in sorted(raw.items()):
         b64 = base64.b64encode(r).decode()
         body.append(f"    {w}: (\n" + "".join(f'        "{b64[i:i+120]}"\n' for i in range(0, len(b64), 120)) + "    ),\n")
+    body.append("}\n")
+    cr = {w: chart_woff2(w).read_bytes() for w in CHART_WEIGHTS}
+    body.append("CHART_SHA256 = {\n" + "".join(f'    {w}: "{hashlib.sha256(r).hexdigest()}",\n' for w, r in sorted(cr.items())) + "}\nCHART_B64 = {\n")
+    for w, r in sorted(cr.items()):
+        b64 = base64.b64encode(r).decode()
+        body.append(f"    {w}: (\n" + "".join(f'        "{b64[i:i+120]}"\n' for i in range(0, len(b64), 120)) + "    ),\n")
+    dr = {w: display_woff2(w).read_bytes() for w in DISPLAY_WEIGHTS}
+    body.append("}\nDISPLAY_SHA256 = {\n" + "".join(f'    {w}: "{hashlib.sha256(r).hexdigest()}",\n' for w, r in sorted(dr.items())) + "}\nDISPLAY_B64 = {\n")
+    for w, r in sorted(dr.items()):
+        b64 = base64.b64encode(r).decode()
+        body.append(f"    {w}: (\n" + "".join(f'        "{b64[i:i+120]}"\n' for i in range(0, len(b64), 120)) + "    ),\n")
     DATA.write_text("".join(body) + "}\n", encoding="utf-8")
 
 
@@ -116,10 +177,22 @@ def check() -> int:
         ok = ok and raw[:4] == b"wOF2" and hashlib.sha256(raw).hexdigest() == m.WOFF2_SHA256[w]
         if woff2(w).exists():              # máy khách chỉ có .py → chỉ kiểm tự-nhất-quán; repo framework kiểm thêm khớp file gốc
             ok = ok and hashlib.sha256(woff2(w).read_bytes()).hexdigest() == m.WOFF2_SHA256[w]
+    ok = ok and set(getattr(m, "DISPLAY_B64", {})) == set(DISPLAY_WEIGHTS)
+    for w in DISPLAY_WEIGHTS if ok else ():
+        raw = base64.b64decode(m.DISPLAY_B64[w])
+        ok = ok and raw[:4] == b"wOF2" and hashlib.sha256(raw).hexdigest() == m.DISPLAY_SHA256[w]
+        if display_woff2(w).exists():
+            ok = ok and hashlib.sha256(display_woff2(w).read_bytes()).hexdigest() == m.DISPLAY_SHA256[w]
+    ok = ok and set(getattr(m, "CHART_B64", {})) == set(CHART_WEIGHTS)
+    for w in CHART_WEIGHTS if ok else ():
+        raw = base64.b64decode(m.CHART_B64[w])
+        ok = ok and raw[:4] == b"wOF2" and hashlib.sha256(raw).hexdigest() == m.CHART_SHA256[w]
+        if chart_woff2(w).exists():
+            ok = ok and hashlib.sha256(chart_woff2(w).read_bytes()).hexdigest() == m.CHART_SHA256[w]
     print("html_font: OK" if ok else "html_font: LỆCH — chạy html_font.py --sync (hoặc --rebuild)"); return 0 if ok else 1
 
 
-def rebuild(src_dir: str) -> int:
+def rebuild(src_dir: str, chart_src: str | None = None, display_src: str | None = None) -> int:
     from fontTools.ttLib import TTFont
     from fontTools import subset
     uni = (list(range(0x20, 0x7F)) + list(range(0xA0, 0x180)) + [0x1A0, 0x1A1, 0x1AF, 0x1B0] + list(range(0x300, 0x30A)) + [0x323]
@@ -131,6 +204,26 @@ def rebuild(src_dir: str) -> int:
         opt.notdef_outline = True; opt.flavor = "woff2"
         s = subset.Subsetter(opt); s.populate(unicodes=uni); s.subset(f); subset.save_font(f, str(woff2(w)), opt)
         print(f"→ {woff2(w)} ({woff2(w).stat().st_size/1024:.1f} KB)")
+    lx = Path(chart_src or Path.home() / "Library/Fonts/LexendDeca-VariableFont_wght.ttf")
+    from fontTools.varLib import instancer
+    for w in CHART_WEIGHTS:                # chart: Lexend Deca TĨNH tại 300 / 400 (cắt glyph trước, cố định trục sau)
+        f = TTFont(lx)
+        opt = subset.Options(); opt.layout_features = ["kern", "liga", "mark", "mkmk", "ccmp", "locl"]; opt.name_IDs = [1, 2, 3, 4, 6, 13, 14]
+        opt.notdef_outline = True
+        s = subset.Subsetter(opt); s.populate(unicodes=uni); s.subset(f)
+        tmp = chart_woff2(w).with_suffix(".tmp.ttf"); f.save(tmp)
+        v = instancer.instantiateVariableFont(TTFont(tmp), {"wght": w}); v.flavor = "woff2"; v.save(chart_woff2(w)); tmp.unlink()
+        print(f"→ {chart_woff2(w)} ({chart_woff2(w).stat().st_size/1024:.1f} KB)")
+    nr = Path(display_src or Path.home() / "Library/Fonts/Newsreader.ttf")
+    if nr.is_file():                       # TIÊU ĐỀ: Newsreader tĩnh tại wght 600 / opsz 24 (cắt glyph trước, cố định trục sau)
+        for w in DISPLAY_WEIGHTS:
+            f = TTFont(nr)
+            opt = subset.Options(); opt.layout_features = ["kern", "liga", "mark", "mkmk", "ccmp", "locl"]; opt.name_IDs = [1, 2, 3, 4, 6, 13, 14]
+            opt.notdef_outline = True
+            sb = subset.Subsetter(opt); sb.populate(unicodes=uni); sb.subset(f)
+            tmp = display_woff2(w).with_suffix(".tmp.ttf"); f.save(tmp)
+            v = instancer.instantiateVariableFont(TTFont(tmp), {"wght": w, "opsz": DISPLAY_OPSZ}); v.flavor = "woff2"; v.save(display_woff2(w)); tmp.unlink()
+            print(f"→ {display_woff2(w)} ({display_woff2(w).stat().st_size/1024:.1f} KB)")
     _write_data({w: woff2(w).read_bytes() for w in WEIGHTS}); print(f"→ {DATA}"); return 0
 
 
@@ -138,7 +231,7 @@ if __name__ == "__main__":
     a = sys.argv[1:]
     if "--rebuild" in a:
         rest = [x for x in a if not x.startswith("--")]
-        sys.exit(rebuild(rest[0] if rest else str(Path.home() / "Library/Fonts")))
+        sys.exit(rebuild(rest[0] if rest else str(Path.home() / "Library/Fonts"), rest[1] if len(rest) > 1 else None, rest[2] if len(rest) > 2 else None))
     if "--apply" in a:
         rc = 0
         for f in [Path(x) for x in a if not x.startswith("--")]:

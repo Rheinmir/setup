@@ -19,6 +19,9 @@
 # Nguồn file: ưu tiên bundle cạnh script; thiếu thì clone $HARNESS_REPO@$HARNESS_REF
 # (cả hai suy từ REPO_RAW nếu có — fork nào cũng cài được, xem khối 0).
 set -euo pipefail
+# Windows (Git Bash + Python native): stdout mặc định cp1252/cp437 → mọi print tiếng Việt/“→” crash UnicodeEncodeError
+# giữa chừng cài (GH#168, GH#169). Ép UTF-8 cho MỌI python con của installer; Linux/macOS vốn UTF-8 nên không đổi gì.
+export PYTHONUTF8=1 PYTHONIOENCODING=utf-8
 
 # ---------- Flag scan (tách --self-heal khỏi positional) ----------
 # --self-heal: sau audit, installer TỰ backfill nợ (Origin+index+OKF) trong 1 process
@@ -234,10 +237,12 @@ harness/scripts/dispatch-verify.py
   ensure_orca_graph
 
   SETTINGS="$HOME/.claude/settings.json"
-  [ -f "$SETTINGS" ] && cp "$SETTINGS" "$SETTINGS.bak.$(date +%s)" || echo '{}' > "$SETTINGS"
-  python3 - << 'PYEOF'
-import json, os
-path = os.path.expanduser("~/.claude/settings.json")
+  mkdir -p "$HOME/.claude"                                   # GH#169 C: máy mới chưa có ~/.claude → echo '{}' > … hỏng, python ném FileNotFoundError
+  { [ -f "$SETTINGS" ] && [ -s "$SETTINGS" ]; } && cp "$SETTINGS" "$SETTINGS.bak.$(date +%s)" || echo '{}' > "$SETTINGS"
+  python3 - "$SETTINGS" << 'PYEOF'
+import json, os, sys
+# đường dẫn từ argv, KHÔNG expanduser: Python native Windows lấy ~ = USERPROFILE, có thể khác $HOME của bash đang cài (GH#169)
+path = sys.argv[1]
 cur = json.load(open(path))
 HOOKS_DIR = '$HOME/.claude/harness/hooks'
 def cmd(script):
@@ -268,6 +273,8 @@ tpl = {
                      {"matcher": None, "script": "code_graph_keeper.py"}],
     "UserPromptSubmit": {"matcher": None, "script": "user_prompt_submit.py"},
 }
+if os.name == "nt":   # Windows: hook python in tiếng Việt ra stdout cp1252 → UnicodeEncodeError (GH#169) — Claude Code truyền `env` cho hook
+    cur.setdefault("env", {}).setdefault("PYTHONUTF8", "1")
 cur.setdefault("permissions", {}).setdefault("deny", [])
 # layout dot (.llmwiki/) là mặc định của dự án downstream — thiếu biến thể này thì
 # deny-glob không phủ gì cả (GH#111).
@@ -300,7 +307,7 @@ json.dump(cur, open(path, "w"), indent=2, ensure_ascii=False)
 print("[harness] GLOBAL: settings.json merged (backup .bak.*)")
 PYEOF
 
-  python3 -c "import json; json.load(open(\"$SETTINGS\"))" || { warn "settings.json hỏng — khôi phục từ backup!"; exit 1; }
+  python3 -c "import json,sys; json.load(open(sys.argv[1]))" "$SETTINGS" || { warn "settings.json hỏng — khôi phục từ backup!"; exit 1; }
 
   # OpenClaude dùng cùng hook protocol nhưng chỉ đọc settings scope riêng. Khi CLI có mặt,
   # đăng ký cùng harness global vào ~/.openclaude mà không đè hook user (đặc biệt Orca).
@@ -491,7 +498,7 @@ PYEOF
       [ -n "$backup" ] && cp "$backup" "$settings" 2>/dev/null || true
       return 0
     fi
-    python3 -c "import json; json.load(open(\"$settings\"))" 2>/dev/null || {
+    python3 -c "import json,sys; json.load(open(sys.argv[1]))" "$settings" 2>/dev/null || {
       warn "OpenClaude settings.json hỏng sau merge — khôi phục backup"
       [ -n "$backup" ] && cp "$backup" "$settings" 2>/dev/null || true
     }

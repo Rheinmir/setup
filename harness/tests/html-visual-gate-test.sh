@@ -42,15 +42,56 @@ expect overlap-svg "$(mk ovs '' '<div class="card"><svg width="300" height="80" 
 expect hscroll "$(mk hs '' '<div style="width:1200px;height:10px"></div>')" "horizontal-scroll:.*320px" WARN
 expect hscroll-ok "$(mk hso '' '<div style="max-width:100%;width:1200px;height:10px"></div>')" OK
 expect clickable-wrap "$(mk cw 'a{color:inherit}' '<nav style="width:80px"><a href="#">Bắt đầu dùng miễn phí ngay</a></nav>')" "clickable-wrap:" WARN
-expect clickable-wrap-ok "$(mk cwo 'a{color:inherit}' '<nav style="width:80px"><a href="#" style="white-space:nowrap">Dùng thử</a></nav><p style="width:80px">Đoạn văn có <a href="#">liên kết dài bẻ dòng trong câu</a> thì được tha</p>')" OK
+expect clickable-wrap-ok "$(mk cwo 'a{color:inherit}' '<nav style="width:80px"><a href="#" style="white-space:nowrap;display:inline-block;padding:4px 0">Dùng thử</a></nav><p style="width:80px">Đoạn văn có <a href="#">liên kết dài bẻ dòng trong câu</a> thì được tha</p>')" OK
 expect italic-display "$(mk it '' '<p class="hero__title" style="font-size:40px;font-style:italic">Tiêu đề</p>')" "italic-display:"
 expect italic-display-ok "$(mk ito '' '<p class="hero__title" style="font-size:40px;font-weight:700">Tiêu đề</p><p>Chữ thân <em>nghiêng</em> thì được</p>')" OK
 expect upper-tight "$(mk ut '' '<h2 style="font-size:48px;line-height:.94;text-transform:uppercase">HAI DÒNG, KHÁC NHAU</h2>')" "uppercase-tight-leading:"
 expect upper-tight-ok "$(mk uto '' '<h2 style="font-size:48px;line-height:1.05;text-transform:uppercase">HAI DÒNG, KHÁC NHAU</h2>')" OK
+# PLAN 220926 t4 — nhịp chữ & khoảng cách (chuẩn fdk/wiki/sources/220926-spacing-standards.md)
+L2="Đoạn văn đủ dài để chắc chắn xuống nhiều dòng khi khối chứa hẹp, dùng để đo nhịp chữ, độ dài dòng và khoảng cách giữa các dòng của nội dung thân bài trong trang."
+expect line-height-body "$(mk lhb '.tl p{line-height:1.3}' "<div class=\"card tl\" style=\"max-width:320px\"><p>$L2</p></div>")" "line-height-body:"
+expect line-height-body-ok "$(mk lhbo '.tl p{line-height:1.6}.one{line-height:1.1}' "<div class=\"card tl\" style=\"max-width:320px\"><p>$L2</p><p class=\"one\">Một dòng thì được</p></div>")" OK
+expect measure-too-wide "$(mk mw '' "<p>$L2 $L2 $L2 $L2</p>")" "measure-too-wide:" WARN
+expect measure-ok "$(mk mwo '' "<p style=\"max-width:34em\">$L2 $L2 $L2 $L2</p>")" OK
+expect heading-proximity "$(mk hp '.hp h2{margin:8px 0 24px}' '<div class="card hp"><p>Đoạn trước.</p><h2>Tiêu đề</h2><p>Đoạn sau.</p></div>')" "heading-proximity:" WARN
+expect heading-proximity-ok "$(mk hpo '.hp h2{margin:40px 0 12px}' '<div class="card hp"><p>Đoạn trước.</p><h2>Tiêu đề</h2><p>Đoạn sau.</p></div>')" OK
+NAV='<nav><div class="grp">Nhóm</div><a href="#">Mục một</a><a href="#">Mục hai</a></nav>'
+expect hierarchy-flat "$(mk hf 'a{color:inherit;display:block;padding:8px 0}' "$NAV")" "hierarchy-flat:"
+expect hierarchy-flat-ok "$(mk hfo 'a{color:inherit;display:block;padding:8px 0}.grp{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}' "$NAV")" OK
+# ca user 22/09 (sidebar kanban cũ): nhãn nhóm khác mục ở 2–3 thuộc tính nhưng CHÌM hơn (xám nhạt, nhỏ, không đậm) → vẫn phải FAIL
+expect hierarchy-flat-dim "$(mk hfd 'a{color:#111;display:block;padding:8px 0;font-size:12px}.grp{font-size:10.5px;color:#8a8f99;text-transform:uppercase;letter-spacing:.06em}' "$NAV")" "CHÌM hơn mục"
+expect tap-target "$(mk tt 'a{color:inherit}' '<nav><a href="#" style="font-size:12px">Nhỏ</a></nav>')" "tap-target:" WARN
+expect tap-target-ok "$(mk tto 'a{color:inherit}' '<nav><a href="#" style="display:inline-block;padding:8px 12px">Đủ lớn</a></nav><p>Câu có <a href="#">liên kết</a> nội dòng.</p><ul><li><a href="#">mục</a></li></ul>')" OK
 # toggle: bỏ hẳn nút / nút bấm không đổi gì
 NOTOGGLE="${BASE/<button class=\"theme-switch\" aria-label=\"Đổi giao diện\">Giao diện<\/button>/}"; NOTOGGLE="${NOTOGGLE/document.querySelector(\".theme-switch\").addEventListener/0&&document.addEventListener}"
 h="${NOTOGGLE/EXTRA_CSS/}"; printf '%s' "${h/BODY/<div class=\"card\"><p>Trang không có nút đổi giao diện</p></div>}" > "$T/notoggle.html"; expect toggle-missing "$T/notoggle.html" "toggle: MISSING"
 DEAD="${BASE/d.setAttribute(\"data-theme\",n);try/try}"; h="${DEAD/EXTRA_CSS/}"; printf '%s' "${h/BODY/<div class=\"card\"><p>Nút có nhưng bấm không đổi gì</p></div>}" > "$T/dead.html"; expect toggle-dead "$T/dead.html" "toggle: NO-EFFECT"
 expect glass    "$(mk glass '.g{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}[data-theme="dark"] .g{backdrop-filter:none;-webkit-backdrop-filter:none}' '<div class="card g"><p>Kính chỉ còn ở chế độ sáng</p></div>')" "glass:"
+
+# ── PLAN 220926 (user 22/09): chữ hoa đầu · thang tiêu đề to → nhỏ · tên trang to hơn nav/tab · khoảng nghỉ cho mắt
+expect sentence-case "$(mk sc 'h2,h3{margin:32px 0 8px}' '<h2>bảng dispatch</h2><p>Nội dung.</p>')" "sentence-case:"
+expect sentence-case-ok "$(mk sco 'h2,h3{margin:32px 0 8px}' '<h2>Bảng dispatch</h2><p>Mở đầu.</p><h3>orca-graph · t1</h3><p>Một.</p><h3><code>scope</code> phải dính</h3><p>Hai.</p><h3 data-case="keep">herdr</h3><p>Nội dung.</p>')" OK
+expect heading-scale "$(mk hs 'h2{font-size:14px;margin:32px 0 8px}h3{font-size:18px;margin:32px 0 8px}' '<h2>Mục lớn</h2><p>Nội dung ngắn.</p><h3>Mục con</h3><p>Nội dung.</p>')" "heading-scale:"
+expect heading-scale-ok "$(mk hso 'h2{font-size:24px;margin:32px 0 8px}h3{font-size:18px;margin:32px 0 8px}' '<h2>Mục lớn</h2><p>Nội dung ngắn.</p><h3>Mục con</h3><p>Nội dung.</p>')" OK
+expect title-scale "$(mk ts 'nav a{display:block;font-size:14px;padding:8px;color:inherit}nav .brand{font-size:14px;font-weight:700}' '<nav><div class="brand">Tên trang</div><a href="#a">Một</a><a href="#b">Hai</a></nav><p>Nội dung.</p>')" "title-scale:"
+expect title-scale-ok "$(mk tso 'nav a{display:block;font-size:13px;padding:8px;color:inherit}nav .brand{font-size:18px;font-weight:700}' '<nav><div class="brand">Tên trang</div><a href="#a">Một</a><a href="#b">Hai</a></nav><p>Nội dung.</p>')" OK
+DENSE=$(for i in $(seq 1 40); do printf '<div class="card" style="margin:0 0 8px;border-radius:0">Khối số %s dày đặc chữ chữ chữ chữ chữ chữ chữ chữ chữ chữ chữ chữ chữ chữ chữ chữ chữ chữ chữ chữ chữ chữ chữ</div>' "$i"; done)
+expect eye-rest "$(mk er '' "$DENSE")" "eye-rest:" WARN
+expect eye-rest-ok "$(mk ero 'h2,h3{margin:32px 0 8px}' '<h2>Tiêu đề</h2><p>Một đoạn ngắn, nhiều khoảng trắng quanh nó.</p>')" OK
+
+# ── kanban-uniform (user 22/09): mọi thẻ cùng size cố định + cùng style
+KB='<div class="board"><div class="lane"><h3>Cần làm</h3><div class="kc">Thẻ ngắn</div><div class="kc">Thẻ dài<br>dòng hai<br>dòng ba</div></div><div class="lane"><h3>Xong</h3><div class="kc">Một</div></div></div>'
+KBC='.board{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.kc{padding:8px;margin:0 0 8px;border:1px solid #ccc;border-radius:8px}'
+expect kanban-uniform "$(mk kb "$KBC" "$KB")" "kanban-uniform:"
+expect kanban-uniform-style "$(mk kbs "$KBC.kc{height:80px;overflow:hidden}.lane:last-child .kc{border-radius:0}" "$KB")" "style khác nhau"
+expect kanban-uniform-ok "$(mk kbo "$KBC.kc{height:80px;overflow:hidden}" "$KB")" OK
+
+# ── line-over-text (user 22/09): vạch tiến độ absolute trong khung cuộn đè lên mục ở mép dưới
+LOT='<div class="sb"><a href="#x">Mục một</a><a href="#x">Mục hai</a><div class="bar"></div></div>'
+expect line-over-text "$(mk lot '.sb{position:relative;width:240px}.sb a{display:block;padding:8px;color:inherit}.bar{position:absolute;left:0;right:0;bottom:12px;height:3px;background:#0a84ff}' "$LOT")" "line-over-text:"
+expect line-over-text-ok "$(mk loto '.sb{position:relative;width:240px}.sb a{display:block;padding:8px;color:inherit}.bar{position:fixed;left:0;right:0;top:0;height:3px;background:#0a84ff}' "$LOT")" OK
+
+# ── design-showcase (PLAN 220926-design-showcase t7): trang MẪU CHUẨN phải sạch tuyệt đối — 0 FAIL, 0 WARN
+expect design-showcase "$ROOT/skills/hallmark/references/design-showcase.html" OK
 
 echo ""; echo "html-visual-gate-test: $PASS PASS · $FAIL FAIL · $SKIP SKIP"; [ "$FAIL" = 0 ]

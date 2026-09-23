@@ -14,6 +14,9 @@
 #
 # Idempotent. CI + pre-commit luôn cài (sàn đảm bảo); adapter chỉ cài cho vendor có mặt.
 set -euo pipefail
+# Windows (Git Bash + Python native): stdout mặc định cp1252/cp437 → mọi print tiếng Việt/“→” crash UnicodeEncodeError
+# giữa chừng cài (GH#168, GH#169). Ép UTF-8 cho MỌI python con của installer; Linux/macOS vốn UTF-8 nên không đổi gì.
+export PYTHONUTF8=1 PYTHONIOENCODING=utf-8
 
 SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"   # nguồn = poc-vendor-neutral/
 ROOT="."; VENDORS=""; VERIFY=1; CLEAN=0; WITH_SKILLS=0; WITH_WIKI=0

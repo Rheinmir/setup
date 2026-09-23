@@ -1,0 +1,281 @@
+{
+ "id": "220926-spacing-system",
+ "plan": "llmwiki/wiki/sources/draft/220926-spacing-system-PLAN.md",
+ "built": "2026-09-22T13:29:10+0700",
+ "nodes": [
+  {
+   "id": "t1",
+   "title": "bộ đo khoảng cách và số đỏ theo từng luật",
+   "files": [],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "`spacing-survey.py [--all] [--json]` — theo trang: số giá trị khoảng cách khác nhau, số ngoài thang, line-height; rc 2 khi còn ngoài thang"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "research",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/spacing-survey.py --all >/dev/null; [ $? -ne 1 ]",
+   "qc": "",
+   "spec_hash": "ee8555e0e9ba3d67",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "ee8555e0e9ba3d67"
+  },
+  {
+   "id": "t2",
+   "title": "token khoảng cách + nhịp chữ trong lớp nền",
+   "files": [],
+   "consumes": [
+    "thang của Task 1"
+   ],
+   "produces": [
+    "token `--sp-1…--sp-12` theo thang, `--lh-body:1.6`, `--lh-heading:1.2`, `--measure:70ch`; mặc định `p,li,dd{line-height:var(--lh-body)}` và `h1,h2,h3{line-height:var(--lh-heading)}` ở độ ưu tiên thấp (`:where`) để trang tự đặt vẫn thắng"
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 -m pytest -q harness/tests/test_html_base.py",
+   "qc": "",
+   "dep_reasons": {
+    "t1": "contract"
+   },
+   "spec_hash": "60ca9c8da969d478",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "60ca9c8da969d478"
+  },
+  {
+   "id": "t3",
+   "title": "tự bẻ khoảng cách về thang trong html-slop-fix",
+   "files": [],
+   "consumes": [
+    "thang của Task 1"
+   ],
+   "produces": [
+    "phép vá mới: padding/margin/gap/inset/top/…/row-gap/column-gap có `px`/`rem` ngoài thang → bậc gần nhất; line-height < 1,5 trên luật chọn chữ nội dung (`p`, `li`, `body`, `.desc`…) → `var(--lh-body)`; không đụng data-URI, JS, srcdoc"
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 -m pytest -q harness/tests/test_html_slop_fix_spacing.py",
+   "qc": "",
+   "dep_reasons": {
+    "t1": "contract"
+   },
+   "spec_hash": "62ef18a5b4ae7c18",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "62ef18a5b4ae7c18"
+  },
+  {
+   "id": "t4",
+   "title": "luật chống slop khoảng cách ở hai cổng",
+   "files": [],
+   "consumes": [
+    "thang Task 1"
+   ],
+   "produces": [
+    "tĩnh `spacing-off-scale`; chạy thật `line-height-body` (đoạn ≥ 2 dòng, lh/fs < 1,5 → FAIL), `measure-too-wide` (> 80ch), `heading-proximity` (khoảng trên < 1,5 × khoảng dưới), `hierarchy-flat` (nhãn nhóm/tên trang trong nav khác mục cùng cấp < 2 trong 4: cỡ · đậm · màu · hoa-thường), `tap-target` (< 24px); mỗi luật fixture XẤU cắn, TỐT sạch"
+   ],
+   "deps": [
+    "t1",
+    "t3"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "python3 -m pytest -q harness/tests/test_frontend_antipattern_slop.py && bash harness/tests/html-visual-gate-test.sh",
+   "qc": "",
+   "dep_reasons": {
+    "t1": "contract",
+    "t3": "effect_order"
+   },
+   "spec_hash": "e44eacb31ee71906",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "e44eacb31ee71906"
+  },
+  {
+   "id": "t5",
+   "title": "phân tầng nhãn sidebar (brand · nhóm · mục)",
+   "files": [],
+   "consumes": [
+    "luật `hierarchy-flat` của Task 4"
+   ],
+   "produces": [
+    "brand = cỡ lớn hơn + đậm + màu nhấn; nhãn nhóm = chữ hoa nhỏ giãn chữ, màu chữ chính đậm, khoảng trên ≥ 1,5 lần khoảng dưới; mục = chữ thường màu phụ; cùng quy ước cho sidebar docs-shell"
+   ],
+   "deps": [
+    "t4"
+   ],
+   "deps_conf": "chắc",
+   "kind": "design",
+   "mode": "afk",
+   "verify": "python3 -m pytest -q harness/tests/test_control_room.py",
+   "qc": "",
+   "dep_reasons": {
+    "t4": "acceptance"
+   },
+   "spec_hash": "e6b074ab1e2d138c",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "e6b074ab1e2d138c"
+  },
+  {
+   "id": "t6",
+   "title": "khuôn skill theo thang + token",
+   "files": [],
+   "consumes": [
+    "token Task 2"
+   ],
+   "produces": [
+    "mục \"Hệ khoảng cách\" trong SKILL (thang, line-height, measure, proximity, nguồn); CSS mẫu dùng token; `html_shell.py --sync` lại"
+   ],
+   "deps": [
+    "t2",
+    "t3"
+   ],
+   "deps_conf": "chắc",
+   "kind": "docs",
+   "mode": "afk",
+   "verify": "python3 -m pytest -q harness/tests/test_html_shell.py",
+   "qc": "",
+   "dep_reasons": {
+    "t2": "contract",
+    "t3": "contract"
+   },
+   "spec_hash": "a61ae4fa3e15c4d3",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "a61ae4fa3e15c4d3"
+  },
+  {
+   "id": "t7",
+   "title": "sinh lại mọi trang, cổng xanh, ảnh trước/sau",
+   "files": [],
+   "consumes": [
+    "mọi task trên"
+   ],
+   "produces": [
+    "trang generator sinh lại + trang tay qua `--apply`; `spacing-survey --all` về 0 ngoài thang trên trang generator; trang ảnh trước/sau"
+   ],
+   "deps": [
+    "t5",
+    "t6"
+   ],
+   "deps_conf": "chắc",
+   "kind": "test",
+   "mode": "afk",
+   "verify": "python3 fdk/tools/frontend-antipattern.py --all >/dev/null; [ $? -ne 1 ] && test -s llmwiki/html/220926-spacing-before-after.html",
+   "qc": "",
+   "dep_reasons": {
+    "t5": "acceptance",
+    "t6": "acceptance"
+   },
+   "spec_hash": "21083f0e0d334bc4",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "21083f0e0d334bc4"
+  },
+  {
+   "id": "t8",
+   "title": "review độc lập + medic --ci",
+   "files": [],
+   "consumes": [
+    "toàn bộ diff"
+   ],
+   "produces": [
+    "finding theo mức chặn / nên sửa / ghi nhận"
+   ],
+   "deps": [
+    "t7"
+   ],
+   "deps_conf": "chắc",
+   "kind": "review",
+   "mode": "afk",
+   "verify": "test -s llmwiki/wiki/sources/draft/220926-spacing-system-review.md && python3 fdk/tools/medic.py --ci",
+   "qc": "",
+   "dep_reasons": {
+    "t7": "acceptance"
+   },
+   "spec_hash": "7009da0d3772e946",
+   "state": "done",
+   "gen": 1,
+   "rev": 4,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "7009da0d3772e946"
+  }
+ ],
+ "layers": [
+  [
+   "t1"
+  ],
+  [
+   "t2",
+   "t3"
+  ],
+  [
+   "t4",
+   "t6"
+  ],
+  [
+   "t5"
+  ],
+  [
+   "t7"
+  ],
+  [
+   "t8"
+  ]
+ ],
+ "parent": null,
+ "depth": 0,
+ "plan_version": 1,
+ "superseded": [],
+ "max_parallel": 4,
+ "conflicts": [],
+ "resource_conflicts": [],
+ "links": [],
+ "control": "active",
+ "schema_version": 1,
+ "checksum": "ed7fb5f4f6492ef6"
+}

@@ -49,7 +49,8 @@ def test_toggle_goes_before_the_LAST_body_close_not_one_inside_a_script():
 
 def test_only_eyebrow_may_be_uppercase_and_cards_have_no_side_stripe():
     css = hb.base_css(family_dark=True)
-    assert css.count("text-transform:uppercase") == 1 and ".ovs-eyebrow{" in css and "letter-spacing" in css.split(".ovs-eyebrow{")[1].split("}")[0]
+    full = css.replace("::first-letter{text-transform:uppercase}", "")      # chữ HOA ĐẦU (sentence-case) ≠ viết HOA toàn bộ
+    assert full.count("text-transform:uppercase") == 1 and ".ovs-eyebrow{" in css and "letter-spacing" in css.split(".ovs-eyebrow{")[1].split("}")[0]
     assert "border-left" not in css and "inset" not in css.split(".ovs-theme i")[0]
 
 
@@ -75,3 +76,10 @@ def test_apply_refreshes_a_stale_base_block_in_templates():
     out = hb.apply(stale)
     assert "@media (prefers-reduced-motion: reduce)" in out and out.count(f'id="{hb.STYLE_ID}"') == 1
     assert hb.apply(out) == out
+
+
+def test_base_css_carries_spacing_scale_and_reading_rhythm_tokens():
+    """PLAN 220926-spacing-system: một thang khoảng cách + line-height chữ nội dung 1,6 + độ dài dòng 34em (~68 ký tự thật; 70ch = ~89 vì "0" rộng hơn chữ trung bình), độ ưu tiên 0."""
+    css = hb.base_css(family_dark=True)
+    assert all(f"--sp-{i}:" in css for i in range(1, 12)) and "--lh-body:1.75" in css and "--measure:35em" in css
+    assert ":where(p,li,dd,blockquote){line-height:var(--lh-body)}" in css
