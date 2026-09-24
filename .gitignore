@@ -82,3 +82,18 @@ llmwiki/handover/
 # orca-graph: lockfile runtime, không track
 llmwiki/graph/*.locks/
 llmwiki/graph/.admission.lock*
+
+# Dự án ngoài harness (nightshift, Reprise Intent Engine): tài liệu làm việc giữ ở máy, không track.
+# Code của chúng nằm ở repo riêng (Rheinmir/nightshift).
+llmwiki/graph/230926-nightshift-*
+llmwiki/graph/230926-rie-*
+llmwiki/graph/240926-intent-manifest-ui-*
+llmwiki/html/240926-intent-manifest-ui-*
+llmwiki/html/*nightshift*
+llmwiki/html/230926-overnight-loop-prd*
+llmwiki/raw/prd/Reprise-Intent-Engine-*
+llmwiki/wiki/sources/230926-reprise-intent-engine-prd.md
+llmwiki/wiki/sources/draft/230926-nightshift-*
+llmwiki/wiki/sources/draft/230926-overnight-loop-PRD.md
+llmwiki/wiki/sources/draft/230926-rie-*
+llmwiki/wiki/sources/draft/240926-intent-manifest-ui-*
