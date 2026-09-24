@@ -547,13 +547,13 @@ def build_r21(base):
     tp = base / "t.jsonl"
     _w(tp, json.dumps({"type": "user", "timestamp": ts, "message": {"content": "x"}}))
     names = {pathlib_name(f) for f in hl.session_touched_files(str(r), str(tp))}
-    # Từ 200926: link CHỈ cho trang người-đọc trong wiki (trần 15); file khác gom nhóm, KHÔNG được có link.
+    # Từ 200926: link CHỈ cho trang người-đọc trong wiki (trần 10 từ 24/09); file khác gom nhóm, KHÔNG được có link.
     capped = hl.touched_message(["/x/llmwiki/wiki/sources/s%d.md" % i for i in range(45)]).count("file://")
     other = hl.touched_message(["/x/harness/scripts/e%d.py" % i for i in range(5)])
     return _result("side-effect", "hooks",
                    [("new-file:listed", "1" if "new.py" in names else "0", "1"),
                     ("old-file:silent", "1" if "old.txt" not in names else "0", "1"),
-                    ("reader-cap:15", str(capped), "15"),
+                    ("reader-cap:10", str(capped), "10"),
                     ("servers:clickable", "1" if "http://localhost:3000/  ⇄  https://a.vn" in hl.servers_message([{"url": "http://localhost:3000/", "what": "x", "public": ["https://a.vn"]}]) else "0", "1"),
                     ("non-reader:grouped-no-link", "1" if "file://" not in other and "code / script: 5" in other else "0", "1")])
 
