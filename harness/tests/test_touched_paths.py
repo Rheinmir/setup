@@ -61,7 +61,7 @@ def test_cap_applies_to_reader_pages(tmp_path):
     for i in range(20):
         p = tmp_path / f"llmwiki/wiki/sources/s{i}.md"; p.parent.mkdir(parents=True, exist_ok=True); p.write_text(f"# S{i}\n"); pages.append(str(p))
     msg = hooklib.touched_message(pages)
-    assert msg.count("file://") == 15 and "+5 trang nữa" in msg
+    assert msg.count("file://") == 10 and "+10 trang nữa" in msg
     assert hooklib.touched_message([]) == ""
 
 

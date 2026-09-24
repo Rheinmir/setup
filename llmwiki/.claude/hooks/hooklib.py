@@ -229,7 +229,7 @@ def orca_graph_running(root: str):
 
 # R21 touched-paths (feedback 190926 "path đâu mà coi?"): cuối mỗi lượt hook Stop in cho USER
 # đường dẫn tuyệt đối các file phiên này tạo/sửa — người xem mở được ngay, không phải hỏi lại.
-TOUCHED_CAP = int(os.environ.get("OVERSTACK_TOUCHED_CAP", "15") or "15")
+TOUCHED_CAP = int(os.environ.get("OVERSTACK_TOUCHED_CAP", "10") or "10")
 _TOUCHED_NOISE = ("harness/metrics/", ".claude/audit/", "/.locks/", ".events.jsonl")  # bare-path: ok — mẫu substring lọc nhiễu, khớp cả harness/ lẫn .harness/ downstream
 
 
