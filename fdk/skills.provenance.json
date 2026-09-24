@@ -421,7 +421,7 @@
     },
     "hallmark": {
       "files": {
-        "SKILL.md": "133b0fec7af8149bb4c1e8f8004be85e8c11cb788bc00c7f01e8d9410a3be03b",
+        "SKILL.md": "676b285a874dd8acb44af6183e57b222ed34be4bb0e03785c5d95e6b666d93f9",
         "references/anti-patterns.md": "1c66f41d68ac32303d52ea49a1d475b212162ff7b38884a0b31774958b4561df",
         "references/assets.md": "60929b3dc2258b69caf3012d99d174e1ad73da9645263db81a9b271cd6fd7d61",
         "references/color.md": "31c470d16ceb17ccce290cbdd00b9e9a88f2094df8eaaefb67c86ec1e1cdb876",
@@ -940,10 +940,10 @@
     },
     "qc-uiux": {
       "files": {
-        "SKILL.md": "102f6460f7d571ea6073b96406b6d462a90a47c9ada408265b35b3539e330ebe",
+        "SKILL.md": "ca23d7ee447a6acd65c6592fc18d0966956cc665b9b4d4bc4dbd977e30cad88b",
         "references/list-control-checklist.md": "68046d11190060a99187ded96b30aa39ef9543e3446a501d7ee50648626a3110"
       },
-      "recorded": "2026-09-23",
+      "recorded": "2026-09-24",
       "source": "local-authored"
     },
     "query": {
