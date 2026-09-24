@@ -4660,3 +4660,1088 @@ cc4f999ad |
 - Graph 1: 13/13 done. Graph 2: 8/11 done; mỗi node qua `set done` chạy lại lệnh Verify thật.
 - Còn HITL: t1 = N14 (adapter provider thật: cần user chọn provider/credential, và senior review SDK); t10 = N23 và t11 = N24 (cần host Linux/VM để chạy systemd, rootless sandbox, 3 đêm canary). Code của N23/N24 (`deploy/nightshift.service`, `scripts/canary.sh`, runbook, UAT) đã viết sẵn; `canary.sh --check` PASS; phần `--run` chờ VM.
 - Sandbox live (AT19) đã PASS trên Docker Desktop khi bật cờ `NIGHTSHIFT_SANDBOX_LIVE=1 NIGHTSHIFT_SANDBOX_ROOTLESS=0`; rootless thật vẫn phải chứng minh trên VM (G2).
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=11 · human=['harness/tests/test_design_showcase.py', 'fdk/tools/html_shell.py', 'h |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['harness/metrics/guardrails/failure-spec-violation.md', 'llmwiki/wiki/s |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=9 · human=['llmwiki/wiki/index.md', 'skills/hallmark/SKILL.md', 'fdk/wiki/sources/ |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/docs-shell-survey.py', 'llmwiki/wiki/sources/230926-reprise- |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/graph/220926-docs-shell-kit.graph.json', 'harness/tests/html-v |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=11 · human=['harness/tests/test_design_showcase.py', 'fdk/tools/html_shell.py', 'h |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/graph/220926-docs-shell-kit.graph.json', 'harness/tests/html-v |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/docs-shell-survey.py', 'llmwiki/wiki/sources/230926-reprise- |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=9 · human=['llmwiki/wiki/index.md', 'skills/hallmark/SKILL.md', 'fdk/wiki/sources/ |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=12 · human=['fdk/tools/build-wiki-graph.py', 'llmwiki/raw/validate-data.md', 'llmw |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['harness/metrics/guardrails/failure-spec-violation.md', 'llmwiki/wiki/s |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['fdk/tools/spacing-survey.py', 'harness/metrics/.stop-debounce.json', ' |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['llmwiki/raw/prd/Reprise-Graph-Engine-Full-Cycle-PRD (1).md', 'llmwiki/ |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-rie-m1-clarify-core.graph.json', 'llmwiki/wiki/so |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/draft/230926-rie-m1-clar |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/metrics/.stop-debounce.json', 'llmwiki/graph/230926-rie-m2-lif |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=961 |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=ead4876f3cafe |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=410 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=56676d0d4ef88 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=c86 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=d38b55af98ea6 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=08a916405a303 |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=01c |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=b2c62d195eb00 |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=de4 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=11 · human=['harness/tests/test_design_showcase.py', 'fdk/tools/html_shell.py', 'h |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['harness/metrics/guardrails/failure-spec-violation.md', 'llmwiki/wiki/s |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=9 · human=['llmwiki/wiki/index.md', 'skills/hallmark/SKILL.md', 'fdk/wiki/sources/ |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/docs-shell-survey.py', 'llmwiki/wiki/sources/230926-reprise- |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/graph/220926-docs-shell-kit.graph.json', 'harness/tests/html-v |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=11 · human=['harness/tests/test_design_showcase.py', 'fdk/tools/html_shell.py', 'h |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/graph/220926-docs-shell-kit.graph.json', 'harness/tests/html-v |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/docs-shell-survey.py', 'llmwiki/wiki/sources/230926-reprise- |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=9 · human=['llmwiki/wiki/index.md', 'skills/hallmark/SKILL.md', 'fdk/wiki/sources/ |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=12 · human=['fdk/tools/build-wiki-graph.py', 'llmwiki/raw/validate-data.md', 'llmw |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['harness/metrics/guardrails/failure-spec-violation.md', 'llmwiki/wiki/s |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['fdk/tools/spacing-survey.py', 'harness/metrics/.stop-debounce.json', ' |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['llmwiki/raw/prd/Reprise-Graph-Engine-Full-Cycle-PRD (1).md', 'llmwiki/ |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-rie-m1-clarify-core.graph.json', 'llmwiki/wiki/so |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/draft/230926-rie-m1-clar |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/metrics/.stop-debounce.json', 'llmwiki/graph/230926-rie-m2-lif |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=961 |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=ead4876f3cafe |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=410 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=56676d0d4ef88 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=c86 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=d38b55af98ea6 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=08a916405a303 |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=01c |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=b2c62d195eb00 |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=de4 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=11 · human=['harness/tests/test_design_showcase.py', 'fdk/tools/html_shell.py', 'h |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['harness/metrics/guardrails/failure-spec-violation.md', 'llmwiki/wiki/s |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=9 · human=['llmwiki/wiki/index.md', 'skills/hallmark/SKILL.md', 'fdk/wiki/sources/ |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/docs-shell-survey.py', 'llmwiki/wiki/sources/230926-reprise- |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/graph/220926-docs-shell-kit.graph.json', 'harness/tests/html-v |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=11 · human=['harness/tests/test_design_showcase.py', 'fdk/tools/html_shell.py', 'h |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/graph/220926-docs-shell-kit.graph.json', 'harness/tests/html-v |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/docs-shell-survey.py', 'llmwiki/wiki/sources/230926-reprise- |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=9 · human=['llmwiki/wiki/index.md', 'skills/hallmark/SKILL.md', 'fdk/wiki/sources/ |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=12 · human=['fdk/tools/build-wiki-graph.py', 'llmwiki/raw/validate-data.md', 'llmw |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['harness/metrics/guardrails/failure-spec-violation.md', 'llmwiki/wiki/s |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['fdk/tools/spacing-survey.py', 'harness/metrics/.stop-debounce.json', ' |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['llmwiki/raw/prd/Reprise-Graph-Engine-Full-Cycle-PRD (1).md', 'llmwiki/ |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-rie-m1-clarify-core.graph.json', 'llmwiki/wiki/so |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/draft/230926-rie-m1-clar |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/metrics/.stop-debounce.json', 'llmwiki/graph/230926-rie-m2-lif |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=961 |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=ead4876f3cafe |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=410 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=56676d0d4ef88 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=c86 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=d38b55af98ea6 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=08a916405a303 |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=01c |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=b2c62d195eb00 |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=de4 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=11 · human=['harness/tests/test_design_showcase.py', 'fdk/tools/html_shell.py', 'h |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['harness/metrics/guardrails/failure-spec-violation.md', 'llmwiki/wiki/s |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=9 · human=['llmwiki/wiki/index.md', 'skills/hallmark/SKILL.md', 'fdk/wiki/sources/ |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/docs-shell-survey.py', 'llmwiki/wiki/sources/230926-reprise- |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/graph/220926-docs-shell-kit.graph.json', 'harness/tests/html-v |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=11 · human=['harness/tests/test_design_showcase.py', 'fdk/tools/html_shell.py', 'h |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/graph/220926-docs-shell-kit.graph.json', 'harness/tests/html-v |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/docs-shell-survey.py', 'llmwiki/wiki/sources/230926-reprise- |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=9 · human=['llmwiki/wiki/index.md', 'skills/hallmark/SKILL.md', 'fdk/wiki/sources/ |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=12 · human=['fdk/tools/build-wiki-graph.py', 'llmwiki/raw/validate-data.md', 'llmw |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['harness/metrics/guardrails/failure-spec-violation.md', 'llmwiki/wiki/s |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['fdk/tools/spacing-survey.py', 'harness/metrics/.stop-debounce.json', ' |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['llmwiki/raw/prd/Reprise-Graph-Engine-Full-Cycle-PRD (1).md', 'llmwiki/ |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-rie-m1-clarify-core.graph.json', 'llmwiki/wiki/so |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/draft/230926-rie-m1-clar |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/metrics/.stop-debounce.json', 'llmwiki/graph/230926-rie-m2-lif |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=961 |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=ead4876f3cafe |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=410 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=56676d0d4ef88 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=c86 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=d38b55af98ea6 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=08a916405a303 |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=01c |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=b2c62d195eb00 |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=de4 |
+
+<!-- log:auto:end -->
+
+## 2026-09-24 — propose — 240926-intent-manifest-ui-nightshift
+- SPEC + trang companion `llmwiki/html/240926-intent-manifest-ui-seq.html` (8 sơ đồ archify, R7 PASS, cổng tĩnh + cổng chạy thật PASS). Quyết định user: mở từ điện thoại; UI tự chạy start sau màn tóm tắt hiệu ứng. Chờ duyệt → /plan.
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/docs-shell-survey.py', 'llmwiki/wiki/sources/230926-reprise- |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/graph/220926-docs-shell-kit.graph.json', 'harness/tests/html-v |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=11 · human=['harness/tests/test_design_showcase.py', 'fdk/tools/html_shell.py', 'h |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/graph/220926-docs-shell-kit.graph.json', 'harness/tests/html-v |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/docs-shell-survey.py', 'llmwiki/wiki/sources/230926-reprise- |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=9 · human=['llmwiki/wiki/index.md', 'skills/hallmark/SKILL.md', 'fdk/wiki/sources/ |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=12 · human=['fdk/tools/build-wiki-graph.py', 'llmwiki/raw/validate-data.md', 'llmw |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['harness/metrics/guardrails/failure-spec-violation.md', 'llmwiki/wiki/s |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['fdk/tools/spacing-survey.py', 'harness/metrics/.stop-debounce.json', ' |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['llmwiki/raw/prd/Reprise-Graph-Engine-Full-Cycle-PRD (1).md', 'llmwiki/ |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-rie-m1-clarify-core.graph.json', 'llmwiki/wiki/so |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/draft/230926-rie-m1-clar |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/metrics/.stop-debounce.json', 'llmwiki/graph/230926-rie-m2-lif |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=961 |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=ead4876f3cafe |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=410 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=56676d0d4ef88 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=c86 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=d38b55af98ea6 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=08a916405a303 |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=01c |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=b2c62d195eb00 |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=de4 |
+| 2026-09-24 09:06:47 | `task.new` |  · task=T-260924-01 · title=Intent→Manifest UI cho nightshift (RIE IN0) · state=proposed · actor=agent · prev=9f026cc3f3 |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+
+<!-- log:auto:end -->
+- 2026-09-24 cập nhật SPEC 240926-intent-manifest-ui-nightshift: thêm giao thức intake/1 + binding MCP/CLI/file (T6–T8), luồng chính từ agent terminal, agent soạn–người duyệt qua link; 11 task, R7 + hai cổng HTML PASS.
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/docs-shell-survey.py', 'llmwiki/wiki/sources/230926-reprise- |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/graph/220926-docs-shell-kit.graph.json', 'harness/tests/html-v |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=11 · human=['harness/tests/test_design_showcase.py', 'fdk/tools/html_shell.py', 'h |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/graph/220926-docs-shell-kit.graph.json', 'harness/tests/html-v |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/docs-shell-survey.py', 'llmwiki/wiki/sources/230926-reprise- |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=9 · human=['llmwiki/wiki/index.md', 'skills/hallmark/SKILL.md', 'fdk/wiki/sources/ |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=12 · human=['fdk/tools/build-wiki-graph.py', 'llmwiki/raw/validate-data.md', 'llmw |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['harness/metrics/guardrails/failure-spec-violation.md', 'llmwiki/wiki/s |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['fdk/tools/spacing-survey.py', 'harness/metrics/.stop-debounce.json', ' |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['llmwiki/raw/prd/Reprise-Graph-Engine-Full-Cycle-PRD (1).md', 'llmwiki/ |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-rie-m1-clarify-core.graph.json', 'llmwiki/wiki/so |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/draft/230926-rie-m1-clar |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/metrics/.stop-debounce.json', 'llmwiki/graph/230926-rie-m2-lif |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=961 |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=ead4876f3cafe |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=410 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=56676d0d4ef88 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=c86 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=d38b55af98ea6 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=08a916405a303 |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=01c |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=b2c62d195eb00 |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=de4 |
+| 2026-09-24 09:06:47 | `task.new` |  · task=T-260924-01 · title=Intent→Manifest UI cho nightshift (RIE IN0) · state=proposed · actor=agent · prev=9f026cc3f3 |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/docs-shell-survey.py', 'llmwiki/wiki/sources/230926-reprise- |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/graph/220926-docs-shell-kit.graph.json', 'harness/tests/html-v |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=11 · human=['harness/tests/test_design_showcase.py', 'fdk/tools/html_shell.py', 'h |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/graph/220926-docs-shell-kit.graph.json', 'harness/tests/html-v |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/docs-shell-survey.py', 'llmwiki/wiki/sources/230926-reprise- |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=9 · human=['llmwiki/wiki/index.md', 'skills/hallmark/SKILL.md', 'fdk/wiki/sources/ |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=12 · human=['fdk/tools/build-wiki-graph.py', 'llmwiki/raw/validate-data.md', 'llmw |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['harness/metrics/guardrails/failure-spec-violation.md', 'llmwiki/wiki/s |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['fdk/tools/spacing-survey.py', 'harness/metrics/.stop-debounce.json', ' |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['llmwiki/raw/prd/Reprise-Graph-Engine-Full-Cycle-PRD (1).md', 'llmwiki/ |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-rie-m1-clarify-core.graph.json', 'llmwiki/wiki/so |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/draft/230926-rie-m1-clar |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/metrics/.stop-debounce.json', 'llmwiki/graph/230926-rie-m2-lif |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=961 |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=ead4876f3cafe |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=410 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=56676d0d4ef88 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=c86 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=d38b55af98ea6 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=08a916405a303 |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=01c |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=b2c62d195eb00 |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=de4 |
+| 2026-09-24 09:06:47 | `task.new` |  · task=T-260924-01 · title=Intent→Manifest UI cho nightshift (RIE IN0) · state=proposed · actor=agent · prev=9f026cc3f3 |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/docs-shell-survey.py', 'llmwiki/wiki/sources/230926-reprise- |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/graph/220926-docs-shell-kit.graph.json', 'harness/tests/html-v |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=11 · human=['harness/tests/test_design_showcase.py', 'fdk/tools/html_shell.py', 'h |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/graph/220926-docs-shell-kit.graph.json', 'harness/tests/html-v |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/docs-shell-survey.py', 'llmwiki/wiki/sources/230926-reprise- |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=9 · human=['llmwiki/wiki/index.md', 'skills/hallmark/SKILL.md', 'fdk/wiki/sources/ |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=12 · human=['fdk/tools/build-wiki-graph.py', 'llmwiki/raw/validate-data.md', 'llmw |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['harness/metrics/guardrails/failure-spec-violation.md', 'llmwiki/wiki/s |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['fdk/tools/spacing-survey.py', 'harness/metrics/.stop-debounce.json', ' |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['llmwiki/raw/prd/Reprise-Graph-Engine-Full-Cycle-PRD (1).md', 'llmwiki/ |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-rie-m1-clarify-core.graph.json', 'llmwiki/wiki/so |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/draft/230926-rie-m1-clar |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/metrics/.stop-debounce.json', 'llmwiki/graph/230926-rie-m2-lif |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=961 |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=ead4876f3cafe |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=410 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=56676d0d4ef88 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=c86 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=d38b55af98ea6 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=08a916405a303 |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=01c |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=b2c62d195eb00 |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=de4 |
+| 2026-09-24 09:06:47 | `task.new` |  · task=T-260924-01 · title=Intent→Manifest UI cho nightshift (RIE IN0) · state=proposed · actor=agent · prev=9f026cc3f3 |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/docs-shell-survey.py', 'llmwiki/wiki/sources/230926-reprise- |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/graph/220926-docs-shell-kit.graph.json', 'harness/tests/html-v |
+| 2026-09-23 11:19:00 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=11 · human=['harness/tests/test_design_showcase.py', 'fdk/tools/html_shell.py', 'h |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/graph/220926-docs-shell-kit.graph.json', 'harness/tests/html-v |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/docs-shell-survey.py', 'llmwiki/wiki/sources/230926-reprise- |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=9 · human=['llmwiki/wiki/index.md', 'skills/hallmark/SKILL.md', 'fdk/wiki/sources/ |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=12 · human=['fdk/tools/build-wiki-graph.py', 'llmwiki/raw/validate-data.md', 'llmw |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['harness/metrics/guardrails/failure-spec-violation.md', 'llmwiki/wiki/s |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['fdk/tools/spacing-survey.py', 'harness/metrics/.stop-debounce.json', ' |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['llmwiki/raw/prd/Reprise-Graph-Engine-Full-Cycle-PRD (1).md', 'llmwiki/ |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-rie-m1-clarify-core.graph.json', 'llmwiki/wiki/so |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/draft/230926-rie-m1-clar |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/metrics/.stop-debounce.json', 'llmwiki/graph/230926-rie-m2-lif |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=961 |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=ead4876f3cafe |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=410 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=56676d0d4ef88 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=c86 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=d38b55af98ea6 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=08a916405a303 |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=01c |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=b2c62d195eb00 |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=de4 |
+| 2026-09-24 09:06:47 | `task.new` |  · task=T-260924-01 · title=Intent→Manifest UI cho nightshift (RIE IN0) · state=proposed · actor=agent · prev=9f026cc3f3 |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/docs-shell-survey.py', 'llmwiki/wiki/sources/230926-reprise- |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=9 · human=['llmwiki/wiki/index.md', 'skills/hallmark/SKILL.md', 'fdk/wiki/sources/ |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=12 · human=['fdk/tools/build-wiki-graph.py', 'llmwiki/raw/validate-data.md', 'llmw |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['harness/metrics/guardrails/failure-spec-violation.md', 'llmwiki/wiki/s |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['fdk/tools/spacing-survey.py', 'harness/metrics/.stop-debounce.json', ' |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['llmwiki/raw/prd/Reprise-Graph-Engine-Full-Cycle-PRD (1).md', 'llmwiki/ |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-rie-m1-clarify-core.graph.json', 'llmwiki/wiki/so |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/draft/230926-rie-m1-clar |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/metrics/.stop-debounce.json', 'llmwiki/graph/230926-rie-m2-lif |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=961 |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=ead4876f3cafe |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=410 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=56676d0d4ef88 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=c86 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=d38b55af98ea6 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=08a916405a303 |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=01c |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=b2c62d195eb00 |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=de4 |
+| 2026-09-24 09:06:47 | `task.new` |  · task=T-260924-01 · title=Intent→Manifest UI cho nightshift (RIE IN0) · state=proposed · actor=agent · prev=9f026cc3f3 |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 10:52:02 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=dea1a398c785ff28ca8d351180342478d8fcc |
+| 2026-09-24 10:52:02 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=fe9c8f910482b604c65dfecb0a637e4e79007 |
+| 2026-09-24 10:52:04 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=54e4b15bb6ed277f8c09271de361532cf2c83 |
+| 2026-09-24 10:52:04 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=930dd47b24f8dcc5c6360f8b1cd0fdc94224c |
+| 2026-09-24 10:55:20 | `file.write` | harness/tests/html-visual-gate-test.sh · tool=Edit · session=d8d98d47 · actor=agent · prev=c84802718d45590962d216e2ffd36 |
+| 2026-09-24 10:55:20 | `file.write` | harness/tests/html-visual-gate-test.sh · tool=Edit · session=d8d98d47 · actor=agent · prev=771392ef8e0355422dafafe48a9eb |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['fdk/tools/docs-shell-survey.py', 'llmwiki/wiki/sources/230926-reprise- |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=9 · human=['llmwiki/wiki/index.md', 'skills/hallmark/SKILL.md', 'fdk/wiki/sources/ |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=12 · human=['fdk/tools/build-wiki-graph.py', 'llmwiki/raw/validate-data.md', 'llmw |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['harness/metrics/guardrails/failure-spec-violation.md', 'llmwiki/wiki/s |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['fdk/tools/spacing-survey.py', 'harness/metrics/.stop-debounce.json', ' |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['llmwiki/raw/prd/Reprise-Graph-Engine-Full-Cycle-PRD (1).md', 'llmwiki/ |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-rie-m1-clarify-core.graph.json', 'llmwiki/wiki/so |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/draft/230926-rie-m1-clar |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/metrics/.stop-debounce.json', 'llmwiki/graph/230926-rie-m2-lif |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=961 |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=ead4876f3cafe |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=410 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=56676d0d4ef88 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=c86 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=d38b55af98ea6 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=08a916405a303 |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=01c |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=b2c62d195eb00 |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=de4 |
+| 2026-09-24 09:06:47 | `task.new` |  · task=T-260924-01 · title=Intent→Manifest UI cho nightshift (RIE IN0) · state=proposed · actor=agent · prev=9f026cc3f3 |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 10:52:02 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=dea1a398c785ff28ca8d351180342478d8fcc |
+| 2026-09-24 10:52:02 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=fe9c8f910482b604c65dfecb0a637e4e79007 |
+| 2026-09-24 10:52:04 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=54e4b15bb6ed277f8c09271de361532cf2c83 |
+| 2026-09-24 10:52:04 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=930dd47b24f8dcc5c6360f8b1cd0fdc94224c |
+| 2026-09-24 10:55:20 | `file.write` | harness/tests/html-visual-gate-test.sh · tool=Edit · session=d8d98d47 · actor=agent · prev=c84802718d45590962d216e2ffd36 |
+| 2026-09-24 10:55:20 | `file.write` | harness/tests/html-visual-gate-test.sh · tool=Edit · session=d8d98d47 · actor=agent · prev=771392ef8e0355422dafafe48a9eb |
+
+<!-- log:auto:end -->
+- 2026-09-24 SPEC 240926-intent-manifest-ui-nightshift bản 3: luồng một phiên + closebox giấy phép + đêm tự quyết có decisions log + báo cáo tiếng người (phản hồi "bắt con người làm quá nhiều"); 12 task, R7 + hai cổng HTML PASS. Hướng dẫn/test nhánh intake-guide còn theo bản 2, viết lại sau khi duyệt.
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=12 · human=['fdk/tools/build-wiki-graph.py', 'llmwiki/raw/validate-data.md', 'llmw |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['harness/metrics/guardrails/failure-spec-violation.md', 'llmwiki/wiki/s |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['fdk/tools/spacing-survey.py', 'harness/metrics/.stop-debounce.json', ' |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['llmwiki/raw/prd/Reprise-Graph-Engine-Full-Cycle-PRD (1).md', 'llmwiki/ |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-rie-m1-clarify-core.graph.json', 'llmwiki/wiki/so |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/draft/230926-rie-m1-clar |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/metrics/.stop-debounce.json', 'llmwiki/graph/230926-rie-m2-lif |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=961 |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=ead4876f3cafe |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=410 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=56676d0d4ef88 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=c86 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=d38b55af98ea6 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=08a916405a303 |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=01c |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=b2c62d195eb00 |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=de4 |
+| 2026-09-24 09:06:47 | `task.new` |  · task=T-260924-01 · title=Intent→Manifest UI cho nightshift (RIE IN0) · state=proposed · actor=agent · prev=9f026cc3f3 |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 10:52:02 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=dea1a398c785ff28ca8d351180342478d8fcc |
+| 2026-09-24 10:52:02 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=fe9c8f910482b604c65dfecb0a637e4e79007 |
+| 2026-09-24 10:52:04 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=54e4b15bb6ed277f8c09271de361532cf2c83 |
+| 2026-09-24 10:52:04 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=930dd47b24f8dcc5c6360f8b1cd0fdc94224c |
+| 2026-09-24 10:55:20 | `file.write` | harness/tests/html-visual-gate-test.sh · tool=Edit · session=d8d98d47 · actor=agent · prev=c84802718d45590962d216e2ffd36 |
+| 2026-09-24 10:55:20 | `file.write` | harness/tests/html-visual-gate-test.sh · tool=Edit · session=d8d98d47 · actor=agent · prev=771392ef8e0355422dafafe48a9eb |
+| 2026-09-24 11:24:36 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 11:24:36 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=12 · human=['fdk/tools/build-wiki-graph.py', 'llmwiki/raw/validate-data.md', 'llmw |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['harness/metrics/guardrails/failure-spec-violation.md', 'llmwiki/wiki/s |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['fdk/tools/spacing-survey.py', 'harness/metrics/.stop-debounce.json', ' |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['llmwiki/raw/prd/Reprise-Graph-Engine-Full-Cycle-PRD (1).md', 'llmwiki/ |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-rie-m1-clarify-core.graph.json', 'llmwiki/wiki/so |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/draft/230926-rie-m1-clar |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/metrics/.stop-debounce.json', 'llmwiki/graph/230926-rie-m2-lif |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=961 |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=ead4876f3cafe |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=410 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=56676d0d4ef88 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=c86 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=d38b55af98ea6 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=08a916405a303 |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=01c |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=b2c62d195eb00 |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=de4 |
+| 2026-09-24 09:06:47 | `task.new` |  · task=T-260924-01 · title=Intent→Manifest UI cho nightshift (RIE IN0) · state=proposed · actor=agent · prev=9f026cc3f3 |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 10:52:02 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=dea1a398c785ff28ca8d351180342478d8fcc |
+| 2026-09-24 10:52:02 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=fe9c8f910482b604c65dfecb0a637e4e79007 |
+| 2026-09-24 10:52:04 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=54e4b15bb6ed277f8c09271de361532cf2c83 |
+| 2026-09-24 10:52:04 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=930dd47b24f8dcc5c6360f8b1cd0fdc94224c |
+| 2026-09-24 10:55:20 | `file.write` | harness/tests/html-visual-gate-test.sh · tool=Edit · session=d8d98d47 · actor=agent · prev=c84802718d45590962d216e2ffd36 |
+| 2026-09-24 10:55:20 | `file.write` | harness/tests/html-visual-gate-test.sh · tool=Edit · session=d8d98d47 · actor=agent · prev=771392ef8e0355422dafafe48a9eb |
+| 2026-09-24 11:24:36 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 11:24:36 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=8 · human=['llmwiki/wiki/sources/draft/220926-minimal-disclosure.md', 'llmwiki/ski |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=12 · human=['fdk/tools/build-wiki-graph.py', 'llmwiki/raw/validate-data.md', 'llmw |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=5 · human=['harness/metrics/guardrails/failure-spec-violation.md', 'llmwiki/wiki/s |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['fdk/tools/spacing-survey.py', 'harness/metrics/.stop-debounce.json', ' |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['llmwiki/raw/prd/Reprise-Graph-Engine-Full-Cycle-PRD (1).md', 'llmwiki/ |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-rie-m1-clarify-core.graph.json', 'llmwiki/wiki/so |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/draft/230926-rie-m1-clar |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/metrics/.stop-debounce.json', 'llmwiki/graph/230926-rie-m2-lif |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=961 |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=ead4876f3cafe |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=410 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=56676d0d4ef88 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=c86 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=d38b55af98ea6 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=08a916405a303 |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=01c |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=b2c62d195eb00 |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=de4 |
+| 2026-09-24 09:06:47 | `task.new` |  · task=T-260924-01 · title=Intent→Manifest UI cho nightshift (RIE IN0) · state=proposed · actor=agent · prev=9f026cc3f3 |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 10:52:02 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=dea1a398c785ff28ca8d351180342478d8fcc |
+| 2026-09-24 10:52:02 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=fe9c8f910482b604c65dfecb0a637e4e79007 |
+| 2026-09-24 10:52:04 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=54e4b15bb6ed277f8c09271de361532cf2c83 |
+| 2026-09-24 10:52:04 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=930dd47b24f8dcc5c6360f8b1cd0fdc94224c |
+| 2026-09-24 10:55:20 | `file.write` | harness/tests/html-visual-gate-test.sh · tool=Edit · session=d8d98d47 · actor=agent · prev=c84802718d45590962d216e2ffd36 |
+| 2026-09-24 10:55:20 | `file.write` | harness/tests/html-visual-gate-test.sh · tool=Edit · session=d8d98d47 · actor=agent · prev=771392ef8e0355422dafafe48a9eb |
+| 2026-09-24 11:24:36 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 11:24:36 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+
+<!-- log:auto:end -->
+- 2026-09-24 plan — 240926-intent-manifest-ui-nightshift-PLAN: 12 task, 3 mốc; SPEC bản 3 đã duyệt; hướng dẫn + test bản 3 commit 62c5a36 (nightshift, nhánh intake-guide).
+- 2026-09-24 thi hành PLAN 240926-intent-manifest-ui-nightshift: 12/12 task commit trên nightshift nhánh intake-guide (40d8fb2..fca0922), test chế độ bắt buộc xanh, báo cáo thật qua hai cổng HTML; 3 chỗ khác kế hoạch ghi trong PLAN.
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['llmwiki/raw/prd/Reprise-Graph-Engine-Full-Cycle-PRD (1).md', 'llmwiki/ |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-rie-m1-clarify-core.graph.json', 'llmwiki/wiki/so |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/draft/230926-rie-m1-clar |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/metrics/.stop-debounce.json', 'llmwiki/graph/230926-rie-m2-lif |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=961 |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=ead4876f3cafe |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=410 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=56676d0d4ef88 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=c86 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=d38b55af98ea6 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=08a916405a303 |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=01c |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=b2c62d195eb00 |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=de4 |
+| 2026-09-24 09:06:47 | `task.new` |  · task=T-260924-01 · title=Intent→Manifest UI cho nightshift (RIE IN0) · state=proposed · actor=agent · prev=9f026cc3f3 |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 10:52:02 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=dea1a398c785ff28ca8d351180342478d8fcc |
+| 2026-09-24 10:52:02 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=fe9c8f910482b604c65dfecb0a637e4e79007 |
+| 2026-09-24 10:52:04 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=54e4b15bb6ed277f8c09271de361532cf2c83 |
+| 2026-09-24 10:52:04 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=930dd47b24f8dcc5c6360f8b1cd0fdc94224c |
+| 2026-09-24 10:55:20 | `file.write` | harness/tests/html-visual-gate-test.sh · tool=Edit · session=d8d98d47 · actor=agent · prev=c84802718d45590962d216e2ffd36 |
+| 2026-09-24 10:55:20 | `file.write` | harness/tests/html-visual-gate-test.sh · tool=Edit · session=d8d98d47 · actor=agent · prev=771392ef8e0355422dafafe48a9eb |
+| 2026-09-24 11:24:36 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 11:24:36 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 11:50:33 | `task.set` |  · task=T-260924-01 · state=approved · actor=agent · prev=6c8dfdd6d07d9ec2958b77267d3d7e8ced8cbe953c46c50bbfd39f86655008 |
+| 2026-09-24 12:01:19 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift-PLAN.md · tool=Write · session=e2543df0 · actor=agent ·  |
+| 2026-09-24 12:01:19 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift-PLAN.md · tool=Write · session=e2543df0 · actor=agent ·  |
+| 2026-09-24 12:29:33 | `task.set` |  · task=T-260924-01 · state=implemented · actor=agent · prev=f97f3ca8db651514574590bb62b0531ccaeab62f98493370f3d200aac24 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['llmwiki/raw/prd/Reprise-Graph-Engine-Full-Cycle-PRD (1).md', 'llmwiki/ |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-rie-m1-clarify-core.graph.json', 'llmwiki/wiki/so |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/draft/230926-rie-m1-clar |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/metrics/.stop-debounce.json', 'llmwiki/graph/230926-rie-m2-lif |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=961 |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=ead4876f3cafe |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=410 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=56676d0d4ef88 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=c86 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=d38b55af98ea6 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=08a916405a303 |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=01c |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=b2c62d195eb00 |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=de4 |
+| 2026-09-24 09:06:47 | `task.new` |  · task=T-260924-01 · title=Intent→Manifest UI cho nightshift (RIE IN0) · state=proposed · actor=agent · prev=9f026cc3f3 |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 10:52:02 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=dea1a398c785ff28ca8d351180342478d8fcc |
+| 2026-09-24 10:52:02 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=fe9c8f910482b604c65dfecb0a637e4e79007 |
+| 2026-09-24 10:52:04 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=54e4b15bb6ed277f8c09271de361532cf2c83 |
+| 2026-09-24 10:52:04 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=930dd47b24f8dcc5c6360f8b1cd0fdc94224c |
+| 2026-09-24 10:55:20 | `file.write` | harness/tests/html-visual-gate-test.sh · tool=Edit · session=d8d98d47 · actor=agent · prev=c84802718d45590962d216e2ffd36 |
+| 2026-09-24 10:55:20 | `file.write` | harness/tests/html-visual-gate-test.sh · tool=Edit · session=d8d98d47 · actor=agent · prev=771392ef8e0355422dafafe48a9eb |
+| 2026-09-24 11:24:36 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 11:24:36 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 11:50:33 | `task.set` |  · task=T-260924-01 · state=approved · actor=agent · prev=6c8dfdd6d07d9ec2958b77267d3d7e8ced8cbe953c46c50bbfd39f86655008 |
+| 2026-09-24 12:01:19 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift-PLAN.md · tool=Write · session=e2543df0 · actor=agent ·  |
+| 2026-09-24 12:01:19 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift-PLAN.md · tool=Write · session=e2543df0 · actor=agent ·  |
+| 2026-09-24 12:29:33 | `task.set` |  · task=T-260924-01 · state=implemented · actor=agent · prev=f97f3ca8db651514574590bb62b0531ccaeab62f98493370f3d200aac24 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['llmwiki/raw/prd/Reprise-Graph-Engine-Full-Cycle-PRD (1).md', 'llmwiki/ |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-rie-m1-clarify-core.graph.json', 'llmwiki/wiki/so |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/draft/230926-rie-m1-clar |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/metrics/.stop-debounce.json', 'llmwiki/graph/230926-rie-m2-lif |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=961 |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=ead4876f3cafe |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=410 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=56676d0d4ef88 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=c86 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=d38b55af98ea6 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=08a916405a303 |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=01c |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=b2c62d195eb00 |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=de4 |
+| 2026-09-24 09:06:47 | `task.new` |  · task=T-260924-01 · title=Intent→Manifest UI cho nightshift (RIE IN0) · state=proposed · actor=agent · prev=9f026cc3f3 |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 10:52:02 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=dea1a398c785ff28ca8d351180342478d8fcc |
+| 2026-09-24 10:52:02 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=fe9c8f910482b604c65dfecb0a637e4e79007 |
+| 2026-09-24 10:52:04 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=54e4b15bb6ed277f8c09271de361532cf2c83 |
+| 2026-09-24 10:52:04 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=930dd47b24f8dcc5c6360f8b1cd0fdc94224c |
+| 2026-09-24 10:55:20 | `file.write` | harness/tests/html-visual-gate-test.sh · tool=Edit · session=d8d98d47 · actor=agent · prev=c84802718d45590962d216e2ffd36 |
+| 2026-09-24 10:55:20 | `file.write` | harness/tests/html-visual-gate-test.sh · tool=Edit · session=d8d98d47 · actor=agent · prev=771392ef8e0355422dafafe48a9eb |
+| 2026-09-24 11:24:36 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 11:24:36 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 11:50:33 | `task.set` |  · task=T-260924-01 · state=approved · actor=agent · prev=6c8dfdd6d07d9ec2958b77267d3d7e8ced8cbe953c46c50bbfd39f86655008 |
+| 2026-09-24 12:01:19 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift-PLAN.md · tool=Write · session=e2543df0 · actor=agent ·  |
+| 2026-09-24 12:01:19 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift-PLAN.md · tool=Write · session=e2543df0 · actor=agent ·  |
+| 2026-09-24 12:29:33 | `task.set` |  · task=T-260924-01 · state=implemented · actor=agent · prev=f97f3ca8db651514574590bb62b0531ccaeab62f98493370f3d200aac24 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['llmwiki/raw/prd/Reprise-Graph-Engine-Full-Cycle-PRD (1).md', 'llmwiki/ |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-rie-m1-clarify-core.graph.json', 'llmwiki/wiki/so |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/draft/230926-rie-m1-clar |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/metrics/.stop-debounce.json', 'llmwiki/graph/230926-rie-m2-lif |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=961 |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=ead4876f3cafe |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=410 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=56676d0d4ef88 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=c86 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=d38b55af98ea6 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=08a916405a303 |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=01c |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=b2c62d195eb00 |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=de4 |
+| 2026-09-24 09:06:47 | `task.new` |  · task=T-260924-01 · title=Intent→Manifest UI cho nightshift (RIE IN0) · state=proposed · actor=agent · prev=9f026cc3f3 |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 10:52:02 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=dea1a398c785ff28ca8d351180342478d8fcc |
+| 2026-09-24 10:52:02 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=fe9c8f910482b604c65dfecb0a637e4e79007 |
+| 2026-09-24 10:52:04 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=54e4b15bb6ed277f8c09271de361532cf2c83 |
+| 2026-09-24 10:52:04 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=930dd47b24f8dcc5c6360f8b1cd0fdc94224c |
+| 2026-09-24 10:55:20 | `file.write` | harness/tests/html-visual-gate-test.sh · tool=Edit · session=d8d98d47 · actor=agent · prev=c84802718d45590962d216e2ffd36 |
+| 2026-09-24 10:55:20 | `file.write` | harness/tests/html-visual-gate-test.sh · tool=Edit · session=d8d98d47 · actor=agent · prev=771392ef8e0355422dafafe48a9eb |
+| 2026-09-24 11:24:36 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 11:24:36 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 11:50:33 | `task.set` |  · task=T-260924-01 · state=approved · actor=agent · prev=6c8dfdd6d07d9ec2958b77267d3d7e8ced8cbe953c46c50bbfd39f86655008 |
+| 2026-09-24 12:01:19 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift-PLAN.md · tool=Write · session=e2543df0 · actor=agent ·  |
+| 2026-09-24 12:01:19 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift-PLAN.md · tool=Write · session=e2543df0 · actor=agent ·  |
+| 2026-09-24 12:29:33 | `task.set` |  · task=T-260924-01 · state=implemented · actor=agent · prev=f97f3ca8db651514574590bb62b0531ccaeab62f98493370f3d200aac24 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['llmwiki/raw/prd/Reprise-Graph-Engine-Full-Cycle-PRD (1).md', 'llmwiki/ |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-rie-m1-clarify-core.graph.json', 'llmwiki/wiki/so |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/draft/230926-rie-m1-clar |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/metrics/.stop-debounce.json', 'llmwiki/graph/230926-rie-m2-lif |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=961 |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=ead4876f3cafe |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=410 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=56676d0d4ef88 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=c86 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=d38b55af98ea6 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=08a916405a303 |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=01c |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=b2c62d195eb00 |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=de4 |
+| 2026-09-24 09:06:47 | `task.new` |  · task=T-260924-01 · title=Intent→Manifest UI cho nightshift (RIE IN0) · state=proposed · actor=agent · prev=9f026cc3f3 |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 10:52:02 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=dea1a398c785ff28ca8d351180342478d8fcc |
+| 2026-09-24 10:52:02 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=fe9c8f910482b604c65dfecb0a637e4e79007 |
+| 2026-09-24 10:52:04 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=54e4b15bb6ed277f8c09271de361532cf2c83 |
+| 2026-09-24 10:52:04 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=930dd47b24f8dcc5c6360f8b1cd0fdc94224c |
+| 2026-09-24 10:55:20 | `file.write` | harness/tests/html-visual-gate-test.sh · tool=Edit · session=d8d98d47 · actor=agent · prev=c84802718d45590962d216e2ffd36 |
+| 2026-09-24 10:55:20 | `file.write` | harness/tests/html-visual-gate-test.sh · tool=Edit · session=d8d98d47 · actor=agent · prev=771392ef8e0355422dafafe48a9eb |
+| 2026-09-24 11:24:36 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 11:24:36 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 11:50:33 | `task.set` |  · task=T-260924-01 · state=approved · actor=agent · prev=6c8dfdd6d07d9ec2958b77267d3d7e8ced8cbe953c46c50bbfd39f86655008 |
+| 2026-09-24 12:01:19 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift-PLAN.md · tool=Write · session=e2543df0 · actor=agent ·  |
+| 2026-09-24 12:01:19 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift-PLAN.md · tool=Write · session=e2543df0 · actor=agent ·  |
+| 2026-09-24 12:29:33 | `task.set` |  · task=T-260924-01 · state=implemented · actor=agent · prev=f97f3ca8db651514574590bb62b0531ccaeab62f98493370f3d200aac24 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['llmwiki/raw/prd/Reprise-Graph-Engine-Full-Cycle-PRD (1).md', 'llmwiki/ |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-rie-m1-clarify-core.graph.json', 'llmwiki/wiki/so |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/draft/230926-rie-m1-clar |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/metrics/.stop-debounce.json', 'llmwiki/graph/230926-rie-m2-lif |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=961 |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=ead4876f3cafe |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=410 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=56676d0d4ef88 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=c86 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=d38b55af98ea6 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=08a916405a303 |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=01c |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=b2c62d195eb00 |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=de4 |
+| 2026-09-24 09:06:47 | `task.new` |  · task=T-260924-01 · title=Intent→Manifest UI cho nightshift (RIE IN0) · state=proposed · actor=agent · prev=9f026cc3f3 |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 10:52:02 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=dea1a398c785ff28ca8d351180342478d8fcc |
+| 2026-09-24 10:52:02 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=fe9c8f910482b604c65dfecb0a637e4e79007 |
+| 2026-09-24 10:52:04 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=54e4b15bb6ed277f8c09271de361532cf2c83 |
+| 2026-09-24 10:52:04 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=930dd47b24f8dcc5c6360f8b1cd0fdc94224c |
+| 2026-09-24 10:55:20 | `file.write` | harness/tests/html-visual-gate-test.sh · tool=Edit · session=d8d98d47 · actor=agent · prev=c84802718d45590962d216e2ffd36 |
+| 2026-09-24 10:55:20 | `file.write` | harness/tests/html-visual-gate-test.sh · tool=Edit · session=d8d98d47 · actor=agent · prev=771392ef8e0355422dafafe48a9eb |
+| 2026-09-24 11:24:36 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 11:24:36 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 11:50:33 | `task.set` |  · task=T-260924-01 · state=approved · actor=agent · prev=6c8dfdd6d07d9ec2958b77267d3d7e8ced8cbe953c46c50bbfd39f86655008 |
+| 2026-09-24 12:01:19 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift-PLAN.md · tool=Write · session=e2543df0 · actor=agent ·  |
+| 2026-09-24 12:01:19 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift-PLAN.md · tool=Write · session=e2543df0 · actor=agent ·  |
+| 2026-09-24 12:29:33 | `task.set` |  · task=T-260924-01 · state=implemented · actor=agent · prev=f97f3ca8db651514574590bb62b0531ccaeab62f98493370f3d200aac24 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['llmwiki/raw/prd/Reprise-Graph-Engine-Full-Cycle-PRD (1).md', 'llmwiki/ |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-rie-m1-clarify-core.graph.json', 'llmwiki/wiki/so |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/draft/230926-rie-m1-clar |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/metrics/.stop-debounce.json', 'llmwiki/graph/230926-rie-m2-lif |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=961 |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=ead4876f3cafe |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=410 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=56676d0d4ef88 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=c86 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=d38b55af98ea6 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=08a916405a303 |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=01c |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=b2c62d195eb00 |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=de4 |
+| 2026-09-24 09:06:47 | `task.new` |  · task=T-260924-01 · title=Intent→Manifest UI cho nightshift (RIE IN0) · state=proposed · actor=agent · prev=9f026cc3f3 |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 10:52:02 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=dea1a398c785ff28ca8d351180342478d8fcc |
+| 2026-09-24 10:52:02 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=fe9c8f910482b604c65dfecb0a637e4e79007 |
+| 2026-09-24 10:52:04 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=54e4b15bb6ed277f8c09271de361532cf2c83 |
+| 2026-09-24 10:52:04 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=930dd47b24f8dcc5c6360f8b1cd0fdc94224c |
+| 2026-09-24 10:55:20 | `file.write` | harness/tests/html-visual-gate-test.sh · tool=Edit · session=d8d98d47 · actor=agent · prev=c84802718d45590962d216e2ffd36 |
+| 2026-09-24 10:55:20 | `file.write` | harness/tests/html-visual-gate-test.sh · tool=Edit · session=d8d98d47 · actor=agent · prev=771392ef8e0355422dafafe48a9eb |
+| 2026-09-24 11:24:36 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 11:24:36 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 11:50:33 | `task.set` |  · task=T-260924-01 · state=approved · actor=agent · prev=6c8dfdd6d07d9ec2958b77267d3d7e8ced8cbe953c46c50bbfd39f86655008 |
+| 2026-09-24 12:01:19 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift-PLAN.md · tool=Write · session=e2543df0 · actor=agent ·  |
+| 2026-09-24 12:01:19 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift-PLAN.md · tool=Write · session=e2543df0 · actor=agent ·  |
+| 2026-09-24 12:29:33 | `task.set` |  · task=T-260924-01 · state=implemented · actor=agent · prev=f97f3ca8db651514574590bb62b0531ccaeab62f98493370f3d200aac24 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=7 · human=['llmwiki/raw/prd/Skill-Design-Standard-SOLID-WHAT-HOW-PRD.md', 'llmwiki |
+| 2026-09-23 11:19:29 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=6 · human=['llmwiki/raw/prd/Reprise-Graph-Engine-Full-Cycle-PRD (1).md', 'llmwiki/ |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-rie-m1-clarify-core.graph.json', 'llmwiki/wiki/so |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/wiki/index.md', 'llmwiki/wiki/sources/draft/230926-rie-m1-clar |
+| 2026-09-23 11:32:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['harness/metrics/.stop-debounce.json', 'llmwiki/graph/230926-rie-m2-lif |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=961 |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=ead4876f3cafe |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:34 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=410 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=56676d0d4ef88 |
+| 2026-09-23 15:48:44 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=c86 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=d38b55af98ea6 |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:48:52 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=08a916405a303 |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:19 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=01c |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/graph/230926-nightshift-core.graph.json'] · prev=b2c62d195eb00 |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/wiki/sources/draft/230926-nightshift-verify-ops-PLAN.md', 'llm |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/graph/230926-nightshift-verify-ops.graph.json', 'llmwiki/wiki/ |
+| 2026-09-23 15:49:40 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/230926-nightshift-core-PLAN.md'] · prev=de4 |
+| 2026-09-24 09:06:47 | `task.new` |  · task=T-260924-01 · title=Intent→Manifest UI cho nightshift (RIE IN0) · state=proposed · actor=agent · prev=9f026cc3f3 |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 09:12:56 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 10:52:02 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=dea1a398c785ff28ca8d351180342478d8fcc |
+| 2026-09-24 10:52:02 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=fe9c8f910482b604c65dfecb0a637e4e79007 |
+| 2026-09-24 10:52:04 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=54e4b15bb6ed277f8c09271de361532cf2c83 |
+| 2026-09-24 10:52:04 | `file.write` | fdk/tools/html-visual-gate.mjs · tool=Edit · session=d8d98d47 · actor=agent · prev=930dd47b24f8dcc5c6360f8b1cd0fdc94224c |
+| 2026-09-24 10:55:20 | `file.write` | harness/tests/html-visual-gate-test.sh · tool=Edit · session=d8d98d47 · actor=agent · prev=c84802718d45590962d216e2ffd36 |
+| 2026-09-24 10:55:20 | `file.write` | harness/tests/html-visual-gate-test.sh · tool=Edit · session=d8d98d47 · actor=agent · prev=771392ef8e0355422dafafe48a9eb |
+| 2026-09-24 11:24:36 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 11:24:36 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift.md · tool=Write · session=e2543df0 · actor=agent · prev= |
+| 2026-09-24 11:50:33 | `task.set` |  · task=T-260924-01 · state=approved · actor=agent · prev=6c8dfdd6d07d9ec2958b77267d3d7e8ced8cbe953c46c50bbfd39f86655008 |
+| 2026-09-24 12:01:19 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift-PLAN.md · tool=Write · session=e2543df0 · actor=agent ·  |
+| 2026-09-24 12:01:19 | `file.write` | llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift-PLAN.md · tool=Write · session=e2543df0 · actor=agent ·  |
+| 2026-09-24 12:29:33 | `task.set` |  · task=T-260924-01 · state=implemented · actor=agent · prev=f97f3ca8db651514574590bb62b0531ccaeab62f98493370f3d200aac24 |
+
+<!-- log:auto:end -->

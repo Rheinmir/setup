@@ -1,0 +1,69 @@
+{
+ "schema_version": 1,
+ "diagram_type": "sequence",
+ "meta": {
+  "title": "T12 — Hướng dẫn là thước nghiệm thu",
+  "output": "240926-intent-manifest-ui-t12.html",
+  "viewBox": [
+   560,
+   520
+  ],
+  "animation": "trace",
+  "quality_profile": "showcase",
+  "column_fit": "spread"
+ },
+ "participants": [
+  {
+   "id": "doc",
+   "type": "database",
+   "label": "Hướng dẫn",
+   "sublabel": "intake-guide.md"
+  },
+  {
+   "id": "test",
+   "type": "backend",
+   "label": "Test",
+   "sublabel": "tests/intake"
+  },
+  {
+   "id": "proto",
+   "type": "backend",
+   "label": "Intake",
+   "sublabel": "intake/1"
+  }
+ ],
+ "messages": [
+  {
+   "id": "t12-m1",
+   "from": "test",
+   "to": "doc",
+   "y": 160,
+   "label": "đọc từng bước UG-*",
+   "variant": "emphasis"
+  },
+  {
+   "id": "t12-m2",
+   "from": "test",
+   "to": "proto",
+   "y": 200,
+   "label": "chạy đúng lệnh",
+   "variant": "emphasis"
+  },
+  {
+   "id": "t12-m3",
+   "from": "proto",
+   "to": "test",
+   "y": 240,
+   "label": "kết quả",
+   "variant": "default"
+  },
+  {
+   "id": "t12-m4",
+   "from": "test",
+   "to": "doc",
+   "y": 280,
+   "label": "so với kết quả phải thấy",
+   "variant": "emphasis"
+  }
+ ]
+}

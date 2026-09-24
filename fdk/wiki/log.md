@@ -349,3 +349,7 @@ Viết lại /fdk (canonical + mirror, diff=SAME) thành self-contained: pre-fli
 - luật R22 `html-slop` gác lúc GHI (PostToolUse nhánh .html) + fire-drill BAD/GOOD trong harness-doctor
 - `medic` probe frontend chạy `--all`; step CI sinh trang rồi chạy cả hai cổng trên 21 trang framework sinh
 - engine orca-graph 3.1.2 → 3.1.4: daemon vẽ đè cockpit bằng builder global cũ; chip `<code>` xếp dọc dính nhau
+- 2026-09-24 12:56 — session `e2543df0` — 52 tool calls — files: 240926-intent-manifest-ui-nightshift-PLAN.md, 240926-intent-manifest-ui-nightshift.md, app.html, audit-guide.mjs, brain.py, build-intake-guide-html.py, cli_json.py, compile.py …
+- 2026-09-24 12:56 — session `e2543df0` — 52 tool calls — files: 240926-intent-manifest-ui-nightshift-PLAN.md, 240926-intent-manifest-ui-nightshift.md, app.html, audit-guide.mjs, brain.py, build-intake-guide-html.py, cli_json.py, compile.py …
+- 2026-09-24 12:56 — session `d8d98d47` — 6 tool calls — files: html-visual-gate-test.sh, html-visual-gate.mjs
+- 2026-09-24 12:56 — session `d8d98d47` — 6 tool calls — files: html-visual-gate-test.sh, html-visual-gate.mjs

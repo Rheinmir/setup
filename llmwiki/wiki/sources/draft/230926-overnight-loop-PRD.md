@@ -171,6 +171,32 @@ Safety invariant: 0 publish sai generation; 0 completed khi oracle fail; 0 dispa
 Áp dụng là diễn giải cho PRD này; nguồn không bảo chứng implementation. Xem mục 16 để biết phần kế thừa và giới hạn từng nguồn.
 
 
+### Giải thích dễ hiểu: một xưởng bánh chạy ban đêm
+
+Hình dung hệ thống như một xưởng làm bánh chạy trong lúc bạn ngủ. Trước khi đi ngủ, bạn viết một **tờ đơn hàng** (M01 Manifest): làm bánh gì, tối đa bao nhiêu tiền, xong trước mấy giờ. Bạn ký tên, tờ đơn được niêm phong và suốt đêm không ai sửa được.
+
+| Vai trong xưởng | Module | Việc làm |
+| --- | --- | --- |
+| Quản đốc | M03 Scheduler + M04 Policy | Chọn món làm trước, giữ ví tiền, trích sẵn tiền cho món đó rồi mới giao việc; ví không đủ thì không giao |
+| Sổ cái | M02 Store | Mọi chuyện ghi vào đây; chỉ quản đốc được viết, ai cần biết thì đọc |
+| Tổ trưởng | M05 Supervisor | Gọi thợ vào, bấm đồng hồ, hết giờ thì đưa thợ ra |
+| Thợ làm bánh | Worker | Làm trong phòng kín không điện thoại, không thấy sổ cái hay đáp án chấm; chỉ có bản sao nguyên liệu nên hỏng cũng không ảnh hưởng bếp chính |
+| Người trực tổng đài | M07 Gateway | Gọi "bộ não bên ngoài" (model AI) hộ thợ; chỉ người này cầm chìa khóa |
+| Người nếm thử | M08 Verifier | Ngồi phòng riêng, chấm theo đáp án niêm phong từ trước; thợ không sửa được đáp án |
+| Người bày hàng | M06 Integration | Bánh đạt mới lên kệ, và là kệ riêng chờ bạn duyệt, không phải kệ chính |
+| Người dọn sự cố | M09 Recovery | Mất điện hay thợ biến mất thì đối chiếu sổ cái; cứu được và còn tiền thì cho làm lại (tối đa 3 lần), không rõ chuyện gì thì đánh dấu "cần người xem" chứ không đoán |
+| Người viết báo cáo | M10 Reporter | Sáng ra chỉ đọc sổ cái, đưa bạn tờ giấy: món nào xong, món nào kẹt, tốn bao nhiêu, bằng chứng từng món |
+
+Mỗi lần làm, thợ nhận một **vé có số mới** (lease token). Thợ cũ đã bị đưa ra mà quay lại nộp bánh thì vé đã hết hạn, bánh bị từ chối.
+
+Ba luật vàng của xưởng:
+
+1. Chỉ một người được ghi sổ, nên không ai lén sửa được.
+2. Không tin lời "con làm xong rồi" của thợ; phải qua người nếm với đáp án niêm phong.
+3. Tiền trích trước rồi mới làm, nên không thể tiêu quá ngân sách qua đêm.
+
+Đối chiếu với ảnh Loop Stack: thợ làm từng thao tác là Execution loop; làm xong một món và qua được người nếm là Task loop; cả xưởng chạy hết đơn trong đêm là Product loop, đúng thứ PRD này xây; bạn đọc báo cáo sáng ra rồi quyết định là Oversight loop. Framework hiện đã làm tốt phần "một món một". PRD bổ sung quản đốc, sổ cái, ví tiền và người dọn sự cố để xưởng tự chạy cả đêm mà không cần bạn thức canh.
+
 ### Block diagram: ai giữ state, ai chạy code lạ
 
 ```mermaid

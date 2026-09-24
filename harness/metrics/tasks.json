@@ -514,5 +514,26 @@
         "note": "lint 180926: đối chiếu code — đã hiện thực"
       }
     ]
+  },
+  "T-260924-01": {
+    "id": "T-260924-01",
+    "title": "Intent→Manifest UI cho nightshift (RIE IN0)",
+    "state": "implemented",
+    "created": "2026-09-24T09:06:47",
+    "updated": "2026-09-24T12:29:33",
+    "history": [
+      {
+        "state": "proposed",
+        "ts": "2026-09-24T09:06:47"
+      },
+      {
+        "state": "approved",
+        "ts": "2026-09-24T11:50:33"
+      },
+      {
+        "state": "implemented",
+        "ts": "2026-09-24T12:29:33"
+      }
+    ]
   }
 }

@@ -1,0 +1,83 @@
+{
+ "schema_version": 1,
+ "diagram_type": "sequence",
+ "meta": {
+  "title": "T2 — Graph research tự đổ đầy thông tin",
+  "output": "240926-intent-manifest-ui-t2.html",
+  "viewBox": [
+   680,
+   520
+  ],
+  "animation": "trace",
+  "quality_profile": "showcase",
+  "column_fit": "spread"
+ },
+ "participants": [
+  {
+   "id": "proto",
+   "type": "backend",
+   "label": "Intake",
+   "sublabel": "intake/1"
+  },
+  {
+   "id": "rg",
+   "type": "backend",
+   "label": "Research",
+   "sublabel": "graph"
+  },
+  {
+   "id": "repo",
+   "type": "database",
+   "label": "Repo",
+   "sublabel": "code · git · docs"
+  },
+  {
+   "id": "web",
+   "type": "cloud",
+   "label": "Web",
+   "sublabel": "miền cho phép"
+  }
+ ],
+ "messages": [
+  {
+   "id": "t2-m1",
+   "from": "proto",
+   "to": "rg",
+   "y": 160,
+   "label": "dựng graph research",
+   "variant": "emphasis"
+  },
+  {
+   "id": "t2-m2",
+   "from": "rg",
+   "to": "repo",
+   "y": 200,
+   "label": "bản đồ repo, git, docs, llmwiki",
+   "variant": "emphasis"
+  },
+  {
+   "id": "t2-m3",
+   "from": "rg",
+   "to": "web",
+   "y": 240,
+   "label": "tài liệu thư viện, API",
+   "variant": "emphasis"
+  },
+  {
+   "id": "t2-m4",
+   "from": "rg",
+   "to": "web",
+   "y": 280,
+   "label": "miền lạ → chặn",
+   "variant": "dashed"
+  },
+  {
+   "id": "t2-m5",
+   "from": "rg",
+   "to": "proto",
+   "y": 320,
+   "label": "atom có nguồn",
+   "variant": "default"
+  }
+ ]
+}

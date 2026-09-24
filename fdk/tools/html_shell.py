@@ -77,8 +77,9 @@ CSS = (
     "nav a.ovs-na.active::after{content:'';flex:none;width:6px;height:6px;border-radius:50%;background:var(--ovs-accent,#0a84ff)}"
     ".ovs-progress{position:fixed;left:0;right:0;top:0;height:3px;z-index:2147483001;pointer-events:none}"
     # nút đổi giao diện VÀO sidebar (hàng cuối, dính đáy) thay vì viên nổi góc phải — user 22/09 "nút chuyển darklight mode đâu ?"
-    "nav .ovs-theme-row{position:sticky;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:12px;margin:24px -8px 0;"
-    "padding:12px 8px;border-top:1px solid var(--ovs-border,rgba(0,0,0,.12));background:var(--ovs-surface2,#fff);font-size:13px;color:var(--ovs-ink,inherit)}"
+    # margin-top:auto → đáy nav (flex dọc); KHÔNG margin âm + nền riêng: user 24/09 "slop" — dải trắng x=4→227 lệch cả mép nav lẫn cột mục (luật band-misaligned)
+    "nav .ovs-theme-row{position:sticky;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:12px;margin:auto 0 0;"
+    "padding:12px 10px;border-top:1px solid var(--ovs-border,rgba(0,0,0,.12));background:inherit;font-size:13px;color:var(--ovs-ink,inherit)}"
     "nav .ovs-theme-row .ovs-theme{position:static;backdrop-filter:none;-webkit-backdrop-filter:none}"
     ".ovs-progress i{display:block;height:100%;width:0;background:var(--ovs-accent,#0a84ff);transition:width .12s ease-out}"
     # title-scale: tên trang ≥ 1,2 × mục nav (13px) — logo docs-shell cũ 14–15px ngang hàng mục (quét 22/09/2026)
@@ -117,11 +118,12 @@ JS_SPY = ("(function(){var L=[].slice.call(document.querySelectorAll('nav a.ovs-
           "by[e.target.id].classList.add('active')}})},{rootMargin:'-35% 0px -60% 0px'});Object.keys(by).forEach(function(id){io.observe(document.getElementById(id))})})();")
 JS_PROGRESS = ("(function(){var b=document.querySelector('.ovs-progress i');if(!b)return;function u(){var d=document.documentElement,m=d.scrollHeight-d.clientHeight;"
                "b.style.width=(m>0?Math.min(100,d.scrollTop/m*100):0)+'%'}addEventListener('scroll',u,{passive:true});u()})();")
+# static→relative phải kèm inset:auto: top/bottom/right sót lại (vd nút theme nổi bottom:16px) sẽ đẩy nút nhảy 16px khi bấm — user 24/09
 JS_RIPPLE = ("(function(){document.addEventListener('pointerdown',function(e){var el=e.target.closest&&e.target.closest('nav a,button,.diagram-reset');"
              "if(!el||matchMedia('(prefers-reduced-motion: reduce)').matches)return;var r=el.getBoundingClientRect(),s=Math.max(r.width,r.height),k=document.createElement('span');"
-             "var po=el.style.position,ov=el.style.overflow;if(getComputedStyle(el).position==='static')el.style.position='relative';el.style.overflow='hidden';k.className='ovs-ripple';"
+             "var po=el.style.position,ov=el.style.overflow,pi=el.style.inset;if(getComputedStyle(el).position==='static'){el.style.position='relative';el.style.inset='auto'}el.style.overflow='hidden';k.className='ovs-ripple';"
              "k.style.cssText='width:'+s+'px;height:'+s+'px;left:'+(e.clientX-r.left-s/2)+'px;top:'+(e.clientY-r.top-s/2)+'px';el.appendChild(k);"
-             "setTimeout(function(){k.remove();el.style.position=po;el.style.overflow=ov},500)})})();")
+             "setTimeout(function(){k.remove();el.style.position=po;el.style.inset=pi;el.style.overflow=ov},500)})})();")
 FAVICON = ('<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E'
            '%3Crect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%230a84ff%22/%3E%3Cpath d=%22M9 11h14M9 16h14M9 21h9%22 stroke=%22white%22 '
            'stroke-width=%222.4%22 stroke-linecap=%22round%22/%3E%3C/svg%3E">')

@@ -482,7 +482,7 @@
         "references/custom-theme.md": "a5026a0b00f69180ba9c24acec6e717bae0fb6e01daf998e8e900c57958a9eea",
         "references/design-default.md": "953633ab6866837002ce178cca754c5063200d0d0870a2ed5afa145060b62d99",
         "references/design-md.md": "a9368b64dd9b6e53e8c707830ce28fd8601d3195a81647ea46b6995aa3556b3c",
-        "references/design-showcase.html": "809ccfbc7372b49e6121fc04168e5bbf50edc792f88535ba0d06d41fde258a76",
+        "references/design-showcase.html": "6d8a4bc2e8a76413c3cb09b9650db8f5a430601a45e6119559a0d5879a523b0a",
         "references/export-formats.md": "de0a73d9bec7a31abbd0cbbf1ecd51c2e440f1f3fdc08f476a343959ca6c22f3",
         "references/floating-nav.md": "c8c80f6560700bf6ee6baf28b81ec1539e9ff920d885624707de5fe8803c25d1",
         "references/frontend-design-delta.md": "23682d648dad8db82a5fb6d9c75c2d6e22d3fa673b3bda2a63e414f8b4ea93ea",
@@ -531,7 +531,7 @@
         "references/verbs/audit.md": "0a5b484453f1697a8675a7020df9159d0b4ce22f059b873501bfd82c26d6a31a",
         "references/verbs/redesign.md": "c2830f3b7d68e9622f55d376048a5a454c5ef59d309a211e716d1142e86acbdf"
       },
-      "recorded": "2026-09-23",
+      "recorded": "2026-09-24",
       "source": "local-authored"
     },
     "harness-tour": {

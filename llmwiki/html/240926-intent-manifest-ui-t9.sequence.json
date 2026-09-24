@@ -1,0 +1,69 @@
+{
+ "schema_version": 1,
+ "diagram_type": "sequence",
+ "meta": {
+  "title": "T9 — Giao thức, CLI JSON, hộp thư file",
+  "output": "240926-intent-manifest-ui-t9.html",
+  "viewBox": [
+   560,
+   520
+  ],
+  "animation": "trace",
+  "quality_profile": "showcase",
+  "column_fit": "spread"
+ },
+ "participants": [
+  {
+   "id": "agent",
+   "type": "external",
+   "label": "Agent",
+   "sublabel": "Claude Code / Codex"
+  },
+  {
+   "id": "cli",
+   "type": "backend",
+   "label": "CLI / file",
+   "sublabel": "JSON"
+  },
+  {
+   "id": "proto",
+   "type": "backend",
+   "label": "Intake",
+   "sublabel": "intake/1"
+  }
+ ],
+ "messages": [
+  {
+   "id": "t9-m1",
+   "from": "agent",
+   "to": "cli",
+   "y": 160,
+   "label": "nightshift intake … --json",
+   "variant": "emphasis"
+  },
+  {
+   "id": "t9-m2",
+   "from": "agent",
+   "to": "cli",
+   "y": 200,
+   "label": "hoặc inbox/<key>.json",
+   "variant": "emphasis"
+  },
+  {
+   "id": "t9-m3",
+   "from": "cli",
+   "to": "proto",
+   "y": 240,
+   "label": "cùng một lệnh",
+   "variant": "emphasis"
+  },
+  {
+   "id": "t9-m4",
+   "from": "proto",
+   "to": "cli",
+   "y": 280,
+   "label": "cùng một dạng trả lời",
+   "variant": "default"
+  }
+ ]
+}

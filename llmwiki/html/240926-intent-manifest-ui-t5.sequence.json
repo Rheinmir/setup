@@ -1,0 +1,69 @@
+{
+ "schema_version": 1,
+ "diagram_type": "sequence",
+ "meta": {
+  "title": "T5 — Dựng manifest, kiểm trước khi ngủ",
+  "output": "240926-intent-manifest-ui-t5.html",
+  "viewBox": [
+   560,
+   520
+  ],
+  "animation": "trace",
+  "quality_profile": "showcase",
+  "column_fit": "spread"
+ },
+ "participants": [
+  {
+   "id": "proto",
+   "type": "backend",
+   "label": "Intake",
+   "sublabel": "intake/1"
+  },
+  {
+   "id": "comp",
+   "type": "backend",
+   "label": "Compile",
+   "sublabel": "manifest"
+  },
+  {
+   "id": "pre",
+   "type": "security",
+   "label": "Preflight",
+   "sublabel": "baseline"
+  }
+ ],
+ "messages": [
+  {
+   "id": "t5-m1",
+   "from": "proto",
+   "to": "comp",
+   "y": 160,
+   "label": "brief đã chốt",
+   "variant": "emphasis"
+  },
+  {
+   "id": "t5-m2",
+   "from": "comp",
+   "to": "pre",
+   "y": 200,
+   "label": "baseline phải xanh",
+   "variant": "default"
+  },
+  {
+   "id": "t5-m3",
+   "from": "comp",
+   "to": "pre",
+   "y": 240,
+   "label": "tiêu chí xong phải đỏ đúng chỗ",
+   "variant": "emphasis"
+  },
+  {
+   "id": "t5-m4",
+   "from": "pre",
+   "to": "proto",
+   "y": 280,
+   "label": "bộ nghiệm thu hỏng → chặn",
+   "variant": "dashed"
+  }
+ ]
+}

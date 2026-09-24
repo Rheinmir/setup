@@ -10,7 +10,7 @@
 //   clickable-wrap     nút / tab / link điều hướng (nav a, footer a, a.btn) bẻ chữ thành ≥ 2 dòng ở 320 hoặc 1360; bỏ qua link trong <p>
 //   italic-display     chữ hiển thị (h1–h6 hoặc ≥ 24px) in nghiêng — phủ chỗ cổng tĩnh sót (class tiêu đề, <em> sau thẻ khác)
 //   uppercase-tight-leading  chữ HOA ≥ 24px có line-height < 1.0 × cỡ chữ (dòng HOA dính nhau)
-//   toggle     có nút đổi sáng/tối; bấm thì nền đổi chiều sáng; tải lại vẫn giữ
+//   toggle     có nút đổi sáng/tối; bấm thì nền đổi chiều sáng; tải lại vẫn giữ; nút KHÔNG nhảy chỗ trong lúc đang bấm (±1px)
 //   glass      phần tử khai kính (backdrop-filter) phải còn kính ở CẢ hai chế độ
 //   Nhịp chữ & khoảng cách (PLAN 220926 t4, fdk/wiki/sources/220926-spacing-standards.md) — đo một lượt ở chế độ sáng:
 //   line-height-body   FAIL  p/li/dd/blockquote/td có chữ trực tiếp, ≥ 2 dòng, line-height/font-size < 1.45 (bỏ nav, button, svg, pre/code)
@@ -22,6 +22,7 @@
 //   title-scale        FAIL  tên trang (brand/logo/h1) ≥ 1,2 × chữ lớn nhất của mục nav/tab
 //   eye-rest           WARN  màn đầu ≤ 55% là chữ/khối, không dải dày liền > 520px thiếu khoảng trống ≥ 24px
 //   line-over-text     FAIL  phần tử có định vị (absolute/fixed/sticky), mảnh ≤ 6px, có màu, cắt ngang chữ không thuộc nó (vạch tiến độ đè mục)
+//   band-misaligned    FAIL  dải (≥ 70% rộng cha) có nền/viền trên-dưới riêng mà mép trái/phải không khớp mép cha, mép nội dung cha hay mép anh em
 //   kanban-uniform     FAIL  bảng kanban (≥ 2 cột lane|kanban|[data-kanban-lane]): mọi thẻ cùng rộng + cao (±2px) và cùng style
 //   tap-target         WARN  nav a / button / [role=button] < 24×24 (WCAG 2.5.8); tha link trong p, li ngoài nav, aria-hidden
 // Usage: NODE_PATH=$(npm root -g) node html-visual-gate.mjs <trang.html …> [--json] [--shots <dir>] [--only contrast,tight]
@@ -238,6 +239,22 @@ const MEASURE = (theme) => {
           for (const q of rg.getClientRects()) for (const l of lines) { if (l.contains(pe)) continue; const r = l.getBoundingClientRect();
             const ox = Math.min(r.right, q.right) - Math.max(r.left, q.left), oy = Math.min(r.bottom, q.bottom) - Math.max(r.top, q.top);
             if (ox > 2 && oy > 1 && !out.line_text.some(x => x.startsWith(name(l)))) out.line_text.push(`${name(l)} ${Math.round(r.width)}×${Math.round(r.height)} cắt chữ "${n.textContent.trim().slice(0, 24)}"`); } } } }
+    // band-misaligned (user 24/09, ảnh hàng "Giao diện" sidebar intake-guide: dải nền trắng x=4→227 trong nav 0→232, mục nav 12→220):
+    // DẢI (rộng ≥ 70% cha) có nền đặc hoặc viền trên/dưới RIÊNG, mà mép trái HOẶC phải không khớp (±2px) mép cha, mép nội dung cha,
+    // hay mép bất kỳ anh em nào → tấm vá lơ lửng: không tràn hẳn, không thẳng cột.
+    out.band = [];
+    if (!ex.has('band-misaligned')) {
+      const pc0 = e => { const d = getComputedStyle(e); return /flex/.test(d.display) ? (/column/.test(d.flexDirection) ? 'block' : 'flex') : d.display; };   // flex dọc = xếp khối như block
+      const own = c => (c.backgroundColor && (lum(c.backgroundColor) || { a: 0 }).a > .3) || ['Top', 'Bottom'].some(s => parseFloat(c['border' + s + 'Width']) > 0 && c['border' + s + 'Style'] !== 'none');
+      for (const el of document.querySelectorAll('body *')) { const pe = el.parentElement; if (!pe || pe === document.body || !vis(el) || out.band.length >= 10) continue;
+        const cs = getComputedStyle(el); if (!own(cs) || parseFloat(cs.borderRadius) > 0.5 || /^table|flex|grid/.test(pc0(pe)) || /^table/.test(cs.display)) continue;   // ô bảng / con flex-grid ngang xếp nối nhau, không phải dải
+        const r = el.getBoundingClientRect(), pr = pe.getBoundingClientRect(), pc = getComputedStyle(pe);
+        const cl = pr.left + parseFloat(pc.borderLeftWidth) + parseFloat(pc.paddingLeft), crt = pr.right - parseFloat(pc.borderRightWidth) - parseFloat(pc.paddingRight);
+        if (r.width < 0.7 * (crt - cl) || r.width < 80) continue;
+        const sib = [...pe.children].filter(s => s !== el && vis(s)).map(s => s.getBoundingClientRect());
+        const ok = (x, refs) => refs.some(v => Math.abs(x - v) <= 2);
+        const L = ok(r.left, [pr.left, cl, pr.left + parseFloat(pc.borderLeftWidth), ...sib.map(s => s.left)]), R = ok(r.right, [pr.right, crt, pr.right - parseFloat(pc.borderRightWidth), ...sib.map(s => s.right)]);
+        if (!L || !R) out.band.push(`${name(el)} x=${Math.round(r.left)}→${Math.round(r.right)} trong ${name(pe)} ${Math.round(pr.left)}→${Math.round(pr.right)} (nội dung ${Math.round(cl)}→${Math.round(crt)})`); } }
     // kanban-uniform (user 22/09: "làm kanban thì luôn chung 1 style và thẻ phải luôn size cố định"): bảng = ≥ 2 cột anh em
     // (class chứa lane|kanban|swimlane hoặc [data-kanban-lane]); thẻ = con trực tiếp của cột mang class lặp nhiều nhất (bỏ tiêu đề/gợi ý).
     // MỌI thẻ trên bảng phải cùng rộng + cùng cao (±2px) và cùng style (nền · viền · bo · padding · cỡ/họ chữ).
@@ -307,7 +324,13 @@ for (const file of pages) { const abs = resolve(file); const row = { page: file,
       const follows = await p.$('[data-ovs-theme-follow]');
       if (follows) row.toggle = 'follows-parent'; else if (!tg) row.toggle = 'MISSING';
       else { const lumNow = () => p.evaluate(() => { const f = c => { const m = c.match(/[\d.]+/g); if (!m) return null; const a = m[3] === undefined ? 1 : +m[3]; return a < .5 ? null : (0.2126 * m[0] + 0.7152 * m[1] + 0.0722 * m[2]) / 255; }; return f(getComputedStyle(document.body).backgroundColor) ?? f(getComputedStyle(document.documentElement).backgroundColor) ?? (document.documentElement.getAttribute('data-theme') === 'dark' ? 0 : 1); });
-        const before = await lumNow(); await tg.click({ force: true }).catch(() => {}); await p.waitForTimeout(700); const after = await lumNow();
+        const before = await lumNow();
+        // toggle-jump (user 24/09 "ấn vào nó vẫn bị nhảy lên"): đo hộp nút GIỮA lúc bấm — ripple đổi static→relative làm bottom/right sót lại
+        // có hiệu lực ~0,5s rồi trả về, nên đo sau click không bao giờ thấy. Nhấn = mouse down/up thật (thay tg.click).
+        const b0 = await tg.boundingBox(); if (b0) { await p.mouse.move(b0.x + b0.width / 2, b0.y + b0.height / 2); await p.mouse.down(); await p.waitForTimeout(80);
+          const b1 = await tg.boundingBox(); await p.mouse.up(); if (b1 && (Math.abs(b1.x - b0.x) > 1 || Math.abs(b1.y - b0.y) > 1)) row.toggleJump = `${Math.round(b1.x - b0.x)},${Math.round(b1.y - b0.y)}px`; }
+        else await tg.click({ force: true }).catch(() => {});
+        await p.waitForTimeout(700); const after = await lumNow();
         const attr = await p.evaluate(() => document.documentElement.getAttribute('data-theme')); await p.reload({ waitUntil: 'load' }).catch(() => {}); await p.waitForTimeout(200);
         const kept = await p.evaluate(() => document.documentElement.getAttribute('data-theme'));
         row.toggle = Math.abs(before - after) < 0.25 ? 'NO-EFFECT' : (kept !== attr ? 'NOT-PERSISTED' : 'ok'); } }
@@ -337,11 +360,13 @@ for (const file of pages) { const abs = resolve(file); const row = { page: file,
   if (on('heading-scale') && L.head_scale && L.head_scale.length) probs.push(`heading-scale: cấp tiêu đề không to → nhỏ — ${L.head_scale.join(' · ')}`);
   if (on('title-scale') && L.title_scale && L.title_scale.length) probs.push(`title-scale: tên trang không lớn hơn mục nav/tab — ${L.title_scale[0]}`);
   if (on('line-over-text') && L.line_text && L.line_text.length) probs.push(`line-over-text: vạch mảnh có định vị đè lên chữ — ${L.line_text.slice(0, 3).join(' · ')}`);
+  if (on('band-misaligned') && L.band && L.band.length) probs.push(`band-misaligned: dải có nền/viền riêng lệch mép — không tràn hẳn cha, không thẳng cột anh em — ${L.band.slice(0, 3).join(' · ')}`);
   if (on('kanban-uniform') && L.kanban && L.kanban.length) probs.push(`kanban-uniform: thẻ kanban không đồng nhất — ${L.kanban.slice(0, 3).join(' · ')}`);
   if (on('eye-rest') && L.eye_rest && L.eye_rest.length) warns.push(`eye-rest: không có khoảng nghỉ cho mắt — ${L.eye_rest.join(' · ')}`);
   if (on('heading-proximity') && L.heading_prox.length) warns.push(`heading-proximity: ${L.heading_prox.length} tiêu đề gần đoạn TRÊN hơn đoạn dưới — vd ${L.heading_prox[0]}`);
   if (on('tap-target') && L.tap.length) warns.push(`tap-target: ${L.tap.length} vùng bấm < 24×24 — vd ${L.tap[0]}`);
   if (on('toggle') && row.toggle !== 'ok' && row.toggle !== 'follows-parent') probs.push(`toggle: ${row.toggle}`);
+  if (on('toggle') && row.toggleJump) probs.push(`toggle: nút đổi giao diện NHẢY chỗ khi đang bấm (dx,dy = ${row.toggleJump}) — thường do ripple static→relative gặp top/bottom/right sót lại`);
   if (on('toggle') && row.toggle === 'ok' && L.bodyL !== null && D.bodyL !== null && Math.abs(L.bodyL - D.bodyL) < 0.25) probs.push('toggle: sáng và tối cho CÙNG một nền');
   if (on('glass') && L.glass > 0 && D.glass === 0) probs.push(`glass: sáng có ${L.glass} lớp kính, tối mất hết`);
   if (on('glass') && D.glass > 0 && L.glass === 0) probs.push(`glass: tối có ${D.glass} lớp kính, sáng mất hết`);

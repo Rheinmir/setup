@@ -91,6 +91,18 @@ LOT='<div class="sb"><a href="#x">Mục một</a><a href="#x">Mục hai</a><div 
 expect line-over-text "$(mk lot '.sb{position:relative;width:240px}.sb a{display:block;padding:8px;color:inherit}.bar{position:absolute;left:0;right:0;bottom:12px;height:3px;background:#0a84ff}' "$LOT")" "line-over-text:"
 expect line-over-text-ok "$(mk loto '.sb{position:relative;width:240px}.sb a{display:block;padding:8px;color:inherit}.bar{position:fixed;left:0;right:0;top:0;height:3px;background:#0a84ff}' "$LOT")" OK
 
+# ── band-misaligned (user 24/09, hàng "Giao diện" sidebar): dải nền riêng margin âm lệch cả mép nav lẫn cột mục
+BM='<nav class="nv"><a href="#x">Mục một</a><a href="#x">Mục hai</a><div class="row">Giao diện</div></nav>'
+BMC='.nv{display:flex;flex-direction:column;width:232px;padding:16px 12px;background:var(--card)}.nv a{padding:6px 10px;color:inherit}'
+expect band-misaligned "$(mk bm "$BMC.row{margin:24px -8px 0;padding:12px 8px;border-top:1px solid var(--bd);background:#fff}" "$BM")" "band-misaligned:"
+expect band-misaligned-ok "$(mk bmo "$BMC.row{margin:auto 0 0;padding:12px 10px;border-top:1px solid var(--bd);background:inherit}" "$BM")" OK
+
+# ── toggle-jump (user 24/09): ripple đổi static→relative khi bấm, bottom/right sót lại đẩy nút lệch 16px
+TJC='.theme-switch{position:static;bottom:16px;right:16px}'
+TJS='<script>document.addEventListener("pointerdown",function(e){var b=e.target.closest("button");if(b){b.style.position="relative";setTimeout(function(){b.style.position=""},500)}})</script>'
+expect toggle-jump "$(mk tj "$TJC" "$TJS")" "NHẢY chỗ"
+expect toggle-jump-ok "$(mk tjo "$TJC" "${TJS/b.style.position=\"relative\"/b.style.position=\"relative\";b.style.inset=\"auto\"}")" OK
+
 # ── design-showcase (PLAN 220926-design-showcase t7): trang MẪU CHUẨN phải sạch tuyệt đối — 0 FAIL, 0 WARN
 expect design-showcase "$ROOT/skills/hallmark/references/design-showcase.html" OK
 

@@ -1,0 +1,503 @@
+{
+ "id": "240926-intent-manifest-ui-nightshift",
+ "plan": "llmwiki/wiki/sources/draft/240926-intent-manifest-ui-nightshift-PLAN.md",
+ "built": "2026-09-24T14:06:15+0700",
+ "nodes": [
+  {
+   "id": "t1",
+   "title": "Case store, giao thức tối thiểu, `nightshift intake new/status`",
+   "files": [
+    "src/nightshift/__init__.py",
+    "src/nightshift/intake/__init__.py",
+    "src/nightshift/cli.py",
+    "tests/intake/test_store.py"
+   ],
+   "consumes": [
+    "`nightshift.util.atomic_write(path, raw)`, `canonical_json`, `now`, `iso`; `nightshift.errors.NightshiftError(code, detail, retryable, exit_code=...)`."
+   ],
+   "produces": [
+    "Produces:"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/nightshift && python3.11 -m unittest tests.intake.test_store tests.intake.test_protocol -q",
+   "qc": "",
+   "spec_hash": "7fa633837e64d491",
+   "state": "done",
+   "gen": 1,
+   "rev": 5,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "7fa633837e64d491"
+  },
+  {
+   "id": "t2",
+   "title": "Repo mẫu, giấy phép, `--version`",
+   "files": [
+    "src/nightshift/intake/demo.py",
+    "src/nightshift/cli.py",
+    "tests/intake/test_license.py"
+   ],
+   "consumes": [
+    "`store.runs_dir()` (Task 1); `tests.helpers.git`."
+   ],
+   "produces": [
+    "Produces:"
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/nightshift && python3.11 -m unittest tests.intake.test_license -q",
+   "qc": "",
+   "spec_hash": "b3031aa3c4504271",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "b3031aa3c4504271"
+  },
+  {
+   "id": "t3",
+   "title": "Graph research",
+   "files": [
+    "src/nightshift/intake/research.py",
+    "src/nightshift/intake/protocol.py",
+    "tests/intake/test_research.py"
+   ],
+   "consumes": [
+    "`store.Case.append`; `license.load()` (lấy `web_domains`, trần đọc)."
+   ],
+   "produces": [
+    "Produces:"
+   ],
+   "deps": [
+    "t1",
+    "t2"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/nightshift && python3.11 -m unittest tests.intake.test_research -q",
+   "qc": "",
+   "spec_hash": "b1a4ae6308502e92",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "b1a4ae6308502e92"
+  },
+  {
+   "id": "t4",
+   "title": "Brief và cổng câu hỏi",
+   "files": [
+    "src/nightshift/intake/brain.py",
+    "src/nightshift/intake/protocol.py",
+    "tests/intake/test_gate.py"
+   ],
+   "consumes": [
+    "`research.run` (Task 3); `store.Case`; `license.load()[\"max_questions\"]`."
+   ],
+   "produces": [
+    "Produces:"
+   ],
+   "deps": [
+    "t3"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/nightshift && python3.11 -m unittest tests.intake.test_gate -q && NIGHTSHIFT_ACCEPT_STRICT=1 python3.11 -m unittest tests.intake.test_guide_cli",
+   "qc": "",
+   "spec_hash": "1eea995a3a811099",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "1eea995a3a811099"
+  },
+  {
+   "id": "t5",
+   "title": "Compile manifest và preflight mở rộng",
+   "files": [
+    "src/nightshift/intake/compile.py",
+    "tests/intake/test_compile.py"
+   ],
+   "consumes": [
+    "`contracts.manifest.validate(data, check_repo=True)`, `engine.preflight(manifest, work_dir, runner)`, `util.tree_hash(path)`, `util.iso(ts)`; brief đã chốt (Task 4)."
+   ],
+   "produces": [
+    "Produces:"
+   ],
+   "deps": [
+    "t4"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/nightshift && python3.11 -m unittest tests.intake.test_compile -q",
+   "qc": "",
+   "spec_hash": "b2d110557466f9b7",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "b2d110557466f9b7"
+  },
+  {
+   "id": "t6",
+   "title": "Closebox trong giấy phép",
+   "files": [
+    "src/nightshift/intake/protocol.py"
+   ],
+   "consumes": [
+    "`compile.build`, `compile.preflight_ext` (Task 5); `license.check` (Task 2); `contracts.manifest.approve(data, snapshot_dir, approved_by)`; `store.db.connect`, `initialize`; `engine.Engine(run_dir, provider, verify_runner=...)`; `providers.registry.make(spec, run_dir, mock_script=...)`."
+   ],
+   "produces": [
+    "`case.closebox` với params `{\"case_id\", \"provider\"?, \"wait\"?}`:"
+   ],
+   "deps": [
+    "t5"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/nightshift && NIGHTSHIFT_ACCEPT_STRICT=1 python3.11 -m unittest tests.intake.test_guide_cli",
+   "qc": "",
+   "spec_hash": "8cf1d1ffd26ad32f",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "8cf1d1ffd26ad32f"
+  },
+  {
+   "id": "t7",
+   "title": "Điểm quyết định ban đêm và nới phạm vi có ghi",
+   "files": [
+    "src/nightshift/decisions/__init__.py",
+    "src/nightshift/providers/base.py",
+    "tests/intake/test_decisions.py"
+   ],
+   "consumes": [
+    "`store.db.emit`; kịch bản mock của repo mẫu (Task 2) có ở bước `run` một quyết định nới phạm vi sang `src/format.py`."
+   ],
+   "produces": [
+    "Produces:"
+   ],
+   "deps": [
+    "t6"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/nightshift && python3.11 -m unittest tests.intake.test_decisions -q && python3.11 -m unittest discover -s tests -t . -q",
+   "qc": "",
+   "spec_hash": "367c92ff8edb8eb4",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "367c92ff8edb8eb4"
+  },
+  {
+   "id": "t8",
+   "title": "Báo cáo tiếng người",
+   "files": [
+    "src/nightshift/reporting/human.py",
+    "src/nightshift/engine.py",
+    "tests/intake/test_human_report.py"
+   ],
+   "consumes": [
+    "`reporting.report.build(db, run_dir)` (dict báo cáo máy); `decisions.jsonl` (Task 7); quyết định trước giờ chạy trong sổ sự kiện case (Task 4)."
+   ],
+   "produces": [
+    "Produces:"
+   ],
+   "deps": [
+    "t7"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/nightshift && python3.11 -m unittest tests.intake.test_human_report -q && NIGHTSHIFT_ACCEPT_STRICT=1 python3.11 -m unittest tests.intake.test_guide_cli",
+   "qc": "",
+   "spec_hash": "ea86c79b365bd2de",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "ea86c79b365bd2de"
+  },
+  {
+   "id": "t9",
+   "title": "Hộp thư file",
+   "files": [
+    "src/nightshift/intake/bindings/mailbox.py",
+    "src/nightshift/intake/bindings/cli_json.py",
+    "tests/intake/test_mailbox.py"
+   ],
+   "consumes": [
+    "`protocol.handle` (Task 1–8)."
+   ],
+   "produces": [
+    "`mailbox.process_once(root: Path) -> int` — với mỗi `inbox/*.json`: tên không khớp `store.KEY_RE` → chuyển sang `inbox/rejected/`; JSON hỏng → `outbox/<key>.json` là response lỗi `INVALID_REQUEST`; có `outbox/<key>.json` rồi thì không xử lý lại (idempotent); ghi response bằng `atomic_write`; chuyển yêu cầu vào `inbox/done/`. `mailbox.serve(root, interval_s=1.0)` lặp `process_once`."
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/nightshift && python3.11 -m unittest tests.intake.test_mailbox -q && NIGHTSHIFT_ACCEPT_STRICT=1 python3.11 -m unittest tests.intake.test_guide_mailbox",
+   "qc": "",
+   "spec_hash": "fd40d1194c9186d9",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "fd40d1194c9186d9"
+  },
+  {
+   "id": "t10",
+   "title": "MCP stdio",
+   "files": [
+    "src/nightshift/intake/bindings/mcp_stdio.py",
+    "src/nightshift/intake/bindings/cli_json.py",
+    "tests/intake/test_mcp.py"
+   ],
+   "consumes": [
+    "`protocol.handle`."
+   ],
+   "produces": [
+    "`mcp_stdio.serve(stdin, stdout)` — JSON-RPC 2.0, mỗi dòng một thông điệp; `initialize` trả `{\"protocolVersion\", \"serverInfo\": {\"name\": \"nightshift-intake\", \"version\"}, \"capabilities\": {\"tools\": {}}}`; `tools/list` trả đúng `TOOLS = [intake_create, intake_status, intake_answer, intake_propose, intake_closebox, intake_report]` kèm `inputSchema`; `tools/call` với tên lạ → lỗi `-32602`; tên hợp lệ → gọi `protocol.handle` với op tương ứng, trả `{\"content\": [{\"type\": \"text\", \"text\": <json>}], \"structuredContent\": <response>, \"isError\": <có error>}`; `notifications/*` không trả lời."
+   ],
+   "deps": [
+    "t1",
+    "t9"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/nightshift && python3.11 -m unittest tests.intake.test_mcp -q && NIGHTSHIFT_ACCEPT_STRICT=1 python3.11 -m unittest tests.intake.test_guide_mcp",
+   "qc": "",
+   "spec_hash": "499981956c7b1731",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "499981956c7b1731"
+  },
+  {
+   "id": "t11",
+   "title": "Web đọc báo cáo, trả lời từ xa",
+   "files": [
+    "src/nightshift/intake/bindings/http.py",
+    "src/nightshift/intake/bindings/cli_json.py",
+    "tests/intake/test_guide_web.py"
+   ],
+   "consumes": [
+    "`protocol.handle`; `human.write` output (Task 8)."
+   ],
+   "produces": [
+    "`http.serve(host: str, port: int, *, print_pairing: bool)` dùng `http.server.ThreadingHTTPServer`; chỉ nhận host `127.0.0.1`/`localhost`; in một dòng JSON `{\"url\", \"pairing_code\", \"expires_in_s\": 600}`; `POST /pair {code}` → cookie `ns_session` (`HttpOnly; Secure khi qua HTTPS; SameSite=Strict`), sai 5 lần khoá 15 phút; mọi `GET/POST /api/v1/intent/*` không có phiên → 401; lệnh ghi cần header `X-Nightshift-CSRF` khớp phiên; `GET /` trả `app.html` (các nhãn: \"Ghép thiết bị\", \"Mã ghép\", \"Việc của bạn\", \"Cần bạn trả lời\", \"Mình đang hiểu\", \"Cần bạn quyết định\", \"Khuyến nghị\", \"Trả lời bằng lời\", \"Gửi trả lời\", \"Sẵn sàng\", \"Closebox\", \"Đang chạy\"); `GET /cases/<id>/report.html` và `/decisions.html` phục vụ file báo cáo."
+   ],
+   "deps": [
+    "t8"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/nightshift && NIGHTSHIFT_ACCEPT_STRICT=1 /tmp/ns-pw/bin/python -m unittest tests.intake.test_guide_web",
+   "qc": "",
+   "spec_hash": "36eab02e52d77686",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "36eab02e52d77686"
+  },
+  {
+   "id": "t12",
+   "title": "E2E, UAT và CI",
+   "files": [
+    ".github/workflows/ci.yml",
+    "docs/uat.md",
+    "README.md"
+   ],
+   "consumes": [
+    "mọi task trước."
+   ],
+   "produces": [
+    "CI xanh ở chế độ bắt buộc; bản ghi UAT tay."
+   ],
+   "deps": [
+    "t9",
+    "t10",
+    "t11"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/nightshift && NIGHTSHIFT_ACCEPT_STRICT=1 python3.11 -m unittest discover -s tests -t .",
+   "qc": "",
+   "spec_hash": "be6cfdf7a0c610d7",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "be6cfdf7a0c610d7"
+  },
+  {
+   "id": "t13",
+   "title": "Site HTML duy nhất: giao việc, trả lời, closebox, báo cáo và cấu hình trên web",
+   "files": [
+    "src/nightshift/intake/bindings/http.py",
+    "src/nightshift/intake/ui/app.html",
+    "src/nightshift/intake/protocol.py",
+    "src/nightshift/intake/brain.py",
+    "tests/intake/test_guide_web.py",
+    "docs/intake-guide.md"
+   ],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "—"
+   ],
+   "deps": [
+    "t11"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd /Users/giatran/orca/nightshift && python3.11 -m unittest tests.intake.test_guide_contract tests.intake.test_protocol -q && NIGHTSHIFT_ACCEPT_STRICT=1 /tmp/ns-pw/bin/python -m unittest tests.intake.test_guide_web",
+   "qc": "",
+   "dep_reasons": {
+    "t11": "contract"
+   },
+   "spec_hash": "305017b0dc41adb3",
+   "state": "done",
+   "gen": 1,
+   "rev": 3,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "305017b0dc41adb3"
+  }
+ ],
+ "layers": [
+  [
+   "t1"
+  ],
+  [
+   "t2",
+   "t9"
+  ],
+  [
+   "t10",
+   "t3"
+  ],
+  [
+   "t4"
+  ],
+  [
+   "t5"
+  ],
+  [
+   "t6"
+  ],
+  [
+   "t7"
+  ],
+  [
+   "t8"
+  ],
+  [
+   "t11"
+  ],
+  [
+   "t12",
+   "t13"
+  ]
+ ],
+ "parent": null,
+ "depth": 0,
+ "plan_version": 4,
+ "superseded": [],
+ "max_parallel": 4,
+ "conflicts": [],
+ "resource_conflicts": [],
+ "links": [
+  {
+   "to_graph": "200926-orca-graph-v3",
+   "to_node": "t9",
+   "via": [
+    "README.md"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "230926-nightshift-core",
+   "to_node": "t1",
+   "via": [
+    "README.md"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "230926-nightshift-core",
+   "to_node": "t13",
+   "via": [
+    "src/nightshift/providers/base.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "230926-nightshift-verify-ops",
+   "to_node": "t7",
+   "via": [
+    "src/nightshift/cli.py"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "230926-nightshift-verify-ops",
+   "to_node": "t11",
+   "via": [
+    "docs/uat.md"
+   ],
+   "kind": "touches-same-file"
+  }
+ ],
+ "control": "active",
+ "schema_version": 1,
+ "checksum": "87b5df9c25d728d6"
+}

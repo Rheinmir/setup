@@ -1,0 +1,77 @@
+{
+ "schema_version": 1,
+ "diagram_type": "sequence",
+ "meta": {
+  "title": "T11 — Web đọc báo cáo, trả lời từ xa",
+  "output": "240926-intent-manifest-ui-t11.html",
+  "viewBox": [
+   560,
+   520
+  ],
+  "animation": "trace",
+  "quality_profile": "showcase",
+  "column_fit": "spread"
+ },
+ "participants": [
+  {
+   "id": "phone",
+   "type": "external",
+   "label": "Điện thoại",
+   "sublabel": "HTTPS"
+  },
+  {
+   "id": "webui",
+   "type": "frontend",
+   "label": "Web",
+   "sublabel": "127.0.0.1"
+  },
+  {
+   "id": "proto",
+   "type": "backend",
+   "label": "Intake",
+   "sublabel": "intake/1"
+  }
+ ],
+ "messages": [
+  {
+   "id": "t11-m1",
+   "from": "phone",
+   "to": "webui",
+   "y": 160,
+   "label": "ghép bằng mã một lần",
+   "variant": "emphasis"
+  },
+  {
+   "id": "t11-m2",
+   "from": "webui",
+   "to": "phone",
+   "y": 200,
+   "label": "report.html, decisions.html",
+   "variant": "emphasis"
+  },
+  {
+   "id": "t11-m3",
+   "from": "phone",
+   "to": "webui",
+   "y": 240,
+   "label": "trả lời phiên hỏi",
+   "variant": "emphasis"
+  },
+  {
+   "id": "t11-m4",
+   "from": "webui",
+   "to": "proto",
+   "y": 280,
+   "label": "case.answer",
+   "variant": "default"
+  },
+  {
+   "id": "t11-m5",
+   "from": "phone",
+   "to": "webui",
+   "y": 320,
+   "label": "không phiên → 401",
+   "variant": "dashed"
+  }
+ ]
+}
