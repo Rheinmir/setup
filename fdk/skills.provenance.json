@@ -313,7 +313,7 @@
       "files": {
         "SKILL.md": "571ca591ce7d48dc1a515ca482a276bb2c3eb5afce66001bd9dc3e8990a22b23",
         "references/example-setup/README.md": "343c09fef83bbb179514311d025f1a697b474d977cc08e0b952026e8e2fb29b6",
-        "references/example-setup/flow.html": "13b2ab9c776d5d2c035b96d913d06b2d1a904aa052e88c7520abee765b5cb83c",
+        "references/example-setup/flow.html": "60b9be43143738268175baaa8d5a4ea62198b93875068d138b0fa1884f585d43",
         "references/example-setup/skills/dym-setup-agent-workflow.skill.md": "3f94fd478de88a2ce33d203a02c96e111beace12b8d97ee3afeedfe23cd4a2a3",
         "references/example-setup/skills/dym-setup-ci.skill.md": "634682a7799bef4cd9caccf7338b4b5d09bd3960ab8199e41ebe46e68a402fe4",
         "references/example-setup/skills/dym-setup-contributor.skill.md": "9c31dc4ad21bcd0165948aa859c2a6934b00059197d6d5dcb1da02ac27a1cc29",
@@ -323,7 +323,7 @@
         "references/example-setup/skills/dym-setup.skill.md": "fa286d0f1e20ae6f7493ff13a91eeb91d549fdcc02a2d3f81dad02ad57b5f439",
         "references/example-setup/workflows.md": "8813b9f0c73865eb47034c2bdf4ec3819f7fa698d988c345d7de4f67b934b190"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-09-24",
       "source": "local-authored"
     },
     "extract-site": {
@@ -915,13 +915,13 @@
         "references/intake.md": "424e768222f1d6166fb02449f8cd25d347c31401f8f8487a93f7563d34a2d62c",
         "references/presets/macos-glass.design.md": "9ebfad6079fbe224b065745a1504c0dcf26b09e52ef2cc82312816540ef763d1",
         "references/presets/macos-glass.evidence.md": "4b5104161e05bfe576343fc44e8f8974c1e5e7d636e81870c5a4cc7a7ce35c3a",
-        "references/presets/macos-glass.probe.html": "75e3ce3984495964a872c6f33784ee50fe939537b652afa2dbe6bf7cd00c5c52",
+        "references/presets/macos-glass.probe.html": "f86b32540d4d60f24d65ebfb7185a678afdf45735f6c42223039af4bb632dc9d",
         "scripts/badge-consistency.py": "21b3ac1e9e0c5fd4a9799055294dfc9dfd917380459ff05951e6895dba3ba3f7",
         "scripts/design-sync.py": "26b2f0a395b78283f3427241c827ece8426660d870bf8eab1257c0ab1a87877a",
         "scripts/fe-gate.sh": "77a29e080dbc81fe5d64bab89d795399abff55aa5aabb18d6ecde75f037530dd",
         "scripts/viewport-check.mjs": "faa40944739d264a724c61e8523970e2abd183e4d1dae5e6df1cfced338c0ff4"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-09-24",
       "source": "local-authored"
     },
     "propose": {

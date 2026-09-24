@@ -452,6 +452,16 @@ def scan_slop(html: str, styles: str, rel: str) -> list:
         elif not has_toggle:
             add("FAIL", "no-theme-toggle", "có CSS chế độ tối nhưng KHÔNG có nút đổi (chỉ theo hệ điều hành) — luật repo: phải có toggle + nhớ lựa chọn.",
                 "thêm nút toggle (html_base.apply) hoặc đánh dấu trang con: data-ovs-theme-follow")
+        # lớp nền của NHÀ (user 24/09: "dự án có harness mà UI chưa apply đúng — có sáng tối nhưng đâu phải code mẫu"): trang tự viết
+        # theme riêng (font system-ui, nút tự chế) vẫn qua hai luật trên. Trang thật phải mang lớp nền chung html_base (font nhà + token
+        # + nút gạt như design-showcase). Tha: engine vẽ có hệ thiết kế riêng đã duyệt (archify preset) và miễn trừ có khai lý do.
+        exempt = re.search(r'<meta\s+name=["\']overstack-exempt["\'][^>]*content=["\'][^"\']*house-base[^>]*data-reason=["\'][^"\']{8,}', html, re.I)
+        engine = re.search(r'<meta\s+name=["\']generator["\']\s+content=["\']archify', html, re.I)
+        if 'id="ovs-base"' not in html and not exempt and not engine:
+            add("FAIL", "no-house-base", "trang KHÔNG dùng lớp nền của nhà (thiếu `<style id=\"ovs-base\">`: font Newsreader + Be Vietnam Pro, token sáng/tối, "
+                "nút gạt chuẩn) — tự viết theme riêng thì trông khác mọi trang khác. Mẫu chuẩn: skills/hallmark/references/design-showcase.html.",
+                "html_base.apply(html) (python3 fdk/tools/html_base.py --apply <file>); miễn trừ có lý do: "
+                '<meta name="overstack-exempt" content="house-base" data-reason="...">')
     # ── viết HOA: chỉ nhãn nhỏ được uppercase và phải kèm letter-spacing ──
     bad_up = []
     for sel, decl in css_rules(styles):

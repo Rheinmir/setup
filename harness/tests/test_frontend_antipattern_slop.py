@@ -132,3 +132,13 @@ def test_spacing_off_scale_matches_spacing_survey_on_samples():
         assert sorted(fap._spacing_off(s)) == sorted(ssv.off_scale(s)), s
     html = '<style id="ovs-x">.a{padding:10px}</style><style>.b{padding:6px;background:url(data:x;margin:3px)}</style>'
     assert fap._page_css(html) == ssv.page_css(html)
+
+
+def test_page_with_its_own_theme_but_not_the_house_base_fails():
+    # tái hiện 24/09: app.html của nightshift có tối + nút riêng + font system-ui → trước đây qua xanh
+    own = DARK + "body{font:16px system-ui}"
+    assert "no-house-base" in rules(own, TOGGLE)
+    assert "no-house-base" not in rules(own, TOGGLE, '<style id="ovs-base"></style>')
+    assert "no-house-base" not in rules(own, TOGGLE, '<meta name="generator" content="archify 2.17.0">')
+    assert "no-house-base" not in rules(own, TOGGLE, '<meta name="overstack-exempt" content="house-base" data-reason="trang nhúng của bên thứ ba">')
+    assert "no-house-base" in rules(own, TOGGLE, '<meta name="overstack-exempt" content="house-base" data-reason="">')   # miễn trừ phải có lý do
