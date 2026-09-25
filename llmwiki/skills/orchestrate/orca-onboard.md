@@ -680,7 +680,7 @@ fi
 (DeepSeek tự chế CSS/JS → mất "gương", ấn không ăn, output 173–816 dòng không ổn định).
 Thay vào đó: model CHỈ phát **một object JSON** theo schema; UI do **skeleton v2 frozen**
 (`assets/docs-site-skeleton.html`, đã áp đúng design-system `/docs-site-macos`) render.
-Skeleton = nav 5 tab CỐ ĐỊNH (Overview/Architecture/Guided Tour/Modules/Docker) + sidebar
+Skeleton = nav CỐ ĐỊNH (Overview/What & How/Architecture/Guided Tour/Modules/Docker; What & How ẩn khi JSON thiếu cả `what` lẫn `how`) + sidebar
 fixed + collapse + scroll-spy + tour master-detail + draggable diagram; **Modules/Docker tự
 ẩn khi mono**. Nội dung con (layer/tour/module/docker) DATA-DRIVEN từ JSON.
 
@@ -713,6 +713,7 @@ if [ "$RESUME_MODE" != "true" ] || [ "$PHASE4_STATUS" != "done" ]; then
 Phát ra MỘT object JSON (KHÔNG markdown, KHÔNG giải thích) theo ĐÚNG schema trong header của
 $SKELETON, ghi vào $JSON_OUT. Yêu cầu chất lượng:
 - project: name/subtitle/about thật; stack[] + versions[] từ manifest; stats[] (files, services, layers, tour steps).
+- project.what = 2–4 câu LỜI THƯỜNG: dự án làm gì, cho ai, giải quyết vấn đề gì (không thuật ngữ nội bộ); project.how[] = 3–7 bước {t,d} kể luồng chạy đầu→cuối bằng lời người — hiện thành mục What & How NGAY SAU Overview.
 - architecture.layers[] = layers thật; architecture.diagram.nodes[] (toạ độ trong ~760×rộng, rect≥70×30) + edges[] theo luồng.
 - tour[] 5–15 bước, MỖI bước GIÀU: role(1-2 câu), file+line THẬT, in[]/out[], hot(churn), narr — KHÔNG 1–2 dòng.
 - modules[] = mỗi container/image (đọc $DKFILE): name,img,meta(port/env/volume),life[[read|proc|write,desc]],arch. Repo mono ($N_SVC≤1) → modules:[].

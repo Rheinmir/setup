@@ -119,6 +119,12 @@ jobs:
           else
             echo "SKIP cổng chạy-thật: không cài được Chromium trên runner"
           fi
+      # Mỗi luật của cổng chạy-thật có fixture XẤU phải bị bắt + trang TỐT phải qua (Chromium đã cài ở bước trên; thiếu → test tự SKIP có tên).
+      - name: html-visual-gate + button-harmony — luật cổng chạy-thật cắn fixture xấu, tha fixture tốt
+        run: |
+          export NODE_PATH=$(npm root -g)
+          bash harness/tests/html-visual-gate-test.sh
+          bash harness/tests/button-harmony-test.sh
       - name: downstream slop-gate — trang sinh Ở MÁY KHÁCH qua cả hai cổng
         run: bash harness/tests/downstream-slop-gate-test.sh
       - name: code-health — Trụ 4 cổng CI tất định không-LLM (mọi .py compile; ruff nếu có)
