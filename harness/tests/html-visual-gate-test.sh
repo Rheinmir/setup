@@ -103,6 +103,28 @@ TJS='<script>document.addEventListener("pointerdown",function(e){var b=e.target.
 expect toggle-jump "$(mk tj "$TJC" "$TJS")" "NHẢY chỗ"
 expect toggle-jump-ok "$(mk tjo "$TJC" "${TJS/b.style.position=\"relative\"/b.style.position=\"relative\";b.style.inset=\"auto\"}")" OK
 
+# ── fixed-trapped (user 24/09): thanh tiến độ fixed nằm TRONG nav có backdrop-filter → bị nhốt trong sidebar thay vì phủ đầu trang
+FTC='.sb{width:240px;backdrop-filter:blur(8px)}.sb a{display:block;padding:8px;color:inherit}.pg{position:fixed;left:0;right:0;top:0;height:3px;background:#0a84ff}'
+expect fixed-trapped "$(mk ft "$FTC" '<nav class="sb"><a href="#x">Mục</a><div class="pg"></div></nav>')" "fixed-trapped:"
+expect fixed-trapped-ok "$(mk fto "$FTC" '<div class="pg"></div><nav class="sb"><a href="#x">Mục</a></nav>')" OK
+
+# ── field-ring (user 24/09, ô "Mã ghép"): ô nhập không viền, không vòng focus; phản hồi bằng nền đậm dần
+FRB='<label>Mã ghép <input class="fi" type="text"></label>'
+expect field-ring "$(mk fr '.fi{border:1px solid var(--bd);background:var(--card);color:var(--ink)}.fi:focus-visible{outline:2px solid #0a84ff;outline-offset:2px}' "$FRB")" "field-ring:"
+expect field-ring-flat "$(mk frf '.fi{border:0;background:var(--card);color:var(--ink)}.fi:focus{outline:none}' "$FRB")" "không đổi nền"
+expect field-ring-ok "$(mk fro '.fi{border:0;padding:8px 12px;border-radius:10px;background:color-mix(in srgb,var(--ink) 6%,transparent);color:var(--ink);transition:background-color .12s ease-out}.fi:focus{outline:none;background:color-mix(in srgb,var(--ink) 13%,transparent)}' "$FRB")" OK
+
+# ── action-left (user 24/09): hàng nút kết thúc form phải nằm bên phải
+ALB='<form class="card"><label>Tên <input type="text" style="border:0;background:color-mix(in srgb,var(--ink) 6%,transparent);color:var(--ink)"></label><div class="act"><button type="submit" class="theme-x">Lưu lại</button></div></form>'
+expect action-left "$(mk al '.act{display:flex;gap:8px}.act button{min-height:40px;padding:0 16px}input:focus{outline:none;background:color-mix(in srgb,var(--ink) 13%,transparent)!important}' "$ALB")" "action-left:"
+expect action-left-ok "$(mk alo '.act{display:flex;justify-content:flex-end;gap:8px}.act button{min-height:40px;padding:0 16px}input:focus{outline:none;background:color-mix(in srgb,var(--ink) 13%,transparent)!important}' "$ALB")" OK
+
+# ── row-wrap (user 24/09): hàng chip rơi xuống dòng ở 375 → cảnh báo; ovs-line (một dòng, mờ mép) → sạch
+RWB='<div class="chips">'"$(for t in repo-nightshift nhanh-intake-guide ba-task han-sau-gio provider-cli-claude sandbox-podman; do printf '<span class="c">%s</span>' "$t"; done)"'</div>'
+RWC='.chips{display:flex;gap:8px}.c{flex:none;font-size:13px;padding:2px 12px;border-radius:999px;background:var(--card);color:var(--ink)}'
+expect row-wrap "$(mk rw "$RWC.chips{flex-wrap:wrap}" "$RWB")" "row-wrap:"
+expect row-wrap-ok "$(mk rwo "$RWC.chips{flex-wrap:nowrap;overflow:hidden;white-space:nowrap}" "$RWB")" OK
+
 # ── design-showcase (PLAN 220926-design-showcase t7): trang MẪU CHUẨN phải sạch tuyệt đối — 0 FAIL, 0 WARN
 expect design-showcase "$ROOT/skills/hallmark/references/design-showcase.html" OK
 

@@ -482,7 +482,7 @@
         "references/custom-theme.md": "a5026a0b00f69180ba9c24acec6e717bae0fb6e01daf998e8e900c57958a9eea",
         "references/design-default.md": "953633ab6866837002ce178cca754c5063200d0d0870a2ed5afa145060b62d99",
         "references/design-md.md": "a9368b64dd9b6e53e8c707830ce28fd8601d3195a81647ea46b6995aa3556b3c",
-        "references/design-showcase.html": "6d8a4bc2e8a76413c3cb09b9650db8f5a430601a45e6119559a0d5879a523b0a",
+        "references/design-showcase.html": "25259dc504d6e513c30f9d9c4a3940983af2c576c7b93203f995b0b3206e9832",
         "references/export-formats.md": "de0a73d9bec7a31abbd0cbbf1ecd51c2e440f1f3fdc08f476a343959ca6c22f3",
         "references/floating-nav.md": "c8c80f6560700bf6ee6baf28b81ec1539e9ff920d885624707de5fe8803c25d1",
         "references/frontend-design-delta.md": "23682d648dad8db82a5fb6d9c75c2d6e22d3fa673b3bda2a63e414f8b4ea93ea",
@@ -867,10 +867,10 @@
     },
     "orca-onboard": {
       "files": {
-        "SKILL.md": "a7b441defe93ea544fe5e3900d06856d1751fb83e4e749e7d80d08c5de31891a",
-        "assets/docs-site-skeleton.html": "f4196154239a537aa2b369a8ff2fbf48bc010a7f6a829971cbc0e728f96e683f"
+        "SKILL.md": "9def7346c64bb84c7ea7bf0c24c74f7f85317868672a9b73066115f5b45bfd4d",
+        "assets/docs-site-skeleton.html": "1d89cfb39a13e254e0789e3036d9a2be40d50d088bc6d0ae57a7eefce5932bf0"
       },
-      "recorded": "2026-09-22",
+      "recorded": "2026-09-24",
       "source": "local-authored"
     },
     "orca-sec-scans": {
@@ -1146,6 +1146,14 @@
         "SKILL.md": "698efef7464586fd887bf173544ad22e6ae94b2069d0e9af9b3efcd5300de66c"
       },
       "recorded": "2026-09-19",
+      "source": "local-authored"
+    },
+    "whales-storying": {
+      "files": {
+        "SKILL.md": "2a7803178e425a517f903aada54babe07537aad33dda8edcceedc0e2c115da36",
+        "fleet.json": "bc382609ae2c127cc52f75cdc6be8e4daf7122c92847a1f046de4daec6842e6b"
+      },
+      "recorded": "2026-09-25",
       "source": "local-authored"
     },
     "wiki-room": {

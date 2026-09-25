@@ -230,9 +230,16 @@ def apply(html: str) -> str:
     if need["icon"]:
         m = re.search(r"<nav\b.*?</nav>", html, re.S)
         nav = _nav_links(m.group(0))
-        if "ovs-progress" not in nav:
-            nav = nav[:nav.rfind("</nav>")] + '<div class="ovs-progress" aria-hidden="true"><i></i></div></nav>'
         html = html[:m.start()] + nav + html[m.end():]
+    # 1a) thanh tiến độ đọc: con TRỰC TIẾP của <body>, KHÔNG trong <nav> — nav có backdrop-filter nên thành khung chứa của
+    # position:fixed → thanh bị nhốt trong sidebar 232px (user 24/09 "phải đặt ở đầu cả trang"). Dời cả bản cũ đã lỡ nằm trong nav.
+    html = html.replace('<div class="ovs-progress" aria-hidden="true"><i></i></div>', "")
+    html = re.sub(r'<div class="ovs-progress" aria-hidden="true"><i style="[^"]*"></i></div>', "", html)
+    if need["icon"] or "ovs-na" in html:
+        bar = '<div class="ovs-progress" aria-hidden="true"><i></i></div>'
+        # sau skip-link nếu đã có, không thì ngay sau <body>: bước 2 chèn skip-link sau <body> → lần đầu ra [skip][bar], các lần sau vẫn [skip][bar] (idempotent)
+        sk = re.search(r'<a class="skip-link"[^>]*>.*?</a>', html, re.S) or re.search(r"<body\b[^>]*>", html)
+        html = html[:sk.end()] + bar + html[sk.end():] if sk else html.replace("<nav", bar + "<nav", 1)   # không có <body> → trước <nav>, vẫn là con của body
     # 1b) nút đổi giao diện của lớp nền (chèn trước </body>) → hàng cuối sidebar; idempotent (đã ở trong nav thì thôi)
     tg = re.search(r'<button type="button" class="ovs-theme"[^>]*>.*?</button>', html, re.S)
     nav1 = re.search(r"<nav\b.*?</nav>", html, re.S)

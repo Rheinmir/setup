@@ -88,8 +88,8 @@ BLOCKS = [
              ".sc-error-state .t{font-family:var(--font-display);font-weight:var(--fw-heading,600);color:var(--ovs-bad)}.sc-error-state p{margin:4px 0 12px}"
              ".sc-error-state button{min-height:36px;padding:0 16px;border:1px solid var(--ovs-bad);border-radius:999px;background:transparent;color:var(--ovs-bad);font:inherit;font-weight:600;cursor:pointer}")),
     dict(
-        id="progress-read", title="Vạch tiến độ đọc", rules=["motion-ease-out", "reduced-motion", "line-over-text"],
-        note="Vạch 4px ở mép trên, chạy theo phần đã cuộn; cập nhật bằng transform: scaleX (không đổi width) nên không giật. Trang docs-shell: lớp nền tự gắn ở mép trên CỬA SỔ (fixed), không đặt absolute trong sidebar cuộn (vạch sẽ cắt ngang mục).",
+        id="progress-read", title="Vạch tiến độ đọc", rules=["motion-ease-out", "reduced-motion", "line-over-text", "fixed-trapped"],
+        note="Vạch 4px ở mép trên, chạy theo phần đã cuộn; cập nhật bằng transform: scaleX (không đổi width) nên không giật. Trang docs-shell: lớp nền tự gắn ở mép trên CỬA SỔ (fixed), không đặt absolute trong sidebar cuộn (vạch sẽ cắt ngang mục). Vạch fixed phải là con TRỰC TIẾP của body: đặt trong nav có backdrop-filter/transform thì nav thành khung chứa và vạch bị nhốt trong sidebar (luật fixed-trapped).",
         html=('<div class="sc-progress-read"><i class="bar"></i><div class="scroll" tabindex="0" aria-label="Vùng cuộn ví dụ">'
               + "".join(f"<p>Đoạn {i}: cuộn trong khung này để thấy vạch chạy.</p>" for i in range(1, 9)) + '</div></div>'),
         css=(".sc-progress-read{position:relative;border:1px solid var(--ovs-border);border-radius:12px;overflow:hidden}"

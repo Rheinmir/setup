@@ -108,13 +108,13 @@ BLOCKS = [
     dict(
         id="button", title="Nút đủ 8 trạng thái", rules=["eight-states", "tap-target", "transition-all", "contrast"],
         note="Mặc định · hover · focus-visible (viền focus 2px lệch 2px) · active · disabled · loading · lỗi · thành công. Cao ≥ 36px, bo viên, chỉ chuyển màu nền và màu chữ, không transition: all.",
-        html=('<div class="sc-button">'
+        html=('<div class="sc-button ovs-line">'
               '<button class="b" type="button">Mặc định</button><button class="b is-hover" type="button">Hover</button>'
               '<button class="b is-focus" type="button">Focus</button><button class="b is-active" type="button">Đang nhấn</button>'
               '<button class="b" type="button" disabled>Tắt</button><button class="b" type="button" aria-busy="true"><i class="spin"></i>Đang tải</button>'
               '<button class="b err" type="button">Thử lại</button><button class="b ok" type="button">Đã lưu</button>'
               '<button class="b ghost" type="button">Nút phụ</button></div>'),
-        css=(".sc-button{display:flex;flex-wrap:wrap;gap:12px}"
+        css=(".sc-button{gap:12px;padding:4px}"
              ".sc-button .b{display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:0 16px;border:1px solid transparent;border-radius:999px;"
              "background:var(--ovs-ink);color:var(--ovs-bg);font:inherit;font-weight:600;cursor:pointer;transition:background-color .18s ease-out,color .18s ease-out}"
              ".sc-button .b:hover,.sc-button .b.is-hover{background:var(--ovs-ink2)}"
@@ -176,8 +176,8 @@ BLOCKS = [
               + "".join(f'<tr><td>{i}</td><td>{t}</td><td>{k}</td><td>{st}</td><td class="num" data-v="{n}">{n}</td></tr>' for i, t, k, st, n in _ROWS)
               + '<tr class="empty" hidden><td colspan="5">Không có dòng nào khớp. Thử bỏ bớt chữ trong ô lọc.</td></tr></tbody></table></div></div>'),
         css=(".sc-table .f{display:flex;align-items:center;gap:12px;margin:0 0 12px;font-size:14px;font-weight:600}"
-             ".sc-table .f input{flex:1;max-width:320px;min-height:36px;padding:0 12px;border:1px solid var(--ovs-border);border-radius:10px;background:var(--ovs-surface2);color:var(--ovs-ink);font:inherit;font-weight:400}"
-             ".sc-table .f input:focus-visible{outline:2px solid var(--ovs-accent);outline-offset:1px}"
+             ".sc-table .f input{flex:1;max-width:320px;min-height:36px;padding:0 12px;border:0;border-radius:10px;background:color-mix(in srgb,var(--ovs-ink) 6%,transparent);color:var(--ovs-ink);font:inherit;font-weight:400;transition:background-color .12s ease-out}"
+             ".sc-table .f input:hover{background:color-mix(in srgb,var(--ovs-ink) 9%,transparent)}.sc-table .f input:focus{outline:none;background:color-mix(in srgb,var(--ovs-ink) 13%,transparent)}"
              ".sc-table .wrap{overflow-x:auto;border:1px solid var(--ovs-border);border-radius:12px}"
              ".sc-table table{width:max-content;min-width:100%;border-collapse:collapse;font-size:14px}"
              ".sc-table th{position:relative;text-align:left;padding:0;border-bottom:1px solid var(--ovs-border);background:var(--ovs-surface2)}"
@@ -204,20 +204,24 @@ BLOCKS = [
             "rz.addEventListener('pointermove',mv);rz.addEventListener('pointerup',up)});"
             "rz.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();set(th.offsetWidth+(e.key==='ArrowRight'?16:-16))}})});")),
     dict(
-        id="form", title="Form", rules=["eight-states", "contrast", "tap-target"],
-        note="Nhãn luôn hiện phía trên ô (không dùng placeholder thay nhãn); ô cao 40px; lỗi = viền đỏ + dòng giải thích dưới ô, không chỉ đổi màu.",
+        id="form", title="Form", rules=["eight-states", "contrast", "tap-target", "field-ring", "action-left"],
+        note="Nhãn luôn hiện phía trên ô (không dùng placeholder thay nhãn); ô cao 40px; ô KHÔNG viền, KHÔNG vòng focus: nền trong suốt nhạt, hover đậm hơn, focus đậm nữa (luật field-ring — user 24/09 \"viền khoanh tròn là slop\"); lỗi = nền ngả đỏ + dòng giải thích dưới ô, không chỉ đổi màu. Nút hành động ở GÓC PHẢI DƯỚI, nút chính ngoài cùng bên phải; thứ tự góc ưu tiên cho cụm nút: phải-dưới → trái-trên → phải-trên → trái-dưới (luật action-left).",
         html=('<form class="sc-form" onsubmit="return false"><label>Tên dự án<input value="overstack"></label>'
               '<label>Email<input type="email" value="sai-dinh-dang" aria-invalid="true" aria-describedby="sc-err"></label>'
               '<p class="err" id="sc-err">Email thiếu ký tự @.</p>'
-              '<label>Khoá API<input value="Không đổi được" disabled></label></form>'),
+              '<label>Khoá API<input value="Không đổi được" disabled></label>'
+              '<div class="act"><button type="button" class="ghost">Huỷ</button><button type="submit" class="pri">Lưu</button></div></form>'),
         css=(".sc-form{display:grid;gap:12px;max-width:360px}.sc-form label{display:grid;gap:4px;font-size:14px;font-weight:600}"
-             ".sc-form input{min-height:40px;padding:0 12px;border:1px solid var(--ovs-border);border-radius:10px;background:var(--ovs-surface2);color:var(--ovs-ink);font:inherit;font-weight:400}"
-             ".sc-form input:focus-visible{outline:2px solid var(--ovs-accent);outline-offset:1px}"
-             ".sc-form input[aria-invalid=true]{border-color:var(--ovs-bad)}"
+             ".sc-form input{min-height:40px;padding:0 12px;border:0;border-radius:10px;background:color-mix(in srgb,var(--ovs-ink) 6%,transparent);color:var(--ovs-ink);font:inherit;font-weight:400;transition:background-color .12s ease-out}"
+             ".sc-form input:hover{background:color-mix(in srgb,var(--ovs-ink) 9%,transparent)}.sc-form input:focus{outline:none;background:color-mix(in srgb,var(--ovs-ink) 13%,transparent)}"
+             ".sc-form input[aria-invalid=true]{background:color-mix(in srgb,var(--ovs-bad) 12%,transparent)}.sc-form input[aria-invalid=true]:focus{background:color-mix(in srgb,var(--ovs-bad) 20%,transparent)}"
              ".sc-form input:disabled{color:var(--ovs-ink2);cursor:not-allowed}"
-             ".sc-form .err{margin:-8px 0 0;font-size:13px;color:var(--ovs-bad)}")),
+             ".sc-form .err{margin:-8px 0 0;font-size:13px;color:var(--ovs-bad)}"
+             ".sc-form .act{display:flex;justify-content:flex-end;gap:8px;margin-top:4px}"
+             ".sc-form .act button{min-height:40px;padding:0 16px;border-radius:10px;border:0;font:inherit;font-weight:600;cursor:pointer}"
+             ".sc-form .act .pri{background:var(--ovs-accent);color:var(--ovs-bg)}.sc-form .act .ghost{background:none;color:var(--ovs-ink)}")),
     dict(
-        id="mode-switch", title="Công tắc sáng tối", rules=["toggle", "no-theme-toggle", "no-dark-mode"],
+        id="mode-switch", title="Công tắc sáng tối", rules=["toggle", "no-house-base", "no-theme-toggle", "no-dark-mode"],
         note="Mọi trang có công tắc; lựa chọn nhớ trong localStorage (khoá ovs-theme) và áp TRƯỚC khi vẽ để không nháy. Lớp nền html_base tự chèn — mẫu này cho trang tự dựng.",
         html='<div class="sc-mode-switch"><button class="sw" type="button" aria-pressed="false"><span class="knob"></span><span class="lb">Chế độ tối</span></button></div>',
         css=(".sc-mode-switch .sw{display:inline-flex;align-items:center;gap:12px;min-height:36px;padding:4px 16px 4px 4px;border:1px solid var(--ovs-border);border-radius:999px;background:var(--ovs-surface2);color:var(--ovs-ink);font:inherit;cursor:pointer}"
@@ -227,17 +231,25 @@ BLOCKS = [
             "b.addEventListener('click',()=>{const n=h.dataset.theme==='dark'?'light':'dark';h.setAttribute('data-theme',n);"
             "try{localStorage.setItem('ovs-theme',n)}catch(e){}sync()});")),
     dict(
+        id="one-line", title="Hàng một dòng", rules=["row-wrap"],
+        note="Hàng chip, chỉ số, meta, breadcrumb KHÔNG BAO GIỜ rơi xuống dòng: gắn class ovs-line của lớp nền — giữ một dòng, tràn thật thì mép phải mờ dần, rê chuột hoặc focus thì bung ra đủ nội dung. Không dùng cho đoạn văn hay tiêu đề (user 24/09).",
+        html=('<div class="sc-one-line"><div class="ovs-line">'
+              + "".join(f'<span class="c">{t}</span>' for t in ["repo: nightshift", "nhánh: intake-guide", "3 task", "hạn 06:00", "provider: cli:claude", "sandbox: podman", "20 lượt gọi"])
+              + '</div></div>'),
+        css=(".sc-one-line{max-width:420px}.sc-one-line .ovs-line{gap:8px}"
+             ".sc-one-line .c{font-size:13px;font-weight:600;padding:2px 12px;border-radius:999px;background:var(--ovs-accent-bg);color:var(--ovs-ink)}")),
+    dict(
         id="status-dot", title="Chấm trạng thái", rules=["side-stripe", "contrast"],
         note="Một bộ trạng thái = MỘT dạng, MỘT cỡ chữ cho mọi mục. Dạng chấm: chấm 8px + chữ (màu không đứng một mình). Dạng viên (khi cần nổi hơn): nền màu đặc, chữ màu CỐ ĐỊNH đạt tương phản, không dùng token đổi theo chế độ.",
-        html=('<div class="sc-status-dot"><div class="row"><span class="k">Dạng chấm</span>'
+        html=('<div class="sc-status-dot"><div class="row ovs-line"><span class="k">Dạng chấm</span>'
               + "".join(f'<span class="s"><i style="background:var(--ovs-{c})"></i>{t}</span>'
                         for c, t in [("ok", "Xong"), ("accent", "Đang chạy"), ("warn", "Chờ duyệt"), ("bad", "Hỏng"), ("ink2", "Không rõ")])
-              + '</div><div class="row"><span class="k">Dạng viên</span>'
+              + '</div><div class="row ovs-line"><span class="k">Dạng viên</span>'
               + "".join(f'<span class="pill" style="background:{bg};color:{fg}">{t}</span>'
                         for bg, fg, t in [("#15803d", "#fff", "Xong"), ("#0059b8", "#fff", "Đang chạy"), ("#fcd34d", "#0f0f12", "Chờ duyệt"),
                                           ("#b91c1c", "#fff", "Hỏng"), ("#f97316", "#0f0f12", "Không rõ")])
               + '</div></div>'),
-        css=(".sc-status-dot{display:grid;gap:16px}.sc-status-dot .row{display:flex;flex-wrap:wrap;gap:16px;align-items:center}"
+        css=(".sc-status-dot{display:grid;gap:16px}.sc-status-dot .row{gap:16px;align-items:center}"
              ".sc-status-dot .k{width:88px;font-size:13px;color:var(--ovs-ink2)}"
              ".sc-status-dot .s,.sc-status-dot .pill{display:inline-flex;align-items:center;gap:8px;font-size:14px;line-height:1.4}"
              ".sc-status-dot i{width:8px;height:8px;border-radius:50%}.sc-status-dot .pill{padding:2px 12px;border-radius:999px;font-weight:600}")),

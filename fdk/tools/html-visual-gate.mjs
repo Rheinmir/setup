@@ -22,6 +22,10 @@
 //   title-scale        FAIL  tên trang (brand/logo/h1) ≥ 1,2 × chữ lớn nhất của mục nav/tab
 //   eye-rest           WARN  màn đầu ≤ 55% là chữ/khối, không dải dày liền > 520px thiếu khoảng trống ≥ 24px
 //   line-over-text     FAIL  phần tử có định vị (absolute/fixed/sticky), mảnh ≤ 6px, có màu, cắt ngang chữ không thuộc nó (vạch tiến độ đè mục)
+//   row-wrap           FAIL  hàng flex ngang ≥ 2 mục nhỏ (≤ 64px cao) rơi xuống ≥ 2 dòng ở 375 hoặc 1360 — dùng .ovs-line (một dòng, mờ mép, hover thấy đủ)
+//   action-left        FAIL  hàng nút kết thúc form/dialog/thẻ không chạm mép phải nội dung (±4px); ưu tiên góc: phải-dưới → trái-trên → phải-trên → trái-dưới
+//   field-ring         FAIL  ô nhập chữ có viền lúc nghỉ, outline/box-shadow khi focus, hoặc focus không đổi nền (phản hồi phải bằng nền đậm dần)
+//   fixed-trapped      FAIL  position:fixed có left:0 + right:0 mà rộng < cửa sổ (tổ tiên transform/filter/backdrop-filter/contain nhốt lại)
 //   band-misaligned    FAIL  dải (≥ 70% rộng cha) có nền/viền trên-dưới riêng mà mép trái/phải không khớp mép cha, mép nội dung cha hay mép anh em
 //   kanban-uniform     FAIL  bảng kanban (≥ 2 cột lane|kanban|[data-kanban-lane]): mọi thẻ cùng rộng + cao (±2px) và cùng style
 //   tap-target         WARN  nav a / button / [role=button] < 24×24 (WCAG 2.5.8); tha link trong p, li ngoài nav, aria-hidden
@@ -239,6 +243,43 @@ const MEASURE = (theme) => {
           for (const q of rg.getClientRects()) for (const l of lines) { if (l.contains(pe)) continue; const r = l.getBoundingClientRect();
             const ox = Math.min(r.right, q.right) - Math.max(r.left, q.left), oy = Math.min(r.bottom, q.bottom) - Math.max(r.top, q.top);
             if (ox > 2 && oy > 1 && !out.line_text.some(x => x.startsWith(name(l)))) out.line_text.push(`${name(l)} ${Math.round(r.width)}×${Math.round(r.height)} cắt chữ "${n.textContent.trim().slice(0, 24)}"`); } } } }
+    // fixed-trapped (user 24/09, thanh tiến độ nằm trong sidebar thay vì đầu trang): position:fixed khai left:0 + right:0 (ý là phủ ngang
+    // cả cửa sổ) mà rộng thật < cửa sổ − 2px → bị tổ tiên có transform / filter / backdrop-filter / contain / will-change biến thành khung chứa.
+    out.trapped = [];
+    if (!ex.has('fixed-trapped')) for (const el of document.querySelectorAll('body *')) { const cs = getComputedStyle(el);
+      if (cs.position !== 'fixed' || cs.left !== '0px' || cs.right !== '0px' || cs.display === 'none') continue;
+      const w = el.getBoundingClientRect().width; if (w >= document.documentElement.clientWidth - 2) continue;
+      let a = el.parentElement, why = ''; for (; a && a !== document.documentElement; a = a.parentElement) { const c = getComputedStyle(a);
+        const k = ['transform', 'filter', 'backdropFilter', 'perspective'].find(x => c[x] && c[x] !== 'none') || (/paint|layout|strict|content/.test(c.contain) && 'contain') || (/transform|filter/.test(c.willChange) && 'will-change');
+        if (k) { why = `${name(a)} có ${k}`; break; } }
+      if (out.trapped.length < 5) out.trapped.push(`${name(el)} rộng ${Math.round(w)}px / cửa sổ ${document.documentElement.clientWidth}px${why ? ' — bị nhốt vì ' + why : ''}`); }
+    // field-ring (user 24/09, ô "Mã ghép": viền 1px + vòng focus 2px lệch 2px = hai vòng khoanh): ô nhập chữ KHÔNG viền lúc nghỉ, KHÔNG
+    // outline/box-shadow khi focus; phản hồi bằng NỀN — focus phải đổi nền (ΔL ≥ 0.01) so với lúc nghỉ, không thì người dùng không thấy ô đang nhận chữ.
+    out.field = [];
+    if (!ex.has('field-ring')) { const act = document.activeElement;
+      for (const el of document.querySelectorAll('input:not([type]),input[type=text],input[type=search],input[type=email],input[type=url],input[type=tel],input[type=password],input[type=number],textarea')) {
+        if (!vis(el) || el.disabled || out.field.length >= 6) continue; const tr0 = el.style.transition; el.style.transition = 'none'; const c0 = getComputedStyle(el), r0 = bgL(el);   // tắt transition khi đo: không thì focus() đọc ra màu ĐANG chuyển (= màu nghỉ)
+        const bd = ['Top', 'Right', 'Bottom', 'Left'].filter(k => parseFloat(c0['border' + k + 'Width']) >= 1 && c0['border' + k + 'Style'] !== 'none' && (lum(c0['border' + k + 'Color']) || { a: 0 }).a > .1);
+        if (bd.length) out.field.push(`${name(el)} có viền ${bd.length === 4 ? 'bốn cạnh' : bd.join('/')} lúc nghỉ`);
+        el.focus({ preventScroll: true }); const c1 = getComputedStyle(el);
+        if (c1.outlineStyle !== 'none' && parseFloat(c1.outlineWidth) > 0) out.field.push(`${name(el)} focus vẽ outline ${c1.outlineWidth}`);
+        else if (c1.boxShadow && c1.boxShadow !== 'none') out.field.push(`${name(el)} focus vẽ box-shadow (vòng)`);
+        if (Math.abs(bgL(el) - r0) < 0.01) out.field.push(`${name(el)} focus không đổi nền — người dùng không thấy ô đang nhận chữ`);
+        el.blur(); el.style.transition = tr0; }
+      if (act && act.focus) act.focus({ preventScroll: true }); }
+    // action-left (user 24/09 "nút phải ưu tiên align bên phải"): hàng nút KẾT THÚC một form / dialog / thẻ (con cuối, chỉ chứa button|a.btn)
+    // phải chạm mép PHẢI vùng nội dung của khung (±4px). Thứ tự góc ưu tiên cho cụm nút: phải-dưới → trái-trên → phải-trên → trái-dưới;
+    // luật này đo trường hợp phổ biến nhất (nút hành động cuối khung). Tha nút rộng ≥ 90% khung (nút full-width trên mobile).
+    out.action_left = [];
+    if (!ex.has('action-left')) for (const box of document.querySelectorAll('form,dialog,[role=dialog],.card,[class*=modal]')) { if (!vis(box) || out.action_left.length >= 6) continue;
+      const kids = [...box.children].filter(k => vis(k) && !/^(P|SMALL|OUTPUT)$/.test(k.tagName) && !/status|err|hint|note|muted/.test(typeof k.className === 'string' ? k.className : ''));
+      const last = kids[kids.length - 1]; if (!last) continue;
+      const btns = last.matches('button,a.btn,[role=button]') ? [last] : [...last.children].filter(vis);
+      if (!btns.length || !btns.every(b => b.matches('button,a.btn,[role=button],input[type=submit]'))) continue;
+      const bc = getComputedStyle(box), br = box.getBoundingClientRect(), cr = br.right - parseFloat(bc.borderRightWidth) - parseFloat(bc.paddingRight), cl = br.left + parseFloat(bc.borderLeftWidth) + parseFloat(bc.paddingLeft);
+      const right = Math.max(...btns.map(b => b.getBoundingClientRect().right)), left = Math.min(...btns.map(b => b.getBoundingClientRect().left));
+      if (right - left >= 0.9 * (cr - cl)) continue;
+      if (Math.abs(right - cr) > 4) out.action_left.push(`${name(box)} › "${btns.map(b => (b.innerText || '').trim().slice(0, 18)).join(' · ')}" kết thúc ở x=${Math.round(right)}, mép phải nội dung x=${Math.round(cr)}`); }
     // band-misaligned (user 24/09, ảnh hàng "Giao diện" sidebar intake-guide: dải nền trắng x=4→227 trong nav 0→232, mục nav 12→220):
     // DẢI (rộng ≥ 70% cha) có nền đặc hoặc viền trên/dưới RIÊNG, mà mép trái HOẶC phải không khớp (±2px) mép cha, mép nội dung cha,
     // hay mép bất kỳ anh em nào → tấm vá lơ lửng: không tràn hẳn, không thẳng cột.
@@ -285,7 +326,16 @@ const LAYOUT = () => { const d = document.documentElement, wrap = [];
     // số dòng = số cụm rect KHÔNG chồng nhau theo chiều dọc (icon căn giữa cùng dòng với chữ không bị đếm thành dòng mới)
     let lines = 0, bot = -Infinity; for (const x of rs) { if (x.top >= bot - 1) { lines++; bot = x.bottom; } else bot = Math.max(bot, x.bottom); }
     if (lines >= 2 && wrap.length < 40) wrap.push((el.tagName.toLowerCase() + (typeof el.className === 'string' && el.className ? '.' + el.className.trim().split(/\s+/)[0] : '')) + ' "' + el.textContent.trim().slice(0, 24) + '"'); }
-  return { over: d.scrollWidth - d.clientWidth, wrap }; };
+  // row-wrap (user 24/09 "tràn thì không xuống dòng, chỉ mờ đi"): hàng flex ngang ≥ 2 mục NHỎ (mỗi mục ≤ 64px cao — không phải lưới thẻ)
+  // mà các mục rơi xuống ≥ 2 dòng → FAIL. Sửa: class ovs-line của lớp nền (một dòng, mờ mép khi tràn, hover thấy đủ).
+  const rows = [];
+  for (const el of document.querySelectorAll('body *')) { const cs = getComputedStyle(el); if (/^H[1-6]$/.test(el.tagName) || !/flex/.test(cs.display) || !/^row/.test(cs.flexDirection) || cs.flexWrap === 'nowrap') continue;
+    const kids = [...el.children].filter(k => { const c = getComputedStyle(k), r = k.getBoundingClientRect(); return r.width > 1 && r.height > 1 && c.position !== 'absolute' && c.position !== 'fixed' && c.display !== 'none'; });
+    if (kids.length < 2) continue; const rs = kids.map(k => k.getBoundingClientRect()); if (Math.max(...rs.map(r => r.height)) > 64) continue;
+    if (kids.some(k => getComputedStyle(k).flexBasis === '100%')) continue;   // mục chủ ý chiếm trọn dòng (vd hộp kết quả bên dưới) — không phải tràn
+    const tops = []; for (const r of rs) if (!tops.some(t => Math.abs(t - r.top) < Math.min(...rs.map(x => x.height)) / 2)) tops.push(r.top);
+    if (tops.length >= 2 && rows.length < 20) rows.push((el.tagName.toLowerCase() + (typeof el.className === 'string' && el.className ? '.' + el.className.trim().split(/\s+/)[0] : '')) + ` (${kids.length} mục, ${tops.length} dòng)`); }
+  return { over: d.scrollWidth - d.clientWidth, wrap, rows }; };
 const WIDTHS = [320, 375, 768, 1360], WRAP_AT = [320, 1360];
 const TOGGLE_SEL = '.theme-switch,[data-theme-toggle],.theme-toggle,#theme-toggle,#themeToggle,[aria-label*="giao diện" i],[aria-label*="theme" i],[class*="theme-t"],[id*="theme"]';
 const on = k => !only.length || only.includes(k);
@@ -314,9 +364,9 @@ for (const file of pages) { const abs = resolve(file); const row = { page: file,
       if (cr < c.need) verified.push({ ...c, ratio: +cr.toFixed(2), by: 'pixel' }); }
     m.contrast = verified.concat(m.contrast.slice(90).filter(c => !c.svg)); row.findings[theme] = m;
     if (shots) await p.screenshot({ path: `${shots}/${basename(file, '.html')}-${theme}.png` });
-    if (theme === 'light' && (on('horizontal-scroll') || on('clickable-wrap'))) { row.hscroll = []; row.wrap = [];
+    if (theme === 'light' && (on('horizontal-scroll') || on('clickable-wrap') || on('row-wrap'))) { row.hscroll = []; row.wrap = []; row.rowwrap = [];
       for (const w of WIDTHS) { await p.setViewportSize({ width: w, height: 900 }); await p.waitForTimeout(150); const l = await p.evaluate(LAYOUT);
-        if (l.over > 1) row.hscroll.push({ w, over: l.over }); if (WRAP_AT.includes(w)) for (const x of l.wrap) row.wrap.push(`${x} @${w}`); }
+        if (l.over > 1) row.hscroll.push({ w, over: l.over }); if (WRAP_AT.includes(w)) for (const x of l.wrap) row.wrap.push(`${x} @${w}`); if (w === 375 || w === 1360) for (const x of l.rows) row.rowwrap.push(`${x} @${w}`); }
       await p.setViewportSize({ width: 1360, height: 900 }); await p.waitForTimeout(150); }
     if (theme === 'light') { // toggle: bấm → nền đổi chiều; tải lại → giữ
       // phần tử NHÌN THẤY đầu tiên khớp selector (selector rộng còn khớp cả <script id="…theme…"> / <meta name="theme-color"> trong <head>)
@@ -360,6 +410,11 @@ for (const file of pages) { const abs = resolve(file); const row = { page: file,
   if (on('heading-scale') && L.head_scale && L.head_scale.length) probs.push(`heading-scale: cấp tiêu đề không to → nhỏ — ${L.head_scale.join(' · ')}`);
   if (on('title-scale') && L.title_scale && L.title_scale.length) probs.push(`title-scale: tên trang không lớn hơn mục nav/tab — ${L.title_scale[0]}`);
   if (on('line-over-text') && L.line_text && L.line_text.length) probs.push(`line-over-text: vạch mảnh có định vị đè lên chữ — ${L.line_text.slice(0, 3).join(' · ')}`);
+  // row-wrap FAIL: lớp nền (html_base LINE_JS) tự gắn ovs-line cho hàng rơi dòng → trang mang lớp nền sạch; còn bắt được = trang KHÔNG mang lớp nền.
+  if (on('row-wrap') && row.rowwrap && row.rowwrap.length) probs.push(`row-wrap: hàng chip/chỉ số/nút rơi xuống nhiều dòng — dùng class ovs-line (một dòng, mờ mép khi tràn, hover thấy đủ) — ${row.rowwrap.slice(0, 3).join(' · ')}`);
+  if (on('action-left') && L.action_left && L.action_left.length) probs.push(`action-left: hàng nút cuối khung không nằm bên phải (ưu tiên góc phải-dưới) — ${L.action_left.slice(0, 3).join(' · ')}`);
+  if (on('field-ring') && L.field && L.field.length) probs.push(`field-ring: ô nhập khoanh viền/vòng — dùng nền trong suốt, hover/focus đậm dần — ${L.field.slice(0, 3).join(' · ')}`);
+  if (on('fixed-trapped') && L.trapped && L.trapped.length) probs.push(`fixed-trapped: phần tử fixed phủ ngang bị nhốt trong khung cha — đặt nó làm con trực tiếp của <body> — ${L.trapped.join(' · ')}`);
   if (on('band-misaligned') && L.band && L.band.length) probs.push(`band-misaligned: dải có nền/viền riêng lệch mép — không tràn hẳn cha, không thẳng cột anh em — ${L.band.slice(0, 3).join(' · ')}`);
   if (on('kanban-uniform') && L.kanban && L.kanban.length) probs.push(`kanban-uniform: thẻ kanban không đồng nhất — ${L.kanban.slice(0, 3).join(' · ')}`);
   if (on('eye-rest') && L.eye_rest && L.eye_rest.length) warns.push(`eye-rest: không có khoảng nghỉ cho mắt — ${L.eye_rest.join(' · ')}`);

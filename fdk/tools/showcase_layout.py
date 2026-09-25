@@ -35,8 +35,8 @@ BLOCKS = [
     _grid(3, "khung hẹp hơn 680px thì rơi thẳng về 1 cột (3 → 2 để lại ô mồ côi)", _LB[:3]),
     _grid(4, "khung hẹp hơn 760px còn 2 cột, hẹp hơn 420px còn 1 cột", _LB),
     dict(
-        id="sidebar", title="Sidebar chuẩn", rules=["hierarchy-flat", "title-scale", "sentence-case", "tap-target", "clickable-wrap"],
-        note="Rộng 240–256px, nút thu về thanh icon 64px (nhãn còn trong title); tên trang 18px/800; nhãn nhóm 11px/700 chữ hoa giãn chữ, cùng độ đậm màu với mục; mục 13px, cao ≥ 32px; mục đang xem = nền viên + chấm màu.",
+        id="sidebar", title="Sidebar chuẩn", rules=["hierarchy-flat", "title-scale", "sentence-case", "tap-target", "clickable-wrap", "band-misaligned"],
+        note="Rộng 240–256px, nút thu về thanh icon 64px (nhãn còn trong title); tên trang 18px/800; nhãn nhóm 11px/700 chữ hoa giãn chữ, cùng độ đậm màu với mục; mục 13px, cao ≥ 32px; mục đang xem = nền viên + chấm màu. Hàng cuối (công tắc giao diện) thẳng cột với mục, chung nền sidebar, không margin âm hay nền riêng (luật band-misaligned).",
         html=('<nav class="sc-sidebar" aria-label="Ví dụ sidebar"><div class="top"><a class="logo" href="#b-sidebar"><span class="lb">Tên dự án</span></a>'
               '<button class="fold" type="button" aria-expanded="true" aria-label="Thu gọn sidebar"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16"/></svg></button></div>'
               '<div class="grp">Bắt đầu</div>'

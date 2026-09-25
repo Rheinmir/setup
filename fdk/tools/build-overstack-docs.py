@@ -214,7 +214,7 @@ LOOP_GROUPS = {
         [("docs", "📄 tài liệu & render"), ("taste", "🎨 thiết kế & style"), ("imagegen", "🖼️ image→code/gen"),
          ("caveman", "🦴 caveman"), ("fdk", "🛠️ framework-dev"), ("utility", "🔧 tiện ích khác")],
         {"docs-site-macos": "docs", "extract-site": "docs", "md-to-html": "docs",
-         "web-crawl": "docs", "web-clone": "docs",
+         "web-crawl": "docs", "web-clone": "docs", "whales-storying": "docs",
          "tour-guide": "taste", "tour-guide-supademo": "taste",
          "brandkit": "taste", "hallmark": "taste", "design-prim": "taste", "dark-mode-maker": "taste", "prd-grade-fe": "taste", "design-taste-frontend": "taste", "design-taste-frontend-v1": "taste",
          "timeline": "taste", "blur": "taste",

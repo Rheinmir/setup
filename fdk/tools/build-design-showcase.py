@@ -83,7 +83,7 @@ html.sc-nav-off nav.sc-side{transform:translateX(-100%)}html.sc-nav-off main.sc-
 .sc-block{margin:0 0 48px}.sc-block>h3{font-size:22px;line-height:1.55;margin:32px 0 16px}
 .sc-block>.sc-note{margin:0 0 24px;max-width:var(--measure);color:var(--ovs-ink2)}
 .sc-demo{border:1px solid var(--ovs-border);border-radius:14px;padding:24px;background:rgba(var(--ovs-glass-rgb),.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 8px 24px rgba(30,90,170,.06)}
-.sc-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:24px 0 0;font-size:13px;color:var(--ovs-ink2)}
+.sc-meta{display:flex;gap:8px;align-items:center;margin:24px 0 0;font-size:13px;color:var(--ovs-ink2)}
 .sc-meta code{font-family:inherit;font-size:12px;font-weight:500;padding:2px 8px;border-radius:999px;background:var(--ovs-accent-bg);color:var(--ovs-ink)}
 details.sc-code{margin:12px 0 0}
 details.sc-code>summary{cursor:pointer;display:inline-flex;align-items:center;min-height:32px;padding:4px 12px;border:1px solid var(--ovs-border);border-radius:999px;font-size:13px}
@@ -113,7 +113,7 @@ def render_block(b: dict) -> str:
     return (f'<article class="sc-block" id="b-{b["id"]}" data-block="{b["id"]}" data-rules="{",".join(b.get("rules", []))}">'
             f'<h3>{H.escape(b["title"])}</h3><p class="sc-note">{H.escape(b.get("note", ""))}</p>'
             f'<div class="sc-demo">{b["html"]}</div>'
-            f'<div class="sc-meta">Luật: {rules}</div>'
+            f'<div class="sc-meta ovs-line">Luật: {rules}</div>'
             f'<details class="sc-code"><summary>Xem code</summary><div class="sc-codebox">'
             f'<button class="sc-copy" type="button">Sao chép</button>'
             f'<pre><code class="language-html">{H.escape(snippet(b))}</code></pre></div></details></article>')

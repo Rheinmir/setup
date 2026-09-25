@@ -33,7 +33,8 @@ def test_sidebar_gets_icon_tiles_label_and_number_in_title_without_wrapping_chip
     assert nav.count('class="ic"') == 4 and nav.count("ovs-na") == 4
     assert 'title="01 · Vấn đề"' in nav and '<span class="ovs-lbl">Vấn đề</span>' in nav
     assert "ovs-num" not in nav                                       # chip số làm nhãn bẻ 2 dòng ở sidebar 200px
-    assert "<svg" in nav and 'class="ovs-progress"' in nav
+    assert "<svg" in nav and 'class="ovs-progress"' not in nav        # thanh tiến độ fixed KHÔNG trong nav (backdrop-filter nhốt nó — user 24/09)
+    assert out.count('class="ovs-progress"') == 1
 
 
 def test_a11y_skip_link_main_and_favicon_are_added():

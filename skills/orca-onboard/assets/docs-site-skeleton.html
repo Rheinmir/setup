@@ -13,7 +13,9 @@
   SCHEMA ONBOARD_JSON:
   {
     "project":{"name","subtitle","about","stack":[{"name","role"}],
-               "versions":[{"name","ver"}],"stats":[{"n","l"}]},
+               "versions":[{"name","ver"}],"stats":[{"n","l"}],
+               "what":"2–4 câu lời thường: dự án LÀM GÌ, cho AI, giải quyết vấn đề gì (không thuật ngữ nội bộ)",
+               "how":[{"t":"bước ngắn","d":"1–2 câu: chuyện gì xảy ra ở bước này, dữ liệu đi đâu"}]},   // 3–7 bước đầu→cuối; thiếu cả hai → ẩn mục
     "architecture":{
       "layers":[{"name","desc"}],
       "diagram":{"nodes":[{"label","x","y","w","h","color"}],"edges":[[fromIdx,toIdx]]}},
@@ -157,7 +159,7 @@
   .diagram-box::after{content:'';position:absolute;right:5px;bottom:5px;width:16px;height:16px;pointer-events:none;opacity:0;transition:opacity .25s;clip-path:polygon(100% 0,100% 100%,0 100%);background:repeating-linear-gradient(135deg,transparent 0 3.5px,rgba(10,132,255,.45) 3.5px 5px)}
   .diagram-box:hover::after{opacity:.85}.diagram-box::-webkit-resizer{display:none}
   .tour{display:grid;grid-template-columns:268px 1fr;gap:20px}
-  .steps{list-style:none;margin:0;padding:0}
+  .steps{list-style:none;margin:0;padding:0}.howlist{list-style:none;margin:0;padding:0;display:grid;gap:12px}.howlist li p{margin:4px 0 0;color:var(--ink2)}
   .steps li{padding:12px 12px;border-radius:13px;cursor:pointer;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start;background:var(--glass-2);backdrop-filter:blur(var(--blur-2));-webkit-backdrop-filter:blur(var(--blur-2));border:1px solid var(--border);box-shadow:var(--edge-hi),0 4px 20px rgba(20,40,90,.08);transition:.16s}
   .steps li:hover{transform:translateX(3px)}
   .steps li[aria-selected=true]{background:linear-gradient(120deg,rgba(var(--ovs-glass-rgb,255,255,255),.92),rgba(var(--ovs-glass-rgb,255,255,255),.85));border-color:#cdc4ff}
@@ -233,12 +235,14 @@
     architecture:'<path d="M12 3 3 7.5l9 4.5 9-4.5L12 3Z"/><path d="M3 12l9 4.5L21 12"/><path d="M3 16.5 12 21l9-4.5"/>',
     tour:'<path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11Z"/><circle cx="12" cy="10" r="2.5"/>',
     modules:'<path d="M12 2.5 3 7.5v9l9 5 9-5v-9l-9-5Z"/><path d="M3 7.5l9 5 9-5"/><line x1="12" y1="12.5" x2="12" y2="21.5"/>',
+    whathow:'<circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 1 1 3.4 2.3c-.6.3-1 .8-1 1.5v.7"/><circle cx="12" cy="16.8" r=".6"/>',
     docker:'<rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="M7 9.5l3 2.5-3 2.5"/><line x1="12.5" y1="15" x2="16.5" y2="15"/>'
   };
   var sv=function(p){return '<svg viewBox="0 0 24 24">'+p+'</svg>';};
 
   /* ---- NAV ---- */
-  var navItems=[['overview','Overview'],['architecture','Architecture'],['tour','Guided Tour']];
+  var hasWH=!!(P.what||(P.how&&P.how.length));
+  var navItems=[['overview','Overview']];if(hasWH)navItems.push(['whathow','What & How']);navItems.push(['architecture','Architecture'],['tour','Guided Tour']);
   if(hasMods)navItems.push(['modules','Modules']);
   if(hasDk)navItems.push(['docker','Docker']);
   var navHTML='<div class="logo"><span class="badge">'+sv(ICON.monitor)+'</span><span class="lt">'+esc(P.name||'Project')+'<small>onboarding'+(hasMods?' · '+MODS.length+' svc':'')+'</small></span></div>';
@@ -246,17 +250,24 @@
   document.getElementById('nav').innerHTML=navHTML;
 
   /* ---- SECTIONS ---- */
+  var secN=0,num=function(){secN++;return (secN<10?'0':'')+secN;};
   var H='<div class="hero"><h1>'+esc(P.name||'Project')+'</h1><p>'+esc(P.subtitle||'')+'</p></div>';
   var stack=(P.stack||[]).map(function(s){return '<li><b>'+esc(s.name)+'</b><span>'+esc(s.role||'')+'</span></li>';}).join('');
   var vers=(P.versions||[]).map(function(v){return '<li>'+esc(v.name)+' <span class="v">'+esc(v.ver)+'</span></li>';}).join('');
   var stats=(P.stats||[]).map(function(s){return '<div class="card stat"><div class="n">'+esc(s.n)+'</div><div class="l">'+esc(s.l)+'</div></div>';}).join('');
-  H+='<section id="overview" class="section-bg s-bg0"><span class="tag">01 · Overview</span><h2>Làm về cái gì</h2>'+
+  H+='<section id="overview" class="section-bg s-bg0"><span class="tag">'+num()+' · Overview</span><h2>Làm về cái gì</h2>'+
      '<p class="lead">'+esc(P.about||'')+'</p>'+
      (stack||vers?('<h3 class="sub">Tech stack &amp; version</h3><div class="grid col2">'+
         '<div class="card"><h4 style="color:#0a84ff">Tech Stack</h4><ul class="techlist">'+stack+'</ul></div>'+
         '<div class="card"><h4 style="color:#28a745">Version</h4><ul class="vlist">'+vers+'</ul></div></div>'):'')+
      (stats?('<h3 class="sub">Stats</h3><div class="grid stats">'+stats+'</div>'):'')+
      '</section>';
+
+  // WHAT & HOW (user 24/09): ngay sau Overview — người mới đọc bằng lời thường dự án làm gì và chạy thế nào, trước khi vào kiến trúc
+  if(hasWH){var how=(P.how||[]).map(function(h,i){return '<li class="card"><b>'+(i+1)+'. '+esc(h.t||'')+'</b><p>'+esc(h.d||'')+'</p></li>';}).join('');
+    H+='<section id="whathow" class="section-bg s-bg1"><span class="tag">'+num()+' · What &amp; How</span><h2>Làm gì và chạy thế nào</h2>'+
+       (P.what?('<h3 class="sub">What — dự án làm gì</h3><p class="lead">'+esc(P.what)+'</p>'):'')+
+       (how?('<h3 class="sub">How — chạy từ đầu tới cuối</h3><ol class="howlist">'+how+'</ol>'):'')+'</section>';}
 
   var layers=(A.layers||[]).map(function(l){return '<div class="layer"><b>'+esc(l.name)+'</b><span class="nodes">'+esc(l.desc||'')+'</span></div>';}).join('');
   var diagram='';
@@ -272,18 +283,18 @@
     svg+='</svg>';
     diagram='<div class="diagram-box">'+svg+'</div>';
   }
-  H+='<section id="architecture" class="section-bg s-bg1"><span class="tag">02 · Architecture</span><h2>Kiến trúc &amp; layers</h2>'+
+  H+='<section id="architecture" class="section-bg s-bg1"><span class="tag">'+num()+' · Architecture</span><h2>Kiến trúc &amp; layers</h2>'+
      '<p class="lead">'+(diagram?'Sơ đồ tương tác — kéo từng node, cuộn để zoom, kéo nền để pan.':'Các layer suy từ knowledge-graph.')+'</p>'+
      diagram+(layers?('<h3 class="sub">Layers</h3>'+layers):'')+'</section>';
 
-  H+='<section id="tour" class="section-bg s-bg2"><span class="tag">03 · Guided Tour</span><h2>Guided Tour</h2>'+
+  H+='<section id="tour" class="section-bg s-bg2"><span class="tag">'+num()+' · Guided Tour</span><h2>Guided Tour</h2>'+
      '<p class="lead">Bấm một bước bên trái → chi tiết đầy đủ đổi tại chỗ bên phải.</p>'+
      '<div class="tour"><ul class="steps" id="tour-steps" role="listbox" aria-label="Tour steps"></ul><div class="card detail" id="tour-detail"></div></div></section>';
 
-  if(hasMods)H+='<section id="modules" class="section-bg s-bg3"><span class="tag">04 · Modules</span><h2>Modules &amp; containers</h2>'+
+  if(hasMods)H+='<section id="modules" class="section-bg s-bg3"><span class="tag">'+num()+' · Modules</span><h2>Modules &amp; containers</h2>'+
      '<p class="lead">Mỗi image/container: kiến trúc riêng + data lifecycle nội bộ.</p><div class="grid mods" id="mods"></div></section>';
 
-  if(hasDk){var idx=hasMods?'05':'04';
+  if(hasDk){var idx=num();
     H+='<section id="docker" class="section-bg s-bg4"><span class="tag">'+idx+' · Docker</span><h2>Chạy bằng Docker</h2>'+
        '<p class="lead">'+(DK.strategy||'')+'</p>'+
        (DK.cmd?('<h3 class="sub">Quickstart</h3><pre class="code-block" id="dk-cmd"></pre>'):'')+
