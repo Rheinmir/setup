@@ -373,17 +373,25 @@ for (const file of pages) { const abs = resolve(file); const row = { page: file,
       let tg = null; for (const h of await p.$$(TOGGLE_SEL)) { if (await h.evaluate(e => { const r = e.getBoundingClientRect(); return r.width > 4 && r.height > 4 && !/^(script|style|meta|link|template)$/i.test(e.tagName); })) { tg = h; break; } }
       const follows = await p.$('[data-ovs-theme-follow]');
       if (follows) row.toggle = 'follows-parent'; else if (!tg) row.toggle = 'MISSING';
-      else { const lumNow = () => p.evaluate(() => { const f = c => { const m = c.match(/[\d.]+/g); if (!m) return null; const a = m[3] === undefined ? 1 : +m[3]; return a < .5 ? null : (0.2126 * m[0] + 0.7152 * m[1] + 0.0722 * m[2]) / 255; }; return f(getComputedStyle(document.body).backgroundColor) ?? f(getComputedStyle(document.documentElement).backgroundColor) ?? (document.documentElement.getAttribute('data-theme') === 'dark' ? 0 : 1); });
+      else { const lumNow = (pg = p) => pg.evaluate(() => { const f = c => { const m = c.match(/[\d.]+/g); if (!m) return null; const a = m[3] === undefined ? 1 : +m[3]; return a < .5 ? null : (0.2126 * m[0] + 0.7152 * m[1] + 0.0722 * m[2]) / 255; }; return f(getComputedStyle(document.body).backgroundColor) ?? f(getComputedStyle(document.documentElement).backgroundColor) ?? (document.documentElement.getAttribute('data-theme') === 'dark' ? 0 : 1); });
         const before = await lumNow();
         // toggle-jump (user 24/09 "ấn vào nó vẫn bị nhảy lên"): đo hộp nút GIỮA lúc bấm — ripple đổi static→relative làm bottom/right sót lại
         // có hiệu lực ~0,5s rồi trả về, nên đo sau click không bao giờ thấy. Nhấn = mouse down/up thật (thay tg.click).
         const b0 = await tg.boundingBox(); if (b0) { await p.mouse.move(b0.x + b0.width / 2, b0.y + b0.height / 2); await p.mouse.down(); await p.waitForTimeout(80);
           const b1 = await tg.boundingBox(); await p.mouse.up(); if (b1 && (Math.abs(b1.x - b0.x) > 1 || Math.abs(b1.y - b0.y) > 1)) row.toggleJump = `${Math.round(b1.x - b0.x)},${Math.round(b1.y - b0.y)}px`; }
         else await tg.click({ force: true }).catch(() => {});
-        await p.waitForTimeout(700); const after = await lumNow();
-        const attr = await p.evaluate(() => document.documentElement.getAttribute('data-theme')); await p.reload({ waitUntil: 'load' }).catch(() => {}); await p.waitForTimeout(200);
-        const kept = await p.evaluate(() => document.documentElement.getAttribute('data-theme'));
-        row.toggle = Math.abs(before - after) < 0.25 ? 'NO-EFFECT' : (kept !== attr ? 'NOT-PERSISTED' : 'ok'); } }
+        // CHỜ ĐIỀU KIỆN, không chờ cứng: toggle kiểu circle-reveal áp theme SAU hiệu ứng. Đo 27/09/2026 trên ubuntu-latest:
+        // overstack.html còn sáng ở +700ms, tối ở +1500ms → bản chờ cứng 700ms báo NO-EFFECT giả trên CI, xanh trên máy nhanh.
+        let after = await lumNow(); for (let t = 0; t < 3000 && Math.abs(before - after) < 0.25; t += 100) { await p.waitForTimeout(100); after = await lumNow(); }
+        // "Tải lại vẫn giữ" = mở lại trang ở TAB MỚI cùng context (cùng storage) rồi đo NỀN NHÌN THẤY. Không dùng p.reload()/goto
+        // trên chính trang: đo 27/09/2026 trên ubuntu-latest, key localStorage trang vừa ghi (file://) có lúc MẤT qua reload/goto
+        // cùng trang → NOT-PERSISTED giả, tập trang đỏ đổi giữa các lần chạy (reload 16–21/22, goto 21/22, tab mới 22/22 cả hai lần).
+        // Chờ hiệu ứng đổi theme lắng (nền đứng yên 400ms) trước khi mở tab mới.
+        { let last = after, still = 0; for (let t = 0; t < 3000 && still < 400; t += 100) { await p.waitForTimeout(100); const l = await lumNow(); still = Math.abs(l - last) < 0.01 ? still + 100 : 0; last = l; } }
+        const p2 = await ctx.newPage(); await p2.goto(p.url(), { waitUntil: 'load', timeout: 30000 }).catch(() => {});
+        let kept = await lumNow(p2); for (let t = 0; t < 2000 && Math.abs(kept - after) >= 0.25; t += 100) { await p2.waitForTimeout(100); kept = await lumNow(p2); }
+        await p2.close();
+        row.toggle = Math.abs(before - after) < 0.25 ? 'NO-EFFECT' : (Math.abs(kept - after) >= 0.25 ? 'NOT-PERSISTED' : 'ok'); } }
     await ctx.close(); }
   const L = row.findings.light, D = row.findings.dark; const probs = [];
   if (on('contrast')) for (const [t, m] of [['sáng', L], ['tối', D]]) if (m.contrast.length) probs.push(`contrast(${t}): ${m.contrast.length} chữ chìm — vd "${m.contrast[0].text}" ${m.contrast[0].ratio}:1 (cần ${m.contrast[0].need}) ở ${m.contrast[0].el}`);
