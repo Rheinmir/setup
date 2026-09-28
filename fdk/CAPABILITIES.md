@@ -1,7 +1,7 @@
 <!-- SINH BẰNG CODE: build-capabilities.py — ĐỪNG sửa tay; chạy lại để cập nhật. -->
 # CAPABILITIES — toàn bộ đồ nghề (luôn-mới, đếm từ đĩa)
 
-**103 skill · 22 rule · 56 fdk-tool · 76 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
+**103 skill · 22 rule · 56 fdk-tool · 77 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
 
 ## Skills (gọi bằng `/<tên>`)
 
@@ -230,6 +230,7 @@
 - `harness-doctor.py`
 - `harness-lint.py`
 - `health-check.py`
+- `hook-audit.py`
 - `hub.py`
 - `inject-scan.py`
 - `ledger-snapshot.py`
@@ -276,11 +277,12 @@
 - `wiki-sync.py`
 - `wikieval.py`
 
-## Neo bằng chứng — 285/285 năng lực có neo KHAI BÁO
+## Neo bằng chứng — 286/286 năng lực có neo KHAI BÁO
 **Đọc cho đúng: đây KHÔNG phải bằng chứng năng lực còn SỐNG.** Mỗi năng lực được map tất định tới một *điểm neo* bằng chứng trên đĩa (frontmatter `proof:` > rule-map > tests > self-test > golden > medic). Việc map là **tĩnh** — nó kiểm file/chuỗi có mặt, **không thực thi gì cả**. Nó bắt được ca 'năng lực này chẳng có test/golden/rule nào neo vào' (hữu ích thật), nhưng KHÔNG bắt được ca 'test có mà đỏ' hay 'engine có mà chết'. Muốn biết một dependency ngoài còn sống thì hỏi `harness/scripts/dep-health.py`. Chi tiết neo: `build-capabilities.py --capproof-json`.
 
-## TRÙNG-ỨNG-VIÊN (29) — máy phát hiện, NGƯỜI phán (dedupe = vòng /propose riêng)
+## TRÙNG-ỨNG-VIÊN (30) — máy phát hiện, NGƯỜI phán (dedupe = vòng /propose riêng)
 - `mech:medic` ↔ `mech:medic-mirror` — name-token: medic
+- `script:audit.py` ↔ `script:hook-audit.py` — name-token: audit
 - `script:failure-flywheel.py` ↔ `script:flywheel.py` — name-token: flywheel
 - `script:failure-flywheel.py` ↔ `script:success-flywheel.py` — desc-jaccard 0.50
 - `script:flywheel.py` ↔ `script:success-flywheel.py` — name-token: flywheel

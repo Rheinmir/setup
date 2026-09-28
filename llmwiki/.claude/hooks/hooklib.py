@@ -281,6 +281,88 @@ def session_touched_files(root: str, transcript_path: str):
     return sorted(files, key=lambda p: (_touched_rank(p), -os.path.getmtime(p)))
 
 
+def session_new_html(root: str, transcript_path: str):
+    """Feedback 280926 "thứ hai là file html — tạo ra, không phải edit, trong .llmwiki/html": HTML SINH MỚI trong phiên ở
+    `<overstack>/html/`. Mới = thời điểm SINH file (st_birthtime, macOS) ≥ mốc đầu phiên — ghi đè tại chỗ giữ birthtime cũ nên
+    file chỉ bị sửa không lọt; file git ĐÃ theo dõi luôn loại (có từ trước phiên — bộ sinh ghi tạm + rename làm mới birthtime).
+    Không có birthtime (Linux) → mtime. wiki-graph.html (stop.py tự dựng lại) luôn loại. Mới nhất trước. Fail-open: lỗi gì cũng trả list rỗng."""
+    try:
+        start = None
+        for line in open(transcript_path, encoding="utf-8", errors="ignore"):
+            ts = json.loads(line).get("timestamp") if line.strip() else None
+            if ts:
+                start = datetime.datetime.fromisoformat(ts.replace("Z", "+00:00")).timestamp()
+                break
+        ov = overstack_dir(root)
+        if start is None or not ov or not (pathlib.Path(ov) / "html").is_dir():
+            return []
+        tracked = set()                                              # file git ĐÃ theo dõi = có từ trước phiên → không bao giờ "mới"
+        try:                                                         # (generator ghi tạm + rename làm mới birthtime — đo 280926: 3 trang tự sinh lọt)
+            top = subprocess.run(["git", "-C", str(ov), "rev-parse", "--show-toplevel"], capture_output=True, text=True, timeout=5).stdout.strip()
+            r = subprocess.run(["git", "-C", str(ov), "ls-files", "--full-name", "-z", "--", "."], capture_output=True, text=True, timeout=10).stdout
+            tracked = {os.path.abspath(os.path.join(top, x)) for x in r.split("\0") if x} if top else set()
+        except Exception:
+            pass
+        out = []
+        for f in (pathlib.Path(ov) / "html").rglob("*.html"):
+            fp = str(f.resolve())
+            if f.name == "wiki-graph.html" or fp in tracked:
+                continue
+            st = f.stat()
+            if getattr(st, "st_birthtime", st.st_mtime) >= start:   # không có birthtime (Linux) → mtime
+                out.append(fp)
+        return sorted(out, key=lambda p: -os.path.getmtime(p))
+    except Exception:
+        return []
+
+
+def session_graphs(root: str, transcript_path: str):
+    """Feedback 280926 ("graph này cũ rồi mà"): graph phân việc CỦA PHIÊN NÀY = graph orca-graph có id xuất hiện trong input
+    của tool_use mà phiên đã gọi (lệnh orca-graph build/dispatch, Read/Write PLAN…) — KHÔNG suy từ mtime (phiên khác hay bộ
+    sinh ghi lại PLAN/graph làm graph cũ lọt). Trả path `<overstack>/graph/<id>.graph.html` đã dựng. Fail-open → []."""
+    try:
+        ov = overstack_dir(root)
+        gdir = pathlib.Path(ov) / "graph" if ov else None
+        if not gdir or not gdir.is_dir():
+            return []
+        ids = {f.name[:-len(".graph.html")]: f for f in gdir.glob("*.graph.html")}
+        if not ids:
+            return []
+        seen, order = set(), []
+        for line in open(transcript_path, encoding="utf-8", errors="ignore"):
+            if '"tool_use"' not in line:
+                continue
+            try:
+                msg = json.loads(line).get("message") or {}
+            except Exception:
+                continue
+            for c in msg.get("content") or [] if isinstance(msg, dict) else []:
+                if isinstance(c, dict) and c.get("type") == "tool_use":
+                    text = json.dumps(c.get("input") or {}, ensure_ascii=False)
+                    for gid in ids:
+                        if gid not in seen and gid in text:
+                            seen.add(gid); order.append(gid)
+        return [str(ids[g].resolve()) for g in reversed(order)]          # dùng gần nhất trước
+    except Exception:
+        return []
+
+
+def graphs_message(files) -> str:
+    if not files:
+        return ""
+    return "\n".join([f"🧭 [R21] {len(files)} graph phân việc phiên này:"]
+                     + [f"  • [graph] {_page_title(p) or os.path.basename(p)}\n      file://{p}" for p in files])
+
+
+def new_html_message(files) -> str:
+    """Khối '[newhtml]' cho stop.py gộp vào dòng R21 (sau graph phân việc)."""
+    if not files:
+        return ""
+    lines = [f"🆕 [R21] {len(files)} HTML tạo mới phiên này:"]
+    lines += [f"  • [newhtml] {_page_title(p) or os.path.basename(p)}\n      file://{p}" for p in files]
+    return "\n".join(lines)
+
+
 def _touched_rank(p: str) -> int:
     """Thứ tự user muốn xem (feedback 190926): HTML trong llmwiki → graph → PLAN → còn lại."""
     q = p.replace(os.sep, "/")
@@ -297,11 +379,11 @@ def _touched_rank(p: str) -> int:
 # Feedback 200926: "40 file ở Stop annoying — thứ tôi cần đọc là .md/.html định dạng NGƯỜI ĐỌC sinh ra trong wiki; mỗi dòng path
 # phải ghi nó LÀ GÌ; dòng khác show ra thì ít nhất cho biết nó VỀ cái gì". → link chỉ cho trang người-đọc trong wiki (kèm tiêu đề
 # thật lấy từ frontmatter/<title>), phần còn lại gom theo nhóm: nhãn + số lượng + vài tên, không rải từng path.
-_READER_SKIP = ("/index.md", "/log.md", "/_template.md", "/README.md", "/provenance/", "/atlas.html", "/control-room",
+_READER_SKIP = ("/index.md", "/log.md", "/_template.md", "/README.md", "/provenance/", "/atlas.html", "/wiki-graph.html", "/control-room",
                 "/overstack.html", "/skills/", "/raw/")     # sổ máy / trang tự sinh lại mỗi lượt — không phải thứ người ngồi đọc
 _GROUPS = (("test", ("/tests/", "^test_", "-test.sh", ".spec.")),      # "^x" = TÊN FILE bắt đầu bằng x (so cả path thì thư mục tên test_* khớp nhầm) ("skill (hướng dẫn cho agent)", ("/skills/", "SKILL.md")),
            ("dữ liệu graph / sổ máy", (".graph.json", ".jsonl", "/graph/", "/index.md", "/log.md", "/provenance/", "ledger")),
-           ("trang tự sinh lại", ("/atlas.html", "/control-room", "/overstack.html", "CAPABILITIES.md")),
+           ("trang tự sinh lại", ("/atlas.html", "/wiki-graph.html", "/control-room", "/overstack.html", "CAPABILITIES.md")),
            ("CI / cấu hình", (".yml", ".yaml", ".json", ".toml", ".gitignore", "/.github/")),
            ("nguồn thô raw/", ("/raw/",)), ("code / script", (".py", ".sh", ".ps1", ".js", ".mjs", ".ts", ".tsx", ".css")),
            ("tài liệu ngoài wiki", (".md", ".html")))
@@ -342,7 +424,7 @@ def touched_message(files, cap: int = TOUCHED_CAP) -> str:
     if pages:
         lines.append(f"📖 [R21] {len(pages)} trang để ĐỌC phiên này tạo/sửa (HTML → graph → PLAN → còn lại):")
         for p in pages[:cap]:
-            kind = "HTML" if p.endswith(".html") else "PLAN" if p.endswith("-PLAN.md") else "md"
+            kind = "orca-graph" if p.endswith(".graph.html") else "HTML" if p.endswith(".html") else "PLAN" if p.endswith("-PLAN.md") else "md"
             lines.append(f"  • [{kind}] {_page_title(p) or os.path.basename(p)}\n      file://{p}")
         if len(pages) > cap:
             lines.append(f"  … +{len(pages) - cap} trang nữa (trần {cap} — OVERSTACK_TOUCHED_CAP)")

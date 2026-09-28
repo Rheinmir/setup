@@ -113,3 +113,75 @@ def test_servers_message_shows_public_link_next_to_localhost():
     msg = hooklib.servers_message([{"url": "http://localhost:3000/", "what": "node server.js · chạy ở web/", "public": ["https://app.example.vn"]}])
     assert "http://localhost:3000/  ⇄  https://app.example.vn" in msg and "node server.js" in msg
     assert hooklib.servers_message([]) == ""
+
+
+def test_stop_collapses_r21_to_graph_only_and_dedupes_double_hook(tmp_path, monkeypatch):
+    """Feedback 280926 "tui cần cái graph phân việc thôi" + "phiên không có graph thì không show": dòng gọn CHỈ còn link
+    orca-graph [graph] + link "chi tiết" (bản đủ); không graph → không in. Hook dự án + global cùng chạy thì lần 2 im."""
+    import importlib.util, tempfile
+    monkeypatch.setattr(tempfile, "gettempdir", lambda: str(tmp_path))
+    spec = importlib.util.spec_from_file_location("stop_mod", ROOT / "llmwiki/.claude/hooks/stop.py")
+    st = importlib.util.module_from_spec(spec); spec.loader.exec_module(st)
+    full = ("📖 [R21] 3 trang để ĐỌC (x):\n  • [HTML] Báo cáo\n      file:///r/a.html\n  • [graph] Graph phân việc · g1\n      file:///r/graph/g1.graph.html\n"
+            "  • [PLAN] Kế hoạch\n      file:///r/g1-PLAN.md\n🗂 10 file khác (x):\n  · code: 1 — x.py\n🌐 [R21] 1 server đang chạy (bấm mở):\n  • https://uiux.giatbh.io.vn\n      link thật")
+    line = st._collapse(full, "s1")
+    assert "\n" not in line
+    assert "\x1b]8;;file:///r/graph/g1.graph.html\x1b\\Graph phân việc · g1\x1b]8;;\x1b\\" in line     # OSC 8: chữ hiện, URL ẩn
+    for gone in ("a.html", "g1-PLAN.md", "uiux.giatbh.io.vn", "file khác"):
+        assert gone not in line, gone
+    detail = line.rsplit("\x1b]8;;file://", 1)[1].split("\x1b")[0]
+    assert open(detail, encoding="utf-8").read().strip() == full                    # bản đủ vẫn còn sau "chi tiết"
+    assert st._collapse(full, "s1") is None                                          # hook thứ hai, cùng nội dung → không in lại
+    assert st._collapse(full.replace("[graph]", "[HTML]"), "s2") is None            # phiên không có graph → không in
+    monkeypatch.setenv("OVERSTACK_TOUCHED_FULL", "1")
+    assert st._collapse(full + "\n  • b", "s1").startswith("📖 [R21] 3 trang để ĐỌC")
+    monkeypatch.setenv("OVERSTACK_TOUCHED_FULL", "0"); monkeypatch.setenv("OVERSTACK_TOUCHED_OSC8", "0")
+    raw = st._collapse(full + "\n  • c", "s1")
+    assert "\x1b" not in raw and "Graph phân việc · g1 <file:///r/graph/g1.graph.html>" in raw
+
+
+def test_graph_is_the_one_this_session_worked_on_not_by_mtime(tmp_path, monkeypatch):
+    """Feedback 280926: 'graph' = trang orca-graph `<id>.graph.html` mà phiên này GỌI TỚI (id nằm trong input tool_use);
+    PLAN/graph cũ bị ghi lại (mtime mới) không được lọt ('graph này cũ rồi mà'); wiki-graph.html không phải trang để đọc."""
+    ov = tmp_path / "llmwiki"; (ov / "graph").mkdir(parents=True); (ov / "html").mkdir()
+    for g in ("200926-old", "280926-mine"):
+        (ov / "graph" / f"{g}.graph.html").write_text(f"<title>Graph phân việc · {g}</title>")
+    (ov / "html/wiki-graph.html").write_text("<title>wg</title>")
+    monkeypatch.setattr(hooklib, "overstack_dir", lambda r: ov)
+    t = tmp_path / "t.jsonl"
+    t.write_text("\n".join(json.dumps(r) for r in [
+        {"type": "assistant", "message": {"content": [{"type": "tool_use", "name": "Bash",
+                                                       "input": {"command": "orca-graph build llmwiki/wiki/sources/draft/280926-mine-PLAN.md"}}]}},
+        {"type": "user", "message": {"content": [{"type": "tool_result", "content": "200926-old.graph.html"}]}}]))   # chỉ ở OUTPUT → không tính
+    got = [Path(p).name for p in hooklib.session_graphs(str(tmp_path), str(t))]
+    assert got == ["280926-mine.graph.html"], got
+    old_plan = ov / "wiki/sources/draft/200926-old-PLAN.md"; old_plan.parent.mkdir(parents=True); old_plan.write_text("# p")
+    msg = hooklib.touched_message([str(ov / "html/wiki-graph.html"), str(old_plan), str(ov / "graph/200926-old.graph.html")])
+    assert "[graph]" not in msg and "file://" + str(ov / "html/wiki-graph.html") not in msg
+    assert "trang tự sinh lại: 1 — wiki-graph.html" in msg
+
+
+def test_new_html_only_created_not_edited_and_joins_stop_line(tmp_path, monkeypatch):
+    """Feedback 280926: dòng Stop thứ hai = HTML TẠO MỚI trong phiên ở <overstack>/html (sửa file cũ không tính; wiki-graph.html loại)."""
+    root = _repo(tmp_path / "repo")
+    html = root / "llmwiki/html"; html.mkdir(parents=True)
+    (html / "old.html").write_text("<title>Cũ</title>")                     # sinh TRƯỚC phiên
+    time.sleep(1.1)
+    t = _transcript(tmp_path, root / "x")                                     # mốc phiên = now-60s → lùi old.html ra trước bằng birthtime thật
+    monkeypatch.setattr(hooklib, "overstack_dir", lambda r: html.parent)
+    start = time.time() - 0.5
+    ts = time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime(start)) + ".%03dZ" % int((start % 1) * 1000)
+    t.write_text(t.read_text().replace(json.loads(t.read_text().splitlines()[0])["timestamp"], ts))
+    time.sleep(0.6)
+    (html / "old.html").write_text("<title>Cũ sửa</title>")                 # SỬA trong phiên → không tính
+    (html / "new.html").write_text("<title>Trang mới</title>")               # TẠO trong phiên → tính
+    (html / "wiki-graph.html").write_text("<title>wg</title>")               # tự sinh → loại
+    got = [Path(p).name for p in hooklib.session_new_html(str(root), str(t))]
+    assert got == ["new.html"], got
+    import importlib.util, tempfile
+    monkeypatch.setattr(tempfile, "gettempdir", lambda: str(tmp_path))
+    spec = importlib.util.spec_from_file_location("stop_mod2", ROOT / "llmwiki/.claude/hooks/stop.py")
+    st = importlib.util.module_from_spec(spec); spec.loader.exec_module(st)
+    msg = "  • [graph] G\n      file:///r/g.graph.html\n" + hooklib.new_html_message(hooklib.session_new_html(str(root), str(t)))
+    line = st._collapse(msg, "s9")
+    assert line.index("g.graph.html") < line.index("new.html") and "🆕" in line

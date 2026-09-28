@@ -9,7 +9,7 @@ import subprocess
 import sys
 import time
 
-from hooklib import running_servers, servers_message, audit, code_log, find_validators, harness_dir, overstack_dir, project_dir, read_payload, resolve_tool, run_validator, scope_config, stamp_path, session_touched_files, touched_message
+from hooklib import running_servers, servers_message, audit, code_log, find_validators, harness_dir, overstack_dir, project_dir, read_payload, resolve_tool, run_validator, scope_config, stamp_path, session_touched_files, touched_message, session_new_html, new_html_message, session_graphs, graphs_message
 
 
 # file code (đa ngôn ngữ) trong git-status → trigger regen phần code-graph của wiki-graph.
@@ -441,14 +441,56 @@ def main() -> None:
     sys.exit(0)
 
 
+def _collapse(msg: str, session: str):
+    """UI không gập được systemMessage → gập bằng tay: bản đủ ghi ra file tạm, UI chỉ thấy 1 dòng đếm + link
+    (bấm = bung). Trả None khi cùng phiên vừa in đúng nội dung này (<120s) — repo framework đăng ký CẢ hook
+    dự án lẫn hook global nên stop.py chạy 2 lần mỗi lượt. OVERSTACK_TOUCHED_FULL=1 → in đủ như cũ."""
+    import hashlib
+    import tempfile
+    import time
+    d = os.path.join(tempfile.gettempdir(), "overstack-r21")
+    os.makedirs(d, exist_ok=True)
+    full = os.path.join(d, f"{session or 'nosession'}.md")
+    mark = f"{full}.{hashlib.sha1(msg.encode()).hexdigest()[:12]}"
+    try:  # 2 hook Stop chạy SONG SONG → khoá nguyên tử O_EXCL, ai tạo được marker trước thì in
+        if time.time() - os.path.getmtime(mark) >= 120:
+            os.remove(mark)
+    except OSError:
+        pass
+    try:
+        os.close(os.open(mark, os.O_CREAT | os.O_EXCL | os.O_WRONLY))
+    except FileExistsError:
+        return None
+    with open(full, "w", encoding="utf-8") as fh:
+        fh.write(msg + "\n")
+    if os.environ.get("OVERSTACK_TOUCHED_FULL") == "1":
+        return msg
+    # OSC 8 = link ẩn sau chữ (thẻ <a> của terminal): chỉ hiện TIÊU ĐỀ, bấm mở — gọn mà vẫn bấm được.
+    # Terminal không hiểu OSC 8 sẽ lộ mã → OVERSTACK_TOUCHED_OSC8=0 quay về dạng đếm + link thô.
+    osc8 = os.environ.get("OVERSTACK_TOUCHED_OSC8") != "0"
+    a = (lambda url, text: f"\x1b]8;;{url}\x1b\\{text}\x1b]8;;\x1b\\") if osc8 else (lambda url, text: f"{text} <{url}>")
+    # Feedback 280926 "tui cần cái graph phân việc thôi" + "thứ hai là file html tạo mới trong .llmwiki/html": dòng gọn CHỈ còn
+    # (1) trang orca-graph `[graph]` rồi (2) HTML sinh mới `[newhtml]`; PLAN/md/server/"file khác" chỉ nằm trong bản đủ sau
+    # link "chi tiết". Phiên không có cả hai → không in dòng.
+    graphs = re.findall(r"• \[graph\] (.+)\n\s+(file://\S+)", msg)
+    news = [x for x in re.findall(r"• \[newhtml\] (.+)\n\s+(file://\S+)", msg) if x not in graphs]
+    if not graphs and not news:
+        return None
+    parts = [a(url, title) for title, url in graphs] + [f"🆕 {a(url, title)}" for title, url in news]
+    return f"📖 [R21] {' · '.join(parts)} · {a('file://' + full, 'chi tiết')}"
+
+
 def _emit_touched(payload: dict) -> None:
     """R21: exit 0 nào cũng in danh sách path cho USER (systemMessage — hiện thẳng ở UI, 0 token
-    của model). Exit 2 (đang chặn dừng) thì bỏ: lượt dừng thật kế tiếp sẽ in."""
+    của model), dạng GẬP 1 dòng (xem _collapse). Exit 2 (đang chặn dừng) thì bỏ: lượt dừng thật kế tiếp sẽ in."""
     try:
         root = project_dir(payload)
-        msg = touched_message(session_touched_files(root, payload.get("transcript_path") or ""))
+        tp = payload.get("transcript_path") or ""
+        msg = "\n".join(x for x in (graphs_message(session_graphs(root, tp)), new_html_message(session_new_html(root, tp)),
+                                    touched_message(session_touched_files(root, tp))) if x)
         if os.environ.get("OVERSTACK_TOUCHED_SERVERS") != "0":          # link server đang chạy: localhost trong dự án + hostname thật qua tunnel
             msg = "\n".join(x for x in (msg, servers_message(running_servers(root))) if x)
+        msg = msg and _collapse(msg, payload.get("session_id") or "")
         if msg:
             print(json.dumps({"systemMessage": msg}, ensure_ascii=False))
     except Exception:
