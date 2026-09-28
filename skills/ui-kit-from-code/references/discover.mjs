@@ -7,14 +7,21 @@
  *
  *   NODE_PATH=$(npm root -g) node discover.mjs <url> [--out dir] [--pages 15] [--saturate 3]
  *        [--include <regex>] [--exclude <regex>] [--viewport 1440x900]
+ *        [--offline] [--no-js] [--page-timeout 120] [--i-have-permission]
+ *        Trước khi quét site công khai, script đọc /robots.txt: `User-agent: *` chặn `/` hoặc chặn chính
+ *        đường bắt đầu, hay có ghi chú cấm thu thập tự động → DỪNG (rc 3), trừ khi --i-have-permission
+ *        (user xác nhận có giấy phép). Localhost / 127.0.0.1 / file:// không kiểm.
+ *        --offline: chặn MỌI request ra ngoài origin của <url> (dùng với trang user tự lưu, phục vụ qua
+ *        server cục bộ: không crawler nào chạm tới site gốc). --no-js: tắt JS của trang (DOM đã lưu sẵn,
+ *        CSS và :hover vẫn chạy; tránh script tự chuyển hướng về site gốc).
  *   node discover.mjs --coverage <out>/inventory.json <kit.html>
  *        cổng phủ: mỗi pattern phải có thẻ trong kit mang data-sig="<sig>" (một thẻ có thể ghi
  *        nhiều sig, cách nhau bởi dấu cách) hoặc nằm trong <meta name="ui-kit-skip" content="sig:lý do;…">.
  *        In pattern còn thiếu, rc 1 nếu còn thiếu.
  *
  * Trạng thái: với pattern bấm được (button, card-link, link, tabs, disclosure, input, card có cursor
- * pointer), đo style trước/sau HOVER, FOCUS-VISIBLE (bàn phím) và ACTIVE (nhấn giữ, kéo chuột ra
- * rồi mới nhả nên không click); khác thì lưu `states.<tên> = {diff, crop}`. Pattern mang dấu chọn
+ * pointer), ép :hover / :active / :focus-visible qua CDP CSS.forcePseudoState rồi so style với lúc nghỉ;
+ * khác thì lưu `states.<tên> = {diff, crop}`. Pattern mang dấu chọn
  * (aria-pressed/selected/current/checked, data-state=active|on|checked|open, class is-active|active|
  * selected) được ghép với biến thể thường cùng họ: `selectedOf = <sig biến thể thường>`.
  * Ra: <out>/inventory.json (mọi pattern: kind, sig, styles, pages, count, crop, html, states, sel)
@@ -61,10 +68,35 @@ const INC = opt("include") ? new RegExp(opt("include")) : null;
 /* mặc định bỏ đường dẫn cần đăng nhập, tải file, và trang pháp lý */
 const EXC = new RegExp(opt("exclude", "(logout|signout|/api/|/app/|\\.(pdf|zip|png|jpe?g|svg|mp4)$|/privacy|/terms|/legal)"));
 const [VW, VH] = opt("viewport", "1440x900").split("x").map(Number);
+const OFFLINE = argv.includes("--offline");
+const NOJS = argv.includes("--no-js");
+/* trần thời gian mỗi trang (giây): trang rất nặng (feed mạng xã hội, 3000+ phần tử) cần nâng lên */
+const PAGE_TIMEOUT = Number(opt("page-timeout", 120)) * 1000;
 mkdirSync(OUT + "/crops", { recursive: true });
 mkdirSync(OUT + "/pages", { recursive: true });
 
 const origin = new URL(start).origin;
+/* robots.txt: site cấm crawler thì không quét. Trang user tự lưu phục vụ qua localhost thì không kiểm. */
+if (!/^https?:\/\/(localhost|127\.0\.0\.1)(:|\/|$)/.test(start) && !argv.includes("--i-have-permission")) {
+  const txt = await fetch(origin + "/robots.txt").then((r) => (r.ok ? r.text() : "")).catch(() => "");
+  const path0 = new URL(start).pathname;
+  let inStar = false, blocked = false;
+  for (const raw of txt.split(/\r?\n/)) {
+    const line = raw.replace(/#.*/, "").trim();
+    const m = line.match(/^(user-agent|disallow|allow):\s*(.*)$/i);
+    if (!m) continue;
+    const [k, v] = [m[1].toLowerCase(), m[2].trim()];
+    if (k === "user-agent") inStar = v === "*";
+    else if (inStar && k === "disallow" && v && (v === "/" || path0.startsWith(v))) blocked = true;
+  }
+  const noticed = /automated means is prohibited|prohibited unless you have express written permission/i.test(txt);
+  if (blocked || noticed) {
+    console.error(`robots.txt của ${origin} cấm crawler (${blocked ? "User-agent: * chặn đường này" : "ghi chú cấm thu thập tự động"}).`);
+    console.error("Không quét. Cách khác: user tự lưu trang (Cmd+S, 'Webpage, Complete'), phục vụ qua 127.0.0.1 rồi chạy với --offline --no-js;");
+    console.error("hoặc chạy lại với --i-have-permission nếu user có giấy phép của site.");
+    process.exit(3);
+  }
+}
 const norm = (u) => { try { const x = new URL(u, origin); x.hash = ""; if ([...x.searchParams].length > 2) x.search = ""; return x.origin === origin ? x.href.replace(/\/$/, "") : null; } catch { return null; } };
 
 /* chạy trong trang: trả về các khối ứng viên, mỗi khối có kind + style + shape + selector tạm */
@@ -145,45 +177,51 @@ const sigOf = (it) => {
 /* scale/translate/rotate là thuộc tính riêng (Tailwind v4 dùng chúng thay cho transform: hover:scale-105) */
 const STATE_PROPS = ["backgroundColor", "color", "borderTopColor", "borderTopWidth", "boxShadow", "outlineStyle", "outlineColor", "outlineWidth", "transform", "scale", "translate", "rotate", "opacity", "textDecorationLine", "filter", "backgroundImage"];
 const INTERACTIVE = new Set(["button", "card-link", "link", "tabs", "disclosure", "input"]);
+/* trần thời gian cứng cho mọi lệnh đo: một phần tử lỗi không được kéo treo cả vòng */
+const withT = (pr, ms = 3000) => Promise.race([pr.catch(() => null), new Promise((r) => setTimeout(() => r(null), ms))]);
 async function snap(loc) {
-  return loc.evaluate((e, props) => { const s = getComputedStyle(e); const o = {}; for (const k of props) o[k] = s[k];
-    /* hover thường đổi màu con (icon, chữ) chứ không đổi khối ngoài: gộp màu chữ của con trực tiếp */
-    o.childColors = [...e.querySelectorAll("*")].slice(0, 6).map((c) => getComputedStyle(c).color).join("|"); return o; }, STATE_PROPS).catch(() => null);
+  return withT(loc.evaluate((e, props) => { const s = getComputedStyle(e); const o = {}; for (const k of props) o[k] = s[k];
+    /* hover thường đổi phần tử con chứ không đổi khối ngoài: màu icon/chữ, hoặc một lớp phủ con đổi
+       opacity/nền (cách FDS của Facebook làm). Gộp màu, nền, opacity, transform của 12 phần tử con đầu */
+    o.children = [...e.querySelectorAll("*")].slice(0, 12).map((c) => { const t = getComputedStyle(c); return [t.color, t.backgroundColor, t.opacity, t.transform, t.scale].join(","); }).join("|"); return o; }, STATE_PROPS));
 }
 const diffOf = (a, b) => { if (!a || !b) return null; const d = {}; for (const k of Object.keys(a)) if (a[k] !== b[k]) d[k] = [a[k], b[k]]; return Object.keys(d).length ? d : null; };
-/* đo hover / focus-visible / active cho một phần tử; trả {state: {diff, crop}} */
-async function measureStates(page, loc, base) {
+/* đo hover / active / focus-visible cho một phần tử bằng CDP CSS.forcePseudoState (như "Force state"
+   trong DevTools): không dùng chuột/bàn phím thật nên không có kéo-thả gốc, click, chuyển trang hay treo
+   khi trang tắt JS; tất định giữa các lần chạy. Trả {state: {diff, crop}} */
+async function measureStates(page, loc, base, id, cdp) {
   const out = {};
-  const box = await loc.boundingBox().catch(() => null);
-  if (!box || box.width < 4) return out;
+  const q = await withT(cdp.send("DOM.getDocument", { depth: 0 }).then(({ root }) => cdp.send("DOM.querySelector", { nodeId: root.nodeId, selector: `[data-discover-id="${id}"]` })));
+  if (!q?.nodeId) return out;
+  const force = (list) => withT(cdp.send("CSS.forcePseudoState", { nodeId: q.nodeId, forcedPseudoClasses: list }));
+  const shot = async (name) => { const f = `crops/${base}-${name}.png`; return withT(loc.screenshot({ path: `${OUT}/${f}`, timeout: 3000 }).then(() => f), 4000); };
   const before = await snap(loc);
-  const shot = async (name) => { const f = `crops/${base}-${name}.png`; return (await loc.screenshot({ path: `${OUT}/${f}`, timeout: 3000 }).then(() => f).catch(() => null)); };
-  try {
-    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2); await page.waitForTimeout(450);
-    const d = diffOf(before, await snap(loc)); if (d) out.hover = { diff: d, crop: await shot("hover") };
-    await page.mouse.down(); await page.waitForTimeout(150);
-    const a = diffOf(before, await snap(loc)); if (a && JSON.stringify(a) !== JSON.stringify(d)) out.active = { diff: a, crop: await shot("active") };
-    await page.mouse.move(1, 1); await page.mouse.up(); await page.waitForTimeout(300);
-    /* focus-visible cần "chế độ bàn phím": nhấn Shift trước rồi focus bằng code */
-    await page.keyboard.press("Shift"); await loc.focus({ timeout: 1000 }).catch(() => {}); await page.waitForTimeout(250);
-    const f = diffOf(before, await snap(loc));
-    /* focus chỉ bật outline:auto là viền mặc định của trình duyệt, không phải style của site */
-    if (f) out.focus = { diff: f, crop: await shot("focus"), ua: Object.keys(f).every((k) => /^outline/.test(k)) && f.outlineStyle?.[1] === "auto" };
-    await loc.evaluate((e) => e.blur()).catch(() => {});
-  } catch {}
+  let hoverDiff = null;
+  for (const [name, list] of [["hover", ["hover"]], ["active", ["hover", "active"]], ["focus", ["focus", "focus-visible"]]]) {
+    await force(list); await page.waitForTimeout(name === "hover" ? 450 : 250);
+    const d = diffOf(before, await snap(loc));
+    if (d && !(name === "active" && JSON.stringify(d) === JSON.stringify(hoverDiff))) {
+      out[name] = { diff: d, crop: await shot(name) };
+      /* focus chỉ bật outline:auto là viền mặc định của trình duyệt, không phải style của site */
+      if (name === "focus") out[name].ua = Object.keys(d).every((k) => /^outline/.test(k)) && d.outlineStyle?.[1] === "auto";
+    }
+    if (name === "hover") hoverDiff = d;
+    await force([]); await page.waitForTimeout(120);
+  }
   return out;
 }
 
-/* bấm mở phần ẩn: accordion, details, tab chưa chọn, menu. Không bấm link, không gửi form. */
+/* mọi lệnh chờ nằm ở phía Node: khi --no-js, setTimeout trong trang không bao giờ chạy nên await nó là treo */
 async function reveal(page) {
-  return page.evaluate(async () => {
-    const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  const k = await page.evaluate(() => {
     let n = 0;
     for (const d of [...document.querySelectorAll("details:not([open])")].slice(0, 6)) { d.open = true; n++; }
     const clickable = [...document.querySelectorAll('[aria-expanded="false"]:not(a), [role="tab"][aria-selected="false"]')].filter((e) => !e.closest("form")).slice(0, 8);
-    for (const e of clickable) { try { e.click(); n++; await wait(250); } catch {} }
-    return n;
+    clickable.forEach((e, i) => e.setAttribute("data-discover-open", i));
+    return { n, c: clickable.length };
   });
+  for (let i = 0; i < k.c; i++) { await page.evaluate((i) => { try { document.querySelector(`[data-discover-open="${i}"]`)?.click(); } catch {} }, i); await page.waitForTimeout(250); }
+  return k.n + k.c;
 }
 
 const queue = [norm(start)], seen = new Set(queue);
@@ -192,24 +230,35 @@ const log = [];
 let dry = 0, visited = 0, stateCount = 0;
 const save = () => writeFileSync(`${OUT}/inventory.json`, JSON.stringify({ start, visited, stoppedBy: dry >= SAT ? "saturated" : queue.length ? (visited >= MAX ? "page-budget" : "running") : "no-more-links", pages: log, patterns: [...inv.values()] }, null, 1));
 const b = await chromium.launch();
-const ctx = await b.newContext({ viewport: { width: VW, height: VH } });
+const ctx = await b.newContext({ viewport: { width: VW, height: VH }, javaScriptEnabled: !NOJS });
+let blocked = 0;
+if (OFFLINE) await ctx.route("**/*", (r) => { if (new URL(r.request().url()).origin === origin || r.request().url().startsWith("data:")) return r.continue(); blocked++; return r.abort(); });
 while (queue.length && visited < MAX && dry < SAT) {
   const url = queue.shift();
   const page = await ctx.newPage();
-  const guard = setTimeout(() => { console.log(`   bỏ trang (quá 120s): ${url}`); page.close().catch(() => {}); }, 120000);
+  const guard = setTimeout(() => { console.log(`   bỏ trang (quá ${PAGE_TIMEOUT / 1000}s, tăng --page-timeout): ${url}`); page.close().catch(() => {}); }, PAGE_TIMEOUT);
   try {
     await page.goto(url, { waitUntil: "networkidle", timeout: 45000 }).catch(() => {});
     await page.waitForTimeout(1200);
     /* cuộn cả window lẫn container cuộn bên trong để nạp phần lazy */
-    await page.evaluate(async () => {
-      const wait = (ms) => new Promise((r) => setTimeout(r, ms));
-      const scrollers = [document.scrollingElement, ...[...document.querySelectorAll("*")].filter((e) => /(auto|scroll)/.test(getComputedStyle(e).overflowY) && e.scrollHeight > e.clientHeight + 100)];
-      /* trần 40 bước mỗi container: trang cuộn vô hạn làm scrollHeight tăng mãi, không có trần là treo */
-      for (const s of scrollers.slice(0, 4)) { for (let y = 0, k = 0; y < s.scrollHeight && k < 40; y += 600, k++) { s.scrollTop = y; await wait(120); } s.scrollTop = 0; }
+    const nsc = await page.evaluate(() => {
+      const scrollers = [document.scrollingElement, ...[...document.querySelectorAll("*")].filter((e) => /(auto|scroll)/.test(getComputedStyle(e).overflowY) && e.scrollHeight > e.clientHeight + 100)].slice(0, 4);
+      scrollers.forEach((e, i) => e.setAttribute("data-discover-scroll", i));
+      return scrollers.length;
     });
+    /* trần 40 bước mỗi container: trang cuộn vô hạn làm scrollHeight tăng mãi, không có trần là treo */
+    for (let i = 0; i < nsc; i++) {
+      for (let k = 0; k < 40; k++) {
+        const more = await page.evaluate(([i, k]) => { const s = document.querySelector(`[data-discover-scroll="${i}"]`); if (!s) return false; s.scrollTop = k * 600; return k * 600 < s.scrollHeight; }, [i, k]);
+        if (!more) break;
+        await page.waitForTimeout(120);
+      }
+      await page.evaluate((i) => { const s = document.querySelector(`[data-discover-scroll="${i}"]`); if (s) s.scrollTop = 0; }, i);
+    }
     const opened = await reveal(page);
     await page.waitForTimeout(400);
     const { items, links } = await page.evaluate(collect);
+    const cdp = await page.context().newCDPSession(page); await withT(cdp.send("DOM.enable")); await withT(cdp.send("CSS.enable"));
     const slug = new URL(url).pathname.replace(/\W+/g, "-").replace(/^-|-$/g, "") || "home";
     /* trang cuộn trong container riêng thì fullPage chỉ chụp một màn: tạm mở container ra rồi mới chụp */
     await page.evaluate(() => {
@@ -229,11 +278,11 @@ while (queue.length && visited < MAX && dry < SAT) {
       const n = [...inv.values()].filter((x) => x.kind === it.kind).length + 1;
       const crop = `crops/${it.kind}-${n}.png`;
       const el = page.locator(`[data-discover-id="${it.id}"]`);
-      await el.scrollIntoViewIfNeeded({ timeout: 2000 }).catch(() => {});
-      const ok = await el.screenshot({ path: `${OUT}/${crop}`, timeout: 4000 }).then(() => true).catch(() => false);
+      await withT(el.scrollIntoViewIfNeeded({ timeout: 2000 }));
+      const ok = !!(await withT(el.screenshot({ path: `${OUT}/${crop}`, timeout: 4000 }).then(() => true), 5000));
       const rec = { sig, kind: it.kind, count: 1, pages: [url], firstText: it.text, shape: it.shape, styles: it.st, cls: it.cls, html: it.html, crop: ok ? crop : null, sel: it.sel };
       if (INTERACTIVE.has(it.kind) || (it.kind === "card" && it.pointer)) {
-        rec.states = await measureStates(page, el, `${it.kind}-${n}`);
+        rec.states = await measureStates(page, el, `${it.kind}-${n}`, it.id, cdp);
         stateCount += Object.keys(rec.states).length;
       }
       inv.set(sig, rec);
@@ -262,6 +311,7 @@ for (const p of inv.values()) {
 const list = [...inv.values()].sort((a, b) => a.kind.localeCompare(b.kind) || b.count - a.count);
 writeFileSync(`${OUT}/inventory.json`, JSON.stringify({ start, visited, stoppedBy: dry >= SAT ? "saturated" : queue.length ? "page-budget" : "no-more-links", pages: log, patterns: list }, null, 1));
 const byKind = list.reduce((m, p) => ((m[p.kind] = (m[p.kind] || 0) + 1), m), {});
+if (OFFLINE) console.log(`offline: chặn ${blocked} request ra ngoài ${origin}`);
 console.log(`\n${list.length} pattern từ ${visited} trang · dừng vì ${dry >= SAT ? `${SAT} trang liền không có gì mới` : queue.length ? "hết ngân sách trang" : "hết link"}`);
 console.log(Object.entries(byKind).map(([k, v]) => `${k} ${v}`).join(" · "));
 const stTotals = list.reduce((m, p) => { for (const k of Object.keys(p.states || {})) m[k] = (m[k] || 0) + 1; return m; }, {});

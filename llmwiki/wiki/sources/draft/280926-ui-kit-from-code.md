@@ -87,6 +87,26 @@ Khung 7 phần cố định: thanh điều khiển theme · intro + facts · fou
   - 44/56 focus của site chỉ là viền mặc định của trình duyệt. Đây là điểm yếu về accessibility, kit ghi lại chứ không che đi.
 - **Còn hở:** trạng thái chỉ có khi JS chạy (menu mở bằng click, tooltip trễ) chưa đo tự động. Disabled mới bắt được dạng tĩnh (thuộc tính `disabled`), chưa đi tìm chủ động.
 
+## Cập nhật 3 (2026-09-28): chạy `/ui-kit-from-code facebook.com`
+- **robots.txt:** facebook.com ghi "Collection of data on Facebook through automated means is prohibited unless you have express written permission", `User-agent: *` → `Disallow: /`. `discover.mjs` lúc đó KHÔNG kiểm robots.txt, nên nếu agent không tự đọc thì nó đã crawl. Sửa: script đọc robots.txt trước khi quét, cấm thì dừng rc 3 (cờ `--i-have-permission` chỉ khi user có giấy phép); thêm RULE-11.
+- **Nhánh B05, user tự lưu trang:** user lưu News Feed ("Webpage, Complete"). Agent phục vụ qua 127.0.0.1, chặn mọi request ra ngoài (`--offline`), tắt JS (`--no-js`). Không crawler nào chạm tới facebook.com.
+- **4 lỗi của discover.mjs bắt được khi chạy trên trang lưu:**
+  1. Khi tắt JS, `setTimeout` trong trang không chạy, nên mọi `await wait()` trong `page.evaluate` treo vĩnh viễn (vòng cuộn và reveal). Sửa: mọi lệnh chờ chuyển sang phía Node.
+  2. `locator.focus()` treo, và kéo treo luôn lệnh evaluate kế tiếp.
+  3. Đo active bằng "nhấn giữ rồi kéo chuột ra" mở native drag trên link/ảnh, `mouse.up` treo.
+  4. Trần 120 s/trang quá thấp cho trang 3000+ phần tử (thêm `--page-timeout`).
+
+  Lỗi 2 và 3 được sửa tận gốc bằng cách bỏ hẳn chuột/bàn phím thật, đổi sang CDP `CSS.forcePseudoState`. Kiểm hồi quy trên 2 trang drafted.ai: cách mới bắt nhiều hơn (hover 18 so với 16, focus 23 so với 19, active 2 so với 0, cặp selected 1 so với 0).
+- **Nghiệm thu:**
+  - Lấy được 579 biến FDS cho cả sáng lẫn tối từ CSS đã lưu.
+  - 78 pattern, 5 trạng thái đo được.
+  - Kit `~/orca/ui-kits/facebook.html`: 27 thẻ, 66 vai trò màu. Cổng 78/78 + 5/5. Playwright 0 lỗi, 390px không tràn, 0 request ra ngoài.
+  - grep 0 tên/nội dung thật của người dùng.
+- **Còn hở:**
+  - Hover/pressed của nút FDS do JS React gắn nên không đo được trên trang tắt JS. Kit dựng từ token `--hover-overlay` / `--press-overlay` và ghi rõ nguồn.
+  - Trang lưu chỉ là bản desktop, nên màn mobile suy từ token.
+  - Vòng focus FDS (`--focus-ring-shadow-default`) không hiện trên trang tắt JS.
+
 ## Assign & lý do
 @Rheinmir, dispatch Claude qua `/fdk`: đã có bản mẫu chạy thật nên việc chủ yếu là chưng cất quy trình, agent làm được (`ready-for-agent`).
 
