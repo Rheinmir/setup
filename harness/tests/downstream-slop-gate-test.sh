@@ -38,7 +38,7 @@ if [ ! -f "$GH/fdk/tools/html-visual-gate.mjs" ]; then
 elif ! command -v node >/dev/null 2>&1; then
   echo "SKIP  cổng chạy-thật: máy không có node"
 else
-  NODE_PATH="$(npm root -g 2>/dev/null)" node "$GH/fdk/tools/html-visual-gate.mjs" "${pages[@]}"
+  NODE_PATH="${NODE_PATH:-$(npm root -g 2>/dev/null)}" node "$GH/fdk/tools/html-visual-gate.mjs" "${pages[@]}"
   rc=$?
   if [ "$rc" = 4 ]; then echo "SKIP  cổng chạy-thật: không có Playwright"
   elif [ "$rc" = 0 ]; then echo "PASS  cổng chạy-thật: ${#pages[@]} trang sạch"
