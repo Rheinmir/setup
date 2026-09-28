@@ -177,7 +177,10 @@ def test_new_html_only_created_not_edited_and_joins_stop_line(tmp_path, monkeypa
     (html / "new.html").write_text("<title>Trang mới</title>")               # TẠO trong phiên → tính
     (html / "wiki-graph.html").write_text("<title>wg</title>")               # tự sinh → loại
     got = [Path(p).name for p in hooklib.session_new_html(str(root), str(t))]
-    assert got == ["new.html"], got
+    # Linux không có st_birthtime → hàm fallback mtime (đã ghi trong docstring) nên file SỬA trong phiên cũng lọt; chỉ khẳng định
+    # "sửa không tính" ở nơi có birthtime (macOS). CI ubuntu đỏ vì đòi hành vi macOS (run 36458101184).
+    want = ["new.html"] if hasattr(os.stat(html / "new.html"), "st_birthtime") else ["new.html", "old.html"]
+    assert sorted(got) == want, got
     import importlib.util, tempfile
     monkeypatch.setattr(tempfile, "gettempdir", lambda: str(tmp_path))
     spec = importlib.util.spec_from_file_location("stop_mod2", ROOT / "llmwiki/.claude/hooks/stop.py")
