@@ -34,7 +34,8 @@
 // Sinh ra 20/09/2026 sau khi bộ đo nháp trả 0 ở hai cột mà user thấy lỗi bằng mắt: mỗi luật ở đây có fixture XẤU chứng minh nó cắn
 // (harness/tests/html-visual-gate-test.sh).
 import { pathToFileURL } from 'url';
-import { mkdirSync, existsSync } from 'fs';
+import { mkdirSync, existsSync, readFile } from 'fs';
+import { createServer } from 'node:http';
 import { resolve, basename } from 'path';
 import { createRequire } from 'node:module';
 // Playwright: ESM KHÔNG đọc NODE_PATH → đi qua createRequire như harness/tests/orca-graph-ui-smoke.mjs: <repo>/scratchpad/node_modules
@@ -339,14 +340,22 @@ const LAYOUT = () => { const d = document.documentElement, wrap = [];
 const WIDTHS = [320, 375, 768, 1360], WRAP_AT = [320, 1360];
 const TOGGLE_SEL = '.theme-switch,[data-theme-toggle],.theme-toggle,#theme-toggle,#themeToggle,[aria-label*="giao diện" i],[aria-label*="theme" i],[class*="theme-t"],[id*="theme"]';
 const on = k => !only.length || only.includes(k);
+// Trang phục vụ qua http://127.0.0.1 (chỉ loopback, sống trong lượt chạy) thay vì file://: localStorage của file:// trên Chromium
+// CI có lúc MẤT qua reload → phép thử toggle báo NOT-PERSISTED ngẫu nhiên cho trang không lỗi (GH#179/#183, đo ở PR #176).
+// Origin http thường thì lưu bền như web thật. Mạng ngoài vẫn chặn — bằng route thay cho `offline` (offline chặn cả loopback).
+const MIME = { html: 'text/html', css: 'text/css', js: 'text/javascript', mjs: 'text/javascript', json: 'application/json', svg: 'image/svg+xml', png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp', gif: 'image/gif', woff2: 'font/woff2', woff: 'font/woff', ttf: 'font/ttf' };
+const srv = createServer((q, r) => { const f = decodeURIComponent(new URL(q.url, 'http://x').pathname);
+  readFile(f, (e, buf) => { if (e) { r.writeHead(404); r.end(); return; } r.writeHead(200, { 'content-type': MIME[f.split('.').pop().toLowerCase()] || 'application/octet-stream' }); r.end(buf); }); });
+await new Promise(ok => srv.listen(0, '127.0.0.1', ok)); const ORIGIN = `http://127.0.0.1:${srv.address().port}`;
+const pageUrl = abs => ORIGIN + pathToFileURL(abs).pathname;
 const b = await chromium.launch(); const report = []; let bad = 0;
 for (const file of pages) { const abs = resolve(file); const row = { page: file, findings: {} };
   if (!existsSync(abs)) { row.error = 'không tồn tại'; bad++; report.push(row); continue; }
   for (const theme of ['light', 'dark']) {
-    const ctx = await b.newContext({ viewport: { width: 1360, height: 900 }, colorScheme: theme, offline: true }); const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(String(e).slice(0, 140)));
+    const ctx = await b.newContext({ viewport: { width: 1360, height: 900 }, colorScheme: theme }); await ctx.route('**', r => r.request().url().startsWith(ORIGIN) || r.request().url().startsWith('data:') ? r.continue() : r.abort()); const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(String(e).slice(0, 140)));
     // chỉ đặt khi CHƯA có: đặt vô điều kiện thì lần reload của phép thử toggle bị ghi đè → báo nhầm NOT-PERSISTED
     await p.addInitScript(t => { try { for (const k of ['theme', 'ovs-theme', 'color-scheme', 'og-theme']) if (localStorage.getItem(k) === null) localStorage.setItem(k, t); } catch (e) {} }, theme);
-    await p.goto(pathToFileURL(abs).href, { waitUntil: 'load', timeout: 30000 }).catch(e => errs.push('goto: ' + e.message.slice(0, 80)));
+    await p.goto(pageUrl(abs), { waitUntil: 'load', timeout: 30000 }).catch(e => errs.push('goto: ' + e.message.slice(0, 80)));
     await p.evaluate(t => { const d = document.documentElement; if (d.getAttribute('data-theme') !== t) d.setAttribute('data-theme', t); return document.fonts.ready; }, theme); await p.waitForTimeout(250);
     const m = await p.evaluate(MEASURE, theme); m.jsErrors = errs;
     // Xác minh bằng ĐIỂM ẢNH: nền ước lượng từ CSS sai khi có lớp giả (::before), backdrop-filter, ảnh nền cố định… Chụp đúng ô chứa chữ,
@@ -429,7 +438,7 @@ for (const file of pages) { const abs = resolve(file); const row = { page: file,
   if (on('glass') && D.glass > 0 && L.glass === 0) probs.push(`glass: tối có ${D.glass} lớp kính, sáng mất hết`);
   const je = [...L.jsErrors, ...D.jsErrors]; if (je.length) probs.push(`js: ${je[0]}`);
   row.problems = probs; row.warnings = warns; if (probs.length) bad++; report.push(row); }
-await b.close();
+await b.close(); srv.close();
 if (asJson) console.log(JSON.stringify(report.map(r => ({ page: r.page, toggle: r.toggle, problems: r.problems, warnings: r.warnings, light: r.findings.light && { contrast: r.findings.light.contrast, tight: r.findings.light.tight, overlap: r.findings.light.overlap, stripe: r.findings.light.stripe, rounded_edge: r.findings.light.rounded_edge, italic_display: r.findings.light.italic_display, upper_tight: r.findings.light.upper_tight, line_body: r.findings.light.line_body, measure: r.findings.light.measure, heading_prox: r.findings.light.heading_prox, hier_flat: r.findings.light.hier_flat, tap: r.findings.light.tap, sent_case: r.findings.light.sent_case, head_scale: r.findings.light.head_scale, title_scale: r.findings.light.title_scale, eye_rest: r.findings.light.eye_rest, glass: r.findings.light.glass }, hscroll: r.hscroll, wrap: r.wrap, dark: r.findings.dark && { contrast: r.findings.dark.contrast, rounded_edge: r.findings.dark.rounded_edge, overlap: r.findings.dark.overlap, glass: r.findings.dark.glass } })), null, 1));
 else { for (const r of report) { console.log(`${r.problems && r.problems.length ? '✗' : '✓'} ${r.page}${r.error ? ' — ' + r.error : ''}`); for (const q of r.problems || []) console.log('    ' + q); for (const q of r.warnings || []) console.log('    ⚠ ' + q); }
   console.log(`html-visual-gate: ${report.length - bad}/${report.length} trang đạt`); }
