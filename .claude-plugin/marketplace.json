@@ -124,6 +124,7 @@
         "./skills/threejs-particle-morph",
         "./skills/timeline",
         "./skills/tour-guide",
+        "./skills/ui-kit-from-code",
         "./skills/tour-guide-supademo",
         "./skills/trace-grader",
         "./skills/uat-nonit-testcase",
