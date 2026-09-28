@@ -105,6 +105,7 @@
         "./skills/ovs-notes",
         "./skills/plan",
         "./skills/playwright-verify",
+        "./skills/live-mcp-bridge",
         "./skills/propose",
         "./skills/qc-code",
         "./skills/qc-uiux",

@@ -1,0 +1,11 @@
+{
+  "schema_version": "swh.reuse/1",
+  "recipe_id": "live-mcp-bridge",
+  "decision": "scratch",
+  "candidates": [
+    "pure-transform",
+    "compact",
+    "evidence-to-artifact"
+  ],
+  "reason": ""
+}
