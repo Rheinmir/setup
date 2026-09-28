@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>harness-sdk · luồng skill</title>
+<script>
+  // chống FOUC: đặt theme trước khi trang vẽ
+  (function () {
+    try {
+      var t = localStorage.getItem('dym-hs-theme');
+      if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
+  })();
+</script>
+<style>
+  :root {
+    --bg1: #eaf2fb; --bg2: #f7fbff; --orb1: #bcd9f7; --orb2: #d9e9fb;
+    --glass: rgba(255,255,255,.62); --glass-2: rgba(255,255,255,.42);
+    --stroke: rgba(15,42,74,.13); --edge: rgba(255,255,255,.75);
+    --ink: #10233c; --ink-2: #46617f; --ink-3: #7a90a8;
+    --accent: #1f6feb; --ok: #157a54; --warn: #9a5b06; --stop: #a32b2b;
+    --code-bg: rgba(15,42,74,.055);
+  }
+  :root[data-theme="dark"] {
+    --bg1: #070d16; --bg2: #0d1725; --orb1: #14314f; --orb2: #10233a;
+    --glass: rgba(20,33,52,.60); --glass-2: rgba(20,33,52,.40);
+    --stroke: rgba(150,190,235,.15); --edge: rgba(160,200,245,.10);
+    --ink: #dfeaf7; --ink-2: #9db4cd; --ink-3: #6b8199;
+    --accent: #6aa6ff; --ok: #4fc496; --warn: #e0a341; --stop: #ef7f7f;
+    --code-bg: rgba(160,200,245,.09);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; color: var(--ink); font: 13px/1.6 -apple-system, BlinkMacSystemFont,
+      "SF Pro Text", "Inter", "Segoe UI", system-ui, sans-serif;
+    background: linear-gradient(155deg, var(--bg1), var(--bg2));
+    min-height: 100vh; overflow-x: hidden;
+  }
+  .orb { position: fixed; border-radius: 50%; filter: blur(80px); z-index: 0; pointer-events: none; }
+  .orb.a { width: 46vw; height: 46vw; background: var(--orb1); top: -14vw; left: -10vw; opacity: .55; }
+  .orb.b { width: 38vw; height: 38vw; background: var(--orb2); bottom: -14vw; right: -8vw; opacity: .5; }
+  .skip { position: absolute; left: -9999px; }
+  .skip:focus { left: 12px; top: 12px; z-index: 99; background: var(--glass); padding: 8px 14px;
+    border-radius: 10px; border: 1px solid var(--stroke); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+
+  .shell { position: relative; z-index: 1; display: grid; grid-template-columns: 232px 1fr;
+    gap: 22px; max-width: 1180px; margin: 0 auto; padding: 26px 22px 60px; align-items: start; }
+  aside { position: sticky; top: 26px; background: var(--glass); backdrop-filter: blur(22px) saturate(160%);
+    -webkit-backdrop-filter: blur(22px) saturate(160%); border: 1px solid var(--stroke);
+    border-top-color: var(--edge); border-radius: 16px; padding: 16px 14px; }
+  .chrome { display: flex; gap: 6px; margin-bottom: 14px; }
+  .chrome i { width: 10px; height: 10px; border-radius: 50%; display: block; }
+  .chrome i:nth-child(1) { background: #ff5f57; } .chrome i:nth-child(2) { background: #febc2e; }
+  .chrome i:nth-child(3) { background: #28c840; }
+  aside h1 { font-size: 13px; margin: 0 0 3px; letter-spacing: -.01em; }
+  aside p { margin: 0 0 14px; font-size: 11.5px; color: var(--ink-3); }
+  nav a { display: block; padding: 6px 9px; border-radius: 8px; color: var(--ink-2);
+    text-decoration: none; font-size: 12.5px; }
+  nav a:hover { background: var(--glass-2); color: var(--ink); }
+  .toggle { margin-top: 16px; width: 100%; padding: 7px; border-radius: 9px; cursor: pointer;
+    background: var(--glass-2); border: 1px solid var(--stroke); color: var(--ink-2); font-size: 12px; }
+  .toggle:hover { color: var(--ink); }
+
+  main { min-width: 0; }
+  section { background: var(--glass); backdrop-filter: blur(22px) saturate(160%);
+    -webkit-backdrop-filter: blur(22px) saturate(160%); border: 1px solid var(--stroke);
+    border-top-color: var(--edge); border-radius: 16px; padding: 20px 22px; margin-bottom: 18px; }
+  h2 { font-size: 15px; margin: 0 0 4px; letter-spacing: -.01em; }
+  h2 + .sub { margin: 0 0 16px; color: var(--ink-3); font-size: 12px; }
+  p { margin: 0 0 11px; color: var(--ink-2); }
+  strong { color: var(--ink); font-weight: 600; }
+  code { background: var(--code-bg); padding: 1px 5px; border-radius: 5px; font-size: 11.5px;
+    font-family: "SF Mono", ui-monospace, Menlo, monospace; }
+  .scroll { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 12px; min-width: 480px; }
+  table, th, td { color: var(--ink); }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--stroke); vertical-align: top; }
+  th { color: var(--ink-3); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; }
+
+  /* ---- sơ đồ luồng ---- */
+  #flow { position: relative; }
+  #wires { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+  .lane { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 26px; }
+  .lane-label { font-size: 10.5px; text-transform: uppercase; letter-spacing: .07em;
+    color: var(--ink-3); margin-bottom: 8px; width: 100%; }
+  .node { flex: 1 1 210px; min-width: 190px; background: var(--glass-2); border: 1px solid var(--stroke);
+    border-left: 3px solid var(--accent); border-radius: 11px; padding: 11px 13px; }
+  .node.out { border-left-color: var(--ok); }
+  .node.trap { border-left-color: var(--stop); }
+  .node b { display: block; font-size: 12.5px; margin-bottom: 4px; }
+  .node .cmd { font-family: "SF Mono", ui-monospace, Menlo, monospace; font-size: 11px;
+    color: var(--accent); display: block; margin-bottom: 5px; word-break: break-all; }
+  .node small { color: var(--ink-3); font-size: 11.5px; line-height: 1.5; display: block; }
+  .tag { display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 20px;
+    border: 1px solid var(--stroke); color: var(--ink-3); margin-bottom: 6px; }
+
+  details { border-top: 1px solid var(--stroke); padding: 9px 0 2px; }
+  details summary { cursor: pointer; font-size: 12.5px; color: var(--ink); }
+  details p, details ul { margin-top: 8px; }
+  ul { margin: 0 0 11px; padding-left: 18px; color: var(--ink-2); }
+  li { margin-bottom: 5px; }
+  footer { color: var(--ink-3); font-size: 11px; padding: 4px 2px 0; word-break: break-all; }
+  .vs td:nth-child(4) { font-weight: 600; color: var(--ink); }
+  @media (max-width: 820px) { .shell { grid-template-columns: 1fr; } aside { position: static; } }
+</style>
+
+</head>
+<body>
+<a class="skip" href="#main">Bỏ qua tới nội dung</a>
+<div class="orb a"></div><div class="orb b"></div>
+
+<div class="shell">
+  <aside>
+    <div class="chrome"><i></i><i></i><i></i></div>
+    <h1>harness-sdk</h1>
+    <p>bundle doyourmagic · 28/09/2026</p>
+    <nav>
+      <a href="#phat-hien">Phát hiện</a>
+      <a href="#flow">Sơ đồ luồng</a>
+      <a href="#danh-gia">Đánh giá: hơn / kém</a>
+      <a href="#to-chuc">Tổ chức: hơn / kém</a>
+      <a href="#bay">Bẫy đã đo</a>
+      <a href="#verdict">Verdict</a>
+    </nav>
+    <button class="toggle" id="themeBtn" type="button">Đổi sáng / tối</button>
+  </aside>
+
+  <main id="main">
+    <section id="phat-hien">
+      <h2>Cùng chữ "harness", khác tầng</h2>
+      <p class="sub">Đọc cái này trước, nếu không phần so sánh sẽ thành so táo với cam.</p>
+      <p>Với Strands, <strong>harness là một agent lắp sẵn</strong>: <code>create_harness()</code> trả về
+        một <code>strands.Agent</code> thường đã gắn đủ 11 tool (shell, đọc/ghi/sửa file, web, subagent,
+        todo…), memory, session, bộ nhả context (offload — cắt kết quả tool dài ra đĩa, để lại bản xem trước)
+        với giá trị mặc định họ nói là đã đo benchmark.</p>
+      <p>Với overstack, <strong>harness là lớp quản trị bao quanh</strong> một agent có sẵn (Claude Code):
+        22 luật cắn bằng hook, cổng kiểm, wiki, và một dàn công cụ đo. Vì thế chỉ so được hai trục user hỏi:
+        <strong>cách đánh giá</strong> và <strong>cách tổ chức</strong>.</p>
+    </section>
+
+    <section id="flow">
+      <h2>Sơ đồ luồng — skill nào sinh ra gì, nuôi skill nào</h2>
+      <p class="sub">Đường kẻ do JS vẽ từ vị trí thật của từng ô, vẽ lại khi đổi kích thước cửa sổ.</p>
+      <div style="position:relative">
+        <svg id="wires" aria-hidden="true"></svg>
+
+        <div class="lane">
+          <span class="lane-label">Nền — dựng agent</span>
+          <div class="node" id="n-qs">
+            <span class="tag">bước 1</span>
+            <b>quickstart</b>
+            <span class="cmd">/dym-harness-sdk quickstart</span>
+            <small>Sinh ra: một <code>strands.Agent</code> với 11 tool, dựng được mà chưa tốn đồng nào.
+              Bẫy: <code>session</code>/<code>memory</code> mặc định bật và ghi vào <code>./.agent/</code>.</small>
+          </div>
+          <div class="node" id="n-iv">
+            <span class="tag">bước 2</span>
+            <b>interventions</b>
+            <span class="cmd">/dym-harness-sdk interventions</span>
+            <small>Sinh ra: chốt chặn tool call trả quyết định có kiểu (Deny/Guide/Interrupt/Transform).
+              Bẫy: <code>"ask"</code> chạy headless sẽ kẹt chờ stdin.</small>
+          </div>
+        </div>
+
+        <div class="lane">
+          <span class="lane-label">Đánh giá</span>
+          <div class="node" id="n-et">
+            <span class="tag">bước 3 · tốn tiền model</span>
+            <b>effect-tests</b>
+            <span class="cmd">/dym-harness-sdk effect-tests</span>
+            <small>Sinh ra: bộ pytest live-model assert hiệu ứng (tool thành công, file trên đĩa, cache tăng).
+              Bẫy: <code>--reruns 2</code> che mất độ flaky thật.</small>
+          </div>
+          <div class="node trap" id="n-ev">
+            <span class="tag">chưa kiểm chứng</span>
+            <b>evals</b>
+            <span class="cmd">/dym-harness-sdk evals</span>
+            <small>Sinh ra: điểm số OUTPUT/TRACE/SESSION, gate CI bằng <code>--fail-on</code>.
+              Chỉ đối chiếu docs; code ở repo ngoài.</small>
+          </div>
+        </div>
+
+        <div class="lane">
+          <span class="lane-label">Sản phẩm / nhánh đóng góp</span>
+          <div class="node out" id="n-out">
+            <b>Agent có chốt chặn + bằng chứng chạy được</b>
+            <small>Test không vỡ khi model đổi câu chữ; assert "bị chặn" không pass giả nhờ <code>tool_attempted</code>.</small>
+          </div>
+          <div class="node" id="n-ct">
+            <span class="tag">đối tượng khác: người sửa harness</span>
+            <b>contributor</b>
+            <span class="cmd">/dym-harness-sdk contributor</span>
+            <small>Unit harness-py: 748 passed, rc 0, 50s. Bẫy: fixture gọi <code>python</code>, máy chỉ có <code>python3</code>.</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="danh-gia">
+      <h2>Đánh giá — họ hơn ta ở đâu, ta hơn họ ở đâu</h2>
+      <p class="sub">Mỗi dòng đều có bằng chứng file:dòng hoặc lượt chạy thật trong <code>workflows.md</code>.</p>
+      <div class="scroll">
+        <table class="vs">
+          <tr><th>trục</th><th>Strands</th><th>overstack</th><th>hơn</th></tr>
+          <tr><td>Test live-model bằng hiệu ứng</td><td>trục chính: đọc lịch sử hội thoại, ghép toolUse↔toolResult</td><td>chấm chữ (contains/regex) + process từ span</td><td>Strands</td></tr>
+          <tr><td>Chống pass giả khi assert "bị chặn"</td><td><code>tool_attempted</code></td><td>chưa có</td><td>Strands</td></tr>
+          <tr><td>Kiểm cơ chế bằng metric hạ tầng</td><td>cache-read phải tăng mọi lượt</td><td>chưa có</td><td>Strands</td></tr>
+          <tr><td>Độ ổn định thống kê</td><td>chỉ rerun 2 lần</td><td>pass@k + pass^k (<code>skill-ab-eval</code>)</td><td>overstack</td></tr>
+          <tr><td>Regression eval khi đổi default</td><td>không có trong CI</td><td>wikieval, trace-grader, council, capproof</td><td>overstack</td></tr>
+          <tr><td>Lỗi → luật</td><td>không</td><td>failure-flywheel</td><td>overstack</td></tr>
+          <tr><td>Benchmark công khai</td><td>6 bộ, nhưng số chép tay, dữ liệu gốc vắng</td><td>không chạy</td><td>không ai đủ</td></tr>
+          <tr><td>Trust model cho CI live</td><td>PR từ fork phải được duyệt tay trước khi cấp credential</td><td>CI không gọi model</td><td>Strands</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <section id="to-chuc">
+      <h2>Tổ chức — hơn / kém</h2>
+      <p class="sub">Điểm đáng học nhất là mô hình quyết định có kiểu của intervention.</p>
+      <div class="scroll">
+        <table class="vs">
+          <tr><th>trục</th><th>Strands</th><th>overstack</th><th>hơn</th></tr>
+          <tr><td>Chốt chặn</td><td>5 action có kiểu, ưu tiên Deny&gt;Interrupt&gt;Transform&gt;Guide&gt;Proceed, audit chung, subagent kế thừa</td><td>22 luật, hook chặn một kênh (exit 2)</td><td>Strands (mô hình) · ta (độ phủ)</td></tr>
+          <tr><td>Lớp chỉ dẫn agent</td><td><code>CLAUDE.md</code> = <code>@AGENTS.md</code>; <code>.claude</code>/<code>.kiro</code> symlink về <code>.agents/</code></td><td>mirror llmwiki ↔ canonical, từng drift</td><td>Strands</td></tr>
+          <tr><td>Governance</td><td>TENETS · ADR nhẹ · bar-raising 3 mức · experimental có tiêu chí thoát</td><td>propose → gate → plan · ADR wiki</td><td>ngang</td></tr>
+          <tr><td>Parity đa ngôn ngữ</td><td>py↔ts chép tay, không có test chéo</td><td>—</td><td>Strands yếu</td></tr>
+          <tr><td>Tài liệu khớp code</td><td>lệch: workspace sai, design đánh số trùng, trích sai "0017"</td><td>có máy bắt lệch (wiki-sync, lint)</td><td>overstack</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <section id="bay">
+      <h2>Bẫy đã đo</h2>
+      <p class="sub">Mỗi mục là một lần chạy thật, không phải đoán.</p>
+      <details open><summary>Fixture MCP gọi <code>python</code>, máy chỉ có <code>python3</code></summary>
+        <p><code>test_subagent_delegate_inherits_parent_mcp_tools</code> FAIL với
+          <code>No such file or directory: 'python'</code>. Đặt <code>bin</code> của venv lên đầu PATH thì xanh.</p></details>
+      <details><summary>Thiếu PATH venv và biến AWS thì bộ unit chạy 24 phút, đỏ</summary>
+        <p>Lượt đầu: 7 failed, 8 errors (đều test MCP), mất 24 phút. Đặt venv <code>bin</code> lên đầu PATH và thêm
+          <code>AWS_EC2_METADATA_DISABLED=true AWS_REGION=us-east-1</code> thì xong trong 50 giây, xanh.
+          Chưa tách được biến nào gây chậm.</p></details>
+      <details><summary>Model không có web search thì tool bị bỏ lặng lẽ</summary>
+        <p>Bedrock Opus 5 (mặc định): harness chỉ in cảnh báo, <code>web_search</code> biến khỏi danh sách tool, không lỗi.</p></details>
+      <details><summary>Số benchmark không tái lập được</summary>
+        <p>Trang benchmark trích file <code>.xlsx</code> không có trong repo; harness chạy benchmark nằm ở repo khác.</p></details>
+    </section>
+
+    <section id="verdict">
+      <h2>Verdict: HÒA TAN một phần nhỏ</h2>
+      <p class="sub">Chưa dựng gì vào repo chính — cần user duyệt.</p>
+      <ul>
+        <li><strong>Lấy:</strong> ba predicate hiệu ứng + assert metric, thành một loại <code>check</code> mới
+          cho <code>skill-ab-eval</code>/<code>trace-grader</code> (vài chục dòng stdlib).</li>
+        <li><strong>Lấy (propose riêng):</strong> mô hình quyết định có kiểu + ưu tiên + audit cho <code>harness-events.py</code>.</li>
+        <li><strong>Không lấy:</strong> SDK/harness (khác tầng), Evals SDK (ta đã có đồ tương đương, và chính họ cũng chưa dùng trong CI), số benchmark.</li>
+        <li><strong>Cân nhắc:</strong> gom lớp chỉ dẫn về một nguồn + symlink.</li>
+      </ul>
+    </section>
+
+    <footer id="path"></footer>
+  </main>
+</div>
+
+<script>
+  document.getElementById('themeBtn').addEventListener('click', function () {
+    var cur = document.documentElement.getAttribute('data-theme');
+    var next = cur === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    try { localStorage.setItem('dym-hs-theme', next); } catch (e) {}
+    draw();
+  });
+
+  var EDGES = [
+    ['n-qs', 'n-et'], ['n-iv', 'n-et'], ['n-qs', 'n-ev'],
+    ['n-et', 'n-out'], ['n-ev', 'n-out']
+  ];
+  var svg = document.getElementById('wires');
+
+  function draw() {
+    var host = svg.parentElement, hb = host.getBoundingClientRect();
+    svg.setAttribute('viewBox', '0 0 ' + hb.width + ' ' + hb.height);
+    svg.style.height = hb.height + 'px';
+    var stroke = getComputedStyle(document.documentElement).getPropertyValue('--stroke').trim();
+    var d = '';
+    EDGES.forEach(function (e) {
+      var a = document.getElementById(e[0]), b = document.getElementById(e[1]);
+      if (!a || !b) return;
+      var ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
+      var x1 = ra.left - hb.left + ra.width / 2, y1 = ra.bottom - hb.top;
+      var x2 = rb.left - hb.left + rb.width / 2, y2 = rb.top - hb.top;
+      if (y2 < y1) return;
+      var m = (y1 + y2) / 2;
+      d += 'M' + x1 + ',' + y1 + ' C' + x1 + ',' + m + ' ' + x2 + ',' + m + ' ' + x2 + ',' + y2 + ' ';
+    });
+    svg.innerHTML = '<path d="' + d + '" fill="none" stroke="' + stroke + '" stroke-width="1.5"/>';
+  }
+
+  addEventListener('resize', draw);
+  addEventListener('load', draw);
+  document.querySelectorAll('details').forEach(function (el) { el.addEventListener('toggle', draw); });
+  draw();
+
+  document.getElementById('path').textContent =
+    decodeURIComponent(location.pathname) || 'doyourmagic/harness-sdk/flow.html';
+</script>
+</body>
+</html>

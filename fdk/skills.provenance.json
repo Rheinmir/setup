@@ -113,6 +113,16 @@
     "note": "design foundation — Together AI; KHÔNG sửa nội dung gốc",
     "source": "https://github.com/Nutlope/hallmark"
   },
+  "modules": {
+    "overstack-strands": {
+      "adapt_mode": "external-pull",
+      "commit": "371173f37d208779d4ad0e0254d51fc815e38f51",
+      "note": "Strands harness = vendor thứ 7; ghim ngược setup ở upstream/PIN.json",
+      "recorded": "2026-09-28",
+      "source": "https://github.com/Rheinmir/overstack-strands",
+      "version": "0.1.0"
+    }
+  },
   "schema": "skill-provenance/v1",
   "skills": {
     "agent-reach": {

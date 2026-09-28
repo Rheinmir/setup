@@ -5745,3 +5745,11 @@ cc4f999ad |
 | 2026-09-24 12:29:33 | `task.set` |  · task=T-260924-01 · state=implemented · actor=agent · prev=f97f3ca8db651514574590bb62b0531ccaeab62f98493370f3d200aac24 |
 
 <!-- log:auto:end -->
+
+## 2026-09-28 — propose — 280926-overstack-strands-wrapper
+
+- SPEC chờ duyệt: Strands harness thành vendor thứ 7 (repo private Rheinmir/overstack-strands, policy ghim từ setup) + hệ đánh giá bọc ngoài E0–E3 trên OpenRouter (model Trung Quốc). 5 task, 5 sơ đồ archify, 4 unknown U-01..U-04. Task T-260928-01.
+
+## 2026-09-28 — plan — 280926-overstack-strands-wrapper-PLAN
+
+- SPEC bản 2 (5 chỗ sửa do /plan phát hiện: skill-ab-eval.py chưa commit, snippet hook bị gitignore, exit 2 → Guide, E3 đọc lịch sử hội thoại, model mới hơn) được duyệt lại. PLAN 7 task nhúng nguyên văn prototype đã chạy trên bản PyPI đã pin: 22 test xanh, E0 11/11. U-01 đã trả; U-02..U-04 còn mở.
