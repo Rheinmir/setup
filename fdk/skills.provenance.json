@@ -764,6 +764,13 @@
       "recorded": "2026-09-19",
       "source": "local-authored"
     },
+    "live-mcp-bridge": {
+      "files": {
+        "SKILL.md": "009244fe4172dbebcc4d137e34c8febdde30f83d0795b3113b79e9bc78254295"
+      },
+      "recorded": "2026-09-28",
+      "source": "local-authored"
+    },
     "loop-runner": {
       "files": {
         "SKILL.md": "9c28b2e9d7c17f21734e75d9c2eb0fa93d0ebf0572cbd2e4028164647260b522"
