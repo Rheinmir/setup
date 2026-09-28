@@ -2,7 +2,7 @@
 """hook-audit — đếm lỗi CỦA CHÍNH HARNESS từ transcript Claude Code (phiên chính + sub-agent).
 
 Vì sao: hook fail-open nuốt lỗi, không sổ nào ghi (stop.py timeout 731 lần/30 ngày mà failures.jsonl
-trống — xem llmwiki/wiki/sources/draft/280926-harness-error-audit-30d.md, F6). Nguồn thật duy nhất là
+trống — xem draft 280926-harness-error-audit-30d.md trong wiki dự án, F6). Nguồn thật duy nhất là
 attachment trong transcript: hook_cancelled (timeout) · hook_{blocking,non_blocking}_error · hook_success
 exit≠0 · tool_result is_error có dấu vết harness.
 

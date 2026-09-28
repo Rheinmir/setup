@@ -5753,3 +5753,13 @@ cc4f999ad |
 ## 2026-09-28 — plan — 280926-overstack-strands-wrapper-PLAN
 
 - SPEC bản 2 (5 chỗ sửa do /plan phát hiện: skill-ab-eval.py chưa commit, snippet hook bị gitignore, exit 2 → Guide, E3 đọc lịch sử hội thoại, model mới hơn) được duyệt lại. PLAN 7 task nhúng nguyên văn prototype đã chạy trên bản PyPI đã pin: 22 test xanh, E0 11/11. U-01 đã trả; U-02..U-04 còn mở.
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-28 17:17:06 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['fdk/CAPABILITIES.md'] · prev=genesis · h=0bf316fea5eca9683f32bfa85bc19 |
+
+<!-- log:auto:end -->
