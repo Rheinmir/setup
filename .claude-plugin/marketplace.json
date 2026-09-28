@@ -125,6 +125,7 @@
         "./skills/timeline",
         "./skills/tour-guide",
         "./skills/ui-kit-from-code",
+        "./skills/ui-snapshot",
         "./skills/tour-guide-supademo",
         "./skills/trace-grader",
         "./skills/uat-nonit-testcase",

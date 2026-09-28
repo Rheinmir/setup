@@ -1128,6 +1128,17 @@
       "recorded": "2026-09-28",
       "source": "local-authored"
     },
+    "ui-snapshot": {
+      "files": {
+        "SKILL.md": "07bb6a84c3b43ffad3035f8cd73cff1c89c12c927e6cd80d38694f60492c4c56",
+        "assets/app-skeleton.js": "312093699cbb7ce3239ce8953888076030c6e72a736b714b572d386e8117dcc8",
+        "assets/template.html": "030e47d72f5e2cc54f1d004c67cf16f67545ca918c0357cdab3ca5e524a56a99",
+        "scripts/build.py": "d06f79905b3514d89fa45e35809ca4648471d86cbb21d0b4fbed631a3d856241",
+        "scripts/shot.mjs": "6ed4c9d2abd773ae5acac027b5448a56796df85b13a285353b3fa47155b3d8e1"
+      },
+      "recorded": "2026-09-28",
+      "source": "local-authored"
+    },
     "verify-before-commit": {
       "files": {
         "SKILL.md": "25843e2038bb61ee7f2c1597b741ae749ded5a2c10a9925ebb5ce51d0e5a23c8"
