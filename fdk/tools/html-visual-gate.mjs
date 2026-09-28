@@ -380,9 +380,11 @@ for (const file of pages) { const abs = resolve(file); const row = { page: file,
         const b0 = await tg.boundingBox(); if (b0) { await p.mouse.move(b0.x + b0.width / 2, b0.y + b0.height / 2); await p.mouse.down(); await p.waitForTimeout(80);
           const b1 = await tg.boundingBox(); await p.mouse.up(); if (b1 && (Math.abs(b1.x - b0.x) > 1 || Math.abs(b1.y - b0.y) > 1)) row.toggleJump = `${Math.round(b1.x - b0.x)},${Math.round(b1.y - b0.y)}px`; }
         else await tg.click({ force: true }).catch(() => {});
-        await p.waitForTimeout(700); const after = await lumNow();
-        const attr = await p.evaluate(() => document.documentElement.getAttribute('data-theme')); await p.reload({ waitUntil: 'load' }).catch(() => {}); await p.waitForTimeout(200);
-        const kept = await p.evaluate(() => document.documentElement.getAttribute('data-theme'));
+        // Poll thay vì chờ cứng: circle-reveal áp theme SAU hiệu ứng (~1,5s trên runner CI) — chờ cứng 700ms đọc giữa chừng → NO-EFFECT/NOT-PERSISTED ngẫu nhiên (GH#179/#183).
+        const theAttr = () => p.evaluate(() => document.documentElement.getAttribute('data-theme'));
+        let after = before; for (let t = 0; t < 3000 && Math.abs(before - after) < 0.25; t += 100) { await p.waitForTimeout(100); after = await lumNow(); }
+        await p.waitForTimeout(400); const attr = await theAttr(); await p.reload({ waitUntil: 'load' }).catch(() => {});
+        let kept = await theAttr(); for (let t = 0; t < 2000 && kept !== attr; t += 100) { await p.waitForTimeout(100); kept = await theAttr(); }
         row.toggle = Math.abs(before - after) < 0.25 ? 'NO-EFFECT' : (kept !== attr ? 'NOT-PERSISTED' : 'ok'); } }
     await ctx.close(); }
   const L = row.findings.light, D = row.findings.dark; const probs = [];
