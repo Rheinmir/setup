@@ -1111,7 +1111,8 @@
     },
     "ui-kit-from-code": {
       "files": {
-        "SKILL.md": "5765fb8fd141e904aae9ff7997dcec8aecb8674c2707317d50635545a2228454",
+        "SKILL.md": "70a838245948f391ed6389604793e997f8ad42c1b65c8efcaecd1091383f81b9",
+        "references/discover.mjs": "226d27a51a185d216b7ace587b0af8e423b3ad459532d5a7e67998b92af82a92",
         "references/ui-kit-reference.html": "5ac9689830dd9194f8b27ec00f040aaf7dd1e292a4c86e55e4be17c307896204"
       },
       "recorded": "2026-09-28",

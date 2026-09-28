@@ -43,9 +43,28 @@ Khi một dự án đã có hệ thiết kế nằm trong code (token màu, than
 Khung 7 phần cố định: thanh điều khiển theme · intro + facts · foundations (màu, chữ, shape, layout/kích thước) · component theo nhóm của app · màn mẫu (mobile + desktop) · nút copy (token, HTML từng thẻ, hex từng ô) · kiểm chứng Playwright.
 
 ## Tiêu chí HOÀN THÀNH
+- (bổ sung 28/09) Chạy lại trên drafted.ai: `discover.mjs` dừng vì bão hoà và `--coverage` của kit drafted rc 0.
+  - **Kết quả 28/09:** 32 trang, 171 pattern, `stoppedBy: saturated` (4 trang liền 0 mới). Cổng phủ 62/171 (36%) → 171/171 (100%): 149 có thẻ, 22 `ui-kit-skip` có lý do. Kit 59 thẻ, Playwright 0 lỗi, 390px không tràn. Lần chạy 16 trang trước đó dừng vì hết ngân sách trang khi trang 13–14 vẫn còn ra pattern mới, đúng failure boundary mới thêm.
 - `swh-lint --skills ui-kit-from-code --ci`, `sync-skills.py --check`, `skill-registry.py --check`, `skill-provenance.py check --ci` đều rc 0.
 - Skill nêu rõ cấu trúc bắt buộc của từng phần và trỏ tới file mẫu tham chiếu.
 - File mẫu mở được độc lập (file://), 0 lỗi JS, không tràn ngang ở 390px.
+
+## Cập nhật 2026-09-28 — lỗ hổng lộ ra khi test thật trên drafted.ai
+- **Triệu chứng:** chạy `/ui-kit-from-code https://www.drafted.ai/`, agent chỉ quét đúng 3 trang đã biết (landing, `/auth`, `/learn`) rồi dựng kit. Kit ra đủ 7 phần nhưng chỉ là "phần xương". Người dùng mở `/learn/ai-for-homebuyers` và thấy nhiều pattern kit không có: breadcrumb, hàng tab hình thang, khung section viền đứt, lưới thẻ tính năng, hàng thẻ-link có mũi tên, sơ đồ luồng "PDF → Drafted → Editable plan", dải CTA giữa hai đường kẻ, lưới link "Popular ways to browse".
+- **Gốc rễ:** skill chỉ bảo "tìm danh mục component" (W01, judgment). Không có bước bắt agent đi theo link, bấm mở phần ẩn, hay biết khi nào là đủ. Cũng không có cổng nào đo kit đã phủ hết pattern tìm được chưa.
+- **Sửa (cùng PR):**
+  - `references/discover.mjs`:
+    - BFS link cùng origin, cuộn cả container cuộn bên trong, bấm mở accordion/tab/details.
+    - Chữ ký pattern = loại + style + hình dạng con, bỏ trùng theo chữ ký.
+    - Dừng khi `--saturate` trang liền không có pattern mới. Ra `inventory.json` + crop từng pattern.
+    - Chế độ `--coverage` làm cổng phủ.
+  - `SKILL.md`: thêm W01b (khám phá), W01c (xem crop), W05b (cổng phủ), RULE-08 (không dừng ở phần xương), RULE-09 (không nhúng tài sản bên thứ ba), B04 (nguồn là URL), 2 failure boundary (container cuộn riêng, chạm trần trang).
+- **Lỗi của chính discover.mjs bắt được khi chạy thử:**
+  1. `fullPage` chỉ chụp 900px vì site cuộn trong container.
+  2. Luật "chỉ lấy khối ngoài cùng" nuốt mọi thẻ nằm trong khung viền đứt (lần đầu chỉ ra 3 card).
+  3. Treo vô hạn trên trang cuộn vô hạn (vòng cuộn không có trần). Đã thêm trần 40 bước mỗi container, trần 120 s mỗi trang, và ghi inventory sau mỗi trang.
+  4. Khung bố cục cả trang bị tính là card. Đã loại khối rộng ≥ 90% viewport mà cao hơn một màn.
+  Tất cả đã sửa trong script.
 
 ## Assign & lý do
 @Rheinmir, dispatch Claude qua `/fdk`: đã có bản mẫu chạy thật nên việc chủ yếu là chưng cất quy trình, agent làm được (`ready-for-agent`).
