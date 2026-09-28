@@ -12,7 +12,12 @@
  *        nhiều sig, cách nhau bởi dấu cách) hoặc nằm trong <meta name="ui-kit-skip" content="sig:lý do;…">.
  *        In pattern còn thiếu, rc 1 nếu còn thiếu.
  *
- * Ra: <out>/inventory.json (mọi pattern: kind, sig, styles, pages, count, crop, html)
+ * Trạng thái: với pattern bấm được (button, card-link, link, tabs, disclosure, input, card có cursor
+ * pointer), đo style trước/sau HOVER, FOCUS-VISIBLE (bàn phím) và ACTIVE (nhấn giữ, kéo chuột ra
+ * rồi mới nhả nên không click); khác thì lưu `states.<tên> = {diff, crop}`. Pattern mang dấu chọn
+ * (aria-pressed/selected/current/checked, data-state=active|on|checked|open, class is-active|active|
+ * selected) được ghép với biến thể thường cùng họ: `selectedOf = <sig biến thể thường>`.
+ * Ra: <out>/inventory.json (mọi pattern: kind, sig, styles, pages, count, crop, html, states, sel)
  *     <out>/crops/<kind>-<n>.png · <out>/pages/<slug>.png · bảng tóm tắt trên stdout.
  * Chỉ đọc trang công khai; không gửi form, không đăng nhập, không bấm link ra ngoài. */
 import { createRequire } from "node:module";
@@ -28,7 +33,18 @@ if (process.argv[2] === "--coverage") {
   const pct = Math.round((100 * (inv.patterns.length - miss.length)) / inv.patterns.length);
   console.log(`phủ ${inv.patterns.length - miss.length}/${inv.patterns.length} pattern (${pct}%) · ${covered.size} sig trong kit · ${skip.size} bỏ có lý do`);
   for (const p of miss) console.log(`  THIẾU ${p.sig}  ${p.kind.padEnd(10)} ×${p.count}  ${p.crop ?? "(không crop)"}  "${p.firstText.slice(0, 50)}"`);
-  process.exit(miss.length ? 1 : 0);
+  /* trạng thái: mỗi state đo được phải có data-sig-state="<sig>:<state>" trong kit, hoặc ui-kit-skip
+     "<sig>:<state>:lý do". Cặp selected tính là state "selected" của biến thể thường. */
+  const shown = new Set([...html.matchAll(/data-sig-state="([^"]+)"/g)].flatMap((m) => m[1].split(/\s+/)));
+  const need = inv.patterns.filter((p) => !skip.has(p.sig)).flatMap((p) => [
+    ...Object.keys(p.states || {}).map((st) => ({ p, st })),
+    ...(p.selectedOf ? [{ p: inv.patterns.find((q) => q.sig === p.selectedOf) || p, st: "selected", via: p.sig }] : []),
+  ]);
+  const skipState = (k) => [...html.matchAll(/<meta name="ui-kit-skip" content="([^"]*)"/g)].some((m) => m[1].split(";").some((x) => x.startsWith(k + ":")));
+  const smiss = need.filter(({ p, st }) => !shown.has(`${p.sig}:${st}`) && !skipState(`${p.sig}:${st}`));
+  console.log(`trạng thái ${need.length - smiss.length}/${need.length} (hover/focus/active/selected)`);
+  for (const { p, st, via } of smiss) console.log(`  THIẾU ${p.sig}:${st.padEnd(8)} ${p.kind.padEnd(10)} ${(p.states?.[st]?.crop) ?? (via ? "selected=" + via : "")}  ${JSON.stringify(p.states?.[st]?.diff ?? {}).slice(0, 110)}`);
+  process.exit(miss.length || smiss.length ? 1 : 0);
 }
 
 const require = createRequire(process.env.NODE_PATH ? process.env.NODE_PATH + "/" : import.meta.url);
@@ -61,6 +77,8 @@ function collect() {
     const t = e.tagName.toLowerCase(), role = e.getAttribute("role") || "", cls = String(e.className?.baseVal ?? e.className ?? "");
     if (/^h[1-6]$/.test(t)) return "heading";
     if (t === "input" || t === "textarea" || t === "select" || role === "combobox" || role === "textbox") return "input";
+    /* phần tử mang trạng thái chọn luôn là tab/toggle, kể cả khi trong suốt (tab vẽ bằng SVG) */
+    if (e.hasAttribute("aria-pressed") || e.hasAttribute("aria-selected") || (e.hasAttribute("aria-current") && e.getAttribute("aria-current") !== "false")) return "tabs";
     if (role === "tab" || role === "tablist") return "tabs";
     if (t === "summary" || t === "details" || e.hasAttribute("aria-expanded") && t !== "a") return "disclosure";
     if (t === "table") return "table";
@@ -100,7 +118,11 @@ function collect() {
       pad: s.padding, tt: s.textTransform, ls: s.letterSpacing, display: s.display, w: Math.round(r.width), h: Math.round(r.height) };
     const id = "d" + n++;
     e.setAttribute("data-discover-id", id);
-    out.push({ id, kind, st, shape: shape(e), text: (e.innerText || e.getAttribute("alt") || "").trim().replace(/\s+/g, " ").slice(0, 80),
+    const ds = e.getAttribute("data-state") || "";
+    const sel = ["aria-pressed", "aria-selected", "aria-checked"].some((a) => e.getAttribute(a) === "true") || (e.hasAttribute("aria-current") && e.getAttribute("aria-current") !== "false")
+      || /^(active|on|checked|open)$/.test(ds) || /(^|\s)(is-active|active|selected|is-selected)(\s|$)/.test(String(e.className?.baseVal ?? e.className ?? ""));
+    const pointer = s.cursor === "pointer";
+    out.push({ id, kind, st, sel, pointer, shape: shape(e), text: (e.innerText || e.getAttribute("alt") || "").trim().replace(/\s+/g, " ").slice(0, 80),
       cls: String(e.className?.baseVal ?? e.className ?? "").slice(0, 200),
       html: e.outerHTML.replace(/<svg[\s\S]*?<\/svg>/g, "<svg/>").replace(/\s(srcset|sizes|style|data-[\w-]+)="[^"]*"/g, "").replace(/(src|href)="[^"]{80,}"/g, '$1="…"').slice(0, 1600) });
   }
@@ -119,6 +141,39 @@ const sigOf = (it) => {
   return createHash("sha1").update(JSON.stringify(key)).digest("hex").slice(0, 10);
 };
 
+/* style dùng để so trạng thái: chỉ thuộc tính nhìn thấy được thay đổi khi tương tác */
+/* scale/translate/rotate là thuộc tính riêng (Tailwind v4 dùng chúng thay cho transform: hover:scale-105) */
+const STATE_PROPS = ["backgroundColor", "color", "borderTopColor", "borderTopWidth", "boxShadow", "outlineStyle", "outlineColor", "outlineWidth", "transform", "scale", "translate", "rotate", "opacity", "textDecorationLine", "filter", "backgroundImage"];
+const INTERACTIVE = new Set(["button", "card-link", "link", "tabs", "disclosure", "input"]);
+async function snap(loc) {
+  return loc.evaluate((e, props) => { const s = getComputedStyle(e); const o = {}; for (const k of props) o[k] = s[k];
+    /* hover thường đổi màu con (icon, chữ) chứ không đổi khối ngoài: gộp màu chữ của con trực tiếp */
+    o.childColors = [...e.querySelectorAll("*")].slice(0, 6).map((c) => getComputedStyle(c).color).join("|"); return o; }, STATE_PROPS).catch(() => null);
+}
+const diffOf = (a, b) => { if (!a || !b) return null; const d = {}; for (const k of Object.keys(a)) if (a[k] !== b[k]) d[k] = [a[k], b[k]]; return Object.keys(d).length ? d : null; };
+/* đo hover / focus-visible / active cho một phần tử; trả {state: {diff, crop}} */
+async function measureStates(page, loc, base) {
+  const out = {};
+  const box = await loc.boundingBox().catch(() => null);
+  if (!box || box.width < 4) return out;
+  const before = await snap(loc);
+  const shot = async (name) => { const f = `crops/${base}-${name}.png`; return (await loc.screenshot({ path: `${OUT}/${f}`, timeout: 3000 }).then(() => f).catch(() => null)); };
+  try {
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2); await page.waitForTimeout(450);
+    const d = diffOf(before, await snap(loc)); if (d) out.hover = { diff: d, crop: await shot("hover") };
+    await page.mouse.down(); await page.waitForTimeout(150);
+    const a = diffOf(before, await snap(loc)); if (a && JSON.stringify(a) !== JSON.stringify(d)) out.active = { diff: a, crop: await shot("active") };
+    await page.mouse.move(1, 1); await page.mouse.up(); await page.waitForTimeout(300);
+    /* focus-visible cần "chế độ bàn phím": nhấn Shift trước rồi focus bằng code */
+    await page.keyboard.press("Shift"); await loc.focus({ timeout: 1000 }).catch(() => {}); await page.waitForTimeout(250);
+    const f = diffOf(before, await snap(loc));
+    /* focus chỉ bật outline:auto là viền mặc định của trình duyệt, không phải style của site */
+    if (f) out.focus = { diff: f, crop: await shot("focus"), ua: Object.keys(f).every((k) => /^outline/.test(k)) && f.outlineStyle?.[1] === "auto" };
+    await loc.evaluate((e) => e.blur()).catch(() => {});
+  } catch {}
+  return out;
+}
+
 /* bấm mở phần ẩn: accordion, details, tab chưa chọn, menu. Không bấm link, không gửi form. */
 async function reveal(page) {
   return page.evaluate(async () => {
@@ -134,7 +189,7 @@ async function reveal(page) {
 const queue = [norm(start)], seen = new Set(queue);
 const inv = new Map();
 const log = [];
-let dry = 0, visited = 0;
+let dry = 0, visited = 0, stateCount = 0;
 const save = () => writeFileSync(`${OUT}/inventory.json`, JSON.stringify({ start, visited, stoppedBy: dry >= SAT ? "saturated" : queue.length ? (visited >= MAX ? "page-budget" : "running") : "no-more-links", pages: log, patterns: [...inv.values()] }, null, 1));
 const b = await chromium.launch();
 const ctx = await b.newContext({ viewport: { width: VW, height: VH } });
@@ -176,20 +231,38 @@ while (queue.length && visited < MAX && dry < SAT) {
       const el = page.locator(`[data-discover-id="${it.id}"]`);
       await el.scrollIntoViewIfNeeded({ timeout: 2000 }).catch(() => {});
       const ok = await el.screenshot({ path: `${OUT}/${crop}`, timeout: 4000 }).then(() => true).catch(() => false);
-      inv.set(sig, { sig, kind: it.kind, count: 1, pages: [url], firstText: it.text, shape: it.shape, styles: it.st, cls: it.cls, html: it.html, crop: ok ? crop : null });
+      const rec = { sig, kind: it.kind, count: 1, pages: [url], firstText: it.text, shape: it.shape, styles: it.st, cls: it.cls, html: it.html, crop: ok ? crop : null, sel: it.sel };
+      if (INTERACTIVE.has(it.kind) || (it.kind === "card" && it.pointer)) {
+        rec.states = await measureStates(page, el, `${it.kind}-${n}`);
+        stateCount += Object.keys(rec.states).length;
+      }
+      inv.set(sig, rec);
     }
     for (const h of links) { const u = norm(h); if (u && !seen.has(u) && !EXC.test(u) && (!INC || INC.test(u))) { seen.add(u); queue.push(u); } }
     visited++;
     dry = fresh === 0 ? dry + 1 : 0;
     log.push({ url, items: items.length, fresh, opened });
-    console.log(`${String(visited).padStart(2)}  +${String(fresh).padStart(3)} mới / ${String(items.length).padStart(4)} khối  mở ${opened}  ${url}`);
+    console.log(`${String(visited).padStart(2)}  +${String(fresh).padStart(3)} mới / ${String(items.length).padStart(4)} khối  mở ${opened}  trạng thái Σ${stateCount}  ${url}`);
   } catch (e) { console.log(`   lỗi trang ${url}: ${String(e.message).slice(0, 80)}`); }
   finally { clearTimeout(guard); await page.close().catch(() => {}); save(); }
 }
 await b.close();
 
+/* ghép biến thể "đang chọn" với biến thể thường cùng họ: cùng loại, cùng hình dạng con, chung ≥ 60%
+   class (bỏ class màu/z/trạng thái); lấy cặp giống nhất */
+const tok = (c) => new Set(c.split(/\s+/).filter((t) => t && !/^(is-active|active|selected|z-|text-stone-|text-neutral-|bg-|border-stone-|hover:|aria-|data-)/.test(t)));
+const jac = (a, b) => { const A = tok(a), B = tok(b); if (!A.size && !B.size) return 0; let i = 0; for (const x of A) if (B.has(x)) i++; return i / (A.size + B.size - i); };
+let pairs = 0;
+for (const p of inv.values()) {
+  if (!p.sel) continue;
+  let best = null, bs = 0.6;
+  for (const q of inv.values()) if (q !== p && !q.sel && q.kind === p.kind && q.shape === p.shape) { const j = jac(p.cls, q.cls); if (j >= bs) { bs = j; best = q; } }
+  if (best) { p.selectedOf = best.sig; pairs++; }
+}
 const list = [...inv.values()].sort((a, b) => a.kind.localeCompare(b.kind) || b.count - a.count);
 writeFileSync(`${OUT}/inventory.json`, JSON.stringify({ start, visited, stoppedBy: dry >= SAT ? "saturated" : queue.length ? "page-budget" : "no-more-links", pages: log, patterns: list }, null, 1));
 const byKind = list.reduce((m, p) => ((m[p.kind] = (m[p.kind] || 0) + 1), m), {});
 console.log(`\n${list.length} pattern từ ${visited} trang · dừng vì ${dry >= SAT ? `${SAT} trang liền không có gì mới` : queue.length ? "hết ngân sách trang" : "hết link"}`);
 console.log(Object.entries(byKind).map(([k, v]) => `${k} ${v}`).join(" · "));
+const stTotals = list.reduce((m, p) => { for (const k of Object.keys(p.states || {})) m[k] = (m[k] || 0) + 1; return m; }, {});
+console.log(`trạng thái: ${Object.entries(stTotals).map(([k, v]) => `${k} ${v}`).join(" · ") || "0"} · cặp selected ${pairs}`);

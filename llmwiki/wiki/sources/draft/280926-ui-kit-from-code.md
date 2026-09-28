@@ -66,6 +66,27 @@ Khung 7 phần cố định: thanh điều khiển theme · intro + facts · fou
   4. Khung bố cục cả trang bị tính là card. Đã loại khối rộng ≥ 90% viewport mà cao hơn một màn.
   Tất cả đã sửa trong script.
 
+## Cập nhật 2 (2026-09-28): kit thiếu trạng thái hover / focus / active / selected
+- **Triệu chứng:** người dùng chỉ ra kit drafted chỉ bày trạng thái nghỉ. Không có hover, không có "đang chọn", nên không tái dùng được như Figma UI kit (Figma kit luôn có variant state).
+- **Gốc rễ:**
+  1. `discover.mjs` chỉ chụp style lúc trang vừa tải, không tương tác.
+  2. Tab mang `aria-pressed` là `<a>` trong suốt cao đúng 40px, lọt qua mọi luật phân loại nên không được thu thập, và biến thể selected bị tính thành pattern rời.
+  3. Hover của Tailwind v4 dùng thuộc tính CSS `scale` riêng, không nằm trong `transform`.
+  4. Cổng phủ không đếm trạng thái.
+- **Sửa (cùng PR #182):**
+  - `discover.mjs` đo HOVER (rê chuột), ACTIVE (`mouse.down` → kéo ra → `mouse.up`, không kích hoạt link) và FOCUS-VISIBLE (Shift rồi focus) trên mọi pattern bấm được. So 16 thuộc tính nhìn thấy được, gồm `scale/translate/rotate` và màu của phần tử con. Focus chỉ là `outline:auto` thì gắn `ua: true`.
+  - Phần tử có `aria-pressed/selected/current` luôn thuộc loại `tabs`. Biến thể selected được ghép với biến thể thường qua độ trùng class (≥ 0,6): `selectedOf`.
+  - `--coverage` đòi mỗi trạng thái có `data-sig-state="<sig>:<state>"` trong kit, hoặc `ui-kit-skip` có lý do.
+  - SKILL.md: RULE-10 (component không chỉ có trạng thái nghỉ), W01b / W05b / failure boundary cho trạng thái dựa vào JS.
+- **Nghiệm thu trên drafted.ai:**
+  - 32 trang, 175 pattern (bão hoà), 104 trạng thái: 44 hover, 56 focus, 1 active, 3 cặp selected.
+  - Cổng: `trạng thái 0/104` → `104/104`, pattern `175/175`.
+  - Kit 61 thẻ, 23 dải trạng thái. Playwright 0 lỗi, 390px không tràn.
+- **Phát hiện phụ nhờ đo thật:**
+  - 6 rule hover trong kit trước đó là đoán và sai. Ví dụ: thẻ lựa chọn và lưới onboarding hover lên viền stone-500 (không phải stone-900); nút viền mảnh hover đổi nền stone-50; hàng link nền giấy hover chuyển nền trắng.
+  - 44/56 focus của site chỉ là viền mặc định của trình duyệt. Đây là điểm yếu về accessibility, kit ghi lại chứ không che đi.
+- **Còn hở:** trạng thái chỉ có khi JS chạy (menu mở bằng click, tooltip trễ) chưa đo tự động. Disabled mới bắt được dạng tĩnh (thuộc tính `disabled`), chưa đi tìm chủ động.
+
 ## Assign & lý do
 @Rheinmir, dispatch Claude qua `/fdk`: đã có bản mẫu chạy thật nên việc chủ yếu là chưng cất quy trình, agent làm được (`ready-for-agent`).
 
