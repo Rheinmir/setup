@@ -1,0 +1,845 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<!-- Mẫu output chuẩn của skill ui-kit-from-code: UI kit rút từ lib/tokens.ts của m3e-canvas (Material 3 Expressive), 28/09/2026.
+     Giữ khung 7 phần (thanh điều khiển · mục lục · intro · nền tảng · thành phần · màn mẫu · script); thay token, component, màn mẫu cho dự án đích. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>M3E Canvas UI Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400..700,0..1,0&display=block">
+<style>
+/* Bộ kit này mặc chính token của app (lib/tokens.ts): mọi màu là một vai trò M3 dưới dạng
+   --m3-<role>, mọi bo góc nhân với --k theo thang shape (square 0.35 · rounded 1 · full 1.6,
+   giống scaleR). Palette mặc định là Purple sáng; script bên dưới đổi palette / sáng-tối / shape. */
+:root {
+  --m3-primary:#6750A4; --m3-onPrimary:#FFFFFF; --m3-primaryContainer:#EADDFF; --m3-onPrimaryContainer:#21005D;
+  --m3-inversePrimary:#D0BCFF; --m3-secondary:#635A75; --m3-secondaryContainer:#E8DEF8; --m3-onSecondaryContainer:#1D192B;
+  --m3-tertiaryContainer:#FFD8E4; --m3-onTertiaryContainer:#31111D; --m3-surface:#FEF7FF; --m3-surfaceContainerLow:#F7F2FA;
+  --m3-surfaceContainer:#F3EDF7; --m3-surfaceContainerHigh:#ECE6F0; --m3-surfaceContainerHighest:#E6E0E9; --m3-onSurface:#1D1B20;
+  --m3-onSurfaceVariant:#49454F; --m3-outline:#79747E; --m3-outlineVariant:#CAC4D0; --m3-inverseSurface:#322F35;
+  --m3-inverseOnSurface:#F5EFF7; --m3-error:#B3261E; --m3-onError:#FFFFFF; --m3-errorContainer:#F9DEDC; --m3-onErrorContainer:#410E0B;
+  --k: 1;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --settle: 340ms;
+  --font: Roboto, system-ui, sans-serif;
+  --mono: "Roboto Mono", ui-monospace, Menlo, monospace;
+  --shadow-1: 0 1px 3px rgba(0,0,0,.20), 0 4px 8px rgba(0,0,0,.10);
+  color-scheme: light;
+}
+:root[data-mode="dark"] { color-scheme: dark; }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--m3-surface); color: var(--m3-onSurface); font: 400 14px/20px var(--font); -webkit-font-smoothing: antialiased; }
+.ms { font-family: "Material Symbols Rounded"; font-weight: normal; font-style: normal; font-size: 24px; line-height: 1; letter-spacing: normal; text-transform: none; display: inline-block; white-space: nowrap; direction: ltr; font-feature-settings: "liga"; -webkit-font-smoothing: antialiased; font-variation-settings: "FILL" 0; user-select: none; }
+.ms.fill { font-variation-settings: "FILL" 1; }
+code, .code { font-family: var(--mono); font-size: 12px; }
+:focus-visible { outline: 2px solid var(--m3-primary); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* ---------- vỏ trang ---------- */
+.shell { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100vh; }
+.side { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 20px 12px; background: var(--m3-surfaceContainerLow); display: flex; flex-direction: column; gap: 2px; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 4px 12px 16px; }
+.brand-mark { width: 32px; height: 32px; border-radius: calc(10px * var(--k)); background: var(--m3-primary); color: var(--m3-onPrimary); display: grid; place-items: center; }
+.brand b { font-size: 16px; font-weight: 600; display: block; }
+.brand small { color: var(--m3-onSurfaceVariant); font-size: 12px; }
+.side h6 { margin: 14px 12px 6px; font-size: 11px; font-weight: 500; letter-spacing: .5px; text-transform: uppercase; color: var(--m3-onSurfaceVariant); }
+.side a { display: flex; align-items: center; gap: 12px; height: 40px; padding: 0 12px; border-radius: 20px; color: var(--m3-onSurfaceVariant); text-decoration: none; font-weight: 500; }
+.side a .ms { font-size: 20px; }
+.side a:hover { background: color-mix(in srgb, var(--m3-onSurface) 8%, transparent); }
+.side a.on { background: var(--m3-secondaryContainer); color: var(--m3-onSecondaryContainer); }
+main { padding: 0 32px 96px; min-width: 0; }
+
+.bar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 14px 0; background: var(--m3-surface); border-bottom: 1px solid var(--m3-outlineVariant); }
+.bar .grow { flex: 1; }
+.ctl { display: flex; align-items: center; gap: 8px; }
+.ctl > span { font-size: 12px; font-weight: 500; color: var(--m3-onSurfaceVariant); }
+.swatches { display: flex; gap: 6px; }
+.sw { width: 26px; height: 26px; border-radius: 50%; border: 2px solid transparent; padding: 0; cursor: pointer; background: var(--c); box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); }
+.sw[aria-pressed="true"] { border-color: var(--m3-onSurface); }
+.seg { display: inline-flex; gap: 2px; }
+.seg button { height: 32px; padding: 0 12px; border: 1px solid var(--m3-outline); background: transparent; color: var(--m3-onSurface); font: 500 13px var(--font); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; border-radius: 6px; }
+.seg button:first-child { border-radius: 16px 6px 6px 16px; }
+.seg button:last-child { border-radius: 6px 16px 16px 6px; }
+.seg button[aria-pressed="true"] { background: var(--m3-secondaryContainer); color: var(--m3-onSecondaryContainer); border-color: transparent; }
+.seg .ms { font-size: 18px; }
+
+.intro { padding: 40px 0 8px; max-width: 760px; }
+.intro .eyebrow { font-family: var(--mono); font-size: 12px; color: var(--m3-primary); letter-spacing: .3px; }
+.intro h1 { font-size: 45px; line-height: 52px; font-weight: 400; margin: 8px 0 12px; letter-spacing: 0; text-wrap: balance; }
+.intro p { font-size: 16px; line-height: 24px; color: var(--m3-onSurfaceVariant); margin: 0; max-width: 64ch; }
+.intro .facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.fact { font-family: var(--mono); font-size: 12px; padding: 4px 10px; border-radius: 8px; background: var(--m3-surfaceContainerHigh); color: var(--m3-onSurfaceVariant); }
+
+section.block { padding-top: 48px; scroll-margin-top: 64px; }
+section.block > header { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+section.block h2 { font-size: 28px; line-height: 36px; font-weight: 400; margin: 0; }
+section.block > header p { margin: 0; color: var(--m3-onSurfaceVariant); max-width: 70ch; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+.grid.wide { grid-template-columns: repeat(auto-fill, minmax(460px, 1fr)); }
+.spec { background: var(--m3-surfaceContainerLow); border-radius: calc(16px * var(--k)); display: flex; flex-direction: column; min-width: 0; }
+.spec.full { grid-column: 1 / -1; }
+.spec-h { display: flex; align-items: center; gap: 8px; padding: 14px 16px 0; flex-wrap: wrap; }
+.spec-h b { font-size: 15px; font-weight: 500; }
+.kind { font-family: var(--mono); font-size: 11px; padding: 2px 8px; border-radius: 6px; background: var(--m3-primaryContainer); color: var(--m3-onPrimaryContainer); }
+.spec-h .dp { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--m3-onSurfaceVariant); font-variant-numeric: tabular-nums; }
+.stage { padding: 20px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; min-height: 96px; overflow-x: auto; }
+.stage.col { flex-direction: column; align-items: stretch; }
+.stage.center { justify-content: center; }
+.stage.surface { background: var(--m3-surface); margin: 12px 12px 0; border-radius: calc(12px * var(--k)); }
+.spec-f { display: flex; align-items: center; gap: 8px; padding: 8px 12px 12px 16px; margin-top: auto; }
+.spec-f .note { font-size: 12px; color: var(--m3-onSurfaceVariant); flex: 1; }
+.copy { height: 32px; padding: 0 12px; border-radius: 16px; border: none; background: transparent; color: var(--m3-primary); font: 500 13px var(--font); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.copy:hover { background: color-mix(in srgb, var(--m3-primary) 8%, transparent); }
+.copy .ms { font-size: 18px; }
+
+/* nền tảng */
+.roles { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; }
+.role { border-radius: calc(12px * var(--k)); padding: 12px; min-height: 76px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--m3-outlineVariant) 60%, transparent); cursor: pointer; border: none; text-align: left; font: inherit; }
+.role b { font-size: 13px; font-weight: 500; }
+.role code { font-size: 11px; opacity: .85; }
+.type-row { display: grid; grid-template-columns: 150px minmax(0, 1fr) 110px; gap: 16px; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--m3-outlineVariant); }
+.type-row:last-child { border-bottom: none; }
+.type-row .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.type-row .meta { font-family: var(--mono); font-size: 11px; color: var(--m3-onSurfaceVariant); font-variant-numeric: tabular-nums; }
+.shape-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--m3-onSurfaceVariant); }
+.shape-cell i { display: block; width: 64px; height: 64px; background: var(--m3-primaryContainer); }
+table.tok { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+table.tok th, table.tok td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--m3-outlineVariant); font-size: 13px; }
+table.tok th { font-weight: 500; color: var(--m3-onSurfaceVariant); font-size: 12px; }
+table.tok td:first-child { font-family: var(--mono); font-size: 12px; }
+
+/* ================= các thành phần m3-* (tái dùng được: chỉ cần token --m3-* và --k) ================= */
+.m3-btn { --h: 40px; --px: 16px; --gap: 8px; --ic: 20px; --fs: 14px;
+  height: var(--h); padding: 0 var(--px); gap: var(--gap); font: 500 var(--fs)/1 var(--font); letter-spacing: .1px;
+  display: inline-flex; align-items: center; justify-content: center; border: none; cursor: pointer; white-space: nowrap;
+  border-radius: calc(var(--h) / 2 * var(--k)); transition: border-radius var(--settle) var(--ease), filter .15s; }
+.m3-btn .ms { font-size: var(--ic); }
+.m3-btn:hover { filter: brightness(.96); }
+.m3-btn:active { border-radius: calc(var(--h) / 4 * var(--k)); }
+.m3-btn.xs { --h: 32px; --px: 12px; --gap: 8px; --ic: 20px; --fs: 14px; }
+.m3-btn.s  { --h: 40px; --px: 16px; --gap: 8px; --ic: 20px; --fs: 14px; }
+.m3-btn.m  { --h: 56px; --px: 24px; --gap: 8px; --ic: 24px; --fs: 16px; }
+.m3-btn.l  { --h: 96px; --px: 48px; --gap: 12px; --ic: 32px; --fs: 24px; }
+.m3-btn.xl { --h: 136px; --px: 64px; --gap: 16px; --ic: 40px; --fs: 32px; }
+.v-filled   { background: var(--m3-primary); color: var(--m3-onPrimary); }
+.v-tonal    { background: var(--m3-secondaryContainer); color: var(--m3-onSecondaryContainer); }
+.v-elevated { background: var(--m3-surfaceContainerLow); color: var(--m3-primary); box-shadow: var(--shadow-1); }
+.v-outlined { background: transparent; color: var(--m3-primary); box-shadow: inset 0 0 0 1px var(--m3-outline); }
+.v-text     { background: transparent; color: var(--m3-primary); }
+.m3-btn.full { width: 380px; max-width: 100%; }
+.m3-btn.half { width: 182px; }
+
+.m3-connected { display: inline-flex; gap: 3px; }
+.m3-connected > * { border-radius: calc(8px * var(--k)); }
+.m3-connected > :first-child { border-radius: calc(28px * var(--k)) calc(8px * var(--k)) calc(8px * var(--k)) calc(28px * var(--k)); }
+.m3-connected > :last-child  { border-radius: calc(8px * var(--k)) calc(28px * var(--k)) calc(28px * var(--k)) calc(8px * var(--k)); }
+.m3-connected.y { flex-direction: column; display: flex; }
+.m3-connected.y > :first-child { border-radius: calc(16px * var(--k)) calc(16px * var(--k)) calc(4px * var(--k)) calc(4px * var(--k)); }
+.m3-connected.y > :last-child  { border-radius: calc(4px * var(--k)) calc(4px * var(--k)) calc(16px * var(--k)) calc(16px * var(--k)); }
+.m3-connected.y > :not(:first-child):not(:last-child) { border-radius: calc(4px * var(--k)); }
+
+.m3-icon-btn { width: 40px; height: 40px; border-radius: calc(20px * var(--k)); border: none; display: inline-grid; place-items: center; cursor: pointer; }
+.m3-icon-btn.v-standard { background: transparent; color: var(--m3-onSurfaceVariant); }
+
+.m3-fab { --d: 56px; --r: 16px; --ic: 24px; width: var(--d); height: var(--d); border-radius: calc(var(--r) * var(--k)); border: none; cursor: pointer;
+  background: var(--m3-primaryContainer); color: var(--m3-onPrimaryContainer); display: inline-grid; place-items: center; box-shadow: 0 3px 6px rgba(0,0,0,.16), 0 1px 2px rgba(0,0,0,.12); }
+.m3-fab .ms { font-size: var(--ic); }
+.m3-fab.s { --d: 40px; --r: 12px; --ic: 24px; }
+.m3-fab.l { --d: 96px; --r: 28px; --ic: 36px; }
+.m3-fab.ext { width: auto; height: 56px; padding: 0 20px 0 16px; gap: 12px; display: inline-flex; align-items: center; font: 500 16px var(--font); }
+.m3-fab.v-primary { background: var(--m3-primary); color: var(--m3-onPrimary); }
+.m3-fab.v-tertiary { background: var(--m3-tertiaryContainer); color: var(--m3-onTertiaryContainer); }
+
+.m3-split { display: inline-flex; gap: 2px; }
+.m3-split > .m3-btn:first-child { border-radius: calc(20px * var(--k)) calc(4px * var(--k)) calc(4px * var(--k)) calc(20px * var(--k)); }
+.m3-split > .m3-btn:last-child { border-radius: calc(4px * var(--k)) calc(20px * var(--k)) calc(20px * var(--k)) calc(4px * var(--k)); padding: 0 10px; }
+
+.m3-chip { height: 32px; padding: 0 16px; gap: 8px; border-radius: calc(8px * var(--k)); display: inline-flex; align-items: center; font: 500 14px var(--font); cursor: pointer;
+  background: transparent; color: var(--m3-onSurfaceVariant); border: 1px solid var(--m3-outlineVariant); }
+.m3-chip .ms { font-size: 18px; color: var(--m3-primary); }
+.m3-chip.lead { padding-left: 8px; }
+.m3-chip.on { background: var(--m3-secondaryContainer); color: var(--m3-onSecondaryContainer); border-color: transparent; }
+.m3-chip.on .ms { color: var(--m3-onSecondaryContainer); }
+.m3-chip.elev { border-color: transparent; background: var(--m3-surfaceContainerLow); box-shadow: var(--shadow-1); }
+
+.m3-topbar { width: 412px; max-width: 100%; background: var(--m3-surface); color: var(--m3-onSurface); padding-top: 24px; }
+.m3-topbar .row { height: 64px; display: flex; align-items: center; gap: 4px; padding: 0 4px; }
+.m3-topbar .row .title { flex: 1; font-size: 22px; line-height: 28px; padding: 0 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.m3-topbar .big { padding: 0 16px; display: flex; align-items: flex-end; }
+.m3-topbar.m .big { height: 48px; font-size: 24px; line-height: 32px; padding-bottom: 12px; }
+.m3-topbar.l .big { height: 88px; font-size: 28px; line-height: 36px; padding-bottom: 20px; }
+.m3-topbar.filled { background: var(--m3-surfaceContainer); }
+.status { height: 24px; margin-top: -24px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font: 500 12px var(--font); color: var(--m3-onSurface); }
+.status .ms { font-size: 14px; }
+
+.m3-navbar { width: 412px; max-width: 100%; height: 80px; background: var(--m3-surfaceContainer); display: flex; padding: 12px 8px 16px; }
+.m3-navbar.inset { height: 104px; padding-bottom: 40px; }
+.m3-navbar .tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; font: 500 12px/16px var(--font); color: var(--m3-onSurfaceVariant); cursor: pointer; }
+.m3-navbar .pill { width: 56px; height: 32px; border-radius: calc(16px * var(--k)); display: grid; place-items: center; }
+.m3-navbar .tab.on { color: var(--m3-onSurface); }
+.m3-navbar .tab.on .pill { background: var(--m3-secondaryContainer); color: var(--m3-onSecondaryContainer); }
+.m3-navbar .tab.on .ms { font-variation-settings: "FILL" 1; }
+
+.m3-rail { width: 96px; height: 380px; background: var(--m3-surface); display: flex; flex-direction: column; align-items: center; gap: 12px; padding-top: 16px; }
+.m3-rail .menu { margin-bottom: 8px; }
+.m3-rail .tab { display: flex; flex-direction: column; align-items: center; gap: 4px; font: 500 12px/16px var(--font); color: var(--m3-onSurfaceVariant); }
+.m3-rail .pill { width: 56px; height: 32px; border-radius: calc(16px * var(--k)); display: grid; place-items: center; }
+.m3-rail .tab.on { color: var(--m3-onSurface); }
+.m3-rail .tab.on .pill { background: var(--m3-secondaryContainer); color: var(--m3-onSecondaryContainer); }
+
+.m3-tabs { width: 412px; max-width: 100%; height: 48px; display: flex; background: var(--m3-surface); border-bottom: 1px solid var(--m3-surfaceContainerHighest); }
+.m3-tabs .tab { flex: 1; display: grid; place-items: center; position: relative; font: 500 14px var(--font); color: var(--m3-onSurfaceVariant); cursor: pointer; }
+.m3-tabs .tab.on { color: var(--m3-primary); }
+.m3-tabs .tab.on::after { content: ""; position: absolute; bottom: 0; width: 48px; height: 3px; border-radius: 3px 3px 0 0; background: var(--m3-primary); }
+
+.m3-search { width: 380px; max-width: 100%; height: 56px; border-radius: calc(28px * var(--k)); background: var(--m3-surfaceContainerHigh); display: flex; align-items: center; gap: 16px; padding: 0 4px 0 16px; color: var(--m3-onSurfaceVariant); font-size: 16px; }
+.m3-search span.t { flex: 1; }
+
+.m3-list { width: 380px; max-width: 100%; }
+.m3-li { min-height: 72px; padding: 12px 16px; display: flex; align-items: center; gap: 16px; background: var(--m3-surfaceContainerLow); color: var(--m3-onSurface); cursor: pointer; }
+.m3-li.one { min-height: 56px; }
+.m3-li .av { width: 40px; height: 40px; border-radius: 50%; background: var(--m3-primaryContainer); color: var(--m3-onPrimaryContainer); display: grid; place-items: center; flex: none; }
+.m3-li .av .ms { font-size: 20px; }
+.m3-li .txt { flex: 1; min-width: 0; }
+.m3-li .txt b { display: block; font-weight: 400; font-size: 16px; line-height: 24px; }
+.m3-li .txt small { display: block; font-size: 14px; line-height: 20px; color: var(--m3-onSurfaceVariant); }
+.m3-li > .ms { color: var(--m3-onSurfaceVariant); }
+
+.m3-card { width: 380px; max-width: 100%; border-radius: calc(12px * var(--k)); overflow: hidden; display: flex; flex-direction: column; }
+.m3-card.v-filled { background: var(--m3-surfaceContainerHighest); color: var(--m3-onSurface); }
+.m3-card.v-elevated { background: var(--m3-surfaceContainerLow); color: var(--m3-onSurface); }
+.m3-card.v-outlined { background: var(--m3-surface); color: var(--m3-onSurface); box-shadow: inset 0 0 0 1px var(--m3-outlineVariant); }
+.m3-card .img { height: 120px; background: linear-gradient(135deg, var(--m3-primaryContainer), var(--m3-tertiaryContainer)); display: grid; place-items: center; color: var(--m3-onPrimaryContainer); }
+.m3-card .img .ms { font-size: 40px; opacity: .7; }
+.m3-card .body { padding: 16px; }
+.m3-card .body b { display: block; font-size: 22px; line-height: 28px; font-weight: 400; }
+.m3-card .body p { margin: 4px 0 0; font-size: 14px; line-height: 20px; color: var(--m3-onSurfaceVariant); }
+
+.m3-field { width: 380px; max-width: 100%; position: relative; }
+.m3-field .box { height: 56px; display: flex; align-items: center; gap: 12px; padding: 0 12px 0 16px; }
+.m3-field .box .ms { color: var(--m3-onSurfaceVariant); }
+.m3-field .in { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.m3-field label { font-size: 12px; line-height: 16px; color: var(--m3-primary); }
+.m3-field .val { font-size: 16px; line-height: 24px; color: var(--m3-onSurface); }
+.m3-field .help { font-size: 12px; line-height: 16px; color: var(--m3-onSurfaceVariant); padding: 4px 16px 0; }
+.m3-field.filled .box { background: var(--m3-surfaceContainerHighest); border-radius: calc(4px * var(--k)) calc(4px * var(--k)) 0 0; box-shadow: inset 0 -2px 0 var(--m3-primary); }
+.m3-field.outlined .box { border-radius: calc(4px * var(--k)); box-shadow: inset 0 0 0 2px var(--m3-primary); }
+.m3-field.outlined label { position: absolute; top: -8px; left: 12px; padding: 0 4px; background: var(--bg, var(--m3-surface)); }
+.m3-field.error .box { box-shadow: inset 0 -2px 0 var(--m3-error); }
+.m3-field.error label, .m3-field.error .help { color: var(--m3-error); }
+
+.m3-switch { width: 52px; height: 32px; border-radius: 16px; background: var(--m3-surfaceContainerHighest); box-shadow: inset 0 0 0 2px var(--m3-outline); position: relative; border: none; cursor: pointer; flex: none; }
+.m3-switch::after { content: ""; position: absolute; top: 8px; left: 8px; width: 16px; height: 16px; border-radius: 50%; background: var(--m3-outline); transition: all var(--settle) var(--ease); }
+.m3-switch[aria-checked="true"] { background: var(--m3-primary); box-shadow: none; }
+.m3-switch[aria-checked="true"]::after { top: 4px; left: 24px; width: 24px; height: 24px; background: var(--m3-onPrimary); }
+.m3-check { width: 18px; height: 18px; border-radius: 2px; box-shadow: inset 0 0 0 2px var(--m3-onSurfaceVariant); display: inline-grid; place-items: center; flex: none; }
+.m3-check.on { background: var(--m3-primary); box-shadow: none; color: var(--m3-onPrimary); }
+.m3-check .ms { font-size: 16px; font-variation-settings: "wght" 700; }
+.m3-radio { width: 20px; height: 20px; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--m3-onSurfaceVariant); display: inline-grid; place-items: center; flex: none; }
+.m3-radio.on { box-shadow: inset 0 0 0 2px var(--m3-primary); }
+.m3-radio.on::after { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--m3-primary); }
+.m3-labeled { display: inline-flex; align-items: center; gap: 12px; min-height: 40px; font-size: 16px; }
+.m3-labeled.row380 { width: 380px; max-width: 100%; justify-content: space-between; }
+
+.m3-slider { width: 380px; max-width: 100%; height: 44px; display: flex; align-items: center; gap: 6px; --v: 40%; }
+.m3-slider .act { width: var(--v); height: 16px; border-radius: 8px 2px 2px 8px; background: var(--m3-primary); }
+.m3-slider .handle { width: 4px; height: 44px; border-radius: 2px; background: var(--m3-primary); flex: none; }
+.m3-slider .rest { flex: 1; height: 16px; border-radius: 2px 8px 8px 2px; background: var(--m3-secondaryContainer); position: relative; }
+.m3-slider .rest::after { content: ""; position: absolute; right: 6px; top: 6px; width: 4px; height: 4px; border-radius: 50%; background: var(--m3-primary); }
+
+.m3-linear { width: 380px; max-width: 100%; height: 4px; display: flex; gap: 4px; --v: 60%; }
+.m3-linear .act { width: var(--v); border-radius: 2px; background: var(--m3-primary); }
+.m3-linear .rest { flex: 1; border-radius: 2px; background: var(--m3-secondaryContainer); position: relative; }
+.m3-linear .rest::after { content: ""; position: absolute; right: 0; top: 0; width: 4px; height: 4px; border-radius: 50%; background: var(--m3-primary); }
+.m3-linear.ind .act { width: 30%; animation: ind 1.6s var(--ease) infinite; }
+@keyframes ind { 0% { margin-left: -30%; } 100% { margin-left: 100%; } }
+.m3-circular { width: 48px; height: 48px; }
+.m3-circular circle { fill: none; stroke-width: 4; stroke-linecap: round; }
+.m3-circular .track { stroke: var(--m3-secondaryContainer); }
+.m3-circular .bar { stroke: var(--m3-primary); }
+.m3-circular.spin { animation: spin 1.2s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.m3-loading { width: 48px; height: 48px; display: grid; place-items: center; }
+.m3-loading svg { width: 38px; height: 38px; fill: var(--m3-primary); animation: morph 2.4s var(--ease) infinite; }
+.m3-loading.contained { border-radius: 50%; background: var(--m3-primaryContainer); }
+.m3-loading.contained svg { width: 30px; height: 30px; fill: var(--m3-onPrimaryContainer); }
+@keyframes morph { 0% { transform: rotate(0) scale(1); } 50% { transform: rotate(180deg) scale(.86); } 100% { transform: rotate(360deg) scale(1); } }
+
+.m3-snackbar { width: 344px; max-width: 100%; min-height: 48px; border-radius: calc(4px * var(--k)); background: var(--m3-inverseSurface); color: var(--m3-inverseOnSurface); display: flex; align-items: center; gap: 8px; padding: 0 8px 0 16px; box-shadow: var(--shadow-1); font-size: 14px; }
+.m3-snackbar span { flex: 1; }
+.m3-snackbar button { background: none; border: none; color: var(--m3-inversePrimary); font: 500 14px var(--font); height: 40px; padding: 0 12px; border-radius: 20px; cursor: pointer; }
+
+.m3-dialog { width: 312px; max-width: 100%; border-radius: calc(28px * var(--k)); background: var(--m3-surfaceContainerHigh); color: var(--m3-onSurface); padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.m3-dialog .ms.head { color: var(--m3-secondary); align-self: center; }
+.m3-dialog h3 { margin: 0; font-size: 24px; line-height: 32px; font-weight: 400; text-align: center; }
+.m3-dialog p { margin: 0; color: var(--m3-onSurfaceVariant); font-size: 14px; line-height: 20px; }
+.m3-dialog .acts { display: flex; justify-content: flex-end; gap: 8px; padding-top: 8px; }
+
+.m3-sheet { width: 412px; max-width: 100%; height: 220px; border-radius: calc(28px * var(--k)) calc(28px * var(--k)) 0 0; background: var(--m3-surfaceContainerLow); display: flex; flex-direction: column; align-items: center; padding-top: 22px; gap: 12px; color: var(--m3-onSurfaceVariant); }
+.m3-sheet .grip { width: 32px; height: 4px; border-radius: 2px; background: var(--m3-onSurfaceVariant); opacity: .4; }
+
+.m3-toolbar { height: 64px; border-radius: calc(32px * var(--k)); display: inline-flex; align-items: center; gap: 4px; padding: 0 8px; box-shadow: var(--shadow-1); }
+.m3-toolbar.v-tonal { background: var(--m3-surfaceContainer); color: var(--m3-onSurfaceVariant); }
+.m3-toolbar.v-filled { background: var(--m3-primaryContainer); color: var(--m3-onPrimaryContainer); }
+.m3-toolbar .m3-icon-btn { background: transparent; color: inherit; width: 48px; height: 48px; border-radius: calc(24px * var(--k)); }
+.m3-toolbar .m3-icon-btn.on { background: var(--m3-primary); color: var(--m3-onPrimary); }
+
+.m3-badge-host { position: relative; display: inline-grid; place-items: center; width: 40px; height: 40px; color: var(--m3-onSurfaceVariant); }
+.m3-badge { position: absolute; top: 6px; left: 22px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 8px; background: var(--m3-error); color: var(--m3-onError); font: 500 11px/16px var(--font); text-align: center; }
+.m3-badge.dot { min-width: 6px; width: 6px; height: 6px; padding: 0; top: 8px; left: 26px; }
+.m3-divider { width: 380px; max-width: 100%; height: 1px; background: var(--m3-outlineVariant); margin: 8px 0; }
+
+.m3-menu { width: 200px; border-radius: calc(16px * var(--k)); background: var(--m3-surfaceContainer); padding: 8px 4px; box-shadow: var(--shadow-1); }
+.m3-menu div { height: 48px; display: flex; align-items: center; gap: 12px; padding: 0 12px; border-radius: calc(12px * var(--k)); font-size: 14px; color: var(--m3-onSurface); }
+.m3-menu div .ms { font-size: 20px; color: var(--m3-onSurfaceVariant); }
+.m3-menu div.on { background: var(--m3-tertiaryContainer); color: var(--m3-onTertiaryContainer); }
+
+.m3-fabmenu { display: inline-flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.m3-fabmenu .it { height: 56px; border-radius: calc(28px * var(--k)); background: var(--m3-primaryContainer); color: var(--m3-onPrimaryContainer); display: inline-flex; align-items: center; gap: 12px; padding: 0 24px 0 20px; font: 500 16px var(--font); }
+.m3-fabmenu .close { margin-top: 8px; width: 56px; height: 56px; border-radius: 50%; background: var(--m3-primary); color: var(--m3-onPrimary); display: grid; place-items: center; }
+
+/* một màn hình điện thoại hoàn chỉnh: 412 × 892 dp, thu nhỏ để xem */
+.phone-wrap { overflow-x: auto; padding: 8px 0; }
+.phones { display: flex; gap: 32px; width: max-content; }
+.phone { width: 412px; height: 892px; border-radius: 40px; box-shadow: 0 0 0 10px var(--m3-inverseSurface); background: var(--m3-surface); position: relative; overflow: hidden; margin: 10px; zoom: .62; }
+.phone .body { padding: 8px 16px; display: flex; flex-direction: column; gap: 8px; }
+.phone .m3-navbar { position: absolute; bottom: 0; left: 0; }
+.phone .m3-fab { position: absolute; right: 16px; bottom: 120px; }
+/* màn desktop: 1280 × 800 dp, bo 28 (DESKTOP_W/H/R), bố cục list-detail của cửa sổ expanded */
+.desk { width: 1280px; height: 800px; border-radius: 28px; box-shadow: 0 0 0 10px var(--m3-inverseSurface); background: var(--m3-surfaceContainer); overflow: hidden; margin: 10px; zoom: .6; display: flex; }
+.desk .m3-rail { height: 100%; background: transparent; flex: none; }
+.desk .panes { flex: 1; display: flex; gap: 24px; padding: 24px 24px 24px 0; min-width: 0; }
+.desk .pane { background: var(--m3-surface); border-radius: calc(28px * var(--k)); overflow: hidden; display: flex; flex-direction: column; }
+.desk .pane.list { width: 412px; flex: none; }
+.desk .pane.detail { flex: 1; min-width: 0; }
+.desk .pane .head { height: 64px; display: flex; align-items: center; gap: 4px; padding: 0 8px 0 24px; font-size: 22px; line-height: 28px; }
+.desk .pane .head .t { flex: 1; }
+.desk .pane .inner { padding: 8px 16px 16px; display: flex; flex-direction: column; gap: 12px; overflow: hidden; }
+.desk .m3-li.sel { background: var(--m3-secondaryContainer); color: var(--m3-onSecondaryContainer); }
+.desk .detail .inner { padding: 8px 24px 24px; gap: 20px; }
+.desk .hero { height: 260px; border-radius: calc(16px * var(--k)); background: linear-gradient(135deg, var(--m3-primaryContainer), var(--m3-tertiaryContainer)); display: grid; place-items: center; color: var(--m3-onPrimaryContainer); }
+.desk .hero .ms { font-size: 56px; opacity: .6; }
+.desk .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.desk .cols .m3-labeled { display: flex; }
+.desk .cols h4 { margin: 0 0 8px; font-size: 16px; font-weight: 500; }
+.desk .cols ol { margin: 0; padding-left: 20px; color: var(--m3-onSurfaceVariant); font-size: 14px; line-height: 22px; }
+.phone-cap { font-family: var(--mono); font-size: 12px; color: var(--m3-onSurfaceVariant); margin: 4px 10px 0; }
+
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; transition: all .25s var(--ease); z-index: 20; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .side { display: none; }
+  main { padding: 0 16px 80px; }
+  .grid, .grid.wide { grid-template-columns: 1fr; }
+  .intro h1 { font-size: 34px; line-height: 42px; }
+  .type-row { grid-template-columns: 1fr; gap: 2px; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="side" aria-label="Mục lục">
+    <div class="brand"><div class="brand-mark"><span class="ms fill">interests</span></div><div><b>M3E UI Kit</b><small>Material 3 Expressive</small></div></div>
+    <h6>Nền tảng</h6>
+    <a href="#color"><span class="ms">palette</span>Màu</a>
+    <a href="#type"><span class="ms">text_fields</span>Chữ</a>
+    <a href="#shape"><span class="ms">rounded_corner</span>Hình khối</a>
+    <a href="#layout"><span class="ms">straighten</span>Bố cục &amp; kích thước</a>
+    <h6>Thành phần</h6>
+    <a href="#actions"><span class="ms">touch_app</span>Hành động</a>
+    <a href="#navigation"><span class="ms">explore</span>Điều hướng</a>
+    <a href="#containment"><span class="ms">web_asset</span>Chứa nội dung</a>
+    <a href="#inputs"><span class="ms">toggle_on</span>Nhập liệu</a>
+    <a href="#feedback"><span class="ms">progress_activity</span>Phản hồi</a>
+    <h6>Mẫu</h6>
+    <a href="#screens"><span class="ms">devices</span>Màn hình mẫu</a>
+  </nav>
+
+  <main>
+    <div class="bar" role="toolbar" aria-label="Chủ đề">
+      <div class="ctl"><span>Palette</span><div class="swatches" id="swatches"></div></div>
+      <div class="ctl"><span>Chế độ</span><div class="seg" id="mode">
+        <button data-v="light" aria-pressed="true"><span class="ms">light_mode</span>Sáng</button>
+        <button data-v="dark" aria-pressed="false"><span class="ms">dark_mode</span>Tối</button></div></div>
+      <div class="ctl"><span>Shape</span><div class="seg" id="shape">
+        <button data-v="0.35" aria-pressed="false">Square</button>
+        <button data-v="1" aria-pressed="true">Rounded</button>
+        <button data-v="1.6" aria-pressed="false">Full</button></div></div>
+      <div class="grow"></div>
+      <button class="copy" id="copy-tokens"><span class="ms">data_object</span>Copy CSS token</button>
+    </div>
+
+    <div class="intro">
+      <div class="eyebrow">lib/tokens.ts → docs/ui-kit.html</div>
+      <h1>Bộ thành phần của M3E Canvas</h1>
+      <p>Mọi thành phần app vẽ trên canvas, dựng lại bằng HTML/CSS thuần. Màu lấy thẳng từ 7 palette của app, cả sáng lẫn tối. Kích thước tính bằng dp đúng thông số app dùng. Mỗi thẻ ghi tên <code>kind</code> trong <code>public/agent.md</code> và có nút copy HTML, nên chỉ cần dán khối <code>--m3-*</code> cùng CSS <code>.m3-*</code> là dùng lại được ở dự án khác.</p>
+      <div class="facts"><span class="fact">phone 412 × 892</span><span class="fact">margin 16 · content 380 · half 182</span><span class="fact">connected gap 3 · r 28 / 8</span><span class="fact">ease cubic-bezier(0.2, 0, 0, 1) · 340ms</span></div>
+    </div>
+
+    <!-- ================= NỀN TẢNG ================= -->
+    <section class="block" id="color">
+      <header><h2>Màu</h2><p>25 vai trò màu M3 của palette đang chọn. Bấm một ô để copy mã hex. Luôn ghép màu nền với màu chữ <code>on*</code> cùng cặp.</p></header>
+      <div class="roles" id="roles"></div>
+    </section>
+
+    <section class="block" id="type">
+      <header><h2>Chữ</h2><p>Thang chữ M3 trên Roboto. Trong app còn chọn được Roboto Flex, Roboto Serif hoặc font hệ thống; chế độ emphasized dùng độ đậm cao hơn một bậc.</p></header>
+      <div class="spec"><div class="stage col" id="typescale"></div></div>
+    </section>
+
+    <section class="block" id="shape">
+      <header><h2>Hình khối</h2><p>App nhân mọi bán kính mặc định với hệ số của thang shape (<code>scaleR</code>): square × 0.35, rounded × 1, full × 1.6. Đổi Shape ở thanh trên để xem cả bộ kit đổi theo.</p></header>
+      <div class="spec"><div class="stage" id="shapes" style="gap:28px"></div></div>
+    </section>
+
+    <section class="block" id="layout">
+      <header><h2>Bố cục &amp; kích thước</h2><p>Các con số tidy và canvas dùng để xếp thành phần trên màn hình.</p></header>
+      <div class="grid wide">
+        <div class="spec"><div class="stage col">
+          <table class="tok"><thead><tr><th>Button</th><th>h</th><th>padX</th><th>gap</th><th>icon</th><th>font</th></tr></thead><tbody>
+            <tr><td>xs</td><td>32</td><td>12</td><td>8</td><td>20</td><td>14</td></tr>
+            <tr><td>s</td><td>40</td><td>16</td><td>8</td><td>20</td><td>14</td></tr>
+            <tr><td>m</td><td>56</td><td>24</td><td>8</td><td>24</td><td>16</td></tr>
+            <tr><td>l</td><td>96</td><td>48</td><td>12</td><td>32</td><td>24</td></tr>
+            <tr><td>xl</td><td>136</td><td>64</td><td>16</td><td>40</td><td>32</td></tr></tbody></table>
+        </div><div class="spec-f"><span class="note">Chiều cao nằm giữa hai bậc thì mọi số đo được nội suy theo tỉ lệ (<code>buttonMetrics</code>).</span></div></div>
+        <div class="spec"><div class="stage col">
+          <table class="tok"><thead><tr><th>Hằng số</th><th>dp</th><th>Dùng cho</th></tr></thead><tbody>
+            <tr><td>PHONE_W × H</td><td>412 × 892</td><td>khung điện thoại, bo 40</td></tr>
+            <tr><td>DESKTOP_W × H</td><td>1280 × 800</td><td>khung desktop, bo 28</td></tr>
+            <tr><td>PHONE_MARGIN</td><td>16</td><td>lề màn hình</td></tr>
+            <tr><td>CONTENT_W / HALF_W</td><td>380 / 182</td><td>nút full / hai nút cạnh nhau</td></tr>
+            <tr><td>STATUS_BAR_H · NAV_BAR_H</td><td>24 · 24</td><td>inset trên top bar / dưới nav bar</td></tr>
+            <tr><td>GAP · R_FULL · R_INNER</td><td>3 · 28 · 8</td><td>nhóm connected</td></tr>
+            <tr><td>Chip xs · s · m</td><td>32 · 40 · 56</td><td>chiều cao chip</td></tr>
+            <tr><td>FAB s · m · l</td><td>40 · 56 · 96</td><td>đường kính FAB</td></tr>
+            <tr><td>Top bar s · m · l</td><td>64 · 112 · 152</td><td>title 22 · 24 · 28</td></tr></tbody></table>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- ================= HÀNH ĐỘNG ================= -->
+    <section class="block" id="actions">
+      <header><h2>Hành động</h2></header>
+      <div class="grid">
+        <div class="spec full"><div class="spec-h"><b>Button · 5 variant</b><span class="kind">button</span><span class="dp">h 40 · r h/2</span></div>
+          <div class="stage">
+            <button class="m3-btn s v-filled"><span class="ms">add</span>Filled</button>
+            <button class="m3-btn s v-tonal"><span class="ms">bookmark</span>Tonal</button>
+            <button class="m3-btn s v-elevated"><span class="ms">share</span>Elevated</button>
+            <button class="m3-btn s v-outlined">Outlined</button>
+            <button class="m3-btn s v-text">Text</button>
+          </div><div class="spec-f"><span class="note">Khi nhấn, góc bo co lại (hiệu ứng shape morph của Expressive).</span></div></div>
+
+        <div class="spec full"><div class="spec-h"><b>Button · 5 cỡ</b><span class="kind">button · size2</span><span class="dp">32 · 40 · 56 · 96 · 136</span></div>
+          <div class="stage">
+            <button class="m3-btn xs v-filled"><span class="ms">edit</span>XS</button>
+            <button class="m3-btn s v-filled"><span class="ms">edit</span>S</button>
+            <button class="m3-btn m v-filled"><span class="ms">edit</span>M</button>
+            <button class="m3-btn l v-filled"><span class="ms">edit</span>L</button>
+            <button class="m3-btn xl v-filled"><span class="ms">edit</span>XL</button>
+          </div></div>
+
+        <div class="spec"><div class="spec-h"><b>Nút chính & cặp nút</b><span class="kind">button · size 380 / 182</span></div>
+          <div class="stage col">
+            <button class="m3-btn m v-filled full">Lưu công thức</button>
+            <div class="m3-connected"><button class="m3-btn m v-tonal half">Huỷ</button><button class="m3-btn m v-filled half">Đăng</button></div>
+          </div><div class="spec-f"><span class="note">Nút đứng một mình rộng 380; hai nút cạnh nhau là một nhóm connected, mỗi nút 182.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Button group (connected)</b><span class="kind">axis "x"</span><span class="dp">gap 3 · r 28/8</span></div>
+          <div class="stage">
+            <div class="m3-connected"><button class="m3-btn s v-tonal">Ngày</button><button class="m3-btn s v-filled">Tuần</button><button class="m3-btn s v-tonal">Tháng</button></div>
+          </div></div>
+
+        <div class="spec"><div class="spec-h"><b>Icon button</b><span class="kind">iconButton</span><span class="dp">40 × 40</span></div>
+          <div class="stage">
+            <button class="m3-icon-btn v-filled" aria-label="Yêu thích"><span class="ms fill">favorite</span></button>
+            <button class="m3-icon-btn v-tonal" aria-label="Chỉnh sửa"><span class="ms">edit</span></button>
+            <button class="m3-icon-btn v-outlined" aria-label="Chia sẻ"><span class="ms">share</span></button>
+            <button class="m3-icon-btn v-standard" aria-label="Thêm"><span class="ms">more_vert</span></button>
+            <div class="m3-connected"><button class="m3-icon-btn v-tonal" aria-label="Trái"><span class="ms">format_align_left</span></button><button class="m3-icon-btn v-filled" aria-label="Giữa"><span class="ms">format_align_center</span></button><button class="m3-icon-btn v-tonal" aria-label="Phải"><span class="ms">format_align_right</span></button></div>
+          </div></div>
+
+        <div class="spec"><div class="spec-h"><b>FAB</b><span class="kind">fab · size 40/56/96</span><span class="dp">r 12 · 16 · 28</span></div>
+          <div class="stage">
+            <button class="m3-fab s" aria-label="Thêm"><span class="ms">add</span></button>
+            <button class="m3-fab" aria-label="Thêm"><span class="ms">add</span></button>
+            <button class="m3-fab l" aria-label="Thêm"><span class="ms">add</span></button>
+            <button class="m3-fab v-primary" aria-label="Sửa"><span class="ms">edit</span></button>
+            <button class="m3-fab v-tertiary" aria-label="Ảnh"><span class="ms">photo_camera</span></button>
+          </div></div>
+
+        <div class="spec"><div class="spec-h"><b>Extended FAB · Split button</b><span class="kind">extendedFab · splitButton</span><span class="dp">h 56 · 40</span></div>
+          <div class="stage">
+            <button class="m3-fab ext"><span class="ms">edit</span>Soạn</button>
+            <div class="m3-split"><button class="m3-btn s v-filled"><span class="ms">send</span>Gửi</button><button class="m3-btn s v-filled" aria-label="Tuỳ chọn"><span class="ms">keyboard_arrow_down</span></button></div>
+          </div></div>
+
+        <div class="spec"><div class="spec-h"><b>FAB menu</b><span class="kind">fabMenu</span><span class="dp">220 rộng</span></div>
+          <div class="stage center">
+            <div class="m3-fabmenu"><div class="it"><span class="ms">description</span>Ghi chú</div><div class="it"><span class="ms">checklist</span>Danh sách</div><div class="it"><span class="ms">photo_camera</span>Ảnh</div><div class="close"><span class="ms">close</span></div></div>
+          </div></div>
+
+        <div class="spec"><div class="spec-h"><b>Chip</b><span class="kind">chip · checked</span><span class="dp">h 32 · r 8</span></div>
+          <div class="stage">
+            <span class="m3-chip lead on"><span class="ms">check</span>Chay</span>
+            <span class="m3-chip">Dưới 30 phút</span>
+            <span class="m3-chip lead"><span class="ms">local_fire_department</span>Cay</span>
+            <span class="m3-chip elev">Món nướng</span>
+            <div class="m3-connected"><span class="m3-chip">Sáng</span><span class="m3-chip on">Trưa</span><span class="m3-chip">Tối</span></div>
+          </div></div>
+
+        <div class="spec"><div class="spec-h"><b>Floating toolbar</b><span class="kind">toolbar</span><span class="dp">h 64</span></div>
+          <div class="stage col" style="align-items:center">
+            <div class="m3-toolbar v-tonal"><button class="m3-icon-btn" aria-label="Đậm"><span class="ms">format_bold</span></button><button class="m3-icon-btn on" aria-label="Nghiêng"><span class="ms">format_italic</span></button><button class="m3-icon-btn" aria-label="Gạch chân"><span class="ms">format_underlined</span></button><button class="m3-icon-btn" aria-label="Danh sách"><span class="ms">format_list_bulleted</span></button></div>
+            <div class="m3-toolbar v-filled"><button class="m3-icon-btn" aria-label="Quay lại"><span class="ms">arrow_back</span></button><button class="m3-icon-btn" aria-label="Tải xuống"><span class="ms">download</span></button><button class="m3-icon-btn on" aria-label="Chia sẻ"><span class="ms">share</span></button></div>
+          </div><div class="spec-f"><span class="note">variant tonal = standard, filled = vibrant.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= ĐIỀU HƯỚNG ================= -->
+    <section class="block" id="navigation">
+      <header><h2>Điều hướng</h2></header>
+      <div class="grid wide">
+        <div class="spec full"><div class="spec-h"><b>Top app bar · s / m / l</b><span class="kind">topAppBar · size2 64/112/152</span><span class="dp">+ status 24</span></div>
+          <div class="stage" style="align-items:flex-start;gap:20px">
+            <div class="m3-topbar"><div class="status"><span>9:30</span><span><span class="ms">signal_cellular_alt</span> <span class="ms">battery_full</span></span></div><div class="row"><button class="m3-icon-btn v-standard" aria-label="Menu"><span class="ms">menu</span></button><span class="title">Công thức</span><button class="m3-icon-btn v-standard" aria-label="Tìm"><span class="ms">search</span></button></div></div>
+            <div class="m3-topbar m"><div class="status"><span>9:30</span><span><span class="ms">battery_full</span></span></div><div class="row"><button class="m3-icon-btn v-standard" aria-label="Quay lại"><span class="ms">arrow_back</span></button><span class="title"></span><button class="m3-icon-btn v-standard" aria-label="Thêm"><span class="ms">more_vert</span></button></div><div class="big">Canh cà chua</div></div>
+            <div class="m3-topbar l filled"><div class="status"><span>9:30</span><span><span class="ms">battery_full</span></span></div><div class="row"><button class="m3-icon-btn v-standard" aria-label="Quay lại"><span class="ms">arrow_back</span></button><span class="title"></span></div><div class="big">Cài đặt</div></div>
+          </div></div>
+
+        <div class="spec"><div class="spec-h"><b>Navigation bar</b><span class="kind">bottomNav · tabs · selected</span><span class="dp">80 + 24 · pill 56×32</span></div>
+          <div class="stage">
+            <div class="m3-navbar"><div class="tab on"><div class="pill"><span class="ms">home</span></div>Trang chủ</div><div class="tab"><div class="pill"><span class="ms">search</span></div>Tìm</div><div class="tab"><div class="pill"><span class="ms">favorite</span></div>Đã lưu</div><div class="tab"><div class="pill"><span class="ms">settings</span></div>Cài đặt</div></div>
+          </div></div>
+
+        <div class="spec"><div class="spec-h"><b>Tabs</b><span class="kind">tabs</span><span class="dp">h 48</span></div>
+          <div class="stage col">
+            <div class="m3-tabs"><div class="tab on">Nguyên liệu</div><div class="tab">Cách làm</div><div class="tab">Ghi chú</div></div>
+          </div><div class="spec-f"><span class="note">Từ 6 tab trở lên thì hàng tab cuộn ngang.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Search bar</b><span class="kind">searchBar</span><span class="dp">380 × 56 · r 28</span></div>
+          <div class="stage"><div class="m3-search"><span class="ms">search</span><span class="t">Tìm công thức</span><button class="m3-icon-btn v-standard" aria-label="Giọng nói"><span class="ms">mic</span></button></div></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Navigation rail</b><span class="kind">navRail · railExpanded</span><span class="dp">96 / 220</span></div>
+          <div class="stage">
+            <div class="m3-rail"><button class="m3-icon-btn v-standard menu" aria-label="Menu"><span class="ms">menu</span></button><button class="m3-fab" aria-label="Soạn"><span class="ms">edit</span></button><div class="tab on"><div class="pill"><span class="ms fill">inbox</span></div>Hộp thư</div><div class="tab"><div class="pill"><span class="ms">star</span></div>Gắn sao</div><div class="tab"><div class="pill"><span class="ms">send</span></div>Đã gửi</div></div>
+          </div><div class="spec-f"><span class="note">Chỉ dùng cho desktop. Ở dạng modal, rail mở rộng đè lên nội dung kèm lớp phủ tối.</span></div></div>
+      </div>
+    </section>
+
+    <!-- ================= CHỨA NỘI DUNG ================= -->
+    <section class="block" id="containment">
+      <header><h2>Chứa nội dung</h2></header>
+      <div class="grid wide">
+        <div class="spec"><div class="spec-h"><b>List item (connected run)</b><span class="kind">listItem · axis "y"</span><span class="dp">380 × 72 · gap 3</span></div>
+          <div class="stage">
+            <div class="m3-list m3-connected y">
+              <div class="m3-li"><div class="av"><span class="ms">restaurant</span></div><div class="txt"><b>Canh cà chua</b><small>30 phút · 4 người</small></div><span class="ms">chevron_right</span></div>
+              <div class="m3-li"><div class="av"><span class="ms">bakery_dining</span></div><div class="txt"><b>Bánh pancake</b><small>20 phút · 2 người</small></div><span class="ms">chevron_right</span></div>
+              <div class="m3-li"><div class="av"><span class="ms">ramen_dining</span></div><div class="txt"><b>Phở bò</b><small>3 giờ · 6 người</small></div><span class="ms">chevron_right</span></div>
+            </div>
+          </div></div>
+
+        <div class="spec"><div class="spec-h"><b>List item · switch</b><span class="kind">listItem · switch · checked</span><span class="dp">h 56</span></div>
+          <div class="stage">
+            <div class="m3-list m3-connected y">
+              <div class="m3-li one"><div class="txt"><b>Thông báo</b></div><button class="m3-switch" role="switch" aria-checked="true" aria-label="Thông báo"></button></div>
+              <div class="m3-li one"><div class="txt"><b>Đồng bộ ảnh</b></div><button class="m3-switch" role="switch" aria-checked="false" aria-label="Đồng bộ ảnh"></button></div>
+              <div class="m3-li one"><div class="txt"><b>Ngôn ngữ</b></div><span class="ms">chevron_right</span></div>
+            </div>
+          </div></div>
+
+        <div class="spec full"><div class="spec-h"><b>Card · filled / elevated / outlined</b><span class="kind">card · fill · noImage</span><span class="dp">380 × 223 · r 12</span></div>
+          <div class="stage" style="align-items:flex-start">
+            <div class="m3-card v-filled" style="width:300px"><div class="img"><span class="ms">image</span></div><div class="body"><b>Salad bơ</b><p>Bơ, cà chua bi và dầu olive, trộn trong 10 phút.</p></div></div>
+            <div class="m3-card v-elevated" style="width:300px;box-shadow:var(--shadow-1)"><div class="img"><span class="ms">image</span></div><div class="body"><b>Cơm gà</b><p>Gà luộc xé, cơm nấu nước dùng gà.</p></div></div>
+            <div class="m3-card v-outlined" style="width:300px"><div class="body"><b>Không có ảnh</b><p>Đặt <code>"noImage": true</code> để bỏ vùng ảnh; card chỉ còn tiêu đề và nội dung.</p></div></div>
+          </div></div>
+
+        <div class="spec"><div class="spec-h"><b>Dialog</b><span class="kind">dialog</span><span class="dp">312 × 220 · r 28</span></div>
+          <div class="stage center surface"><div class="m3-dialog"><span class="ms head">delete</span><h3>Xoá công thức?</h3><p>Công thức và ảnh đi kèm sẽ bị xoá khỏi máy này.</p><div class="acts"><button class="m3-btn s v-text">Huỷ</button><button class="m3-btn s v-text">Xoá</button></div></div></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Bottom sheet</b><span class="kind">box · checked</span><span class="dp">412 × 220 · r 28 trên</span></div>
+          <div class="stage center"><div class="m3-sheet"><div class="grip"></div><div class="m3-labeled">Sắp xếp theo thời gian nấu</div></div></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Menu</b><span class="kind">select · splitButton menu</span><span class="dp">item h 48 · pad 8</span></div>
+          <div class="stage center"><div class="m3-menu"><div><span class="ms">edit</span>Sửa</div><div class="on"><span class="ms">content_copy</span>Nhân bản</div><div><span class="ms">delete</span>Xoá</div></div></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Divider · Badge</b><span class="kind">divider · badge</span><span class="dp">1 · dot 6 · 16</span></div>
+          <div class="stage col">
+            <div style="display:flex;gap:8px"><span class="m3-badge-host"><span class="ms">notifications</span><span class="m3-badge dot"></span></span><span class="m3-badge-host"><span class="ms">mail</span><span class="m3-badge">3</span></span><span class="m3-badge-host"><span class="ms">chat</span><span class="m3-badge">99+</span></span></div>
+            <div class="m3-divider"></div>
+          </div></div>
+      </div>
+    </section>
+
+    <!-- ================= NHẬP LIỆU ================= -->
+    <section class="block" id="inputs">
+      <header><h2>Nhập liệu</h2></header>
+      <div class="grid wide">
+        <div class="spec"><div class="spec-h"><b>Text field · filled / outlined</b><span class="kind">textField · variant</span><span class="dp">380 × 56</span></div>
+          <div class="stage col" style="gap:20px">
+            <div class="m3-field filled"><div class="box"><div class="in"><label>Tên món</label><span class="val">Canh cà chua</span></div><span class="ms">cancel</span></div><div class="help">Tối đa 40 ký tự</div></div>
+            <div class="m3-field outlined" style="--bg:var(--m3-surfaceContainerLow)"><label>Email</label><div class="box"><span class="ms">mail</span><div class="in"><span class="val">an@vidu.vn</span></div></div></div>
+            <div class="m3-field filled error"><div class="box"><div class="in"><label>Số người</label><span class="val">0</span></div><span class="ms" style="color:var(--m3-error)">error</span></div><div class="help">Nhập số từ 1 đến 20</div></div>
+          </div></div>
+
+        <div class="spec"><div class="spec-h"><b>Select (dropdown)</b><span class="kind">select · tabs · selected</span><span class="dp">380 × 56</span></div>
+          <div class="stage col" style="gap:12px">
+            <div class="m3-field outlined" style="--bg:var(--m3-surfaceContainerLow)"><label>Độ khó</label><div class="box"><div class="in"><span class="val">Trung bình</span></div><span class="ms">arrow_drop_down</span></div></div>
+            <div class="m3-menu" style="width:380px;max-width:100%"><div>Dễ</div><div class="on">Trung bình</div><div>Khó</div></div>
+          </div></div>
+
+        <div class="spec"><div class="spec-h"><b>Switch · Checkbox · Radio</b><span class="kind">switch · checkbox · radio</span><span class="dp">52×32 · 18 · 20</span></div>
+          <div class="stage col">
+            <div class="m3-labeled row380">Chế độ tối<button class="m3-switch" role="switch" aria-checked="true" aria-label="Chế độ tối"></button></div>
+            <div class="m3-labeled"><span class="m3-check on"><span class="ms">check</span></span>Không hành</div>
+            <div class="m3-labeled"><span class="m3-check"></span>Không tỏi</div>
+            <div class="m3-labeled"><span class="m3-radio on"></span>Nấu nhanh</div>
+            <div class="m3-labeled"><span class="m3-radio"></span>Nấu chậm</div>
+          </div><div class="spec-f"><span class="note">Switch rộng 380 thì nhãn nằm bên trái, công tắc bên phải.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Slider (Expressive)</b><span class="kind">slider · value</span><span class="dp">380 × 44 · track 16 · handle 4×44</span></div>
+          <div class="stage col">
+            <div class="m3-slider" style="--v:40%"><div class="act"></div><div class="handle"></div><div class="rest"></div></div>
+            <div class="m3-slider" style="--v:75%"><div class="act"></div><div class="handle"></div><div class="rest"></div></div>
+          </div></div>
+      </div>
+    </section>
+
+    <!-- ================= PHẢN HỒI ================= -->
+    <section class="block" id="feedback">
+      <header><h2>Phản hồi</h2></header>
+      <div class="grid">
+        <div class="spec"><div class="spec-h"><b>Linear progress</b><span class="kind">linearProgress · value</span><span class="dp">h 4 · gap 4</span></div>
+          <div class="stage col" style="gap:24px"><div class="m3-linear" style="--v:60%"><div class="act"></div><div class="rest"></div></div><div class="m3-linear ind"><div class="act"></div><div class="rest"></div></div></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Circular progress</b><span class="kind">circularProgress</span><span class="dp">48 · stroke 4</span></div>
+          <div class="stage">
+            <svg class="m3-circular" viewBox="0 0 48 48" role="img" aria-label="60%"><circle class="track" cx="24" cy="24" r="20" stroke-dasharray="44 126" stroke-dashoffset="-80"/><circle class="bar" cx="24" cy="24" r="20" stroke-dasharray="72 126" transform="rotate(-90 24 24)"/></svg>
+            <svg class="m3-circular spin" viewBox="0 0 48 48" role="img" aria-label="Đang tải"><circle class="bar" cx="24" cy="24" r="20" stroke-dasharray="40 126"/></svg>
+          </div></div>
+
+        <div class="spec"><div class="spec-h"><b>Loading indicator</b><span class="kind">loadingIndicator · contained</span><span class="dp">48 × 48</span></div>
+          <div class="stage">
+            <div class="m3-loading" role="img" aria-label="Đang tải"><svg viewBox="0 0 40 40"><path d="M20 2l4.2 6.1 7.1-2.2.3 7.4 7 2.6-4.4 6 4.4 6-7 2.6-.3 7.4-7.1-2.2L20 38l-4.2-6.1-7.1 2.2-.3-7.4-7-2.6 4.4-6-4.4-6 7-2.6.3-7.4 7.1 2.2z" stroke-linejoin="round"/></svg></div>
+            <div class="m3-loading contained" role="img" aria-label="Đang tải"><svg viewBox="0 0 40 40"><path d="M20 2l4.2 6.1 7.1-2.2.3 7.4 7 2.6-4.4 6 4.4 6-7 2.6-.3 7.4-7.1-2.2L20 38l-4.2-6.1-7.1 2.2-.3-7.4-7-2.6 4.4-6-4.4-6 7-2.6.3-7.4 7.1 2.2z"/></svg></div>
+          </div><div class="spec-f"><span class="note">Bản HTML chỉ xoay và co giãn một hình. App thật morph qua nhiều hình khác nhau.</span></div></div>
+
+        <div class="spec"><div class="spec-h"><b>Snackbar</b><span class="kind">snackbar · supporting</span><span class="dp">344 × 48 · r 4</span></div>
+          <div class="stage center"><div class="m3-snackbar"><span>Đã lưu công thức</span><button>Hoàn tác</button></div></div></div>
+      </div>
+    </section>
+
+    <!-- ================= MẪU MÀN HÌNH ================= -->
+    <section class="block" id="screens">
+      <header><h2>Màn hình mẫu</h2><p>Ghép thành phần theo quy tắc "A good sketch" trong agent.md: top app bar ở trên cùng, bottom nav giữ cùng các tab trên các màn chính, danh sách mở màn chi tiết, màn chi tiết có nút quay lại. Trên desktop, thanh điều hướng dưới được thay bằng navigation rail, và danh sách với chi tiết nằm cạnh nhau trong cùng một màn.</p></header>
+      <div class="phone-wrap"><div class="phones">
+        <div>
+          <div class="phone">
+            <div class="m3-topbar"><div class="status"><span>9:30</span><span><span class="ms">signal_cellular_alt</span> <span class="ms">battery_full</span></span></div><div class="row"><button class="m3-icon-btn v-standard" aria-label="Menu"><span class="ms">menu</span></button><span class="title">Công thức</span><button class="m3-icon-btn v-standard" aria-label="Tìm"><span class="ms">search</span></button></div></div>
+            <div class="body">
+              <div style="display:flex;gap:8px;padding-bottom:8px"><span class="m3-chip lead on"><span class="ms">check</span>Tất cả</span><span class="m3-chip">Chay</span><span class="m3-chip">Nhanh</span></div>
+              <div class="m3-list m3-connected y">
+                <div class="m3-li"><div class="av"><span class="ms">restaurant</span></div><div class="txt"><b>Canh cà chua</b><small>30 phút</small></div><span class="ms">chevron_right</span></div>
+                <div class="m3-li"><div class="av"><span class="ms">bakery_dining</span></div><div class="txt"><b>Bánh pancake</b><small>20 phút</small></div><span class="ms">chevron_right</span></div>
+                <div class="m3-li"><div class="av"><span class="ms">ramen_dining</span></div><div class="txt"><b>Phở bò</b><small>3 giờ</small></div><span class="ms">chevron_right</span></div>
+                <div class="m3-li"><div class="av"><span class="ms">egg_alt</span></div><div class="txt"><b>Trứng chiên</b><small>10 phút</small></div><span class="ms">chevron_right</span></div>
+              </div>
+            </div>
+            <button class="m3-fab" aria-label="Thêm công thức"><span class="ms">add</span></button>
+            <div class="m3-navbar inset"><div class="tab on"><div class="pill"><span class="ms">home</span></div>Trang chủ</div><div class="tab"><div class="pill"><span class="ms">search</span></div>Tìm</div><div class="tab"><div class="pill"><span class="ms">settings</span></div>Cài đặt</div></div>
+          </div>
+          <div class="phone-cap">home · topAppBar + chip + listItem×4 + fab + bottomNav</div>
+        </div>
+        <div>
+          <div class="phone">
+            <div class="m3-topbar m"><div class="status"><span>9:30</span><span><span class="ms">battery_full</span></span></div><div class="row"><button class="m3-icon-btn v-standard" aria-label="Quay lại"><span class="ms">arrow_back</span></button><span class="title"></span><button class="m3-icon-btn v-standard" aria-label="Yêu thích"><span class="ms">favorite</span></button></div><div class="big">Canh cà chua</div></div>
+            <div class="body" style="gap:16px">
+              <div class="m3-card v-filled"><div class="img" style="height:180px"><span class="ms">image</span></div><div class="body"><b>30 phút · 4 người</b><p>Cà chua chín, đậu phụ non, hành lá. Nấu với nước dùng xương.</p></div></div>
+              <div class="m3-tabs" style="width:380px"><div class="tab on">Nguyên liệu</div><div class="tab">Cách làm</div></div>
+              <div class="m3-labeled"><span class="m3-check on"><span class="ms">check</span></span>4 quả cà chua</div>
+              <div class="m3-labeled"><span class="m3-check"></span>1 bìa đậu phụ</div>
+              <div class="m3-connected" style="margin-top:8px"><button class="m3-btn m v-tonal half"><span class="ms">share</span>Chia sẻ</button><button class="m3-btn m v-filled half"><span class="ms">skillet</span>Nấu</button></div>
+            </div>
+          </div>
+          <div class="phone-cap">detail · action { to: "back" } trên arrow_back</div>
+        </div>
+      </div></div>
+
+      <div class="phone-wrap" style="margin-top:24px"><div>
+        <div class="desk">
+          <div class="m3-rail"><button class="m3-icon-btn v-standard menu" aria-label="Menu"><span class="ms">menu</span></button><button class="m3-fab v-tertiary" aria-label="Thêm công thức"><span class="ms">add</span></button><div class="tab on"><div class="pill"><span class="ms fill">home</span></div>Trang chủ</div><div class="tab"><div class="pill"><span class="ms">search</span></div>Tìm</div><div class="tab"><div class="pill"><span class="ms">favorite</span></div>Đã lưu</div><div class="tab"><div class="pill"><span class="ms">settings</span></div>Cài đặt</div></div>
+          <div class="panes">
+            <div class="pane list">
+              <div class="head"><span class="t">Công thức</span><button class="m3-icon-btn v-standard" aria-label="Lọc"><span class="ms">filter_list</span></button></div>
+              <div class="inner">
+                <div class="m3-search" style="width:100%"><span class="ms">search</span><span class="t">Tìm công thức</span></div>
+                <div style="display:flex;gap:8px"><span class="m3-chip lead on"><span class="ms">check</span>Tất cả</span><span class="m3-chip">Chay</span><span class="m3-chip">Nhanh</span></div>
+                <div class="m3-list m3-connected y" style="width:100%">
+                  <div class="m3-li sel"><div class="av"><span class="ms">restaurant</span></div><div class="txt"><b>Canh cà chua</b><small>30 phút · 4 người</small></div></div>
+                  <div class="m3-li"><div class="av"><span class="ms">bakery_dining</span></div><div class="txt"><b>Bánh pancake</b><small>20 phút · 2 người</small></div></div>
+                  <div class="m3-li"><div class="av"><span class="ms">ramen_dining</span></div><div class="txt"><b>Phở bò</b><small>3 giờ · 6 người</small></div></div>
+                  <div class="m3-li"><div class="av"><span class="ms">egg_alt</span></div><div class="txt"><b>Trứng chiên</b><small>10 phút · 1 người</small></div></div>
+                  <div class="m3-li"><div class="av"><span class="ms">set_meal</span></div><div class="txt"><b>Cá kho tộ</b><small>1 giờ · 4 người</small></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="pane detail">
+              <div class="head"><span class="t">Canh cà chua</span><button class="m3-icon-btn v-standard" aria-label="Yêu thích"><span class="ms">favorite</span></button><button class="m3-icon-btn v-standard" aria-label="Chia sẻ"><span class="ms">share</span></button><button class="m3-icon-btn v-standard" aria-label="Thêm"><span class="ms">more_vert</span></button></div>
+              <div class="inner">
+                <div class="hero"><span class="ms">image</span></div>
+                <div style="display:flex;gap:8px"><span class="m3-chip lead"><span class="ms">schedule</span>30 phút</span><span class="m3-chip lead"><span class="ms">group</span>4 người</span><span class="m3-chip lead"><span class="ms">eco</span>Chay</span></div>
+                <div class="cols">
+                  <div><h4>Nguyên liệu</h4>
+                    <div class="m3-labeled"><span class="m3-check on"><span class="ms">check</span></span>4 quả cà chua</div>
+                    <div class="m3-labeled"><span class="m3-check on"><span class="ms">check</span></span>1 bìa đậu phụ non</div>
+                    <div class="m3-labeled"><span class="m3-check"></span>2 cây hành lá</div></div>
+                  <div><h4>Cách làm</h4><ol><li>Phi thơm hành, xào cà chua đến khi mềm.</li><li>Thêm 1 lít nước dùng, đun sôi.</li><li>Cho đậu phụ, nêm vừa ăn, rắc hành lá.</li></ol></div>
+                </div>
+                <div class="m3-connected"><button class="m3-btn m v-tonal"><span class="ms">edit</span>Sửa</button><button class="m3-btn m v-filled"><span class="ms">skillet</span>Bắt đầu nấu</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-cap">desktop 1280 × 800 · platform "web" · navRail + list-detail (pane list 412, khoảng cách 24)</div>
+      </div></div>
+    </section>
+  </main>
+</div>
+<div class="toast m3-snackbar" id="toast" role="status"><span id="toast-t">Đã copy</span></div>
+
+<script>
+/* 7 palette của app, sinh từ lib/tokens.ts (paletteOf, sáng và tối) */
+const ROLES=["primary", "onPrimary", "primaryContainer", "onPrimaryContainer", "inversePrimary", "secondary", "secondaryContainer", "onSecondaryContainer", "tertiaryContainer", "onTertiaryContainer", "surface", "surfaceContainerLow", "surfaceContainer", "surfaceContainerHigh", "surfaceContainerHighest", "onSurface", "onSurfaceVariant", "outline", "outlineVariant", "inverseSurface", "inverseOnSurface", "error", "onError", "errorContainer", "onErrorContainer"];
+const PALETTES={"purple":{"label":"Purple","light":["#6750A4","#FFFFFF","#EADDFF","#21005D","#D0BCFF","#635A75","#E8DEF8","#1D192B","#FFD8E4","#31111D","#FEF7FF","#F7F2FA","#F3EDF7","#ECE6F0","#E6E0E9","#1D1B20","#49454F","#79747E","#CAC4D0","#322F35","#F5EFF7","#B3261E","#FFFFFF","#F9DEDC","#410E0B"],"dark":["#D2BCFC","#32226F","#4C3889","#E9DDFF","#6750A4","#CDC1E1","#4B425D","#E9DDFD","#6C3644","#FDDAE1","#141317","#1C1B1F","#201F23","#2B292D","#363438","#E4E1E7","#C9C4D1","#938F9B","#494550","#E4E1E7","#313034","#F2B8B5","#601410","#8C1D18","#F9DEDC"]},"blue":{"label":"Blue","light":["#0B57D0","#FFFFFF","#D3E3FD","#041E49","#A8C7FA","#5A5C7C","#DCE2F9","#131C2B","#FFD8EE","#2E1125","#FAF9FD","#F3F3FA","#EEEDF3","#E9E8EF","#E3E2E6","#1B1B1F","#44474E","#74777F","#C4C6D0","#303034","#F2F0F4","#B3261E","#FFFFFF","#F9DEDC","#410E0B"],"dark":["#C0C2FD","#042C71","#04409F","#E0E0FC","#3757BA","#C3C3E9","#424463","#E0E0FE","#6E334E","#FFD8E7","#131317","#1B1B1F","#1F1F23","#2A2A2E","#343439","#E2E2E8","#C6C5D2","#90909C","#464651","#E2E2E8","#303034","#F2B8B5","#601410","#8C1D18","#F9DEDC"]},"green":{"label":"Green","light":["#2E6A45","#FFFFFF","#B0F1C2","#00210F","#95D5A7","#516356","#D3E8D8","#102016","#C2E8FF","#001E2C","#F6FBF4","#F0F5EE","#EAF0E8","#E4EAE2","#DEE4DC","#181D18","#414941","#707972","#BFC9C0","#2D322D","#EEF2EB","#B3261E","#FFFFFF","#F9DEDC","#410E0B"],"dark":["#96D5A9","#00391C","#12512E","#B1F1C5","#2E6A45","#B7CBBD","#3A4B3F","#D3E8D8","#1E4D54","#BBEBF2","#101411","#181C1A","#1C211E","#272B28","#313633","#DEE4E0","#BDCAC0","#87948B","#3E4941","#DEE4E0","#2D312E","#F2B8B5","#601410","#8C1D18","#F9DEDC"]},"coral":{"label":"Coral","light":["#984061","#FFFFFF","#FFD9E2","#3E001D","#FFB0C8","#74575F","#F6DDE4","#31101D","#FFDBCA","#2C1600","#FFF8F8","#FCF0F2","#F6EBED","#F3E5E9","#EEE0E3","#201A1B","#524346","#847377","#D5C2C6","#352F30","#FAEEEF","#B3261E","#FFFFFF","#F9DEDC","#410E0B"],"dark":["#FEB1C9","#620833","#7D2649","#FED9E4","#984061","#DFBEC7","#5B3F48","#FCDAE3","#5E402C","#FFDBC6","#181213","#201A1C","#241E20","#2E282A","#393335","#E8E1E3","#D4C2C7","#9D8D91","#514347","#E8E1E3","#352F30","#F2B8B5","#601410","#8C1D18","#F9DEDC"]},"amber":{"label":"Amber","light":["#8B5000","#FFFFFF","#FFDCC2","#2C1600","#FFB77C","#725A44","#F6DFC8","#271905","#D5EDC0","#0E2004","#FFF8F5","#FCF1EA","#F7ECE4","#F3E6DE","#EDE0D8","#211A14","#51443B","#83746A","#D6C3B6","#362F28","#FBEEE5","#B3261E","#FFFFFF","#F9DEDC","#410E0B"],"dark":["#FDB976","#472A07","#683C05","#FDDDC1","#8B5000","#DEC1A8","#59422E","#FBDDC4","#384D25","#D2EABA","#17130F","#1F1B18","#231F1C","#2D2926","#383431","#E7E1DD","#D1C4BA","#9A8F85","#4F453D","#E7E1DD","#34302C","#F2B8B5","#601410","#8C1D18","#F9DEDC"]},"teal":{"label":"Teal","light":["#00696E","#FFFFFF","#9CF1F6","#002022","#80D5DA","#4D6263","#CCE8E9","#051F20","#D2E4FF","#001C3B","#F4FBFB","#EEF5F5","#E8EFEF","#E2EAEA","#DDE4E4","#161D1D","#3F4948","#6F7979","#BEC8C8","#2B3232","#ECF2F2","#B3261E","#FFFFFF","#F9DEDC","#410E0B"],"dark":["#83D4D8","#063639","#0B4F52","#9FF0F5","#00696E","#B3CBCC","#354A4C","#CFE7E8","#38485A","#D3E4FA","#0D1515","#161D1D","#1A2121","#252B2B","#2F3636","#DCE4E4","#B7CACB","#819495","#394A4B","#DCE4E4","#2B3232","#F2B8B5","#601410","#8C1D18","#F9DEDC"]},"mono":{"label":"Mono","light":["#4A4459","#FFFFFF","#E6E0F0","#1A1626","#CFC3E0","#5F5D65","#E6E1E6","#1B1B1F","#E9E0EA","#1E1A22","#FCF8FD","#F5F1F6","#EFEBF0","#E9E5EA","#E4E0E5","#1C1B1F","#48454E","#79747E","#CAC4D0","#313033","#F4EFF4","#B3261E","#FFFFFF","#F9DEDC","#410E0B"],"dark":["#CAC3DC","#332D41","#4A4459","#E7DFF8","#615B71","#C8C5CD","#48464D","#E4E1EA","#524346","#F0DEE2","#141317","#1C1B1F","#201F23","#2B292D","#353438","#E3E2E7","#C9C5D1","#938F9B","#484550","#E3E2E7","#313034","#F2B8B5","#601410","#8C1D18","#F9DEDC"]}};
+(function () {
+  const root = document.documentElement;
+  /* lần đầu theo chế độ của máy; sau đó nhớ lựa chọn của người xem */
+  const state = { pal: "purple", mode: matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light", k: "1" };
+  try { Object.assign(state, JSON.parse(localStorage.getItem("m3e-kit") || "{}")); } catch (e) {}
+
+  const toast = (t) => {
+    const el = document.getElementById("toast");
+    document.getElementById("toast-t").textContent = t;
+    el.classList.add("show");
+    clearTimeout(toast.t);
+    toast.t = setTimeout(() => el.classList.remove("show"), 1600);
+  };
+  const copy = async (text, msg) => {
+    try { await navigator.clipboard.writeText(text); toast(msg); }
+    catch (e) { toast("Trình duyệt chặn clipboard, hãy copy tay"); }
+  };
+
+  function apply() {
+    const p = PALETTES[state.pal] || PALETTES.purple;
+    const vals = p[state.mode];
+    ROLES.forEach((r, i) => root.style.setProperty("--m3-" + r, vals[i]));
+    root.style.setProperty("--k", state.k);
+    root.dataset.mode = state.mode;
+    document.querySelectorAll("#swatches .sw").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.pal));
+    document.querySelectorAll("#mode button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.mode));
+    document.querySelectorAll("#shape button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === state.k));
+    renderRoles(vals);
+    try { localStorage.setItem("m3e-kit", JSON.stringify(state)); } catch (e) {}
+  }
+
+  const sw = document.getElementById("swatches");
+  Object.entries(PALETTES).forEach(([key, p]) => {
+    const b = document.createElement("button");
+    b.className = "sw"; b.dataset.v = key; b.title = p.label; b.setAttribute("aria-label", p.label);
+    b.style.setProperty("--c", p.light[0]);
+    b.onclick = () => { state.pal = key; apply(); };
+    sw.appendChild(b);
+  });
+  document.querySelectorAll("#mode button").forEach((b) => (b.onclick = () => { state.mode = b.dataset.v; apply(); }));
+  document.querySelectorAll("#shape button").forEach((b) => (b.onclick = () => { state.k = b.dataset.v; apply(); }));
+
+  /* ô màu: cặp nền / chữ theo đúng vai trò */
+  const PAIRS = { primary: "onPrimary", primaryContainer: "onPrimaryContainer", secondaryContainer: "onSecondaryContainer", tertiaryContainer: "onTertiaryContainer",
+    error: "onError", errorContainer: "onErrorContainer", inverseSurface: "inverseOnSurface", onSurface: "surface", onSurfaceVariant: "surface", outline: "surface",
+    onPrimary: "primary", onPrimaryContainer: "primaryContainer", onSecondaryContainer: "secondaryContainer", onTertiaryContainer: "tertiaryContainer",
+    onError: "error", onErrorContainer: "errorContainer", inverseOnSurface: "inverseSurface", inversePrimary: "inverseSurface", secondary: "onPrimary" };
+  function renderRoles(vals) {
+    const box = document.getElementById("roles");
+    box.innerHTML = "";
+    ROLES.forEach((r, i) => {
+      const fg = PAIRS[r] ? vals[ROLES.indexOf(PAIRS[r])] : vals[ROLES.indexOf("onSurface")];
+      const b = document.createElement("button");
+      b.className = "role"; b.style.background = vals[i]; b.style.color = fg;
+      b.innerHTML = "<b>" + r + "</b><code>" + vals[i] + "</code>";
+      b.onclick = () => copy(vals[i], "Đã copy " + r + " " + vals[i]);
+      box.appendChild(b);
+    });
+  }
+
+  /* thang chữ M3 */
+  const TYPE = [["Display Large", 57, 64, 400], ["Display Medium", 45, 52, 400], ["Display Small", 36, 44, 400], ["Headline Large", 32, 40, 400], ["Headline Medium", 28, 36, 400],
+    ["Headline Small", 24, 32, 400], ["Title Large", 22, 28, 400], ["Title Medium", 16, 24, 500], ["Title Small", 14, 20, 500], ["Body Large", 16, 24, 400],
+    ["Body Medium", 14, 20, 400], ["Body Small", 12, 16, 400], ["Label Large", 14, 20, 500], ["Label Medium", 12, 16, 500], ["Label Small", 11, 16, 500]];
+  const ts = document.getElementById("typescale");
+  TYPE.forEach(([name, size, lh, w]) => {
+    const row = document.createElement("div");
+    row.className = "type-row";
+    row.innerHTML = '<span class="meta">' + name + '</span><span class="t" style="font-size:' + size + 'px;line-height:' + lh + 'px;font-weight:' + w + '">Canh cà chua nấu 30 phút</span><span class="meta">' + size + " / " + lh + " · " + w + "</span>";
+    ts.appendChild(row);
+  });
+
+  /* thang bo góc */
+  const sh = document.getElementById("shapes");
+  [["none", 0], ["xs", 4], ["s", 8], ["m", 12], ["l", 16], ["xl", 28]].forEach(([n, r]) => {
+    const c = document.createElement("div");
+    c.className = "shape-cell";
+    c.innerHTML = '<i style="border-radius:calc(' + r + 'px * var(--k))"></i>' + n + " · " + r;
+    sh.appendChild(c);
+  });
+  const full = document.createElement("div");
+  full.className = "shape-cell"; full.innerHTML = '<i style="border-radius:50%"></i>full';
+  sh.appendChild(full);
+
+  /* mỗi thẻ thành phần có nút copy HTML của phần trình diễn */
+  document.querySelectorAll(".spec").forEach((spec) => {
+    const stage = spec.querySelector(".stage");
+    if (!stage || !spec.querySelector(".spec-h")) return;
+    let foot = spec.querySelector(".spec-f");
+    if (!foot) { foot = document.createElement("div"); foot.className = "spec-f"; foot.innerHTML = '<span class="note"></span>'; spec.appendChild(foot); }
+    const b = document.createElement("button");
+    b.className = "copy"; b.innerHTML = '<span class="ms">content_copy</span>HTML';
+    b.onclick = () => copy(stage.innerHTML.trim().replace(/\n\s+/g, "\n"), "Đã copy HTML của " + spec.querySelector(".spec-h b").textContent);
+    foot.appendChild(b);
+  });
+
+  /* token hiện tại dưới dạng khối :root để dán vào dự án khác */
+  document.getElementById("copy-tokens").onclick = () => {
+    const vals = PALETTES[state.pal][state.mode];
+    const lines = ROLES.map((r, i) => "  --m3-" + r + ": " + vals[i] + ";");
+    copy(":root {\n" + lines.join("\n") + "\n  --k: " + state.k + ";\n  --ease: cubic-bezier(0.2, 0, 0, 1);\n  --settle: 340ms;\n}", "Đã copy token " + PALETTES[state.pal].label + " " + (state.mode === "dark" ? "tối" : "sáng"));
+  };
+
+  /* làm nổi mục đang xem trong mục lục */
+  const links = [...document.querySelectorAll(".side a")];
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
+  }), { rootMargin: "-30% 0px -60% 0px" });
+  document.querySelectorAll("section.block").forEach((s) => io.observe(s));
+
+  /* switch bấm được */
+  document.addEventListener("click", (e) => {
+    const s = e.target.closest(".m3-switch");
+    if (s) s.setAttribute("aria-checked", s.getAttribute("aria-checked") !== "true");
+  });
+
+  apply();
+})();
+</script>
+</body>
+</html>
