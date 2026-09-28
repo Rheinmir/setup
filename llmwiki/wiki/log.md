@@ -5763,3 +5763,20 @@ cc4f999ad |
 | 2026-09-28 17:17:06 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['fdk/CAPABILITIES.md'] · prev=genesis · h=0bf316fea5eca9683f32bfa85bc19 |
 
 <!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-28 23:42:35 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/graph/280926-issues-sweep.graph.json', 'llmwiki/wiki/sources/d |
+| 2026-09-28 23:42:41 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/graph/280926-issues-sweep.graph.json', 'llmwiki/wiki/sources/d |
+| 2026-09-28 23:42:58 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/graph/280926-issues-sweep.graph.json', 'llmwiki/wiki/index.md' |
+| 2026-09-28 23:42:58 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/280926-issues-sweep-PLAN.md'] · prev=4cc879 |
+| 2026-09-28 23:43:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/280926-issues-sweep-PLAN.md'] · prev=b245ac |
+| 2026-09-28 23:43:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skill-catalog/recipes/ui-snapshot.recipe.json', 'skills/ui-snapsho |
+| 2026-09-28 23:43:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/AGENT.md', 'fdk/tools/build-overstack-docs.py', 'llmwiki/skill |
+| 2026-09-28 23:43:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/CAPABILITIES.md', 'llmwiki/CLAUDE.md', 'fdk/skills.provenance.json |
+
+<!-- log:auto:end -->
