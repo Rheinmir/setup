@@ -20,12 +20,13 @@
    "verify": "NODE_PATH=$(npm root -g) node fdk/tools/html-visual-gate.mjs llmwiki/html/overstack.html",
    "qc": "",
    "spec_hash": "1b20b02f9caa59bd",
-   "state": "ready",
-   "gen": 0,
-   "rev": 0,
-   "attempts": 0,
+   "state": "done",
+   "gen": 1,
+   "rev": 5,
+   "attempts": 1,
    "fresh": "current",
-   "verified": "unverified"
+   "verified": "verified",
+   "done_spec_hash": "1b20b02f9caa59bd"
   },
   {
    "id": "t2",
@@ -46,12 +47,13 @@
    "verify": "bash harness/tests/stop-budget-test.sh .",
    "qc": "",
    "spec_hash": "8578040f8e7844fb",
-   "state": "proposed",
-   "gen": 0,
-   "rev": 0,
-   "attempts": 0,
+   "state": "done",
+   "gen": 1,
+   "rev": 5,
+   "attempts": 1,
    "fresh": "current",
-   "verified": "unverified"
+   "verified": "verified",
+   "done_spec_hash": "8578040f8e7844fb"
   },
   {
    "id": "t3",
@@ -72,12 +74,13 @@
    "verify": "python3 harness/scripts/sync-skills.py --check",
    "qc": "",
    "spec_hash": "0936793e02479498",
-   "state": "proposed",
-   "gen": 0,
-   "rev": 0,
-   "attempts": 0,
+   "state": "done",
+   "gen": 1,
+   "rev": 5,
+   "attempts": 1,
    "fresh": "current",
-   "verified": "unverified"
+   "verified": "verified",
+   "done_spec_hash": "0936793e02479498"
   },
   {
    "id": "t4",
@@ -96,12 +99,13 @@
    "verify": "grep -q PYTHONUTF8 harness/poc-vendor-neutral/bootstrap.sh",
    "qc": "",
    "spec_hash": "661e4877e9682423",
-   "state": "ready",
-   "gen": 0,
-   "rev": 0,
-   "attempts": 0,
+   "state": "done",
+   "gen": 1,
+   "rev": 5,
+   "attempts": 1,
    "fresh": "current",
-   "verified": "unverified"
+   "verified": "verified",
+   "done_spec_hash": "661e4877e9682423"
   },
   {
    "id": "t5",
@@ -122,12 +126,13 @@
    "verify": "gh issue view 170 --json state",
    "qc": "",
    "spec_hash": "1fc67bd45eae28d6",
-   "state": "proposed",
-   "gen": 0,
-   "rev": 0,
-   "attempts": 0,
+   "state": "done",
+   "gen": 1,
+   "rev": 5,
+   "attempts": 1,
    "fresh": "current",
-   "verified": "unverified"
+   "verified": "verified",
+   "done_spec_hash": "1fc67bd45eae28d6"
   },
   {
    "id": "t6",
@@ -146,12 +151,13 @@
    "verify": "gh issue list --state open",
    "qc": "",
    "spec_hash": "a52c8d7398a51c76",
-   "state": "ready",
-   "gen": 0,
-   "rev": 0,
-   "attempts": 0,
+   "state": "done",
+   "gen": 1,
+   "rev": 5,
+   "attempts": 1,
    "fresh": "current",
-   "verified": "unverified"
+   "verified": "verified",
+   "done_spec_hash": "a52c8d7398a51c76"
   },
   {
    "id": "t7",
@@ -177,12 +183,13 @@
    "verify": "bash harness/tests/downstream-firedrill-test.sh",
    "qc": "",
    "spec_hash": "00056715d6c028fe",
-   "state": "proposed",
-   "gen": 0,
-   "rev": 0,
-   "attempts": 0,
+   "state": "done",
+   "gen": 1,
+   "rev": 5,
+   "attempts": 1,
    "fresh": "current",
-   "verified": "unverified"
+   "verified": "verified",
+   "done_spec_hash": "00056715d6c028fe"
   }
  ],
  "layers": [
@@ -212,5 +219,5 @@
  "links": [],
  "control": "active",
  "schema_version": 1,
- "checksum": "a9213b30ec8a6a4f"
+ "checksum": "5f0fabdf39e4e1e1"
 }
