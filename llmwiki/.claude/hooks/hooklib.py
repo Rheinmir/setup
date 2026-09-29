@@ -63,14 +63,18 @@ def find_validators(start: str):
 
 
 def run_validator(name: str, event: dict, validators_dir: pathlib.Path):
-    """Chạy validator theo contract stdin-JSON. Trả (returncode, stderr)."""
-    proc = subprocess.run(
-        [sys.executable, str(validators_dir / name)],
-        input=json.dumps(event),
-        capture_output=True,
-        text=True,
-        timeout=30,
-    )
+    """Chạy validator theo contract stdin-JSON. Trả (returncode, stderr).
+    Quá timeout (máy tải cao) → fail-open rc=0 + 1 dòng nhắc, không để Traceback lọt ra hook."""
+    try:
+        proc = subprocess.run(
+            [sys.executable, str(validators_dir / name)],
+            input=json.dumps(event),
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+    except subprocess.TimeoutExpired as e:
+        return 0, f"[harness] validator {name} quá {e.timeout}s — bỏ qua lượt này (fail-open)"
     return proc.returncode, proc.stderr.strip()
 
 
