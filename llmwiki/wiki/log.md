@@ -5780,3 +5780,11 @@ cc4f999ad |
 | 2026-09-28 23:43:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/CAPABILITIES.md', 'llmwiki/CLAUDE.md', 'fdk/skills.provenance.json |
 
 <!-- log:auto:end -->
+
+## 2026-09-29 — plan — 290926-uiux-semantic-search-PLAN
+
+- PLAN 6 task semantic search cho uiux-asset (Upstash Search free); graph orca-graph dựng + 6/6 node verify thật → done. Đo: tìm theo nhóm 12/12, tìm gộp 8–9/12. Code ở repo Rheinmir/uiux-asset commit 6f07191.
+
+## 2026-09-29 — fix — 290926-uiux-followups-PLAN
+
+- html-visual-gate: eye-rest bỏ qua nội dung `<details>` đang đóng (Chromium vẫn trả getClientRects) — fixture eye-rest-details đỏ 800px → xanh; test cổng 66/66. CI harness đỏ html-slop: tái hiện trong container Linux 26/26 xanh, upstream đã sửa ở 77f7810. uiux-asset: `npm run deploy` tự nạp chỉ mục khi đổi + xoá mục đã gỡ.

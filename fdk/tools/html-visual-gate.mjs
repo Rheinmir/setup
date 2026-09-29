@@ -222,6 +222,8 @@ const MEASURE = (theme) => {
       const paint = r => { const a = Math.max(0, Math.floor((r.left - x0) / 8)), c = Math.min(gw - 1, Math.floor((r.right - x0) / 8)), t = Math.max(0, Math.floor(r.top / 8)), d = Math.min(gh - 1, Math.floor(r.bottom / 8));
         for (let y = t; y <= d; y++) for (let x = a; x <= c; x++) grid[y * gw + x] = 1; for (let y = Math.max(0, Math.floor(r.top / 4)); y <= Math.min(rows.length - 1, Math.floor(r.bottom / 4)); y++) rows[y] = 1; };
       for (const el of document.querySelectorAll('body *')) { if ((navE && navE.contains(el)) || el.closest('.ovs-theme')) continue; const cs = getComputedStyle(el); if (cs.visibility === 'hidden' || +cs.opacity < .1 || cs.display === 'none') continue;
+        // nội dung <details> ĐANG ĐÓNG không hiện ra mà Chromium vẫn trả getClientRects → không phải mực (29/09: báo nhầm 584px trang chip uiux-asset)
+        const shut = el.closest('details:not([open])'); if (shut && shut !== el && !el.closest('summary')) continue;
         for (const n of el.childNodes) if (n.nodeType === 3 && n.textContent.trim()) { const rg = document.createRange(); rg.selectNodeContents(n); for (const q of rg.getClientRects()) if (q.bottom > 0 && q.top < H && q.right > x0) paint(q); }
         const r = el.getBoundingClientRect(); if (r.bottom <= 0 || r.top >= H || r.right <= x0) continue;
         const bg = cs.backgroundColor; if ((bg && !/rgba?\(0, 0, 0, 0\)|transparent/.test(bg) && r.width < W * .9) || (parseFloat(cs.borderTopWidth) > 0 && cs.borderTopStyle !== 'none' && r.width > 40 && r.height > 20)) paint(r); }
