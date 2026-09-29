@@ -223,6 +223,8 @@ jobs:
         run: bash harness/tests/stop-hook-all-wikis-test.sh .
       - name: stop-budget — stop.py thoát trong ngân sách hook 30s, cổng R3 vẫn chạy sau bước nặng
         run: bash harness/tests/stop-budget-test.sh .
+      - name: run-validator-timeout — validator quá timeout thì fail-open, không Traceback
+        run: python3 -m pytest -v harness/tests/test_run_validator_timeout.py
       - name: evidence-terminal — R19 chuỗi kết luận phải chạm chứng cứ + kill-switch
         run: bash harness/tests/evidence-terminal-test.sh .
       - name: anti-idle — provider cắt lượt bằng refusal rỗng thì Stop hook chặn dừng
