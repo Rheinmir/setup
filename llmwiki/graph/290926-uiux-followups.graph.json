@@ -106,12 +106,13 @@
    "verify": "git fetch -q origin && git log origin/orca -8 --format=%s | grep -q \"eye-rest\"",
    "qc": "",
    "spec_hash": "21f887804779fd99",
-   "state": "ready",
+   "state": "done",
    "gen": 0,
-   "rev": 0,
+   "rev": 2,
    "attempts": 0,
    "fresh": "current",
-   "verified": "unverified"
+   "verified": "verified",
+   "done_spec_hash": "21f887804779fd99"
   },
   {
    "id": "t5",
@@ -190,5 +191,5 @@
  ],
  "control": "active",
  "schema_version": 1,
- "checksum": "9fbaacac647af434"
+ "checksum": "4771a5abb5b333e4"
 }

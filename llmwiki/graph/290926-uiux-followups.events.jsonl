@@ -6,3 +6,5 @@
 {"ts": "2026-09-29T14:34:23+0700", "node": "t3", "from": "done_unverified", "to": "done", "by": "reconcile", "op_key": "reconcile:t3:0:0", "gen": 0, "rev": 2, "note": "verify rc=0", "spec_hash": "dde5119d2f97d387", "plan_version": 1}
 {"ts": "2026-09-29T14:35:32+0700", "node": "t5", "from": "ready", "to": "done_unverified", "by": "claude", "op_key": "t5:done_unverified:1790667332349", "gen": 0, "rev": 1, "note": "", "spec_hash": "3cdd4598059e2db9", "plan_version": 1}
 {"ts": "2026-09-29T14:35:36+0700", "node": "t5", "from": "done_unverified", "to": "done", "by": "reconcile", "op_key": "reconcile:t5:0:0", "gen": 0, "rev": 2, "note": "verify rc=0", "spec_hash": "3cdd4598059e2db9", "plan_version": 1}
+{"ts": "2026-09-29T14:47:41+0700", "node": "t4", "from": "ready", "to": "done_unverified", "by": "claude", "op_key": "t4:done_unverified:1790668061193", "gen": 0, "rev": 1, "note": "", "spec_hash": "21f887804779fd99", "plan_version": 1}
+{"ts": "2026-09-29T14:47:42+0700", "node": "t4", "from": "done_unverified", "to": "done", "by": "reconcile", "op_key": "reconcile:t4:0:0", "gen": 0, "rev": 2, "note": "verify rc=0", "spec_hash": "21f887804779fd99", "plan_version": 1}
