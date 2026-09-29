@@ -34,6 +34,8 @@ _DEBOUNCE_WINDOW_S = int(os.environ.get("OVERSTACK_STOP_DEBOUNCE_S", "180"))
 _T0 = time.monotonic()
 _BUDGET_S = float(os.environ.get("OVERSTACK_STOP_BUDGET_S", "20"))
 _RESERVE_S = 6.0
+# Trần CỨNG cho phần chạy sau ngân sách (validator R3, link server R21) — Claude Code giết hook ở 30s (GH#177).
+_HARD_S = 27.0
 
 
 def _run(cmd, timeout, reserve=_RESERVE_S, **kw):
@@ -449,10 +451,13 @@ def main() -> None:
     for wiki in wikis:
         try:
             _run([sys.executable, os.path.join(vdir, "index_sync.py"),
-                            "--wiki-dir", str(wiki), "--fix"], capture_output=True, timeout=15, reserve=0)
+                            "--wiki-dir", str(wiki), "--fix"], capture_output=True, timeout=15,
+                 reserve=_BUDGET_S - _HARD_S + 3)  # R3 là cổng bắt buộc: chạy tới trần cứng, không dừng ở ngân sách mềm
         except Exception:
             pass
-        rc, err = run_validator("index_sync.py", {"action": "stop", "wiki_dir": str(wiki)}, vdir)
+        # run_validator có timeout riêng 30s → kẹp theo _HARD_S, nếu không lượt tải cao vượt trần hook 30s (GH#177)
+        rc, err = run_validator("index_sync.py", {"action": "stop", "wiki_dir": str(wiki)}, vdir,
+                                timeout=max(1.0, _T0 + _HARD_S - 3 - time.monotonic()))
         if rc == 2:
             errs.append(err)
     if errs:
@@ -509,7 +514,7 @@ def _emit_touched(payload: dict) -> None:
         msg = "\n".join(x for x in (graphs_message(session_graphs(root, tp)), new_html_message(session_new_html(root, tp)),
                                     touched_message(session_touched_files(root, tp))) if x)
         if os.environ.get("OVERSTACK_TOUCHED_SERVERS") != "0":          # link server đang chạy: localhost trong dự án + hostname thật qua tunnel
-            msg = "\n".join(x for x in (msg, servers_message(running_servers(root))) if x)
+            msg = "\n".join(x for x in (msg, servers_message(running_servers(root, deadline=_T0 + _HARD_S))) if x)
         msg = msg and _collapse(msg, payload.get("session_id") or "")
         if msg:
             print(json.dumps({"systemMessage": msg}, ensure_ascii=False))
