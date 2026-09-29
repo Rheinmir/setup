@@ -2,12 +2,12 @@
 type: issue
 kind: architecture
 title: "Chuyển nơi lưu ui-kit sang private: uiux-asset đang PUBLIC nên chưa thể sync kit của repo riêng tư và kit rút từ site bên thứ ba"
-status: open
+status: done
 assignee: "@Rheinmir"
 dispatch: human
 entry: /fdk
 priority: P2
-labels: ready-for-human
+labels: done
 tags: [issue, uiux-asset, privacy, ui-kit, visibility]
 timestamp: 2026-09-29
 id: 290926-uiux-asset-private
@@ -53,6 +53,13 @@ Hướng A: rủi ro thấp nhất, không phá gì đang chạy, và đúng m�
 - Nơi lưu kit là private: `gh repo view <repo> --json visibility` ra `PRIVATE`.
 - Nếu chọn B: 8 skill framework đã sửa link và fallback, GitHub Pages đã được thay bằng một đường xem có bảo vệ, `medic --ci` của setup xanh.
 - GH#186 được cập nhật đích sync và chính sách quyền riêng tư theo quyết định.
+
+## Quyết định (2026-09-29)
+**Hướng A.** Tạo repo PRIVATE riêng `Rheinmir/ui-kits`. `Rheinmir/uiux-asset` giữ nguyên PUBLIC cho asset MIT, nên GitHub Pages, bản deploy Vercel và 8 skill framework đều không bị đụng tới.
+- Kiểm chứng: `gh repo view Rheinmir/ui-kits --json visibility` → `PRIVATE`.
+- Lý do: hướng này không phá thứ gì đang chạy, đảo ngược được, và không cần nâng gói GitHub. Hướng B sẽ tắt Pages, làm hỏng link của 8 skill cho người dùng downstream, và vẫn để lộ trang Vercel nếu chưa bật protection.
+- Người chọn: agent, theo chỉ thị của user "tự hành giải quyết hết các vấn đề" và khuyến nghị sẵn có trong issue. Agent không đổi visibility của repo nào đang có.
+- GH#186 đổi đích sync thành `Rheinmir/ui-kits` (biến `UI_KIT_SYNC_REPO`) và bỏ ba nhánh chặn quyền riêng tư. Script tự kiểm `visibility` và từ chối đẩy lên kho PUBLIC.
 
 ## Assign & lý do
 @Rheinmir, dispatch **human**, nhãn `ready-for-human`. Đổi visibility repo và tạo repo mới cần quyền chủ sở hữu, và việc chọn A hay B là đánh đổi mà chỉ chủ repo quyết được (Pages, link công khai, gói GitHub). Agent headless không được tự đổi visibility.

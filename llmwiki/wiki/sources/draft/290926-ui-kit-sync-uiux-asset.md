@@ -2,12 +2,12 @@
 type: issue
 kind: feature-gap
 title: "ui-kit-from-code chưa tự đẩy kit lên Rheinmir/uiux-asset — không có id chống trùng, không có phiên bản v1, v2, v3 cho cùng một dự án"
-status: open
+status: done
 assignee: "@Rheinmir"
 dispatch: Claude
 entry: /fdk
 priority: P2
-labels: ready-for-agent
+labels: done
 tags: [issue, skill, ui-kit, uiux-asset, sync, versioning]
 timestamp: 2026-09-29
 id: 290926-ui-kit-sync-uiux-asset
@@ -76,6 +76,16 @@ ui-kits/
 - Test tất định cho phần tính id, hash và số phiên bản (không cần mạng), chạy được trong CI của setup.
 - `swh-lint --skills ui-kit-from-code --ci`, `sync-skills.py --check`, `skill-registry.py --check`, `skill-provenance.py check --ci` đều rc 0.
 - Backfill: kit m3e-canvas hiện có được đẩy thành v1. Hai kit facebook và drafted-ai KHÔNG được đẩy nếu không có đồng ý.
+
+## Kết quả (2026-09-29)
+Đích sync đổi theo quyết định của `[[290926-uiux-asset-private]]`: kho **PRIVATE** `Rheinmir/ui-kits` thay vì `uiux-asset`. Vì kho private nên ba nhánh chặn quyền riêng tư đã bỏ; RULE-09 (không nhúng ảnh hay nội dung có bản quyền) vẫn giữ.
+- `skills/ui-kit-from-code/references/sync-kit.py`: gồm id, hash bỏ meta `ui-kit-id`, `vN+1`/`latest`/`manifest`/`registry`/README, push có retry 3 lần, `UI_KIT_SYNC=0`, `UI_KIT_SYNC_REPO`, `--id` và `--dry-run`. Script từ chối kho không PRIVATE. Lỗi mạng hoặc quyền thì in "chưa sync" và trả rc 0.
+- SKILL.md: thêm W09, RULE-12 và dòng Out; cập nhật Failure và B03. Mirror llmwiki đã đồng bộ.
+- Test tất định `harness/tests/test_ui_kit_sync.py` (id, hash, số phiên bản, v1 giữ nguyên byte-for-byte khi ra v2, quay lại nội dung cũ vẫn thành v3) đã gắn vào CI `harness.yml`.
+- Chạy thật: m3e-canvas lên `lnkiai-m3e-canvas/v1`; chạy lại ngay thì báo "không đổi so với v1" và không có commit mới.
+- Backfill: 17 kit lên v1, gồm m3e-canvas cùng 16 kit site có trong `~/orca/m3e-canvas/docs`. Không đẩy `bonbon-ui-need-remake-kit.html` vì tên file ghi là chưa xong. Kit bonbon không ghi host nên dùng `--id bonbon`.
+- Cổng: `swh-lint --skills ui-kit-from-code --ci`, `sync-skills.py --check`, `skill-registry.py --check` đều rc 0; `skill-provenance check` không còn lệch với ui-kit-from-code.
+- Không làm: gallery `index.html` (kho private không có Pages, README bảng kit thay thế). Thêm khi nào có đường xem web được bảo vệ.
 
 ## Assign & lý do
 @Rheinmir, dispatch Claude qua `/fdk`. Yêu cầu đã rõ và mọi quyết định có default an toàn (chính sách quyền riêng tư ở trên suy trực tiếp từ RULE-09 sẵn có), nên agent làm được: `ready-for-agent`. Nếu người nhận muốn tự đẩy cả kit từ repo private mà không hỏi, đó là đổi chính sách và cần user xác nhận trước khi code.

@@ -1121,11 +1121,12 @@
     },
     "ui-kit-from-code": {
       "files": {
-        "SKILL.md": "368dac8c685a88ed6043257bb8535d49edf34696805ad678fd91a624348c14c8",
+        "SKILL.md": "efd8f926e93055475dc6f94777d6284bd52f34b248f743cb55850c8a535bf8fe",
         "references/discover.mjs": "7281851680cd8a789f77ea6781be7234c8697ae82eb4e72b9ba5538fe594f42b",
+        "references/sync-kit.py": "70b5a06f9ff664fc53034cda8d2435e39f1ddec1b7e88c6dbb5de037f6e1384a",
         "references/ui-kit-reference.html": "5ac9689830dd9194f8b27ec00f040aaf7dd1e292a4c86e55e4be17c307896204"
       },
-      "recorded": "2026-09-28",
+      "recorded": "2026-09-29",
       "source": "local-authored"
     },
     "ui-snapshot": {
