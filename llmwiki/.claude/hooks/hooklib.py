@@ -9,6 +9,7 @@ import pathlib
 import re
 import subprocess
 import sys
+import time
 
 
 def read_payload() -> dict:
@@ -62,16 +63,17 @@ def find_validators(start: str):
     return None
 
 
-def run_validator(name: str, event: dict, validators_dir: pathlib.Path):
+def run_validator(name: str, event: dict, validators_dir: pathlib.Path, timeout: float = 30):
     """Chạy validator theo contract stdin-JSON. Trả (returncode, stderr).
-    Quá timeout (máy tải cao) → fail-open rc=0 + 1 dòng nhắc, không để Traceback lọt ra hook."""
+    Quá timeout (máy tải cao) → fail-open rc=0 + 1 dòng nhắc, không để Traceback lọt ra hook.
+    `timeout`: caller có ngân sách tổng (stop.py) truyền phần còn lại — 30s cứng từng làm stop.py vượt trần hook 30s."""
     try:
         proc = subprocess.run(
             [sys.executable, str(validators_dir / name)],
             input=json.dumps(event),
             capture_output=True,
             text=True,
-            timeout=30,
+            timeout=timeout,
         )
     except subprocess.TimeoutExpired as e:
         return 0, f"[harness] validator {name} quá {e.timeout}s — bỏ qua lượt này (fail-open)"
@@ -446,10 +448,15 @@ def touched_message(files, cap: int = TOUCHED_CAP) -> str:
 
 # R21 phần server (feedback 200926 "stop hook kèm link các server hiện tại localhost hoặc link thật"): cuối lượt in luôn
 # cái gì ĐANG CHẠY để bấm mở — khỏi hỏi "port mấy?". Chỉ đọc (lsof/ps + file config tunnel), không mở kết nối nào.
-def running_servers(root: str):
+def running_servers(root: str, deadline=None):
     """[{url, what, public[]}] — process đang LISTEN có cwd nằm trong dự án; kèm hostname thật nếu một cloudflared đang chạy
-    trỏ ingress về đúng port đó. Thêm các hostname tunnel đang sống của máy (trỏ dịch vụ ngoài) ở cuối. Fail-open → []."""
+    trỏ ingress về đúng port đó. Thêm các hostname tunnel đang sống của máy (trỏ dịch vụ ngoài) ở cuối. Fail-open → [].
+    `deadline` (time.monotonic): mỗi lệnh bị kẹp vào thời gian còn lại — stop.py gọi hàm này SAU ngân sách chính."""
     def sh(args, t=4):
+        if deadline is not None:
+            t = min(t, deadline - time.monotonic())
+            if t <= 0:
+                return ""
         try:
             return subprocess.run(args, capture_output=True, text=True, timeout=t).stdout
         except Exception:

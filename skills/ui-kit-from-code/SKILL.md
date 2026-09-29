@@ -34,6 +34,7 @@ Kit là **bản sao có kiểm chứng** của hệ trong code: mọi màu và s
 | Out | `docs/ui-kit.html` (hoặc đường user chọn) | có | 1 file, mở bằng file:// được, có đủ 7 phần bên dưới |
 | Out | báo cáo nguồn gốc | có | phần nào lấy từ code, phần nào vẽ theo spec |
 | Out | bằng chứng Playwright | có | 0 lỗi JS, `scrollWidth - innerWidth = 0` ở 390px, ảnh sáng + tối + màn mẫu |
+| Out | phiên bản trên kho kit | có (trừ `UI_KIT_SYNC=0`) | `<id>/vN/index.html` + `manifest.json` + dòng `registry.json` trên kho PRIVATE `Rheinmir/ui-kits` (W09) |
 
 ### Rules và capabilities
 - RULE-01 (MUST): màu và số đo lấy bằng cách **chạy** code token của dự án (test runner/script tạm, xoá sau khi dump), không gõ tay hex. Code chỉ đọc được mà không chạy được (CSS vars, JSON) thì parse file.
@@ -45,7 +46,8 @@ Kit là **bản sao có kiểm chứng** của hệ trong code: mọi màu và s
 - RULE-08 (MUST): **Không dừng ở phần xương.** Danh mục component phải đến từ vòng khám phá W01b (đi theo link, bấm mở phần ẩn, dừng khi bão hoà), không chỉ từ vài trang/file đã biết. Mỗi pattern trong `inventory.json` phải có thẻ trong kit mang `data-sig="<sig>"`, hoặc được bỏ có lý do qua `<meta name="ui-kit-skip" content="<sig>:<lý do>;…">`. Cổng: `node references/discover.mjs --coverage inventory.json kit.html` rc 0.
 - RULE-10 (MUST): **Component không chỉ có trạng thái nghỉ.** Mỗi trạng thái mà W01b đo được (hover, focus-visible, active, selected) phải hiện trong kit: thẻ bày biến thể ở trạng thái đó (class `is-hover` / `is-focus` / `is-active` / `is-on` sao chép đúng rule `:hover`… của site) và mang `data-sig-state="<sig>:<state>"`. Hoặc được bỏ có lý do qua `ui-kit-skip` `"<sig>:<state>:lý do"`. Focus chỉ là `outline:auto` của trình duyệt (`ua: true`) thì kit ghi rõ "focus mặc định trình duyệt, site không style riêng". Cổng `--coverage` đếm cả trạng thái.
 - RULE-11 (MUST): **Tôn trọng robots.txt và điều khoản của site.** `discover.mjs` đọc `/robots.txt` trước khi quét. `User-agent: *` chặn đường bắt đầu, hoặc có ghi chú cấm thu thập tự động (vd facebook.com) → dừng rc 3, KHÔNG tự thêm `--i-have-permission`. Chỉ dùng cờ đó khi user xác nhận có giấy phép. Thay vào đó, đề xuất B05: user tự lưu trang.
-- RULE-09 (MUST): nguồn là site của người khác thì không nhúng ảnh, logo, wordmark SVG hay nội dung có bản quyền của họ vào kit; thay bằng khối giữ chỗ ghi rõ "ảnh …". Kit giữ ở máy user; muốn chia sẻ ra ngoài thì hỏi trước (B03).
+- RULE-09 (MUST): nguồn là site của người khác thì không nhúng ảnh, logo, wordmark SVG hay nội dung có bản quyền của họ vào kit; thay bằng khối giữ chỗ ghi rõ "ảnh …". Kit tự sync lên kho PRIVATE (W09) là được; muốn chia sẻ ra NGOÀI kho đó (link công khai, hosting) thì hỏi trước (B03).
+- RULE-12 (MUST): **Chỉ sync kit đã PASS** (W05b + W06 xanh), và chỉ lên kho **PRIVATE** — `sync-kit.py` tự kiểm `visibility` và từ chối kho PUBLIC (GH#187). Phiên bản chỉ tăng: không ghi đè, không xoá `vN` cũ.
 - RULE-07 (SHOULD): đặt file mẫu `references/ui-kit-reference.html` cạnh khi làm; tái dùng khung, CSS vỏ trang và script điều khiển của nó, chỉ thay token, component, màn mẫu.
 - Capabilities: đọc codebase; chạy test runner/script của dự án; ghi 1 file HTML; chạy Playwright (xem `/playwright-verify`).
 
@@ -73,6 +75,7 @@ Chung cho cả trang: vỏ trang mặc chính token của kit (trang đổi them
 - Token chỉ chạy được trong runtime nặng (cần DB/app server) → dump bằng Playwright từ app đang chạy (`getComputedStyle` trên `:root`), ghi rõ cách lấy.
 - Dự án chỉ có một nền tảng → phần 6 chỉ có màn đó, ghi lý do.
 - Playwright báo lỗi JS hoặc tràn ngang sau 3 vòng sửa → dừng, báo lỗi còn lại.
+- Sync W09 lỗi mạng / không có quyền push / kho không PRIVATE → script in "chưa sync, lý do …" rc 0; kit local vẫn là kết quả hợp lệ, báo lý do trong W08.
 
 ## HOW
 
@@ -89,7 +92,8 @@ Chung cho cả trang: vỏ trang mặc chính token của kit (trang đổi them
 | W05b | deterministic | kit + inventory | `node references/discover.mjs --coverage <scratch>/disc/inventory.json <kit.html>` | `phủ N/N (100%)` + `trạng thái M/M` rc 0 | THIẾU pattern → dựng thẻ; THIẾU `sig:state` → thêm biến thể trạng thái vào thẻ (RULE-10) hoặc `ui-kit-skip` có lý do; chạy lại |
 | W06 | deterministic | file | Playwright: tải trang, đếm `pageerror`, chụp đầu trang + giữa + màn mẫu, bật tối + palette khác chụp lại, viewport 390 đo tràn ngang | ảnh + số liệu | lỗi → sửa, tối đa 3 vòng |
 | W07 | judgment | ảnh | nhìn ảnh một lượt, sửa lỗi bố cục thấy được (chữ dồn dòng, mục lệch), chụp lại 1 lần | kit xong | — |
-| W08 | judgment | kết quả | báo user: đường file, nội dung 7 phần, phần nào từ code / theo spec, bằng chứng W06 | báo cáo | — |
+| W08 | judgment | kết quả | báo user: đường file, nội dung 7 phần, phần nào từ code / theo spec, bằng chứng W06, kết quả sync W09 | báo cáo | — |
+| W09 | effect | kit đã PASS W05b + W06 | `python3 references/sync-kit.py <kit.html> --source <thư mục repo \| URL gốc>` (thêm `--id <id>` khi nguồn không suy ra được id, vd app sau đăng nhập). Id: repo → `<owner>-<repo>` từ `origin` (không remote → `<thư mục>-local`); URL → host bỏ `www.`, chấm → gạch. Hash sha256 bỏ meta `ui-kit-id`; trùng bản mới nhất → "không đổi so với vN", không commit. Khác → `vN+1` + `latest/`, push, bị từ chối thì pull lại tính lại tối đa 3 lần. `UI_KIT_SYNC=0` bỏ qua; `UI_KIT_SYNC_REPO` đổi kho | `✓ <id>: vN → <link>` hoặc `= không đổi` | lỗi → "chưa sync, lý do" rc 0 (Failure) |
 
 **Dump token mẫu (vitest, TS):** tạo `lib/zz-kit-dump.test.ts` gọi hàm token rồi `writeFileSync(<scratchpad>/tokens.json, …)`, chạy `npx vitest run lib/zz-kit-dump.test.ts`, rồi `rm` file. Không để file tạm lọt vào diff của dự án.
 
@@ -102,10 +106,10 @@ Chung cho cả trang: vỏ trang mặc chính token của kit (trang đổi them
 | B02 | conditional_required | app có tài liệu schema cho agent (vd `agent.md`) | chip "tên trong code" ghi đúng tên field của schema, màn mẫu theo quy tắc trong tài liệu đó | không có → dùng tên component | W04 |
 | B04 | conditional_required | nguồn là URL site đang chạy (không có code) | W02 thay bằng Playwright: đọc CSS vars ở `:root`/`.dark` + `getComputedStyle` của phần tử thật; màu `lab()`/`oklch()` đổi sang hex; áp RULE-09 | có code → skip | W03 |
 | B05 | conditional_required | site cấm crawler (RULE-11) hoặc giao diện nằm sau đăng nhập | user tự lưu trang ("Webpage, Complete") vào một thư mục → `python3 -m http.server 8765 --bind 127.0.0.1` → `discover.mjs http://127.0.0.1:8765/<file>.html --offline --no-js --page-timeout 1500` (chặn mọi request ra ngoài, tắt JS để không có script tự gọi về site). Trang lưu chứa dữ liệu cá nhân: kit chỉ lấy style/cấu trúc, mọi tên/ảnh/nội dung thay bằng mẫu, kiểm bằng grep tên thật trước khi giao | site cho phép crawl → W01b thường | W01c |
-| B03 | user_optional | user muốn link chia sẻ | đăng file lên Artifact/hosting user chọn; file vẫn giữ ở repo | mặc định chỉ file local | W08 |
+| B03 | user_optional | user muốn link chia sẻ ra ngoài kho kit private | đăng file lên Artifact/hosting user chọn; file vẫn giữ ở repo | mặc định: file local + kho kit private (W09) | W08 |
 
 ### Validation và stopping
-Máy kiểm: W05b cổng phủ rc 0 (mọi pattern có `data-sig` hoặc `ui-kit-skip`); W06 phải cho `pageerror = 0` và tràn ngang = 0 ở 390px. Mắt kiểm: đủ 7 phần theo bảng cấu trúc; so ảnh sáng/tối; thử nút Copy CSS token và 1 nút Copy HTML. Tối đa 3 vòng sửa ở W06, W07 chỉ chụp lại một lần.
+Máy kiểm: test tất định của W09 `python3 -m pytest harness/tests/test_ui_kit_sync.py` (id, hash, số phiên bản, v1 bất biến); W05b cổng phủ rc 0 (mọi pattern có `data-sig` hoặc `ui-kit-skip`); W06 phải cho `pageerror = 0` và tràn ngang = 0 ở 390px. Mắt kiểm: đủ 7 phần theo bảng cấu trúc; so ảnh sáng/tối; thử nút Copy CSS token và 1 nút Copy HTML. Tối đa 3 vòng sửa ở W06, W07 chỉ chụp lại một lần.
 
 ### Examples
 - **Positive:** m3e-canvas (Next.js, editor Material 3 Expressive). Dump `paletteOf()` qua vitest ra 7 palette × sáng/tối; kit có 25 vai trò màu, 15 kiểu chữ, 3 mức shape, khoảng 30 component chia 5 nhóm như bảng Parts của app, màn mobile 412×892 (list + detail) và desktop 1280×800 (rail + list-detail); Playwright 0 lỗi, 390px không tràn. Kết quả chính là `references/ui-kit-reference.html`.
