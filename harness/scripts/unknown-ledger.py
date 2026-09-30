@@ -197,6 +197,10 @@ def main():
     a = ap.parse_args()
     if a.self_test:
         sys.exit(self_test())
+    if (a.add or a.resolve or a.trace) and not a.file:
+        ap.error("--add/--resolve/--trace cần --file")
+    if (a.resolve or a.trace) and not a.id:
+        ap.error("--resolve/--trace cần --id")
     if a.add:
         add(a); sys.exit(0)
     if a.resolve:
