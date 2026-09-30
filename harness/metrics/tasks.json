@@ -807,5 +807,24 @@
         "note": "backfill 2026-09-27: khôi phục từ proposal đã archive (llmwiki/wiki/sources/draft/archive/proposals/160726-teach-me-skill.md); bản ghi tasks.json gốc bị prune trước khi cổng task-lifecycle tồn tại. Đánh 'superseded' — chỉ khẳng định task từng tồn tại rồi retire, không bịa bước trung gian."
       }
     ]
+  },
+  "T-260928-01": {
+    "id": "T-260928-01",
+    "title": "overstack-strands-wrapper",
+    "state": "approved",
+    "created": "2026-09-28T00:00:00",
+    "updated": "2026-09-28T00:00:00",
+    "history": [
+      {
+        "state": "proposed",
+        "ts": "2026-09-28T00:00:00",
+        "note": "backfill 2026-09-30: suy từ frontmatter llmwiki/wiki/sources/draft/280926-overstack-strands-wrapper.md (status: approved, task: T-260928-01) — SPEC được tạo mà chưa đăng ký task"
+      },
+      {
+        "state": "approved",
+        "ts": "2026-09-28T00:00:00",
+        "note": "backfill 2026-09-30: suy từ frontmatter llmwiki/wiki/sources/draft/280926-overstack-strands-wrapper.md (status: approved, task: T-260928-01) — SPEC được tạo mà chưa đăng ký task"
+      }
+    ]
   }
 }
