@@ -36,4 +36,4 @@ SQLite WAL với `BEGIN IMMEDIATE`, quota theo profile, connector Jenkins, recip
 ## Origin
 
 - Nguồn thô: `/Users/giatran/Downloads/Reprise-PRD-Product-Grade.md` (ngoài repo, không chép vào raw/) (user đưa ngày 12/09/2026, yêu cầu "còn về quản lý state của graph check PRD này").
-- Đối chiếu và rút luật trong phiên /fdk ngày 12/09/2026; kết quả áp vào `harness/scripts/orca-graph.py` và ghi ở [[orca-graph]].
+- Đối chiếu và rút luật trong phiên /fdk ngày 12/09/2026; kết quả áp vào `harness/scripts/orca-graph.py` và ghi ở orca-graph (fdk/wiki).

@@ -537,15 +537,20 @@ _REDUCED = re.compile(r"@media[^{]*prefers-reduced-motion", re.I)
 
 
 _ARCHIFY_RE = re.compile(r"\barchify \d+\.\d+")
+# Trang bằng chứng `bin/visual-check.mjs` của archify ghi CẠNH sơ đồ (llmwiki/html/*.visual-check.html):
+# chỉ có <img> ảnh chụp, không <svg>, không chuỗi "archify X.Y" → lọt miễn trừ viewer và làm medic đỏ
+# mỗi lần /diagram chạy (đo 27/09/2026: 9 trang × 3 FAIL = toàn bộ 27 FAIL của medic frontend).
+_ARCHIFY_EVIDENCE_RE = re.compile(r"<title>\s*Archify automated browser evidence", re.I)
 
 
 def _is_archify_artifact(p: Path) -> bool:
-    """Viewer archify tự chứa: miễn như R16/R20/R22 — luật của nó nằm ở fork, không ở đây."""
+    """Artifact archify tự chứa (viewer hoặc trang bằng chứng visual-check): miễn như R16/R20/R22 —
+    luật của nó nằm ở fork, không ở đây."""
     try:
         t = p.read_text(encoding="utf-8", errors="replace")
     except OSError:
         return False
-    return bool(_ARCHIFY_RE.search(t)) and "<svg" in t
+    return (bool(_ARCHIFY_RE.search(t)) and "<svg" in t) or bool(_ARCHIFY_EVIDENCE_RE.search(t))
 
 
 def framework_pages(root: Path) -> list:
@@ -689,6 +694,14 @@ def self_test() -> int:
     bad = _scan_text(BAD)
     good = _scan_text(GOOD)
     bad_kinds = {f["msg"][:20] for f in bad}
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        ev_page = Path(td) / "x.visual-check.html"
+        ev_page.write_text("<!doctype html><title>Archify automated browser evidence · x.html</title>"
+                           "<img src='x.png'>", encoding="utf-8")
+        plain = Path(td) / "y.html"
+        plain.write_text("<!doctype html><title>Trang thường nói về archify</title><p>x</p>", encoding="utf-8")
+        ev_exempt, plain_exempt = _is_archify_artifact(ev_page), _is_archify_artifact(plain)
     ok = True
     checks = [
         ("BAD bắt gradient-text", any("gradient TEXT" in f["msg"] for f in bad)),
@@ -709,6 +722,8 @@ def self_test() -> int:
         ("hình học: ô NGOÀI viewBox → FAIL", any("NGOÀI viewBox" in f["msg"] for f in geo_out)),
         ("hình học: chữ TRÀN ô → FAIL", any("TRÀN RA NGOÀI" in f["msg"] for f in geo_of)),
         ("hình học: bố cục lành + ô LỒNG + đường chéo → sạch", len(geo_good) == 0),
+        ("trang bằng chứng archify visual-check → miễn", ev_exempt),
+        ("trang thường nhắc chữ archify → KHÔNG miễn", not plain_exempt),
     ]
     for label, passed in checks:
         print(f"  {'✓' if passed else '✗'} {label}")
