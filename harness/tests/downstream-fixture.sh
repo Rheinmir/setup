@@ -13,6 +13,12 @@ make_downstream_fixture() {
   else
     export ORCA_GRAPH_SKIP=1
   fi
+  # HOME giả làm Playwright tìm browser trong $HOME/.cache giả → cổng chạy-thật crash "Executable doesn't exist" (CI 36456898543).
+  # Ghim cache browser THẬT trước khi đổi HOME; người gọi đã đặt sẵn thì tôn trọng.
+  if [ -z "${PLAYWRIGHT_BROWSERS_PATH:-}" ]; then
+    for d in "$HOME/.cache/ms-playwright" "$HOME/Library/Caches/ms-playwright"; do [ -d "$d" ] && { export PLAYWRIGHT_BROWSERS_PATH="$d"; break; }; done
+  fi
+  [ -z "${NODE_PATH:-}" ] && command -v npm >/dev/null 2>&1 && export NODE_PATH="$(npm root -g 2>/dev/null)"   # npm prefix theo HOME thật
   export HOME="$FX_TMP/home"; mkdir -p "$HOME"
   FX="$FX_TMP/proj"; GH="$HOME/.claude/harness"
   mkdir -p "$FX"; git -C "$FX" init -q

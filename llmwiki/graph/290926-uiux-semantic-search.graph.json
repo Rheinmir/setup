@@ -1,0 +1,207 @@
+{
+ "id": "290926-uiux-semantic-search",
+ "plan": "llmwiki/wiki/sources/draft/290926-uiux-semantic-search-PLAN.md",
+ "built": "2026-09-29T11:21:10+0700",
+ "nodes": [
+  {
+   "id": "t1",
+   "title": "cài Upstash Search gói free vào project Vercel uiux-asset",
+   "files": [
+    ".vercel/project.json"
+   ],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "env `UPSTASH_SEARCH_REST_URL`, `UPSTASH_SEARCH_REST_TOKEN` (tên thật đọc từ `vercel env ls`)"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "infra",
+   "mode": "afk",
+   "verify": "cd ~/orca/setup/uiux-asset && vercel env ls 2>&1 | grep -q SEARCH",
+   "qc": "",
+   "spec_hash": "c1a954c8d3b679a6",
+   "state": "done",
+   "gen": 0,
+   "rev": 2,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "c1a954c8d3b679a6"
+  },
+  {
+   "id": "t2",
+   "title": "sinh chỉ mục search-index.json từ manifest + khối chip",
+   "files": [
+    "tools/build-search-index.py"
+   ],
+   "consumes": [
+    "`scroll-effects/manifest.json`, `tools/build-chips.py` (SECTIONS)"
+   ],
+   "produces": [
+    "`search-index.json` = [{id, title, kind, text, url, tags}]"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd ~/orca/setup/uiux-asset && python3 tools/build-search-index.py --check",
+   "qc": "",
+   "spec_hash": "fcd186eba5c8ef42",
+   "state": "done",
+   "gen": 0,
+   "rev": 2,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "fcd186eba5c8ef42"
+  },
+  {
+   "id": "t3",
+   "title": "nạp chỉ mục lên Upstash Search + đo 10 truy vấn Việt/Anh",
+   "files": [
+    "tools/upload-search.mjs"
+   ],
+   "consumes": [
+    "`search-index.json`, env Search"
+   ],
+   "produces": [
+    "index `uiux` trên Upstash Search; bảng đo precision@3 cho 10 truy vấn"
+   ],
+   "deps": [
+    "t1",
+    "t2"
+   ],
+   "deps_conf": "chắc",
+   "kind": "research",
+   "mode": "afk",
+   "verify": "cd ~/orca/setup/uiux-asset && node tools/upload-search.mjs --eval",
+   "qc": "",
+   "spec_hash": "23e6d0a2d283fd85",
+   "state": "done",
+   "gen": 0,
+   "rev": 2,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "23e6d0a2d283fd85"
+  },
+  {
+   "id": "t4",
+   "title": "API /api/search (semantic) + fallback từ khoá",
+   "files": [
+    "api/search.js"
+   ],
+   "consumes": [
+    "env Search, `search-index.json`"
+   ],
+   "produces": [
+    "`GET /api/search?q=` → {mode: \"semantic\"|\"keyword\", hits: [{id,title,kind,url,score}]}"
+   ],
+   "deps": [
+    "t2"
+   ],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd ~/orca/setup/uiux-asset && node tools/test-search.js",
+   "qc": "",
+   "spec_hash": "02d8e09c1f931519",
+   "state": "done",
+   "gen": 0,
+   "rev": 2,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "02d8e09c1f931519"
+  },
+  {
+   "id": "t5",
+   "title": "ô tìm kiếm ở trang chủ (phím /) + ghi từ khoá vào stats",
+   "files": [
+    "search.js",
+    "index.html"
+   ],
+   "consumes": [
+    "`/api/search`"
+   ],
+   "produces": [
+    "ô tìm trang chủ; panel \"Từ khoá hay tìm\" trên /stats.html"
+   ],
+   "deps": [
+    "t4"
+   ],
+   "deps_conf": "chắc",
+   "kind": "design",
+   "mode": "afk",
+   "verify": "cd ~/orca/setup/uiux-asset && node ../setup/fdk/tools/html-visual-gate.mjs index.html stats.html",
+   "qc": "",
+   "spec_hash": "e05e53d096679e2f",
+   "state": "done",
+   "gen": 0,
+   "rev": 2,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "e05e53d096679e2f"
+  },
+  {
+   "id": "t6",
+   "title": "deploy + kiểm trên domain thật + commit/push",
+   "files": [
+    "api/search.js"
+   ],
+   "consumes": [
+    "mọi task trên"
+   ],
+   "produces": [
+    "production có search; `git push` main"
+   ],
+   "deps": [
+    "t3",
+    "t5"
+   ],
+   "deps_conf": "chắc",
+   "kind": "ship",
+   "mode": "afk",
+   "verify": "cd ~/orca/setup/uiux-asset && git status --short | wc -l | grep -q '^ *0$'",
+   "qc": "",
+   "spec_hash": "fa2bef11fa1033ce",
+   "state": "done",
+   "gen": 0,
+   "rev": 2,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "fa2bef11fa1033ce"
+  }
+ ],
+ "layers": [
+  [
+   "t1",
+   "t2"
+  ],
+  [
+   "t3",
+   "t4"
+  ],
+  [
+   "t5"
+  ],
+  [
+   "t6"
+  ]
+ ],
+ "parent": null,
+ "depth": 0,
+ "plan_version": 1,
+ "superseded": [],
+ "max_parallel": 4,
+ "conflicts": [],
+ "resource_conflicts": [],
+ "links": [],
+ "control": "active",
+ "schema_version": 1,
+ "checksum": "c39219455b899f37"
+}

@@ -221,6 +221,12 @@ jobs:
         run: bash harness/tests/scope-config-test.sh .
       - name: stop-hook-all-wikis — Stop auto-index + R3 soi MỌI wiki (fdk/wiki + llmwiki/wiki), GH#76
         run: bash harness/tests/stop-hook-all-wikis-test.sh .
+      - name: stop-budget — stop.py thoát trong ngân sách hook 30s, cổng R3 vẫn chạy sau bước nặng
+        run: bash harness/tests/stop-budget-test.sh .
+      - name: run-validator-timeout — validator quá timeout thì fail-open, không Traceback
+        run: python3 -m pytest -v harness/tests/test_run_validator_timeout.py
+      - name: unknown-ledger-args — thiếu --file/--id thì báo usage, không Traceback
+        run: python3 -m pytest -v harness/tests/test_unknown_ledger_args.py
       - name: evidence-terminal — R19 chuỗi kết luận phải chạm chứng cứ + kill-switch
         run: bash harness/tests/evidence-terminal-test.sh .
       - name: anti-idle — provider cắt lượt bằng refusal rỗng thì Stop hook chặn dừng
@@ -241,7 +247,7 @@ jobs:
           python3 -m pytest -q harness/tests/test_control_room.py
       - name: html-font-lint — mọi HTML framework sinh ra = Be Vietnam Pro NHÚNG (generator · engine qua shim · parity bản sao ở engine · template skill)
         run: |
-          python3 -m pytest -q harness/tests/test_html_font.py harness/tests/test_repo_role.py
+          python3 -m pytest -q harness/tests/test_html_font.py harness/tests/test_repo_role.py harness/tests/test_ui_kit_sync.py
           bash harness/tests/html-font-lint-test.sh
       - name: install-flows — mỗi ô của bảng luồng cài/cập nhật là một ca (A3 A7 B1 B3 C1); B1 tự SKIP trên checkout nông
         run: bash harness/tests/install-flows-test.sh

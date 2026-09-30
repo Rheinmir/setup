@@ -1,0 +1,195 @@
+{
+ "id": "290926-uiux-followups",
+ "plan": "/Users/giatran/orca/setup/setup/scratchpad/ship2/llmwiki/wiki/sources/draft/290926-uiux-followups-PLAN.md",
+ "built": "2026-09-29T14:31:22+0700",
+ "nodes": [
+  {
+   "id": "t1",
+   "title": "cổng eye-rest bỏ qua nội dung details đang đóng",
+   "files": [
+    "fdk/tools/html-visual-gate.mjs",
+    "harness/tests/html-visual-gate-test.sh"
+   ],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "fixture `eye-rest-details` (trang có details đóng dài phải qua sạch)"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "fix",
+   "mode": "afk",
+   "verify": "bash harness/tests/html-visual-gate-test.sh .",
+   "qc": "",
+   "spec_hash": "10ea7289aeb37fb9",
+   "state": "done",
+   "gen": 0,
+   "rev": 2,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "10ea7289aeb37fb9"
+  },
+  {
+   "id": "t2",
+   "title": "uiux-asset tự nạp chỉ mục tìm kiếm khi deploy",
+   "files": [
+    "~/orca/setup/uiux-asset/tools/upload-search.mjs"
+   ],
+   "consumes": [
+    "`search-index.json`, env Upstash Search"
+   ],
+   "produces": [
+    "`npm run deploy` (build chỉ mục → nạp nếu đổi → vercel deploy); `--if-changed`; xoá mục đã gỡ"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "build",
+   "mode": "afk",
+   "verify": "cd ~/orca/setup/uiux-asset && npm test && node tools/upload-search.mjs --if-changed",
+   "qc": "",
+   "spec_hash": "3585433489f166c6",
+   "state": "done",
+   "gen": 0,
+   "rev": 2,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "3585433489f166c6"
+  },
+  {
+   "id": "t3",
+   "title": "CI harness đỏ bước html-slop — xác nhận đã xanh",
+   "files": [],
+   "consumes": [
+    "lịch sử `gh run list -w harness`"
+   ],
+   "produces": [
+    "kết luận: sửa upstream `77f7810`, không làm lại"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "research",
+   "mode": "afk",
+   "verify": "gh run list -w harness -b orca -L 1 --json conclusion -q '.[0].conclusion' | grep -qx success",
+   "qc": "",
+   "spec_hash": "dde5119d2f97d387",
+   "state": "done",
+   "gen": 0,
+   "rev": 2,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "dde5119d2f97d387"
+  },
+  {
+   "id": "t4",
+   "title": "commit + push framework (cổng eye-rest, PLAN/graph semantic search + PLAN này)",
+   "files": [
+    "llmwiki/wiki/index.md",
+    "llmwiki/wiki/sources/draft/290926-uiux-semantic-search-PLAN.md"
+   ],
+   "consumes": [
+    "Task 1"
+   ],
+   "produces": [
+    "commit trên `origin/orca`"
+   ],
+   "deps": [
+    "t1",
+    "t3"
+   ],
+   "deps_conf": "chắc",
+   "kind": "ship",
+   "mode": "afk",
+   "verify": "git fetch -q origin && git log origin/orca -8 --format=%s | grep -q \"eye-rest\"",
+   "qc": "",
+   "spec_hash": "21f887804779fd99",
+   "state": "done",
+   "gen": 0,
+   "rev": 2,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "21f887804779fd99"
+  },
+  {
+   "id": "t5",
+   "title": "commit + push + deploy uiux-asset",
+   "files": [
+    "~/orca/setup/uiux-asset/.gitignore"
+   ],
+   "consumes": [
+    "Task 2"
+   ],
+   "produces": [
+    "`main` trên GitHub khớp local; production deploy"
+   ],
+   "deps": [
+    "t2"
+   ],
+   "deps_conf": "chắc",
+   "kind": "ship",
+   "mode": "afk",
+   "verify": "cd ~/orca/setup/uiux-asset && git fetch -q && test -z \"$(git log origin/main..HEAD)\" && test -z \"$(git status --porcelain)\"",
+   "qc": "",
+   "spec_hash": "3cdd4598059e2db9",
+   "state": "done",
+   "gen": 0,
+   "rev": 2,
+   "attempts": 0,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "3cdd4598059e2db9"
+  }
+ ],
+ "layers": [
+  [
+   "t1",
+   "t2",
+   "t3"
+  ],
+  [
+   "t4",
+   "t5"
+  ]
+ ],
+ "parent": null,
+ "depth": 0,
+ "plan_version": 1,
+ "superseded": [],
+ "max_parallel": 4,
+ "conflicts": [],
+ "resource_conflicts": [],
+ "links": [
+  {
+   "to_graph": "180926-ship-scroll-originals",
+   "to_node": "t7",
+   "via": [
+    "llmwiki/wiki/index.md"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "200926-self-slop-gate",
+   "to_node": "t2",
+   "via": [
+    "fdk/tools/html-visual-gate.mjs",
+    "harness/tests/html-visual-gate-test.sh"
+   ],
+   "kind": "touches-same-file"
+  },
+  {
+   "to_graph": "220926-design-showcase",
+   "to_node": "t7",
+   "via": [
+    "harness/tests/html-visual-gate-test.sh"
+   ],
+   "kind": "touches-same-file"
+  }
+ ],
+ "control": "active",
+ "schema_version": 1,
+ "checksum": "4771a5abb5b333e4"
+}

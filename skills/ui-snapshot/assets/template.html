@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#16315E">
+<title>__TITLE__ · UI snapshot</title>
+<meta name="description" content="UI/UX snapshot — một file, dữ liệu placeholder cứng.">
+
+<style>
+/*__FONTS__*/
+:root{--font-sans:"__FONT__"}
+.material-symbols-outlined{font-family:"Material Symbols Outlined";font-weight:normal;font-style:normal;font-size:24px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr;-webkit-font-feature-settings:"liga";font-feature-settings:"liga";-webkit-font-smoothing:antialiased;font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}
+@keyframes viewFadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}.view-enter{animation:viewFadeIn .25s cubic-bezier(.4,0,.2,1) both}
+@keyframes trkpulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.3)}}
+@media (prefers-reduced-motion:reduce){.view-enter{animation:none}}
+body.phone-mode{background:#dfe3e7}
+body.phone-mode #frame{width:390px;height:min(844px,calc(100vh - 32px));margin:16px auto;transform:translateZ(0);overflow:hidden;border:10px solid #0f1e2f;border-radius:44px;box-shadow:0 30px 60px rgba(22,49,94,.25);background:#fff}
+body.phone-mode #app{height:100%;overflow-y:auto;overflow-x:hidden}
+body.phone-mode #app .h-screen{height:100%}
+body.phone-mode #app .min-h-screen{min-height:100%}
+/*__CSS__*/
+</style>
+</head>
+<body class="min-h-screen bg-background font-sans antialiased">
+<div id="frame"><div id="app"></div></div>
+<div id="tour"></div>
+<div id="chrome"></div>
+<script>
+/*__JS__*/
+</script>
+</body>
+</html>

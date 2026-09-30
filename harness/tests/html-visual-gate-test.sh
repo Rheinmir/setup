@@ -78,6 +78,9 @@ expect title-scale-ok "$(mk tso 'nav a{display:block;font-size:13px;padding:8px;
 DENSE=$(for i in $(seq 1 40); do printf '<div class="card" style="margin:0 0 8px;border-radius:0">Khối số %s dày đặc chữ chữ chữ chữ chữ chữ chữ chữ chữ chữ chữ chữ chữ chữ chữ chữ chữ chữ chữ chữ chữ chữ chữ</div>' "$i"; done)
 expect eye-rest "$(mk er '' "$DENSE")" "eye-rest:" WARN
 expect eye-rest-ok "$(mk ero 'h2,h3{margin:32px 0 8px}' '<h2>Tiêu đề</h2><p>Một đoạn ngắn, nhiều khoảng trắng quanh nó.</p>')" OK
+# chữ trong <details> ĐANG ĐÓNG không hiện ra nên không phải "mực" — Chromium vẫn trả getClientRects cho nó (đo 29/09 trang chip uiux-asset: báo nhầm 584px)
+CODE60=$(for i in $(seq 1 60); do printf 'dòng code số %s chữ chữ chữ chữ chữ chữ chữ chữ chữ chữ\n' "$i"; done)
+expect eye-rest-details "$(mk erd 'h2{margin:32px 0 8px}' "<h2>Tiêu đề</h2><p>Một đoạn ngắn.</p><details><summary>Xem code</summary><pre>$CODE60</pre></details>")" OK
 
 # ── kanban-uniform (user 22/09): mọi thẻ cùng size cố định + cùng style
 KB='<div class="board"><div class="lane"><h3>Cần làm</h3><div class="kc">Thẻ ngắn</div><div class="kc">Thẻ dài<br>dòng hai<br>dòng ba</div></div><div class="lane"><h3>Xong</h3><div class="kc">Một</div></div></div>'

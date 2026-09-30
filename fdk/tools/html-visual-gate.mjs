@@ -34,7 +34,8 @@
 // Sinh ra 20/09/2026 sau khi bộ đo nháp trả 0 ở hai cột mà user thấy lỗi bằng mắt: mỗi luật ở đây có fixture XẤU chứng minh nó cắn
 // (harness/tests/html-visual-gate-test.sh).
 import { pathToFileURL } from 'url';
-import { mkdirSync, existsSync } from 'fs';
+import { mkdirSync, existsSync, readFile } from 'fs';
+import { createServer } from 'node:http';
 import { resolve, basename } from 'path';
 import { createRequire } from 'node:module';
 // Playwright: ESM KHÔNG đọc NODE_PATH → đi qua createRequire như harness/tests/orca-graph-ui-smoke.mjs: <repo>/scratchpad/node_modules
@@ -221,6 +222,8 @@ const MEASURE = (theme) => {
       const paint = r => { const a = Math.max(0, Math.floor((r.left - x0) / 8)), c = Math.min(gw - 1, Math.floor((r.right - x0) / 8)), t = Math.max(0, Math.floor(r.top / 8)), d = Math.min(gh - 1, Math.floor(r.bottom / 8));
         for (let y = t; y <= d; y++) for (let x = a; x <= c; x++) grid[y * gw + x] = 1; for (let y = Math.max(0, Math.floor(r.top / 4)); y <= Math.min(rows.length - 1, Math.floor(r.bottom / 4)); y++) rows[y] = 1; };
       for (const el of document.querySelectorAll('body *')) { if ((navE && navE.contains(el)) || el.closest('.ovs-theme')) continue; const cs = getComputedStyle(el); if (cs.visibility === 'hidden' || +cs.opacity < .1 || cs.display === 'none') continue;
+        // nội dung <details> ĐANG ĐÓNG không hiện ra mà Chromium vẫn trả getClientRects → không phải mực (29/09: báo nhầm 584px trang chip uiux-asset)
+        const shut = el.closest('details:not([open])'); if (shut && shut !== el && !el.closest('summary')) continue;
         for (const n of el.childNodes) if (n.nodeType === 3 && n.textContent.trim()) { const rg = document.createRange(); rg.selectNodeContents(n); for (const q of rg.getClientRects()) if (q.bottom > 0 && q.top < H && q.right > x0) paint(q); }
         const r = el.getBoundingClientRect(); if (r.bottom <= 0 || r.top >= H || r.right <= x0) continue;
         const bg = cs.backgroundColor; if ((bg && !/rgba?\(0, 0, 0, 0\)|transparent/.test(bg) && r.width < W * .9) || (parseFloat(cs.borderTopWidth) > 0 && cs.borderTopStyle !== 'none' && r.width > 40 && r.height > 20)) paint(r); }
@@ -339,14 +342,22 @@ const LAYOUT = () => { const d = document.documentElement, wrap = [];
 const WIDTHS = [320, 375, 768, 1360], WRAP_AT = [320, 1360];
 const TOGGLE_SEL = '.theme-switch,[data-theme-toggle],.theme-toggle,#theme-toggle,#themeToggle,[aria-label*="giao diện" i],[aria-label*="theme" i],[class*="theme-t"],[id*="theme"]';
 const on = k => !only.length || only.includes(k);
+// Trang phục vụ qua http://127.0.0.1 (chỉ loopback, sống trong lượt chạy) thay vì file://: localStorage của file:// trên Chromium
+// CI có lúc MẤT qua reload → phép thử toggle báo NOT-PERSISTED ngẫu nhiên cho trang không lỗi (GH#179/#183, đo ở PR #176).
+// Origin http thường thì lưu bền như web thật. Mạng ngoài vẫn chặn — bằng route thay cho `offline` (offline chặn cả loopback).
+const MIME = { html: 'text/html', css: 'text/css', js: 'text/javascript', mjs: 'text/javascript', json: 'application/json', svg: 'image/svg+xml', png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp', gif: 'image/gif', woff2: 'font/woff2', woff: 'font/woff', ttf: 'font/ttf' };
+const srv = createServer((q, r) => { const f = decodeURIComponent(new URL(q.url, 'http://x').pathname);
+  readFile(f, (e, buf) => { if (e) { r.writeHead(404); r.end(); return; } r.writeHead(200, { 'content-type': MIME[f.split('.').pop().toLowerCase()] || 'application/octet-stream' }); r.end(buf); }); });
+await new Promise(ok => srv.listen(0, '127.0.0.1', ok)); const ORIGIN = `http://127.0.0.1:${srv.address().port}`;
+const pageUrl = abs => ORIGIN + pathToFileURL(abs).pathname;
 const b = await chromium.launch(); const report = []; let bad = 0;
 for (const file of pages) { const abs = resolve(file); const row = { page: file, findings: {} };
   if (!existsSync(abs)) { row.error = 'không tồn tại'; bad++; report.push(row); continue; }
   for (const theme of ['light', 'dark']) {
-    const ctx = await b.newContext({ viewport: { width: 1360, height: 900 }, colorScheme: theme, offline: true }); const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(String(e).slice(0, 140)));
+    const ctx = await b.newContext({ viewport: { width: 1360, height: 900 }, colorScheme: theme }); await ctx.route('**', r => r.request().url().startsWith(ORIGIN) || r.request().url().startsWith('data:') ? r.continue() : r.abort()); const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(String(e).slice(0, 140)));
     // chỉ đặt khi CHƯA có: đặt vô điều kiện thì lần reload của phép thử toggle bị ghi đè → báo nhầm NOT-PERSISTED
     await p.addInitScript(t => { try { for (const k of ['theme', 'ovs-theme', 'color-scheme', 'og-theme']) if (localStorage.getItem(k) === null) localStorage.setItem(k, t); } catch (e) {} }, theme);
-    await p.goto(pathToFileURL(abs).href, { waitUntil: 'load', timeout: 30000 }).catch(e => errs.push('goto: ' + e.message.slice(0, 80)));
+    await p.goto(pageUrl(abs), { waitUntil: 'load', timeout: 30000 }).catch(e => errs.push('goto: ' + e.message.slice(0, 80)));
     await p.evaluate(t => { const d = document.documentElement; if (d.getAttribute('data-theme') !== t) d.setAttribute('data-theme', t); return document.fonts.ready; }, theme); await p.waitForTimeout(250);
     const m = await p.evaluate(MEASURE, theme); m.jsErrors = errs;
     // Xác minh bằng ĐIỂM ẢNH: nền ước lượng từ CSS sai khi có lớp giả (::before), backdrop-filter, ảnh nền cố định… Chụp đúng ô chứa chữ,
@@ -380,9 +391,11 @@ for (const file of pages) { const abs = resolve(file); const row = { page: file,
         const b0 = await tg.boundingBox(); if (b0) { await p.mouse.move(b0.x + b0.width / 2, b0.y + b0.height / 2); await p.mouse.down(); await p.waitForTimeout(80);
           const b1 = await tg.boundingBox(); await p.mouse.up(); if (b1 && (Math.abs(b1.x - b0.x) > 1 || Math.abs(b1.y - b0.y) > 1)) row.toggleJump = `${Math.round(b1.x - b0.x)},${Math.round(b1.y - b0.y)}px`; }
         else await tg.click({ force: true }).catch(() => {});
-        await p.waitForTimeout(700); const after = await lumNow();
-        const attr = await p.evaluate(() => document.documentElement.getAttribute('data-theme')); await p.reload({ waitUntil: 'load' }).catch(() => {}); await p.waitForTimeout(200);
-        const kept = await p.evaluate(() => document.documentElement.getAttribute('data-theme'));
+        // Poll thay vì chờ cứng: circle-reveal áp theme SAU hiệu ứng (~1,5s trên runner CI) — chờ cứng 700ms đọc giữa chừng → NO-EFFECT/NOT-PERSISTED ngẫu nhiên (GH#179/#183).
+        const theAttr = () => p.evaluate(() => document.documentElement.getAttribute('data-theme'));
+        let after = before; for (let t = 0; t < 3000 && Math.abs(before - after) < 0.25; t += 100) { await p.waitForTimeout(100); after = await lumNow(); }
+        await p.waitForTimeout(400); const attr = await theAttr(); await p.reload({ waitUntil: 'load' }).catch(() => {});
+        let kept = await theAttr(); for (let t = 0; t < 2000 && kept !== attr; t += 100) { await p.waitForTimeout(100); kept = await theAttr(); }
         row.toggle = Math.abs(before - after) < 0.25 ? 'NO-EFFECT' : (kept !== attr ? 'NOT-PERSISTED' : 'ok'); } }
     await ctx.close(); }
   const L = row.findings.light, D = row.findings.dark; const probs = [];
@@ -427,7 +440,7 @@ for (const file of pages) { const abs = resolve(file); const row = { page: file,
   if (on('glass') && D.glass > 0 && L.glass === 0) probs.push(`glass: tối có ${D.glass} lớp kính, sáng mất hết`);
   const je = [...L.jsErrors, ...D.jsErrors]; if (je.length) probs.push(`js: ${je[0]}`);
   row.problems = probs; row.warnings = warns; if (probs.length) bad++; report.push(row); }
-await b.close();
+await b.close(); srv.close();
 if (asJson) console.log(JSON.stringify(report.map(r => ({ page: r.page, toggle: r.toggle, problems: r.problems, warnings: r.warnings, light: r.findings.light && { contrast: r.findings.light.contrast, tight: r.findings.light.tight, overlap: r.findings.light.overlap, stripe: r.findings.light.stripe, rounded_edge: r.findings.light.rounded_edge, italic_display: r.findings.light.italic_display, upper_tight: r.findings.light.upper_tight, line_body: r.findings.light.line_body, measure: r.findings.light.measure, heading_prox: r.findings.light.heading_prox, hier_flat: r.findings.light.hier_flat, tap: r.findings.light.tap, sent_case: r.findings.light.sent_case, head_scale: r.findings.light.head_scale, title_scale: r.findings.light.title_scale, eye_rest: r.findings.light.eye_rest, glass: r.findings.light.glass }, hscroll: r.hscroll, wrap: r.wrap, dark: r.findings.dark && { contrast: r.findings.dark.contrast, rounded_edge: r.findings.dark.rounded_edge, overlap: r.findings.dark.overlap, glass: r.findings.dark.glass } })), null, 1));
 else { for (const r of report) { console.log(`${r.problems && r.problems.length ? '✗' : '✓'} ${r.page}${r.error ? ' — ' + r.error : ''}`); for (const q of r.problems || []) console.log('    ' + q); for (const q of r.warnings || []) console.log('    ⚠ ' + q); }
   console.log(`html-visual-gate: ${report.length - bad}/${report.length} trang đạt`); }

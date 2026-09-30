@@ -239,6 +239,57 @@ BLOCKS = [
         css=(".sc-one-line{max-width:420px}.sc-one-line .ovs-line{gap:8px}"
              ".sc-one-line .c{font-size:13px;font-weight:600;padding:2px 12px;border-radius:999px;background:var(--ovs-accent-bg);color:var(--ovs-ink)}")),
     dict(
+        id="chip", title="Chip lọc, chọn và nhập",
+        rules=["row-wrap", "tap-target", "eight-states", "contrast", "motion-ease-out"],
+        note=("Chip = một lựa chọn gọn, KHÁC nút (nút gây hành động, chip bật/tắt hoặc mang giá trị) và KHÁC viên trạng thái (chỉ để đọc). "
+              "Cấu tạo (setproduct): vỏ · nhãn · icon trước · userpic · bộ đếm · nút xoá. Số đo (Material 3): cao 32px, bo 8px, "
+              "padding ngang 12px (8px phía có icon), icon 18px, avatar 24px, chip cách nhau 8px, vùng bấm ≥ 40px nhờ padding hàng. "
+              "Ba loại: LỌC chọn nhiều (aria-pressed, đã chọn thì nền đặc + dấu tích, không đổi cỡ chữ) · CHỌN một (radiogroup, phím mũi tên) · "
+              "NHẬP (userpic + nút xoá có aria-label, Backspace/Delete xoá, focus chuyển sang chip kế). "
+              "Hover nền nhạt hơn, không đổi viền; tắt = mờ 38% + not-allowed; nhãn dài thì cắt … và title đủ chữ. Hàng chip luôn một dòng (ovs-line)."),
+        html=('<div class="sc-chip">'
+              '<div class="row"><span class="k">Lọc</span><div class="ovs-line" role="group" aria-label="Lọc theo loại task">'
+              + "".join(f'<button type="button" class="ch f" aria-pressed="{p}"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>{t}<span class="n">{n}</span></button>'
+                        for t, n, p in [("Xây dựng", 3, "true"), ("Thiết kế", 4, "false"), ("Kiểm thử", 1, "false"), ("Tài liệu", 1, "false")])
+              + '<button type="button" class="ch f" aria-pressed="false" disabled>Nghiên cứu<span class="n">0</span></button></div></div>'
+              '<div class="row"><span class="k">Chọn một</span><div class="ovs-line" role="radiogroup" aria-label="Khoảng thời gian">'
+              + "".join(f'<button type="button" class="ch c" role="radio" aria-checked="{a}" tabindex="{0 if a == "true" else -1}">{t}</button>'
+                        for t, a in [("Hôm nay", "false"), ("7 ngày", "true"), ("30 ngày", "false")])
+              + '</div></div>'
+              '<div class="row"><span class="k">Người nhận</span><div class="ovs-line in" aria-label="Người nhận">'
+              + "".join(f'<span class="ch i"><span class="av" aria-hidden="true">{t[0]}</span><span class="lb" title="{t}">{t}</span>'
+                        f'<button type="button" class="x" aria-label="Xoá {t}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"/></svg></button></span>'
+                        for t in ["Claude", "Minh Anh", "Trần Nguyễn Bảo Khang (reviewer)"])
+              + '</div></div></div>'),
+        css=(".sc-chip{display:grid;gap:12px}.sc-chip .row{display:flex;align-items:center;gap:12px;min-width:0}"
+             ".sc-chip .k{flex:none;width:88px;font-size:13px;color:var(--ovs-ink2)}"
+             ".sc-chip .ovs-line{gap:8px;padding:4px 0;min-width:0}"
+             ".sc-chip .ch{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border:1px solid var(--ovs-border);border-radius:8px;"
+             "background:transparent;color:var(--ovs-ink);font:inherit;font-size:14px;line-height:1;cursor:pointer;flex:none;"
+             "transition:background-color .12s ease-out,color .12s ease-out,border-color .12s ease-out}"
+             ".sc-chip .ch:hover:not(:disabled){background:color-mix(in srgb,var(--ovs-ink) 7%,transparent)}"
+             ".sc-chip .ch:active:not(:disabled){background:color-mix(in srgb,var(--ovs-ink) 12%,transparent)}"
+             ".sc-chip .ch:focus-visible,.sc-chip .x:focus-visible{outline:2px solid var(--ovs-accent);outline-offset:2px}"
+             ".sc-chip .ch:disabled{opacity:.38;cursor:not-allowed}"
+             ".sc-chip .ic{width:18px;height:18px;margin-left:-4px;display:none;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}"
+             ".sc-chip .f[aria-pressed=true],.sc-chip .c[aria-checked=true]{background:var(--ovs-accent-bg);border-color:transparent;font-weight:600}"
+             ".sc-chip .f[aria-pressed=true] .ic{display:block}"
+             ".sc-chip .n{font-size:12px;font-weight:600;color:var(--ovs-ink2);font-variant-numeric:tabular-nums}"
+             ".sc-chip .i{padding:0 4px 0 4px;cursor:default;max-width:200px}"
+             ".sc-chip .av{flex:none;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--ovs-accent);color:var(--ovs-bg);font-size:12px;font-weight:600}"
+             ".sc-chip .lb{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}"
+             ".sc-chip .x{flex:none;display:grid;place-items:center;width:24px;height:24px;border:0;border-radius:50%;background:none;color:var(--ovs-ink2);cursor:pointer}"
+             ".sc-chip .x:hover{background:color-mix(in srgb,var(--ovs-ink) 10%,transparent);color:var(--ovs-ink)}"
+             ".sc-chip .x svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}"),
+        js=("root.querySelectorAll('.f').forEach(b=>b.addEventListener('click',()=>b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')!=='true')));"
+            "const rs=[...root.querySelectorAll('.c')];const pick=r=>{rs.forEach(x=>{const on=x===r;x.setAttribute('aria-checked',on);x.tabIndex=on?0:-1});r.focus()};"
+            "rs.forEach((r,i)=>{r.addEventListener('click',()=>pick(r));r.addEventListener('keydown',e=>{const d={ArrowRight:1,ArrowDown:1,ArrowLeft:-1,ArrowUp:-1}[e.key];"
+            "if(d){e.preventDefault();pick(rs[(i+d+rs.length)%rs.length])}})});"
+            "const box=root.querySelector('.in');const del=c=>{const all=[...box.querySelectorAll('.i')],k=all.indexOf(c);c.remove();"
+            "const nx=all[k+1]||all[k-1];if(nx)nx.querySelector('.x').focus()};"
+            "box.addEventListener('click',e=>{const x=e.target.closest('.x');if(x)del(x.closest('.i'))});"
+            "box.addEventListener('keydown',e=>{if((e.key==='Backspace'||e.key==='Delete')&&e.target.matches('.x')){e.preventDefault();del(e.target.closest('.i'))}});")),
+    dict(
         id="status-dot", title="Chấm trạng thái", rules=["side-stripe", "contrast"],
         note="Một bộ trạng thái = MỘT dạng, MỘT cỡ chữ cho mọi mục. Dạng chấm: chấm 8px + chữ (màu không đứng một mình). Dạng viên (khi cần nổi hơn): nền màu đặc, chữ màu CỐ ĐỊNH đạt tương phản, không dùng token đổi theo chế độ.",
         html=('<div class="sc-status-dot"><div class="row ovs-line"><span class="k">Dạng chấm</span>'

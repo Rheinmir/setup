@@ -113,6 +113,16 @@
     "note": "design foundation — Together AI; KHÔNG sửa nội dung gốc",
     "source": "https://github.com/Nutlope/hallmark"
   },
+  "modules": {
+    "overstack-strands": {
+      "adapt_mode": "external-pull",
+      "commit": "371173f37d208779d4ad0e0254d51fc815e38f51",
+      "note": "Strands harness = vendor thứ 7; ghim ngược setup ở upstream/PIN.json",
+      "recorded": "2026-09-28",
+      "source": "https://github.com/Rheinmir/overstack-strands",
+      "version": "0.1.0"
+    }
+  },
   "schema": "skill-provenance/v1",
   "skills": {
     "agent-reach": {
@@ -482,7 +492,7 @@
         "references/custom-theme.md": "a5026a0b00f69180ba9c24acec6e717bae0fb6e01daf998e8e900c57958a9eea",
         "references/design-default.md": "953633ab6866837002ce178cca754c5063200d0d0870a2ed5afa145060b62d99",
         "references/design-md.md": "a9368b64dd9b6e53e8c707830ce28fd8601d3195a81647ea46b6995aa3556b3c",
-        "references/design-showcase.html": "25259dc504d6e513c30f9d9c4a3940983af2c576c7b93203f995b0b3206e9832",
+        "references/design-showcase.html": "ca1b8b8dbef4f5b0c0a3abd5571b9aea34d0cc4bc5212889257e0b14b98ab0a1",
         "references/export-formats.md": "de0a73d9bec7a31abbd0cbbf1ecd51c2e440f1f3fdc08f476a343959ca6c22f3",
         "references/floating-nav.md": "c8c80f6560700bf6ee6baf28b81ec1539e9ff920d885624707de5fe8803c25d1",
         "references/frontend-design-delta.md": "23682d648dad8db82a5fb6d9c75c2d6e22d3fa673b3bda2a63e414f8b4ea93ea",
@@ -531,7 +541,7 @@
         "references/verbs/audit.md": "0a5b484453f1697a8675a7020df9159d0b4ce22f059b873501bfd82c26d6a31a",
         "references/verbs/redesign.md": "c2830f3b7d68e9622f55d376048a5a454c5ef59d309a211e716d1142e86acbdf"
       },
-      "recorded": "2026-09-24",
+      "recorded": "2026-09-28",
       "source": "local-authored"
     },
     "harness-tour": {
@@ -1107,6 +1117,27 @@
         "SKILL.md": "7fc3b6051cc7ff661cab4b3455f1417fa880360beaf97b99378501a6c5c8d094"
       },
       "recorded": "2026-09-19",
+      "source": "local-authored"
+    },
+    "ui-kit-from-code": {
+      "files": {
+        "SKILL.md": "efd8f926e93055475dc6f94777d6284bd52f34b248f743cb55850c8a535bf8fe",
+        "references/discover.mjs": "7281851680cd8a789f77ea6781be7234c8697ae82eb4e72b9ba5538fe594f42b",
+        "references/sync-kit.py": "70b5a06f9ff664fc53034cda8d2435e39f1ddec1b7e88c6dbb5de037f6e1384a",
+        "references/ui-kit-reference.html": "5ac9689830dd9194f8b27ec00f040aaf7dd1e292a4c86e55e4be17c307896204"
+      },
+      "recorded": "2026-09-29",
+      "source": "local-authored"
+    },
+    "ui-snapshot": {
+      "files": {
+        "SKILL.md": "07bb6a84c3b43ffad3035f8cd73cff1c89c12c927e6cd80d38694f60492c4c56",
+        "assets/app-skeleton.js": "312093699cbb7ce3239ce8953888076030c6e72a736b714b572d386e8117dcc8",
+        "assets/template.html": "030e47d72f5e2cc54f1d004c67cf16f67545ca918c0357cdab3ca5e524a56a99",
+        "scripts/build.py": "d06f79905b3514d89fa45e35809ca4648471d86cbb21d0b4fbed631a3d856241",
+        "scripts/shot.mjs": "6ed4c9d2abd773ae5acac027b5448a56796df85b13a285353b3fa47155b3d8e1"
+      },
+      "recorded": "2026-09-28",
       "source": "local-authored"
     },
     "verify-before-commit": {

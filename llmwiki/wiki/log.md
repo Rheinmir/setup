@@ -5745,3 +5745,46 @@ cc4f999ad |
 | 2026-09-24 12:29:33 | `task.set` |  · task=T-260924-01 · state=implemented · actor=agent · prev=f97f3ca8db651514574590bb62b0531ccaeab62f98493370f3d200aac24 |
 
 <!-- log:auto:end -->
+
+## 2026-09-28 — propose — 280926-overstack-strands-wrapper
+
+- SPEC chờ duyệt: Strands harness thành vendor thứ 7 (repo private Rheinmir/overstack-strands, policy ghim từ setup) + hệ đánh giá bọc ngoài E0–E3 trên OpenRouter (model Trung Quốc). 5 task, 5 sơ đồ archify, 4 unknown U-01..U-04. Task T-260928-01.
+
+## 2026-09-28 — plan — 280926-overstack-strands-wrapper-PLAN
+
+- SPEC bản 2 (5 chỗ sửa do /plan phát hiện: skill-ab-eval.py chưa commit, snippet hook bị gitignore, exit 2 → Guide, E3 đọc lịch sử hội thoại, model mới hơn) được duyệt lại. PLAN 7 task nhúng nguyên văn prototype đã chạy trên bản PyPI đã pin: 22 test xanh, E0 11/11. U-01 đã trả; U-02..U-04 còn mở.
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-28 17:17:06 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['fdk/CAPABILITIES.md'] · prev=genesis · h=0bf316fea5eca9683f32bfa85bc19 |
+
+<!-- log:auto:end -->
+
+<!-- log:auto:start -->
+
+### 🤖 Log tự-động (code-logger, không do agent ghi)
+
+| Thời điểm | Event | Chi tiết |
+|---|---|---|
+| 2026-09-28 23:42:35 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/graph/280926-issues-sweep.graph.json', 'llmwiki/wiki/sources/d |
+| 2026-09-28 23:42:41 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/graph/280926-issues-sweep.graph.json', 'llmwiki/wiki/sources/d |
+| 2026-09-28 23:42:58 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=2 · human=['llmwiki/graph/280926-issues-sweep.graph.json', 'llmwiki/wiki/index.md' |
+| 2026-09-28 23:42:58 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/280926-issues-sweep-PLAN.md'] · prev=4cc879 |
+| 2026-09-28 23:43:08 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=1 · human=['llmwiki/wiki/sources/draft/280926-issues-sweep-PLAN.md'] · prev=b245ac |
+| 2026-09-28 23:43:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['fdk/skill-catalog/recipes/ui-snapshot.recipe.json', 'skills/ui-snapsho |
+| 2026-09-28 23:43:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=3 · human=['llmwiki/AGENT.md', 'fdk/tools/build-overstack-docs.py', 'llmwiki/skill |
+| 2026-09-28 23:43:47 | `commit.reconcile` |  · actor=system · agent_n=0 · human_n=4 · human=['fdk/CAPABILITIES.md', 'llmwiki/CLAUDE.md', 'fdk/skills.provenance.json |
+
+<!-- log:auto:end -->
+
+## 2026-09-29 — plan — 290926-uiux-semantic-search-PLAN
+
+- PLAN 6 task semantic search cho uiux-asset (Upstash Search free); graph orca-graph dựng + 6/6 node verify thật → done. Đo: tìm theo nhóm 12/12, tìm gộp 8–9/12. Code ở repo Rheinmir/uiux-asset commit 6f07191.
+
+## 2026-09-29 — fix — 290926-uiux-followups-PLAN
+
+- html-visual-gate: eye-rest bỏ qua nội dung `<details>` đang đóng (Chromium vẫn trả getClientRects) — fixture eye-rest-details đỏ 800px → xanh; test cổng 66/66. CI harness đỏ html-slop: tái hiện trong container Linux 26/26 xanh, upstream đã sửa ở 77f7810. uiux-asset: `npm run deploy` tự nạp chỉ mục khi đổi + xoá mục đã gỡ.

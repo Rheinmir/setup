@@ -1,0 +1,223 @@
+{
+ "id": "280926-issues-sweep",
+ "plan": "llmwiki/wiki/sources/draft/280926-issues-sweep-PLAN.md",
+ "built": "2026-09-28T23:30:52+0700",
+ "nodes": [
+  {
+   "id": "t1",
+   "title": "cổng chạy-thật chờ toggle bằng poll thay vì chờ cứng",
+   "files": [],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "phép thử toggle: poll nền mỗi 100ms tới 3s, poll data-theme sau reload tới 2s"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "fix",
+   "mode": "afk",
+   "verify": "NODE_PATH=$(npm root -g) node fdk/tools/html-visual-gate.mjs llmwiki/html/overstack.html",
+   "qc": "",
+   "spec_hash": "1b20b02f9caa59bd",
+   "state": "done",
+   "gen": 1,
+   "rev": 5,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "1b20b02f9caa59bd"
+  },
+  {
+   "id": "t2",
+   "title": "gộp PR #178 — stop.py có ngân sách tổng",
+   "files": [],
+   "consumes": [
+    "nhánh origin/maintainer/280926-stop-hook-budget"
+   ],
+   "produces": [
+    "stop.py tổng ≤ 20s, R3 chạy lại"
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "merge",
+   "mode": "afk",
+   "verify": "bash harness/tests/stop-budget-test.sh .",
+   "qc": "",
+   "spec_hash": "8578040f8e7844fb",
+   "state": "done",
+   "gen": 1,
+   "rev": 5,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "8578040f8e7844fb"
+  },
+  {
+   "id": "t3",
+   "title": "gộp PR #182 — skill ui-kit-from-code",
+   "files": [],
+   "consumes": [
+    "nhánh origin/feat/ui-kit-from-code"
+   ],
+   "produces": [
+    "skill ui-kit-from-code trong catalog"
+   ],
+   "deps": [
+    "t1"
+   ],
+   "deps_conf": "chắc",
+   "kind": "merge",
+   "mode": "afk",
+   "verify": "python3 harness/scripts/sync-skills.py --check",
+   "qc": "",
+   "spec_hash": "0936793e02479498",
+   "state": "done",
+   "gen": 1,
+   "rev": 5,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "0936793e02479498"
+  },
+  {
+   "id": "t4",
+   "title": "xác nhận bootstrap Windows đã sửa rồi đóng",
+   "files": [],
+   "consumes": [
+    "—"
+   ],
+   "produces": [
+    "bằng chứng PYTHONUTF8 + cảnh báo WSL + mkdir ~/.claude"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "verify",
+   "mode": "afk",
+   "verify": "grep -q PYTHONUTF8 harness/poc-vendor-neutral/bootstrap.sh",
+   "qc": "",
+   "spec_hash": "661e4877e9682423",
+   "state": "done",
+   "gen": 1,
+   "rev": 5,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "661e4877e9682423"
+  },
+  {
+   "id": "t5",
+   "title": "đăng ký skill ui-snapshot hoặc đóng có lý do",
+   "files": [],
+   "consumes": [
+    "~/.agents/skills/ui-snapshot (bản chạy thật của tác giả)"
+   ],
+   "produces": [
+    "skill ui-snapshot trong catalog"
+   ],
+   "deps": [
+    "t3"
+   ],
+   "deps_conf": "chắc",
+   "kind": "triage",
+   "mode": "afk",
+   "verify": "gh issue view 170 --json state",
+   "qc": "",
+   "spec_hash": "1fc67bd45eae28d6",
+   "state": "done",
+   "gen": 1,
+   "rev": 5,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "1fc67bd45eae28d6"
+  },
+  {
+   "id": "t6",
+   "title": "đóng issue roadmap/frontier lỗi thời, giữ ledger",
+   "files": [],
+   "consumes": [
+    "ledger draft của từng issue"
+   ],
+   "produces": [
+    "issue đóng kèm lý do + trỏ ledger"
+   ],
+   "deps": [],
+   "deps_conf": "chắc",
+   "kind": "triage",
+   "mode": "afk",
+   "verify": "gh issue list --state open",
+   "qc": "",
+   "spec_hash": "a52c8d7398a51c76",
+   "state": "done",
+   "gen": 1,
+   "rev": 5,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "a52c8d7398a51c76"
+  },
+  {
+   "id": "t7",
+   "title": "cổng dừng — CI harness xanh, test downstream xanh, 0 issue mở",
+   "files": [],
+   "consumes": [
+    "kết quả Task 1–6"
+   ],
+   "produces": [
+    "verdict dừng"
+   ],
+   "deps": [
+    "t1",
+    "t2",
+    "t3",
+    "t4",
+    "t5",
+    "t6"
+   ],
+   "deps_conf": "chắc",
+   "kind": "gate",
+   "mode": "afk",
+   "verify": "bash harness/tests/downstream-firedrill-test.sh",
+   "qc": "",
+   "spec_hash": "00056715d6c028fe",
+   "state": "done",
+   "gen": 1,
+   "rev": 5,
+   "attempts": 1,
+   "fresh": "current",
+   "verified": "verified",
+   "done_spec_hash": "00056715d6c028fe"
+  }
+ ],
+ "layers": [
+  [
+   "t1",
+   "t4",
+   "t6"
+  ],
+  [
+   "t2",
+   "t3"
+  ],
+  [
+   "t5"
+  ],
+  [
+   "t7"
+  ]
+ ],
+ "parent": null,
+ "depth": 0,
+ "plan_version": 1,
+ "superseded": [],
+ "max_parallel": 4,
+ "conflicts": [],
+ "resource_conflicts": [],
+ "links": [],
+ "control": "active",
+ "schema_version": 1,
+ "checksum": "5f0fabdf39e4e1e1"
+}
