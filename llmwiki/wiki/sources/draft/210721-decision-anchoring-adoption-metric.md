@@ -2,7 +2,7 @@
 type: issue
 kind: process
 title: "decision-anchoring: chưa có metric adoption, chưa có kill-switch nếu không ai dùng"
-status: open
+status: wontfix
 assignee: grower
 dispatch: Claude
 entry: /fdk

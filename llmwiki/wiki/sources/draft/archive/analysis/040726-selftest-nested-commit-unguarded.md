@@ -2,7 +2,7 @@
 type: issue
 kind: tech-debt
 title: "Self-test harness chạy git commit LỒNG không tắt hook → nguy cơ tự-kích đệ quy"
-status: open
+status: done
 assignee: "@Rheinmir"
 dispatch: Claude
 entry: /fdk

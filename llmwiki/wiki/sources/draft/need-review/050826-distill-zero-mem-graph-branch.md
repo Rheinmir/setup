@@ -2,7 +2,7 @@
 type: issue
 kind: feature-gap
 title: "Distill Zero-Mem: thêm nhánh entity-graph (NER+PageRank) bổ sung cho mem-rank hiện tại"
-status: open
+status: wontfix
 assignee: "@Rheinmir"
 dispatch: Claude
 entry: /fdk

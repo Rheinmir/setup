@@ -2,7 +2,7 @@
 type: issue
 kind: foundation
 title: "orca-graph không có allow-listed write paths per-task — lock chỉ kiểm soát dispatch"
-status: implemented
+status: done
 assignee: claude-sonnet-5
 dispatch: human
 entry: /fdk

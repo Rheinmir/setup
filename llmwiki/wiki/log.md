@@ -5788,3 +5788,11 @@ cc4f999ad |
 ## 2026-09-29 — fix — 290926-uiux-followups-PLAN
 
 - html-visual-gate: eye-rest bỏ qua nội dung `<details>` đang đóng (Chromium vẫn trả getClientRects) — fixture eye-rest-details đỏ 800px → xanh; test cổng 66/66. CI harness đỏ html-slop: tái hiện trong container Linux 26/26 xanh, upstream đã sửa ở 77f7810. uiux-asset: `npm run deploy` tự nạp chỉ mục khi đổi + xoá mục đã gỡ.
+
+## 2026-10-01 — issues — /goal "kéo toàn bộ issue về và xử lý"
+
+- GitHub còn 1 issue mở (#191). Ledger `ISSUES.md` lệch: 33 dòng GitHub đã đóng vẫn ghi open/in-progress → đồng bộ (COMPLETED→done, NOT_PLANNED→wontfix, cả frontmatter draft); 38 link chết do draft đã dời vào archive/ → sửa; thêm `wiki-health.py --fail-on ledger` + bước CI để link chết không tái phát.
+- GH#191: skill `surface-coverage` (SWH) + `fdk/tools/surface-coverage.py` (scan bề mặt từ code @commit, check sổ phủ + file:line) + `harness/tests/test_surface_coverage.py`; cắm Phase 2 `orca-onboard` (RULE-12, báo `N/M mục`) và `teach-me` (RULE-10).
+- 030726-multi-session-add-guard (ledger-only): luật pathspec tường minh trong /fdk + CLAUDE/AGENT; rule dự án P1 `no-bulk-stage` (harness-local) + test 2 phiên + firedrill → done.
+- 150726-legacy-html-slop-debt (ledger-only, draft mất 2 lần): đếm lại bằng frontend-antipattern 0/18 file → tạo lại draft, done.
+- Kèm draft chờ duyệt `011026-theme-toggle-neumorphism` (chuẩn nút sáng/tối mới) để không mất như draft chưa commit trước đây.

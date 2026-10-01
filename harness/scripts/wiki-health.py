@@ -3,7 +3,7 @@
 
 Usage:
   wiki-health.py --wiki-dir llmwiki/wiki [--stale-days 60] [--csv harness/metrics/wiki-health.csv]
-                 [--fail-on broken,orphans,index,stale]
+                 [--fail-on broken,orphans,index,summary,ledger,stale]
 
 Output: JSON ra stdout. --csv append một dòng metric (chạy cron để có trend).
 Exit 2 nếu nhóm chỉ định trong --fail-on có vi phạm (mặc định: không fail — chỉ báo cáo).
@@ -157,6 +157,15 @@ def main() -> None:
         if BARE_DATE_RE.match(summary):
             bare_date_summary.append(f"{name}({link})")
 
+    # 3c. ledger issue: link cột đầu của sources/ISSUES.md phải tới file thật. ISSUES.md bị bỏ khỏi quét
+    # wikilink (văn bản lịch sử) nên trước 01/10/2026 38 dòng chết im lặng khi tidy dời draft vào archive/.
+    ledger_dangling = []
+    led = wiki / "sources" / "ISSUES.md"
+    if led.is_file():
+        for m in INDEX_ROW_RE.finditer(led.read_text(encoding="utf-8", errors="replace")):
+            if not (led.parent / m.group(2)).is_file():
+                ledger_dangling.append(f"{m.group(1)}({m.group(2)})")
+
     # 4. stale (theo git)
     now = datetime.datetime.now().timestamp()
     stale = []
@@ -173,6 +182,7 @@ def main() -> None:
         "missing_in_index": missing_index,
         "extra_in_index": extra_index,
         "bare_date_summary": bare_date_summary,
+        "ledger_dangling": ledger_dangling,
         "stale": stale,
     }
     print(json.dumps(report, ensure_ascii=False, indent=2))
@@ -196,6 +206,7 @@ def main() -> None:
         or ("index" in fail_groups and (missing_index or extra_index))
         or ("summary" in fail_groups and bare_date_summary)
         or ("stale" in fail_groups and stale)
+        or ("ledger" in fail_groups and ledger_dangling)
     )
     sys.exit(2 if failed else 0)
 

@@ -86,6 +86,7 @@ Chi tiết từng bước (nguồn chân lý cho W01–W06, Pre-flight):
 3. **Đừng dẫm module cũ** — trước khi tạo skill/validator/script/hook mới, **grep tên** xem đã tồn tại chưa; sửa code dùng-chung thì map caller trước (impact-check) rồi safe-change.
 4. **Propose trước** — mọi thay đổi → draft kế hoạch, STOP chờ duyệt; đừng code thẳng.
 5. **Surgical → verify → ghi vết** — chỉ chạm cái buộc phải chạm; chạy test/drift-test; cập nhật registry/log.
+   Commit thì **stage pathspec tường minh**, không `git add -A`/`.`/`commit -a`: nhiều phiên dùng chung cây, stage hàng loạt cuốn việc dở của phiên khác (rule P1 `no-bulk-stage` chặn ở repo framework).
 6. **Layout máy khách ≠ layout repo** — trước khi chạm path trong hook/engine/installer/CI: đọc mục "Bản đồ downstream" bên dưới; đường trần `llmwiki/` `harness/` CHỈ đúng trong repo này.
 
 ### Branches

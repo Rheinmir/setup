@@ -2,7 +2,7 @@
 type: issue
 kind: feature-gap
 title: "Observability runtime: tracing + eval-per-skill + simulation cho orca (không chỉ eval tĩnh CI)"
-status: open
+status: wontfix
 assignee: "@Rheinmir"
 dispatch: Claude
 entry: /fdk

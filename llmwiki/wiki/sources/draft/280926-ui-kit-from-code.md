@@ -2,7 +2,7 @@
 type: issue
 kind: feature-gap
 title: "Chưa có skill rút UI kit HTML (kiểu Figma UI kit) từ token + component thật của một codebase"
-status: open
+status: done
 assignee: "@Rheinmir"
 dispatch: Claude
 entry: /fdk

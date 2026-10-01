@@ -2,7 +2,7 @@
 type: issue
 kind: architecture
 title: "Dây chuyền sản xuất app khép kín kiểu Ralph: BR-kỹ → slice frames gắn-chặt-code → mỗi frame là loop có harness + monitor"
-status: open
+status: done
 assignee: "@Rheinmir"
 dispatch: Claude
 entry: /fdk

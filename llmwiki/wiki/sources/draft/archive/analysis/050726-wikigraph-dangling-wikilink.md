@@ -2,7 +2,7 @@
 type: issue
 kind: tech-debt
 title: "wiki-graph: broken wikilink [[X]] đẻ cạnh dangling trỏ node không tồn tại (rác graph data)"
-status: open
+status: done
 assignee: "@Rheinmir"
 dispatch: Claude
 entry: /fdk

@@ -2,7 +2,7 @@
 type: issue
 kind: feature-gap
 title: "Thống kê skill-usage thực tế → dashboard HTML báo cáo hàng tuần"
-status: open
+status: done
 assignee: "@Rheinmir"
 dispatch: Claude
 entry: /fdk

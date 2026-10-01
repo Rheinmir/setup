@@ -2,7 +2,7 @@
 type: issue
 kind: process
 title: "Đa-session chung working tree: git add -A trộn việc giữa các phiên — cần guard quy-session"
-status: open
+status: done
 assignee: "@Rheinmir"
 dispatch: Claude
 entry: /fdk
@@ -38,12 +38,18 @@ Nhiều phiên dev cùng lúc trên MỘT working tree: `git add -A` / `git add 
 3. **Thu hẹp quét pre-commit về STAGED, không cả cây:** hook content-scan (arch-scan…) chỉ soi file staged → file dang-dở của phiên khác không chặn commit của mình.
 
 ## Tiêu chí HOÀN THÀNH (kiểm chứng được)
-- [ ] Pre-flight `/fdk` + CLAUDE.md có luật "không `git add -A` khi dev framework; stage pathspec tường minh".
-- [ ] Có guard đọc `events.jsonl session` cảnh báo khi staged lẫn file của session khác (fixture 2-session chứng minh nó cắn).
-- [ ] `arch-scan` (và content-scan tương tự) chỉ soi file staged — fixture: file dang-dở vi-phạm-luật của "phiên khác" KHÔNG chặn commit sạch.
+- [x] Pre-flight `/fdk` + CLAUDE.md có luật "không `git add -A` khi dev framework; stage pathspec tường minh".
+- [x] Có guard đọc `events.jsonl session` cảnh báo khi staged lẫn file của session khác (fixture 2-session chứng minh nó cắn).
+- [x] `arch-scan` (và content-scan tương tự) chỉ soi file staged — fixture: file dang-dở vi-phạm-luật của "phiên khác" KHÔNG chặn commit sạch.
 
 ## Assign & lý do
 - `@Rheinmir` / **Claude** / mở bằng `/fdk`: đây là kỷ luật + hook framework, reasoning-heavy (quy-session, fixture đa-phiên), tự-chứa trong repo framework.
+
+## Kết quả (01/10/2026, phiên /goal "kéo toàn bộ issue về và xử lý")
+- Luật "stage pathspec tường minh, không `git add -A`/`.`/`commit -a`" đã vào pre-flight `skills/fdk/SKILL.md` (bước 5) và `llmwiki/CLAUDE.md` + `AGENT.md` (mục Rules).
+- Guard = rule dự án **P1 `no-bulk-stage`** (`harness-local/validators/no_bulk_stage.py`, chạy ở PreToolUse qua `harness-local/run.py`). Nó chặn stage hàng loạt, và khi `git commit` trên cây CHUNG thì chặn file mà phiên khác ghi lần cuối theo `harness/metrics/events.jsonl` (bỏ qua bằng `OVS_ALLOW_CROSS_SESSION=1`). Lệnh nhắm worktree khác (`cd X &&` / `git -C X`) không bị kiểm chéo phiên. Hook `pre_tool_use.py` giờ truyền `session` + `root` vào event bash.
+- Chứng: `harness/tests/test_no_bulk_stage.py` (fixture 2 phiên thật trên git tạm, 3/3 xanh) + `harness-local/run.py firedrill` (P1 bad→chặn, good→qua).
+- Tiêu chí 3 đã đạt mà không cần sửa: `arch-scan` không còn là hook pre-commit (chuyển sang CI), và framework pre-commit tự stash file chưa stage trước khi chạy hook, nên file dang dở của phiên khác không chặn commit sạch.
 
 ## Origin
 - **Raise bởi:** phiên `b73d2c47-27fe-4f86-8a29-0802a2e7e2e3` (2026-07-03), qua `/raise-issue`.

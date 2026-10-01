@@ -91,8 +91,10 @@ def _resolve_validator(vp):
 
 
 def _event(fx):
-    """fixture {path?, content?} → 1 write-event JSON đúng contract validator."""
+    """fixture {path?, content?} → 1 write-event JSON; fixture {command} → 1 bash-event (rule gác lệnh shell)."""
     fx = fx if isinstance(fx, dict) else {"content": str(fx)}
+    if fx.get("command") is not None:
+        return json.dumps({"action": "bash", "command": fx["command"]})
     return json.dumps({"action": "write",
                        "file_path": fx.get("path") or "harness-local-firedrill.tmp",
                        "content": fx.get("content") or ""})

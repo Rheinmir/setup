@@ -2,7 +2,7 @@
 type: issue
 kind: architecture
 title: "Council tự chọn đề thi + app mẫu ngoài-khuôn + harass 8 loại vector — phần lõi chưa ship"
-status: open
+status: wontfix
 assignee: "@Rheinmir"
 dispatch: Claude
 entry: /fdk

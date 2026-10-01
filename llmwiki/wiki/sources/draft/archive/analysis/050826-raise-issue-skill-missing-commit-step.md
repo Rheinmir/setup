@@ -2,7 +2,7 @@
 type: issue
 kind: tech-debt
 title: "Skill raise-issue thiếu bước commit — ledger mặc định untracked, không travel theo repo như quảng cáo"
-status: implemented
+status: done
 assignee: "@Rheinmir"
 dispatch: Claude
 entry: /fdk

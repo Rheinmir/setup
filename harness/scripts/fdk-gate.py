@@ -21,7 +21,7 @@ from pathlib import Path
 STEPS = [
     ("R3 index-sync", ["python3", "harness/validators/index_sync.py", "--wiki-dir", "llmwiki/wiki"],
      "index.md khớp file wiki (git-aware)"),
-    ("L4 wiki-health", ["python3", "harness/scripts/wiki-health.py", "--wiki-dir", "llmwiki/wiki", "--fail-on", "broken,summary"],
+    ("L4 wiki-health", ["python3", "harness/scripts/wiki-health.py", "--wiki-dir", "llmwiki/wiki", "--fail-on", "broken,summary,ledger"],
      "không broken wikilink · Summary trong index.md không được là ngày tháng trơ"),
     ("arch-scan", ["python3", "harness/scripts/arch-scan.py", "--root", "."],
      "văn bản skill/doc khớp luật R1-R7"),

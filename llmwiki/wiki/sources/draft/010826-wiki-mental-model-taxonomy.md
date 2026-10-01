@@ -2,7 +2,7 @@
 type: issue
 kind: architecture
 title: "Tái tổ chức wiki theo taxonomy Fact/Concept/Mental-Model/Framework + visualize cho người học mới"
-status: open
+status: wontfix
 assignee: "@Rheinmir"
 dispatch: Claude
 entry: /fdk

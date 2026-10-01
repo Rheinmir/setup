@@ -2,7 +2,7 @@
 type: issue
 kind: architecture
 title: "Auto-wire loop chống-lạc-quan: grader/anti-fabrication tự-kích qua hook, không đợi gọi skill tay"
-status: open
+status: wontfix
 assignee: "@Rheinmir"
 dispatch: Claude
 entry: /fdk

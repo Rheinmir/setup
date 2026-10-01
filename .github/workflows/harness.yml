@@ -76,6 +76,8 @@ jobs:
           python3 harness/validators/index_sync.py --wiki-dir llmwiki/wiki
       - name: L4 wiki-health — broken wikilink (git-aware)
         run: python3 harness/scripts/wiki-health.py --wiki-dir fdk/wiki --fail-on broken
+      - name: L4 wiki-health — ledger issue không trỏ draft đã dời/mất
+        run: python3 harness/scripts/wiki-health.py --wiki-dir llmwiki/wiki --fail-on ledger > /dev/null
       - name: arch-scan — doc vs rule
         run: python3 harness/scripts/arch-scan.py --root .
       - name: retrieval-eval — query truy-hồi không tụt dưới sàn (tất định, không LLM)

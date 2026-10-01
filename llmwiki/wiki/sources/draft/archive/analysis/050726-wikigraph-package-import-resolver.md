@@ -2,7 +2,7 @@
 type: issue
 kind: tech-debt
 title: "Engine wiki-graph: resolver Python chỉ khớp basename 1-segment → import qualified theo package không nối cạnh"
-status: open
+status: done
 assignee: "@Rheinmir"
 dispatch: Claude
 entry: /fdk
