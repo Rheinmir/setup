@@ -2,7 +2,7 @@
 type: issue
 kind: foundation
 title: "Ship self-index engine (wiki-graph + retrieval) xuống downstream — hết credibility gap 'query được'"
-status: open
+status: done
 assignee: "@Rheinmir"
 dispatch: Claude
 entry: /fdk

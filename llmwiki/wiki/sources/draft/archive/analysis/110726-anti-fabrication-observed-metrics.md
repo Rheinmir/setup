@@ -2,7 +2,7 @@
 type: issue
 kind: feature-gap
 title: "Anti-fabrication mở rộng: cấm bịa số liệu về người-dùng/thế-giới mà agent không đo được"
-status: implemented
+status: done
 assignee: "@Rheinmir"
 dispatch: Claude
 entry: /fdk

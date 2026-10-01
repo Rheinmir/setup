@@ -2,7 +2,7 @@
 type: issue
 kind: architecture
 title: "Orchestration scale: DAG + file-bus, nâng orca lên hàng-trăm-subagent song song có verify"
-status: open
+status: done
 assignee: "@Rheinmir"
 dispatch: Claude
 entry: /fdk

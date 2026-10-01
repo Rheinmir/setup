@@ -366,9 +366,9 @@
     },
     "fdk": {
       "files": {
-        "SKILL.md": "2b0df1e92355af22a16ba07e98ee661df1694d8f892eaa709961be995ab230d7"
+        "SKILL.md": "8c2f7270959a0154ec7c9f3e75abc3850736bd1e3f94bc91394a75c77463318f"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-01",
       "source": "local-authored"
     },
     "fdk-uat": {
@@ -877,10 +877,10 @@
     },
     "orca-onboard": {
       "files": {
-        "SKILL.md": "9def7346c64bb84c7ea7bf0c24c74f7f85317868672a9b73066115f5b45bfd4d",
+        "SKILL.md": "ef430a1e08ff8a1f69c9e78b20da0f796e7fde837b2d367407b0e40f22402f7f",
         "assets/docs-site-skeleton.html": "1d89cfb39a13e254e0789e3036d9a2be40d50d088bc6d0ae57a7eefce5932bf0"
       },
-      "recorded": "2026-09-24",
+      "recorded": "2026-10-01",
       "source": "local-authored"
     },
     "orca-sec-scans": {
@@ -1033,6 +1033,13 @@
       "recorded": "2026-07-18",
       "source": "https://github.com/Leonxlnx/taste-skill"
     },
+    "surface-coverage": {
+      "files": {
+        "SKILL.md": "926c93b87c620a2f97f6cf5fd171103b5d2f41be9ad4e2951b0155502e38b8d3"
+      },
+      "recorded": "2026-10-01",
+      "source": "local-authored"
+    },
     "svg-stroke-reveal": {
       "files": {
         "SKILL.md": "fe6b37729ed3bdaea3d44a4094ffaba2e664988708fde46a4d542150d3047a50",
@@ -1059,9 +1066,9 @@
     },
     "teach-me": {
       "files": {
-        "SKILL.md": "a2f97cbe344fbfd85e327885b701a4c8a519296acc06e087235f069ab401b133"
+        "SKILL.md": "f3fe1f9009b081149a08a670ea2a4f47c35f8013146d33d95690e9e87332c3d5"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-01",
       "source": "local-authored"
     },
     "threejs-particle-morph": {

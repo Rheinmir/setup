@@ -1,0 +1,11 @@
+{
+  "schema_version": "swh.reuse/1",
+  "recipe_id": "surface-coverage",
+  "decision": "scratch",
+  "candidates": [
+    "pure-transform",
+    "compact",
+    "evidence-to-artifact"
+  ],
+  "reason": "nội dung WHAT/HOW đã có sẵn từ downstream (GH#191), không khớp template catalog"
+}

@@ -2,7 +2,7 @@
 type: issue
 kind: foundation
 title: "Thống nhất install: bootstrap/install.sh kéo file-list từ manifest → ship engine + wire llmwiki hooks"
-status: in-progress
+status: done
 assignee: "@Rheinmir"
 dispatch: Claude
 entry: /fdk

@@ -2,7 +2,7 @@
 type: issue
 kind: tech-debt
 title: "skill-provenance.py + build-skill-search.py: path resolution vỡ sau khi travel xuống global harness home"
-status: open
+status: done
 assignee: "@Rheinmir"
 dispatch: Claude
 entry: /fdk

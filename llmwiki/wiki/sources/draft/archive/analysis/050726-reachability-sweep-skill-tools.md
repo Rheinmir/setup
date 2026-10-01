@@ -2,7 +2,7 @@
 type: issue
 kind: foundation
 title: "Reachability sweep: skill-shipped trỏ tool .py không ship → user gọi skill lỗi (GH#54)"
-status: in-progress
+status: done
 assignee: "@Rheinmir"
 dispatch: Claude
 entry: /fdk

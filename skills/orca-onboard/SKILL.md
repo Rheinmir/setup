@@ -38,6 +38,7 @@ Onboard codebase via distilled understand-anything pipeline (graph + git history
 | In | `opencode`, skill `docs-site-macos` | có | thiếu → Phase 0 exit 1 kèm lệnh cài |
 | Out | `.overstack/graph/knowledge-graph.json`, `ONBOARDING.md`, `meta.json` | có | Phase 1 (gate cuối Phase 1 kiểm 2 file đầu) |
 | Out | `.overstack/onboard/intermediate/domain-graph.json` | có | Phase 2 |
+| Out | `.overstack/onboard/intermediate/surface.json` + `coverage.json` | có | Phase 2 — bề mặt thật @commit + sổ phủ; output report in `N/M mục bề mặt được phủ` (skill `surface-coverage`) |
 | Out | `llmwiki/wiki/` (index, concepts, entities) | có trừ `--skip-wiki` | Phase 3; mọi trang có `## Origin` + dòng index |
 | Out | `llmwiki/html/onboarding-<slug>.html` + `llmwiki/html/wiki-graph.html` | có (vector fail-open) | Phase 4 |
 | Out | draft trạng thái + dòng index/log | có | cập nhật sau MỖI phase |
@@ -53,6 +54,7 @@ Onboard codebase via distilled understand-anything pipeline (graph + git history
 - RULE-06 (MUST): **READ BEFORE ACT** — each phase reads all inputs in `READ FIRST` block before any action. Never ask user about something already in a file.
 - RULE-07 (MUST): **NO full `knowledge-graph.json` reads after Phase 1** — use `ONBOARDING.md` instead.
 - RULE-08 (MUST): Real file paths only — never fabricate; domain graph only references real file:line, verify against code.
+- RULE-12 (MUST): Độ phủ của domain graph báo bằng diff với bề mặt thật (`surface-coverage.py check`), dạng `N/M mục`; không bao giờ báo số flow/bài như thể đã giải thích hết app.
 - RULE-09 (MUST): Wiki: wikilink format `[[page-name]]`; tour: 5-15 steps, start with project overview.
 - RULE-10 (MUST): Phase 4 KHÔNG bao giờ tự viết HTML thô — luôn qua skeleton v2.
 - RULE-11 (MUST): code-graph chỉ index khi `dep-health.py --json` báo `status == "ok"` — khai báo trong config ≠ server sống.
@@ -78,7 +80,7 @@ Onboard codebase via distilled understand-anything pipeline (graph + git history
 | W03 | deterministic | repo | **Phase 1** 1.1 SCAN + 1.2 GIT HISTORY (bash) + 1.3 ANALYZE (static parse; opencode chỉ enrich) + 1.4 MERGE (python) | `assembled-graph.json` | batch fail → retry 1 → bỏ, PHASE_WARNINGS |
 | W04 | judgment | assembled graph, dir tree, README | 1.5 LAYERS + TOUR (Claude main thread) | layers + tour 5-15 bước | — |
 | W05 | deterministic | graph | 1.6 VALIDATE + SAVE + gate cuối Phase 1 | `knowledge-graph.json`, `meta.json`, `ONBOARDING.md` | thiếu file → exit 1 |
-| W06 | judgment | `ONBOARDING.md`, layers | **Phase 2** domain enrichment (Claude) | `domain-graph.json` | không entry point → domains rỗng |
+| W06 | judgment | `ONBOARDING.md`, layers, `surface.json` | **Phase 2** bề mặt thật (`surface-coverage.py scan`) → domain enrichment (Claude) → gate `check` | `domain-graph.json` + `coverage.json`, dòng `N/M mục` | không entry point → domains rỗng; `check` đỏ sau 3 vòng → partial kèm danh sách CHƯA PHỦ |
 | W07 | effect | ONBOARDING + domain graph | **Phase 3** wiki (opencode, template fill) | `llmwiki/wiki/` | opencode lỗi → Claude fallback |
 | W08 | effect | ONBOARDING + domain graph + skeleton | **Phase 4** STEP A JSON → STEP B fill skeleton (python) → STEP C vector | HTML + `wiki-graph.html` | skeleton thiếu → exit 1; vector lỗi → fail-open |
 | W09 | effect | kết quả | Output Report + cập nhật status + sync push | draft cuối, index/log | — |
@@ -566,10 +568,14 @@ echo "[1.7] code-graph: gọi reindex_repo cho mỗi repo code có manifest"
 > 3. If `UPDATE_MODE=true`: read existing `.overstack/onboard/intermediate/domain-graph.json` (merge, don't overwrite)
 
 **DO:**
-1. From entry points → identify HTTP endpoints / CLI commands / events / cron jobs
+0. **Bề mặt thật TRƯỚC khi chọn flow** (skill `surface-coverage`, GH#191 — 18 flow từng bị báo như phủ hết một app 62 trang + 37 module):
+   `python3 "$FDK_TOOLS/surface-coverage.py" scan "$PROJECT_ROOT" [--modules '<thư mục module API>/*'] --out .overstack/onboard/intermediate/surface.json`
+   với `FDK_TOOLS=$([ -f fdk/tools/surface-coverage.py ] && echo fdk/tools || echo "$HOME/.claude/harness/fdk/tools")` (repo framework → bản trong repo; máy khách → engine global). Khung không file-based → viết script liệt kê route rồi gộp vào cùng file.
+1. From entry points → identify HTTP endpoints / CLI commands / events / cron jobs — mỗi mục trong `surface.json` phải được một flow phủ hoặc loại trừ có lý do
 2. Reverse-engineer: entry point → flow (process) → steps (actions @ file:line)
 3. Build `domain → flow → step` hierarchy
-4. Write `.overstack/onboard/intermediate/domain-graph.json`
+4. Write `.overstack/onboard/intermediate/domain-graph.json` + sổ phủ `.overstack/onboard/intermediate/coverage.json` (`{"commit", "items": {"page:/x": {"by": ["flow:…"]} | {"exclude": "lý do"}}}`)
+5. **Gate:** `python3 "$FDK_TOOLS/surface-coverage.py" check surface.json coverage.json --flows domain-graph.json --root "$PROJECT_ROOT"` — rc 1 (mục CHƯA PHỦ, flow id sai, `file:line` sai) → lần code lấp tiếp, tối đa 3 vòng; vẫn đỏ thì Phase 2 = **partial**. Báo cáo cuối (W09) in nguyên dòng `N/M mục bề mặt được phủ, K loại trừ` + danh sách CHƯA PHỦ — KHÔNG bao giờ báo số flow trơn như thể đã đủ.
 
 **Domain graph schema:**
 ```json

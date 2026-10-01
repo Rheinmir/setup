@@ -7,7 +7,14 @@
 #   Rule CÓ validator mà THIẾU fixtures = blind-spot → firedrill FAIL (không im lặng). Fixture là
 #   {path, content}; hook write-event dựng từ nó. CI downstream chạy firedrill mỗi PR.
 
-rules: []
+rules:
+  - id: P1
+    name: no-bulk-stage
+    validator: harness-local/validators/no_bulk_stage.py
+    statement: "Nhiều phiên dev chung một working tree: cấm git add -A/./--all và commit -a; cấm commit file mà phiên KHÁC ghi lần cuối (events.jsonl) trừ khi OVS_ALLOW_CROSS_SESSION=1 (issue 030726-multi-session-add-guard)."
+    fixtures:
+      bad:  { command: "git add -A && git commit -m x" }      # PHẢI bị chặn
+      good: { command: "git add fdk/tools/x.py && git commit -m x" }   # PHẢI qua
 
 # Ví dụ (bỏ comment + sửa, rồi tạo validator tương ứng — NHỚ khai fixtures để chứng được):
 #
