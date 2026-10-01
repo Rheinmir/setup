@@ -162,8 +162,13 @@ def main() -> None:
     ledger_dangling = []
     led = wiki / "sources" / "ISSUES.md"
     if led.is_file():
-        for m in INDEX_ROW_RE.finditer(led.read_text(encoding="utf-8", errors="replace")):
-            if not (led.parent / m.group(2)).is_file():
+        for ln in led.read_text(encoding="utf-8", errors="replace").splitlines():
+            if not ln.startswith("|") or re.match(r"^\|\s*(id\s*\||-)", ln):   # header / dòng kẻ
+                continue
+            m = re.match(r"^\|\s*\[([^\]]+)\]\(([^)]+)\)\s*\|", ln)
+            if not m:   # ô đầu không phải [id](link) — vd "| | [x]" làm lệch cột, status bị đọc sai
+                ledger_dangling.append(f"dòng hỏng: {ln[:60]}")
+            elif not (led.parent / m.group(2)).is_file():
                 ledger_dangling.append(f"{m.group(1)}({m.group(2)})")
 
     # 4. stale (theo git)
