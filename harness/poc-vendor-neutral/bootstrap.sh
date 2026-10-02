@@ -12,6 +12,7 @@
 #   ... | bash -s -- --clean          # cài mới = gỡ cũ rồi cài
 #   ... | bash -s -- --no-verify
 #   ... | bash -s -- --no-graph       # KHÔNG kéo module orca-graph (repo riêng Rheinmir/orca-graph)
+#   ... | bash -s -- uninstall        # GỠ khỏi dự án hiện tại (giữ wiki; thêm --purge-wiki để xoá luôn)
 #
 # Module orca-graph: mặc định ĐÃ TICK. Chạy trong terminal → hiện checklist, Enter là kéo đủ (gõ số để bỏ tick);
 # agent/CI chạy (không terminal) → kéo luôn, không hỏi. Đổi nhánh/tag engine: ORCA_GRAPH_REF=<ref>.
@@ -44,6 +45,15 @@ for f in policy.yaml gen-converters.py demo.sh test-broad.sh install.sh uninstal
   curl -fsSL "$BASE/$f" -o "$TMP/$f" || { echo "tải lỗi: $f" >&2; exit 1; }
 done
 chmod +x "$TMP"/*.sh "$TMP/bin/llmwiki-validate.py" 2>/dev/null || true
+
+# `... | bash -s -- uninstall [--purge-wiki] [--keep-core] [--purge-bak]` → GỠ khỏi dự án hiện tại thay vì cài.
+# README hứa lệnh này từ lâu nhưng bootstrap chưa từng xử lý: chữ "uninstall" bị chuyển thẳng cho install.sh.
+if [ "${1:-}" = "uninstall" ]; then
+  shift
+  say "gỡ overstack khỏi $TARGET"
+  bash "$TMP/uninstall.sh" "$TARGET" "$@" || exit $?   # không exec: trap EXIT còn phải dọn $TMP
+  exit 0
+fi
 # MẶC ĐỊNH: cài/UPDATE CẢ 3 TRỤ (harness + skills + llmwiki) — 1 lệnh, khỏi nhớ cờ.
 # Opt-out: --harness-only (chỉ harness). Tự chỉ --with-skills/--with-wiki/--full → tôn trọng.
 WANT_FULL=1; NEWARGS=()

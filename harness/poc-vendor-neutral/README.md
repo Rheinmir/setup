@@ -92,7 +92,7 @@ Cờ tùy chọn (thêm sau `| bash -s --`):
   --clean                    cài MỚI = gỡ cũ rồi cài
   --no-verify                bỏ chạy test
 Sau khi cài: nhắc user mở session Claude mới (hoặc /hooks reload) để hook có hiệu lực.
-Gỡ: bash harness/poc-vendor-neutral/uninstall.sh .   (giữ nguyên config khác của user)
+Gỡ: curl -fsSL .../bootstrap.sh | bash -s -- uninstall   (giữ wiki + config khác của user; --purge-wiki xoá luôn wiki)
 Sửa luật: harness/poc-vendor-neutral/policy.yaml → chạy lại lệnh cài.
 ```
 
@@ -125,7 +125,7 @@ Tự làm B0–B4: copy lõi → dò vendor → `gen-converters.py` → **merge*
 bash harness/poc-vendor-neutral/uninstall.sh /đường-dẫn/dự-án   # gỡ ĐÚNG phần harness, giữ config của bạn
 bash harness/poc-vendor-neutral/install.sh   /đường-dẫn/dự-án --clean   # cài MỚI = gỡ cũ rồi cài
 ```
-`uninstall.sh` đảo ngược: gỡ CI, gỡ hook harness khỏi `.claude/settings.json` (giữ hook khác của bạn), gỡ glob deny harness khỏi `opencode.json` (giữ rule khác), gỡ pre-commit hook + advisory, xoá lõi. Có backup `.bak`. Cờ: `--keep-core` (chỉ gỡ wiring) · `--purge-bak`.
+`uninstall.sh` đảo ngược, hiểu cả layout dot (`.llmwiki/` + `.harness/`) lẫn layout cũ: gỡ con dấu `.harness-stamp` TRƯỚC (công tắc của hook global — gỡ là harness tắt ngay ở dự án này), gỡ CI, gỡ đúng hook installer thêm khỏi `.claude/settings.json` và `.openclaude/settings.json` (giữ hook khác của bạn), gỡ glob deny harness khỏi `opencode.json` (giữ rule khác), gỡ pre-commit hook + advisory, xoá lõi. **Giữ wiki** trừ khi có `--purge-wiki`. Từ chối chạy trong repo framework (rc 2). Có backup `.bak`. Cờ: `--keep-core` (chỉ gỡ wiring + con dấu) · `--purge-wiki` · `--purge-bak`. Cũng gọi được qua bootstrap: `... | bash -s -- uninstall`.
 
 ## Thành phần
 

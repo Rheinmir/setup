@@ -37,6 +37,14 @@ script tự dừng và chỉ đường cài Git for Windows. Chưa có gói `win
 
 Mặc định cài/update **cả 3 trụ**: **Harness** (validator tất định vendor-neutral — chặn ghi `raw/`, ép wiki có `## Origin`… qua hook native + CI làm sàn) · **Skills** (global `~/.claude/skills`) · **llmwiki** (khung wiki). Cuối lần chạy in **bảng trạng thái 3 trụ**. Cờ: `--harness-only` · `--clean` · `uninstall` (bản PowerShell: `-HarnessOnly` · `-Clean`).
 
+**Gỡ khỏi một dự án** — chạy trong thư mục gốc dự án đó:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash -s -- uninstall
+```
+
+Lệnh gỡ con dấu `.harness-stamp` (công tắc của hook global, nên harness tắt ngay ở dự án này), gỡ hook và CI mà installer đã thêm, xoá lõi `.harness/poc-vendor-neutral/` — nhưng **giữ nguyên wiki của bạn** (`.llmwiki/`) và mọi hook do bạn tự viết. Thêm `--purge-wiki` để xoá luôn wiki. Engine global `~/.claude/harness` được giữ vì các dự án khác còn dùng. Mở phiên agent mới sau khi gỡ.
+
 **Module tuỳ chọn — orca-graph.** Engine đồ thị phân việc (`/orca-graph`, `/tc-run`, control-room) sống ở repo riêng [`Rheinmir/orca-graph`](https://github.com/Rheinmir/orca-graph) để có lịch sử, test và bộ eval riêng; trình cài chỉ kéo nó khi option được tick. Option này **đã tick sẵn**: chạy trong terminal sẽ thấy checklist dưới đây, **chỉ cần Enter là kéo đủ**; gõ `1` để bỏ tick, `n` để bỏ hết. Agent hoặc CI chạy (không có terminal) thì kéo luôn, không hỏi.
 
 ```
