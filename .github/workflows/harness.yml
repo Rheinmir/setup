@@ -229,6 +229,8 @@ jobs:
         run: python3 -m pytest -v harness/tests/test_run_validator_timeout.py
       - name: unknown-ledger-args — thiếu --file/--id thì báo usage, không Traceback
         run: python3 -m pytest -v harness/tests/test_unknown_ledger_args.py
+      - name: egress-guard-falsepos — tha loopback/việc thường ngày, vẫn cắn exfil thật
+        run: python3 harness/tests/egress-guard-falsepos-test.py
       - name: evidence-terminal — R19 chuỗi kết luận phải chạm chứng cứ + kill-switch
         run: bash harness/tests/evidence-terminal-test.sh .
       - name: anti-idle — provider cắt lượt bằng refusal rỗng thì Stop hook chặn dừng
