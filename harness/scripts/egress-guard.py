@@ -17,6 +17,7 @@ The ONE adapter = harness/egress-guard.config.yaml (allow_domains, net_commands,
 mcp_injection_patterns, mode — verified:false). DETECTION here is deterministic, built now,
 tested by --self-test. Default mode 'warn' so an un-calibrated allow-list never breaks a session.
 """
+import ipaddress
 import json
 import os
 import re
@@ -84,7 +85,19 @@ def _domains_in(command: str, bare_ok: bool = True):
     return {h.split("@")[-1] for h in hosts}
 
 
+def _loopback(host: str) -> bool:
+    """Loopback không phải egress (audit 280926 F4) — tha trong code, không qua allow_domains."""
+    if host == "localhost" or host.endswith(".localhost"):
+        return True
+    try:
+        return ipaddress.ip_address(host).is_loopback
+    except ValueError:
+        return False
+
+
 def _allowed(host: str, allow):
+    if _loopback(host):
+        return True
     return any(host == d.lower() or host.endswith("." + d.lower()) for d in allow)
 
 
