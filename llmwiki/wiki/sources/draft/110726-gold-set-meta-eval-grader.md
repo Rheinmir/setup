@@ -2,7 +2,7 @@
 type: issue
 kind: feature-gap
 title: "Gold-set + QWK meta-eval: đo độ ĐÚNG của chính grader (ai chấm người-chấm)"
-status: open
+status: wontfix
 assignee: "@Rheinmir"
 dispatch: Claude
 entry: /fdk

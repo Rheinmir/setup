@@ -2,7 +2,7 @@
 type: issue
 kind: foundation
 title: "Harness/wiki-graph: khai báo scope index tường minh qua .overstack.yaml (relocate được)"
-status: in-progress
+status: done
 assignee: "@Rheinmir"
 dispatch: Claude
 entry: /fdk

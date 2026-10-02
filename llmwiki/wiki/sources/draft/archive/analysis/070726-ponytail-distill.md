@@ -2,7 +2,7 @@
 type: issue
 kind: process
 title: "Chưng cất Ponytail (anti-over-engineering ladder) vào overstack, bỏ phần bao bì thừa"
-status: open
+status: done
 assignee: Rheinmir
 dispatch: Claude
 entry: /fdk

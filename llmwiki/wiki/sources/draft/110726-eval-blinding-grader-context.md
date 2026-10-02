@@ -2,7 +2,7 @@
 type: issue
 kind: feature-gap
 title: "Evaluation blinding: che context sinh output khỏi grader để chống mồi/lạc quan"
-status: open
+status: wontfix
 assignee: "@Rheinmir"
 dispatch: Claude
 entry: /fdk

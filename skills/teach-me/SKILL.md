@@ -49,6 +49,7 @@ metadata:
 - RULE-07 (MUST): **Phạm vi MỘT thứ:** teach-me không phân tích cả dự án (đó là `/onboard-codebase`/`/join-project`) và không ghi wiki.
 - RULE-08 (MUST): **Không đẻ debugger mới** — dùng công cụ có sẵn (pdb/debugpy · node --inspect · print/log · /run · /verify).
 - RULE-09 (MUST): **Trade-off và Giới hạn không được lẫn vào nhau** — Trade-off là đánh đổi CÓ CHỦ ĐÍCH lúc thiết kế; Giới hạn là biên nó KHÔNG VƯỢT QUA ĐƯỢC dù muốn, thường lộ ra khi dùng thật.
+- RULE-10 (MUST): **Loạt bài nhiều thứ thì đếm theo bề mặt, không theo số bài** — khi teach-me được gọi lặp để dựng một bộ bài học cho cả app (hoặc user hỏi "đã đủ chưa"), KHÔNG báo "N bài" như thể đã phủ hết: chạy skill `surface-coverage` (`surface-coverage.py scan` + `check`) và báo `N/M mục bề mặt được phủ` kèm danh sách chưa có bài (GH#191).
 - Capabilities: đọc code/tài liệu; chạy code cục bộ với debugger/log có sẵn; ghi tạm instrument (gỡ trước khi kết thúc); không ghi wiki.
 
 ### Failure boundaries

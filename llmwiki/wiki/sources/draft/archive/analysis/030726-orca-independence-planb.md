@@ -2,7 +2,7 @@
 type: issue
 kind: architecture
 title: "Orca-independence — tự-build orchestration optional làm Plan B"
-status: open
+status: wontfix
 assignee: phiên /fdk kế (framework-dev)
 dispatch: Claude
 entry: /fdk

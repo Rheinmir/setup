@@ -2,7 +2,7 @@
 type: issue
 kind: process
 title: "Map-is-not-Territory (Thariq/Fable 5): kỹ thuật tìm unknowns → đối chiếu & vá overstack (skills/CLAUDE.md/context)"
-status: open
+status: done
 assignee: "@Rheinmir"
 dispatch: Claude
 entry: /fdk

@@ -1,7 +1,7 @@
 <!-- SINH BẰNG CODE: build-capabilities.py — ĐỪNG sửa tay; chạy lại để cập nhật. -->
 # CAPABILITIES — toàn bộ đồ nghề (luôn-mới, đếm từ đĩa)
 
-**105 skill · 22 rule · 56 fdk-tool · 77 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
+**106 skill · 22 rule · 57 fdk-tool · 77 harness-script.** Agent: đây là danh sách ĐẦY ĐỦ những gì bạn có để dùng. Tìm nhanh: `python3 fdk/tools/build-skill-search.py` rồi `find-skill "<việc cần làm>"`. Phát triển framework: gọi `/fdk`.
 
 ## Skills (gọi bằng `/<tên>`)
 
@@ -12,7 +12,7 @@
 - **`/record-episode`** — Ghi một SESSION EPISODE có cấu trúc (tầng nhớ episodic) vào memory store để phiên sau truy…
 - **`/wiki-room`** — Mở room (subagent 1 tầng) nạp chi tiết wiki khi context phiên chính đã rot
 
-### dev-loop (23)
+### dev-loop (24)
 - **`/br`** — Hub MỘT TÊN cho dây chuyền sản xuất kiểu Ralph (GH#15): biến tài liệu thô của user thành s…
 - **`/build-now-adapt-later`** — When a task is blocked by missing or unverified information (an undocumented protocol, an …
 - **`/doyourmagic`** — Given a freshly-cloned external repo/tool, run clone→explore→verify→write to produce a bun…
@@ -30,6 +30,7 @@
 - **`/safe-change`** — Modify shared code without breaking existing callers
 - **`/ship`** — Workflow chốt PUSH/RELEASE/PR/MR
 - **`/skill-provenance`** — Ghi và kiểm provenance (nguồn + sha256 checksum) cho skill
+- **`/surface-coverage`** — Kiểm 'phủ hết' bằng diff với BỀ MẶT THẬT đọc từ code (trang, route, module API, lệnh CLI, …
 - **`/teach-me`** — Giải thích MỘT thứ (một file, hàm, tính năng, cơ chế, khái niệm, lỗi, hay hệ thống) theo c…
 - **`/ui-kit-from-code`** — Rút hệ thiết kế ĐANG CÓ của một dự án
 - **`/ui-snapshot`** — Nén TOÀN BỘ UI/UX của một frontend (React/Next.js/Vue + Tailwind) vào MỘT file HTML tự chứ…
@@ -194,6 +195,7 @@
 - `skill-usage.py`
 - `spacing-survey.py`
 - `supply-watch.py`
+- `surface-coverage.py`
 - `swh-lint.py`
 - `ui-detect.py`
 - `visual-receipt.py`
@@ -279,7 +281,7 @@
 - `wiki-sync.py`
 - `wikieval.py`
 
-## Neo bằng chứng — 288/288 năng lực có neo KHAI BÁO
+## Neo bằng chứng — 290/290 năng lực có neo KHAI BÁO
 **Đọc cho đúng: đây KHÔNG phải bằng chứng năng lực còn SỐNG.** Mỗi năng lực được map tất định tới một *điểm neo* bằng chứng trên đĩa (frontmatter `proof:` > rule-map > tests > self-test > golden > medic). Việc map là **tĩnh** — nó kiểm file/chuỗi có mặt, **không thực thi gì cả**. Nó bắt được ca 'năng lực này chẳng có test/golden/rule nào neo vào' (hữu ích thật), nhưng KHÔNG bắt được ca 'test có mà đỏ' hay 'engine có mà chết'. Muốn biết một dependency ngoài còn sống thì hỏi `harness/scripts/dep-health.py`. Chi tiết neo: `build-capabilities.py --capproof-json`.
 
 ## TRÙNG-ỨNG-VIÊN (30) — máy phát hiện, NGƯỜI phán (dedupe = vòng /propose riêng)

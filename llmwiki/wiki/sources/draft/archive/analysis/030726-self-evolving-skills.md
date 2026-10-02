@@ -2,7 +2,7 @@
 type: issue
 kind: feature-gap
 title: "Self-evolving skills: vòng CoEvoSkills nội bộ (sinh → eval tự động → merge khi xanh)"
-status: open
+status: wontfix
 assignee: "@Rheinmir"
 dispatch: Claude
 entry: /fdk

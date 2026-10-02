@@ -2,7 +2,7 @@
 type: issue
 kind: feature-gap
 title: "orca-graph không tách vai QC khỏi Verify — verify: chỉ là 1 lệnh shell, không có reviewer độc lập"
-status: implemented
+status: done
 assignee: claude-sonnet-5
 dispatch: human
 entry: /fdk

@@ -2,7 +2,7 @@
 type: issue
 kind: feature-gap
 title: "skill-provenance thiếu lớp Behavioral Integrity Verification (mô tả khai báo ≠ hành vi thật lúc chạy)"
-status: open
+status: wontfix
 assignee: Rheinmir
 dispatch: Claude
 entry: /fdk

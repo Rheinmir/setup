@@ -86,7 +86,9 @@ def main() -> None:
         }
         checks = ["no_write_raw.py", "folder_structure.py", "patterns_guard.py"]
     elif tool == "Bash":
-        event = {"action": "bash", "command": ti.get("command", "")}
+        # session + root: rule dự án cần biết phiên nào đang chạy (P1 no-bulk-stage — commit file của phiên khác)
+        event = {"action": "bash", "command": ti.get("command", ""), "session": payload.get("session_id", ""),
+                 "root": project_dir(payload)}
         checks = ["no_write_raw.py", "patterns_guard.py"]
     else:
         sys.exit(0)

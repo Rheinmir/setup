@@ -6,6 +6,8 @@
 |------|------|---------|
 | [example-concept](concepts/example-concept.md) | concept | Ví dụ một trang concept hợp lệ (Origin + OKF) cho project dùng llmwiki |
 | [030926-memory-retrieval-improvement-summary](../html/030926-memory-retrieval-improvement-summary.html) | draft | Trang docs-site-macos tóm tắt luồng: phát hiện agent không tự nhớ → /last30days lấy bằng chứng ngoài → /propose T-260902-01 chọn hướng A. Audit Playwright xanh (0 lỗi console, sidebar/theme round-trip đúng) |
+| [011026-theme-toggle-neumorphism](sources/draft/011026-theme-toggle-neumorphism.md) | draft | PROPOSE chờ duyệt: đổi nút sáng/tối mặc định của toàn framework sang nút tròn neumorphism mặt trăng/mặt trời (Uiverse · Creatlydev) |
+| [150726-legacy-html-slop-debt](sources/draft/150726-legacy-html-slop-debt.md) | issue | Issue nợ gradient-text/ligature trong HTML cũ: draft mất 2 lần, đếm lại 01/10/2026 bằng frontend-antipattern còn 0/18 file, đã đóng |
 | [020926-sessionstart-episodic-recall](sources/draft/archive/proposals/020926-sessionstart-episodic-recall.md) | draft | Đề xuất T-260902-01: nudge tất định 1-2 dòng ở SessionStart đọc episode gần nhất qua `mem-rank.py recent` (mới) — đóng khoảng trống "agent phiên mới không tự nhớ", KHÔNG auto-inject toàn bộ (rẻ hơn ~20 lần theo Memori paper) |
 | [140826-session-provenance](sources/provenance/140826-session-provenance.md) | source | Auto-distill scratch-log phiên dba79064 ngày 14/08 (stub) — chỉ chạm `gitignore`/`entities/repowise.md`, chưa ghi why thủ công |
 | [160826-session-provenance](sources/provenance/160826-session-provenance.md) | source | Auto-distill scratch-log phiên dba79064 ngày 16/08 (stub) — chỉ chạm `gitignore`/`entities/repowise.md`, chưa ghi why thủ công |
