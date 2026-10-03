@@ -13,25 +13,38 @@ Modes:
 Lý do ghi ra stderr. Thiếu policy / payload hỏng => fail-open (exit 0) — đúng triết
 lý harness: lỗi hạ tầng không được chặn người dùng; tầng repo (CI) vẫn đỡ.
 """
+import hashlib
 import json
 import os
 import re
 import sys
 
-try:
-    import yaml
-except ImportError:
-    sys.stderr.write("llmwiki-validate: thiếu pyyaml (pip install pyyaml) — fail-open\n")
-    sys.exit(0)
-
-# Hook này chạy ở MỌI lần agent gọi Write/Edit/Bash, nên thời gian parse policy.yaml (~19 KB) cộng
-# thẳng vào độ trễ từng tool call. Loader C của libyaml cho cùng kết quả nhanh hơn ~15 lần (đo
-# 2026-10-03: 21 ms → 1,5 ms); máy không có libyaml thì về loader thuần Python như cũ.
-_SafeLoader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+# Hook này chạy ở MỌI lần agent gọi Write/Edit/Bash, nên mọi mili-giây khởi động cộng thẳng vào độ trễ
+# từng tool call. Hai việc đắt nhất là `import yaml` (~12 ms) và parse policy.yaml. Nên:
+#   - policy đã parse được cache thành JSON, khoá bằng sha256 NỘI DUNG file (sửa policy = cache mới);
+#   - yaml chỉ được import khi thật cần: cache trượt, hoặc luật R9 phải đọc frontmatter.
+# Loader C của libyaml khi có (cùng kết quả, nhanh hơn ~15 lần), không thì SafeLoader như cũ.
+_yaml = None
 
 
 def _yaml_load(text_or_file):
-    return yaml.load(text_or_file, Loader=_SafeLoader)
+    global _yaml
+    if _yaml is None:
+        try:
+            import yaml
+        except ImportError:
+            sys.stderr.write("llmwiki-validate: thiếu pyyaml (pip install pyyaml) — fail-open\n")
+            sys.exit(0)
+        _yaml = yaml
+    return _yaml.load(text_or_file, Loader=getattr(_yaml, "CSafeLoader", _yaml.SafeLoader))
+
+
+_CACHE_VERSION = "1"
+
+
+def _cache_dir():
+    base = os.environ.get("XDG_CACHE_HOME") or os.path.join(os.path.expanduser("~"), ".cache")
+    return os.path.join(base, "overstack")
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_POLICY = os.path.normpath(os.path.join(HERE, "..", "policy.yaml"))
@@ -76,10 +89,27 @@ def norm(path):
 
 def load_policy(path):
     try:
-        with open(path, "r", encoding="utf-8") as f:
-            return _yaml_load(f) or {}
+        with open(path, "rb") as f:
+            raw = f.read()
     except OSError:
         return None
+    key = hashlib.sha256(_CACHE_VERSION.encode() + b"\0" + raw).hexdigest()[:32]
+    cached = os.path.join(_cache_dir(), f"llmwiki-policy-{key}.json")
+    try:
+        with open(cached, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        pass
+    policy = _yaml_load(raw.decode("utf-8")) or {}
+    try:  # cache là tối ưu, không phải điều kiện: thư mục chỉ-đọc / đầy đĩa thì thôi
+        os.makedirs(_cache_dir(), exist_ok=True)
+        tmp = f"{cached}.{os.getpid()}.tmp"
+        with open(tmp, "w", encoding="utf-8") as f:
+            json.dump(policy, f)
+        os.replace(tmp, cached)
+    except (OSError, TypeError, ValueError):
+        pass
+    return policy
 
 
 def rules_for_layer(policy, layer):
