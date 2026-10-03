@@ -243,6 +243,8 @@ jobs:
         run: bash harness/tests/dot-layout-runtime-test.sh .
       - name: fdk-gate-git-env — bước của fdk-gate KHÔNG thừa hưởng GIT_DIR của git hook (không commit lén vào repo thật)
         run: bash harness/tests/fdk-gate-git-env-test.sh .
+      - name: code-logger-render — log.md giữ đúng 1 khối auto kể cả khi đã bị xé và khi nhiều Stop render cùng lúc
+        run: bash harness/tests/code-logger-render-test.sh .
       - name: r3-worktree-hook-env — R3 đúng khi chạy trong hook git của linked worktree (GIT_DIR không GIT_WORK_TREE)
         run: bash harness/tests/r3-worktree-hook-env-test.sh .
       - name: install-graph-option — module orca-graph (repo riêng) mặc định TICK, Enter là kéo; --no-graph / bỏ tick thì không kéo

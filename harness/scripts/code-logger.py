@@ -108,8 +108,32 @@ def _read_events(root: Path, limit: int = 0):
     return out[-limit:] if limit else out
 
 
+def _strip_auto(text: str) -> str:
+    """Bỏ MỌI khối START…END và mọi marker lẻ, giữ nguyên chữ người viết.
+
+    Bản cũ chỉ cắt `pre = trước START đầu tiên` + `post = sau END ĐẦU TIÊN`. Khi một lần ghi bị xé để lại
+    END mồ côi đứng trước START, END đầu tiên là chính nó → mọi khối cũ được giữ lại và mỗi lần render
+    thêm một khối: llmwiki/wiki/log.md phình 50 → 5.798 dòng, 118 khối (19→28/09/2026). START không
+    có END theo sau (file cụt) thì chỉ bỏ dòng marker, không nuốt chữ phía dưới."""
+    lines, out, i = text.split("\n"), [], 0
+    while i < len(lines):
+        s = lines[i].strip()
+        if s == AUTO_START:
+            end = next((k for k in range(i + 1, len(lines)) if lines[k].strip() == AUTO_END), None)
+            i = (end + 1) if end is not None else (i + 1)
+            continue
+        if s != AUTO_END:
+            out.append(lines[i])
+        i += 1
+    return "\n".join(out)
+
+
 def render_md(root, keep: int = 40) -> bool:
-    """Sinh lại auto-block trong wiki/log.md từ events.jsonl. Giữ nguyên text ngoài marker. Fail-open."""
+    """Sinh lại auto-block trong wiki/log.md từ events.jsonl. Giữ nguyên text ngoài marker. Fail-open.
+
+    Đọc–sửa–ghi dưới flock + ghi nguyên tử (file tạm rồi os.replace): ở repo framework stop.py chạy 2 lần
+    mỗi lượt (hook dự án + hook global), cộng các phiên song song. Hai lần ghi đè chồng nhau từng để lại
+    "bản ngắn + đuôi của bản dài" = END mồ côi (tái hiện 30/1500 lượt với bản không khoá, 02/10/2026)."""
     try:
         root = Path(root)
         log = root / "llmwiki" / "wiki" / "log.md"
@@ -128,18 +152,21 @@ def render_md(root, keep: int = 40) -> bool:
             lines.append(f"| {ts} | `{e.get('event','')}` | {cell} |")
         lines += ["", AUTO_END]
         block = "\n".join(lines)
-        text = log.read_text(encoding="utf-8")
-        if AUTO_START in text and AUTO_END in text:
-            # marker cũ có thể đứng lệch giữa file (agent vẫn append thủ công phía dưới
-            # mỗi lần) — gộp pre+post (bỏ block cũ) rồi đặt lại block ở CUỐI file, để
-            # block "sự kiện mới nhất" luôn nằm đúng vị trí thời gian của nó.
-            pre = text.split(AUTO_START)[0].rstrip()
-            post = text.split(AUTO_END, 1)[1].strip()
-            body = pre + ("\n\n" + post if post else "")
-            new = body.rstrip() + "\n\n" + block + "\n"
-        else:
-            new = text.rstrip() + "\n\n" + block + "\n"
-        log.write_text(new, encoding="utf-8")
+        with open(_events_path(root).with_name("log-render.lock"), "a", encoding="utf-8") as lk:
+            try:
+                import fcntl
+                fcntl.flock(lk, fcntl.LOCK_EX)
+            except Exception:
+                pass                                   # không flock được (fs lạ) → vẫn ghi nguyên tử bên dưới
+            text = log.read_text(encoding="utf-8")
+            # Khối cũ (kể cả mảnh vỡ) bỏ hết, đặt lại ĐÚNG MỘT khối ở cuối file — khối "sự kiện mới nhất"
+            # luôn nằm đúng vị trí thời gian, chữ người viết (append tay phía dưới) giữ nguyên thứ tự.
+            body = _strip_auto(text).rstrip()
+            new = (body + "\n\n" if body else "") + block + "\n"
+            if new != text:
+                tmp = log.with_name(f".{log.name}.{os.getpid()}.tmp")
+                tmp.write_text(new, encoding="utf-8")
+                os.replace(tmp, log)
         return True
     except Exception:
         return False
