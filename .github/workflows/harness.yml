@@ -165,6 +165,8 @@ jobs:
         run: bash harness/tests/capproof-test.sh .
       - name: ledger-snapshot — ký ức máy-local round-trip + backup tự chạy
         run: bash harness/tests/ledger-snapshot-test.sh .
+      - name: llmwiki-validate cache — đúng quyết định, mất hiệu lực khi policy đổi, cache chỉ-đọc vẫn chặn
+        run: bash harness/tests/llmwiki-validate-cache-test.sh .
       - name: skill-provenance-scope — tamper skill NGOÀI đỏ, dev churn local không cries-wolf
         run: bash harness/tests/skill-provenance-scope-test.sh .
       - name: engines-smoke — chạy THẬT từng engine từng thiếu proof (26 nợ capproof → 0)
