@@ -23,7 +23,7 @@ task: T-260928-01
 
 ## Global constraints
 
-- `policy.yaml` là nguồn chân lý duy nhất cho luật ([[ADR-001-policy-as-source-of-truth]]).
+- `policy.yaml` là nguồn chân lý duy nhất cho luật (ADR-001-policy-as-source-of-truth (fdk/wiki)).
   - Repo mới **ghim** policy và validators theo commit của setup; không chép rồi sửa riêng.
   - Nhãn repo: `repo_role: module`, `upstream_pin: <commit setup>` (khuôn `orca-graph`).
 - Setup **giữ nguyên** adapter Claude Code và 5 vendor còn lại. Repo mới chỉ **thêm** vendor thứ 7.
@@ -37,7 +37,7 @@ task: T-260928-01
   - Khoá API chỉ đọc từ biến môi trường, không bao giờ ghi vào repo.
 - Mọi lượt đo tốn tiền phải chạy dưới trần ngân sách khai trước. Chạm trần thì dừng, không tự nới.
 - Repo private cho tới khi E1 xanh.
-- Commit không ghi công AI (R15, [[ADR-016-no-ai-attribution-in-commits]]).
+- Commit không ghi công AI (R15, ADR-016-no-ai-attribution-in-commits (fdk/wiki)).
 
 ## File structure
 
