@@ -58,15 +58,12 @@ STEPS = [
      "mọi script có --self-test ĐỀU được fdk-gate chạy (anti-drift: thêm feature quên gate → đỏ)"),
     ("policy↔converters drift", ["bash", "harness/tests/policy-converters-drift-test.sh"],
      "adapter sinh khớp policy.yaml"),
-    ("graph-engineering tests", ["bash", "-c",
-        "bash harness/tests/ge-backcompat-test.sh . >/dev/null && "
-        "bash harness/tests/ge-integration-test.sh . >/dev/null && "
-        "bash harness/tests/ge-killswitch-test.sh . >/dev/null && "
-        "bash harness/tests/ge-travel-test.sh . >/dev/null && "
-        "bash harness/tests/ge-reachability-test.sh . >/dev/null && "
-        "bash harness/tests/ge-acceptance-test.sh . >/dev/null && "
-        "bash harness/tests/ge-purpose-test.sh . >/dev/null"],
-     "T1–T7: hồi quy · tích hợp · kill-switch · travel · reachability · §X acceptance · mục đích"),
+    # T1–T7 graph-engineering: mỗi test một step riêng để chạy song song được (trước là một chuỗi `&&`
+    # dài nhất cổng, và dừng ở test đỏ đầu tiên nên các test sau không được chạy).
+    *[(f"graph-engineering {t}", ["bash", f"harness/tests/ge-{t}-test.sh", "."], why)
+      for t, why in [("backcompat", "T1 hồi quy"), ("integration", "T2 tích hợp"), ("killswitch", "T3 kill-switch"),
+                     ("travel", "T4 travel"), ("reachability", "T5 reachability"), ("acceptance", "T6 §X acceptance"),
+                     ("purpose", "T7 mục đích")]],
     ("vendor-neutral demo", ["bash", "harness/poc-vendor-neutral/demo.sh"],
      "self-test lõi (demo)"),
     ("vendor-neutral broad", ["bash", "harness/poc-vendor-neutral/test-broad.sh"],
