@@ -5,6 +5,7 @@
 #   A7  install-harness.sh --global   → shim VÀ engine tới cùng chuyến;  A7s: ORCA_GRAPH_SKIP=1 → shim báo lệnh cài (rc 3)
 #   B1  máy còn engine v2 (trước khi tách repo) chạy lại bootstrap → shim + engine v3, graph đang dở vẫn đọc được
 #   B3  /harness-update kiểu cũ (`install-harness.sh . --self-heal`) trên dự án dot-layout → DỪNG rc 5, không chép engine vào dự án
+#   D1  cài dự án layout cũ → mọi hook trong settings trỏ tới file CÓ THẬT (bất biến, không gắn regex)
 #   C1  chạy installer trong REPO FRAMEWORK (khai nhãn / suy theo fdk/wiki) → DỪNG rc 3, 0 file đổi; ép cờ thì chạy
 # Gọi từng ca: install-flows-test.sh B3 C1 · không tham số = mọi ca. Kín mạng (engine lấy từ bản cài local), HOME cô lập, không daemon.
 set -uo pipefail
@@ -70,7 +71,35 @@ case_C1(){ for how in declared inferred; do box "c1$how"; P="$B/proj"; mkdir -p 
   ( cd "$B/proj" && HOME="$B/home" ORCA_GRAPH_SKIP=1 bash "$SRC/harness/poc-vendor-neutral/install.sh" . --no-verify ) >"$LOG" 2>&1
   [ "$(cat "$B/proj/.overstack.yaml")" = "$(printf 'wiki_dir: .llmwiki/wiki\nrepo_role: downstream')" ] && ok "C1b: thêm nhãn không làm hỏng dòng cuối thiếu newline" || no "C1b: $(tr '\n' '|' < "$B/proj/.overstack.yaml")"; }
 
-CASES=("$@"); [ ${#CASES[@]} -gt 0 ] || CASES=(A3 A7 B1 B3 C1)
-for c in "${CASES[@]}"; do if declare -F "case_$c" >/dev/null; then "case_$c"; else echo "ca lạ: $c (có: A3 A7 B1 B3 C1)"; FAIL=$((FAIL+1)); fi; done
+# D1 (05/10/2026 — user cài mới: MỌI hook "No such file ~/.claude/.harness/hooks/…"): migrate dot-layout đổi nhầm
+# đường engine global. Bất biến kiểm ở đây không gắn với regex nào: SAU KHI CÀI, mọi .py mà hook trong settings
+# (dự án + ~/.claude) trỏ tới PHẢI tồn tại. Lỗi nào khác cùng loại (sai path hook) cũng đỏ ở đây.
+case_D1(){ box d1; P="$B/proj"; mkdir -p "$P/llmwiki/wiki" "$P/harness" "$P/.claude"
+  printf '{"hooks":{"UserPromptSubmit":[{"hooks":[{"type":"command","command":"python3 \\"$HOME/.claude/harness/hooks/user_prompt_submit.py\\""}]}]}}\n' > "$P/.claude/settings.json"
+  ORCA_GRAPH_SKIP=1 boot --with-wiki; rc=$?
+  BAD="$(HOME="$B/home" python3 - "$P/.claude/settings.json" "$P/.claude/settings.local.json" "$B/home/.claude/settings.json" <<'PY'
+import json, os, re, sys
+bad, n = [], 0
+for f in sys.argv[1:]:
+    if not os.path.isfile(f): continue
+    def walk(o):
+        if isinstance(o, dict):
+            for k, v in o.items():
+                if k == "command" and isinstance(v, str): yield v
+                else: yield from walk(v)
+        elif isinstance(o, list):
+            for v in o: yield from walk(v)
+    for cmd in walk(json.load(open(f))):
+        for m in re.findall(r'(?:\$HOME|~)(/[^\s"\x27;]+\.py)', cmd):
+            n += 1; path = os.environ["HOME"] + m
+            if not os.path.isfile(path): bad.append(f"{os.path.basename(os.path.dirname(f))}/{os.path.basename(f)}: ~{m}")
+print("\n".join(bad) if bad else f"OK {n}")
+PY
+)"
+  { [ $rc = 0 ] && [[ "$BAD" == OK\ [1-9]* ]]; } && ok "D1 cài dự án layout cũ: mọi hook trỏ tới file có thật (${BAD#OK } path)" || no "D1 rc=$rc hook trỏ file KHÔNG có: $BAD"; }
+
+[ -d "${1:-}" ] && shift   # quy ước harness/tests: runner chung (whales-storying --measure) truyền repo root làm $1
+CASES=("$@"); [ ${#CASES[@]} -gt 0 ] || CASES=(A3 A7 B1 B3 C1 D1)
+for c in "${CASES[@]}"; do if declare -F "case_$c" >/dev/null; then "case_$c"; else echo "ca lạ: $c (có: A3 A7 B1 B3 C1 D1)"; FAIL=$((FAIL+1)); fi; done
 LEAK="$(pgrep -f "$T" | wc -l | tr -d ' ')"; [ "$LEAK" = 0 ] || { echo "  ⚠ còn $LEAK process chạy từ thư mục tạm của test"; FAIL=$((FAIL+1)); }
 echo ""; echo "install-flows: $PASS PASS · $FAIL FAIL · $SKIP SKIP"; [ "$FAIL" = 0 ]

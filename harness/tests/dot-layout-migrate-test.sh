@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# dot-layout-migrate-test.sh — chứng minh migrate layout ẩn chạy đúng (6 assertion).
+# dot-layout-migrate-test.sh — chứng minh migrate layout ẩn chạy đúng (9 assertion).
 # Sandbox trong $TMPDIR, không đụng repo thật.
 set -uo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
@@ -25,6 +25,8 @@ mkdir -p "$P/.claude"
 # settings.json ĐỜI CŨ (trước v4, hook per-project). Bản cài hiện tại KHÔNG ghi hook vào dự án khách:
 # hook chạy từ ~/.claude/harness/hooks. Fixture này chỉ tồn tại để kiểm migrate viết lại con trỏ đời cũ.
 printf '{"hooks":{"SessionStart":[{"command":"python3 \\"$CLAUDE_PROJECT_DIR/llmwiki/.claude/hooks/session_start.py\\""}]}}\n' > "$P/.claude/settings.json"
+# Lệnh hook HIỆN HÀNH (wire bởi install-harness): engine global ~/.claude/harness/ KHÔNG được bị đổi thành ~/.claude/.harness/
+printf '{"hooks":{"UserPromptSubmit":[{"command":"python3 \\"$HOME/.claude/harness/hooks/user_prompt_submit.py\\""}]}}\n' > "$P/.claude/settings.local.json"
 printf 'llmwiki/html/*.png\n' > "$P/.gitignore"
 ( run_migrate "$P" ) >/dev/null 2>&1
 ck "llmwiki/ được dọn vào .llmwiki/" "yes" "$([ -d "$P/.llmwiki" ] && [ ! -d "$P/llmwiki" ] && echo yes || echo no)"
@@ -32,6 +34,8 @@ ck "harness/ được dọn vào .harness/"  "yes" "$([ -d "$P/.harness" ] && [ 
 ck "nội dung không mất" "noi dung" "$(cat "$P/.llmwiki/wiki/concepts/a.md")"
 ck "con trỏ hook được viết lại" "yes" \
    "$(grep -q '\.llmwiki/\.claude/hooks' "$P/.claude/settings.json" && echo yes || echo no)"
+ck "engine global ~/.claude/harness/ giữ nguyên (không thành .claude/.harness/)" "yes" \
+   "$(grep -q '\.claude/harness/hooks' "$P/.claude/settings.local.json" && ! grep -q '\.claude/\.harness/' "$P/.claude/settings.local.json" && echo yes || echo no)"
 ck "gitignore được viết lại" "yes" \
    "$(grep -q '^\.llmwiki/html/' "$P/.gitignore" && echo yes || echo no)"
 
@@ -46,4 +50,11 @@ F="$TMP/fw"; mkdir -p "$F/fdk/wiki" "$F/llmwiki/wiki" "$F/harness"
 ck "repo framework giữ nguyên llmwiki/ (không tự migrate)" "yes" \
    "$([ -d "$F/llmwiki" ] && [ ! -d "$F/.llmwiki" ] && echo yes || echo no)"
 
-echo "dot-layout-migrate-test: $pass/7 assertion XANH"
+# 4. Dự án ĐÃ bị regex cũ làm hỏng (~/.claude/.harness/) → bước sửa trong installer phải trả về ~/.claude/harness/
+B="$TMP/broken"; mkdir -p "$B/.claude"
+printf '{"hooks":{"UserPromptSubmit":[{"command":"python3 \\"$HOME/.claude/.harness/hooks/user_prompt_submit.py\\""}]}}\n' > "$B/.claude/settings.json"
+( ROOT="$B"; log(){ :; }; eval "$(sed -n '/^# Sửa hậu quả của regex migrate cũ/,/^true$/p' "$INSTALL")" ) >/dev/null 2>&1
+ck "dự án đã hỏng được sửa về ~/.claude/harness/" "yes" \
+   "$(grep -q '\.claude/harness/hooks' "$B/.claude/settings.json" && ! grep -q '\.claude/\.harness/' "$B/.claude/settings.json" && echo yes || echo no)"
+
+echo "dot-layout-migrate-test: $pass/9 assertion XANH"
