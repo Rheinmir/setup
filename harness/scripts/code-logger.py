@@ -113,7 +113,7 @@ def _strip_auto(text: str) -> str:
 
     Bản cũ chỉ cắt `pre = trước START đầu tiên` + `post = sau END ĐẦU TIÊN`. Khi một lần ghi bị xé để lại
     END mồ côi đứng trước START, END đầu tiên là chính nó → mọi khối cũ được giữ lại và mỗi lần render
-    thêm một khối: llmwiki/wiki/log.md phình 50 → 5.798 dòng, 118 khối (19→28/09/2026). START không
+    thêm một khối: log.md của wiki phình 50 → 5.798 dòng, 118 khối (19→28/09/2026). START không
     có END theo sau (file cụt) thì chỉ bỏ dòng marker, không nuốt chữ phía dưới."""
     lines, out, i = text.split("\n"), [], 0
     while i < len(lines):
