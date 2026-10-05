@@ -6,6 +6,8 @@
 #   B1  máy còn engine v2 (trước khi tách repo) chạy lại bootstrap → shim + engine v3, graph đang dở vẫn đọc được
 #   B3  /harness-update kiểu cũ (`install-harness.sh . --self-heal`) trên dự án dot-layout → DỪNG rc 5, không chép engine vào dự án
 #   D1  cài dự án layout cũ → mọi hook trong settings trỏ tới file CÓ THẬT (bất biến, không gắn regex)
+#   D2  chạy installer ở THƯ MỤC HOME → DỪNG, không đụng settings global
+#   D3  mọi $OUT/<file> install.sh đọc phải do gen-converters.py sinh (tĩnh, không cần vendor trên máy)
 #   C1  chạy installer trong REPO FRAMEWORK (khai nhãn / suy theo fdk/wiki) → DỪNG rc 3, 0 file đổi; ép cờ thì chạy
 # Gọi từng ca: install-flows-test.sh B3 C1 · không tham số = mọi ca. Kín mạng (engine lấy từ bản cài local), HOME cô lập, không daemon.
 set -uo pipefail
@@ -98,8 +100,22 @@ PY
 )"
   { [ $rc = 0 ] && [[ "$BAD" == OK\ [1-9]* ]]; } && ok "D1 cài dự án layout cũ: mọi hook trỏ tới file có thật (${BAD#OK } path)" || no "D1 rc=$rc hook trỏ file KHÔNG có: $BAD"; }
 
-[ -d "${1:-}" ] && shift   # quy ước harness/tests: runner chung (whales-storying --measure) truyền repo root làm $1
-CASES=("$@"); [ ${#CASES[@]} -gt 0 ] || CASES=(A3 A7 B1 B3 C1 D1)
-for c in "${CASES[@]}"; do if declare -F "case_$c" >/dev/null; then "case_$c"; else echo "ca lạ: $c (có: A3 A7 B1 B3 C1 D1)"; FAIL=$((FAIL+1)); fi; done
+# D2 (05/10/2026): curl ở ~ → installer coi HOME là dự án, ghi đè ~/.claude/settings.json GLOBAL. Phải DỪNG rc 3, 0 file đổi.
+case_D2(){ box d2; H="$B/home"; mkdir -p "$H/.claude"; echo '{"mine":1}' > "$H/.claude/settings.json"
+  ( cd "$H" && HOME="$H" ORCA_GRAPH_SKIP=1 bash "$SRC/harness/poc-vendor-neutral/install.sh" . --no-verify ) >"$LOG" 2>&1; rc=$?
+  { [ $rc = 3 ] && grep -q "THƯ MỤC HOME" "$LOG" && [ "$(cat "$H/.claude/settings.json")" = '{"mine":1}' ] && [ "$(ls -A "$H" | tr '\n' ' ')" = ".claude " ]; } \
+    && ok "D2 cài vào HOME: DỪNG rc 3, settings global không bị đụng, không đẻ thư mục rác" || no "D2 rc=$rc home có: $(ls -A "$H" | tr '\n' ' ')"; }
+
+# D3 (05/10/2026): install.sh đọc "$OUT/antigravity/hooks.json" mà gen-converters.py CÙNG commit không sinh → máy có Antigravity
+# chết giữa chừng (FileNotFoundError); CI không bắt vì runner không có Antigravity. Kiểm TĨNH, không phụ thuộc vendor trên máy:
+# mọi $OUT/<file> mà install.sh nhắc tới phải được gen-converters.py sinh ra.
+case_D3(){ box d3; cp -R "$SRC/harness/poc-vendor-neutral" "$B/pvn"; rm -rf "$B/pvn/out"
+  ( cd "$B/pvn" && python3 gen-converters.py ) >"$LOG" 2>&1 || { no "D3 gen-converters rc≠0"; return; }
+  MISS=""; for r in $(grep -oE '\$OUT/[A-Za-z0-9_./-]+' "$B/pvn/install.sh" | sed 's#^\$OUT/##; s#/$##' | sort -u); do
+    case "$r" in *.*) [ -e "$B/pvn/out/$r" ] || MISS="$MISS $r";; esac; done
+  [ -z "$MISS" ] && ok "D3 mọi \$OUT/<file> install.sh đọc đều do gen-converters sinh" || no "D3 install.sh đọc file gen-converters KHÔNG sinh:$MISS"; }
+
+CASES=("$@"); [ ${#CASES[@]} -gt 0 ] || CASES=(A3 A7 B1 B3 C1 D1 D2 D3)
+for c in "${CASES[@]}"; do if declare -F "case_$c" >/dev/null; then "case_$c"; else echo "ca lạ: $c (có: A3 A7 B1 B3 C1 D1 D2 D3)"; FAIL=$((FAIL+1)); fi; done
 LEAK="$(pgrep -f "$T" | wc -l | tr -d ' ')"; [ "$LEAK" = 0 ] || { echo "  ⚠ còn $LEAK process chạy từ thư mục tạm của test"; FAIL=$((FAIL+1)); }
 echo ""; echo "install-flows: $PASS PASS · $FAIL FAIL · $SKIP SKIP"; [ "$FAIL" = 0 ]

@@ -2,10 +2,10 @@
 # install.sh — cài PoC vendor-neutral harness vào 1 dự án bằng MỘT lệnh (luồng B0–B4).
 #
 # Usage:
-#   bash install.sh [project_root] [--vendor claude,opencode,cursor,codex,kiro,antigravity] [--no-verify]
+#   bash install.sh [project_root] [--vendor claude,opencode,cursor,codex,kiro] [--no-verify]
 #
 #   project_root  thư mục dự án đích (mặc định: thư mục hiện tại)
-#   --vendor      ép danh sách vendor; bỏ qua → tự DÒ (.claude/ · .agents/ · GEMINI.md · opencode.json · .cursor/ · .kiro/ · .codex)
+#   --vendor      ép danh sách vendor; bỏ qua → tự DÒ (.claude/ · opencode.json · .cursor/ · .kiro/ · .codex)
 #   --no-verify   bỏ bước chạy demo.sh + test-broad.sh
 #   --no-graph    KHÔNG kéo module orca-graph (repo riêng Rheinmir/orca-graph). Mặc định: option này ĐÃ TICK —
 #                 có terminal thì hiện checklist, Enter là kéo; không terminal (agent/CI chạy curl|bash) thì kéo luôn.
@@ -59,6 +59,13 @@ if [ "$FORCE_FRAMEWORK" != 1 ] && { [ "$ROLE_DECL" = framework ] || { [ -z "$ROL
   printf '\033[1;31m[install]\033[0m %s\n' "DỪNG — $ROOT là REPO FRAMEWORK ($([ -n "$ROLE_DECL" ] && echo 'repo_role: framework trong .overstack.yaml' || echo 'có fdk/wiki/, chưa khai repo_role'))." >&2
   echo "           Installer sẽ ghi đè .github/workflows/harness.yml và .claude/settings.json của chính framework — chưa ghi gì cả." >&2
   echo "           Muốn thử installer: chạy trong một thư mục dự án khác (vd mktemp -d). Cố ý thì thêm cờ --i-know-this-is-the-framework." >&2
+  exit 3
+fi
+# ── CHẶN: đích là THƯ MỤC HOME ── (05/10/2026: curl ở ~ → "dự án" = home → .claude/settings.json của nó CHÍNH LÀ settings
+# GLOBAL của Claude Code; migrate/merge ghi thẳng vào đó, đẻ ~/harness ~/.harness ~/.llmwiki rác và làm hỏng mọi hook.)
+if [ "$ROOT" = "$(cd "$HOME" && pwd)" ]; then
+  printf '\033[1;31m[install]\033[0m %s\n' "DỪNG — đang cài vào THƯ MỤC HOME ($ROOT), không phải một dự án. Chưa ghi gì cả." >&2
+  echo "           cd vào thư mục dự án rồi chạy lại lệnh curl (phần global — skills, hook — cài kèm theo)." >&2
   exit 3
 fi
 # ── MODULE TUỲ CHỌN sống ở REPO RIÊNG — chỉ kéo khi được tick; mặc định ĐÃ TICK, Enter là kéo đủ ──────────
@@ -197,10 +204,6 @@ if [ -z "$VENDORS" ]; then
   [ -d "$ROOT/.cursor" ] && det="${det}cursor,"
   { [ -f "$ROOT/AGENTS.md" ] || [ -d "$ROOT/.codex" ]; } && det="${det}codex,"
   [ -d "$ROOT/.kiro" ] && det="${det}kiro,"
-  # chỉ dò theo dấu hiệu TRONG DỰ ÁN như mọi vendor khác — dò theo máy (`agy` trong PATH, ~/.gemini/antigravity-cli) làm mọi dự án mới trên
-  # máy có Antigravity bị coi là dự án Antigravity, nhánh mặc định Claude bên dưới không chạy, thiếu .claude/settings.json (fresh-install đỏ 01/10/2026).
-  # Máy có Antigravity mà dự án chưa có .agents/ → cài thêm bằng --vendor claude,antigravity.
-  { [ -d "$ROOT/.agents" ] || [ -f "$ROOT/GEMINI.md" ]; } && det="${det}antigravity,"
   VENDORS="${det%,}"
   # harness chạy TRONG Claude Code → nếu không dò ra vendor nào, mặc định Claude
   # (tạo .claude/settings.json để wire PreToolUse hook, kể cả project chưa có .claude/)
@@ -328,83 +331,12 @@ fi
 if has cursor; then mkdir -p "$ROOT/.cursor/rules"; cp "$OUT/cursor/.cursor/rules/harness.mdc" "$ROOT/.cursor/rules/"; log "  ✓ Cursor   → .cursor/rules/harness.mdc (advisory)"; fi
 if has kiro;   then mkdir -p "$ROOT/.kiro/steering"; cp "$OUT/kiro/.kiro/steering/harness.md" "$ROOT/.kiro/steering/"; log "  ✓ Kiro     → .kiro/steering/harness.md (advisory)"; fi
 if has codex;  then warn "  Codex → thêm nội dung out/codex/AGENTS.snippet.md vào AGENTS.md (advisory)"; fi
-# Antigravity (workspace hook + always-on project rule)
-if has antigravity; then
-  mkdir -p "$ROOT/.agents/rules"
-  python3 - "$ROOT" "$OUT/antigravity/hooks.json" "$OUT/antigravity/rules/overstack-harness.md" <<'PY'
-import json, os, shutil, sys
-
-root, snippet, rule = sys.argv[1:]
-agents = os.path.join(root, ".agents")
-hooks_path = os.path.join(agents, "hooks.json")
-marker = "antigravity-hook.py"
-
-cur = json.load(open(hooks_path, encoding="utf-8")) if os.path.exists(hooks_path) else {}
-add = json.load(open(snippet, encoding="utf-8"))
-
-# Remove only the previous overstack handler; preserve other named hooks and groups.
-for name, cfg in list(cur.items()):
-    if not isinstance(cfg, dict):
-        continue
-    for event in ("PreToolUse", "PostToolUse"):
-        groups = cfg.get(event)
-        if not isinstance(groups, list):
-            continue
-        kept = []
-        for group in groups:
-            if not isinstance(group, dict):
-                kept.append(group)
-                continue
-            handlers = [h for h in (group.get("hooks") or [])
-                        if marker not in (h.get("command") or "")]
-            if handlers:
-                group = dict(group)
-                group["hooks"] = handlers
-                kept.append(group)
-        if kept:
-            cfg[event] = kept
-        else:
-            cfg.pop(event, None)
-    if name == "overstack-harness" and not any(k in cfg for k in ("PreToolUse", "PostToolUse", "PreInvocation", "PostInvocation", "Stop")):
-        cur.pop(name, None)
-
-for name, cfg in add.items():
-    dst = cur.setdefault(name, {})
-    for event, groups in cfg.items():
-        dst.setdefault(event, []).extend(groups)
-
-new = json.dumps(cur, ensure_ascii=False, indent=2) + "\n"
-old = open(hooks_path, encoding="utf-8").read() if os.path.exists(hooks_path) else None
-if new != old:
-    if old is not None:
-        shutil.copy(hooks_path, hooks_path + ".bak")
-    with open(hooks_path, "w", encoding="utf-8") as f:
-        f.write(new)
-    status = "merged"
-else:
-    status = "unchanged"
-
-rules_path = os.path.join(agents, "rules", "overstack-harness.md")
-new_rule = open(rule, encoding="utf-8").read()
-old_rule = open(rules_path, encoding="utf-8").read() if os.path.exists(rules_path) else None
-if new_rule != old_rule:
-    if old_rule is not None:
-        shutil.copy(rules_path, rules_path + ".bak")
-    with open(rules_path, "w", encoding="utf-8") as f:
-        f.write(new_rule)
-    rule_status = "updated"
-else:
-    rule_status = "unchanged"
-
-print("  \033[1;32m✓\033[0m Antigravity → .agents/hooks.json (%s), .agents/rules/overstack-harness.md (%s)" % (status, rule_status))
-PY
-fi
 
 # ── B4. Verify ──
 if [ "$VERIFY" = 1 ]; then
   log "B4 · verify"
-  if bash "$DEST/demo.sh" >/dev/null 2>&1; then log "  ✓ demo.sh (16)"; else warn "  demo.sh FAIL — kiểm pyyaml"; fi
-  if bash "$DEST/test-broad.sh" >/dev/null 2>&1; then log "  ✓ test-broad.sh (88)"; else warn "  test-broad.sh FAIL"; fi
+  if bash "$DEST/demo.sh" >/dev/null 2>&1; then log "  ✓ demo.sh (13)"; else warn "  demo.sh FAIL — kiểm pyyaml"; fi
+  if bash "$DEST/test-broad.sh" >/dev/null 2>&1; then log "  ✓ test-broad.sh (80)"; else warn "  test-broad.sh FAIL"; fi
 fi
 
 # ── (tùy chọn) trụ 3: seed khung llmwiki (nhanh, idempotent — không đè file có sẵn) ──
