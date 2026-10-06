@@ -83,6 +83,8 @@
 | [map-not-territory](concepts/map-not-territory.md) | concept | map-not-territory — tìm unknowns trước khi prompt |
 | [artifact-selfpath-relative](sources/evals/artifact-selfpath-relative.md) | eval | Golden: artifact-selfpath-relative |
 | [downstream-layout-awareness](sources/evals/downstream-layout-awareness.md) | eval | Golden đo agent sửa hook trong repo framework có biết code chạy ở đâu trên máy khách: stamp .llmwiki/.harness-stamp, engine ~/.claude/harness, resolver dùng chung, chứng minh bằng fixture layout dot |
+| [html-favicon-source](sources/evals/html-favicon-source.md) | eval | Golden: favicon chữ O là nguồn duy nhất, gắn qua --apply; trang tự lo theme dùng --favicon-only |
+| [ui-kit-hero](sources/evals/ui-kit-hero.md) | eval | Golden: màn đại diện của UI kit cạnh intro, clone từ data-kit-rep vào data-kit-hero |
 <!-- index:auto:end -->
 | [harness-local](concepts/harness-local.md) | concept | harness-local — harness RIÊNG của dự án |
 | [ADR-011-project-local-harness](sources/adr/ADR-011-project-local-harness.md) | source | "ADR-011: project-local harness — dự án tự phát triển rule riêng (P-namespace, sandbox-safe)" |

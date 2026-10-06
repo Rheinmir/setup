@@ -46,6 +46,7 @@ WEIGHT_TEXT = 400          # nội dung — như theme mẫu
 WEIGHT_STRONG = 600        # <strong>/<b>/th
 WEIGHT_HEADING = 600       # tiêu đề: Newsreader SemiBold (serif — 800 của sans cũ đọc nặng, user 22/09 "font này cũng lởm luôn")
 TRACK_HEADING = "-.01em"   # CHỈ h1/h2: theme siết -.035 → -.055em ở tiêu đề lớn; h3/h4 (~16px) siết vào là dính chữ (soát ảnh 21/09)
+TEXT_EX_HEIGHT = 0.53      # chiều cao chữ "x" / em của Be Vietnam Pro (OS/2 sxHeight, assets/fonts) — tiêu đề ép theo số này; test gác lệch font
 
 
 def woff2(w: int) -> Path:
@@ -108,9 +109,15 @@ def head_css() -> str:
             f"strong,b,th{{font-weight:var(--fw-strong)}}h1,h2,h3,h4{{font-family:var(--font-display);font-weight:var(--fw-heading)}}h1,h2{{letter-spacing:var(--ls-heading)}}"
             f"code,pre,kbd,samp{{font-family:var(--font-mono)}}"
             # thang tiêu đề MẶC ĐỊNH to → nhỏ (user 22/09/2026 "các cấp header phải thêm chuẩn từ to tới nhỏ"); :where = độ ưu tiên 0
-            # → trang tự đặt vẫn thắng, và luật heading-scale của cổng chạy thật bắt khi thứ tự sai
-            f":where(h1){{font-size:2.5rem;line-height:1.25}}:where(h2){{font-size:1.75rem;line-height:1.42;margin:40px 0 24px}}"
-            f":where(h3){{font-size:1.375rem;line-height:1.55;margin:32px 0 16px}}:where(h4){{font-size:1.125rem;line-height:1.5;margin:24px 0 12px}}"
+            # → trang tự đặt vẫn thắng, và luật heading-scale của cổng chạy thật bắt khi thứ tự sai.
+            # Tỉ lệ theo mẫu m3e-canvas docs/protected/ui-kit.html (user chọn 29/09/2026): h1 2,8× · h2 2× chữ nội dung.
+            # font-size-adjust ép Newsreader (chữ "x" 0,44em) về chữ "x" của Be Vietnam Pro, nếu không cùng px mà
+            # tiêu đề trông nhỏ hơn ~17% (user báo 29/09: "font làm header nó bị nhỏ sẵn so với font nội dung").
+            f":where(h1,h2,h3,h4){{font-size-adjust:ex-height {TEXT_EX_HEIGHT}}}"
+            f":where(h1){{font-size:2.8125rem;line-height:1.16}}:where(h2){{font-size:2rem;line-height:1.25;margin:48px 0 24px}}"
+            f":where(h3){{font-size:1.5rem;line-height:1.35;margin:32px 0 16px}}:where(h4){{font-size:1.25rem;line-height:1.4;margin:24px 0 12px}}"
+            # cỡ chữ nội dung mặc định 14px (user 01/10/2026: "nhỏ hơn 2 đơn vị", 16 → 14); :where → trang tự đặt vẫn thắng
+            f":where(body){{font-size:.875rem}}"
             f":where(p,ul,ol,blockquote){{margin:0 0 24px}}"
             + chart_css())
 

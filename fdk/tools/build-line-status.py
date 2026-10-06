@@ -307,7 +307,6 @@ def render_html(model, out_html_path):
 <html lang="vi"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Line status — dây chuyền Ralph</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a84ff'/%3E%3C/svg%3E">
 <style>
 :root{{--bg:#eef4fb;--card:#fff;--ink:#1c2b3a;--sub:#5a6f88;--line:#c9d8ec;--acc:#2f6fdb}}
 @media(prefers-color-scheme:dark){{:root{{--bg:#0f1722;--card:#1b2534;--ink:#e5edf7;--sub:#94a8c0;--line:#2b3b52;--acc:#7aa7f7}}}}

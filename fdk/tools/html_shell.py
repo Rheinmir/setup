@@ -49,6 +49,15 @@ def is_docs_shell(html: str) -> bool:
     return bool(m) and 'class="logo' in m.group(0) and len(re.findall(r'<a\b(?![^>]*class="[^"]*\blogo)[^>]*href="#[^"]', m.group(0))) >= 4
 
 
+def is_side_nav(html: str) -> bool:
+    """Trang KHÔNG phải docs-shell nhưng có sidebar: nav mang `.brand`/`.logo` + ≥ 4 link bất kỳ (trang graph của engine, control-room,
+    trang index). User 30/09: "thay thế mặc định thì áp hết" → các trang này cũng đổi sidebar sang rail TOC map, nhưng CHỈ phần điều hướng
+    (rail + cụm điều khiển + scroll spy); mind map, skip-link, favicon… vẫn là việc riêng của docs-shell và của R20."""
+    m = re.search(r"<nav\b.*?</nav>", html, re.S)
+    return bool(m) and bool(re.search(r'class="[^"]*\b(?:logo|brand)\b', m.group(0))) \
+        and len(re.findall(r'<a\b(?![^>]*class="[^"]*\b(?:logo|brand)\b)[^>]*\bhref="(?!#")[^"]', m.group(0))) >= 4
+
+
 def nav_icon(label: str) -> str:
     low = label.lower()
     for pat, body in _ICONS:
@@ -65,26 +74,90 @@ def _vendor():
     return m
 
 
+def _list(q: str) -> str:
+    """CSS chế độ DANH SÁCH của rail dày; `q` = điều kiện trên nav (đang bật nhãn, hoặc đang rê chuột). Khung ngoài HOÀN TOÀN trong suốt,
+    mỗi dòng là thẻ nhãn riêng + chấm (user 30/09: "bọc kiểu cả sidebar là sai, div ngoài cùng transparent, từng dòng wrap trong container riêng")."""
+    n = ":root nav.ovs-side.nw-tocmap" + q
+    # mask: danh sách cuộn KHÔNG vẽ xuống vùng cụm điều khiển góc phải dưới (hộp nav vẫn cao trọn màn để vùng rê không hụt)
+    return (n + "{width:auto;max-width:calc(100vw - 1rem);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;"
+            "-webkit-mask-image:linear-gradient(#000 calc(100% - 120px),transparent calc(100% - 104px));mask-image:linear-gradient(#000 calc(100% - 120px),transparent calc(100% - 104px))}"
+            + n + ">:not(.ovs-na){display:none}"
+            + n + " a.ovs-na{position:static;justify-content:flex-end}"
+            + n + " a.ovs-na::before{position:static;opacity:1;visibility:visible;transform:none;pointer-events:auto}")
+
+
+_LV = ((1, 40, 58), (2, 40, 58), (3, 28, 42), (4, 20, 32), (5, 14, 24), (6, 14, 24))   # chấm nhạt dần theo cấp heading (mẫu: toc-map-item-background-1..6); user 30/09 "dot đậm bất thường" ở 76% → hạ còn 40%
 CSS = (
-    # sidebar: icon tile + viên active có chấm (KHÔNG sọc cạnh — luật side-stripe/rounded-edge)
-    "nav a.ovs-na{display:flex;align-items:center;gap:10px;padding:6px 10px;font-size:13px;font-weight:500;color:var(--ovs-ink,inherit)}"
-    "nav a.ovs-na .ic{flex:none;width:24px;height:24px;border-radius:7px;display:grid;place-items:center;background:var(--ic,#0a84ff);"
-    "box-shadow:inset 0 1px 0 rgba(255,255,255,.35)}"
-    "nav a.ovs-na .ic svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}"
-    "nav a.ovs-na .ic b{color:#fff;font-size:12px;font-weight:700;line-height:1}"
-    "nav a.ovs-na .ovs-lbl{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}"
-    "nav a.ovs-na.active{background:color-mix(in srgb,var(--ovs-accent,#0a84ff) 14%,transparent);color:var(--ovs-ink,inherit);font-weight:600}"
-    "nav a.ovs-na.active::after{content:'';flex:none;width:6px;height:6px;border-radius:50%;background:var(--ovs-accent,#0a84ff)}"
+    # ĐIỀU HƯỚNG = TOC MAP (user 30/09/2026, /goal "đổi bộ điều hướng … thành kiểu cuộn này"): rail chấm mục lục mép phải thay sidebar trái.
+    # Hai khối .nw-tip + .nw-tocmap chép từ m3e-canvas docs/namuwiki-ui-kit.html dòng 191–215; bỏ dòng chết `.nw-tocmap a::before{position:static}` (thua độ ưu tiên), đổi token --espejo-* → --ovs-* (thẻ nhãn: kính mờ không viền thay thẻ có viền của mẫu — user chọn 30/09), easing →
+    # ease-out + bỏ `transition:all` (luật motion-ease-out, transition-all của repo), gói luật :hover vào @media(hover:hover) (màn cảm ứng: hover dính sau khi chạm) và thêm :focus-visible.
+    ".nw-tip{position:relative}"
+    ".nw-tip[data-tooltip]::before{content:attr(data-tooltip);position:absolute;right:100%;margin:0 .5rem 0 0;padding:.15rem .4rem;white-space:nowrap;pointer-events:none;z-index:509;"
+    "font-size:.9rem;line-height:1.5;color:var(--ovs-ink,#111);background-color:var(--ovs-surface2,#fff);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:6px;"
+    "box-shadow:0 1px 2px rgba(15,30,60,.08),0 6px 16px -6px rgba(15,30,60,.22);opacity:0;visibility:hidden;transform:translateX(1rem);transition:opacity .1s ease-out,transform .1s ease-out,visibility .1s ease-out}"
+    ".nw-tip[data-tooltip]:focus-visible::before,.nw-tip[data-tooltip][data-tooltip-show]::before,[data-tooltip-show-children] .nw-tip[data-tooltip]::before"
+    "{opacity:1;visibility:visible;transform:translateX(0);pointer-events:auto}"
+    "[data-hover]:not([data-dense]) .nw-tip[data-tooltip]::before{opacity:1;visibility:visible;transform:translateX(0);pointer-events:auto}"
+    ".nw-tocmap a{position:absolute;right:0;display:flex;align-items:center;justify-content:center;text-decoration:none}"
+    ".nw-tocmap a::before{max-width:calc(100vw - 4rem);overflow:hidden;text-overflow:ellipsis}"                     # màn hẹp: nhãn dài cắt "…" thay vì tràn mép trái
+    ".nw-tocmap a:hover::before,.nw-tocmap a.is-hover::before{background-color:color-mix(in srgb,var(--ovs-accent,#0a84ff) 12%,var(--ovs-surface2,#fff));"
+    "transition:background-color .05s ease-out}"
+    ".nw-tocmap .hit{display:flex;align-items:center;justify-content:flex-end;width:1rem;height:1.75rem;padding:0 .5rem 0 0;box-sizing:content-box}"
+    ".nw-tocmap .dot{display:inline-block;width:5px;height:5px;border-radius:100%;background-color:var(--d);transition:background-color .05s ease-out}"
+    ".nw-tocmap a:hover .dot,.nw-tocmap a.is-hover .dot{background-color:var(--dh)}"
+    + "".join(f".nw-tocmap .l{n}{{--d:color-mix(in srgb,var(--ovs-ink,#111) {d}%,transparent);--dh:color-mix(in srgb,var(--ovs-ink,#111) {h}%,transparent)}}" for n, d, h in _LV) +
+    # <nav> của trang (tác giả viết kiểu sidebar: .logo + nhãn nhóm + link) → rail cố định mép phải, dưới toolbar. `:root` + 2 class → thắng CSS nav
+    # riêng của trang dù trang đặt sau. Thứ không phải chấm (logo, nhãn nhóm, nút ✕ cũ) ẩn bằng visibility — link lồng trong khối bọc vẫn hiện được.
+    ":root nav.ovs-side.nw-tocmap{position:fixed;inset:0 0 0 auto;z-index:40;display:block;box-sizing:border-box;width:1.5rem;height:auto;min-height:0;margin:0;padding:24px 0 112px;overflow:visible;"
+    "background:none;backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none;border:0;transform:none;transition:none}"
+    # VÙNG RÊ (user 30/09, ba lần nhắc: "tính từ cạnh phải cộng thêm xx px", "hover trên khoảng đỏ là tự động hiện ra"): JS nghe mousemove, con trỏ cách mép phải
+    # cửa sổ ≤ 176px (hoặc đang nằm trên nhãn) thì gắn data-hover lên nav → bung nhãn. Không dùng hộp bắt chuột vô hình nên không chắn bấm / bôi chữ ở nội dung.
+    # Lúc NGHỈ chấm mờ gần như không thấy (user: "dot mờ gần như không thấy khi đang collapsed"), rõ lên khi bung.
+    ":root nav.ovs-side.nw-tocmap a.ovs-na .hit{opacity:.22;transition:opacity .12s ease-out}"
+    ":root nav.ovs-side.nw-tocmap:is([data-hover],[data-tooltip-show-children]) a.ovs-na .hit,:root nav.ovs-side.nw-tocmap a.ovs-na:focus-visible .hit{opacity:1}"
+    ":root nav.ovs-side.nw-tocmap::before,:root nav.ovs-side.nw-tocmap::after{content:none}"
+    ":root nav.ovs-side.nw-tocmap :not(.ovs-na,.ovs-na *){position:static;visibility:hidden}"
+    ":root nav.ovs-side.nw-tocmap a.ovs-na{visibility:visible;left:auto;width:auto;height:auto;min-height:0;margin:0;padding:0;border:0;border-radius:0;overflow:visible;"
+    "background:none;box-shadow:none;font-size:0;line-height:0}"                                 # link không có chữ (nhãn là ::before cỡ rem) — cỡ 0 để cổng title-scale không tính nó là "mục nav"
+    # RAIL DÀY (JS gắn data-dense khi số mục × 1.75rem > chiều cao rail, vd design showcase 39 mục): nhãn cao hơn bước chấm nên bung hết sẽ chồng
+    # nhau → rê chuột vào rail HOẶC bấm nút mục lục đều mở DANH SÁCH cuộn được: khung ngoài trong suốt, mỗi mục một thẻ nhãn riêng + chấm, bấm được (user 30/09).
+    # shortcut: danh sách ẩn mọi con trực tiếp không phải link (logo, nhãn nhóm) — link lồng trong khối bọc sẽ mất ở chế độ này; nâng cấp khi có trang > 28 mục mà nav lồng khối.
+    + _list("[data-dense][data-tooltip-show-children]") + _list("[data-dense][data-hover]") +
+    # tên class `.dot` / `.hit` của mẫu trùng class riêng của trang (230926-overnight-loop-prd: `.dot{margin-top:8px}` + màu theme tối) → đặt lại trong phạm vi rail
+    ":root nav.ovs-side.nw-tocmap a.ovs-na .hit{margin:0;border:0;background:none;box-shadow:none}"
+    ":root nav.ovs-side.nw-tocmap a.ovs-na .dot{flex:none;margin:0;border:0;box-shadow:none;background:var(--d)}"
+    ":root nav.ovs-side.nw-tocmap a.ovs-na:hover .dot,:root nav.ovs-side.nw-tocmap a.ovs-na.is-hover .dot{background:var(--dh)}"
+    ":root nav.ovs-side.nw-tocmap a.ovs-na.active .dot{background:var(--ovs-accent,#0a84ff)}"                 # chấm của mục đang xem (scroll spy)
+    # THẺ NHÃN = kính mờ không viền (user chọn trong 4 bản so sánh, 30/09). PHÂN CẤP BẰNG FONT + CỠ CHỮ, một màu chữ (user chọn trong 4 bản so sánh
+    # thứ hai, sau khi thử phân bằng màu và chê "màu trông hơi xấu"): JS gắn data-lv = cấp heading của đích —
+    # cấp 1 (tên trang / #top) font tiêu đề 18px đậm 700 · cấp 2 font tiêu đề 16px đậm 600 · cấp 3 font nội dung 13.5px · cấp 4 trở xuống 12px.
+    # Chưa có JS → mọi nhãn coi như cấp 2. Mục ĐANG XEM: nền thẻ pha màu nhấn + chấm màu nhấn.
+    ":root nav.ovs-side.nw-tocmap a.ovs-na::before{font-family:var(--font-display,Georgia,serif);font-size:16px;font-weight:600;line-height:1.35;font-style:normal;"
+    "letter-spacing:0;text-transform:none;color:var(--ovs-ink,#111)}"
+    ":root nav.ovs-side.nw-tocmap a.ovs-na[data-lv=\"1\"]::before{font-size:18px;font-weight:700}"
+    ":root nav.ovs-side.nw-tocmap a.ovs-na[data-lv=\"3\"]::before{font-family:var(--font-text,sans-serif);font-size:13.5px;font-weight:400}"
+    ":root nav.ovs-side.nw-tocmap a.ovs-na:is([data-lv=\"4\"],[data-lv=\"5\"],[data-lv=\"6\"])::before{font-family:var(--font-text,sans-serif);font-size:12px;font-weight:400}"
+    ":root nav.ovs-side.nw-tocmap a.ovs-na.active::before{background-color:color-mix(in srgb,var(--ovs-accent,#0a84ff) 16%,var(--ovs-surface2,#fff))}"
+    ":root nav.ovs-side.nw-tocmap a.ovs-na>:not(.hit){display:none}"                 # mực ripple riêng của trang chèn vào link → không vẽ trên chấm
+    ":root body{padding-left:0}"                                    # cột nội dung lấy lại bề ngang sidebar cũ
+    ":root .nav-toggle,:root .nav-close{display:none!important}"    # nút ☰/✕ của sidebar cũ
+    "@media print{:root nav.ovs-side.nw-tocmap,.ovs-bar{display:none}}"
+    # CỤM ĐIỀU KHIỂN NỔI góc phải dưới (user chọn 30/09, thay dải dính trên bị chê "top menu"): thẻ dọc kiểu nhóm nút nổi nw-ctl của mẫu, mỗi ô 2.5rem,
+    # ngăn nhau bằng viền: nút sáng/tối + nút bật nhãn mục lục (màn cảm ứng không có hover). Rail chấm dừng phía trên cụm (inset đáy 112px).
+    ".ovs-bar{position:fixed;right:12px;bottom:16px;z-index:41;display:flex;flex-direction:column;align-items:stretch;margin:0;padding:0;overflow:hidden;"
+    "background:var(--ovs-bg,#fff);border:1px solid var(--ovs-border,rgba(0,0,0,.12));border-radius:6px;box-shadow:0 5px 8px -3px rgba(0,0,0,.165)}"
+    ".ovs-bar>*+*{border-top:1px solid var(--ovs-border,rgba(0,0,0,.12))}"
+    ":root .ovs-bar .ovs-navbtn,:root .ovs-bar .ovs-theme{position:static;flex:none;width:auto;min-width:2.5rem;height:2.5rem;min-height:0;display:grid;place-items:center;margin:0;padding:0;"
+    "border-width:0;border-radius:0;background:none;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;color:var(--ovs-ink,inherit);cursor:pointer}"
+    ":root .ovs-bar>*+.ovs-navbtn,:root .ovs-bar>*+.ovs-theme{border-top-width:1px}"
+    ":root .ovs-bar .ovs-theme span{display:none}"                 # ô vuông chỉ có icon; tên trạng thái vẫn ở aria-label / aria-checked
+    ".ovs-navbtn[aria-pressed=true]{background:color-mix(in srgb,var(--ovs-accent,#0a84ff) 16%,var(--ovs-bg,#fff))}"
+    ".ovs-navbtn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}"
+    ":root .ovs-bar .theme-row{position:static;flex:none;justify-content:center;margin:0;padding:8px;border-width:0;background:none}"   # hàng nút gạt riêng của trang (dark-mode-maker)
+    ":root .ovs-bar .theme-row .lbl,:root .ovs-bar .theme-row>span:first-child:not(.theme-switch){display:none}"
     ".ovs-progress{position:fixed;left:0;right:0;top:0;height:3px;z-index:2147483001;pointer-events:none}"
-    # nút đổi giao diện VÀO sidebar (hàng cuối, dính đáy) thay vì viên nổi góc phải — user 22/09 "nút chuyển darklight mode đâu ?"
-    # margin-top:auto → đáy nav (flex dọc); KHÔNG margin âm + nền riêng: user 24/09 "slop" — dải trắng x=4→227 lệch cả mép nav lẫn cột mục (luật band-misaligned)
-    "nav .ovs-theme-row{position:sticky;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:12px;margin:auto 0 0;"
-    "padding:12px 10px;border-top:1px solid var(--ovs-border,rgba(0,0,0,.12));background:inherit;font-size:13px;color:var(--ovs-ink,inherit)}"
-    "nav .ovs-theme-row .ovs-theme{position:static;backdrop-filter:none;-webkit-backdrop-filter:none}"
     ".ovs-progress i{display:block;height:100%;width:0;background:var(--ovs-accent,#0a84ff);transition:width .12s ease-out}"
-    # title-scale: tên trang ≥ 1,2 × mục nav (13px) — logo docs-shell cũ 14–15px ngang hàng mục (quét 22/09/2026)
-    ":root nav .logo{font-size:18px;line-height:1.25;letter-spacing:-.015em}:root nav .logo small{font-size:11px;letter-spacing:0}"   # :root → thắng nav .logo của trang dù trang đặt sau
-        # a11y
+    # a11y
     ".skip-link{position:absolute;left:12px;top:-60px;z-index:2147483001;padding:8px 14px;border-radius:10px;background:var(--ovs-surface2,#fff);"
     "color:var(--ovs-ink,#111);font-size:13px;text-decoration:none;border:1px solid var(--ovs-border,rgba(0,0,0,.12))}"
     ".skip-link:focus{top:12px}"
@@ -116,10 +189,31 @@ JS_SPY = ("(function(){var L=[].slice.call(document.querySelectorAll('nav a.ovs-
           "var by={};L.forEach(function(a){var t=document.getElementById(decodeURIComponent(a.getAttribute('href').slice(1)));if(t)by[t.id]=a});"
           "var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting&&by[e.target.id]){L.forEach(function(x){x.classList.remove('active')});"
           "by[e.target.id].classList.add('active')}})},{rootMargin:'-35% 0px -60% 0px'});Object.keys(by).forEach(function(id){io.observe(document.getElementById(id))})})();")
+# TOC map: cấp chấm theo heading của đích (`#top` → cấp 1; đích không có heading, hoặc link sang trang khác → cấp 3) · `top` theo vị trí đích trong trang, mục sau cách mục trước ≥ một ô 1.75rem (rail đầy thì ô co lại),
+# dồn ngược khi tràn đáy · hàng `.theme-row` (nút gạt sáng/tối skill dark-mode-maker chèn vào nav lúc chạy) dời vào cụm điều khiển nổi, không thì nó bị ẩn cùng nav · rail không đủ chỗ thì gắn data-dense (xem CSS) · tính lại khi đổi cỡ / nội dung đổi chiều cao · nút toolbar bật/tắt mọi nhãn (Esc hoặc bấm một mục thì tắt).
+JS_TOC = ("(function(){var nav=document.querySelector('nav.nw-tocmap');if(!nav)return;var L=[].slice.call(nav.querySelectorAll('a.nw-tip')),"
+          "T=L.map(function(a){var h=a.getAttribute('href')||'';return h.charAt(0)==='#'?document.getElementById(decodeURIComponent(h.slice(1))):null});"
+          "L.forEach(function(a,i){var t=T[i],h=t&&(/^H[1-6]$/.test(t.tagName)?t:t.querySelector('h1,h2,h3,h4,h5,h6')),d=a.querySelector('.dot');"
+          "var v=h?h.tagName.charAt(1):(/^#(top)?$/.test(a.getAttribute('href')||'')?'1':'3');if(d)d.className='dot l'+v;a.setAttribute('data-lv',v)});"
+          "var b=document.querySelector('.ovs-navbtn'),tr=nav.querySelector('.theme-row');if(b&&tr)b.parentNode.insertBefore(tr,b);"
+          "function lay(){var cs=getComputedStyle(nav),pt=parseFloat(cs.paddingTop)||0,H=nav.clientHeight-pt-(parseFloat(cs.paddingBottom)||0),D=document.documentElement.scrollHeight,n=L.length;if(H<=0||!n)return;"
+          "var c0=1.75*parseFloat(getComputedStyle(document.documentElement).fontSize),cell=Math.min(c0,(H-c0)/Math.max(1,n-1)),y=[],p=-cell;nav.toggleAttribute('data-dense',n*c0>H);"
+          "L.forEach(function(a,i){var t=T[i],v=t?(t.getBoundingClientRect().top+window.scrollY)/D*H:p+cell;p=y[i]=Math.max(v,p+cell)});"
+          "for(var i=n-1,m=H-c0;i>=0&&y[i]>m;i--,m-=cell)y[i]=m;"
+          "L.forEach(function(a,i){a.style.top=Math.round(pt+y[i])+'px'})}"
+          "lay();addEventListener('resize',lay);addEventListener('load',lay);if('ResizeObserver' in window)new ResizeObserver(lay).observe(document.body);"
+          "function show(on){nav.toggleAttribute('data-tooltip-show-children',on);if(!b)return;"
+          "b.setAttribute('aria-pressed',on?'true':'false');b.setAttribute('aria-label',on?'Ẩn nhãn mục lục':'Hiện nhãn mục lục')}"
+          "if(b)b.addEventListener('click',function(){show(!nav.hasAttribute('data-tooltip-show-children'))});"
+          "if(matchMedia('(hover:hover)').matches){document.addEventListener('mousemove',function(e){nav.toggleAttribute('data-hover',e.clientX>=innerWidth-176||nav.contains(e.target))},{passive:true});"
+          "document.documentElement.addEventListener('mouseleave',function(){nav.removeAttribute('data-hover')})}"
+          "nav.addEventListener('click',function(e){if(e.target.closest('a'))show(false)});"
+          "document.addEventListener('keydown',function(e){if(e.key==='Escape')show(false)})})();")
 JS_PROGRESS = ("(function(){var b=document.querySelector('.ovs-progress i');if(!b)return;function u(){var d=document.documentElement,m=d.scrollHeight-d.clientHeight;"
                "b.style.width=(m>0?Math.min(100,d.scrollTop/m*100):0)+'%'}addEventListener('scroll',u,{passive:true});u()})();")
+# KHÔNG gợn trên chấm TOC map (`:not(.nw-tip)`): khôi phục style.inset='' sau gợn xoá luôn `top` inline của chấm → chấm rơi khỏi vị trí.
 # static→relative phải kèm inset:auto: top/bottom/right sót lại (vd nút theme nổi bottom:16px) sẽ đẩy nút nhảy 16px khi bấm — user 24/09
-JS_RIPPLE = ("(function(){document.addEventListener('pointerdown',function(e){var el=e.target.closest&&e.target.closest('nav a,button,.diagram-reset');"
+JS_RIPPLE = ("(function(){document.addEventListener('pointerdown',function(e){var el=e.target.closest&&e.target.closest('nav a:not(.nw-tip),button,.diagram-reset');"
              "if(!el||matchMedia('(prefers-reduced-motion: reduce)').matches)return;var r=el.getBoundingClientRect(),s=Math.max(r.width,r.height),k=document.createElement('span');"
              "var po=el.style.position,ov=el.style.overflow,pi=el.style.inset;if(getComputedStyle(el).position==='static'){el.style.position='relative';el.style.inset='auto'}el.style.overflow='hidden';k.className='ovs-ripple';"
              "k.style.cssText='width:'+s+'px;height:'+s+'px;left:'+(e.clientX-r.left-s/2)+'px;top:'+(e.clientY-r.top-s/2)+'px';el.appendChild(k);"
@@ -130,27 +224,37 @@ FAVICON = ('<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www
 
 
 def _nav_links(nav: str) -> str:
-    """Mỗi <a href="#…"> chưa có icon → [icon tile][nhãn] (số thứ tự vào title). Nhãn lấy từ TEXT của link (bỏ tag con)."""
-    i = [0]
+    """Mỗi <a href="#…"> → một CHẤM trên rail (mẫu nw-tocmap, user 30/09): nhãn nằm trong data-tooltip + aria-label, `top` chia đều làm mặc định
+    (JS đặt lại theo vị trí heading thật). Trang đã áp bản sidebar cũ (icon tile `.ic`, nhãn `.ovs-lbl` + số thứ tự trong `title`, brand bọc
+    `.ovs-mark`) được chuyển sang; link đã là chấm thì giữ nguyên."""
+    nav = re.sub(r'<span class="ic"[^>]*>.*?</span>', "", nav, flags=re.S)
+    nav = re.sub(r'<span class="ovs-mark" aria-hidden="true">[^<]*</span><span class="ovs-brand">(.*?)</span>(</(?:a|div)>)', r"\1\2", nav, count=1, flags=re.S)
+    A = re.compile(r"<a\b([^>]*)>(.*?)</a>", re.S)
+
+    def item(attrs):
+        return "href=" in attrs and not re.search(r'href="#"', attrs) and not re.search(r'class="[^"]*\b(?:logo|brand)\b', attrs)
+
+    total, i = sum(1 for m in A.finditer(nav) if item(m.group(1))), [0]
 
     def one(m):
         attrs, inner = m.group(1), m.group(2)
-        if 'href="#' not in attrs or re.search(r'href="#"', attrs) or 'class="ic' in inner or re.search(r'class="[^"]*\blogo', attrs):
+        if not item(attrs):
             return m.group(0)
-        text = re.sub(r"<[^>]+>", "", inner).strip()
-        mn = re.match(r"^\s*(\d{1,2})\s*[·.\-:]\s*(.+)$", text, re.S)
-        lbl = mn.group(2).strip() if mn else text
-        color = ACCENTS[i[0] % len(ACCENTS)]; i[0] += 1
+        i[0] += 1
+        if re.search(r'class="[^"]*\bnw-tip\b', attrs):
+            return m.group(0)
+        t = re.search(r'\btitle="([^"]*)"', attrs)
+        text = t.group(1) if t and "ovs-lbl" in inner else re.sub(r"<[^>]+>", "", inner)
+        lab = _h.escape(" ".join(_h.unescape(text).split()), quote=True)
+        attrs = re.sub(r'\s+(?:title|style|data-tooltip|aria-label)="[^"]*"', "", attrs)
         cls = re.search(r'class="([^"]*)"', attrs)
-        attrs = (attrs.replace(cls.group(0), f'class="{cls.group(1)} ovs-na"') if cls else attrs + ' class="ovs-na"')
-        # số thứ tự KHÔNG hiện (sidebar 200px: icon + chip + nhãn → nhãn bẻ 2 dòng, luật clickable-wrap; số đã có ở nhãn section) — để trong title
-        full = _h.escape(_h.unescape(text))
-        if "title=" not in attrs:
-            attrs += f' title="{full}"'
-        return (f'<a{attrs}><span class="ic" style="--ic:{color}">{nav_icon(lbl)}</span>'
-                f'<span class="ovs-lbl">{_h.escape(_h.unescape(lbl))}</span></a>')
+        have = cls.group(1).split() if cls else []
+        new = " ".join(have + [c for c in ("ovs-na", "nw-tip") if c not in have])
+        attrs = attrs.replace(cls.group(0), f'class="{new}"') if cls else attrs + f' class="{new}"'
+        return (f'<a{attrs} data-tooltip="{lab}" aria-label="{lab}" style="top:{(i[0] - .5) / total * 100:.2f}%">'
+                '<span class="hit"><span class="dot l2"></span></span></a>')
 
-    return re.sub(r"<a\b([^>]*)>(.*?)</a>", one, nav, flags=re.S)
+    return A.sub(one, nav)
 
 
 def _mind_map(html: str) -> str:
@@ -208,7 +312,8 @@ def has_main_target(html: str) -> bool:
 
 
 def apply(html: str) -> str:
-    if not is_docs_shell(html) or re.search(r'<meta\s+name="overstack-shell"\s+content="none"', html):
+    full = is_docs_shell(html)                                      # docs-shell → đủ bộ khung; sidebar khác → chỉ đổi điều hướng
+    if not (full or is_side_nav(html)) or re.search(r'<meta\s+name="overstack-shell"\s+content="none"', html):
         return html
     v = _vendor()
     # khối CỦA MÌNH bỏ ra TRƯỚC khi tính cờ — không thì lần chạy thứ hai thấy chính spy/ripple mình chèn và
@@ -217,7 +322,7 @@ def apply(html: str) -> str:
     html = re.sub(rf'<script id="{JS_ID}">.*?</script>', "", html, flags=re.S)
     nav0 = re.search(r"<nav\b.*?</nav>", html, re.S).group(0)
     need = {
-        "icon": not re.search(r'class="ic\b|class="nav-ic', nav0),
+        "toc": not re.search(r'class="nav-ic', nav0),                       # nav tự dựng icon riêng (overstack.html) → không đụng
         "skip": "skip-link" not in html,
         "fav": not re.search(r'<link\b[^>]*\brel="(?:shortcut )?icon"', html),
         "spy": "IntersectionObserver" not in html,
@@ -226,8 +331,10 @@ def apply(html: str) -> str:
         "plane": not re.search(r"body::before|orbDrift|ovs-orb", re.sub(rf'<style id="{STYLE_ID}">.*?</style>', "", html, flags=re.S)),
         "drag": "diagram-box" in html and not re.search(r"dataset\.draggable|data-draggable|initDraggableDiagrams", html),
     }
-    # 1) sidebar
-    if need["icon"]:
+    if not full:
+        need.update(skip=False, fav=False, ripple=False, mm=False, plane=False, drag=False)
+    # 1) nav → rail TOC map
+    if need["toc"]:
         m = re.search(r"<nav\b.*?</nav>", html, re.S)
         nav = _nav_links(m.group(0))
         html = html[:m.start()] + nav + html[m.end():]
@@ -235,20 +342,38 @@ def apply(html: str) -> str:
     # position:fixed → thanh bị nhốt trong sidebar 232px (user 24/09 "phải đặt ở đầu cả trang"). Dời cả bản cũ đã lỡ nằm trong nav.
     html = html.replace('<div class="ovs-progress" aria-hidden="true"><i></i></div>', "")
     html = re.sub(r'<div class="ovs-progress" aria-hidden="true"><i style="[^"]*"></i></div>', "", html)
-    if need["icon"] or "ovs-na" in html:
+    if full and (need["toc"] or "ovs-na" in html):
         bar = '<div class="ovs-progress" aria-hidden="true"><i></i></div>'
         # sau skip-link nếu đã có, không thì ngay sau <body>: bước 2 chèn skip-link sau <body> → lần đầu ra [skip][bar], các lần sau vẫn [skip][bar] (idempotent)
         sk = re.search(r'<a class="skip-link"[^>]*>.*?</a>', html, re.S) or re.search(r"<body\b[^>]*>", html)
         html = html[:sk.end()] + bar + html[sk.end():] if sk else html.replace("<nav", bar + "<nav", 1)   # không có <body> → trước <nav>, vẫn là con của body
-    # 1b) nút đổi giao diện của lớp nền (chèn trước </body>) → hàng cuối sidebar; idempotent (đã ở trong nav thì thôi)
-    tg = re.search(r'<button type="button" class="ovs-theme"[^>]*>.*?</button>', html, re.S)
-    nav1 = re.search(r"<nav\b.*?</nav>", html, re.S)
-    if tg and nav1 and not (nav1.start() < tg.start() < nav1.end()):
-        btn = tg.group(0); html = html[:tg.start()] + html[tg.end():]
-        nav1 = re.search(r"<nav\b.*?</nav>", html, re.S); nv = nav1.group(0)
-        at = nv.find('<div class="ovs-progress"') if '<div class="ovs-progress"' in nv else nv.rfind("</nav>")
-        nv = nv[:at] + f'<div class="ovs-theme-row"><span>Giao diện</span>{btn}</div>' + nv[at:]
-        html = html[:nav1.start()] + nv + html[nav1.end():]
+    # 1b) cụm điều khiển nổi góc phải dưới (user 30/09): nút đổi giao diện của lớp nền + nút bật nhãn mục lục. Gỡ hàng "Giao diện" cũ ở
+    # đáy sidebar và dải toolbar dính trên của bản trước; idempotent (cụm dựng lại mỗi lần, nút theme nhấc ra rồi đặt lại vào).
+    html = re.sub(r'<div class="ovs-theme-row"><span>Giao diện</span>(<button type="button" class="ovs-theme".*?</button>)</div>', r"\1", html, flags=re.S)
+    if "ovs-na" in html:
+        tg = re.search(r'<button type="button" class="ovs-theme"[^>]*>.*?</button>', html, re.S)
+        btn = tg.group(0) if tg else ""
+        if tg:
+            html = html[:tg.start()] + html[tg.end():]
+        html = re.sub(r'<div class="ovs-bar" role="toolbar".*?<!--/ovs-bar--></div>', "", html, flags=re.S)
+        bar = ('<div class="ovs-bar" role="toolbar" aria-label="Điều khiển trang">' + btn
+               + '<button type="button" class="ovs-navbtn" aria-controls="ovs-sidebar" aria-pressed="false" aria-label="Hiện nhãn mục lục">'
+               '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4 6h1M4 12h1M4 18h1"/></svg></button><!--/ovs-bar--></div>')
+        at = html.find("<nav")                                     # ngay TRƯỚC nav, ngoài <main>: main có backdrop-filter/transform sẽ nhốt position:fixed (luật fixed-trapped)
+        html = html[:at] + bar + html[at:]
+        def _side(m):                                               # đánh dấu NAV chính (nav đầu) — CSS chỉ áp cho nó, không đụng nav minh hoạ
+            t = m.group(0)
+            c = re.search(r'class="([^"]*)"', t)
+            have = c.group(1).split() if c else []                    # so CLASS, không so chuỗi — id="ovs-sidebar" chứa "ovs-side"
+            new = " ".join(have + [k for k in ("ovs-side", "nw-tocmap") if k not in have])
+            t = t.replace(c.group(0), f'class="{new}"') if c else t.replace("<nav", f'<nav class="{new}"', 1)
+            if "data-tooltip-show-children-hover" not in t:          # rê chuột vào rail → bung mọi nhãn (mẫu)
+                t = t[:-1] + " data-tooltip-show-children-hover>"
+            return t if re.search(r"\bid=", t) else t.replace("<nav", '<nav id="ovs-sidebar"', 1)
+        html = re.sub(r"<nav\b[^>]*>", _side, html, count=1)
+        nid = re.search(r'<nav\b[^>]*\bid="([^"]+)"', html)                  # nút thu gọn trỏ ĐÚNG id của sidebar (trang có id riêng, vd sc-side)
+        if nid:
+            html = html.replace('aria-controls="ovs-sidebar"', f'aria-controls="{nid.group(1)}"', 1)
     # 2) a11y: vùng nội dung chính + skip-link trỏ ĐÚNG id của nó
     target = "main"
     mm = re.search(r"<main\b([^>]*)>", html)
@@ -258,7 +383,7 @@ def apply(html: str) -> str:
             target = idm.group(1)
         else:
             html = html[:mm.start()] + f'<main id="main"{mm.group(1)}>' + html[mm.end():]
-    elif not re.search(r'\bid="main"', html) and "</nav>" in html and not wrap_blocked(html):
+    elif full and not re.search(r'\bid="main"', html) and "</nav>" in html and not wrap_blocked(html):
         i = html.find("</nav>") + len("</nav>"); j = _body_end(html)
         html = html[:i] + '<main id="main" style="display:contents">' + html[i:j] + "</main>" + html[j:]
     if need["skip"] and has_main_target(html):
@@ -277,12 +402,16 @@ def apply(html: str) -> str:
             at = at + first.end() if first else at
             html = html[:at] + block + html[at:]
     if "ovs-mindmap" in html and v:
-        css += ".ovs-mindmap{margin:0 auto;max-width:1100px;padding:8px 24px 24px}" + v.MM_CSS; js += v.MM_JS
+        # không max-width: từ khi bỏ sidebar, khung chứa rộng hơn 1100px làm mind map thành dải lơ lửng lệch mép (cổng band-misaligned, đo 30/09 trang overnight-loop-prd)
+        css += ".ovs-mindmap{padding:8px 24px 24px}" + v.MM_CSS; js += v.MM_JS
     if need["drag"] and v:
         css += v.DRAG_CSS; js += v.DRAG_JS
     if need["spy"]:
         js += JS_SPY
-    js += JS_PROGRESS
+    if 'class="ovs-progress"' in html:
+        js += JS_PROGRESS
+    if "nw-tocmap" in html:
+        js += JS_TOC
     if need["ripple"]:
         js += JS_RIPPLE
     html = re.sub(r"</head\s*>", f'<style id="{STYLE_ID}">{css}</style></head>', html, count=1, flags=re.I)

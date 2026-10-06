@@ -31,11 +31,12 @@ def _nav(html: str) -> str:
 
 # Mỗi check: True = ĐỦ. Thành phần có điều kiện (sơ đồ) chỉ hỏi khi trang có đối tượng đó.
 CHECKS = {
-    "icon-tile":  lambda h: bool(re.search(r'class="ic\b|class="nav-ic|<span[^>]*class="[^"]*\bico', _nav(h))),
+    "toolbar":    lambda h: 'role="toolbar"' in h,                             # mẫu ui-kit/namuwiki (user 30/09): điều khiển trang ở toolbar trên, sidebar không icon
     "skip-link":  lambda h: "skip-link" in h,
     "main-id":    lambda h: bool(re.search(r'<main\b|\bid="main"', h)),          # <main> id bất kỳ (skip-link trỏ đúng id đó)
     "favicon":    lambda h: bool(re.search(r'<link\b[^>]*\brel="(?:shortcut )?icon"', h)),   # thứ tự thuộc tính / file favicon đều nhận
-    "nav-toggle": lambda h: "nav-toggle" in h,
+    "nav-toggle": lambda h: "nav-toggle" in h or "ovs-navbtn" in h,
+    "toc-map":    lambda h: "nw-tocmap" in h,                                  # điều hướng = rail chấm mục lục mép phải (user 30/09, PLAN 300926-tocmap-nav)
     "scroll-spy": lambda h: "IntersectionObserver" in h,
     "ripple":     lambda h: "ripple" in h,
     "mind-map":   lambda h: bool(re.search(r'mind-?map|class="mm"', h, re.I)),   # khuôn skill dùng class "mm"

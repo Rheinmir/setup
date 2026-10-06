@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
 <!-- Mẫu output chuẩn của skill ui-kit-from-code: UI kit rút từ lib/tokens.ts của m3e-canvas (Material 3 Expressive), 28/09/2026.
-     Giữ khung 7 phần (thanh điều khiển · mục lục · intro · nền tảng · thành phần · màn mẫu · script); thay token, component, màn mẫu cho dự án đích. -->
+     Giữ khung 7 phần (thanh điều khiển · mục lục · intro + màn đại diện · nền tảng · thành phần · màn mẫu · script); thay token, component, màn mẫu cho dự án đích. -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>M3E Canvas UI Kit</title>
@@ -68,7 +68,11 @@ main { padding: 0 32px 96px; min-width: 0; }
 .seg button[aria-pressed="true"] { background: var(--m3-secondaryContainer); color: var(--m3-onSecondaryContainer); border-color: transparent; }
 .seg .ms { font-size: 18px; }
 
-.intro { padding: 40px 0 8px; max-width: 760px; }
+.intro { padding: 40px 0 8px; display: grid; grid-template-columns: minmax(0, 640px) auto; gap: 40px; align-items: center; justify-content: space-between; }
+/* màn đại diện: bản clone của màn [data-kit-rep] ở #screens, đặt cạnh intro để thấy ngay app trông ra sao */
+.kit-hero { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.kit-hero .phone { zoom: .5; }
+.kit-hero a { font-family: var(--mono); font-size: 12px; color: var(--m3-primary); }
 .intro .eyebrow { font-family: var(--mono); font-size: 12px; color: var(--m3-primary); letter-spacing: .3px; }
 .intro h1 { font-size: 45px; line-height: 52px; font-weight: 400; margin: 8px 0 12px; letter-spacing: 0; text-wrap: balance; }
 .intro p { font-size: 16px; line-height: 24px; color: var(--m3-onSurfaceVariant); margin: 0; max-width: 64ch; }
@@ -339,11 +343,12 @@ table.tok td:first-child { font-family: var(--mono); font-size: 12px; }
   .side { display: none; }
   main { padding: 0 16px 80px; }
   .grid, .grid.wide { grid-template-columns: 1fr; }
+  .intro { grid-template-columns: 1fr; }
   .intro h1 { font-size: 34px; line-height: 42px; }
   .type-row { grid-template-columns: 1fr; gap: 2px; }
 }
 </style>
-</head>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%27-18 -786 815 815%27%3E%3Cstyle%3Epath%7Bfill:%23111%7D%40media %28prefers-color-scheme:dark%29%7Bpath%7Bfill:%23f2f2f2%7D%7D%3C/style%3E%3Cpath transform=%27scale%281,-1%29%27 d=%27M199.31210327148438 603.3731842041016 260.95220947265625 628.9676971435547C260.95220947265625 521.2086181640625 260.9541015625 413.4495391845703 260.9541015625 305.69044494628906L191.6516571044922 276.154541015625C174.88037109375 323.5634002685547 165.92764282226562 376.11016845703125 165.92764282226562 429.61871337890625C165.92764282226562 493.5791931152344 178.068359375 552.0941772460938 199.31211853027344 603.3731842041016ZM217.31954956054688 641.2168426513672C245.6704559326172 693.5884704589844 284.15870666503906 736.5945434570312 328.7041015625 767.8300933837891L314.201171875 786.3330230712891C163.14163208007812 725.0359954833984 42.342010498046875 572.3384246826172 42.342010498046875 366.32122802734375C42.342010498046875 140.77476501464844 182.31382751464844 -28.564682006835938 350.0135955810547 -28.564682006835938C525.0232086181641 -28.564682006835938 735.9516143798828 190.85427856445312 735.9516143798828 419.0563049316406C735.9516143798828 589.1531829833984 628.3419952392578 711.2011108398438 505.201171875 765.0000152587891ZM201.3350067138672 251.3717803955078 389.9521484375 330.75392150878906 390.0164031982422 682.5583801269531 392.2841796875 683.5000152587891C407.72547912597656 676.7563018798828 422.4015197753906 669.4654998779297 436.3193054199219 661.6544036865234C436.3193054199219 468.28440856933594 436.31842041015625 274.91441345214844 436.31842041015625 81.54443359375C432.765869140625 81.34140014648438 429.2063751220703 81.23924255371094 425.64381408691406 81.23924255371094C322.53656005859375 81.23924255371094 243.85682678222656 152.3477325439453 201.3350067138672 251.3717803955078ZM464.98326110839844 85.39506530761719C464.9832458496094 148.83770751953125 464.982666015625 212.2803497314453 464.982666015625 275.7229919433594L631.7685241699219 359.9234161376953C633.0531921386719 345.6885070800781 633.6924133300781 331.1865692138672 633.6924133300781 316.4414367675781C633.6924133300781 188.89947509765625 555.1638641357422 104.55381774902344 464.9832305908203 85.39506530761719ZM464.9815216064453 644.1320648193359C529.1327514648438 601.4556884765625 574.4758453369141 546.26611328125 601.8828735351562 481.90708923339844L464.9822235107422 412.7901916503906C464.9822235107422 489.90415954589844 464.98150634765625 567.0181274414062 464.98150634765625 644.132080078125ZM464.98231506347656 380.68263244628906 612.1320343017578 454.96990966796875C619.1414947509766 434.1694030761719 624.4237823486328 412.52435302734375 628.0052337646484 390.1357116699219L464.9825439453125 307.8305969238281C464.98255920410156 332.11460876464844 464.9823303222656 356.39862060546875 464.9823303222656 380.68263244628906Z%27/%3E%3C/svg%3E"></head>
 <body>
 <div class="shell">
   <nav class="side" aria-label="Mục lục">
@@ -378,10 +383,13 @@ table.tok td:first-child { font-family: var(--mono); font-size: 12px; }
     </div>
 
     <div class="intro">
+      <div>
       <div class="eyebrow">lib/tokens.ts → docs/ui-kit.html</div>
       <h1>Bộ thành phần của M3E Canvas</h1>
       <p>Mọi thành phần app vẽ trên canvas, dựng lại bằng HTML/CSS thuần. Màu lấy thẳng từ 7 palette của app, cả sáng lẫn tối. Kích thước tính bằng dp đúng thông số app dùng. Mỗi thẻ ghi tên <code>kind</code> trong <code>public/agent.md</code> và có nút copy HTML, nên chỉ cần dán khối <code>--m3-*</code> cùng CSS <code>.m3-*</code> là dùng lại được ở dự án khác.</p>
       <div class="facts"><span class="fact">phone 412 × 892</span><span class="fact">margin 16 · content 380 · half 182</span><span class="fact">connected gap 3 · r 28 / 8</span><span class="fact">ease cubic-bezier(0.2, 0, 0, 1) · 340ms</span></div>
+      </div>
+      <div class="kit-hero" data-kit-hero><a href="#screens">Xem tất cả màn mẫu ↓</a></div>
     </div>
 
     <!-- ================= NỀN TẢNG ================= -->
@@ -645,7 +653,7 @@ table.tok td:first-child { font-family: var(--mono); font-size: 12px; }
       <header><h2>Màn hình mẫu</h2><p>Ghép thành phần theo quy tắc "A good sketch" trong agent.md: top app bar ở trên cùng, bottom nav giữ cùng các tab trên các màn chính, danh sách mở màn chi tiết, màn chi tiết có nút quay lại. Trên desktop, thanh điều hướng dưới được thay bằng navigation rail, và danh sách với chi tiết nằm cạnh nhau trong cùng một màn.</p></header>
       <div class="phone-wrap"><div class="phones">
         <div>
-          <div class="phone">
+          <div class="phone" data-kit-rep>
             <div class="m3-topbar"><div class="status"><span>9:30</span><span><span class="ms">signal_cellular_alt</span> <span class="ms">battery_full</span></span></div><div class="row"><button class="m3-icon-btn v-standard" aria-label="Menu"><span class="ms">menu</span></button><span class="title">Công thức</span><button class="m3-icon-btn v-standard" aria-label="Tìm"><span class="ms">search</span></button></div></div>
             <div class="body">
               <div style="display:flex;gap:8px;padding-bottom:8px"><span class="m3-chip lead on"><span class="ms">check</span>Tất cả</span><span class="m3-chip">Chay</span><span class="m3-chip">Nhanh</span></div>
@@ -719,6 +727,8 @@ table.tok td:first-child { font-family: var(--mono); font-size: 12px; }
 <div class="toast m3-snackbar" id="toast" role="status"><span id="toast-t">Đã copy</span></div>
 
 <script>
+/* màn đại diện: clone màn [data-kit-rep] lên đầu trang, một nguồn markup duy nhất */
+{ const rep = document.querySelector("[data-kit-rep]").cloneNode(true); rep.removeAttribute("data-kit-rep"); document.querySelector("[data-kit-hero]").prepend(rep); }
 /* 7 palette của app, sinh từ lib/tokens.ts (paletteOf, sáng và tối) */
 const ROLES=["primary", "onPrimary", "primaryContainer", "onPrimaryContainer", "inversePrimary", "secondary", "secondaryContainer", "onSecondaryContainer", "tertiaryContainer", "onTertiaryContainer", "surface", "surfaceContainerLow", "surfaceContainer", "surfaceContainerHigh", "surfaceContainerHighest", "onSurface", "onSurfaceVariant", "outline", "outlineVariant", "inverseSurface", "inverseOnSurface", "error", "onError", "errorContainer", "onErrorContainer"];
 const PALETTES={"purple":{"label":"Purple","light":["#6750A4","#FFFFFF","#EADDFF","#21005D","#D0BCFF","#635A75","#E8DEF8","#1D192B","#FFD8E4","#31111D","#FEF7FF","#F7F2FA","#F3EDF7","#ECE6F0","#E6E0E9","#1D1B20","#49454F","#79747E","#CAC4D0","#322F35","#F5EFF7","#B3261E","#FFFFFF","#F9DEDC","#410E0B"],"dark":["#D2BCFC","#32226F","#4C3889","#E9DDFF","#6750A4","#CDC1E1","#4B425D","#E9DDFD","#6C3644","#FDDAE1","#141317","#1C1B1F","#201F23","#2B292D","#363438","#E4E1E7","#C9C4D1","#938F9B","#494550","#E4E1E7","#313034","#F2B8B5","#601410","#8C1D18","#F9DEDC"]},"blue":{"label":"Blue","light":["#0B57D0","#FFFFFF","#D3E3FD","#041E49","#A8C7FA","#5A5C7C","#DCE2F9","#131C2B","#FFD8EE","#2E1125","#FAF9FD","#F3F3FA","#EEEDF3","#E9E8EF","#E3E2E6","#1B1B1F","#44474E","#74777F","#C4C6D0","#303034","#F2F0F4","#B3261E","#FFFFFF","#F9DEDC","#410E0B"],"dark":["#C0C2FD","#042C71","#04409F","#E0E0FC","#3757BA","#C3C3E9","#424463","#E0E0FE","#6E334E","#FFD8E7","#131317","#1B1B1F","#1F1F23","#2A2A2E","#343439","#E2E2E8","#C6C5D2","#90909C","#464651","#E2E2E8","#303034","#F2B8B5","#601410","#8C1D18","#F9DEDC"]},"green":{"label":"Green","light":["#2E6A45","#FFFFFF","#B0F1C2","#00210F","#95D5A7","#516356","#D3E8D8","#102016","#C2E8FF","#001E2C","#F6FBF4","#F0F5EE","#EAF0E8","#E4EAE2","#DEE4DC","#181D18","#414941","#707972","#BFC9C0","#2D322D","#EEF2EB","#B3261E","#FFFFFF","#F9DEDC","#410E0B"],"dark":["#96D5A9","#00391C","#12512E","#B1F1C5","#2E6A45","#B7CBBD","#3A4B3F","#D3E8D8","#1E4D54","#BBEBF2","#101411","#181C1A","#1C211E","#272B28","#313633","#DEE4E0","#BDCAC0","#87948B","#3E4941","#DEE4E0","#2D312E","#F2B8B5","#601410","#8C1D18","#F9DEDC"]},"coral":{"label":"Coral","light":["#984061","#FFFFFF","#FFD9E2","#3E001D","#FFB0C8","#74575F","#F6DDE4","#31101D","#FFDBCA","#2C1600","#FFF8F8","#FCF0F2","#F6EBED","#F3E5E9","#EEE0E3","#201A1B","#524346","#847377","#D5C2C6","#352F30","#FAEEEF","#B3261E","#FFFFFF","#F9DEDC","#410E0B"],"dark":["#FEB1C9","#620833","#7D2649","#FED9E4","#984061","#DFBEC7","#5B3F48","#FCDAE3","#5E402C","#FFDBC6","#181213","#201A1C","#241E20","#2E282A","#393335","#E8E1E3","#D4C2C7","#9D8D91","#514347","#E8E1E3","#352F30","#F2B8B5","#601410","#8C1D18","#F9DEDC"]},"amber":{"label":"Amber","light":["#8B5000","#FFFFFF","#FFDCC2","#2C1600","#FFB77C","#725A44","#F6DFC8","#271905","#D5EDC0","#0E2004","#FFF8F5","#FCF1EA","#F7ECE4","#F3E6DE","#EDE0D8","#211A14","#51443B","#83746A","#D6C3B6","#362F28","#FBEEE5","#B3261E","#FFFFFF","#F9DEDC","#410E0B"],"dark":["#FDB976","#472A07","#683C05","#FDDDC1","#8B5000","#DEC1A8","#59422E","#FBDDC4","#384D25","#D2EABA","#17130F","#1F1B18","#231F1C","#2D2926","#383431","#E7E1DD","#D1C4BA","#9A8F85","#4F453D","#E7E1DD","#34302C","#F2B8B5","#601410","#8C1D18","#F9DEDC"]},"teal":{"label":"Teal","light":["#00696E","#FFFFFF","#9CF1F6","#002022","#80D5DA","#4D6263","#CCE8E9","#051F20","#D2E4FF","#001C3B","#F4FBFB","#EEF5F5","#E8EFEF","#E2EAEA","#DDE4E4","#161D1D","#3F4948","#6F7979","#BEC8C8","#2B3232","#ECF2F2","#B3261E","#FFFFFF","#F9DEDC","#410E0B"],"dark":["#83D4D8","#063639","#0B4F52","#9FF0F5","#00696E","#B3CBCC","#354A4C","#CFE7E8","#38485A","#D3E4FA","#0D1515","#161D1D","#1A2121","#252B2B","#2F3636","#DCE4E4","#B7CACB","#819495","#394A4B","#DCE4E4","#2B3232","#F2B8B5","#601410","#8C1D18","#F9DEDC"]},"mono":{"label":"Mono","light":["#4A4459","#FFFFFF","#E6E0F0","#1A1626","#CFC3E0","#5F5D65","#E6E1E6","#1B1B1F","#E9E0EA","#1E1A22","#FCF8FD","#F5F1F6","#EFEBF0","#E9E5EA","#E4E0E5","#1C1B1F","#48454E","#79747E","#CAC4D0","#313033","#F4EFF4","#B3261E","#FFFFFF","#F9DEDC","#410E0B"],"dark":["#CAC3DC","#332D41","#4A4459","#E7DFF8","#615B71","#C8C5CD","#48464D","#E4E1EA","#524346","#F0DEE2","#141317","#1C1B1F","#201F23","#2B292D","#353438","#E3E2E7","#C9C5D1","#938F9B","#484550","#E3E2E7","#313034","#F2B8B5","#601410","#8C1D18","#F9DEDC"]}};

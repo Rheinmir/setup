@@ -33,9 +33,10 @@ def test_fire_drill_bad_page_blocked_then_apply_makes_it_pass(tmp_path):
     assert good.returncode == 0, good.stderr
 
 
-def test_manual_gap_is_not_promised_to_apply():
+def test_every_gap_of_a_plain_page_is_one_the_base_layer_inserts():
+    """Từ 30/09 lớp nền tự chèn cả nút mục lục (.ovs-navbtn) lẫn rail TOC map → thông báo không còn mục nào "phải dựng tay"."""
     msg = val.shell_problem("x.html", PAGE.replace('<button class="nav-toggle">≡</button>', ""))
-    assert "nav-toggle phải dựng tay" in msg
+    assert "toc-map" in msg and "nav-toggle" in msg.split("tự chèn")[1] and "dựng tay" not in msg
 
 
 def test_validator_and_survey_checks_do_not_drift():

@@ -331,7 +331,6 @@ def build_static(primary: str, out_abs: str, nodes, edges, ledger, stale):
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>wiki-graph (HTML thuần)</title>
 <meta name="theme-color" content="#eaf2fd">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a84ff'/%3E%3C/svg%3E">
 <style>
 :root{{--ink:#0f0f12;--ink2:#4a4a55;--border:rgba(30,90,170,.16)}}
 *{{margin:0;padding:0;box-sizing:border-box}}
@@ -505,7 +504,6 @@ def build_html(primary: str, out_abs: str, nodes, edges, ledger, stale):
 <title>wiki-graph whiteboard</title>
 <meta name="description" content="Whiteboard đồ thị quan hệ wiki-core v2 — node tự dàn, hover dây xem quan hệ.">
 <meta name="theme-color" content="#eaf2fd">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a84ff'/%3E%3C/svg%3E">
 <style>
 :root{{--ink:#0f0f12;--ink2:#4a4a55;--border:rgba(30,90,170,.16)}}
 *{{margin:0;padding:0;box-sizing:border-box}}

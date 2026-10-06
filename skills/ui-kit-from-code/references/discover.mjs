@@ -51,7 +51,11 @@ if (process.argv[2] === "--coverage") {
   const smiss = need.filter(({ p, st }) => !shown.has(`${p.sig}:${st}`) && !skipState(`${p.sig}:${st}`));
   console.log(`trạng thái ${need.length - smiss.length}/${need.length} (hover/focus/active/selected)`);
   for (const { p, st, via } of smiss) console.log(`  THIẾU ${p.sig}:${st.padEnd(8)} ${p.kind.padEnd(10)} ${(p.states?.[st]?.crop) ?? (via ? "selected=" + via : "")}  ${JSON.stringify(p.states?.[st]?.diff ?? {}).slice(0, 110)}`);
-  process.exit(miss.length || smiss.length ? 1 : 0);
+  /* màn đại diện (RULE-13): khung [data-kit-hero] phải đứng trước phần nội dung đầu tiên, và có màn [data-kit-rep] để clone */
+  const hero = html.search(/<[^>]*\sdata-kit-hero[\s>=]/), firstBlock = html.search(/<section class="block"/), rep = /<[^>]*\sdata-kit-rep[\s>=]/.test(html);
+  const heroOk = hero >= 0 && (firstBlock < 0 || hero < firstBlock) && rep;
+  console.log(heroOk ? "màn đại diện: có, đứng trước nội dung" : `THIẾU màn đại diện: ${hero < 0 ? "không có [data-kit-hero]" : !rep ? "không có màn [data-kit-rep] ở #screens" : "[data-kit-hero] đứng sau <section class=\"block\"> đầu tiên"}`);
+  process.exit(miss.length || smiss.length || !heroOk ? 1 : 0);
 }
 
 const require = createRequire(process.env.NODE_PATH ? process.env.NODE_PATH + "/" : import.meta.url);
