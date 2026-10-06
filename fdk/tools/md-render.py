@@ -26,7 +26,14 @@ HERE = Path(__file__).resolve().parent
 VENDOR = [HERE.parents[1] / "skills/docs-site-macos/vendor/beautiful-mermaid.min.js.gz.b64",
           Path.home() / ".claude/skills/docs-site-macos/vendor/beautiful-mermaid.min.js.gz.b64"]
 
-CSS = """main{max-width:var(--measure,72ch);margin:0 auto;padding:var(--sp-6,32px) var(--sp-4,16px) var(--sp-8,64px);overflow-wrap:break-word}
+CSS = """main{max-width:min(1280px,100%);margin:0 auto;padding:var(--sp-6,32px) var(--sp-4,16px) var(--sp-8,64px);overflow-wrap:break-word;box-sizing:border-box}
+main :is(p,li,blockquote,h1,h2,h3,h4,footer){max-width:var(--measure,35em)}
+main section{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr));gap:0 var(--sp-6,32px);align-items:start}
+main section>*{grid-column:1/-1;min-width:0}
+main section>.card{grid-column:auto}
+main section>.card:has(.tbl,.diagram-box,.chart,.archify-embed,pre){grid-column:1/-1}
+main ul.cols{columns:auto 300px;column-gap:var(--sp-6,32px)}
+main ul.cols>li{break-inside:avoid}
 main :not(pre)>code{overflow-wrap:anywhere}
 main table{border-collapse:collapse;width:100%;margin:0 0 var(--sp-4,16px);font-size:.875rem;font-variant-numeric:tabular-nums}
 main :is(h1,h2,h3,h4,section){scroll-margin-top:72px}
@@ -37,9 +44,9 @@ main pre{overflow-x:auto;padding:var(--sp-3,12px);border:1px solid var(--ovs-bor
 main blockquote{margin:0 0 var(--sp-4,16px);padding-left:var(--sp-4,16px);border-left:3px solid var(--ovs-border);color:var(--ovs-ink2)}
 main img{max-width:100%}
 .archify-embed{width:100%;height:clamp(640px,85vh,1100px);border:1px solid var(--ovs-border);border-radius:12px;background:var(--ovs-surface)}
-main .diagram-box{box-sizing:border-box;border:1px solid var(--ovs-border);border-radius:12px;padding:var(--sp-3,12px);overflow:auto;width:min(1200px,calc(100vw - 48px));max-width:none;margin:0 0 var(--sp-3,12px) calc(50% - min(600px,50vw - 24px))}  /* sơ đồ thoát cột chữ: Mermaid sinh SVG 1100–1700px, nhét vào 72ch là chữ trong nút còn 30% */
+main .diagram-box{box-sizing:border-box;border:1px solid var(--ovs-border);border-radius:12px;padding:var(--sp-3,12px);overflow:auto;margin:0 0 var(--sp-3,12px)}  /* khung main đã rộng (1280) → sơ đồ chiếm trọn hàng lưới, không cần thoát cột */
 .mm-out{display:block;text-align:center}
-main .chart{box-sizing:border-box;margin:0 0 var(--sp-3,12px) calc(50% - min(500px,50vw - 24px));width:min(1000px,calc(100vw - 48px));padding:var(--sp-3,12px);border:1px solid var(--ovs-border);border-radius:12px;overflow-x:auto}
+main .chart{box-sizing:border-box;margin:0 0 var(--sp-3,12px);padding:var(--sp-3,12px);border:1px solid var(--ovs-border);border-radius:12px;overflow-x:auto}
 .chart figcaption{font-weight:600;margin:0 0 8px}.chart svg{width:100%;height:auto;display:block}
 .c-lab{font-size:13px;fill:var(--ovs-ink)}.c-num{font-size:13px;fill:var(--ovs-ink2);font-variant-numeric:tabular-nums}
 .c-bar{fill:var(--ovs-accent)}.c-alt{fill:var(--ovs-ink2);opacity:.55}
@@ -116,14 +123,15 @@ LIST_RE = re.compile(r"^(\s*)([-*+]|\d+[.)])\s+(.*)$")
 
 
 def render_list(lines):
-    """lines: [(indent, ordered, text)] → HTML list lồng theo thụt lề."""
+    """lines: [(indent, ordered, text)] → HTML list lồng theo thụt lề. List gạch phẳng ≥ 6 mục → class cols (chia cột)."""
     out, stack = [], []
+    cols = ' class="cols"' if len(lines) >= 6 and len({ind for ind, _, _ in lines}) == 1 and not lines[0][1] else ""
     for ind, ordered, text in lines:
         while stack and ind < stack[-1][0]:
             out.append(f"</li></{stack.pop()[1]}>")
         if not stack or ind > stack[-1][0]:
             tag = "ol" if ordered else "ul"
-            stack.append((ind, tag)); out.append(f"<{tag}><li>")
+            stack.append((ind, tag)); out.append(f"<{tag}{cols}><li>")
         else:
             out.append("</li><li>")
         out.append(inline(text))
@@ -141,7 +149,12 @@ def render(md, title=None):
             meta[k.strip()] = v.strip().strip('"\'')
         md = md[m.end():]
     lines, i, body, toc, seen = md.split("\n"), 0, [], [], set()
-    want_desc, has_mermaid = False, False
+    want_desc, has_mermaid, in_card = False, False, False
+
+    def close_card():
+        nonlocal in_card
+        if in_card:
+            body.append("</div>"); in_card = False
 
     def para(text):
         nonlocal want_desc
@@ -184,6 +197,11 @@ def render(md, title=None):
             if n == 1 and not title:
                 title = re.sub(r"[*_`]", "", text)
             sid = slug(re.sub(r"[*_`]", "", text), seen)
+            if n <= 3:
+                close_card()
+            if n == 3 and toc:                                # mỗi ### trong section = một ô lưới (2–3 cột theo bề ngang)
+                in_card = True
+                body.append(f'<div class="card"><h3 id="{sid}">{inline(text)}</h3>'); i += 1; continue
             if n == 2:                                        # mỗi mục ## = một <section> (rail mục lục + mind map của lớp nền bám vào đây)
                 toc.append((sid, re.sub(r"[*_`]", "", text)))
                 body.append(("</section>" if toc[:-1] else "") + f'<section id="{sid}"><h2>{inline(text)}</h2>'); i += 1; continue
@@ -218,6 +236,7 @@ def render(md, title=None):
             buf.append(lines[i].strip()); i += 1
         para(" ".join(buf))
 
+    close_card()
     if toc:
         body.append("</section>")
     title = meta.get("title") or title or "Tài liệu"

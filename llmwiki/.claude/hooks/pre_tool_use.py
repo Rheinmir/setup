@@ -8,7 +8,9 @@ import sys
 
 import json
 import os
+import re
 import subprocess
+import tempfile
 
 from hooklib import find_validators, project_dir, read_payload, resolve_tool, run_validator
 
@@ -70,6 +72,37 @@ def run_local(root: str, event: dict, tool: str, target: str) -> None:
         sys.exit(2)
 
 
+# Việc ỒN (dựng/kiểm HTML, chạy cổng) nên giao agent con để log + ảnh chụp không đổ vào context chính (user 07/10: phiên
+# 7ed5600e tự md-render + sửa lớp nền + loay hoay Playwright ngay trong phiên chính). NHẮC, không chặn: hook nhận nhầm lệnh
+# cũng không kẹt việc. Mỗi loại nhắc một lần mỗi phiên; agent con (có agent_type) không bao giờ bị nhắc.
+DELEGATE = (
+    ("html-builder", re.compile(r"md-render|html-visual-gate|html-slop-fix|playwright|chromium"),
+     "dựng/kiểm trang HTML (render, gate, chụp ảnh, sửa tới xanh)"),
+    ("gate-runner", re.compile(r"ci-local|medic\.py|\bpytest\b|swh-lint|harness-doctor"),
+     "chạy cổng kiểm/test rồi sửa tới xanh"),
+)
+
+
+def delegate_nudge(payload: dict, tool: str, ti: dict) -> str:
+    if payload.get("agent_type"):
+        return ""
+    text = ti.get("command", "") if tool == "Bash" else (ti.get("file_path", "") if tool in WRITE_TOOLS else "")
+    for agent, rx, job in DELEGATE:
+        hit = (tool in WRITE_TOOLS and agent == "html-builder" and text.lower().endswith(".html")) or (tool == "Bash" and rx.search(text))
+        if not hit or not os.path.isfile(os.path.expanduser(f"~/.claude/agents/{agent}.md")):
+            continue
+        mark = os.path.join(tempfile.gettempdir(), f"ovs-nudge-{payload.get('session_id', '')}-{agent}")
+        if os.path.exists(mark):
+            return ""
+        try:
+            open(mark, "w").close()
+        except OSError:
+            pass
+        return (f"[delegate] Việc này ({job}) nên giao agent `{agent}` (Agent tool, subagent_type={agent}) — log, diff, ảnh "
+                f"chụp ở lại context của agent, phiên chính chỉ nhận khối Trạng thái. Lệnh hiện tại vẫn chạy; nhắc 1 lần/phiên.")
+    return ""
+
+
 def main() -> None:
     payload = read_payload()
     tool = payload.get("tool_name", "")
@@ -113,6 +146,9 @@ def main() -> None:
     if tool == "Bash":
         run_egress_guard(root, event, tool, target)
     run_local(root, event, tool, target)  # rule RIÊNG của dự án (harness-local) — sau framework
+    msg = delegate_nudge(payload, tool, ti)
+    if msg:
+        print(json.dumps({"hookSpecificOutput": {"hookEventName": "PreToolUse", "additionalContext": msg}}, ensure_ascii=False))
     sys.exit(0)
 
 

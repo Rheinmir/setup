@@ -110,3 +110,14 @@ def test_chart_block_renders_static_svg_with_values(tmp_path):
     assert 'role="img"' in h and "cũ: 33 KB" in h and ">33 KB<" in h and ">16 KB<" in h
     assert 'class="c-bar c-alt"' in h and '<p class="desc">Giải thích chart.</p>' in h
     assert 'class="chart-err"' in h                               # JSON hỏng → báo lỗi tại chỗ, không vỡ trang
+
+
+def test_section_grid_cards_and_list_columns(tmp_path):
+    # user 07/10: chữ trong cột hẹp nhưng MỘT section phải chia 2–3 cột — mỗi ### = một ô lưới, list phẳng dài chia cột
+    src = tmp_path / "g.md"
+    src.write_text("## S\n\nmở đầu\n\n### A\n\n- a\n\n### B\n\n| x | y |\n|---|---|\n| 1 | 2 |\n\n## T\n\n"
+                   + "".join(f"- m{i}\n" for i in range(6)) + "\n- ngắn\n", encoding="utf-8")
+    out = tmp_path / "g.html"; mr.build(src, out); h = out.read_text(encoding="utf-8")
+    assert h.count('<div class="card">') == 2 and '<div class="card"><h3 id="a">A</h3>\n<ul><li>a</li></ul>\n</div>' in h
+    assert "main section{display:grid" in h and "section>.card:has(.tbl" in h       # ô có bảng chiếm trọn hàng
+    assert '<ul class="cols"><li>m0' in h and "<ul><li>ngắn" in h                  # < 6 mục → không chia cột
