@@ -327,6 +327,19 @@ def build_r23(base):
     fx["good_event"] = {"action": "read", "file_path": str(good)}
     return _content("html_read_guard.py", fx)
 
+
+def build_r24(base):
+    # R24: agent con sửa file cổng kiểm → chặn; agent con sửa code thường → qua (stdin-only: cần agent_type trong payload).
+    validator, src = resolve_validator("agent_scope_guard.py")
+    if validator is None:
+        return _dark("block", "agent_scope_guard.py not found")
+    bad = {"action": "write", "file_path": str(base / "harness" / "validators" / "x.py"), "agent_type": "gate-runner"}
+    good = {"action": "write", "file_path": str(base / "fdk" / "tools" / "x.py"), "agent_type": "gate-runner"}
+    byp = {"action": "bash", "command": "git commit --no-verify -m x", "agent_type": "gate-runner"}
+    main = {"action": "write", "file_path": str(base / "harness" / "validators" / "x.py")}
+    return _result("block", src, [("stdin:agent-sửa-validator", run_stdin(validator, bad), 2), ("stdin:agent-sửa-code", run_stdin(validator, good), 0),
+                                  ("stdin:agent-no-verify", run_stdin(validator, byp), 2), ("stdin:phiên-chính", run_stdin(validator, main), 0)])
+
 # ── Tier 1b: argv-only / custom-flag content validators ─────────────────────
 def build_r13(base):
     # R13: architecture row in decisions.md must reference an ADR-N (or (no-adr: …)).
@@ -645,6 +658,7 @@ RULES = [
     ("R21", "touched-paths", build_r21),
     ("R22", "html-slop", build_r22),
     ("R23", "html-read-guard", build_r23),
+    ("R24", "agent-scope-guard", build_r24),
 ]
 
 

@@ -165,6 +165,9 @@ if [ "${1:-}" = "--global" ]; then
   cp "$SRC/harness/scripts/"*.py   "$GH/harness/scripts/"  2>/dev/null || true
   # personas travel theo engine (archetype.py --get đọc posture; UAT canary 260718 bắt preamble rỗng)
   cp "$SRC/llmwiki/personas/"*.md  "$GH/llmwiki/personas/" 2>/dev/null || true
+  # agent cho việc ồn ào (cổng kiểm, dựng HTML) — user-level để mọi dự án gọi được; chỉ ghi đè file cùng tên của harness
+  mkdir -p "$HOME/.claude/agents"
+  cp "$SRC/harness/agents/"*.md "$HOME/.claude/agents/" 2>/dev/null || true
   cp "$SRC/harness/validators/"*.py "$GH/harness/validators/" 2>/dev/null || true
   cp "$SRC/harness/"*.yaml         "$GH/harness/"          2>/dev/null || true
   # config đi CÙNG script đọc nó (mem-rank.py ⇄ mem-rank.config.yaml) — glob *.py bên trên bỏ sót,

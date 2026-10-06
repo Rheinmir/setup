@@ -187,6 +187,15 @@ rules:
     scope: "**/html/*.html (miễn chính artifact archify)"
     note: "PostToolUse nhánh .html cùng R16/R20. Validator GỌI fdk/tools/frontend-antipattern.py chứ không chép regex, nên hai cổng không lệch luật; vá máy-làm-được bằng fdk/tools/html-slop-fix.py. Nguồn: user 20/09/2026 'cơ chế bắt slop bắt buộc chưa tự bắt nó' — medic trước đó chỉ soi 1 trang nên luôn xanh."
 
+  - id: R24
+    name: agent-scope-guard
+    validator: agent_scope_guard.py
+    statement: 'Agent con (payload có agent_type) không được làm cổng xanh bằng cách nới cổng: cấm ghi/sửa file cổng kiểm (harness/validators, hook validators, harness/tests, test_*.py, *-test.sh, policy.yaml, .pre-commit-config.yaml, harness-doctor.py) và cấm bỏ cổng (--no-verify, SKIP=, HUSKY=0). Chạy validator/test vẫn được; phiên chính không bị đụng. Thoát: OVERSTACK_AGENT_HARNESS_EDIT=1 khi chính user giao agent con sửa harness.'
+    enforce_at: [session]
+    applies_to: [write, bash]
+    scope: "mọi file cổng kiểm của harness, chỉ khi tool do agent con gọi"
+    note: "PreToolUse (pre_tool_use.py: Write/Edit + Bash, chỉ khi payload có agent_type). Đo 06/10/2026: hook chạy cả trong agent con, cùng session_id/transcript với phiên chính — R2/R23 vẫn cắn; lỗ còn lại là agent con bị chặn tự nới cổng. Nguồn: user 06/10/2026 'chỉ sợ nhất cái harness nó gác sai khi chuyển sang mô hình model con'."
+
   - id: R23
     name: html-read-guard
     validator: html_read_guard.py

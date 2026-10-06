@@ -31,6 +31,7 @@ Một trang đọc-là-đủ. Nguồn chân lý máy-đọc là `harness/poc-ven
 | **R14** | patterns-protected | `deny_write` · `validators/patterns_guard.py` | PreToolUse (unlock env) | session | active |
 | **R15** | no-ai-attribution | `process_gate` · `validators/no_ai_attribution.py` | git `commit-msg` (pre-commit stage) | repo | active |
 | **R23** | html-read-guard | `content_check` · `validators/html_read_guard.py` | PreToolUse (Read + Bash đổ nội dung .html) | session | active |
+| **R24** | agent-scope-guard | `content_check` · `validators/agent_scope_guard.py` | PreToolUse, chỉ khi payload có `agent_type` | session | active |
 
 > Nợ: R16–R22 có trong `policy.yaml` nhưng chưa có dòng ở bảng này (bảng ngừng cập nhật sau R15).
 
