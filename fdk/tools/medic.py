@@ -414,7 +414,7 @@ def p_engine():
     missing = sorted(f.name for f in src.glob("*.py") if not (eng / f.name).is_file())
     if diff or missing:
         return ("warn", f"engine global lệch nguồn: {len(diff)} file khác ({', '.join(diff[:5])}{'…' if len(diff) > 5 else ''})"
-                f"{f', thiếu {len(missing)}' if missing else ''}", "bash harness/scripts/install-harness.sh --global  # cài lại engine từ repo")
+                f"{f', thiếu {len(missing)}' if missing else ''}", "bash harness/scripts/install-harness.sh --global  # cài lại engine từ repo")  # bare-path: ok lệnh gõ trong repo framework (probe chỉ có nghĩa ở đó)
     return "ok", f"engine global khớp nguồn ({len(list(src.glob('*.py')))} file)", ""
 
 

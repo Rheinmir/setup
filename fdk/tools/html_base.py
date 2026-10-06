@@ -64,8 +64,9 @@ def base_css(*, family_dark: bool) -> str:
           # user 01/10/2026 lần 2: chữ vẫn to → chia 2-3-4 khối theo bề rộng (cột tối thiểu 18em, tối đa 4 cột)
           ".ovs-cols{columns:4 18em;column-gap:var(--sp-6);margin:0 0 var(--sp-4)}.ovs-cols>p{max-width:var(--measure);orphans:3;widows:3}"
           ".ovs-cols>p:first-child{margin-top:0}"
-          # footer cuối trang = dòng nguồn/tham chiếu, đọc lướt → mờ, nhỏ, có vạch ngăn (user 01/10/2026: "đặt nó làm footer mờ")
-          ":is(main,body)>footer{color:var(--ovs-ink2);font-size:.75rem;line-height:1.6;opacity:.8;margin-top:var(--sp-8);padding-top:var(--sp-4);"
+          # footer cuối trang = dòng nguồn/tham chiếu, đọc lướt → mờ, nhỏ, có vạch ngăn (user 01/10/2026: "đặt nó làm footer mờ").
+          # "Mờ" = màu ink2, KHÔNG thêm opacity: opacity .8 kéo contrast xuống 3.33:1 < 4.5 (cổng chạy-thật đỏ 06/10/2026)
+          ":is(main,body)>footer{color:var(--ovs-ink2);font-size:.75rem;line-height:1.6;margin-top:var(--sp-8);padding-top:var(--sp-4);"
           "border-top:1px solid var(--ovs-border)}:is(main,body)>footer p{margin:0;max-width:none;font-size:inherit;line-height:inherit;color:inherit}"
           ":is(main,body)>footer :is(code,b,strong){background:none;padding:0;font-weight:inherit;color:inherit;font-size:inherit}"
           # hàng meta dưới tiêu đề (loại · nguồn · trạng thái · phút đọc) — kiểu dòng thông tin báo giấy, không phải văn xuôi
