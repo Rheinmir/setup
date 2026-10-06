@@ -26,7 +26,7 @@
 - **`/playwright-verify`** — Cài + dùng Playwright bằng standalone .mjs script (không qua npx playwright test / *.spec.…
 - **`/propose`** — Plan a feature before coding
 - **`/qc-code`** — Review code phong cách SENIOR 10 năm
-- **`/qc-uiux`** — Audit UI/UX phong cách SENIOR
+- **`/qc-uiux`** — CHUẨN UI/UX của cả framework
 - **`/safe-change`** — Modify shared code without breaking existing callers
 - **`/ship`** — Workflow chốt PUSH/RELEASE/PR/MR
 - **`/skill-provenance`** — Ghi và kiểm provenance (nguồn + sha256 checksum) cho skill

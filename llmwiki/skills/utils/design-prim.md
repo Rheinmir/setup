@@ -1,6 +1,6 @@
 ---
 name: design-prim
-description: Dọn slop UI/UX khi onboard 1 dự án bất kỳ — quét view có sẵn, chụp playwright (before), để hallmark tự đọc project và REDESIGN thật (sinh design.md của riêng nó, không đóng khung theo token slop cũ), rồi vòng lặp sửa dựa trên slop-test 58 gate + `/impeccable audit`/`critique` + `/qc-uiux` (verdict senior 4-mục, engine tất định `visual-qa`) cho tới khi sạch hoặc hết ngân sách vòng. Gọi khi user nói "dọn slop", "làm gọn UI dự án", "chuẩn hoá UI xuyên suốt", "onboard rồi làm sạch UI", "design prim", "/design-prim".
+description: Dọn slop UI/UX khi onboard 1 dự án bất kỳ — quét view có sẵn, chụp playwright (before), để hallmark tự đọc project và REDESIGN thật (sinh design.md của riêng nó, không đóng khung theo token slop cũ), rồi vòng lặp sửa dựa trên slop-test 58 gate + `/impeccable audit`/`critique` + `/qc-uiux` (chuẩn UI/UX của framework: 5 mục UX + AX, DONE contract — engine tất định `visual-qa` + `ax-scan`) cho tới khi sạch hoặc hết ngân sách vòng. Gọi khi user nói "dọn slop", "làm gọn UI dự án", "chuẩn hoá UI xuyên suốt", "onboard rồi làm sạch UI", "design prim", "/design-prim".
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
@@ -12,7 +12,7 @@ metadata:
 
 Nén 1 lần: `orca-onboard` (bỏ — quá nặng, hallmark tự quét token ở Step 0 rồi) + `playwright-verify` +
 `impeccable` (bundle `doyourmagic/impeccable`) + `hallmark` (sàn design + slop-test) + `qc-uiux` (verdict
-senior 4-mục, dùng engine tất định `visual-qa`). Không viết lại logic của các skill này — chỉ gọi
+chuẩn UI/UX của framework — 5 mục UX + AX + DONE contract, engine tất định `visual-qa` + `ax-scan`). Không viết lại logic của các skill này — chỉ gọi
 đúng thứ tự, đúng target.
 
 **Bẫy đã trả giá — đọc trước khi chạy:** `/impeccable document` sinh `DESIGN.md` bằng cách **chụp lại
@@ -103,8 +103,8 @@ Chi tiết từng bước (nguồn chân lý cho W01–W07):
    a. `hallmark` tự chấm slop-test (six-axes pre-emit + 58 gate, đã chạy trong Build của bước 4).
    b. `/impeccable audit <view>` (P0–P3: a11y, perf, theming, responsive, anti-pattern) và
       `/impeccable critique <view>` (hierarchy, IA, cognitive load).
-   c. `/qc-uiux <view>` (app phải đang chạy — `<base-url>` như `playwright-verify`) — verdict senior
-      4-mục (accessibility · visual-hierarchy · consistency · antipattern), phần ĐO ĐƯỢC
+   c. `/qc-uiux <view>` (app phải đang chạy — `<base-url>` như `playwright-verify`) — chuẩn UI/UX của framework: 5 mục UX + AX, DONE contract khoá; dự án chỉ được coi là dọn xong khi DONE đạt — verdict senior
+      5 mục (accessibility · hierarchy & ấn tượng · consistency · antipattern · AX), phần ĐO ĐƯỢC
       (contrast WCAG, tap-target, overlap/misalign hình học) chạy tất định qua engine `visual-qa`
       (đo rect thật, không đọc CSS tĩnh) → kết luận PASS hay CẦN SỬA.
    Chụp lại (after) bằng `playwright-verify`, đặt cạnh ảnh before bước 2 — đây là bằng chứng

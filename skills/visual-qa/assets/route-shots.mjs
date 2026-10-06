@@ -343,6 +343,9 @@ const THEME_SET = arg("--theme-set", `fetch("/api/v1/users/-/settings/general?up
 // PHẢI PHỦ *MỌI* THEME APP CUNG CẤP, không phải danh sách tôi tự nghĩ ra (bài học 14/07/26:
 // tôi hardcode "light,dark" ⇒ theme `paper` không ai đụng tới ⇒ nó vỡ y hệt dark, user tìm ra).
 // Danh sách lấy từ CHÍNH APP (dropdown Theme trong Settings→Preferences), không đoán.
+// --viewports 1440x900,768x1024,375x812 : chụp + đo THÊM ở từng khổ (qc-uiux UX/AX: desktop · tablet · mobile).
+// Không có cờ → chỉ khổ mặc định 1360×900 như trước (visual-qa không đổi hành vi). Ảnh: <name>@<w>x<h>.png.
+const VIEWPORTS = (arg("--viewports", "") || "").split(",").filter(Boolean).map((v) => v.split("x").map(Number));
 const THEMES = (process.argv.includes("--themes")
   ? process.argv[process.argv.indexOf("--themes") + 1] : "light,dark,paper").split(",");
 
@@ -400,6 +403,18 @@ for (const [name0, path] of ROUTES) {
     }
 
     results.push({ name, path: `${path} [${theme}]`, status: resp?.status() ?? 0, file, issues, diff });
+    for (const [vw, vh] of VIEWPORTS) {
+      await page.setViewportSize({ width: vw, height: vh });
+      await page.waitForTimeout(800);
+      const vname = `${name}@${vw}x${vh}`, vfile = `${OUT}/${vname}.png`;
+      await page.screenshot({ path: vfile });
+      const vissues = await page.evaluate(DESIGN_AUDIT).catch(() => []);
+      const over = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
+      if (over > 0) vissues.push({ rule: "horizontal-overflow", px: over });
+      results.push({ name: vname, path: `${path} [${theme} ${vw}x${vh}]`, status: resp?.status() ?? 0, file: vfile, issues: vissues });
+      console.log(`shot ${vname} → ${vissues.length ? "⚑ " + vissues.map((i) => i.rule).join(", ") : "✓ design-ok"}`);
+    }
+    if (VIEWPORTS.length) await page.setViewportSize({ width: 1360, height: 900 });
     const bad = issues.filter((i) => i.rule === "monochrome-surface").length;
     const dtxt = diff ? (diff.note ? `  [baseline: ${diff.note}]`
       : `  [diff ${diff.pct}%${diff.pct > DIFF_MAX ? " ⚠ VƯỢT NGƯỠNG" : ""}]`) : "";
