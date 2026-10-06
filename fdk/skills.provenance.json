@@ -366,9 +366,9 @@
     },
     "fdk": {
       "files": {
-        "SKILL.md": "8c2f7270959a0154ec7c9f3e75abc3850736bd1e3f94bc91394a75c77463318f"
+        "SKILL.md": "cead5df4a953084c8fac83bf48fe1225bb14d2b5da916abc1222e9b89293f799"
       },
-      "recorded": "2026-10-01",
+      "recorded": "2026-10-06",
       "source": "local-authored"
     },
     "fdk-uat": {
@@ -793,9 +793,9 @@
     },
     "md-to-html": {
       "files": {
-        "SKILL.md": "7b53618fdbf402a59033b1bebcf55919d2e7d3de209e7ad998055959fda5e7d9"
+        "SKILL.md": "3032957be7af69d2e835507d47d623fa9559b4b3825901eb3dfb58b90951ab2d"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-06",
       "source": "local-authored"
     },
     "medic": {
@@ -936,9 +936,9 @@
     },
     "propose": {
       "files": {
-        "SKILL.md": "82b90d933ba3ffb0bf9848e0532569310a162485fb0e26e2453c8de88a61dfc8"
+        "SKILL.md": "02bc7d57ebbe44e537e18819b97c15c8d686c9462be079f35596e5eac8ccaf64"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-06",
       "source": "local-authored"
     },
     "qc-code": {

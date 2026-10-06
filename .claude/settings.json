@@ -15,7 +15,7 @@
             "command": "python3 \"$CLAUDE_PROJECT_DIR/llmwiki/.claude/hooks/pre_tool_use.py\""
           }
         ],
-        "matcher": "Write|Edit|MultiEdit|NotebookEdit|Bash"
+        "matcher": "Write|Edit|MultiEdit|NotebookEdit|Bash|Read"
       },
       {
         "matcher": "Write|Edit|MultiEdit|Bash",
