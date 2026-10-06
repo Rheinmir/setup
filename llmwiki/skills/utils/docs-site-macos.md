@@ -27,7 +27,7 @@ Output is a self-contained `.html` file (no JS libraries, no build step).
 ## WHAT
 
 ### Purpose và context
-- **Purpose:** dựng một docs site HTML tự chứa (một file, hoặc index + N trang) theo design system macOS liquid-glass — sidebar kính, mind map, sơ đồ SVG động kéo-thả được, theme sáng/tối — ghi vào `llmwiki/html/`, tự host để xem trước, và chỉ báo "xong" sau khi Playwright audit PASS.
+- **Purpose:** dựng một docs site HTML tự chứa (một file, hoặc index + N trang) theo design system macOS liquid-glass — mục lục TOC map (rail chấm mép phải), mind map, sơ đồ SVG động kéo-thả được, theme sáng/tối — ghi vào `llmwiki/html/`, tự host để xem trước, và chỉ báo "xong" sau khi Playwright audit PASS.
 - **Trigger (when to use):**
   - User muốn docs site, landing page, showcase, portfolio, guide, tutorial site, feature overview hoặc product documentation — nhất là khi nói "clean", "modern", "Apple-like", "macOS style", "glass", "frosted", "animated diagrams", "single HTML file".
   - Yêu cầu "liquid glass", "frosted glass", "translucent UI" cho trang docs/showcase.
@@ -36,7 +36,7 @@ Output is a self-contained `.html` file (no JS libraries, no build step).
 - **Non-goals:** không tự viết lại CSS/JS theme toggle (nguồn duy nhất là skill `dark-mode-maker`); không chép SVG của sơ đồ do engine archify vẽ ra ngoài (nhúng `<iframe>`); không kéo CDN/webfont/script ngoài; không ghi file ra ngoài `llmwiki/html/`; không giữ/commit script hay ảnh chụp audit.
 
 ### Mental model
-`nội dung nguồn (markdown · wiki · mô tả) → N section (#sec-{i}, accent i % 6) → Page Architecture (skip-link · nav sidebar · main · hero · mind map · section · footer) → HTML tự chứa llmwiki/html/DDMMYY-<slug>.html → Auto-Host :8765 → Playwright Audit → Output Report draft`.
+`nội dung nguồn (markdown · wiki · mô tả) → N section (#sec-{i}, accent i % 6) → Page Architecture (skip-link · nav mục lục · main · hero · mind map · section · footer) → HTML tự chứa llmwiki/html/DDMMYY-<slug>.html → Auto-Host :8765 → Playwright Audit → Output Report draft`.
 
 ### Input và output contract
 | | Field | Required? | Ý nghĩa |
@@ -53,7 +53,7 @@ Output is a self-contained `.html` file (no JS libraries, no build step).
 ### Rules và capabilities
 - RULE-01 (MUST): **Self-Contained — CRITICAL:** output HTML make ZERO external requests: no font/CSS/JS CDN links, no remote images, no `@import`, no `<script src>` (hyperlink `<a href>` ra ngoài thì được).
 - RULE-02 (MUST): **Output Path — CRITICAL:** ALWAYS write HTML files to `llmwiki/html/` inside the current project root; filename MUST be prefixed with today's date `DDMMYY-`; NEVER write to the project root or any other directory.
-- RULE-03 (MUST): **Navigation — SIDEBAR ONLY** (không bao giờ dùng top bar), sidebar là kính thật và có `.nav-toggle`/`.nav-close`.
+- RULE-03 (MUST): **Navigation — TOC MAP** (rail chấm mục lục mép phải; không sidebar trái, không top bar nhồi link). Tác giả chỉ viết `<nav>` gồm `.logo` + các link `#neo`; lớp nền (bước 2) đổi nó thành rail và gom nút sáng/tối, nút mục lục vào một cụm nổi góc phải dưới. Không có dải menu phía trên; tên trang chỉ nằm ở `<h1>`.
 - RULE-04 (MUST): **Mind Map mặc định — luôn vẽ một bản** collapsible, sinh từ chính tài liệu.
 - RULE-05 (MUST): **Theme Toggle sáng/tối REQUIRED, KHÔNG được ép một mode** — load skill `dark-mode-maker`, nút gạt nằm trong `<nav>`.
 - RULE-06 (MUST): **Accessibility & Document Head REQUIRED** — viewport/meta/favicon inline, focus ring `:focus-visible`, skip link + `<main id="main">`, reduced-motion toàn cục, SVG có text alternative.
@@ -61,14 +61,15 @@ Output is a self-contained `.html` file (no JS libraries, no build step).
 - RULE-08 (MUST): **Auto-Host** — ALWAYS start a local HTTP server after writing the HTML file.
 - RULE-09 (MUST): **Playwright Audit REQUIRED** trước khi báo user; FAIL → sửa rồi audit lại, không giao trang đỏ.
 - RULE-10 (MUST): Thang cỡ chữ COMPACT cho màn 13″ — giảm chứ không tăng size.
-- RULE-11 (MUST): Sơ đồ archify nhúng qua `<iframe>` (khung vừa nội dung + link "Mở sơ đồ riêng ↗"), để trống `meta.visual_preset` (luật R20).
+- RULE-11 (MUST): **Mỗi trang ĐÚNG MỘT sơ đồ archify** (bao toàn bộ, user 021026: "tới cái thứ 2 là không ai đọc rồi") nhúng qua `<iframe>` (khung vừa nội dung + link "Mở sơ đồ riêng ↗"), để trống `meta.visual_preset` (luật R20). Mọi sơ đồ còn lại vẽ bằng Mermaid trong `.diagram-box[data-mermaid]` (§Mermaid Diagram Engine) theo chuẩn nhà — `python3 fdk/tools/mermaid-audit.py <trang>` phải 0 FAIL. Không vì luật này mà bớt sơ đồ: chỉ đổi engine.
 - RULE-12 (MUST): **KHÔNG gradient-text, KHÔNG sọc viền một cạnh** — `background-clip:text` (chữ tô gradient) và `border-left/right: ≥3px solid <màu>` trên thẻ/nút/callout là hai dấu hiệu AI-generated bị cổng tĩnh chặn cứng. Nhấn chữ bằng weight hoặc màu đặc; phân loại callout bằng chấm màu, nhãn, hoặc nền nhạt toàn thẻ (viền thì đều bốn cạnh).
 - RULE-13 (MUST): **Chạy HAI CỔNG trước khi giao** — `python3 fdk/tools/frontend-antipattern.py <trang>` (tĩnh) và `NODE_PATH=$(npm root -g) node fdk/tools/html-visual-gate.mjs <trang>` (chạy thật: chữ chìm < 4,5:1, khối dính < 8px, icon đè chữ, toggle, kính ở cả hai chế độ). Cổng đỏ thì SỬA rồi chạy lại; vá máy-làm-được bằng `python3 fdk/tools/html-slop-fix.py <trang>`. Không báo xong khi còn cổng đỏ.
+- RULE-14 (MUST): **Mở bìa bằng câu chuyện, không vào kỹ thuật ngay** (user 01/10/2026). Đoạn đầu tiên ngay dưới hero (section đầu / "Tổng quan") kể BỐI CẢNH và PAINPOINT trước: chuyện gì đang diễn ra, ai đang khổ vì cái gì, khổ thế nào (có con số hoặc tình huống cụ thể nếu có), rồi mới tới "vì vậy tài liệu này đề xuất / giải thích …". Thứ tự: bối cảnh → nỗi đau → hệ quả nếu để nguyên → hướng giải. Không mở bằng định nghĩa, tên field, kiến trúc hay danh sách tính năng. Dài 3–6 câu là đủ; không bịa bối cảnh — lấy từ yêu cầu của user, SPEC, issue hoặc log có thật.
 - Capabilities: đọc nội dung nguồn; ghi file HTML vào thư mục output của dự án; chạy HTTP server cục bộ; điều khiển trình duyệt headless để đo DOM/console/ảnh chụp; ghi draft + index + log của wiki.
 
 ### Failure boundaries
 - Không có nội dung / không rõ chủ đề nào thành section → **clarify** với user, chưa sinh trang.
-- Playwright audit FAIL (lỗi console, thiếu `.nav-toggle`/`.nav-close`, theme toggle không nằm trong `.theme-row`) → **blocked**: sửa rồi audit lại; không báo trang đã xong ở trạng thái đỏ.
+- Playwright audit FAIL (lỗi console, thiếu rail `nav.nw-tocmap` hoặc nút mục lục `.ovs-navbtn`, theme toggle không nằm trong `.theme-row`) → **blocked**: sửa rồi audit lại; không báo trang đã xong ở trạng thái đỏ.
 - Chưa có `@playwright/test` → cài theo `/playwright-verify` rồi mới audit; không bỏ bước audit.
 - Port 8765 đã bận → coi như server đang chạy, bỏ qua bước start (không phải lỗi).
 - Mở iframe archify qua `file://` không đo được chiều cao → **partial** chấp nhận được: khung giữ 1000px, link "Mở sơ đồ riêng ↗" là đường thay thế; muốn vừa khít thì mở qua Auto-Host.
@@ -87,32 +88,33 @@ python3 fdk/tools/html_font.py --apply <trang.html> [trang-khác.html …]      
 ```
 Chưa chạy bước 2 = trang rơi về font hệ thống → CHƯA xong. Kiểm nhanh: `grep -c 'id="ovs-font"' <trang.html>` phải ra `1`.
 
-**Bước 2 còn tự gắn bộ khung (PLAN 220926)** cho trang có sidebar `.logo` + ≥4 neo `#…`: icon tile cho mọi `nav a` chưa có `.ic` (icon chọn theo từ khoá tên mục, số thứ tự "01 ·" vào `title`), mục active = viên nền + chấm màu, vạch tiến độ đọc, skip-link, `<main id="main">`, favicon inline, scroll spy, ripple, mind map sinh từ h2/h3 (khi trang chưa có `.mm`), JS kéo-thả cho `.diagram-box`. Nguồn: `fdk/tools/html_shell.py`; CSS/JS mind map + kéo-thả là bản NGUYÊN VĂN của skill này (`html_shell.py --sync`). Chỉ `.nav-toggle`/`.nav-close` vẫn phải dựng tay. Luật R20 chặn trang thiếu khung kèm đúng lệnh `--apply`.
+**Bước 2 còn tự gắn bộ khung (PLAN 220926, điều hướng đổi theo PLAN 300926-tocmap-nav)** cho trang có nav `.logo` + ≥4 neo `#…`: mỗi `nav a` thành một CHẤM trên rail TOC map mép phải (nhãn vào `data-tooltip` + `aria-label`, vị trí theo heading trong trang), cụm điều khiển nổi góc phải dưới `.ovs-bar` (nút sáng/tối, nút mục lục `.ovs-navbtn` bật mọi nhãn), chấm của mục đang xem tô màu nhấn, vạch tiến độ đọc, skip-link, `<main id="main">`, favicon inline, scroll spy, ripple, mind map sinh từ h2/h3 (khi trang chưa có `.mm`), JS kéo-thả cho `.diagram-box`. Nguồn: `fdk/tools/html_shell.py`; CSS rail chép từ mẫu namuwiki-ui-kit, CSS/JS mind map + kéo-thả là bản NGUYÊN VĂN của skill này (`html_shell.py --sync`). Không còn thành phần điều hướng nào phải dựng tay. Luật R20 chặn trang thiếu khung kèm đúng lệnh `--apply`.
 
 ### Hệ khoảng cách và nhịp chữ (MUST, PLAN 220926-spacing-system — nguồn `fdk/wiki/sources/220926-spacing-standards.md`)
 - **Một thang duy nhất** cho padding/margin/gap: 2 · 4 · 8 · 12 · 16 · 20 · 24 · 32 · 40 · 48 · 64 · 80 · 96 px (IBM Carbon + Tailwind), dùng token `--sp-1…--sp-11` của lớp nền. Không 5, 6, 9, 10, 13, 14px. `html_font.py --apply` tự bẻ giá trị lệch về bậc gần nhất; cổng tĩnh `spacing-off-scale` chặn trang chưa qua bước đó.
 - **Line-height:** chữ nội dung 1,55–1,6 (`--lh-body`), MỘT giá trị cho mọi đoạn/mục; tiêu đề 1,1–1,3 (`--lh-heading`). Dưới 1,5 cho đoạn nhiều dòng là lỗi (`line-height-body`).
+- **Chữ dài chia hai cột** (MUST, user chốt 01/10/2026): chuỗi đoạn chữ giải thích từ 600 ký tự (hoặc một đoạn từ 900 ký tự) chia hai cột thay vì trải hết bề ngang hay bóp hẹp khung. Lớp nền (`html_font.py --apply`) tự bọc chuỗi đoạn vào `.ovs-cols` (`columns:2 24em`, khung hẹp tự về một cột); không bọc đoạn trong mục danh sách, ô bảng, trích dẫn. Mẫu: `build-design-showcase.py --get prose-columns`.
 - **Độ dài dòng:** đoạn chữ ≤ 80 ký tự (WCAG 1.4.8), mục tiêu `max-width:var(--measure)` = 34em (Baymard; ≈ 68 ký tự thật — `70ch` cho ~89 ký tự vì `ch` là độ rộng chữ số "0", rộng hơn chữ trung bình).
 - **Proximity:** khoảng TRÊN tiêu đề ≥ 1,5 lần khoảng DƯỚI (USWDS) — tiêu đề thuộc về phần chữ phía sau. Mẫu tốt đã đo: 26px trên / 12px dưới.
-- **Phân tầng nhãn sidebar:** tên trang · nhãn nhóm · mục phải khác nhau ở ≥ 2 trong 4 thuộc tính (cỡ, đậm, màu, hoa/thường) — luật `hierarchy-flat`. Mục nav 13–14px đậm 600 màu chữ chính; nhãn nhóm chữ hoa nhỏ giãn chữ.
+- **Phân tầng nhãn trong nav có chữ** (trang tài liệu dùng TOC map nên nhãn nằm trong tooltip; luật này chỉ còn cắn nav tự dựng có nhãn nhóm)**:** tên trang · nhãn nhóm · mục phải khác nhau ở ≥ 2 trong 4 thuộc tính (cỡ, đậm, màu, hoa/thường) — luật `hierarchy-flat`. Mục nav 13–14px đậm 600 màu chữ chính; nhãn nhóm chữ hoa nhỏ, KHÔNG giãn chữ quá .02em (luật `wide-tracking`).
 - **Vùng bấm** ≥ 24×24px (WCAG 2.5.8).
 - **Thang tiêu đề to → nhỏ** (MUST): h1 > h2 > h3 > h4 (mặc định lớp font: 32 · 24 · 20 · 17px) và không nhỏ hơn chữ nội dung; **tên trang ≥ 1,2 × mục nav/tab** (sidebar: logo 18px, mục 13px) — luật `heading-scale`, `title-scale`.
 - **Viết hoa chữ đầu** (MUST) cho tiêu đề, nhãn, nút, tab, mục nav (`sentence-case`; lớp nền tự sửa khi `--apply`). Tên riêng muốn giữ chữ thường: `data-case="keep"`.
 - **Kanban một style, thẻ cố định kích thước** (MUST): mọi thẻ trên bảng cùng style và cùng rộng/cao; tiêu đề `line-clamp:2`, dòng phụ `ellipsis`, bấm thẻ mở chi tiết — luật `kanban-uniform`.
-- **Code mẫu** cho sidebar, lưới, kanban, list, motion, chart…: trang `skills/hallmark/references/design-showcase.html` (máy khách: `~/.claude/skills/hallmark/references/design-showcase.html`); lấy khối bằng `python3 fdk/tools/build-design-showcase.py --get <id>` (máy khách: `python3 ~/.claude/harness/fdk/tools/build-design-showcase.py --get <id>`; `--list` in index).
+- **Code mẫu** cho TOC map, lưới, kanban, list, motion, chart…: trang `skills/hallmark/references/design-showcase.html` (máy khách: `~/.claude/skills/hallmark/references/design-showcase.html`); lấy khối bằng `python3 fdk/tools/build-design-showcase.py --get <id>` (máy khách: `python3 ~/.claude/harness/fdk/tools/build-design-showcase.py --get <id>`; `--list` in index).
 - **Khoảng nghỉ cho mắt** (MUST): màn đầu chỉ tóm tắt, chi tiết hiện khi bấm (`<details>`, popup, nút tóm tắt); đừng đặt ngang hàng hàng chục viên/chip/nút — luật `eye-rest`. Khác chuẩn vì yêu cầu đặc biệt → `<meta name="overstack-exempt" content="…" data-reason="…">`.
 
 ### Main workflow
 | Step | Type | Inputs | Action | Outputs/exit | Failure/next |
 |---|---|---|---|---|---|
 | W01 | judgment | nội dung, lời user | Chia nội dung thành N section (mỗi chủ đề/file một section); chọn một file hay Multi-File Mode (B01) | danh sách section + chế độ | thiếu nội dung → clarify |
-| W02 | judgment | danh sách section | Dựng khung theo Page Architecture: skip-link, nav sidebar (kính thật, `.nav-toggle`/`.nav-close`), `<main id="main">`, hero, mind map, `section-bg s-bg{i}`, footer | khung HTML | — |
+| W02 | judgment | danh sách section | Dựng khung theo Page Architecture: skip-link, `<nav>` mục lục (`.logo` + link `#sec-{i}`, KHÔNG viết CSS sidebar — lớp nền dựng rail TOC map), `<main id="main">`, hero, mind map, `section-bg s-bg{i}`, footer | khung HTML | — |
 | W03 | deterministic | N section | Sinh CSS theo Design System + CSS Generator Pattern (`#sec-{i}`, accent `i % 6`, biến thể dark-mode cho `.tag`), scrollbar overlay, font stack hệ thống | CSS inline | — |
 | W04 | judgment | nội dung mỗi section | Vẽ sơ đồ: SVG inline node-draggable (≤~5 node, tuyến tính) hoặc Mermaid engine (≥6 node / có nhánh) (B02); nhúng artifact archify qua `<iframe>` (B03) | `.diagram-box` | — |
 | W05 | deterministic | khung + CSS | Gắn thành phần bắt buộc: mind map, copy button, water-ripple, collapse, scroll spy, theme toggle từ `dark-mode-maker`, Accessibility & Document Head | trang đủ thành phần | — |
 | W06 | effect | trang | Ghi `llmwiki/html/DDMMYY-<slug>.html` (tạo thư mục nếu chưa có) | file HTML | — |
 | W07 | effect | file HTML | Auto-Host: `npx serve -p 8765` từ project root | link `http://localhost:8765/llmwiki/html/...` | port bận → server đã chạy, đi tiếp |
-| W08 | deterministic | trang đang host | Playwright Audit bằng script `.mjs` chạy `node`: 0 lỗi console, round-trip sidebar, theme toggle trong `.theme-row`, chụp 3 trạng thái | `AUDIT PASS` | FAIL → B04 |
+| W08 | deterministic | trang đang host | Playwright Audit bằng script `.mjs` chạy `node`: 0 lỗi console, round-trip mục lục (bật nhãn, bấm chấm cuộn tới mục), theme toggle trong `.theme-row`, chụp 3 trạng thái | `AUDIT PASS` | FAIL → B04 |
 | W09 | effect | kết quả | Báo user link + viết Output Report draft + index + log | draft + index + log | 0 artifact → skip report |
 
 Chi tiết từng bước (nguồn chân lý cho W01–W09): các mục Design System, Page Architecture, Mind Map, Section-Bg Pattern, Animated SVG Diagrams, Accessibility & Document Head, Output Path, Auto-Host, Playwright Audit, Multi-File Mode và Output Report bên dưới — chép nguyên văn từ bản trước migrate.
@@ -127,11 +129,11 @@ Chi tiết từng bước (nguồn chân lý cho W01–W09): các mục Design S
 | B05 | user_optional | user muốn "xem UI sẽ trông ra sao" / "tạo bảng tương tác thử" | Interactive Prototype / Editable Data-Grid (vanilla JS, vẫn Self-Contained) | không yêu cầu → skip | W06 |
 
 ### Validation và stopping
-Phần kiểm bằng code: script Playwright ở W08 (console/pageerror, DOM `.nav-toggle`/`.nav-close`, round-trip `nav-collapsed`, `data-theme` đổi + control nằm trong `.theme-row`) — exit 1 là đỏ. Phần cần mắt: ảnh chụp theme sáng / tối / sidebar đóng. Dừng khi audit PASS; không có trần vòng sửa cứng trong bản gốc — nhưng không bao giờ báo "xong" khi còn đỏ. Script và ảnh audit là verify-rồi-vứt, không commit.
+Phần kiểm bằng code: script Playwright ở W08 (console/pageerror, DOM `nav.nw-tocmap` + `.ovs-navbtn`, round-trip bật nhãn rồi bấm chấm, `data-theme` đổi + control nằm trong `.theme-row`) — exit 1 là đỏ. Phần cần mắt: ảnh chụp theme sáng / tối / mục lục bung nhãn. Dừng khi audit PASS; không có trần vòng sửa cứng trong bản gốc — nhưng không bao giờ báo "xong" khi còn đỏ. Script và ảnh audit là verify-rồi-vứt, không commit.
 
 ### Examples
-- **Positive:** "làm docs site macOS cho 4 file trong `llmwiki/wiki/concepts/`" → một file `llmwiki/html/190926-overstack-concepts.html` có sidebar, mind map 4 nhánh, 4 section `#sec-0..3` (accent theo `i % 6`), server `:8765`, script Playwright in `AUDIT PASS` → báo link `http://localhost:8765/llmwiki/html/190926-overstack-concepts.html` + draft report.
-- **Boundary/failure:** trang sinh ra có nút theme là chip `position:fixed` góc phải, sidebar thiếu `.nav-close` → audit in `AUDIT FAIL: ['THIẾU .nav-toggle/.nav-close …', '… KHÔNG nằm trong .theme-row …']`, exit 1 → B04 sửa rồi audit lại; KHÔNG báo user trang đã xong.
+- **Positive:** "làm docs site macOS cho 4 file trong `llmwiki/wiki/concepts/`" → một file `llmwiki/html/190926-overstack-concepts.html` có rail TOC map, mind map 4 nhánh, 4 section `#sec-0..3` (accent theo `i % 6`), server `:8765`, script Playwright in `AUDIT PASS` → báo link `http://localhost:8765/llmwiki/html/190926-overstack-concepts.html` + draft report.
+- **Boundary/failure:** trang sinh ra có nút theme là chip `position:fixed` góc phải, chưa chạy bước 2 nên không có rail → audit in `AUDIT FAIL: ['THIẾU rail TOC map …', '… KHÔNG nằm trong .theme-row …']`, exit 1 → B04 sửa rồi audit lại; KHÔNG báo user trang đã xong.
 - **Boundary:** user nói "6 file" → B01: `DDMMYY-index.html` + 6 trang `DDMMYY-<slug>.html`, không gộp một trang.
 
 ### Design System
@@ -272,42 +274,26 @@ Rộng → cap 1052 căn giữa, thẳng hàng với chữ trong hero (1100−24
 
 ⚠️ **Body cuối của boxed element cần padding-bottom rộng hơn padding-top** (bài học 13/06/2026 — user chê "chỗ chuyển tiếp bị cắt đứt không mượt"): khối nội dung cuối (vd `.rc-body`) nối thẳng xuống section kế tiếp; nếu padding dưới = padding trên (16px) thì chữ áp sát mép box, đọc như bị cụt. Cho đáy thở thêm: `padding:16px 18px 22px` (đáy ≥ trên + 6px). Quy tắc: pane kết thúc bằng text → bottom-pad ≥ top-pad.
 
-#### Navigation — SIDEBAR ONLY (không bao giờ dùng top bar)
+#### Navigation — TOC MAP (rail chấm mục lục mép phải; không sidebar, không top bar)
 
 Máy gác (R20, hook PostToolUse): trang `*/html/*.html` có hơn 3 mục (`<section id>` hoặc `<h2>`) mà không có `<nav>` chứa ít nhất 3 link `#anchor` sẽ bị chặn, bất kể skill nào sinh trang. Trang cố ý một cột thì khai `<meta name="overstack-nav" content="none">` kèm lý do.
 
-Mọi cỡ màn hình đều dùng LEFT SIDEBAR + nút collapse. ⛔ KHÔNG có chế độ top bar — top bar nhồi link wrap chữ rất xấu trên màn hẹp. Màn hẹp (<640px): sidebar OVERLAY đè content (body giữ padding-left:0), mặc định THU GỌN, user mở bằng nút toggle:
+Điều hướng mặc định từ 30/09/2026 (user chốt theo mẫu `m3e-canvas/docs/namuwiki-ui-kit.html`, PLAN 300926-tocmap-nav) là **TOC map**: một rail mỏng bám mép phải, mỗi mục của trang là một chấm 5px, vị trí chấm theo đúng chỗ heading nằm trong trang như một bản đồ của thanh cuộn; mục sau cách mục trước ít nhất một ô 1.75rem; chấm nhạt dần theo cấp heading; chấm của mục đang xem tô màu nhấn. Chữ của mục nằm trong tooltip: rê chuột vào rail thì mọi nhãn bung ra, bàn phím thấy nhãn khi focus, màn cảm ứng bấm nút mục lục ở cụm nổi góc phải dưới. Thẻ nhãn là kính mờ không viền, một màu chữ, phân cấp bằng font và cỡ chữ: cấp 1 (tên trang, `#top`) font tiêu đề 18px, cấp 2 font tiêu đề 16px, cấp 3 font nội dung 13.5px, cấp 4 trở xuống 12px; mục đang xem có nền thẻ pha màu nhấn. Lúc nghỉ chấm mờ gần như không thấy. Vùng rê là 176px tính từ mép phải cửa sổ, cao trọn màn hình, do JS đo vị trí con trỏ nên không chắn bấm vào nội dung. Rail quá dày (số mục × 1.75rem vượt chiều cao rail) thì rê chuột vào rail hoặc bấm nút mục lục đều mở một danh sách cuộn được: khung ngoài trong suốt, mỗi mục là một thẻ nhãn riêng bấm được. ⛔ KHÔNG sidebar trái, KHÔNG top bar nhồi link.
 
-⚠️ **Sidebar PHẢI là kính thật, không phải tấm trắng sữa** (bài học 12/06/2026 — user chê "màu trơn trông hơi chắn"): fill phẳng `--glass-1` alpha .55 trên nền sáng ra "sữa" đục, không ra gương. Pane chrome LỚN (sidebar, panel cao full màn) bắt buộc 3 thứ: (1) **gradient-alpha glass** — alpha biến thiên dọc mặt kính thay vì một hằng số; (2) **specular sheen** `::before` — vùng sáng radial góc trên + dải sheen chéo; (3) **orb màu ngay sau lưng pane** (xem Background Plane) — blur 24px phải có màu thật để nghiền. `--glass-1` chỉ còn dùng cho floating panel nhỏ:
+Tác giả trang chỉ viết phần NGUỒN, không viết CSS hay JS điều hướng:
 
-```css
-:root{--nav-pad-y:18px}   /* nguồn chân lý duy nhất cho khoảng đệm dọc của nav — .theme-row (§Theme Toggle) đọc lại biến này, KHÔNG hard-code số riêng, để 2 chỗ không thể lệch nhau (bài học 200826: bug thật, xem lịch sử) */
-nav{position:fixed;top:0;left:0;bottom:0;width:200px;z-index:100;
-  display:flex;flex-direction:column;align-items:stretch;gap:2px;padding:var(--nav-pad-y) 12px;
-  background:linear-gradient(165deg,rgba(255,255,255,.46) 0%,rgba(255,255,255,.22) 48%,rgba(240,248,255,.34) 100%);
-  backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
-  -webkit-backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
-  border-right:1px solid rgba(255,255,255,.55);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 1px 0 0 rgba(255,255,255,.5),
-    inset -1px 0 0 rgba(30,90,170,.10),4px 0 24px rgba(30,90,170,.08)}
-/* specular sheen — vệt sáng chéo trên mặt kính; con của nav cần position:relative để nổi trên sheen */
-nav::before{content:'';position:absolute;inset:0;pointer-events:none;
-  background:
-    radial-gradient(220px 160px at 18% 4%,rgba(255,255,255,.55),transparent 70%),
-    linear-gradient(115deg,rgba(255,255,255,.28) 0%,transparent 28%,transparent 72%,rgba(255,255,255,.14) 100%)}
-nav>*{position:relative}
-nav .logo{margin:0 0 12px;padding:8px 12px;
-  background:linear-gradient(135deg,#0a84ff,#64b5f7);-webkit-background-clip:text;background-clip:text;color:transparent}
-nav a{padding:8px 12px;border-radius:10px;font-size:13px;position:relative;overflow:hidden}
-nav a.active{color:#0a84ff;background:rgba(10,132,255,.08);font-weight:600}
-body{padding-left:192px}
-@media(max-width:640px){
-  body{padding-left:0}                       /* sidebar overlay, không chiếm column */
-  nav{box-shadow:0 8px 30px rgba(0,0,0,.14)} /* nổi trên content khi mở */
-}
+```html
+<nav aria-label="Mục lục">
+  <div class="logo">Tên trang<small>dòng phụ ngắn</small></div>
+  <a href="#sec-0">1. Tổng quan</a>
+  <a href="#sec-1">2. Cài đặt</a>
+  <!-- ≥ 4 link neo; mỗi link trỏ tới id của section hoặc heading -->
+</nav>
 ```
 
-**Ripple effect (BẮT BUỘC trên nút sidebar + toggle):** click vào đâu, một hình tròn lan ra TỪ ĐÚNG TOẠ ĐỘ đó và phủ từ từ kín nút (bán kính = khoảng cách xa nhất tới 4 góc), rồi fade. Phần tử cha cần CÓ position (relative/fixed/absolute đều chứa được ink) + `overflow:hidden`. ⚠️ KHÔNG viết rule chung ép `position:relative` lên `.nav-toggle` — nó sẽ đè `position:fixed` (cùng specificity, rule sau thắng) làm nút rơi xuống cuối trang:
+Bước 2 (`html_font.py --apply`) đổi khối này thành rail: thêm class `ovs-side nw-tocmap` cho nav, mỗi link thành `<a class="ovs-na nw-tip" data-tooltip="…" aria-label="…"><span class="hit"><span class="dot l2"></span></span></a>`, dựng cụm điều khiển nổi góc phải dưới chứa nút sáng/tối và nút mục lục (không dải menu phía trên, không lặp tên trang). Trang KHÔNG đặt `body{padding-left}` hay `main{margin-left}` chừa chỗ sidebar — cột nội dung dùng trọn bề ngang, canh giữa bằng `max-width` + `margin:0 auto`. Code mẫu chạy thật: `python3 fdk/tools/build-design-showcase.py --get toc-map`.
+
+**Ripple effect (BẮT BUỘC trên nút bấm):** click vào đâu, một hình tròn lan ra TỪ ĐÚNG TOẠ ĐỘ đó và phủ từ từ kín nút (bán kính = khoảng cách xa nhất tới 4 góc), rồi fade. Phần tử cha cần CÓ position (relative/fixed/absolute đều chứa được ink) + `overflow:hidden`. ⚠️ KHÔNG viết rule chung ép `position:relative` lên `.nav-toggle` — nó sẽ đè `position:fixed` (cùng specificity, rule sau thắng) làm nút rơi xuống cuối trang:
 
 Ripple ink là LIQUID GLASS, không phải vệt màu phẳng: specular highlight lệch góc (circle at 35% 30%), thân trắng mờ, viền xanh nhạt, `backdrop-filter:blur(2px)` để giọt nước tự khúc xạ content bên dưới, edge highlight inset:
 
@@ -334,63 +320,10 @@ Ripple ink là LIQUID GLASS, không phải vệt màu phẳng: specular highligh
       ink.addEventListener('animationend', () => ink.remove());
     });
   }
-  document.querySelectorAll('nav a, .nav-toggle, .nav-close').forEach(attach);
+  document.querySelectorAll('button').forEach(attach);   // KHÔNG gắn lên chấm TOC map (nav a) — chấm 5px không có mặt để gợn
 })();
 ```
-Chạy SAU script tạo .nav-toggle để nút toggle cũng có ripple.
-
-**Liên quan §Theme Toggle sáng/tối (bên dưới, dòng ~952):** `.theme-row` là con trực tiếp của cùng `nav` này, dùng chung biến `--nav-pad-y` khai ở CSS `nav` phía trên — sửa padding của `nav` thì `.theme-row` tự theo, không cần sửa 2 chỗ.
-
-- Tier-1 glass cho cả hai dạng
-- Scroll spy via IntersectionObserver watching `section[id]` (selector `nav a` không đổi)
-
-**Collapse (BẮT BUỘC với sidebar) — 2 nút riêng biệt:** nút ĐÓNG `✕` nằm TRONG sidebar (góc trên phải, 26×26, bg mờ nhẹ) — bấm → sidebar `translateX(-100%)`, `body{padding-left:0}` (trả lại nguyên column). Nút MỞ `☰` glass 32×32 lơ lửng góc trên trái, CHỈ hiện khi sidebar đang đóng (`body:not(.nav-collapsed) .nav-toggle{opacity:0;pointer-events:none}`). Cả 2 nút đều có ripple liquid-glass. Trạng thái nhớ `localStorage('navCollapsed')`; màn hẹp mặc định collapsed (matchMedia 640px). JS tự tạo cả 2 button — không cần sửa markup:
-
-```js
-(function(){
-  const nav = document.querySelector('nav'); if (!nav) return;
-  const btn = document.createElement('button'); btn.className = 'nav-toggle'; btn.textContent = '☰';
-  document.body.appendChild(btn);
-  const close = document.createElement('button'); close.className = 'nav-close'; close.textContent = '✕';
-  nav.appendChild(close);
-  const apply = c => { document.body.classList.toggle('nav-collapsed', c);
-    try { localStorage.setItem('navCollapsed', c ? '1' : '0'); } catch(e){} };
-  btn.addEventListener('click', () => apply(false));
-  close.addEventListener('click', () => apply(true));
-  try { const s = localStorage.getItem('navCollapsed');
-    if (s === '1' || (s !== '0' && matchMedia('(max-width:640px)').matches)) apply(true);
-  } catch(e){}
-})();
-```
-
-```css
-nav{transition:transform .28s cubic-bezier(.4,0,.2,1)}
-body{transition:padding-left .28s cubic-bezier(.4,0,.2,1)}
-body.nav-collapsed nav{transform:translateX(-100%)}
-body.nav-collapsed{padding-left:0}
-.nav-toggle{position:fixed;top:12px;left:12px;z-index:120;width:32px;height:32px;border-radius:10px;
-  display:flex;align-items:center;justify-content:center;font-size:14px;color:#4a4a55;cursor:pointer;
-  background:linear-gradient(165deg,rgba(255,255,255,.5),rgba(255,255,255,.24));
-  backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
-  -webkit-backdrop-filter:blur(var(--blur-1)) saturate(1.7) brightness(1.04);
-  border:1px solid transparent;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 0 0 1px rgba(30,90,170,.08),0 2px 10px rgba(30,90,170,.12);
-  transition:opacity .2s,transform .28s cubic-bezier(.4,0,.2,1)}
-.nav-toggle:hover{color:#0a84ff}
-body:not(.nav-collapsed) .nav-toggle{opacity:0;pointer-events:none;transform:translateX(-6px)}
-.nav-close{position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:8px;
-  display:flex;align-items:center;justify-content:center;font-size:12px;color:#4a4a55;cursor:pointer;
-  background:rgba(0,0,0,.04);border:none;overflow:hidden}
-.nav-close:hover{color:#0a84ff;background:rgba(10,132,255,.10)}
-/* .nav-toggle hiện ở mọi cỡ màn */
-```
-
-⚠️ **Chip kính NỔI trên nền sáng KHÔNG được dùng viền trắng đặc** (bài học 13/06/2026 — user chê viền `.nav-toggle` "trông kỳ"): nút toggle (và mọi floating glass chip góc trên-trái) nằm trên vùng nền trang gần trắng-xanh phẳng → `backdrop-filter:blur` không có gì tối phía sau để nghiền thành kính, nên thứ rõ nhất lại là cái viền `rgba(255,255,255,.55)` — một vòng 1px nét căng, đọc thành "viền sticker dán lên", không ra mép kính. Fix: `border:1px solid transparent`, để mép sinh ra từ inset top-highlight + ring lạnh cực mảnh + drop-shadow lạnh:
-```css
-border:1px solid transparent;
-box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 0 0 1px rgba(30,90,170,.08),0 2px 10px rgba(30,90,170,.12);
-```
-Quy tắc: viền trắng đặc CHỈ hợp khi pane có content tối/đa sắc phía sau để blur sample (vd sidebar đè lên section). Chip nổi trên nền sáng → mép bằng shadow lạnh, không bằng stroke trắng.
+- Scroll spy via IntersectionObserver watching `section[id]` (selector `nav a` không đổi — lớp nền tô chấm của mục đang xem)
 
 ### Scrollbar — overlay tự ẩn (theme thay scrollbar mặc định)
 
@@ -437,7 +370,7 @@ Lưu ý: tint xanh `#0a84ff` để khớp pattern; thumb đậm dần theo hover
 
 ```
 <a class="skip-link"> — first focusable, jumps to #main (see Accessibility section)
-<nav>          — fixed LEFT sidebar with section links (never a top bar)
+<nav>          — mục lục: .logo + link #sec-{i}; lớp nền đổi thành rail TOC map mép phải (không sidebar, không top bar)
 <main id="main">  — wraps everything below for the landmark + skip-link target
 <hero>         — gradient title + subtitle
 <div class="mm">  — MẶC ĐỊNH: một mind map collapsible (xem § Mind Map) — luôn vẽ
@@ -810,6 +743,21 @@ async function renderMermaidDiagram(container, dsl){
 
 Every call site becomes `await renderMermaidDiagram(container, dsl)` — wrap the page's diagram-init code in an `async function` (or top-level `(async()=>{...})()`), never call this expecting a synchronous SVG element back.
 
+**Markup chuẩn (021026)** — mỗi sơ đồ Mermaid là một khối, mã nằm sẵn trong trang để `mermaid-audit.py` và validator R7 đọc được mà không cần chạy JS:
+
+```html
+<div class="diagram-box" data-mermaid><pre class="mermaid-src" hidden>flowchart TD
+  A["Người dùng giao việc"] --> B(["Còn trong giới hạn?"]):::decision
+  B -->|Có| C["Gọi LLM"]
+  B -->|Không| D["Dừng và báo phần chưa xong"]</pre><div class="mm-out"></div></div>
+<script>
+(async () => { for (const box of document.querySelectorAll('.diagram-box[data-mermaid]'))
+  await renderMermaidDiagram(box.querySelector('.mm-out'), box.querySelector('.mermaid-src').textContent); })();
+</script>
+```
+
+Chuẩn nét vẽ lấy từ mẫu user chọn 021026 (sơ đồ "harness agent"): đọc từ trên xuống, nút quyết định là hộp bo góc `:::decision` kết thúc bằng "?" (không hình thoi), tối đa 2 dòng × 40 ký tự mỗi nút, nhãn mũi tên ≤ 5 từ, ≤ 15 nút, một tông màu, chỉ mũi tên `-->`. Chi tiết + màu đo được: docstring `fdk/tools/mermaid-audit.py`.
+
 **5. Glassmorphism post-processing (REQUIRED)** — beautiful-mermaid's default rendering is flat; this makes it match the rest of the page (rounded corners, soft blue drop-shadow, specular sheen — same recipe as `.diagram-box`/`.card`, never a fake `backdrop-filter` since SVG doesn't support it reliably) plus a subtle flowing-dash on edges for liveliness, reusing the exact `flowArrow` keyframe already defined above (§Key Animations) rather than inventing new vocabulary. **Never touches node/edge coordinates** — ELK.js already computed those; this only adds visual layers on top:
 
 ```js
@@ -1051,21 +999,6 @@ liền mạch). Đây là cách cho "đọc tuần tự + bấm để đào sâu
 - Ripple: chỉ gắn ở list-control nếu muốn — KHÔNG để splash lan sang panel chi tiết.
 - Bản chạy thật: skill `orca-onboard` tab "Guided Tour" (skeleton v2).
 
-### Sidebar Icon Tiles (macOS SF-Symbols-style)
-
-Mỗi mục `nav a` = **tile bo góc đổ màu** (kiểu macOS System Settings) chứa **icon line vẽ
-bằng inline SVG** (stroke trắng, ~14px, round caps). ⛔ KHÔNG dùng glyph unicode (◫ ▸ ▤ —
-lệch baseline, xấu). Logo app = icon "display/monitor" SVG trong tile gradient. SF Symbols là
-font độc quyền Apple → **vẽ lại path SVG mô phỏng**, KHÔNG nhúng font (self-contained).
-
-```css
-nav a .ic{width:24px;height:24px;border-radius:7px;display:grid;place-items:center}
-nav a .ic svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-/* mỗi tab 1 màu tile (theo section accent) */
-```
-Map gợi ý: overview→`info.circle` · architecture→`square.stack.3d` · guided-tour→`mappin.and.ellipse`
-· modules→`cube.box` · run/docker→`terminal`. Bản chạy thật: `orca-onboard` skeleton v2.
-
 ### Responsive
 
 ```css
@@ -1108,7 +1041,7 @@ pre.code-block,.foot-tree{font-family:var(--font-mono)}
 
 ### Theme Toggle sáng/tối (REQUIRED — feedback user 2026-07-06, KHÔNG được ép một mode)
 
-**Tách ra thành skill riêng `dark-mode-maker` (feedback 160926: "bê nguyên cái làm hiệu ứng dark/light mode thành 1 skill riêng").** Mọi trang sinh ra phải cho user TỰ CHỌN sáng/tối bằng nút gạt (switch) dính đáy sidebar/nav — `prefers-color-scheme` chỉ là mặc định ban đầu. **Load skill `dark-mode-maker` (Skill tool) để lấy đúng:** markup nút gạt + chống FOUC + palette dark-mode trung tính (không navy-tinted) + hiệu ứng circle-reveal tỏa từ con trỏ (kẹp trong biên nút) + crest-glow liquid-glass + nghiệm thu Playwright. Đừng chép lại CSS/JS ở đây — một nguồn, sửa một chỗ, tránh đúng con drift đã từng xảy ra giữa `SKILL.md` và `fdk/tools/build-overstack-docs.py`.
+**Tách ra thành skill riêng `dark-mode-maker` (feedback 160926: "bê nguyên cái làm hiệu ứng dark/light mode thành 1 skill riêng").** Mọi trang sinh ra phải cho user TỰ CHỌN sáng/tối bằng nút gạt (switch): JS của `dark-mode-maker` chèn hàng `.theme-row` vào `<nav>`, lớp nền dời hàng đó vào cụm điều khiển nổi góc phải dưới (nav giờ là rail chấm) — `prefers-color-scheme` chỉ là mặc định ban đầu. **Load skill `dark-mode-maker` (Skill tool) để lấy đúng:** markup nút gạt + chống FOUC + palette dark-mode trung tính (không navy-tinted) + hiệu ứng circle-reveal tỏa từ con trỏ (kẹp trong biên nút) + crest-glow liquid-glass + nghiệm thu Playwright. Đừng chép lại CSS/JS ở đây — một nguồn, sửa một chỗ, tránh đúng con drift đã từng xảy ra giữa `SKILL.md` và `fdk/tools/build-overstack-docs.py`.
 
 Sinh trang bằng script (`fdk/tools/build-overstack-docs.py`)? Vẫn giữ nguyên tắc "một nguồn emit 2 khối CSS" (`_theme_css()`/`_DARK_RULES`) — chỉ khác là nội dung token giờ theo palette của `dark-mode-maker` § Palette, không phải chép tay riêng ở đây.
 
@@ -1116,15 +1049,14 @@ Sinh trang bằng script (`fdk/tools/build-overstack-docs.py`)? Vẫn giữ nguy
 
 These are easy to forget and break silently — wire all of them on every page.
 
-**`<head>` — meta + favicon (without `viewport` the whole Responsive section is dead on mobile):**
+**`<head>` — meta (favicon do `html_base --apply` gắn; without `viewport` the whole Responsive section is dead on mobile):**
 ```html
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Page Title — concise, sentence case</title>
 <meta name="description" content="One specific sentence about the page.">
 <meta name="theme-color" content="#eaf2fd">
-<!-- inline favicon, keeps the file self-contained (no /favicon.ico request) -->
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a84ff'/%3E%3C/svg%3E">
+<!-- favicon: KHÔNG tự viết — bước --apply (html_base) gắn favicon chữ "O" của Overstack, thay mọi favicon có sẵn -->
 ```
 Add Open Graph (`og:title`/`og:description`/`og:image`) only when the page is meant to be shared/linked externally — skip for purely local `file://` docs.
 
@@ -1241,9 +1173,9 @@ If port 8765 is already in use, skip (server already running).
 **Sau khi Auto-Host chạy, PHẢI verify bằng Playwright thật trước khi báo user trang đã xong.** Nếu không có sẵn `@playwright/test` trong project, cài theo `/playwright-verify` (skill riêng, đã có sẵn nếu framework này cài). Viết một script `.mjs` chạy thẳng bằng `node` (không qua `npx playwright test`), tối thiểu kiểm:
 
 1. **0 lỗi console/pageerror** khi trang load.
-2. **Nếu trang có `<nav>` sidebar**: `.nav-toggle` và `.nav-close` PHẢI tồn tại trong DOM (không phải suy đoán từ CSS — query DOM thật). Click `.nav-close` → `document.body` PHẢI có class `nav-collapsed` VÀ `.nav-toggle` PHẢI hiện (`opacity` khác 0). Click lại `.nav-toggle` → `nav-collapsed` PHẢI mất. Đây chính là round-trip đã KHÔNG được kiểm trong bài học 200826.
-3. **Nếu trang có theme toggle**: PHẢI là `.theme-row`/`.theme-switch` nằm bên trong `<nav>` (kiểm bằng `nav.contains(themeRowElement)`), KHÔNG phải một control `position:fixed` độc lập ở góc màn hình. Click toggle → `document.documentElement` đổi `data-theme`, chụp ảnh cả 2 theme.
-4. **Chụp ảnh tối thiểu 3 trạng thái**: theme sáng, theme tối, và (nếu có sidebar) sidebar đã đóng — lưu vào scratchpad, không cần giữ lại sau khi audit qua.
+2. **Nếu trang có `<nav>` mục lục**: rail `nav.nw-tocmap` và nút `.ovs-navbtn` PHẢI tồn tại trong DOM (query DOM thật — thiếu nghĩa là chưa chạy bước 2). Click `.ovs-navbtn` → nav PHẢI có thuộc tính `data-tooltip-show-children` (nhãn bung). Click một chấm `nav.nw-tocmap a.nw-tip` → thuộc tính đó PHẢI mất và mục đích PHẢI cuộn vào khung nhìn.
+3. **Nếu trang có theme toggle**: PHẢI là `.theme-row`/`.theme-switch` nằm trong cụm điều khiển `.ovs-bar` (lớp nền dời nó từ nav sang; kiểm bằng `closest('.ovs-bar')`), KHÔNG phải một control `position:fixed` độc lập ở góc màn hình. Click toggle → `document.documentElement` đổi `data-theme`, chụp ảnh cả 2 theme.
+4. **Chụp ảnh tối thiểu 3 trạng thái**: theme sáng, theme tối, và (nếu có mục lục) rail đang bung nhãn — lưu vào scratchpad, không cần giữ lại sau khi audit qua.
 
 ```js
 import { chromium } from "@playwright/test";
@@ -1258,16 +1190,20 @@ await page.waitForTimeout(500);
 const hasNav = await page.evaluate(() => !!document.querySelector('nav'));
 if (hasNav) {
   const dom = await page.evaluate(() => ({
-    hasToggle: !!document.querySelector('.nav-toggle'),
-    hasClose: !!document.querySelector('.nav-close'),
+    hasRail: !!document.querySelector('nav.nw-tocmap a.nw-tip'),
+    hasBtn: !!document.querySelector('.ovs-navbtn'),
   }));
-  if (!dom.hasToggle || !dom.hasClose) errors.push('THIẾU .nav-toggle/.nav-close — sidebar không đóng/mở được');
-  if (dom.hasClose) {
-    await page.click('.nav-close'); await page.waitForTimeout(300);
-    const collapsed = await page.evaluate(() => document.body.classList.contains('nav-collapsed'));
-    if (!collapsed) errors.push('Click .nav-close không collapse được sidebar');
-    await page.screenshot({ path: '/tmp/audit-collapsed.png' });
-    await page.click('.nav-toggle'); await page.waitForTimeout(300);
+  if (!dom.hasRail || !dom.hasBtn) errors.push('THIẾU rail TOC map (nav.nw-tocmap) hoặc nút mục lục (.ovs-navbtn) — chưa chạy html_font.py --apply');
+  else {
+    await page.click('.ovs-navbtn'); await page.waitForTimeout(300);
+    const open = await page.evaluate(() => document.querySelector('nav.nw-tocmap').hasAttribute('data-tooltip-show-children'));
+    if (!open) errors.push('Click .ovs-navbtn không bung được nhãn mục lục');
+    await page.screenshot({ path: '/tmp/audit-toc-open.png' });
+    const href = await page.evaluate(() => document.querySelectorAll('nav.nw-tocmap a.nw-tip')[1].getAttribute('href'));
+    await page.click('nav.nw-tocmap a.nw-tip >> nth=1'); await page.waitForTimeout(1200);
+    const jump = await page.evaluate(h => { const t = document.getElementById(decodeURIComponent(h.slice(1))).getBoundingClientRect();
+      return { closed: !document.querySelector('nav.nw-tocmap').hasAttribute('data-tooltip-show-children'), inView: t.top < innerHeight && t.bottom > 0 }; }, href);
+    if (!jump.closed || !jump.inView) errors.push('Bấm chấm mục lục không cuộn tới mục hoặc nhãn không tự tắt');
   }
 }
 await page.screenshot({ path: '/tmp/audit-light.png' });
@@ -1278,10 +1214,8 @@ await page.screenshot({ path: '/tmp/audit-light.png' });
 // control có thể bấm được tới khi data-theme đổi, rồi kiểm nó có nằm trong
 // .theme-row hay không — bất kể tên class/id của nó là gì.
 const themeBefore = await page.evaluate(() => document.documentElement.getAttribute('data-theme'));
-// loại .nav-toggle/.nav-close khỏi ứng viên — chúng CŨNG là <button>, và bấm
-// nhầm .nav-close giữa vòng dò sẽ sập sidebar, khiến .theme-switch biến mất
-// khỏi tầm bấm cho các lần thử sau (bug thật gặp khi tự viết script này)
-const clickables = await page.$$('button:not(.nav-toggle):not(.nav-close), [role="switch"]');
+// loại nút mục lục khỏi ứng viên — nó CŨNG là <button> nhưng không đổi theme
+const clickables = await page.$$('button:not(.ovs-navbtn), [role="switch"]');
 let themeCtl = null, inThemeRow = false;
 for (const el of clickables) {
   await el.click().catch(() => {});
@@ -1290,7 +1224,7 @@ for (const el of clickables) {
   if (themeAfter !== themeBefore) { themeCtl = el; inThemeRow = await el.evaluate(n => !!n.closest('.theme-row')); break; }
 }
 if (!themeCtl) errors.push('Bấm thử mọi <button>/[role=switch] không thấy data-theme đổi — thiếu theme toggle');
-else if (!inThemeRow) errors.push('Tìm thấy control đổi được data-theme nhưng KHÔNG nằm trong .theme-row — khả năng là chip nổi góc rời sidebar (bug 200826)');
+else if (!inThemeRow) errors.push('Tìm thấy control đổi được data-theme nhưng KHÔNG nằm trong .theme-row — khả năng là chip nổi góc rời cụm điều khiển (bug 200826)');
 await page.screenshot({ path: '/tmp/audit-dark.png' });
 
 if (errors.length) { console.log('AUDIT FAIL:', errors); process.exit(1); }

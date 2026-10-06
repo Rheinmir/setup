@@ -17,6 +17,7 @@ Tự-mở-coverage: đọc policy.yaml/validator/generator LIVE → thêm chức
 Self-contained: chỉ stdlib. Fail-open từng probe: probe lỗi → SKIP, không giết cả cổng.
 """
 import json
+import os
 import re
 import subprocess
 import sys
@@ -205,7 +206,7 @@ PROBE_MECH_MAP = {
     "selfstate": "code-state", "capsurface": "capsurface",
     "capproof": "capproof", "provenance": "provenance-scope",
     "orchestration": None, "deps": None, "wikisummary": None, "tidy": None,
-    "swh": "swh-lint",
+    "swh": "swh-lint", "engine": None,
 }
 
 
@@ -402,6 +403,21 @@ def p_capsurface():
     return "ok", "bề mặt năng lực khớp version (downstream sẽ thấy đúng khi có bản mới)", ""
 
 
+def p_engine():
+    """Engine global đã cài (~/.claude/harness/fdk/tools) lệch nguồn repo → mọi dự án khác sinh HTML bằng bản cũ mà không ai biết
+    (06/10/2026: sidebar cũ + favicon xanh dù repo đã đổi). CHỈ cảnh báo: repo đang sửa dở cũng lệch, đó là churn bình thường."""
+    eng = Path(os.environ.get("OVERSTACK_HARNESS_HOME") or Path.home() / ".claude/harness") / "fdk/tools"
+    if not eng.is_dir():
+        return "skip", f"chưa cài engine global ({eng})", ""
+    src = ROOT / "fdk/tools"
+    diff = sorted(f.name for f in src.glob("*.py") if (eng / f.name).is_file() and (eng / f.name).read_bytes() != f.read_bytes())
+    missing = sorted(f.name for f in src.glob("*.py") if not (eng / f.name).is_file())
+    if diff or missing:
+        return ("warn", f"engine global lệch nguồn: {len(diff)} file khác ({', '.join(diff[:5])}{'…' if len(diff) > 5 else ''})"
+                f"{f', thiếu {len(missing)}' if missing else ''}", "bash harness/scripts/install-harness.sh --global  # cài lại engine từ repo")
+    return "ok", f"engine global khớp nguồn ({len(list(src.glob('*.py')))} file)", ""
+
+
 def p_provenance():
     """Skill NGOÀI (adapt_mode=external-pull — pin + audit, engine ở ngoài) chạy full-permission
     sau khi cài; supply-chain drift (upstream sửa lén sau lúc pin) chỉ lộ ra nếu ai đó CHỦ ĐỘNG
@@ -577,7 +593,8 @@ PROBES = [
     ("freshinstall", ["freshinstall", "install", "orchestration", "e2e", "push"], p_freshinstall),
     ("capsurface", ["capsurface", "version", "capabilities", "bump", "downstream"], p_capsurface),
     ("capproof", ["capproof", "proof", "unproven", "ratchet", "dup"], p_capproof),
-    ("provenance", ["provenance", "supply-chain", "external-pull", "tamper"], p_provenance),
+    ("engine", ["engine", "install", "downstream", "drift", "html"], p_engine),
+("provenance", ["provenance", "supply-chain", "external-pull", "tamper"], p_provenance),
     ("swh", ["swh", "skill", "solid", "what-how", "standard"], p_swh),
     ("orchestration", ["orchestration", "orca", "dispatch", "task", "treo"], p_orchestration),
     ("deps", ["deps", "dependency", "code-graph", "orca", "mcp", "ngoài"], p_deps),

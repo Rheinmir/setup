@@ -82,3 +82,14 @@ def test_chart_text_uses_lexend_light_and_bold_maps_to_regular():
         f = ft.TTFont(io.BytesIO(base64.b64decode(b)))
         assert f["OS/2"].usWeightClass == w and "fvar" not in f                 # bản tĩnh: trình duyệt không vẽ được 700 từ nó
         assert all(ord(c) in f.getBestCmap() for c in "Đườngữợỹ")
+
+
+def test_headings_are_optically_matched_to_the_text_font_and_twice_its_size():
+    """User 29/09/2026: tiêu đề Newsreader trông nhỏ hơn cùng px vì chữ "x" thấp (0,426em vs 0,53em) → font-size-adjust
+    theo chữ "x" của font NỘI DUNG; thang theo mẫu ui-kit: h1 2,8× · h2 2× chữ nội dung 16px."""
+    css = hf.head_css()
+    assert f":where(h1,h2,h3,h4){{font-size-adjust:ex-height {hf.TEXT_EX_HEIGHT}}}" in css
+    assert ":where(h1){font-size:2.8125rem" in css and ":where(h2){font-size:2rem" in css
+    tt = pytest.importorskip("fontTools.ttLib")
+    f = tt.TTFont(ROOT / "fdk/tools/assets/fonts/BeVietnamPro-400-vi.woff2")
+    assert round(f["OS/2"].sxHeight / f["head"].unitsPerEm, 2) == hf.TEXT_EX_HEIGHT   # đổi font nội dung → số này phải đổi theo

@@ -11,10 +11,14 @@
     trang. Thoát: <meta name="overstack-preset" content="<preset>"> khi user YÊU CẦU preset đó.
 
 (c) PLAN 220926 — trang docs-shell (sidebar có `.logo` + ≥4 neo `#…`) phải đủ bộ khung MUST của docs-site-macos:
-    icon tile trong sidebar, skip-link, <main id="main">, favicon inline, scroll spy, ripple, mind map, sơ đồ kéo-thả.
+    rail TOC map (chấm mục lục mép phải) + toolbar, skip-link, <main id="main">, favicon inline, scroll spy, ripple, mind map, sơ đồ kéo-thả.
     Trước đây chỉ là văn xuôi trong skill → 0/5 trang đủ. Lớp nền (`html_font.py --apply`) tự chèn hết → chặn kèm đúng
     lệnh đó. CHECKS chép từ fdk/tools/docs-shell-survey.py (máy khách: validators và tools ở hai thư mục khác nhau);
     test_html_docs_shell.py gác hai bản không lệch.
+
+(d) 06/10/2026 — trang độc lập (có </head>, không phải trang con data-ovs-theme-follow) phải mang favicon chữ "O" của
+    Overstack (chữ ký viewBox `-18 -786 815 815`, nguồn duy nhất html_base.FAVICON_SVG). Trước đó favicon xanh cũ hay favicon
+    viết tay vẫn qua (cổng chỉ hỏi "có rel=icon không"), và engine cài cũ sinh favicon xanh mà không ai biết.
 
 Phạm vi: file .html nằm TRỰC TIẾP trong một thư mục `html/` (`*/html/*.html`). Miễn: chính artifact
 archify (viewer tự chứa — cùng cách miễn R16/R7).
@@ -47,11 +51,12 @@ def is_docs_shell(text: str) -> bool:
 
 
 SHELL_CHECKS = {
-    "icon-tile":  lambda h: bool(re.search(r'class="ic\b|class="nav-ic|<span[^>]*class="[^"]*\bico', _nav(h))),
+    "toolbar":    lambda h: 'role="toolbar"' in h,                             # mẫu ui-kit/namuwiki (user 30/09): điều khiển trang ở toolbar trên, sidebar không icon
     "skip-link":  lambda h: "skip-link" in h,
     "main-id":    lambda h: bool(re.search(r'<main\b|\bid="main"', h)),          # <main> id bất kỳ (skip-link trỏ đúng id đó)
     "favicon":    lambda h: bool(re.search(r'<link\b[^>]*\brel="(?:shortcut )?icon"', h)),   # thứ tự thuộc tính / file favicon đều nhận
-    "nav-toggle": lambda h: "nav-toggle" in h,
+    "nav-toggle": lambda h: "nav-toggle" in h or "ovs-navbtn" in h,
+    "toc-map":    lambda h: "nw-tocmap" in h,                                  # điều hướng = rail chấm mục lục mép phải (user 30/09, PLAN 300926-tocmap-nav)
     "scroll-spy": lambda h: "IntersectionObserver" in h,
     "ripple":     lambda h: "ripple" in h,
     "mind-map":   lambda h: bool(re.search(r'mind-?map|class="mm"', h, re.I)),
@@ -59,7 +64,7 @@ SHELL_CHECKS = {
 }
 
 
-MANUAL = {"nav-toggle"}   # lớp nền (fdk/tools/html_shell.py) KHÔNG tự chèn — thông báo không được hứa "--apply là xong"
+MANUAL = set()   # lớp nền (fdk/tools/html_shell.py) KHÔNG tự chèn — thông báo không được hứa "--apply là xong"
 
 
 def wrap_blocked(html: str) -> bool:
@@ -83,13 +88,22 @@ def shell_problem(path: str, text: str):
     if auto:
         msg += (f" Lớp nền tự chèn {', '.join(auto)} — chạy: python3 ~/.claude/harness/fdk/tools/html_font.py --apply {path}"
                 "  (repo framework: python3 fdk/tools/html_font.py --apply …).")
-    if "nav-toggle" in gaps:
-        msg += " nav-toggle phải dựng tay theo §Navigation của /docs-site-macos (.nav-toggle + .nav-close) — lớp nền không chèn vì đụng bố cục riêng."
     if "main-id" in gaps and "main-id" in manual:
         msg += (" main-id + skip-link phải dựng tay: bọc nội dung trong <main id=\"main\"> sẽ gãy trang này (CSS `body >`/`nav ~`/`nav +`"
                 " hoặc nav nằm trong <header>).")
     msg += " Trang cố ý không theo khung → <meta name=\"overstack-shell\" content=\"none\"> kèm lý do."
     return msg
+
+
+FAVICON_SIG = "-18 -786 815 815"
+
+
+def favicon_problem(path: str, text: str):
+    ho = re.search(r"<html\b[^>]*>", text, re.I)
+    if "</head" not in text.lower() or (ho and "data-ovs-theme-follow" in ho.group(0)) or FAVICON_SIG in text:
+        return None
+    return ("thiếu favicon chữ \"O\" của Overstack (favicon cũ/viết tay không tính) — chạy: python3 ~/.claude/harness/fdk/tools/html_font.py"
+            f" --apply {path}  (repo framework: fdk/tools/html_font.py; trang tự lo theme/font → html_base.py --apply --favicon-only).")
 
 
 def is_archify(text: str) -> bool:
@@ -114,7 +128,7 @@ def nav_problem(text: str):
         return None
     return (f"{n} mục (<section id>={sec}, <h2>={h2}) nhưng không có <nav> chứa ≥3 liên kết #anchor "
             f"(đếm được {anchors}) — trang dài không có menu điều hướng. Sửa: nạp /docs-site-macos (Skill tool) "
-            f"và dựng sidebar theo §Navigation (nav + .nav-toggle/.nav-close + scroll-spy). Cố ý một cột → "
+            f"và viết <nav> mục lục theo §Navigation (.logo + các link #neo — lớp nền đổi nó thành rail TOC map). Cố ý một cột → "
             f'thêm <meta name="overstack-nav" content="none"> kèm lý do.')
 
 
@@ -145,7 +159,7 @@ def check(path: str) -> None:
         return
     if is_archify(text):
         return
-    errs = [e for e in (nav_problem(text), preset_problem(path, text), shell_problem(path, text)) if e]
+    errs = [e for e in (nav_problem(text), preset_problem(path, text), shell_problem(path, text), favicon_problem(path, text)) if e]
     if errs:
         for e in errs:
             print(f"[R20 html-docs-shell] {path}: {e}", file=sys.stderr)
@@ -181,14 +195,18 @@ def self_test():
                        + '<iframe src="t1.html"></iframe>'), "preset user yêu cầu (meta) phải qua"
     shell = ('<nav><div class="logo">T</div>' + "".join(f'<a href="#s{i}">S{i}</a>' for i in range(5)) + "</nav>")
     assert blocked(shell + secs), "docs-shell thiếu bộ khung phải bị chặn (c)"
-    full = ('<link rel="icon" href="data:x"><a class="skip-link"></a>' + shell.replace('<a href', '<a class="ic" href')
-            + '<main id="main"></main>nav-toggle IntersectionObserver ripple <div class="mm"></div>' + secs)
+    full = ('<link rel="icon" href="data:x"><a class="skip-link"></a>' + shell.replace("<nav>", '<nav class="ovs-side nw-tocmap">')
+            + '<main id="main"><div role="toolbar"><button class="ovs-navbtn"></button></div></main>IntersectionObserver ripple <div class="mm"></div>' + secs)
     assert not blocked(full), "docs-shell đủ khung phải qua (c)"
+    head = "<!doctype html><html><head><title>t</title>{}</head><body><p>x</p></body></html>"
+    assert blocked(head.format('<link rel="icon" href="data:image/svg+xml,blue">')), "favicon cũ phải bị chặn (d)"
+    assert not blocked(head.format(f'<link rel="icon" href="data:image/svg+xml,%3Csvg viewBox=%27{FAVICON_SIG}%27%3E">')), "favicon O phải qua (d)"
+    assert not blocked(head.format("").replace("<html>", "<html data-ovs-theme-follow>")), "trang con (follow) được miễn (d)"
     sub = d / "council"
     sub.mkdir()
     (sub / "x.html").write_text(secs, encoding="utf-8")
     check(str(sub / "x.html"))  # ngoài */html/*.html → bỏ qua, không exit
-    print("html_docs_shell --self-test: 11/11 ok")
+    print("html_docs_shell --self-test: 14/14 ok")
 
 
 def main() -> None:

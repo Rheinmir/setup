@@ -159,6 +159,9 @@ if [ "${1:-}" = "--global" ]; then
   # Tool KHÔNG-python cũng phải xuống máy khách: html-visual-gate.mjs là cổng chạy-thật (Playwright).
   # Bỏ sót thì downstream chỉ có cổng tĩnh và không ai biết — smoke 21/09/2026 bắt đúng ca này.
   cp "$SRC/fdk/tools/"*.mjs        "$GH/fdk/tools/"        2>/dev/null || true
+  # Font ribbon "Overstack" (html_base._mast_css đọc lúc chạy) — chỉ chép *.py thì máy khách rơi về Georgia (06/10/2026).
+  mkdir -p "$GH/fdk/tools/assets/fonts"
+  cp "$SRC/fdk/tools/assets/fonts/Chomsky-"* "$GH/fdk/tools/assets/fonts/" 2>/dev/null || true
   cp "$SRC/harness/scripts/"*.py   "$GH/harness/scripts/"  2>/dev/null || true
   # personas travel theo engine (archetype.py --get đọc posture; UAT canary 260718 bắt preamble rỗng)
   cp "$SRC/llmwiki/personas/"*.md  "$GH/llmwiki/personas/" 2>/dev/null || true

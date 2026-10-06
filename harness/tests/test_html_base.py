@@ -83,3 +83,16 @@ def test_base_css_carries_spacing_scale_and_reading_rhythm_tokens():
     css = hb.base_css(family_dark=True)
     assert all(f"--sp-{i}:" in css for i in range(1, 12)) and "--lh-body:1.75" in css and "--measure:35em" in css
     assert ":where(p,li,dd,blockquote){line-height:var(--lh-body)}" in css
+
+
+def test_parent_embedding_follow_child_still_gets_mast_and_o_favicon():
+    """overstack.html 06/10/2026: trang mẹ nhúng trang con đã to_follow qua srcdoc → chuỗi data-ovs-theme-follow nằm trong thân
+    trang mẹ; bản cũ xét cả văn bản nên trang mẹ mất ribbon + giữ favicon xanh cũ. Chỉ thẻ <html> mở đầu mới quyết định."""
+    child = hb.to_follow(hb.apply("<!doctype html><html><head><title>c</title></head><body><p>con</p></body></html>"))
+    assert hb._is_follow(child) and 'id="ovs-mast"' not in child
+    src = child.replace('"', "&quot;")
+    parent = ('<!doctype html><html><head><title>m</title><link rel="icon" href="data:image/svg+xml,blue"></head>'
+              f'<body><iframe srcdoc="{src}"></iframe></body></html>')
+    out = hb.apply(parent)
+    assert 'id="ovs-mast"' in out
+    assert "-18 -786 815 815" in out.split("</head>")[0] and "svg+xml,blue" not in out
