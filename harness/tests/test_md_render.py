@@ -98,3 +98,15 @@ def test_idempotent(tmp_path):
     out, h1 = render(tmp_path)
     mr.build(tmp_path / "p.md", out)
     assert out.read_text(encoding="utf-8") == h1
+
+
+def test_chart_block_renders_static_svg_with_values(tmp_path):
+    src = tmp_path / "c.md"
+    src.write_text('## A\n\n```chart\n{"title": "Model viết bao nhiêu?", "unit": "KB", "note": "đo 06/10", '
+                   '"bars": [{"label": "cũ", "value": 33, "group": "trước"}, {"label": "mới", "value": 16, "group": "sau"}]}\n```\n'
+                   'Giải thích chart.\n\n```chart\n{bad json\n```\n', encoding="utf-8")
+    out = tmp_path / "html" / "c.html"; mr.build(src, out); h = out.read_text(encoding="utf-8")
+    assert '<figure class="chart"><figcaption>Model viết bao nhiêu?</figcaption>' in h
+    assert 'role="img"' in h and "cũ: 33 KB" in h and ">33 KB<" in h and ">16 KB<" in h
+    assert 'class="c-bar c-alt"' in h and '<p class="desc">Giải thích chart.</p>' in h
+    assert 'class="chart-err"' in h                               # JSON hỏng → báo lỗi tại chỗ, không vỡ trang

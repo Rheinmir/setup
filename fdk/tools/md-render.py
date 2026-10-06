@@ -7,7 +7,7 @@ nguồn duy nhất; vỏ trang (rail mục lục, sáng/tối, font, favicon, ri
 
 Cú pháp hỗ trợ: front matter YAML (lấy `title`), heading (có id để nhảy tới), đoạn văn, list lồng (- * + 1.),
 bảng `| a | b |`, trích dẫn `>`, `---`, code fence, inline `code` **đậm** *nghiêng* [link](url) ![ảnh](url).
-Hai khối đặc biệt:
+Ba khối đặc biệt (```chart: JSON {title (câu hỏi), unit, note (nguồn đo), bars:[{label,value,group?}]} → biểu đồ thanh SVG tĩnh):
   ```mermaid      → <div class="diagram-box" data-mermaid> (mermaid-audit.py + R7 đọc được mã gốc; engine vẽ nhúng
                      khi trang có sơ đồ). ```archify  <file.html> [tiêu đề] → <iframe class="archify-embed"> — CHỈ trỏ
                      tới artifact archify, không chép, không sửa nó.
@@ -17,6 +17,7 @@ HTML thô trong md bị escape (md là dữ liệu, không phải markup tin đ�
 Usage: md-render.py <in.md> [-o out.html] [--title "…"]     → in `→ <out>`; mặc định out = cạnh file md, đuôi .html
 """
 import html
+import json
 import re
 import sys
 from pathlib import Path
@@ -38,6 +39,14 @@ main img{max-width:100%}
 .archify-embed{width:100%;height:clamp(640px,85vh,1100px);border:1px solid var(--ovs-border);border-radius:12px;background:var(--ovs-surface)}
 main .diagram-box{box-sizing:border-box;border:1px solid var(--ovs-border);border-radius:12px;padding:var(--sp-3,12px);overflow:auto;width:min(1200px,calc(100vw - 48px));max-width:none;margin:0 0 var(--sp-3,12px) calc(50% - min(600px,50vw - 24px))}  /* sơ đồ thoát cột chữ: Mermaid sinh SVG 1100–1700px, nhét vào 72ch là chữ trong nút còn 30% */
 .mm-out{display:block;text-align:center}
+main .chart{box-sizing:border-box;margin:0 0 var(--sp-3,12px) calc(50% - min(500px,50vw - 24px));width:min(1000px,calc(100vw - 48px));padding:var(--sp-3,12px);border:1px solid var(--ovs-border);border-radius:12px;overflow-x:auto}
+.chart figcaption{font-weight:600;margin:0 0 8px}.chart svg{width:100%;height:auto;display:block}
+.c-lab{font-size:13px;fill:var(--ovs-ink)}.c-num{font-size:13px;fill:var(--ovs-ink2);font-variant-numeric:tabular-nums}
+.c-bar{fill:var(--ovs-accent)}.c-alt{fill:var(--ovs-ink2);opacity:.55}
+.c-legend{display:flex;gap:16px;font-size:12px;color:var(--ovs-ink2);margin-top:6px}
+.c-key::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;background:var(--ovs-accent);vertical-align:-1px}
+.c-key.c-alt{opacity:1}.c-key.c-alt::before{background:var(--ovs-ink2);opacity:.55}
+.c-note{font-size:12px;color:var(--ovs-ink2);margin:6px 0 0}
 :root{--mm-bg:transparent;--mm-fg:var(--ovs-ink);--mm-line:var(--ovs-ink2);--mm-accent:var(--ovs-accent);--mm-muted:var(--ovs-ink2);--mm-surface:var(--ovs-surface);--mm-border:var(--ovs-border)}"""
 
 MERMAID_JS = """window.__bmReady=(typeof DecompressionStream==='undefined')?Promise.reject(new Error('no DecompressionStream')):(async function(){
@@ -48,6 +57,36 @@ for(const box of document.querySelectorAll('.diagram-box[data-mermaid]')){var ou
 try{await window.__bmReady;var svg=BeautifulMermaid.renderMermaidSVG(src.textContent,{bg:v('--mm-bg'),fg:v('--mm-fg'),accent:v('--mm-accent'),line:v('--mm-line'),muted:v('--mm-muted'),surface:v('--mm-surface'),border:v('--mm-border')});
 out.innerHTML=svg.replace(/@import url\\('https:\\/\\/fonts\\.googleapis\\.com[^;]+;/g,'');
 var el=out.querySelector('svg'),vb=el&&el.viewBox&&el.viewBox.baseVal;if(vb&&vb.width){el.removeAttribute('width');el.removeAttribute('height');el.style.width=Math.max(vb.width*0.7,Math.min(vb.width,out.clientWidth))+'px';el.style.height='auto'}}catch(e){src.hidden=false}}})();"""
+
+
+def bar_chart(src):
+    """```chart (JSON) → biểu đồ thanh ngang SVG tĩnh, 0 thư viện, màu theo token trang (sáng/tối tự đổi).
+    {"title": "Câu hỏi biểu đồ trả lời?", "unit": "KB", "note": "nguồn đo", "bars": [{"label": "…", "value": 33, "group": "trước"}]}
+    group (tuỳ chọn) đổi màu thanh: nhóm đầu = màu nhấn, các nhóm sau = màu phụ — dùng cho so sánh trước/sau."""
+    try:
+        d = json.loads(src)
+        bars = [(str(b["label"]), float(b["value"]), str(b.get("group", ""))) for b in d["bars"]]
+    except (ValueError, KeyError, TypeError) as e:
+        return f'<pre class="chart-err">chart lỗi: {html.escape(str(e))}</pre>'
+    unit, vmax = d.get("unit", ""), max((v for _, v, _ in bars), default=0) or 1
+    groups = list(dict.fromkeys(g for _, _, g in bars))
+    lw = 16 + 7.4 * max(len(l) for l, _, _ in bars)              # cột nhãn vừa nhãn dài nhất (13px ≈ 7,4px/ký tự) — không cắt chữ
+    bw, rh = 520, 32                                            # vùng thanh · cao mỗi hàng
+    h = rh * len(bars) + 8
+    rows = []
+    for i, (lab, v, g) in enumerate(bars):
+        y, w = i * rh + 4, max(2, bw * v / vmax)
+        cls = "c-bar" if not groups or g == groups[0] else "c-bar c-alt"
+        num = f"{v:g}{(' ' + unit) if unit else ''}"
+        rows.append(f'<text x="{lw - 8}" y="{y + 15}" text-anchor="end" class="c-lab">{html.escape(lab)}</text>'
+                    f'<rect x="{lw}" y="{y + 3}" width="{w:.1f}" height="{rh - 10}" rx="4" class="{cls}"><title>{html.escape(lab)}: {num}</title></rect>'
+                    f'<text x="{lw + w + 6:.1f}" y="{y + 15}" class="c-num">{html.escape(num)}</text>')
+    legend = "".join(f'<span class="c-key{" c-alt" if i else ""}">{html.escape(g)}</span>' for i, g in enumerate(groups) if g)
+    label = html.escape(d.get("title", "Biểu đồ") + " — " + "; ".join(f"{l}: {v:g} {unit}".strip() for l, v, _ in bars))
+    return (f'<figure class="chart"><figcaption>{html.escape(d.get("title", ""))}</figcaption>'
+            f'<svg viewBox="0 0 {lw + bw + 110:.0f} {h}" style="max-width:{lw + bw + 110:.0f}px" role="img" aria-label="{label}">{"".join(rows)}</svg>'
+            + (f'<div class="c-legend">{legend}</div>' if legend else "")
+            + (f'<p class="c-note">{inline(d["note"])}</p>' if d.get("note") else "") + "</figure>")
 
 
 def slug(t, seen):
@@ -124,6 +163,9 @@ def render(md, title=None):
             if lang == "mermaid":
                 has_mermaid = want_desc = True
                 body.append(f'<div class="diagram-box" data-mermaid><pre class="mermaid-src" hidden>{html.escape(src, quote=False)}</pre><div class="mm-out"></div></div>')
+            elif lang == "chart":
+                want_desc = True
+                body.append(bar_chart(src))
             elif lang == "archify":
                 parts = (src.strip() or rest).split(None, 1)
                 if parts:
