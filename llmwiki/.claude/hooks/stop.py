@@ -428,8 +428,10 @@ def main() -> None:
     # dựng wiki-graph + overstack (overstack NHÚNG memory-map). Thứ tự cũ ngược lại nên
     # overstack luôn ôm bản memory-map cũ và medic báo "docs CŨ so đĩa" ở MỌI phiên —
     # một cảnh báo đúng nhưng vô phương sửa bằng cách chạy lại generator.
+    before = _html_mtimes(root)
     secondary_memory(root, (payload.get("session_id") or ""))  # issue #5: bộ-nhớ-thứ-cấp tự lưu context vụn cuối lượt
     regen_docs(root)               # overstack.html + CAPABILITIES tự cập nhật khi skill/rule đổi (repo framework)
+    _REGEN[:] = sorted(f for f, t in _html_mtimes(root).items() if before.get(f) != t)   # → dòng R21 "♻️ tự sinh lại"
     dym_drift_mirror(root)  # T2b: bundle tool ngoài lệch kho dym → nhắc, không chặn
     if framework_medic_mirror(root) == 2:  # T2: đụng framework → soi medic; FAIL thật thì chặn dừng
         sys.exit(2)
@@ -505,6 +507,28 @@ def _collapse(msg: str, session: str):
     return f"📖 [R21] {' · '.join(parts)} · {a('file://' + full, 'chi tiết')}"
 
 
+_REGEN = []          # HTML mà CHÍNH hook này vừa sinh lại trong lượt (secondary_memory + regen_docs) — R21 vốn loại chúng
+
+
+def _html_mtimes(root: str) -> dict:
+    """mtime mọi .html trong <overstack>/html + graph — để biết hook vừa ghi lại trang nào (user 06/10/2026:
+    "giảm thiểu việc tạo ra html mà không ai biết"). Fail-open → {}."""
+    try:
+        ov = overstack_dir(root)
+        if not ov:
+            return {}
+        return {str(f): f.stat().st_mtime for d in ("html", "graph") if (pathlib.Path(ov) / d).is_dir() for f in (pathlib.Path(ov) / d).rglob("*.html")}
+    except Exception:
+        return {}
+
+
+def regen_message(files) -> str:
+    if not files:
+        return ""
+    return "\n".join([f"♻️ [R21] hook cuối lượt vừa TỰ SINH LẠI {len(files)} HTML (không phải bạn/agent viết):"]
+                     + [f"  • [regen] {os.path.basename(p)}\n      file://{p}" for p in files])
+
+
 def _emit_touched(payload: dict) -> None:
     """R21: exit 0 nào cũng in danh sách path cho USER (systemMessage — hiện thẳng ở UI, 0 token
     của model), dạng GẬP 1 dòng (xem _collapse). Exit 2 (đang chặn dừng) thì bỏ: lượt dừng thật kế tiếp sẽ in."""
@@ -512,7 +536,7 @@ def _emit_touched(payload: dict) -> None:
         root = project_dir(payload)
         tp = payload.get("transcript_path") or ""
         msg = "\n".join(x for x in (graphs_message(session_graphs(root, tp)), new_html_message(session_new_html(root, tp)),
-                                    touched_message(session_touched_files(root, tp))) if x)
+                                    regen_message(_REGEN), touched_message(session_touched_files(root, tp))) if x)
         if os.environ.get("OVERSTACK_TOUCHED_SERVERS") != "0":          # link server đang chạy: localhost trong dự án + hostname thật qua tunnel
             msg = "\n".join(x for x in (msg, servers_message(running_servers(root, deadline=_T0 + _HARD_S))) if x)
         msg = msg and _collapse(msg, payload.get("session_id") or "")
