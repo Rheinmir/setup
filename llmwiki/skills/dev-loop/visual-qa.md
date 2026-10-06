@@ -33,7 +33,7 @@ metadata:
   - Frame có `ui_role≠none` cần gate acceptance (xem skill `br` § Vòng tự-kiểm thị giác).
   - Extension browser không chụp được localhost (thường gặp) → headless CLI thay thế.
   - User nói "qa thị giác", "visual qa", "route-shots", "screenshot từng route", "kiểm giao diện", "baseline diff", "UI có regression không", "test giao diện headless", "/visual-qa".
-- **Non-goals:** không dẫm `computer-use` (desktop AX / Orca browser); không phải verdict senior 4-mục (đó là `/qc-uiux`, dùng engine này); không nới ngưỡng để "hết lỗi".
+- **Non-goals:** không dẫm `computer-use` (desktop AX / Orca browser); không phải verdict senior + DONE contract (đó là `/qc-uiux` — chuẩn UI/UX của framework, dùng engine này); không nới ngưỡng để "hết lỗi".
 
 ### Mental model
 `app chạy + route list THẬT + login → route-shots (ảnh + MANIFEST, mọi theme/state) → tầng 1 baseline diff (ngưỡng 0) → tầng 2 bất biến in-page (contrast-aa · monochrome-surface · rogue-slab · shadow-clipped · overlap · row-misalign) → tầng 3 đọc đủ N ảnh theo rubric → FINDINGS.md → sửa → chụp lại + đọc lại`.

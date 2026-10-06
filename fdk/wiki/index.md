@@ -85,6 +85,7 @@
 | [downstream-layout-awareness](sources/evals/downstream-layout-awareness.md) | eval | Golden đo agent sửa hook trong repo framework có biết code chạy ở đâu trên máy khách: stamp .llmwiki/.harness-stamp, engine ~/.claude/harness, resolver dùng chung, chứng minh bằng fixture layout dot |
 | [html-favicon-source](sources/evals/html-favicon-source.md) | eval | Golden: favicon chữ O là nguồn duy nhất, gắn qua --apply; trang tự lo theme dùng --favicon-only |
 | [ui-kit-hero](sources/evals/ui-kit-hero.md) | eval | Golden: màn đại diện của UI kit cạnh intro, clone từ data-kit-rep vào data-kit-hero |
+| [qc-uiux-done-ratchet](sources/evals/qc-uiux-done-ratchet.md) | eval | Golden: UI chỉ xong khi DONE của /qc-uiux đạt; DONE khoá trước khi sửa, ratchet verify giữa các vòng |
 <!-- index:auto:end -->
 | [harness-local](concepts/harness-local.md) | concept | harness-local — harness RIÊNG của dự án |
 | [ADR-011-project-local-harness](sources/adr/ADR-011-project-local-harness.md) | source | "ADR-011: project-local harness — dự án tự phát triển rule riêng (P-namespace, sandbox-safe)" |

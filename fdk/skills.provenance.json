@@ -148,7 +148,7 @@
     },
     "br": {
       "files": {
-        "SKILL.md": "21706a69ba0dc87c52ce08b0aea75a264271dbcaff2f7b2488b51bdab76c5808",
+        "SKILL.md": "935029a587b2acd891295b3ce10c7fb6f7595ca9d8a27094ba822c041bd47ac6",
         "assets/defaults.yaml": "8753bb2b49dbe53c8d1ec5df9ed22eccb643a07238dbfdd06737be665cfa353e",
         "assets/design-template.md": "830734ed57b5f2b504204bec3c7d0958e8f5dcc91faee74708a80959c4eaad89",
         "assets/frame-template.md": "253427bbec120ea572ff2f0dbe3ff442b928f18854f86916cac5dbf45443f00d",
@@ -156,7 +156,7 @@
         "assets/revise-prompt.md": "f088c244213d969ae0282f9ce737f605f4468732406251f6e1b1219d12b9f6c1",
         "assets/spec-template.md": "c1a0f3bbf30d8d98c81b5cbdd5ea4c1be30f5a910150f1b9446d1e624c8a10b4"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-06",
       "source": "local-authored"
     },
     "brandkit": {
@@ -280,9 +280,9 @@
     },
     "design-prim": {
       "files": {
-        "SKILL.md": "75bad3f9e1223cdf60f15b3dd772646e2197f624bde41aa0d14a8937c63785ea"
+        "SKILL.md": "4590a8f4acba555369c297d996921aa13b9f0c2195ef9b962953a59a4f004072"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-06",
       "source": "local-authored"
     },
     "design-taste-frontend": {
@@ -431,7 +431,7 @@
     },
     "hallmark": {
       "files": {
-        "SKILL.md": "676b285a874dd8acb44af6183e57b222ed34be4bb0e03785c5d95e6b666d93f9",
+        "SKILL.md": "eb208ed95d408fbbfe58c9443bf610c287da4c0bf116d4f738ba4e6ee66ab2db",
         "references/anti-patterns.md": "1c66f41d68ac32303d52ea49a1d475b212162ff7b38884a0b31774958b4561df",
         "references/assets.md": "60929b3dc2258b69caf3012d99d174e1ad73da9645263db81a9b271cd6fd7d61",
         "references/color.md": "31c470d16ceb17ccce290cbdd00b9e9a88f2094df8eaaefb67c86ec1e1cdb876",
@@ -541,7 +541,7 @@
         "references/verbs/audit.md": "0a5b484453f1697a8675a7020df9159d0b4ce22f059b873501bfd82c26d6a31a",
         "references/verbs/redesign.md": "c2830f3b7d68e9622f55d376048a5a454c5ef59d309a211e716d1142e86acbdf"
       },
-      "recorded": "2026-09-28",
+      "recorded": "2026-10-06",
       "source": "local-authored"
     },
     "harness-tour": {
@@ -950,10 +950,12 @@
     },
     "qc-uiux": {
       "files": {
-        "SKILL.md": "ca23d7ee447a6acd65c6592fc18d0966956cc665b9b4d4bc4dbd977e30cad88b",
-        "references/list-control-checklist.md": "68046d11190060a99187ded96b30aa39ef9543e3446a501d7ee50648626a3110"
+        "SKILL.md": "7ae2a20de86ffcdf0efa7cf1159800178140e852a896df0a5c7c02b12cd244e2",
+        "references/list-control-checklist.md": "68046d11190060a99187ded96b30aa39ef9543e3446a501d7ee50648626a3110",
+        "scripts/ax-scan.py": "b86dcaa1f86262bc0da660709e48a3e5aecf2bd5f251e4f8a72c315d31d170a5",
+        "scripts/done-contract.py": "52ffc73eb325641fe6a084a220fa1a6d6a75a775886ffb793a25aa83293e8f45"
       },
-      "recorded": "2026-09-24",
+      "recorded": "2026-10-06",
       "source": "local-authored"
     },
     "query": {
@@ -1156,13 +1158,13 @@
     },
     "visual-qa": {
       "files": {
-        "SKILL.md": "163db7995f6257c32b94be0a3a5d92e5d0a65d46279d15109f12b81d96792d18",
+        "SKILL.md": "7e2da19f75e306adb0a99ce3a3b48b7dc4520d6e0e87c925975cc96c8f0c9d86",
         "assets/.gitignore": "4d56952b0fb13bf8f9b6c13a6d4c34a075bac3af447636a1df4335d7576e2f97",
         "assets/package-lock.json": "38e8a936bd4a4cfae70a013b1b2455a8a63cf84a28f3fb01f7008e2798a70b31",
         "assets/package.json": "7647d7f2d4459d1ffa26a19d5c5295f9104364a2a21a2c59a453e5209b56d37b",
-        "assets/route-shots.mjs": "68378c3abf00cb51bda69a6dca83efb9aaa679de7ad09d470d62e55a2bb34f92"
+        "assets/route-shots.mjs": "27673cbd81a8810bff16c3c0bbd4b7cf82c40e98aecba3388b04e588b04d2286"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-06",
       "source": "local-authored"
     },
     "wayfinder": {

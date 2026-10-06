@@ -8,7 +8,7 @@ description: >-
   clause_id + bảng "Giả định đang gánh"), `/br slice` (BR → frames nhỏ gắn chặt code,
   gác bằng frame-lint), `/br run <frame>` (mỗi frame chạy loop-runner có 6 phanh +
   dry-run + người gác · sau frame xanh TỰ chạy QC tất định 0-token), `/br qc` (audit
-  senior 4-mục: /qc-code soi code + /qc-uiux soi UI/UX qua engine visual-qa), `/br status`
+  senior: /qc-code soi code + /qc-uiux — chuẩn UI/UX của framework, 5 mục UX+AX + DONE contract), `/br status`
   (trang line-status.html tất định: frame nào chạy/kẹt/xong + truy ngược lỗi→frame→clause).
   Gọi khi user nói "br", "interview", "phỏng vấn yêu cầu", "soạn BR", "slice frame",
   "chạy frame", "qc frame", "audit ui mockup", "trạng thái dây chuyền", "ralph pipeline",
@@ -192,7 +192,7 @@ In ra: frame phụ trách (khớp theo file THẬT đã đổi > scope_code > t�
 #### Mode 4c — `/br qc [frame]` — audit senior QC (LLM 4-mục) trên mockup/frame
 Sau khi có mockup/frame xanh, chạy CẶP MẮT SENIOR (đắt=LLM, gọi tay — phần rẻ tất định đã tự chạy sau mỗi `/br run`):
 - **Code:** gọi `/qc-code` (Skill tool → `qc-code`) soi diff frame — 4 mục security/performance/naming/logic + sinh test tái hiện `qc-*`.
-- **UI/UX:** gọi `/qc-uiux` (Skill tool → `qc-uiux`) audit mockup — 4 mục a11y/hierarchy/consistency/antipattern; phần đo được (contrast/tap-target/overlap/misalign/missing-label) chạy qua engine visual-qa headless:
+- **UI/UX:** gọi `/qc-uiux` (Skill tool → `qc-uiux`) audit mockup theo CHUẨN UI/UX của framework — 5 mục (a11y · hierarchy & ấn tượng · consistency · antipattern · AX) + DONE contract khoá; frame UI chỉ chốt khi DONE đạt; phần đo được (contrast/tap-target/overlap/misalign/missing-label) chạy qua engine visual-qa headless:
   ```
   node skills/visual-qa/assets/route-shots.mjs <base-url-mockup> --audit
   ```
