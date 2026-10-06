@@ -301,6 +301,9 @@ for event, spec in tpl.items():
     for s in (spec if isinstance(spec, list) else [spec]):
         existing = {h.get("command") for d in defs for h in (d.get("hooks") or [])}
         c = cmd(s["script"])
+        for d in defs:   # hook đã có → vẫn cập nhật matcher (thêm Read cho R23 06/10/2026: chỉ-thêm-khi-thiếu làm máy đã cài kẹt matcher cũ)
+            if s["matcher"] and any(h.get("command") == c for h in (d.get("hooks") or [])) and d.get("matcher") != s["matcher"]:
+                d["matcher"] = s["matcher"]
         if c not in existing:
             entry = {"hooks": [{"type": "command", "command": c, "timeout": 30}]}
             if s["matcher"]:
