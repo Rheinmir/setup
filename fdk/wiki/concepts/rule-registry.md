@@ -30,6 +30,12 @@ Một trang đọc-là-đủ. Nguồn chân lý máy-đọc là `harness/poc-ven
 | **R13** | decision-to-adr | `content_check` · `validators/decision_adr.py` | pre-commit + CI repo-health | repo | active |
 | **R14** | patterns-protected | `deny_write` · `validators/patterns_guard.py` | PreToolUse (unlock env) | session | active |
 | **R15** | no-ai-attribution | `process_gate` · `validators/no_ai_attribution.py` | git `commit-msg` (pre-commit stage) | repo | active |
+| **R23** | html-read-guard | `content_check` · `validators/html_read_guard.py` | PreToolUse (Read + Bash đổ nội dung .html) | session | active |
+
+> Nợ: R16–R22 có trong `policy.yaml` nhưng chưa có dòng ở bảng này (bảng ngừng cập nhật sau R15).
+
+## R23 — chi tiết
+Đọc lại trang HTML **máy sinh** bị chặn khi nó có nguồn khác: trang `md-render` → file `.md` ở chân trang; artifact archify → spec `.json`; trang generator → dữ liệu/generator. Trang mà HTML chính là nguồn (landing, UI kit) không bị đụng. Ngoại lệ: lượt do user gọi slash một skill audit (`/qc-uiux`, `/visual-qa`, `/design-prim`, `/hallmark`…); thoát tay `OVERSTACK_READ_HTML=1`. Nguồn: user 06/10/2026 "đọc md là đủ rồi".
 
 ## R15 — chi tiết
 Commit message KHÔNG được ghi công AI: `Co-Authored-By: Claude…`, `Generated with|by <AI>`, 🤖. Enforce ở git `commit-msg` hook (vendor-neutral, ADR-002) — fail-open nếu thiếu file message. Chỉ quét message (không quét nội dung file). Cài qua `install-harness.sh` (`pre-commit install --hook-type commit-msg`). Xem ADR-016. **Caveat**: repo chưa cài hook hoặc `git commit --no-verify` sẽ bypass — sàn cục bộ, chưa có CI job quét commit PR (follow-up).

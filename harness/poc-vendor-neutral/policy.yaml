@@ -260,6 +260,16 @@ rules:
     handler: "llmwiki/.claude/hooks/stop.py::_emit_touched · hooklib.session_touched_files/touched_message. Nguồn: feedback user 19/09/2026 'path đâu mà coi?'."
     blocking: false
 
+  html_read_guard:
+    id: R23
+    name: html-read-guard
+    kind: content_check
+    statement: 'Không đọc lại trang HTML MÁY SINH khi nó có nguồn khác để đọc — nguồn là đủ: trang md-render → file .md ghi ở chân trang; artifact archify → spec .json cạnh nó; trang generator (overstack, wiki-graph, control-room*, *.graph.html, memory-map, skill-whiteboard, atlas) → dữ liệu/generator. Chặn Read và lệnh Bash đổ nội dung (cat/less/more/bat/head/tail/sed/awk); grep/wc vẫn được. Trang mà HTML chính là nguồn (landing hallmark, UI kit, viết tay) không bị đụng. Ngoại lệ: lượt do user gọi slash một skill audit (/qc-uiux, /visual-qa, /design-prim, /hallmark, /impeccable, /redesign-existing-projects, /qc-code, tên có "audit"); thoát tay OVERSTACK_READ_HTML=1.'
+    enforce_at: [session]
+    target_globs: ["**/*.html"]
+    handler: "harness/validators/html_read_guard.py · PreToolUse (llmwiki/.claude/hooks/pre_tool_use.py nhánh Read + Bash có .html; matcher thêm Read). Read không phải .html thoát ngay, không gọi validator. Nguồn: user 06/10/2026 'có ngăn luôn việc đọc lại html được không — đọc md là đủ rồi — trừ khi dùng audit skill gọi bằng slash'."
+    blocking: true
+
   html_slop:
     id: R22
     name: html-slop

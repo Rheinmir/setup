@@ -316,6 +316,17 @@ def build_r22(base):
     return _content("html_slop.py", fixture(bad, good))
 
 
+
+def build_r23(base):
+    # R23: đọc lại trang MÁY SINH bị chặn (đọc nguồn); trang mà HTML chính là nguồn (landing viết tay) đọc được.
+    bad = _w(base / "llmwiki" / "html" / "p-seq.html",
+             "<!doctype html><body><p>x</p><footer><p>Sinh từ <code>/x/p.md</code> bởi <code>md-render.py</code></p></footer></body>")
+    good = _w(base / "llmwiki" / "html" / "landing.html", "<!doctype html><body><h1>landing viết tay</h1></body>")
+    fx = fixture(bad, good)
+    fx["bad_event"] = {"action": "read", "file_path": str(bad)}
+    fx["good_event"] = {"action": "read", "file_path": str(good)}
+    return _content("html_read_guard.py", fx)
+
 # ── Tier 1b: argv-only / custom-flag content validators ─────────────────────
 def build_r13(base):
     # R13: architecture row in decisions.md must reference an ADR-N (or (no-adr: …)).
@@ -633,6 +644,7 @@ RULES = [
     ("R20", "html-docs-shell", build_r20),
     ("R21", "touched-paths", build_r21),
     ("R22", "html-slop", build_r22),
+    ("R23", "html-read-guard", build_r23),
 ]
 
 

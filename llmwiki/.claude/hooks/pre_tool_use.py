@@ -88,8 +88,14 @@ def main() -> None:
     elif tool == "Bash":
         # session + root: rule dự án cần biết phiên nào đang chạy (P1 no-bulk-stage — commit file của phiên khác)
         event = {"action": "bash", "command": ti.get("command", ""), "session": payload.get("session_id", ""),
-                 "root": project_dir(payload)}
-        checks = ["no_write_raw.py", "patterns_guard.py"]
+                 "root": project_dir(payload), "transcript_path": payload.get("transcript_path", "")}
+        checks = ["no_write_raw.py", "patterns_guard.py"] + (["html_read_guard.py"] if ".html" in event["command"] else [])
+    elif tool == "Read":
+        # R23: chỉ .html mới tốn công gọi validator — mọi Read khác thoát ngay (Read chạy rất nhiều lần mỗi phiên)
+        if not str(ti.get("file_path", "")).lower().endswith(".html"):
+            sys.exit(0)
+        event = {"action": "read", "file_path": ti.get("file_path", ""), "transcript_path": payload.get("transcript_path", "")}
+        checks = ["html_read_guard.py"]
     else:
         sys.exit(0)
 

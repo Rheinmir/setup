@@ -267,7 +267,7 @@ def _is_stale(c):
     # cổ ([ -d llmwiki ]) đều phải bị dọn, nếu không hook fire đôi sau update (GH#111).
     return '/.llmwiki/.harness-stamp" ]' not in c
 tpl = {
-    "PreToolUse":  [{"matcher": "Write|Edit|MultiEdit|NotebookEdit|Bash", "script": "pre_tool_use.py"},
+    "PreToolUse":  [{"matcher": "Write|Edit|MultiEdit|NotebookEdit|Bash|Read", "script": "pre_tool_use.py"},
                     {"matcher": "Bash", "script": "orca_guard.py"}],
     "PostToolUse": {"matcher": "Write|Edit|MultiEdit", "script": "post_tool_use.py"},
     "Stop":        {"matcher": None, "script": "stop.py"},
@@ -422,7 +422,7 @@ def hook(script, matcher=None):
     return entry
 
 tpl = {
-    "PreToolUse": [hook("pre_tool_use.py", "Write|Edit|MultiEdit|NotebookEdit|Bash"),
+    "PreToolUse": [hook("pre_tool_use.py", "Write|Edit|MultiEdit|NotebookEdit|Bash|Read"),
                    hook("orca_guard.py", "Bash")],
     "PostToolUse": [hook("post_tool_use.py", "Write|Edit|MultiEdit")],
     "Stop": [hook("stop.py")],
@@ -692,7 +692,7 @@ def h(script, matcher=None):
     if matcher: d["matcher"] = matcher
     return d
 tpl = {"permissions": {"deny": deny}, "env": {"OVERSTACK_WIKIGRAPH": "1"}, "hooks": {
-    "PreToolUse":  [h("pre_tool_use.py",  "Write|Edit|MultiEdit|NotebookEdit|Bash"), h("orca_guard.py", "Bash")],
+    "PreToolUse":  [h("pre_tool_use.py",  "Write|Edit|MultiEdit|NotebookEdit|Bash|Read"), h("orca_guard.py", "Bash")],
     "PostToolUse": [h("post_tool_use.py", "Write|Edit|MultiEdit")],
     "Stop":        [h("stop.py")],
     "SessionEnd":  [h("session_end.py")],
