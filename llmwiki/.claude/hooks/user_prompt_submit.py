@@ -66,11 +66,23 @@ def last_user_texts(transcript_path: str, k: int):
     return texts[-k:]
 
 
+_MSGS: list = []
+
+
 def emit(msg: str) -> None:
-    print(json.dumps({"hookSpecificOutput": {
-        "hookEventName": "UserPromptSubmit",
-        "additionalContext": msg,
-    }}, ensure_ascii=False))
+    """Gom thông điệp — in ĐÚNG MỘT object JSON ở flush() cuối hook. Audit 280926 F3: print mỗi lần
+    gọi → 2 object nối liền khi orca-graph + goal/docs-gate cùng lượt → Claude Code báo 'not valid
+    JSON' và vứt cả hai context (35 lần/30 ngày)."""
+    _MSGS.append(msg)
+
+
+def flush() -> None:
+    if _MSGS:
+        print(json.dumps({"hookSpecificOutput": {
+            "hookEventName": "UserPromptSubmit",
+            "additionalContext": "\n\n".join(_MSGS),
+        }}, ensure_ascii=False))
+        _MSGS.clear()
 
 
 GOAL_RE = re.compile(r"(?<![\w-])goal(?![\w-])", re.I)
@@ -116,6 +128,13 @@ def build_gate(n: int, every: int, need_docs: bool, need_eval: bool) -> str:
 
 
 def main() -> None:
+    try:
+        _main()
+    finally:
+        flush()          # mọi nhánh sys.exit(0) đều qua đây → stdout luôn là một JSON duy nhất
+
+
+def _main() -> None:
     payload = read_payload()
     audit(payload, "UserPromptSubmit")
 
@@ -156,6 +175,7 @@ def main() -> None:
                                 "--prompt", payload.get("prompt", "") or ""],
                                cwd=str(root), capture_output=True, text=True, timeout=150)
             if p.returncode == 2:
+                _MSGS.clear()                   # block: stdout chỉ là payload của session-continue
                 sys.stdout.write(p.stdout)      # OpenClaude: {"decision":"block"} · Claude Code: exit 2 + stderr
                 sys.stderr.write(p.stderr)
                 sys.exit(2)
