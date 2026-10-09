@@ -115,7 +115,16 @@ case_D3(){ box d3; cp -R "$SRC/harness/poc-vendor-neutral" "$B/pvn"; rm -rf "$B/
     case "$r" in *.*) [ -e "$B/pvn/out/$r" ] || MISS="$MISS $r";; esac; done
   [ -z "$MISS" ] && ok "D3 mọi \$OUT/<file> install.sh đọc đều do gen-converters sinh" || no "D3 install.sh đọc file gen-converters KHÔNG sinh:$MISS"; }
 
-CASES=("$@"); [ ${#CASES[@]} -gt 0 ] || CASES=(A3 A7 B1 B3 C1 D1 D2 D3)
-for c in "${CASES[@]}"; do if declare -F "case_$c" >/dev/null; then "case_$c"; else echo "ca lạ: $c (có: A3 A7 B1 B3 C1 D1 D2 D3)"; FAIL=$((FAIL+1)); fi; done
+# D4 (09/10/2026): CI sinh cho downstream gọi "$HOME/.claude/harness/.harness/poc-vendor-neutral/…" — gen-converters ghép
+# HARNESS_DIR của DỰ ÁN (.harness) vào đường engine GLOBAL (luôn harness/). Kiểm TĨNH: mọi path sau $HOME/.claude/harness/
+# trong out/ci/*.yml sinh với layout downstream phải là file có thật trong repo nguồn (global = bản chép của nó).
+case_D4(){ box d4; cp -R "$SRC/harness/poc-vendor-neutral" "$B/pvn"; rm -rf "$B/pvn/out"
+  ( cd "$B/pvn" && OVERSTACK_HARNESS_DIR=.harness OVERSTACK_OVERSTACK_DIR=.llmwiki python3 gen-converters.py ) >"$LOG" 2>&1 || { no "D4 gen-converters rc≠0"; return; }
+  REFS="$(grep -ohE '\$HOME/\.claude/harness/[A-Za-z0-9_./-]+' "$B/pvn"/out/ci/*.yml | sed 's#^\$HOME/\.claude/harness/##' | sort -u)"
+  MISS=""; for r in $REFS; do [ -e "$SRC/$r" ] || MISS="$MISS $r"; done
+  { [ -n "$REFS" ] && [ -z "$MISS" ]; } && ok "D4 CI downstream: mọi path engine global trỏ file có thật ($(echo "$REFS" | wc -l | tr -d ' ') path)" || no "D4 CI trỏ engine global KHÔNG có:${MISS:- (không tìm thấy ref nào)}"; }
+
+CASES=("$@"); [ ${#CASES[@]} -gt 0 ] || CASES=(A3 A7 B1 B3 C1 D1 D2 D3 D4)
+for c in "${CASES[@]}"; do if declare -F "case_$c" >/dev/null; then "case_$c"; else echo "ca lạ: $c (có: A3 A7 B1 B3 C1 D1 D2 D3 D4)"; FAIL=$((FAIL+1)); fi; done
 LEAK="$(pgrep -f "$T" | wc -l | tr -d ' ')"; [ "$LEAK" = 0 ] || { echo "  ⚠ còn $LEAK process chạy từ thư mục tạm của test"; FAIL=$((FAIL+1)); }
 echo ""; echo "install-flows: $PASS PASS · $FAIL FAIL · $SKIP SKIP"; [ "$FAIL" = 0 ]

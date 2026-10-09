@@ -29,6 +29,10 @@ OUT = os.path.join(HERE, "out")
 HARNESS_DIR = os.environ.get("OVERSTACK_HARNESS_DIR", "harness")
 OVERSTACK_DIR = os.environ.get("OVERSTACK_OVERSTACK_DIR", "llmwiki")
 CLI = f"{HARNESS_DIR}/poc-vendor-neutral/bin/llmwiki-validate.py"
+# Engine GLOBAL (~/.claude/harness/) luôn giữ layout `harness/` — dot-layout chỉ áp cho thư mục TRONG dự án.
+# Dùng CLI (theo HARNESS_DIR) cho đường global thì downstream nhận `~/.claude/harness/.harness/…` — file không
+# tồn tại, bước CI "harness validator" đỏ ở mọi PR có đổi .md.
+GLOBAL_CLI = "harness/poc-vendor-neutral/bin/llmwiki-validate.py"
 GEN = "# ⚙️  GENERATED FROM policy.yaml — đừng sửa tay; sửa policy.yaml rồi chạy gen-converters.py"
 
 
@@ -181,7 +185,7 @@ jobs:
           base="${{{{ github.event.pull_request.base.sha || github.event.before }}}}"
           files=$(git diff --name-only "$base" HEAD 2>/dev/null | grep -E '\\.md$' || true)
           [ -z "$files" ] && {{ echo "no changed .md"; exit 0; }}
-          python3 "$HOME/.claude/harness/{CLI}" files $files
+          python3 "$HOME/.claude/harness/{GLOBAL_CLI}" files $files
       - name: wikieval — gate hồi quy eval (skip nếu dự án chưa khoá baseline)
         # Engine từ GLOBAL (repo downstream không mang engine), nhưng golden/baseline/config
         # PHẢI trỏ vào repo đang check: wikieval tính REPO_ROOT từ __file__, nên gọi bản
