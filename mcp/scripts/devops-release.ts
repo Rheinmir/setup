@@ -22,7 +22,8 @@ const [cmd = "status", arg] = process.argv.slice(2);
 const client = new Client({ name: "overstack-mcp-release", version: "0" });
 await client.connect(new StreamableHTTPClientTransport(new URL(URL_), { requestInit: { headers: { authorization: `Bearer ${TOKEN}` } } }));
 const txt = (r: unknown) => (((r as { content?: Array<{ type: string; text?: string }> }).content) ?? []).filter((c) => c.type === "text").map((c) => c.text ?? "").join("\n");
-const call = async (name: string, args: Record<string, unknown>) => { const r = await client.callTool({ name, arguments: args }); const t = txt(r); if (r.isError) throw new Error(`${name}: ${t.slice(0, 800)}`); try { return JSON.parse(t) as Record<string, unknown>; } catch { return { text: t }; } };
+// stack_release = fetch + deploy (deploy chờ tới 40 s rồi trả job): nâng timeout request lên 10 phút thay vì 60 s mặc định của SDK
+const call = async (name: string, args: Record<string, unknown>) => { const r = await client.callTool({ name, arguments: args }, undefined, { timeout: 600_000 }); const t = txt(r); if (r.isError) throw new Error(`${name}: ${t.slice(0, 800)}`); try { return JSON.parse(t) as Record<string, unknown>; } catch { return { text: t }; } };
 
 interface Service { service: string; container: string; state: string; status: string; health?: string; ports: string[] }
 interface StackRow { name: string; dir: string; composeFile: string | null; hasEnv: boolean; services?: Service[]; error?: string }
