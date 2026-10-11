@@ -57,7 +57,7 @@ tên `mcp__overstack__<tool>`.
 
 | Biến | Mặc định | Ý nghĩa |
 |---|---|---|
-| `OVERSTACK_MCP_TOKEN` | *(bắt buộc cho HTTP, ≥ 16 ký tự)* | Bearer cho `/mcp`; `/healthz` không cần |
+| `OVERSTACK_MCP_TOKEN` | *(vắng → đọc/sinh file `<WORKSPACES_DIR>/.overstack-mcp-token`, 0600)* | Bearer cho `/mcp` (≥ 16 ký tự); `/healthz` không cần và báo `tokenSource` |
 | `OVERSTACK_ROOT` | cha của `mcp/` | Gốc repo overstack chứa `skills/`, `harness/`, `fdk/` |
 | `WORKSPACES_DIR` | `/workspaces` | Thư mục cha của các workspace |
 | `OVERSTACK_TOOLS` | `core` | `core` = 11 tool ở trên · `all` = thêm một tool mỗi script |
@@ -82,7 +82,8 @@ OVERSTACK_MCP_TOKEN=$(cat .token.local) bash scripts/dsh-smoke.sh   # dsh thật
 ```
 
 Client mẫu: `clients/dsh.overlay.yml` (dsh `--patch`), `clients/claude-code.mcp.json` (`claude mcp add`). Deploy lên host riêng
-qua devops-agent: [RUNBOOK.md](RUNBOOK.md).
+qua MCP của devops-agent: `DEVOPS_AGENT_URL=… DEVOPS_AGENT_TOKEN=… npm run devops -- release <ref> | wait | status`
+(`scripts/devops-release.ts`) — chi tiết [RUNBOOK.md](RUNBOOK.md).
 
 ## Giới hạn (nói thẳng)
 

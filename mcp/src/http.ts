@@ -15,14 +15,15 @@ export function sameToken(a: string | undefined, b: string): boolean {
   return timingSafeEqual(Buffer.from(a), Buffer.from(b));
 }
 
-export interface HttpOptions extends ServerOptions { token: string }
+export interface HttpOptions extends ServerOptions { token: string; tokenSource?: "env" | "file" | "generated" }
 
 export function createApp(opts: HttpOptions): Hono {
   if (!opts.token || opts.token.length < 16) throw new Error("OVERSTACK_MCP_TOKEN must be set (≥ 16 chars) — generate one: openssl rand -hex 32");
   const catalog = opts.catalog ?? loadCatalog();
   const mode = opts.mode ?? toolModeFromEnv();
   const app = new Hono();
-  app.get("/healthz", (c) => c.json({ ok: true, name: "overstack-mcp", version: VERSION, skills: catalog.skills.length, rules: catalog.rules.length, tools: catalog.tools.length, mode }));
+  // tokenSource nói cho operator biết token nằm ở đâu (env hay file trong volume) — không bao giờ lộ giá trị
+  app.get("/healthz", (c) => c.json({ ok: true, name: "overstack-mcp", version: VERSION, skills: catalog.skills.length, rules: catalog.rules.length, tools: catalog.tools.length, mode, tokenSource: opts.tokenSource ?? "env" }));
   app.use("*", async (c, next) => {
     const bearer = c.req.header("authorization")?.replace(/^Bearer\s+/i, "");
     if (!sameToken(bearer, opts.token)) return c.json({ error: "unauthorized" }, 401);

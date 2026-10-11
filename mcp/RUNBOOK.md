@@ -14,27 +14,26 @@ tầng của devops-agent **chờ người duyệt** trên web UI của nó.
 | `.env` của stack | `/home/rhein/stacks/overstack-mcp/.env` | operator viết; hostops không bao giờ đọc hay in |
 | Network `ai-net` | trên host (devops-agent tạo sẵn) | compose của stack khai `external: true` |
 
-## 1. Operator chuẩn bị thư mục + `.env` (một lần)
+## 1. Đường ngắn: `devops-release.ts` (qua MCP của devops-agent, không cần chạm host)
 
 ```sh
-# trên host (hoặc qua một lệnh approve của devops-agent nếu bạn đã cho nó tool đó)
-mkdir -p /home/rhein/stacks/overstack-mcp
-cat > /home/rhein/stacks/overstack-mcp/.env <<EOF
-OVERSTACK_MCP_TOKEN=$(openssl rand -hex 32)
-OVERSTACK_TOOLS=core
-OVERSTACK_GIT_ALLOW=https://github.com/Rheinmir/
-OVERSTACK_GIT_TOKEN=
-OVERSTACK_TOOL_TIMEOUT_MS=120000
-OVERSTACK_MCP_BIND=127.0.0.1
-ORCA_GRAPH_REF=main
-EOF
-chmod 600 /home/rhein/stacks/overstack-mcp/.env
+cd ~/orca/setup/mcp
+export DEVOPS_AGENT_URL=http://100.114.107.68:8787/mcp   # hoặc https://<tunnel-host>/mcp
+export DEVOPS_AGENT_TOKEN=<AGENT_AUTH_TOKEN của người vận hành>
+npm run -s devops -- release feat/overstack-mcp   # asset_upsert overstack-mcp (repo/ref) → flow stack_release (stack_fetch + stack_deploy)
+npm run -s devops -- wait 900                     # poll stacks_list tới khi service healthy
+npm run -s devops -- status                       # state/health/port + sha đang chạy (stack_source)
 ```
 
-`OVERSTACK_MCP_BIND=127.0.0.1` → chỉ loopback của host và network `ai-net` (devops-agent, PM agent gọi
-`http://overstack-mcp:8791/mcp`). Muốn máy khác trong tailnet gọi: đặt IP tailnet của host. **Không** đặt `0.0.0.0`.
+`hostops_stack_fetch` **tạo thư mục stack lần đầu**, nên không cần staging tay. Không có `.env` → server **tự sinh token**
+lần đầu và giữ trong volume `/workspaces/.overstack-mcp-token`; `/healthz` báo `tokenSource: generated|file|env`.
+Operator đọc token một lần: `docker exec overstack-mcp cat /workspaces/.overstack-mcp-token` (trên host). Muốn tự chọn token
+hoặc đổi `OVERSTACK_TOOLS=all`, `OVERSTACK_MCP_BIND=<ip tailnet>`: viết `/home/rhein/stacks/overstack-mcp/.env` (mẫu
+`.env.mcp.example`) rồi `stack_deploy` lại. **Không** đặt `OVERSTACK_MCP_BIND=0.0.0.0`.
 
-## 2. devops-agent kéo + deploy
+Ở autonomy `ask`, hai bước ghi (`stack_fetch`, `stack_deploy`) chờ duyệt trên web UI của devops-agent; ở `all` chạy ngay.
+
+## 2. Đường dài: qua chat / flow bằng CLI của devops-agent
 
 Qua chat (agent gọi tool hostops, mỗi lệnh ghi chờ duyệt ở tab Approvals):
 

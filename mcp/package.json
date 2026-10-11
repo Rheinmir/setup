@@ -14,6 +14,7 @@
     "catalog": "python3 scripts/gen-catalog.py",
     "catalog:check": "python3 scripts/gen-catalog.py --check",
     "mcp:check": "tsx scripts/mcp-check.ts",
+    "devops": "tsx scripts/devops-release.ts",
     "typecheck": "tsc --noEmit",
     "test": "node --import tsx --test tests/*.test.ts"
   },

@@ -20,7 +20,8 @@ services:
       - path: .env
         required: false
     environment:
-      OVERSTACK_MCP_TOKEN: ${OVERSTACK_MCP_TOKEN:?set OVERSTACK_MCP_TOKEN in .env (openssl rand -hex 32)}
+      # vắng → server sinh token lần đầu vào volume (/workspaces/.overstack-mcp-token); đọc: docker exec overstack-mcp cat /workspaces/.overstack-mcp-token
+      OVERSTACK_MCP_TOKEN: ${OVERSTACK_MCP_TOKEN:-}
       OVERSTACK_TOOLS: ${OVERSTACK_TOOLS:-core}
       OVERSTACK_GIT_ALLOW: ${OVERSTACK_GIT_ALLOW:-https://github.com/Rheinmir/}
       OVERSTACK_GIT_TOKEN: ${OVERSTACK_GIT_TOKEN:-}
