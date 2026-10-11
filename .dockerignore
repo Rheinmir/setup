@@ -1,0 +1,15 @@
+.git
+**/node_modules
+**/__pycache__
+**/*.pyc
+scratchpad
+.overstack
+llmwiki/html/*.html
+llmwiki/handover
+fdk/html
+harness/metrics/*.jsonl
+harness/metrics/*.json
+.env
+.env.*
+!.env.mcp.example
+mcp/.token.local

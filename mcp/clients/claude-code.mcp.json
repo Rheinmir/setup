@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "overstack": {
+      "command": "node",
+      "args": ["--import", "tsx", "/path/to/setup/mcp/src/stdio.ts"],
+      "env": { "WORKSPACES_DIR": "/path/to/your/projects", "OVERSTACK_TOOLS": "core" }
+    },
+    "overstack-remote": {
+      "type": "http",
+      "url": "https://<overstack-mcp-host>/mcp",
+      "headers": { "Authorization": "Bearer <OVERSTACK_MCP_TOKEN>" }
+    }
+  }
+}

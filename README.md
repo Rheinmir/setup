@@ -71,6 +71,7 @@ Chi tiết + bản từng pha (`01`/`02`/`03`): [`setup.md`](setup.md). Cài b�
 | `harness/` | **Trụ guardrail.** `validators/` + `scripts/` (install, fdk-gate, code-logger, council/loop/eval…). `poc-vendor-neutral/` = lõi CLI vendor-neutral + installer 1-dòng |
 | `skills/` | **Trụ kỹ năng** — mỗi `SKILL.md` gọi bằng `/tên`; canonical, mirror sang `llmwiki/skills/` |
 | `fdk/` | **Framework Dev Kit** — đồ nghề phát triển CHÍNH overstack + **`wiki/`** (wiki RIÊNG của framework: ADR-001..010, concepts harness/fdk, decisions), `CAPABILITIES.md`, `tools/`. Không travel xuống dự án (ADR-004/008) |
+| `mcp/` + `Dockerfile.mcp`, `docker-compose.stack.yml` | **overstack-mcp** — toàn bộ skill (prompt + resource), rule (`rule_check`) và script (`tool_run`) như MỘT MCP server; stdio cùng máy hoặc Streamable HTTP + bearer trên host riêng, deploy qua devops-agent (`stack_sync` → `stack_deploy`). [`mcp/README.md`](mcp/README.md) · [`mcp/RUNBOOK.md`](mcp/RUNBOOK.md) |
 | `00–03-*.md`, `setup.md` | Prompt dựng dự án mới — **bắt đầu ở `00-New-Project.md`** (1 lần dán) |
 | `.github/workflows/harness.yml` | CI: validator + self-test mỗi PR |
 

@@ -1,0 +1,20 @@
+# dsh chạy model qua OpenRouter (endpoint Anthropic-compatible) — dùng khi DEEPSEEK_API_KEY là key OpenRouter (sk-or-…).
+#   pnpm dsh headless --patch mcp/clients/dsh.openrouter.overlay.yml --patch mcp/clients/dsh.overlay.yml "…"
+# Ba điều OpenRouter cần khác DeepSeek chính thức: model id dạng `deepseek/<model>`, thinking tắt (không nhận budget_tokens),
+# maxTokens vừa quota; và tắt deepseek-llm-api-extensions (REQUEST_EXTENSION không qua gateway).
+- id: llm-deepseek
+  config:
+    baseURL: https://openrouter.ai/api
+    thinking: disabled
+    maxTokens: 4096
+    models:
+      - id: deepseek/deepseek-v4.1-flash
+        name: DeepSeek V4.1 Flash (OpenRouter)
+        inputModalities: [text]
+        maxTokens: 4096
+- id: agent-default-model
+  config:
+    provider: deepseek-official
+    model: deepseek/deepseek-v4.1-flash
+- id: deepseek-llm-api-extensions
+  disabled: true

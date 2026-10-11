@@ -1,0 +1,56 @@
+# overstack-mcp như MỘT stack riêng — devops-agent (hostops) ưu tiên tên file này khi stack_deploy:
+#   stack_sync  overstack-mcp  https://github.com/Rheinmir/setup  <ref>      → /home/rhein/stacks/overstack-mcp
+#   stack_deploy overstack-mcp                                             → docker compose up -d --build
+# Không publish ra 0.0.0.0: chỉ loopback của host (hoặc tailnet qua OVERSTACK_MCP_BIND) và network ai-net
+# (alias `overstack-mcp` để devops-agent / PM agent gọi http://overstack-mcp:8791/mcp). .env do operator viết trên host.
+name: overstack-mcp
+
+services:
+  overstack-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile.mcp
+      args:
+        ORCA_GRAPH_REF: ${ORCA_GRAPH_REF:-main}
+    image: overstack-mcp:latest
+    container_name: overstack-mcp
+    restart: unless-stopped
+    # .env do operator viết trên host; smoke cục bộ truyền --env-file nên file có thể vắng
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      OVERSTACK_MCP_TOKEN: ${OVERSTACK_MCP_TOKEN:?set OVERSTACK_MCP_TOKEN in .env (openssl rand -hex 32)}
+      OVERSTACK_TOOLS: ${OVERSTACK_TOOLS:-core}
+      OVERSTACK_GIT_ALLOW: ${OVERSTACK_GIT_ALLOW:-https://github.com/Rheinmir/}
+      OVERSTACK_GIT_TOKEN: ${OVERSTACK_GIT_TOKEN:-}
+      OVERSTACK_TOOL_TIMEOUT_MS: ${OVERSTACK_TOOL_TIMEOUT_MS:-120000}
+    ports:
+      - "${OVERSTACK_MCP_BIND:-127.0.0.1}:8791:8791"
+    volumes:
+      - workspaces:/workspaces
+    networks:
+      default:
+      ai-net:
+        aliases: [overstack-mcp]
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /home/app
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+    mem_limit: 1g
+    cpus: 2
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8791/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+networks:
+  ai-net:
+    external: true
+
+volumes:
+  workspaces:

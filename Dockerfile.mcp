@@ -1,0 +1,38 @@
+# overstack-mcp — toàn bộ skill/rule/tool của overstack như một MCP server (xem mcp/README.md).
+# Ảnh = repo overstack (skills/, harness/, fdk/) + node 22 + python3 (+pyyaml) + engine orca-graph. Chạy user `node`,
+# root filesystem read-only (compose), HOME trên tmpfs, workspace là volume /workspaces.
+FROM node:22-bookworm-slim
+
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends python3 python3-yaml git ca-certificates curl \
+ && rm -rf /var/lib/apt/lists/*
+
+# Engine orca-graph (shim harness/scripts/orca-graph.py tìm theo ORCA_GRAPH_ENGINE_DIR)
+ARG ORCA_GRAPH_REF=main
+RUN git clone --depth 1 --branch "${ORCA_GRAPH_REF}" https://github.com/Rheinmir/orca-graph /opt/orca-graph \
+ && rm -rf /opt/orca-graph/.git
+ENV ORCA_GRAPH_ENGINE_DIR=/opt/orca-graph/engine
+
+WORKDIR /opt/overstack
+# package trước để cache layer npm
+COPY mcp/package.json mcp/package-lock.json* ./mcp/
+RUN cd mcp && npm ci --omit=dev --no-audit --no-fund --ignore-scripts && npm rebuild esbuild 2>/dev/null || true
+# phần còn lại của repo (lọc bởi .dockerignore)
+COPY . .
+RUN python3 mcp/scripts/gen-catalog.py --check \
+ && mkdir -p /workspaces /home/app \
+ && chown -R node:node /workspaces /home/app /opt/overstack/mcp
+
+ENV OVERSTACK_ROOT=/opt/overstack \
+    WORKSPACES_DIR=/workspaces \
+    HOME=/home/app \
+    PORT=8791 \
+    BIND=0.0.0.0 \
+    OVERSTACK_TOOLS=core \
+    NODE_ENV=production
+USER node
+EXPOSE 8791
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD curl -fsS http://127.0.0.1:8791/healthz || exit 1
+# cwd = mcp/ để `--import tsx` resolve từ mcp/node_modules; OVERSTACK_ROOT vẫn là gốc repo
+WORKDIR /opt/overstack/mcp
+CMD ["node", "--import", "tsx", "src/main.ts"]

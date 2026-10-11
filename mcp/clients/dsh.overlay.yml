@@ -1,0 +1,16 @@
+# dsh (DeepSeek Harness) nối vào overstack-mcp qua Streamable HTTP.
+#   OVERSTACK_MCP_URL=http://127.0.0.1:8791/mcp OVERSTACK_MCP_TOKEN=… \
+#   pnpm dsh headless --patch mcp/clients/dsh.overlay.yml "Dùng mcp__overstack__skill_find để tìm skill render markdown ra html"
+# Tool hiện ra cho model dưới tên mcp__overstack__<tool> (skill_find, tool_run, rule_check, orca_graph…).
+# failOnStartupError: true — server vắng thì harness từ chối bật plugin thay vì chạy tiếp không có tool (fail loud).
+- insert:
+    - id: mcp-overstack
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: overstack
+        transport: streamable-http
+        url: !!js process.env.OVERSTACK_MCP_URL ?? 'http://127.0.0.1:8791/mcp'
+        headers:
+          Authorization: !!js '`Bearer ${process.env.OVERSTACK_MCP_TOKEN ?? ""}`'
+        toolCallTimeoutMs: 180000
+        failOnStartupError: true
