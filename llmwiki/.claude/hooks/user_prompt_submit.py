@@ -134,6 +134,52 @@ def main() -> None:
         flush()          # mọi nhánh sys.exit(0) đều qua đây → stdout luôn là một JSON duy nhất
 
 
+def prompt_recall(root: Path, sid: str, prompt: str) -> None:
+    """Quét OKF THEO PROMPT ở prompt đầu của phiên (0 token chọn, bơm 1 lần).
+    Vì sao: SessionStart quét trước khi user gõ gì, truy vấn chỉ có did episode trước (= commit subject
+    upstream) + file dirty → episode luôn thắng chữ, wiki chỉ nổi nhờ cạnh file (backlog #2). Prompt là
+    tín hiệu về việc SẮP làm; okf-scan `--prompt` rút từ khoá tất định (định danh → từ vựng chỉ mục →
+    bảng cầu Việt→Anh, bench bench_prompt_query.py). Chỉ in những trang CHƯA có trong biên lai của phiên
+    (SessionStart đã in rồi) để không bơm trùng. Fail-open tuyệt đối."""
+    text = (prompt or "").strip()
+    if len(text) < 12 or text.startswith("<task-notification") or text.startswith("[SYSTEM"):
+        return
+    ok_tool = resolve_tool(str(root), "harness/scripts/okf-scan.py")
+    if not ok_tool:
+        return
+    try:
+        rs = subprocess.run([sys.executable, ok_tool, "receipts", "--session", sid, "--root", str(root), "--json"],
+                            cwd=str(root), capture_output=True, text=True, timeout=10)
+        receipts = json.loads(rs.stdout or "[]")
+    except Exception:
+        receipts = []
+    if any(r.get("prompt") for r in receipts):
+        return                                  # đã quét theo prompt trong phiên này → 1 lần là đủ
+    seen = {p for r in receipts for p in (r.get("returned") or [])}
+    dirty = ""
+    try:
+        st = subprocess.run(["git", "status", "--porcelain", "--untracked-files=no"], cwd=str(root),
+                            capture_output=True, text=True, timeout=5).stdout
+        dirty = ",".join(ln[3:].strip().split(" -> ")[-1] for ln in st.splitlines() if len(ln) > 3)[:4000]
+    except Exception:
+        pass
+    cmd = [sys.executable, ok_tool, "query", "--prompt", text[:2000], "--root", str(root), "--session", sid, "--k", "4", "--json"]
+    if dirty:
+        cmd += ["--files", dirty]
+    try:
+        rec = json.loads(subprocess.run(cmd, cwd=str(root), capture_output=True, text=True, timeout=12).stdout or "{}")
+    except Exception:
+        return
+    new = [h for h in rec.get("hits") or [] if h.get("path") not in seen]
+    if not new:
+        return
+    how = rec.get("prompt_terms") or {}
+    why = ", ".join(dict.fromkeys((how.get("idents") or [])[:3] + (how.get("bridge") or [])[:3] + (how.get("vocab") or [])[:3]))[:120]
+    emit("🔎 [recall-prompt] Từ prompt này" + (f" ({why})" if why else "") + " → nên đọc thêm:\n    "
+         + "\n    ".join(f"{h['path']}  [{h['type']}]" for h in new)
+         + "\n  Đây là NHẮC, không phải sự thật — file trong repo mới là nguồn đúng.")
+
+
 def _main() -> None:
     payload = read_payload()
     audit(payload, "UserPromptSubmit")
@@ -143,6 +189,11 @@ def _main() -> None:
         sys.exit(0)  # không phải project llmwiki → bỏ qua
 
     sid = payload.get("session_id") or "default"
+
+    try:
+        prompt_recall(root, sid, payload.get("prompt", "") or "")
+    except Exception:
+        pass
 
     # orca-graph có node đang locked/dispatched → nhắc MỖI LƯỢT (không throttle như docs-gate),
     # kèm chỉ thị rõ IN LINK Ở CUỐI RESPONSE — feedback 170926: user muốn link luôn thấy được,

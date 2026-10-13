@@ -1,0 +1,4346 @@
+[
+ {
+  "q": "fix(services): wait for runtime status before showing stopped",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/ServicesTab.tsx",
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/services-status.test.tsx",
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/services/ServiceDetailPanel.tsx",
+   "apps/dashboard/src/components/services/ServiceStatusBadge.tsx",
+   "apps/dashboard/src/i18n/locales/ar/projects.json",
+   "apps/dashboard/src/i18n/locales/de/projects.json"
+  ],
+  "vi_plain": "Sửa để dịch vụ chỉ hiện trạng thái đã dừng sau khi đã chờ nhận được trạng thái thực tế từ máy chạy.",
+  "vi_ident": "Trong ServiceStatusBadge.tsx, đừng hiện trạng thái đã dừng khi chưa nhận được trạng thái thực tế từ máy chạy.",
+  "cost": 0.0072596
+ },
+ {
+  "q": "refactor(env): remove obsolete scope UI and review noise",
+  "gold": [
+   "concepts/architecture.md",
+   "concepts/services-environment.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/environment-scope.test.tsx",
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/services/ServiceDetailPanel.tsx",
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/services/ServiceEnvironmentScope.tsx",
+   "apps/dashboard/src/components/import-project/EnvironmentVariables.tsx",
+   "packages/platform/src/engine/modules/services/service.operations.ts"
+  ],
+  "vi_plain": "Gỡ hết phần chọn phạm vi môi trường đã cũ không dùng nữa, dọn luôn mấy chỗ thừa cho gọn lại nhé.",
+  "vi_ident": "Gỡ hết phần chọn phạm vi môi trường đã cũ trong ServiceEnvironmentScope.tsx, dọn luôn mấy chỗ thừa cho gọn lại nhé.",
+  "cost": 0.0075014999999999995
+ },
+ {
+  "q": "fix(env): preserve Cloud runtime identity during inspection",
+  "gold": [
+   "concepts/services-environment.md"
+  ],
+  "files": [
+   "apps/api/test/modules/services/service-environment-state.test.ts",
+   "packages/platform/src/engine/modules/services/service-environment-state.ts"
+  ],
+  "vi_plain": "Khi kiểm tra trạng thái môi trường dịch vụ, đừng làm mất thông tin nhận dạng của bản chạy trên nền tảng đám mây.",
+  "vi_ident": "Trong service-environment-state.ts, khi kiểm tra trạng thái môi trường, đừng làm mất thông tin nhận dạng của bản chạy trên đám mây.",
+  "cost": 0.0074014
+ },
+ {
+  "q": "fix(ssl): validate lineages and avoid imported certificate collisions",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/infra/nginx-certbot-lineage.test.ts",
+   "packages/adapters/src/infra/nginx.test.ts",
+   "packages/adapters/src/infra/nginx.ts",
+   "packages/adapters/src/system/proxy/certbot-lineages.ts",
+   "packages/adapters/src/system/proxy/test-certs.ts"
+  ],
+  "vi_plain": "Nhờ kiểm tra lại chứng chỉ bảo mật của từng tên miền, và tránh trùng tên khi nhập chứng chỉ có sẵn.",
+  "vi_ident": "Nhờ kiểm tra lại phần xử lý trong certbot-lineages.ts, và tránh trùng tên khi nhập chứng chỉ có sẵn.",
+  "cost": 0.007800200000000001
+ },
+ {
+  "q": "fix(env): align restart checks with the running service",
+  "gold": [
+   "concepts/services-environment.md"
+  ],
+  "files": [
+   "apps/api/test/e2e/service-environment.e2e.test.ts",
+   "apps/api/test/modules/services/service-environment-state.test.ts",
+   "apps/api/test/modules/services/service-restart-config-stale.test.ts",
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/services/service-environment-apply.test.tsx",
+   "packages/platform/src/engine/modules/services/service-environment-state.ts",
+   "packages/platform/src/engine/modules/services/service.service.ts"
+  ],
+  "vi_plain": "Sửa phần kiểm tra khi khởi động lại dịch vụ cho khớp với trạng thái đang chạy thật",
+  "vi_ident": "Sửa phần kiểm tra khi khởi động lại dịch vụ trong service.service.ts cho khớp với trạng thái đang chạy thật",
+  "cost": 0.007346600000000001
+ },
+ {
+  "q": "fix(routing): recover recreated project cleanup reservations",
+  "gold": [
+   "concepts/domains-routing-ssl.md"
+  ],
+  "files": [
+   "apps/api/test/modules/projects/routing-repair.integration.test.ts",
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/DomainSettings.tsx",
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/RoutingUnsyncedCallout.tsx",
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/domain-routing-retry.test.tsx",
+   "apps/dashboard/src/hooks/useSystemPrepareModal.tsx",
+   "packages/db/src/repos/orphaned-resource.repo.ts"
+  ],
+  "vi_plain": "Dự án được tạo lại thì các giữ chỗ dọn dẹp cũ phải được khôi phục lại, và sửa luôn phần cấu hình tên miền bị lệch.",
+  "vi_ident": "Dự án được tạo lại thì các giữ chỗ dọn dẹp cũ phải được khôi phục, sửa trong orphaned-resource.repo.ts giúp mình nhé.",
+  "cost": 0.007489900000000001
+ },
+ {
+  "q": "change deployment action after finish",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/components/import-project/DeploymentActions.tsx",
+   "apps/dashboard/src/components/import-project/DeploymentProcessing.tsx",
+   "apps/dashboard/src/components/import-project/compose/ComposeDeploymentProcessing.tsx",
+   "apps/dashboard/src/i18n/locales/ar/importProject.json",
+   "apps/dashboard/src/i18n/locales/de/importProject.json",
+   "apps/dashboard/src/i18n/locales/en/importProject.json"
+  ],
+  "vi_plain": "Đổi các nút thao tác hiện ra sau khi quá trình triển khai dự án hoàn tất trên màn hình import.",
+  "vi_ident": "Đổi các nút thao tác hiện ra sau khi triển khai xong, sửa trong DeploymentActions.tsx giúp mình nhé.",
+  "cost": 0.006680900000000001
+ },
+ {
+  "q": "fix(dashboard): simplify service volume controls",
+  "gold": [
+   "concepts/architecture.md"
+  ],
+  "files": [
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/services/ServiceDetailPanel.tsx",
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/services/ServiceVolumesPanel.tsx",
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/services/service-overview.test.tsx",
+   "apps/dashboard/src/components/backup/PolicyEditor.tsx",
+   "apps/dashboard/src/components/ui/Tabs.tsx",
+   "apps/dashboard/src/i18n/locales/ar/projectDetail.json"
+  ],
+  "vi_plain": "Làm gọn phần điều khiển ổ đĩa của dịch vụ, bỏ bớt các nút thừa cho người dùng dễ thao tác hơn.",
+  "vi_ident": "Làm gọn phần điều khiển ổ đĩa trong ServiceVolumesPanel.tsx cho dịch vụ, bỏ bớt các nút thừa để dễ thao tác hơn.",
+  "cost": 0.006884000000000001
+ },
+ {
+  "q": "fix(domains): honor retry backoff across overlapping sweeps",
+  "gold": [
+   "concepts/domains-routing-ssl.md"
+  ],
+  "files": [
+   "apps/api/test/modules/domains/domain-auto-ssl.test.ts",
+   "apps/api/test/modules/projects/routing-repair.integration.test.ts",
+   "packages/db/src/repos/domain-verification.repo.test.ts",
+   "packages/db/src/repos/domain.repo.ts",
+   "packages/platform/src/engine/modules/domains/domain.service.ts"
+  ],
+  "vi_plain": "Các lượt quét tên miền chạy chồng nhau đang bỏ qua thời gian chờ trước khi thử lại, cần sửa cho đúng.",
+  "vi_ident": "Nhờ sửa domain.service.ts: các lượt quét tên miền chạy chồng nhau đang bỏ qua thời gian chờ trước khi thử lại.",
+  "cost": 0.00121266
+ },
+ {
+  "q": "fix(domains): report unsuccessful automatic SSL checks accurately",
+  "gold": [
+   "concepts/domains-routing-ssl.md"
+  ],
+  "files": [
+   "apps/api/test/modules/domains/domain-auto-ssl.test.ts",
+   "packages/platform/src/engine/modules/domains/domain.service.ts"
+  ],
+  "vi_plain": "Sửa giúp chỗ báo cáo kiểm tra chứng chỉ tự động của tên miền, lần nào thất bại thì báo đúng là thất bại.",
+  "vi_ident": "Sửa giúp domain.service.ts phần báo cáo kiểm tra chứng chỉ tự động của tên miền, lần nào thất bại thì báo đúng là thất bại.",
+  "cost": 0.0069446
+ },
+ {
+  "q": "fix(domains): expose real verification states and durable retry timing",
+  "gold": [
+   "concepts/architecture.md",
+   "concepts/domains-routing-ssl.md"
+  ],
+  "files": [
+   "apps/api/test/lib/domain-ssl-bookkeeping.test.ts",
+   "apps/api/test/lib/domain-ssl-dns01.test.ts",
+   "apps/api/test/lib/routing-domains.test.ts",
+   "apps/api/test/modules/domains/domain-diagnostics.test.ts",
+   "apps/api/test/modules/projects/routing-domain-verification.test.ts",
+   "apps/api/test/modules/projects/routing-repair.integration.test.ts"
+  ],
+  "vi_plain": "Nhờ bạn làm trạng thái xác minh tên miền hiển thị đúng thực tế, và thời gian thử lại được lưu bền hơn.",
+  "vi_ident": "Nhờ bạn kiểm tra routing-repair.integration.test.ts, phần xác minh tên miền và thời gian thử lại cần chạy đúng hơn.",
+  "cost": 0.00123415
+ },
+ {
+  "q": "fix(routing): recover live project domains and preserve complete routes",
+  "gold": [
+   "concepts/domains-routing-ssl.md"
+  ],
+  "files": [
+   "apps/api/src/modules/deployments/compose/composite-route.test.ts",
+   "apps/api/src/modules/domains/routing-apply.service.test.ts",
+   "apps/api/test/e2e/routing-rules.e2e.test.ts",
+   "apps/api/test/lib/domain-ssl-bookkeeping.test.ts",
+   "apps/api/test/lib/domain-ssl-dns01.test.ts",
+   "apps/api/test/lib/domain-ssl-gate.test.ts"
+  ],
+  "vi_plain": "Nhờ sửa lại việc khôi phục tên miền đang chạy và giữ nguyên đầy đủ các tuyến định tuyến khi áp dụng cấu hình.",
+  "vi_ident": "Nhờ sửa lại phần khôi phục tên miền đang chạy và giữ đủ các tuyến, kiểm tra trong routing-apply.service.test.ts giúp mình.",
+  "cost": 0.00119275
+ },
+ {
+  "q": "update compose items",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/DomainSettings.tsx",
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/services/ServiceDetailPanel.tsx",
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/services/ServiceDomainsPanel.tsx",
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/services/ServiceOverview.tsx",
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/services/ServicePortsCard.tsx",
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/services/ServiceSettingsForm.tsx"
+  ],
+  "vi_plain": "Cập nhật lại phần dịch vụ trong dự án: tên miền, cổng mở và phần cài đặt của từng dịch vụ.",
+  "vi_ident": "Nhờ bạn cập nhật lại phần cổng mở trong ServicePortsCard.tsx cho đúng với dịch vụ hiện tại.",
+  "cost": 0.00133116
+ },
+ {
+  "q": "fix(routing): verify live bindings before recovering quarantine",
+  "gold": [
+   "concepts/deployment-pipeline.md",
+   "concepts/domains-routing-ssl.md",
+   "concepts/services-environment.md"
+  ],
+  "files": [
+   "apps/api/src/modules/deployments/build-pipeline.prebuilt-image.test.ts",
+   "apps/api/src/modules/deployments/observed-host-port-claims.test.ts",
+   "apps/api/test/lib/route-apply-host-port-claims.test.ts",
+   "apps/api/test/modules/domains/project-route.service.test.ts",
+   "packages/platform/src/engine/lib/route-apply.service.ts",
+   "packages/platform/src/engine/modules/deployments/build-pipeline.ts"
+  ],
+  "vi_plain": "Trước khi khôi phục tuyến bị cách ly, nhớ kiểm tra lại cổng và tên miền đang thực sự được dùng.",
+  "vi_ident": "Trước khi khôi phục tuyến bị cách ly, nhớ kiểm tra lại cổng và tên miền trong route-apply.service.ts.",
+  "cost": 0.00128715
+ },
+ {
+  "q": "fix(routing): stream retries and reconcile pending domains",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/domains-routing-ssl.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/modules/domains/routing-apply.service.test.ts",
+   "apps/api/src/modules/projects/project.controller.ts",
+   "apps/api/src/modules/projects/project.routes.ts",
+   "apps/api/test/lib/self-app-routing.test.ts",
+   "apps/api/test/modules/projects/retry-routing.test.ts",
+   "apps/api/test/modules/projects/routing-domain-verification.test.ts"
+  ],
+  "vi_plain": "Nhờ sửa phần thử lại khi định tuyến bị lỗi, và đồng bộ lại các tên miền đang chờ xác minh.",
+  "vi_ident": "Nhờ sửa phần thử lại trong project.controller.ts khi định tuyến bị lỗi, và đồng bộ lại các tên miền đang chờ xác minh.",
+  "cost": 0.00131945
+ },
+ {
+  "q": "fix(runtime): restore services after environment startup crashes",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/runtime/docker-environment.test.ts",
+   "packages/adapters/src/runtime/docker-environment.ts"
+  ],
+  "vi_plain": "Nhờ sửa lỗi khi môi trường khởi động bị sập thì các dịch vụ không tự chạy lại được.",
+  "vi_ident": "Nhờ sửa docker-environment.ts để khi môi trường khởi động bị lỗi thì các dịch vụ vẫn được chạy lại.",
+  "cost": 0.0011474500000000002
+ },
+ {
+  "q": "fix: merge Compose updates without losing saved environment",
+  "gold": [
+   "concepts/architecture.md",
+   "concepts/deployment-pipeline.md",
+   "concepts/services-environment.md"
+  ],
+  "files": [
+   "apps/api/test/e2e/runtime-env.e2e.test.ts",
+   "apps/api/test/e2e/service-environment.e2e.test.ts",
+   "apps/api/test/modules/deployments/build.service.test.ts",
+   "apps/api/test/modules/services/service-update-env.test.ts",
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/Deployments.test.tsx",
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/Deployments.tsx"
+  ],
+  "vi_plain": "Khi cập nhật dịch vụ, hãy gộp thay đổi mới vào mà vẫn giữ nguyên các biến môi trường đã lưu trước đó.",
+  "vi_ident": "Trong service-update-env.test.ts, hãy kiểm tra việc gộp cập nhật mới mà vẫn giữ nguyên các biến môi trường đã lưu.",
+  "cost": 0.00158869
+ },
+ {
+  "q": "fix(deploy): preserve TLS state when SSH checks fail",
+  "gold": [
+   "concepts/deployment-pipeline.md"
+  ],
+  "files": [
+   "apps/api/src/modules/deployments/decision-vs-warning.test.ts",
+   "apps/api/src/modules/deployments/route-issues-warning.test.ts",
+   "apps/api/test/lib/routing-domains.test.ts",
+   "apps/api/test/modules/deployments/route-tls-audit.test.ts",
+   "packages/platform/src/engine/lib/domain-ssl.ts",
+   "packages/platform/src/engine/lib/routing-domains.ts"
+  ],
+  "vi_plain": "Nhờ sửa lỗi: khi kiểm tra kết nối máy chủ thất bại, đừng làm mất trạng thái chứng chỉ bảo mật của tên miền.",
+  "vi_ident": "Nhờ sửa lỗi trong domain-ssl.ts: khi kiểm tra kết nối máy chủ thất bại, đừng làm mất trạng thái chứng chỉ của tên miền.",
+  "cost": 0.0017075900000000001
+ },
+ {
+  "q": "fix(routing): preserve canonical endpoints when removing aliases",
+  "gold": [
+   "concepts/architecture.md",
+   "concepts/deployment-pipeline.md",
+   "concepts/onboarding-tour.md",
+   "entities/platform-engine.md"
+  ],
+  "files": [
+   "apps/api/test/modules/migration/migration-routing-state.test.ts",
+   "packages/platform/src/engine/lib/routing-domains.ts"
+  ],
+  "vi_plain": "Khi gỡ bỏ các đường dẫn bí danh, hãy giữ nguyên những đường dẫn chính gốc, đừng để mất chúng.",
+  "vi_ident": "Khi gỡ bỏ các đường dẫn bí danh trong routing-domains.ts, hãy giữ nguyên những đường dẫn chính gốc.",
+  "cost": 0.0013590899999999999
+ },
+ {
+  "q": "complete saas setup for payments",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/api/src/lib/plan-guard.test.ts",
+   "apps/api/src/modules/billing/billing-credit-units.test.ts",
+   "apps/api/src/modules/billing/billing-local.routes.ts",
+   "apps/api/src/modules/billing/billing-resources.test.ts",
+   "apps/api/src/modules/billing/billing.controller.ts",
+   "apps/api/src/modules/billing/billing.routes.ts"
+  ],
+  "vi_plain": "Nhờ bạn hoàn thiện phần thanh toán cho dịch vụ, gồm gói đăng ký, trừ tín dụng và kiểm tra quyền theo gói.",
+  "vi_ident": "Nhờ bạn hoàn thiện phần thanh toán, nhất là billing.controller.ts, gồm trừ tín dụng và kiểm tra gói đăng ký.",
+  "cost": 0.00146979
+ },
+ {
+  "q": "fix: preserve Cloud Docker streams during shutdown",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/runtime/cloud/docker-bridge-source.ts",
+   "packages/adapters/src/runtime/cloud/docker-transport.test.ts",
+   "packages/adapters/src/runtime/cloud/docker-transport.ts",
+   "packages/adapters/src/runtime/cloud/docker.test.ts",
+   "packages/adapters/src/runtime/cloud/docker.ts"
+  ],
+  "vi_plain": "Khi tắt hệ thống, đừng để mất các luồng dữ liệu đang chạy trên đám mây.",
+  "vi_ident": "Khi tắt hệ thống, đừng để mất các luồng dữ liệu đang chạy, nhờ kiểm tra docker-transport.ts giúp mình.",
+  "cost": 0.00133519
+ },
+ {
+  "q": "complete networkign in scale update",
+  "gold": [
+   "concepts/architecture.md"
+  ],
+  "files": [
+   "apps/api/test/modules/system/managed-network.test.ts",
+   "apps/dashboard/src/app/(dashboard)/servers/page.test.tsx",
+   "apps/dashboard/src/app/(dashboard)/servers/page.tsx",
+   "apps/dashboard/src/components/servers/clusters/ClusterDetail.tsx",
+   "apps/dashboard/src/components/servers/clusters/ClusterEditor.test.tsx",
+   "apps/dashboard/src/components/servers/clusters/ClusterNetworkDiagnostics.tsx"
+  ],
+  "vi_plain": "Hoàn thiện phần mạng trong đợt mở rộng cụm máy chủ, thêm chẩn đoán lỗi kết nối cho người dùng.",
+  "vi_ident": "Hoàn thiện phần mạng trong đợt mở rộng cụm máy chủ, kiểm tra lại ClusterNetworkDiagnostics.tsx giúp tôi.",
+  "cost": 0.00154189
+ },
+ {
+  "q": "fix(php): install ext-exif in the PHP recipe",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/runtime/docker-build-plan.test.ts",
+   "packages/adapters/src/runtime/docker-build-plan.ts"
+  ],
+  "vi_plain": "Lúc dựng môi trường chạy cho dự án này, nhớ cài thêm phần đọc thông tin ẩn trong ảnh nhé.",
+  "vi_ident": "Trong docker-build-plan.ts, nhớ thêm phần đọc thông tin ẩn trong ảnh khi dựng môi trường chạy.",
+  "cost": 0.00159319
+ },
+ {
+  "q": "scale features networking add",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "apps/api/src/modules/system/server-clusters.controller.ts",
+   "apps/api/src/modules/system/server-management.routes.ts",
+   "apps/api/src/modules/system/servers.controller.removal.test.ts",
+   "apps/api/test/modules/deployments/native-sdk-parity.test.ts",
+   "apps/api/test/modules/system/server-clusters.test.ts",
+   "apps/dashboard/public/provider-logos/LICENSE.devicon"
+  ],
+  "vi_plain": "Thêm chức năng cho phép tăng giảm số lượng máy chủ trong cụm và cấu hình mạng cho từng máy.",
+  "vi_ident": "Nhờ bạn thêm tính năng co giãn số máy chủ trong cụm, xử lý phần mạng trong server-clusters.controller.ts giúp mình.",
+  "cost": 0.0014146900000000001
+ },
+ {
+  "q": "fix(backup): restore persistence settings and unwind failed downloads",
+  "gold": [
+   "concepts/backups.md"
+  ],
+  "files": [
+   "apps/api/test/modules/backups/restore-no-managed-container.test.ts",
+   "packages/adapters/src/backup/producers/redis-bgsave.test.ts",
+   "packages/adapters/src/backup/producers/redis.ts",
+   "packages/platform/src/engine/modules/backups/restore.orchestrator.ts"
+  ],
+  "vi_plain": "Sửa khôi phục để giữ nguyên cấu hình lưu bền vững, và hoàn tác mọi thay đổi khi tải bản sao lưu lỗi.",
+  "vi_ident": "Trong restore.orchestrator.ts, sửa khôi phục để giữ nguyên cấu hình lưu bền vững và hoàn tác khi tải bản sao lưu lỗi.",
+  "cost": 0.00155089
+ },
+ {
+  "q": "fix: report restore writes only after producer preflight",
+  "gold": [
+   "concepts/backups.md"
+  ],
+  "files": [
+   "apps/api/test/modules/backups/restore-no-managed-container.test.ts",
+   "packages/adapters/src/backup/types.ts",
+   "packages/platform/src/engine/modules/backups/restore.orchestrator.ts"
+  ],
+  "vi_plain": "Sửa lại chỗ khôi phục sao lưu: chỉ ghi nhận kết quả sau khi bước kiểm tra đầu vào đã qua.",
+  "vi_ident": "Nhờ bạn sửa restore.orchestrator.ts: chỉ ghi kết quả khôi phục sau khi bước kiểm tra đầu vào chạy xong.",
+  "cost": 0.0013293900000000002
+ },
+ {
+  "q": "fix(cli): expose safe project display-name changes",
+  "gold": [
+   "concepts/onboarding-tour.md",
+   "entities/cli-desktop-sdk.md"
+  ],
+  "files": [
+   "apps/cli/src/commands/project.ts",
+   "apps/cli/test/e2e/project.test.ts",
+   "apps/web/content/docs/cli/projects.mdx"
+  ],
+  "vi_plain": "Nhờ bạn cho người dùng đổi tên hiển thị của dự án từ dòng lệnh, và đảm bảo đổi an toàn.",
+  "vi_ident": "Nhờ bạn cho người dùng đổi tên hiển thị dự án từ dòng lệnh trong project.ts, đảm bảo an toàn.",
+  "cost": 0.00150579
+ },
+ {
+  "q": "fix(deploy): reject preview variables on production runtimes",
+  "gold": [
+   "concepts/deployment-pipeline.md",
+   "entities/cli-desktop-sdk.md"
+  ],
+  "files": [
+   "apps/api/src/modules/deployments/build-pipeline.prebuilt-image.test.ts",
+   "apps/api/test/modules/deployments/build.service.test.ts",
+   "apps/api/test/modules/deployments/deploy-outcome-vs-logs.test.ts",
+   "apps/api/test/modules/projects/ensure-compose-services.test.ts",
+   "apps/cli/src/commands/deploy.ts",
+   "apps/web/content/docs/cli/deploy.mdx"
+  ],
+  "vi_plain": "Đừng cho phép đưa biến của bản xem thử vào môi trường thật khi triển khai, phải báo lỗi ngay.",
+  "vi_ident": "Trong file deploy.ts, đừng cho phép đưa biến của bản xem thử vào môi trường thật, phải báo lỗi ngay.",
+  "cost": 0.00133219
+ },
+ {
+  "q": "fix(compose): recover cached environment provenance and require source refresh",
+  "gold": [
+   "concepts/architecture.md",
+   "concepts/deployment-pipeline.md",
+   "concepts/services-environment.md"
+  ],
+  "files": [
+   "apps/api/test/lib/secret-env.test.ts",
+   "apps/api/test/modules/deployments/build.service.test.ts",
+   "apps/api/test/modules/services/service-update-env.test.ts",
+   "packages/core/src/types.ts",
+   "packages/db/src/index.ts",
+   "packages/db/src/repos/compose-env-reconcile.test.ts"
+  ],
+  "vi_plain": "Nhờ sửa lỗi phục hồi nguồn gốc biến môi trường đã lưu tạm, và bắt buộc làm mới nguồn mỗi lần dựng dịch vụ.",
+  "vi_ident": "Nhờ sửa lỗi phục hồi nguồn gốc biến môi trường đã lưu tạm, cập nhật types.ts, và bắt buộc làm mới nguồn mỗi lần dựng.",
+  "cost": 0.00173789
+ },
+ {
+  "q": "fix(system): refresh stale SSH login groups without interrupting active sessions",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "apps/api/src/lib/ssh-manager.refresh.test.ts",
+   "apps/api/src/modules/system/server-check.dependencies.test.ts",
+   "packages/adapters/src/index.ts",
+   "packages/adapters/src/system/checks.ts",
+   "packages/adapters/src/system/docker-check.test.ts",
+   "packages/adapters/src/system/index.ts"
+  ],
+  "vi_plain": "Cập nhật lại danh sách quyền đăng nhập đã cũ mà không làm ngắt các phiên người dùng đang làm việc.",
+  "vi_ident": "Nhờ bạn làm mới danh sách quyền đăng nhập đã cũ trong ssh-manager.refresh.test.ts, đừng để ngắt các phiên đang dùng.",
+  "cost": 0.0014441900000000001
+ },
+ {
+  "q": "fix(cli): refuse unresolved database storage before writing configuration",
+  "gold": [
+   "entities/cli-desktop-sdk.md"
+  ],
+  "files": [
+   "apps/cli/src/lib/compose.ts",
+   "apps/cli/test/unit/compose-docker-config-mount.test.ts",
+   "apps/cli/test/unit/compose-env-preserve.test.ts",
+   "apps/cli/test/unit/compose-secret-rotation.test.ts",
+   "apps/cli/test/unit/compose-source-build.test.ts"
+  ],
+  "vi_plain": "Nếu nơi lưu trữ cơ sở dữ liệu chưa xác định rõ thì đừng ghi cấu hình, báo lỗi luôn cho tôi.",
+  "vi_ident": "Trong compose.ts, nếu nơi lưu trữ cơ sở dữ liệu chưa xác định thì đừng ghi cấu hình, báo lỗi luôn.",
+  "cost": 0.00143199
+ },
+ {
+  "q": "test(edge): exercise current route upgrades and container reloads",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "apps/api/test/e2e/edge-upstream-down-page.e2e.test.ts",
+   "packages/adapters/src/infra/nginx.test.ts"
+  ],
+  "vi_plain": "Nhờ bạn thêm kiểm thử cho việc đổi đường dẫn, khởi động lại dịch vụ và trang báo lỗi khi máy chủ sập.",
+  "vi_ident": "Nhờ bạn thêm kiểm thử trong edge-upstream-down-page.e2e.test.ts cho việc đổi đường dẫn, khởi động lại dịch vụ và trang báo lỗi khi máy chủ sập.",
+  "cost": 0.00200609
+ },
+ {
+  "q": "fix(dashboard): keep issue operation logs inline and owned (#660)",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/app/(dashboard)/issues/IssuesView.stream.test.tsx",
+   "apps/dashboard/src/app/(dashboard)/issues/IssuesView.tsx",
+   "apps/dashboard/src/components/issues/useIssueActions.ts",
+   "apps/dashboard/src/hooks/useInfraFix.ts",
+   "apps/dashboard/src/hooks/useLogStream.test.tsx",
+   "apps/dashboard/src/hooks/useReattachActiveFix.ts"
+  ],
+  "vi_plain": "Chỉnh lại phần nhật ký thao tác của các ticket sao cho hiện ngay trong trang và đúng chủ sở hữu.",
+  "vi_ident": "Chỉnh lại nhật ký thao tác trong IssuesView.tsx sao cho hiện ngay trên trang và đúng chủ sở hữu.",
+  "cost": 0.00136839
+ },
+ {
+  "q": "fix(updates): share release checks across desktop and dashboard consumers",
+  "gold": [
+   "entities/cli-desktop-sdk.md"
+  ],
+  "files": [
+   "apps/dashboard/src/components/updates/useUpdates.requests.test.tsx",
+   "apps/dashboard/src/components/updates/useUpdates.ts",
+   "apps/dashboard/src/desktop.d.ts",
+   "apps/desktop/src/main/index.ts",
+   "apps/desktop/src/main/updater.ts",
+   "apps/desktop/src/preload/index.ts"
+  ],
+  "vi_plain": "Nhờ gom phần kiểm tra bản cập nhật để ứng dụng máy tính và trang quản trị dùng chung, đỡ viết lặp hai nơi.",
+  "vi_ident": "Nhờ gom phần kiểm tra bản cập nhật trong updater.ts để ứng dụng máy tính và trang quản trị dùng chung, đỡ viết lặp.",
+  "cost": 0.00138669
+ },
+ {
+  "q": "fix(routing): proxy static container roots through their owning service",
+  "gold": [
+   "concepts/domains-routing-ssl.md"
+  ],
+  "files": [
+   "apps/api/test/modules/domains/project-route.service.test.ts",
+   "packages/platform/src/engine/modules/domains/project-route.service.ts"
+  ],
+  "vi_plain": "Khi ai đó vào địa chỉ gốc của trang tĩnh, hệ thống phải chuyển yêu cầu đến đúng dịch vụ đang quản lý nó.",
+  "vi_ident": "Sửa project-route.service.ts để khi vào tên miền gốc của trang tĩnh thì chuyển yêu cầu đến đúng dịch vụ quản lý nó.",
+  "cost": 0.00146349
+ },
+ {
+  "q": "fix(platform): share Compose environment rules across recovery paths",
+  "gold": [
+   "concepts/deployment-pipeline.md"
+  ],
+  "files": [
+   "apps/api/test/modules/backups/service-handle.test.ts",
+   "apps/api/test/modules/deployments/rollback-frozen-env.test.ts",
+   "apps/api/test/modules/deployments/rollback-preview-env.test.ts",
+   "packages/platform/src/engine/modules/backups/service-handle.ts",
+   "packages/platform/src/engine/modules/deployments/deployment.service.ts",
+   "packages/platform/src/engine/modules/deployments/rollback/env-diff.ts"
+  ],
+  "vi_plain": "Đưa các quy tắc biến môi trường về một chỗ dùng chung cho mọi cách khôi phục bản cũ và bản sao lưu.",
+  "vi_ident": "Đưa các quy tắc biến môi trường về chung trong env-diff.ts, dùng cho mọi cách khôi phục bản cũ và bản sao lưu.",
+  "cost": 0.0015485899999999999
+ },
+ {
+  "q": "fix(dashboard): preserve branch focus while loading pages (#870)",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/components/github/RepositoryBranchSelect.test.tsx",
+   "apps/dashboard/src/components/ui/CustomSelect.tsx"
+  ],
+  "vi_plain": "Lúc đang tải thêm các trang nhánh, ô chọn nhánh phải giữ nguyên vị trí con trỏ, đừng bị nhảy lên đầu.",
+  "vi_ident": "Sửa CustomSelect.tsx giúp mình: lúc đang tải thêm trang nhánh, ô chọn nhánh phải giữ nguyên vị trí, đừng nhảy lên đầu.",
+  "cost": 0.0012992899999999998
+ },
+ {
+  "q": "fix(webhooks): retain completed targets when retrying a partial push (#847)",
+  "gold": [
+   "concepts/push-to-deploy.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/modules/github/github.webhook.ts",
+   "apps/api/src/modules/github/webhook-push.ts",
+   "apps/api/test/modules/github/webhook-redelivery.test.ts",
+   "packages/db/src/repos/webhook-delivery.repo.test.ts",
+   "packages/db/src/repos/webhook-delivery.repo.ts"
+  ],
+  "vi_plain": "Khi gửi lại thông báo mà có vài nơi đã nhận xong thì giữ nguyên, đừng gửi lại cho chúng.",
+  "vi_ident": "Trong webhook-push.ts, khi gửi lại thông báo mà có vài nơi đã nhận xong thì giữ nguyên, đừng gửi lại cho chúng.",
+  "cost": 0.0013997900000000001
+ },
+ {
+  "q": "docs(domains): clarify private ingress verification for homelabs (#706)",
+  "gold": [
+   "concepts/active-work.md"
+  ],
+  "files": [
+   "apps/api/test/modules/domains/external-ingress-sdk-parity.test.ts",
+   "apps/dashboard/src/i18n/locales/en/projectSettings.json",
+   "apps/dashboard/src/i18n/locales/fr/projectSettings.json",
+   "apps/dashboard/src/i18n/locales/tr/projectSettings.json",
+   "apps/dashboard/src/lib/api/projects.ts",
+   "apps/web/content/docs/guides/custom-domains.mdx"
+  ],
+  "vi_plain": "Nhờ bạn làm rõ phần hướng dẫn tên miền riêng cho người tự dựng máy chủ ở nhà, và cập nhật các bản dịch liên quan.",
+  "vi_ident": "Nhờ bạn làm rõ cách xác minh tên miền riêng trong custom-domains.mdx cho máy chủ ở nhà, rồi cập nhật bản dịch.",
+  "cost": 0.0014180899999999999
+ },
+ {
+  "q": "fix(webhooks): report blocked dispatches and accept failed redelivery (#847)",
+  "gold": [
+   "concepts/push-to-deploy.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/modules/github/github.webhook.ts",
+   "apps/api/src/modules/github/webhook-push.ts",
+   "apps/api/src/modules/webhooks/webhook.controller.ts",
+   "apps/api/test/modules/github/github.webhook.test.ts",
+   "apps/api/test/modules/github/webhook-redelivery.test.ts",
+   "apps/web/content/docs/guides/auto-deploy.mdx"
+  ],
+  "vi_plain": "Lần gửi bị chặn phải báo rõ ra, và cho phép gửi lại những lần đã thất bại.",
+  "vi_ident": "Trong webhook.controller.ts, lần gửi bị chặn phải báo rõ ra, và cho phép gửi lại những lần đã thất bại.",
+  "cost": 0.0014804899999999999
+ },
+ {
+  "q": "fix(backups): enforce retention after successful captures",
+  "gold": [
+   "concepts/backups.md"
+  ],
+  "files": [
+   "apps/api/src/modules/backups/retention-prune.mail.test.ts",
+   "apps/api/test/modules/backups/post-run-retention.test.ts",
+   "apps/api/test/modules/backups/retention-prune.test.ts",
+   "apps/web/content/docs/guides/backups-restore.mdx",
+   "packages/platform/src/engine/modules/backups/backup.orchestrator.ts",
+   "packages/platform/src/engine/modules/backups/retention-prune.ts"
+  ],
+  "vi_plain": "Sau khi sao lưu thành công thì nhớ dọn bớt các bản cũ theo đúng quy định giữ lại, nhé.",
+  "vi_ident": "Sau khi sao lưu thành công, bổ sung việc dọn bản cũ vào backup.orchestrator.ts theo đúng số bản cần giữ.",
+  "cost": 0.00139569
+ },
+ {
+  "q": "test(routing): verify resume preserves the repair failure cause",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/modules/projects/project-toggle.test.ts"
+  ],
+  "vi_plain": "Kiểm tra khi tiếp tục xử lý sau khi sửa chữa thất bại thì nguyên nhân lỗi cũ vẫn được giữ nguyên.",
+  "vi_ident": "Trong project-toggle.test.ts, kiểm tra khi tiếp tục sau lúc sửa chữa thất bại thì nguyên nhân lỗi vẫn còn đó.",
+  "cost": 0.00135229
+ },
+ {
+  "q": "fix(dashboard): keep nested server dialogs within dashboard providers",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/app/(dashboard)/providers.tsx",
+   "apps/dashboard/src/components/servers/add-server-modal.test.tsx"
+  ],
+  "vi_plain": "Hộp thoại thêm máy chủ lồng trong trang khác đang lỗi, nhờ sửa để nó luôn nằm trong phần bọc ngoài chung.",
+  "vi_ident": "Hộp thoại thêm máy chủ lồng trong trang khác đang lỗi, nhờ sửa providers.tsx để nó luôn nằm trong phần bọc ngoài chung.",
+  "cost": 0.0013102600000000002
+ },
+ {
+  "q": "fix(routing): preserve self-app ownership and report skipped routes",
+  "gold": [
+   "concepts/architecture.md",
+   "concepts/domains-routing-ssl.md"
+  ],
+  "files": [
+   "apps/api/src/modules/domains/ensure-edge.controller.ts",
+   "apps/api/test/lib/route-apply-proxy.test.ts",
+   "apps/api/test/lib/self-app-routing.test.ts",
+   "apps/api/test/modules/domains/project-route.service.test.ts",
+   "apps/api/test/modules/projects/retry-routing.test.ts",
+   "apps/cli/src/commands/edge.ts"
+  ],
+  "vi_plain": "Nhờ sửa lại phần giữ quyền sở hữu của ứng dụng nội bộ, và báo rõ những tuyến bị bỏ qua khi áp dụng.",
+  "vi_ident": "Nhờ sửa trong edge.ts phần giữ quyền sở hữu của ứng dụng nội bộ, và báo rõ những tuyến bị bỏ qua khi áp dụng.",
+  "cost": 0.00141849
+ },
+ {
+  "q": "fix(dashboard): expose shared environment for service projects",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/AppConfiguration.tsx",
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/BuildSettings.tsx",
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/environment-scope.test.tsx",
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/services/ServiceDetailPanel.tsx",
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/services/ServiceEnvironmentScope.tsx",
+   "apps/dashboard/src/context/ProjectSettingsContext.tsx"
+  ],
+  "vi_plain": "Làm cho các dịch vụ trong dự án có thể dùng chung biến môi trường và hiển thị nó trên trang cấu hình.",
+  "vi_ident": "Sửa ServiceEnvironmentScope.tsx để các dịch vụ trong dự án dùng chung biến môi trường.",
+  "cost": 0.00151939
+ },
+ {
+  "q": "test: isolate Git configuration and update branch lookup fixtures",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/modules/projects/project-environment-create.test.ts",
+   "packages/adapters/src/runtime/git-clone.test.ts"
+  ],
+  "vi_plain": "Nhờ bạn cô lập cấu hình trên máy cho các bài kiểm tra, rồi sửa dữ liệu mẫu khi tìm nhánh.",
+  "vi_ident": "Nhờ bạn cô lập cấu hình trên máy trong git-clone.test.ts, rồi sửa dữ liệu mẫu khi tìm nhánh.",
+  "cost": 0.0015236899999999999
+ },
+ {
+  "q": "fix(mcp): advertise the canonical external OAuth resource URL",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/app/(dashboard)/settings/_components/McpConnection.tsx",
+   "apps/dashboard/src/lib/api/urls.test.ts",
+   "apps/dashboard/src/lib/api/urls.ts"
+  ],
+  "vi_plain": "Hiển thị đúng địa chỉ máy chủ xác thực bên ngoài ở mục cài đặt, dùng đường dẫn chuẩn để tránh sai lệch.",
+  "vi_ident": "Sửa urls.ts để hiển thị đúng địa chỉ máy chủ xác thực bên ngoài, dùng đường dẫn chuẩn.",
+  "cost": 0.00144949
+ },
+ {
+  "q": "fix sdk dns part",
+  "gold": [
+   "concepts/deployment-pipeline.md",
+   "concepts/domains-routing-ssl.md"
+  ],
+  "files": [
+   "packages/platform/src/engine/modules/deployments/compose/build-service-dns.test.ts",
+   "packages/platform/src/engine/modules/deployments/compose/build-service-dns.ts"
+  ],
+  "vi_plain": "Sửa lỗi phân giải tên miền nội bộ giữa các dịch vụ khi triển khai, để chúng gọi được nhau đúng.",
+  "vi_ident": "Sửa lỗi trong build-service-dns.ts để các dịch vụ gọi được nhau đúng tên miền nội bộ khi triển khai.",
+  "cost": 0.00136979
+ },
+ {
+  "q": "fix(github): load branch pages on demand",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/api-app.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/api/src/modules/deployments/prepare.service.ts",
+   "apps/api/src/modules/github/github.branches.test.ts",
+   "apps/api/src/modules/github/github.controller.ts",
+   "apps/api/src/modules/github/github.service.ts",
+   "apps/api/src/modules/github/github.types.ts",
+   "apps/api/src/modules/projects/project-crud.service.ts"
+  ],
+  "vi_plain": "Sửa giúp mình phần lấy danh sách nhánh của kho mã: chỉ tải từng trang khi cần, đừng tải hết một lượt.",
+  "vi_ident": "Sửa giúp mình phần lấy danh sách nhánh trong github.service.ts: chỉ tải từng trang khi cần, đừng tải hết một lượt.",
+  "cost": 0.0014312600000000002
+ },
+ {
+  "q": "fixed fetch git submodules during build checkouts",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/runtime/build-pipeline.ts",
+   "packages/adapters/src/runtime/cloud.ts",
+   "packages/adapters/src/runtime/docker.ts"
+  ],
+  "vi_plain": "Nhờ sửa lỗi: khi chuẩn bị đóng gói, các phần con của kho mã chưa được tải về đầy đủ.",
+  "vi_ident": "Trong build-pipeline.ts, nhờ sửa lỗi: khi chuẩn bị đóng gói, các phần con của kho mã chưa được tải về đầy đủ.",
+  "cost": 0.00135319
+ },
+ {
+  "q": "fix(notifications): include destination and policy in backup run alerts (Closes #865)",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/backups.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/notification-workers.ts",
+   "apps/api/src/modules/backups/backup.orchestrator.ts",
+   "apps/api/test/lib/notification-headline.test.ts"
+  ],
+  "vi_plain": "Nhờ bạn sửa thông báo khi quá trình sao lưu chạy xong: thêm nơi lưu và chính sách vào nội dung cảnh báo.",
+  "vi_ident": "Nhờ bạn sửa notification-workers.ts để thông báo khi quá trình sao lưu chạy xong có thêm nơi lưu và chính sách.",
+  "cost": 0.0012192600000000002
+ },
+ {
+  "q": "fix(api): mask build arguments and preserve secrets on round trips",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/platform-engine.md"
+  ],
+  "files": [
+   "apps/api/src/lib/build-arg-fingerprint.ts",
+   "apps/api/src/lib/secret-env.ts",
+   "apps/api/src/modules/deployments/build-status.service.ts",
+   "apps/api/src/modules/deployments/build.service.ts",
+   "apps/api/src/modules/services/service.service.ts",
+   "apps/api/test/lib/build-args-masking.test.ts"
+  ],
+  "vi_plain": "Phần giấu các giá trị nhạy cảm khi lưu cấu hình và giữ nguyên mật khẩu khi chỉnh sửa lại, nhờ bạn giúp.",
+  "vi_ident": "Trong secret-env.ts, mình muốn các giá trị nhạy cảm được giấu đi khi lưu cấu hình và giữ nguyên khi chỉnh sửa lại.",
+  "cost": 0.0014229899999999998
+ },
+ {
+  "q": "fix(cli): require folder upload opt-in and isolate archive staging",
+  "gold": [
+   "entities/cli-desktop-sdk.md"
+  ],
+  "files": [
+   "apps/cli/src/commands/deploy.ts",
+   "apps/cli/src/lib/folder-deploy.ts",
+   "apps/cli/test/e2e/deploy-folder-opt-in.test.ts",
+   "apps/cli/test/unit/folder-deploy.test.ts",
+   "apps/web/content/docs/cli/deploy.mdx",
+   "apps/web/content/docs/guides/deploy-local-folder.mdx"
+  ],
+  "vi_plain": "Nhờ bạn sửa: muốn đưa cả thư mục lên phải bật tùy chọn chủ động, còn phần nén tạm thì tách riêng ra.",
+  "vi_ident": "Nhờ bạn sửa folder-deploy.ts: muốn đưa cả thư mục lên phải bật tùy chọn chủ động, còn phần nén tạm thì tách riêng ra.",
+  "cost": 0.0016403900000000003
+ },
+ {
+  "q": "fix(dashboard): keep GitHub device sign-in visible until completion",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/package.json",
+   "apps/dashboard/src/app/(dashboard)/settings/_components/GitHubConnection.tsx",
+   "apps/dashboard/src/app/(dashboard)/settings/_components/github-device-signin.test.tsx",
+   "apps/dashboard/src/context/GitHubContext.tsx"
+  ],
+  "vi_plain": "Bảng đăng nhập bằng mã thiết bị phải hiện cho tới khi người dùng hoàn tất, đừng để nó tự biến mất giữa chừng.",
+  "vi_ident": "Trong GitHubContext.tsx, bảng đăng nhập bằng mã thiết bị phải hiện cho tới khi người dùng hoàn tất, đừng để nó tự biến mất.",
+  "cost": 0.00153309
+ },
+ {
+  "q": "fix(backups): skip stateless services during project policy fan-out",
+  "gold": [
+   "concepts/backups.md"
+  ],
+  "files": [
+   "apps/api/src/modules/backups/backup.orchestrator.ts",
+   "apps/api/src/modules/backups/triggers/cron.ts",
+   "apps/api/test/modules/backups/backup-run-durability.test.ts"
+  ],
+  "vi_plain": "Khi áp chính sách sao lưu cho cả dự án thì bỏ qua các dịch vụ không có dữ liệu cần lưu.",
+  "vi_ident": "Trong backup.orchestrator.ts, khi áp chính sách cho cả dự án thì bỏ qua dịch vụ không có dữ liệu cần lưu.",
+  "cost": 0.0015348900000000001
+ },
+ {
+  "q": "fix(dashboard): rescan deployment configuration when branches change",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/package.json",
+   "apps/dashboard/src/app/(dashboard)/(deployment)/deploy/[slug]/components/Sidebar.tsx",
+   "apps/dashboard/src/components/import-project/ComposePathField.tsx",
+   "apps/dashboard/src/components/import-project/ProjectSettings.tsx",
+   "apps/dashboard/src/context/DeploymentContext.tsx",
+   "apps/dashboard/src/context/deployment/branch-rescan.test.tsx"
+  ],
+  "vi_plain": "Khi người dùng đổi nhánh thì tự quét lại cấu hình triển khai cho đúng.",
+  "vi_ident": "Khi đổi nhánh thì quét lại cấu hình triển khai trong DeploymentContext.tsx giúp tôi.",
+  "cost": 0.00120085
+ },
+ {
+  "q": "fix: remove unsupported GitHub manifest event",
+  "gold": [
+   "concepts/push-to-deploy.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/modules/github/github-source.service.test.ts",
+   "apps/api/src/modules/github/github-source.service.ts"
+  ],
+  "vi_plain": "Nhờ bạn gỡ loại sự kiện không còn được hỗ trợ khỏi luồng lấy dữ liệu từ kho mã, rồi sửa bài kiểm thử.",
+  "vi_ident": "Nhờ bạn gỡ loại sự kiện không còn được hỗ trợ khỏi github-source.service.ts, rồi sửa bài kiểm thử tương ứng.",
+  "cost": 0.0020635899999999997
+ },
+ {
+  "q": "fix(deployments): explain service DNS failures during Docker builds",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "apps/api/src/modules/deployments/compose/build-service-dns.test.ts",
+   "apps/api/src/modules/deployments/compose/build-service-dns.ts",
+   "apps/api/src/modules/deployments/compose/build.service.ts",
+   "apps/web/content/docs/guides/compose-multi-service.mdx",
+   "apps/web/content/docs/reference/openship-json.mdx",
+   "packages/adapters/src/runtime/build-pipeline.ts"
+  ],
+  "vi_plain": "Khi đóng gói thất bại vì không tìm được các dịch vụ con, hãy giải thích rõ nguyên nhân cho người dùng.",
+  "vi_ident": "Khi đóng gói thất bại vì không tìm được các dịch vụ con, hãy giải thích rõ nguyên nhân trong build-service-dns.ts cho người dùng.",
+  "cost": 0.00155789
+ },
+ {
+  "q": "fix false docker build exit code",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "apps/api/test/e2e/catalog-inline-build.e2e.test.ts",
+   "apps/api/test/e2e/data-transfer-http.e2e.test.ts",
+   "packages/adapters/src/runtime/docker-build-diagnostics.test.ts",
+   "packages/adapters/src/runtime/docker-build-diagnostics.ts",
+   "packages/adapters/src/runtime/docker-build-subcontext.test.ts",
+   "packages/adapters/src/runtime/docker-buildkit-trace.test.ts"
+  ],
+  "vi_plain": "Sửa chỗ hệ thống báo việc đóng gói ứng dụng thành công dù thực ra đã thất bại.",
+  "vi_ident": "Sửa chỗ báo thành công giả trong docker-build-diagnostics.ts giúp mình, thất bại vẫn bị coi là xong.",
+  "cost": 0.00128849
+ },
+ {
+  "q": "feat(mail): make mail database port configurable with auto-discovery fallback",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "apps/email/docker/entrypoint.sh",
+   "packages/adapters/src/index.ts",
+   "packages/adapters/src/infra/mail-container.test.ts",
+   "packages/adapters/src/infra/mail-container.ts",
+   "packages/adapters/src/system/mail/ensure-container-mail.test.ts",
+   "packages/adapters/src/system/mail/ensure-container-mail.ts"
+  ],
+  "vi_plain": "Nhờ bạn làm cho cổng máy chủ thư điện tử đổi được trong cấu hình, không đặt thì tự dò tìm cổng trống.",
+  "vi_ident": "Nhờ bạn sửa mail-container.ts để cổng cơ sở dữ liệu thư đổi được, không đặt thì tự dò tìm.",
+  "cost": 0.0015223900000000002
+ },
+ {
+  "q": "fix github auth window",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/app/auth/callback/close/page.tsx",
+   "apps/dashboard/src/app/auth/callback/github-app/page.tsx",
+   "apps/dashboard/src/app/auth/callback/install/page.tsx",
+   "apps/dashboard/src/context/GitHubContext.tsx",
+   "apps/dashboard/src/lib/api/endpoints.ts",
+   "apps/dashboard/src/lib/api/github.ts"
+  ],
+  "vi_plain": "Sửa lại cửa sổ đăng nhập khi kết nối tài khoản, xong việc thì cửa sổ tự đóng lại cho đúng.",
+  "vi_ident": "Sửa lại cửa sổ đăng nhập khi kết nối tài khoản, nhớ kiểm tra GitHubContext.tsx xem trạng thái có cập nhật không.",
+  "cost": 0.0014180899999999999
+ },
+ {
+  "q": "fix(docker): safely terminate stalled builds",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/runtime/docker-build-cancellation.test.ts",
+   "packages/adapters/src/runtime/docker-build-container-tracker.test.ts",
+   "packages/adapters/src/runtime/docker-build-container-tracker.ts",
+   "packages/adapters/src/runtime/docker-build-diagnostics.test.ts",
+   "packages/adapters/src/runtime/docker-build-diagnostics.ts",
+   "packages/adapters/src/runtime/docker-build-subcontext.test.ts"
+  ],
+  "vi_plain": "Giúp mình xử lý các tiến trình dựng ảnh bị treo, tắt chúng an toàn và không để sót tiến trình con nào.",
+  "vi_ident": "Giúp mình xử lý các tiến trình dựng ảnh bị treo, sửa docker-build-container-tracker.ts cho tắt an toàn.",
+  "cost": 0.0013699900000000002
+ },
+ {
+  "q": "fix(data-transfer): reconcile runtime state after import (#826)",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/auth-mode.ts",
+   "apps/api/src/lib/box-org.ts",
+   "apps/api/src/lib/cache-store/index.ts",
+   "apps/api/src/lib/database-runtime-state.ts",
+   "apps/api/src/lib/host-control.ts",
+   "apps/api/src/lib/local-user.ts"
+  ],
+  "vi_plain": "Sau khi nhập dữ liệu xong, cần đồng bộ lại trạng thái đang chạy của hệ thống cho khớp với dữ liệu mới.",
+  "vi_ident": "Sau khi nhập dữ liệu xong, nhờ đồng bộ lại trạng thái đang chạy trong database-runtime-state.ts cho khớp với dữ liệu mới.",
+  "cost": 0.0014129899999999998
+ },
+ {
+  "q": "fix(dashboard): preserve env across deploy entry paths",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md",
+   "entities/platform-engine.md"
+  ],
+  "files": [
+   "apps/api/src/modules/deployments/build.service.ts",
+   "apps/api/src/modules/deployments/deployment.schema.ts",
+   "apps/api/test/modules/deployments/build.service.test.ts",
+   "apps/dashboard/src/context/deployment/env-payload.test.ts",
+   "apps/dashboard/src/context/deployment/env-payload.ts",
+   "apps/dashboard/src/context/deployment/project-env-wiring.test.ts"
+  ],
+  "vi_plain": "Nhờ bạn sửa để biến môi trường của dự án không bị mất khi triển khai từ các đường vào khác nhau.",
+  "vi_ident": "Nhờ bạn sửa env-payload.ts để biến môi trường không bị mất khi triển khai từ các đường vào khác nhau.",
+  "cost": 0.0013230899999999999
+ },
+ {
+  "q": "fix(dashboard): persist deployment env edits safely",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/EnvVarsEditor.tsx",
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/env-diff.test.ts",
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/env-diff.ts",
+   "apps/dashboard/src/components/import-project/EnvironmentVariables.tsx",
+   "apps/dashboard/src/components/import-project/types.ts",
+   "apps/dashboard/src/context/deployment/env-payload.test.ts"
+  ],
+  "vi_plain": "Nhờ bạn sửa lại phần lưu biến môi trường khi người dùng chỉnh sửa, đảm bảo không bị mất hay ghi sai dữ liệu.",
+  "vi_ident": "Nhờ bạn sửa lại EnvVarsEditor.tsx để lưu biến môi trường khi chỉnh sửa, không bị mất hay ghi sai dữ liệu.",
+  "cost": 0.0013086500000000002
+ },
+ {
+  "q": "fix(data-transfer): make large transfers resilient (#823)",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md",
+   "entities/database.md"
+  ],
+  "files": [
+   "apps/api/src/lib/encryption.ts",
+   "apps/api/src/lib/rate-limit/policies.ts",
+   "apps/api/src/lib/route-permission.ts",
+   "apps/api/src/modules/system/data-transfer/chunk-store.ts",
+   "apps/api/src/modules/system/data-transfer/data-transfer.controller.ts",
+   "apps/api/src/modules/system/data-transfer/direct-transfer.service.ts"
+  ],
+  "vi_plain": "Việc chuyển dữ liệu dung lượng lớn hay bị gián đoạn giữa chừng, nhờ bạn làm cho nó chịu lỗi tốt hơn, mạng chập chờn vẫn tiếp tục được.",
+  "vi_ident": "Việc chuyển dữ liệu lớn hay bị đứt giữa chừng, nhờ bạn sửa chunk-store.ts để nó chịu lỗi tốt hơn khi mạng chập chờn.",
+  "cost": 0.00120295
+ },
+ {
+  "q": "fix(adapters): make SSH exec recovery type-safe",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/remote-state.test.ts",
+   "apps/api/src/lib/remote-state.ts",
+   "packages/adapters/src/system/errors.test.ts",
+   "packages/adapters/src/system/errors.ts",
+   "packages/adapters/src/system/probe-exec.test.ts",
+   "packages/adapters/src/system/ssh-executor.test.ts"
+  ],
+  "vi_plain": "Nhờ sửa phần xử lý khi lệnh chạy từ xa bị lỗi, làm cho kiểu dữ liệu chặt chẽ hơn.",
+  "vi_ident": "Nhờ sửa phần xử lý lỗi trong errors.ts khi lệnh chạy từ xa thất bại, làm cho kiểu dữ liệu chặt chẽ hơn.",
+  "cost": 0.00126325
+ },
+ {
+  "q": "fix(dns): preserve selected predeploy target",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "concepts/domains-routing-ssl.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/api/src/modules/domains/domain.controller.ts",
+   "apps/api/src/modules/domains/domain.service.ts",
+   "apps/api/test/modules/domains/domain-dns.test.ts",
+   "apps/dashboard/src/app/(dashboard)/(deployment)/deploy/[slug]/components/DnsConfiguration.tsx",
+   "apps/dashboard/src/app/(dashboard)/(deployment)/deploy/[slug]/components/Sidebar.tsx",
+   "apps/dashboard/src/app/(dashboard)/apps/new/[appId]/page.tsx"
+  ],
+  "vi_plain": "Nhờ bạn sửa lỗi để cấu hình tên miền vẫn giữ đúng mục tiêu đã chọn trước khi triển khai.",
+  "vi_ident": "Nhờ bạn sửa lỗi trong DnsConfiguration.tsx để cấu hình tên miền vẫn giữ đúng mục tiêu đã chọn trước khi triển khai.",
+  "cost": 0.00129205
+ },
+ {
+  "q": "feat(dashboard): allow toggling secret env vars per service (#812)",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/services/ServiceDetailPanel.tsx",
+   "apps/dashboard/src/components/import-project/EnvironmentVariables.tsx",
+   "apps/dashboard/src/components/import-project/environment-variables.render.test.tsx",
+   "apps/dashboard/src/components/import-project/types.ts"
+  ],
+  "vi_plain": "Cho phép bật hoặc tắt chế độ bảo mật cho từng biến môi trường của mỗi dịch vụ, để giá trị bị che đi.",
+  "vi_ident": "Nhờ chỉnh EnvironmentVariables.tsx để cho phép bật hoặc tắt chế độ bảo mật cho từng biến môi trường của mỗi dịch vụ.",
+  "cost": 0.00152429
+ },
+ {
+  "q": "fix(dashboard): guard app install custom domains with DNS pre-deploy gate (#810)",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/app/(dashboard)/(deployment)/deploy/[slug]/components/Sidebar.tsx",
+   "apps/dashboard/src/app/(dashboard)/apps/new/[appId]/page.tsx",
+   "apps/dashboard/src/components/domains/DnsRecordsModal.tsx",
+   "apps/dashboard/src/components/domains/dns-records-modal.render.test.tsx",
+   "apps/dashboard/src/lib/deployment-dns.test.ts",
+   "apps/dashboard/src/lib/deployment-dns.ts"
+  ],
+  "vi_plain": "Khi cài ứng dụng, nếu tên miền riêng chưa được trỏ đúng cấu hình thì chặn lại, không cho phát hành lên.",
+  "vi_ident": "Trong deployment-dns.ts, khi cài ứng dụng, nếu tên miền riêng chưa trỏ đúng cấu hình thì chặn lại trước khi phát hành.",
+  "cost": 0.00147389
+ },
+ {
+  "q": "fix(adapters): recover on ssh2 \"Unable to exec\" channel failure and classify as retryable",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/remote-state.ts",
+   "packages/adapters/src/system/errors.ts",
+   "packages/adapters/src/system/probe-exec.test.ts",
+   "packages/adapters/src/system/ssh-executor.test.ts",
+   "packages/adapters/src/system/ssh-executor.ts",
+   "packages/core/src/connectivity.ts"
+  ],
+  "vi_plain": "Khi máy chủ báo không chạy được lệnh, nhờ hệ thống tự phục hồi và coi đó là lỗi có thể thử lại.",
+  "vi_ident": "Trong ssh-executor.ts, khi máy chủ báo không chạy được lệnh thì tự phục hồi và coi là lỗi thử lại được.",
+  "cost": 0.00143069
+ },
+ {
+  "q": "complete port allocation fix",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md",
+   "entities/platform-engine.md"
+  ],
+  "files": [
+   "apps/api/src/modules/deployments/build-pipeline.prebuilt-image.test.ts",
+   "apps/api/src/modules/deployments/build-pipeline.ts",
+   "apps/api/src/modules/deployments/build.service.ts",
+   "apps/api/src/modules/deployments/compose/carried-host-port.test.ts",
+   "apps/api/src/modules/deployments/compose/deploy.service.ts",
+   "apps/api/src/modules/deployments/pinned-host-ports.test.ts"
+  ],
+  "vi_plain": "Nhờ bạn hoàn thiện nốt phần cấp phát cổng để các ứng dụng không bị trùng cổng khi chạy.",
+  "vi_ident": "Nhờ bạn hoàn thiện nốt phần cấp phát cổng, nhất là đoạn trong pinned-host-ports.test.ts, để không còn bị trùng cổng nữa.",
+  "cost": 0.00136069
+ },
+ {
+  "q": "fix project deployment status",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "apps/api/src/lib/git-forwarding/README.md",
+   "apps/api/src/lib/git-forwarding/relay.test.ts",
+   "apps/api/src/lib/git-forwarding/relay.ts",
+   "apps/dashboard/src/app/(dashboard)/DashboardHomeClient.tsx",
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/DraftProjectView.tsx",
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/ProjectSidebar.tsx"
+  ],
+  "vi_plain": "Nhờ bạn sửa lại phần hiển thị trạng thái triển khai của dự án cho đúng với thực tế hiện tại.",
+  "vi_ident": "Nhờ bạn sửa trạng thái triển khai dự án trong DraftProjectView.tsx, hiển thị cho đúng với thực tế.",
+  "cost": 0.00129719
+ },
+ {
+  "q": "fix deployment stuck from docker ssh",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "apps/api/src/modules/deployments/compose/deploy.service.ts",
+   "apps/api/test/e2e/rollback-compose-cycle.e2e.test.ts",
+   "apps/api/test/lib/provision-lock.test.ts",
+   "apps/api/test/modules/deployments/compose-host-channel-notice.test.ts",
+   "packages/adapters/src/system/ssh-executor.test.ts",
+   "packages/adapters/src/system/ssh-executor.ts"
+  ],
+  "vi_plain": "Sửa lỗi triển khai bị treo mãi không xong khi máy chủ từ xa phản hồi chậm, nhờ bạn xem giúp mình.",
+  "vi_ident": "Sửa lỗi triển khai bị treo mãi không xong khi máy chủ từ xa phản hồi chậm, nhờ bạn xem file ssh-executor.ts giúp mình.",
+  "cost": 0.00142339
+ },
+ {
+  "q": "fix(deployments): surface partial failure decision (#664)",
+  "gold": [
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/api/src/modules/deployments/compose/pipeline.ts",
+   "apps/api/src/modules/deployments/decision-vs-warning.test.ts",
+   "apps/api/src/modules/deployments/deployment-lifecycle.ts",
+   "apps/api/src/modules/deployments/deployment.service.ts",
+   "apps/api/src/modules/deployments/session-manager.decision-pending.test.ts",
+   "apps/api/src/modules/deployments/session-manager.ts"
+  ],
+  "vi_plain": "Khi việc triển khai chỉ thành công một phần, hệ thống cần hiện rõ quyết định đang chờ người dùng xử lý.",
+  "vi_ident": "Trong session-manager.ts, khi triển khai thành công một phần, hãy hiện quyết định đang chờ thay vì chỉ cảnh báo.",
+  "cost": 0.00116775
+ },
+ {
+  "q": "fix(domains): fall back to findLocalServer when project serverId is null (#721)",
+  "gold": [
+   "concepts/domains-routing-ssl.md"
+  ],
+  "files": [
+   "apps/api/src/modules/domains/ensure-edge.controller.test.ts",
+   "apps/api/src/modules/domains/ensure-edge.controller.ts"
+  ],
+  "vi_plain": "Nếu dự án chưa gắn máy chủ thì tự tìm máy chủ nội bộ thay thế, nhớ thêm kiểm thử cho trường hợp này.",
+  "vi_ident": "Nếu dự án chưa gắn máy chủ thì sửa ensure-edge.controller.ts để tự tìm máy chủ nội bộ thay thế nhé.",
+  "cost": 0.00153786
+ },
+ {
+  "q": "fix(db): identify backup fan-out batches explicitly",
+  "gold": [
+   "concepts/backups.md"
+  ],
+  "files": [
+   "apps/api/src/modules/backups/backup.orchestrator.ts",
+   "apps/api/test/modules/backups/backup-run-durability.test.ts",
+   "packages/db/drizzle/0119_backup_run_batch.sql",
+   "packages/db/drizzle/meta/_journal.json",
+   "packages/db/src/repos/backup-latest-by-policy.repo.test.ts",
+   "packages/db/src/repos/backup.repo.ts"
+  ],
+  "vi_plain": "Nhờ bạn sửa lại cách đánh dấu các đợt sao lưu được chia nhỏ ra, để mỗi đợt được nhận diện rõ ràng.",
+  "vi_ident": "Nhờ bạn sửa lại cách đánh dấu các đợt sao lưu chia nhỏ trong backup.orchestrator.ts, để mỗi đợt được nhận diện rõ ràng.",
+  "cost": 0.00123416
+ },
+ {
+  "q": "fix(api,dashboard): add success field to resources responses and harden ResourceSettings (#737)",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/api-app.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/api/src/lib/resources.ts",
+   "apps/api/src/modules/projects/project-resources.controller.test.ts",
+   "apps/api/src/modules/projects/project.controller.ts",
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/ResourceSettings.tsx",
+   "apps/dashboard/src/i18n/locales/ar/projectSettings.json",
+   "apps/dashboard/src/i18n/locales/de/projectSettings.json"
+  ],
+  "vi_plain": "Giúp mình thêm trường thành công cho phản hồi tài nguyên và siết chặt phần cài đặt tài nguyên trong dự án nhé.",
+  "vi_ident": "Giúp mình thêm trường báo thành công cho phản hồi ở ResourceSettings.tsx và siết chặt màn cài đặt tài nguyên.",
+  "cost": 0.00158569
+ },
+ {
+  "q": "fix: clone git deployment revisions",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/platform-engine.md"
+  ],
+  "files": [
+   "apps/api/src/modules/deployments/build.service.ts",
+   "apps/api/test/modules/deployments/build.service.test.ts"
+  ],
+  "vi_plain": "Bản triển khai lại phiên bản cũ đang bị lỗi, nhờ sửa để nó tự kéo lại mã nguồn từ kho lưu trữ gốc.",
+  "vi_ident": "Nhờ sửa build.service.ts để khi triển khai lại phiên bản cũ, hệ thống tự kéo mã nguồn từ kho lưu trữ.",
+  "cost": 0.00138159
+ },
+ {
+  "q": "feat: add PocketBase app",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/components/AppLogo.tsx",
+   "packages/core/src/apps/catalog.json",
+   "packages/core/src/apps/catalog.test.ts",
+   "packages/core/src/apps/catalog/pocketbase.json"
+  ],
+  "vi_plain": "Thêm một ứng dụng cơ sở dữ liệu mới vào danh sách có sẵn, kèm logo và kiểm tra lại.",
+  "vi_ident": "Thêm ứng dụng cơ sở dữ liệu PocketBase vào catalog.json, kèm logo và kiểm tra lại nhé.",
+  "cost": 0.0018285899999999997
+ },
+ {
+  "q": "soft fix the redeploy issue",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/api/src/modules/deployments/compose/carried-host-port.test.ts",
+   "apps/api/src/modules/deployments/compose/deploy.service.ts",
+   "apps/api/src/modules/deployments/compose/foreign-compose-collision.test.ts",
+   "apps/api/src/modules/deployments/compose/foreign-compose-collision.ts",
+   "apps/api/src/modules/deployments/compose/host-port-stability.ts",
+   "apps/api/src/modules/issues/issues.controller.ts"
+  ],
+  "vi_plain": "Sửa lỗi khi triển khai lại ứng dụng, làm mềm phần kiểm tra xung đột cổng để không chặn việc chạy lại.",
+  "vi_ident": "Sửa lỗi khi triển khai lại, làm mềm kiểm tra xung đột cổng trong deploy.service.ts giúp mình nhé.",
+  "cost": 0.00138459
+ },
+ {
+  "q": "fix(db): aggregate multi-service project policy batches in latestByPolicy (#730)",
+  "gold": [
+   "concepts/architecture.md"
+  ],
+  "files": [
+   "packages/db/src/index.ts",
+   "packages/db/src/repos/backup-latest-by-policy.repo.test.ts",
+   "packages/db/src/repos/backup.repo.ts",
+   "packages/db/src/repos/index.ts"
+  ],
+  "vi_plain": "Sửa giúp phần gom sao lưu theo chính sách cho dự án nhiều dịch vụ, lấy đúng bản mới nhất mỗi chính sách.",
+  "vi_ident": "Sửa giúp phần gom sao lưu trong backup.repo.ts cho dự án nhiều dịch vụ, lấy đúng bản mới nhất mỗi chính sách.",
+  "cost": 0.0015237900000000001
+ },
+ {
+  "q": "fix(updates): invalidate and sync update_status cache on deployment",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/platform-engine.md"
+  ],
+  "files": [
+   "apps/api/src/modules/deployments/build.service.ts",
+   "apps/api/src/modules/deployments/deployment-lifecycle.ts",
+   "apps/api/test/modules/deployments/build.service.test.ts",
+   "apps/api/test/modules/deployments/deploy-outcome-vs-logs.test.ts",
+   "apps/api/test/modules/updates/upstream-cache.test.ts"
+  ],
+  "vi_plain": "Khi một lần triển khai xong thì xóa bộ nhớ đệm trạng thái cập nhật rồi đồng bộ lại cho đúng.",
+  "vi_ident": "Trong deployment-lifecycle.ts, khi triển khai xong thì xóa bộ nhớ đệm trạng thái cập nhật rồi đồng bộ lại.",
+  "cost": 0.00138469
+ },
+ {
+  "q": "fix(domains): add mcp metadata to DELETE /api/domains/:id route (#720)",
+  "gold": [
+   "concepts/domains-routing-ssl.md"
+  ],
+  "files": [
+   "apps/api/src/modules/domains/domain.routes.ts",
+   "apps/api/test/modules/mcp/mcp-domain-tools.test.ts"
+  ],
+  "vi_plain": "Nhờ bạn bổ sung mô tả cho chức năng xóa tên miền theo mã số để trợ lý gọi được.",
+  "vi_ident": "Nhờ bạn bổ sung mô tả cho chức năng xóa tên miền trong domain.routes.ts để trợ lý gọi được.",
+  "cost": 0.0013510600000000003
+ },
+ {
+  "q": "fix(domains): prioritize custom domains over free subdomains on isPrimary ties (#719)",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/domains-routing-ssl.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/public-endpoints.ts",
+   "apps/api/src/modules/domains/project-route.service.ts",
+   "apps/api/test/lib/public-endpoints.test.ts",
+   "apps/api/test/modules/domains/project-route.service.test.ts"
+  ],
+  "vi_plain": "Khi hai tên miền cùng được đánh dấu chính, nên ưu tiên tên miền riêng của khách thay vì tên miễn phí.",
+  "vi_ident": "Trong project-route.service.ts, khi hai tên miền cùng được đánh dấu chính, nên ưu tiên tên miền riêng của khách hơn tên miễn phí.",
+  "cost": 0.00153905
+ },
+ {
+  "q": "fix e2e tests for 0.6.8",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/redis.ts",
+   "apps/api/test/e2e/rollback-full-cycle.e2e.test.ts",
+   "apps/api/test/e2e/rollback-compose-cycle.e2e.test.ts",
+   "apps/api/test/e2e/rollback-full-cycle.e2e.test.ts",
+   "apps/api/test/e2e/routing-rules.e2e.test.ts"
+  ],
+  "vi_plain": "Mấy bài kiểm thử đầu cuối cho bản 0.6.8 đang bị lỗi, nhờ bạn sửa lại giúp mình nhé.",
+  "vi_ident": "Mấy bài kiểm thử đầu cuối cho bản 0.6.8 đang bị lỗi, nhờ bạn sửa file routing-rules.e2e.test.ts giúp mình nhé.",
+  "cost": 0.0013288899999999999
+ },
+ {
+  "q": "fix(ssl): make dns-01 hooks remote-safe and renewable",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/domain-ssl.ts",
+   "apps/api/src/modules/projects/project.controller.ts",
+   "apps/api/test/lib/domain-ssl-dns01.test.ts",
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/DomainSettings.tsx",
+   "apps/dashboard/src/i18n/locales/ar/projectSettings.json",
+   "apps/dashboard/src/i18n/locales/de/projectSettings.json"
+  ],
+  "vi_plain": "Nhờ sửa phần tự động cấp và gia hạn chứng chỉ bảo mật cho tên miền, để việc xác minh qua máy chủ tên miền chạy an toàn hơn.",
+  "vi_ident": "Nhờ sửa phần tự động cấp và gia hạn chứng chỉ trong domain-ssl.ts, để việc xác minh qua máy chủ tên miền chạy an toàn.",
+  "cost": 0.00136689
+ },
+ {
+  "q": "feat(ssl): support dns-01 challenge and wildcard certificates for projects (#37)",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "apps/api/src/lib/domain-ssl.ts",
+   "apps/api/src/modules/domains/domain.schema.ts",
+   "apps/api/src/modules/domains/domain.service.ts",
+   "apps/api/test/lib/domain-ssl-dns01.test.ts",
+   "apps/api/test/modules/domains/domain-add.test.ts",
+   "packages/adapters/src/index.ts"
+  ],
+  "vi_plain": "Thêm cách xác minh tên miền bằng bản ghi cấu hình, và cho phép cấp chứng chỉ dùng chung cho tên miền con.",
+  "vi_ident": "Trong domain-ssl.ts, thêm cách xác minh tên miền bằng bản ghi, và cho phép cấp chứng chỉ dùng chung cho tên miền con.",
+  "cost": 0.00160936
+ },
+ {
+  "q": "fix proxy cci tests",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/api/test/lib/proxy-settings-e2e.test.ts",
+   "apps/dashboard/src/components/migration/session-log-line.test.ts"
+  ],
+  "vi_plain": "Giúp tôi sửa mấy bài kiểm thử về cài đặt kết nối trung gian và dòng nhật ký phiên bị lỗi.",
+  "vi_ident": "Giúp tôi sửa mấy bài kiểm thử về cài đặt kết nối trung gian trong proxy-settings-e2e.test.ts bị lỗi.",
+  "cost": 0.00141886
+ },
+ {
+  "q": "fix failed tests",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/infra/nginx-remote-paths.test.ts",
+   "packages/adapters/test/nginx-cert-install.test.ts"
+  ],
+  "vi_plain": "Mấy bài kiểm tra cấu hình đường dẫn máy chủ và cài chứng chỉ đang báo lỗi, nhờ bạn sửa giúp cho chạy lại.",
+  "vi_ident": "Nhờ bạn sửa giúp file nginx-remote-paths.test.ts đang báo lỗi, chạy lại cho tôi xem với.",
+  "cost": 0.0016300899999999998
+ },
+ {
+  "q": "fix(dashboard): scope analytics error to traffic summary block in MonitoringView",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/MonitoringTab.tsx",
+   "apps/dashboard/src/components/monitoring/MonitoringView.tsx"
+  ],
+  "vi_plain": "Lỗi phân tích chỉ nên hiện ở khối tóm tắt lưu lượng, đừng làm cả trang giám sát bị báo lỗi.",
+  "vi_ident": "Lỗi phân tích chỉ nên hiện ở khối tóm tắt lưu lượng trong MonitoringView.tsx, đừng làm cả trang bị báo lỗi.",
+  "cost": 0.00135659
+ },
+ {
+  "q": "cleanup(dashboard): services fetch state (#666)",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/ServicesTab.tsx",
+   "apps/dashboard/src/context/ProjectSettingsContext.tsx",
+   "apps/dashboard/src/context/services-fetch-state.test.ts",
+   "apps/dashboard/src/context/services-fetch-state.ts"
+  ],
+  "vi_plain": "Dọn lại phần lấy trạng thái danh sách dịch vụ trong trang cài đặt dự án, cho gọn và dễ đọc hơn.",
+  "vi_ident": "Dọn lại phần lấy trạng thái dịch vụ trong file services-fetch-state.ts giúp mình, phần này đang hơi rối.",
+  "cost": 0.00125865
+ },
+ {
+  "q": "fix(dashboard): keep service rows during refetch (#666)",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/ServicesTab.tsx",
+   "apps/dashboard/src/context/ProjectSettingsContext.tsx"
+  ],
+  "vi_plain": "Khi đang tải lại dữ liệu thì danh sách dịch vụ đừng bị biến mất, cứ giữ nguyên các dòng hiện có.",
+  "vi_ident": "Trong ServicesTab.tsx, khi tải lại dữ liệu thì đừng làm mất các dòng dịch vụ đang hiển thị nhé.",
+  "cost": 0.0011574600000000001
+ },
+ {
+  "q": "fix ci test",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/public/app-logos/mindwire.svg",
+   "apps/dashboard/src/app/(dashboard)/apps/new/[appId]/page.tsx",
+   "apps/dashboard/src/components/AppLogo.tsx"
+  ],
+  "vi_plain": "Nhờ sửa chỗ biểu tượng ứng dụng hiển thị sai ở trang tạo ứng dụng mới, để bước kiểm tra tự động chạy qua.",
+  "vi_ident": "Nhờ sửa AppLogo.tsx để biểu tượng ứng dụng hiển thị đúng ở trang tạo ứng dụng mới, bước kiểm tra tự động chạy qua.",
+  "cost": 0.0015480899999999998
+ },
+ {
+  "q": "fix native update window in desktop app",
+  "gold": [
+   "entities/cli-desktop-sdk.md"
+  ],
+  "files": [
+   "apps/desktop/src/main/update-window.ts",
+   "apps/desktop/test/shell-security.test.ts"
+  ],
+  "vi_plain": "Sửa lỗi cửa sổ cập nhật của bản ứng dụng máy tính, rồi kiểm tra lại phần bảo mật liên quan.",
+  "vi_ident": "Sửa lỗi cửa sổ cập nhật trong update-window.ts giúp mình, rồi kiểm tra lại bảo mật.",
+  "cost": 0.00135429
+ },
+ {
+  "q": "fix(connections): resolve the machine a project runs on instead of comparing serverId columns",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/modules/projects/project-connection.service.ts",
+   "apps/api/test/modules/projects/connection-internal-synth.test.ts"
+  ],
+  "vi_plain": "Nhờ bạn sửa cách tìm ra máy nào đang chạy một dự án, đừng dựa vào số định danh trùng nhau nữa.",
+  "vi_ident": "Nhờ bạn sửa project-connection.service.ts để tìm máy đang chạy một dự án, đừng so khớp số định danh nữa.",
+  "cost": 0.00155849
+ },
+ {
+  "q": "fix(connections): decide internal reach from the endpoint, not from which output threw",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/modules/projects/project-connection.service.test.ts",
+   "apps/api/src/modules/projects/project-connection.service.ts",
+   "apps/api/src/modules/projects/project-connection.util.ts",
+   "apps/api/src/modules/projects/project-storage.service.test.ts",
+   "apps/api/src/modules/projects/project-storage.service.ts",
+   "apps/api/test/modules/projects/connection-internal-synth.test.ts"
+  ],
+  "vi_plain": "Nhờ sửa lại cách xác định kết nối nội bộ: dựa vào địa chỉ đích, đừng dựa vào phần nào bị lỗi.",
+  "vi_ident": "Nhờ sửa cách xác định kết nối nội bộ trong project-connection.service.ts: dựa vào địa chỉ đích, đừng dựa vào phần nào bị lỗi.",
+  "cost": 0.00151439
+ },
+ {
+  "q": "fix(connections): allow non-URL outputs in internal connection mode",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/modules/projects/project-connection.service.test.ts",
+   "apps/api/src/modules/projects/project-connection.service.ts",
+   "apps/api/src/modules/projects/project-connection.util.ts",
+   "apps/api/test/modules/projects/connection-internal-synth.test.ts"
+  ],
+  "vi_plain": "Chế độ kết nối nội bộ nên cho phép kết quả không phải dạng liên kết, đừng bắt buộc luôn là đường dẫn.",
+  "vi_ident": "Trong project-connection.service.ts, chế độ kết nối nội bộ nên cho phép kết quả không phải dạng liên kết, đừng bắt buộc luôn là đường dẫn.",
+  "cost": 0.00138029
+ },
+ {
+  "q": "refactor(adapters): make the git clone credential URL self-contained",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "apps/api/node_modules",
+   "apps/api/src/lib/git-forwarding/relay.ts",
+   "apps/api/src/modules/deployments/build-log-sanitize.ts",
+   "apps/api/test/modules/deployments/build-log-sanitize.test.ts",
+   "packages/adapters/node_modules",
+   "packages/adapters/src/index.ts"
+  ],
+  "vi_plain": "Sửa đường dẫn kéo mã nguồn để tự mang đủ thông tin đăng nhập, và che phần đó trong nhật ký dựng ứng dụng.",
+  "vi_ident": "Sửa relay.ts để đường dẫn kéo mã nguồn tự mang đủ thông tin đăng nhập, và che phần đó trong nhật ký dựng.",
+  "cost": 0.0016479900000000002
+ },
+ {
+  "q": "fix(adapters): ride GitHub PATs in the username slot of clone URLs",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/runtime/git-clone.test.ts",
+   "packages/adapters/src/runtime/git-clone.ts"
+  ],
+  "vi_plain": "Sửa lại chỗ đưa mã truy cập vào đường dẫn tải mã nguồn, để kho riêng tư vẫn kéo về được.",
+  "vi_ident": "Trong git-clone.ts, sửa chỗ đưa mã truy cập vào đường dẫn tải mã nguồn để kho riêng tư vẫn kéo về được.",
+  "cost": 0.00121126
+ },
+ {
+  "q": "fix(dashboard): stop swallowing build-page load errors as 'not found'",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/app/(dashboard)/(deployment)/build/[id]/page.tsx",
+   "apps/dashboard/src/context/deployment/load-session.test.ts",
+   "apps/dashboard/src/context/deployment/load-session.ts",
+   "apps/dashboard/src/context/deployment/types.ts",
+   "apps/dashboard/src/context/deployment/useDeploymentBuild.tsx"
+  ],
+  "vi_plain": "Đừng báo 'không tìm thấy' khi thật ra là lỗi tải trang, phân biệt hai trường hợp này giúp mình.",
+  "vi_ident": "Trong load-session.ts, đừng báo 'không tìm thấy' khi thật ra là lỗi tải, phân biệt hai trường hợp giúp mình.",
+  "cost": 0.00118706
+ },
+ {
+  "q": "feat(dashboard): add deterministic service topology model",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/lib/service-topology.test.ts",
+   "apps/dashboard/src/lib/service-topology.ts"
+  ],
+  "vi_plain": "Nhờ bạn làm sơ đồ quan hệ giữa các dịch vụ, cùng đầu vào thì luôn cho cùng kết quả.",
+  "vi_ident": "Nhờ bạn viết phần sơ đồ dịch vụ trong service-topology.ts, cùng đầu vào thì luôn ra cùng kết quả.",
+  "cost": 0.0015842599999999999
+ },
+ {
+  "q": "fix(edge): serve an Openship page for upstream-down 502/504",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "apps/api/test/e2e/edge-upstream-down-page.e2e.test.ts",
+   "packages/adapters/src/index.ts",
+   "packages/adapters/src/infra/edge-upstream-down.test.ts",
+   "packages/adapters/src/infra/edge-upstream-down.ts",
+   "packages/adapters/src/infra/nginx.test.ts",
+   "packages/adapters/src/infra/nginx.ts"
+  ],
+  "vi_plain": "Khi ứng dụng phía sau bị sập, người dùng nên thấy một trang thông báo đẹp của Openship thay vì trang lỗi trắng.",
+  "vi_ident": "Khi ứng dụng phía sau bị sập, người dùng thấy trang Openship đẹp, phần này trong edge-upstream-down.ts nhé.",
+  "cost": 0.00147229
+ },
+ {
+  "q": "feat(apps): drop the experimental badge from Neon and PostHog",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "apps/api/scripts/promo-code.ts",
+   "apps/api/src/lib/auth.ts",
+   "apps/api/src/lib/compose-parser.ts",
+   "apps/api/src/lib/deployable-service.ts",
+   "apps/api/src/lib/free-domain-guard.ts",
+   "apps/api/src/lib/host-channel-banner.test.ts"
+  ],
+  "vi_plain": "Giúp mình bỏ nhãn thử nghiệm ở Neon và PostHog, hai dịch vụ này đã ổn định rồi.",
+  "vi_ident": "Giúp mình bỏ nhãn thử nghiệm ở Neon và PostHog trong deployable-service.ts, hai dịch vụ này ổn định rồi.",
+  "cost": 0.00149279
+ },
+ {
+  "q": "fix(auth): resolve the v0.6.6 conflict markers that shipped into auth.ts",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/auth.ts"
+  ],
+  "vi_plain": "Nhờ gỡ các đoạn xung đột còn sót trong phần xác thực của bản phát hành vừa rồi, giữ lại phần đúng.",
+  "vi_ident": "Nhờ gỡ các đoạn xung đột còn sót trong auth.ts của bản phát hành vừa rồi, giữ lại phần đúng.",
+  "cost": 0.0015857900000000001
+ },
+ {
+  "q": "chore(adapters): carry the compose-cmd/executor changes docker.ts depends on",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/runtime/compose-cmd.ts",
+   "packages/adapters/src/runtime/docker-entrypoint.test.ts",
+   "packages/adapters/src/system/executor.ts",
+   "packages/adapters/test/compose-cmd.test.ts"
+  ],
+  "vi_plain": "Nhờ bạn gom những thay đổi về cách chạy lệnh và trình thực thi mà phần xử lý nền đang cần vào một đợt riêng.",
+  "vi_ident": "Nhờ bạn gom những thay đổi trong executor.ts mà phần xử lý nền đang cần vào một đợt riêng.",
+  "cost": 0.0015916900000000002
+ },
+ {
+  "q": "fix(migration): resolve a service selection by identity, not by bare name (#584)",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/platform-engine.md"
+  ],
+  "files": [
+   "apps/api/src/lib/controller-helpers.ts",
+   "apps/api/src/middleware/error-handler.ts",
+   "apps/api/src/modules/deployments/build.service.ts",
+   "apps/api/src/modules/domains/domain.service.ts",
+   "apps/api/src/modules/migration/docker-inspect.service.ts",
+   "apps/api/src/modules/migration/docker-reconcile.ts"
+  ],
+  "vi_plain": "Nhờ bạn sửa chỗ chọn dịch vụ khi chuyển hệ thống: phải so theo định danh đầy đủ, đừng chỉ so tên ngắn.",
+  "vi_ident": "Nhờ bạn sửa docker-reconcile.ts: khi chọn dịch vụ phải so theo định danh đầy đủ, đừng chỉ so tên ngắn.",
+  "cost": 0.0014055600000000001
+ },
+ {
+  "q": "feat(core): credential provider registry, registry-host rules, secret-key heuristic",
+  "gold": [
+   "concepts/architecture.md"
+  ],
+  "files": [
+   "packages/core/src/audit-taxonomy.ts",
+   "packages/core/src/constants.ts",
+   "packages/core/src/credentials.test.ts",
+   "packages/core/src/credentials.ts",
+   "packages/core/src/image-ref.test.ts",
+   "packages/core/src/image-ref.ts"
+  ],
+  "vi_plain": "Nhờ bạn thêm đăng ký nguồn lấy thông tin đăng nhập, quy tắc theo từng máy chủ kho ảnh và nhận diện khóa bí mật.",
+  "vi_ident": "Nhờ bạn thêm đăng ký nguồn lấy thông tin đăng nhập trong credentials.ts, quy tắc máy chủ kho ảnh và nhận diện khóa bí mật.",
+  "cost": 0.0019493899999999996
+ },
+ {
+  "q": "fix(migrate): skip nginx's default vhost, resolve prefix-relative roots",
+  "gold": [
+   "concepts/onboarding-tour.md",
+   "entities/cli-desktop-sdk.md"
+  ],
+  "files": [
+   "apps/cli/src/commands/wizard.ts",
+   "packages/adapters/src/system/proxy/import/nginx.ts",
+   "packages/adapters/src/system/proxy/import/proxy-import.test.ts"
+  ],
+  "vi_plain": "Khi chuyển cấu hình máy chủ web sang proxy, bỏ qua trang mặc định và sửa cách tính đường dẫn gốc tương đối.",
+  "vi_ident": "Trong nginx.ts, bỏ qua trang mặc định và sửa cách tính đường dẫn gốc tương đối khi import.",
+  "cost": 0.00157039
+ },
+ {
+  "q": "feat(mail): schema foundation for inbound-mail notification rules",
+  "gold": [
+   "concepts/architecture.md"
+  ],
+  "files": [
+   "packages/db/drizzle/0105_mail_inbound_rules.sql",
+   "packages/db/drizzle/meta/_journal.json",
+   "packages/db/src/dump.ts",
+   "packages/db/src/index.ts",
+   "packages/db/src/repos/index.ts",
+   "packages/db/src/repos/mail-inbound.repo.ts"
+  ],
+  "vi_plain": "Nhờ bạn thêm phần nền tảng dữ liệu để lưu các quy tắc báo thư đến cho mình.",
+  "vi_ident": "Nhờ bạn thêm phần nền tảng dữ liệu cho quy tắc báo thư đến, bắt đầu từ mail-inbound.repo.ts giúp mình.",
+  "cost": 0.00133469
+ },
+ {
+  "q": "fix(deployments): correct three defects in the compose no-op change, drop its dead weight",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/api-app.md",
+   "entities/platform-engine.md"
+  ],
+  "files": [
+   "apps/api/src/lib/deployment-runtime.ts",
+   "apps/api/src/lib/notification-categories.ts",
+   "apps/api/src/modules/analytics/analytics.service.ts",
+   "apps/api/src/modules/deployments/build-status.service.ts",
+   "apps/api/src/modules/deployments/build.service.ts",
+   "apps/api/src/modules/deployments/compose/deploy.service.ts"
+  ],
+  "vi_plain": "Sửa giúp ba lỗi trong phần xử lý khi không có thay đổi, rồi bỏ những đoạn mã thừa không còn dùng tới.",
+  "vi_ident": "Sửa giúp ba lỗi trong deploy.service.ts khi không có thay đổi, rồi bỏ những đoạn mã thừa không còn dùng tới.",
+  "cost": 0.00149539
+ },
+ {
+  "q": "fix(deployments): stop the static extract from deploying a cancelled build",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "apps/api/src/modules/deployments/compose/build.service.ts",
+   "apps/api/src/modules/deployments/compose/pipeline-cancel.test.ts",
+   "packages/adapters/src/runtime/docker-build-cancellation.test.ts",
+   "packages/adapters/src/runtime/docker.ts"
+  ],
+  "vi_plain": "Khi người dùng hủy một lần triển khai đang chạy thì đừng để bước giải nén tiếp tục đưa bản đã hủy lên.",
+  "vi_ident": "Trong build.service.ts, nếu người dùng hủy triển khai giữa chừng thì bước giải nén file tĩnh đừng đưa bản đó lên nữa.",
+  "cost": 0.00137879
+ },
+ {
+  "q": "fix(dashboard): keep a stored healthcheck test intact through the settings form",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/services/ServiceSettingsForm.tsx",
+   "apps/dashboard/src/lib/healthcheck-test.test.ts",
+   "apps/dashboard/src/lib/healthcheck-test.ts"
+  ],
+  "vi_plain": "Khi sửa cài đặt dịch vụ, giữ nguyên bài kiểm tra sức khỏe đã lưu từ trước.",
+  "vi_ident": "Khi sửa cài đặt dịch vụ, giữ nguyên bài kiểm tra sức khỏe đã lưu, chú ý ServiceSettingsForm.tsx.",
+  "cost": 0.00130579
+ },
+ {
+  "q": "fix(adapters): treat a NONE healthcheck test array as disabled",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/runtime/docker.ts",
+   "packages/adapters/test/docker-healthcheck.test.ts",
+   "packages/core/src/types.ts"
+  ],
+  "vi_plain": "Phần kiểm tra sức khỏe mà ghi lệnh tắt thì phải coi như đang tắt, bạn sửa giúp mình với nhé.",
+  "vi_ident": "Trong docker.ts, nếu phần kiểm tra sức khỏe ghi lệnh tắt thì phải coi như đang tắt, sửa giúp mình.",
+  "cost": 0.0015071899999999998
+ },
+ {
+  "q": "fix(dns): make the Cloudflare DNS provider boot, validate, and delete safely",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "apps/api/src/modules/dns/dns-credential.service.ts",
+   "apps/api/src/modules/dns/dns.controller.ts",
+   "apps/api/src/modules/dns/dns.routes.ts",
+   "apps/api/src/modules/dns/dns.schema.ts",
+   "apps/api/src/modules/dns/index.ts",
+   "apps/api/src/modules/dns/providers/cloudflare.provider.ts"
+  ],
+  "vi_plain": "Nhờ bạn sửa phần quản lý tên miền: làm cho khởi động được, kiểm tra thông tin nhập và xóa bản ghi an toàn hơn.",
+  "vi_ident": "Nhờ bạn sửa cloudflare.provider.ts để phần quản lý tên miền khởi động được, kiểm tra thông tin nhập và xóa an toàn hơn.",
+  "cost": 0.00162089
+ },
+ {
+  "q": "fix(deployments): don't let an all-carried compose redeploy take over the active release",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/api-app.md",
+   "entities/platform-engine.md"
+  ],
+  "files": [
+   "apps/api/src/lib/container-ref.ts",
+   "apps/api/src/lib/deployment-runtime.ts",
+   "apps/api/src/lib/notification-categories.ts",
+   "apps/api/src/lib/public-endpoints.ts",
+   "apps/api/src/modules/analytics/analytics.service.ts",
+   "apps/api/src/modules/deployments/build-pipeline.ts"
+  ],
+  "vi_plain": "Nếu lần triển khai lại chỉ giữ nguyên toàn bộ dịch vụ thì đừng để nó giành quyền bản phát hành đang chạy.",
+  "vi_ident": "Trong build-pipeline.ts, nếu lần triển khai lại chỉ giữ nguyên mọi dịch vụ thì đừng để nó giành bản phát hành đang chạy.",
+  "cost": 0.00133589
+ },
+ {
+  "q": "fix(runtime): make build cancellation actually stop every build path",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "apps/api/src/modules/deployments/compose/build-cancel.test.ts",
+   "apps/api/src/modules/deployments/compose/build.service.ts",
+   "apps/api/src/modules/deployments/compose/pipeline.ts",
+   "packages/adapters/src/runtime/bare.ts",
+   "packages/adapters/src/runtime/build-pipeline.ts",
+   "packages/adapters/src/runtime/docker-build-cancellation.test.ts"
+  ],
+  "vi_plain": "Khi người dùng hủy việc đang dựng bản ứng dụng, mọi cách dựng phải thật sự dừng lại, không được chạy ngầm nữa.",
+  "vi_ident": "Nhờ bạn sửa build.service.ts sao cho khi người dùng hủy việc dựng bản, mọi cách dựng đều dừng hẳn, không chạy ngầm nữa.",
+  "cost": 0.0013580900000000002
+ },
+ {
+  "q": "fix(auth): scope nested lists to their parent",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/route-permission.ts",
+   "apps/api/test/lib/permission-nested-list-parent.test.ts"
+  ],
+  "vi_plain": "Sửa lỗi quyền truy cập: danh sách con chỉ hiển thị khi người dùng có quyền với mục cha chứa nó.",
+  "vi_ident": "Trong route-permission.ts, sửa để danh sách con chỉ hiển thị khi người dùng có quyền với mục cha chứa nó.",
+  "cost": 0.00127939
+ },
+ {
+  "q": "fix(runtime): cancel remote Docker builds",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/runtime/docker-build-cancellation.test.ts",
+   "packages/adapters/src/runtime/docker.ts"
+  ],
+  "vi_plain": "Nhờ bạn sửa lỗi để khi hủy tác vụ thì việc dựng bản chạy trên máy chủ từ xa cũng bị dừng lại theo.",
+  "vi_ident": "Nhờ bạn sửa docker.ts để khi hủy thì việc dựng bản chạy trên máy chủ từ xa cũng dừng theo luôn.",
+  "cost": 0.00124596
+ },
+ {
+  "q": "enhance issues page ui",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/components/issues/IssueGroup.tsx",
+   "apps/dashboard/src/components/issues/IssueList.test.tsx",
+   "apps/dashboard/src/components/issues/IssueList.tsx",
+   "apps/dashboard/src/components/issues/issueMeta.ts",
+   "apps/dashboard/src/components/overview/AlertPanel.tsx",
+   "packages/adapters/src/system/environment-ops.ts"
+  ],
+  "vi_plain": "Giúp mình làm đẹp lại giao diện trang danh sách sự cố, cho các nhóm lỗi dễ theo dõi hơn nhé.",
+  "vi_ident": "Giúp mình làm đẹp lại giao diện trang danh sách sự cố trong IssueList.tsx, cho các nhóm lỗi dễ theo dõi hơn nhé.",
+  "cost": 0.00113666
+ },
+ {
+  "q": "test(adapters): exercise the journal write the #514 fix is actually about",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/runtime/bare-remote-promote.test.ts"
+  ],
+  "vi_plain": "Viết thêm kiểm thử cho đúng phần ghi nhật ký khi đưa bản sao từ xa lên chính thức, lỗi nằm ở đó.",
+  "vi_ident": "Viết thêm kiểm thử cho đúng phần ghi nhật ký trong bare-remote-promote.test.ts, lỗi đang nằm ở đó.",
+  "cost": 0.0013638600000000002
+ },
+ {
+  "q": "fix(adapters): provision .builds, not the build dir, before the SSH extract",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/runtime/docker.ts"
+  ],
+  "vi_plain": "Nhờ sửa lỗi: trước khi giải nén từ xa, phải tạo sẵn thư mục chứa các bản dựng thay vì thư mục đích.",
+  "vi_ident": "Nhờ sửa docker.ts: trước khi giải nén từ xa, phải tạo sẵn thư mục chứa các bản dựng thay vì thư mục đích.",
+  "cost": 0.00128795
+ },
+ {
+  "q": "test(adapters): cover a remote non-root static deploy end to end",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/runtime/issue-514-remote-static-deploy.test.ts"
+  ],
+  "vi_plain": "Nhờ bạn viết thêm phần kiểm tra toàn bộ luồng đưa trang tĩnh lên máy chủ từ xa, chạy trong thư mục con.",
+  "vi_ident": "Nhờ bạn viết thêm phần kiểm tra toàn bộ luồng đưa trang tĩnh lên máy chủ từ xa trong issue-514-remote-static-deploy.test.ts.",
+  "cost": 0.00155105
+ },
+ {
+  "q": "fix(adapters): provision the release base before promoting a build",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/runtime/bare.ts"
+  ],
+  "vi_plain": "Sửa giúp mình: phải dựng sẵn môi trường phát hành trước khi đưa bản dựng lên chính thức.",
+  "vi_ident": "Sửa giúp mình trong bare.ts: phải dựng sẵn môi trường phát hành trước khi đưa bản dựng lên chính thức.",
+  "cost": 0.00118975
+ },
+ {
+  "q": "fix(adapters): provision the static doc-root before extracting into it",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/runtime/docker.ts"
+  ],
+  "vi_plain": "Nhờ bạn sửa lỗi này: phải tạo sẵn thư mục chứa tài liệu tĩnh trước khi giải nén nội dung vào trong đó.",
+  "vi_ident": "Nhờ bạn sửa lỗi trong docker.ts: phải tạo sẵn thư mục chứa tài liệu tĩnh trước khi giải nén nội dung vào đó.",
+  "cost": 0.0013108500000000001
+ },
+ {
+  "q": "fix(adapters): avoid duplicate CMD prefix in compose healthchecks",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/runtime/docker.ts",
+   "packages/adapters/test/docker-healthcheck.test.ts"
+  ],
+  "vi_plain": "Sửa lỗi phần kiểm tra tình trạng dịch vụ trong tệp cấu hình bị lặp thừa đoạn lệnh đầu khi chạy.",
+  "vi_ident": "Sửa lỗi phần kiểm tra tình trạng trong docker.ts bị lặp thừa đoạn lệnh đầu khi chạy.",
+  "cost": 0.00146746
+ },
+ {
+  "q": "fix live stream from edge",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/cli-desktop-sdk.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/api/src/lib/project-analytics.ts",
+   "apps/api/src/modules/migration/docker-inspect.service.ts",
+   "apps/api/src/modules/migration/docker-reconcile.test.ts",
+   "apps/api/src/modules/migration/docker-reconcile.ts",
+   "apps/api/src/modules/migration/migration.controller.ts",
+   "apps/api/src/modules/migration/migration.routes.ts"
+  ],
+  "vi_plain": "Nhờ bạn sửa lỗi video trực tiếp bị đứt khi phát từ máy chủ biên, rồi kiểm tra lại phần đối chiếu sau chuyển máy.",
+  "vi_ident": "Nhờ bạn sửa lỗi video trực tiếp bị đứt khi phát từ máy chủ biên, nhất là trong docker-reconcile.ts.",
+  "cost": 0.00140649
+ },
+ {
+  "q": "fix app settings url",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "apps/api/src/modules/apps/app-settings.service.ts",
+   "apps/api/src/modules/projects/project-crud.service.ts",
+   "apps/api/src/modules/system/tunnels.controller.ts",
+   "apps/dashboard/src/app/(dashboard)/apps/new/[appId]/page.tsx",
+   "apps/dashboard/src/app/(dashboard)/dev/issues/IssuesPreview.tsx",
+   "apps/dashboard/src/app/(dashboard)/issues/IssuesView.tsx"
+  ],
+  "vi_plain": "Sửa lại đường dẫn trong phần cài đặt ứng dụng, hiện đang trỏ sai địa chỉ so với thực tế.",
+  "vi_ident": "Sửa lại đường dẫn trong app-settings.service.ts cho đúng địa chỉ thật, hiện đang trỏ sai.",
+  "cost": 0.00135489
+ },
+ {
+  "q": "edge static path takeover fix",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md",
+   "entities/cli-desktop-sdk.md"
+  ],
+  "files": [
+   "apps/api/src/lib/startup/self-edge.ts",
+   "apps/api/src/modules/issues/issues.service.ts",
+   "apps/api/src/modules/jobs/job.registry.ts",
+   "apps/api/src/modules/projects/project-crud.service.ts",
+   "apps/api/src/modules/projects/project.controller.ts",
+   "apps/api/src/modules/projects/project.service.ts"
+  ],
+  "vi_plain": "Nhờ sửa cổng vào hệ thống đang chiếm mất đường dẫn ảnh và tài liệu tĩnh, khiến chúng không hiển thị được.",
+  "vi_ident": "Nhờ sửa self-edge.ts đang chiếm mất đường dẫn ảnh và tài liệu tĩnh, khiến chúng không hiển thị được.",
+  "cost": 0.0013946600000000003
+ },
+ {
+  "q": "fix updates notification cache and add better apps installation process",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "apps/api/src/modules/deployments/compose/build.service.ts",
+   "apps/api/src/modules/deployments/compose/deploy.service.ts",
+   "apps/api/src/modules/deployments/compose/pipeline.ts",
+   "apps/api/src/modules/deployments/deployment.service.ts",
+   "apps/api/src/modules/deployments/session-manager.install-phase.test.ts",
+   "apps/api/src/modules/deployments/session-manager.ts"
+  ],
+  "vi_plain": "Sửa lại bộ nhớ đệm thông báo cập nhật và làm quy trình cài đặt ứng dụng chắc chắn hơn.",
+  "vi_ident": "Nhờ bạn sửa lại phần thông báo cập nhật và cài đặt ứng dụng trong session-manager.ts cho chắc hơn.",
+  "cost": 0.00124426
+ },
+ {
+  "q": "fix compose parse",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/platform-engine.md"
+  ],
+  "files": [
+   "apps/api/src/lib/compose-parser.ts",
+   "apps/api/src/lib/secret-env.ts",
+   "apps/api/src/modules/deployments/build.service.ts",
+   "apps/api/src/modules/deployments/prepare.service.ts",
+   "apps/api/test/lib/compose-parser.test.ts",
+   "apps/api/test/lib/secret-env.test.ts"
+  ],
+  "vi_plain": "Nhờ bạn sửa lỗi đọc file cấu hình nhiều dịch vụ, và phần biến bí mật lúc đóng gói bị xử lý sai.",
+  "vi_ident": "Nhờ bạn sửa lỗi đọc trong compose-parser.ts, và phần biến bí mật lúc đóng gói bị xử lý sai.",
+  "cost": 0.00143636
+ },
+ {
+  "q": "feat(adapters): Ruby build recipe with a real toolchain",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/runtime/docker-build-plan.ts",
+   "packages/adapters/test/ruby-dockerfile.test.ts"
+  ],
+  "vi_plain": "Làm giúp mình phần dựng môi trường để thư viện cài được đầy đủ, có công cụ biên dịch thật sự, không phải bản giả.",
+  "vi_ident": "Làm giúp mình thêm phần dựng môi trường trong docker-build-plan.ts, sao cho cài được đủ công cụ biên dịch thật.",
+  "cost": 0.0015609600000000001
+ },
+ {
+  "q": "fix(adapters): copy vendor/ into the PHP asset stage so package CSS resolves",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/runtime/docker-build-plan.test.ts",
+   "packages/adapters/src/runtime/docker-build-plan.ts"
+  ],
+  "vi_plain": "Giúp mình sửa bước đóng gói ứng dụng để các thư viện giao diện bên trong hiển thị đúng kiểu dáng.",
+  "vi_ident": "Giúp mình sửa file docker-build-plan.ts để ứng dụng đóng gói xong thì giao diện hiển thị đúng kiểu dáng.",
+  "cost": 0.0013212500000000002
+ },
+ {
+  "q": "feat(cli): add shell completion via @bomb.sh/tab (bash/zsh/fish)",
+  "gold": [
+   "concepts/onboarding-tour.md",
+   "entities/cli-desktop-sdk.md"
+  ],
+  "files": [
+   "apps/cli/package.json",
+   "apps/cli/src/commands/completion.ts",
+   "apps/cli/src/index.ts",
+   "apps/cli/test/e2e/completion.test.ts"
+  ],
+  "vi_plain": "Nhờ bạn thêm chức năng tự động gợi ý lệnh khi người dùng nhấn phím tab trên dòng lệnh.",
+  "vi_ident": "Nhờ bạn thêm chức năng tự động gợi ý lệnh trong file completion.ts khi người dùng nhấn phím Tab trên dòng lệnh.",
+  "cost": 0.00141755
+ },
+ {
+  "q": "fix(dashboard): remove debug logs, null guards, timer leaks, and button types",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/components/jobs/JobForm.tsx",
+   "apps/dashboard/src/components/overview/ActivityChart.tsx",
+   "apps/dashboard/src/hooks/useBuildConnection.ts",
+   "apps/dashboard/src/utils/upload.js"
+  ],
+  "vi_plain": "Nhờ dọn mấy dòng in thử còn sót, thêm kiểm tra dữ liệu rỗng và sửa lỗi hẹn giờ không tắt hẳn.",
+  "vi_ident": "Nhờ dọn mấy dòng in thử còn sót trong ActivityChart.tsx, thêm kiểm tra dữ liệu rỗng và sửa lỗi hẹn giờ không tắt hẳn.",
+  "cost": 0.00145135
+ },
+ {
+  "q": "back build context to fix docker crach issue",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/package.json",
+   "packages/adapters/src/runtime/docker.ts",
+   "packages/adapters/src/runtime/tar-fs.d.ts",
+   "packages/adapters/test/docker-build-context-pack.test.ts"
+  ],
+  "vi_plain": "Làm ơn quay lại cách đóng gói dữ liệu như trước, bản mới đang làm chương trình bị sập liên tục.",
+  "vi_ident": "Làm ơn quay lại cách đóng gói dữ liệu như trước trong docker.ts, bản mới làm chương trình bị sập liên tục.",
+  "cost": 0.0012174500000000001
+ },
+ {
+  "q": "fix(api): accept framework display labels in project ensure schema to resolve 400 Bad Request (#427)",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/modules/projects/project-crud.service.ts",
+   "apps/api/src/modules/projects/project.schema.ts",
+   "apps/api/test/modules/projects/ensure-schema-output-dir.test.ts",
+   "packages/core/src/stacks.ts",
+   "packages/core/test/is-services-framework.test.ts"
+  ],
+  "vi_plain": "Chọn công nghệ bằng tên hiển thị khi tạo dự án đang bị báo lỗi, cần cho nhận luôn tên đó.",
+  "vi_ident": "Chọn công nghệ bằng tên hiển thị khi tạo dự án đang lỗi, bạn xem giúp project.schema.ts nhé.",
+  "cost": 0.0016057900000000002
+ },
+ {
+  "q": "fix(dashboard): send configured env when re-scanning a compose path",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/context/deployment/useDeploymentConfig.ts",
+   "apps/dashboard/src/lib/api/deploy.ts"
+  ],
+  "vi_plain": "Lúc quét lại đường dẫn cấu hình thì gửi kèm luôn biến môi trường đã thiết lập cho ứng dụng.",
+  "vi_ident": "Trong useDeploymentConfig.ts, lúc quét lại đường dẫn cấu hình thì gửi kèm biến môi trường đã thiết lập.",
+  "cost": 0.00148439
+ },
+ {
+  "q": "fix(api): accept env on POST /deployments/prepare",
+  "gold": [
+   "concepts/deployment-pipeline.md"
+  ],
+  "files": [
+   "apps/api/src/modules/deployments/deployment.controller.ts",
+   "apps/api/src/modules/deployments/deployment.schema.ts"
+  ],
+  "vi_plain": "Giúp mình sửa để bước chuẩn bị triển khai cũng nhận được phần biến môi trường người dùng gửi lên.",
+  "vi_ident": "Giúp mình sửa file deployment.schema.ts để bước chuẩn bị triển khai nhận thêm phần biến môi trường người dùng gửi lên.",
+  "cost": 0.00139069
+ },
+ {
+  "q": "feat: add TanStack Start stack detection",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/stack-detector.ts",
+   "apps/api/test/lib/stack-detector.test.ts",
+   "packages/core/src/stacks.ts"
+  ],
+  "vi_plain": "Nhờ bạn thêm khả năng nhận diện một loại khung làm web mới, để hệ thống tự hiểu đúng công nghệ mà dự án đang dùng.",
+  "vi_ident": "Nhờ bạn sửa stack-detector.ts để nhận diện thêm loại khung làm web mới, hệ thống hiểu đúng công nghệ dự án đang dùng.",
+  "cost": 0.00156909
+ },
+ {
+  "q": "fix(dashboard): show per-service warnings in the migration wizard",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/components/migration/ServerMigrationWizard.tsx"
+  ],
+  "vi_plain": "Màn hình chuyển máy chủ chưa hiện cảnh báo riêng của từng dịch vụ, nhờ bạn sửa cho hiển thị đầy đủ.",
+  "vi_ident": "Trong ServerMigrationWizard.tsx, màn hình chuyển máy chủ chưa hiện cảnh báo riêng của từng dịch vụ, nhờ bạn sửa.",
+  "cost": 0.00143876
+ },
+ {
+  "q": "fix(acme): stage the EAB config inside a 0700 directory",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/infra/nginx.test.ts",
+   "packages/adapters/src/infra/nginx.ts"
+  ],
+  "vi_plain": "Thông tin đăng ký tài khoản chứng chỉ cần lưu trong thư mục chỉ chủ sở hữu truy cập được, nhờ bạn sửa nhé.",
+  "vi_ident": "Nhờ bạn sửa nginx.ts để thông tin đăng ký tài khoản chứng chỉ nằm trong thư mục chỉ chủ sở hữu đọc được, cảm ơn.",
+  "cost": 0.00166919
+ },
+ {
+  "q": "fix(acme): survive CA switches on renewal and harden EAB secret handling",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "apps/api/src/config/env.ts",
+   "apps/cli/test/unit/compose-env-preserve.test.ts",
+   "packages/adapters/src/infra/nginx.test.ts",
+   "packages/adapters/src/infra/nginx.ts"
+  ],
+  "vi_plain": "Nhờ bạn sửa lỗi gia hạn chứng chỉ khi đổi nhà cấp, và giữ khóa đăng ký bí mật chặt chẽ hơn.",
+  "vi_ident": "Nhờ bạn sửa file nginx.ts để gia hạn chứng chỉ không lỗi khi đổi nhà cấp, và giữ khóa bí mật chặt hơn.",
+  "cost": 0.00160269
+ },
+ {
+  "q": "Support alternate ACME CAs and EAB",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md",
+   "entities/cli-desktop-sdk.md"
+  ],
+  "files": [
+   "apps/api/src/config/env.ts",
+   "apps/api/src/lib/acme-config.ts",
+   "apps/api/src/lib/controller-helpers.ts",
+   "apps/api/src/lib/deployment-runtime.ts",
+   "apps/api/src/lib/startup/self-edge.ts",
+   "apps/api/src/modules/deployments/build-pipeline.ts"
+  ],
+  "vi_plain": "Nhờ bạn cho phép chọn nhà cấp chứng chỉ khác thay cho mặc định, kèm tài khoản xác thực khi cần.",
+  "vi_ident": "Nhờ bạn cho phép chọn nhà cấp chứng chỉ khác thay cho mặc định, kèm tài khoản xác thực khi cần, sửa trong acme-config.ts.",
+  "cost": 0.00135336
+ },
+ {
+  "q": "org conflict issue solve",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/deployment-runtime.ts",
+   "apps/dashboard/src/app/(dashboard)/(deployment)/deploy/[slug]/page.tsx"
+  ],
+  "vi_plain": "Nhờ bạn sửa lỗi xung đột tổ chức khi triển khai ứng dụng, cả phần chạy lẫn giao diện trang triển khai.",
+  "vi_ident": "Nhờ bạn sửa lỗi xung đột tổ chức trong deployment-runtime.ts khi triển khai ứng dụng, cảm ơn nhé.",
+  "cost": 0.00131535
+ },
+ {
+  "q": "fix(adapters): match Docker's .dockerignore semantics in the build context",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/runtime/docker-build-context.test.ts",
+   "packages/adapters/src/runtime/docker-build-context.ts"
+  ],
+  "vi_plain": "Chỉnh cách loại trừ tệp khi gom đồ đóng gói cho giống hệt cách công cụ đóng gói tự xử lý.",
+  "vi_ident": "Chỉnh cách loại trừ tệp trong docker-build-context.ts cho giống hệt cách công cụ đóng gói tự xử lý.",
+  "cost": 0.00184039
+ },
+ {
+  "q": "fix wizard health layout",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/app/(dashboard)/(deployment)/deploy/[slug]/page.tsx",
+   "apps/dashboard/src/components/domains/DnsRecordCard.tsx",
+   "apps/dashboard/src/components/project-settings/ReadinessSection.tsx"
+  ],
+  "vi_plain": "Nhờ bạn sửa lại cách sắp xếp phần kiểm tra tình trạng trong các bước hướng dẫn cho gọn hơn.",
+  "vi_ident": "Nhờ bạn sửa lại cách sắp xếp phần kiểm tra trong ReadinessSection.tsx cho gọn hơn.",
+  "cost": 0.00142699
+ },
+ {
+  "q": "fix(api): parse multi-line quoted values in .env files",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/compose-parser.ts",
+   "apps/api/test/lib/compose-parser.test.ts"
+  ],
+  "vi_plain": "Giá trị nhiều dòng nằm trong cặp nháy kép hiện bị đọc sai, bạn sửa giúp để đọc đúng cả đoạn nhiều dòng nhé.",
+  "vi_ident": "Bên compose-parser.ts, giá trị nhiều dòng nằm trong nháy kép đang bị đọc sai, bạn sửa giúp để đọc đúng cả đoạn nhé.",
+  "cost": 0.0015020900000000002
+ },
+ {
+  "q": "fix(api): resolve nested Compose interpolation like ${A:-${B}}",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/compose-parser.ts",
+   "apps/api/test/lib/compose-parser.test.ts"
+  ],
+  "vi_plain": "Nhờ sửa lại phần đọc cấu hình, để biến có giá trị mặc định lồng nhau được thay thế đúng cách.",
+  "vi_ident": "Nhờ sửa compose-parser.ts để biến có giá trị mặc định lồng nhau được thay thế đúng cách.",
+  "cost": 0.00142419
+ },
+ {
+  "q": "fix(api): relay server-log stream chunks as bytes, not re-decoded strings",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/modules/projects/project.controller.ts",
+   "apps/api/test/modules/projects/server-log-stream-relay.test.ts"
+  ],
+  "vi_plain": "Sửa chỗ chuyển tiếp nhật ký máy chủ đang truyền từng đoạn: đừng giải mã thành chữ rồi mã hóa lại nữa.",
+  "vi_ident": "Sửa chỗ chuyển tiếp nhật ký máy chủ trong project.controller.ts: đừng giải mã thành chữ rồi mã hóa lại nữa.",
+  "cost": 0.0013653600000000001
+ },
+ {
+  "q": "health check refactor",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/api/src/lib/deployment-runtime.ts",
+   "apps/api/src/modules/deployments/build-pipeline.ts",
+   "apps/api/src/modules/deployments/compose/deploy.service.ts",
+   "apps/api/src/modules/deployments/health-gate.ts",
+   "apps/api/src/modules/deployments/prepare.service.ts",
+   "apps/api/src/modules/projects/project-crud.service.ts"
+  ],
+  "vi_plain": "Nhờ bạn tách lại phần kiểm tra sức khỏe của ứng dụng cho gọn hơn, giữ nguyên hành vi hiện tại.",
+  "vi_ident": "Nhờ bạn tách lại phần kiểm tra sức khỏe trong health-gate.ts cho gọn, giữ nguyên hành vi hiện tại.",
+  "cost": 0.00127789
+ },
+ {
+  "q": "fix mcp clone token issue",
+  "gold": [
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/api/src/lib/route-permission.ts",
+   "apps/api/src/lib/routing-domains.ts",
+   "apps/api/src/modules/deployments/build-pipeline.ts",
+   "apps/api/src/modules/deployments/clone-plan.ts",
+   "apps/api/src/modules/github/github-access.ts",
+   "apps/api/src/modules/github/github.auth.ts"
+  ],
+  "vi_plain": "Sửa lỗi lấy mã xác thực để kéo mã nguồn về bị hỏng khi triển khai, nhờ bạn xử lý giúp nhé.",
+  "vi_ident": "Sửa lỗi lấy mã xác thực để kéo mã nguồn về trong github-access.ts bị hỏng, nhờ bạn xử lý giúp nhé.",
+  "cost": 0.0013796899999999998
+ },
+ {
+  "q": "fix(api): reject CR/LF in tunnel request paths and headers",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/ssh-tunnel.ts",
+   "apps/api/test/lib/ssh-tunnel-http.test.ts"
+  ],
+  "vi_plain": "Nhờ chặn ký tự xuống dòng trong đường dẫn và tiêu đề yêu cầu gửi qua kết nối đường hầm, tránh bị chèn dữ liệu.",
+  "vi_ident": "Nhờ chặn ký tự xuống dòng trong đường dẫn và tiêu đề yêu cầu ở ssh-tunnel.ts, tránh bị chèn dữ liệu.",
+  "cost": 0.00173166
+ },
+ {
+  "q": "fix(api): relay tunnelStream bytes without UTF-8 re-decoding",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/ssh-tunnel.ts",
+   "apps/api/test/lib/ssh-tunnel-http.test.ts"
+  ],
+  "vi_plain": "Nhờ sửa để dữ liệu đi qua kết nối trung gian giữ nguyên, đừng bị đọc lại thành chữ làm hỏng tệp.",
+  "vi_ident": "Nhờ sửa ssh-tunnel.ts để dữ liệu qua kết nối trung gian giữ nguyên, đừng bị đọc lại thành chữ làm hỏng tệp.",
+  "cost": 0.0014809900000000002
+ },
+ {
+  "q": "fix(api): fail a truncated tunnel response instead of resolving it 200",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/ssh-tunnel.ts",
+   "apps/api/test/lib/ssh-tunnel-http.test.ts"
+  ],
+  "vi_plain": "Nhờ bạn sửa: nếu phản hồi bị cắt dở giữa đường thì báo lỗi luôn, đừng coi là thành công.",
+  "vi_ident": "Nhờ bạn sửa file ssh-tunnel.ts: nếu phản hồi bị cắt dở giữa đường thì báo lỗi luôn, đừng coi là thành công.",
+  "cost": 0.00142389
+ },
+ {
+  "q": "fix(api): honor case-insensitive and list-form Transfer-Encoding in tunnelRequest",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/ssh-tunnel.ts",
+   "apps/api/test/lib/ssh-tunnel-http.test.ts"
+  ],
+  "vi_plain": "Nhờ sửa chỗ chuyển tiếp qua đường hầm để nhận đúng mã hóa truyền tải dù viết hoa hay thường hoặc dạng danh sách.",
+  "vi_ident": "Nhờ sửa ssh-tunnel.ts để nhận đúng mã hóa truyền tải dù viết hoa hay thường hoặc dạng danh sách, rồi thêm kiểm thử.",
+  "cost": 0.0019221899999999998
+ },
+ {
+  "q": "fix(api): don't synthesize an install command for Dockerfile-owned sub-apps",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/stack-detector.ts"
+  ],
+  "vi_plain": "Với các ứng dụng con đã có quy trình đóng gói riêng thì đừng tự sinh thêm lệnh cài đặt nữa nhé.",
+  "vi_ident": "Trong stack-detector.ts, các ứng dụng con đã có quy trình đóng gói riêng thì đừng tự sinh thêm lệnh cài đặt.",
+  "cost": 0.00133246
+ },
+ {
+  "q": "fix(api): accept an empty publicEndpoints array on project create/update/ensure",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/modules/projects/project.schema.test.ts",
+   "apps/api/src/modules/projects/project.schema.ts"
+  ],
+  "vi_plain": "Cho phép lưu dự án khi chưa có đường dẫn công khai nào, không bắt buộc phải điền ít nhất một.",
+  "vi_ident": "Trong project.schema.ts, cho phép danh sách đường dẫn công khai rỗng khi tạo, sửa hoặc đảm bảo dự án.",
+  "cost": 0.00137699
+ },
+ {
+  "q": "fix docker stream issue",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/project-analytics.ts",
+   "apps/api/src/lib/server-target.ts",
+   "apps/api/src/lib/startup/self-server.ts",
+   "apps/api/src/modules/domains/domain.controller.ts",
+   "apps/api/src/modules/domains/domain.service.ts",
+   "apps/api/src/modules/projects/project.controller.ts"
+  ],
+  "vi_plain": "Nhật ký chạy trực tiếp của ứng dụng đang bị đứng giữa chừng, nhờ bạn sửa giúp mình cho hiển thị liền mạch.",
+  "vi_ident": "Nhật ký chạy trực tiếp của ứng dụng đang bị đứng giữa chừng, nhờ bạn xem giúp mình file self-server.ts cho hiển thị liền mạch.",
+  "cost": 0.0016011900000000002
+ },
+ {
+  "q": "fix(edge): use GeoLite2's latest-release download URL, not a pinned date tag",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/infra/openresty-lua.ts"
+  ],
+  "vi_plain": "Sửa cách tải cơ sở dữ liệu vị trí địa lý để luôn lấy bản mới nhất thay vì ghim cứng theo ngày.",
+  "vi_ident": "Trong openresty-lua.ts, sửa cách tải cơ sở dữ liệu vị trí để luôn lấy bản mới nhất, bỏ ghim theo ngày.",
+  "cost": 0.00149949
+ },
+ {
+  "q": "fix(api): rewrite SSH tunnel HTTP requests over raw duplex stream",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/ssh-tunnel.ts"
+  ],
+  "vi_plain": "Viết lại phần gửi yêu cầu qua đường hầm bảo mật, đi thẳng trên luồng dữ liệu hai chiều thay vì cách cũ.",
+  "vi_ident": "Nhờ sửa ssh-tunnel.ts: viết lại cách gửi yêu cầu qua đường hầm, đi thẳng trên luồng dữ liệu hai chiều.",
+  "cost": 0.0014524899999999999
+ },
+ {
+  "q": "bug report prompts for mcp",
+  "gold": [
+   "concepts/access-auth-mcp.md"
+  ],
+  "files": [
+   "apps/api/src/modules/mcp/mcp-prompts.ts",
+   "apps/api/test/modules/mcp/mcp-prompts.test.ts"
+  ],
+  "vi_plain": "Nhờ sửa giúp lỗi ở phần gợi ý khi người dùng báo cáo lỗi, đang hiện sai nội dung.",
+  "vi_ident": "Nhờ sửa giúp lỗi ở mcp-prompts.ts khi tạo gợi ý báo cáo lỗi, đang hiện sai nội dung.",
+  "cost": 0.0014681899999999999
+ },
+ {
+  "q": "fix port conflict on host, harden mcp prompts, fix ssl flow",
+  "gold": [
+   "concepts/access-auth-mcp.md"
+  ],
+  "files": [
+   "apps/api/src/modules/mcp/mcp-tools.ts",
+   "apps/api/src/modules/mcp/mcp.routes.ts",
+   "apps/api/test/modules/mcp/mcp-tools-filter.test.ts",
+   "apps/api/src/config/env.ts",
+   "apps/api/src/lib/domain-ssl.ts",
+   "apps/api/src/lib/route-permission.ts"
+  ],
+  "vi_plain": "Giúp sửa lỗi hai dịch vụ tranh cổng trên máy, siết lại lời nhắc cho công cụ và sửa luồng cấp chứng chỉ tên miền.",
+  "vi_ident": "Giúp sửa file domain-ssl.ts, luồng cấp chứng chỉ tên miền đang bị lỗi, và tiện thể siết lại lời nhắc cho công cụ.",
+  "cost": 0.0018878900000000001
+ },
+ {
+  "q": "fix: sanitize monorepo sub-app names for Docker container naming",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/project-root-detector.ts",
+   "apps/api/test/lib/project-root-detector.test.ts"
+  ],
+  "vi_plain": "Tên các ứng dụng con trong dự án có ký tự lạ làm bản chạy bị lỗi, nhờ sửa cho hợp lệ.",
+  "vi_ident": "Nhờ sửa cách tên ứng dụng con được xử lý trong project-root-detector.ts, để tên có ký tự lạ không làm bản chạy bị lỗi.",
+  "cost": 0.0017847899999999999
+ },
+ {
+  "q": "feat(email): manage vmail aliases, forwards, and catch-all from the dashboard",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/api/src/modules/mail/admin/admin.controller.ts",
+   "apps/api/src/modules/mail/admin/aliases.service.ts",
+   "apps/api/src/modules/mail/mail.routes.ts",
+   "apps/dashboard/src/app/(dashboard)/emails/_components/admin/admin-panel.tsx",
+   "apps/dashboard/src/app/(dashboard)/emails/_components/admin/aliases-tab.tsx",
+   "apps/dashboard/src/i18n/i18n-parity.test.ts"
+  ],
+  "vi_plain": "Trên dashboard, thêm phần quản lý địa chỉ email phụ, chuyển tiếp thư và hộp thư nhận mọi địa chỉ không tồn tại.",
+  "vi_ident": "Trên dashboard, thêm phần quản lý email phụ ở aliases-tab.tsx, chuyển tiếp thư và hộp thư nhận mọi địa chỉ không tồn tại.",
+  "cost": 0.00157289
+ },
+ {
+  "q": "wait for edge container check",
+  "gold": [
+   "entities/cli-desktop-sdk.md"
+  ],
+  "files": [
+   "apps/cli/src/lib/edge-import.ts",
+   "packages/adapters/src/system/docker-edge-executor.ts"
+  ],
+  "vi_plain": "Nhờ bạn sửa phần nhập dữ liệu: đợi bước kiểm tra chạy xong rồi mới tiếp tục, đừng chạy luôn.",
+  "vi_ident": "Nhờ bạn sửa docker-edge-executor.ts: đợi bước kiểm tra chạy xong rồi mới tiếp tục, đừng chạy luôn.",
+  "cost": 0.0015220899999999998
+ },
+ {
+  "q": "Fix Cloud sign-in on private HTTP dashboards",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/package.json",
+   "apps/dashboard/src/app/cloud-connect-callback/page.tsx",
+   "apps/dashboard/src/context/CloudContext.tsx",
+   "apps/dashboard/src/lib/cloud-auth.test.ts",
+   "apps/dashboard/src/lib/cloud-auth.ts"
+  ],
+  "vi_plain": "Nhờ bạn sửa lỗi không đăng nhập được vào đám mây khi trang quản trị chạy trên mạng nội bộ.",
+  "vi_ident": "Nhờ bạn sửa lỗi không đăng nhập được vào đám mây khi trang quản trị chạy trên mạng nội bộ, xem trong cloud-auth.ts.",
+  "cost": 0.0014490899999999999
+ },
+ {
+  "q": "fix(api): resolve compose `<<` merge keys so anchored env reaches services",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/compose-parser.ts",
+   "apps/api/test/lib/compose-parser.test.ts"
+  ],
+  "vi_plain": "Phần đọc cấu hình đang bỏ sót các biến khai báo bằng neo, cần sửa để các dịch vụ nhận đủ giá trị.",
+  "vi_ident": "Trong compose-parser.ts, phần đọc neo đang bỏ sót các biến khai báo, cần sửa để dịch vụ nhận đủ giá trị.",
+  "cost": 0.0015431899999999998
+ },
+ {
+  "q": "fix up tests",
+  "gold": [
+   "concepts/onboarding-tour.md",
+   "entities/cli-desktop-sdk.md"
+  ],
+  "files": [
+   "apps/cli/src/commands/up.ts",
+   "apps/cli/src/commands/wizard.ts",
+   "apps/cli/src/lib/compose.ts",
+   "apps/cli/test/e2e/up.test.ts",
+   "packages/adapters/src/system/proxy/detect.ts"
+  ],
+  "vi_plain": "Nhờ sửa lại các bài kiểm thử cho lệnh khởi chạy để chúng chạy đúng trở lại.",
+  "vi_ident": "Nhờ sửa lại các bài kiểm thử trong up.test.ts để lệnh khởi chạy chạy đúng trở lại.",
+  "cost": 0.00125259
+ },
+ {
+  "q": "fix up test failure",
+  "gold": [
+   "concepts/onboarding-tour.md",
+   "entities/cli-desktop-sdk.md"
+  ],
+  "files": [
+   "apps/cli/src/commands/up.ts",
+   "apps/cli/src/commands/update.ts",
+   "apps/cli/src/commands/wizard.ts",
+   "apps/cli/src/lib/compose.ts",
+   "apps/cli/test/e2e/up.test.ts",
+   "apps/cli/test/unit/compose-env-preserve.test.ts"
+  ],
+  "vi_plain": "Bài kiểm thử đang báo lỗi, nhờ sửa lại để chạy qua và giữ nguyên phần giữ lại các cấu hình biến môi trường.",
+  "vi_ident": "Bài kiểm thử đang báo lỗi, nhờ sửa compose.ts để chạy qua và giữ nguyên phần giữ lại cấu hình biến môi trường.",
+  "cost": 0.00128349
+ },
+ {
+  "q": "rollback the advisor",
+  "gold": [
+   "concepts/onboarding-tour.md",
+   "entities/cli-desktop-sdk.md"
+  ],
+  "files": [
+   "apps/cli/src/commands/up.ts",
+   "apps/cli/src/lib/compose.ts"
+  ],
+  "vi_plain": "Gỡ bỏ phần tư vấn vừa thêm, đưa cách khởi động dịch vụ về như trước đó.",
+  "vi_ident": "Gỡ bỏ phần tư vấn vừa thêm trong up.ts, đưa cách khởi động dịch vụ về như trước đó.",
+  "cost": 0.00118055
+ },
+ {
+  "q": "show server logs tab on static projects",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/modules/projects/project-teardown.record-only.test.ts",
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/LogsSettings.tsx",
+   "apps/dashboard/src/i18n/locales/en/projectSettings.json"
+  ],
+  "vi_plain": "Mấy dự án tĩnh cũng cho xem được nhật ký máy chủ ở phần cài đặt, hiện giờ đang bị ẩn đi.",
+  "vi_ident": "Nhờ sửa LogsSettings.tsx để dự án tĩnh cũng xem được nhật ký máy chủ trong phần cài đặt.",
+  "cost": 0.0014042899999999999
+ },
+ {
+  "q": "fix mv comand in edge for static files",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/infra/nginx.ts",
+   "packages/adapters/src/system/docker-edge-executor.ts",
+   "packages/adapters/src/system/edge-container-executor.test.ts",
+   "packages/adapters/src/system/edge-container-executor.ts",
+   "packages/adapters/src/system/elevated-executor.ts",
+   "packages/adapters/src/system/local-executor.ts"
+  ],
+  "vi_plain": "Nhờ bạn sửa lỗi lệnh di chuyển tệp tĩnh ở lớp biên, hiện đang chuyển sai vị trí các tệp đó.",
+  "vi_ident": "Nhờ bạn sửa lỗi lệnh di chuyển tệp tĩnh trong edge-container-executor.ts, hiện đang chuyển sai các tệp đó.",
+  "cost": 0.00133386
+ },
+ {
+  "q": "edge reconcile fix",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "apps/api/src/lib/edge-reconcile.ts",
+   "apps/api/src/lib/startup/self-deploy.ts",
+   "apps/api/src/modules/domains/ensure-edge.controller.ts",
+   "apps/api/src/modules/system/self-app.controller.ts",
+   "apps/api/src/modules/system/server-check.controller.ts",
+   "apps/cli/src/commands/server.ts"
+  ],
+  "vi_plain": "Nhờ bạn sửa lỗi đồng bộ lại cấu hình tên miền cho máy chủ mỗi khi khởi động lại hệ thống.",
+  "vi_ident": "Nhờ bạn sửa lỗi đồng bộ lại cấu hình tên miền trong edge-reconcile.ts cho máy chủ khi khởi động.",
+  "cost": 0.00139399
+ },
+ {
+  "q": "remove openresty from system contianer and add openship edge",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/adapters.md",
+   "entities/cli-desktop-sdk.md"
+  ],
+  "files": [
+   "apps/cli/src/lib/compose.ts",
+   "packages/adapters/src/index.ts",
+   "packages/adapters/src/system/checks.ts",
+   "packages/adapters/src/system/components.ts",
+   "packages/adapters/src/system/edge-check.test.ts",
+   "packages/adapters/src/system/index.ts"
+  ],
+  "vi_plain": "Bỏ phần máy chủ web cũ khỏi hệ thống, thay bằng lớp đệm mới và kiểm tra lại cho chắc chắn.",
+  "vi_ident": "Bỏ phần máy chủ web cũ trong components.ts, thay bằng lớp đệm mới rồi kiểm tra lại.",
+  "cost": 0.00155999
+ },
+ {
+  "q": "static projects mount on shared paths",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "apps/api/src/lib/deployable-service.ts",
+   "apps/api/src/lib/project-root-detector.ts",
+   "apps/api/src/lib/route-apply.service.ts",
+   "apps/api/src/modules/deployments/compose/build.service.ts",
+   "apps/api/src/modules/deployments/compose/composite-route.ts",
+   "apps/api/src/modules/deployments/compose/deploy.service.ts"
+  ],
+  "vi_plain": "Nhờ sửa để các trang tĩnh dùng chung đường dẫn lưu trữ không bị đè lên nhau khi triển khai.",
+  "vi_ident": "Nhờ sửa phần đường dẫn trang tĩnh dùng chung trong route-apply.service.ts để các trang không bị đè lên nhau.",
+  "cost": 0.00134939
+ },
+ {
+  "q": "fix(mail): unblock mail setup and routing on a containerized edge",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "apps/api/Dockerfile",
+   "apps/api/src/modules/mail/admin/dns-scan.service.ts",
+   "apps/api/src/modules/mail/admin/test-email.service.ts",
+   "apps/api/src/modules/mail/mail.service.ts",
+   "apps/api/test/modules/mail/dns-scan.service.test.ts",
+   "apps/api/test/modules/mail/mail-engine-path.test.ts"
+  ],
+  "vi_plain": "Nhờ sửa chỗ đang làm kẹt việc cài đặt và chuyển hướng thư trên máy chủ biên chạy theo kiểu đóng gói.",
+  "vi_ident": "Nhờ sửa chỗ đang làm kẹt việc cài đặt và chuyển hướng thư trong mail.service.ts trên máy chủ biên.",
+  "cost": 0.0014955899999999998
+ },
+ {
+  "q": "fix cli installation for 0.4.6",
+  "gold": [
+   "entities/cli-desktop-sdk.md"
+  ],
+  "files": [
+   "apps/api/Dockerfile",
+   "apps/api/src/lib/startup/self-services.ts",
+   "apps/api/src/modules/services/service.service.ts",
+   "apps/cli/src/commands/wizard.ts",
+   "apps/cli/src/index.ts",
+   "apps/cli/src/lib/compose.ts"
+  ],
+  "vi_plain": "Bản 0.4.6 cài đặt bị lỗi, nhờ sửa để người dùng cài lại được bình thường nhé.",
+  "vi_ident": "Bản 0.4.6 cài đặt bị lỗi, nhờ sửa trong wizard.ts để người dùng cài lại được bình thường nhé.",
+  "cost": 0.00132999
+ },
+ {
+  "q": "fix cli update",
+  "gold": [
+   "concepts/onboarding-tour.md",
+   "entities/cli-desktop-sdk.md"
+  ],
+  "files": [
+   "apps/api/src/modules/github/github.capabilities.ts",
+   "apps/api/src/modules/github/github.controller.ts",
+   "apps/api/src/modules/github/github.token.ts",
+   "apps/api/test/modules/github/token-chain-shape.test.ts",
+   "apps/cli/src/commands/up.ts",
+   "apps/cli/src/commands/update.ts"
+  ],
+  "vi_plain": "Sửa lỗi lệnh cập nhật của công cụ dòng lệnh, đang chạy bị hỏng, nhờ bạn xem và sửa giúp nhé.",
+  "vi_ident": "Sửa lỗi lệnh cập nhật trong update.ts, đang chạy bị hỏng, nhờ bạn xem và sửa giúp nhé.",
+  "cost": 0.00131769
+ },
+ {
+  "q": "fix self hosted github auth, self hosted (this server) row after installation",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/onboarding-tour.md",
+   "entities/cli-desktop-sdk.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/api/src/config/env.ts",
+   "apps/api/src/lib/startup/self-server.ts",
+   "apps/api/src/modules/github/github.auth.ts",
+   "apps/api/src/modules/github/github.controller.ts",
+   "apps/api/src/modules/github/github.local-auth.ts",
+   "apps/api/src/modules/github/github.routes.ts"
+  ],
+  "vi_plain": "Sửa lại phần đăng nhập cho máy chủ tự cài, để dòng máy này hiện ra sau khi cài đặt xong.",
+  "vi_ident": "Sửa phần đăng nhập trong github.auth.ts, để dòng máy này hiện ra sau khi cài đặt xong.",
+  "cost": 0.00148019
+ },
+ {
+  "q": "fix(mail): don't install a host OpenResty when the edge is containerized",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "apps/api/src/modules/mail/mail.service.ts",
+   "apps/api/test/modules/mail/mail-setup-container-edge.test.ts",
+   "packages/adapters/src/index.ts",
+   "packages/adapters/src/system/index.ts",
+   "packages/adapters/src/system/proxy/index.ts"
+  ],
+  "vi_plain": "Cổng vào đã chạy sẵn trong ứng dụng riêng thì đừng cài thêm bản sao trên máy chủ chính nữa.",
+  "vi_ident": "Trong mail.service.ts, bỏ bước cài thêm bản sao cổng vào trên máy chủ khi nó đã chạy sẵn trong ứng dụng riêng.",
+  "cost": 0.00159469
+ },
+ {
+  "q": "fix(dashboard): refresh sidebar project count after delete",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/[[...slug]]/page.tsx",
+   "apps/dashboard/src/components/sidebar.tsx",
+   "apps/dashboard/src/lib/sidebar-nav-counts.ts"
+  ],
+  "vi_plain": "Sau khi xóa dự án, số đếm dự án ở thanh bên vẫn chưa đổi, nhờ bạn sửa để nó cập nhật ngay.",
+  "vi_ident": "Sau khi xóa dự án, số đếm dự án trong file sidebar.tsx vẫn chưa đổi, nhờ bạn sửa để nó cập nhật ngay.",
+  "cost": 0.00132335
+ },
+ {
+  "q": "test(dashboard): add first component test covering Button",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/components/ui/button.test.tsx"
+  ],
+  "vi_plain": "Viết giúp mình vài test đơn giản kiểm tra nút bấm hiển thị và phản hồi đúng khi người dùng nhấn vào.",
+  "vi_ident": "Viết giúp mình test cho button.test.tsx để kiểm tra nút bấm hiển thị đúng và phản hồi khi người dùng nhấn vào.",
+  "cost": 0.00095919
+ },
+ {
+  "q": "test(dashboard): cover SSE build, log, and generic message processors",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/lib/sseMessageProcessors.test.ts"
+  ],
+  "vi_plain": "Nhờ bạn thêm kiểm thử cho phần xử lý luồng sự kiện từ máy chủ, gồm tin nhắn nhật ký và tin nhắn chung.",
+  "vi_ident": "Nhờ bạn thêm kiểm thử cho sseMessageProcessors.test.ts, phần xử lý tin nhắn từ máy chủ gồm nhật ký và tin nhắn chung.",
+  "cost": 0.0015828600000000002
+ },
+ {
+  "q": "dockerode connection protocole remove hijak",
+  "gold": [
+   "entities/cli-desktop-sdk.md"
+  ],
+  "files": [
+   "apps/api/package.json",
+   "apps/cli/package.json",
+   "apps/cli/src/commands/uninstall.ts",
+   "apps/cli/src/index.ts",
+   "apps/cli/src/lib/compose.ts",
+   "apps/dashboard/src/i18n/i18n-parity.test.ts"
+  ],
+  "vi_plain": "Gỡ bỏ đoạn mã tự chế can thiệp vào cách ứng dụng kết nối với máy chủ, trả về kiểu kết nối nguyên bản.",
+  "vi_ident": "Trong compose.ts, bỏ đoạn mã tự chế can thiệp vào cách kết nối với máy chủ, trả về kiểu kết nối nguyên bản.",
+  "cost": 0.00170119
+ },
+ {
+  "q": "harden db password for cli",
+  "gold": [
+   "entities/cli-desktop-sdk.md"
+  ],
+  "files": [
+   "apps/api/package.json",
+   "apps/api/src/modules/system/self-app.controller.ts",
+   "apps/cli/src/lib/compose.ts",
+   "apps/cli/test/unit/compose-source-build.test.ts",
+   "apps/dashboard/package.json"
+  ],
+  "vi_plain": "Giúp mình siết chặt bảo mật mật khẩu cơ sở dữ liệu khi chạy từ công cụ dòng lệnh, đừng để lộ mật khẩu ra ngoài.",
+  "vi_ident": "Giúp mình siết chặt mật khẩu cơ sở dữ liệu trong compose.ts khi chạy từ công cụ dòng lệnh, đừng để lộ ra ngoài.",
+  "cost": 0.00146189
+ },
+ {
+  "q": "fix cli deploy",
+  "gold": [
+   "concepts/onboarding-tour.md",
+   "entities/cli-desktop-sdk.md"
+  ],
+  "files": [
+   "apps/cli/src/commands/up.ts",
+   "apps/cli/src/lib/compose.ts",
+   "apps/cli/src/lib/edge-import.ts",
+   "apps/dashboard/src/app/(dashboard)/(deployment)/deploy/[slug]/page.tsx",
+   "apps/dashboard/src/components/apps/VerifiedBadge.tsx"
+  ],
+  "vi_plain": "Sửa giúp mình lỗi khi triển khai ứng dụng bằng dòng lệnh, với cả huy hiệu xác minh trên trang chi tiết.",
+  "vi_ident": "Sửa giúp mình lỗi khi triển khai bằng lệnh trong up.ts, với cả huy hiệu xác minh trên trang chi tiết.",
+  "cost": 0.0015512899999999999
+ },
+ {
+  "q": "test(dashboard): cover deployment phase, project status, subdomain, and dotenv logic",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/lib/dotenv.test.ts",
+   "apps/dashboard/src/utils/deploymentPhaseDetector.test.ts",
+   "apps/dashboard/src/utils/project-status.test.ts",
+   "apps/dashboard/src/utils/subdomain.test.ts"
+  ],
+  "vi_plain": "Nhờ bổ sung kiểm thử cho giai đoạn triển khai, trạng thái dự án, tên miền phụ và cấu hình môi trường.",
+  "vi_ident": "Nhờ bổ sung kiểm thử cho phần tên miền phụ trong subdomain.test.ts giúp mình nhé.",
+  "cost": 0.0017342899999999999
+ },
+ {
+  "q": "migration missing image reconcile",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/platform-engine.md"
+  ],
+  "files": [
+   "apps/api/src/lib/edge-config.test.ts",
+   "apps/api/src/modules/deployments/build.service.ts",
+   "apps/api/src/modules/projects/project-crud.service.ts",
+   "apps/edge/nginx.conf"
+  ],
+  "vi_plain": "Giúp mình viết bước chuyển dữ liệu để đối chiếu lại các ảnh bị thiếu của dự án đã có.",
+  "vi_ident": "Giúp mình viết bước chuyển dữ liệu đối chiếu lại ảnh bị thiếu, nhớ xử lý luôn trong build.service.ts nhé.",
+  "cost": 0.0014738899999999998
+ },
+ {
+  "q": "more atomic routes after migration",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "apps/api/src/modules/migration/migrate.service.ts",
+   "apps/api/src/modules/migration/migration.orchestrator.ts",
+   "apps/dashboard/src/app/(dashboard)/projects/[id]/components/DomainSettings.tsx",
+   "apps/dashboard/src/components/migration/ServerMigrationWizard.tsx",
+   "packages/adapters/src/infra/nginx.ts",
+   "packages/db/src/repos/service.repo.ts"
+  ],
+  "vi_plain": "Sau khi chuyển dữ liệu xong, nhờ tách nhỏ phần định tuyến tên miền thành từng phần riêng cho dễ quản lý.",
+  "vi_ident": "Sau khi chuyển xong, nhờ tách nhỏ các đường dẫn trong nginx.ts thành từng phần riêng cho dễ quản lý.",
+  "cost": 0.00154249
+ },
+ {
+  "q": "cli compose usage harding",
+  "gold": [
+   "entities/cli-desktop-sdk.md"
+  ],
+  "files": [
+   "apps/cli/src/commands/wizard.ts",
+   "apps/cli/src/index.ts",
+   "apps/cli/src/lib/compose.ts"
+  ],
+  "vi_plain": "Nhờ bạn siết chặt cách dùng phần khởi chạy dịch vụ, để người dùng nhập sai thì được báo lỗi rõ ràng.",
+  "vi_ident": "Nhờ bạn siết chặt cách dùng trong compose.ts, để người dùng nhập sai thì được báo lỗi rõ ràng.",
+  "cost": 0.0014051900000000002
+ },
+ {
+  "q": "cli dev mode to install from repo",
+  "gold": [
+   "entities/cli-desktop-sdk.md"
+  ],
+  "files": [
+   "apps/cli/src/commands/reset-admin.ts",
+   "apps/cli/src/commands/status.ts",
+   "apps/cli/src/commands/update.ts",
+   "apps/cli/src/commands/wizard.ts",
+   "apps/cli/src/lib/cache.ts",
+   "apps/cli/src/lib/compose.ts"
+  ],
+  "vi_plain": "Giúp mình thêm chế độ phát triển để cài công cụ dòng lệnh thẳng từ mã nguồn dự án, không cần bản đóng gói.",
+  "vi_ident": "Giúp mình thêm chế độ phát triển để cài công cụ dòng lệnh từ mã nguồn, chỉnh luôn wizard.ts cho hợp lý.",
+  "cost": 0.00151859
+ },
+ {
+  "q": "cleanup garbage images after redeploy",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "apps/api/src/modules/deployments/build-pipeline.ts",
+   "apps/api/src/modules/deployments/image-gc.test.ts",
+   "apps/api/src/modules/deployments/image-gc.ts",
+   "apps/api/src/modules/deployments/rollback/rollback-orchestrator.ts",
+   "apps/api/src/modules/jobs/job.registry.ts",
+   "apps/api/src/modules/projects/project-cleanup.service.ts"
+  ],
+  "vi_plain": "Sau mỗi lần cập nhật lại ứng dụng, dọn các bản đóng gói cũ không dùng nữa để giải phóng dung lượng.",
+  "vi_ident": "Sau mỗi lần cập nhật lại ứng dụng, nhờ sửa image-gc.ts để dọn các bản đóng gói cũ không dùng nữa.",
+  "cost": 0.00146779
+ },
+ {
+  "q": "migration server target tag fix",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md",
+   "entities/platform-engine.md"
+  ],
+  "files": [
+   "apps/api/src/modules/deployments/build.service.ts",
+   "apps/api/src/modules/migration/docker-reconcile.ts",
+   "apps/api/src/modules/migration/migrate.service.ts",
+   "apps/dashboard/src/app/(dashboard)/(deployment)/deploy/[slug]/components/BuildSummary.tsx",
+   "apps/dashboard/src/app/(dashboard)/(deployment)/deploy/[slug]/components/DeployTargetStep.tsx",
+   "apps/dashboard/src/context/deployment/useDeploymentBuild.tsx"
+  ],
+  "vi_plain": "Sửa lỗi nhãn phiên bản không được gắn đúng khi chọn nơi nhận dữ liệu chuyển sang.",
+  "vi_ident": "Sửa lỗi nhãn phiên bản không được gắn đúng khi chọn nơi nhận dữ liệu chuyển sang trong migrate.service.ts.",
+  "cost": 0.00134029
+ },
+ {
+  "q": "fix(release): remove unsupported --no-absolute-names tar flag (GNU tar compat)",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/release-download.ts"
+  ],
+  "vi_plain": "Bỏ một tùy chọn giải nén không tương thích, để việc tải bản phát hành chạy được trên các máy khác nhau.",
+  "vi_ident": "Trong release-download.ts, bỏ một tùy chọn giải nén không tương thích để việc tải bản phát hành chạy được trên máy khác.",
+  "cost": 0.00141939
+ },
+ {
+  "q": "ssl become standlone over the edge proxy, updatine installation guide",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "concepts/domains-routing-ssl.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "apps/api/src/lib/deployment-runtime.ts",
+   "apps/api/src/lib/domain-ssl.ts",
+   "apps/api/src/modules/analytics/analytics.service.ts",
+   "apps/api/src/modules/domains/domain.controller.ts",
+   "apps/api/src/modules/domains/domain.routes.ts",
+   "apps/api/src/modules/domains/domain.service.ts"
+  ],
+  "vi_plain": "Nhờ tách phần cấp chứng chỉ bảo mật thành dịch vụ chạy riêng, đứng trước cổng vào, rồi cập nhật hướng dẫn cài đặt.",
+  "vi_ident": "Nhờ tách phần cấp chứng chỉ trong domain-ssl.ts thành dịch vụ chạy riêng, đứng trước cổng vào, rồi cập nhật hướng dẫn cài đặt.",
+  "cost": 0.00145046
+ },
+ {
+  "q": "inital fix for edge not being able to find prev ssls",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/api/src/lib/domain-ssl.ts",
+   "apps/api/src/lib/openship-manifest-sync.ts",
+   "apps/api/src/modules/domains/domain.service.ts",
+   "apps/api/src/modules/domains/ensure-edge.controller.ts",
+   "apps/api/src/modules/migration/docker-inspect.service.ts",
+   "apps/api/src/modules/projects/project.routes.ts"
+  ],
+  "vi_plain": "Giúp mình sửa lỗi: hệ thống không tìm lại được chứng chỉ bảo mật đã cấp cho tên miền trước đó.",
+  "vi_ident": "Giúp mình sửa lỗi trong domain-ssl.ts: không tìm lại được chứng chỉ bảo mật đã cấp cho tên miền trước đó.",
+  "cost": 0.00127095
+ },
+ {
+  "q": "harden cloud mode access control on build pipeline",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/platform-engine.md"
+  ],
+  "files": [
+   "apps/api/src/modules/deployments/build.service.ts",
+   "apps/api/src/modules/projects/project-crud.service.ts"
+  ],
+  "vi_plain": "Giúp mình siết quyền truy cập ở chế độ đám mây, nhất là khâu đóng gói, ai không được phép thì chặn.",
+  "vi_ident": "Giúp mình siết quyền truy cập trong build.service.ts, ở chế độ đám mây, ai không được phép thì chặn.",
+  "cost": 0.00139376
+ },
+ {
+  "q": "fix(cli): preserve context endpoints on re-login",
+  "gold": [
+   "concepts/onboarding-tour.md",
+   "entities/cli-desktop-sdk.md"
+  ],
+  "files": [
+   "apps/cli/src/commands/login.ts",
+   "apps/cli/test/e2e/login.test.ts"
+  ],
+  "vi_plain": "Đăng nhập lại thì đừng làm mất các địa chỉ máy chủ đã lưu cho từng môi trường, nhờ bạn sửa giúp.",
+  "vi_ident": "Sửa login.ts để khi đăng nhập lại không mất các địa chỉ máy chủ đã lưu cho từng môi trường.",
+  "cost": 0.0012370600000000001
+ },
+ {
+  "q": "fix(cli): confirm server rm and fail install on component error",
+  "gold": [
+   "concepts/onboarding-tour.md",
+   "entities/cli-desktop-sdk.md"
+  ],
+  "files": [
+   "apps/cli/src/commands/server.ts",
+   "apps/cli/test/e2e/server.test.ts"
+  ],
+  "vi_plain": "Nhờ sửa để lệnh xóa máy chủ hỏi xác nhận trước, còn cài đặt mà thành phần lỗi thì phải báo thất bại.",
+  "vi_ident": "Nhờ sửa server.ts để lệnh xóa máy chủ hỏi xác nhận trước, và cài đặt mà thành phần lỗi thì báo thất bại.",
+  "cost": 0.0012903600000000002
+ },
+ {
+  "q": "fix(api): return deployment_id/project_id from the deploy trigger",
+  "gold": [
+   "concepts/deployment-pipeline.md"
+  ],
+  "files": [
+   "apps/api/src/modules/deployments/deployment.controller.ts",
+   "apps/api/test/modules/deployments/deployment.controller.test.ts"
+  ],
+  "vi_plain": "Khi bấm chạy triển khai xong thì trả về mã triển khai và mã dự án cho người gọi.",
+  "vi_ident": "Khi bấm chạy triển khai xong, nhớ trả về mã triển khai và mã dự án trong deployment.controller.ts nhé.",
+  "cost": 0.00124265
+ },
+ {
+  "q": "fix(api): retry errored certificates in SSL renewal selection",
+  "gold": [
+   "concepts/domains-routing-ssl.md"
+  ],
+  "files": [
+   "apps/api/src/modules/domains/domain.service.ts",
+   "packages/db/src/repos/domain.repo.test.ts",
+   "packages/db/src/repos/domain.repo.ts"
+  ],
+  "vi_plain": "Nhờ bạn sửa phần chọn chứng chỉ cần gia hạn, để những cái trước bị lỗi cũng được thử gia hạn lại.",
+  "vi_ident": "Nhờ bạn sửa trong domain.repo.ts phần chọn chứng chỉ cần gia hạn, để những cái trước bị lỗi cũng được thử gia hạn lại.",
+  "cost": 0.0012736499999999999
+ },
+ {
+  "q": "refactor(api): extract isRedisReachable to shared lib",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/cache-store/index.ts",
+   "apps/api/src/lib/job-runner/index.ts",
+   "apps/api/src/lib/rate-limit/index.ts",
+   "apps/api/src/lib/redis.ts"
+  ],
+  "vi_plain": "Tách đoạn kiểm tra máy chủ bộ nhớ đệm còn phản hồi ra thư viện chung để nhiều chỗ cùng dùng lại.",
+  "vi_ident": "Tách đoạn kiểm tra máy chủ bộ nhớ đệm trong redis.ts ra thư viện chung để nhiều chỗ cùng dùng.",
+  "cost": 0.0012238499999999999
+ },
+ {
+  "q": "fix(api): don't re-interpolate '$' carried in by a resolved compose value",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/compose-parser.ts",
+   "apps/api/test/lib/compose-parser.test.ts"
+  ],
+  "vi_plain": "Sửa lỗi khi giá trị đã thay thế có chứa ký tự đô la thì đừng thay thế thêm lần nữa nhé.",
+  "vi_ident": "Trong compose-parser.ts, sửa lỗi khi giá trị đã thay thế có chứa ký tự đô la thì đừng thay thế thêm lần nữa.",
+  "cost": 0.00123945
+ },
+ {
+  "q": "fix: only header-safe metadata on backup artifact uploads",
+  "gold": [
+   "concepts/backups.md"
+  ],
+  "files": [
+   "apps/api/src/modules/backups/backup.orchestrator.ts"
+  ],
+  "vi_plain": "Khi tải bản sao lưu lên kho, chỉ giữ thông tin đính kèm an toàn, bỏ ký tự đặc biệt gây lỗi.",
+  "vi_ident": "Khi tải bản sao lưu lên kho, backup.orchestrator.ts chỉ giữ thông tin đính kèm an toàn, bỏ ký tự gây lỗi.",
+  "cost": 0.00141285
+ },
+ {
+  "q": "fix: pass full payloadConfig to backup producers",
+  "gold": [
+   "concepts/backups.md"
+  ],
+  "files": [
+   "apps/api/src/modules/backups/backup.orchestrator.ts"
+  ],
+  "vi_plain": "Nhờ bạn sửa để phần sao lưu nhận đủ toàn bộ cấu hình, không còn thiếu thông tin khi gửi đi.",
+  "vi_ident": "Nhờ bạn sửa backup.orchestrator.ts để phần sao lưu nhận đủ toàn bộ cấu hình, không còn thiếu thông tin.",
+  "cost": 0.00143325
+ },
+ {
+  "q": "fix(adapters): clamp untrusted vercel.json redirect status codes",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/infra/vercel-routing.ts",
+   "packages/adapters/test/vercel-routing.test.ts"
+  ],
+  "vi_plain": "Giới hạn lại mã trạng thái chuyển hướng lấy từ cấu hình không đáng tin, chỉ giữ các giá trị hợp lệ.",
+  "vi_ident": "Giới hạn lại mã trạng thái chuyển hướng trong vercel-routing.ts, vì cấu hình không đáng tin chỉ giữ các giá trị hợp lệ.",
+  "cost": 0.00133506
+ },
+ {
+  "q": "fix(api): clamp Slack/Discord notifications to webhook payload limits",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/notification-workers.ts",
+   "apps/api/test/lib/notification-message-limits.test.ts"
+  ],
+  "vi_plain": "Cắt ngắn thông báo gửi sang ứng dụng nhắn tin nhóm khi vượt quá giới hạn cho phép",
+  "vi_ident": "Sửa notification-workers.ts để cắt ngắn thông báo gửi sang ứng dụng nhắn tin nhóm khi vượt quá giới hạn cho phép",
+  "cost": 0.00144715
+ },
+ {
+  "q": "fix(api): keep single-quoted .env values literal (no interpolation)",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/compose-parser.ts",
+   "apps/api/test/lib/compose-parser.test.ts"
+  ],
+  "vi_plain": "Nhờ bạn sửa chỗ đọc biến môi trường: giá trị trong nháy đơn phải giữ nguyên, đừng thay biến.",
+  "vi_ident": "Nhờ bạn sửa compose-parser.ts: giá trị trong nháy đơn phải giữ nguyên, đừng thay biến.",
+  "cost": 0.0014678500000000001
+ },
+ {
+  "q": "fix(api): avoid domain route save timeouts",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/domains-routing-ssl.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/modules/domains/domain.service.ts",
+   "apps/api/src/modules/projects/project-crud.service.ts",
+   "apps/api/test/modules/domains/domain-add.test.ts",
+   "apps/api/test/modules/projects/project-route-update.test.ts"
+  ],
+  "vi_plain": "Lưu tên miền cho dự án hay bị quá thời gian chờ, nhờ sửa để lưu nhanh hơn và không bị treo nữa.",
+  "vi_ident": "Trong domain.service.ts, lưu tên miền cho dự án hay bị quá thời gian chờ, nhờ sửa để lưu nhanh hơn không bị treo nữa.",
+  "cost": 0.00118585
+ },
+ {
+  "q": "fix(api): escape user-controlled fields in transactional email HTML",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/email-templates.ts",
+   "apps/api/test/lib/email-templates.test.ts"
+  ],
+  "vi_plain": "Nội dung người dùng nhập đang đưa thẳng vào email gửi đi, cần lọc lại cho an toàn.",
+  "vi_ident": "Nhờ bạn sửa email-templates.ts: nội dung người dùng nhập đang đưa thẳng vào email gửi đi, cần lọc lại cho an toàn.",
+  "cost": 0.00124355
+ },
+ {
+  "q": "fix(adapters): map compose `on-failure:<n>` restart to on-failure",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/runtime/cloud/compose.ts",
+   "packages/adapters/test/cloud-restart-policy.test.ts"
+  ],
+  "vi_plain": "Sửa chỗ đọc cấu hình tự khởi động lại khi lỗi, để kiểu có đếm số lần thử được hiểu đúng.",
+  "vi_ident": "Sửa file compose.ts để kiểu tự khởi động lại khi lỗi có đếm số lần thử được hiểu đúng.",
+  "cost": 0.00131885
+ },
+ {
+  "q": "fix(api): decode compose .env double-quoted escapes in a single pass",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/compose-parser.ts",
+   "apps/api/test/lib/compose-parser.test.ts"
+  ],
+  "vi_plain": "Sửa lỗi đọc biến môi trường: chuỗi có ngoặc kép đang bị giải mã hai lần, chỉ nên giải mã một lần thôi.",
+  "vi_ident": "Sửa lỗi trong compose-parser.ts: chuỗi có ngoặc kép đang bị giải mã hai lần, chỉ nên giải mã một lần thôi.",
+  "cost": 0.0014523499999999998
+ },
+ {
+  "q": "fix(dashboard): keep clone token visible after save and default toggle",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/app/(dashboard)/settings/_components/CloneCredentials.tsx",
+   "apps/dashboard/src/lib/api/settings.ts"
+  ],
+  "vi_plain": "Sau khi bấm lưu, mã sao chép phải vẫn hiện trên màn hình, và công tắc mặc định cũng phải đúng trạng thái.",
+  "vi_ident": "Sau khi lưu trong CloneCredentials.tsx, mã sao chép vẫn hiện và công tắc mặc định đúng trạng thái.",
+  "cost": 0.00118396
+ },
+ {
+  "q": "fix(api): honor compose long-form volume selinux/nocopy mode",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/compose-parser.ts",
+   "apps/api/test/lib/compose-parser.test.ts"
+  ],
+  "vi_plain": "Hãy sửa phần đọc cấu hình gắn thư mục để giữ lại tùy chọn nhãn bảo mật và chế độ không sao chép.",
+  "vi_ident": "Trong compose-parser.ts, hãy giữ lại tùy chọn nhãn bảo mật và chế độ không sao chép khi gắn thư mục.",
+  "cost": 0.00131285
+ },
+ {
+  "q": "fix(api): honor compose long-form volume `read_only` (:ro)",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/compose-parser.ts",
+   "apps/api/test/lib/compose-parser.test.ts"
+  ],
+  "vi_plain": "Sửa bộ đọc cấu hình để nhận đúng quyền chỉ đọc khi khai báo ổ gắn kèm kiểu dài, không chỉ kiểu viết tắt.",
+  "vi_ident": "Sửa compose-parser.ts để nhận đúng quyền chỉ đọc khi khai báo ổ gắn kèm kiểu dài, không chỉ kiểu viết tắt.",
+  "cost": 0.0014918499999999999
+ },
+ {
+  "q": "fix(api): honor compose long-form port `host_ip` bind interface",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/compose-parser.ts",
+   "apps/api/test/lib/compose-parser.test.ts"
+  ],
+  "vi_plain": "Sửa bộ đọc cấu hình để nhận đúng địa chỉ gắn cổng khi khai báo dạng dài, đừng bỏ qua.",
+  "vi_ident": "Sửa compose-parser.ts để nhận đúng địa chỉ gắn cổng khi khai báo dạng dài, đừng bỏ qua.",
+  "cost": 0.00118665
+ },
+ {
+  "q": "fix(cli): stop pointing service-health failures at `openship logs`",
+  "gold": [
+   "concepts/onboarding-tour.md",
+   "entities/cli-desktop-sdk.md"
+  ],
+  "files": [
+   "apps/cli/src/commands/wizard.ts"
+  ],
+  "vi_plain": "Khi dịch vụ kiểm tra sức khỏe thất bại, đừng bảo người dùng xem nhật ký nữa, hãy sửa lại thông báo đó.",
+  "vi_ident": "Trong wizard.ts, khi kiểm tra sức khỏe dịch vụ bị lỗi thì đừng gợi ý xem nhật ký nữa, hãy sửa lại thông báo.",
+  "cost": 0.00129155
+ },
+ {
+  "q": "fix(cli): resolve the latest deployment when `openship logs` gets no ID",
+  "gold": [
+   "concepts/onboarding-tour.md",
+   "entities/cli-desktop-sdk.md"
+  ],
+  "files": [
+   "apps/cli/src/commands/logs.ts"
+  ],
+  "vi_plain": "Nhờ bạn sửa lệnh xem nhật ký: khi không nhập mã thì tự lấy lần triển khai mới nhất để hiển thị.",
+  "vi_ident": "Nhờ bạn sửa logs.ts: khi không nhập mã thì tự lấy lần triển khai mới nhất để xem nhật ký.",
+  "cost": 0.0014235600000000001
+ },
+ {
+  "q": "fix(api): pass isSelfApp when self-deploy reapplies the self-app routes",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/startup/self-deploy.ts"
+  ],
+  "vi_plain": "Nhờ bạn sửa chỗ hệ thống tự triển khai lại các đường dẫn của chính nó, đang thiếu thông tin đánh dấu nhận biết.",
+  "vi_ident": "Nhờ bạn sửa file self-deploy.ts, chỗ tự triển khai lại các đường dẫn của hệ thống đang thiếu thông tin đánh dấu.",
+  "cost": 0.00151855
+ },
+ {
+  "q": "fix(api): exempt the self-app from the reserved loopback route guard",
+  "gold": [
+   "concepts/domains-routing-ssl.md"
+  ],
+  "files": [
+   "apps/api/src/modules/domains/project-route.service.ts",
+   "apps/api/test/modules/domains/project-route.service.test.ts"
+  ],
+  "vi_plain": "Ứng dụng của chính hệ thống nên được miễn kiểm tra các tên miền dành riêng, đừng chặn nó nữa.",
+  "vi_ident": "Trong project-route.service.ts, ứng dụng của chính hệ thống nên được miễn kiểm tra các tên miền dành riêng.",
+  "cost": 0.00131185
+ },
+ {
+  "q": "fix(adapters): verify remote-built Docker images over the build's own SSH channel",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/runtime/docker.ts"
+  ],
+  "vi_plain": "Sửa lỗi: ảnh dựng trên máy chủ từ xa phải được kiểm tra lại qua chính kết nối lúc dựng.",
+  "vi_ident": "Nhờ sửa file docker.ts: ảnh dựng trên máy chủ từ xa phải được kiểm tra lại qua chính kết nối lúc dựng.",
+  "cost": 0.00131305
+ },
+ {
+  "q": "fix(adapters): normalize Docker container status and handle health states (#127)",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/runtime/docker.ts"
+  ],
+  "vi_plain": "Nhờ bạn sửa lại cách đọc trạng thái của ứng dụng đóng gói đang chạy, nhất là khi tình trạng hoạt động báo lỗi.",
+  "vi_ident": "Nhờ bạn sửa lại cách đọc trạng thái trong docker.ts, nhất là khi tình trạng hoạt động báo lỗi.",
+  "cost": 0.00136995
+ },
+ {
+  "q": "fix(adapters): quote systemd Environment= values",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/runtime/supervisor/systemd.ts",
+   "packages/adapters/test/systemd-env-quoting.test.ts"
+  ],
+  "vi_plain": "Nhờ sửa phần ghi biến môi trường vào cấu hình dịch vụ, giá trị có khoảng trắng đang bị lỗi.",
+  "vi_ident": "Nhờ sửa phần ghi biến môi trường trong systemd.ts, giá trị có khoảng trắng đang bị lỗi.",
+  "cost": 0.00137025
+ },
+ {
+  "q": "fix(api): allow the documented /etc/openship/ssh-keys default root",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/ssh-key-path.ts",
+   "apps/api/test/lib/ssh-key-path.test.ts"
+  ],
+  "vi_plain": "Sửa giúp mình để thư mục gốc mặc định ghi trong tài liệu được chấp nhận, không báo lỗi nữa nhé.",
+  "vi_ident": "Trong ssh-key-path.ts, sửa để thư mục gốc mặc định ghi trong tài liệu được chấp nhận, đừng báo lỗi nữa.",
+  "cost": 0.00136659
+ },
+ {
+  "q": "fix(adapters): make the empty-transfer guard actually detect an empty target",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/runtime/transfer.ts",
+   "packages/adapters/test/transfer-verify.test.ts"
+  ],
+  "vi_plain": "Nhờ bạn sửa lỗi kiểm tra chuyển dữ liệu: hiện tại nó không nhận ra khi nơi nhận đang trống.",
+  "vi_ident": "Nhờ bạn sửa transfer.ts để kiểm tra nơi nhận rỗng hoạt động đúng, hiện tại nó bỏ sót trường hợp này.",
+  "cost": 0.00140499
+ },
+ {
+  "q": "fix(adapters): separate CIDR from value in nginx geo whitelist",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/infra/nginx.ts",
+   "packages/adapters/test/nginx-geo-whitelist.test.ts"
+  ],
+  "vi_plain": "Sửa phần danh sách cho phép theo khu vực, tách riêng dải mạng khỏi giá trị gán vào.",
+  "vi_ident": "Sửa phần danh sách cho phép theo khu vực trong nginx.ts, tách riêng dải mạng khỏi giá trị gán vào.",
+  "cost": 0.0014812900000000001
+ },
+ {
+  "q": "fix(api): drop unused @ts-expect-error that breaks typecheck",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/startup/self-edge.test.ts"
+  ],
+  "vi_plain": "Gỡ dòng ghi chú bỏ qua lỗi không còn cần, vì nó làm hỏng bước kiểm tra trước khi phát hành phần mềm.",
+  "vi_ident": "Gỡ dòng ghi chú bỏ qua lỗi trong self-edge.test.ts vì không còn cần, nó làm hỏng bước kiểm tra.",
+  "cost": 0.00155819
+ },
+ {
+  "q": "fix build issue for assests missing",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/adapters.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/api/src/lib/startup/self-edge.test.ts",
+   "apps/api/src/lib/startup/self-edge.ts",
+   "apps/api/src/modules/migration/docker-inspect.service.ts",
+   "apps/api/src/modules/migration/docker-reconcile.test.ts",
+   "apps/api/src/modules/migration/docker-reconcile.ts",
+   "apps/api/src/modules/migration/migrate.service.ts"
+  ],
+  "vi_plain": "Nhờ sửa lỗi thiếu tài nguyên làm bản đóng gói bị hỏng, rồi kiểm tra lại phần khởi động và đồng bộ dịch vụ.",
+  "vi_ident": "Nhờ sửa lỗi thiếu tài nguyên làm bản đóng gói bị hỏng, rồi kiểm tra lại docker-reconcile.ts và phần đồng bộ dịch vụ.",
+  "cost": 0.00194729
+ },
+ {
+  "q": "fix(deployments): pass service mode into trigger preflight",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/platform-engine.md"
+  ],
+  "files": [
+   "apps/api/src/modules/deployments/build.service.ts",
+   "apps/api/test/modules/deployments/build.service.test.ts",
+   "apps/api/test/modules/deployments/preflight.test.ts"
+  ],
+  "vi_plain": "Sửa giúp mình lỗi khi bấm chạy: bước kiểm tra trước khi chạy chưa biết dịch vụ đang ở chế độ nào.",
+  "vi_ident": "Sửa giúp mình lỗi trong build.service.ts: bước kiểm tra trước khi chạy chưa biết dịch vụ đang ở chế độ nào.",
+  "cost": 0.00130545
+ },
+ {
+  "q": "handle edge cases in formatBytes and slugify",
+  "gold": [
+   "concepts/onboarding-tour.md",
+   "entities/cli-desktop-sdk.md"
+  ],
+  "files": [
+   "apps/cli/src/commands/update.ts",
+   "packages/core/src/utils.ts",
+   "packages/core/test/utils-format-slug.test.ts"
+  ],
+  "vi_plain": "Nhờ xử lý các trường hợp đặc biệt khi đổi dung lượng sang chữ dễ đọc và khi làm đường dẫn từ tiêu đề.",
+  "vi_ident": "Nhờ xử lý các trường hợp đặc biệt trong utils.ts khi đổi dung lượng sang chữ dễ đọc và khi làm đường dẫn.",
+  "cost": 0.00146376
+ },
+ {
+  "q": "return 400 not 500 for malformed JSON request bodies",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/middleware/error-handler.ts",
+   "apps/api/test/middleware/json-error-handler.test.ts"
+  ],
+  "vi_plain": "Khi người dùng gửi dữ liệu sai định dạng thì phải báo lỗi phía khách, đừng báo lỗi máy chủ nữa.",
+  "vi_ident": "Trong error-handler.ts, khi người dùng gửi dữ liệu sai định dạng thì trả lỗi phía khách chứ đừng báo lỗi máy chủ nữa.",
+  "cost": 0.00148249
+ },
+ {
+  "q": "fix(adapters): confine cloud Pages static output path (#66)",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/runtime/cloud-deploy-static.test.ts",
+   "packages/adapters/src/runtime/cloud.ts"
+  ],
+  "vi_plain": "Nhờ bạn siết lại chỗ thư mục xuất trang của dịch vụ đám mây, đảm bảo không ghi ra ngoài vùng cho phép.",
+  "vi_ident": "Nhờ bạn siết lại chỗ thư mục xuất trang trong cloud.ts, đảm bảo không ghi ra ngoài vùng cho phép.",
+  "cost": 0.00128829
+ },
+ {
+  "q": "refactor(adapters): route bare static root through resolveStaticOutputPath",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/runtime/bare.ts"
+  ],
+  "vi_plain": "Nhờ bạn sửa để thư mục gốc tĩnh khi chạy trực tiếp cũng đi qua bước xác định đường dẫn xuất tệp chuẩn.",
+  "vi_ident": "Nhờ bạn sửa bare.ts để thư mục gốc tĩnh khi chạy trực tiếp cũng đi qua bước xác định đường dẫn xuất tệp chuẩn.",
+  "cost": 0.00140989
+ },
+ {
+  "q": "refactor(adapters): extract resolveStaticOutputPath into stack-output",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "packages/adapters/src/runtime/stack-output.test.ts",
+   "packages/adapters/src/runtime/stack-output.ts"
+  ],
+  "vi_plain": "Tách phần tính đường dẫn cho tài nguyên tĩnh thành một chỗ riêng, đừng làm thay đổi kết quả hiện tại.",
+  "vi_ident": "Tách phần tính đường dẫn trong stack-output.ts ra thành hàm riêng, giữ nguyên kết quả hiện tại.",
+  "cost": 0.00135279
+ },
+ {
+  "q": "self-host: preserve gates before 0.2.2 merge (git CLI in api, externalEdge, docker.sock/extra_hosts, 4001/4002 ports)",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [
+   "apps/api/Dockerfile",
+   "apps/api/src/lib/stack-detector.ts",
+   "packages/adapters/src/platform.ts",
+   "packages/adapters/src/runtime/docker-build-plan.ts",
+   "packages/adapters/src/system/setup.ts"
+  ],
+  "vi_plain": "Giữ lại các điều kiện cho bản tự triển khai trước khi gộp bản mới, tránh mất tính năng khi chạy trên máy riêng.",
+  "vi_ident": "Giữ lại các điều kiện cho bản tự triển khai trước khi gộp, nhất là phần Dockerfile không bị mất khi chạy trên máy riêng.",
+  "cost": 0.00195549
+ },
+ {
+  "q": "fix(mail): prevent concurrent setup runs",
+  "gold": [
+   "concepts/architecture.md"
+  ],
+  "files": [
+   "apps/api/src/modules/mail/mail-setup-lease.ts",
+   "apps/api/src/modules/mail/mail.controller.ts",
+   "apps/api/test/modules/mail/mail-setup-concurrency.test.ts",
+   "apps/api/test/modules/mail/mail-setup-lease.test.ts",
+   "packages/db/src/advisory-lock.test.ts",
+   "packages/db/src/advisory-lock.ts"
+  ],
+  "vi_plain": "Nhờ bạn chặn việc cài đặt hộp thư chạy đồng thời nhiều lần; nếu đang chạy thì lần sau phải chờ hoặc báo lỗi.",
+  "vi_ident": "Nhờ bạn chặn việc cài đặt hộp thư chạy đồng thời trong mail-setup-lease.ts, nếu đang chạy thì lần sau phải chờ.",
+  "cost": 0.0016217900000000001
+ },
+ {
+  "q": "feat(self-host): deploy to own server by default, never Openship Cloud",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md",
+   "entities/platform-engine.md"
+  ],
+  "files": [
+   "apps/api/Dockerfile",
+   "apps/api/src/modules/deployments/build.service.ts",
+   "apps/api/src/modules/deployments/compose/project-services.ts",
+   "apps/dashboard/src/context/deployment/types.ts"
+  ],
+  "vi_plain": "Mặc định hãy đưa ứng dụng lên máy chủ của mình, đừng bao giờ chuyển sang dịch vụ đám mây bên ngoài.",
+  "vi_ident": "Với build.service.ts, mặc định hãy đưa ứng dụng lên máy chủ của mình, đừng bao giờ dùng đám mây bên ngoài.",
+  "cost": 0.00137759
+ },
+ {
+  "q": "fix(dashboard): move locale cookie outside client boundary",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [
+   "apps/dashboard/src/app/layout.tsx",
+   "apps/dashboard/src/components/i18n-provider.tsx",
+   "apps/dashboard/src/i18n/index.ts"
+  ],
+  "vi_plain": "Giúp mình sửa chỗ lưu lựa chọn ngôn ngữ của người dùng, để nó nằm ngoài phần chạy trên trình duyệt.",
+  "vi_ident": "Sửa giúp mình trong layout.tsx: chỗ lưu lựa chọn ngôn ngữ của người dùng phải nằm ngoài phần chạy trên trình duyệt.",
+  "cost": 0.00151469
+ },
+ {
+  "q": "fix(api): serve OAuth discovery metadata behind a public URL",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [
+   "apps/api/src/lib/public-url.ts"
+  ],
+  "vi_plain": "Sửa lại để thông tin cấu hình đăng nhập được phục vụ qua địa chỉ công khai cho các ứng dụng bên ngoài.",
+  "vi_ident": "Sửa public-url.ts để thông tin cấu hình đăng nhập được phục vụ qua địa chỉ công khai cho ứng dụng bên ngoài.",
+  "cost": 0.00122009
+ },
+ {
+  "q": "fix(deployments): fall back to saved project env vars in requestBuildAccess",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/platform-engine.md"
+  ],
+  "files": [
+   "apps/api/src/modules/deployments/build.service.ts"
+  ],
+  "vi_plain": "Nếu lúc xin quyền xây dựng thiếu biến môi trường thì lấy biến đã lưu sẵn của dự án giúp mình.",
+  "vi_ident": "Trong build.service.ts, khi xin quyền xây dựng mà thiếu biến môi trường thì lấy biến đã lưu sẵn của dự án.",
+  "cost": 0.00148399
+ },
+ {
+  "q": "fix(dashboard): don't crash outside a secure context",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/dashboard.md"
+  ],
+  "files": [],
+  "vi_plain": "Trang quản lý đang bị văng khi mở qua kết nối không an toàn, nhờ bạn sửa giúp chỗ đó.",
+  "vi_ident": "Hàm isSecureContext làm trang quản lý bị văng khi mở ngoài ngữ cảnh an toàn, nhờ bạn sửa giúp.",
+  "cost": 0.00162839
+ },
+ {
+  "q": "fix(dashboard): keep the local API on the same loopback host as the page",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [],
+  "vi_plain": "",
+  "vi_ident": "",
+  "err": "Expecting value: line 1 column 1 (char 0)"
+ },
+ {
+  "q": "adding docs, supporting DE lanugage, refine security.md",
+  "gold": [
+   "entities/cli-desktop-sdk.md"
+  ],
+  "files": [],
+  "vi_plain": "Nhờ bạn thêm phần tài liệu, hỗ trợ thêm tiếng Đức và chỉnh lại phần bảo mật cho gọn hơn.",
+  "vi_ident": "Nhờ bạn thêm tài liệu, hỗ trợ tiếng Đức và chỉnh lại security.md cho rõ ràng hơn.",
+  "cost": 0.0014032899999999997
+ },
+ {
+  "q": "fix(dashboard): resolve API origin correctly in docker-compose",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [],
+  "vi_plain": "Giúp mình sửa chỗ trang quản trị lấy sai địa chỉ máy chủ khi chạy cùng các dịch vụ khác, làm lại cho đúng.",
+  "vi_ident": "Giúp mình sửa file docker-compose.yml để trang quản trị lấy đúng địa chỉ máy chủ khi chạy cùng các dịch vụ.",
+  "cost": 0.00165589
+ },
+ {
+  "q": "update stack catalog with sample data",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/adapters.md",
+   "entities/cli-desktop-sdk.md"
+  ],
+  "files": [],
+  "vi_plain": "Nhờ bạn cập nhật danh mục các cụm máy chủ bằng dữ liệu mẫu để thử nghiệm nhé.",
+  "vi_ident": "Nhờ bạn cập nhật danh mục cụm trong catalog bằng dữ liệu mẫu để thử nghiệm nhé.",
+  "cost": 0.0017652899999999999
+ },
+ {
+  "q": "reuse oblien workspace from cloud deployment to mcp folder upload",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [],
+  "vi_plain": "Nhờ bạn dùng lại không gian làm việc đã có ở phần đưa lên đám mây khi tải tệp vào thư mục mới.",
+  "vi_ident": "Nhờ bạn dùng lại không gian làm việc oblien từ phần triển khai đám mây khi tải tệp vào thư mục mới.",
+  "cost": 0.0015840899999999998
+ },
+ {
+  "q": "fix mcp request context",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/api-app.md"
+  ],
+  "files": [],
+  "vi_plain": "Nhờ sửa lại chỗ giữ ngữ cảnh cho từng yêu cầu gửi đến máy chủ, để mỗi yêu cầu không bị lẫn sang nhau.",
+  "vi_ident": "Nhờ sửa lại chỗ giữ ngữ cảnh cho từng yêu cầu gửi đến máy chủ MCP, để mỗi yêu cầu không bị lẫn sang nhau.",
+  "cost": 0.00158369
+ },
+ {
+  "q": "pumb the build timeout",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [],
+  "vi_plain": "Tăng thời gian chờ tối đa cho quá trình biên dịch lên lâu hơn, hiện đang bị ngắt quá sớm nên lỗi liên tục.",
+  "vi_ident": "Tăng thời gian chờ biên dịch trong config.yaml giúp mình, hiện đang bị ngắt quá sớm nên lỗi liên tục.",
+  "cost": 0.00142739
+ },
+ {
+  "q": "increase rate limit of mcp",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [],
+  "vi_plain": "",
+  "vi_ident": "",
+  "err": "Expecting value: line 1 column 1 (char 0)"
+ },
+ {
+  "q": "fix mcp auth wire",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "entities/api-app.md"
+  ],
+  "files": [],
+  "vi_plain": "Sửa lại phần xác thực đăng nhập cho dịch vụ nội bộ, hiện đang bị lỗi kết nối.",
+  "vi_ident": "Sửa lại phần xác thực đăng nhập trong devops-release.ts cho dịch vụ nội bộ, đang bị lỗi kết nối.",
+  "cost": 0.0013755899999999999
+ },
+ {
+  "q": "support revoke mcp connection from client",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [],
+  "vi_plain": "Nhờ bạn làm thêm tính năng thu hồi quyền kết nối đã cấp cho ứng dụng bên ngoài đang dùng hệ thống.",
+  "vi_ident": "Nhờ bạn thêm tính năng thu hồi kết nối MCP đã cấp cho ứng dụng bên ngoài, và xử lý luôn phần đó.",
+  "cost": 0.0014819899999999999
+ },
+ {
+  "q": "fix partial services build status",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/dashboard.md"
+  ],
+  "files": [],
+  "vi_plain": "",
+  "vi_ident": "",
+  "err": "Expecting value: line 1 column 1 (char 0)"
+ },
+ {
+  "q": "upload return to rsync instead of ssh2",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [],
+  "vi_plain": "Phần đưa tập tin lên máy chủ đổi sang cách đồng bộ thư mục thay vì thư viện cũ, nhờ bạn sửa giúp mình nhé.",
+  "vi_ident": "Phần đưa tập tin lên máy chủ đổi sang dùng rsync thay vì cách cũ, nhờ bạn sửa giúp mình nhé.",
+  "cost": 0.00167259
+ },
+ {
+  "q": "upload return to rsync instead of ssh2",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [],
+  "vi_plain": "Phần tải tệp lên đang dùng cách cũ, nhờ đổi sang cách đồng bộ thư mục cho nhanh hơn.",
+  "vi_ident": "Nhờ đổi phần tải tệp lên sang dùng rsync thay cho cách cũ, giúp mình nhé.",
+  "cost": 0.00156009
+ },
+ {
+  "q": "saas domain lookup on redeploy issue fix",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md",
+   "entities/dashboard.md"
+  ],
+  "files": [],
+  "vi_plain": "",
+  "vi_ident": "",
+  "err": "Extra data: line 2 column 1 (char 180)"
+ },
+ {
+  "q": "support import/export of desktop data",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/adapters.md",
+   "entities/dashboard.md"
+  ],
+  "files": [],
+  "vi_plain": "Mình muốn thêm chức năng nhập và xuất dữ liệu từ ứng dụng máy tính, giúp chuyển dữ liệu qua lại dễ hơn.",
+  "vi_ident": "Bạn giúp mình thêm nhập và xuất dữ liệu máy tính trong desktop_data, để chuyển dữ liệu qua lại dễ hơn.",
+  "cost": 0.0016265899999999998
+ },
+ {
+  "q": "fix primary domain lose on redeploy",
+  "gold": [
+   "entities/dashboard.md"
+  ],
+  "files": [],
+  "vi_plain": "Sau khi triển khai lại thì tên miền chính bị mất, nhờ bạn sửa cho giữ nguyên.",
+  "vi_ident": "Sau khi chạy lại thì tên miền chính bị mất, bạn sửa giúp phần xử lý tên miền chính nhé.",
+  "cost": 0.00151066
+ },
+ {
+  "q": "remove isActiveDeploymentRace and replace with db flow",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/platform-engine.md"
+  ],
+  "files": [],
+  "vi_plain": "Bỏ phần kiểm tra đợt triển khai đang chạy chồng nhau, thay bằng luồng xử lý lưu trong cơ sở dữ liệu.",
+  "vi_ident": "Bỏ isActiveDeploymentRace, thay bằng luồng xử lý lưu trong cơ sở dữ liệu giúp tôi nhé.",
+  "cost": 0.00162679
+ },
+ {
+  "q": "fix services status",
+  "gold": [
+   "concepts/architecture.md"
+  ],
+  "files": [],
+  "vi_plain": "Giúp mình sửa lại phần hiển thị trạng thái các dịch vụ, đang hiển thị sai.",
+  "vi_ident": "Giúp mình sửa lại cách hiển thị trạng thái trong services, đang hiển thị sai.",
+  "cost": 0.00146159
+ },
+ {
+  "q": "update project route",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/api-app.md",
+   "entities/dashboard.md"
+  ],
+  "files": [],
+  "vi_plain": "",
+  "vi_ident": "",
+  "err": "Expecting value: line 1 column 1 (char 0)"
+ },
+ {
+  "q": "add option for db pass instead of url only",
+  "gold": [
+   "entities/database.md"
+  ],
+  "files": [],
+  "vi_plain": "Thêm cách nhập mật khẩu riêng để kết nối cơ sở dữ liệu, không bắt buộc phải gõ cả chuỗi kết nối.",
+  "vi_ident": "Thêm tùy chọn nhập mật khẩu riêng qua `db_pass` thay vì chỉ dùng chuỗi kết nối cho cơ sở dữ liệu.",
+  "cost": 0.00182599
+ },
+ {
+  "q": "fix build issue, fix services build stream",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [],
+  "vi_plain": "Việc biên dịch đang bị lỗi, nhờ bạn tìm và sửa để các dịch vụ chạy lại bình thường.",
+  "vi_ident": "Việc biên dịch đang lỗi ở Makefile, nhờ bạn tìm nguyên nhân và sửa để các dịch vụ chạy lại bình thường.",
+  "cost": 0.0016366899999999999
+ },
+ {
+  "q": "extend services options to match native docker compose",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [],
+  "vi_plain": "Nhờ bạn thêm tùy chọn cho phần khai báo dịch vụ, cho khớp với cách viết gốc của công cụ chạy nhiều ứng dụng.",
+  "vi_ident": "Nhờ bạn thêm tùy chọn cho phần dịch vụ trong docker-compose.yml, cho khớp với cách viết gốc của công cụ.",
+  "cost": 0.00171499
+ },
+ {
+  "q": "update landing and genearl enhancments",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ],
+  "files": [],
+  "vi_plain": "Cập nhật lại trang giới thiệu và chỉnh sửa vài chỗ chung cho dễ dùng hơn.",
+  "vi_ident": "",
+  "cost": 0.0014744900000000002
+ },
+ {
+  "q": "update",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md",
+   "entities/platform-engine.md"
+  ],
+  "files": [],
+  "vi_plain": "Bạn ơi, sửa lại phần cập nhật dữ liệu cho gọn hơn giúp mình với, cảm ơn nhé.",
+  "vi_ident": "Bạn ơi, sửa phần xếp hạng trong lexrank.py cho gọn hơn giúp mình với nhé.",
+  "cost": 0.0014519899999999998
+ },
+ {
+  "q": "finishing gh webhook workflow",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/push-to-deploy.md",
+   "entities/api-app.md"
+  ],
+  "files": [],
+  "vi_plain": "Nhờ bạn làm nốt phần nhận thông báo khi có thay đổi trên kho mã cho xong.",
+  "vi_ident": "Nhờ bạn làm nốt phần nhận thông báo cho gh rồi xong luôn nhé.",
+  "cost": 0.00144449
+ },
+ {
+  "q": "update advanced tab",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/api-app.md"
+  ],
+  "files": [],
+  "vi_plain": "Nhờ bạn cập nhật lại phần cài đặt nâng cao giúp mình, có thay đổi gì thì sửa theo luôn nhé.",
+  "vi_ident": "Nhờ bạn cập nhật lại AdvancedTab giúp mình, có thay đổi gì thì sửa theo luôn nhé.",
+  "cost": 0.0014974900000000002
+ },
+ {
+  "q": "add billing",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [],
+  "vi_plain": "Giúp tôi thêm chức năng thanh toán và xuất hóa đơn cho khách hàng trong hệ thống này nhé.",
+  "vi_ident": "Giúp tôi thêm chức năng billing để tính tiền và xuất hóa đơn cho khách hàng nhé.",
+  "cost": 0.00133239
+ },
+ {
+  "q": "fixing services routes",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md",
+   "entities/platform-engine.md"
+  ],
+  "files": [],
+  "vi_plain": "Bạn sửa giúp mình phần đường dẫn của các dịch vụ, đang bị lỗi khi truy cập vào trang.",
+  "vi_ident": "Bạn sửa giúp mình phần routes của dịch vụ, đang bị lỗi khi truy cập vào trang.",
+  "cost": 0.00150849
+ },
+ {
+  "q": "update project ui",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [],
+  "vi_plain": "Nhờ bạn cập nhật lại giao diện của dự án cho gọn gàng và đẹp hơn.",
+  "vi_ident": "Nhờ bạn cập nhật lại giao diện của dự án cho gọn gàng hơn, giữ nguyên phần còn lại.",
+  "cost": 0.00157859
+ },
+ {
+  "q": "finished docker flow",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [],
+  "vi_plain": "Mình hoàn thiện xong phần đóng gói và chạy ứng dụng, bạn kiểm tra giúp mình nhé.",
+  "vi_ident": "Mình hoàn thiện xong phần đóng gói và chạy ứng dụng, bạn kiểm tra giúp mình nhé.",
+  "cost": 0.0018044900000000002
+ },
+ {
+  "q": "hello github",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ],
+  "files": [],
+  "vi_plain": "Nhờ bạn viết một lời chào đơn giản rồi đưa lên kho mã của mình nhé.",
+  "vi_ident": "Nhờ bạn viết một lời chào đơn giản rồi đưa lên kho mã của mình nhé.",
+  "cost": 0.0014963899999999998
+ },
+ {
+  "q": "update github auth",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/dashboard.md"
+  ],
+  "files": [],
+  "vi_plain": "Nhờ bạn cập nhật lại cách xác thực đăng nhập để kết nối tài khoản với kho mã nguồn.",
+  "vi_ident": "Nhờ bạn cập nhật lại cách xác thực đăng nhập GitHub để kết nối tài khoản với kho mã nguồn.",
+  "cost": 0.00163609
+ },
+ {
+  "q": "bro, this is large commit, anyway here's what's added: entire core components from old oblien project, needs refactor, and most of landing design",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ],
+  "files": [],
+  "vi_plain": "",
+  "vi_ident": "",
+  "err": "Expecting value: line 1 column 1 (char 0)"
+ }
+]

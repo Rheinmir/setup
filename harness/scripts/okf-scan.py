@@ -7,10 +7,14 @@ Vì sao cần: recall/orient chỉ *in gợi ý* vào context. Không có gì ch
 chạy, (b) agent có đọc thứ được trả về hay chỉ lướt qua. "Agent bảo là đã đọc wiki" không phải
 bằng chứng. Ở đây cả hai vế đều tất định, 0 token:
 
-  query "<từ khoá>" [--tags a,b] [--type t] [--k N] [--session S] [--json]
+  query "<từ khoá>" [--prompt "<prompt>"] [--tags a,b] [--type t] [--files a,b] [--k N] [--session S] [--json]
+        `--prompt`: rút từ khoá TẤT ĐỊNH từ prompt (định danh → từ vựng chỉ mục → bảng cầu Việt→Anh,
+        xem prompt_terms) và ghép vào "<từ khoá>" (có thể bỏ trống); file nhắc trong prompt vào --files.
         Quét frontmatter OKF (`type`, `tags`, `title`, `id`) của mọi file .md trong các cây wiki
         + mọi record trong harness/metrics/memory.jsonl (đã mang `type`), xếp hạng theo tag khớp
-        rồi token-overlap, in top-k. GHI biên lai {ts, session, query, scanned, returned}.
+        → cạnh file→trang (`--files`: file đang dirty / được nhắc; trang trích dẫn file đó nổi
+        lên dù chữ không trùng) → BM25 trên title/path/tags (lexrank.py). In top-k. GHI biên lai
+        {ts, session, query, files, scanned, returned}. 0 token, tất định.
 
   verify --session S --transcript P [--json]
         Đọc transcript của phiên, xem mục nào trong `returned` thật sự xuất hiện ở đầu vào
@@ -42,6 +46,10 @@ try:
 except Exception:
     overstack_paths = None
     harness_dir = None
+try:
+    import lexrank                      # BM25 + cạnh file→trang (0 token). Thiếu → Jaccard cũ.
+except Exception:
+    lexrank = None
 
 def receipts_path(root):
     if harness_dir:
@@ -91,21 +99,38 @@ def wiki_dirs(root: Path) -> list:
     return [root / c for c in WIKI_CANDS if (root / c).is_dir()]
 
 
+def _skip_dirs() -> list:
+    """Cây con KHÔNG quét, dạng 'sources/provenance' ; env OKF_SCAN_SKIP (phẩy) ghi đè, rỗng = không bỏ gì."""
+    env = os.environ.get("OKF_SCAN_SKIP")
+    if env is None:
+        return ["sources/provenance"]
+    return [x.strip() for x in env.split(",") if x.strip()]
+
+
 def collect(root: Path) -> list:
     """Mọi mục OKF: file .md có frontmatter trong các cây wiki + record trong memory store."""
     items = []
     for wd in wiki_dirs(root):
         for p in wd.rglob("*.md"):
+            # Tuỳ chọn bỏ qua cây con: mặc định sources/provenance/ (sổ scratch-log tự ghi mỗi
+            # ngày cho hệ khác đọc — memory-map, overstack; mỗi trang chỉ trích 2 file harness →
+            # cạnh yếu, 15/43 mục openship 2026-10-13). Đổi bằng OKF_SCAN_SKIP="a/,b/" ; rỗng = quét hết.
+            if any(sk and f"/{sk.strip('/')}/" in p.as_posix() for sk in _skip_dirs()):
+                continue
             try:
-                fm = _frontmatter(p.read_text(encoding="utf-8", errors="ignore")[:2000])
+                text = p.read_text(encoding="utf-8", errors="ignore")
+                fm = _frontmatter(text[:2000])
             except Exception:
                 continue
             if not fm.get("type"):
                 continue                     # OKF v0.1: không có `type` thì không phải mục OKF
             tags = fm.get("tags") or []
+            # cạnh file→trang: đường dẫn trang trích dẫn (backtick) — sinh từ chữ đã viết, 0 token
+            files = lexrank.cited_files(text) if lexrank else []
             items.append({"source": "wiki", "path": str(p.relative_to(root)),
                           "type": fm["type"], "title": fm.get("title") or p.stem,
-                          "tags": tags if isinstance(tags, list) else [str(tags)], "id": fm.get("id") or p.stem})
+                          "tags": tags if isinstance(tags, list) else [str(tags)], "id": fm.get("id") or p.stem,
+                          "files": files})
     try:
         for ln in (_metrics_dir(root) / "memory.jsonl").read_text(encoding="utf-8").splitlines():
             if not ln.strip():
@@ -117,17 +142,22 @@ def collect(root: Path) -> list:
                           "path": f"{(_metrics_dir(root) / 'memory.jsonl').relative_to(root).as_posix()}#{m.get('id')}",
                           "type": m["type"], "title": (m.get("did") or m.get("text") or "")[:90],
                           "tags": ["memory", m["type"]] + ([m["session"]] if m.get("session") else []),
-                          "id": m.get("id")})
+                          "id": m.get("id"), "files": list(m.get("files") or [])})
     except Exception:
         pass
     return items
 
 
-def rank(items: list, query: str, tags=None, type_filter=None, k: int = 5) -> list:
-    """Tag khớp thắng token-overlap: tag là thứ người/máy khai CHỦ ĐÍCH, chính xác hơn đoán từ chữ."""
+def rank(items: list, query: str, tags=None, type_filter=None, k: int = 5, files=None) -> list:
+    """Ba tầng, tầng trên thắng tầng dưới (hệ số 10 / 3 / 1):
+      tag khớp  — tag là thứ người/máy khai CHỦ ĐÍCH, chính xác hơn đoán từ chữ;
+      cạnh file — trang trích dẫn file đang dirty/được nhắc (`files`) liên quan dù chữ không trùng
+                  (bench wiki openship, 275 commit thật: chỉ chữ R@1 0.46 → có cạnh 0.98);
+      BM25      — chữ trên title/path/tags, thay Jaccard (LongMemEval R@5 0.63 → 0.95).
+    Mọi tầng tất định, 0 token. Thiếu lexrank.py → Jaccard cũ (fail-open)."""
     want_tags = {t.strip().lower() for t in (tags or []) if t.strip()}
-    q = _toks(query)
-    out = []
+    qfiles = [f.strip() for f in (files or []) if f and f.strip()]
+    cands = []
     for it in items:
         if type_filter and it["type"] != type_filter:
             continue
@@ -135,12 +165,35 @@ def rank(items: list, query: str, tags=None, type_filter=None, k: int = 5) -> li
         tag_hit = len(want_tags & it_tags)
         if want_tags and not tag_hit:
             continue
-        hay = _toks(" ".join([it.get("title") or "", it.get("path") or "", " ".join(it_tags)]))
-        overlap = len(q & hay) / len(q | hay) if (q and hay) else 0.0
-        score = tag_hit * 10 + overlap
+        cands.append((it, it_tags, tag_hit))
+    hays = [" ".join([it.get("title") or "", it.get("path") or "", " ".join(sorted(tg))]) for it, tg, _ in cands]
+    if lexrank:
+        lex = lexrank.bm25_scores(query, hays)
+    else:                                                   # fallback: Jaccard như bản cũ
+        q = _toks(query); lex = []
+        for h in hays:
+            hay = _toks(h)
+            lex.append(len(q & hay) / len(q | hay) if (q and hay) else 0.0)
+    out = []
+    for (it, _tg, tag_hit), lx in zip(cands, lex):
+        edge = lexrank.edge_score(qfiles, it.get("files") or []) if (lexrank and qfiles) else 0.0
+        score = tag_hit * 10 + edge * 3 + lx
         if score > 0:
             out.append((score, it))
     out.sort(key=lambda x: (-x[0], x[1]["path"]))
+    # Gộp bản TRÙNG (cùng nguồn + title + files): episode auto-ghi mỗi lượt Stop lặp y hệt nhau
+    # và chiếm hết k slot, wiki không ngoi lên được (thấy trên openship 2026-10-13: 4/4 slot là
+    # "Merge pull request #930"). Giữ bản điểm cao nhất, đồng điểm thì giữ bản ĐỨNG SAU (id mới).
+    best = {}
+    for sc, it in out:
+        # Khoá gộp = (nguồn, tiêu đề). KHÔNG đưa files vào khoá: cùng một did với 3 danh sách
+        # file hơi khác nhau vẫn là một lời nhắc; để cả ba thì 3/4 slot recall là bản sao
+        # (đo 2026-10-13 sau compact: m254/m329/m92 cùng "Merge pull request #930").
+        key = (it.get("source"), re.sub(r"\s+", " ", (it.get("title") or "").strip().lower()))
+        cur = best.get(key)
+        if cur is None or sc > cur[0] or (sc == cur[0] and str(it.get("id")) > str(cur[1].get("id"))):
+            best[key] = (sc, it)
+    out = sorted(best.values(), key=lambda x: (-x[0], x[1]["path"]))
     return [dict(it, score=round(sc, 4)) for sc, it in out[:k]]
 
 
@@ -182,14 +235,136 @@ def read_receipts(root: Path, session=None) -> list:
     return out
 
 
-def query(root: Path, q: str, tags=None, type_filter=None, k=5, session=None) -> dict:
+# ── Rút từ khoá từ PROMPT (tất định, 0 token) ──────────────────────────────────────────
+# Prompt thật ở openship: 18/18 phiên tiếng Việt, title/tag wiki tiếng Anh → BM25 thuần không
+# gặp nhau ("tên miền" ≠ "domain"). Ba tầng, tầng nào cũng không cần model:
+#   1. định danh trong prompt (đường dẫn, tên file, snake_case, CamelCase, chữ trong backtick)
+#      → vào chữ truy vấn, và file-ish thì vào kênh cạnh `files`;
+#   2. token prompt ∩ từ vựng chỉ mục (title+path+tags của mọi mục) — từ mượn lọt qua đây;
+#   3. bảng cầu Việt→Anh: mặc định bên dưới (từ vựng dev chung) + bảng riêng dự án
+#      `<wiki>/.query-bridge.json` ({"cụm tiếng việt": "en terms"}), bảng dự án ghi đè.
+# Không rút được gì → trả nguyên prompt (BM25 tự bỏ qua từ không có trong chỉ mục).
+DEFAULT_BRIDGE = {
+    "tên miền": "domain", "miền": "domain", "định tuyến": "routing", "điều hướng": "routing", "chứng chỉ": "ssl certificate",
+    "https": "ssl", "triển khai": "deploy deployment", "đẩy lên": "push deploy", "sao lưu": "backup", "khôi phục": "backup restore",
+    "thư điện tử": "mail", "email": "mail", "hộp thư": "mail", "dịch vụ": "service", "môi trường": "environment",
+    "biến môi trường": "environment", "cơ sở dữ liệu": "database", "csdl": "database", "migration": "database migration",
+    "bảng điều khiển": "dashboard", "giao diện quản trị": "dashboard", "đăng nhập": "auth access", "xác thực": "auth",
+    "phân quyền": "auth access permission", "quyền truy cập": "access", "dòng lệnh": "cli", "máy tính để bàn": "desktop",
+    "thư viện khách": "sdk client", "kiến trúc": "architecture", "cấu trúc dự án": "project structure", "thư mục": "project structure",
+    "nền tảng": "platform", "lõi": "engine kernel", "làm quen": "onboarding tour", "hướng dẫn mới": "onboarding",
+    "tự host": "self hosted", "tự lưu trữ": "self hosted", "việc đang làm": "active work", "đang làm dở": "active work",
+    "webhook": "api webhook", "giao diện": "dashboard", "người dùng": "auth access", "tài khoản": "auth access",
+    "tuyến": "routing", "cổng": "routing", "proxy": "routing", "địa chỉ": "domain routing", "trang tĩnh": "routing",
+    "đám mây": "cloud adapter", "máy chủ": "adapter host", "container": "adapter", "docker": "adapter", "k8s": "adapter",
+    "bản dựng": "deployment pipeline", "build": "deployment pipeline", "phát hành": "deployment", "rollback": "deployment pipeline",
+    "quay lui": "deployment pipeline", "hàng đợi": "pipeline", "nhật ký": "dashboard", "ticket": "dashboard", "vấn đề": "dashboard",
+    "bảng": "dashboard", "ứng dụng": "app", "máy chạy": "environment service", "bản chạy": "environment service",
+    "trạng thái": "service", "phiên": "auth access", "ssh": "access", "khoá": "auth access", "mật khẩu": "auth",
+    "lưu trữ": "backup database", "bản sao": "backup", "schema": "database", "truy vấn": "database",
+    "đồng bộ": "sdk cli", "máy khách": "sdk cli desktop", "gói": "sdk", "thư viện": "sdk",
+}
+_IDENT_RE = re.compile(r"`([^`\n]{2,80})`|((?:[A-Za-z0-9_.-]+/)*[A-Za-z0-9_.-]+\.(?:tsx?|jsx?|mjs|py|md|json|ya?ml|go|rs|sql|css|html|sh))"
+                       r"|\b([a-z]+_[a-z0-9_]+)\b|\b([a-z]+(?:[A-Z][a-z0-9]+)+)\b|\b([A-Z][a-z0-9]+(?:[A-Z][a-z0-9]+)+)\b")
+
+
+def load_bridge(root: Path) -> dict:
+    b = dict(DEFAULT_BRIDGE)
+    try:
+        from overstack_paths import wiki_dir  # type: ignore
+        w = wiki_dir(str(root))
+    except Exception:
+        w = None
+    for cand in ([Path(w)] if w else []) + [root / ".llmwiki" / "wiki", root / "llmwiki" / "wiki"]:
+        f = Path(cand) / ".query-bridge.json"
+        if f.is_file():
+            try:
+                b.update({str(k).lower(): str(v) for k, v in json.load(open(f, encoding="utf-8")).items()})
+            except Exception:
+                pass
+            break
+    return b
+
+
+def prompt_terms(prompt: str, items: list, bridge: dict) -> dict:
+    """prompt → {"q": chữ truy vấn, "files": file-ish nhắc trong prompt, "how": tầng nào góp gì}."""
+    text = prompt or ""
+    idents, files = [], []
+    for m in _IDENT_RE.finditer(text):
+        g = next((x for x in m.groups() if x), "")
+        if not g:
+            continue
+        if re.search(r"\.[a-z]{1,5}$", g) and ("/" in g or "." in g):
+            files.append(g.strip("`"))
+        idents.append(g)
+    vocab = set()
+    if lexrank:
+        for it in items:
+            vocab.update(lexrank.norm(" ".join([it.get("title") or "", it.get("path") or "",
+                                                " ".join(map(str, it.get("tags") or []))])))
+        ptoks = lexrank.norm(text)
+    else:
+        ptoks = []
+    hits = [t for t in dict.fromkeys(ptoks) if t in vocab and len(t) > 2 and t.isascii()]   # từ mượn; token Việt bỏ (lọt từ trang nháp Việt)
+    low = text.lower()
+    bridged = []
+    for vi, en in bridge.items():
+        if vi in low:
+            bridged.extend(en.split())
+    parts = idents + hits + bridged
+    q = " ".join(dict.fromkeys(parts)) if parts else text[:400]
+    return {"q": q, "files": list(dict.fromkeys(files)),
+            "how": {"idents": idents, "vocab": hits, "bridge": list(dict.fromkeys(bridged))}}
+
+
+def query(root: Path, q: str, tags=None, type_filter=None, k=5, session=None, files=None, prompt=None) -> dict:
     items = collect(root)
-    hits = rank(items, q, tags, type_filter, k)
+    derived = None
+    if prompt:                                   # --prompt: rút từ khoá tất định, prompt gốc vẫn vào biên lai
+        derived = prompt_terms(prompt, items, load_bridge(root))
+        q = (q + " " + derived["q"]).strip() if q else derived["q"]
+        files = list(dict.fromkeys(list(files or []) + derived["files"]))
+    hits = rank(items, q, tags, type_filter, k, files=files)
     rec = {"ts": _now(), "session": session or "", "query": q,
-           "tags": tags or [], "scanned": len(items),
+           "tags": tags or [], "files": list(files or []), "scanned": len(items),
            "returned": [h["path"] for h in hits], "hits": hits}
+    if derived is not None:
+        rec["prompt"] = (prompt or "")[:300]
+        rec["prompt_terms"] = derived["how"]
     write_receipt(root, rec)
     return rec
+
+
+def _tool_inputs(transcript: str) -> str:
+    """Nối mọi tham số chuỗi của tool_use trong transcript JSONL (assistant → content[].tool_use.input)."""
+    vals = []
+
+    def walk(x):
+        if isinstance(x, dict):
+            for v in x.values():
+                walk(v)
+        elif isinstance(x, list):
+            for v in x:
+                walk(v)
+        elif isinstance(x, str):
+            vals.append(x)
+    try:
+        with open(transcript, encoding="utf-8", errors="ignore") as fh:
+            for ln in fh:
+                if '"tool_use"' not in ln:
+                    continue
+                try:
+                    r = json.loads(ln)
+                except Exception:
+                    continue
+                if r.get("type") != "assistant":
+                    continue
+                for c in (r.get("message") or {}).get("content") or []:
+                    if isinstance(c, dict) and c.get("type") == "tool_use":
+                        walk(c.get("input"))
+    except Exception:
+        pass
+    return "\n".join(vals)
 
 
 def verify(root: Path, session: str, transcript: str) -> dict:
@@ -202,12 +377,12 @@ def verify(root: Path, session: str, transcript: str) -> dict:
     for r in read_receipts(root, session):
         returned += r.get("returned") or []
     returned = sorted(set(returned))
-    blob = ""
-    try:
-        blob = Path(transcript).read_text(encoding="utf-8", errors="ignore")
-    except Exception:
-        pass
-    opened = [p for p in returned if p and (p in blob or Path(p).name in blob)]
+    # CHỈ đếm tham số tool_use (Read.file_path, Bash.command, Grep.path...). Bản cũ soi cả
+    # transcript thô nên khớp luôn chữ trong CHÍNH output hook SessionStart (nơi liệt kê các
+    # đường dẫn này) → coverage 1.0 ở 329/329 biên lai openship (đo 2026-10-13), trong khi
+    # đếm theo tool_use thật thì 7/72. Biên lai sai còn tệ hơn không có biên lai.
+    blob = _tool_inputs(transcript)
+    opened = [p for p in returned if p and (p.split("#")[0] in blob)]
     cov = round(len(opened) / len(returned), 3) if returned else 0.0
     rec = {"ts": _now(), "session": session, "kind": "verify", "returned": returned,
            "opened": opened, "coverage": cov}
@@ -234,37 +409,60 @@ def self_test() -> int:
             "---\ntype: concept\ntitle: \"gu thiết kế UI\"\ntags: [design, ui]\nid: design-taste\n---\n\n# y\n## Origin\n- b\n",
             encoding="utf-8")
         (wd / "no-frontmatter.md").write_text("# không phải OKF\n", encoding="utf-8")
+        pv = root / ".llmwiki" / "wiki" / "sources" / "provenance"
+        pv.mkdir(parents=True)
+        (pv / "131026-session-provenance.md").write_text(
+            "---\ntype: source\ntitle: \"harness gate provenance\"\ntags: [harness]\nid: pv\n---\n\n# p\n## Origin\n- d\n", encoding="utf-8")
+        (wd / "backups.md").write_text(
+            "---\ntype: concept\ntitle: \"Backups\"\ntags: [openship]\nid: backups\n---\n\n# Backups\n"
+            "Route `apps/api/src/modules/backups/backup.routes.ts:32`.\n## Origin\n- c\n", encoding="utf-8")
         (root / "harness" / "metrics").mkdir(parents=True)
         (_metrics_dir(root) / "memory.jsonl").write_text(json.dumps(
             {"id": "ep1", "kind": "episode", "type": "episode", "did": "vá hook harness",
-             "session": "sessA", "ts": "2026-09-07T00:00:00"}) + "\n", encoding="utf-8")
+             "session": "sessA", "ts": "2026-09-07T00:00:00"}) + "\n" + json.dumps(
+            {"id": "ep2", "kind": "episode", "type": "episode", "did": "vá hook harness",
+             "session": "sessB", "ts": "2026-09-08T00:00:00"}) + "\n", encoding="utf-8")
 
         items = collect(root)
-        chk(len(items) == 3, f"collect: 2 wiki OKF + 1 memory, bỏ file thiếu frontmatter ({len(items)})")
+        chk(len(items) == 5, f"collect: 3 wiki OKF + 2 memory, bỏ file thiếu frontmatter ({len(items)})")
+        chk(any(it.get("files") == ["apps/api/src/modules/backups/backup.routes.ts"] for it in items),
+            "collect: lấy được cạnh file→trang từ đường dẫn trong backtick")
 
         r = query(root, "luật harness", session="sessX")
-        chk(r["scanned"] == 3 and r["returned"] and "harness-rules" in r["returned"][0],
+        chk(r["scanned"] == 5 and r["returned"] and "harness-rules" in r["returned"][0],
             f"query xếp đúng mục liên quan nhất ({r['returned'][:1]})")
+
+        r_edge = query(root, "sửa lỗi lưu trữ", session="sessX",
+                       files=["apps/api/src/modules/backups/retention.ts"])
+        chk(r_edge["returned"] and "backups" in r_edge["returned"][0] and r_edge["files"],
+            f"cạnh file→trang: file dirty cùng module kéo trang lên dù chữ không trùng ({r_edge['returned'][:1]})")
+
+        r_idf = query(root, "harness gate", session="sessX")
+        chk(r_idf["returned"] and "harness-rules" in r_idf["returned"][0],
+            "BM25/IDF: từ hiếm (gate) quyết định, từ phổ thông (harness) không kéo mục khác lên")
 
         r2 = query(root, "bất kỳ", tags=["design"], session="sessX")
         chk(len(r2["returned"]) == 1 and "design-taste" in r2["returned"][0],
             "lọc theo tag: chỉ trả mục mang tag đó")
 
         r3 = query(root, "vá hook", type_filter="episode", session="sessX")
-        chk(len(r3["returned"]) == 1 and "memory.jsonl" in r3["returned"][0],
-            "lọc theo type: memory store cũng là nguồn OKF")
+        chk(len(r3["returned"]) == 1 and r3["returned"][0].endswith("#ep2"),
+            "lọc theo type + gộp trùng: 2 episode y hệt → trả 1, giữ bản mới (ep2)")
 
         rs = read_receipts(root, "sessX")
-        chk(len(rs) == 3 and all(x.get("scanned") == 3 for x in rs),
+        chk(len(rs) == 5 and all(x.get("scanned") == 5 for x in rs),
             f"biên lai ghi đủ mỗi lượt quét ({len(rs)})")
         chk(read_receipts(root, "khac") == [], "lọc biên lai theo phiên")
 
         tr = root / "t.jsonl"
-        tr.write_text('{"type":"assistant","message":{"content":[{"type":"tool_use","name":"Read",'
+        tr.write_text('{"type":"attachment","attachment":{"type":"hook_success","content":"nên đọc: '
+                      '.llmwiki/wiki/concepts/design-taste.md backups.md"}}\n'
+                      '{"type":"user","message":{"content":"đọc design-taste.md đi"}}\n'
+                      '{"type":"assistant","message":{"content":[{"type":"tool_use","name":"Read",'
                       '"input":{"file_path":"/x/.llmwiki/wiki/concepts/harness-rules.md"}}]}}\n', encoding="utf-8")
         v = verify(root, "sessX", str(tr))
-        chk(len(v["opened"]) == 1 and 0 < v["coverage"] < 1,
-            f"verify: đếm ĐÚNG mục agent thật sự mở ({v['opened']}, coverage {v['coverage']})")
+        chk(len(v["opened"]) == 1 and v["opened"][0].endswith("harness-rules.md") and 0 < v["coverage"] < 1,
+            f"verify: chỉ đếm tool_use thật, KHÔNG đếm chữ trong hook/prompt ({v['opened']}, coverage {v['coverage']})")
 
         v2 = verify(root, "sessX", str(root / "khong-co.jsonl"))
         chk(v2["opened"] == [] and v2["coverage"] == 0.0, "transcript thiếu → coverage 0, không nổ")
@@ -298,8 +496,10 @@ def main() -> None:
     try:
         if args and args[0] == "query":
             tags = [t for t in (_opt(args, "--tags") or "").split(",") if t.strip()]
-            rec = query(root, args[1] if len(args) > 1 else "", tags,
-                        _opt(args, "--type"), int(_opt(args, "--k") or 5), sess)
+            files = [f for f in (_opt(args, "--files") or "").split(",") if f.strip()]
+            qtext = args[1] if len(args) > 1 and not args[1].startswith("--") else ""
+            rec = query(root, qtext, tags, _opt(args, "--type"), int(_opt(args, "--k") or 5), sess,
+                        files=files, prompt=_opt(args, "--prompt") or None)
             if "--json" in args:
                 print(json.dumps(rec, ensure_ascii=False, indent=1)); return
             if not rec["hits"]:
