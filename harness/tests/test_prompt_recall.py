@@ -44,6 +44,8 @@ def main():
         chk("recall-prompt" not in out2, "prompt thứ hai cùng phiên → không bơm lại")
         out3 = run_hook(root, "sessQ", "<task-notification>xong</task-notification>")
         chk("recall-prompt" not in out3, "thông báo nền → im lặng")
+        out4 = run_hook(root, "sessR", "xem lại wiki và harness cho tôi với nhé")
+        chk("recall-prompt" not in out4, "prompt chỉ có chữ chung ('wiki', 'harness' ở mọi đường dẫn) → không bơm rác")
     print("test_prompt_recall: " + ("PASS" if ok else "FAIL")); return 0 if ok else 1
 
 if __name__ == "__main__":

@@ -170,7 +170,11 @@ def prompt_recall(root: Path, sid: str, prompt: str) -> None:
         rec = json.loads(subprocess.run(cmd, cwd=str(root), capture_output=True, text=True, timeout=12).stdout or "{}")
     except Exception:
         return
-    new = [h for h in rec.get("hits") or [] if h.get("path") not in seen]
+    hits = rec.get("hits") or []
+    top = max((float(h.get("score") or 0) for h in hits), default=0.0)
+    # Chỉ in mục có điểm đáng kể so với đỉnh: phiên thật 13/10 đỉnh 1.0 kéo theo 3 trang 0.11 (chữ "wiki"/"harness"
+    # khớp mọi đường dẫn) → agent tốn một lần Read vào trang hub. Ngưỡng 0.3×đỉnh và tối thiểu 0.3 tuyệt đối.
+    new = [h for h in hits if h.get("path") not in seen and float(h.get("score") or 0) >= max(0.3, 0.3 * top)]
     if not new:
         return
     how = rec.get("prompt_terms") or {}

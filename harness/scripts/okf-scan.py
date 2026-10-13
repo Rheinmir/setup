@@ -297,15 +297,19 @@ def prompt_terms(prompt: str, items: list, bridge: dict) -> dict:
         if re.search(r"\.[a-z]{1,5}$", g) and ("/" in g or "." in g):
             files.append(g.strip("`"))
         idents.append(g)
-    vocab = set()
+    df = {}
     if lexrank:
         for it in items:
-            vocab.update(lexrank.norm(" ".join([it.get("title") or "", it.get("path") or "",
-                                                " ".join(map(str, it.get("tags") or []))])))
+            for t in set(lexrank.norm(" ".join([it.get("title") or "", it.get("path") or "",
+                                                 " ".join(map(str, it.get("tags") or []))]))):
+                df[t] = df.get(t, 0) + 1
         ptoks = lexrank.norm(text)
     else:
         ptoks = []
-    hits = [t for t in dict.fromkeys(ptoks) if t in vocab and len(t) > 2 and t.isascii()]   # từ mượn; token Việt bỏ (lọt từ trang nháp Việt)
+    # Từ mượn (ASCII) có trong chỉ mục; bỏ token Việt (lọt từ trang nháp Việt) và bỏ token có ở quá nửa chỉ mục
+    # ("wiki", "llmwiki", "md", "concept", "harness" nằm trong MỌI đường dẫn → phiên thật 13/10 in 3 trang rác điểm 0.11).
+    half = max(1, len(items) // 2)
+    hits = [t for t in dict.fromkeys(ptoks) if t in df and len(t) > 2 and t.isascii() and df[t] <= half]
     low = text.lower()
     bridged = []
     for vi, en in bridge.items():
