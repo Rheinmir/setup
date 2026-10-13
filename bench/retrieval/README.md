@@ -99,3 +99,16 @@ Kết luận: (1) prompt Việt nguyên văn = 0, đúng như dự đoán; (2) b
 gánh hết (≈0.78/0.90) và chữ chỉ thêm 0–3 điểm R@4. Đã cài: `okf-scan query --prompt`, hook UserPromptSubmit
 `prompt_recall` (prompt đầu phiên, chỉ bơm trang chưa in; test `harness/tests/test_prompt_recall.py`),
 bảng cầu riêng dự án `<wiki>/.query-bridge.json`.
+
+### Phiên thật (live_prompt_cases.py, 14/10/2026)
+
+Trần của fdk-uat và của payload giả là "cài được / hook trả lời khi gọi tay". Chỉ phiên `claude -p` thật mới cho thấy khối hook
+có vào context không, agent mở trang nào, có rác không. 12 prompt Việt (10 nhắm một trang, 2 chung chung), haiku, 3 vòng:
+
+| vòng | gợi ý trúng | agent mở trúng | chung chung im lặng | trang rác do prompt | sửa sau vòng |
+|---|---|---|---|---|---|
+| 1 | 10/10 | 10/10 | 0/2 | 16 | từ vựng bỏ cả đường dẫn ("wiki" khớp mọi trang) |
+| 2 | 10/10 | 10/10 | 2/2 | 8 | bảng cầu "khoá"/"phiên" → cụm dài; stoplist âm tiết không dấu |
+| 3 | 10/10 | 10/10 | 2/2 | 4 (đều trang liên quan thật) | — |
+
+Cách chạy: `python3 live_prompt_cases.py <repo>` rồi xoá biên lai/episode của các phiên thử khỏi `.harness/metrics/` (SIDS in ở cuối).
