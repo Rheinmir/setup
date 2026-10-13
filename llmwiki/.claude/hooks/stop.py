@@ -217,13 +217,38 @@ def secondary_memory(root: str, session: str) -> None:
                                       capture_output=True, text=True, timeout=8).stdout.strip()
             changed = [ln[3:] for ln in dirty.splitlines() if len(ln) > 3][:8]
             did = subject or "(phiên có sửa, chưa commit)"
+            # MỘT episode cho MỖI PHIÊN, không phải mỗi lượt. Đo 2026-10-13 (openship): Stop-hook
+            # chạy mỗi lượt → 329 episode giống hệt nhau (cùng did, cùng files), chiếm hết slot
+            # recall đầu phiên và được mở thật 7/72 lần. Cùng phiên: did+files không đổi → bỏ qua;
+            # đổi → ghi đè đúng record cũ (UPDATE theo id, giữ ts mới). Phiên khác → thêm mới.
+            prev = _last_episode(root, mr, session)
+            if prev and prev.get("did") == did and list(prev.get("files") or []) == changed:
+                return
+            cmd = [sys.executable, mr, "episode", did,
+                   "--files", ",".join(changed), "--session", session, "--parent", "auto"]
+            if prev and prev.get("id"):
+                cmd += ["--id", str(prev["id"])]
             # --parent auto: nối episode này vào phiên NGAY TRƯỚC → một CHUỖI đọc được
             # (mem-rank chain), thay vì một đống episode rời không biết cái nào tiếp cái nào.
-            _run([sys.executable, mr, "episode", did,
-                             "--files", ",".join(changed), "--session", session, "--parent", "auto"],
-                           cwd=root, capture_output=True, timeout=15)
+            _run(cmd, cwd=root, capture_output=True, timeout=15)
         except Exception:
             pass
+
+
+def _last_episode(root: str, mr: str, session: str):
+    """Episode mới nhất của CHÍNH phiên này trong store (None nếu chưa có). Đọc qua
+    `mem-rank chain <session> --json` để không nhân đôi logic đọc store ở hook."""
+    if not session:
+        return None
+    try:
+        out = _run([sys.executable, mr, "chain", session, "--root", root, "--json"],
+                   cwd=root, capture_output=True, text=True, timeout=8).stdout
+        rows = json.loads(out or "[]")
+        if rows and rows[0].get("session") == session:
+            return rows[0]
+    except Exception:
+        pass
+    return None
 
 
 _ANSI = re.compile(r"\033\[[0-9;]*m")

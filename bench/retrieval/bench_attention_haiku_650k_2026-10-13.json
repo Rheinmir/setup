@@ -1,0 +1,391 @@
+{
+ "cases": [
+  {
+   "q": "edge static path takeover fix",
+   "gold": [
+    ".llmwiki/wiki/concepts/active-work.md",
+    ".llmwiki/wiki/concepts/onboarding-tour.md"
+   ],
+   "returned": [
+    ".llmwiki/wiki/concepts/active-work.md",
+    ".llmwiki/wiki/concepts/architecture.md",
+    ".llmwiki/wiki/concepts/onboarding-tour.md",
+    ".llmwiki/wiki/concepts/access-auth-mcp.md"
+   ]
+  },
+  {
+   "q": "fix cli installation for 0.4.6",
+   "gold": [
+    ".llmwiki/wiki/entities/cli-desktop-sdk.md"
+   ],
+   "returned": [
+    ".llmwiki/wiki/entities/cli-desktop-sdk.md",
+    ".llmwiki/wiki/concepts/onboarding-tour.md",
+    ".llmwiki/wiki/concepts/access-auth-mcp.md",
+    ".llmwiki/wiki/entities/api-app.md"
+   ]
+  },
+  {
+   "q": "fix(compose): recover cached environment provenance and require source refresh",
+   "gold": [
+    ".llmwiki/wiki/concepts/architecture.md",
+    ".llmwiki/wiki/concepts/deployment-pipeline.md",
+    ".llmwiki/wiki/concepts/services-environment.md"
+   ],
+   "returned": [
+    ".llmwiki/wiki/concepts/architecture.md",
+    ".llmwiki/wiki/concepts/services-environment.md",
+    ".llmwiki/wiki/concepts/deployment-pipeline.md",
+    ".llmwiki/wiki/entities/database.md"
+   ]
+  },
+  {
+   "q": "fix(adapters): treat a NONE healthcheck test array as disabled",
+   "gold": [
+    ".llmwiki/wiki/concepts/active-work.md",
+    ".llmwiki/wiki/concepts/deployment-pipeline.md",
+    ".llmwiki/wiki/entities/adapters.md"
+   ],
+   "returned": [
+    ".llmwiki/wiki/entities/adapters.md",
+    ".llmwiki/wiki/concepts/active-work.md",
+    ".llmwiki/wiki/concepts/deployment-pipeline.md",
+    ".llmwiki/wiki/concepts/architecture.md"
+   ]
+  },
+  {
+   "q": "test(routing): verify resume preserves the repair failure cause",
+   "gold": [
+    ".llmwiki/wiki/concepts/active-work.md",
+    ".llmwiki/wiki/entities/api-app.md"
+   ],
+   "returned": [
+    ".llmwiki/wiki/concepts/domains-routing-ssl.md",
+    ".llmwiki/wiki/concepts/active-work.md",
+    ".llmwiki/wiki/entities/api-app.md",
+    ".llmwiki/wiki/concepts/access-auth-mcp.md"
+   ]
+  },
+  {
+   "q": "fix(deployments): don't let an all-carried compose redeploy take over the active release",
+   "gold": [
+    ".llmwiki/wiki/concepts/active-work.md",
+    ".llmwiki/wiki/concepts/architecture.md",
+    ".llmwiki/wiki/entities/api-app.md"
+   ],
+   "returned": [
+    ".llmwiki/wiki/concepts/active-work.md",
+    ".llmwiki/wiki/concepts/architecture.md",
+    ".llmwiki/wiki/entities/api-app.md",
+    ".llmwiki/wiki/concepts/deployment-pipeline.md"
+   ]
+  },
+  {
+   "q": "fix(env): preserve Cloud runtime identity during inspection",
+   "gold": [
+    ".llmwiki/wiki/concepts/services-environment.md"
+   ],
+   "returned": [
+    ".llmwiki/wiki/concepts/services-environment.md",
+    ".llmwiki/wiki/concepts/backups.md",
+    ".llmwiki/wiki/concepts/deployment-pipeline.md",
+    ".llmwiki/wiki/concepts/domains-routing-ssl.md"
+   ]
+  },
+  {
+   "q": "fix(api): don't synthesize an install command for Dockerfile-owned sub-apps",
+   "gold": [
+    ".llmwiki/wiki/concepts/access-auth-mcp.md",
+    ".llmwiki/wiki/concepts/onboarding-tour.md",
+    ".llmwiki/wiki/entities/api-app.md"
+   ],
+   "returned": [
+    ".llmwiki/wiki/entities/api-app.md",
+    ".llmwiki/wiki/concepts/access-auth-mcp.md",
+    ".llmwiki/wiki/concepts/onboarding-tour.md",
+    ".llmwiki/wiki/concepts/active-work.md"
+   ]
+  },
+  {
+   "q": "fix(env): align restart checks with the running service",
+   "gold": [
+    ".llmwiki/wiki/concepts/services-environment.md"
+   ],
+   "returned": [
+    ".llmwiki/wiki/concepts/services-environment.md",
+    ".llmwiki/wiki/concepts/architecture.md",
+    ".llmwiki/wiki/concepts/backups.md",
+    ".llmwiki/wiki/concepts/deployment-pipeline.md"
+   ]
+  },
+  {
+   "q": "fix(adapters): clamp untrusted vercel.json redirect status codes",
+   "gold": [
+    ".llmwiki/wiki/concepts/active-work.md",
+    ".llmwiki/wiki/concepts/deployment-pipeline.md",
+    ".llmwiki/wiki/entities/adapters.md"
+   ],
+   "returned": [
+    ".llmwiki/wiki/entities/adapters.md",
+    ".llmwiki/wiki/concepts/active-work.md",
+    ".llmwiki/wiki/concepts/deployment-pipeline.md",
+    ".llmwiki/wiki/concepts/access-auth-mcp.md"
+   ]
+  }
+ ],
+ "results": [
+  {
+   "text": ".llmwiki/wiki/index.md",
+   "tokens": 685560,
+   "cost": 0.6563311000000001,
+   "case": 0,
+   "size": 1900000,
+   "variant": "none",
+   "q": "edge static path takeover fix",
+   "hit": false,
+   "any_returned": false
+  },
+  {
+   "text": ".llmwiki/wiki/concepts/architecture.md",
+   "tokens": 685757,
+   "cost": 0.6566681000000001,
+   "case": 0,
+   "size": 1900000,
+   "variant": "once",
+   "q": "edge static path takeover fix",
+   "hit": false,
+   "any_returned": true
+  },
+  {
+   "text": ".llmwiki/wiki/concepts/active-work.md",
+   "tokens": 695720,
+   "cost": 0.6654386,
+   "case": 0,
+   "size": 1900000,
+   "variant": "repeat",
+   "q": "edge static path takeover fix",
+   "hit": true,
+   "any_returned": true
+  },
+  {
+   "text": ".llmwiki/wiki/",
+   "tokens": 685564,
+   "cost": 0.6552601,
+   "case": 1,
+   "size": 1900000,
+   "variant": "none",
+   "q": "fix cli installation for 0.4.6",
+   "hit": false,
+   "any_returned": false
+  },
+  {
+   "text": ".llmwiki/wiki/entities/cli-desktop-sdk.md",
+   "tokens": 685766,
+   "cost": 0.6561570999999999,
+   "case": 1,
+   "size": 1900000,
+   "variant": "once",
+   "q": "fix cli installation for 0.4.6",
+   "hit": true,
+   "any_returned": true
+  },
+  {
+   "text": ".llmwiki/wiki/entities/cli-desktop-sdk.md",
+   "tokens": 695974,
+   "cost": 0.6657076,
+   "case": 1,
+   "size": 1900000,
+   "variant": "repeat",
+   "q": "fix cli installation for 0.4.6",
+   "hit": true,
+   "any_returned": true
+  },
+  {
+   "text": "Tôi chưa biết trang nào trong `.llmwiki/wiki/` liên quan, vì phiên này không có công cụ đọc file hay liệt kê thư mục nên tôi chưa xem được nội dung repo. Nếu đoán đường dẫn, tôi có thể đưa ra một trang không tồn tại hoặc không liên quan. Bạn cho tôi quyền đọc repo hoặc dán nội dung `.llmwiki/wiki/` (hoặc file mục lục) để tôi chọn đúng trang.",
+   "tokens": 685572,
+   "cost": 0.6567806,
+   "case": 2,
+   "size": 1900000,
+   "variant": "none",
+   "q": "fix(compose): recover cached environment provenance and require source refresh",
+   "hit": false,
+   "any_returned": false
+  },
+  {
+   "text": ".llmwiki/wiki/concepts/services-environment.md",
+   "tokens": 685763,
+   "cost": 0.6561216,
+   "case": 2,
+   "size": 1900000,
+   "variant": "once",
+   "q": "fix(compose): recover cached environment provenance and require source refresh",
+   "hit": true,
+   "any_returned": true
+  },
+  {
+   "text": ".llmwiki/wiki/concepts/services-environment.md",
+   "tokens": 695432,
+   "cost": 0.6651531,
+   "case": 2,
+   "size": 1900000,
+   "variant": "repeat",
+   "q": "fix(compose): recover cached environment provenance and require source refresh",
+   "hit": true,
+   "any_returned": true
+  },
+  {
+   "text": ".llmwiki/wiki/entities/adapters.md",
+   "tokens": 683068,
+   "cost": 0.65523445,
+   "case": 3,
+   "size": 1900000,
+   "variant": "once",
+   "q": "fix(adapters): treat a NONE healthcheck test array as disabled",
+   "hit": true,
+   "any_returned": true
+  },
+  {
+   "text": ".llmwiki/wiki/entities/adapters.md",
+   "tokens": 695485,
+   "cost": 0.6652011,
+   "case": 3,
+   "size": 1900000,
+   "variant": "repeat",
+   "q": "fix(adapters): treat a NONE healthcheck test array as disabled",
+   "hit": true,
+   "any_returned": true
+  },
+  {
+   "text": ".llmwiki/wiki/concepts/domains-routing-ssl.md",
+   "tokens": 685768,
+   "cost": 0.6562741,
+   "case": 4,
+   "size": 1900000,
+   "variant": "once",
+   "q": "test(routing): verify resume preserves the repair failure cause",
+   "hit": false,
+   "any_returned": true
+  },
+  {
+   "text": ".llmwiki/wiki/concepts/active-work.md",
+   "tokens": 695780,
+   "cost": 0.6654986,
+   "case": 4,
+   "size": 1900000,
+   "variant": "repeat",
+   "q": "test(routing): verify resume preserves the repair failure cause",
+   "hit": true,
+   "any_returned": true
+  },
+  {
+   "text": ".llmwiki/wiki/concepts/deployment-pipeline.md",
+   "tokens": 685769,
+   "cost": 0.6561126,
+   "case": 5,
+   "size": 1900000,
+   "variant": "once",
+   "q": "fix(deployments): don't let an all-carried compose redeploy take over the active release",
+   "hit": false,
+   "any_returned": true
+  },
+  {
+   "text": ".llmwiki/wiki/concepts/deployment-pipeline.md",
+   "tokens": 695487,
+   "cost": 0.6656006,
+   "case": 5,
+   "size": 1900000,
+   "variant": "repeat",
+   "q": "fix(deployments): don't let an all-carried compose redeploy take over the active release",
+   "hit": false,
+   "any_returned": true
+  },
+  {
+   "text": ".llmwiki/wiki/concepts/services-environment.md",
+   "tokens": 683072,
+   "cost": 0.65525095,
+   "case": 6,
+   "size": 1900000,
+   "variant": "once",
+   "q": "fix(env): preserve Cloud runtime identity during inspection",
+   "hit": true,
+   "any_returned": true
+  },
+  {
+   "text": ".llmwiki/wiki/concepts/services-environment.md",
+   "tokens": 695832,
+   "cost": 0.6655531,
+   "case": 6,
+   "size": 1900000,
+   "variant": "repeat",
+   "q": "fix(env): preserve Cloud runtime identity during inspection",
+   "hit": true,
+   "any_returned": true
+  },
+  {
+   "text": ".llmwiki/wiki/entities/api-app.md",
+   "tokens": 683077,
+   "cost": 0.65519345,
+   "case": 7,
+   "size": 1900000,
+   "variant": "once",
+   "q": "fix(api): don't synthesize an install command for Dockerfile-owned sub-apps",
+   "hit": true,
+   "any_returned": true
+  },
+  {
+   "text": ".llmwiki/wiki/entities/api-app.md",
+   "tokens": 695690,
+   "cost": 0.6659086,
+   "case": 7,
+   "size": 1900000,
+   "variant": "repeat",
+   "q": "fix(api): don't synthesize an install command for Dockerfile-owned sub-apps",
+   "hit": true,
+   "any_returned": true
+  },
+  {
+   "text": ".llmwiki/wiki/concepts/services-environment.md",
+   "tokens": 685758,
+   "cost": 0.6559790999999999,
+   "case": 8,
+   "size": 1900000,
+   "variant": "once",
+   "q": "fix(env): align restart checks with the running service",
+   "hit": true,
+   "any_returned": true
+  },
+  {
+   "text": ".llmwiki/wiki/concepts/deployment-pipeline.md",
+   "tokens": 695525,
+   "cost": 0.6652561,
+   "case": 8,
+   "size": 1900000,
+   "variant": "repeat",
+   "q": "fix(env): align restart checks with the running service",
+   "hit": false,
+   "any_returned": true
+  },
+  {
+   "text": ".llmwiki/wiki/entities/adapters.md",
+   "tokens": 685773,
+   "cost": 0.6559891,
+   "case": 9,
+   "size": 1900000,
+   "variant": "once",
+   "q": "fix(adapters): clamp untrusted vercel.json redirect status codes",
+   "hit": true,
+   "any_returned": true
+  },
+  {
+   "text": ".llmwiki/wiki/entities/adapters.md",
+   "tokens": 693037,
+   "cost": 0.66509345,
+   "case": 9,
+   "size": 1900000,
+   "variant": "repeat",
+   "q": "fix(adapters): clamp untrusted vercel.json redirect status codes",
+   "hit": true,
+   "any_returned": true
+  }
+ ]
+}

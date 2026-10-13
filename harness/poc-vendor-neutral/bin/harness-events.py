@@ -143,6 +143,14 @@ def m_session():
 
 def m_docs():
     every = int(os.environ.get("LLMWIKI_DOCS_GATE_EVERY", "5") or 5)
+    # Hook GLOBAL (~/.claude/harness/hooks/user_prompt_submit.py) đã gác docs-gate cùng mốc N
+    # prompt và CÓ soi transcript (im lặng khi tài liệu/eval đang được duy trì). Repo có stamp
+    # → hook global chắc chắn chạy → bản này đứng ra là bắn ĐÔI: đo 2026-10-13 trên 19 phiên
+    # openship, bản này bắn 110 lần, bản global 2 lần, ≈734 token/phiên cho cùng một lời nhắc.
+    r = root()
+    g = os.path.join(os.path.expanduser("~"), ".claude", "harness", "hooks", "user_prompt_submit.py")
+    if os.path.isfile(g) and any(os.path.isfile(os.path.join(r, d, ".harness-stamp")) for d in ("llmwiki", ".llmwiki")):
+        return 0
     try:
         p = os.path.join(_audit_dir(), ".docs-gate.json")
         try:

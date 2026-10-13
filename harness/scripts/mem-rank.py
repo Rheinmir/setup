@@ -26,8 +26,10 @@ records a `supersedes` link so you can answer "which fact was true when" — the
 newer record and points back at what it replaced.
 
 The ONE adapter = harness/mem-rank.config.yaml (relevance.scorer, embedding_model, eviction;
-flagged verified=false). The token-overlap ranker + store + ops are deterministic, built now.
-The embedding scorer is the quarantined unknown; absent => token-overlap.
+flagged verified=false). The lexical ranker (BM25 via lexrank.py; Jaccard if lexrank is missing)
++ store + ops are deterministic, built now. Bench 2026-10-13, LongMemEval 500 câu, R@5:
+Jaccard 0.628 → BM25 0.954 (MemPalace embedding 0.966) — lexical đủ, 0 token, 0 dependency.
+The embedding scorer stays the quarantined unknown; absent => BM25.
 """
 import json
 import os
@@ -46,13 +48,17 @@ try:
     from overstack_paths import harness_dir as _harness_dir
 except Exception:          # bản cài cũ thiếu overstack_paths → giữ hành vi cũ
     _harness_dir = None
+try:
+    import lexrank         # BM25 tất định (0 token). Thiếu → Jaccard cũ.
+except Exception:
+    lexrank = None
 
 
 def _metrics_dir(root) -> Path:
     return (_harness_dir(root) if _harness_dir else Path(root) / "harness") / "metrics"
 
 
-_FALLBACK = {"verified": False, "relevance": {"scorer": "token-overlap", "embedding_model": None},
+_FALLBACK = {"verified": False, "relevance": {"scorer": "bm25", "embedding_model": None},
              "eviction": {"policy": "score", "max_entries": 500}}
 
 
@@ -175,6 +181,39 @@ def episode(root, did, files=None, outcome=None, session=None, ts=None, supersed
     return add(root, text, kind="episode", mid=mid, meta=meta, ts=ts, supersedes=supersedes)
 
 
+def compact(root) -> int:
+    """Gộp episode trùng: cùng (session, did, files) chỉ giữ record MỚI NHẤT; record bị
+    `supersedes` trỏ tới cũng bỏ. Trả về số record đã xoá. Bản gốc được chép sang
+    memory.jsonl.bak-<ts> trước khi ghi. Lý do: Stop-hook cũ ghi mỗi LƯỢT → 329 bản sao
+    một episode (openship 2026-10-13); đọc đã dedup nhưng store phình và chain nhiễu."""
+    root = Path(root)
+    mems = _read(root)
+    if not mems:
+        return 0
+    superseded = {m.get("supersedes") for m in mems if m.get("supersedes")}
+    keep, seen = [], {}
+    for m in reversed(mems):                       # mới → cũ, bản đầu gặp = mới nhất
+        if m.get("id") in superseded:
+            continue
+        if m.get("kind") == "episode":
+            key = (m.get("session"), (m.get("did") or "").strip(), tuple(m.get("files") or []))
+            if key in seen:
+                continue
+            seen[key] = True
+        keep.append(m)
+    keep.reverse()
+    removed = len(mems) - len(keep)
+    if removed:
+        try:
+            import shutil
+            sf = _store_file(root)
+            shutil.copy2(sf, str(sf) + ".bak-" + datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S"))
+        except Exception:
+            pass
+        _write_all(root, keep)
+    return removed
+
+
 def last_session(root, exclude=None):
     """Session của episode gần nhất (bỏ qua chính phiên đang ghi). None nếu chưa có."""
     for m in reversed(_read(Path(root))):
@@ -291,7 +330,14 @@ def _overlap(query, text):
     q, t = _toks(query), _toks(text)
     if not q or not t:
         return 0.0
-    return len(q & t) / len(q | t)            # Jaccard — deterministic
+    return len(q & t) / len(q | t)            # Jaccard — deterministic (fallback khi thiếu lexrank)
+
+
+def _lexical_scores(query, texts):
+    """Điểm lexical cho từng text: BM25 (lexrank) — chuẩn hoá [0,1]; thiếu lexrank → Jaccard."""
+    if lexrank:
+        return lexrank.bm25_scores(query, texts)
+    return [_overlap(query, t) for t in texts]
 
 
 def _embed(text, cmd):
@@ -324,8 +370,9 @@ def retrieve(root, query, k=5, kind_filter=None, cfg=None):
     """Top-k by relevance. NOOP (empty) if nothing relevant — don't return noise.
     `kind_filter` restricts ranking to one memory kind (e.g. 'episode' for episodic recall).
     Scorer picked from config: 'embedding' (cosine over `relevance.embedder_cmd`, SEMANTIC —
-    catches paraphrase/synonym) else 'token-overlap' (Jaccard, lexical, zero-dep default).
-    Embedding path degrades to token-overlap if the backend is unset or unreachable."""
+    catches paraphrase/synonym) else lexical BM25 (zero-dep default; 'token-overlap' is accepted
+    as a legacy alias and now also means BM25). Embedding path degrades to BM25 if the backend
+    is unset or unreachable."""
     root = Path(root)
     if cfg is None:
         cfg = load_config(root)
@@ -337,7 +384,7 @@ def retrieve(root, query, k=5, kind_filter=None, cfg=None):
     use_embed = rel.get("scorer") == "embedding" and bool(cmd)
     qv = _embed(query, cmd) if use_embed else None
     if use_embed and qv is None:
-        sys.stderr.write("mem-rank: embedder_cmd unreachable — falling back to token-overlap\n")
+        sys.stderr.write("mem-rank: embedder_cmd unreachable — falling back to BM25 (lexical)\n")
         use_embed = False
     if use_embed:
         thr = float(rel.get("min_score", 0.25))       # cosine>0 for unrelated too — need a floor
@@ -348,8 +395,8 @@ def retrieve(root, query, k=5, kind_filter=None, cfg=None):
             if s >= thr:
                 scored.append((m, s))
     else:
-        scored = [(m, _overlap(query, m.get("text", ""))) for m in mems]
-        scored = [(m, s) for m, s in scored if s > 0]
+        lex = _lexical_scores(query, [m.get("text", "") for m in mems])
+        scored = [(m, s) for m, s in zip(mems, lex) if s > 0]
     scored.sort(key=lambda ms: (-ms[1], ms[0].get("id", "")))
     return scored[:max(1, int(k))]
 
@@ -525,6 +572,8 @@ def main() -> None:
             for f in (mt.get("files") or [])[:4]:
                 print(f"  {'  ' if i == len(rows) - 1 else '│ '}    · {f}")
         return
+    if args and args[0] == "compact":
+        n = compact(root); print(f"compact: xoá {n} record trùng/bị thay thế (bản gốc .bak-*)"); return
     if args and args[0] == "delete":
         if len(args) < 2:
             print("usage: mem-rank.py delete ID", file=sys.stderr); sys.exit(2)

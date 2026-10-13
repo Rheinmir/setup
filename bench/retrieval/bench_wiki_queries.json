@@ -1,0 +1,2071 @@
+[
+ {
+  "q": "fix(services): wait for runtime status before showing stopped",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "refactor(env): remove obsolete scope UI and review noise",
+  "gold": [
+   "concepts/architecture.md",
+   "concepts/services-environment.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix(env): preserve Cloud runtime identity during inspection",
+  "gold": [
+   "concepts/services-environment.md"
+  ]
+ },
+ {
+  "q": "fix(ssl): validate lineages and avoid imported certificate collisions",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(env): align restart checks with the running service",
+  "gold": [
+   "concepts/services-environment.md"
+  ]
+ },
+ {
+  "q": "fix(routing): recover recreated project cleanup reservations",
+  "gold": [
+   "concepts/domains-routing-ssl.md"
+  ]
+ },
+ {
+  "q": "change deployment action after finish",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix(dashboard): simplify service volume controls",
+  "gold": [
+   "concepts/architecture.md"
+  ]
+ },
+ {
+  "q": "fix(domains): honor retry backoff across overlapping sweeps",
+  "gold": [
+   "concepts/domains-routing-ssl.md"
+  ]
+ },
+ {
+  "q": "fix(domains): report unsuccessful automatic SSL checks accurately",
+  "gold": [
+   "concepts/domains-routing-ssl.md"
+  ]
+ },
+ {
+  "q": "fix(domains): expose real verification states and durable retry timing",
+  "gold": [
+   "concepts/architecture.md",
+   "concepts/domains-routing-ssl.md"
+  ]
+ },
+ {
+  "q": "fix(routing): recover live project domains and preserve complete routes",
+  "gold": [
+   "concepts/domains-routing-ssl.md"
+  ]
+ },
+ {
+  "q": "update compose items",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix(routing): verify live bindings before recovering quarantine",
+  "gold": [
+   "concepts/deployment-pipeline.md",
+   "concepts/domains-routing-ssl.md",
+   "concepts/services-environment.md"
+  ]
+ },
+ {
+  "q": "fix(routing): stream retries and reconcile pending domains",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/domains-routing-ssl.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(runtime): restore services after environment startup crashes",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix: merge Compose updates without losing saved environment",
+  "gold": [
+   "concepts/architecture.md",
+   "concepts/deployment-pipeline.md",
+   "concepts/services-environment.md"
+  ]
+ },
+ {
+  "q": "fix(deploy): preserve TLS state when SSH checks fail",
+  "gold": [
+   "concepts/deployment-pipeline.md"
+  ]
+ },
+ {
+  "q": "fix(routing): preserve canonical endpoints when removing aliases",
+  "gold": [
+   "concepts/architecture.md",
+   "concepts/deployment-pipeline.md",
+   "concepts/onboarding-tour.md",
+   "entities/platform-engine.md"
+  ]
+ },
+ {
+  "q": "complete saas setup for payments",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix: preserve Cloud Docker streams during shutdown",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "complete networkign in scale update",
+  "gold": [
+   "concepts/architecture.md"
+  ]
+ },
+ {
+  "q": "fix(php): install ext-exif in the PHP recipe",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "scale features networking add",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(backup): restore persistence settings and unwind failed downloads",
+  "gold": [
+   "concepts/backups.md"
+  ]
+ },
+ {
+  "q": "fix: report restore writes only after producer preflight",
+  "gold": [
+   "concepts/backups.md"
+  ]
+ },
+ {
+  "q": "fix(cli): expose safe project display-name changes",
+  "gold": [
+   "concepts/onboarding-tour.md",
+   "entities/cli-desktop-sdk.md"
+  ]
+ },
+ {
+  "q": "fix(deploy): reject preview variables on production runtimes",
+  "gold": [
+   "concepts/deployment-pipeline.md",
+   "entities/cli-desktop-sdk.md"
+  ]
+ },
+ {
+  "q": "fix(compose): recover cached environment provenance and require source refresh",
+  "gold": [
+   "concepts/architecture.md",
+   "concepts/deployment-pipeline.md",
+   "concepts/services-environment.md"
+  ]
+ },
+ {
+  "q": "fix(system): refresh stale SSH login groups without interrupting active sessions",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(cli): refuse unresolved database storage before writing configuration",
+  "gold": [
+   "entities/cli-desktop-sdk.md"
+  ]
+ },
+ {
+  "q": "test(edge): exercise current route upgrades and container reloads",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(dashboard): keep issue operation logs inline and owned (#660)",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix(updates): share release checks across desktop and dashboard consumers",
+  "gold": [
+   "entities/cli-desktop-sdk.md"
+  ]
+ },
+ {
+  "q": "fix(routing): proxy static container roots through their owning service",
+  "gold": [
+   "concepts/domains-routing-ssl.md"
+  ]
+ },
+ {
+  "q": "fix(platform): share Compose environment rules across recovery paths",
+  "gold": [
+   "concepts/deployment-pipeline.md"
+  ]
+ },
+ {
+  "q": "fix(dashboard): preserve branch focus while loading pages (#870)",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix(webhooks): retain completed targets when retrying a partial push (#847)",
+  "gold": [
+   "concepts/push-to-deploy.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "docs(domains): clarify private ingress verification for homelabs (#706)",
+  "gold": [
+   "concepts/active-work.md"
+  ]
+ },
+ {
+  "q": "fix(webhooks): report blocked dispatches and accept failed redelivery (#847)",
+  "gold": [
+   "concepts/push-to-deploy.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(backups): enforce retention after successful captures",
+  "gold": [
+   "concepts/backups.md"
+  ]
+ },
+ {
+  "q": "test(routing): verify resume preserves the repair failure cause",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(dashboard): keep nested server dialogs within dashboard providers",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix(routing): preserve self-app ownership and report skipped routes",
+  "gold": [
+   "concepts/architecture.md",
+   "concepts/domains-routing-ssl.md"
+  ]
+ },
+ {
+  "q": "fix(dashboard): expose shared environment for service projects",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "test: isolate Git configuration and update branch lookup fixtures",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(mcp): advertise the canonical external OAuth resource URL",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix sdk dns part",
+  "gold": [
+   "concepts/deployment-pipeline.md",
+   "concepts/domains-routing-ssl.md"
+  ]
+ },
+ {
+  "q": "fix(github): load branch pages on demand",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/api-app.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fixed fetch git submodules during build checkouts",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(notifications): include destination and policy in backup run alerts (Closes #865)",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/backups.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(api): mask build arguments and preserve secrets on round trips",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/platform-engine.md"
+  ]
+ },
+ {
+  "q": "fix(cli): require folder upload opt-in and isolate archive staging",
+  "gold": [
+   "entities/cli-desktop-sdk.md"
+  ]
+ },
+ {
+  "q": "fix(dashboard): keep GitHub device sign-in visible until completion",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix(backups): skip stateless services during project policy fan-out",
+  "gold": [
+   "concepts/backups.md"
+  ]
+ },
+ {
+  "q": "fix(dashboard): rescan deployment configuration when branches change",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix: remove unsupported GitHub manifest event",
+  "gold": [
+   "concepts/push-to-deploy.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(deployments): explain service DNS failures during Docker builds",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix false docker build exit code",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "feat(mail): make mail database port configurable with auto-discovery fallback",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix github auth window",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix(docker): safely terminate stalled builds",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(data-transfer): reconcile runtime state after import (#826)",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(dashboard): preserve env across deploy entry paths",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md",
+   "entities/platform-engine.md"
+  ]
+ },
+ {
+  "q": "fix(dashboard): persist deployment env edits safely",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix(data-transfer): make large transfers resilient (#823)",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md",
+   "entities/database.md"
+  ]
+ },
+ {
+  "q": "fix(adapters): make SSH exec recovery type-safe",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(dns): preserve selected predeploy target",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "concepts/domains-routing-ssl.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "feat(dashboard): allow toggling secret env vars per service (#812)",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix(dashboard): guard app install custom domains with DNS pre-deploy gate (#810)",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix(adapters): recover on ssh2 \"Unable to exec\" channel failure and classify as retryable",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "complete port allocation fix",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md",
+   "entities/platform-engine.md"
+  ]
+ },
+ {
+  "q": "fix project deployment status",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix deployment stuck from docker ssh",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(deployments): surface partial failure decision (#664)",
+  "gold": [
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix(domains): fall back to findLocalServer when project serverId is null (#721)",
+  "gold": [
+   "concepts/domains-routing-ssl.md"
+  ]
+ },
+ {
+  "q": "fix(db): identify backup fan-out batches explicitly",
+  "gold": [
+   "concepts/backups.md"
+  ]
+ },
+ {
+  "q": "fix(api,dashboard): add success field to resources responses and harden ResourceSettings (#737)",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/api-app.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix: clone git deployment revisions",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/platform-engine.md"
+  ]
+ },
+ {
+  "q": "feat: add PocketBase app",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "soft fix the redeploy issue",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix(db): aggregate multi-service project policy batches in latestByPolicy (#730)",
+  "gold": [
+   "concepts/architecture.md"
+  ]
+ },
+ {
+  "q": "fix(updates): invalidate and sync update_status cache on deployment",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/platform-engine.md"
+  ]
+ },
+ {
+  "q": "fix(domains): add mcp metadata to DELETE /api/domains/:id route (#720)",
+  "gold": [
+   "concepts/domains-routing-ssl.md"
+  ]
+ },
+ {
+  "q": "fix(domains): prioritize custom domains over free subdomains on isPrimary ties (#719)",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/domains-routing-ssl.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix e2e tests for 0.6.8",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(ssl): make dns-01 hooks remote-safe and renewable",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "feat(ssl): support dns-01 challenge and wildcard certificates for projects (#37)",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix proxy cci tests",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix failed tests",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(dashboard): scope analytics error to traffic summary block in MonitoringView",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "cleanup(dashboard): services fetch state (#666)",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix(dashboard): keep service rows during refetch (#666)",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix ci test",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix native update window in desktop app",
+  "gold": [
+   "entities/cli-desktop-sdk.md"
+  ]
+ },
+ {
+  "q": "fix(connections): resolve the machine a project runs on instead of comparing serverId columns",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(connections): decide internal reach from the endpoint, not from which output threw",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(connections): allow non-URL outputs in internal connection mode",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "refactor(adapters): make the git clone credential URL self-contained",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(adapters): ride GitHub PATs in the username slot of clone URLs",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(dashboard): stop swallowing build-page load errors as 'not found'",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "feat(dashboard): add deterministic service topology model",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix(edge): serve an Openship page for upstream-down 502/504",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "feat(apps): drop the experimental badge from Neon and PostHog",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(auth): resolve the v0.6.6 conflict markers that shipped into auth.ts",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "chore(adapters): carry the compose-cmd/executor changes docker.ts depends on",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(migration): resolve a service selection by identity, not by bare name (#584)",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/platform-engine.md"
+  ]
+ },
+ {
+  "q": "feat(core): credential provider registry, registry-host rules, secret-key heuristic",
+  "gold": [
+   "concepts/architecture.md"
+  ]
+ },
+ {
+  "q": "fix(migrate): skip nginx's default vhost, resolve prefix-relative roots",
+  "gold": [
+   "concepts/onboarding-tour.md",
+   "entities/cli-desktop-sdk.md"
+  ]
+ },
+ {
+  "q": "feat(mail): schema foundation for inbound-mail notification rules",
+  "gold": [
+   "concepts/architecture.md"
+  ]
+ },
+ {
+  "q": "fix(deployments): correct three defects in the compose no-op change, drop its dead weight",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/api-app.md",
+   "entities/platform-engine.md"
+  ]
+ },
+ {
+  "q": "fix(deployments): stop the static extract from deploying a cancelled build",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(dashboard): keep a stored healthcheck test intact through the settings form",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix(adapters): treat a NONE healthcheck test array as disabled",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(dns): make the Cloudflare DNS provider boot, validate, and delete safely",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(deployments): don't let an all-carried compose redeploy take over the active release",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/api-app.md",
+   "entities/platform-engine.md"
+  ]
+ },
+ {
+  "q": "fix(runtime): make build cancellation actually stop every build path",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(auth): scope nested lists to their parent",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(runtime): cancel remote Docker builds",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "enhance issues page ui",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "test(adapters): exercise the journal write the #514 fix is actually about",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(adapters): provision .builds, not the build dir, before the SSH extract",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "test(adapters): cover a remote non-root static deploy end to end",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(adapters): provision the release base before promoting a build",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(adapters): provision the static doc-root before extracting into it",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(adapters): avoid duplicate CMD prefix in compose healthchecks",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix live stream from edge",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/cli-desktop-sdk.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix app settings url",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "edge static path takeover fix",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md",
+   "entities/cli-desktop-sdk.md"
+  ]
+ },
+ {
+  "q": "fix updates notification cache and add better apps installation process",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix compose parse",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/platform-engine.md"
+  ]
+ },
+ {
+  "q": "feat(adapters): Ruby build recipe with a real toolchain",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(adapters): copy vendor/ into the PHP asset stage so package CSS resolves",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "feat(cli): add shell completion via @bomb.sh/tab (bash/zsh/fish)",
+  "gold": [
+   "concepts/onboarding-tour.md",
+   "entities/cli-desktop-sdk.md"
+  ]
+ },
+ {
+  "q": "fix(dashboard): remove debug logs, null guards, timer leaks, and button types",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "back build context to fix docker crach issue",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(api): accept framework display labels in project ensure schema to resolve 400 Bad Request (#427)",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(dashboard): send configured env when re-scanning a compose path",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix(api): accept env on POST /deployments/prepare",
+  "gold": [
+   "concepts/deployment-pipeline.md"
+  ]
+ },
+ {
+  "q": "feat: add TanStack Start stack detection",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(dashboard): show per-service warnings in the migration wizard",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix(acme): stage the EAB config inside a 0700 directory",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(acme): survive CA switches on renewal and harden EAB secret handling",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "Support alternate ACME CAs and EAB",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md",
+   "entities/cli-desktop-sdk.md"
+  ]
+ },
+ {
+  "q": "org conflict issue solve",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(adapters): match Docker's .dockerignore semantics in the build context",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix wizard health layout",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix(api): parse multi-line quoted values in .env files",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(api): resolve nested Compose interpolation like ${A:-${B}}",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(api): relay server-log stream chunks as bytes, not re-decoded strings",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "health check refactor",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix mcp clone token issue",
+  "gold": [
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix(api): reject CR/LF in tunnel request paths and headers",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(api): relay tunnelStream bytes without UTF-8 re-decoding",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(api): fail a truncated tunnel response instead of resolving it 200",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(api): honor case-insensitive and list-form Transfer-Encoding in tunnelRequest",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(api): don't synthesize an install command for Dockerfile-owned sub-apps",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(api): accept an empty publicEndpoints array on project create/update/ensure",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix docker stream issue",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(edge): use GeoLite2's latest-release download URL, not a pinned date tag",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(api): rewrite SSH tunnel HTTP requests over raw duplex stream",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "bug report prompts for mcp",
+  "gold": [
+   "concepts/access-auth-mcp.md"
+  ]
+ },
+ {
+  "q": "fix port conflict on host, harden mcp prompts, fix ssl flow",
+  "gold": [
+   "concepts/access-auth-mcp.md"
+  ]
+ },
+ {
+  "q": "fix: sanitize monorepo sub-app names for Docker container naming",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "feat(email): manage vmail aliases, forwards, and catch-all from the dashboard",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "wait for edge container check",
+  "gold": [
+   "entities/cli-desktop-sdk.md"
+  ]
+ },
+ {
+  "q": "Fix Cloud sign-in on private HTTP dashboards",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix(api): resolve compose `<<` merge keys so anchored env reaches services",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix up tests",
+  "gold": [
+   "concepts/onboarding-tour.md",
+   "entities/cli-desktop-sdk.md"
+  ]
+ },
+ {
+  "q": "fix up test failure",
+  "gold": [
+   "concepts/onboarding-tour.md",
+   "entities/cli-desktop-sdk.md"
+  ]
+ },
+ {
+  "q": "rollback the advisor",
+  "gold": [
+   "concepts/onboarding-tour.md",
+   "entities/cli-desktop-sdk.md"
+  ]
+ },
+ {
+  "q": "show server logs tab on static projects",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix mv comand in edge for static files",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "edge reconcile fix",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "remove openresty from system contianer and add openship edge",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/adapters.md",
+   "entities/cli-desktop-sdk.md"
+  ]
+ },
+ {
+  "q": "static projects mount on shared paths",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(mail): unblock mail setup and routing on a containerized edge",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix cli installation for 0.4.6",
+  "gold": [
+   "entities/cli-desktop-sdk.md"
+  ]
+ },
+ {
+  "q": "fix cli update",
+  "gold": [
+   "concepts/onboarding-tour.md",
+   "entities/cli-desktop-sdk.md"
+  ]
+ },
+ {
+  "q": "fix self hosted github auth, self hosted (this server) row after installation",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/onboarding-tour.md",
+   "entities/cli-desktop-sdk.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix(mail): don't install a host OpenResty when the edge is containerized",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(dashboard): refresh sidebar project count after delete",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "test(dashboard): add first component test covering Button",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "test(dashboard): cover SSE build, log, and generic message processors",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "dockerode connection protocole remove hijak",
+  "gold": [
+   "entities/cli-desktop-sdk.md"
+  ]
+ },
+ {
+  "q": "harden db password for cli",
+  "gold": [
+   "entities/cli-desktop-sdk.md"
+  ]
+ },
+ {
+  "q": "fix cli deploy",
+  "gold": [
+   "concepts/onboarding-tour.md",
+   "entities/cli-desktop-sdk.md"
+  ]
+ },
+ {
+  "q": "test(dashboard): cover deployment phase, project status, subdomain, and dotenv logic",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "migration missing image reconcile",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/platform-engine.md"
+  ]
+ },
+ {
+  "q": "more atomic routes after migration",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "cli compose usage harding",
+  "gold": [
+   "entities/cli-desktop-sdk.md"
+  ]
+ },
+ {
+  "q": "cli dev mode to install from repo",
+  "gold": [
+   "entities/cli-desktop-sdk.md"
+  ]
+ },
+ {
+  "q": "cleanup garbage images after redeploy",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "migration server target tag fix",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md",
+   "entities/platform-engine.md"
+  ]
+ },
+ {
+  "q": "fix(release): remove unsupported --no-absolute-names tar flag (GNU tar compat)",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "ssl become standlone over the edge proxy, updatine installation guide",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "concepts/domains-routing-ssl.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "inital fix for edge not being able to find prev ssls",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "harden cloud mode access control on build pipeline",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/platform-engine.md"
+  ]
+ },
+ {
+  "q": "fix(cli): preserve context endpoints on re-login",
+  "gold": [
+   "concepts/onboarding-tour.md",
+   "entities/cli-desktop-sdk.md"
+  ]
+ },
+ {
+  "q": "fix(cli): confirm server rm and fail install on component error",
+  "gold": [
+   "concepts/onboarding-tour.md",
+   "entities/cli-desktop-sdk.md"
+  ]
+ },
+ {
+  "q": "fix(api): return deployment_id/project_id from the deploy trigger",
+  "gold": [
+   "concepts/deployment-pipeline.md"
+  ]
+ },
+ {
+  "q": "fix(api): retry errored certificates in SSL renewal selection",
+  "gold": [
+   "concepts/domains-routing-ssl.md"
+  ]
+ },
+ {
+  "q": "refactor(api): extract isRedisReachable to shared lib",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(api): don't re-interpolate '$' carried in by a resolved compose value",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix: only header-safe metadata on backup artifact uploads",
+  "gold": [
+   "concepts/backups.md"
+  ]
+ },
+ {
+  "q": "fix: pass full payloadConfig to backup producers",
+  "gold": [
+   "concepts/backups.md"
+  ]
+ },
+ {
+  "q": "fix(adapters): clamp untrusted vercel.json redirect status codes",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(api): clamp Slack/Discord notifications to webhook payload limits",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(api): keep single-quoted .env values literal (no interpolation)",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(api): avoid domain route save timeouts",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/domains-routing-ssl.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(api): escape user-controlled fields in transactional email HTML",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(adapters): map compose `on-failure:<n>` restart to on-failure",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(api): decode compose .env double-quoted escapes in a single pass",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(dashboard): keep clone token visible after save and default toggle",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix(api): honor compose long-form volume selinux/nocopy mode",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(api): honor compose long-form volume `read_only` (:ro)",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(api): honor compose long-form port `host_ip` bind interface",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(cli): stop pointing service-health failures at `openship logs`",
+  "gold": [
+   "concepts/onboarding-tour.md",
+   "entities/cli-desktop-sdk.md"
+  ]
+ },
+ {
+  "q": "fix(cli): resolve the latest deployment when `openship logs` gets no ID",
+  "gold": [
+   "concepts/onboarding-tour.md",
+   "entities/cli-desktop-sdk.md"
+  ]
+ },
+ {
+  "q": "fix(api): pass isSelfApp when self-deploy reapplies the self-app routes",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(api): exempt the self-app from the reserved loopback route guard",
+  "gold": [
+   "concepts/domains-routing-ssl.md"
+  ]
+ },
+ {
+  "q": "fix(adapters): verify remote-built Docker images over the build's own SSH channel",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(adapters): normalize Docker container status and handle health states (#127)",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(adapters): quote systemd Environment= values",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(api): allow the documented /etc/openship/ssh-keys default root",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(adapters): make the empty-transfer guard actually detect an empty target",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(adapters): separate CIDR from value in nginx geo whitelist",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(api): drop unused @ts-expect-error that breaks typecheck",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix build issue for assests missing",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/adapters.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix(deployments): pass service mode into trigger preflight",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/platform-engine.md"
+  ]
+ },
+ {
+  "q": "handle edge cases in formatBytes and slugify",
+  "gold": [
+   "concepts/onboarding-tour.md",
+   "entities/cli-desktop-sdk.md"
+  ]
+ },
+ {
+  "q": "return 400 not 500 for malformed JSON request bodies",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(adapters): confine cloud Pages static output path (#66)",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "refactor(adapters): route bare static root through resolveStaticOutputPath",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "refactor(adapters): extract resolveStaticOutputPath into stack-output",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "self-host: preserve gates before 0.2.2 merge (git CLI in api, externalEdge, docker.sock/extra_hosts, 4001/4002 ports)",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix(mail): prevent concurrent setup runs",
+  "gold": [
+   "concepts/architecture.md"
+  ]
+ },
+ {
+  "q": "feat(self-host): deploy to own server by default, never Openship Cloud",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md",
+   "entities/platform-engine.md"
+  ]
+ },
+ {
+  "q": "fix(dashboard): move locale cookie outside client boundary",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix(api): serve OAuth discovery metadata behind a public URL",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix(deployments): fall back to saved project env vars in requestBuildAccess",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/platform-engine.md"
+  ]
+ },
+ {
+  "q": "fix(dashboard): don't crash outside a secure context",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix(dashboard): keep the local API on the same loopback host as the page",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "adding docs, supporting DE lanugage, refine security.md",
+  "gold": [
+   "entities/cli-desktop-sdk.md"
+  ]
+ },
+ {
+  "q": "fix(dashboard): resolve API origin correctly in docker-compose",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "update stack catalog with sample data",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/adapters.md",
+   "entities/cli-desktop-sdk.md"
+  ]
+ },
+ {
+  "q": "reuse oblien workspace from cloud deployment to mcp folder upload",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "fix mcp request context",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "pumb the build timeout",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "increase rate limit of mcp",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "fix mcp auth wire",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "support revoke mcp connection from client",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix partial services build status",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "upload return to rsync instead of ssh2",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "upload return to rsync instead of ssh2",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "saas domain lookup on redeploy issue fix",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "support import/export of desktop data",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/adapters.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fix primary domain lose on redeploy",
+  "gold": [
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "remove isActiveDeploymentRace and replace with db flow",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/platform-engine.md"
+  ]
+ },
+ {
+  "q": "fix services status",
+  "gold": [
+   "concepts/architecture.md"
+  ]
+ },
+ {
+  "q": "update project route",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/api-app.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "add option for db pass instead of url only",
+  "gold": [
+   "entities/database.md"
+  ]
+ },
+ {
+  "q": "fix build issue, fix services build stream",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "extend services options to match native docker compose",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "update landing and genearl enhancments",
+  "gold": [
+   "concepts/access-auth-mcp.md",
+   "concepts/onboarding-tour.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "update",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md",
+   "entities/platform-engine.md"
+  ]
+ },
+ {
+  "q": "finishing gh webhook workflow",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/push-to-deploy.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "update advanced tab",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/api-app.md"
+  ]
+ },
+ {
+  "q": "add billing",
+  "gold": [
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "fixing services routes",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md",
+   "entities/platform-engine.md"
+  ]
+ },
+ {
+  "q": "update project ui",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "finished docker flow",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "hello github",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "concepts/deployment-pipeline.md",
+   "entities/adapters.md"
+  ]
+ },
+ {
+  "q": "update github auth",
+  "gold": [
+   "concepts/active-work.md",
+   "entities/dashboard.md"
+  ]
+ },
+ {
+  "q": "bro, this is large commit, anyway here's what's added: entire core components from old oblien project, needs refactor, and most of landing design",
+  "gold": [
+   "concepts/active-work.md",
+   "concepts/architecture.md",
+   "entities/dashboard.md"
+  ]
+ }
+]

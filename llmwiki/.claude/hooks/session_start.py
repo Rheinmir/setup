@@ -239,14 +239,25 @@ def recall(root: Path, sid: str = "") -> None:
                              capture_output=True, text=True, timeout=10)
         rows = json.loads(out.stdout or "[]")
         lines = []
-        for m in rows[:3]:
+        # Gộp các phiên liên tiếp có CÙNG did+files thành một dòng "×N phiên": nhắc 3 dòng giống
+        # hệt nhau là trả token mỗi lượt cho cùng một thông tin (đo 2026-10-13: 3/3 dòng trùng).
+        groups = []
+        for m in rows:
+            key = ((m.get("did") or m.get("text") or "").strip(), tuple(m.get("files") or []))
+            if groups and groups[-1][0] == key:
+                groups[-1][1].append(m)
+            else:
+                groups.append((key, [m]))
+        for _key, ms in groups[:3]:
+            m = ms[0]
             # KHÔNG đặt tên `sid` ở đây: nó sẽ đè tham số sid (session của phiên HIỆN TẠI) và
             # biên lai okf-scan bên dưới bị ghi nhầm sang phiên cũ. Bug thật, bắt bằng test.
             esid = (m.get("session") or "?")[:8]
             did = (m.get("did") or m.get("text") or "").strip().splitlines()[0][:90]
             files = ", ".join((m.get("files") or [])[:3])
-            lines.append(f"  • {esid} ({m.get('ts', '')[:10]}) — {did}" + (f"  [{files}]" if files else ""))
-        more = f"  … còn {len(rows) - 3} phiên nữa: `mem-rank.py chain`" if len(rows) > 3 else ""
+            dup = f" ×{len(ms)} phiên" if len(ms) > 1 else ""
+            lines.append(f"  • {esid} ({m.get('ts', '')[:10]}){dup} — {did}" + (f"  [{files}]" if files else ""))
+        more = f"  … còn {len(groups) - 3} mốc nữa: `mem-rank.py chain`" if len(groups) > 3 else ""
         # Quét OKF THẬT (wiki + memory) và để lại BIÊN LAI: có bằng chứng việc quét đã chạy,
         # và Stop-hook sẽ đối chiếu transcript xem agent có MỞ những mục này không (okf-scan
         # verify). "Agent bảo đã đọc wiki" không phải bằng chứng; biên lai + coverage thì có.
@@ -259,9 +270,21 @@ def recall(root: Path, sid: str = "") -> None:
                 if not q:
                     q = subprocess.run(["git", "branch", "--show-current"], cwd=str(root),
                                        capture_output=True, text=True, timeout=5).stdout.strip().replace("-", " ") or "context"
-                sc = subprocess.run([sys.executable, str(ok_tool), "query", q, "--root", str(root),
-                                     "--session", sid, "--k", "4", "--json"],
-                                    capture_output=True, text=True, timeout=12)
+                # Cạnh file→trang (0 token): file đang dirty trong working tree là tín hiệu mạnh
+                # nhất về việc sắp làm — trang wiki trích dẫn file đó nổi lên dù chữ không trùng
+                # (bench wiki openship 275 commit: chỉ chữ R@1 0.46 → có cạnh file 0.98).
+                dirty = ""
+                try:
+                    st = subprocess.run(["git", "status", "--porcelain", "--untracked-files=no"],
+                                        cwd=str(root), capture_output=True, text=True, timeout=5).stdout
+                    dirty = ",".join(ln[3:].strip().split(" -> ")[-1] for ln in st.splitlines() if len(ln) > 3)[:4000]
+                except Exception:
+                    dirty = ""
+                cmd = [sys.executable, str(ok_tool), "query", q, "--root", str(root),
+                       "--session", sid, "--k", "4", "--json"]
+                if dirty:
+                    cmd += ["--files", dirty]
+                sc = subprocess.run(cmd, capture_output=True, text=True, timeout=12)
                 rec = json.loads(sc.stdout or "{}")
                 if rec.get("hits"):
                     scan_line = ("\n  Quét OKF (" + str(rec.get("scanned", 0)) + " mục, có biên lai) → nên đọc:\n    "

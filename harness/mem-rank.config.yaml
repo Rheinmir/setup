@@ -5,20 +5,22 @@
 # retrieval that returns the few relevant memories instead of dumping full context.
 #
 # The store, the 4 ops, and BOTH rankers are built + self-tested now:
-#   - token-overlap (Jaccard, lexical): zero-dep DEFAULT, works offline everywhere.
+#   - bm25 (lexical, harness/scripts/lexrank.py): zero-dep DEFAULT, works offline everywhere.
+#     Thay Jaccard 2026-10-13: LongMemEval 500 câu R@5 Jaccard 0.628 → BM25 0.954 (embedding 0.966).
+#     'token-overlap' vẫn được chấp nhận như alias cũ (giờ cũng chạy BM25).
 #   - embedding (cosine over `embedder_cmd`): REAL semantic path — code exists + tested; it needs
 #     an embedding backend, which a travel-able framework can't bundle, so the backend is pluggable.
 # Only the model WEIGHTS come from the environment — the wiring is no longer a null stub.
 
-verified: false                   # token-overlap default is deterministic + tested; flip true once an embedder_cmd is wired + calibrated on real load.
+verified: false                   # bm25 default is deterministic + benched (LongMemEval); flip true once an embedder_cmd is wired + calibrated on real load.
 
 relevance:
-  scorer: token-overlap           # 'token-overlap' (Jaccard, offline default) | 'embedding' (semantic, needs embedder_cmd below)
+  scorer: bm25                    # 'bm25' (lexical, offline default; alias cũ 'token-overlap') | 'embedding' (semantic, needs embedder_cmd below)
   # embedder_cmd: reads text on STDIN, prints a JSON float array on STDOUT. Any backend works:
   #   (2026-09-08: bỏ embed-ollama.py/embed-voyage.py — chưa ai bật; cần thì viết script ~20 dòng
   #    đọc stdin → in JSON float array, vd gọi Ollama /api/embeddings hay Voyage.)
   # Set scorer: embedding AND embedder_cmd to turn on semantic recall; unreachable => auto-fallback.
-  embedder_cmd: null              # null => token-overlap (semantic path off)
+  embedder_cmd: null              # null => bm25 (semantic path off)
   min_score: 0.25                 # embedding only: cosine floor for NOOP (cosine>0 even for unrelated)
 
 eviction:
