@@ -316,7 +316,9 @@ def prompt_terms(prompt: str, items: list, bridge: dict) -> dict:
         if vi in low:
             bridged.extend(en.split())
     parts = idents + hits + bridged
-    q = " ".join(dict.fromkeys(parts)) if parts else text[:400]
+    # Không rút được gì → q RỖNG, KHÔNG rơi về prompt thô: chữ Việt không có trong chỉ mục, còn từ chung
+    # ("wiki") khớp mọi trang → BM25 chuẩn hoá đẩy một trang bất kỳ lên 1.0 (test_prompt_recall case 5).
+    q = " ".join(dict.fromkeys(parts))
     return {"q": q, "files": list(dict.fromkeys(files)),
             "how": {"idents": idents, "vocab": hits, "bridge": list(dict.fromkeys(bridged))}}
 
@@ -328,7 +330,8 @@ def query(root: Path, q: str, tags=None, type_filter=None, k=5, session=None, fi
         derived = prompt_terms(prompt, items, load_bridge(root))
         q = (q + " " + derived["q"]).strip() if q else derived["q"]
         files = list(dict.fromkeys(list(files or []) + derived["files"]))
-    hits = rank(items, q, tags, type_filter, k, files=files)
+    # --prompt mà không rút được từ khoá lẫn file → không xếp hạng (biên lai vẫn ghi để hook biết đã quét)
+    hits = rank(items, q, tags, type_filter, k, files=files) if (q or files or tags) else []
     rec = {"ts": _now(), "session": session or "", "query": q,
            "tags": tags or [], "files": list(files or []), "scanned": len(items),
            "returned": [h["path"] for h in hits], "hits": hits}
