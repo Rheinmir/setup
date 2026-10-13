@@ -1,0 +1,211 @@
+[
+ {
+  "prompt": "tên miền không cấp được chứng chỉ, xem lại luồng cấp SSL",
+  "gold": "domains-routing-ssl",
+  "sid": "91ba3f61-84a7-497b-8450-bff4091c2ebb",
+  "cost": 0.0015061599999999999,
+  "ss": [
+   "domains-routing-ssl"
+  ],
+  "pr": [
+   "domains-routing-ssl"
+  ],
+  "pr_block": false,
+  "reads": [
+   "domains-routing-ssl"
+  ],
+  "answer": "Trang wiki harness gợi ý là `.llmwiki/wiki/concepts/domains-routing-ssl.md` (cập nhật 2026-09-24):  1. Luồng SSL gồm `ss"
+ },
+ {
+  "prompt": "sao lưu theo lịch bị lỗi, khôi phục bản sao lưu không chạy",
+  "gold": "backups",
+  "sid": "5ed560e9-f0c2-49fb-ba12-5924e54f174b",
+  "cost": 0.0015834700000000002,
+  "ss": [
+   "domains-routing-ssl"
+  ],
+  "pr": [
+   "backups"
+  ],
+  "pr_block": true,
+  "reads": [
+   "backups"
+  ],
+  "answer": "- **Trang `backups.md`** mô tả domain backups: policy và các lần chạy (theo lịch, thủ công, trước deploy), retention và "
+ },
+ {
+  "prompt": "hộp thư tự host gửi email ra ngoài bị chặn",
+  "gold": "self-hosted-mail",
+  "sid": "937ef420-43db-4952-82d2-635da0de6b36",
+  "cost": 0.00151718,
+  "ss": [
+   "domains-routing-ssl"
+  ],
+  "pr": [
+   "self-hosted-mail"
+  ],
+  "pr_block": true,
+  "reads": [
+   "self-hosted-mail"
+  ],
+  "answer": "- Trang mô tả việc dựng và kiểm tra máy chủ mail tự host (engine iRedMail, entry `/api/mail`). Luồng gồm 5 bước: kiểm po"
+ },
+ {
+  "prompt": "migration cơ sở dữ liệu kẹt khoá khi chạy song song",
+  "gold": "database",
+  "sid": "093ee26b-39d7-4955-a86a-9d25c203b261",
+  "cost": 0.00156062,
+  "ss": [
+   "domains-routing-ssl"
+  ],
+  "pr": [
+   "database"
+  ],
+  "pr_block": true,
+  "reads": [
+   "database"
+  ],
+  "answer": "Trang `.llmwiki/wiki/entities/database.md` (cập nhật 2026-09-24) nói migration nằm ở `packages/db/drizzle/`, `drizzle/me"
+ },
+ {
+  "prompt": "bản dựng rollback không quay lại được bản trước trong pipeline triển khai",
+  "gold": "deployment-pipeline",
+  "sid": "9baddbf9-bcbb-4cf7-81bd-2031f080825d",
+  "cost": 0.0021134200000000004,
+  "ss": [
+   "domains-routing-ssl"
+  ],
+  "pr": [
+   "deployment-pipeline",
+   "push-to-deploy"
+  ],
+  "pr_block": true,
+  "reads": [
+   "deployment-pipeline",
+   "push-to-deploy"
+  ],
+  "answer": "- **Deployment pipeline:** Luồng là Detect → build → run → route → finalize, bắt đầu từ `POST /api/deployments`. Rollbac"
+ },
+ {
+  "prompt": "bảng điều khiển hiện trạng thái dịch vụ sai",
+  "gold": "dashboard",
+  "sid": "24508f2f-85ba-4168-a219-7c5b8e8e2719",
+  "cost": 0.00179702,
+  "ss": [
+   "domains-routing-ssl"
+  ],
+  "pr": [
+   "dashboard"
+  ],
+  "pr_block": true,
+  "reads": [
+   "dashboard",
+   "domains-routing-ssl"
+  ],
+  "answer": "- **Dashboard** (`entities/dashboard.md`): `apps/dashboard` + `packages/ui` là Next.js dashboard. Các file chính cần chú"
+ },
+ {
+  "prompt": "dòng lệnh và sdk máy khách không đồng bộ phiên bản",
+  "gold": "cli-desktop-sdk",
+  "sid": "1dadf58b-9ac8-481d-83d2-b41b4172653b",
+  "cost": 0.00157138,
+  "ss": [
+   "domains-routing-ssl"
+  ],
+  "pr": [
+   "cli-desktop-sdk"
+  ],
+  "pr_block": true,
+  "reads": [
+   "cli-desktop-sdk"
+  ],
+  "answer": "- Trang `.llmwiki/wiki/entities/cli-desktop-sdk.md` nói rằng `apps/cli`, `apps/desktop` và `packages/sdk` / `packages/op"
+ },
+ {
+  "prompt": "đăng nhập qua mcp không có quyền truy cập",
+  "gold": "access-auth-mcp",
+  "sid": "b0a9c971-4df5-4cad-bf1b-58e52429cedb",
+  "cost": 0.0015559100000000002,
+  "ss": [
+   "domains-routing-ssl"
+  ],
+  "pr": [
+   "access-auth-mcp"
+  ],
+  "pr_block": true,
+  "reads": [
+   "access-auth-mcp"
+  ],
+  "answer": "Tóm tắt trang `.llmwiki/wiki/concepts/access-auth-mcp.md`:  - Mỗi request `/api` đi qua `secureRouter` (kiểm tag quyền t"
+ },
+ {
+  "prompt": "biến môi trường của dịch vụ không được nạp khi chạy",
+  "gold": "services-environment",
+  "sid": "f0c4e0c1-fe95-4494-b376-41a94496955b",
+  "cost": 0.0014801800000000002,
+  "ss": [
+   "domains-routing-ssl"
+  ],
+  "pr": [
+   "services-environment"
+  ],
+  "pr_block": true,
+  "reads": [
+   "services-environment"
+  ],
+  "answer": "Trang gợi ý là `.llmwiki/wiki/concepts/services-environment.md`. Tóm tắt 2 dòng:  1. Env của service đọc qua `loadServic"
+ },
+ {
+  "prompt": "sửa endpoints.ts cho đúng đường dẫn gọi api",
+  "gold": "dashboard",
+  "sid": "ecd06db8-c2ed-408d-9ea6-8b75c1e9db31",
+  "cost": 0.0024696,
+  "ss": [
+   "domains-routing-ssl"
+  ],
+  "pr": [
+   "active-work",
+   "onboarding-tour",
+   "dashboard",
+   "api-app"
+  ],
+  "pr_block": true,
+  "reads": [
+   "active-work",
+   "onboarding-tour",
+   "dashboard",
+   "api-app"
+  ],
+  "answer": "**Tóm tắt 2 dòng** (đọc 4 trang: `active-work`, `onboarding-tour`, `dashboard`, `api-app`):  1. `apps/dashboard/src/lib/"
+ },
+ {
+  "prompt": "hôm nay làm gì tiếp nhỉ",
+  "gold": null,
+  "sid": "1f4a457a-7b8e-4514-9176-777ba3d9ac89",
+  "cost": 0.00151922,
+  "ss": [
+   "domains-routing-ssl"
+  ],
+  "pr": [],
+  "pr_block": false,
+  "reads": [
+   "domains-routing-ssl"
+  ],
+  "answer": "- Trang này mô tả luồng domain, routing và SSL của openship: thêm và xác minh domain (`POST /api/domains`), tự cấu hình "
+ },
+ {
+  "prompt": "xem lại wiki và harness cho tôi với nhé",
+  "gold": null,
+  "sid": "9d16923b-4f95-4349-ad0f-03e6136e1009",
+  "cost": 0.00171651,
+  "ss": [
+   "domains-routing-ssl"
+  ],
+  "pr": [],
+  "pr_block": false,
+  "reads": [
+   "domains-routing-ssl"
+  ],
+  "answer": "Trang wiki harness gợi ý là `.llmwiki/wiki/concepts/domains-routing-ssl.md`. Tóm tắt 2 dòng:  1. Trang mô tả luồng domai"
+ }
+]

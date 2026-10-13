@@ -260,7 +260,7 @@ DEFAULT_BRIDGE = {
     "bản dựng": "deployment pipeline", "build": "deployment pipeline", "phát hành": "deployment", "rollback": "deployment pipeline",
     "quay lui": "deployment pipeline", "hàng đợi": "pipeline", "nhật ký": "dashboard", "ticket": "dashboard", "vấn đề": "dashboard",
     "bảng": "dashboard", "ứng dụng": "app", "máy chạy": "environment service", "bản chạy": "environment service",
-    "trạng thái": "service", "phiên": "auth access", "ssh": "access", "khoá": "auth access", "mật khẩu": "auth",
+    "trạng thái": "service", "phiên đăng nhập": "auth access", "phiên làm việc": "auth access", "ssh": "access", "khoá api": "auth access", "mật khẩu": "auth",
     "lưu trữ": "backup database", "bản sao": "backup", "schema": "database", "truy vấn": "database",
     "đồng bộ": "sdk cli", "máy khách": "sdk cli desktop", "gói": "sdk", "thư viện": "sdk",
 }
@@ -300,8 +300,10 @@ def prompt_terms(prompt: str, items: list, bridge: dict) -> dict:
     df = {}
     if lexrank:
         for it in items:
-            for t in set(lexrank.norm(" ".join([it.get("title") or "", it.get("path") or "",
-                                                 " ".join(map(str, it.get("tags") or []))]))):
+            # từ vựng = title + tags + TÊN FILE trang (không lấy cả đường dẫn: "llmwiki", "wiki", "concepts", "md"
+            # là chữ rác chung — phiên thật 14/10: prompt có chữ "wiki" → 4 trang đồng điểm 1.0 bị bơm)
+            stem = Path(str(it.get("path") or "")).stem.replace("-", " ").replace("_", " ")
+            for t in set(lexrank.norm(" ".join([it.get("title") or "", stem, " ".join(map(str, it.get("tags") or []))]))):
                 df[t] = df.get(t, 0) + 1
         ptoks = lexrank.norm(text)
     else:
@@ -309,7 +311,12 @@ def prompt_terms(prompt: str, items: list, bridge: dict) -> dict:
     # Từ mượn (ASCII) có trong chỉ mục; bỏ token Việt (lọt từ trang nháp Việt) và bỏ token có ở quá nửa chỉ mục
     # ("wiki", "llmwiki", "md", "concept", "harness" nằm trong MỌI đường dẫn → phiên thật 13/10 in 3 trang rác điểm 0.11).
     half = max(1, len(items) // 2)
-    hits = [t for t in dict.fromkeys(ptoks) if t in df and len(t) > 2 and t.isascii() and df[t] <= half]
+    # Âm tiết Việt không dấu lọt qua isascii ("theo", "cho", "xem"…) và trùng với chữ trong title trang nháp Việt
+    # → phiên thật 14/10: "sao lưu theo lịch" kéo theo issue-tracker 0.53. Không phải từ mượn thì bỏ.
+    VI_ASCII = {"theo", "cho", "xem", "nay", "con", "ban", "lam", "toi", "nha", "anh", "hay", "may", "khi", "neu", "nen",
+                "van", "dang", "dung", "tren", "trong", "sau", "truoc", "vao", "cua", "noi", "phan", "hon", "nhu", "dong",
+                "lien", "them", "nhe", "roi", "cai", "cac", "nhung", "voi", "thi", "bao", "chay", "lai", "sua", "tao", "doc"}
+    hits = [t for t in dict.fromkeys(ptoks) if t in df and len(t) > 2 and t.isascii() and df[t] <= half and t not in VI_ASCII]
     low = text.lower()
     bridged = []
     for vi, en in bridge.items():
