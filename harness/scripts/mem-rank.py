@@ -396,7 +396,12 @@ def retrieve(root, query, k=5, kind_filter=None, cfg=None):
                 scored.append((m, s))
     else:
         lex = _lexical_scores(query, [m.get("text", "") for m in mems])
-        scored = [(m, s) for m, s in zip(mems, lex) if s > 0]
+        # BM25 (chuẩn hoá đỉnh = 1) cho điểm nhỏ cho hầu hết mục có 1 từ trùng — Jaccard cũ cho 0. Không chặn thì
+        # retrieve trả đủ k mục đuôi, eval episodic phình token 127 → 232 (+83%) dù hit@5 vẫn 2/2. Giữ mục
+        # ≥ lex_floor × đỉnh (mặc định 0.3, chỉnh relevance.lex_floor).
+        floor = float(rel.get("lex_floor", 0.3))
+        top = max(lex, default=0.0)
+        scored = [(m, s) for m, s in zip(mems, lex) if s > 0 and s >= floor * top]
     scored.sort(key=lambda ms: (-ms[1], ms[0].get("id", "")))
     return scored[:max(1, int(k))]
 
