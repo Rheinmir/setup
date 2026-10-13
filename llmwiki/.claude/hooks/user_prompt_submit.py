@@ -144,7 +144,7 @@ def prompt_recall(root: Path, sid: str, prompt: str) -> None:
     text = (prompt or "").strip()
     if len(text) < 12 or text.startswith("<task-notification") or text.startswith("[SYSTEM"):
         return
-    ok_tool = resolve_tool(str(root), "harness/scripts/okf-scan.py")
+    ok_tool = resolve_tool(str(root), "harness/scripts/okf-scan.py")   # bare-path: ok — rel chuẩn của resolve_tool (repo-local → ~/.claude/harness)
     if not ok_tool:
         return
     try:
