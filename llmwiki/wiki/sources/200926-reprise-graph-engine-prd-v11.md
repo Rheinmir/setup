@@ -56,7 +56,7 @@ Mười tám ticket GX-01 đến GX-18, tổng 42 ngày công, chia năm mốc X
 
 ## Áp vào orca-graph v3 (20/09/2026)
 
-orca-graph là tool file-based một máy ([[ADR-018-orca-graph-file-based-graph-engine]]), nên chỉ nhận phần nằm trong tầm đó. Bảng dưới là kế hoạch của PLAN `200926-orca-graph-v3-PLAN`; trạng thái thực thi xem graph cùng tên và concept [[orca-graph]].
+orca-graph là tool file-based một máy (ADR-018-orca-graph-file-based-graph-engine (fdk/wiki)), nên chỉ nhận phần nằm trong tầm đó. Bảng dưới là kế hoạch của PLAN `200926-orca-graph-v3-PLAN`; trạng thái thực thi xem graph cùng tên và concept orca-graph (fdk/wiki).
 
 | Mục PRD | Vào orca-graph thế nào | Kịch bản VT |
 |---|---|---|
