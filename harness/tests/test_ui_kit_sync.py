@@ -1,10 +1,20 @@
 """test_ui_kit_sync — phần tất định của skills/ui-kit-from-code/references/sync-kit.py (GH#186), không cần mạng:
 id dự án, hash bỏ meta, số phiên bản, v1 bất biến khi ra v2, chạy lại không đổi thì không tạo bản mới."""
-import importlib.util, json, subprocess
+import importlib.util, json, os, subprocess
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[2]
-spec = importlib.util.spec_from_file_location("sync_kit", ROOT / "skills/ui-kit-from-code/references/sync-kit.py")
+# skill tách sang Rheinmir/skills (PLAN 141026-skills-split): OVERSTACK_SKILLS_DIR (CI clone) > <repo>/skills > ~/.claude/skills
+_SK = Path(os.environ["OVERSTACK_SKILLS_DIR"]).expanduser() if os.environ.get("OVERSTACK_SKILLS_DIR") else ROOT / "skills"
+if not (_SK / "ui-kit-from-code" / "references" / "sync-kit.py").is_file():
+    _SK = Path.home() / ".claude" / "skills"
+_SYNC_KIT = _SK / "ui-kit-from-code" / "references" / "sync-kit.py"
+if not _SYNC_KIT.is_file():
+    pytest.skip(f"không có skill ui-kit-from-code (đặt OVERSTACK_SKILLS_DIR trỏ checkout Rheinmir/skills/skills): {_SYNC_KIT}",
+                allow_module_level=True)
+spec = importlib.util.spec_from_file_location("sync_kit", _SYNC_KIT)
 sk = importlib.util.module_from_spec(spec); spec.loader.exec_module(sk)
 
 

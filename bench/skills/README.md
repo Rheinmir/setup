@@ -6,7 +6,7 @@ Mọi số dưới đây là đo thật trong phiên 14/10/2026 trên máy dev (
 
 | Việc | Trước (skill trong Rheinmir/setup) | Sau (Rheinmir/skills) | Cách đo |
 |---|---|---|---|
-| CI khi push đổi 1 SKILL.md | skills-sync.yml 15 s **+** harness.yml ~364 s (mọi push `orca`) | ci.yml **10–19 s** (2 lần đầu: 10 s, 19 s; checkout setup depth 1 + 7 cổng) | `gh run list -R Rheinmir/skills --json createdAt,updatedAt` |
+| CI khi push đổi 1 SKILL.md | skills-sync.yml 15 s **+** harness.yml ~364 s (mọi push `orca`) | ci.yml **10–19 s** (2 lần đầu: 10 s, 19 s; bản xanh cuối `bdf47be` sau `--no-bin`: 16 s; checkout setup depth 1 + 7 cổng) | `gh run list -R Rheinmir/skills --json createdAt,updatedAt` |
 | Cổng cục bộ trước push | `medic --ci` 34–72 s + `fdk-gate` ~61 s + fdk-uat 2 pha | `bash tools/check.sh <setup>` **1.0 s** (7 cổng) | `time bash tools/check.sh ~/orca/setup` |
 | Cập nhật skill trên máy người dùng | chạy lại bootstrap trọn bộ (harness + skill + wiki) | `bootstrap.sh \| bash -s -- --skills-only` **19.8 s** (npx skills add + dấu version + kiểm requires), không đụng `~/.claude/harness` | `time`, so mtime `version.json` trước/sau |
 | Cài mới trọn bộ từ canary (harness 1.3.126→1.3.127 + skill + orca-graph) | — | **38.1 s** | `time` bootstrap pha 1 |

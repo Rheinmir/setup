@@ -27,8 +27,12 @@ if python3 harness/scripts/orca-graph.py --version >/dev/null 2>&1; then
   case $prc in 0) ok "(3) $(tail -1 "$T/3.log")";; 4) sk "(3) $(tail -1 "$T/3.log")";; *) no "(3) $(tail -1 "$T/3.log")";; esac
 else sk "(2)(3) chưa cài engine orca-graph"; fi
 
-{ grep -q "'Be Vietnam Pro'" skills/docs-site-macos/SKILL.md && grep -q "html_font.py --apply" skills/docs-site-macos/SKILL.md \
-  && $LINT skills/orca-onboard/assets/docs-site-skeleton.html >/dev/null 2>&1; } && ok "(4) template docs-site-macos khai font + bước --apply; skeleton orca-onboard đã nhúng" || no "(4) template skill"
+# skills/ tách sang Rheinmir/skills (141026): OVERSTACK_SKILLS_DIR (CI clone) > skills/ (repo cũ) > ~/.claude/skills (bản cài máy dev)
+SK="${OVERSTACK_SKILLS_DIR:-skills}"; [ -f "$SK/docs-site-macos/SKILL.md" ] || SK="$HOME/.claude/skills"
+if [ -f "$SK/docs-site-macos/SKILL.md" ]; then
+  { grep -q "'Be Vietnam Pro'" "$SK/docs-site-macos/SKILL.md" && grep -q "html_font.py --apply" "$SK/docs-site-macos/SKILL.md" \
+    && $LINT "$SK/orca-onboard/assets/docs-site-skeleton.html" >/dev/null 2>&1; } && ok "(4) template docs-site-macos khai font + bước --apply; skeleton orca-onboard đã nhúng ($SK)" || no "(4) template skill ($SK)"
+else sk "(4) không có skill docs-site-macos — đặt OVERSTACK_SKILLS_DIR trỏ checkout Rheinmir/skills/skills"; fi
 
 printf '<html><head><style>body{font-family:-apple-system,sans-serif}</style></head><body>Đường dẫn</body></html>' > "$T/bad.html"
 $LINT "$T/bad.html" >"$T/5.log" 2>&1; rc=$?

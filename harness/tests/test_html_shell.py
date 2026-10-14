@@ -2,6 +2,8 @@
 import importlib.util, re
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -73,7 +75,14 @@ def test_apply_is_idempotent_and_goes_through_html_base():
 
 def test_vendor_blocks_are_verbatim_copies_of_the_skill():
     """Luật repo: code gốc chép NGUYÊN — sửa ở skill rồi `html_shell.py --sync`, không sửa tay bản trích."""
-    b = sh.skill_blocks((ROOT / "skills/docs-site-macos/SKILL.md").read_text(encoding="utf-8"))
+    import os
+    # skill tách sang Rheinmir/skills (141026): OVERSTACK_SKILLS_DIR > <repo>/skills > ~/.claude/skills
+    sk = Path(os.environ["OVERSTACK_SKILLS_DIR"]).expanduser() if os.environ.get("OVERSTACK_SKILLS_DIR") else ROOT / "skills"
+    if not (sk / "docs-site-macos" / "SKILL.md").is_file():
+        sk = Path.home() / ".claude" / "skills"
+    if not (sk / "docs-site-macos" / "SKILL.md").is_file():
+        pytest.skip("không có skill docs-site-macos — đặt OVERSTACK_SKILLS_DIR trỏ checkout Rheinmir/skills/skills")
+    b = sh.skill_blocks((sk / "docs-site-macos/SKILL.md").read_text(encoding="utf-8"))
     v = sh._vendor()
     assert all(getattr(v, k) == b[k] for k in b), "html_shell_vendor.py lệch skill — chạy: python3 fdk/tools/html_shell.py --sync"
 

@@ -68,6 +68,13 @@ jobs:
         with:
           python-version: '3.x'
       - run: pip install pyyaml
+      # Skill tách sang Rheinmir/skills (PLAN 141026-skills-split). Clone NGOÀI workspace (RUNNER_TEMP) để các lint quét
+      # cả cây không ăn nhầm. KHÔNG đặt OVERSTACK_SKILLS_DIR cho cả job: repo framework đi theo ảnh chụp catalog
+      # (build-capabilities KHÔNG đếm skill là năng lực) — chỉ step nào cần đọc file skill thật mới nhận env này.
+      - name: skills — clone Rheinmir/skills (depth 1) cho các step cần file skill thật
+        run: |
+          git clone -q --depth 1 https://github.com/Rheinmir/skills "$RUNNER_TEMP/skills"
+          echo "skills: $(ls "$RUNNER_TEMP/skills/skills" | wc -l) thư mục · $(git -C "$RUNNER_TEMP/skills" rev-parse --short HEAD)"
       # Các validator này trước nay CHỈ chạy pre-commit (bypass bằng --no-verify / không cài).
       # Nay git-aware (bỏ qua draft/html gitignored) nên chạy được trên checkout sạch của CI.
       - name: R3 index-sync (git-aware) — framework wiki (fdk/wiki) + demo template (llmwiki/wiki)
@@ -248,6 +255,8 @@ jobs:
           bash harness/tests/install-graph-option-test.sh
           python3 -m pytest -q harness/tests/test_control_room.py
       - name: html-font-lint — mọi HTML framework sinh ra = Be Vietnam Pro NHÚNG (generator · engine qua shim · parity bản sao ở engine · template skill)
+        env:
+          OVERSTACK_SKILLS_DIR: ${{ runner.temp }}/skills/skills   # (4) template skill + test_ui_kit_sync đọc file skill thật
         run: |
           python3 -m pytest -q harness/tests/test_html_font.py harness/tests/test_repo_role.py harness/tests/test_ui_kit_sync.py
           bash harness/tests/html-font-lint-test.sh
