@@ -8,6 +8,7 @@ import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { loadCatalog } from "../src/catalog.ts";
 import { buildServer } from "../src/server.ts";
 import { createApp } from "../src/http.ts";
+import { NodeSource } from "../src/source-node.ts";
 
 const cat = loadCatalog();
 const base = mkdtempSync(join(tmpdir(), "ovs-srv-"));
@@ -97,7 +98,7 @@ test("all mode: one tool per catalog script on top of core", async () => {
 
 test("http: /healthz open, everything else 401 without the bearer, /mcp initializes with it", async () => {
   const token = "t".repeat(32);
-  const app = createApp({ token, catalog: cat, mode: "core" });
+  const app = createApp({ token, catalog: cat, mode: "core", source: new NodeSource(undefined, cat), build: (o) => buildServer(o) });
   const health = await app.request("/healthz");
   assert.equal(health.status, 200);
   assert.equal(((await health.json()) as { ok: boolean }).ok, true);
@@ -109,5 +110,5 @@ test("http: /healthz open, everything else 401 without the bearer, /mcp initiali
   assert.equal(init.status, 200, raw);
   const body = JSON.parse(raw) as { result: { serverInfo: { name: string } } };
   assert.equal(body.result.serverInfo.name, "overstack");
-  assert.throws(() => createApp({ token: "short", catalog: cat }), /OVERSTACK_MCP_TOKEN/);
+  assert.throws(() => createApp({ token: "short", catalog: cat, source: new NodeSource(undefined, cat) }), /OVERSTACK_MCP_TOKEN/);
 });

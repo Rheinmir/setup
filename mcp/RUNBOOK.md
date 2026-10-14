@@ -130,3 +130,30 @@ curl -fsS https://skills.giatbh.io.vn/healthz
 Sau khi lên: mỗi dev đặt `OVERSTACK_VERSION_URL=https://skills.giatbh.io.vn/healthz` (hoặc để mặc định raw GitHub) — hook đầu phiên
 tự nhắc khi máy cũ hơn bản chuẩn. Token Cloudflare "toàn năng" đã lộ trong chat ngày 14/10 → xoay, cấp token giới hạn zone
 `giatbh.io.vn` (DNS edit + Tunnel edit), cất vào Vault `secret/infra/cloudflare`.
+
+## 8. Cloudflare Workers — hostname công khai không cần k8s2 (mode read, Free plan)
+
+Thay cho §7 khi chỉ cần **đọc** (skill, rule, tool help, `/healthz` nguồn phiên bản): Worker + static assets, không tunnel, không
+container, 0 đồng ở Free (100.000 request/ngày, 10 ms CPU/request). Thực thi script (`tool_run`, `orca_graph`) vẫn là §1/§2.
+
+```sh
+cd ~/orca/setup/mcp
+npx wrangler whoami || npx wrangler login                 # (a) đăng nhập một lần — mở trình duyệt, không dán token vào chat
+OVERSTACK_SKILLS_ROOT=~/orca/skills/skills npm run catalog   # (b) catalog theo checkout skills (skillsVersion = version.json của repo skills)
+npm test && npm run typecheck                              # (c) tests/worker.test.ts: AssetsSource ≡ NodeSource, assets đủ 106 skill
+npx wrangler secret put OVERSTACK_MCP_TOKEN -c worker/wrangler.jsonc   # (d) token (≥ 16 ký tự) — lần đầu, hoặc khi xoay
+OVERSTACK_SKILLS_ROOT=~/orca/skills/skills npm run worker:deploy       # (e) gom assets + deploy → in URL *.workers.dev
+# (f) kiểm
+curl -fsS https://overstack-mcp.<account>.workers.dev/healthz        # {"ok":true,"harness":"1.3.128","skills":{"count":106,"version":"1.0.3",…},"mode":"read"}
+curl -s https://overstack-mcp.<account>.workers.dev/mcp -H "authorization: Bearer <token>" -H "content-type: application/json" \
+  -H "accept: application/json, text/event-stream" -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'   # 6 tool đọc
+claude mcp add --transport http overstack https://overstack-mcp.<account>.workers.dev/mcp --header "Authorization: Bearer <token>"
+```
+
+- Tên miền riêng `skills.giatbh.io.vn`: gỡ bản ghi DNS trỏ tunnel (§7), rồi thêm vào `worker/wrangler.jsonc`:
+  `"routes": [{ "pattern": "skills.giatbh.io.vn", "custom_domain": true }]` và deploy lại; sau đó dev đặt
+  `OVERSTACK_VERSION_URL=https://skills.giatbh.io.vn/healthz`.
+- Cập nhật: skill đổi (repo skills bump version) hoặc harness đổi → (b) rồi (e). Rollback: `npx wrangler rollback -c worker/wrangler.jsonc`.
+- Dashboard: https://dash.cloudflare.com → Workers & Pages → `overstack-mcp` (log, metrics, secret, custom domain).
+- Giới hạn: Free 10 ms CPU/request — `skill_find` BM25 trên 106 skill đo ≈ vài ms; vượt thì bật Workers Paid (5 USD/tháng, 30 s CPU).
+

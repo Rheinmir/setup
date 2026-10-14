@@ -1,0 +1,17 @@
+// overstack-mcp trên Cloudflare Workers (mode read). Chạy từ thư mục mcp/: npm run worker:dev · npm run worker:deploy
+// Token: npx wrangler secret put OVERSTACK_MCP_TOKEN -c worker/wrangler.jsonc   (≥ 16 ký tự; openssl rand -hex 32)
+// Tên miền riêng: thêm "routes": [{ "pattern": "skills.giatbh.io.vn", "custom_domain": true }] khi bản ghi DNS cũ (tunnel) đã gỡ.
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "overstack-mcp",
+  "main": "../src/worker.ts",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./assets",
+    "binding": "ASSETS",
+    "run_worker_first": true
+  },
+  "vars": { "OVERSTACK_TOOLS": "read" },
+  "observability": { "enabled": true }
+}

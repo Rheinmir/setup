@@ -1,0 +1,109 @@
+/**
+ * Lõi ĐỌC của overstack-mcp — mọi thứ không cần đĩa hay tiến trình con, chạy được trên Node lẫn Cloudflare Workers:
+ *   prompts   — một prompt mỗi skill (tên = tên skill), trả nguyên văn SKILL.md + task của người gọi
+ *   resources — overstack://catalog · overstack://capabilities · overstack://policy · overstack://skill/{name} ·
+ *               overstack://rule/{id} · overstack://tool/{name}
+ *   tools     — skills_list skill_find skill_get rules_list tools_list tool_help (6 tool đọc)
+ * Phần chạy tool/workspace (rule_check, tool_run, workspace_*, orca_graph, mode all) ở src/server.ts (chỉ Node).
+ */
+import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { z } from "zod";
+import { findRule, findSkill, findTool, searchSkills } from "./catalog.ts";
+import type { Catalog } from "./catalog.ts";
+import type { Source } from "./source.ts";
+
+export type ToolMode = "read" | "core" | "all";
+export interface CoreOptions { catalog: Catalog; mode: ToolMode; source: Source; version?: string; workspacesHint?: string }
+
+export const VERSION = "0.1.0";
+export const text = (v: unknown) => ({ content: [{ type: "text" as const, text: typeof v === "string" ? v : JSON.stringify(v, null, 2) }] });
+export const fail = (msg: string) => ({ isError: true, content: [{ type: "text" as const, text: msg }] });
+export const RO = { readOnlyHint: true, idempotentHint: true, openWorldHint: false };
+
+/** OVERSTACK_TOOLS: read (hostname công khai, không chạy gì) · core (mặc định) · all. Workers không có process → đọc qua globalThis. */
+export function toolModeFromEnv(env: Record<string, string | undefined> | undefined = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env): ToolMode {
+  const v = env?.OVERSTACK_TOOLS;
+  return v === "all" ? "all" : v === "read" ? "read" : "core";
+}
+
+export function buildCoreServer(opts: CoreOptions): McpServer {
+  const { catalog: cat, mode, source } = opts;
+  const server = new McpServer(
+    { name: "overstack", version: opts.version ?? VERSION },
+    {
+      instructions: [
+        `overstack toolbox: ${cat.skills.length} skills (prompts, resources overstack://skill/{name}), ${cat.rules.length} wiki rules (rule_check),`,
+        mode === "read" ? `${cat.tools.length} scripts listed read-only (tools_list, tool_help); this public endpoint runs nothing — install the harness locally to run tools.` : `${cat.tools.length} scripts (tool_run; ${mode === "all" ? "also one tool each" : "list with tools_list, read flags with tool_help"}).`,
+        mode === "read" ? "" : `Every script runs inside a workspace under ${opts.workspacesHint ?? "WORKSPACES_DIR"}: list with workspace_list, pull a repo with workspace_sync, pass workspace-relative paths.`,
+        "Start with skill_find for the task at hand, then read the skill resource before acting.",
+        mode === "read" ? "" : "A tool result carries rc/stdout/stderr verbatim; rc 2 from a validator means the rule is broken, not that the call failed.",
+      ].filter(Boolean).join(" "),
+    },
+  );
+
+  // ── resources ──────────────────────────────────────────────────────────────
+  server.registerResource("catalog", "overstack://catalog", { title: "Overstack catalog", description: "Skills, rules and tools this server serves (names, groups, summaries).", mimeType: "application/json" }, async (uri) => ({
+    contents: [{ uri: uri.href, mimeType: "application/json", text: JSON.stringify({
+      skills: cat.skills.map((s) => ({ name: s.name, group: s.group, modelInvocable: s.modelInvocable, description: s.description })),
+      rules: cat.rules.map((r) => ({ id: r.id, name: r.name, checkable: !!r.validatorPath, statement: r.statement })),
+      tools: cat.tools.map((t) => ({ name: t.name, kind: t.kind, runner: t.runner, summary: t.summary.slice(0, 200) })),
+    }, null, 1) }],
+  }));
+  for (const [name, rel, title, mime] of [["capabilities", "fdk/CAPABILITIES.md", "CAPABILITIES.md của overstack", "text/markdown"], ["policy", "harness/policy.yaml", "policy.yaml — 22 luật L0", "text/yaml"]] as const) {
+    server.registerResource(name, `overstack://${name}`, { title, mimeType: mime }, async (uri) => {
+      const body = await source.read(rel);
+      return { contents: [{ uri: uri.href, mimeType: mime, text: body ?? `(${rel} missing on this server)` }] };
+    });
+  }
+  server.registerResource("skill", new ResourceTemplate("overstack://skill/{name}", {
+    list: async () => ({ resources: cat.skills.map((s) => ({ uri: `overstack://skill/${s.name}`, name: s.name, title: `/${s.name}`, description: s.description.slice(0, 300), mimeType: "text/markdown" })) }),
+    complete: { name: async (v) => cat.skills.map((s) => s.name).filter((n) => n.startsWith(v)).slice(0, 50) },
+  }), { title: "Skill (SKILL.md)", mimeType: "text/markdown" }, async (uri, vars) => {
+    const s = findSkill(cat, String(vars.name));
+    if (!s) throw new Error(`no skill ${String(vars.name)}`);
+    return { contents: [{ uri: uri.href, mimeType: "text/markdown", text: await source.skillBody(s) }] };
+  });
+  server.registerResource("rule", new ResourceTemplate("overstack://rule/{id}", {
+    list: async () => ({ resources: cat.rules.map((r) => ({ uri: `overstack://rule/${r.id}`, name: r.id, title: `${r.id} ${r.name ?? ""}`.trim(), description: r.statement.slice(0, 300), mimeType: "application/json" })) }),
+  }), { title: "Wiki rule", mimeType: "application/json" }, async (uri, vars) => {
+    const r = findRule(cat, String(vars.id));
+    if (!r) throw new Error(`no rule ${String(vars.id)}`);
+    const py = r.validatorPath ? await source.read(r.validatorPath) : null;
+    const src = py?.match(/^(?:#![^\n]*\n)?[\s\S]*?"""([\s\S]*?)"""/)?.[1]?.trim();
+    return { contents: [{ uri: uri.href, mimeType: "application/json", text: JSON.stringify({ ...r, validatorDoc: src }, null, 2) }] };
+  });
+  server.registerResource("tool", new ResourceTemplate("overstack://tool/{name}", {
+    list: async () => ({ resources: cat.tools.map((t) => ({ uri: `overstack://tool/${t.name}`, name: t.name, title: t.file, description: t.summary.slice(0, 300), mimeType: "text/plain" })) }),
+  }), { title: "Tool help (--help)", mimeType: "text/plain" }, async (uri, vars) => {
+    const t = findTool(cat, String(vars.name));
+    if (!t) throw new Error(`no tool ${String(vars.name)}`);
+    return { contents: [{ uri: uri.href, mimeType: "text/plain", text: t.help ?? `${t.file}: ${t.summary || "(no --help; see source)"}` }] };
+  });
+
+  // ── prompts: một prompt mỗi skill ──────────────────────────────────────────
+  for (const s of cat.skills) {
+    server.registerPrompt(s.name, {
+      title: `/${s.name}`,
+      description: `${s.modelInvocable ? "" : "[user-invoked skill] "}${s.description}`.slice(0, 1000),
+      argsSchema: { task: z.string().optional().describe("Việc cần làm với skill này (tuỳ chọn)") },
+    }, async ({ task }) => ({
+      description: `overstack skill /${s.name}`,
+      messages: [{ role: "user", content: { type: "text", text: `${await source.skillBody(s)}\n\n---\nFollow the skill above.${task ? ` Task: ${task}` : ""}` } }],
+    }));
+  }
+
+  // ── tools: đọc ─────────────────────────────────────────────────────────────
+  server.registerTool("skills_list", { title: "skills list", description: `List the ${cat.skills.length} overstack skills (name, group, one-line description). Filter by group: wiki-loop, dev-loop, orchestrate, utils.`, inputSchema: { group: z.string().optional() }, annotations: RO },
+    async ({ group }) => text(cat.skills.filter((s) => !group || s.group === group).map((s) => ({ name: s.name, group: s.group, modelInvocable: s.modelInvocable, description: s.description.slice(0, 240) }))));
+  server.registerTool("skill_find", { title: "skill find", description: "Rank skills for a task (BM25 over name, description and SKILL.md). Returns the best k with scores; read overstack://skill/{name} next.", inputSchema: { query: z.string().min(1), k: z.number().int().min(1).max(20).default(5) }, annotations: RO },
+    async ({ query, k }) => text(searchSkills(cat, query, k, await source.skillHeads())));
+  server.registerTool("skill_get", { title: "skill get", description: "Full SKILL.md of one skill, by name (with or without the leading slash).", inputSchema: { name: z.string().min(1) }, annotations: RO },
+    async ({ name }) => { const s = findSkill(cat, name); return s ? text(await source.skillBody(s)) : fail(`no skill ${name}; try skill_find`); });
+  server.registerTool("rules_list", { title: "rules list", description: "The wiki rules of harness/policy.yaml: id, name, statement, where enforced, and whether rule_check can run its validator.", inputSchema: {}, annotations: RO },
+    async () => text(cat.rules.map((r) => ({ id: r.id, name: r.name, checkable: !!r.validatorPath, enforce_at: r.enforce_at, applies_to: r.applies_to, statement: r.statement }))));
+  server.registerTool("tools_list", { title: "tools list", description: `List the ${cat.tools.length} scripts (harness-script, fdk-tool, validator) with a one-line summary. Filter by kind or a substring of the name.`, inputSchema: { kind: z.enum(["harness-script", "fdk-tool", "validator"]).optional(), match: z.string().optional() }, annotations: RO },
+    async ({ kind, match }) => text(cat.tools.filter((t) => (!kind || t.kind === kind) && (!match || t.name.includes(match) || t.summary.toLowerCase().includes(match.toLowerCase()))).map((t) => ({ name: t.name, kind: t.kind, runner: t.runner, hasHelp: !!t.help, summary: t.summary.slice(0, 200) }))));
+  server.registerTool("tool_help", { title: "tool help", description: "Usage, flags and positionals of one script (parsed from --help), plus the raw help text.", inputSchema: { name: z.string().min(1) }, annotations: RO },
+    async ({ name }) => { const t = findTool(cat, name); return t ? text({ name: t.name, path: t.path, runner: t.runner, usage: t.usage, summary: t.summary, options: t.options, positionals: t.positionals, stdinJson: t.stdinJson, help: t.help }) : fail(`no tool ${name}; see tools_list`); });
+  return server;
+}

@@ -22,22 +22,28 @@ export interface CatalogTool {
 export interface SkillsVersion { version: string | null; catalog_sha: string | null; count: number | null }
 export interface Catalog { schemaVersion: number; root: string; skillsRoot?: string; skillsVersion?: SkillsVersion; skills: CatalogSkill[]; rules: CatalogRule[]; tools: CatalogTool[] }
 
-const HERE = dirname(fileURLToPath(import.meta.url));
+// File này đi vào bundle Worker (core.ts import find*/search*): không đụng process/import.meta lúc nạp nếu môi trường không có.
+const ENV = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env ?? {};
+const HERE = typeof import.meta.url === "string" && import.meta.url.startsWith("file:") ? dirname(fileURLToPath(import.meta.url)) : "/";
 /** Gốc repo overstack: OVERSTACK_ROOT, hoặc thư mục cha của mcp/ (layout repo). */
-export const OVERSTACK_ROOT = resolve(process.env.OVERSTACK_ROOT ?? join(HERE, "..", ".."));
+export const OVERSTACK_ROOT = resolve(ENV.OVERSTACK_ROOT ?? join(HERE, "..", ".."));
 export const CATALOG_PATH = join(OVERSTACK_ROOT, "mcp", "catalog.json");
+
+export function loadCatalogFromText(text: string, where = "catalog"): Catalog {
+  const cat = JSON.parse(text) as Catalog;
+  if (cat.schemaVersion !== 1) throw new Error(`${where}: catalog schemaVersion ${cat.schemaVersion} unsupported (want 1)`);
+  return cat;
+}
 
 export function loadCatalog(path = CATALOG_PATH): Catalog {
   if (!existsSync(path)) throw new Error(`catalog not found at ${path} — run: python3 mcp/scripts/gen-catalog.py`);
-  const cat = JSON.parse(readFileSync(path, "utf8")) as Catalog;
-  if (cat.schemaVersion !== 1) throw new Error(`catalog schemaVersion ${cat.schemaVersion} unsupported (want 1)`);
-  return cat;
+  return loadCatalogFromText(readFileSync(path, "utf8"), path);
 }
 
 /** Nội dung SKILL.md của một skill (đọc lúc gọi, không cache: skill đổi trên đĩa thì prompt đổi theo). */
 /** Thư mục skill lúc chạy: OVERSTACK_SKILLS_ROOT (Docker /opt/skills/skills) > catalog.skillsRoot (máy sinh catalog) > <root>/skills. */
 export function skillsRootDir(cat: Catalog | undefined, root = OVERSTACK_ROOT): string {
-  const env = process.env.OVERSTACK_SKILLS_ROOT;
+  const env = ENV.OVERSTACK_SKILLS_ROOT;
   if (env) return env;
   if (cat?.skillsRoot && existsSync(cat.skillsRoot)) return cat.skillsRoot;
   return join(root, "skills");
@@ -51,7 +57,7 @@ export function skillBody(skill: CatalogSkill, root = OVERSTACK_ROOT, cat?: Cata
 
 /** template_version của harness (repo setup hoặc bản global) — /healthz công bố để dev so bản. */
 export function harnessVersion(root = OVERSTACK_ROOT): string | null {
-  for (const p of [join(root, "harness", "version.json"), join(process.env.HOME ?? "", ".claude", "harness", "version.json")]) {
+  for (const p of [join(root, "harness", "version.json"), join(ENV.HOME ?? "", ".claude", "harness", "version.json")]) {
     try { return String(JSON.parse(readFileSync(p, "utf8")).template_version ?? null); } catch { /* thử đường kế */ }
   }
   return null;
@@ -71,17 +77,15 @@ export function findTool(cat: Catalog, name: string): CatalogTool | undefined {
 }
 
 // ── skill_find: BM25 giống fdk/tools/build-skill-search.py (k1 1.5, b 0.75) trên name + description + phần đầu body ──
+// Phần đầu body do Source cung cấp (Node: đọc đĩa lúc gọi; Worker: skills-index.json tính sẵn lúc build) — hàm này thuần.
 const STOP = new Set("a an the and or of to in on for with is are be this that it as at by from into về của và cho với là có một các khi để từ trong".split(" "));
 export function tokenize(text: string): string[] {
   return text.toLowerCase().normalize("NFC").split(/[^\p{L}\p{N}_-]+/u).filter((t) => t.length > 1 && !STOP.has(t));
 }
 export interface SkillHit { name: string; score: number; group: string; description: string; modelInvocable: boolean }
-export function searchSkills(cat: Catalog, query: string, k = 5, root = OVERSTACK_ROOT): SkillHit[] {
-  const docs = cat.skills.map((s) => {
-    let body = "";
-    try { body = skillBody(s, root, cat).slice(0, 4000); } catch { body = ""; }
-    return { s, toks: tokenize(`${s.name} ${s.name.replace(/-/g, " ")} ${s.description} ${body}`) };
-  });
+export function searchSkills(cat: Catalog, query: string, k = 5, heads: Array<{ name: string; head: string }> = []): SkillHit[] {
+  const head = new Map(heads.map((h) => [h.name, h.head]));
+  const docs = cat.skills.map((s) => ({ s, toks: tokenize(`${s.name} ${s.name.replace(/-/g, " ")} ${s.description} ${head.get(s.name) ?? ""}`) }));
   const N = docs.length, avgdl = docs.reduce((a, d) => a + d.toks.length, 0) / Math.max(1, N);
   const df = new Map<string, number>();
   for (const d of docs) for (const t of new Set(d.toks)) df.set(t, (df.get(t) ?? 0) + 1);

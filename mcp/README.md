@@ -64,6 +64,26 @@ tên `mcp__overstack__<tool>`.
 catalog_sha}}`. Hook SessionStart của overstack đọc `OVERSTACK_VERSION_URL=https://skills.giatbh.io.vn/healthz` (1 lần/ngày) và nhắc
 khi máy cũ hơn — xem `llmwiki/.claude/hooks/session_start.py::remote_version_nudge`.
 
+## Cloudflare Workers (mode read, Free plan)
+
+Lõi đọc (`src/core.ts`) không cần đĩa hay tiến trình con nên chạy nguyên trên Workers: `src/worker.ts` + `worker/wrangler.jsonc`,
+skill/rule/policy/CAPABILITIES đọc từ **static assets** do `scripts/build-worker-assets.mjs` gom (125 file, ≈2,7 MiB; `skills-index.json`
+là 4000 ký tự đầu mỗi SKILL.md để `skill_find` chỉ tốn một asset fetch — Free giới hạn 50 subrequest/request). Không có
+`workspace_*`, `tool_run`, `rule_check`, `orca_graph` (6 tool đọc). Cùng `createApp` với Node: `/healthz` mở, còn lại bearer.
+
+```sh
+cd mcp && npm install
+npx wrangler login                                        # một lần, mở trình duyệt (token ở ~/.wrangler, không qua chat)
+OVERSTACK_SKILLS_ROOT=~/orca/skills/skills npm run catalog   # catalog theo checkout Rheinmir/skills
+OVERSTACK_SKILLS_ROOT=~/orca/skills/skills npm run worker:dev # wrangler dev :8787 — smoke như RUNBOOK §8
+npx wrangler secret put OVERSTACK_MCP_TOKEN -c worker/wrangler.jsonc   # ≥ 16 ký tự (openssl rand -hex 32)
+OVERSTACK_SKILLS_ROOT=~/orca/skills/skills npm run worker:deploy       # → https://overstack-mcp.<account>.workers.dev/mcp
+```
+
+Dev cục bộ đặt token ở `worker/.dev.vars` (`OVERSTACK_MCP_TOKEN=…`, gitignored). Tên miền riêng: thêm `routes` custom_domain trong
+`wrangler.jsonc` sau khi gỡ bản ghi DNS của tunnel. Mỗi lần skill/harness đổi → chạy lại `worker:deploy` (assets gom lại từ catalog);
+thực thi script vẫn ở stack Docker (k8s2) hoặc Containers có phí — xem [RUNBOOK §8](RUNBOOK.md#8-cloudflare-workers).
+
 ## Biến môi trường
 
 | Biến | Mặc định | Ý nghĩa |
@@ -71,7 +91,7 @@ khi máy cũ hơn — xem `llmwiki/.claude/hooks/session_start.py::remote_versio
 | `OVERSTACK_MCP_TOKEN` | *(vắng → đọc/sinh file `<WORKSPACES_DIR>/.overstack-mcp-token`, 0600)* | Bearer cho `/mcp` (≥ 16 ký tự); `/healthz` không cần và báo `tokenSource` |
 | `OVERSTACK_ROOT` | cha của `mcp/` | Gốc repo overstack chứa `skills/`, `harness/`, `fdk/` |
 | `WORKSPACES_DIR` | `/workspaces` | Thư mục cha của các workspace |
-| `OVERSTACK_TOOLS` | `core` | `core` = 11 tool ở trên · `all` = thêm một tool mỗi script |
+| `OVERSTACK_TOOLS` | `core` | `read` = 6 tool đọc (+ `workspace_list` trên Node) · `core` = 11 tool ở trên · `all` = thêm một tool mỗi script |
 | `OVERSTACK_GIT_ALLOW` | `https://github.com/Rheinmir/` | Prefix repo cho `workspace_sync` (phân cách dấu phẩy) |
 | `OVERSTACK_GIT_TOKEN` | — | Token read-only cho repo private (đi qua env của git, scrub khỏi log) |
 | `OVERSTACK_TOOL_TIMEOUT_MS` / `OVERSTACK_TOOL_MAX_TIMEOUT_MS` | 120000 / 900000 | Trần mặc định / trần cứng một lần chạy tool |

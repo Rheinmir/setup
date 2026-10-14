@@ -420,7 +420,7 @@
    "path": "docs-site-macos/SKILL.md"
   },
   {
-   "bytes": 19917,
+   "bytes": 20130,
    "description": "Given a freshly-cloned external repo/tool, run clone→explore→verify→write to produce a bundle of RUNNABLE workflow skills under .overstack/doyourmagic/<repo>/skills/ — one hub skill /dym-<repo> (1 dòng context, chỉ nạp workflow con khi được gọi) + N sub-skills dạng SKILL.md promote thẳng lên repo chính (npx skills add) — plus workflows.md (index + bảng kiểm chứng) and flow.html (docs-site-macos, sơ đồ luồng skill→sản phẩm→skill kế). Trigger on 'kéo repo mới về', 'clone tool này làm workflow', 'doyourmagic', 'onboard external tool/repo', 'generate workflow docs/skills for this repo', or /doyourmagic. Options: --name <prefix> · --humanize.",
    "dir": "doyourmagic",
    "external": false,
@@ -760,7 +760,7 @@
    "path": "harness-tour/SKILL.md"
   },
   {
-   "bytes": 9514,
+   "bytes": 10298,
    "description": "TỰ BẢO TRÌ framework overstack trên máy user (self-maintain) — migrate llmwiki cũ lên harness (case B) hoặc update bản mới (case C). MỘT lệnh `install-harness.sh --self-heal` tự cài + tự backfill nợ wiki (Origin/index/OKF) + refresh bản đồ năng lực + health-check trong 1 process, không vòng lặp re-run. Trigger: \"tự bảo trì framework\", \"self-maintain\", \"migrate harness\", \"update harness\", \"update overstack\", \"nâng cấp harness\", \"cài harness vào dự án cũ\", \"/harness-update\".",
    "dir": "harness-update",
    "external": false,
@@ -910,8 +910,8 @@
    "path": "new-project-setup/SKILL.md"
   },
   {
-   "bytes": 8906,
-   "description": "Scaffold a new skill into both publish trees at once — skills/<name>/SKILL.md plus its byte-identical llmwiki mirror — via fdk/tools/new-skill.py, then print the exact commands to register it on the curated surfaces (LOOP_MAP, marketplace.json, AGENT.md/CLAUDE.md). Use when the user says \"create a skill\", \"add a new skill\", \"scaffold a skill\", \"make a new skill\", \"new skill\", or invokes /new-skill.",
+   "bytes": 11150,
+   "description": "Scaffold (tạo) một skill mới — new skill — into the Rheinmir/skills checkout (skills/<name>/SKILL.md, frontmatter metadata.loop + metadata.requires) via fdk/tools/new-skill.py of the setup repo, then run the skills-repo gate (requires · provenance · catalog · tools/check.sh). Use when the user says \"create a skill\", \"add a new skill\", \"scaffold a skill\", \"make a new skill\", \"new skill\", or invokes /new-skill.",
    "dir": "new-skill",
    "external": false,
    "group": "dev-loop",
@@ -1372,9 +1372,9 @@
  ],
  "skillsRoot": "/Users/admin/orca/skills/skills",
  "skillsVersion": {
-  "catalog_sha": "1081dd193a7f1b96",
+  "catalog_sha": "312e31d506764b76",
   "count": 106,
-  "version": "1.0.0"
+  "version": "1.0.3"
  },
  "tools": [
   {
@@ -1530,7 +1530,7 @@
   },
   {
    "file": "capability-stamp.py",
-   "help": "capability-stamp: OK (sha acdcec72f73ad2dc, 113 mục bề mặt)",
+   "help": "capability-stamp: OK (sha 55c0ae9b0e2aae3e, 113 mục bề mặt)",
    "helpRc": 0,
    "kind": "harness-script",
    "name": "capability-stamp",
@@ -3801,7 +3801,7 @@
   },
   {
    "file": "tour.sh",
-   "help": "\u001b[1m════ HARNESS TOUR — hệ thống này làm gì? (sandbox: /tmp/harness-tour.4NkaAQ) ════\u001b[0m\n   \u001b[1;32m✓\u001b[0m Đã cài harness vào sandbox bằng install-harness.sh (mode NEW)\n\n\u001b[1m🎬 Cảnh 1 — Agent cố ghi vào raw/ — inbox của con người\u001b[0m\n   \u001b[0;90m$ Write llmwiki/raw/hack.md\u001b[0m\n   \u001b[1;33m⛔ BỊ CHẶN\u001b[0m [R1 no-write-raw] Chan ghi file vao raw/: llmwiki/raw/hack.md — raw/ la inbox cua con nguoi, agent chi duoc doc.\n   \u001b[0;90m$ bash: echo \"x\" > llmwiki/raw/hack.md   (lách qua đường bash cũng không thoát)\u001b[0m\n   \u001b[1;33m⛔ BỊ CHẶN\u001b[0m [R1 no-write-raw] Chan lenh bash ghi vao raw/: echo x > llmwiki/raw/hack.md — raw/ la inbox cua con nguoi, agent chi duoc doc.\n\n\u001b[1m🎬 Cảnh 2 — Wiki file thiếu '## Origin' — tri thức không truy được nguồn\u001b[0m\n   \u001b[0;90m$ Write llmwiki/wiki/concepts/demo.md (không có Origin)\u001b[0m\n   \u001b[1;33m⛔ BỊ CHẶN\u001b[0m [R2 origin-required] llmwiki/wiki/concepts/demo.md thieu section '## Origin' — them vao de truy duoc nguon goc (raw file / commit / URL).\n   \u001b[1;32m✓\u001b[0m Trong phiên thật: stderr này quay về Claude → nó PHẢI tự thêm Origin ngay\n\n\u001b[1m🎬 Cảnh 3 — File .md vứt bừa vào wiki/ root\u001b[0m\n   \u001b[0;90m$ Write llmwiki/wiki/notes.md\u001b[0m\n   \u001b[1;33m⛔ BỊ CHẶN\u001b[0m [R5 folder-structure] File la o wiki/ root: llmwiki/wiki/notes.md — file wiki phai nam trong ['architecture', 'concepts', 'draft', 'entities', 'sources', 'tours'], khong duoc o wiki/ root.\n\n\u001b[1m🎬 Cảnh 4 — index.md nói dối — có file mà index không ghi\u001b[0m\n   \u001b[0;90m$ tạo wiki/concepts/real-page.md (có Origin) nhưng KHÔNG cập nhật index.md\u001b[0m\n   \u001b[1;33m⛔ BỊ CHẶN\u001b[0m [R3 index-sync] wiki/index.md lech voi thuc te:\n  THIEU trong index: concepts/real-page.md\n  → Cap nhat wiki/index.md cho khop roi tiep tuc.\n   \u001b[1;32m✓\u001b[0m Trong phiên thật: Stop hook dùng đúng check này — Claude KHÔNG ĐƯỢC kết thúc lượt khi index lệch\n\n\u001b[1m🎬 Cảnh 5 — Audit — máy ghi log, model không thể quên\u001b[0m\n   \u001b[0;90m$ giả lập 1 tool call đi qua PostToolUse hook\u001b[0m\n   \u001b[1;32m✓\u001b[0m JSONL xuất hiện tự động: 2026-10-14.jsonl — nội dung:\n      {\"ts\": \"2026-10-14T09:08:07\", \"event\": \"PostToolUse\", \"session_id\": \"tour\", \"tool_name\": \"Write\", \"file_path\": \"/tmp/harness-tour.4NkaAQ/llmwiki/wiki/concepts/real-page.md\"}\n\n\u001b[1m════ TÓM TẮT ════\u001b[0m\n   \u001b[1;32m✓\u001b[0m R1 chặn ghi raw/ (cả Write lẫn bash)\n   \u001b[1;32m✓\u001b[0m R2 ép mọi tri thức có '## Origin'\n   \u001b[1;32m✓\u001b[0m R5 giữ wiki đúng cấu trúc folder\n   \u001b[1;32m✓\u001b[0m R3 không cho kết thúc phiên khi index nói dối\n   \u001b[1;32m✓\u001b[0m R4 log bằng máy — audit JSONL + log.md tự sinh\n   \u001b[0;90mTất cả 0 token, chạy ngầm, không lệnh mới phải nhớ. Sandbox đã tự dọn.\u001b[0m\n   \u001b[0;90mXem nó cắn Claude thật: gọi /harness-tour trong phiên Claude Code.\u001b[0m",
+   "help": "\u001b[1m════ HARNESS TOUR — hệ thống này làm gì? (sandbox: /tmp/harness-tour.0CWrqo) ════\u001b[0m\n   \u001b[1;32m✓\u001b[0m Đã cài harness vào sandbox bằng install-harness.sh (mode NEW)\n\n\u001b[1m🎬 Cảnh 1 — Agent cố ghi vào raw/ — inbox của con người\u001b[0m\n   \u001b[0;90m$ Write llmwiki/raw/hack.md\u001b[0m\n   \u001b[1;33m⛔ BỊ CHẶN\u001b[0m [R1 no-write-raw] Chan ghi file vao raw/: llmwiki/raw/hack.md — raw/ la inbox cua con nguoi, agent chi duoc doc.\n   \u001b[0;90m$ bash: echo \"x\" > llmwiki/raw/hack.md   (lách qua đường bash cũng không thoát)\u001b[0m\n   \u001b[1;33m⛔ BỊ CHẶN\u001b[0m [R1 no-write-raw] Chan lenh bash ghi vao raw/: echo x > llmwiki/raw/hack.md — raw/ la inbox cua con nguoi, agent chi duoc doc.\n\n\u001b[1m🎬 Cảnh 2 — Wiki file thiếu '## Origin' — tri thức không truy được nguồn\u001b[0m\n   \u001b[0;90m$ Write llmwiki/wiki/concepts/demo.md (không có Origin)\u001b[0m\n   \u001b[1;33m⛔ BỊ CHẶN\u001b[0m [R2 origin-required] llmwiki/wiki/concepts/demo.md thieu section '## Origin' — them vao de truy duoc nguon goc (raw file / commit / URL).\n   \u001b[1;32m✓\u001b[0m Trong phiên thật: stderr này quay về Claude → nó PHẢI tự thêm Origin ngay\n\n\u001b[1m🎬 Cảnh 3 — File .md vứt bừa vào wiki/ root\u001b[0m\n   \u001b[0;90m$ Write llmwiki/wiki/notes.md\u001b[0m\n   \u001b[1;33m⛔ BỊ CHẶN\u001b[0m [R5 folder-structure] File la o wiki/ root: llmwiki/wiki/notes.md — file wiki phai nam trong ['architecture', 'concepts', 'draft', 'entities', 'sources', 'tours'], khong duoc o wiki/ root.\n\n\u001b[1m🎬 Cảnh 4 — index.md nói dối — có file mà index không ghi\u001b[0m\n   \u001b[0;90m$ tạo wiki/concepts/real-page.md (có Origin) nhưng KHÔNG cập nhật index.md\u001b[0m\n   \u001b[1;33m⛔ BỊ CHẶN\u001b[0m [R3 index-sync] wiki/index.md lech voi thuc te:\n  THIEU trong index: concepts/real-page.md\n  → Cap nhat wiki/index.md cho khop roi tiep tuc.\n   \u001b[1;32m✓\u001b[0m Trong phiên thật: Stop hook dùng đúng check này — Claude KHÔNG ĐƯỢC kết thúc lượt khi index lệch\n\n\u001b[1m🎬 Cảnh 5 — Audit — máy ghi log, model không thể quên\u001b[0m\n   \u001b[0;90m$ giả lập 1 tool call đi qua PostToolUse hook\u001b[0m\n   \u001b[1;32m✓\u001b[0m JSONL xuất hiện tự động: 2026-10-14.jsonl — nội dung:\n      {\"ts\": \"2026-10-14T11:08:12\", \"event\": \"PostToolUse\", \"session_id\": \"tour\", \"tool_name\": \"Write\", \"file_path\": \"/tmp/harness-tour.0CWrqo/llmwiki/wiki/concepts/real-page.md\"}\n\n\u001b[1m════ TÓM TẮT ════\u001b[0m\n   \u001b[1;32m✓\u001b[0m R1 chặn ghi raw/ (cả Write lẫn bash)\n   \u001b[1;32m✓\u001b[0m R2 ép mọi tri thức có '## Origin'\n   \u001b[1;32m✓\u001b[0m R5 giữ wiki đúng cấu trúc folder\n   \u001b[1;32m✓\u001b[0m R3 không cho kết thúc phiên khi index nói dối\n   \u001b[1;32m✓\u001b[0m R4 log bằng máy — audit JSONL + log.md tự sinh\n   \u001b[0;90mTất cả 0 token, chạy ngầm, không lệnh mới phải nhớ. Sandbox đã tự dọn.\u001b[0m\n   \u001b[0;90mXem nó cắn Claude thật: gọi /harness-tour trong phiên Claude Code.\u001b[0m",
    "helpRc": 0,
    "kind": "harness-script",
    "name": "tour",
@@ -4632,7 +4632,7 @@
   },
   {
    "file": "build-capabilities.py",
-   "help": "✓ wrote fdk/CAPABILITIES.md (310 dòng)",
+   "help": "✓ wrote fdk/CAPABILITIES.md (305 dòng)",
    "helpRc": 0,
    "kind": "fdk-tool",
    "name": "build-capabilities",
@@ -4691,7 +4691,7 @@
   },
   {
    "file": "build-design-showcase.py",
-   "help": "→ /var/folders/3q/f300q6_14czddbsfp1dxt0t40000gn/T/overstack-catalog-_70rd8zk/.claude/skills/hallmark/references/design-showcase.html  (35 khối)",
+   "help": "→ /var/folders/3q/f300q6_14czddbsfp1dxt0t40000gn/T/overstack-catalog-v24qeufn/.claude/skills/hallmark/references/design-showcase.html  (35 khối)",
    "helpRc": 0,
    "kind": "fdk-tool",
    "name": "build-design-showcase",
@@ -4705,7 +4705,7 @@
   },
   {
    "file": "build-docs-index.py",
-   "help": "✓ index.html: 14 trang (0 superseded) · by-type {seq:1, docs:13, cheatsheet:0, report:0}\n  → llmwiki/html/index.html · 23.4 KB · tổng nguồn 7.7 MB",
+   "help": "✓ index.html: 17 trang (0 superseded) · by-type {seq:1, docs:16, cheatsheet:0, report:0}\n  → llmwiki/html/index.html · 24.7 KB · tổng nguồn 8.5 MB",
    "helpRc": 0,
    "kind": "fdk-tool",
    "name": "build-docs-index",
@@ -4719,7 +4719,7 @@
   },
   {
    "file": "build-health-dashboard.py",
-   "help": "✓ wrote llmwiki/html/280626-health-dashboard.html  (19 KB)\n  checks: 3/5 pass\n    [pass] exit=0  Index ↔ wiki sync (R3)\n    [pass] exit=0  Wiki health — broken links\n    [pass] exit=0  Architecture scan\n    [fail] exit=3  OKF frontmatter (R9)\n    [fail] exit=1  Policy → converters drift\n  counts: {'skills': 106, 'validators': 21, 'hooks': 10, 'rules': 22, 'drafts': 2, 'html': 14, 'adrs': 18}\n  drift (truth=106): arch=32, proj=32",
+   "help": "✓ wrote llmwiki/html/280626-health-dashboard.html  (19 KB)\n  checks: 3/5 pass\n    [pass] exit=0  Index ↔ wiki sync (R3)\n    [pass] exit=0  Wiki health — broken links\n    [pass] exit=0  Architecture scan\n    [fail] exit=3  OKF frontmatter (R9)\n    [fail] exit=1  Policy → converters drift\n  counts: {'skills': 106, 'validators': 21, 'hooks': 10, 'rules': 22, 'drafts': 2, 'html': 17, 'adrs': 18}\n  drift (truth=106): arch=32, proj=32",
    "helpRc": 0,
    "kind": "fdk-tool",
    "name": "build-health-dashboard",
@@ -4761,7 +4761,7 @@
   },
   {
    "file": "build-overstack-docs.py",
-   "help": "✓ wrote llmwiki/html/overstack.html (1141044 bytes, 863 dòng)\n\n[build-overstack-docs] KHÔNG đọc được /Users/admin/orca/setup/harness/mechanisms.yaml: No module named 'yaml' — mục cơ-chế sẽ TRỐNG\n[build-overstack-docs] KHÔNG đọc được /Users/admin/orca/setup/harness/foundation.yaml: No module named 'yaml' — mục Nền tảng sẽ TRỐNG",
+   "help": "✓ wrote llmwiki/html/overstack.html (1165608 bytes, 975 dòng)\n\n[build-overstack-docs] KHÔNG đọc được /Users/admin/orca/setup/harness/mechanisms.yaml: No module named 'yaml' — mục cơ-chế sẽ TRỐNG\n[build-overstack-docs] KHÔNG đọc được /Users/admin/orca/setup/harness/foundation.yaml: No module named 'yaml' — mục Nền tảng sẽ TRỐNG",
    "helpRc": 0,
    "kind": "fdk-tool",
    "name": "build-overstack-docs",
@@ -5022,7 +5022,7 @@
   {
    "file": "code-state.py",
    "help": null,
-   "helpRc": 1,
+   "helpRc": -1,
    "kind": "fdk-tool",
    "name": "code-state",
    "options": [],
@@ -5743,7 +5743,7 @@
   },
   {
    "file": "whiteboard-skill-map.py",
-   "help": "✓ wrote llmwiki/html/skill-whiteboard.html (100106 bytes) — đồ thị JS qua build-wiki-graph engine",
+   "help": "✓ wrote llmwiki/html/skill-whiteboard.html (100117 bytes) — đồ thị JS qua build-wiki-graph engine",
    "helpRc": 0,
    "kind": "fdk-tool",
    "name": "whiteboard-skill-map",

@@ -16,7 +16,10 @@
     "mcp:check": "tsx scripts/mcp-check.ts",
     "devops": "tsx scripts/devops-release.ts",
     "typecheck": "tsc --noEmit",
-    "test": "node --import tsx --test tests/*.test.ts"
+    "test": "node --import tsx --test tests/*.test.ts",
+    "worker:assets": "node scripts/build-worker-assets.mjs",
+    "worker:dev": "npm run worker:assets && wrangler dev -c worker/wrangler.jsonc",
+    "worker:deploy": "npm run worker:assets && wrangler deploy -c worker/wrangler.jsonc"
   },
   "dependencies": {
     "@hono/node-server": "^2.1.3",
@@ -27,6 +30,7 @@
   },
   "devDependencies": {
     "@types/node": "^26.6.3",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "wrangler": "^4.150.0"
   }
 }
