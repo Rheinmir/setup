@@ -39,11 +39,14 @@ for v in "user/tokens/verify" "accounts/$CLOUDFLARE_ACCOUNT_ID/tokens/verify"; d
   curl -sS --max-time 20 -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "$CF_API/$v" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{const d=JSON.parse(s);
     console.log("  "+process.argv[1]+": "+(d.success?"id "+d.result.id+" · "+d.result.status+(d.result.expires_on?" · hết hạn "+d.result.expires_on:""):"✗ "+JSON.stringify(d.errors)))}catch{console.log("  "+process.argv[1]+": ✗ "+s.slice(0,120))}})' "${v%%/tokens*}" || true
 done
-probe=$(curl -sS --max-time 20 -o /dev/null -w '%{http_code}' -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "$CF_API/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts" || echo 000)
-if [ "$probe" != 200 ]; then
-  echo "✗ token không đọc được Workers Scripts của account (HTTP $probe) — cần quyền Account · Workers Scripts:Edit với Account Resources = Include <account> (id token in ở trên để tìm đúng token trong dashboard)" >&2; exit 6
-fi
-echo "  Workers Scripts: đọc được"
+# đúng lời gọi đầu tiên của `wrangler deploy` (check-remote-secrets-override): GET secrets của script — cần Workers Scripts:EDIT
+# (Read chỉ đủ liệt kê script). 200 = có script và quyền; 404/10007 = chưa có script, quyền ổn; còn lại = thiếu Edit.
+probe=$(curl -sS --max-time 20 -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "$CF_API/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts/overstack-mcp/secrets" || true)
+case "$probe" in
+  *'"success":true'*|*'"code":10007'*) echo "  Workers Scripts: ghi được";;
+  *) echo "✗ token chưa GHI được Workers Scripts: ${probe:0:200}" >&2
+     echo "  cần Account · Workers Scripts: Edit (không phải Read) với Account Resources = Include <account>; id token in ở trên" >&2; exit 6;;
+esac
 echo "→ wrangler"; WV=$($WRANGLER --version 2>&1 | tail -1) || { echo "✗ không chạy được wrangler ($WRANGLER): $WV — trong container: /tmp phải mount exec (esbuild postinstall)" >&2; exit 5; }; echo "  $WV"
 echo "→ assets"; ${BUILD_ASSETS:-node scripts/build-worker-assets.mjs}
 DOM_ARGS=(); [ -n "$DOMAIN" ] && DOM_ARGS=(--domain "$DOMAIN")

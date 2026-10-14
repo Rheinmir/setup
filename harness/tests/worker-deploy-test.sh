@@ -18,7 +18,7 @@ cat > "$T/bin/curl" <<'C'
 url="${@: -1}"; echo "curl $url" >> "$LOG"; F=0; for a in "$@"; do case "$a" in -*f*) [ "${a#--}" = "$a" ] && F=1;; esac; done
 case "$url" in
   */tokens/verify) echo '{"success":true,"result":{"id":"tokid","status":"active"}}';;
-  */workers/scripts) [ "${SCRIPTS:-ok}" = ok ] && echo 200 || echo 403;;
+  */workers/scripts/overstack-mcp/secrets) case "${SCRIPTS:-ok}" in ok) echo '{"success":true,"result":[]}';; new) echo '{"success":false,"errors":[{"code":10007,"message":"This Worker does not exist on your account."}]}';; *) echo '{"success":false,"errors":[{"code":10000,"message":"Authentication error"}]}';; esac;;
   */memberships*) [ "${MEMBERS:-}" = one ] && echo '{"success":true,"result":[{"account":{"id":"accmem"}}]}' || echo '{"success":true,"result":[]}';;
   */accounts*) case "$ACCOUNTS" in
       one) echo '{"success":true,"result":[{"id":"acc111","name":"me"}]}';;
@@ -67,5 +67,7 @@ printf '#!/bin/sh\necho "npm error code 1" >&2; exit 1\n' > "$T/bin/wrangler-bro
 [ "$rc" = 5 ] && grep -q "không chạy được wrangler" "$T/out" && ok "(10) wrangler không chạy (tmpfs noexec 14/10) → rc 5, nói lý do, không im lặng" || { no "(10) rc=$rc"; cat "$T/out"; }
 grep -A2 "^  worker-deploy:" "$ROOT/docker-compose.stack.yml" >/dev/null && awk '/^  worker-deploy:/{f=1} f&&/tmpfs:/{getline; print; exit}' "$ROOT/docker-compose.stack.yml" | grep -q "/tmp:exec" && ok "(11) compose: worker-deploy mount /tmp:exec" || no "(11) worker-deploy tmpfs thiếu :exec"
 rc=$(run CLOUDFLARE_API_TOKEN=tok ACCOUNTS=zero ZONES=one HEALTH=up SCRIPTS=denied)
-[ "$rc" = 6 ] && ! grep -q "^wrangler deploy" "$T/log" && grep -q "id tokid" "$T/out" && grep -q "Workers Scripts:Edit" "$T/out" && ok "(12) token thiếu quyền Workers (14/10) → rc 6 trước deploy, in id token + quyền cần" || { no "(12) rc=$rc"; cat "$T/out"; }
+[ "$rc" = 6 ] && ! grep -q "^wrangler deploy" "$T/log" && grep -q "id tokid" "$T/out" && grep -q "Workers Scripts: Edit (không phải Read)" "$T/out" && ok "(12) token thiếu quyền Workers (14/10) → rc 6 trước deploy, in id token + quyền cần" || { no "(12) rc=$rc"; cat "$T/out"; }
+rc=$(run CLOUDFLARE_API_TOKEN=tok ACCOUNTS=one HEALTH=up SCRIPTS=new)
+[ "$rc" = 0 ] && grep -q "^wrangler deploy" "$T/log" && ok "(13) script chưa tồn tại (10007, lần deploy đầu) → vẫn deploy" || { no "(13) rc=$rc"; cat "$T/out"; }
 echo; echo "worker-deploy: $PASS PASS · $FAIL FAIL"; [ "$FAIL" = 0 ]
