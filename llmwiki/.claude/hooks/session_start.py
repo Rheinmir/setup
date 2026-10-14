@@ -57,6 +57,74 @@ def harness_integrity(root: Path) -> None:
         pass
 
 
+def _cmp_semver(a: str, b: str) -> int:
+    def key(v):
+        return [int(x) if x.isdigit() else 0 for x in re.split(r"[.\-+]", str(v).strip().lstrip("v"))[:3]] + [0, 0, 0]
+    ka, kb = key(a)[:3], key(b)[:3]
+    return (ka > kb) - (ka < kb)
+
+
+def _fetch_json(url: str, timeout: float = 2.0):
+    import urllib.request
+    with urllib.request.urlopen(url, timeout=timeout) as r:
+        return json.load(r)
+
+
+def remote_version_nudge(root: Path) -> None:
+    """Dev lệch bản giữa máy (feedback 14/10/2026): so bản harness + bộ skill trên MÁY NÀY với BẢN CHUẨN, in đúng một dòng
+    khi máy cũ hơn. Nguồn chuẩn: OVERSTACK_VERSION_URL (healthz của overstack-mcp, vd https://skills.giatbh.io.vn/healthz,
+    trả {harness, skills:{version}}) hoặc mặc định raw GitHub version.json của Rheinmir/setup + Rheinmir/skills.
+    Hỏi mạng tối đa 1 lần/ngày/máy (cache ~/.claude/harness/.remote-version.json), timeout 2 s, fail-open tuyệt đối."""
+    try:
+        if os.environ.get("OVERSTACK_VERSION_NUDGE") == "0":
+            return
+        gv = HARNESS_HOME / "version.json"
+        if not gv.is_file():
+            return
+        local_h = str(json.loads(gv.read_text(encoding="utf-8")).get("template_version") or "0")
+        local_s = None
+        sv = HARNESS_HOME / "skills-version.json"
+        if sv.is_file():
+            local_s = str(json.loads(sv.read_text(encoding="utf-8")).get("version") or "") or None
+        import datetime
+        today = datetime.date.today().isoformat()
+        cache = HARNESS_HOME / ".remote-version.json"
+        doc = {}
+        try:
+            doc = json.loads(cache.read_text(encoding="utf-8")) if cache.is_file() else {}
+        except Exception:
+            doc = {}
+        if doc.get("date") != today:
+            remote_h = remote_s = None
+            url = os.environ.get("OVERSTACK_VERSION_URL")
+            if url:
+                body = _fetch_json(url)
+                remote_h = body.get("harness") or body.get("template_version")
+                sk = body.get("skills")
+                remote_s = (sk.get("version") if isinstance(sk, dict) else None)
+            else:
+                try:
+                    remote_h = _fetch_json("https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/version.json").get("template_version")
+                except Exception:
+                    pass
+                try:
+                    remote_s = _fetch_json("https://raw.githubusercontent.com/Rheinmir/skills/main/version.json").get("version")
+                except Exception:
+                    pass
+            doc = {"date": today, "harness": remote_h, "skills": remote_s, "source": url or "github-raw"}
+            cache.write_text(json.dumps(doc), encoding="utf-8")
+        msgs = []
+        rh, rs = doc.get("harness"), doc.get("skills")
+        if rh and _cmp_semver(local_h, str(rh)) < 0:
+            msgs.append(f"harness máy bạn v{local_h} < bản chuẩn v{rh} → curl -fsSL https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/poc-vendor-neutral/bootstrap.sh | bash")
+        if rs and local_s and _cmp_semver(local_s, str(rs)) < 0:
+            msgs.append(f"bộ skill v{local_s} < bản chuẩn v{rs} → npx -y skills add rheinmir/skills#main --global --all")
+        if msgs:
+            print("⬆ [version] " + " · ".join(msgs))
+    except Exception:
+        pass
+
+
 def wiki_drift(root: Path) -> None:
     """Nhắc code→wiki drift đầu phiên (distill openwiki 2026-07-06): wiki có neo
     .last-sync.json (do harness/scripts/wiki-sync.py --mark-synced chốt) mà code đã
@@ -380,6 +448,7 @@ def main() -> None:
 
     root = Path(project_dir(payload))
     harness_integrity(root)  # U11: so stamp↔global TRƯỚC early-exit (downstream v4 không có manifest)
+    remote_version_nudge(root)  # lệch bản với bản chuẩn (1 dòng, 1 lần/ngày, fail-open) — feedback dev lệch version 14/10
     wiki_drift(root)         # code→wiki drift — cũng TRƯỚC early-exit (downstream v4 là đích chính)
     wikigraph_reminder(root) # C: cờ bật mà vector thiếu/cũ → nhắc 1 dòng (trước early-exit, downstream primary)
     draft_threshold(root)    # kho nháp vượt ngưỡng → HỎI user chạy /tidy (trước early-exit, downstream primary)

@@ -12,6 +12,7 @@ services:
       dockerfile: Dockerfile.mcp
       args:
         ORCA_GRAPH_REF: ${ORCA_GRAPH_REF:-main}
+        SKILLS_REF: ${SKILLS_REF:-main}
     image: overstack-mcp:latest
     container_name: overstack-mcp
     restart: unless-stopped
@@ -48,6 +49,24 @@ services:
       interval: 30s
       timeout: 5s
       retries: 3
+
+  # Cloudflare Tunnel (profile `tunnel`): public hostname skills.giatbh.io.vn → http://overstack-mcp:8791 (cấu hình trên dashboard
+  # Zero Trust). TUNNEL_TOKEN lấy từ Vault k8s2 secret/infra/cloudflare, viết vào .env của stack. Chỉ bật cùng OVERSTACK_TOOLS=read
+  # — hostname công khai KHÔNG được có tool_run/workspace_sync/orca_graph.
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: overstack-mcp-cloudflared
+    restart: unless-stopped
+    command: ["tunnel", "--no-autoupdate", "run"]
+    environment:
+      TUNNEL_TOKEN: ${TUNNEL_TOKEN:-}
+    depends_on:
+      overstack-mcp:
+        condition: service_healthy
+    networks:
+      default:
+      ai-net:
+    profiles: ["tunnel"]
 
 networks:
   ai-net:

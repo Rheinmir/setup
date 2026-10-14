@@ -101,6 +101,9 @@ def read_text(repo, rel):
 # `verified`/`enabled`/`threshold`… riêng). KHÔNG phải hằng-số-ẩn-số đặc trưng → không tính leak.
 GENERIC_KEYS = {
     "verified", "enabled", "threshold", "model", "mode", "status", "tracked", "trigger",
+    # `thinking` là khoá cấu hình provider LLM (wikieval judge ↔ dsh client overlay là hai adapter độc lập) — không phải
+    # hằng-số-ẩn-số rò qua biên; đo 14/10/2026: overlay OpenRouter tắt thinking vì gateway không nhận budget_tokens.
+    "thinking",
     "disposable", "source", "kind", "timeout", "budget", "backend", "rubric", "category",
     # parallel BNAL adapters legitimately share these schema keys (e.g. failure-flywheel ↔
     # success-flywheel both carry recurrence_threshold + distill.prompt) — not a leak.

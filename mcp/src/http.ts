@@ -7,7 +7,7 @@ import { timingSafeEqual } from "node:crypto";
 import { Hono } from "hono";
 import { buildServer, toolModeFromEnv, VERSION } from "./server.ts";
 import type { ServerOptions } from "./server.ts";
-import { loadCatalog } from "./catalog.ts";
+import { harnessVersion, loadCatalog } from "./catalog.ts";
 import { workspacesDir } from "./workspace.ts";
 
 export function sameToken(a: string | undefined, b: string): boolean {
@@ -23,7 +23,10 @@ export function createApp(opts: HttpOptions): Hono {
   const mode = opts.mode ?? toolModeFromEnv();
   const app = new Hono();
   // tokenSource nói cho operator biết token nằm ở đâu (env hay file trong volume) — không bao giờ lộ giá trị
-  app.get("/healthz", (c) => c.json({ ok: true, name: "overstack-mcp", version: VERSION, skills: catalog.skills.length, rules: catalog.rules.length, tools: catalog.tools.length, mode, tokenSource: opts.tokenSource ?? "env" }));
+  // Nguồn phiên bản đồng nhất cho mọi dev (PLAN 141026 T5): harness = template_version, skills = version.json của Rheinmir/skills.
+  app.get("/healthz", (c) => c.json({ ok: true, name: "overstack-mcp", version: VERSION, harness: harnessVersion(opts.root), template_version: harnessVersion(opts.root),
+    skills: { count: catalog.skills.length, version: catalog.skillsVersion?.version ?? null, catalog_sha: catalog.skillsVersion?.catalog_sha ?? null },
+    rules: catalog.rules.length, tools: catalog.tools.length, mode, tokenSource: opts.tokenSource ?? "env" }));
   app.use("*", async (c, next) => {
     const bearer = c.req.header("authorization")?.replace(/^Bearer\s+/i, "");
     if (!sameToken(bearer, opts.token)) return c.json({ error: "unauthorized" }, 401);

@@ -12,6 +12,8 @@ CLI:
   build-overstack-docs.py            # ghi llmwiki/html/overstack.html từ đĩa
   build-overstack-docs.py --check    # exit 2 nếu file cũ so với bản sinh (giữ docs luôn-mới)
 """
+import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -127,6 +129,11 @@ def _fm_desc(p: Path) -> str:
     return re.split(r"(?<=[.!?。])\s|—| - |\. |\. ", val, 1)[0].strip()
 
 
+def _first_sentence(val: str) -> str:
+    val = " ".join(val.split()).strip().strip('"').strip("'")
+    return re.split(r"(?<=[.!?。])\s|—| - |\. |\. ", val, 1)[0].strip()
+
+
 def load_loops(root: Path) -> dict:
     try:
         t = (root / "harness" / "scripts" / "sync-skills.py").read_text(encoding="utf-8")
@@ -138,8 +145,17 @@ def load_loops(root: Path) -> dict:
 
 def skills_by_loop(root: Path):
     loops = load_loops(root)
-    sk_dir = root / "skills"
+    env = os.environ.get("OVERSTACK_SKILLS_DIR")
+    sk_dir = Path(env).expanduser() if env else root / "skills"
     if not (sk_dir.is_dir() and any(sk_dir.glob("*/SKILL.md"))):
+        cat_p = root / "fdk" / "skills.catalog.json"
+        if not env and cat_p.is_file():
+            # repo framework: skill ở Rheinmir/skills → ảnh chụp catalog (tất định, --check không lệch theo máy)
+            by, n = {}, 0
+            for s in json.loads(cat_p.read_text(encoding="utf-8")).get("skills", []):
+                n += 1
+                by.setdefault(str(s.get("loop") or "utils"), []).append((str(s.get("name")), _first_sentence(str(s.get("description") or ""))))
+            return by, n
         sk_dir = Path.home() / ".claude" / "skills"
     by = {}
     n = 0
@@ -148,7 +164,8 @@ def skills_by_loop(root: Path):
         if not sk.is_file():
             continue
         n += 1
-        loop = loops.get(d.name, "utils")
+        fm_loop = re.search(r"^\s{2}loop:\s*([\w-]+)\s*$", sk.read_text(encoding="utf-8", errors="ignore")[:4000], re.M)
+        loop = loops.get(d.name) or (fm_loop.group(1) if fm_loop else "utils")
         by.setdefault(loop, []).append((d.name, _fm_desc(sk)))
     return by, n
 
@@ -1074,7 +1091,7 @@ def sections(root: Path):
         "<ol class=\"ck\">"
         "<li><b>Code + test</b> — viết lõi tất định + self-test; ẩn số → nhốt sau MỘT adapter (<code>verified:false</code>).</li>"
         "<li><b>Rule mới?</b> → thêm vào <code>policy.yaml</code> + validator + wiring (đừng hardcode rời rạc).</li>"
-        "<li><b>Skill mới?</b> → <code>skills/&lt;tên&gt;/SKILL.md</code> (canonical) + sync sang <code>llmwiki/skills/</code> (mirror) + LOOP_MAP + bảng skill trong AGENT.md ＋ CLAUDE.md (giữ parity) + CAPABILITIES.</li>"
+        "<li><b>Skill mới?</b> → repo <code>Rheinmir/skills</code>: <code>skills/&lt;tên&gt;/SKILL.md</code> (khai <code>metadata.loop</code> + <code>metadata.requires</code>, cổng <code>tools/check.sh</code>) — setup không còn <code>skills/</code> (mirror) + LOOP_MAP + bảng skill trong AGENT.md ＋ CLAUDE.md (giữ parity) + CAPABILITIES.</li>"
         "<li><b>Cổng mới?</b> → cắm vào pre-commit + CI + một bước trong <code>fdk-gate</code>.</li>"
         "<li><b>Wiki \"vì sao\"</b> — viết concept giải thích lý do tồn tại (như feature-catalog).</li>"
         "<li><b>Docs người-đọc</b> — cập nhật trang này (regenerate) + README nếu đổi cách dùng.</li>"

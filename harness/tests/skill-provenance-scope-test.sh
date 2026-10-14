@@ -11,6 +11,7 @@ fail=0
 ok(){ printf '  \033[1;32m✓\033[0m %s\n' "$1"; }
 bad(){ printf '  \033[1;31m✗\033[0m %s\n' "$1"; fail=$((fail+1)); }
 
+if [ -f "$ROOT/fdk/skills.provenance.json" ]; then
 # 1. --json phân biệt được external-pull vs local-authored (điều kiện tiên quyết để scope đúng)
 python3 "$SP" check --json 2>/dev/null | python3 -c "
 import sys, json
@@ -20,6 +21,10 @@ has_local = any(r.get('adapt_mode') != 'external-pull' for r in d['rows'])
 sys.exit(0 if has_ext and has_local else 1)
 " && ok "--json phân biệt được external-pull và local-authored" \
   || bad "--json thiếu 1 trong 2 loại — không thể scope đúng"
+
+else
+  ok "repo không còn sổ provenance (skill tách sang Rheinmir/skills — sổ + checksum gác ở CI repo đó); chỉ kiểm sandbox"
+fi
 
 # 2. Sandbox: tamper 1 skill GIẢ external-pull → probe phải ĐỎ, không đụng repo thật
 # GH#136: chụp trạng thái skills/ TRƯỚC — so HIỆU SỐ, không so tuyệt đối (working tree bẩn sẵn ≠ test làm bẩn)

@@ -5,7 +5,7 @@
 # Phủ: mech:harness-lint, mech:medic-mirror, skill:tidy, skill:ovs-notes,
 #      script: adapt-registry.py arch-scan.py dispatch-verify.py
 #              harness-lint.py ovs-notes.py query-log.py query-proxy.py skill-health.py
-#              skill-registry.py sync-skills.py sync-template.py wiki-health.py dym-sync.py
+#              sync-template.py wiki-health.py dym-sync.py (skill-registry/sync-skills đã tách sang Rheinmir/skills)
 #      tool:   artifacts.py build-cheatsheet.py build-docs-index.py build-health-dashboard.py
 #              build-skill-search.py tidy.py whiteboard-skill-map.py wiki-relations.py
 set -u
@@ -75,20 +75,26 @@ out=$(python3 "$ROOT/harness/scripts/sync-template.py" --root "$SB/st" --dry-run
 [ $rc -eq 2 ] && echo "$out" | grep -q "parse" \
   && ok "sync-template.py từ chối remote không parse được (rc=2)" || bad "sync-template.py rc=$rc: $out"
 
-# ── 11. sync-skills.py: sinh mirror thật → --check xanh → phá mirror → --check đỏ ──
-T="$SB/ss"; clone_tool "$T" harness/scripts/sync-skills.py
-mkdir -p "$T/skills/smoke-sk"; cp "$SB/skills/smoke-sk/SKILL.md" "$T/skills/smoke-sk/"
-python3 "$T/harness/scripts/sync-skills.py" >/dev/null 2>&1
-python3 "$T/harness/scripts/sync-skills.py" --check >/dev/null 2>&1; rc=$?
-[ $rc -eq 0 ] && ok "sync-skills.py sinh mirror rồi --check xanh" || bad "sync-skills.py --check đỏ ngay sau sinh (rc=$rc)"
-find "$T/llmwiki/skills" -name '*.md' | head -1 | xargs -I{} sh -c 'echo drift >> {}'
-python3 "$T/harness/scripts/sync-skills.py" --check >/dev/null 2>&1; rc=$?
-[ $rc -ne 0 ] && ok "sync-skills.py --check ĐỎ khi mirror bị phá (fire-drill)" || bad "sync-skills.py --check không bắt drift"
+# ── 11. okf-check.py (R9 OKF frontmatter): wiki fixture — trang có frontmatter qua, trang thiếu `type` bị --check bắt ──
+mkdir -p "$SB/okf/wiki/concepts"
+printf -- '---\ntype: concept\ntitle: ok\n---\n# ok\n' > "$SB/okf/wiki/concepts/ok.md"
+out=$(python3 "$ROOT/harness/scripts/okf-check.py" --root "$SB/okf" --wiki-dir "$SB/okf/wiki" --check 2>&1); rc=$?
+[ $rc -eq 0 ] && ok "okf-check.py --check xanh khi mọi trang có frontmatter OKF" || bad "okf-check.py --check rc=$rc trên fixture sạch: $out"
+printf -- '# thieu frontmatter\nnoi dung\n' > "$SB/okf/wiki/concepts/bad.md"
+out=$(python3 "$ROOT/harness/scripts/okf-check.py" --root "$SB/okf" --wiki-dir "$SB/okf/wiki" --check 2>&1); rc=$?
+[ $rc -ne 0 ] && ok "okf-check.py --check ĐỎ khi có trang thiếu frontmatter (fire-drill)" || bad "okf-check.py không bắt trang thiếu frontmatter"
 
-# ── 12. skill-registry.py: report thật trên repo (read-only) ──
-out=$(python3 "$ROOT/harness/scripts/skill-registry.py" 2>&1); rc=$?
-[ $rc -eq 0 ] && [ -n "$out" ] && ok "skill-registry.py report chạy được trên repo thật" \
-  || bad "skill-registry.py rc=$rc: $(echo "$out" | head -2)"
+# ── 12. health-check.py (mech:health-check): manifest + version.json trong sandbox, --offline --json → status tất định ──
+mkdir -p "$SB/hc/llmwiki"
+printf -- 'noi dung\n' > "$SB/hc/llmwiki/AGENT.md"
+printf -- '{"remote":"https://example.invalid/x.git","includes":["llmwiki/AGENT.md"],"excludes":[]}\n' > "$SB/hc/.template-manifest.json"
+python3 "$ROOT/harness/scripts/health-check.py" --root "$SB/hc" --manifest .template-manifest.json --version-file version.json --offline --update >/dev/null 2>&1
+out=$(python3 "$ROOT/harness/scripts/health-check.py" --root "$SB/hc" --manifest .template-manifest.json --version-file version.json --offline --json 2>&1); rc=$?
+st=$(printf '%s' "$out" | python3 -c "import json,sys; print(json.load(sys.stdin).get('status'))" 2>/dev/null)
+[ "$st" = "ok" ] && ok "health-check.py --offline --json: status=ok ngay sau --update" || bad "health-check.py status='$st' rc=$rc: $(printf '%s' "$out" | tail -c 300)"
+printf -- 'noi dung doi\n' > "$SB/hc/llmwiki/AGENT.md"
+st=$(python3 "$ROOT/harness/scripts/health-check.py" --root "$SB/hc" --manifest .template-manifest.json --version-file version.json --offline --json 2>/dev/null | python3 -c "import json,sys; print(json.load(sys.stdin).get('status'))" 2>/dev/null)
+[ "$st" = "drift" ] && ok "health-check.py báo drift khi file đổi so hash đã ghi" || bad "health-check.py không bắt drift (status='$st')"
 
 # ── 13. harness-lint.py (mech:harness-lint): --check thật trên repo — đỏ là drift THẬT ──
 out=$(python3 "$ROOT/harness/scripts/harness-lint.py" --check 2>&1); rc=$?
@@ -187,5 +193,5 @@ out=$(python3 "$ROOT/harness/scripts/sync-template.py" --selftest 2>&1); rc=$?
 [ $rc -eq 0 ] && ok "sync-template.py --selftest (migrate_paths) xanh" || bad "sync-template.py --selftest rc=$rc: $out"
 
 echo
-if [ $fail -eq 0 ]; then echo "engines-smoke-test: PASS (23 nhóm assert)"; else
+if [ $fail -eq 0 ]; then echo "engines-smoke-test: PASS (25 nhóm assert)"; else
   echo "engines-smoke-test: FAIL ($fail assert đỏ)"; exit 1; fi

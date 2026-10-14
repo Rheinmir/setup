@@ -129,6 +129,8 @@ expect row-wrap "$(mk rw "$RWC.chips{flex-wrap:wrap}" "$RWB")" "row-wrap:"
 expect row-wrap-ok "$(mk rwo "$RWC.chips{flex-wrap:nowrap;overflow:hidden;white-space:nowrap}" "$RWB")" OK
 
 # ── design-showcase (PLAN 220926-design-showcase t7): trang MẪU CHUẨN phải sạch tuyệt đối — 0 FAIL, 0 WARN
-expect design-showcase "$ROOT/skills/hallmark/references/design-showcase.html" OK
+python3 "$ROOT/fdk/tools/build-design-showcase.py" --out "$T/design-showcase.html" >/dev/null 2>&1 \
+  && expect design-showcase "$T/design-showcase.html" OK \
+  || { echo "  FAIL design-showcase: generator không sinh được trang"; FAIL=$((FAIL+1)); }
 
 echo ""; echo "html-visual-gate-test: $PASS PASS · $FAIL FAIL · $SKIP SKIP"; [ "$FAIL" = 0 ]

@@ -20,6 +20,7 @@ CLI:
   build-capabilities.py --check         # exit 2 nếu CAPABILITIES.md cũ (CHỈ dùng ở repo framework)
 """
 import json
+import os
 import re
 import subprocess
 import sys
@@ -56,6 +57,9 @@ def cap_path(root: Path) -> Path:
 
 def skills_dir(root: Path) -> Path:
     """Repo có skills/ nguồn → dùng nó. Downstream KHÔNG có → skill là GLOBAL ~/.claude/skills."""
+    env = os.environ.get("OVERSTACK_SKILLS_DIR")
+    if env:
+        return Path(env).expanduser()
     local = root / "skills"
     if local.is_dir() and any(local.glob("*/SKILL.md")):
         return local
@@ -87,8 +91,31 @@ def parse_frontmatter_desc(p: Path):
     return val.strip().strip('"').strip("'")
 
 
+def catalog_snapshot(root: Path):
+    """fdk/skills.catalog.json (ảnh chụp catalog Rheinmir/skills) — chỉ dùng khi repo KHÔNG có skills/ và không đặt
+    OVERSTACK_SKILLS_DIR; downstream (không có fdk/) trả None → đọc ~/.claude/skills như trước."""
+    if os.environ.get("OVERSTACK_SKILLS_DIR") or any((root / "skills").glob("*/SKILL.md")):
+        return None
+    p = root / "fdk" / "skills.catalog.json"
+    try:
+        d = json.loads(p.read_text(encoding="utf-8"))
+        return d if isinstance(d.get("skills"), list) else None
+    except (OSError, ValueError):
+        return None
+
+
+def frontmatter_loop(sk: Path):
+    """metadata.loop trong frontmatter SKILL.md (repo Rheinmir/skills khai loop tại chỗ, không còn LOOP_MAP)."""
+    try:
+        head = sk.read_text(encoding="utf-8", errors="ignore")[:4000]
+        m = re.search(r"^\s{2}loop:\s*([\w-]+)\s*$", head, re.M)
+        return m.group(1) if m else None
+    except OSError:
+        return None
+
+
 def load_loops(root: Path):
-    """LOOP_MAP từ sync-skills.py (nguồn duy nhất). Downstream không có file này → {} (mọi skill về utils)."""
+    """LOOP_MAP từ sync-skills.py (bản cũ, nếu còn). Thiếu → {} và loop lấy từ frontmatter (frontmatter_loop)."""
     try:
         t = (root / "harness" / "scripts" / "sync-skills.py").read_text(encoding="utf-8")
         m = re.search(r"LOOP_MAP\s*=\s*\{(.*?)\}", t, re.S)
@@ -217,13 +244,16 @@ def capproof(root: Path) -> dict:
     if src is None:
         return {"schema": "capproof/v1", "downstream": True}
     items, descs = {}, {}
-    for d in sorted([*skills_dir(root).glob("*/"), *skills_dir(root).glob("external/*/")]):
-        sk = d / "SKILL.md"
-        if sk.is_file():
-            body = sk.read_text(encoding="utf-8", errors="ignore")
-            p, via = _resolve_one(root, src, "skill", d.name, body)
-            items[f"skill:{d.name}"] = {"proof": p, "via": via}
-            descs[f"skill:{d.name}"] = parse_frontmatter_desc(sk) or ""
+    # Skill tách sang Rheinmir/skills (141026): repo framework (ảnh chụp catalog, không có skills/) KHÔNG đếm skill là năng lực
+    # của mình — neo bằng chứng của skill (golden skill-resolve, provenance) gác ở CI repo đó. Repo còn skills/ giữ hành vi cũ.
+    if catalog_snapshot(root) is None:
+        for d in sorted([*skills_dir(root).glob("*/"), *skills_dir(root).glob("external/*/")]):
+            sk = d / "SKILL.md"
+            if sk.is_file():
+                body = sk.read_text(encoding="utf-8", errors="ignore")
+                p, via = _resolve_one(root, src, "skill", d.name, body)
+                items[f"skill:{d.name}"] = {"proof": p, "via": via}
+                descs[f"skill:{d.name}"] = parse_frontmatter_desc(sk) or ""
     pol = root / "harness" / "poc-vendor-neutral" / "policy.yaml"
     if pol.is_file():
         for rid in re.findall(r"id:\s*(R\d+)", pol.read_text(encoding="utf-8")):
@@ -274,11 +304,17 @@ def build(root: Path) -> str:
     repo = is_framework_repo(root)
     loops = load_loops(root)
     skills = []
-    for d in sorted([*skills_dir(root).glob("*/"), *skills_dir(root).glob("external/*/")]):
-        name = d.name
-        sk = d / "SKILL.md"
-        if sk.is_file():
-            skills.append((name, loops.get(name, "utils"), first_sentence(parse_frontmatter_desc(sk))))
+    cat = catalog_snapshot(root)
+    if cat is not None:
+        # repo framework: skill tách sang Rheinmir/skills → danh sách TẤT ĐỊNH từ fdk/skills.catalog.json (không đọc ~/.claude/skills)
+        for s in cat.get("skills", []):
+            skills.append((str(s.get("name")), str(s.get("loop") or "utils"), first_sentence(str(s.get("description") or ""))))
+    else:
+        for d in sorted([*skills_dir(root).glob("*/"), *skills_dir(root).glob("external/*/")]):
+            name = d.name
+            sk = d / "SKILL.md"
+            if sk.is_file():
+                skills.append((name, loops.get(name) or frontmatter_loop(sk) or "utils", first_sentence(parse_frontmatter_desc(sk))))
     by_loop = {}
     for name, loop, desc in skills:
         by_loop.setdefault(loop, []).append((name, desc))

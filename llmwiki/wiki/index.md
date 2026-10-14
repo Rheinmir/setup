@@ -100,24 +100,6 @@
 | [040726-episodic-vector-plan](sources/draft/archive/analysis/040726-episodic-vector-plan.md) | draft | Draft: đạt 4/4 tầng nhớ cho llmwiki (issue #9) |
 | [ep-ci-tech-debt](sources/evals/episodic/ep-ci-tech-debt.md) | eval | Episodic golden: đóng tech-debt CI |
 | [ep-episodic-wire](sources/evals/episodic/ep-episodic-wire.md) | eval | Episodic golden: nối episodic + vector retrieval |
-| [caveman-commit](sources/evals/skill-resolve/caveman-commit.md) | auto | skill-resolve golden: caveman-commit |
-| [caveman](sources/evals/skill-resolve/caveman.md) | auto | skill-resolve golden: caveman |
-| [council](sources/evals/skill-resolve/council.md) | auto | skill-resolve golden: council |
-| [design-frontend](sources/evals/skill-resolve/design-frontend.md) | auto | skill-resolve golden: design-frontend |
-| [design-v1](sources/evals/skill-resolve/design-v1.md) | auto | skill-resolve golden: design-v1 |
-| [frontier-scan](sources/evals/skill-resolve/frontier-scan.md) | auto | skill-resolve golden: frontier-scan |
-| [health-check](sources/evals/skill-resolve/health-check.md) | auto | skill-resolve golden: health-check |
-| [ingest](sources/evals/skill-resolve/ingest.md) | auto | skill-resolve golden: ingest |
-| [medic](sources/evals/skill-resolve/medic.md) | auto | skill-resolve golden: medic |
-| [new-skill](sources/evals/skill-resolve/new-skill.md) | auto | skill-resolve golden: new-skill |
-| [onboard](sources/evals/skill-resolve/onboard.md) | auto | skill-resolve golden: onboard |
-| [orca-issue](sources/evals/skill-resolve/orca-issue.md) | auto | skill-resolve golden: orca-issue |
-| [raise-issue](sources/evals/skill-resolve/raise-issue.md) | auto | skill-resolve golden: raise-issue |
-| [ship](sources/evals/skill-resolve/ship.md) | auto | skill-resolve golden: ship |
-| [skill-provenance](sources/evals/skill-resolve/skill-provenance.md) | auto | skill-resolve golden: skill-provenance |
-| [snapshot-push](sources/evals/skill-resolve/snapshot-push.md) | auto | skill-resolve golden: snapshot-push |
-| [tour-basic](sources/evals/skill-resolve/tour-basic.md) | auto | skill-resolve golden: tour-basic |
-| [tour-supademo](sources/evals/skill-resolve/tour-supademo.md) | auto | skill-resolve golden: tour-supademo |
 | [040726-selftest-nested-commit-unguarded](sources/draft/archive/analysis/040726-selftest-nested-commit-unguarded.md) | issue | Issue: Self-test harness chạy `git commit` lồng không tắt hook |
 | [050726-ship-selfindex-engine-downstream](sources/draft/archive/analysis/050726-ship-selfindex-engine-downstream.md) | issue | Issue: Ship self-index engine (wiki-graph + retrieval) xuống downstream |
 | [050726-wikigraph-package-import-resolver](sources/draft/archive/analysis/050726-wikigraph-package-import-resolver.md) | issue | Issue: resolver Python của wiki-graph chỉ khớp basename 1-segment |
@@ -132,9 +114,6 @@
 | [080926-session-provenance](sources/provenance/080926-session-provenance.md) | source | session-provenance a01cd2b7 — auto-distill |
 | [080926-prd-grade-fe](sources/draft/archive/proposals/080926-prd-grade-fe.md) | draft | 080926-prd-grade-fe |
 | [080926-prd-grade-fe-PLAN](sources/draft/archive/proposals/080926-prd-grade-fe-PLAN.md) | draft | /prd-grade-fe — PLAN thi hành |
-| [prd-grade-fe-production](sources/evals/skill-resolve/prd-grade-fe-production.md) | eval | skill-resolve golden: prd-grade-fe-production |
-| [prd-grade-fe-theme-docs](sources/evals/skill-resolve/prd-grade-fe-theme-docs.md) | eval | skill-resolve golden: prd-grade-fe-theme-docs |
-| [prd-grade-fe-url](sources/evals/skill-resolve/prd-grade-fe-url.md) | eval | skill-resolve golden: prd-grade-fe-url |
 | [090926-session-provenance](sources/provenance/090926-session-provenance.md) | source | session-provenance f38daa12 — auto-distill |
 | [ci-maintainer-brief](sources/ci-maintainer-brief.md) | reference | CI maintainer brief |
 | [290726-ge-test-PLAN](sources/draft/archive/proposals/290726-ge-test-PLAN.md) | draft | Graph-engineering — PLAN kiểm thử thay đổi T1–T7 |
@@ -322,3 +301,5 @@
 | [280926-issues-sweep-PLAN](sources/draft/280926-issues-sweep-PLAN.md) | draft | PLAN quét sạch 26 issue GitHub mở: sửa CI harness đỏ (toggle poll), gộp PR #178 #182, đăng ký ui-snapshot, đóng issue lỗi thời kèm ledger — graph 280926-issues-sweep |
 | [290926-uiux-semantic-search-PLAN](sources/draft/290926-uiux-semantic-search-PLAN.md) | draft | Kế hoạch 6 task (đã xong, verify thật) thêm tìm kiếm theo nghĩa cho site uiux-asset trên Upstash Search gói free: chỉ mục 89 mục, đo 12 truy vấn (tìm theo nhóm 12/12), API có cache + trần tháng + fallback từ khoá không dấu, ô tìm trang chủ và panel từ khoá trên /stats |
 | [290926-uiux-followups-PLAN](sources/draft/290926-uiux-followups-PLAN.md) | draft | Kế hoạch dọn việc dở sau semantic search: sửa cổng eye-rest báo nhầm chữ trong details đang đóng (có fixture đỏ→xanh), uiux-asset tự nạp chỉ mục tìm kiếm khi deploy, xác nhận CI harness đã xanh nhờ bản sửa upstream, rồi commit/push hai repo |
+| [141026-skills-split-mcp-danh-gia](sources/draft/141026-skills-split-mcp-danh-gia.md) | draft | Đánh giá tách hệ skill ra repo riêng + MCP trên Cloudflare (số đo, 3 lớp A/B/C) |
+| [141026-skills-split-PLAN](sources/draft/141026-skills-split-PLAN.md) | draft | PLAN 7 task: tách skill sang Rheinmir/skills, requires/loop, installer, MCP skills.giatbh.io.vn |

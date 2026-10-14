@@ -19,7 +19,8 @@ export interface CatalogTool {
   summary: string; usage: string | null; options: CatalogToolOption[]; positionals: Array<{ name: string; help: string }>;
   help: string | null; helpRc: number | null; stdinJson: boolean;
 }
-export interface Catalog { schemaVersion: number; root: string; skills: CatalogSkill[]; rules: CatalogRule[]; tools: CatalogTool[] }
+export interface SkillsVersion { version: string | null; catalog_sha: string | null; count: number | null }
+export interface Catalog { schemaVersion: number; root: string; skillsRoot?: string; skillsVersion?: SkillsVersion; skills: CatalogSkill[]; rules: CatalogRule[]; tools: CatalogTool[] }
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 /** Gốc repo overstack: OVERSTACK_ROOT, hoặc thư mục cha của mcp/ (layout repo). */
@@ -34,8 +35,26 @@ export function loadCatalog(path = CATALOG_PATH): Catalog {
 }
 
 /** Nội dung SKILL.md của một skill (đọc lúc gọi, không cache: skill đổi trên đĩa thì prompt đổi theo). */
-export function skillBody(skill: CatalogSkill, root = OVERSTACK_ROOT): string {
-  return readFileSync(join(root, skill.path), "utf8");
+/** Thư mục skill lúc chạy: OVERSTACK_SKILLS_ROOT (Docker /opt/skills/skills) > catalog.skillsRoot (máy sinh catalog) > <root>/skills. */
+export function skillsRootDir(cat: Catalog | undefined, root = OVERSTACK_ROOT): string {
+  const env = process.env.OVERSTACK_SKILLS_ROOT;
+  if (env) return env;
+  if (cat?.skillsRoot && existsSync(cat.skillsRoot)) return cat.skillsRoot;
+  return join(root, "skills");
+}
+
+export function skillBody(skill: CatalogSkill, root = OVERSTACK_ROOT, cat?: Catalog): string {
+  // skill.path tương đối skills root (từ 141026: repo Rheinmir/skills); bản cũ `skills/x/SKILL.md` tương đối repo setup
+  const p = skill.path.startsWith("skills/") ? join(root, skill.path) : join(skillsRootDir(cat, root), skill.path);
+  return readFileSync(p, "utf8");
+}
+
+/** template_version của harness (repo setup hoặc bản global) — /healthz công bố để dev so bản. */
+export function harnessVersion(root = OVERSTACK_ROOT): string | null {
+  for (const p of [join(root, "harness", "version.json"), join(process.env.HOME ?? "", ".claude", "harness", "version.json")]) {
+    try { return String(JSON.parse(readFileSync(p, "utf8")).template_version ?? null); } catch { /* thử đường kế */ }
+  }
+  return null;
 }
 
 export function findSkill(cat: Catalog, name: string): CatalogSkill | undefined {
@@ -60,7 +79,7 @@ export interface SkillHit { name: string; score: number; group: string; descript
 export function searchSkills(cat: Catalog, query: string, k = 5, root = OVERSTACK_ROOT): SkillHit[] {
   const docs = cat.skills.map((s) => {
     let body = "";
-    try { body = skillBody(s, root).slice(0, 4000); } catch { body = ""; }
+    try { body = skillBody(s, root, cat).slice(0, 4000); } catch { body = ""; }
     return { s, toks: tokenize(`${s.name} ${s.name.replace(/-/g, " ")} ${s.description} ${body}`) };
   });
   const N = docs.length, avgdl = docs.reduce((a, d) => a + d.toks.length, 0) / Math.max(1, N);

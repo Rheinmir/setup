@@ -127,8 +127,8 @@ mechanisms:
     name: harness-update
     kind: skill
     surface: [maintain]
-    desc: "TỰ BẢO TRÌ: cài bản mới + self-heal (backfill Origin/index/OKF) + refresh bản đồ năng lực trong một lệnh"
-    live_probe: skills/harness-update/SKILL.md
+    desc: "TỰ BẢO TRÌ: cài bản mới + self-heal (backfill Origin/index/OKF) + refresh bản đồ năng lực trong một lệnh (skill /harness-update ở repo Rheinmir/skills; engine là install-harness.sh --self-heal)"
+    live_probe: harness/scripts/install-harness.sh
 
   - id: code-state
     name: "code-state (tự tường thuật)"

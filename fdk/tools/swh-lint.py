@@ -118,7 +118,9 @@ def report(d, preserve=None):
 
 
 def skill_dirs(root, only=None):
-    dirs = sorted(p.parent for p in (root / "skills").glob("*/SKILL.md"))  # skills/external/* không khớp glob này
+    import os
+    base = Path(os.environ["OVERSTACK_SKILLS_DIR"]).expanduser() if os.environ.get("OVERSTACK_SKILLS_DIR") else root / "skills"
+    dirs = sorted(p.parent for p in base.glob("*/SKILL.md"))  # skills/external/* không khớp glob này
     if only:
         want = set(only)
         dirs = [d for d in dirs if d.name in want]

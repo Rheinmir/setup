@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""new-skill — scaffold a skill in BOTH publish trees at once, then print the
-registration commands (NEVER auto-edits the curated registry surfaces).
+"""new-skill — scaffold a skill into the Rheinmir/skills checkout (OVERSTACK_SKILLS_DIR / --skills-dir), then print the
+registration commands (NEVER auto-edits the curated registry surfaces). Since 141026 skills live in their own repo:
+no llmwiki/skills mirror, loop is declared in frontmatter metadata.loop.
 
 WHY: adding a skill is a 4-place chore — create `skills/<name>/SKILL.md`, map it
 in `sync-skills.py` LOOP_MAP, list it in `.claude-plugin/marketplace.json`, and add
@@ -27,8 +28,9 @@ import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
-SKILLS = REPO / "skills"                  # canonical (npx publish set)
-LLMWIKI = REPO / "llmwiki" / "skills"     # mirror (bundle llmwiki / sync-template)
+import os
+# skill tách sang repo Rheinmir/skills (141026): ghi vào OVERSTACK_SKILLS_DIR (checkout repo đó) hoặc --skills-dir
+SKILLS = Path(os.environ.get("OVERSTACK_SKILLS_DIR") or (REPO / "skills")).expanduser()
 
 # SkillResolve — cảnh báo khi skill mới TRÙNG NĂNG LỰC với skill hiện có (GH#13).
 # Tái dùng nguyên engine BM25 của build-skill-search.py (đừng viết lại). Ngưỡng
@@ -60,7 +62,7 @@ def yaml_scalar(s: str) -> str:
     return s
 
 
-def render(name: str, desc: str) -> str:
+def render(name: str, desc: str, loop: str = "utils") -> str:
     """The SKILL.md body — khung compact solid-what-how/1 (concept llmwiki/wiki/concepts/solid-what-how.md).
     Written ONCE, then byte-for-byte to both trees. Qua được `swh-lint` cấu trúc; ⟨TODO⟩ phải điền trước release."""
     return f"""---
@@ -175,34 +177,14 @@ def print_similarity_warning(hits) -> bool:
 
 
 def next_steps(name: str, loop: str) -> str:
-    """The three CURATED surfaces this tool deliberately does NOT touch (policy:
-    registry surfaces are user-curated). Exact copy-paste lines + a verify command."""
+    """Các bề mặt còn lại nằm ở repo Rheinmir/skills (metadata.loop đã ghi sẵn trong frontmatter)."""
     return f"""
-NEXT — register `{name}` on the curated surfaces (this tool does NOT edit them — policy: user-curated):
-
-  1. LOOP_MAP — add this line inside the `{loop}` group of LOOP_MAP in
-     harness/scripts/sync-skills.py  (so the mirror parity check knows its loop):
-
-         "{name}": "{loop}",
-
-  2. marketplace.json (optional — the publish set) — add to the right plugin's
-     "skills" array in .claude-plugin/marketplace.json:
-
-         "./skills/{name}",
-
-  3. AGENT.md / CLAUDE.md ## Skills table — add ONE row to BOTH
-     llmwiki/AGENT.md and llmwiki/CLAUDE.md:
-
-         | `{name}` | <when to invoke> | `skills/{loop}/{name}.md` | {loop} |
-
-  4. Mind map nhóm (HỎI 1 LẦN) — nếu `{loop}` được chia nhánh con theo chức năng trong
-     LOOP_GROUPS (fdk/tools/build-overstack-docs.py), thêm `{name}` vào ĐÚNG nhóm 1 lần;
-     không thì nó hiện ở "❓ chưa phân loại". overstack.html tự regen (Stop hook khi skill đổi).
-
-  5. Verify every surface agrees:
-
-         python3 harness/scripts/sync-skills.py --check        # mirror parity (skills/ <-> llmwiki/skills/)
-         python3 harness/scripts/skill-registry.py --check      # cross-surface drift (marketplace + AGENT + CLAUDE + LOOP_MAP)
+NEXT (trong checkout repo Rheinmir/skills):
+  1. marketplace.json — thêm "./skills/{name}" vào plugin phù hợp trong .claude-plugin/marketplace.json
+  2. requires — python3 <setup>/harness/scripts/skill-requires.py gen --write --skills-dir skills --repo-root <setup>
+  3. provenance — python3 <setup>/fdk/tools/skill-provenance.py --skills-dir skills --store skills.provenance.json record {name} --source local-authored
+  4. catalog + version — python3 tools/catalog.py --update
+  5. verify — bash tools/check.sh <setup>      (loop = {loop} đã nằm trong metadata.loop)
 """
 
 
@@ -222,6 +204,7 @@ def main() -> None:
                     help="sinh từ template trong fdk/skill-catalog (vd evidence-to-artifact) — Reuse Layer SWH v1.1")
     ap.add_argument("--params", help="JSON tham số typed cho --from (skill_name/discovery_description tự điền)")
     ap.add_argument("--reason", default="", help="lý do chọn scratch/mẫu — ghi vào reuse_decision")
+    ap.add_argument("--skills-dir", help="checkout repo Rheinmir/skills (thư mục skills/); mặc định OVERSTACK_SKILLS_DIR")
     ap.add_argument("--strict", action="store_true",
                     help="exit 1 (không scaffold) nếu trùng năng lực trên ngưỡng — cho CI/agent")
     args = ap.parse_args()
@@ -230,9 +213,11 @@ def main() -> None:
     if not NAME_RE.match(name):
         sys.exit(f"✗ invalid name '{name}' — use kebab-case: ^[a-z0-9]+(-[a-z0-9]+)*$")
 
+    global SKILLS
+    if args.skills_dir:
+        SKILLS = Path(args.skills_dir).expanduser().resolve()
     skill_dir = SKILLS / name
     skill_md = skill_dir / "SKILL.md"
-    mirror_md = LLMWIKI / args.loop / f"{name}.md"
 
     if skill_dir.exists():
         sys.exit(f"✗ skills/{name}/ already exists — refusing to overwrite. "
@@ -272,7 +257,7 @@ def main() -> None:
         except sr.ReuseError as e:
             sys.exit(f"✗ {e.code}: {e.detail}")
     else:
-        body = render(name, args.desc)
+        body = render(name, args.desc, args.loop)
     tag = "[dry-run] would create" if args.dry_run else "✓ created"
 
     if args.dry_run:
@@ -283,15 +268,12 @@ def main() -> None:
     else:
         skill_dir.mkdir(parents=True, exist_ok=True)
         skill_md.write_text(body, encoding="utf-8")
-        mirror_md.parent.mkdir(parents=True, exist_ok=True)
-        mirror_md.write_text(body, encoding="utf-8")  # byte-identical: same string, both trees
         if sr:
             rp = sr.write_recipe(name, decision, [h["asset_id"] for h in (hits or [])], reason=args.reason,
                                  base=args.base if decision == "reuse" else None, params=params or None)
             print(f"✓ reuse_decision={decision}  {rel(rp)}")
 
-    print(f"\n{tag}  {rel(skill_md)}")
-    print(f"{tag}  {rel(mirror_md)}  (mirror — byte-identical, sync-skills enforces parity)")
+    print(f"\n{tag}  {skill_md}")
     print(next_steps(name, args.loop))
 
 

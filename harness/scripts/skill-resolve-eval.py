@@ -36,13 +36,14 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
+import os
 import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
 GOLDENS_DIR = REPO / "llmwiki" / "wiki" / "sources" / "evals" / "skill-resolve"
 BASELINE = GOLDENS_DIR / "baseline.json"
-SKILLS_DIR = REPO / "skills"
+SKILLS_DIR = Path(os.environ.get("OVERSTACK_SKILLS_DIR") or (REPO / "skills")).expanduser()
 SEARCH_PY = REPO / "fdk" / "tools" / "build-skill-search.py"
 SCHEMA = "skill-resolve-baseline/v1"
 HARD_CAP = 40          # chống mạ vàng eval: quá 40 golden thì từ chối chạy
@@ -136,7 +137,7 @@ def cmd_write(res):
                        for g, r in res["per"].items()}}
     BASELINE.write_text(json.dumps(payload, indent=2, ensure_ascii=False, sort_keys=True) + "\n",
                         encoding="utf-8")
-    print(f"✓ baseline ghi → {BASELINE.relative_to(REPO)}  "
+    print(f"✓ baseline ghi → {BASELINE}  "
           f"(hit@1 {res['totals']['hit1']}/{res['totals']['n']}, "
           f"hit@3 {res['totals']['hit3']}/{res['totals']['n']})")
 
@@ -171,6 +172,19 @@ def cmd_check(res):
 
 def self_test():
     # engine load được + mọi golden có expected là skill THẬT trên đĩa.
+    # Repo setup không còn skills/ + golden (tách sang Rheinmir/skills, 141026) → tự dựng fixture tạm để kiểm engine.
+    global SKILLS_DIR, GOLDENS_DIR, BASELINE
+    if not any(SKILLS_DIR.glob("*/SKILL.md")) or not GOLDENS_DIR.is_dir():
+        import tempfile
+        td = Path(tempfile.mkdtemp(prefix="skill-resolve-selftest-"))
+        for name, desc in (("md-to-html", "Render markdown to a standalone html page. Trigger: md to html, render markdown"),
+                           ("wiki-lint", "Periodic wiki health check: orphans, broken links. Trigger: lint wiki, wiki health")):
+            (td / "skills" / name).mkdir(parents=True)
+            (td / "skills" / name / "SKILL.md").write_text(f"---\nname: {name}\ndescription: {desc}\n---\n# {name}\n\n## Trigger phrases\n{desc}\n", encoding="utf-8")
+        (td / "goldens").mkdir()
+        (td / "goldens" / "g1.md").write_text("---\nid: g1\nquery: render markdown to html\nexpected: md-to-html\n---\n", encoding="utf-8")
+        SKILLS_DIR, GOLDENS_DIR = td / "skills", td / "goldens"
+        BASELINE = GOLDENS_DIR / "baseline.json"
     mod = _load_search()
     index = mod.build_index(str(SKILLS_DIR))
     on_disk = {d.name for d in [*SKILLS_DIR.iterdir(), *SKILLS_DIR.glob("external/*/")] if (d / "SKILL.md").exists()}
@@ -188,7 +202,15 @@ def main():
     ap.add_argument("--write-baseline", action="store_true")
     ap.add_argument("--check", action="store_true")
     ap.add_argument("--k", type=int, default=DEFAULT_K)
+    ap.add_argument("--skills-dir", help="thư mục skill (repo Rheinmir/skills: skills/)")
+    ap.add_argument("--goldens", help="thư mục golden (repo Rheinmir/skills: evals/skill-resolve)")
     a = ap.parse_args()
+    global SKILLS_DIR, GOLDENS_DIR, BASELINE
+    if a.skills_dir:
+        SKILLS_DIR = Path(a.skills_dir).expanduser().resolve()
+    if a.goldens:
+        GOLDENS_DIR = Path(a.goldens).expanduser().resolve()
+        BASELINE = GOLDENS_DIR / "baseline.json"
     if a.self_test:
         return self_test()
     res = run(a.k)

@@ -42,9 +42,29 @@ def _load(modpath, name):
 
 WG = _load("fdk/tools/build-wiki-graph.py", "wg")          # engine đồ thị (tái dùng)
 BO = _load("fdk/tools/build-overstack-docs.py", "bo")      # LOOP_GROUPS
-SS = _load("harness/scripts/sync-skills.py", "ss")         # LOOP_MAP
 LOOP_GROUPS = getattr(BO, "LOOP_GROUPS", {})
-LOOP_MAP = getattr(SS, "LOOP_MAP", getattr(SS, "SKILL_LOOP", {}))
+
+
+def _skills_dir():
+    import os
+    env = os.environ.get("OVERSTACK_SKILLS_DIR")
+    base = Path(env).expanduser() if env else ROOT / "skills"
+    return base if any(base.glob("*/SKILL.md")) else Path.home() / ".claude" / "skills"
+
+
+SKILLS_DIR = _skills_dir()
+# loop lấy từ frontmatter metadata.loop của từng skill (repo Rheinmir/skills) — không còn LOOP_MAP trong setup;
+# repo framework không có skills/ → ảnh chụp fdk/skills.catalog.json (tất định)
+LOOP_MAP, CATALOG_DESC = {}, {}
+_cat = ROOT / "fdk" / "skills.catalog.json"
+if not any((ROOT / "skills").glob("*/SKILL.md")) and not __import__("os").environ.get("OVERSTACK_SKILLS_DIR") and _cat.is_file():
+    for _s in __import__("json").loads(_cat.read_text(encoding="utf-8")).get("skills", []):
+        LOOP_MAP[str(_s.get("name"))] = str(_s.get("loop") or "utils")
+        CATALOG_DESC[str(_s.get("name"))] = str(_s.get("description") or "")
+else:
+    for _p in sorted([*SKILLS_DIR.glob("*/SKILL.md"), *SKILLS_DIR.glob("external/*/SKILL.md")]):
+        _m = re.search(r"^\s{2}loop:\s*([\w-]+)\s*$", _p.read_text(encoding="utf-8", errors="ignore")[:4000], re.M)
+        LOOP_MAP[_p.parent.name] = _m.group(1) if _m else "utils"
 
 # rel mới cho quan hệ skill (nhét vào legend/màu của engine, chỉ in-memory — không sửa source)
 WG.REL_COLORS["contains"] = "#5856d6"      # loop → skill
@@ -72,7 +92,9 @@ def all_skills():
 
 
 def desc_of(skill):
-    for p in (ROOT / "skills" / skill / "SKILL.md", ROOT / "llmwiki" / "skills" / "utils" / f"{skill}.md"):
+    if skill in CATALOG_DESC:
+        return CATALOG_DESC[skill]
+    for p in (SKILLS_DIR / skill / "SKILL.md", SKILLS_DIR / "external" / skill / "SKILL.md"):
         if not p.exists():
             continue
         t = p.read_text(encoding="utf-8", errors="ignore")

@@ -29,7 +29,15 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-DEFAULT_OUT = HERE.parents[1] / "skills" / "hallmark" / "references" / "design-showcase.html"
+def _skills_dir():
+    import os
+    env = os.environ.get("OVERSTACK_SKILLS_DIR")
+    base = Path(env).expanduser() if env else HERE.parents[1] / "skills"
+    return base if any(base.glob("*/SKILL.md")) else Path.home() / ".claude" / "skills"
+
+
+# trang mẫu sống trong skill hallmark (repo Rheinmir/skills) — ghi vào checkout skills (OVERSTACK_SKILLS_DIR) hoặc bản cài global
+DEFAULT_OUT = _skills_dir() / "hallmark" / "references" / "design-showcase.html"
 GROUP_ORDER = ["showcase_layout", "showcase_components", "showcase_motion", "showcase_dataviz"]
 
 

@@ -7,7 +7,7 @@
 ## Cấu trúc
 
 - **`tools/`** — script phục vụ dev framework.
-  - `build-cheatsheet.py` — nhồi toàn bộ `skills/*/SKILL.md` vào trang skills-cheatsheet để nó self-contained (mở `file://` vẫn xem được full nội dung, không cần server). Chạy: `python3 fdk/tools/build-cheatsheet.py`.
+  - `build-cheatsheet.py` — nhồi toàn bộ SKILL.md (OVERSTACK_SKILLS_DIR hoặc `~/.claude/skills`, repo Rheinmir/skills) vào trang skills-cheatsheet để nó self-contained (mở `file://` vẫn xem được full nội dung, không cần server). Chạy: `python3 fdk/tools/build-cheatsheet.py`.
 - **`docs/`** — tài liệu dev framework di động được (không bị coupled với engine).
   - `CONTRIBUTING.md` — runbook thêm/sửa một rule của harness (cổng quyết định ADR, phân loại content-check / hook-event / process-gate).
 

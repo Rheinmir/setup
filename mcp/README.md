@@ -5,7 +5,7 @@ dùng được mà không cần cài harness vào máy mình:
 
 | Overstack có | MCP lộ ra | Cách dùng |
 |---|---|---|
-| 106 skill (`skills/*/SKILL.md`) | **prompt** cùng tên (`/plan`, `/md-to-html`…) + **resource** `overstack://skill/{name}` | `prompts/get plan` trả nguyên văn SKILL.md kèm task; `skill_find` xếp hạng skill cho một việc |
+| 106 skill (repo [Rheinmir/skills](https://github.com/Rheinmir/skills), nướng vào ảnh ở `/opt/skills`, `OVERSTACK_SKILLS_ROOT`) | **prompt** cùng tên (`/plan`, `/md-to-html`…) + **resource** `overstack://skill/{name}` | `prompts/get plan` trả nguyên văn SKILL.md kèm task; `skill_find` xếp hạng skill cho một việc |
 | 22 rule (`harness/policy.yaml`) | **resource** `overstack://rule/{id}` + tool `rule_check` | chạy validator của rule lên file trong workspace: rc 0 pass · rc 2 vi phạm |
 | 146 script (`harness/scripts`, `fdk/tools`, `harness/validators`) | tool `tool_run` (+ `tool_help`, `tools_list`); `OVERSTACK_TOOLS=all` → thêm một tool mỗi script | argv cố định, không shell, cwd = workspace |
 | engine orca-graph | tool `orca_graph` | `build / ask / next / lock / set / audit / add-node…` trên `.llmwiki/graph` của workspace |
@@ -37,7 +37,7 @@ Container (xem `../Dockerfile.mcp`, `../docker-compose.stack.yml`): node 22 + py
 
 | Tool | Loại | Làm gì |
 |---|---|---|
-| `skills_list` | read | Danh sách skill (lọc theo group `wiki-loop` · `dev-loop` · `orchestrate` · `utils`) |
+| `skills_list` | read | Danh sách skill (lọc theo group `wiki-loop` · `dev-loop` · `orchestrate` · `utils` — group = `metadata.loop` trong frontmatter) |
 | `skill_find` | read | BM25 (k1 1.5, b 0.75 — như `build-skill-search.py`) trên tên + description + 4 KB đầu SKILL.md; trả top-k có điểm |
 | `skill_get` | read | Nguyên văn SKILL.md một skill |
 | `rules_list` | read | 22 rule với `checkable` (có validator chạy được hay không) |
@@ -52,6 +52,17 @@ Container (xem `../Dockerfile.mcp`, `../docker-compose.stack.yml`): node 22 + py
 
 Kết quả tool trả **nguyên văn** rc/stdout/stderr: validator rc 2 nghĩa là luật bị vi phạm, không phải lỗi gọi. dsh thấy tool dưới
 tên `mcp__overstack__<tool>`.
+
+## Chế độ tool và nguồn phiên bản
+
+`OVERSTACK_TOOLS=read` (bắt buộc cho hostname công khai `skills.giatbh.io.vn`): chỉ `skills_list` · `skill_find` · `skill_get` ·
+`rules_list` · `tools_list` · `tool_help` · `workspace_list`; không `tool_run` / `rule_check` / `workspace_sync` / `orca_graph`
+(mở thực thi script ra internet sau một bearer là không chấp nhận). `core` thêm 4 tool ghi/chạy (mạng nội bộ ai-net, tailnet);
+`all` thêm một tool mỗi script.
+
+`GET /healthz` (không cần token) là **nguồn phiên bản đồng nhất** cho mọi dev: `{harness: "<template_version>", skills: {count, version,
+catalog_sha}}`. Hook SessionStart của overstack đọc `OVERSTACK_VERSION_URL=https://skills.giatbh.io.vn/healthz` (1 lần/ngày) và nhắc
+khi máy cũ hơn — xem `llmwiki/.claude/hooks/session_start.py::remote_version_nudge`.
 
 ## Biến môi trường
 

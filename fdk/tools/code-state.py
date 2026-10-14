@@ -55,6 +55,19 @@ def _git(*a):
     return out if rc == 0 else None
 
 
+def _skill_count():
+    """Skill tách sang Rheinmir/skills (141026): repo framework đếm từ ảnh chụp fdk/skills.catalog.json (tất định);
+    repo còn skills/ (bản cũ) đếm đĩa như trước; không có gì → None (UNKNOWN)."""
+    cat = ROOT / "fdk" / "skills.catalog.json"
+    if cat.is_file():
+        try:
+            return int(json.loads(cat.read_text(encoding="utf-8")).get("count") or 0)
+        except (ValueError, OSError):
+            return None
+    n = _count("*/SKILL.md", "skills")
+    return None if n is None else n + (_count("external/*/SKILL.md", "skills") or 0)
+
+
 def _count(glob, base="."):
     d = ROOT / base
     return len(list(d.glob(glob))) if d.is_dir() else None
@@ -127,8 +140,8 @@ def facts(include_medic=True):
         ("git", "HEAD", head or "UNKNOWN", "git", "git rev-parse --short HEAD"),
         ("git", "commit cuối", cdate or "UNKNOWN", "git", "git show -s --format=%cI HEAD"),
         ("git", "file chưa commit", ("UNKNOWN" if dirty is None else str(dirty)), "git", "git status --porcelain | wc -l"),
-        ("đồ nghề", "skill", _fmt(_count("*/SKILL.md", "skills") + (_count("external/*/SKILL.md", "skills") or 0)), "đĩa",
-         "ls skills/*/SKILL.md skills/external/*/SKILL.md | wc -l"),
+        ("đồ nghề", "skill", _fmt(_skill_count()), "catalog" if (ROOT / "fdk" / "skills.catalog.json").is_file() else "đĩa",
+         "python3 -c \"import json;print(json.load(open('fdk/skills.catalog.json'))['count'])\"  # repo Rheinmir/skills (ảnh chụp)"),
         ("đồ nghề", "rule", _fmt(_rule_count()), "policy", "grep -c 'id: R' policy.yaml"),
         ("đồ nghề", "validator", _fmt(_count("*.py", "harness/validators")), "đĩa", "ls harness/validators/*.py | wc -l"),
         ("đồ nghề", "hook", _fmt(_count("*.py", "llmwiki/.claude/hooks")), "đĩa", "ls llmwiki/.claude/hooks/*.py | wc -l"),

@@ -10,7 +10,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 TOOLS = ROOT / "fdk/tools"
-PAGE = ROOT / "skills/hallmark/references/design-showcase.html"
+import os as _os
+_SK = Path(_os.environ["OVERSTACK_SKILLS_DIR"]).expanduser() if _os.environ.get("OVERSTACK_SKILLS_DIR") else ROOT / "skills"
+if not (_SK / "hallmark" / "SKILL.md").is_file():
+    _SK = Path.home() / ".claude" / "skills"          # skill tách sang Rheinmir/skills — dùng bản cài global
+PAGE = _SK / "hallmark/references/design-showcase.html"
 
 
 def _load(fname):

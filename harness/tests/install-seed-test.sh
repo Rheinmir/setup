@@ -10,8 +10,8 @@ trap 'rm -rf "$TMP"' EXIT
 export HOME="$TMP/home"; mkdir -p "$HOME"
 pass=0
 assert() { if [ "$2" = "$3" ]; then pass=$((pass+1)); echo "  ✓ $1"; else echo "  ✗ $1 (mong '$2', được '$3')"; exit 1; fi; }
-# 4 thư mục khung chỉ khối seed tạo: html · inbox tài liệu · skills · wiki
-seed() { ls "$1/llmwiki" | grep -c -x -E 'html|raw|skills|wiki'; }
+# 3 thư mục khung chỉ khối seed tạo: html · inbox tài liệu · wiki (skills tách sang repo Rheinmir/skills, cài global)
+seed() { ls "$1/llmwiki" | grep -c -x -E 'html|raw|wiki'; }
 snap() { (cd "$1/llmwiki" && find . -type f ! -name log.md -print0 | sort -z | xargs -0 shasum) | shasum; }
 inst() { bash "$INST" "$1" >"$TMP/log.$2" 2>&1; }
 
@@ -20,7 +20,7 @@ P1="$TMP/new"; mkdir -p "$P1"; git -C "$P1" init -q
 inst "$P1" new; rc=$?
 assert "installer rc=0" 0 "$rc"
 assert "log ghi mode new" 1 "$(grep -c 'mode: new' "$TMP/log.new")"
-assert "đủ 4 thư mục khung" 4 "$(seed "$P1")"
+assert "đủ 3 thư mục khung" 3 "$(seed "$P1")"
 assert "wiki/index.md được tạo" 1 "$([ -f "$P1/llmwiki/wiki/index.md" ] && echo 1 || echo 0)"
 
 echo "[2] project đã có llmwiki/wiki (BRD đặt sẵn ở draft) → migrate vẫn bổ sung khung, không đè"
@@ -31,7 +31,7 @@ inst "$P2" mig1; rc=$?
 # rc=3 = "MIGRATE CÓ NỢ": hooks đã cài, baseline audit báo BRD thiếu Origin/dòng index — đúng kịch bản thật.
 assert "installer rc=3 (migrate có nợ baseline, vẫn cài xong)" 3 "$rc"
 assert "log ghi mode migrate" 1 "$(grep -c 'mode: migrate' "$TMP/log.mig1")"
-assert "đủ 4 thư mục khung" 4 "$(seed "$P2")"
+assert "đủ 3 thư mục khung" 3 "$(seed "$P2")"
 assert "BRD giữ nguyên" "BRD gốc" "$(cat "$P2/llmwiki/wiki/sources/draft/brd.md")"
 assert "index.md không bị đè" "# Index riêng" "$(head -1 "$P2/llmwiki/wiki/index.md")"
 

@@ -13,13 +13,19 @@ RUN git clone --depth 1 --branch "${ORCA_GRAPH_REF}" https://github.com/Rheinmir
  && rm -rf /opt/orca-graph/.git
 ENV ORCA_GRAPH_ENGINE_DIR=/opt/orca-graph/engine
 
+# Bộ skill (repo riêng Rheinmir/skills từ 141026) — catalog sinh từ /opt/skills/skills; /healthz công bố version.json của nó
+ARG SKILLS_REF=main
+RUN git clone --depth 1 --branch "${SKILLS_REF}" https://github.com/Rheinmir/skills /opt/skills \
+ && rm -rf /opt/skills/.git
+ENV OVERSTACK_SKILLS_ROOT=/opt/skills/skills
+
 WORKDIR /opt/overstack
 # package trước để cache layer npm
 COPY mcp/package.json mcp/package-lock.json* ./mcp/
 RUN cd mcp && npm ci --omit=dev --no-audit --no-fund --ignore-scripts && npm rebuild esbuild 2>/dev/null || true
 # phần còn lại của repo (lọc bởi .dockerignore)
 COPY . .
-RUN python3 mcp/scripts/gen-catalog.py --check \
+RUN python3 mcp/scripts/gen-catalog.py --no-help \
  && mkdir -p /workspaces /home/app \
  && chown -R node:node /workspaces /home/app /opt/overstack/mcp
 

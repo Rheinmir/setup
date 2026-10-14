@@ -31,6 +31,8 @@ hdr()  { printf '\n\033[1m── %s\033[0m\n' "$1"; }
 note() { printf '        \033[2m%s\033[0m\n' "$1"; }   # delta/xu hướng — không phải assert
 TMP=$(mktemp -d); trap 'rm -rf "$TMP"' EXIT
 
+# skills/ + golden router tách sang repo Rheinmir/skills (141026): (a)(b)(e) chạy ở CI repo đó (tools/check.sh).
+if [ -d "$SRC/skills" ] && [ -d "$SRC/llmwiki/wiki/sources/evals/skill-resolve" ]; then
 # ─────────────────────────────────────────────────────────────────────────────
 hdr "(a) bộ golden router hiện có KHÔNG tụt"
 
@@ -127,6 +129,10 @@ OUT=$(resolve_top3 "grounding check verdict review code" qc-code); RC=$?
   && ok "router THẬT: hỏi về grounding/verdict → /qc-code lọt top-3 ($OUT)" \
   || bad "router THẬT (qc-code)" "hỏi về grounding/verdict mà KHÔNG ra /qc-code ($OUT)"
 
+else
+  note "(a)(b): skills/ + golden đã tách sang Rheinmir/skills — kiểm ở CI repo đó"
+fi
+
 # ─────────────────────────────────────────────────────────────────────────────
 hdr "(c) capproof — engine mới PHẢI có neo bằng chứng, không khai suông"
 
@@ -211,6 +217,7 @@ note "delta golden: $NDISK trên đĩa vs $NBASE trong baseline ($(( NDISK - NBA
   && ok "baseline ratchet: hits $BHITS/$BGOLD — chưa ai hạ baseline xuống dưới toàn-trúng" \
   || bad "baseline bị hạ" "hits=$BHITS decided=$BDEC goldens=$BGOLD (đáng lẽ bằng nhau)"
 
+if [ -d "$SRC/skills" ] && [ -f "$SRC/harness/scripts/sync-skills.py" ]; then
 # ─────────────────────────────────────────────────────────────────────────────
 hdr "(e) parity ba bề mặt phát hành skill"
 
@@ -241,6 +248,10 @@ if cmp -s "$TMP/skills.search.json" "$SRC/fdk/skills.search.json"; then
   ok "parity: fdk/skills.search.json khớp chỉ mục dựng lại từ skills/"
 else
   bad "search-index cũ" "fdk/skills.search.json lệch skills/ — chạy build-skill-search.py"
+fi
+
+else
+  note "(e): bề mặt phát hành skill (marketplace · loop · provenance · catalog) gác ở CI Rheinmir/skills"
 fi
 
 # ─────────────────────────────────────────────────────────────────────────────

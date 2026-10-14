@@ -64,7 +64,7 @@ Hai câu hỏi khác nhau, phải gác riêng:
 
 ### `capability-stamp.py` — forcing function cho (2)
 
-Đóng dấu **bề mặt năng lực** thành một sha: `skills/*/SKILL.md` (tên + trigger) · rule id trong `policy.yaml` · engine trong `harness/scripts/` + `llmwiki/.claude/hooks/`. Cố ý **không** hash nội dung engine — sửa một dòng log trong `council.py` không phải "năng lực mới"; thứ downstream cần biết là *danh sách và trigger*.
+Đóng dấu **bề mặt năng lực** thành một sha: rule id trong `policy.yaml` · engine trong `harness/scripts/` + `llmwiki/.claude/hooks/`. Cố ý **không** hash nội dung engine — sửa một dòng log trong `council.py` không phải "năng lực mới"; thứ downstream cần biết là *danh sách và trigger*.
 
 ```
 python3 harness/scripts/capability-stamp.py --check    # sha đĩa ≠ sha trong version.json → exit 1
@@ -155,7 +155,7 @@ Một cổng headless **không** spin được model LLM + Orca runtime, nên "`
 
 - Script: `harness/scripts/fresh-install-smoke.sh`
 - Cổng: `fdk/tools/medic.py` (probe `freshinstall`)
-- Checklist push: `skills/ship/SKILL.md` §1
+- Checklist push: skill `ship` (repo Rheinmir/skills, `~/.claude/skills/ship/SKILL.md`) §1
 - Sổ vấn đề: node `p-freshinstall` trong `llmwiki/html/fdk-problem-tree.html`
 
 ## Luồng chuẩn: dựng workspace Orca mới rồi test fresh-install (2026-07-11)

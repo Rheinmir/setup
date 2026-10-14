@@ -262,3 +262,56 @@ if __name__ == "__main__":
     print(f"harness   : {harness_dir(root)}")
     mig = needs_migration(root)
     print(f"migrate   : {mig or 'không cần (đã đúng chuẩn hoặc repo framework)'}")
+
+
+# ── skills tách sang repo Rheinmir/skills (PLAN 141026-skills-split T3) ──────────────────────────
+def skills_dir(root=None):
+    """Thư mục skill: env OVERSTACK_SKILLS_DIR > <root>/skills (checkout repo Rheinmir/skills, hoặc repo cũ còn skills/)
+    > ~/.claude/skills (bản đã cài trên máy qua `npx skills add --global`)."""
+    import os
+    env = os.environ.get("OVERSTACK_SKILLS_DIR")
+    if env:
+        return pathlib.Path(env).expanduser()
+    if root is not None and any((pathlib.Path(root) / "skills").glob("*/SKILL.md")):
+        return pathlib.Path(root) / "skills"
+    return pathlib.Path.home() / ".claude" / "skills"
+
+
+def iter_skill_dirs(sdir):
+    """Thư mục skill (có SKILL.md) ở tầng gốc và external/, bỏ trùng theo đường dẫn thật (symlink)."""
+    seen, out = set(), []
+    for p in sorted(list(pathlib.Path(sdir).glob("*/SKILL.md")) + list(pathlib.Path(sdir).glob("external/*/SKILL.md"))):
+        key = p.parent.resolve()
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(p.parent)
+    return out
+
+
+_LOOP_RE = __import__("re").compile(r"^\s{2}loop:\s*([\w-]+)\s*$", __import__("re").M)
+
+
+def skill_loop(skill_dir, default="utils"):
+    """metadata.loop trong frontmatter SKILL.md (wiki-loop | dev-loop | orchestrate | utils); thiếu → default."""
+    try:
+        text = (pathlib.Path(skill_dir) / "SKILL.md").read_text(encoding="utf-8", errors="ignore")
+    except OSError:
+        return default
+    m = __import__("re").match(r"^---[ \t]*\r?\n(.*?)\r?\n---", text, __import__("re").S)
+    if not m:
+        return default
+    lm = _LOOP_RE.search(m.group(1))
+    return lm.group(1) if lm else default
+
+
+def skill_catalog(root):
+    """Ảnh chụp catalog của repo Rheinmir/skills (fdk/skills.catalog.json, cập nhật bằng fdk/tools/sync-skill-catalog.py).
+    Repo framework không còn skills/ nên docs/stamp đọc từ đây để TẤT ĐỊNH, không phụ thuộc máy đang cài gì. Thiếu → None."""
+    import json
+    p = pathlib.Path(root) / "fdk" / "skills.catalog.json"
+    try:
+        d = json.loads(p.read_text(encoding="utf-8"))
+        return d if isinstance(d.get("skills"), list) else None
+    except (OSError, ValueError):
+        return None

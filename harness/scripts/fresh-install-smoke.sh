@@ -97,21 +97,26 @@ fi
 # ra để chống). Kiểm này KHÔNG cần mạng — chỉ so skill trên đĩa với skill đã tới global.
 echo "${Y}parity hứa↔giao:${X}"
 SK_DIR="${AGENTS_SKILLS_DIR:-$REAL_HOME/.agents/skills}"
-if [ -d "$SK_DIR" ]; then
-  dropped=""
-  for sk in "$ROOT"/skills/*/SKILL.md "$ROOT"/skills/external/*/SKILL.md; do
-    [ -f "$sk" ] || continue
-    n="$(basename "$(dirname "$sk")")"
-    [ "$n" = "fdk" ] && continue                      # cố ý không ship xuống user (ADR-004)
-    [ -d "$SK_DIR/$n" ] || dropped="$dropped $n"
-  done
+# Skill tách sang repo Rheinmir/skills (141026): "hứa" = ảnh chụp fdk/skills.catalog.json (cam kết trong repo này),
+# "giao" = thư mục skill global. Offline, tất định — không đọc skills/ (không còn) và không cần mạng.
+CAT="$ROOT/fdk/skills.catalog.json"
+if [ -d "$SK_DIR" ] && [ -f "$CAT" ]; then
+  dropped="$(python3 - "$CAT" "$SK_DIR" <<'PY'
+import json, os, sys
+cat, sk = sys.argv[1], sys.argv[2]
+names = [s["name"] for s in json.load(open(cat, encoding="utf-8")).get("skills", [])]
+print(" ".join(n for n in names if n != "fdk" and not os.path.isdir(os.path.join(sk, n))))
+PY
+)"
   if [ -z "$dropped" ]; then
-    ok "mọi skill trên đĩa đều tới được người dùng (hứa == giao)"
+    ok "mọi skill trong catalog (Rheinmir/skills v$(python3 -c "import json,sys;print(json.load(open(sys.argv[1])).get('version'))" "$CAT")) đều tới được người dùng (hứa == giao)"
   else
-    bad "SKILL RỚT — doc hứa nhưng user KHÔNG nhận được:$dropped"
-    bad "  → soi nguyên nhân: python3 harness/scripts/capability-stamp.py --check"
-    bad "  → giao lại:        npx skills add . --global --all"
+    bad "SKILL RỚT — catalog hứa nhưng user KHÔNG nhận được: $dropped"
+    bad "  → giao lại:        npx -y skills add rheinmir/skills#main --global --all"
+    bad "  → soi nguyên nhân: python3 ~/.claude/harness/harness/scripts/skill-requires.py check --installed"
   fi
+elif [ -d "$SK_DIR" ]; then
+  skip "không có fdk/skills.catalog.json (downstream) — bỏ qua parity"
 else
   skip "chưa cài skill global ($SK_DIR) — bỏ qua parity (fail-open, không chặn máy mới)"
 fi

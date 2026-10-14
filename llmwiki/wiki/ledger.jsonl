@@ -503,3 +503,5 @@
 {"ts": "2026-09-29T14:31:22", "action": "modify", "target": "sources/draft/290926-uiux-followups-PLAN.md", "tool": "Write"}
 {"ts": "2026-10-01T13:51:54", "session": "bbe097e3", "action": "add", "target": "sources/draft/150726-legacy-html-slop-debt.md", "tool": "Write"}
 {"ts": "2026-10-01T13:51:54", "session": "bbe097e3", "action": "add", "target": "sources/draft/150726-legacy-html-slop-debt.md", "tool": "Write"}
+{"ts": "2026-10-14T00:39:54", "session": "9a2e3a05", "action": "add", "target": "sources/draft/141026-skills-split-mcp-PLAN.md", "tool": "Write"}
+{"ts": "2026-10-14T08:46:47", "session": "9a2e3a05", "action": "add", "target": "sources/draft/141026-skills-split-PLAN.md", "tool": "Write"}

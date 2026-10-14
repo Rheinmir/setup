@@ -50,7 +50,7 @@ WANT_FULL=1; NEWARGS=()
 for a in "$@"; do
   case "$a" in
     --harness-only) WANT_FULL=0;;
-    --full|--with-skills|--with-wiki) WANT_FULL=0; NEWARGS+=("$a");;
+    --full|--with-skills|--with-wiki|--skills-only) WANT_FULL=0; NEWARGS+=("$a");;
     *) NEWARGS+=("$a");;
   esac
 done

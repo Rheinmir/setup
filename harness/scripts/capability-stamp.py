@@ -102,8 +102,19 @@ def _engines():
     return out
 
 
+def _skill_catalog():
+    """Skill tách sang Rheinmir/skills: bề mặt = version + catalog_sha của ảnh chụp fdk/skills.catalog.json
+    (cập nhật bằng fdk/tools/sync-skill-catalog.py). Đổi skill ở repo kia → kéo ảnh chụp mới → stamp đổi → bump."""
+    p = ROOT / "fdk" / "skills.catalog.json"
+    try:
+        d = json.loads(p.read_text(encoding="utf-8"))
+        return [f"skillcat:{d.get('version')}:{d.get('catalog_sha')}:{d.get('count')}"]
+    except (OSError, ValueError):
+        return []
+
+
 def surface():
-    return _skills() + _rules() + _engines()
+    return _skills() + _skill_catalog() + _rules() + _engines()
 
 
 def surface_sha():

@@ -1,0 +1,1247 @@
+{
+  "schema": 1,
+  "version": "1.0.2",
+  "harness_floor": "1.3.127",
+  "catalog_sha": "0c842d4ca4d5c731",
+  "count": 106,
+  "source": "/Users/admin/orca/skills/catalog.json",
+  "skills": [
+    {
+      "name": "blur",
+      "loop": "utils",
+      "description": "Hiệu ứng WebGL \"zoom blur\" chuyển ảnh nền toàn màn hình (Three.js + shader GLSL riêng, parallax theo chuột, điều hướng scroll/click/phím) cho hero section/slideshow ảnh. Gọi khi user nói \"hiệu ứng blur ảnh\", \"chuyển ảnh mờ dần kiểu zoom\", \"webgl blur transition\", \"gallery ảnh full-screen kiểu blur\", hoặc /blur. KHÁC `dark-mode-maker` (circle-reveal đổi theme) — đây là hiệu ứng CHUYỂN ẢNH, không phải chuyển theme.",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "br",
+      "loop": "dev-loop",
+      "description": "Hub MỘT TÊN cho dây chuyền sản xuất kiểu Ralph (GH#15): biến tài liệu thô của user thành sản phẩm qua 5 mode — `/br interview` (đọc folder raw/ → đối chiếu bộ specs chuẩn S1–S10 → sinh bộ câu hỏi hỏi-bù dạng HTML xem trước + MD điền, cho phép lens chuyên gia điền thay mục chưa chắc), `/br compile` (answers → BR.md có clause_id + bảng \"Giả định đang gánh\"), `/br slice` (BR → frames nhỏ gắn chặt code, gác bằng frame-lint), `/br run <frame>` (mỗi frame chạy loop-runner có 6 phanh + dry-run + người gác · sau frame xanh TỰ chạy QC tất định 0-token), `/br qc` (audit senior 4-mục: /qc-code soi code + /qc-uiux soi UI/UX qua engine visual-qa), `/br status` (trang line-status.html tất định: frame nào chạy/kẹt/xong + truy ngược lỗi→frame→clause). Gọi khi user nói \"br\", \"interview\", \"phỏng vấn yêu cầu\", \"soạn BR\", \"slice frame\", \"chạy frame\", \"qc frame\", \"audit ui mockup\", \"trạng thái dây chuyền\", \"ralph pipeline\", hoặc invoke /br. User chỉ mô tả PHẠM VI, không cần nhớ lệnh con.",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "node",
+          "python3"
+        ],
+        "scripts": [
+          "fdk/tools/br-contract.py",
+          "fdk/tools/br-fill.py",
+          "fdk/tools/br-find.py",
+          "fdk/tools/br-prompts.py",
+          "fdk/tools/br-queue.py",
+          "fdk/tools/br-rail.py",
+          "fdk/tools/br-revise.py",
+          "fdk/tools/br-run.py",
+          "fdk/tools/br-sync.py",
+          "fdk/tools/build-line-status.py",
+          "fdk/tools/checkpoint.py",
+          "fdk/tools/frame-lint.py",
+          "fdk/tools/medic.py",
+          "harness/scripts/council.py",
+          "harness/scripts/loop-runner.py"
+        ]
+      }
+    },
+    {
+      "name": "build-now-adapt-later",
+      "loop": "dev-loop",
+      "description": "When a task is blocked by missing or unverified information (an undocumented protocol, an unknown API shape, a value only real hardware/prod can confirm), build everything that does NOT depend on the unknown right now, and quarantine the unknown behind a single adapter boundary — best-guess defaults + a verified flag + a conformance/adapt kit — so adapting later means editing one file, not rewriting the project. Trigger when the user says \"làm những gì có thể trước\", \"build what we can now\", \"wrap the unknowns\", \"isolate/quarantine the unknown parts\", \"don't block on missing info\", \"adapter so we can swap later\", \"ready to adapt\", or invokes /build-now-adapt-later. Also applies whenever a spec has ⚠️ \"to be verified\" items but most of the work doesn't actually depend on them.",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "check-approve",
+      "loop": "utils",
+      "description": "Sinh sẵn 1-liner để trace 1 lệnh approve/return/reject của DMS trên log BE (docker) + FE proxy, ghi ra file .sh cho user copy-paste lên product server. Dùng khi user nói \"viết lệnh check approve\", \"check duyệt request <CODE>\", \"approve treo / không thấy lệnh duyệt\", \"/check-approve\".",
+      "external": false,
+      "requires": {
+        "bin": [
+          "docker"
+        ]
+      }
+    },
+    {
+      "name": "council",
+      "loop": "orchestrate",
+      "description": "Run a Karpathy-style LLM council (3-stage multi-agent evaluation) on top of the existing orca orchestration: N seats independently answer a question, the answers are BLIND peer-ranked (identities stripped so a model can't favour its own), and a chairman synthesizes the final answer. The orchestration makes the model calls; harness/scripts/council.py does the deterministic protocol math (anonymization, mean-rank aggregation, dissent, anchor guard, transcript). Use when the user says \"run a council\", \"llm-council\", \"panel of models\", \"blind peer-rank these answers\", \"ensemble + chairman\", or invokes /council. Stage-4 is a MANDATORY HTML report, rendered inside council.py itself (offline, no CDN, no external skill): every `rank` writes a NEW versioned self-contained report (llmwiki/html/council/council-report-NNN-seed<seed>.html) — opinion cards (persona name + lens), a blind-vote table, and a dashboard. Isolated in try/except so a render bug never kills the core transcript.",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "orca",
+          "python3"
+        ],
+        "scripts": [
+          "harness/scripts/council.py"
+        ]
+      }
+    },
+    {
+      "name": "css-scroll-driven-native",
+      "loop": "utils",
+      "description": "Hiệu ứng cuộn trang thuần CSS qua Native CSS Scroll-Driven Animations API (animation-timeline scroll()/view(), animation-range) — ZERO JavaScript. Gọi khi user nói \"css scroll driven animation\", \"animation-timeline\", \"scroll animation không js\", \"css thuần cuộn trang\", \"scroll-driven CSS\", hoặc /css-scroll-driven-native. KHÁC `skills/scroll-effects` (đó dùng IntersectionObserver JS, chạy MỌI trình duyệt hiện đại) — skill này 0 JS nhưng trình duyệt CHƯA hỗ trợ đủ (Firefox/Safari còn behind flag/rollout), dùng làm progressive enhancement phía trên scroll-effects, không thay thế khi cần chạy chắc trên mọi trình duyệt.",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "cursor-animated-sites",
+      "loop": "utils",
+      "description": "Build an interactive \"cursor-animated walkthrough\" page on top of the /docs-site-macos glass theme — a narrow LEFT step-list + wide RIGHT animated folder-tree where an arrow cursor sits in the gutter at the start of each line and moves controller→file per step, files TYPE IN like a transcript exactly when they are created (absent before), nodes are colored BY ROLE (source/read vs dest/write vs pass vs verdict) with text tags, each step has its own accent, there is a manual \"step\" mode and an auto-play mode, and a caption under the frame narrates the current frame. Use for explaining install→runtime lifecycles, sequences, data-flow, or any \"how it works, step by step\" walkthrough where the viewer must SEE which file each action touches. Hooks /docs-site-macos for the base glass design system.",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "dark-mode-maker",
+      "loop": "utils",
+      "description": "Circle-reveal (giọt nước rơi + crest-glow liquid-glass) khi chuyển dark/light mode — nút gạt switch, overlay tỏa từ VỊ TRÍ CON TRỎ (kẹp trong biên nút), palette dark-mode trung tính kiểu thị trường (GitHub Dark/Vercel/Linear), nghiệm thu bằng Playwright thật. Gọi khi user nói 'làm dark mode', 'theme toggle', 'chuyển sáng tối', 'circle reveal', 'hiệu ứng đổi giao diện', hoặc /dark-mode-maker. KHÁC docs-site-macos (đó là sàn trang tài liệu macOS, dark-mode-maker là module toggle dùng được cho MỌI trang HTML).",
+      "external": false,
+      "requires": {
+        "bin": [
+          "node",
+          "npm"
+        ]
+      }
+    },
+    {
+      "name": "design-prim",
+      "loop": "utils",
+      "description": "Dọn slop UI/UX khi onboard 1 dự án bất kỳ — quét view có sẵn, chụp playwright (before), để hallmark tự đọc project và REDESIGN thật (sinh design.md của riêng nó, không đóng khung theo token slop cũ), rồi vòng lặp sửa dựa trên slop-test 58 gate + `/impeccable audit`/`critique` + `/qc-uiux` (verdict senior 4-mục, engine tất định `visual-qa`) cho tới khi sạch hoặc hết ngân sách vòng. Gọi khi user nói \"dọn slop\", \"làm gọn UI dự án\", \"chuẩn hoá UI xuyên suốt\", \"onboard rồi làm sạch UI\", \"design prim\", \"/design-prim\".",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "diagram",
+      "loop": "utils",
+      "description": "Vẽ SƠ ĐỒ và BIỂU ĐỒ bằng máy, không để model tự bịa hình. Gọi khi user nói — tiếng Việt \"vẽ sơ đồ\", \"vẽ biểu đồ\", \"vẽ luồng\", \"sơ đồ kiến trúc\", \"sơ đồ hệ thống\", \"sơ đồ quy trình\", \"luồng xử lý\", \"flow\", \"graph\", \"đồ thị\", \"biểu đồ\", \"chart\", \"trực quan hoá\", \"visualize\", \"mô hình hoá\", \"vẽ hộ\", \"diagram hoá\", \"chuyển mô tả thành hình\", \"so sánh hai luồng\"; tiếng Anh \"draw a diagram\", \"architecture diagram\", \"workflow diagram\", \"sequence diagram\", \"data flow\", \"state machine\", \"lifecycle\", \"dependency graph\", \"org chart\", \"chart\", \"plot\", \"dashboard\", \"visualize this\", \"turn this into a diagram\", \"convert Mermaid\", \"diff two flows\". Bao cả hai họ — sơ đồ QUAN HỆ/LUỒNG (hộp + mũi tên) và biểu đồ DỮ LIỆU (số liệu). KHÔNG dùng cho màn hình UI/landing page — đó là `hallmark`.",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "python3"
+        ],
+        "scripts": [
+          "fdk/tools/frontend-antipattern.py",
+          "fdk/tools/visual-receipt.py"
+        ],
+        "framework_scripts": [
+          "fdk/tools/build-overstack-docs.py"
+        ]
+      }
+    },
+    {
+      "name": "docs-site-macos",
+      "loop": "utils",
+      "description": "Build a beautiful macOS-inspired documentation site (single HTML file) with a liquid-glass surface system (tiered glassmorphism: opacity ladder, blur scale, edge highlights), animated SVG diagrams, traffic-light window chrome, and a light-blue + white liquid-glass palette (white glass surfaces over a soft blue gradient field, per-section blue-tone theming). Also trigger on \"liquid glass\", \"frosted glass\", or \"translucent UI\" requests for docs/showcase pages. Trigger when the user wants to create a docs site, landing page, showcase, portfolio, guide, tutorial site, feature overview, or product documentation — especially when they mention wanting it to look \"clean\", \"modern\", \"Apple-like\", \"macOS style\", \"glass\", \"frosted\", \"animated diagrams\", or \"single HTML file\". Also use when the user has multiple markdown files and wants them rendered into a cohesive visual HTML page with sections. If the user says \"6 file\" or wants separate pages per topic, generate one HTML file per wiki file (index.html as overview + N topic files), NOT a single combined page.",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "node",
+          "npx",
+          "python3"
+        ],
+        "scripts": [
+          "fdk/tools/build-design-showcase.py",
+          "fdk/tools/frontend-antipattern.py",
+          "fdk/tools/html-slop-fix.py",
+          "fdk/tools/html-visual-gate.mjs",
+          "fdk/tools/html_font.py",
+          "fdk/tools/html_shell.py"
+        ],
+        "framework_scripts": [
+          "fdk/tools/build-overstack-docs.py"
+        ]
+      }
+    },
+    {
+      "name": "doyourmagic",
+      "loop": "dev-loop",
+      "description": "Given a freshly-cloned external repo/tool, run clone→explore→verify→write to produce a bundle of RUNNABLE workflow skills under .overstack/doyourmagic/<repo>/skills/ — one hub skill /dym-<repo> (1 dòng context, chỉ nạp workflow con khi được gọi) + N sub-skills dạng SKILL.md promote thẳng lên repo chính (npx skills add) — plus workflows.md (index + bảng kiểm chứng) and flow.html (docs-site-macos, sơ đồ luồng skill→sản phẩm→skill kế). Trigger on 'kéo repo mới về', 'clone tool này làm workflow', 'doyourmagic', 'onboard external tool/repo', 'generate workflow docs/skills for this repo', or /doyourmagic. Options: --name <prefix> · --humanize.",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "python3"
+        ],
+        "scripts": [
+          "fdk/tools/medic.py",
+          "harness/poc-vendor-neutral/bin/harness-events.py",
+          "harness/poc-vendor-neutral/bin/llmwiki-validate.py",
+          "harness/poc-vendor-neutral/bootstrap.sh",
+          "harness/poc-vendor-neutral/demo.sh",
+          "harness/poc-vendor-neutral/gen-converters.py",
+          "harness/poc-vendor-neutral/install.sh",
+          "harness/poc-vendor-neutral/test-broad.sh",
+          "harness/scripts/dym-sync.py"
+        ],
+        "framework_scripts": [
+          "fdk/tools/fdk-kit.sh",
+          "fdk/tools/new-skill.py",
+          "harness/scripts/fdk-gate.py",
+          "harness/scripts/fresh-install-smoke.sh",
+          "harness/scripts/install-harness.sh"
+        ]
+      }
+    },
+    {
+      "name": "agent-reach",
+      "loop": "utils",
+      "description": "MUST USE when user wants to research/search/look up/find anything on the internet — e.g. \"research this topic\", \"do a deep dive on X\", \"search the web for X\", \"see what people say about X\", \"look this up\". Also MUST USE when user mentions any platform or shares any URL/link: Twitter/X, Reddit, Facebook, Instagram, YouTube, GitHub, Bilibili, XiaoHongShu, Xiaoyuzhou Podcast, LinkedIn/jobs/recruiting, V2EX, Xueqiu (stocks), RSS. 15 platforms, multi-backend routing (OpenCLI / per-platform CLIs / APIs). Zero config for 6 channels. Run `agent-reach doctor --json` to see which backend serves each platform right now. NOT for: writing reports/analysis/translation (this skill only FETCHES internet content); posting/commenting/liking (write operations); platforms that already have a dedicated skill installed (prefer that skill).",
+      "external": true,
+      "requires": {
+        "bin": [
+          "curl",
+          "gh"
+        ]
+      }
+    },
+    {
+      "name": "brandkit",
+      "loop": "utils",
+      "description": "Premium brand-kit image generation skill for creating high-end brand-guidelines boards, logo systems, identity decks, and visual-world presentations. Trained for minimalist, cinematic, editorial, dark-tech, luxury, cultural, security, gaming, developer-tool, and consumer-app brand systems. Optimized for intentional logo concepting, refined composition, sparse typography, strong symbolic meaning, premium mockups, art-directed imagery, and flexible grid layouts.",
+      "external": true,
+      "requires": {}
+    },
+    {
+      "name": "cavecrew",
+      "loop": "utils",
+      "description": "Decision guide for delegating to caveman-style subagents. Tells the main thread WHEN to spawn `cavecrew-investigator` (locate code), `cavecrew-builder` (1-2 file edit), or `cavecrew-reviewer` (diff review) instead of doing the work inline or using vanilla `Explore`. Subagent output is caveman-compressed so the tool-result injected back into main context is ~60% smaller — main context lasts longer across long sessions. Trigger: \"delegate to subagent\", \"use cavecrew\", \"spawn investigator/builder/reviewer\", \"save context\", \"compressed agent output\".",
+      "external": true,
+      "requires": {}
+    },
+    {
+      "name": "caveman",
+      "loop": "utils",
+      "description": "Ultra-compressed communication mode. Cuts token usage ~75% by speaking like caveman while keeping full technical accuracy. Supports intensity levels: lite, full (default), ultra, wenyan-lite, wenyan-full, wenyan-ultra. Use when user says \"caveman mode\", \"talk like caveman\", \"use caveman\", \"less tokens\", \"be brief\", or invokes /caveman. Also auto-triggers when token efficiency is requested.",
+      "external": true,
+      "requires": {}
+    },
+    {
+      "name": "caveman-commit",
+      "loop": "utils",
+      "description": "Ultra-compressed commit message generator. Cuts noise from commit messages while preserving intent and reasoning. Conventional Commits format. Subject ≤50 chars, body only when \"why\" isn't obvious. Use when user says \"write a commit\", \"commit message\", \"generate commit\", \"/commit\", or invokes /caveman-commit. Auto-triggers when staging changes.",
+      "external": true,
+      "requires": {}
+    },
+    {
+      "name": "caveman-compress",
+      "loop": "utils",
+      "description": "Compress natural language memory files (CLAUDE.md, todos, preferences) into caveman format to save input tokens. Preserves all technical substance, code, URLs, and structure. Compressed version overwrites the original file. Human-readable backup saved as FILE.original.md. Trigger: /caveman-compress FILEPATH or \"compress memory file\"",
+      "external": true,
+      "requires": {}
+    },
+    {
+      "name": "caveman-help",
+      "loop": "utils",
+      "description": "Quick-reference card for all caveman modes, skills, and commands. One-shot display, not a persistent mode. Trigger: /caveman-help, \"caveman help\", \"what caveman commands\", \"how do I use caveman\".",
+      "external": true,
+      "requires": {}
+    },
+    {
+      "name": "caveman-review",
+      "loop": "utils",
+      "description": "Ultra-compressed code review comments. Cuts noise from PR feedback while preserving the actionable signal. Each comment is one line: location, problem, fix. Use when user says \"review this PR\", \"code review\", \"review the diff\", \"/review\", or invokes /caveman-review. Auto-triggers when reviewing pull requests.",
+      "external": true,
+      "requires": {}
+    },
+    {
+      "name": "caveman-stats",
+      "loop": "utils",
+      "description": "Show real token usage and estimated savings for the current session. Reads directly from the Claude Code session log — no AI estimation. Triggers on /caveman-stats. Output is injected by the mode-tracker hook; the model itself does not compute the numbers.",
+      "external": true,
+      "requires": {}
+    },
+    {
+      "name": "design-taste-frontend",
+      "loop": "utils",
+      "description": "Anti-slop frontend skill for landing pages, portfolios, and redesigns. The agent reads the brief, infers the right design direction, and ships interfaces that do not look templated. Real design systems when applicable, audit-first on redesigns, strict pre-flight check.",
+      "external": true,
+      "requires": {
+        "bin": [
+          "npm",
+          "npx"
+        ]
+      }
+    },
+    {
+      "name": "design-taste-frontend-v1",
+      "loop": "utils",
+      "description": "The original v1 taste-skill, preserved for projects depending on its exact behavior. The current default is `design-taste-frontend` (v2 experimental), which is a substantial rewrite. Use this v1 install name only if you need exact backward compatibility.",
+      "external": true,
+      "requires": {}
+    },
+    {
+      "name": "find-skills",
+      "loop": "utils",
+      "description": "Helps users discover and install agent skills when they ask questions like \"how do I do X\", \"find a skill for X\", \"is there a skill that can...\", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill.",
+      "external": true,
+      "requires": {
+        "bin": [
+          "npx"
+        ]
+      }
+    },
+    {
+      "name": "full-output-enforcement",
+      "loop": "utils",
+      "description": "Overrides default LLM truncation behavior. Enforces complete code generation, bans placeholder patterns, and handles token-limit splits cleanly. Apply to any task requiring exhaustive, unabridged output.",
+      "external": true,
+      "requires": {}
+    },
+    {
+      "name": "gpt-taste",
+      "loop": "utils",
+      "description": "Elite UX/UI & Advanced GSAP Motion Engineer. Enforces Python-driven true randomization for layout variance, strict AIDA page structure, wide editorial typography (bans 6-line wraps), gapless bento grids, strict GSAP ScrollTriggers (pinning, stacking, scrubbing), inline micro-images, and massive section spacing.",
+      "external": true,
+      "requires": {}
+    },
+    {
+      "name": "high-end-visual-design",
+      "loop": "utils",
+      "description": "Teaches the AI to design like a high-end agency. Defines the exact fonts, spacing, shadows, card structures, and animations that make a website feel expensive. Blocks all the common defaults that make AI designs look cheap or generic.",
+      "external": true,
+      "requires": {}
+    },
+    {
+      "name": "image-to-code",
+      "loop": "utils",
+      "description": "Elite website image-to-code skill for Codex. For visually important web tasks, it must first generate the design image(s) itself, deeply analyze them, then implement the website to match them as closely as possible. In Codex, it must prefer large, readable, section-specific images instead of tiny compressed boards, generate fresh standalone images for sections or detail views instead of cropping old ones, avoid lazy under-generation, avoid cards-inside-cards-inside-cards UI, and keep the hero clean, spacious, readable, and visible on a small laptop.",
+      "external": true,
+      "requires": {}
+    },
+    {
+      "name": "imagegen-frontend-mobile",
+      "loop": "utils",
+      "description": "Elite mobile app image-generation skill for creating premium, app-native screen concepts and flows. Designed for iOS, Android, and cross-platform mobile products. Prioritizes clean hierarchy, comfortably readable text, strong multi-screen consistency, controlled color palettes, non-generic creative direction, textured surfaces, image-led composition, tasteful custom iconography, and clean phone mockup framing. By default, screens should be shown inside a subtle premium iPhone or similar phone mockup with a visible frame, while the main focus stays on the app content itself. This skill generates images only. It does not write code.",
+      "external": true,
+      "requires": {}
+    },
+    {
+      "name": "imagegen-frontend-web",
+      "loop": "utils",
+      "description": "Elite frontend image-direction skill for generating premium, conversion-aware website design references. CRITICAL OUTPUT RULE — generate ONE separate horizontal image FOR EVERY section. A landing page with 8 sections produces 8 images. Never compress multiple sections into one image. Enforces composition variety (not always left-text / right-image), background-image freedom, varied CTAs, varied hero scales (giant / mid / mini minimalist), narrative concept spine, second-read moments, and a single consistent palette across all images. Optimized for landing pages, marketing sites, and product comps that developers or coding models can accurately recreate.",
+      "external": true,
+      "requires": {}
+    },
+    {
+      "name": "industrial-brutalist-ui",
+      "loop": "utils",
+      "description": "Raw mechanical interfaces fusing Swiss typographic print with military terminal aesthetics. Rigid grids, extreme type scale contrast, utilitarian color, analog degradation effects. For data-heavy dashboards, portfolios, or editorial sites that need to feel like declassified blueprints.",
+      "external": true,
+      "requires": {}
+    },
+    {
+      "name": "last30days",
+      "loop": "utils",
+      "description": "Research what people actually say about any topic in the last 30 days. Pulls posts and engagement from Reddit, X, YouTube, TikTok, Hacker News, Polymarket, GitHub, and the web.",
+      "external": true,
+      "requires": {}
+    },
+    {
+      "name": "minimalist-ui",
+      "loop": "utils",
+      "description": "Clean editorial-style interfaces. Warm monochrome palette, typographic contrast, flat bento grids, muted pastels. No gradients, no heavy shadows.",
+      "external": true,
+      "requires": {}
+    },
+    {
+      "name": "redesign-existing-projects",
+      "loop": "utils",
+      "description": "Upgrades existing websites and apps to premium quality. Audits current design, identifies generic AI patterns, and applies high-end design standards without breaking functionality. Works with any CSS framework or vanilla CSS.",
+      "external": true,
+      "requires": {}
+    },
+    {
+      "name": "stitch-design-taste",
+      "loop": "utils",
+      "description": "Semantic Design System Skill for Google Stitch. Generates agent-friendly DESIGN.md files that enforce premium, anti-generic UI standards — strict typography, calibrated color, asymmetric layouts, perpetual micro-motion, and hardware-accelerated performance.",
+      "external": true,
+      "requires": {}
+    },
+    {
+      "name": "extract-site",
+      "loop": "utils",
+      "description": "Extract and convert a website or docs site into clean markdown",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "fable5",
+      "loop": "utils",
+      "description": "Reasoning protocol distilled from Claude Fable 5 — Floor check, multi-hypothesis diagnosis, adversarial self-review, Constraint Loop for hard output constraints. Use when the user says \"fable5\", \"bật thinking mode\", \"reason like fable 5\", or invokes /fable5. Once invoked it stays active for the rest of the session (toggle off with \"stop fable5\" / \"normal mode\").",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "failure-flywheel",
+      "loop": "dev-loop",
+      "description": "Capture each agent failure, bucket and count it deterministically, and when a failure class recurs past a threshold, scaffold a candidate rule/skill stub into the propose->gate flow so the same mistake becomes a guardrail instead of repeating. Hamel's create->label->fix->repeat flywheel, self-evolving. Trigger when the user says \"log this failure\", \"record the mistake\", \"why does this keep happening\", \"turn failures into rules\", \"failure taxonomy\", \"what keeps breaking\", or invokes /failure-flywheel. Also run --report periodically to see the top recurring failure classes.",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "python3"
+        ],
+        "scripts": [
+          "harness/scripts/code-logger.py",
+          "harness/scripts/failure-flywheel.py",
+          "harness/scripts/flywheel.py"
+        ]
+      }
+    },
+    {
+      "name": "fdk",
+      "loop": "utils",
+      "description": "Front-door on-demand cho phát triển framework HOẶC distill/author một skill — SELF-CONTAINED, chạy được ở BẤT KỲ project nào (không phụ thuộc file repo-local). Gọi khi đang sửa chính framework, hoặc đang viết/chưng cất một skill trong phiên của dự án khác. KHÔNG dùng cho dev tính năng dự án thường (đó là phần lớn phiên — ADR-004).",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "python3"
+        ],
+        "scripts": [
+          "fdk/tools/ci-local.py",
+          "fdk/tools/skill-reuse.py",
+          "fdk/tools/swh-lint.py",
+          "harness/scripts/overstack_paths.py"
+        ],
+        "framework_scripts": [
+          "fdk/tools/build-overstack-docs.py",
+          "fdk/tools/new-skill.py",
+          "fdk/tools/sync-skill.sh"
+        ]
+      }
+    },
+    {
+      "name": "fdk-uat",
+      "loop": "utils",
+      "description": "UAT THẬT cho một bản framework sắp phát hành - dựng một dự án TRỐNG hoàn toàn mới, cài overstack đúng đường NGƯỜI MỚI (curl bootstrap từ GitHub raw, không phải file:// working-tree), rồi kiểm chứng năng lực MỚI của chính bản đó có tới tay người dùng không (skill reachable, rule CẮN thật, docs khớp). HAI PHA - (1) nhánh CANARY trước merge: đẩy lên nhánh tạm uat/<ts>, curl từ raw của chính nhánh đó (kèm HARNESS_BASE + REPO_RAW + SKILLS_REF trỏ canary), UAT đầy đủ; FAIL thì xoá canary và nhánh chính chưa hề bị bẩn. (2) main-URL smoke NGAY SAU merge: chạy đúng lệnh người mới gõ, KHÔNG override biến nào - chỉ pha này kiểm được các giá trị MẶC ĐỊNH (chỗ hardcode tên nhánh); FAIL thì gỡ commit khỏi remote (revert hoặc reset --force-with-lease). Gọi khi user nói \"uat\", \"test thật\", \"test downstream\", \"kiểm tra người mới cài có chạy không\", \"acceptance\", \"/fdk-uat\", hoặc trước khi công bố một bản có năng lực mới. KHÁC medic --ci và fresh-install-smoke (cả hai cài từ working-tree qua file:// nên KHÔNG chứng minh được đường remote).",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "curl",
+          "orca",
+          "python3"
+        ],
+        "scripts": [
+          "fdk/tools/medic.py"
+        ]
+      }
+    },
+    {
+      "name": "frontier-scan",
+      "loop": "utils",
+      "description": "Quét biên giới agent-framework 30 ngày qua và đối chiếu overstack theo 8 trục (frontier-gap-scan runbook) — gọi INSTANT, không phải cron. Chạy 5 WebSearch, chấm Ngang/Chớm/Thua, diff kỳ trước, raise-issue cho gap mới / cập nhật gap đã có, cập nhật report. Trigger: 'frontier scan', 'quét đối thủ', 'scout tuần', 'chúng ta thua gì', '/frontier-scan'.",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "graph-mode",
+      "loop": "utils",
+      "description": "Bật luật chứng cứ evidence-chain (R19) cho phần CHAT — bắt buộc mọi chuỗi lập luận chấm dứt ở chứng cứ xem được (observed/tool-record/graph-edge/web/parametric/absence), khác fable5 (kỷ luật suy luận chung, không ràng buộc trích dẫn). Dùng khi user nói 'graph-mode', 'bật graph mode', 'evidence mode', hoặc invoke /graph-mode. Nặng token (buộc trích dẫn/mở file nhiều hơn mỗi câu trả lời) nên KHÔNG auto-bơm mỗi phiên — chỉ bật khi gọi tay. Once invoked it stays active for the rest of the session (toggle off with 'tắt graph mode' / 'graph-mode off' / 'normal mode').",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "gsap-scrolltrigger-pin",
+      "loop": "utils",
+      "description": "Pin một section lại khi cuộn tới, rồi chuyển cuộn dọc thành cuộn ngang qua GSAP ScrollTrigger (pin + scrub + tween xPercent của track). Gọi khi user nói \"gsap scrolltrigger\", \"pin section\", \"cuộn ngang\", \"horizontal scroll section\", \"scroll-driven horizontal\", \"pinned horizontal scroll\", hoặc /gsap-scrolltrigger-pin. KHÁC `scroll-effects` (7 hiệu ứng nhẹ vanilla, không dependency, không pin) và `lenis-smooth-scroll` (làm mượt cuộn TOÀN TRANG, không pin/không đổi hướng cuộn) — skill này CẦN GSAP và chỉ áp dụng cho MỘT section pin cụ thể.",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "hallmark",
+      "loop": "utils",
+      "description": "SÀN design mặc định của overstack (anti-AI-slop) — mọi UI đứng trên nó: build trang mới, audit, redesign, extract design từ URL/screenshot, và KHÓA HỆ THIẾT KẾ XUYÊN MÀN HÌNH qua design.md (chạy `hallmark redesign` cả app một lần → sinh design.md ở project root → mọi màn hình sau bám cùng hệ token/type/motion, không mỗi màn một kiểu). Gọi khi user nói: 'thiết kế', 'giao diện', 'làm UI/landing page/app mới', 'redesign', 'audit design', 'design system', 'đồng bộ giao diện giữa các màn hình', 'khóa hệ thiết kế', 'sao trang này trông AI-generated', hoặc gọi đích danh hallmark / dùng verb build·audit·redesign·study. Việc chạm UI mà không chắc dùng gì → dùng skill này (nó là sàn, các skill taste khác là flavour bên trên).",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "node",
+          "python3"
+        ],
+        "scripts": [
+          "fdk/tools/build-design-showcase.py",
+          "fdk/tools/button-harmony.mjs",
+          "harness/scripts/design-variety.py"
+        ]
+      }
+    },
+    {
+      "name": "harness-tour",
+      "loop": "utils",
+      "description": "Tour — Claude tự diễn cho user xem harness chặn mình theo thời gian thực trên project thật. Hai độ dài — \"short\" = 3 cảnh (R1·R2·R3), \"full\" = 10 (R1–R10). Tự phát hiện PoC vendor-neutral (cách CHÍNH) hay harness production. Tự dọn sạch demo. Trigger: \"harness tour\", \"xem harness làm gì\", \"/harness-tour\", \"test short\", \"test full\".",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "curl",
+          "python3"
+        ],
+        "scripts": [
+          "harness/poc-vendor-neutral/bin/harness-events.py",
+          "harness/poc-vendor-neutral/bin/llmwiki-validate.py",
+          "harness/poc-vendor-neutral/demo.sh"
+        ]
+      }
+    },
+    {
+      "name": "harness-update",
+      "loop": "utils",
+      "description": "TỰ BẢO TRÌ framework overstack trên máy user (self-maintain) — migrate llmwiki cũ lên harness (case B) hoặc update bản mới (case C). MỘT lệnh `install-harness.sh --self-heal` tự cài + tự backfill nợ wiki (Origin/index/OKF) + refresh bản đồ năng lực + health-check trong 1 process, không vòng lặp re-run. Trigger: \"tự bảo trì framework\", \"self-maintain\", \"migrate harness\", \"update harness\", \"update overstack\", \"nâng cấp harness\", \"cài harness vào dự án cũ\", \"/harness-update\".",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "curl",
+          "python3"
+        ],
+        "scripts": [
+          "fdk/tools/build-capabilities.py"
+        ],
+        "framework_scripts": [
+          "harness/scripts/install-harness.sh"
+        ]
+      }
+    },
+    {
+      "name": "health-check",
+      "loop": "utils",
+      "description": "Kiểm tra sức khỏe \"pattern chuẩn\" của template — pattern đã đủ chưa, có drift local không, và có cần /sync-template từ remote không. So version.json local ↔ remote ↔ disk (0 token, fail- open). Trigger: \"health check\", \"check pattern\", \"cần sync chưa\", \"/health-check\".",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "python3"
+        ],
+        "scripts": [
+          "harness/scripts/health-check.py",
+          "harness/scripts/okf-check.py",
+          "harness/scripts/wiki-health.py"
+        ]
+      }
+    },
+    {
+      "name": "i-have-adhd",
+      "loop": "utils",
+      "description": "Shape output for a reader with ADHD. Use this skill whenever responding to ANY user message including coding tasks, debugging, explanations, planning, and casual conversation. Output should lead with concrete next actions, number multi-step work, externalize state across turns, suppress tangents, give specific time estimates, and make wins visible. Trigger even on casual messages and even when the user did not explicitly ask for brevity.",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "impact-check",
+      "loop": "dev-loop",
+      "description": "Map all callers and dependents of a symbol before modifying shared code",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "infinite-webgl-grid",
+      "loop": "utils",
+      "description": "Lưới ảnh WebGL (Three.js) cuộn/kéo VÔ HẠN qua coordinate-wrapping — kéo hoặc cuộn dịch một offset ảo, vị trí mesh tính lại bằng modulo nên lưới trông vô hạn dù chỉ có N×N tile thật tồn tại. Gọi khi user nói \"lưới ảnh vô hạn\", \"infinite scroll grid webgl\", \"draggable image wall\", \"poster wall cuộn vô hạn\", hoặc /infinite-webgl-grid. KHÁC `skills/threejs-particle-morph` (particle rời rạc HỘI TỤ thành 1 ảnh theo tiến độ scroll, có \"đích\" cố định — đây là LƯỚI tile duyệt liên tục, không có đích) và KHÁC `skills/blur` (chuyển ảnh nọ sang ảnh kia trên 1 plane, không phải duyệt lưới nhiều ảnh).",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "ingest",
+      "loop": "wiki-loop",
+      "description": "Process new file in llmwiki/raw/ and distill into wiki pages",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "jenkins-agent-l3-deploy",
+      "loop": "orchestrate",
+      "description": "Deploy a docker-compose app via a Jenkins INBOUND AGENT running on the target server (no SSH from controller), with Docker-secrets \"L3\" hardening — runtime secrets live on tmpfs and never appear in `docker inspect` nor in `.env`. Use when the user wants: \"deploy via jenkins agent\", \"no-ssh deploy\", \"agent thay vì ssh\", \"docker secrets L3\", \"ẩn secret khỏi docker inspect\", \"secret không nằm trên đĩa\", or is wiring a Jenkins pipeline that deploys docker-compose to a Linux host. Encodes the gotchas learned from a real 1:1 run (Java 21, 0444 secret perms, 0400 file-credential, agent user needs docker+sudo).",
+      "external": false,
+      "requires": {
+        "bin": [
+          "curl",
+          "docker",
+          "python3"
+        ]
+      }
+    },
+    {
+      "name": "join-project",
+      "loop": "utils",
+      "description": "Orient nhanh vào dự án đang chạy đã có llmwiki — read-only, không ghi wiki",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "lenis-smooth-scroll",
+      "loop": "utils",
+      "description": "Thiết lập Lenis (physics-based smooth scroll) cho TOÀN TRANG + đồng bộ đúng cách với GSAP ScrollTrigger (raf loop dùng chung driver, không lệch pha, không giật khi quay lại tab). Gọi khi user nói \"lenis\", \"smooth scroll\", \"cuộn mượt kiểu apple\", \"physics-based scroll\", hoặc /lenis-smooth-scroll. KHÁC `skills/gsap-scrolltrigger-pin` (đó là pin + cuộn ngang cho MỘT section cụ thể — dùng CHUNG được với skill này, pin không thay được nền smooth-scroll) và KHÁC `skills/scroll-effects` (vanilla, không dependency; skill này CÓ dependency Lenis + GSAP, là nền smooth-scroll cho cả trang chứ không phải hiệu ứng lẻ).",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "lint",
+      "loop": "wiki-loop",
+      "description": "Periodic wiki health check — orphans, missing links, contradictions, stale (wiki→wiki VÀ code→wiki drift), index gaps. Bước 0 là cổng no-op tất định (wiki-sync, 0 token) — code không đổi kể từ neo thì kết luận \"wiki current\" và dừng sớm hợp lệ.",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "python3"
+        ],
+        "scripts": [
+          "fdk/tools/skill-usage.py",
+          "harness/scripts/claim-receipts.py",
+          "harness/scripts/decision-liveness.py",
+          "harness/scripts/skill-health.py",
+          "harness/scripts/tidy.py",
+          "harness/scripts/unknown-ledger.py",
+          "harness/scripts/wiki-sync.py"
+        ]
+      }
+    },
+    {
+      "name": "loop-runner",
+      "loop": "dev-loop",
+      "description": "Deterministic guardrailed agent-loop driver — wrap any step with propose → deterministic-verify → (critique → revise) and enforce hard termination guards (max_iter, wall-clock budget, no-progress via state-hash, escalate-to-human). The control loop + guards + progress detection are deterministic; the LLM critique/revise step is the one quarantined adapter. Trigger when an agent fix-loop must not spin forever and must not be able to argue its way around a failing test.",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "python3"
+        ],
+        "scripts": [
+          "harness/scripts/loop-runner.py"
+        ]
+      }
+    },
+    {
+      "name": "mask-reveal-transition",
+      "loop": "utils",
+      "description": "Chuyển/lộ ảnh qua mask hữu cơ dạng vòng loang mực (ink-splatter/blob, `mask-image` radial-gradient động theo scroll progress) hoặc pin split-screen sticky (ảnh cố định bên trái, text cuộn bên phải, đổi ảnh qua mask khi panel active đổi). Bản gốc nguyên văn (Ink Transition, Pinned Split-Screen…) ở repo Rheinmir/uiux-asset; assets/ là bản vanilla CSS mask nhẹ, không WebGL. Gọi khi user nói \"mask reveal\", \"ink transition\", \"chuyển ảnh qua mask\", \"split-screen sticky pin\", \"blob reveal effect\", \"vết mực loang\", \"pin ảnh cố định cuộn chữ\", hoặc /mask-reveal-transition. KHÁC `skills/scroll-effects` (reveal đơn giản opacity/translate, KHÔNG có mask hình dạng) và `skills/blur` (shader WebGL nặng GPU cho chuyển ảnh toàn màn hình — đây là CSS `mask-image` nhẹ, không cần Three.js/canvas).",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "md-to-html",
+      "loop": "utils",
+      "description": "Render Markdown thành standalone HTML — Mermaid, Chart.js, styled tables, TOC",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "medic",
+      "loop": "utils",
+      "description": "Cổng sức khoẻ tổng / tuyến phòng thủ cuối của framework overstack — gõ /medic (hoặc `medic` ở CLI) để CHỨNG MINH hệ còn khoẻ trong MỘT lệnh: luật còn cắn (harness-doctor fire-drill), validator không lệch bản (drift), docs khớp đĩa, code compile, eval không regress, backstop git sống. Hub 1-tên — mô tả PHẠM VI thay vì nhớ subcommand (`medic` = all · `medic rules` · `medic docs eval`). Dùng trước commit/PR, sau khi pull/đổi máy, khi nghi một rule không chặn nữa, hoặc vừa thêm skill/rule/generator (medic tự báo nếu quên hàng rào). Trigger: /medic, \"medic\", \"chạy medic\", \"hệ còn khoẻ không\", \"rà luật có cắn không\", \"cổng phòng thủ cuối\", \"health gate\", \"last line of defense\".",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "python3"
+        ],
+        "scripts": [
+          "fdk/tools/medic.py"
+        ]
+      }
+    },
+    {
+      "name": "new-project-setup",
+      "loop": "dev-loop",
+      "description": "Deploy llmwiki từ đầu vào project mới — template pull, skill install, RTK, wiki seed, onboard",
+      "external": false,
+      "requires": {
+        "bin": [
+          "curl"
+        ]
+      }
+    },
+    {
+      "name": "new-skill",
+      "loop": "dev-loop",
+      "description": "Scaffold (tạo) một skill mới — new skill — into the Rheinmir/skills checkout (skills/<name>/SKILL.md, frontmatter metadata.loop + metadata.requires) via fdk/tools/new-skill.py of the setup repo, then run the skills-repo gate (requires · provenance · catalog · tools/check.sh). Use when the user says \"create a skill\", \"add a new skill\", \"scaffold a skill\", \"make a new skill\", \"new skill\", or invokes /new-skill.",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "python3"
+        ],
+        "scripts": [
+          "fdk/tools/skill-reuse.py"
+        ],
+        "framework_scripts": [
+          "fdk/tools/new-skill.py"
+        ]
+      }
+    },
+    {
+      "name": "onboard-codebase",
+      "loop": "dev-loop",
+      "description": "Deep codebase analysis — populate wiki with architecture, concepts, entities",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "orca-dispatch-reference",
+      "loop": "orchestrate",
+      "description": "Reference for Antigravity/OpenCode dispatch, skill installation, AgentMemory, RTK token proxy — NOT a loop skill",
+      "external": false,
+      "requires": {
+        "bin": [
+          "agy",
+          "curl",
+          "opencode",
+          "orca"
+        ]
+      }
+    },
+    {
+      "name": "orca-eval",
+      "loop": "orchestrate",
+      "description": "Quét N session Claude Code gần nhất, distill best practices thành report md + đề xuất action cải tiến quy trình",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "orca-graph",
+      "loop": "orchestrate",
+      "description": "Phân việc dạng ĐỒ THỊ PHỤ THUỘC trên PLAN.md — trả lời 5 câu hỏi (task này cần việc gì · cái gì chạy song song · phụ thuộc vào gì · tồn tại để làm gì trong graph · liên hệ graph cũ) bằng tool tất định, dispatch theo lớp topo có KHOÁ + lease + generation, state lưu bền append-only (events.jsonl), 2 file python vẽ (1 graph / atlas 2D mọi graph), mọi câu trả lời của model gắn nhãn chắc|gợi-ý|không-biết + nguồn, audit bịa=0. Gọi khi user nói \"orca-graph\", \"graph phân việc\", \"task nào song song\", \"phụ thuộc gì\", \"vẽ graph task\", \"dispatch theo graph\", \"/orca-graph\".",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "python3"
+        ],
+        "scripts": [
+          "fdk/tools/build-control-room.py",
+          "fdk/tools/graph-atlas.py",
+          "fdk/tools/graph-viz.py",
+          "harness/scripts/orca-graph.py"
+        ]
+      }
+    },
+    {
+      "name": "orca-handover",
+      "loop": "orchestrate",
+      "description": "Sinh MỘT file .md bàn giao đủ dày để một phiên KHÁC (người hoặc agent, không có context nào của phiên này) mở ra là bắt đầu làm được ngay — việc còn dở, thứ tự ưu tiên có lý do, số đo làm bằng chứng, cạm bẫy đã trả giá, và nợ mở không chặn. Gọi khi user nói \"bàn giao\", \"handover\", \"handoff\", \"viết lại để phiên sau làm tiếp\", \"context cho session khác\", \"tôi sắp hết phiên\", \"ghi lại để mai làm\", \"/orca-handover\". KHÁC record-episode (ghi cho MÁY truy hồi ngữ nghĩa) và KHÁC plan (brief thi hành cho task ĐÃ duyệt, đã hiểu rõ) — orca-handover dành cho việc CÒN DỞ và CÒN MƠ HỒ, nơi thứ tự và lý do quan trọng hơn từng bước code.",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "python3"
+        ],
+        "scripts": [
+          "fdk/tools/build-capabilities.py",
+          "fdk/tools/medic.py"
+        ]
+      }
+    },
+    {
+      "name": "orca-issue",
+      "loop": "orchestrate",
+      "description": "Vòng xử lý SỰ CỐ first-class — dùng khi có bug, lỗi runtime, hành vi sai, \"approve treo\", regression, incident production. Điều phối triage → repro-first gate (chưa tái hiện được thì CHƯA được sửa) → khoanh vùng (code-graph/impact-check/bisect) → fix qua safe-change với bằng chứng đỏ→xanh → distill kép (wiki incident + failure-flywheel + problem-tree). KHÔNG dùng cho tính năng mới (đó là propose/orca-workflow).",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "orca-onboard",
+      "loop": "orchestrate",
+      "description": "Parallel codebase onboarding — distilled understand-anything pipeline (scan + git history + batch analyze + layers/tour, no plugin), then domain enrichment (Claude), wiki + HTML via opencode+DeepSeek Flash v4.",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "agy",
+          "npx",
+          "opencode",
+          "python3"
+        ],
+        "scripts": [
+          "fdk/tools/surface-coverage.py",
+          "harness/scripts/dep-health.py"
+        ]
+      }
+    },
+    {
+      "name": "orca-sec-scans",
+      "loop": "orchestrate",
+      "description": "Quét bảo mật mã nguồn bằng Trivy — tự check/cài Trivy nếu chưa có, quét vuln + misconfig + secret trên be/fe, xuất report JSON+HTML, tóm tắt HIGH/CRITICAL, và đề xuất/áp dụng fix (bump deps, USER non-root). NGOÀI quét static Trivy, còn KIỂM CHỨNG ĐỘNG các giả định mặc định hay sai của dev (auth chỉ ở UI, \"nội bộ nên an toàn\", CORS, config default, lệch branch deploy) bằng request thật. Dùng khi user nói \"quét bảo mật\", \"trivy\", \"scan vuln\", \"security scan\", \"check CVE\", \"có lỗ hổng không\", \"an toàn chưa\", \"/orca-sec-scans\".",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "curl",
+          "python3"
+        ],
+        "scripts": [
+          "fdk/tools/supply-watch.py"
+        ]
+      }
+    },
+    {
+      "name": "orca-workflow",
+      "loop": "orchestrate",
+      "description": "Daily propose → gate → dispatch workflow with Orca",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "agy",
+          "curl",
+          "docker",
+          "gh",
+          "opencode",
+          "orca",
+          "python3"
+        ],
+        "scripts": [
+          "harness/poc-vendor-neutral/bin/pull-gate-sweep.sh",
+          "harness/scripts/archetype.py",
+          "harness/scripts/code-logger.py",
+          "harness/scripts/orca-reconcile.py"
+        ]
+      }
+    },
+    {
+      "name": "ovs-notes",
+      "loop": "utils",
+      "description": "Viewer release-notes overstack TỨC THÌ (kiểu /release-notes của Claude CLI). Gõ /ovs-notes → liệt kê NGAY changelog OVERSTACK framework (newest-first) để chọn & đọc; /ovs-notes <version|latest> in đầy đủ; /ovs-notes --here = release của PROJECT hiện tại. READ-ONLY, KHÔNG side-effect — KHÁC /ship (quy trình CẮT release). Trigger: /ovs-notes, 'xem release notes', 'release notes bản nào', 'changelog', 'các bản đã ra', 'bản mới nhất có gì'.",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "python3"
+        ],
+        "scripts": [
+          "harness/scripts/ovs-notes.py"
+        ]
+      }
+    },
+    {
+      "name": "plan",
+      "loop": "dev-loop",
+      "description": "Mở rộng một draft SPEC ĐÃ ĐƯỢC DUYỆT thành kế hoạch thi hành được — file `DDMMYY-<tên>-PLAN.md` mà một agent KHÔNG có context nào (CLI rẻ chạy headless, không hỏi lại được) vẫn làm đúng: đường dẫn file chính xác, khối Interfaces (Consumes/Produces) khai chữ ký cho task hàng xóm, ràng buộc bao trùm chép nguyên văn, và từng bước 2-5 phút kiểu TDD có code thật + lệnh chạy + output mong đợi. Gọi SAU `/propose` và SAU khi user duyệt ở cổng, TRƯỚC khi dispatch task cho agent. Trigger - \"viết plan\", \"mở rộng proposal thành plan\", \"plan thi hành\", \"chuẩn bị brief cho agent\", \"/plan\". KHÔNG dùng để thiết kế hay để hỏi yêu cầu (đó là `/propose`), KHÔNG dùng khi chưa có SPEC duyệt.",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "playwright-verify",
+      "loop": "dev-loop",
+      "description": "Cài + dùng Playwright bằng standalone .mjs script (không qua npx playwright test / *.spec.ts) để verify code nhanh, một lần: chụp ảnh localhost/file://, đọc console/pageerror, đo getBoundingClientRect khi phần tử không thấy/không bấm được, auth bypass qua addCookies+addInitScript; việc NHIỀU BƯỚC thì mode phiên bền connectOverCDP (tab/cookie giữ nguyên giữa các lượt, không viết mù cả kịch bản). Dùng khi user nói 'verify bằng playwright', 'chụp ảnh trang', 'test nhanh UI bằng script', 'verify nhiều bước', 'giữ session giữa các lần chạy', 'claude-in-chrome bị chặn localhost', 'không click được / không thấy phần tử', hoặc invoke /playwright-verify. KHÁC uat-nonit-testcase (bộ test case UAT cho non-IT) và claude-in-chrome (extension, bị chặn localhost/file://) — đây là hướng dẫn CHUNG áp dụng mọi task.",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "prd-grade-fe",
+      "loop": "utils",
+      "description": "Pipeline MỘT CỬA ra frontend chuẩn production có CỔNG MÁY GÁC: phỏng vấn nguồn theme một tin nhắn (A preset macOS glassmorphism mặc định · B folder/file tài liệu thiết kế · C paste URL trang đích), khoá thông số vào MỘT file design.md (hallmark và impeccable đọc chung) rồi sinh tokens.css + frontmatter bằng design-sync.py, dựng trang token-only theo hallmark, chạy fe-gate.sh (impeccable detect 61 luật tất định rc 0/1/2 + Playwright 4 viewport) và rubric audit/harden/polish, KHÔNG giao khi cổng chưa xanh. Gọi khi user nói 'frontend production', 'production-grade frontend', 'dựng FE chuẩn production', 'giao diện kỷ luật', 'prd-grade-fe', '/prd-grade-fe'. Khác hallmark (sàn design, không có gate impeccable) và khác /br (dây chuyền BR→frame, không lo riêng tầng frontend).",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "python3"
+        ],
+        "framework_scripts": [
+          "fdk/tools/sync-skill.sh"
+        ]
+      }
+    },
+    {
+      "name": "propose",
+      "loop": "dev-loop",
+      "description": "Plan a feature before coding — draft in wiki/sources/draft/, stop for approval",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "python3"
+        ],
+        "scripts": [
+          "harness/scripts/code-logger.py",
+          "harness/scripts/unknown-ledger.py"
+        ]
+      }
+    },
+    {
+      "name": "qc-code",
+      "loop": "dev-loop",
+      "description": "Review code phong cách SENIOR 10 năm — bốn mục security · performance · naming · logic, mỗi mục cho ĐIỂM/10 + LỖI NẶNG NHẤT + CÁCH SỬA, rồi một kết luận PASS-sang-bước-kế hay CẦN-SỬA. Mục logic tìm bug (null/rỗng/âm/overflow, off-by-one, race) và SINH một test-case tái hiện cho mỗi bug (đặt tên qc-*), các test đó auto-chạy qua hook tất định (0-token, không LLM). Gọi khi user nói \"qc code\", \"review code\", \"soi code\", \"chấm điểm code\", \"kiểm tra chất lượng code\", \"/qc-code\". KHÁC /orca-sec-scans (Trivy quét TĨNH — vuln/misconfig/secret) và /code-review built-in (review tổng quát): qc-code là format senior bốn-mục-chấm-điểm-verdict + sinh test tái hiện. Mặc định review DIFF hiện tại; chỉ định file khi cần.",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "python3"
+        ],
+        "scripts": [
+          "harness/scripts/grounding-check.py",
+          "harness/scripts/qc-regression.py"
+        ]
+      }
+    },
+    {
+      "name": "qc-uiux",
+      "loop": "dev-loop",
+      "description": "Audit UI/UX phong cách SENIOR — bốn mục accessibility · visual-hierarchy · consistency · antipattern, mỗi mục cho ĐIỂM/10 + LỖI NẶNG NHẤT + CÁCH SỬA, rồi một kết luận PASS-sang-bước-kế hay CẦN-SỬA. Phần ĐO ĐƯỢC (contrast WCAG, tap-target, overlap/misalign hình học, missing-label) chạy tất định qua engine visual-qa (headless, 0-token, KHÔNG LLM); phần cần MẮT (hierarchy, drift design-system, dark-pattern) là LLM audit. Gọi khi user nói \"qc uiux\", \"audit ui\", \"soi giao diện\", \"dẹp antipattern ui\", \"/qc-uiux\", hoặc SAU khi có mockup/UI. NHÂN KHUÔN /qc-code (đắt=LLM tay, rẻ=test tất định auto). KHÁC /redesign (đổi mới thẩm mỹ) và /visual-qa (chụp+gác pixel) — qc-uiux là verdict senior 4-mục.",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "node",
+          "python3"
+        ],
+        "scripts": [
+          "fdk/tools/build-design-showcase.py",
+          "fdk/tools/button-harmony.mjs",
+          "fdk/tools/html-visual-gate.mjs",
+          "harness/scripts/qc-regression.py"
+        ]
+      }
+    },
+    {
+      "name": "query",
+      "loop": "wiki-loop",
+      "description": "Synthesize answer from wiki; persist new insights as wiki entries. Trả lời kèm mục Evidence trích dẫn edge ID (eid) của các cạnh trong đồ thị wiki thật sự chống lưng kết luận — dùng khi cần biết \"căn cứ nào\", \"trích dẫn cạnh nào\", \"đường đi trong graph\", \"cite evidence\".",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "python3"
+        ],
+        "scripts": [
+          "harness/scripts/mem-rank.py",
+          "harness/scripts/query-log.py",
+          "harness/scripts/wiki-graph.py",
+          "harness/scripts/wiki-sync.py"
+        ]
+      }
+    },
+    {
+      "name": "raise-issue",
+      "loop": "utils",
+      "description": "Raise một ISSUE đầy đủ bối cảnh vào ledger local (draft) để dev khác pull về xử lý ở BẤT KỲ đâu qua /fdk mà không đụng nhánh/dự án khác; TỰ mirror lên tracker remote nếu có (GitHub qua gh / GitLab qua glab / Gitea qua tea) — ledger là nguồn chân lý. Dùng cho feature-gap, tech-debt, foundation, câu hỏi kiến trúc (KHÁC orca-issue = sự cố/bug repro-first). Gồm template context + assign owner + dispatch agent. Trigger: 'raise issue', 'tạo issue', 'ghi issue', 'mở issue', 'log gap này', 'issue để dev khác làm', '/raise-issue'.",
+      "external": false,
+      "requires": {
+        "bin": [
+          "opencode"
+        ]
+      }
+    },
+    {
+      "name": "record-episode",
+      "loop": "wiki-loop",
+      "description": "Ghi một SESSION EPISODE có cấu trúc (tầng nhớ episodic) vào memory store để phiên sau truy hồi được 'phiên trước làm gì' — theo NGỮ NGHĨA, không chỉ theo [[wikilink]]. Bọc mem-rank.py (engine). On-demand, KHÔNG auto-hook (ADR-004). Trigger: 'ghi episode', 'record episode', 'chốt phiên này vào nhớ', 'lưu lại phiên trước làm gì', 'session episode', '/record-episode'.",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "python3"
+        ],
+        "scripts": [
+          "harness/scripts/mem-proxy.py",
+          "harness/scripts/mem-rank.py"
+        ]
+      }
+    },
+    {
+      "name": "safe-change",
+      "loop": "dev-loop",
+      "description": "Modify shared code without breaking existing callers",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "scroll-effects",
+      "loop": "utils",
+      "description": "Hub hiệu ứng cuộn trang — 64 bản GỐC nguyên văn (freefrontend/CodePen, MIT) ở repo Rheinmir/uiux-asset để copy nguyên file, kèm 7 hiệu ứng vanilla nhẹ: reveal-on-scroll, staggered text, scroll highlight, sticky shrink nav, scroll-to-top, scrollspy TOC, parallax nhẹ data-speed. Vanilla HTML/CSS/JS, tôn trọng prefers-reduced-motion. Gọi khi user nói \"hiệu ứng scroll\", \"scroll reveal\", \"scroll to top\", \"scrollspy\", \"parallax nhẹ\", \"highlight khi cuộn\", hoặc /scroll-effects. KHÁC `blur` (WebGL chuyển ảnh nặng GPU) và `timeline` (trục mốc thời gian) — đây là các hiệu ứng cuộn trang dùng hàng ngày, nhẹ, không dependency.",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "ship",
+      "loop": "dev-loop",
+      "description": "Workflow chốt PUSH/RELEASE/PR/MR — gọi khi user nhắc 'release'/'push'/'ship'/'lên release'/'mở PR'/'tạo MR'. Chạy CHECKLIST điều kiện TRƯỚC khi đẩy: (1) medic --ci (cổng sức khoẻ: luật cắn/drift/docs/code/eval), (2) UAT /fdk-uat qua remote thật nếu diff có năng lực mới (chỉ release/pr/mr, medic --ci không chứng minh được đường curl), (3) git sạch (scratchpad/ephemeral không track), (4) selftest, (5) version x.x.x+1 từ tag gần nhất (chỉ mức release), (6) patch note/PR-body trung thực (Added/Fixed/Removed/Known-limitations, KHÔNG phóng đại). Hỗ trợ 5 mức: 'ship push' = chỉ push không tag; 'ship release' = push + tag vX.Y.Z + release notes; 'ship pr' = push nhánh + gh pr create (GitHub); 'ship mr' = push nhánh + glab mr create (GitLab); 'ship merge' = liệt kê PR/MR ĐẾN của repo theo remote, kéo nhánh về, chạy gate+test, chỉ merge nếu XANH. STOP chờ duyệt trước bước side-effect. Trigger: /ship, 'release', 'push', 'ship', 'mở PR', 'tạo MR', 'ship pr', 'ship mr', 'ship merge', 'gom PR về merge', 'merge PR nếu test xanh', 'chuẩn bị push', 'lên release', 'checklist trước push', 'đủ điều kiện push chưa'.",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "python3"
+        ],
+        "scripts": [
+          "fdk/tools/ci-local.py",
+          "fdk/tools/medic.py",
+          "harness/scripts/repo_role.py"
+        ],
+        "framework_scripts": [
+          "harness/scripts/fresh-install-smoke.sh"
+        ]
+      }
+    },
+    {
+      "name": "skill-provenance",
+      "loop": "dev-loop",
+      "description": "Ghi và kiểm provenance (nguồn + sha256 checksum) cho skill — dùng khi 'cài skill từ ngoài', 'skill này từ đâu', 'audit nguồn skill', 'checksum skill', 'supply-chain skill', phát hiện skill bị sửa lén; bổ trợ orca-sec-scans. Chạy fdk/tools/skill-provenance.py. /skill-provenance",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "python3"
+        ],
+        "scripts": [
+          "fdk/tools/skill-provenance.py"
+        ]
+      }
+    },
+    {
+      "name": "snapshot-push",
+      "loop": "utils",
+      "description": "Push bonbon-ai outer repo as full snapshot, including be/ and fe/ content",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "surface-coverage",
+      "loop": "dev-loop",
+      "description": "Kiểm 'phủ hết' bằng diff với BỀ MẶT THẬT đọc từ code (trang, route, module API, lệnh CLI, cron, tool MCP) thay vì đếm số artefact: liệt kê bề mặt tất định ra surface.json @commit, giữ sổ phủ coverage.json (mục → artefact giải thích hoặc loại trừ có lý do), gác bằng test đỏ khi có mục mới chưa phủ, báo 'N/M mục'. Gọi khi user hỏi 'đã phủ hết chưa', 'có đủ chưa', 'tương ứng hết chức năng chưa', 'vét cạn', 'không lọt chức năng', 'coverage', 'sổ chức năng', khi sinh bài học/flow/docs cho một codebase, hoặc khi sắp báo một con số (19 bài, 18 flow) như thể đã đủ.",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "python3"
+        ],
+        "scripts": [
+          "fdk/tools/surface-coverage.py"
+        ]
+      }
+    },
+    {
+      "name": "svg-stroke-reveal",
+      "loop": "utils",
+      "description": "Vẽ dần nét SVG (stroke-draw) theo cuộn trang hoặc khi vào viewport — đo `path.getTotalLength()`, set `stroke-dasharray`/`stroke-dashoffset`, animate dashoffset từ length về 0. Gọi khi user nói \"vẽ svg khi cuộn\", \"svg stroke draw\", \"logo vẽ dần\", \"path animation reveal\", \"stroke-dashoffset\", hoặc /svg-stroke-reveal. KHÁC `skills/scroll-effects` (7 hiệu ứng cuộn chung — reveal/stagger/highlight/nav/top/toc/parallax, KHÔNG có stroke-draw) — skill này chuyên biệt cho SVG `<path>` có NÉT VẼ (logo, chữ ký, biểu đồ đường, hành trình).",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "sync-template",
+      "loop": "utils",
+      "description": "Sync structural improvements between project and master template repo",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "curl",
+          "python3"
+        ],
+        "scripts": [
+          "harness/scripts/health-check.py",
+          "harness/scripts/okf-check.py",
+          "harness/scripts/sync-template.py"
+        ]
+      }
+    },
+    {
+      "name": "tc-run",
+      "loop": "orchestrate",
+      "description": "Có MỘT file test case đầy đủ (.xlsx nhiều sheet, cột Test Case ID/Description/Steps/Expected/Priority/Type) → bóc thành JSON, phân loại tất định ui|calc|perf|security|gap, sinh PLAN theo LÔ, chạy qua orca-graph trên phiên trình duyệt ĐÃ đăng nhập của user (claude-in-chrome), ghi PASS/FAIL/BLOCK + ảnh từng TC, xuất mỗi lô một report .xlsx tester-kit (tao_report_test). Gọi khi user nói \"chạy bộ test case này\", \"file test case xlsx\", \"SIT/UAT theo file\", \"xuất report tester-kit\", \"/tc-run\".",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "orca",
+          "python3"
+        ],
+        "scripts": [
+          "harness/scripts/orca-graph.py",
+          "harness/scripts/tc-xlsx.py"
+        ]
+      }
+    },
+    {
+      "name": "teach-me",
+      "loop": "dev-loop",
+      "description": "Giải thích MỘT thứ (một file, hàm, tính năng, cơ chế, khái niệm, lỗi, hay hệ thống) theo cấu trúc cố định BẢY BƯỚC — Tên gọi → Nguồn gốc → Lý do tồn tại → Cơ chế hoạt động (+ sơ đồ hệ thống & code) → Trade-off → Giới hạn → Vị trí trong toàn bộ hệ thống — và CĂN THEO NGƯỜI NGHE (engineer, sếp/manager, designer, PM, sinh viên, bố mẹ, trẻ 5 tuổi…): cùng bảy bước, đổi độ sâu, từ vựng, phép so sánh, giọng. CHỨNG bước \"Cơ chế hoạt động\" bằng RUNTIME thật — chạy code với đầu vào cụ thể, thêm instrument/breakpoint (pdb/debugpy · node --inspect · print/log), quan sát state THẬT — thay vì đọc-rồi-đoán, rồi dọn sạch instrument. Gọi khi user nói \"teach me\", \"giải thích\", \"dạy tôi\", \"cái này chạy thế nào\", \"sơ đồ hoá\", \"ELI5\", \"explain like I'm…\", \"giải thích như cho trẻ 5 tuổi\", \"nói dễ hiểu\", \"giải thích cho sếp/manager/designer/bố mẹ/vợ tôi…\", \"làm sao nói với sếp cái này\", \"/teach-me\". KHÁC /onboard-codebase và /join-project (cả dự án → wiki): teach-me phạm vi MỘT thứ, sâu, có sơ đồ, chứng bằng chạy thật, không ghi wiki.",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "python3"
+        ],
+        "scripts": [
+          "harness/scripts/wikieval.py"
+        ]
+      }
+    },
+    {
+      "name": "threejs-particle-morph",
+      "loop": "utils",
+      "description": "Particle cloud Three.js (THREE.Points + BufferGeometry) hội tụ từ vị trí ngẫu nhiên thành hình ảnh/logo theo tiến độ cuộn trang — sample pixel từ canvas ẩn làm toạ độ đích, lerp position theo scroll. Gọi khi user nói \"particle image\", \"hạt hội tụ thành ảnh\", \"three.js particle scroll\", \"point cloud morph\", \"particle cloud biến hình theo scroll\", hoặc /threejs-particle-morph. KHÁC `skills/blur` (đó là shader GLSL radial-blur CHUYỂN ẢNH sang ảnh khác trên một plane — đây là particle cloud rời rạc BIẾN HÌNH thành ảnh, kỹ thuật render khác hẳn — PointsMaterial/BufferGeometry, không phải ShaderMaterial trên PlaneGeometry).",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "tidy",
+      "loop": "utils",
+      "description": "Dọn + validate kho nháp và render (wiki/sources/draft/*.md + llmwiki/html/*.html) khi phình to — ex docs-curate (đổi tên 2026-09-09 vì tên cũ không ai gọi). Ba tầng — PROMOTE bản chất quý lên wiki ADR/concept, ARCHIVE nháp đã xong (status done/implemented hoặc task done) vào archive/<nhóm>/ bằng git mv (TRACKED, không xoá, không giết draft còn proposed), KEEP canonical — rồi RE-INDEX. Gọi tay bất cứ lúc nào, hoặc khi đầu phiên báo \"[tidy] draft/ có N file (> 10)\". Trigger — \"tidy\", \"dọn nháp\", \"dọn docs\", \"draft quá nhiều\", \"archive draft\", \"quét nháp lỗi thời\", \"/tidy\".",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "python3"
+        ],
+        "scripts": [
+          "harness/scripts/tidy.py",
+          "harness/scripts/wiki-health.py"
+        ]
+      }
+    },
+    {
+      "name": "timeline",
+      "loop": "utils",
+      "description": "Component timeline dọc (mốc theo ngày, cuộn-hiện dần bằng IntersectionObserver, tự chuyển layout mobile→desktop ở 768px) cho trang changelog/lịch sử/roadmap/writing-archive. Gọi khi user nói \"làm timeline\", \"dòng thời gian\", \"lịch sử phiên bản dạng timeline\", \"changelog timeline\", \"roadmap timeline\", hoặc /timeline. KHÁC /diagram (sơ đồ luồng/kiến trúc) — đây là danh sách MỐC THEO THỜI GIAN của MỘT trục, không phải quan hệ nhiều node.",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "tour-guide",
+      "loop": "utils",
+      "description": "Thêm một in-app product tour (spotlight onboarding overlay) tự viết, KHÔNG cần thư viện (không joyride/intro.js/driver.js). Vẽ lớp tối + khoét spotlight quanh từng phần tử theo CSS selector, gắn tooltip nhãn, và 1 pill \"tap để đóng\" đặt vào khoảng trống lớn nhất. Responsive mobile/desktop, lock scroll, đo bằng getBoundingClientRect, click bất kỳ đâu để đóng. Dùng khi user muốn: \"thêm tour guide\", \"onboarding tour\", \"hướng dẫn trong app\", \"spotlight tour\", \"product tour\", \"walkthrough\", \"tour kiểu bonbon\", hoặc invoke /tour-guide. Hợp với React/Next.js + Tailwind. Mỗi route tự định nghĩa danh sách điểm dừng (spots); phần tử được đánh dấu bằng thuộc tính data-tour ổn định.",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "tour-guide-supademo",
+      "loop": "utils",
+      "description": "Style thiết kế Supademo cho in-app product tour (dùng kèm skill tour-guide — component gốc 0 dependency): blinker hotspot pulse, tooltip card, step counter + nav buttons, progress bar, theme tokens — quy ra recipe Tailwind/CSS dùng ngay. Trigger: \"/tour-guide-supademo\", \"tour kiểu Supademo\", \"style supademo\", \"blinker hotspot\". Quy ước: style distill từ sản phẩm khác sẽ là skill riêng /tour-guide-<tên>.",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "trace-grader",
+      "loop": "orchestrate",
+      "description": "Score the PATH an agent took (tool choice, ordering, retries, repeatability, grounding) — not just its final answer — to catch \"corrupt success\" (right answer via a bad/unsafe path) and flakiness. Deterministic trace schema + pass^k repeatability + config-driven rule checks (forbidden tool, out-of-order, retry-storm, excessive steps, edited-without-read grounding). Parses canonical traces.json, hooklib.audit / code-logger events.jsonl, OR a full Claude Code session transcript (--transcript, richest source: recovers retrieval args + observation + per- step ok). Trigger when the user says \"grade the trajectory\", \"score the path not the answer\", \"did it cheat / take a bad path\", \"did it look before it acted / grounding\", \"corrupt success\", \"is this flaky / does it repeat\", \"pass^k\", \"grade a session transcript\", \"trace grader\", or invokes /trace-grader.",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "python3"
+        ],
+        "scripts": [
+          "harness/scripts/trace-grader.py"
+        ]
+      }
+    },
+    {
+      "name": "uat-nonit-testcase",
+      "loop": "utils",
+      "description": "Tạo bộ test case / checklist UAT cho người dùng nghiệp vụ NON-IT (C&B, kế toán, vận hành) — 1 file HTML offline-proof gồm bảng kịch bản tuần tự có mã Ctrl+F, phạm vi check/không-check theo nguồn dữ liệu, step-by-step kèm ảnh màn hình thật đã blur PII, Đạt/Không đạt + xuất Excel/CSV/PDF. Trigger: \"tạo test case cho non-IT\", \"checklist UAT cho nghiệp vụ\", \"kịch bản kiểm thử cho C&B\", \"/uat-nonit-testcase\".",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "ui-kit-from-code",
+      "loop": "dev-loop",
+      "description": "Rút hệ thiết kế ĐANG CÓ của một dự án — từ code (token màu, thang kích thước, component) hoặc từ URL site đang chạy thành MỘT trang HTML tham chiếu kiểu Figma UI kit: foundations + component theo nhóm + màn mẫu mobile/desktop, đổi palette/sáng-tối/shape, copy token/HTML/hex. Giá trị lấy bằng cách CHẠY hàm token thật (hoặc đọc style thật bằng Playwright) chứ không gõ tay; có vòng KHÁM PHÁ tự đi theo link + bấm mở phần ẩn, bỏ trùng theo chữ ký, dừng khi bão hoà, và cổng PHỦ bắt mọi pattern tìm được phải có mặt trong kit (không dừng ở phần xương). Mẫu output chuẩn: references/ui-kit-reference.html. KHÁC hallmark (dựng/đổi thiết kế mới): skill này chỉ CHÉP LẠI hệ đang có, không sáng tác. Gọi khi user nói 'ui kit', 'figma ui kit bằng html', 'bóc design system ra', 'trang tham chiếu component', 'design token page', 'component gallery', 'style guide từ code', 'bóc trang này ra html kit', 'làm giàu kit', hoặc /ui-kit-from-code.",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "ui-snapshot",
+      "loop": "dev-loop",
+      "description": "Nén TOÀN BỘ UI/UX của một frontend (React/Next.js/Vue + Tailwind) vào MỘT file HTML tự chứa, chạy offline, dữ liệu placeholder viết cứng, dưới ngưỡng dung lượng (mặc định 5MB): port từng màn hình sang vanilla JS với class Tailwind chép nguyên văn từ JSX, biên dịch Tailwind bằng CHÍNH config của dự án, nhúng font + subset icon + logo, có panel chọn màn/trạng thái và khung điện thoại cho chế độ mobile, verify bằng Playwright. Dùng khi user nói 'snapshot UI', 'gói toàn bộ giao diện vào 1 file html', 'bản demo giao diện offline', 'mockup tĩnh có dữ liệu mẫu', 'nén UIUX dự án', 'gửi giao diện cho người không chạy được app', hoặc invoke /ui-snapshot. KHÁC hallmark/redesign (thiết kế MỚI) và playwright-verify (chỉ chụp/đo app đang chạy) — ui-snapshot TÁI HIỆN giao diện hiện có, không cần backend/đăng nhập.",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "verify-before-commit",
+      "loop": "dev-loop",
+      "description": "Gate every commit — typecheck, lint, smoke, then promote draft to wiki",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "python3"
+        ],
+        "scripts": [
+          "harness/scripts/code-logger.py",
+          "harness/scripts/qc-regression.py",
+          "harness/validators/task_lifecycle.py"
+        ]
+      }
+    },
+    {
+      "name": "visual-qa",
+      "loop": "dev-loop",
+      "description": "WORKFLOW tự-kiểm THỊ GIÁC khép kín cho SPA local (app do /br sinh, hoặc bất kỳ web app): chụp headless từng route → BASELINE pixel-diff (bắt thay đổi ngoài ý muốn) → bất biến máy-kiểm (design conformance) → agent ĐỌC HẾT ảnh theo rubric → FINDINGS.md → sửa → chụp lại → chỉ pass khi máy VÀ mắt cùng sạch. Dùng khi đổi theme/UI/rebrand, khi extension MCP không chụp được localhost, hoặc cần gate UI cho frame. Trigger: \"qa thị giác\", \"visual qa\", \"route-shots\", \"screenshot từng route\", \"kiểm giao diện\", \"baseline diff\", \"UI có regression không\", \"test giao diện headless\", \"/visual-qa\".",
+      "external": false,
+      "requires": {
+        "bin": [
+          "node"
+        ]
+      }
+    },
+    {
+      "name": "wayfinder",
+      "loop": "orchestrate",
+      "description": "Lập bản đồ cho một chunk việc QUÁ LỚN với một phiên agent và còn MÙ MỜ — dựng một bản đồ các ticket QUYẾT ĐỊNH trên ledger issue, rồi giải từng ticket một cho tới khi đường tới đích hiện rõ. Gọi bằng tay khi có một ý tưởng lớn chưa rõ hình dạng, TRƯỚC cả /propose. Chỉ-gọi-tay.",
+      "external": false,
+      "requires": {}
+    },
+    {
+      "name": "web-clone",
+      "loop": "utils",
+      "description": "Clone a website — two modes. SNAPSHOT = a faithful, self-contained offline copy of a page (HTML+CSS+JS+images in one file, exact bytes, SingleFile-style). RECONSTRUCT = AI reverse- engineer the page into a clean editable Next.js/Tailwind codebase (design tokens → component specs → parallel builders → visual-diff QA, the ai-website-cloner-template method). Use when the user wants to \"clone this site\", copy a page's design/UI + interactions, mirror a layout, save offline, or rebuild a site as editable code. Built-now-adapt-later: snapshot builtin works now; faithful live capture + the reconstruct pipeline are one-config engine adapters.",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "python3"
+        ],
+        "scripts": [
+          "harness/scripts/web-clone.py"
+        ]
+      }
+    },
+    {
+      "name": "web-crawl",
+      "loop": "utils",
+      "description": "Crawl/scrape a website or single page into clean LLM-ready MARKDOWN. Use when the user wants to fetch a URL's content, scrape a site, extract an article/page as text, pull docs from the web into the wiki, or \"crawl this link\". Markdown (not raw HTML) = 5-10x fewer tokens. Built-now- adapt-later: works offline with no key via a builtin urllib→markdown backend; premium backends (Firecrawl/Crawl4AI/Jina) are a one-config adapter.",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "python3"
+        ],
+        "scripts": [
+          "harness/scripts/web-crawl.py"
+        ]
+      }
+    },
+    {
+      "name": "wiki-room",
+      "loop": "wiki-loop",
+      "description": "Mở room (subagent 1 tầng) nạp chi tiết wiki khi context phiên chính đã rot — depth cap=1, budget cứng, circuit breaker. Trigger: 'mở room', 'context rot', 'nạp thêm chi tiết wiki', 'đào sâu wiki', '/wiki-room'.",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "python3"
+        ],
+        "scripts": [
+          "harness/scripts/mem-rank.py"
+        ]
+      }
+    },
+    {
+      "name": "wikieval",
+      "loop": "dev-loop",
+      "description": "Turn wiki golden pages into a CI-blocking eval suite with a cheap→expensive assertion cascade plus a committed regression baseline. Goldens are md files under llmwiki/wiki/sources/evals/ with YAML frontmatter (input, expected, optional rubric, asserts). The engine runs deterministic tier-1 asserts (equals/contains/regex/is-json/is-sql-ish) in pure code, an optional tier-2 similarity, and reports tier-3 (LLM-rubric judge) as the quarantined adapter — never calling a model. Candidate outputs come from --outputs outputs.json so the suite is fully runnable without any model. Trigger when the user says \"wikieval\", \"eval suite for the wiki\", \"regression gate for goldens\", \"assertion cascade\", \"block CI on eval drop\", or invokes /wikieval.",
+      "external": false,
+      "requires": {
+        "harness": ">=1.3.127",
+        "bin": [
+          "python3"
+        ],
+        "scripts": [
+          "harness/scripts/wikieval.py"
+        ]
+      }
+    }
+  ]
+}

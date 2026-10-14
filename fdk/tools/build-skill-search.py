@@ -40,6 +40,9 @@ def _resolve_skills_dir(root):
     riêng — skill thật nằm ở ~/.claude/skills/ (cài qua `npx skills add --global`),
     tức dirname(root)/skills. Fallback chỉ kích khi candidate trong-repo rỗng, nên
     không đổi hành vi khi chạy trong repo gốc (GH#87)."""
+    env = os.environ.get("OVERSTACK_SKILLS_DIR")      # repo Rheinmir/skills tách riêng
+    if env:
+        return os.path.expanduser(env)
     candidate = os.path.join(root, "skills")
     if glob.glob(os.path.join(candidate, "*", "SKILL.md")):
         return candidate
@@ -47,7 +50,8 @@ def _resolve_skills_dir(root):
         alt = os.path.join(os.path.dirname(root), "skills")
         if os.path.isdir(alt):
             return alt
-    return candidate
+    home = os.path.expanduser("~/.claude/skills")
+    return home if glob.glob(os.path.join(home, "*", "SKILL.md")) else candidate
 
 
 SKILLS_DIR = _resolve_skills_dir(ROOT)

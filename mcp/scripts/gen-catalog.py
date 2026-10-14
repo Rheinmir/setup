@@ -105,19 +105,45 @@ def load_loops() -> dict:
         return {}
 
 
+def skills_root() -> Path:
+    """Skill tách sang repo Rheinmir/skills (141026): OVERSTACK_SKILLS_ROOT (Docker: /opt/skills/skills) > <repo>/skills (bản cũ)
+    > ~/orca/skills/skills (checkout dev) > ~/.claude/skills (bản cài global)."""
+    env = os.environ.get("OVERSTACK_SKILLS_ROOT")
+    if env:
+        return Path(env).expanduser()
+    for c in (ROOT / "skills", Path.home() / "orca" / "skills" / "skills", Path.home() / ".claude" / "skills"):
+        if any(c.glob("*/SKILL.md")):
+            return c
+    return ROOT / "skills"
+
+
+def skills_version() -> dict:
+    """version.json của repo skills (cạnh thư mục skills/) — để /healthz công bố bản skill đang phục vụ."""
+    for c in (skills_root().parent / "version.json", Path.home() / ".claude" / "harness" / "skills-version.json"):
+        try:
+            d = json.loads(c.read_text(encoding="utf-8"))
+            return {"version": d.get("version"), "catalog_sha": d.get("catalog_sha"), "count": d.get("count")}
+        except (OSError, ValueError):
+            continue
+    return {"version": None, "catalog_sha": None, "count": None}
+
+
 def collect_skills() -> list:
     loops = load_loops()
     skills = []
-    for sk in sorted([*(ROOT / "skills").glob("*/SKILL.md"), *(ROOT / "skills").glob("external/*/SKILL.md")]):
+    sroot = skills_root()
+    for sk in sorted([*sroot.glob("*/SKILL.md"), *sroot.glob("external/*/SKILL.md")]):
         fm = frontmatter(sk.read_text(encoding="utf-8", errors="replace"))
         name = fm.get("name") or sk.parent.name
         dmi = str(fm.get("disable-model-invocation", "false")).lower() == "true"
+        meta = fm.get("metadata") if isinstance(fm.get("metadata"), dict) else {}
+        fm_loop = re.search(r"^\s{2}loop:\s*([\w-]+)\s*$", sk.read_text(encoding="utf-8", errors="replace")[:4000], re.M)
         skills.append({
             "name": name,
             "dir": sk.parent.name,
-            "path": sk.relative_to(ROOT).as_posix(),
+            "path": sk.relative_to(sroot).as_posix(),   # tương đối skills root — ảnh Docker (/opt/skills/skills) và máy dev dùng chung catalog
             "external": sk.parent.parent.name == "external",
-            "group": loops.get(name, "utils"),
+            "group": loops.get(name) or (fm_loop.group(1) if fm_loop else "utils"),
             "description": fm.get("description", ""),
             "modelInvocable": not dmi,
             "bytes": sk.stat().st_size,
@@ -283,6 +309,8 @@ def build(with_help: bool) -> dict:
     return {
         "schemaVersion": SCHEMA_VERSION,
         "root": "Rheinmir/setup",
+        "skillsRoot": skills_root().as_posix(),
+        "skillsVersion": skills_version(),
         "skills": collect_skills(),
         "rules": collect_rules(),
         "tools": collect_tools(with_help),

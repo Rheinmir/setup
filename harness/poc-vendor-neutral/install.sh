@@ -19,7 +19,7 @@ set -euo pipefail
 export PYTHONUTF8=1 PYTHONIOENCODING=utf-8
 
 SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"   # nguồn = poc-vendor-neutral/
-ROOT="."; VENDORS=""; VERIFY=1; CLEAN=0; WITH_SKILLS=0; WITH_WIKI=0
+ROOT="."; VENDORS=""; VERIFY=1; CLEAN=0; WITH_SKILLS=0; WITH_WIKI=0; SKILLS_ONLY=0
 FORCE_FRAMEWORK=0
 WITH_GRAPH=""   # "" = chưa quyết → checklist (mặc định tick) · 1 = kéo · 0 = bỏ
 [ -n "${ORCA_GRAPH_SKIP:-}" ] && WITH_GRAPH=0   # knob cho test/fixture cần cài kín mạng; người dùng thật dùng --no-graph
@@ -39,6 +39,7 @@ while [ $# -gt 0 ]; do
     --no-graph) WITH_GRAPH=0; shift;;
     --i-know-this-is-the-framework) FORCE_FRAMEWORK=1; shift;;
     --full) WITH_SKILLS=1; WITH_WIKI=1; shift;;   # đủ 3 trụ: harness + skills + llmwiki
+    --skills-only) WITH_SKILLS=1; SKILLS_ONLY=1; shift;;   # chỉ cài/cập nhật bộ skill (repo Rheinmir/skills), không đụng harness/llmwiki
     -*) echo "tham số lạ: $1" >&2; exit 1;;
     *) ROOT="$1"; shift;;
   esac
@@ -47,6 +48,60 @@ ROOT="$(cd "$ROOT" && pwd)"
 # log/warn định nghĩa Ở ĐÂY, trước mọi khối dùng tới: gọi `log` khi chưa định nghĩa là chạy nhầm /usr/bin/log của macOS.
 log(){ printf '\033[1;32m[install]\033[0m %s\n' "$*"; }
 warn(){ printf '\033[1;33m[install]\033[0m %s\n' "$*"; }
+# ── cài/cập nhật bộ skill GLOBAL từ repo Rheinmir/skills (gọi ở cuối flow thường, hoặc một mình với --skills-only) ──
+install_skills() {
+  # Ref cài skill. Từ 141026 skill ở REPO RIÊNG Rheinmir/skills (nhánh main) — đây là đường cài của mọi người dùng thật.
+  # Mở override để test được một nhánh khác (canary UAT): không có nó thì cài-từ-nhánh-X vẫn
+  # kéo skill của `orca` → bài UAT chấm bản CŨ rồi báo PASS cho bản MỚI. Cổng nói dối mà vẫn
+  # xanh còn tệ hơn không có cổng. HARNESS_BASE / REPO_RAW đã override được; dòng này thì chưa.
+  SKILLS_REF="${SKILLS_REF:-rheinmir/skills#main}"
+  log "+ cài bộ skill llmwiki (global, qua npx skills — ref: $SKILLS_REF)"
+  if command -v npx >/dev/null; then
+    npx -y skills add "$SKILLS_REF" --global --all 2>&1 | tail -4 | sed 's/^/    /' \
+      || warn "  cài skill lỗi — chạy tay: npx skills add $SKILLS_REF --global --all"
+    # Dấu phiên bản bộ skill vừa cài (version.json của repo skills) → hook đầu phiên so với bản chuẩn (lệch là nhắc).
+    # SKILLS_RAW override cho canary UAT; lỗi mạng → bỏ qua, không chặn cài.
+    SK_REPO="${SKILLS_REF%%#*}"; SK_BR="${SKILLS_REF#*#}"; [ "$SK_BR" = "$SKILLS_REF" ] && SK_BR="main"
+    SKILLS_RAW="${SKILLS_RAW:-https://raw.githubusercontent.com/$SK_REPO/$SK_BR}"
+    mkdir -p "$GH_HOME"
+    if curl -fsSL "$SKILLS_RAW/version.json" -o "$GH_HOME/skills-version.json" 2>/dev/null; then
+      log "  ✓ skills-version.json: v$(python3 -c "import json,sys;print(json.load(open(sys.argv[1])).get('version','?'))" "$GH_HOME/skills-version.json" 2>/dev/null || echo '?') ($SKILLS_RAW)"
+    else
+      warn "  không tải được $SKILLS_RAW/version.json — bỏ qua dấu phiên bản skill"
+    fi
+    # Hợp đồng phụ thuộc: skill nào cần harness mới hơn / thiếu binary / thiếu script engine → in ra ngay lúc cài.
+    SR="$GH_HOME/harness/scripts/skill-requires.py"; [ -f "$SR" ] || SR="$SRC/../scripts/skill-requires.py"
+    if [ -f "$SR" ]; then
+      python3 "$SR" check --installed --harness-home "$GH_HOME" 2>/dev/null | tail -6 | sed 's/^/    /' || true
+    fi
+  else
+    warn "  không có npx — cài skill tay: npx skills add $SKILLS_REF --global --all"
+  fi
+
+  # OpenClaude quét THƯ MỤC SKILL RIÊNG: ~/.openclaude/skills. `npx skills add --global` chỉ
+  # ghi vào ~/.claude/skills, nên máy có cả hai CLI thì openclaude thấy 0 skill — gõ
+  # /orca-onboard không resolve, agent tự chế lại việc đã có sẵn. Đo 2026-08-06: 87 skill ở
+  # ~/.claude/skills, thư mục ~/.openclaude/skills KHÔNG tồn tại; bundle openclaude grep ra
+  # 10 hit ".openclaude/skills" và 0 hit ".claude/skills".
+  # Symlink thay vì copy: MỘT nguồn chân lý, cài/gỡ skill một lần là cả hai CLI thấy ngay.
+  if command -v openclaude >/dev/null 2>&1; then
+    OC_SKILLS="$HOME/.openclaude/skills"
+    if [ -L "$OC_SKILLS" ]; then
+      log "  ✓ OpenClaude skills → đã trỏ sẵn ($(readlink "$OC_SKILLS"))"
+    elif [ -e "$OC_SKILLS" ]; then
+      warn "  OpenClaude đã có thư mục skill RIÊNG (không phải symlink) — giữ nguyên, không đè"
+    elif [ -d "$HOME/.claude/skills" ]; then
+      mkdir -p "$HOME/.openclaude"
+      ln -s "$HOME/.claude/skills" "$OC_SKILLS" \
+        && log "  ✓ OpenClaude skills → symlink ~/.claude/skills (cả hai CLI dùng chung)" \
+        || warn "  không tạo được symlink ~/.openclaude/skills — openclaude sẽ thấy 0 skill"
+    fi
+  fi
+}
+if [ "$SKILLS_ONLY" = 1 ]; then
+  install_skills
+  exit 0
+fi
 # ── CHẶN TRƯỚC KHI GHI BẤT CỨ THỨ GÌ: đích là REPO FRAMEWORK ────────────────────────────────────────────
 # Installer viết cho dự án downstream: nó SINH ĐÈ .github/workflows/harness.yml (bản CI rút gọn cho máy khách) và
 # .claude/settings.json. Chạy nhầm trong repo framework = mất CI của chính framework (đo 20/09/2026 11:10: harness.yml
@@ -446,41 +501,8 @@ PYEOF
   fi
 fi
 
-# ── (tùy chọn) cài skill llmwiki (GLOBAL — khác phạm vi với harness theo-project) ──
-if [ "$WITH_SKILLS" = 1 ]; then
-  # Ref cài skill. Mặc định GIỮ NGUYÊN `#orca` — đây là đường cài của mọi người dùng thật.
-  # Mở override để test được một nhánh khác (canary UAT): không có nó thì cài-từ-nhánh-X vẫn
-  # kéo skill của `orca` → bài UAT chấm bản CŨ rồi báo PASS cho bản MỚI. Cổng nói dối mà vẫn
-  # xanh còn tệ hơn không có cổng. HARNESS_BASE / REPO_RAW đã override được; dòng này thì chưa.
-  SKILLS_REF="${SKILLS_REF:-rheinmir/setup#orca}"
-  log "+ cài bộ skill llmwiki (global, qua npx skills — ref: $SKILLS_REF)"
-  if command -v npx >/dev/null; then
-    npx -y skills add "$SKILLS_REF" --global --all 2>&1 | tail -4 | sed 's/^/    /' \
-      || warn "  cài skill lỗi — chạy tay: npx skills add $SKILLS_REF --global --all"
-  else
-    warn "  không có npx — cài skill tay: npx skills add $SKILLS_REF --global --all"
-  fi
-
-  # OpenClaude quét THƯ MỤC SKILL RIÊNG: ~/.openclaude/skills. `npx skills add --global` chỉ
-  # ghi vào ~/.claude/skills, nên máy có cả hai CLI thì openclaude thấy 0 skill — gõ
-  # /orca-onboard không resolve, agent tự chế lại việc đã có sẵn. Đo 2026-08-06: 87 skill ở
-  # ~/.claude/skills, thư mục ~/.openclaude/skills KHÔNG tồn tại; bundle openclaude grep ra
-  # 10 hit ".openclaude/skills" và 0 hit ".claude/skills".
-  # Symlink thay vì copy: MỘT nguồn chân lý, cài/gỡ skill một lần là cả hai CLI thấy ngay.
-  if command -v openclaude >/dev/null 2>&1; then
-    OC_SKILLS="$HOME/.openclaude/skills"
-    if [ -L "$OC_SKILLS" ]; then
-      log "  ✓ OpenClaude skills → đã trỏ sẵn ($(readlink "$OC_SKILLS"))"
-    elif [ -e "$OC_SKILLS" ]; then
-      warn "  OpenClaude đã có thư mục skill RIÊNG (không phải symlink) — giữ nguyên, không đè"
-    elif [ -d "$HOME/.claude/skills" ]; then
-      mkdir -p "$HOME/.openclaude"
-      ln -s "$HOME/.claude/skills" "$OC_SKILLS" \
-        && log "  ✓ OpenClaude skills → symlink ~/.claude/skills (cả hai CLI dùng chung)" \
-        || warn "  không tạo được symlink ~/.openclaude/skills — openclaude sẽ thấy 0 skill"
-    fi
-  fi
-fi
+# ── (tùy chọn) cài skill (GLOBAL, repo Rheinmir/skills — khác phạm vi với harness theo-project); hàm install_skills ở đầu file ──
+if [ "$WITH_SKILLS" = 1 ]; then install_skills; fi
 
 GRAPH_STATUS="— BỎ QUA         → cài sau: curl -fsSL https://raw.githubusercontent.com/Rheinmir/orca-graph/main/install.sh | bash"
 OG_ENGINE="${ORCA_GRAPH_INSTALL_DIR:-$HOME/.orca-graph/repo}/engine/orca-graph.py"

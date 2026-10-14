@@ -102,3 +102,31 @@ chat-send <chatId> "stack_sync overstack-mcp ref <previous-sha> rồi stack_depl
 |---|---|---|---|
 | 2026-10-11 | máy dev (macOS, Docker 29.8) | nhánh `feat/overstack-mcp` | `stack-smoke.sh` build + up + `workspace_sync` + `mcp-check remote` OK; `dsh-smoke.sh` qua OpenRouter: dsh gọi `mcp__overstack__skill_find` → `md-to-html` |
 | 2026-10-11 | k8s2 qua MCP devops-agent (`http://100.114.107.68:8787/mcp`) | `feat/overstack-mcp` @ `1bbd846` | `APPROVE=yes devops-release.ts release`: `hostops_stack_fetch` 7 s (tạo `/home/rhein/stacks/overstack-mcp`), `hostops_stack_deploy` job `d-mv3nw7qv` build 10:09→10:12 UTC, service `running/healthy`, cổng `127.0.0.1:8791`, không `.env` → token tự sinh trong volume (đọc bằng `docker exec overstack-mcp cat /workspaces/.overstack-mcp-token` trên host). Hai lần trước approval hết hạn 15 phút vì không ai bấm web UI. |
+
+## 7. Hostname công khai `skills.giatbh.io.vn` (PLAN 141026-skills-split T7 — handoff, chưa chạy từ máy dev)
+
+Mục tiêu: `https://skills.giatbh.io.vn/healthz` trả bản harness + bản skill chuẩn; `/mcp` phục vụ **đọc** skill/rule/tool cho mọi dev
+và agent (Claude Code: `claude mcp add --transport http overstack https://skills.giatbh.io.vn/mcp --header "Authorization: Bearer <token>"`).
+Trạng thái 14/10/2026: hostname đã có bản ghi proxied nhưng trả 530 (tunnel tắt); máy dev không có khoá SSH tới k8s2, không có token
+devops-agent, token Cloudflare dán trong chat bị khoá theo IP (`Cannot use the access token from location`) → cần người vận hành làm trên k8s2.
+
+```sh
+# (a) .env của stack — TUNNEL_TOKEN lấy từ Vault k8s2: vault kv get secret/infra/cloudflare (hoặc tạo tunnel mới ở Zero Trust → Networks → Tunnels)
+cat >> /home/rhein/stacks/overstack-mcp/.env <<'EOF'
+OVERSTACK_TOOLS=read
+SKILLS_REF=main
+TUNNEL_TOKEN=<token tunnel>
+EOF
+# (b) Zero Trust → Tunnels → <tunnel> → Public hostnames: skills.giatbh.io.vn → HTTP → overstack-mcp:8791  (cùng network compose)
+# (c) kéo bản mới (có cloudflared profile) + dựng lại, bật profile tunnel
+#     qua devops-agent: stack_sync overstack-mcp ref orca → stack_deploy overstack-mcp   (RUNBOOK §1/§2)
+#     hoặc trên host:
+docker compose --project-directory /home/rhein/stacks/overstack-mcp -f docker-compose.stack.yml -p overstack-mcp --profile tunnel up -d --build
+# (d) kiểm
+curl -fsS https://skills.giatbh.io.vn/healthz
+# {"ok":true,"name":"overstack-mcp","version":"0.1.0","harness":"1.3.127","skills":{"count":106,"version":"1.0.x","catalog_sha":"…"},"rules":22,"tools":147,"mode":"read",…}
+```
+
+Sau khi lên: mỗi dev đặt `OVERSTACK_VERSION_URL=https://skills.giatbh.io.vn/healthz` (hoặc để mặc định raw GitHub) — hook đầu phiên
+tự nhắc khi máy cũ hơn bản chuẩn. Token Cloudflare "toàn năng" đã lộ trong chat ngày 14/10 → xoay, cấp token giới hạn zone
+`giatbh.io.vn` (DNS edit + Tunnel edit), cất vào Vault `secret/infra/cloudflare`.

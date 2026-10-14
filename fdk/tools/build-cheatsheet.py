@@ -43,7 +43,9 @@ def find_html() -> str:
 
 def main() -> None:
     html_path = sys.argv[1] if len(sys.argv) > 1 else find_html()
-    skills_dir = sys.argv[2] if len(sys.argv) > 2 else os.path.join(ROOT, "skills")
+    skills_dir = sys.argv[2] if len(sys.argv) > 2 else (os.environ.get("OVERSTACK_SKILLS_DIR") or os.path.join(ROOT, "skills"))
+    if not glob.glob(os.path.join(skills_dir, "*", "SKILL.md")):
+        skills_dir = os.path.expanduser("~/.claude/skills")      # skill tách sang repo Rheinmir/skills, bản cài global
 
     data = {}
     for p in sorted(glob.glob(os.path.join(skills_dir, "*", "SKILL.md"))

@@ -39,8 +39,6 @@ CHECKS = [
      ["python3", "harness/scripts/arch-scan.py", "--root", "."], None),
     ("OKF frontmatter (R9)", "Frontmatter chuẩn OKF v0.1",
      ["python3", "harness/scripts/okf-check.py"], "harness/scripts/okf-check.py"),
-    ("Skill mirror parity", "skills/ ↔ llmwiki/skills/ khớp",
-     ["python3", "harness/scripts/sync-skills.py", "--check"], None),
     ("Policy → converters drift", "gen-converters khớp policy.yaml",
      ["bash", "harness/tests/policy-converters-drift-test.sh"], "harness/tests/policy-converters-drift-test.sh"),
 ]
@@ -141,6 +139,20 @@ def count_skill_table(rel):
         elif in_table and not s:
             in_table = False
     return n
+
+
+def count_skills_installed():
+    """Skill tách sang repo Rheinmir/skills: đếm ở OVERSTACK_SKILLS_DIR > <repo>/skills (bản cũ) > ~/.claude/skills."""
+    import os
+    env = os.environ.get("OVERSTACK_SKILLS_DIR")
+    base = Path(env).expanduser() if env else (ROOT / "skills")
+    if not any(base.glob("*/SKILL.md")):
+        try:
+            return int(json.loads((ROOT / "fdk" / "skills.catalog.json").read_text(encoding="utf-8")).get("count") or 0)
+        except (OSError, ValueError):
+            base = Path.home() / ".claude" / "skills"
+    seen = {p.parent.resolve() for p in [*base.glob("*/SKILL.md"), *base.glob("external/*/SKILL.md")]}
+    return len(seen)
 
 
 def count_loop_map():
@@ -315,7 +327,7 @@ def main():
 
     # 2) counts strip (live file scan)
     counts = {
-        "skills": len(glob.glob(str(ROOT / "skills/*/SKILL.md")) + glob.glob(str(ROOT / "skills/external/*/SKILL.md"))),
+        "skills": count_skills_installed(),
         "validators": count_glob("harness/validators/*.py"),
         "hooks": count_glob("llmwiki/.claude/hooks/*.py"),
         "rules": count_rules(),
@@ -327,14 +339,10 @@ def main():
     # 3) drift table (skill-count, 5-way + stale docs)
     truth = counts["skills"]
     drift = {
-        "marketplace": count_marketplace(),
-        "agent": count_skill_table("llmwiki/AGENT.md"),
-        "claude": count_skill_table("llmwiki/CLAUDE.md"),
-        "loop_map": count_loop_map(),
         "arch": grep_num("fdk/wiki/concepts/architecture.md", r"Published Skills\s*\((\d+)"),
         "proj": grep_num("fdk/wiki/entities/project-structure.md", r"(\d+)\s+published skills"),
     }
-    disagree = sum(1 for k in ("marketplace", "agent", "claude", "loop_map", "arch", "proj")
+    disagree = sum(1 for k in ("arch", "proj")
                    if drift[k] is not None and drift[k] != truth)
 
     # ── render
@@ -349,11 +357,7 @@ def main():
         metric_html(counts["adrs"], "ADRs", "sources/adr"),
     ])
     drift_rows = "\n".join([
-        drift_row("skills/ directories", "ls skills/*/SKILL.md skills/external/*/SKILL.md", truth, "nguồn chân lý — đếm thư mục skill thật", truth, is_truth=True),
-        drift_row("marketplace.json entries", ".claude-plugin/marketplace.json", drift["marketplace"], "skill được khai trong plugin npx", truth),
-        drift_row("AGENT.md skill-table rows", "llmwiki/AGENT.md", drift["agent"], "bảng router cho agent", truth),
-        drift_row("CLAUDE.md skill-table rows", "llmwiki/CLAUDE.md", drift["claude"], "bảng router cho Claude", truth),
-        drift_row("sync-skills LOOP_MAP entries", "harness/scripts/sync-skills.py", drift["loop_map"], "map skill → loop của mirror", truth),
+        drift_row("skill đã cài (Rheinmir/skills)", "ls ~/.claude/skills/*/SKILL.md (hoặc OVERSTACK_SKILLS_DIR)", truth, "nguồn chân lý — skill tách sang repo riêng, cổng marketplace/loop/provenance ở CI repo đó", truth, is_truth=True),
         drift_row("architecture.md (hardcoded)", "fdk/wiki/concepts/architecture.md", drift["arch"], "số cứng trong tài liệu", truth, stale=True),
         drift_row("project-structure.md (hardcoded)", "fdk/wiki/entities/project-structure.md", drift["proj"], "số cứng trong tài liệu", truth, stale=True),
     ])
@@ -448,7 +452,7 @@ self-contained, offline-proof (0 request ngoài) &middot; generated {GENERATED}.
         print(f"    [{st:4}] exit={co}  {n}")
     print(f"  counts: {counts}")
     print(f"  drift (truth={truth}): " + ", ".join(
-        f"{k}={drift[k]}" for k in ("marketplace", "agent", "claude", "loop_map", "arch", "proj")))
+        f"{k}={drift[k]}" for k in ("arch", "proj")))
 
 
 if __name__ == "__main__":

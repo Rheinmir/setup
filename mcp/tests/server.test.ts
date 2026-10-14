@@ -15,7 +15,7 @@ process.env.WORKSPACES_DIR = base; // workspace.ts đọc env lúc gọi, nên �
 mkdirSync(join(base, "demo", "llmwiki", "wiki"), { recursive: true });
 writeFileSync(join(base, "demo", "llmwiki", "wiki", "index.md"), "# i\n");
 
-async function connect(mode: "core" | "all") {
+async function connect(mode: "read" | "core" | "all") {
   const [ct, st] = InMemoryTransport.createLinkedPair();
   const server = buildServer({ catalog: cat, mode });
   const client = new Client({ name: "test", version: "0" });
@@ -39,6 +39,15 @@ test("core mode: every skill is a prompt, resources resolve, 11 tools", async ()
   assert.deepEqual(templates.resourceTemplates.map((t) => t.uriTemplate).sort(), ["overstack://rule/{id}", "overstack://skill/{name}", "overstack://tool/{name}"]);
   const prompt = await client.getPrompt({ name: "md-to-html", arguments: { task: "render README" } });
   assert.match((prompt.messages[0]!.content as { text: string }).text, /Task: render README/);
+  await client.close(); await server.close();
+});
+
+test("read mode (hostname công khai): chỉ 7 tool đọc, không tool_run/rule_check/workspace_sync/orca_graph", async () => {
+  const { client, server } = await connect("read");
+  const tools = await client.listTools();
+  assert.deepEqual(tools.tools.map((t) => t.name).sort(), ["rules_list", "skill_find", "skill_get", "skills_list", "tool_help", "tools_list", "workspace_list"]);
+  const g = await client.callTool({ name: "skill_get", arguments: { name: "lint" } });
+  assert.match((g.content as Array<{ text: string }>)[0]!.text, /name: lint/);
   await client.close(); await server.close();
 });
 

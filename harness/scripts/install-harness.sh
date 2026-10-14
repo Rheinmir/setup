@@ -545,7 +545,7 @@ log "Project: $ROOT — mode: $MODE$([ $SAME_BUNDLE = 1 ] && echo ' (project ch�
 # mkdir -p và touch đều idempotent, index/log đã có guard `[ -f ] ||`, nên chạy
 # ở migrate không đè gì của project đang có.
 mkdir -p "$ROOT/llmwiki/wiki"/{concepts,entities,sources/adr,sources/draft,draft/orca} \
-         "$ROOT/llmwiki"/{raw,html,skills}
+         "$ROOT/llmwiki"/{raw,html}
 touch "$ROOT/llmwiki/raw/.gitkeep"
 [ -f "$ROOT/llmwiki/wiki/index.md" ] || printf '# Wiki Index\n\n| File | Type | Summary |\n|------|------|---------|\n' > "$ROOT/llmwiki/wiki/index.md"
 [ -f "$ROOT/llmwiki/wiki/log.md" ]   || printf '# Operation Log\n' > "$ROOT/llmwiki/wiki/log.md"

@@ -61,15 +61,15 @@ Trang này **sinh bằng code** (`fdk/tools/build-overstack-docs.py`) nên bản
 
 Không copy folder, không feed từng file: mở agent ở thư mục gốc dự án mới rồi **dán nội dung [`00-New-Project.md`](00-New-Project.md)**. Agent tự cài overstack → kickoff (hỏi 3 câu) → dựng knowledge base → scaffold MVP, dừng hỏi đúng lúc cần.
 
-Chi tiết + bản từng pha (`01`/`02`/`03`): [`setup.md`](setup.md). Cài bộ skills: `npx skills add rheinmir/setup#orca --global --all`.
+Chi tiết + bản từng pha (`01`/`02`/`03`): [`setup.md`](setup.md). Cài/cập nhật riêng bộ skill (repo [Rheinmir/skills](https://github.com/Rheinmir/skills)): `npx -y skills add rheinmir/skills#main --global --all`, hoặc `bootstrap.sh … | bash -s -- --skills-only` (kèm dấu `~/.claude/harness/skills-version.json` + kiểm `skill-requires.py check --installed`). Đầu mỗi phiên hook SessionStart so bản harness/skill của máy với bản chuẩn (1 lần/ngày, `OVERSTACK_VERSION_URL` trỏ `https://skills.giatbh.io.vn/healthz` khi MCP đã host) và nhắc đúng một dòng nếu máy cũ hơn.
 
 ## 📂 Cấu trúc
 
 | Thư mục / file | Là gì |
 |---|---|
-| `llmwiki/` | **Trụ tri thức** (khuôn per-project). `wiki/` = khung wiki dự án (concepts/entities/sources/adr/draft), `skills/` (mirror), rules (`CLAUDE.md`/`AGENT.md`), `html/overstack.html` (docs). *Wiki RIÊNG của framework ở `fdk/wiki/` — ADR-008.* |
+| `llmwiki/` | **Trụ tri thức** (khuôn per-project). `wiki/` = khung wiki dự án (concepts/entities/sources/adr/draft), rules (`CLAUDE.md`/`AGENT.md`), `html/overstack.html` (docs). *Wiki RIÊNG của framework ở `fdk/wiki/` — ADR-008.* |
 | `harness/` | **Trụ guardrail.** `validators/` + `scripts/` (install, fdk-gate, code-logger, council/loop/eval…). `poc-vendor-neutral/` = lõi CLI vendor-neutral + installer 1-dòng |
-| `skills/` | **Trụ kỹ năng** — mỗi `SKILL.md` gọi bằng `/tên`; canonical, mirror sang `llmwiki/skills/` |
+| *(repo riêng)* [`Rheinmir/skills`](https://github.com/Rheinmir/skills) | **Trụ kỹ năng** — 106 `SKILL.md` gọi bằng `/tên`, cài global `~/.claude/skills`; mỗi skill khai `metadata.requires` (sàn harness · binary · script) — tách khỏi repo này 14/10/2026 để sửa skill không phải chạy CI framework |
 | `fdk/` | **Framework Dev Kit** — đồ nghề phát triển CHÍNH overstack + **`wiki/`** (wiki RIÊNG của framework: ADR-001..010, concepts harness/fdk, decisions), `CAPABILITIES.md`, `tools/`. Không travel xuống dự án (ADR-004/008) |
 | `mcp/` + `Dockerfile.mcp`, `docker-compose.stack.yml` | **overstack-mcp** — toàn bộ skill (prompt + resource), rule (`rule_check`) và script (`tool_run`) như MỘT MCP server; stdio cùng máy hoặc Streamable HTTP + bearer trên host riêng, deploy qua devops-agent (`stack_sync` → `stack_deploy`). [`mcp/README.md`](mcp/README.md) · [`mcp/RUNBOOK.md`](mcp/RUNBOOK.md) |
 | `00–03-*.md`, `setup.md` | Prompt dựng dự án mới — **bắt đầu ở `00-New-Project.md`** (1 lần dán) |

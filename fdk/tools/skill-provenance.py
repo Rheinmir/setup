@@ -33,6 +33,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import sys
 from datetime import date
 from pathlib import Path
@@ -46,6 +47,9 @@ def _resolve_skills_dir(repo: Path) -> Path:
     riêng — skill thật nằm ở ~/.claude/skills/ (cài qua `npx skills add --global`),
     tức REPO.parent/skills. Fallback này chỉ kích khi candidate trong-repo rỗng,
     nên không đổi hành vi khi chạy trong repo gốc (GH#87)."""
+    env = os.environ.get("OVERSTACK_SKILLS_DIR")          # repo skills tách riêng (Rheinmir/skills) / CI
+    if env and any(Path(env).expanduser().glob("*/SKILL.md")):
+        return Path(env).expanduser()
     candidate = repo / "skills"
     if any(candidate.glob("*/SKILL.md")):
         return candidate
@@ -63,7 +67,7 @@ def _dir(name: str) -> Path:
     """skills/<tên>/ hoặc skills/external/<tên>/ (skill kéo từ upstream — category riêng)."""
     ext = SKILLS / "external" / name
     return ext if (ext / "SKILL.md").exists() else SKILLS / name
-STORE = REPO / "fdk" / "skills.provenance.json"
+STORE = Path(os.environ.get("OVERSTACK_PROVENANCE_STORE") or (REPO / "fdk" / "skills.provenance.json")).expanduser()
 SCHEMA = "skill-provenance/v1"
 
 
@@ -129,7 +133,7 @@ def cmd_record(a) -> int:
             "files": skill_files(name),
         }
     save_store(data)
-    print(f"✓ recorded {len(names)} skill(s) → {STORE.relative_to(REPO)}")
+    print(f"✓ recorded {len(names)} skill(s) → {STORE.relative_to(REPO) if STORE.is_relative_to(REPO) else STORE}")
     return 0
 
 
@@ -237,6 +241,8 @@ def main() -> int:
     ap = argparse.ArgumentParser(prog="skill-provenance.py",
                                  description="Sổ nguồn gốc + checksum cho skill (GH#13).")
     ap.add_argument("--self-test", action="store_true", help="kiểm bất biến nội bộ")
+    ap.add_argument("--skills-dir", help="thư mục skill (mặc định: OVERSTACK_SKILLS_DIR hoặc <repo>/skills)")
+    ap.add_argument("--store", help="file sổ provenance (mặc định: OVERSTACK_PROVENANCE_STORE hoặc fdk/skills.provenance.json)")
     sub = ap.add_subparsers(dest="verb")
 
     p_rec = sub.add_parser("record", help="ghi provenance cho 1 skill (hoặc --all)")
@@ -254,6 +260,11 @@ def main() -> int:
     sub.add_parser("list", help="liệt kê provenance đã ghi")
 
     a = ap.parse_args()
+    global SKILLS, STORE
+    if a.skills_dir:
+        SKILLS = Path(a.skills_dir).expanduser().resolve()
+    if a.store:
+        STORE = Path(a.store).expanduser().resolve()
     if a.self_test:
         return self_test()
     if a.verb == "record":
