@@ -14,10 +14,10 @@ gọi script chưa có ở máy người dùng và gãy câm. Hợp đồng là 
         framework_scripts: [fdk/tools/new-skill.py]   # chỉ có trong checkout repo framework (lớp C)
 
 Dùng:
-    python3 harness/scripts/skill-requires.py check                      # skills dir tự dò (xem skills_dir)
-    python3 harness/scripts/skill-requires.py check --installed          # ~/.claude/skills (máy người dùng, sau npx)
-    python3 harness/scripts/skill-requires.py check --skills-dir ~/orca/skills/skills --repo-root ~/orca/setup --ci
-    python3 harness/scripts/skill-requires.py --self-test
+    python3 ~/.claude/harness/scripts/skill-requires.py check             # skills dir tự dò (xem skills_dir)
+    python3 ~/.claude/harness/scripts/skill-requires.py check --installed # ~/.claude/skills (máy người dùng, sau npx)
+    python3 $SETUP/harness/scripts/skill-requires.py check --skills-dir ~/orca/skills/skills --repo-root ~/orca/setup --ci
+    python3 ~/.claude/harness/scripts/skill-requires.py --self-test
 
 rc 0 = mọi skill đủ · rc 2 = có skill thiếu (in bảng) · rc 1 = lỗi vào (không có skills dir).
 `framework_scripts` chỉ tính là thiếu khi truyền --repo-root (CI của repo skills); ở máy người dùng chúng là thông tin.
@@ -247,15 +247,15 @@ def run_check(args) -> int:
 
 
 # ── gen: sinh metadata.loop + metadata.requires từ grep tất định ─────────────
-SCRIPT_REF_RE = re.compile(r"(?<![\w/.-])((?:harness/scripts|fdk/tools|harness/validators|harness/poc-vendor-neutral(?:/bin)?)"
+SCRIPT_REF_RE = re.compile(r"(?<![\w/.-])((?:harness/scripts|fdk/tools|harness/validators|harness/poc-vendor-neutral(?:/bin)?)"  # bare-path: ok định danh hợp đồng requires.scripts, resolve qua harness_home (_exists), không phải đường chạy
                            r"/[A-Za-z0-9_.-]+\.(?:py|sh|mjs|js))")
 FENCE_RE = re.compile(r"```[^\n]*\n(.*?)```", re.S)
 # vị trí LỆNH trong khối code: đầu dòng (sau `$ `, `env …`, `cd … &&`), hoặc sau && || | ; $(
 CMD_POS_RE = re.compile(r"(?:^|&&|\|\||\||;|\$\(|\bsudo\s+|\bnohup\s+|\btime\s+)\s*(?:\$\s*)?(?:env\s+(?:-u\s+\S+\s+|[A-Z_]+=\S+\s+)*)?"
                         r"(" + "|".join(KNOWN_BINS) + r")\b", re.M)
 # không bao giờ tới máy người dùng (install-harness.sh STRIP_TIER3 + script cài đặt/CI chỉ chạy trong repo framework)
-FRAMEWORK_ONLY_EXTRA = {"fdk/tools/fdk-kit.sh", "fdk/tools/sync-skill.sh", "harness/scripts/fresh-install-smoke.sh",
-                        "harness/scripts/install-harness.sh"}
+FRAMEWORK_ONLY_EXTRA = {"fdk/tools/fdk-kit.sh", "fdk/tools/sync-skill.sh", "harness/scripts/fresh-install-smoke.sh",  # bare-path: ok định danh hợp đồng (khoá so khớp với requires.scripts), không phải đường chạy
+                        "harness/scripts/install-harness.sh"}  # bare-path: ok định danh hợp đồng, như dòng trên
 DEFAULT_FLOOR = ">=1.3.127"
 
 
@@ -391,7 +391,7 @@ def run_gen(args) -> int:
     if args.check:
         if drift:
             print(f"[skill-requires] LỆCH {len(drift)} skill (frontmatter ≠ grep): " + ", ".join(drift[:12])
-                  + (" …" if len(drift) > 12 else "") + "\n  → sửa: python3 harness/scripts/skill-requires.py gen --write", file=sys.stderr)
+                  + (" …" if len(drift) > 12 else "") + "\n  → sửa: python3 $SETUP/harness/scripts/skill-requires.py gen --write", file=sys.stderr)
             return 2
         print(f"[skill-requires] gen --check: {len(rows)} skill khớp")
         return 0
