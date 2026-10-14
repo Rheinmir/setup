@@ -94,7 +94,7 @@ services:
       HOME: /tmp
       npm_config_cache: /tmp/npm
     tmpfs:
-      - /tmp
+      - /tmp:exec   # npx cài wrangler vào /tmp — esbuild/workerd postinstall cần chạy binary; tmpfs mặc định noexec
     security_opt:
       - no-new-privileges:true
     cap_drop: [ALL]

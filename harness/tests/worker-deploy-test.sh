@@ -59,4 +59,8 @@ rc=$(run CLOUDFLARE_API_TOKEN=tok ACCOUNTS=zero MEMBERS=one HEALTH=up)
 [ "$rc" = 0 ] && grep -q "acct=accmem" "$T/log" && ! grep -q "zones?" "$T/log" && ok "(8) memberships có account → dùng, không hỏi zone" || { no "(8) rc=$rc"; cat "$T/log"; }
 rc=$(run CLOUDFLARE_API_TOKEN=tok ACCOUNTS=zero HEALTH=up)
 [ "$rc" = 4 ] && ! grep -q "^wrangler" "$T/log" && grep -q "Zone DNS:Edit" "$T/out" && ok "(9) không nguồn nào ra account → rc 4, nói cần quyền gì" || { no "(9) rc=$rc"; cat "$T/out"; }
+printf '#!/bin/sh\necho "npm error code 1" >&2; exit 1\n' > "$T/bin/wrangler-broken"; chmod +x "$T/bin/wrangler-broken"
+: > "$T/log"; env -i PATH="$T/bin:$PATH" HOME="$T" LOG="$T/log" WRANGLER="$T/bin/wrangler-broken" BUILD_ASSETS=true CLOUDFLARE_API_TOKEN=tok ACCOUNTS=one HEALTH=up bash "$S" > "$T/out" 2>&1; rc=$?
+[ "$rc" = 5 ] && grep -q "không chạy được wrangler" "$T/out" && ok "(10) wrangler không chạy (tmpfs noexec 14/10) → rc 5, nói lý do, không im lặng" || { no "(10) rc=$rc"; cat "$T/out"; }
+grep -A2 "^  worker-deploy:" "$ROOT/docker-compose.stack.yml" >/dev/null && awk '/^  worker-deploy:/{f=1} f&&/tmpfs:/{getline; print; exit}' "$ROOT/docker-compose.stack.yml" | grep -q "/tmp:exec" && ok "(11) compose: worker-deploy mount /tmp:exec" || no "(11) worker-deploy tmpfs thiếu :exec"
 echo; echo "worker-deploy: $PASS PASS · $FAIL FAIL"; [ "$FAIL" = 0 ]

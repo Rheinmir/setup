@@ -33,6 +33,7 @@ if [ -z "${CLOUDFLARE_ACCOUNT_ID:-}" ]; then
   [ -n "$CLOUDFLARE_ACCOUNT_ID" ] || { echo "✗ không suy được account id (token cần Account Settings:Read, hoặc Zone DNS:Edit trên zone $ZONE) — đặt CLOUDFLARE_ACCOUNT_ID" >&2; exit 4; }
   export CLOUDFLARE_ACCOUNT_ID
 fi
+echo "→ wrangler"; WV=$($WRANGLER --version 2>&1 | tail -1) || { echo "✗ không chạy được wrangler ($WRANGLER): $WV — trong container: /tmp phải mount exec (esbuild postinstall)" >&2; exit 5; }; echo "  $WV"
 echo "→ assets"; ${BUILD_ASSETS:-node scripts/build-worker-assets.mjs}
 DOM_ARGS=(); [ -n "$DOMAIN" ] && DOM_ARGS=(--domain "$DOMAIN")
 echo "→ wrangler deploy ${DOMAIN:+(tên miền $DOMAIN)}"; $WRANGLER deploy -c "$CFG" ${DOM_ARGS[@]+"${DOM_ARGS[@]}"} 2>&1 | tee /tmp/worker-deploy.log
