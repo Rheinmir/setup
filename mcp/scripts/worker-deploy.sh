@@ -42,8 +42,10 @@ done
 # đúng lời gọi đầu tiên của `wrangler deploy` (check-remote-secrets-override): GET secrets của script — cần Workers Scripts:EDIT
 # (Read chỉ đủ liệt kê script). 200 = có script và quyền; 404/10007 = chưa có script, quyền ổn; còn lại = thiếu Edit.
 probe=$(curl -sS --max-time 20 -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "$CF_API/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts/overstack-mcp/secrets" || true)
-case "$probe" in
-  *'"success":true'*|*'"code":10007'*) echo "  Workers Scripts: ghi được";;
+verdict=$(printf '%s' "$probe" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{const d=JSON.parse(s);
+  console.log(d.success||(d.errors||[]).some(e=>e.code===10007)?"ok":"no")}catch{console.log("no")}})')
+case "$verdict" in
+  ok) echo "  Workers Scripts: ghi được";;
   *) echo "✗ token chưa GHI được Workers Scripts: ${probe:0:200}" >&2
      echo "  cần Account · Workers Scripts: Edit (không phải Read) với Account Resources = Include <account>; id token in ở trên" >&2; exit 6;;
 esac

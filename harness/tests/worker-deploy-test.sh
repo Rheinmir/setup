@@ -18,7 +18,7 @@ cat > "$T/bin/curl" <<'C'
 url="${@: -1}"; echo "curl $url" >> "$LOG"; F=0; for a in "$@"; do case "$a" in -*f*) [ "${a#--}" = "$a" ] && F=1;; esac; done
 case "$url" in
   */tokens/verify) echo '{"success":true,"result":{"id":"tokid","status":"active"}}';;
-  */workers/scripts/overstack-mcp/secrets) case "${SCRIPTS:-ok}" in ok) echo '{"success":true,"result":[]}';; new) echo '{"success":false,"errors":[{"code":10007,"message":"This Worker does not exist on your account."}]}';; *) echo '{"success":false,"errors":[{"code":10000,"message":"Authentication error"}]}';; esac;;
+  */workers/scripts/overstack-mcp/secrets) case "${SCRIPTS:-ok}" in ok) printf '{\n  "result": [],\n  "success": true\n}\n';; new) printf '{\n  "result": null,\n  "success": false,\n  "errors": [\n    {\n      "code": 10007,\n      "message": "This Worker does not exist on your account."\n    }\n  ]\n}\n';; *) echo '{"success":false,"errors":[{"code":10000,"message":"Authentication error"}]}';; esac;;
   */memberships*) [ "${MEMBERS:-}" = one ] && echo '{"success":true,"result":[{"account":{"id":"accmem"}}]}' || echo '{"success":true,"result":[]}';;
   */accounts*) case "$ACCOUNTS" in
       one) echo '{"success":true,"result":[{"id":"acc111","name":"me"}]}';;
