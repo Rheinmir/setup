@@ -1,14 +1,14 @@
 ---
 type: draft
 title: "PLAN — tách hệ skill ra repo Rheinmir/skills, installer kéo về, MCP skills.giatbh.io.vn làm nguồn phiên bản"
-status: proposed
+status: implemented
 tags: [plan, skills, installer, mcp, cloudflare, ci]
 timestamp: 2026-10-14
 ---
 
 # 141026-skills-split-PLAN
 
-**Status:** proposed
+**Status:** implemented — T1–T6 xong 14/10 (setup 1.3.127 orca@23e53d2, Rheinmir/skills v1.0.2, fdk-uat 2 pha PASS); T7 host skills.giatbh.io.vn = handoff (RUNBOOK §7)
 
 ## Context
 Bản đánh giá `141026-skills-split-mcp-danh-gia.md` (commit fe713cb) đo được: 106 skill trong `skills/` của Rheinmir/setup,
