@@ -4,6 +4,7 @@
 #   (2) token bị Cloudflare từ chối → dừng TRƯỚC deploy, rc 4, lý do in ra
 #   (3) token thấy 2 account → đòi CLOUDFLARE_ACCOUNT_ID, rc 4; đặt rồi thì không gọi /accounts
 #   (7)-(9) /accounts rỗng (token thật 14/10) → /memberships → zone của tên miền; không nguồn nào → rc 4 + quyền cần
+#   (10) wrangler không chạy → rc 5 · (12) token thiếu Workers Scripts → rc 6, in id token (không in giá trị)
 #   (4) OVERSTACK_WORKER_DOMAIN rỗng → không --domain; (5) healthz chết → rc 3; (6) thiếu token → rc ≠ 0, chưa gọi gì
 set -uo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
@@ -16,6 +17,8 @@ cat > "$T/bin/curl" <<'C'
 #!/usr/bin/env bash
 url="${@: -1}"; echo "curl $url" >> "$LOG"; F=0; for a in "$@"; do case "$a" in -*f*) [ "${a#--}" = "$a" ] && F=1;; esac; done
 case "$url" in
+  */tokens/verify) echo '{"success":true,"result":{"id":"tokid","status":"active"}}';;
+  */workers/scripts) [ "${SCRIPTS:-ok}" = ok ] && echo 200 || echo 403;;
   */memberships*) [ "${MEMBERS:-}" = one ] && echo '{"success":true,"result":[{"account":{"id":"accmem"}}]}' || echo '{"success":true,"result":[]}';;
   */accounts*) case "$ACCOUNTS" in
       one) echo '{"success":true,"result":[{"id":"acc111","name":"me"}]}';;
@@ -46,7 +49,7 @@ rc=$(run CLOUDFLARE_API_TOKEN=tok ACCOUNTS=denied HEALTH=up)
 rc=$(run CLOUDFLARE_API_TOKEN=tok ACCOUNTS=two HEALTH=up)
 [ "$rc" = 4 ] && grep -q "2 account" "$T/out" && ! grep -q "^wrangler" "$T/log" && ok "(3a) 2 account → đòi CLOUDFLARE_ACCOUNT_ID" || { no "(3a) rc=$rc"; cat "$T/out"; }
 rc=$(run CLOUDFLARE_API_TOKEN=tok CLOUDFLARE_ACCOUNT_ID=a2 ACCOUNTS=two HEALTH=up)
-[ "$rc" = 0 ] && ! grep -q "/accounts" "$T/log" && grep -q "acct=a2" "$T/log" && ok "(3b) account đặt sẵn → không gọi /accounts" || { no "(3b) rc=$rc"; cat "$T/log"; }
+[ "$rc" = 0 ] && ! grep -q "/accounts?per_page" "$T/log" && grep -q "acct=a2" "$T/log" && ok "(3b) account đặt sẵn → không gọi /accounts" || { no "(3b) rc=$rc"; cat "$T/log"; }
 rc=$(run CLOUDFLARE_API_TOKEN=tok ACCOUNTS=one HEALTH=up OVERSTACK_WORKER_DOMAIN=)
 [ "$rc" = 0 ] && ! grep -q -- "--domain" "$T/log" && ! grep -q "giatbh" "$T/log" && ok "(4) tên miền rỗng → chỉ workers.dev" || { no "(4) rc=$rc"; cat "$T/log"; }
 rc=$(run CLOUDFLARE_API_TOKEN=tok ACCOUNTS=one HEALTH=down)
@@ -63,4 +66,6 @@ printf '#!/bin/sh\necho "npm error code 1" >&2; exit 1\n' > "$T/bin/wrangler-bro
 : > "$T/log"; env -i PATH="$T/bin:$PATH" HOME="$T" LOG="$T/log" WRANGLER="$T/bin/wrangler-broken" BUILD_ASSETS=true CLOUDFLARE_API_TOKEN=tok ACCOUNTS=one HEALTH=up bash "$S" > "$T/out" 2>&1; rc=$?
 [ "$rc" = 5 ] && grep -q "không chạy được wrangler" "$T/out" && ok "(10) wrangler không chạy (tmpfs noexec 14/10) → rc 5, nói lý do, không im lặng" || { no "(10) rc=$rc"; cat "$T/out"; }
 grep -A2 "^  worker-deploy:" "$ROOT/docker-compose.stack.yml" >/dev/null && awk '/^  worker-deploy:/{f=1} f&&/tmpfs:/{getline; print; exit}' "$ROOT/docker-compose.stack.yml" | grep -q "/tmp:exec" && ok "(11) compose: worker-deploy mount /tmp:exec" || no "(11) worker-deploy tmpfs thiếu :exec"
+rc=$(run CLOUDFLARE_API_TOKEN=tok ACCOUNTS=zero ZONES=one HEALTH=up SCRIPTS=denied)
+[ "$rc" = 6 ] && ! grep -q "^wrangler deploy" "$T/log" && grep -q "id tokid" "$T/out" && grep -q "Workers Scripts:Edit" "$T/out" && ok "(12) token thiếu quyền Workers (14/10) → rc 6 trước deploy, in id token + quyền cần" || { no "(12) rc=$rc"; cat "$T/out"; }
 echo; echo "worker-deploy: $PASS PASS · $FAIL FAIL"; [ "$FAIL" = 0 ]

@@ -33,6 +33,17 @@ if [ -z "${CLOUDFLARE_ACCOUNT_ID:-}" ]; then
   [ -n "$CLOUDFLARE_ACCOUNT_ID" ] || { echo "✗ không suy được account id (token cần Account Settings:Read, hoặc Zone DNS:Edit trên zone $ZONE) — đặt CLOUDFLARE_ACCOUNT_ID" >&2; exit 4; }
   export CLOUDFLARE_ACCOUNT_ID
 fi
+# chẩn đoán token (KHÔNG in giá trị): id + loại (user/account token) để khớp với dashboard, rồi thử quyền Workers Scripts
+echo "→ token"
+for v in "user/tokens/verify" "accounts/$CLOUDFLARE_ACCOUNT_ID/tokens/verify"; do
+  curl -sS --max-time 20 -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "$CF_API/$v" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{const d=JSON.parse(s);
+    console.log("  "+process.argv[1]+": "+(d.success?"id "+d.result.id+" · "+d.result.status+(d.result.expires_on?" · hết hạn "+d.result.expires_on:""):"✗ "+JSON.stringify(d.errors)))}catch{console.log("  "+process.argv[1]+": ✗ "+s.slice(0,120))}})' "${v%%/tokens*}" || true
+done
+probe=$(curl -sS --max-time 20 -o /dev/null -w '%{http_code}' -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "$CF_API/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts" || echo 000)
+if [ "$probe" != 200 ]; then
+  echo "✗ token không đọc được Workers Scripts của account (HTTP $probe) — cần quyền Account · Workers Scripts:Edit với Account Resources = Include <account> (id token in ở trên để tìm đúng token trong dashboard)" >&2; exit 6
+fi
+echo "  Workers Scripts: đọc được"
 echo "→ wrangler"; WV=$($WRANGLER --version 2>&1 | tail -1) || { echo "✗ không chạy được wrangler ($WRANGLER): $WV — trong container: /tmp phải mount exec (esbuild postinstall)" >&2; exit 5; }; echo "  $WV"
 echo "→ assets"; ${BUILD_ASSETS:-node scripts/build-worker-assets.mjs}
 DOM_ARGS=(); [ -n "$DOMAIN" ] && DOM_ARGS=(--domain "$DOMAIN")
