@@ -177,14 +177,14 @@ def _exists(rel: str, harness_home: Path, repo_root: Path | None) -> bool:
     return bool(repo_root) and (repo_root / rel).is_file()
 
 
-def check_skill(skill_dir: Path, harness_home: Path, have_version: str, repo_root: Path | None = None) -> dict:
+def check_skill(skill_dir: Path, harness_home: Path, have_version: str, repo_root: Path | None = None, check_bin: bool = True) -> dict:
     sk = skill_dir / "SKILL.md"
     try:
         req = parse_requires(sk.read_text(encoding="utf-8", errors="ignore"))
     except OSError:
         return {"name": skill_dir.name, "ok": False, "error": "không đọc được SKILL.md"}
     floor = (req["harness"] or "").lstrip(">=~^ ").strip()
-    missing_bin = [b for b in req["bin"] if shutil.which(b) is None]
+    missing_bin = [b for b in req["bin"] if shutil.which(b) is None] if check_bin else []
     missing_scripts = [s for s in req["scripts"] if not _exists(s, harness_home, repo_root)]
     fw_missing = [s for s in req["framework_scripts"] if not (repo_root and (repo_root / s).is_file())]
     floor_ok = (not floor) or cmp_semver(have_version, floor) >= 0
@@ -214,7 +214,7 @@ def run_check(args) -> int:
     hh = Path(args.harness_home).expanduser()
     rr = Path(args.repo_root).expanduser().resolve() if args.repo_root else None
     have = harness_version(hh, rr)
-    rows = [check_skill(d, hh, have, rr) for d in iter_skills(sdir)]
+    rows = [check_skill(d, hh, have, rr, check_bin=not args.no_bin) for d in iter_skills(sdir)]
     bad = [r for r in rows if not r["ok"]]
     undeclared = [r["name"] for r in rows if not r.get("declared")]
     if args.json:
@@ -495,6 +495,7 @@ def main(argv=None) -> int:
     c.add_argument("--repo-root", help="checkout repo framework (CI repo skills): scripts + framework_scripts phải có ở đây")
     c.add_argument("--json", action="store_true")
     c.add_argument("--ci", action="store_true")
+    c.add_argument("--no-bin", action="store_true", help="bỏ kiểm binary trong PATH (CI repo skills: chỉ kiểm hợp đồng script + sàn harness)")
     g = sub.add_parser("gen", help="sinh metadata.loop + metadata.requires từ grep tất định (dry-run mặc định)")
     g.add_argument("--skills-dir")
     g.add_argument("--repo-root", help="repo framework để xác nhận script tồn tại (mặc định: repo chứa script này)")
