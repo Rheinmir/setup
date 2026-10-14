@@ -1,8 +1,8 @@
 {
   "schema": 1,
-  "version": "1.0.2",
+  "version": "1.0.3",
   "harness_floor": "1.3.127",
-  "catalog_sha": "0c842d4ca4d5c731",
+  "catalog_sha": "312e31d506764b76",
   "count": 106,
   "source": "/Users/admin/orca/skills/catalog.json",
   "skills": [
