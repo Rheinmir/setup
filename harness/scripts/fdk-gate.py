@@ -6,7 +6,11 @@
 hợp lệ"): chạy mọi gate chặn, in board ✓/✗, exit 2 nếu bất kỳ step nào fail → chặn push.
 
 Wire: pre-push hook (cạnh R12 pull-gate). Hoặc chạy tay trước khi push để biết "đã đủ chưa".
-CLI: fdk-gate.py [--root DIR] [--json]   (exit 0 = đủ điều kiện push · 2 = thiếu step)
+CLI: fdk-gate.py [--root DIR] [--json] [--jobs N]   (exit 0 = đủ điều kiện push · 2 = thiếu step)
+
+Các step độc lập nhau (mỗi step là một lệnh con riêng) nên chạy SONG SONG: --jobs N hoặc env
+FDK_GATE_JOBS, mặc định min(4, số CPU). Lệnh của từng step không đổi, board vẫn in theo thứ tự
+STEPS; chỉ lịch chạy đổi. `--jobs 1` = tuần tự như trước (dùng khi nghi hai step giẫm nhau).
 
 Mỗi step trỏ tới một gate đã có (single source — không lặp lại logic). Thêm gate mới =
 thêm 1 dòng vào STEPS (và cập nhật master-wiki checklist cho khớp).
@@ -15,6 +19,7 @@ import json
 import os
 import subprocess
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 # (tên hiển thị, lệnh, ý nghĩa step khi dev cái mới)
@@ -128,15 +133,40 @@ def run(root: Path, cmd):
         return 1, str(e)[:90]
 
 
+def default_jobs():
+    """Số step chạy cùng lúc khi không ai chỉ định: env FDK_GATE_JOBS, không có thì min(4, số CPU)."""
+    try:
+        n = int(os.environ.get("FDK_GATE_JOBS", ""))
+    except ValueError:
+        n = min(4, os.cpu_count() or 1)
+    return max(1, n)
+
+
+def run_all(root: Path, steps, jobs: int):
+    """Chạy mọi step, trả kết quả THEO THỨ TỰ steps bất kể step nào xong trước.
+    jobs <= 1 → tuần tự. Mỗi step vẫn là đúng lệnh con cũ (subprocess nhả GIL nên thread là đủ)."""
+    if jobs <= 1:
+        outs = [run(root, cmd) for _, cmd, _ in steps]
+    else:
+        with ThreadPoolExecutor(max_workers=jobs) as pool:
+            outs = list(pool.map(lambda s: run(root, s[1]), steps))
+    return [{"step": name, "ok": rc == 0, "rc": rc, "msg": msg, "why": why}
+            for (name, _, why), (rc, msg) in zip(steps, outs)]
+
+
 def main():
     args = sys.argv[1:]
     root = Path(os.environ.get("CLAUDE_PROJECT_DIR") or os.getcwd())
     if "--root" in args:
         root = Path(args[args.index("--root") + 1])
-    results = []
-    for name, cmd, why in STEPS:
-        rc, msg = run(root, cmd)
-        results.append({"step": name, "ok": rc == 0, "rc": rc, "msg": msg, "why": why})
+    jobs = default_jobs()
+    if "--jobs" in args:
+        try:
+            jobs = max(1, int(args[args.index("--jobs") + 1]))
+        except (IndexError, ValueError):
+            print("fdk-gate: --jobs cần một số nguyên ≥ 1", file=sys.stderr)
+            sys.exit(64)
+    results = run_all(root, STEPS, jobs)
     failed = [r for r in results if not r["ok"]]
     if "--json" in args:
         print(json.dumps({"ok": not failed, "results": results}, ensure_ascii=False, indent=2))
