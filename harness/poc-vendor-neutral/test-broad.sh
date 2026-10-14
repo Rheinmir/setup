@@ -135,6 +135,19 @@ hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/sources/draft/i
 # R9 NỚI (khớp global): sources/draft cũng cần frontmatter — file có Origin nhưng THIẾU frontmatter → chặn
 hk '{"tool_name":"Write","tool_input":{"file_path":"llmwiki/wiki/sources/draft/q.md","content":"# q\n## Origin\n- x"}}';                       assert 2 "R9 nới: draft có Origin nhưng thiếu frontmatter bị chặn" $?
 
+echo "── R3 stop (harness-events) khớp index_sync: chỉ đòi file ĐÃ track ──"
+# Hai cổng R3 cùng chạy lúc dừng phiên; nếu harness-events đòi dòng index cho file untracked thì
+# index_sync lại báo đúng dòng đó là THỪA → không thể thoả cả hai (đo 27/09/2026).
+EV="$PWD/bin/harness-events.py"; SB=$(mktemp -d)
+( cd "$SB" && git init -q && mkdir -p llmwiki/wiki/concepts \
+  && printf '| [a](concepts/a.md) | concept | a |\n' > llmwiki/wiki/index.md \
+  && printf '# a\n' > llmwiki/wiki/concepts/a.md && printf '# b\n' > llmwiki/wiki/concepts/yyw-tracked-page.md \
+  && git add -A && git -c user.name=t -c user.email=t@t commit -qm seed )
+CLAUDE_PROJECT_DIR="$SB" python3 "$EV" stop </dev/null >/dev/null 2>&1; assert 2 "R3 stop: file TRACKED thiếu dòng index bị chặn" $?
+printf '| [yyw-tracked-page](concepts/yyw-tracked-page.md) | concept | b |\n' >> "$SB/llmwiki/wiki/index.md"; printf '# q\n' > "$SB/llmwiki/wiki/concepts/zzq-untracked-page.md"
+CLAUDE_PROJECT_DIR="$SB" python3 "$EV" stop </dev/null >/dev/null 2>&1; assert 0 "R3 stop: file UNTRACKED chưa có dòng index không bị đòi" $?
+rm -rf "$SB"
+
 echo
 printf '\033[1mTỔNG: %d test · %d PASS · %d FAIL\033[0m\n' "$T" "$P" "$F"
 [ "$F" = 0 ] || exit 1
