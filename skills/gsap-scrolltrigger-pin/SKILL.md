@@ -4,6 +4,7 @@ description: Pin một section lại khi cuộn tới, rồi chuyển cuộn d�
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: utils
 ---
 
 # Skill: gsap-scrolltrigger-pin

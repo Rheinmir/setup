@@ -4,6 +4,11 @@ description: "Ghi một SESSION EPISODE có cấu trúc (tầng nhớ episodic) 
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: wiki-loop
+  requires:
+    harness: ">=1.3.127"
+    bin: [python3]
+    scripts: [harness/scripts/mem-proxy.py, harness/scripts/mem-rank.py]
 ---
 
 # Skill: record-episode

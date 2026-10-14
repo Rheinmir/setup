@@ -100,6 +100,8 @@ STEPS = [
         "python3 harness/scripts/qc-regression.py --self-test >/dev/null && "
         "python3 harness/scripts/retrieval-eval.py --self-test >/dev/null && "
         "python3 harness/scripts/skill-resolve-eval.py --self-test >/dev/null && "
+        "python3 harness/scripts/skill-requires.py --self-test >/dev/null && "
+        "python3 harness/scripts/hook-audit.py --self-test >/dev/null && "
         "python3 harness/scripts/unknown-ledger.py --self-test >/dev/null && "
         "python3 harness/scripts/decision-anchoring-crosscheck.py --self-test >/dev/null && "
         "python3 harness/scripts/decision-guard.py --self-test >/dev/null && "

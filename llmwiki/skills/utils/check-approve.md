@@ -5,6 +5,9 @@ description: Sinh sẵn 1-liner để trace 1 lệnh approve/return/reject của
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: utils
+  requires:
+    bin: [docker]
 ---
 
 # Skill: check-approve

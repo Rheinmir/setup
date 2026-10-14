@@ -4,6 +4,7 @@ description: Render Markdown thành standalone HTML — Mermaid, Chart.js, style
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: utils
 ---
 
 # Skill: md-to-html

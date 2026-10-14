@@ -4,6 +4,7 @@ description: "Rút hệ thiết kế ĐANG CÓ của một dự án — từ cod
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: dev-loop
 ---
 
 # Skill: ui-kit-from-code

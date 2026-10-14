@@ -130,25 +130,26 @@
       "category": "external",
       "commit": "e825f6740d24c6c315c3b0dc41907e6c87ff39a5",
       "files": {
-        "SKILL.md": "7f7da09f52b8f88d1c438725e94c7335a04a6af45bdf33cae637456f2b1a321a"
+        "SKILL.md": "81c9a76986d6935a68b72ef02799c5d83fc0f7fcacc52c7b780c0f62cecfd65c"
       },
-      "recorded": "2026-07-07",
+      "local_patch": "frontmatter metadata.loop + metadata.requires (141026 skills-split T1); nội dung thân giữ nguyên upstream",
+      "recorded": "2026-10-14",
       "source": "https://github.com/Panniantong/agent-reach",
       "version": "1.5.0"
     },
     "blur": {
       "files": {
-        "SKILL.md": "5c6fe5ca6b13c7645ca7e568220f922e695a0b23cbd3e341063aa062f82d06a0",
+        "SKILL.md": "08d9f0eff97d29e85bfa461866b0e755126fe6f1ced266bf8f0e726d6391606b",
         "assets/blur.css": "f6c45d93b23cbd79cba744d7e4e213ef213c1b6f9557b16976224701f69b4434",
         "assets/blur.html": "2da19d6d0946e2d3fa92cde68ec4936511e2dc8aeaeb6ddcd2bf36d900ecc193",
         "assets/blur.js": "b86cbf40b542cf62ea73b2e793467b7693fc6a4a0acd029237d5687125f42622"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "br": {
       "files": {
-        "SKILL.md": "21706a69ba0dc87c52ce08b0aea75a264271dbcaff2f7b2488b51bdab76c5808",
+        "SKILL.md": "1ff4118d5daa962db434902713b9dbcd736725dd98bc93b01f8360255d53972d",
         "assets/defaults.yaml": "8753bb2b49dbe53c8d1ec5df9ed22eccb643a07238dbfdd06737be665cfa353e",
         "assets/design-template.md": "830734ed57b5f2b504204bec3c7d0958e8f5dcc91faee74708a80959c4eaad89",
         "assets/frame-template.md": "253427bbec120ea572ff2f0dbe3ff442b928f18854f86916cac5dbf45443f00d",
@@ -156,172 +157,182 @@
         "assets/revise-prompt.md": "f088c244213d969ae0282f9ce737f605f4468732406251f6e1b1219d12b9f6c1",
         "assets/spec-template.md": "c1a0f3bbf30d8d98c81b5cbdd5ea4c1be30f5a910150f1b9446d1e624c8a10b4"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "brandkit": {
       "adapt_mode": "external-pull",
       "category": "external",
       "files": {
-        "SKILL.md": "e54b2f5b06b3c7166c2ee90cccb172968337e505e21a99e608fd43b4f2e13e40"
+        "SKILL.md": "89989e8df46502abffbea2214e240114d4165342d0db1aea836ac3668aa9a51b"
       },
-      "recorded": "2026-07-18",
+      "local_patch": "frontmatter metadata.loop + metadata.requires (141026 skills-split T1); nội dung thân giữ nguyên upstream",
+      "recorded": "2026-10-14",
       "source": "https://github.com/Leonxlnx/taste-skill"
     },
     "build-now-adapt-later": {
       "files": {
-        "SKILL.md": "5805c0e2e92a908d92e44d434dfa7a71c99d3d4912a4b4773da7398e18e412d2"
+        "SKILL.md": "d8b8a2791ef130bf9442d6396aaf84f0eee827b2e8296c36961b7ab48325730a"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "cavecrew": {
       "adapt_mode": "external-pull",
       "category": "external",
       "files": {
-        "SKILL.md": "47b23a366ba68c7277dfb1952b408d280ef591ab40c174559e1a001e2dc69a67"
+        "SKILL.md": "fd5636f68df6cab1d42c54b2d792f56133e7cf354140eca30658f40792a2939a"
       },
-      "recorded": "2026-07-04",
+      "local_patch": "frontmatter metadata.loop + metadata.requires (141026 skills-split T1); nội dung thân giữ nguyên upstream",
+      "recorded": "2026-10-14",
       "source": "https://github.com/JuliusBrussee/caveman"
     },
     "caveman": {
       "adapt_mode": "external-pull",
       "category": "external",
       "files": {
-        "SKILL.md": "02522ac596157e429c493ff97a0d438369c825c77cae918094bec59254470b54"
+        "SKILL.md": "58266b058c727283e0627113ac1fe776a0008988361a50a221f50b1414c5a8d0"
       },
-      "recorded": "2026-07-04",
+      "local_patch": "frontmatter metadata.loop + metadata.requires (141026 skills-split T1); nội dung thân giữ nguyên upstream",
+      "recorded": "2026-10-14",
       "source": "https://github.com/JuliusBrussee/caveman"
     },
     "caveman-commit": {
       "adapt_mode": "external-pull",
       "category": "external",
       "files": {
-        "SKILL.md": "23fceebe1ffe278b79f425995c225818aefbb82384c937c1bf338e0a0e59f2f1"
+        "SKILL.md": "50f7f82a4eefd7b9050f6750f3f3f184b7f863f914ce7ce49a182123f279deda"
       },
-      "recorded": "2026-07-04",
+      "local_patch": "frontmatter metadata.loop + metadata.requires (141026 skills-split T1); nội dung thân giữ nguyên upstream",
+      "recorded": "2026-10-14",
       "source": "https://github.com/JuliusBrussee/caveman"
     },
     "caveman-compress": {
       "adapt_mode": "external-pull",
       "category": "external",
       "files": {
-        "SKILL.md": "b5b2e46ccad05a1cef891bd05aeeac419ba3e0a559a93281206df733084b1068"
+        "SKILL.md": "34c71c2babcd3accbdb6490ec83d86c1352ab2a6c55dd034075859956a60035f"
       },
-      "recorded": "2026-07-04",
+      "local_patch": "frontmatter metadata.loop + metadata.requires (141026 skills-split T1); nội dung thân giữ nguyên upstream",
+      "recorded": "2026-10-14",
       "source": "https://github.com/JuliusBrussee/caveman"
     },
     "caveman-help": {
       "adapt_mode": "external-pull",
       "category": "external",
       "files": {
-        "SKILL.md": "f1f774142fbe07d91611e897e39b7e53c0a50f6015897749f75d367b1a85c6e0"
+        "SKILL.md": "18552e2a6c8b26daefa97e8d8a8688af4a3a23e2aa23e81cbfb4f35839b71bd5"
       },
-      "recorded": "2026-07-18",
+      "local_patch": "frontmatter metadata.loop + metadata.requires (141026 skills-split T1); nội dung thân giữ nguyên upstream",
+      "recorded": "2026-10-14",
       "source": "https://github.com/JuliusBrussee/caveman"
     },
     "caveman-review": {
       "adapt_mode": "external-pull",
       "category": "external",
       "files": {
-        "SKILL.md": "3e4e1359fb7d0bda9c174809ea852bf473dd34cf64e28f3c2d3cd8169573e49c"
+        "SKILL.md": "faa05af472601d16dbef723435bf8b8ebab9e8870753bc84d951a6be23fb03df"
       },
-      "recorded": "2026-07-04",
+      "local_patch": "frontmatter metadata.loop + metadata.requires (141026 skills-split T1); nội dung thân giữ nguyên upstream",
+      "recorded": "2026-10-14",
       "source": "https://github.com/JuliusBrussee/caveman"
     },
     "caveman-stats": {
       "adapt_mode": "external-pull",
       "category": "external",
       "files": {
-        "SKILL.md": "3ebad12bda3a1264bb5b97a7256f30dcf3fb3ed29c1a0674a4c94110d47f06a0"
+        "SKILL.md": "b4959c932040945df88bfbefe282adf5e137fc38cb60941d4c46f46587525259"
       },
-      "recorded": "2026-07-18",
+      "local_patch": "frontmatter metadata.loop + metadata.requires (141026 skills-split T1); nội dung thân giữ nguyên upstream",
+      "recorded": "2026-10-14",
       "source": "https://github.com/JuliusBrussee/caveman"
     },
     "check-approve": {
       "files": {
-        "SKILL.md": "ce47e7c9014d47caa293334d6657f8d3adfbe8c5ffb2e60178cfdc842462f138"
+        "SKILL.md": "d72cb1d43bb4d7e997e1b060bd833615f436e9edda6c7f40fca717614e94e255"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "council": {
       "files": {
-        "SKILL.md": "338f0016b4a752a80d11d3408ab1a4bfe8f3cb54092adb2e9960cb3a72786f89"
+        "SKILL.md": "83183b684615c2a63d7413d8bdd3655d6e61fed69282c617ab886b4a64525816"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "css-scroll-driven-native": {
       "files": {
-        "SKILL.md": "c05ede2ca904823d9b70f3be0167fbf99851346151bc1269ca7ed0cd77be2dc6",
+        "SKILL.md": "a2cfe12edc73429317c1442dd0480fed080b7340fb134dbc282a546da7fe9896",
         "assets/demo.css": "846267738363c61f5364b7a1a135b0258b9b6c9c1cd3d572f1a416fbbe6da87c",
         "assets/demo.html": "eb9c561ca2a15bc73bbf4da142d7e0b21a6a71a5e6ab50d22de923fda2817897"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "cursor-animated-sites": {
       "files": {
-        "SKILL.md": "e394efa8c36107c6ef836a21d2049647021d595a6d5c3de43108a0d617a72380"
+        "SKILL.md": "7061d6d588a20d4cc3c8efe694a05cf7674303b534d0f780b11b8171cda583a0"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "dark-mode-maker": {
       "files": {
-        "SKILL.md": "9b5ceb5c84bcf1a647814efe07b5607d4e1dee56f2c8612943367e18ff40fbb1",
+        "SKILL.md": "d9f5756d934aa26e9deb72bf446a46a37bc52953c56e59ff0ebe57ae4ca862d5",
         "scripts/package-lock.json": "546d45f57bc86e78671b82dea49382f48fe07330ba2d7010eed2708615b77ae2",
         "scripts/package.json": "1e43a1f9b9c7c5c71db905862e929f4bb67cd3fffe3234a906691447c6bba228",
         "scripts/verify-theme-motion.mjs": "82e0948857080a1a308122fb5c7e6d4fe033a90b2fe6ca5f0757a2baa003b4e7"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "design-prim": {
       "files": {
-        "SKILL.md": "75bad3f9e1223cdf60f15b3dd772646e2197f624bde41aa0d14a8937c63785ea"
+        "SKILL.md": "d8425f0c3dc6a9ee7b7dd57e5d750f294b9ef2521f3d30fb7d8bf550f670251f"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "design-taste-frontend": {
       "adapt_mode": "external-pull",
       "category": "external",
       "files": {
-        "SKILL.md": "dd482730c278eafc3543a09f9995e165f79ecd8cf4140bb3317b4075128b2811"
+        "SKILL.md": "90b6e1197d743d361ce7bfa1baaa4b9f8940276ea506fe4cae462c520847f0b5"
       },
-      "recorded": "2026-07-18",
+      "local_patch": "frontmatter metadata.loop + metadata.requires (141026 skills-split T1); nội dung thân giữ nguyên upstream",
+      "recorded": "2026-10-14",
       "source": "https://github.com/Leonxlnx/taste-skill"
     },
     "design-taste-frontend-v1": {
       "adapt_mode": "external-pull",
       "category": "external",
       "files": {
-        "SKILL.md": "53dd48d8ee8057d51f43fa625c537942794983341a919f1b6305da1161894966"
+        "SKILL.md": "68a23f1d3d30835873b6c0786e00da107f5ac7c5b0921356772f418b8e5db7a3"
       },
-      "recorded": "2026-07-18",
+      "local_patch": "frontmatter metadata.loop + metadata.requires (141026 skills-split T1); nội dung thân giữ nguyên upstream",
+      "recorded": "2026-10-14",
       "source": "https://github.com/Leonxlnx/taste-skill"
     },
     "diagram": {
       "files": {
-        "SKILL.md": "d8cf8f542a2b5988e2ce51865078dfd938a58c602333fa0644a506100ba21532"
+        "SKILL.md": "a25e7db31cf8ccb057d7c4fc3729b3a8a6df71cece4ed4fc9f56374e07841f13"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "docs-site-macos": {
       "files": {
-        "SKILL.md": "822db4121f79882720c9bab14e6327882e9a6eaa0fd90206767b730207c562a9",
+        "SKILL.md": "1e1dcab566591de56e11c4d182633f0a768e8ca2fe6494e604a486b7e63c1a7d",
         "vendor/README.md": "637090466e5c66282a3e092751982f95f05eeca3ebf3f7eadc29596960ced445",
         "vendor/beautiful-mermaid.min.js.gz.b64": "89e9982b5e5b5f06c7b07ed44ee525df4e8fa5372b93c70bc79cd492acf29b37"
       },
-      "recorded": "2026-09-23",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "doyourmagic": {
       "files": {
-        "SKILL.md": "571ca591ce7d48dc1a515ca482a276bb2c3eb5afce66001bd9dc3e8990a22b23",
+        "SKILL.md": "b415f33cf100a1a1cd347c64435d7a11fbe0eaac10afb9b5d1cddd558f98c6f6",
         "references/example-setup/README.md": "343c09fef83bbb179514311d025f1a697b474d977cc08e0b952026e8e2fb29b6",
         "references/example-setup/flow.html": "60b9be43143738268175baaa8d5a4ea62198b93875068d138b0fa1884f585d43",
         "references/example-setup/skills/dym-setup-agent-workflow.skill.md": "3f94fd478de88a2ce33d203a02c96e111beace12b8d97ee3afeedfe23cd4a2a3",
@@ -333,105 +344,108 @@
         "references/example-setup/skills/dym-setup.skill.md": "fa286d0f1e20ae6f7493ff13a91eeb91d549fdcc02a2d3f81dad02ad57b5f439",
         "references/example-setup/workflows.md": "8813b9f0c73865eb47034c2bdf4ec3819f7fa698d988c345d7de4f67b934b190"
       },
-      "recorded": "2026-09-24",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "extract-site": {
       "files": {
-        "SKILL.md": "fbe054f3a11b9ba55ed23672efcc7771b6a9de4431736d94c3f9aa165f8b9acf",
+        "SKILL.md": "69550296126d2229d1dd62c9d2dbed9bca6a967a6e50c0790bac603874c05ea4",
         "assets/component-spec-template.md": "842e43cbbd90fd9aea1a6b3d722c87d1ca42016ff0bd5de170a630c8db4b2dec",
         "assets/enumerate-assets.js": "6030e3113e88775661a260f7945ce7219358ceaca111404649b7f8f5906e3427",
         "assets/extract-component-styles.js": "38d3497304b8a721f169cbf7da4851eb74270b1e0e47fadaa9b7a043d19162b0",
         "assets/inspection-checklist.md": "e8d338a962a8d8ad6f3fdf1f80e190b697e903b96f9d8a93077dd9ea2ab7d439"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "fable5": {
       "files": {
-        "SKILL.md": "c6f61b6ddf6af2eec73f2579047a8a1e1e1b8fa5c7503b56701d30c50af6634c",
+        "SKILL.md": "150ccc1446b3e935fe82c9008bf9a037e4b21d46318f507549c1171821572606",
         "references/content-taste.md": "3466fab5a841db917a8dea252b0fc5dd869f13010d1667091b1ffa74305bcc33",
         "references/design-taste.md": "9b29c72e97663327b48bc92336202d47e2a41c0b1089e514340075e90ae0a8d9",
         "references/worked-examples.md": "b0a84f590749d91df3e804b9771335156d3f13aa56dd7d5b5f8b0c7b62e9b7af"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "failure-flywheel": {
       "files": {
-        "SKILL.md": "3cab73d6896fd2abcf2f8a4e806d96a9c0f0dcd23ba7d6042dd97d47f5dcce9b"
+        "SKILL.md": "f2172897b5031a4e6202bbca9387936859fb8c0dd6e57c064c909c14ea752d68"
       },
-      "recorded": "2026-09-23",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "fdk": {
       "files": {
-        "SKILL.md": "8c2f7270959a0154ec7c9f3e75abc3850736bd1e3f94bc91394a75c77463318f"
+        "SKILL.md": "f7861fb84c23614536330be2c24015ac70ccb4e411caf6e8d01cfc40d3c296cb"
       },
-      "recorded": "2026-10-01",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "fdk-uat": {
       "files": {
-        "SKILL.md": "518560e6ad033a206f66e4d747d51880c0df1b8b4f68dbd0345c7987e27838a0"
+        "SKILL.md": "0bd0c77cb229ed6daf058b3e36d82a8c435a1f0b795988970a16b02d8c26c5d9"
       },
-      "recorded": "2026-09-20",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "find-skills": {
       "adapt_mode": "external-pull",
       "category": "external",
       "files": {
-        "SKILL.md": "3944913e5b8b98db3cca800204be86d156476ece5d2aef0bb90dc054390c6535"
+        "SKILL.md": "2f14ef6aa0e37b658d41341190a1ded8fad55027237d0478f88a83b2c50ecb8a"
       },
-      "recorded": "2026-07-04",
+      "local_patch": "frontmatter metadata.loop + metadata.requires (141026 skills-split T1); nội dung thân giữ nguyên upstream",
+      "recorded": "2026-10-14",
       "source": "https://github.com/vercel-labs/skills"
     },
     "frontier-scan": {
       "files": {
-        "SKILL.md": "502bc284c86d22291a7035b020ae4f7075fa4deea5436f98487f2a939cc62da3"
+        "SKILL.md": "cec9335b75f510b3dce7dbd90461800c954285898d194bc54f8601e215677734"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "full-output-enforcement": {
       "adapt_mode": "external-pull",
       "category": "external",
       "files": {
-        "SKILL.md": "80adcd02a4a94a6a6fe45a0cc6f851acc8e03b28972862bbe071bcfdbb2a0f55"
+        "SKILL.md": "fc369309f29f7911fa4456c205320120ac28e11182a58f6bf2d51cd8d8347f52"
       },
-      "recorded": "2026-07-04",
+      "local_patch": "frontmatter metadata.loop + metadata.requires (141026 skills-split T1); nội dung thân giữ nguyên upstream",
+      "recorded": "2026-10-14",
       "source": "https://github.com/Leonxlnx/taste-skill"
     },
     "gpt-taste": {
       "adapt_mode": "external-pull",
       "category": "external",
       "files": {
-        "SKILL.md": "b4e774d50c619b7f111032e3bba9aa2940ec8e748962b5949f50d3825edd88a5"
+        "SKILL.md": "51f88b37a7f4f07b61b5333c4cb1bc4e6dd8c3f1ab7bb596840334ec97666cbd"
       },
-      "recorded": "2026-07-18",
+      "local_patch": "frontmatter metadata.loop + metadata.requires (141026 skills-split T1); nội dung thân giữ nguyên upstream",
+      "recorded": "2026-10-14",
       "source": "https://github.com/Leonxlnx/taste-skill"
     },
     "graph-mode": {
       "files": {
-        "SKILL.md": "1e7f91e80764b02d230f26a74fae5575f640c8e4f862728a51f83503e81c83f1"
+        "SKILL.md": "a9e00a439587d0a96fe8133746e24826f9d3caf519189b040a24df12e34d6633"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "gsap-scrolltrigger-pin": {
       "files": {
-        "SKILL.md": "6ae887c38d47a2afb0bd46fa4e1986cba67b4f2433b20a6251de4d47bfc12a99",
+        "SKILL.md": "8cdd4405e8657e172dd3c7b5c308bd38f5929616e42d1cf51bc7f5044b87dac7",
         "assets/demo.html": "1cde488956b5b361bd12b8cf016960ccf6c1f07c452ea3d0218e89751cf03d34",
         "assets/gsap-scrolltrigger-pin.css": "92b0baf2f9592931ac0b47f61ef8a11f66032e5437360c8496397e78e3e5912d",
         "assets/gsap-scrolltrigger-pin.js": "4f2a56dec6c37f90c691975c7eb14732d88828c1f659e81bed1d59196fcad79e"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "hallmark": {
       "files": {
-        "SKILL.md": "676b285a874dd8acb44af6183e57b222ed34be4bb0e03785c5d95e6b666d93f9",
+        "SKILL.md": "ffa1c044d89b88ec1105e39ffd2b7da555a53cb28c8094eba5dd13df28d07642",
         "references/anti-patterns.md": "1c66f41d68ac32303d52ea49a1d475b212162ff7b38884a0b31774958b4561df",
         "references/assets.md": "60929b3dc2258b69caf3012d99d174e1ad73da9645263db81a9b271cd6fd7d61",
         "references/color.md": "31c470d16ceb17ccce290cbdd00b9e9a88f2094df8eaaefb67c86ec1e1cdb876",
@@ -541,125 +555,130 @@
         "references/verbs/audit.md": "0a5b484453f1697a8675a7020df9159d0b4ce22f059b873501bfd82c26d6a31a",
         "references/verbs/redesign.md": "c2830f3b7d68e9622f55d376048a5a454c5ef59d309a211e716d1142e86acbdf"
       },
-      "recorded": "2026-09-28",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "harness-tour": {
       "files": {
-        "SKILL.md": "aeef1c058380d9d5039a1791b0eb2b8b6649811a262d83262806a2dcf77e84b8"
+        "SKILL.md": "287e0a5d951df8fe7640b977cb95c7410223c0cdcf0840125d394cc79d4e002b"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "harness-update": {
       "files": {
-        "SKILL.md": "a2c4eab7e8744dfec1e5e83ebe42fb3db8b4751b19ff3ed7c9936593345a0a81"
+        "SKILL.md": "d92819b128058dc087e7b3ead24038ae013915c0965a7fb79b9cab5a996962c0"
       },
-      "recorded": "2026-09-20",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "health-check": {
       "files": {
-        "SKILL.md": "3973b2356795bf5df4ff451a1680d1bd8dd8b690c7dc99485a1f99b26c7469a5"
+        "SKILL.md": "665dbf319678e64f7e19d59d919dca4c3a767e9bd855395bd3e83e9a10fca2c3"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "high-end-visual-design": {
       "adapt_mode": "external-pull",
       "category": "external",
       "files": {
-        "SKILL.md": "b95441f97b71b5a616e16ab358fc4b00aee8f4d884b459cd57b9017361c7ab00"
+        "SKILL.md": "4415fe4e43b4e986d0b2c897e607abb03c14d11284f947d990a1138d82a65eeb"
       },
-      "recorded": "2026-07-18",
+      "local_patch": "frontmatter metadata.loop + metadata.requires (141026 skills-split T1); nội dung thân giữ nguyên upstream",
+      "recorded": "2026-10-14",
       "source": "https://github.com/Leonxlnx/taste-skill"
     },
     "i-have-adhd": {
       "files": {
-        "SKILL.md": "83f3bd2d52020d341502cce70c0a21c2c3944d1852f8884bac28325c8d642ff4"
+        "SKILL.md": "f0a461fefc53fc985baeef17bd8f57cf1f5f74753209a23b55c2a632c4407dcd"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "image-to-code": {
       "adapt_mode": "external-pull",
       "category": "external",
       "files": {
-        "SKILL.md": "faf7b2dfc7219e6280270b3c85099e293445435ee70abbf07833528f0a4d5fd1"
+        "SKILL.md": "a353327bec7470339fdffd0a56a79111b278f6e144a15b06711a229cb20dc707"
       },
-      "recorded": "2026-07-18",
+      "local_patch": "frontmatter metadata.loop + metadata.requires (141026 skills-split T1); nội dung thân giữ nguyên upstream",
+      "recorded": "2026-10-14",
       "source": "https://github.com/Leonxlnx/taste-skill"
     },
     "imagegen-frontend-mobile": {
       "adapt_mode": "external-pull",
       "category": "external",
       "files": {
-        "SKILL.md": "b4c48f2774582b1a7ceb0738dabcd9a0f32dee36745493029a547063d8284af3"
+        "SKILL.md": "eca252c0327ccf17a7126b8214f6f52d49d54fcb6609e2f935ae97755beebd0b"
       },
-      "recorded": "2026-07-18",
+      "local_patch": "frontmatter metadata.loop + metadata.requires (141026 skills-split T1); nội dung thân giữ nguyên upstream",
+      "recorded": "2026-10-14",
       "source": "https://github.com/Leonxlnx/taste-skill"
     },
     "imagegen-frontend-web": {
       "adapt_mode": "external-pull",
       "category": "external",
       "files": {
-        "SKILL.md": "b11eec9b6ba4f6830788b81ec21c0092f8dd0084d9fad34c6ae9596126c58e64"
+        "SKILL.md": "980eb1f62738fbd24754e700d3944ed5045c17b75898387c7bb0ab49103338d1"
       },
-      "recorded": "2026-07-18",
+      "local_patch": "frontmatter metadata.loop + metadata.requires (141026 skills-split T1); nội dung thân giữ nguyên upstream",
+      "recorded": "2026-10-14",
       "source": "https://github.com/Leonxlnx/taste-skill"
     },
     "impact-check": {
       "files": {
-        "SKILL.md": "8b99e84e3d8d530b0ed2a5768eaa3b02212aff07412c9c7ddbea4ab2ef6e9ba1"
+        "SKILL.md": "08d450f3f352380266c4218449eb0b3b1bc5d4bc965b0bc102d22d315568bb67"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "industrial-brutalist-ui": {
       "adapt_mode": "external-pull",
       "category": "external",
       "files": {
-        "SKILL.md": "92705bb29dab3e255376ed6a7e20051f3af9f1bf16f8e896c323cea5bf62df56"
+        "SKILL.md": "5009cc0ac9bc4afdd4c5e384724331d16d82ae53175294c02514d8b698110a22"
       },
-      "recorded": "2026-07-18",
+      "local_patch": "frontmatter metadata.loop + metadata.requires (141026 skills-split T1); nội dung thân giữ nguyên upstream",
+      "recorded": "2026-10-14",
       "source": "https://github.com/Leonxlnx/taste-skill"
     },
     "infinite-webgl-grid": {
       "files": {
-        "SKILL.md": "1fc014747b63c4f5cc7ccde7f174f3731a57673c0047e4538df4c43624d9dba6",
+        "SKILL.md": "e02c672f020b5e69564fb4f21134056060e50bd33b9aabc1ec9db4dfae685ba7",
         "assets/demo.css": "bc3958c1606b69eba7261d244825acc513cc290861c1fc0ba967b32a6436f214",
         "assets/demo.html": "0dc9a31ad8499913e03ba9d4976bc75ada4746a921deb514b17a5e0fed2ccd90",
         "assets/demo.js": "a83f8a1464f78bdc87cca852f0c33eef8a547af7c0b1335c9b4938201e44ad4e"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "ingest": {
       "files": {
-        "SKILL.md": "30a0d83d196fe2b95b93893a5bfa33b485e4aca18022545c28123191400e2e6c"
+        "SKILL.md": "efc6331a5d18c570b517feb42e276ee844ca3023c27ac5869a31d962018e706d"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "jenkins-agent-l3-deploy": {
       "files": {
-        "SKILL.md": "503114a20eb9e52c283a71ba0d01e18afcfd68d6fa35e5e6c4565d725136296d"
+        "SKILL.md": "5e494d23f22e8ca8e39ca34f31d9d527e3c5fb7341906a03abfd937c37ff5b57"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "join-project": {
       "files": {
-        "SKILL.md": "f5deb0f404018b609e4075168c737f8e3bfcdf978873686790bf8f601b3ee61b"
+        "SKILL.md": "a75b716b5ce720e78e4f3913958a52a47a157e3ff4b7b870689a597fb22022ae"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "last30days": {
       "adapt_mode": "external-pull",
       "category": "external",
       "files": {
-        "SKILL.md": "bee461995acc5faf1a9608d2f8c6ea82017995dc7b2bcf525f845331392cd5cf",
+        "SKILL.md": "8a63e7f4fe05bf24ea262c7ef904846f0037a6a9acacd5593125225d0ac37b9b",
         "agents/openai.yaml": "f46e7f09d3118dee7324ac165391ccb7ffe55323d1d75304e34062017913939c",
         "assets/aging-portrait.jpeg": "92704fa189ea77fb5397c39326a2155bcfb4ca4f0baf577191a49cff5db277cc",
         "assets/claude-code-rap.mp3": "d85ef20d37a067d645bc80b7179fd09644d6c42c8c85dbdc84bb877fbd051d10",
@@ -754,100 +773,102 @@
         "scripts/verify_v3.py": "67f2898fe8b57035b22c2d8b26ed42ed0cf89c600d4d88ee8c007051c473cffc",
         "scripts/watchlist.py": "ffa637f73569863ffa5074faf69fdf712b1caf2bb6da1156bde9fb510bd152fe"
       },
-      "recorded": "2026-09-17",
+      "local_patch": "frontmatter metadata.loop + metadata.requires (141026 skills-split T1); nội dung thân giữ nguyên upstream",
+      "recorded": "2026-10-14",
       "source": "https://github.com/mvanhorn/last30days-skill"
     },
     "lenis-smooth-scroll": {
       "files": {
-        "SKILL.md": "ea597f0a2226fca76e086f68e2233ef408e7048ead179c01dbb54dd7880d3c9f",
+        "SKILL.md": "2801b7156b7d0cc580764d0300e7072f2178f2f94fbcfa52c35f25d511141d07",
         "assets/demo.html": "f9dbfdb0dbc87cfb6150b55bb508ad318e6d83a399348f59fa1d909fec5cce49",
         "assets/lenis-demo.css": "7ce58890869c1b63d8d89ea4576d1e81931ab8d83f66caaed2acdd20f608d347",
         "assets/lenis-demo.js": "5c504682db96c3714e53793494f736cc5a2b845f32708ef752464fc27ec0d236"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "lint": {
       "files": {
-        "SKILL.md": "d74f4ad46f5b022ec13f6f0e982645e313bb3e93b0242cc8e171953f38c39ab8"
+        "SKILL.md": "96bcd81023a3bd09ec1b9eac3160d1234020554850e8bc46ce27a28d7dcdab46"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "loop-runner": {
       "files": {
-        "SKILL.md": "9c28b2e9d7c17f21734e75d9c2eb0fa93d0ebf0572cbd2e4028164647260b522"
+        "SKILL.md": "cddfe7f787c66998c9a13254a28c91955f879ede075d1a5a0f5f424c022724e5"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "mask-reveal-transition": {
       "files": {
-        "SKILL.md": "a2bab37772017efc096887be7eb64b0116c35ada20977cfcd2d936041c926c58",
+        "SKILL.md": "a2a94ee74a60450dd4fa03b62fdbe768934c0131eb9ca98374097f8c850076b9",
         "assets/demo.html": "25a8a22731fd91ba726b61ad530ddd6581e8d85cfdae5e4181750c8c7f8df998",
         "assets/mask-reveal-transition.css": "f432895e747f2bf90e478cbb5121ba7c6b7f2421b6c95cba402bb7d30250c9b5",
         "assets/mask-reveal-transition.js": "c5ca7563fe39beab1da3be0a88581c3f33b1756b46e2642e6c5257287614a7fb"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "md-to-html": {
       "files": {
-        "SKILL.md": "7b53618fdbf402a59033b1bebcf55919d2e7d3de209e7ad998055959fda5e7d9"
+        "SKILL.md": "756183921acf69eb307ca11f983de05796177172c0800c0d345dbf4d9e8296c2"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "medic": {
       "files": {
-        "SKILL.md": "530c967309d89222fa9b38d813197018224ebd3ccc8b33af2ce339ec07d33c32"
+        "SKILL.md": "d999f9a9501dc7a58ef6f5969da7170ca676fc3c05a161d62ea90fc388c79ea9"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "minimalist-ui": {
       "adapt_mode": "external-pull",
       "category": "external",
       "files": {
-        "SKILL.md": "9c6cd449665b00b308b45fc0820e536dc9662d965c602b9c0daac876b5e8a829"
+        "SKILL.md": "a23388fd0b174ddafdf64aefb95e8f988045d7ed17b062756fa37db60a52991e"
       },
-      "recorded": "2026-07-18",
+      "local_patch": "frontmatter metadata.loop + metadata.requires (141026 skills-split T1); nội dung thân giữ nguyên upstream",
+      "recorded": "2026-10-14",
       "source": "https://github.com/Leonxlnx/taste-skill"
     },
     "new-project-setup": {
       "files": {
-        "SKILL.md": "90cf99ff0cb454c6c920620e327d71af80d947ebbcc52e1071cab604b0810ce4"
+        "SKILL.md": "4fa5f118b5ed0ec7274ad66b821dda8be50fdc8e0fd6c1238f6a1dfcfc7b3a73"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "new-skill": {
       "files": {
-        "SKILL.md": "d7f5c0a7319dac7744e8f84330cd060f97ef11772d98b7e37b6096bbaaf82170"
+        "SKILL.md": "a5bb12188833cf147dc3a9ef166d5bd9e42b8cac43364dce14da90791c9f2d78"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "onboard-codebase": {
       "files": {
-        "SKILL.md": "850ce55d9abd88a6a35fbcd3415c33fa3015c6b13295af6530af0fa291f39d3d"
+        "SKILL.md": "3d6c23e63d49c1a3faa36578560484b60b267a61cfb0ccd3b2c61114373f90cd"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "orca-dispatch-reference": {
       "files": {
-        "SKILL.md": "bf55cc7ac1eacaf93b36888ed1cf190c79a0ca77d8d3a1475f88bd7c41f0516f"
+        "SKILL.md": "3663859f3c79a1377f11caf0e0cc9e209f6636620b7886f6a77fa9b414c27c77"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "orca-eval": {
       "files": {
-        "SKILL.md": "97d3183f62e4ce422bedd7260018b866113ee92d2f605768479459358487cdca",
+        "SKILL.md": "6d07c8cf5cbc690cf4afe1b111bef6a22ecd01cca79e26801bfa4a776ff60264",
         "assets/orca-eval-scan.sh": "8bf1fce55e52376a86eec146a81e2915364418d6394bc376d811d44bc5cc4153"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "orca-graph": {
@@ -855,72 +876,73 @@
       "category": "orchestrate",
       "commit": "1bbf549272f286818ec05c5a9bdcbda44d15af55",
       "files": {
-        "SKILL.md": "40a2bb78fc6fa57a08d9349923f69154bc971731b20bcf98d14f481af8fe3083"
+        "SKILL.md": "1f1ade75570cc4ed6ecac8731f30c9bd7b1669a02e7336477afcf33bdfc63762"
       },
-      "recorded": "2026-09-25",
+      "local_patch": "frontmatter metadata.loop + metadata.requires (141026 skills-split T1); nội dung thân giữ nguyên upstream",
+      "recorded": "2026-10-14",
       "source": "https://github.com/Rheinmir/orca-graph",
       "version": "3.2.1"
     },
     "orca-handover": {
       "files": {
-        "SKILL.md": "4d7751de00de746633bde7f33ce296ac0cd334eec9f90e506601bb40c18872d2"
+        "SKILL.md": "9bccde3203800a5dd1de2e38531dda4a614b66c18b60ebbf92ee2f2a7a1004bd"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "orca-issue": {
       "files": {
-        "SKILL.md": "3e472fa7eed9714a256b9a941a1a52c3c749f1340207f492be7c3590b5d37093"
+        "SKILL.md": "b11daecbf1d935622108d5be2f33963a4e60d679961f2ba56455f3e42f11ca24"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "orca-onboard": {
       "files": {
-        "SKILL.md": "ef430a1e08ff8a1f69c9e78b20da0f796e7fde837b2d367407b0e40f22402f7f",
+        "SKILL.md": "a14cc7a3e04008155cf0c44a3db3dd9f958c3d6c7a96559c2e572f87afed85ce",
         "assets/docs-site-skeleton.html": "1d89cfb39a13e254e0789e3036d9a2be40d50d088bc6d0ae57a7eefce5932bf0"
       },
-      "recorded": "2026-10-01",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "orca-sec-scans": {
       "files": {
-        "SKILL.md": "e1c706a4e1bd643e8f148d7b3c337f51ca882e4993f85c8eb3cf37a0aec88fa7"
+        "SKILL.md": "29356a73955e864be339321e105bf22a6299c467f817db297ad0dc06ae7dad56"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "orca-workflow": {
       "files": {
-        "SKILL.md": "ede1696d77e32226055c1ac8d22661e4607ecdeb1ce318fe36c0baf2b805ba35"
+        "SKILL.md": "a425c57d6c1e4b116c9c5e14920e7e1c2848789f1f74d70a4ae9de2821e87b6c"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "ovs-notes": {
       "files": {
-        "SKILL.md": "1e015ca74cd7d56fd6a5376bed596e0be9bd925eb5b67b69f18e6012f712f15d"
+        "SKILL.md": "8a7d505858e3d31afc7072c75379bf3caeea4ae12b21461c0f8c5145007a3121"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "plan": {
       "files": {
-        "SKILL.md": "6b56ed16cc211a39032bb0da543edc00fb4967756bef97a89c70196337e4113a"
+        "SKILL.md": "dcd1b458ecead605006eee3849a687ed7ca26c015aa8cfaae859284b153894a6"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "playwright-verify": {
       "files": {
-        "SKILL.md": "4a32b1d24fe1372c5799a5810703762c5576c5ebbd1c6ef37764443045403480"
+        "SKILL.md": "d2f86e2cf9d5b100f7a86b4f4eaf3d55b8f8ba40c4419e22b641642fb965e028"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "prd-grade-fe": {
       "files": {
-        "SKILL.md": "f803fc49deb3e7ee8b14ccf8f04c60ac71bec2309bdd822ecd4413143d6e6e95",
+        "SKILL.md": "06657440e84c93b3cd415c3a32f38312eb7c1f2bb4c93514ef2408b65747d439",
         "references/impeccable-audit.md": "052a2fa1c52962fdd340f6c615b7b185f9ff6ef7d737c5b879fcc1f11da8f5e4",
         "references/intake.md": "424e768222f1d6166fb02449f8cd25d347c31401f8f8487a93f7563d34a2d62c",
         "references/presets/macos-glass.design.md": "9ebfad6079fbe224b065745a1504c0dcf26b09e52ef2cc82312816540ef763d1",
@@ -931,281 +953,275 @@
         "scripts/fe-gate.sh": "77a29e080dbc81fe5d64bab89d795399abff55aa5aabb18d6ecde75f037530dd",
         "scripts/viewport-check.mjs": "faa40944739d264a724c61e8523970e2abd183e4d1dae5e6df1cfced338c0ff4"
       },
-      "recorded": "2026-09-24",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "propose": {
       "files": {
-        "SKILL.md": "82b90d933ba3ffb0bf9848e0532569310a162485fb0e26e2453c8de88a61dfc8"
+        "SKILL.md": "5110f648962a82522863bb195a1db065c2297b9d3937fcebcd351ed9163164f6"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "qc-code": {
       "files": {
-        "SKILL.md": "27e95d284c5bde6bc091bbe823cd578f88acb4240f378d79062f888bee34b316"
+        "SKILL.md": "6fd662d029a01d746053266cb9f64ed0baca9b0771bad13f2cc11408d160af7d"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "qc-uiux": {
       "files": {
-        "SKILL.md": "ca23d7ee447a6acd65c6592fc18d0966956cc665b9b4d4bc4dbd977e30cad88b",
+        "SKILL.md": "efa52381c78f8efbd8111c8e25e0594a38ebf27db5d18fb49e9be92fb8475e83",
         "references/list-control-checklist.md": "68046d11190060a99187ded96b30aa39ef9543e3446a501d7ee50648626a3110"
       },
-      "recorded": "2026-09-24",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "query": {
       "files": {
-        "SKILL.md": "7f9edc2cde94bab9561c16cd45ee74e12b1e6cdcf216d6c70c470d56696142ff"
+        "SKILL.md": "cda5cec20b2d2bd1816722389b8360a55d20197c06267f71a72405ff298db805"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "raise-issue": {
       "files": {
-        "SKILL.md": "fd7f47210661cb91078bb3ff6cf55b50400822627d83c23e1b7a80de0c674238"
+        "SKILL.md": "ee1fb75dab488000bb0890338d54a674cb822d8f363b4605fca68ee122c0d155"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "record-episode": {
       "files": {
-        "SKILL.md": "64c0aafb0162364954a2e1b8bb1f5b07a82f438a4df614e684d190b7d52f66d5"
+        "SKILL.md": "8c9539982ef31ce1751f56ad6163ef2991edadebc81f1e459599bdd3b4f54d40"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "redesign-existing-projects": {
       "adapt_mode": "external-pull",
       "category": "external",
       "files": {
-        "SKILL.md": "417219394d01c4d96af26119951df4f824b680811444491a93b37405347d4c01"
+        "SKILL.md": "ef0db8c87a6c39f5978289201ac9eedd517da30c7a826919ad69e2683454772f"
       },
-      "recorded": "2026-08-03",
+      "local_patch": "frontmatter metadata.loop + metadata.requires (141026 skills-split T1); nội dung thân giữ nguyên upstream",
+      "recorded": "2026-10-14",
       "source": "https://github.com/Leonxlnx/taste-skill"
     },
     "safe-change": {
       "files": {
-        "SKILL.md": "e7edd4f652752057995452fab2ca8f7bd4893085dec2d0699c871286bb734469"
+        "SKILL.md": "7d01b50ffd416eeb31bd7dedbb5753ca22bcbd7d02f4d0a1a9b4af62f1f47bfe"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "scroll-effects": {
       "files": {
-        "SKILL.md": "0548a0dba4a61dd94d45e484d9087b7f7df213d4bffc5b5ffad8bd4de73d0513",
+        "SKILL.md": "efe7a1bbb9fcecab589020477ae0ad2aee8658b0e20e5798e234888567845469",
         "assets/demo.html": "73a4d88615cdb47367959fd85fd2eca5bd0e549fcc240bccb14e0d50e5c7c395",
         "assets/scroll-effects.css": "d319b82dc2971f825869c94075b07ad745a49dcba42ac30fd7adfd4024229601",
         "assets/scroll-effects.js": "670b8cc07afd4b0fd61ee03ccab36b4fb3bc3f760d0d37edfeaaf4768376c760"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "ship": {
       "files": {
-        "SKILL.md": "7db25447ff680647b165d1c9cab5e85590a154096b1b620f8a8cf10b9ab15eea"
+        "SKILL.md": "11b026be48b8fd050163fc97a80b764e03125ce35069ebdc32e10d3cbcbc13bf"
       },
-      "recorded": "2026-09-20",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "skill-provenance": {
       "files": {
-        "SKILL.md": "82028b1237ac9f2cb2c02cd90db755e5083647eec215e6a65da7efa1f037ef42"
+        "SKILL.md": "29d523b890978e9bc1644e3308142a2f8f73a4978c3a124f034fca6af0ebfc8d"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "snapshot-push": {
       "files": {
-        "SKILL.md": "ef7d636cb9c643e281f427322e0fde956a37d7245f74aa59910d2ddf7b8c6eeb"
+        "SKILL.md": "d0a4f1ea412b819e753c4829a88efb39a2169b5b75d08d8e3f6d077b6c3a8c2b"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "stitch-design-taste": {
       "adapt_mode": "external-pull",
       "category": "external",
       "files": {
-        "SKILL.md": "88ffc7584a24eb72ae5f9f077379a600c7308697548ab0702c495853f01183aa"
+        "SKILL.md": "04918dd8342457cbd5105afdb30e8b4bbdfd551d92818c9296831e9fa8eb6aa9"
       },
-      "recorded": "2026-07-18",
+      "local_patch": "frontmatter metadata.loop + metadata.requires (141026 skills-split T1); nội dung thân giữ nguyên upstream",
+      "recorded": "2026-10-14",
       "source": "https://github.com/Leonxlnx/taste-skill"
     },
     "surface-coverage": {
       "files": {
-        "SKILL.md": "926c93b87c620a2f97f6cf5fd171103b5d2f41be9ad4e2951b0155502e38b8d3"
+        "SKILL.md": "dbc50d69a6d9f62da715251289d9fe4dade656f343ad0b3d41201821f9d2689b"
       },
-      "recorded": "2026-10-01",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "svg-stroke-reveal": {
       "files": {
-        "SKILL.md": "fe6b37729ed3bdaea3d44a4094ffaba2e664988708fde46a4d542150d3047a50",
+        "SKILL.md": "afdc3157781d3a78505683c13b51adff7b354fda51c548e2d17eba887edfd20a",
         "assets/demo.html": "e973d3ce380f0574452665293b4f7c54073ef6990d19b3e290cead77b023b60f",
         "assets/svg-stroke-reveal.css": "8f3f492659afcdc39e701fc87af60575ca40ba04ea134f87bd11fb4261c4298b",
         "assets/svg-stroke-reveal.js": "3a01b9427e294b3d99cd546aafdb8c9f42f8d6688f56e46577d71a58ce6bca5d"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "sync-template": {
       "files": {
-        "SKILL.md": "39c8b9637810909186808adfbc169a957ef596fab5ecbf57b2ab40ce15bbe796"
+        "SKILL.md": "e3d7b986e13ad29830ed8ff90778c9d367b17e9cc59311445359c964a27f0c0c"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "tc-run": {
       "files": {
-        "SKILL.md": "747453b717200db269d58b01fb0e3259c307ba36cf2e2d38dee7c6618c1b8d65"
+        "SKILL.md": "2928500130c792a581fdb3d7eae9eaa91b600c8946e9ae9aa3d0ec55165d8d53"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "teach-me": {
       "files": {
-        "SKILL.md": "f3fe1f9009b081149a08a670ea2a4f47c35f8013146d33d95690e9e87332c3d5"
+        "SKILL.md": "c071f1ef2ecac30b0859e2e0a2e7c34232ba6009f11998ca4bf0d359fa308c0a"
       },
-      "recorded": "2026-10-01",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "threejs-particle-morph": {
       "files": {
-        "SKILL.md": "c4d7e00d5f12b08f6587041b4081b7623f77c0055564a869aa1e5b2c8e361e1d",
+        "SKILL.md": "557a013a4a3a81798790848fb2f3c769681b847810f8cc02739077cfc0d3c056",
         "assets/demo.css": "4c2866ae8d2c8917d862559a1c6a80bab18d8e7bfb5df111af6839d85d10da54",
         "assets/demo.html": "f76a442ed2ef71cdd7242c32d051e04b944f7f54609b7cb0e58f9e5a70e89494",
         "assets/demo.js": "d10ed448ae31e6280fe6a0ab2a509140eaedc2b1337d38a73a09924366532e26"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "tidy": {
       "files": {
-        "SKILL.md": "12b0cee02eaea21422627d3fa8516a33fd28cb074f83a15a393fa162c1effb3f"
+        "SKILL.md": "fed9da45659a689e3deb35aa3b61778ca739ef59ceb5f61549f84bf75027da61"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "timeline": {
       "files": {
-        "SKILL.md": "1f92269e5d4cdda5610c282270c904286444c6dba4991d0b5805b678af037f41",
+        "SKILL.md": "8c4e744454198d4517042496659def508ff41bfb3c21f51640ea3155718dd1ce",
         "assets/timeline.css": "e501b29acd0e2964f19828caa09b4aadf4658998635fd951877907267577e622",
         "assets/timeline.html": "ec839a2017880173e19b5d13094ef349d2aca32141c6f6f8766d82cbae31a5a1",
         "assets/timeline.js": "de3261121f2c22e8785318a070a14e9685b17ffcc121d49139ae9ea0107b68b3"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "tour-guide": {
       "files": {
-        "SKILL.md": "3aa6ca48a7a865c00070d3dbc0b486b90479a2be02701937819409974189d1c3"
+        "SKILL.md": "4f1b835751b1979c2cff16b7d568ec788b4c257951c2aaa196635cf3740ad61c"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "tour-guide-supademo": {
       "files": {
-        "SKILL.md": "f4387d1ccc760b0b4b98d57072d3bf742a77f6fff0127d1ea641a3553199b31b"
+        "SKILL.md": "81bf914310a95d7bdd77b0aa3f5015832f16f12e64885a0eb736801a77869d01"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "trace-grader": {
       "files": {
-        "SKILL.md": "e4cd805345f3c5191cdd99b0fdf8194198da3e87955697547ea2f3b8f0770a0c"
+        "SKILL.md": "6af0cf7d8ebb670bd2147c404c4dba8508897de7f34aa13f3fe6b6bfd4a83d1f"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "uat-nonit-testcase": {
       "files": {
-        "SKILL.md": "7fc3b6051cc7ff661cab4b3455f1417fa880360beaf97b99378501a6c5c8d094"
+        "SKILL.md": "0ef4baeed72305979d423caeb4d37393cc79066840104e6bccddb22ed27f5a20"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "ui-kit-from-code": {
       "files": {
-        "SKILL.md": "efd8f926e93055475dc6f94777d6284bd52f34b248f743cb55850c8a535bf8fe",
+        "SKILL.md": "c5eebc6f73b7f58381a24dcbddee611c6177f5716da97a5b5a3b216786aef18a",
         "references/discover.mjs": "7281851680cd8a789f77ea6781be7234c8697ae82eb4e72b9ba5538fe594f42b",
         "references/sync-kit.py": "70b5a06f9ff664fc53034cda8d2435e39f1ddec1b7e88c6dbb5de037f6e1384a",
         "references/ui-kit-reference.html": "5ac9689830dd9194f8b27ec00f040aaf7dd1e292a4c86e55e4be17c307896204"
       },
-      "recorded": "2026-09-29",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "ui-snapshot": {
       "files": {
-        "SKILL.md": "07bb6a84c3b43ffad3035f8cd73cff1c89c12c927e6cd80d38694f60492c4c56",
+        "SKILL.md": "4b114471d7dbcf0a5b550cfa0c858a63ca72f3b118e36587a35c7c5ada806d26",
         "assets/app-skeleton.js": "312093699cbb7ce3239ce8953888076030c6e72a736b714b572d386e8117dcc8",
         "assets/template.html": "030e47d72f5e2cc54f1d004c67cf16f67545ca918c0357cdab3ca5e524a56a99",
         "scripts/build.py": "d06f79905b3514d89fa45e35809ca4648471d86cbb21d0b4fbed631a3d856241",
         "scripts/shot.mjs": "6ed4c9d2abd773ae5acac027b5448a56796df85b13a285353b3fa47155b3d8e1"
       },
-      "recorded": "2026-09-28",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "verify-before-commit": {
       "files": {
-        "SKILL.md": "25843e2038bb61ee7f2c1597b741ae749ded5a2c10a9925ebb5ce51d0e5a23c8"
+        "SKILL.md": "fb166517695887b79c95d8bdea8bf3ee9751aa331a4172dbaab992347856fc14"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "visual-qa": {
       "files": {
-        "SKILL.md": "163db7995f6257c32b94be0a3a5d92e5d0a65d46279d15109f12b81d96792d18",
+        "SKILL.md": "b78a118ab1a5e6c13b420f5969b019f399eaecf1b0dc811728f142ad0edb6fed",
         "assets/.gitignore": "4d56952b0fb13bf8f9b6c13a6d4c34a075bac3af447636a1df4335d7576e2f97",
         "assets/package-lock.json": "38e8a936bd4a4cfae70a013b1b2455a8a63cf84a28f3fb01f7008e2798a70b31",
         "assets/package.json": "7647d7f2d4459d1ffa26a19d5c5295f9104364a2a21a2c59a453e5209b56d37b",
         "assets/route-shots.mjs": "68378c3abf00cb51bda69a6dca83efb9aaa679de7ad09d470d62e55a2bb34f92"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "wayfinder": {
       "files": {
-        "SKILL.md": "1346cd5cffb65e60690b391c3df64d9df3fc1205e7944c725556ce324af3a7a9"
+        "SKILL.md": "8fdc6c041f7768cb7a3b1a876d235e8adf9813a8985ec3d40f395ab80471e34d"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "web-clone": {
       "files": {
-        "SKILL.md": "c62aafbf5cf64d2caa43e7b84fa0752eb925dc80ee1eaebc0061053017da9239"
+        "SKILL.md": "ae7fb30df871c26ad667acfae969095246db0489c895fabeacb0ce301289118b"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "web-crawl": {
       "files": {
-        "SKILL.md": "698efef7464586fd887bf173544ad22e6ae94b2069d0e9af9b3efcd5300de66c"
+        "SKILL.md": "a1d943bb691fc2eaab2e4a41904e26cc18a115a0d1ee759a84456991d8cb9570"
       },
-      "recorded": "2026-09-19",
-      "source": "local-authored"
-    },
-    "whales-storying": {
-      "files": {
-        "SKILL.md": "2a7803178e425a517f903aada54babe07537aad33dda8edcceedc0e2c115da36",
-        "fleet.json": "bc382609ae2c127cc52f75cdc6be8e4daf7122c92847a1f046de4daec6842e6b"
-      },
-      "recorded": "2026-09-25",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "wiki-room": {
       "files": {
-        "SKILL.md": "bb367a3b524642586ae6f3ca852cd91f4f5ebdc4bc5f32437b075c6103aefc2c"
+        "SKILL.md": "a5ef71086ee64d63fde2690e492d510c33f1e2bdff2d18c4ce8ecc1ee0f46977"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     },
     "wikieval": {
       "files": {
-        "SKILL.md": "c5ad1cfa5bb44a2c8a59e2dd9cd20ddd8a7bedfabc4dd3a46529c9f6390d6d50"
+        "SKILL.md": "bcb9ca7e8cdd07253200b5ad3206ae4d26c912dacec899fec9797d30502aaa69"
       },
-      "recorded": "2026-09-19",
+      "recorded": "2026-10-14",
       "source": "local-authored"
     }
   }

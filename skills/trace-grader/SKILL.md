@@ -15,6 +15,11 @@ description: >-
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: orchestrate
+  requires:
+    harness: ">=1.3.127"
+    bin: [python3]
+    scripts: [harness/scripts/trace-grader.py]
 ---
 
 # Skill: trace-grader

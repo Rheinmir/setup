@@ -4,6 +4,11 @@ description: Daily propose → gate → dispatch workflow with Orca
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: orchestrate
+  requires:
+    harness: ">=1.3.127"
+    bin: [agy, curl, docker, gh, opencode, orca, python3]
+    scripts: [harness/poc-vendor-neutral/bin/pull-gate-sweep.sh, harness/scripts/archetype.py, harness/scripts/code-logger.py, harness/scripts/orca-reconcile.py]
 ---
 
 # Skill: orca-workflow

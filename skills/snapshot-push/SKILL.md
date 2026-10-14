@@ -5,6 +5,7 @@ description: Push bonbon-ai outer repo as full snapshot, including be/ and fe/ c
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: utils
 ---
 
 # Skill: snapshot-push

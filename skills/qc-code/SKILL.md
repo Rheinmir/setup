@@ -11,6 +11,11 @@ description: >-
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: dev-loop
+  requires:
+    harness: ">=1.3.127"
+    bin: [python3]
+    scripts: [harness/scripts/grounding-check.py, harness/scripts/qc-regression.py]
 ---
 
 # Skill: qc-code

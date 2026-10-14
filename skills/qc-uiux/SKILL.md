@@ -11,6 +11,11 @@ description: >-
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: dev-loop
+  requires:
+    harness: ">=1.3.127"
+    bin: [node, python3]
+    scripts: [fdk/tools/build-design-showcase.py, fdk/tools/button-harmony.mjs, fdk/tools/html-visual-gate.mjs, harness/scripts/qc-regression.py]
 ---
 
 # Skill: qc-uiux

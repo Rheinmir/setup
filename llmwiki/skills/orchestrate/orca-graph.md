@@ -4,6 +4,11 @@ description: Phân việc dạng ĐỒ THỊ PHỤ THUỘC trên PLAN.md — tr�
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.1.0"
+  loop: orchestrate
+  requires:
+    harness: ">=1.3.127"
+    bin: [python3]
+    scripts: [fdk/tools/build-control-room.py, fdk/tools/graph-atlas.py, fdk/tools/graph-viz.py, harness/scripts/orca-graph.py]
 ---
 
 # Skill: orca-graph

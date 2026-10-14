@@ -4,6 +4,7 @@ description: "Nén TOÀN BỘ UI/UX của một frontend (React/Next.js/Vue + Ta
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: dev-loop
 ---
 
 # Skill: ui-snapshot

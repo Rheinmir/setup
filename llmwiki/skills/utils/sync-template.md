@@ -5,6 +5,11 @@ description: Sync structural improvements between project and master template re
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: utils
+  requires:
+    harness: ">=1.3.127"
+    bin: [curl, python3]
+    scripts: [harness/scripts/health-check.py, harness/scripts/okf-check.py, harness/scripts/sync-template.py]
 ---
 
 # Skill: sync-template

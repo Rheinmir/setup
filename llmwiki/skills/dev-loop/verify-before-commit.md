@@ -4,6 +4,11 @@ description: Gate every commit — typecheck, lint, smoke, then promote draft to
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: dev-loop
+  requires:
+    harness: ">=1.3.127"
+    bin: [python3]
+    scripts: [harness/scripts/code-logger.py, harness/scripts/qc-regression.py, harness/validators/task_lifecycle.py]
 ---
 
 # Skill: verify-before-commit

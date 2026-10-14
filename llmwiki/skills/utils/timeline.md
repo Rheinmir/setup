@@ -4,6 +4,7 @@ description: Component timeline dọc (mốc theo ngày, cuộn-hiện dần b�
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: utils
 ---
 
 # Skill: timeline

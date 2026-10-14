@@ -5,6 +5,7 @@ description: Quét N session Claude Code gần nhất, distill best practices th
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: orchestrate
 ---
 
 # Skill: orca-eval

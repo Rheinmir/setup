@@ -4,6 +4,11 @@ description: "Kiểm 'phủ hết' bằng diff với BỀ MẶT THẬT đọc t�
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: dev-loop
+  requires:
+    harness: ">=1.3.127"
+    bin: [python3]
+    scripts: [fdk/tools/surface-coverage.py]
 ---
 
 # Skill: surface-coverage

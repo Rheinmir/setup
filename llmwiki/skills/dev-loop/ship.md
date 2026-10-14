@@ -4,6 +4,12 @@ description: "Workflow chốt PUSH/RELEASE/PR/MR — gọi khi user nhắc 'rele
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.1.0"
+  loop: dev-loop
+  requires:
+    harness: ">=1.3.127"
+    bin: [python3]
+    scripts: [fdk/tools/ci-local.py, fdk/tools/medic.py, harness/scripts/repo_role.py]
+    framework_scripts: [harness/scripts/fresh-install-smoke.sh]
 ---
 
 # Skill: ship

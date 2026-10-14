@@ -1,6 +1,8 @@
 ---
 name: industrial-brutalist-ui
 description: Raw mechanical interfaces fusing Swiss typographic print with military terminal aesthetics. Rigid grids, extreme type scale contrast, utilitarian color, analog degradation effects. For data-heavy dashboards, portfolios, or editorial sites that need to feel like declassified blueprints.
+metadata:
+  loop: utils
 ---
 
 > **Đứng trên nền [[design-foundation]]** — 6 discipline + slop-test của hallmark là SÀN chung (không thương lượng); skill này thêm *flavour* lên trên, không thay sàn.

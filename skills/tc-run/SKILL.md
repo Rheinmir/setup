@@ -4,6 +4,11 @@ description: Có MỘT file test case đầy đủ (.xlsx nhiều sheet, cột T
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: orchestrate
+  requires:
+    harness: ">=1.3.127"
+    bin: [orca, python3]
+    scripts: [harness/scripts/orca-graph.py, harness/scripts/tc-xlsx.py]
 ---
 
 # Skill: tc-run — từ file test case đầy đủ đến report từng lô

@@ -4,6 +4,7 @@ description: Build an interactive "cursor-animated walkthrough" page on top of t
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: utils
 ---
 
 # Skill: cursor-animated-sites

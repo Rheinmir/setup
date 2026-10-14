@@ -4,6 +4,9 @@ description: Circle-reveal (giọt nước rơi + crest-glow liquid-glass) khi c
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: utils
+  requires:
+    bin: [node, npm]
 ---
 
 # Skill: dark-mode-maker

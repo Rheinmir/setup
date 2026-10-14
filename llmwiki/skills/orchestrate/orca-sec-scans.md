@@ -4,6 +4,11 @@ description: Quét bảo mật mã nguồn bằng Trivy — tự check/cài Triv
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: orchestrate
+  requires:
+    harness: ">=1.3.127"
+    bin: [curl, python3]
+    scripts: [fdk/tools/supply-watch.py]
 ---
 
 # Skill: orca-sec-scans

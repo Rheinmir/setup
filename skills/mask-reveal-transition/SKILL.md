@@ -4,6 +4,7 @@ description: Chuyển/lộ ảnh qua mask hữu cơ dạng vòng loang mực (in
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: utils
 ---
 
 # Skill: mask-reveal-transition

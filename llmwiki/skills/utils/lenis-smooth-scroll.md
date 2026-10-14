@@ -4,6 +4,7 @@ description: Thiết lập Lenis (physics-based smooth scroll) cho TOÀN TRANG +
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: utils
 ---
 
 # Skill: lenis-smooth-scroll

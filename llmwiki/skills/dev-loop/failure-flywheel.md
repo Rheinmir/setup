@@ -4,6 +4,11 @@ description: Capture each agent failure, bucket and count it deterministically, 
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: dev-loop
+  requires:
+    harness: ">=1.3.127"
+    bin: [python3]
+    scripts: [harness/scripts/code-logger.py, harness/scripts/failure-flywheel.py, harness/scripts/flywheel.py]
 ---
 
 # Skill: failure-flywheel

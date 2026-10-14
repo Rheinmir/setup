@@ -5,6 +5,11 @@ description: Deterministic guardrailed agent-loop driver — wrap any step with 
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: dev-loop
+  requires:
+    harness: ">=1.3.127"
+    bin: [python3]
+    scripts: [harness/scripts/loop-runner.py]
 ---
 
 # Skill: loop-runner

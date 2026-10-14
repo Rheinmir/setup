@@ -16,6 +16,11 @@ description: >-
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: dev-loop
+  requires:
+    harness: ">=1.3.127"
+    bin: [node, python3]
+    scripts: [fdk/tools/br-contract.py, fdk/tools/br-fill.py, fdk/tools/br-find.py, fdk/tools/br-prompts.py, fdk/tools/br-queue.py, fdk/tools/br-rail.py, fdk/tools/br-revise.py, fdk/tools/br-run.py, fdk/tools/br-sync.py, fdk/tools/build-line-status.py, fdk/tools/checkpoint.py, fdk/tools/frame-lint.py, fdk/tools/medic.py, harness/scripts/council.py, harness/scripts/loop-runner.py]
 ---
 
 # Skill: br — dây chuyền sản xuất Ralph (BR-kỹ → frames → loop có harness)

@@ -9,6 +9,11 @@ description: >-
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: utils
+  requires:
+    harness: ">=1.3.127"
+    bin: [curl, python3]
+    scripts: [harness/poc-vendor-neutral/bin/harness-events.py, harness/poc-vendor-neutral/bin/llmwiki-validate.py, harness/poc-vendor-neutral/demo.sh]
 ---
 
 # Skill: harness-tour

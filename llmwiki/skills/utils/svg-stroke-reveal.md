@@ -4,6 +4,7 @@ description: Vẽ dần nét SVG (stroke-draw) theo cuộn trang hoặc khi vào
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: utils
 ---
 
 # Skill: svg-stroke-reveal

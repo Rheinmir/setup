@@ -4,6 +4,7 @@ description: Reasoning protocol distilled from Claude Fable 5 — Floor check, m
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: utils
 ---
 
 # Skill: fable5

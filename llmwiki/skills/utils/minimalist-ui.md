@@ -1,6 +1,8 @@
 ---
 name: minimalist-ui
 description: Clean editorial-style interfaces. Warm monochrome palette, typographic contrast, flat bento grids, muted pastels. No gradients, no heavy shadows.
+metadata:
+  loop: utils
 ---
 
 > **Đứng trên nền [[design-foundation]]** — 6 discipline + slop-test của hallmark là SÀN chung (không thương lượng); skill này thêm *flavour* lên trên, không thay sàn.

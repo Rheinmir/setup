@@ -4,6 +4,7 @@ description: Map all callers and dependents of a symbol before modifying shared 
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: dev-loop
 ---
 
 # Skill: impact-check

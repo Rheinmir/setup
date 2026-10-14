@@ -4,6 +4,9 @@ description: "Raise một ISSUE đầy đủ bối cảnh vào ledger local (dra
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: utils
+  requires:
+    bin: [opencode]
 ---
 
 # Skill: raise-issue

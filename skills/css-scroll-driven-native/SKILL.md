@@ -4,6 +4,7 @@ description: Hiệu ứng cuộn trang thuần CSS qua Native CSS Scroll-Driven 
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: utils
 ---
 
 # Skill: css-scroll-driven-native

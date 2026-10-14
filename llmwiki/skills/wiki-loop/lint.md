@@ -4,6 +4,11 @@ description: Periodic wiki health check — orphans, missing links, contradictio
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: wiki-loop
+  requires:
+    harness: ">=1.3.127"
+    bin: [python3]
+    scripts: [fdk/tools/skill-usage.py, harness/scripts/claim-receipts.py, harness/scripts/decision-liveness.py, harness/scripts/skill-health.py, harness/scripts/tidy.py, harness/scripts/unknown-ledger.py, harness/scripts/wiki-sync.py]
 ---
 
 # Skill: lint

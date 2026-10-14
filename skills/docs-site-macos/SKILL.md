@@ -16,6 +16,12 @@ description: >
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: utils
+  requires:
+    harness: ">=1.3.127"
+    bin: [node, npx, python3]
+    scripts: [fdk/tools/build-design-showcase.py, fdk/tools/frontend-antipattern.py, fdk/tools/html-slop-fix.py, fdk/tools/html-visual-gate.mjs, fdk/tools/html_font.py, fdk/tools/html_shell.py]
+    framework_scripts: [fdk/tools/build-overstack-docs.py]
 ---
 
 # macOS Docs Site Builder

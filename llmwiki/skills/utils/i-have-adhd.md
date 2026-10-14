@@ -4,6 +4,7 @@ description: Shape output for a reader with ADHD. Use this skill whenever respon
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: utils
 ---
 
 # Skill: i-have-adhd

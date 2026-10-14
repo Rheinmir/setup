@@ -4,6 +4,7 @@ description: Orient nhanh vào dự án đang chạy đã có llmwiki — read-o
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: utils
 ---
 
 # Skill: join-project

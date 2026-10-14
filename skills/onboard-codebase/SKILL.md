@@ -4,6 +4,7 @@ description: Deep codebase analysis — populate wiki with architecture, concept
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: dev-loop
 ---
 
 # Skill: onboard-codebase

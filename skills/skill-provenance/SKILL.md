@@ -5,6 +5,11 @@ description: Ghi và kiểm provenance (nguồn + sha256 checksum) cho skill —
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: dev-loop
+  requires:
+    harness: ">=1.3.127"
+    bin: [python3]
+    scripts: [fdk/tools/skill-provenance.py]
 ---
 
 # Skill: skill-provenance

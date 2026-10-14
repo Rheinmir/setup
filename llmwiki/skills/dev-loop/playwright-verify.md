@@ -4,6 +4,7 @@ description: "Cài + dùng Playwright bằng standalone .mjs script (không qua 
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: dev-loop
 ---
 
 # Skill: playwright-verify

@@ -13,6 +13,9 @@ description: >
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: orchestrate
+  requires:
+    bin: [curl, docker, python3]
 ---
 
 # Jenkins-agent L3 deploy (no SSH)

@@ -4,6 +4,7 @@ description: Process new file in llmwiki/raw/ and distill into wiki pages
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: wiki-loop
 ---
 
 # Skill: ingest

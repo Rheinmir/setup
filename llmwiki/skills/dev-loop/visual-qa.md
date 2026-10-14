@@ -11,6 +11,9 @@ description: >-
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: dev-loop
+  requires:
+    bin: [node]
 ---
 
 # Skill: visual-qa — workflow tự-kiểm thị giác (capture → diff → judge → fix → re-verify)

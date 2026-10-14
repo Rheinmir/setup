@@ -4,6 +4,11 @@ description: Synthesize answer from wiki; persist new insights as wiki entries. 
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: wiki-loop
+  requires:
+    harness: ">=1.3.127"
+    bin: [python3]
+    scripts: [harness/scripts/mem-rank.py, harness/scripts/query-log.py, harness/scripts/wiki-graph.py, harness/scripts/wiki-sync.py]
 ---
 
 # Skill: query

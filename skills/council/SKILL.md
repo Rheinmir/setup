@@ -18,6 +18,11 @@ description: >-
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: orchestrate
+  requires:
+    harness: ">=1.3.127"
+    bin: [orca, python3]
+    scripts: [harness/scripts/council.py]
 ---
 
 # Skill: council

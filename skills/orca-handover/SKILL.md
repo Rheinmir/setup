@@ -4,6 +4,11 @@ description: Sinh MỘT file .md bàn giao đủ dày để một phiên KHÁC (
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: orchestrate
+  requires:
+    harness: ">=1.3.127"
+    bin: [python3]
+    scripts: [fdk/tools/build-capabilities.py, fdk/tools/medic.py]
 ---
 
 # Skill: orca-handover

@@ -5,6 +5,12 @@ description: Front-door on-demand cho phát triển framework HOẶC distill/aut
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: utils
+  requires:
+    harness: ">=1.3.127"
+    bin: [python3]
+    scripts: [fdk/tools/ci-local.py, fdk/tools/skill-reuse.py, fdk/tools/swh-lint.py, harness/scripts/overstack_paths.py]
+    framework_scripts: [fdk/tools/build-overstack-docs.py, fdk/tools/new-skill.py, fdk/tools/sync-skill.sh]
 ---
 
 # Skill: fdk — Framework Dev Kit (self-contained)

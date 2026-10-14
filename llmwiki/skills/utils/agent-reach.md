@@ -19,6 +19,9 @@ description: >
 metadata:
   openclaw:
     homepage: https://github.com/Panniantong/Agent-Reach
+  loop: utils
+  requires:
+    bin: [curl, gh]
 ---
 
 # Agent Reach — internet capability router

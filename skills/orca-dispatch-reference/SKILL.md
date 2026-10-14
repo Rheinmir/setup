@@ -4,6 +4,9 @@ description: Reference for Antigravity/OpenCode dispatch, skill installation, Ag
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: orchestrate
+  requires:
+    bin: [agy, curl, opencode, orca]
 ---
 
 # Orca Dispatch Reference

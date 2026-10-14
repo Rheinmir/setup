@@ -8,6 +8,11 @@ requires:
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: orchestrate
+  requires:
+    harness: ">=1.3.127"
+    bin: [agy, npx, opencode, python3]
+    scripts: [fdk/tools/surface-coverage.py, harness/scripts/dep-health.py]
 ---
 
 # orca-onboard

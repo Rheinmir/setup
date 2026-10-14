@@ -4,6 +4,7 @@ description: When a task is blocked by missing or unverified information (an und
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: dev-loop
 ---
 
 # Skill: build-now-adapt-later

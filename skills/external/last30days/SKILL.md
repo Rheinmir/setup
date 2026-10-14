@@ -58,6 +58,7 @@ metadata:
       - web-search
       - ai-skill
       - clawhub
+  loop: utils
 ---
 
 # STEP 0: STALE-CLONE SELF-CHECK — RUN BEFORE READING BELOW

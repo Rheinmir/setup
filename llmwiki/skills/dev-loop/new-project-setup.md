@@ -5,6 +5,9 @@ description: Deploy llmwiki từ đầu vào project mới — template pull, sk
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: dev-loop
+  requires:
+    bin: [curl]
 ---
 
 # Skill: new-project-setup

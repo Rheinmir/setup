@@ -4,6 +4,11 @@ description: "Mở room (subagent 1 tầng) nạp chi tiết wiki khi context ph
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: wiki-loop
+  requires:
+    harness: ">=1.3.127"
+    bin: [python3]
+    scripts: [harness/scripts/mem-rank.py]
 ---
 
 # Skill: wiki-room

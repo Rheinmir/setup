@@ -4,6 +4,7 @@ description: Lưới ảnh WebGL (Three.js) cuộn/kéo VÔ HẠN qua coordinate
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: utils
 ---
 
 # Skill: infinite-webgl-grid

@@ -5,6 +5,12 @@ description: "Given a freshly-cloned external repo/tool, run clone→explore→v
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: dev-loop
+  requires:
+    harness: ">=1.3.127"
+    bin: [python3]
+    scripts: [fdk/tools/medic.py, harness/poc-vendor-neutral/bin/harness-events.py, harness/poc-vendor-neutral/bin/llmwiki-validate.py, harness/poc-vendor-neutral/bootstrap.sh, harness/poc-vendor-neutral/demo.sh, harness/poc-vendor-neutral/gen-converters.py, harness/poc-vendor-neutral/install.sh, harness/poc-vendor-neutral/test-broad.sh, harness/scripts/dym-sync.py]
+    framework_scripts: [fdk/tools/fdk-kit.sh, fdk/tools/new-skill.py, harness/scripts/fdk-gate.py, harness/scripts/fresh-install-smoke.sh, harness/scripts/install-harness.sh, harness/scripts/sync-skills.py]
 ---
 
 # Skill: doyourmagic

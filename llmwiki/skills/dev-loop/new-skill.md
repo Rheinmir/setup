@@ -5,6 +5,12 @@ description: Scaffold a new skill into both publish trees at once — skills/<na
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: dev-loop
+  requires:
+    harness: ">=1.3.127"
+    bin: [python3]
+    scripts: [fdk/tools/skill-reuse.py, fdk/tools/swh-lint.py]
+    framework_scripts: [fdk/tools/new-skill.py, harness/scripts/skill-registry.py, harness/scripts/sync-skills.py]
 ---
 
 # Skill: new-skill

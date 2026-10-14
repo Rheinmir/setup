@@ -9,6 +9,7 @@ description: >-
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: utils
 ---
 
 # UAT Test-case Builder cho người dùng NON-IT

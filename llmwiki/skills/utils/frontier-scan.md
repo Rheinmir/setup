@@ -5,6 +5,7 @@ description: "Quét biên giới agent-framework 30 ngày qua và đối chiếu
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: utils
 ---
 
 # Skill: frontier-scan

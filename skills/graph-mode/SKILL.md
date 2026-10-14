@@ -4,6 +4,7 @@ description: Bật luật chứng cứ evidence-chain (R19) cho phần CHAT — 
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: utils
 ---
 
 # Skill: graph-mode

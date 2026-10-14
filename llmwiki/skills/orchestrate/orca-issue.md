@@ -4,6 +4,7 @@ description: Vòng xử lý SỰ CỐ first-class — dùng khi có bug, lỗi r
 metadata:
   design-standard: "solid-what-how/1"
   contract-version: "1.0.0"
+  loop: orchestrate
 ---
 
 # Skill: orca-issue — vòng xử lý sự cố
