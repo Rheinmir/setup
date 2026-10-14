@@ -69,9 +69,9 @@ services:
     profiles: ["tunnel"]
 
   # Phát hành bản ĐỌC lên Cloudflare Workers (profile `worker`, chạy một lần rồi thoát): cùng ảnh overstack-mcp (đã có node,
-  # skill clone, catalog), gom assets → wrangler deploy → secret bearer → curl /healthz. Ba biến dưới do hostops bơm cho đúng
-  # một lần `compose up` từ két của devops-agent (stack_deploy creds: deploy-cloudflare-api-token · deploy-cloudflare-account-id ·
-  # deploy-overstack-mcp-token) — không nằm trong .env. Gọi: stack_deploy {stack:"overstack-mcp", services:["worker-deploy"], creds:[…]}
+  # skill clone, catalog), gom assets → wrangler deploy --domain → (secret bearer) → curl /healthz. Biến dưới do hostops bơm cho
+  # đúng một lần `compose up` từ két của devops-agent (stack_deploy creds: deploy-cloudflare-api-token bắt buộc; account id tự suy;
+  # deploy-overstack-mcp-token tuỳ chọn) — không nằm trong .env. Gọi: stack_deploy {stack:"overstack-mcp", services:["worker-deploy"], creds:[…]}
   # hoặc flow `worker_release` của devops-agent. Chạy tay: CLOUDFLARE_API_TOKEN=… CLOUDFLARE_ACCOUNT_ID=… docker compose … up worker-deploy
   worker-deploy:
     image: overstack-mcp:latest
@@ -88,6 +88,7 @@ services:
       CLOUDFLARE_API_TOKEN: ${CLOUDFLARE_API_TOKEN:-}
       CLOUDFLARE_ACCOUNT_ID: ${CLOUDFLARE_ACCOUNT_ID:-}
       OVERSTACK_MCP_TOKEN: ${OVERSTACK_MCP_TOKEN:-}
+      OVERSTACK_WORKER_DOMAIN: ${OVERSTACK_WORKER_DOMAIN-skills.giatbh.io.vn}
       WRANGLER_SEND_METRICS: "false"
       CI: "1"
       HOME: /tmp

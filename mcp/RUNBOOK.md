@@ -160,20 +160,20 @@ claude mcp add --transport http overstack https://overstack-mcp.<account>.worker
 ### 8b. Qua devops-agent (két giữ token, không máy dev nào cầm)
 
 Service một-lần `worker-deploy` (profile `worker`, `docker-compose.stack.yml`) chạy `mcp/scripts/worker-deploy.sh` trong ảnh
-overstack-mcp trên host; hostops bơm ba biến từ két của devops-agent cho đúng một lần `compose up` (`stack_deploy creds:[…]`,
-nhánh devops-agent `feat/cf-worker-deploy`). Chuẩn bị một lần trên devops-agent (UI tab Két / CLI):
+overstack-mcp trên host; hostops bơm biến từ két của devops-agent cho đúng một lần `compose up` (`stack_deploy creds:[…]`,
+đã chạy trên k8s2 từ 14/10). Chỉ MỘT cred bắt buộc: account id tự suy từ token, tên miền mặc định `skills.giatbh.io.vn`
+(`--domain`, bản ghi DNS tunnel cũ bị thay), không bearer = đọc công khai. Chuẩn bị một lần trên devops-agent (UI tab Két / CLI):
 
 ```sh
 # token Cloudflare: dash.cloudflare.com → My Profile → API Tokens → Create → mẫu "Edit Cloudflare Workers"
 #   (Workers Scripts:Edit, Account Settings:Read; thêm Zone DNS:Edit + Workers Routes:Edit nếu dùng tên miền riêng)
+#   KHÔNG đặt Client IP Address Filtering — host deploy (k8s2) ra Internet bằng IP khác máy dev; token khoá IP bị từ chối.
 cred-set deploy-cloudflare-api-token  <token>      --kind api-key --note "Workers deploy overstack-mcp"
-cred-set deploy-cloudflare-account-id <account id> --kind other
-cred-set deploy-overstack-mcp-token   "$(openssl rand -hex 32)" --kind token --note "bearer /mcp của Worker"
 asset-upsert --kind service --name overstack-mcp --facts repo=https://github.com/Rheinmir/setup,ref=orca
 ```
 
 Mỗi lần phát hành: `flow-run worker_release --params asset=overstack-mcp` (hoặc hỏi agent "đẩy overstack-mcp lên cloudflare
 workers") → duyệt 2 bước (fetch, deploy) → log tail có URL `*.workers.dev` và kết quả `/healthz`. Chạy tay trên host:
-`CLOUDFLARE_API_TOKEN=… CLOUDFLARE_ACCOUNT_ID=… OVERSTACK_MCP_TOKEN=… docker compose -f docker-compose.stack.yml -p overstack-mcp up --build worker-deploy`.
+`CLOUDFLARE_API_TOKEN=… [CLOUDFLARE_ACCOUNT_ID=…] [OVERSTACK_MCP_TOKEN=…] [OVERSTACK_WORKER_DOMAIN=] docker compose -f docker-compose.stack.yml -p overstack-mcp up --build worker-deploy`.
 - Giới hạn: Free 10 ms CPU/request — `skill_find` BM25 trên 106 skill đo ≈ vài ms; vượt thì bật Workers Paid (5 USD/tháng, 30 s CPU).
 
