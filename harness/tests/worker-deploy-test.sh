@@ -13,12 +13,12 @@ mkdir -p "$T/bin"
 # curl giả: /accounts trả theo $ACCOUNTS (one|two|denied); /healthz trả theo $HEALTH (up|down)
 cat > "$T/bin/curl" <<'C'
 #!/usr/bin/env bash
-url="${@: -1}"; echo "curl $url" >> "$LOG"
+url="${@: -1}"; echo "curl $url" >> "$LOG"; F=0; for a in "$@"; do case "$a" in -*f*) [ "${a#--}" = "$a" ] && F=1;; esac; done
 case "$url" in
   */accounts*) case "$ACCOUNTS" in
       one) echo '{"success":true,"result":[{"id":"acc111","name":"me"}]}';;
       two) echo '{"success":true,"result":[{"id":"a1"},{"id":"a2"}]}';;
-      *)   echo '{"success":false,"errors":[{"code":9109,"message":"Cannot use the access token from location"}]}';; esac;;
+      *)   [ "$F" = 1 ] && exit 22; echo '{"success":false,"errors":[{"code":9109,"message":"Cannot use the access token from location"}]}';; esac;;
   */healthz) [ "$HEALTH" = up ] && echo '{"ok":true,"mode":"read"}' || exit 22;;
   *) exit 6;;
 esac
@@ -38,7 +38,7 @@ rc=$(run CLOUDFLARE_API_TOKEN=tok ACCOUNTS=one HEALTH=up)
 grep -q "wrangler deploy -c worker/wrangler.jsonc --domain skills.giatbh.io.vn acct=acc111" "$T/log" && [ "$rc" = 0 ] \
   && grep -q "curl https://skills.giatbh.io.vn/healthz" "$T/log" && ok "(1) một cred: account suy ra, --domain, healthz, rc 0" || { no "(1) rc=$rc"; cat "$T/log" "$T/out"; }
 rc=$(run CLOUDFLARE_API_TOKEN=tok ACCOUNTS=denied HEALTH=up)
-[ "$rc" = 4 ] && ! grep -q "^wrangler" "$T/log" && grep -q "từ chối token" "$T/out" && ok "(2) token bị từ chối → dừng trước deploy, rc 4" || { no "(2) rc=$rc"; cat "$T/out"; }
+[ "$rc" = 4 ] && ! grep -q "^wrangler" "$T/log" && grep -q "từ chối token.*Cannot use the access token from location" "$T/out" && ok "(2) token bị từ chối → dừng trước deploy, rc 4, in lý do của Cloudflare" || { no "(2) rc=$rc"; cat "$T/out"; }
 rc=$(run CLOUDFLARE_API_TOKEN=tok ACCOUNTS=two HEALTH=up)
 [ "$rc" = 4 ] && grep -q "2 account" "$T/out" && ! grep -q "^wrangler" "$T/log" && ok "(3a) 2 account → đòi CLOUDFLARE_ACCOUNT_ID" || { no "(3a) rc=$rc"; cat "$T/out"; }
 rc=$(run CLOUDFLARE_API_TOKEN=tok CLOUDFLARE_ACCOUNT_ID=a2 ACCOUNTS=two HEALTH=up)

@@ -16,7 +16,7 @@ CFG=worker/wrangler.jsonc
 DOMAIN="${OVERSTACK_WORKER_DOMAIN-skills.giatbh.io.vn}"
 if [ -z "${CLOUDFLARE_ACCOUNT_ID:-}" ]; then
   echo "→ account id (suy từ token)"
-  CLOUDFLARE_ACCOUNT_ID=$(curl -fsS --max-time 20 -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "$CF_API/accounts?per_page=5" | node -e '
+  CLOUDFLARE_ACCOUNT_ID=$(curl -sS --max-time 20 -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "$CF_API/accounts?per_page=5" | node -e '
     let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const d=JSON.parse(s);
       if(!d.success){console.error("✗ Cloudflare từ chối token: "+JSON.stringify(d.errors));process.exit(4)}
       if(d.result.length!==1){console.error("✗ token thấy "+d.result.length+" account — đặt CLOUDFLARE_ACCOUNT_ID");process.exit(4)}
