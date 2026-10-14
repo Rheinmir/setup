@@ -118,8 +118,13 @@ STEPS = [
 
 
 def run(root: Path, cmd):
+    # Chạy trong git hook (pre-push), git export GIT_DIR/GIT_INDEX_FILE… → rò vào step, khiến
+    # self-test dựng repo tạm (git -C /tmp/x commit) ghi nhầm repo thật và vỡ. Gỡ GIT_* local-env.
+    env = {k: v for k, v in os.environ.items()
+           if not (k.startswith("GIT_") and k not in ("GIT_AUTHOR_NAME", "GIT_AUTHOR_EMAIL",
+                                                      "GIT_COMMITTER_NAME", "GIT_COMMITTER_EMAIL"))}
     try:
-        p = subprocess.run(cmd, cwd=root, capture_output=True, text=True, timeout=120)
+        p = subprocess.run(cmd, cwd=root, capture_output=True, text=True, timeout=120, env=env)
         err = (p.stderr or p.stdout or "").strip().splitlines()
         return p.returncode, (err[0][:90] if err else "")
     except FileNotFoundError:

@@ -45,4 +45,4 @@ PRD đã lên v1.1 ngày 20/09/2026, thêm §22–30 (edge có lý do, resource 
 ## Origin
 
 - Nguồn thô: `llmwiki/raw/Reprise-Graph-Engine-Full-Cycle-PRD.md` (user đưa ngày 12/09/2026, yêu cầu "triển khai xong PRD thì dùng").
-- Triển khai: PLAN `sources/draft/120926-orca-graph-v2-PLAN.md`, graph `wiki/graph/120926-orca-graph-v2.graph.json`, concept [[orca-graph]], quyết định [[ADR-018-orca-graph-file-based-graph-engine]].
+- Triển khai: PLAN `sources/draft/120926-orca-graph-v2-PLAN.md`, graph `wiki/graph/120926-orca-graph-v2.graph.json`, concept orca-graph (fdk/wiki), quyết định ADR-018-orca-graph-file-based-graph-engine (fdk/wiki).

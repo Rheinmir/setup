@@ -8,7 +8,7 @@ timestamp: 2026-09-20
 
 # PLAN 200926 — orca-graph v3
 
-Bối cảnh: PRD Reprise Graph Engine lên v1.1 (nguồn [[200926-reprise-graph-engine-prd-v11]]). §30.3 của PRD khuyên thứ tự áp dụng đầu tiên: audit cạnh, item manifest, identity reducer, trên fixture tất định. PLAN này nhận đúng phần nằm trong tầm một tool file-based một máy ([[ADR-018-orca-graph-file-based-graph-engine]]) và chạy bằng chính orca-graph (dogfood như bản v2).
+Bối cảnh: PRD Reprise Graph Engine lên v1.1 (nguồn [[200926-reprise-graph-engine-prd-v11]]). §30.3 của PRD khuyên thứ tự áp dụng đầu tiên: audit cạnh, item manifest, identity reducer, trên fixture tất định. PLAN này nhận đúng phần nằm trong tầm một tool file-based một máy (ADR-018-orca-graph-file-based-graph-engine (fdk/wiki)) và chạy bằng chính orca-graph (dogfood như bản v2).
 
 User chốt ngày 20/09/2026: (1) không cần ép nhỏ gọn, chỉ cần chạy đúng kế hoạch; (2) module graph tách HẲN sang repo riêng để theo dõi và eval được; (3) thêm được node vào graph khi user yêu cầu; (4) install hiện option đã tick sẵn, Enter là kéo đủ.
 
