@@ -15,12 +15,22 @@ CF_API="${CF_API:-https://api.cloudflare.com/client/v4}"
 CFG=worker/wrangler.jsonc
 DOMAIN="${OVERSTACK_WORKER_DOMAIN-skills.giatbh.io.vn}"
 if [ -z "${CLOUDFLARE_ACCOUNT_ID:-}" ]; then
+  # token "Edit Cloudflare Workers" không phải lúc nào cũng đọc được /accounts → thử lần lượt /accounts, /memberships,
+  # rồi zone của tên miền riêng (Zone DNS:Edit đủ để thấy zone, zone mang account.id). Không -f: cần thân lỗi để in lý do.
   echo "→ account id (suy từ token)"
-  CLOUDFLARE_ACCOUNT_ID=$(curl -sS --max-time 20 -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "$CF_API/accounts?per_page=5" | node -e '
-    let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const d=JSON.parse(s);
-      if(!d.success){console.error("✗ Cloudflare từ chối token: "+JSON.stringify(d.errors));process.exit(4)}
-      if(d.result.length!==1){console.error("✗ token thấy "+d.result.length+" account — đặt CLOUDFLARE_ACCOUNT_ID");process.exit(4)}
-      console.log(d.result[0].id)})') || { echo "✗ không suy được account id" >&2; exit 4; }
+  pick='let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{let d;try{d=JSON.parse(s)}catch{d={success:false,errors:[s.slice(0,200)]}}
+    if(!d.success){console.error("  · "+process.argv[1]+": Cloudflare từ chối token: "+JSON.stringify(d.errors));process.exit(5)}
+    const ids=[...new Set((d.result||[]).map(r=>process.argv[1]==="accounts"?r.id:r.account&&r.account.id).filter(Boolean))];
+    if(ids.length===1){console.log(ids[0]);return}
+    console.error("  · "+process.argv[1]+": token thấy "+ids.length+" account");process.exit(ids.length?6:5)})'
+  ZONE=""; [ -n "$DOMAIN" ] && ZONE=$(printf '%s' "$DOMAIN" | awk -F. '{print (NF>=3 && length($(NF-1))<=3 && length($NF)==2) ? $(NF-2)"."$(NF-1)"."$NF : $(NF-1)"."$NF}')
+  CLOUDFLARE_ACCOUNT_ID=""
+  for q in "accounts?per_page=5" "memberships?per_page=5" ${ZONE:+"zones?name=$ZONE"}; do
+    kind=${q%%\?*}
+    id=$(curl -sS --max-time 20 -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "$CF_API/$q" | node -e "$pick" "$kind") && { CLOUDFLARE_ACCOUNT_ID=$id; echo "  account từ $kind"; break; }
+    [ $? = 6 ] && { echo "✗ token thấy nhiều account — đặt CLOUDFLARE_ACCOUNT_ID" >&2; exit 4; }
+  done
+  [ -n "$CLOUDFLARE_ACCOUNT_ID" ] || { echo "✗ không suy được account id (token cần Account Settings:Read, hoặc Zone DNS:Edit trên zone $ZONE) — đặt CLOUDFLARE_ACCOUNT_ID" >&2; exit 4; }
   export CLOUDFLARE_ACCOUNT_ID
 fi
 echo "→ assets"; ${BUILD_ASSETS:-node scripts/build-worker-assets.mjs}

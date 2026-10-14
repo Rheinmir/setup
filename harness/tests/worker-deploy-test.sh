@@ -3,6 +3,7 @@
 #   (1) chỉ CLOUDFLARE_API_TOKEN → account id suy từ /accounts, deploy gắn --domain skills.giatbh.io.vn, kiểm healthz, rc 0
 #   (2) token bị Cloudflare từ chối → dừng TRƯỚC deploy, rc 4, lý do in ra
 #   (3) token thấy 2 account → đòi CLOUDFLARE_ACCOUNT_ID, rc 4; đặt rồi thì không gọi /accounts
+#   (7)-(9) /accounts rỗng (token thật 14/10) → /memberships → zone của tên miền; không nguồn nào → rc 4 + quyền cần
 #   (4) OVERSTACK_WORKER_DOMAIN rỗng → không --domain; (5) healthz chết → rc 3; (6) thiếu token → rc ≠ 0, chưa gọi gì
 set -uo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
@@ -15,10 +16,13 @@ cat > "$T/bin/curl" <<'C'
 #!/usr/bin/env bash
 url="${@: -1}"; echo "curl $url" >> "$LOG"; F=0; for a in "$@"; do case "$a" in -*f*) [ "${a#--}" = "$a" ] && F=1;; esac; done
 case "$url" in
+  */memberships*) [ "${MEMBERS:-}" = one ] && echo '{"success":true,"result":[{"account":{"id":"accmem"}}]}' || echo '{"success":true,"result":[]}';;
   */accounts*) case "$ACCOUNTS" in
       one) echo '{"success":true,"result":[{"id":"acc111","name":"me"}]}';;
       two) echo '{"success":true,"result":[{"id":"a1"},{"id":"a2"}]}';;
+      zero) echo '{"success":true,"result":[]}';;
       *)   [ "$F" = 1 ] && exit 22; echo '{"success":false,"errors":[{"code":9109,"message":"Cannot use the access token from location"}]}';; esac;;
+  */zones\?name=giatbh.io.vn) [ "${ZONES:-}" = one ] && echo '{"success":true,"result":[{"id":"z1","account":{"id":"acczone"}}]}' || echo '{"success":true,"result":[]}';;
   */healthz) [ "$HEALTH" = up ] && echo '{"ok":true,"mode":"read"}' || exit 22;;
   *) exit 6;;
 esac
@@ -49,4 +53,10 @@ rc=$(run CLOUDFLARE_API_TOKEN=tok ACCOUNTS=one HEALTH=down)
 [ "$rc" = 3 ] && ok "(5) healthz chết → rc 3" || { no "(5) rc=$rc"; cat "$T/out"; }
 rc=$(run ACCOUNTS=one HEALTH=up)
 [ "$rc" != 0 ] && [ ! -s "$T/log" ] && ok "(6) thiếu token → dừng, chưa gọi gì" || { no "(6) rc=$rc"; cat "$T/log"; }
+rc=$(run CLOUDFLARE_API_TOKEN=tok ACCOUNTS=zero ZONES=one HEALTH=up)
+[ "$rc" = 0 ] && grep -q "acct=acczone" "$T/log" && grep -q "zones?name=giatbh.io.vn" "$T/log" && ok "(7) token không đọc được account (như token thật 14/10) → account từ zone giatbh.io.vn" || { no "(7) rc=$rc"; cat "$T/log" "$T/out"; }
+rc=$(run CLOUDFLARE_API_TOKEN=tok ACCOUNTS=zero MEMBERS=one HEALTH=up)
+[ "$rc" = 0 ] && grep -q "acct=accmem" "$T/log" && ! grep -q "zones?" "$T/log" && ok "(8) memberships có account → dùng, không hỏi zone" || { no "(8) rc=$rc"; cat "$T/log"; }
+rc=$(run CLOUDFLARE_API_TOKEN=tok ACCOUNTS=zero HEALTH=up)
+[ "$rc" = 4 ] && ! grep -q "^wrangler" "$T/log" && grep -q "Zone DNS:Edit" "$T/out" && ok "(9) không nguồn nào ra account → rc 4, nói cần quyền gì" || { no "(9) rc=$rc"; cat "$T/out"; }
 echo; echo "worker-deploy: $PASS PASS · $FAIL FAIL"; [ "$FAIL" = 0 ]
