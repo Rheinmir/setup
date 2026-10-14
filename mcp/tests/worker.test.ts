@@ -9,6 +9,7 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { loadCatalog, OVERSTACK_ROOT, skillsRootDir } from "../src/catalog.ts";
 import { buildCoreServer } from "../src/core.ts";
+import { createApp } from "../src/http.ts";
 import { AssetsSource, sameToken, skillRel } from "../src/source.ts";
 import { NodeSource } from "../src/source-node.ts";
 
@@ -72,4 +73,19 @@ test("AssetsSource ≡ NodeSource: cùng skill body, cùng top-1 skill_find, res
   const rr = await client.readResource({ uri: `overstack://rule/${rule.id}` });
   assert.ok(JSON.parse(asText(rr.contents[0]!)).validatorDoc, "validatorDoc từ .py trong assets");
   await client.close(); await server.close();
+});
+
+test("đọc công khai (Worker không secret): /mcp không bearer vẫn 200 ở mode read; mode core bỏ qua anonymous và vẫn 401", async () => {
+  const node = new NodeSource(OVERSTACK_ROOT, cat);
+  const open = createApp({ token: "", catalog: cat, mode: "read", source: node, anonymous: true });
+  const h = (await (await open.request("/healthz")).json()) as { tokenSource: string; anonymous: boolean; mode: string };
+  assert.equal(h.tokenSource, "none"); assert.equal(h.anonymous, true); assert.equal(h.mode, "read");
+  const init = await open.request("/mcp", { method: "POST", headers: { "content-type": "application/json", accept: "application/json, text/event-stream" },
+    body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list" }) });
+  assert.equal(init.status, 200);
+  const names = ((await init.json()) as { result: { tools: Array<{ name: string }> } }).result.tools.map((t) => t.name).sort();
+  assert.deepEqual(names, ["rules_list", "skill_find", "skill_get", "skills_list", "tool_help", "tools_list"]);
+  assert.throws(() => createApp({ token: "", catalog: cat, mode: "core", source: node, anonymous: true }), /OVERSTACK_MCP_TOKEN/, "core không bao giờ công khai");
+  const guarded = createApp({ token: "t".repeat(32), catalog: cat, mode: "core", source: node, anonymous: true });
+  assert.equal((await guarded.request("/mcp", { method: "POST", body: "{}" })).status, 401);
 });

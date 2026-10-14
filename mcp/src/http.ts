@@ -23,20 +23,24 @@ export interface HttpOptions {
   /** Dựng McpServer mỗi request: Node = buildServer (có tool chạy), Worker = buildCoreServer (chỉ đọc). Mặc định lõi đọc. */
   build?: (o: CoreOptions) => McpServer;
   workspacesDir?: string;
+  /** Đọc công khai: không bearer — CHỈ được phép ở mode read (nội dung là repo public). core/all luôn đòi token. */
+  anonymous?: boolean;
 }
 
 export function createApp(opts: HttpOptions): Hono {
-  if (!opts.token || opts.token.length < 16) throw new Error("OVERSTACK_MCP_TOKEN must be set (≥ 16 chars) — generate one: openssl rand -hex 32");
   const { catalog, source } = opts;
   const mode = opts.mode ?? toolModeFromEnv();
+  const anonymous = !!opts.anonymous && mode === "read";
+  if (!anonymous && (!opts.token || opts.token.length < 16)) throw new Error("OVERSTACK_MCP_TOKEN must be set (≥ 16 chars) — generate one: openssl rand -hex 32");
   const build = opts.build ?? buildCoreServer;
   const app = new Hono();
   // tokenSource nói cho operator biết token nằm ở đâu (env hay file trong volume) — không bao giờ lộ giá trị
   // Nguồn phiên bản đồng nhất cho mọi dev (PLAN 141026 T5): harness = template_version, skills = version.json của Rheinmir/skills.
   app.get("/healthz", (c) => c.json({ ok: true, name: "overstack-mcp", version: VERSION, harness: opts.harness ?? null, template_version: opts.harness ?? null,
     skills: { count: catalog.skills.length, version: catalog.skillsVersion?.version ?? null, catalog_sha: catalog.skillsVersion?.catalog_sha ?? null },
-    rules: catalog.rules.length, tools: catalog.tools.length, mode, tokenSource: opts.tokenSource ?? "env" }));
+    rules: catalog.rules.length, tools: catalog.tools.length, mode, tokenSource: anonymous ? "none" : (opts.tokenSource ?? "env"), anonymous }));
   app.use("*", async (c, next) => {
+    if (anonymous) return next();
     const bearer = c.req.header("authorization")?.replace(/^Bearer\s+/i, "");
     if (!sameToken(bearer, opts.token)) return c.json({ error: "unauthorized" }, 401);
     return next();

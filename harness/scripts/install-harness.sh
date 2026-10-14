@@ -160,6 +160,7 @@ if [ "${1:-}" = "--global" ]; then
   # Bỏ sót thì downstream chỉ có cổng tĩnh và không ai biết — smoke 21/09/2026 bắt đúng ca này.
   cp "$SRC/fdk/tools/"*.mjs        "$GH/fdk/tools/"        2>/dev/null || true
   cp "$SRC/harness/scripts/"*.py   "$GH/harness/scripts/"  2>/dev/null || true
+  cp "$SRC/harness/scripts/connect-mcp.sh" "$GH/harness/scripts/" 2>/dev/null || true   # bootstrap gọi sau cài: trỏ máy về server trung tâm (MCP + OVERSTACK_VERSION_URL)
   # personas travel theo engine (archetype.py --get đọc posture; UAT canary 260718 bắt preamble rỗng)
   cp "$SRC/llmwiki/personas/"*.md  "$GH/llmwiki/personas/" 2>/dev/null || true
   cp "$SRC/harness/validators/"*.py "$GH/harness/validators/" 2>/dev/null || true

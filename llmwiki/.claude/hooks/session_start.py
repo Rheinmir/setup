@@ -97,12 +97,18 @@ def remote_version_nudge(root: Path) -> None:
         if doc.get("date") != today:
             remote_h = remote_s = None
             url = os.environ.get("OVERSTACK_VERSION_URL")
+            src = url or "github-raw"
             if url:
-                body = _fetch_json(url)
-                remote_h = body.get("harness") or body.get("template_version")
-                sk = body.get("skills")
-                remote_s = (sk.get("version") if isinstance(sk, dict) else None)
-            else:
+                # server trung tâm chưa lên / mất mạng → KHÔNG được nuốt cả nhắc: lùi về raw GitHub, và vẫn ghi cache
+                # (không thì mỗi phiên lại chờ timeout 2 s rồi im — connect-mcp.sh đặt URL này mặc định từ 14/10/2026)
+                try:
+                    body = _fetch_json(url)
+                    remote_h = body.get("harness") or body.get("template_version")
+                    sk = body.get("skills")
+                    remote_s = (sk.get("version") if isinstance(sk, dict) else None)
+                except Exception:
+                    url, src = None, f"github-raw (fallback: {src} không trả lời)"
+            if not url:
                 try:
                     remote_h = _fetch_json("https://raw.githubusercontent.com/Rheinmir/setup/orca/harness/version.json").get("template_version")
                 except Exception:
@@ -111,7 +117,7 @@ def remote_version_nudge(root: Path) -> None:
                     remote_s = _fetch_json("https://raw.githubusercontent.com/Rheinmir/skills/main/version.json").get("version")
                 except Exception:
                     pass
-            doc = {"date": today, "harness": remote_h, "skills": remote_s, "source": url or "github-raw"}
+            doc = {"date": today, "harness": remote_h, "skills": remote_s, "source": src}
             cache.write_text(json.dumps(doc), encoding="utf-8")
         msgs = []
         rh, rs = doc.get("harness"), doc.get("skills")

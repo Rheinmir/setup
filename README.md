@@ -47,6 +47,13 @@ Mặc định cài/update **cả 3 trụ**: **Harness** (validator tất định
 
 Bỏ hẳn bằng cờ `--no-graph` (PowerShell: `-NoGraph`); ghim nhánh/tag engine bằng `ORCA_GRAPH_REF=<ref>`. Engine nằm ở `~/.orca-graph/repo/`, trong overstack chỉ còn shim ở đường dẫn cũ nên lệnh gõ không đổi. Bỏ qua lúc cài thì về sau `/orca-graph` sẽ in đúng một lệnh để cài bù.
 
+**Mặc định trỏ về server trung tâm.** Cuối lần cài, `harness/scripts/connect-mcp.sh` (bản global) làm hai việc, không cần ai dặn agent:
+(1) đăng ký MCP `overstack` cho Claude Code ở **scope user** (`claude mcp add -s user --transport http overstack https://skills.giatbh.io.vn/mcp`)
+→ mọi dự án trên máy có `skill_find` · `skill_get` · `rules_list` · `tool_help` và 106 skill dưới dạng prompt; (2) ghi `OVERSTACK_VERSION_URL`
+vào `~/.claude/settings.json` → hook đầu phiên so bản harness/skill của máy với bản chuẩn trên server và nhắc khi cũ. Giá trị bạn đã đặt tay
+được giữ (`--force` mới ghi đè). Script dò `/healthz` trước: server chưa lên thì chỉ ghi env và **chưa** đăng ký MCP (một MCP chết làm mọi phiên báo lỗi), in lệnh chạy lại khi server lên (`--no-probe` để đăng ký ngay). Cờ bootstrap: `--no-mcp` (hoặc `OVERSTACK_MCP=0`) để không trỏ;
+`OVERSTACK_MCP_URL=…` đổi server; `OVERSTACK_MCP_TOKEN=…` khi server đòi bearer; gỡ: `bash ~/.claude/harness/harness/scripts/connect-mcp.sh --off`.
+
 Tự bảo trì về sau (cập nhật + trả nợ wiki + refresh bản đồ năng lực + health-check trong một lệnh): gọi skill **`/harness-update`**.
 
 ## 📖 Tài liệu chính thức (cho người đọc)

@@ -61,13 +61,35 @@ def test_nudge_when_behind_silent_when_current(tmp_path):
 
 
 def test_fail_open_on_bad_url_and_missing_home(tmp_path):
+    """URL trung tâm chết (connect-mcp.sh đặt mặc định từ 14/10/2026, server có thể chưa lên): KHÔNG nuốt nhắc — lùi về raw
+    GitHub, vẫn ghi cache trong ngày (không chờ timeout mỗi phiên). Không mạng nốt → im lặng, không crash."""
     home = tmp_path / "harness"
     home.mkdir()
     (home / "version.json").write_text(json.dumps({"template_version": "1.0.0"}))
     os.environ["OVERSTACK_VERSION_URL"] = (tmp_path / "khong-co.json").as_uri()
     mod = _load(home)
+    calls = []
+    def fake_fetch(url, timeout=2.0):
+        calls.append(url)
+        if "khong-co" in url:
+            raise OSError("server chưa lên")
+        if "Rheinmir/setup" in url:
+            return {"template_version": "1.3.128"}
+        return {"version": "1.0.3"}
+    mod._fetch_json = fake_fetch
+    out = _run(mod, tmp_path)
+    assert "⬆ [version]" in out and "v1.0.0 < bản chuẩn v1.3.128" in out, out
+    assert any("khong-co" in c for c in calls) and any("Rheinmir/setup" in c for c in calls), calls
+    cache = json.loads((home / ".remote-version.json").read_text())
+    assert cache["harness"] == "1.3.128" and "fallback" in cache["source"], cache
+    # trong ngày không hỏi lại dù URL vẫn chết
+    n = len(calls)
+    _run(mod, tmp_path)
+    assert len(calls) == n
+    # cả hai nguồn đều chết → im lặng, không crash
+    (home / ".remote-version.json").unlink()
+    mod._fetch_json = lambda url, timeout=2.0: (_ for _ in ()).throw(OSError("offline"))
     assert _run(mod, tmp_path) == ""
-    assert not (home / ".remote-version.json").is_file() or "harness" in json.loads((home / ".remote-version.json").read_text()) or True
     # không có version.json → im lặng, không ghi cache
     empty = tmp_path / "empty-home"
     empty.mkdir()

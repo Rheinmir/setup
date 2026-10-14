@@ -266,6 +266,8 @@ jobs:
         run: bash harness/tests/windows-portability-test.sh
       - name: install-ps1 — Windows entry point (fail-open nếu runner không có pwsh)
         run: bash harness/tests/install-ps1-test.sh
+      - name: mcp-connect — bootstrap mặc định trỏ máy về server trung tâm (MCP overstack scope user + OVERSTACK_VERSION_URL), idempotent, --off, không có claude vẫn ok
+        run: bash harness/tests/mcp-connect-test.sh
       - name: tests-wired — MỌI harness/tests/*-test.sh phải có step trong workflow này
         run: |
           for t in harness/tests/*-test.sh; do

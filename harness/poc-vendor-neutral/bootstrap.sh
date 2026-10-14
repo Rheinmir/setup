@@ -12,6 +12,8 @@
 #   ... | bash -s -- --clean          # cài mới = gỡ cũ rồi cài
 #   ... | bash -s -- --no-verify
 #   ... | bash -s -- --no-graph       # KHÔNG kéo module orca-graph (repo riêng Rheinmir/orca-graph)
+#   ... | bash -s -- --no-mcp         # KHÔNG trỏ máy về server trung tâm (MCP overstack scope user + OVERSTACK_VERSION_URL)
+#                                     # (hoặc OVERSTACK_MCP=0; đổi server: OVERSTACK_MCP_URL=…; server đòi bearer: OVERSTACK_MCP_TOKEN=…)
 #
 # Module orca-graph: mặc định ĐÃ TICK. Chạy trong terminal → hiện checklist, Enter là kéo đủ (gõ số để bỏ tick);
 # agent/CI chạy (không terminal) → kéo luôn, không hỏi. Đổi nhánh/tag engine: ORCA_GRAPH_REF=<ref>.
@@ -46,9 +48,10 @@ done
 chmod +x "$TMP"/*.sh "$TMP/bin/llmwiki-validate.py" 2>/dev/null || true
 # MẶC ĐỊNH: cài/UPDATE CẢ 3 TRỤ (harness + skills + llmwiki) — 1 lệnh, khỏi nhớ cờ.
 # Opt-out: --harness-only (chỉ harness). Tự chỉ --with-skills/--with-wiki/--full → tôn trọng.
-WANT_FULL=1; NEWARGS=()
+WANT_FULL=1; WANT_MCP="${OVERSTACK_MCP:-1}"; NEWARGS=()
 for a in "$@"; do
   case "$a" in
+    --no-mcp) WANT_MCP=0;;
     --harness-only) WANT_FULL=0;;
     --full|--with-skills|--with-wiki|--skills-only) WANT_FULL=0; NEWARGS+=("$a");;
     *) NEWARGS+=("$a");;
@@ -59,3 +62,8 @@ say "cài/update vào $TARGET $([ "$WANT_FULL" = 1 ] && echo '— CẢ 3 TRỤ' 
 # repo-root raw (strip /harness/poc-vendor-neutral) → install.sh tải overstack.html từ đúng nguồn/branch
 export REPO_RAW="${BASE%/harness/poc-vendor-neutral}"
 bash "$TMP/install.sh" "$TARGET" ${NEWARGS[@]+"${NEWARGS[@]}"}
+# MẶC ĐỊNH trỏ máy về server trung tâm (harness/scripts/connect-mcp.sh vừa được cài vào bản global): Claude Code có MCP overstack
+# ở scope user (skill_find/skill_get/rules_list + 106 skill là prompt) và hook đầu phiên so bản qua OVERSTACK_VERSION_URL.
+# Không chặn cài: thiếu claude hay server chưa lên thì script tự nói rõ. Opt-out: --no-mcp / OVERSTACK_MCP=0.
+CONNECT="${OVERSTACK_HARNESS_HOME:-$HOME/.claude/harness}/harness/scripts/connect-mcp.sh"
+if [ "$WANT_MCP" = 1 ] && [ -f "$CONNECT" ]; then bash "$CONNECT" || say "connect-mcp lỗi (rc $?) — chạy lại: bash $CONNECT"; fi

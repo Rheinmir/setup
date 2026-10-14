@@ -141,7 +141,7 @@ cd ~/orca/setup/mcp
 npx wrangler whoami || npx wrangler login                 # (a) đăng nhập một lần — mở trình duyệt, không dán token vào chat
 OVERSTACK_SKILLS_ROOT=~/orca/skills/skills npm run catalog   # (b) catalog theo checkout skills (skillsVersion = version.json của repo skills)
 npm test && npm run typecheck                              # (c) tests/worker.test.ts: AssetsSource ≡ NodeSource, assets đủ 106 skill
-npx wrangler secret put OVERSTACK_MCP_TOKEN -c worker/wrangler.jsonc   # (d) token (≥ 16 ký tự) — lần đầu, hoặc khi xoay
+npx wrangler secret put OVERSTACK_MCP_TOKEN -c worker/wrangler.jsonc   # (d) TUỲ CHỌN: bật bearer; mặc định đọc công khai để connect-mcp.sh của mọi máy dev dùng không cần token
 OVERSTACK_SKILLS_ROOT=~/orca/skills/skills npm run worker:deploy       # (e) gom assets + deploy → in URL *.workers.dev
 # (f) kiểm
 curl -fsS https://overstack-mcp.<account>.workers.dev/healthz        # {"ok":true,"harness":"1.3.128","skills":{"count":106,"version":"1.0.3",…},"mode":"read"}
@@ -155,6 +155,7 @@ claude mcp add --transport http overstack https://overstack-mcp.<account>.worker
   `OVERSTACK_VERSION_URL=https://skills.giatbh.io.vn/healthz`.
 - Cập nhật: skill đổi (repo skills bump version) hoặc harness đổi → (b) rồi (e). Rollback: `npx wrangler rollback -c worker/wrangler.jsonc`.
 - Dashboard: https://dash.cloudflare.com → Workers & Pages → `overstack-mcp` (log, metrics, secret, custom domain).
+- Máy dev tự trỏ về đây lúc cài harness: `harness/scripts/connect-mcp.sh` (bootstrap gọi mặc định; `--no-mcp` để tắt) — MCP `overstack` scope user + `OVERSTACK_VERSION_URL`.
 
 ### 8b. Qua devops-agent (két giữ token, không máy dev nào cầm)
 

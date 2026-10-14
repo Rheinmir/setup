@@ -69,14 +69,16 @@ khi máy cũ hơn — xem `llmwiki/.claude/hooks/session_start.py::remote_versio
 Lõi đọc (`src/core.ts`) không cần đĩa hay tiến trình con nên chạy nguyên trên Workers: `src/worker.ts` + `worker/wrangler.jsonc`,
 skill/rule/policy/CAPABILITIES đọc từ **static assets** do `scripts/build-worker-assets.mjs` gom (125 file, ≈2,7 MiB; `skills-index.json`
 là 4000 ký tự đầu mỗi SKILL.md để `skill_find` chỉ tốn một asset fetch — Free giới hạn 50 subrequest/request). Không có
-`workspace_*`, `tool_run`, `rule_check`, `orca_graph` (6 tool đọc). Cùng `createApp` với Node: `/healthz` mở, còn lại bearer.
+`workspace_*`, `tool_run`, `rule_check`, `orca_graph` (6 tool đọc). Cùng `createApp` với Node, nhưng **mặc định đọc công khai**
+(không secret `OVERSTACK_MCP_TOKEN` → `anonymous: true`, `/healthz` báo `tokenSource: "none"`): nội dung là repo public, và
+`harness/scripts/connect-mcp.sh` của mọi máy dev trỏ về đây lúc cài mà không cần phát token. Đặt secret thì `/mcp` đòi bearer như Node.
 
 ```sh
 cd mcp && npm install
 npx wrangler login                                        # một lần, mở trình duyệt (token ở ~/.wrangler, không qua chat)
 OVERSTACK_SKILLS_ROOT=~/orca/skills/skills npm run catalog   # catalog theo checkout Rheinmir/skills
 OVERSTACK_SKILLS_ROOT=~/orca/skills/skills npm run worker:dev # wrangler dev :8787 — smoke như RUNBOOK §8
-npx wrangler secret put OVERSTACK_MCP_TOKEN -c worker/wrangler.jsonc   # ≥ 16 ký tự (openssl rand -hex 32)
+npx wrangler secret put OVERSTACK_MCP_TOKEN -c worker/wrangler.jsonc   # TUỲ CHỌN: bật bearer (≥ 16 ký tự); bỏ qua = đọc công khai
 OVERSTACK_SKILLS_ROOT=~/orca/skills/skills npm run worker:deploy       # → https://overstack-mcp.<account>.workers.dev/mcp
 ```
 
