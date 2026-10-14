@@ -20,6 +20,10 @@
 #
 # Đổi nguồn/branch: HARNESS_BASE=https://raw.githubusercontent.com/<owner>/<repo>/<branch>/harness/poc-vendor-neutral
 set -euo pipefail
+# TOÀN BỘ thân script nằm trong main() và chỉ gọi ở dòng cuối: khi chạy `curl … | bash`, bash đọc script TỪ STDIN từng dòng;
+# một tiến trình con đọc stdin sẽ nuốt phần còn lại của script → mọi bước sau install.sh (connect-mcp) im lặng không chạy mà
+# rc vẫn 0 (smoke thật 14/10/2026 bắt được). Bọc hàm = bash parse hết rồi mới chạy; con cũng được cho </dev/null.
+main() {
 # Windows (Git Bash + Python native): stdout mặc định cp1252/cp437 → mọi print tiếng Việt/“→” crash UnicodeEncodeError
 # giữa chừng cài (GH#168, GH#169). Ép UTF-8 cho MỌI python con của installer; Linux/macOS vốn UTF-8 nên không đổi gì.
 export PYTHONUTF8=1 PYTHONIOENCODING=utf-8
@@ -61,9 +65,11 @@ done
 say "cài/update vào $TARGET $([ "$WANT_FULL" = 1 ] && echo '— CẢ 3 TRỤ' || echo '(harness-only)')"
 # repo-root raw (strip /harness/poc-vendor-neutral) → install.sh tải overstack.html từ đúng nguồn/branch
 export REPO_RAW="${BASE%/harness/poc-vendor-neutral}"
-bash "$TMP/install.sh" "$TARGET" ${NEWARGS[@]+"${NEWARGS[@]}"}
+bash "$TMP/install.sh" "$TARGET" ${NEWARGS[@]+"${NEWARGS[@]}"} </dev/null
 # MẶC ĐỊNH trỏ máy về server trung tâm (harness/scripts/connect-mcp.sh vừa được cài vào bản global): Claude Code có MCP overstack
 # ở scope user (skill_find/skill_get/rules_list + 106 skill là prompt) và hook đầu phiên so bản qua OVERSTACK_VERSION_URL.
 # Không chặn cài: thiếu claude hay server chưa lên thì script tự nói rõ. Opt-out: --no-mcp / OVERSTACK_MCP=0.
 CONNECT="${OVERSTACK_HARNESS_HOME:-$HOME/.claude/harness}/harness/scripts/connect-mcp.sh"
-if [ "$WANT_MCP" = 1 ] && [ -f "$CONNECT" ]; then bash "$CONNECT" || say "connect-mcp lỗi (rc $?) — chạy lại: bash $CONNECT"; fi
+if [ "$WANT_MCP" = 1 ] && [ -f "$CONNECT" ]; then bash "$CONNECT" </dev/null || say "connect-mcp lỗi (rc $?) — chạy lại: bash $CONNECT"; fi
+}
+main "$@"

@@ -71,6 +71,17 @@ else no "(5) rc≠0 khi thiếu claude"; fi
 if OVERSTACK_MCP_URL=http://127.0.0.1:9/mcp run >"$T/out7" 2>&1; then
   ! grep -q "^mcp add" "$CLAUDE_LOG" && grep -q "CHƯA đăng ký" "$T/out7" && python3 -c "import json,sys;d=json.load(open(sys.argv[1]));assert d['env']['OVERSTACK_VERSION_URL']=='http://127.0.0.1:9/healthz'" "$CLAUDE_SETTINGS" && ok "(7) server chưa lên: không add MCP, env vẫn đặt, rc 0" || no "(7) $(cat "$T/out7"; cat "$CLAUDE_LOG")"
 else no "(7) rc≠0 khi server chưa lên"; fi
+# (8) bootstrap qua PIPE (`curl … | bash`) với install.sh con ĐỌC STDIN: connect-mcp vẫn phải chạy (lỗi smoke thật 14/10/2026)
+B="$T/base"; mkdir -p "$B/bin" "$T/gh/harness/scripts" "$T/proj"
+for f in policy.yaml gen-converters.py demo.sh test-broad.sh uninstall.sh bin/llmwiki-validate.py bin/harness-events.py; do echo "# stub" > "$B/$f"; done
+# giả install.sh: đọc hết stdin (như một con đọc stdin thật), rồi "cài" connect-mcp vào bản global
+printf '#!/usr/bin/env bash\ncat >/dev/null\nprintf "%%s\\n" "#!/usr/bin/env bash" "touch \\"\\$CONNECT_MARK\\"" > "%s/gh/harness/scripts/connect-mcp.sh"\n' "$T" > "$B/install.sh"
+export CONNECT_MARK="$T/connect.ran"; rm -f "$CONNECT_MARK"
+( cd "$T/proj" && HARNESS_BASE="file://$B" OVERSTACK_HARNESS_HOME="$T/gh" bash -c "cat '$ROOT/harness/poc-vendor-neutral/bootstrap.sh' | bash" ) >"$T/out8" 2>&1; rc8=$?
+[ "$rc8" = 0 ] && [ -f "$CONNECT_MARK" ] && ok "(8) bootstrap qua pipe + con đọc stdin → connect-mcp vẫn chạy" || no "(8) rc=$rc8 mark=$([ -f "$CONNECT_MARK" ] && echo có || echo KHÔNG): $(tail -3 "$T/out8")"
+rm -f "$CONNECT_MARK"
+( cd "$T/proj" && HARNESS_BASE="file://$B" OVERSTACK_HARNESS_HOME="$T/gh" bash -c "cat '$ROOT/harness/poc-vendor-neutral/bootstrap.sh' | bash -s -- --no-mcp" ) >/dev/null 2>&1
+[ ! -f "$CONNECT_MARK" ] && ok "(8) --no-mcp: không gọi connect-mcp" || no "(8) --no-mcp vẫn gọi"
 # (6)
 grep -q -- "--no-mcp" "$ROOT/harness/poc-vendor-neutral/bootstrap.sh" && grep -q "connect-mcp.sh" "$ROOT/harness/poc-vendor-neutral/bootstrap.sh" && ok "(6) bootstrap: cờ --no-mcp + gọi connect-mcp.sh" || no "(6) bootstrap chưa nối"
 grep -q "connect-mcp" "$ROOT/README.md" && ok "(6) README nói về cấu hình mặc định trỏ server" || no "(6) README"
