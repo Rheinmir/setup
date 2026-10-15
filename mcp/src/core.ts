@@ -26,18 +26,43 @@ export function toolModeFromEnv(env: Record<string, string | undefined> | undefi
   return v === "all" ? "all" : v === "read" ? "read" : "core";
 }
 
+/** Claude Code chép `instructions` vào system prompt mỗi phiên nhưng CẮT ở 4096 ký tự (CLAUDE_CODE_MAX_MCP_DESCRIPTION_LENGTH,
+ *  bản 2.1.300). Để skill trên server được "biết" như skill local, instructions = lời dặn ngắn + danh mục skill model tự gọi,
+ *  mỗi dòng `tên: gợi ý` — gợi ý dài nhất sao cho cả khối ≤ ngân sách (OVERSTACK_INSTRUCTIONS_BUDGET, mặc định 4000). */
+export const INSTRUCTIONS_BUDGET = 4000;
+export function skillHint(description: string, n: number): string {
+  let d = description.replace(/\s+/g, " ").trim();
+  d = d.replace(/^(MUST USE|Use this skill|Use|Invoke|Trigger)\b[^,:]*?(when|for|to)\s+(the\s+)?(user\s+)?(wants?\s+to\s+|asks?\s+(to|for)\s+)?/i, "");
+  d = d.split(/(?<=[.;])\s| — | Use when/)[0]!.replace(/[.]$/, "");
+  if (d.length <= n) return d;
+  const cut = d.slice(0, n), sp = cut.lastIndexOf(" ");
+  return (sp > n / 2 ? cut.slice(0, sp) : cut).replace(/[,;:—-]+$/, "") + "…";
+}
+export function buildInstructions(cat: Catalog, mode: ToolMode, workspacesHint?: string, budget = budgetFromEnv()): string {
+  const head = [
+    `overstack: shared skill library (${cat.skills.length} skills) + harness catalog (${cat.rules.length} rules, ${cat.tools.length} tools).`,
+    "Treat the skills below like your local skills: when the user's task matches one, call skill_get {name} and follow it BEFORE acting",
+    "(a local skill with the same name wins). Unsure which → skill_find {query}.",
+    mode === "read" ? "This endpoint runs nothing: rules_list/tools_list/tool_help describe the harness; install it locally to run tools." : `Run scripts with tool_run inside a workspace under ${workspacesHint ?? "WORKSPACES_DIR"} (workspace_list, workspace_sync).`,
+    "Skills:",
+  ].join(" ");
+  const skills = cat.skills.filter((s) => s.modelInvocable).sort((a, b) => a.name.localeCompare(b.name));
+  const render = (n: number) => head + "\n" + skills.map((s) => (n > 0 ? `${s.name}: ${skillHint(s.description, n)}` : s.name)).join("\n");
+  for (let n = 160; n >= 12; n -= 4) { const t = render(n); if (t.length <= budget) return t; }
+  const names = render(0);
+  return names.length <= budget ? names : head.slice(0, budget);
+}
+function budgetFromEnv(): number {
+  const v = Number((globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env?.OVERSTACK_INSTRUCTIONS_BUDGET);
+  return Number.isFinite(v) && v >= 500 ? v : INSTRUCTIONS_BUDGET;
+}
+
 export function buildCoreServer(opts: CoreOptions): McpServer {
   const { catalog: cat, mode, source } = opts;
   const server = new McpServer(
     { name: "overstack", version: opts.version ?? VERSION },
     {
-      instructions: [
-        `overstack toolbox: ${cat.skills.length} skills (prompts, resources overstack://skill/{name}), ${cat.rules.length} wiki rules (rule_check),`,
-        mode === "read" ? `${cat.tools.length} scripts listed read-only (tools_list, tool_help); this public endpoint runs nothing — install the harness locally to run tools.` : `${cat.tools.length} scripts (tool_run; ${mode === "all" ? "also one tool each" : "list with tools_list, read flags with tool_help"}).`,
-        mode === "read" ? "" : `Every script runs inside a workspace under ${opts.workspacesHint ?? "WORKSPACES_DIR"}: list with workspace_list, pull a repo with workspace_sync, pass workspace-relative paths.`,
-        "Start with skill_find for the task at hand, then read the skill resource before acting.",
-        mode === "read" ? "" : "A tool result carries rc/stdout/stderr verbatim; rc 2 from a validator means the rule is broken, not that the call failed.",
-      ].filter(Boolean).join(" "),
+      instructions: buildInstructions(cat, mode, opts.workspacesHint),
     },
   );
 
