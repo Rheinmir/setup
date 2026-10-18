@@ -20,7 +20,7 @@ metadata:
 - **Non-goals:** không sửa nội dung file `.md` nguồn; không ghi HTML cạnh file `.md` nguồn; không phải site tài liệu nhiều trang có thiết kế riêng (đó là `docs-site-macos`).
 
 ### Mental model
-`file .md → (template đầy đủ ngoài) → HTML standalone (Mermaid · Chart.js · bảng · code highlight · TOC) + output requirements bắt buộc → html/<tên>.html → output report draft`.
+`file .md → fdk/tools/md-render.py (tất định, 0-token: rail mục lục · sáng/tối · font · favicon · bảng · code · ```mermaid vẽ nhúng · ```archify nhúng iframe) → html/<tên>.html → output report draft`. Model KHÔNG viết HTML: viết HTML tay tốn gấp ~3 token so với chỉ md (user 06/10/2026) — nội dung bị viết hai lần và phải nạp skill vỏ trang.
 
 ### Input và output contract
 | | Field | Required? | Ý nghĩa |
@@ -32,7 +32,8 @@ metadata:
 
 ### Rules và capabilities
 - RULE-01 (MUST): Output HTML → `html/` dir, NOT same dir as source `.md`.
-- RULE-02 (MUST): Output requirements (don't ship a broken page) — the generated HTML must include every item in "Output requirements" below, regardless of the external template.
+- RULE-02 (MUST): Output requirements (don't ship a broken page) — the generated HTML must include every item in "Output requirements" below; `md-render.py` emits all of them, so a hand-written page is the only way to miss one.
+- RULE-03 (MUST): **Render bằng máy, không viết HTML tay.** `python3 ~/.claude/harness/fdk/tools/md-render.py <file.md> -o html/<tên>.html` (repo framework: `fdk/tools/md-render.py`). Cần thêm sơ đồ mà file nguồn chưa có → chép md sang scratchpad, chèn khối ```` ```mermaid ```` (quy trình/so sánh) hoặc ```` ```archify <artifact.html> tiêu đề ```` (artifact do `/diagram` vẽ, kể cả chart số liệu) ngay trước đoạn giải thích, rồi render từ bản chép — không sửa md gốc.
 - Capabilities: đọc file Markdown; ghi file HTML tĩnh + draft wiki. Thư viện render (Mermaid, Chart.js) nhúng trong trang.
 
 ### Failure boundaries
@@ -45,10 +46,10 @@ metadata:
 ### Main workflow
 | Step | Type | Inputs | Action | Outputs/exit | Failure/next |
 |---|---|---|---|---|---|
-| W01 | deterministic | đường dẫn `.md` | Đọc file nguồn (+ Full instructions ngoài nếu có) | nội dung | không có file → blocked |
-| W02 | judgment | nội dung | Chọn cách visualize: steps/so sánh → Mermaid, số liệu → Chart.js, bảng styled, code highlight, floating TOC | bản dựng HTML | — |
-| W03 | deterministic | HTML | Kiểm đủ Output requirements (danh sách dưới) | checklist đủ | thiếu → sửa, lặp W03 |
-| W04 | effect | HTML | Ghi `html/<tên-file>.html` | file HTML | — |
+| W01 | deterministic | đường dẫn `.md` | Kiểm file nguồn tồn tại | nội dung | không có file → blocked |
+| W02 | judgment | nội dung | Có cần thêm sơ đồ không? Có → bản chép trong scratchpad + khối ```` ```mermaid ````/```` ```archify ```` (RULE-03); không → dùng file gốc | md sẵn sàng | — |
+| W03 | deterministic | md | `md-render.py <md> -o html/<tên>.html` rồi kiểm Output requirements (grep) | file HTML | thiếu → báo lỗi renderer, không vá tay |
+| W04 | effect | HTML | Báo đường dẫn file cho user | đường dẫn | — |
 | W05 | effect | kết quả | Output report draft (mục Delivery) | draft + index + log | 0 artefact → skip |
 
 Chi tiết từng bước (nguồn chân lý cho W01–W05):

@@ -165,6 +165,9 @@ if [ "${1:-}" = "--global" ]; then
   cp "$SRC/harness/scripts/"*.py   "$GH/harness/scripts/"  2>/dev/null || true
   # personas travel theo engine (archetype.py --get đọc posture; UAT canary 260718 bắt preamble rỗng)
   cp "$SRC/llmwiki/personas/"*.md  "$GH/llmwiki/personas/" 2>/dev/null || true
+  # agent cho việc ồn ào (cổng kiểm, dựng HTML) — user-level để mọi dự án gọi được; chỉ ghi đè file cùng tên của harness
+  mkdir -p "$HOME/.claude/agents"
+  cp "$SRC/harness/agents/"*.md "$HOME/.claude/agents/" 2>/dev/null || true
   cp "$SRC/harness/validators/"*.py "$GH/harness/validators/" 2>/dev/null || true
   cp "$SRC/harness/"*.yaml         "$GH/harness/"          2>/dev/null || true
   # config đi CÙNG script đọc nó (mem-rank.py ⇄ mem-rank.config.yaml) — glob *.py bên trên bỏ sót,
@@ -267,7 +270,7 @@ def _is_stale(c):
     # cổ ([ -d llmwiki ]) đều phải bị dọn, nếu không hook fire đôi sau update (GH#111).
     return '/.llmwiki/.harness-stamp" ]' not in c
 tpl = {
-    "PreToolUse":  [{"matcher": "Write|Edit|MultiEdit|NotebookEdit|Bash", "script": "pre_tool_use.py"},
+    "PreToolUse":  [{"matcher": "Write|Edit|MultiEdit|NotebookEdit|Bash|Read", "script": "pre_tool_use.py"},
                     {"matcher": "Bash", "script": "orca_guard.py"}],
     "PostToolUse": {"matcher": "Write|Edit|MultiEdit", "script": "post_tool_use.py"},
     "Stop":        {"matcher": None, "script": "stop.py"},
@@ -301,6 +304,9 @@ for event, spec in tpl.items():
     for s in (spec if isinstance(spec, list) else [spec]):
         existing = {h.get("command") for d in defs for h in (d.get("hooks") or [])}
         c = cmd(s["script"])
+        for d in defs:   # hook đã có → vẫn cập nhật matcher (thêm Read cho R23 06/10/2026: chỉ-thêm-khi-thiếu làm máy đã cài kẹt matcher cũ)
+            if s["matcher"] and any(h.get("command") == c for h in (d.get("hooks") or [])) and d.get("matcher") != s["matcher"]:
+                d["matcher"] = s["matcher"]
         if c not in existing:
             entry = {"hooks": [{"type": "command", "command": c, "timeout": 30}]}
             if s["matcher"]:
@@ -422,7 +428,7 @@ def hook(script, matcher=None):
     return entry
 
 tpl = {
-    "PreToolUse": [hook("pre_tool_use.py", "Write|Edit|MultiEdit|NotebookEdit|Bash"),
+    "PreToolUse": [hook("pre_tool_use.py", "Write|Edit|MultiEdit|NotebookEdit|Bash|Read"),
                    hook("orca_guard.py", "Bash")],
     "PostToolUse": [hook("post_tool_use.py", "Write|Edit|MultiEdit")],
     "Stop": [hook("stop.py")],
@@ -692,7 +698,7 @@ def h(script, matcher=None):
     if matcher: d["matcher"] = matcher
     return d
 tpl = {"permissions": {"deny": deny}, "env": {"OVERSTACK_WIKIGRAPH": "1"}, "hooks": {
-    "PreToolUse":  [h("pre_tool_use.py",  "Write|Edit|MultiEdit|NotebookEdit|Bash"), h("orca_guard.py", "Bash")],
+    "PreToolUse":  [h("pre_tool_use.py",  "Write|Edit|MultiEdit|NotebookEdit|Bash|Read"), h("orca_guard.py", "Bash")],
     "PostToolUse": [h("post_tool_use.py", "Write|Edit|MultiEdit")],
     "Stop":        [h("stop.py")],
     "SessionEnd":  [h("session_end.py")],

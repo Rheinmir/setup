@@ -338,7 +338,16 @@ const LAYOUT = () => { const d = document.documentElement, wrap = [];
     if (kids.some(k => getComputedStyle(k).flexBasis === '100%')) continue;   // mục chủ ý chiếm trọn dòng (vd hộp kết quả bên dưới) — không phải tràn
     const tops = []; for (const r of rs) if (!tops.some(t => Math.abs(t - r.top) < Math.min(...rs.map(x => x.height)) / 2)) tops.push(r.top);
     if (tops.length >= 2 && rows.length < 20) rows.push((el.tagName.toLowerCase() + (typeof el.className === 'string' && el.className ? '.' + el.className.trim().split(/\s+/)[0] : '')) + ` (${kids.length} mục, ${tops.length} dòng)`); }
-  return { over: d.scrollWidth - d.clientWidth, wrap, rows }; };
+  // cramped-wide (user 07/10, trang md-render cột 522px ở khổ 1440: mind map bị cắt, bảng phải cuộn ngang): bảng / sơ đồ / code / ảnh
+  // RỘNG hơn khung cắt-tràn (overflow ≠ visible) chứa nó, trong khi khung đó còn hẹp hơn cửa sổ ≥ 320px → nội dung bị cắt/cuộn
+  // dù màn hình còn chỗ. Chỉ đo ở khổ desktop (mobile hẹp thì cuộn bảng là bình thường).
+  const cramped = [];
+  if (innerWidth >= 1200) for (const el of document.querySelectorAll('table,svg,pre,canvas,img,iframe')) { if (el.tagName === 'svg' && el.parentElement.closest('svg')) continue;
+    const r = el.getBoundingClientRect(); if (r.width < 2 || r.height < 2) continue; const w = el.tagName === 'PRE' ? el.scrollWidth : r.width;
+    let a = el.parentElement; for (; a && a !== document.body; a = a.parentElement) if (getComputedStyle(a).overflowX !== 'visible') break;
+    if (!a || a === document.body) continue; const aw = a.getBoundingClientRect().width;
+    if (w > a.clientWidth + 4 && aw <= innerWidth - 320 && cramped.length < 10) cramped.push(`${el.tagName.toLowerCase()} rộng ${Math.round(w)}px trong ${a.tagName.toLowerCase()}${typeof a.className === 'string' && a.className ? '.' + a.className.trim().split(/\s+/)[0] : ''} ${a.clientWidth}px — cửa sổ còn trống ${Math.round(innerWidth - aw)}px`); }
+  return { over: d.scrollWidth - d.clientWidth, wrap, rows, cramped }; };
 const WIDTHS = [320, 375, 768, 1360], WRAP_AT = [320, 1360];
 const TOGGLE_SEL = '.theme-switch,[data-theme-toggle],.theme-toggle,#theme-toggle,#themeToggle,[aria-label*="giao diện" i],[aria-label*="theme" i],[class*="theme-t"],[id*="theme"]';
 const on = k => !only.length || only.includes(k);
@@ -375,9 +384,9 @@ for (const file of pages) { const abs = resolve(file); const row = { page: file,
       if (cr < c.need) verified.push({ ...c, ratio: +cr.toFixed(2), by: 'pixel' }); }
     m.contrast = verified.concat(m.contrast.slice(90).filter(c => !c.svg)); row.findings[theme] = m;
     if (shots) await p.screenshot({ path: `${shots}/${basename(file, '.html')}-${theme}.png` });
-    if (theme === 'light' && (on('horizontal-scroll') || on('clickable-wrap') || on('row-wrap'))) { row.hscroll = []; row.wrap = []; row.rowwrap = [];
+    if (theme === 'light' && (on('horizontal-scroll') || on('clickable-wrap') || on('row-wrap') || on('cramped-wide'))) { row.hscroll = []; row.wrap = []; row.rowwrap = [];
       for (const w of WIDTHS) { await p.setViewportSize({ width: w, height: 900 }); await p.waitForTimeout(150); const l = await p.evaluate(LAYOUT);
-        if (l.over > 1) row.hscroll.push({ w, over: l.over }); if (WRAP_AT.includes(w)) for (const x of l.wrap) row.wrap.push(`${x} @${w}`); if (w === 375 || w === 1360) for (const x of l.rows) row.rowwrap.push(`${x} @${w}`); }
+        if (l.over > 1) row.hscroll.push({ w, over: l.over }); if (WRAP_AT.includes(w)) for (const x of l.wrap) row.wrap.push(`${x} @${w}`); if (w === 375 || w === 1360) for (const x of l.rows) row.rowwrap.push(`${x} @${w}`); if (w === 1360) row.cramped = l.cramped; }
       await p.setViewportSize({ width: 1360, height: 900 }); await p.waitForTimeout(150); }
     if (theme === 'light') { // toggle: bấm → nền đổi chiều; tải lại → giữ
       // phần tử NHÌN THẤY đầu tiên khớp selector (selector rộng còn khớp cả <script id="…theme…"> / <meta name="theme-color"> trong <head>)
@@ -424,6 +433,7 @@ for (const file of pages) { const abs = resolve(file); const row = { page: file,
   if (on('title-scale') && L.title_scale && L.title_scale.length) probs.push(`title-scale: tên trang không lớn hơn mục nav/tab — ${L.title_scale[0]}`);
   if (on('line-over-text') && L.line_text && L.line_text.length) probs.push(`line-over-text: vạch mảnh có định vị đè lên chữ — ${L.line_text.slice(0, 3).join(' · ')}`);
   // row-wrap FAIL: lớp nền (html_base LINE_JS) tự gắn ovs-line cho hàng rơi dòng → trang mang lớp nền sạch; còn bắt được = trang KHÔNG mang lớp nền.
+  if (on('cramped-wide') && row.cramped && row.cramped.length) probs.push(`cramped-wide: nội dung rộng bị nhét khung hẹp (bị cắt/cuộn) dù cửa sổ còn chỗ — nới khung chứa, cho bảng/sơ đồ trải rộng — ${row.cramped.slice(0, 3).join(' · ')}`);
   if (on('row-wrap') && row.rowwrap && row.rowwrap.length) probs.push(`row-wrap: hàng chip/chỉ số/nút rơi xuống nhiều dòng — dùng class ovs-line (một dòng, mờ mép khi tràn, hover thấy đủ) — ${row.rowwrap.slice(0, 3).join(' · ')}`);
   if (on('action-left') && L.action_left && L.action_left.length) probs.push(`action-left: hàng nút cuối khung không nằm bên phải (ưu tiên góc phải-dưới) — ${L.action_left.slice(0, 3).join(' · ')}`);
   if (on('field-ring') && L.field && L.field.length) probs.push(`field-ring: ô nhập khoanh viền/vòng — dùng nền trong suốt, hover/focus đậm dần — ${L.field.slice(0, 3).join(' · ')}`);

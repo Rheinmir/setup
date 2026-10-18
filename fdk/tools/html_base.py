@@ -52,7 +52,7 @@ def base_css(*, family_dark: bool) -> str:
         f":root{{{_vars(LIGHT)}--sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:24px;--sp-6:32px;--sp-7:40px;--sp-8:48px;--sp-9:64px;--sp-10:80px;--sp-11:96px;"
         f"--lh-body:1.75;--lh-heading:1.25;--measure:35em;--ovs-r:14px;color-scheme:light}}"
         # nhịp chữ mặc định (PLAN 220926-spacing-system, chuẩn WCAG 1.4.12/USWDS): :where = độ ưu tiên 0 → trang tự đặt vẫn thắng
-        ":where(p,li,dd,blockquote){line-height:var(--lh-body)}:where(h1,h2,h3){line-height:var(--lh-heading)}"
+        ":where(p,li,dd,blockquote,td,th){line-height:var(--lh-body)}:where(h1,h2,h3){line-height:var(--lh-heading)}"
         # sentence-case cho MỌI tiêu đề, kể cả tiêu đề JS sinh lúc chạy (phép vá HTML không với tới) — :where = trang tự đặt vẫn thắng
         ":where(h1,h2,h3,h4,h5,h6,summary,legend)::first-letter{text-transform:uppercase}"
         f"html[data-theme=dark]{{{dark}color-scheme:dark}}"
