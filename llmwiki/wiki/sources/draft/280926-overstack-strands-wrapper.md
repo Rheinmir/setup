@@ -19,7 +19,7 @@ Tạo repo private `Rheinmir/overstack-strands`. Repo này lấy **Strands harne
 
 ## Context
 
-- **Thick policy, thin adapter** ([[ADR-001-policy-as-source-of-truth]], `fdk/wiki/sources/adr/ADR-001-policy-as-source-of-truth.md`):
+- **Thick policy, thin adapter** (ADR-001-policy-as-source-of-truth (fdk/wiki), `fdk/wiki/sources/adr/ADR-001-policy-as-source-of-truth.md`):
   - `harness/poc-vendor-neutral/policy.yaml` là nguồn chân lý. Mỗi vendor chỉ là một dây nối mỏng do `gen-converters.py` sinh.
   - Thêm luật thì sửa policy, không sửa adapter.
   - Strands vì vậy không cần kiến trúc mới, chỉ cần thêm một adapter.
@@ -50,7 +50,7 @@ Tạo repo private `Rheinmir/overstack-strands`. Repo này lấy **Strands harne
 
 ## Global constraints
 
-- `policy.yaml` là nguồn chân lý duy nhất cho luật ([[ADR-001-policy-as-source-of-truth]]).
+- `policy.yaml` là nguồn chân lý duy nhất cho luật (ADR-001-policy-as-source-of-truth (fdk/wiki)).
   - Repo mới **ghim** policy và validators theo commit của setup; không chép rồi sửa riêng.
   - Nhãn repo: `repo_role: module`, `upstream_pin: <commit setup>` (khuôn `orca-graph`).
 - Setup **giữ nguyên** adapter Claude Code và 5 vendor còn lại. Repo mới chỉ **thêm** vendor thứ 7.
@@ -64,7 +64,7 @@ Tạo repo private `Rheinmir/overstack-strands`. Repo này lấy **Strands harne
   - Khoá API chỉ đọc từ biến môi trường, không bao giờ ghi vào repo.
 - Mọi lượt đo tốn tiền phải chạy dưới trần ngân sách khai trước. Chạm trần thì dừng, không tự nới.
 - Repo private cho tới khi E1 xanh.
-- Commit không ghi công AI (R15, [[ADR-016-no-ai-attribution-in-commits]]).
+- Commit không ghi công AI (R15, ADR-016-no-ai-attribution-in-commits (fdk/wiki)).
 
 ## Non-goals
 
@@ -274,6 +274,6 @@ U-01 đã trả bằng mã nguồn SDK (`AfterInvocationEvent.resume`).
 - **Nguồn:**
   - phiên distill `strands-agents/harness-sdk` 2026-09-28 (bundle `.overstack/doyourmagic/harness-sdk/`, PR Rheinmir/dym#12);
   - `harness/recipe.md`;
-  - [[ADR-001-policy-as-source-of-truth]].
+  - ADR-001-policy-as-source-of-truth (fdk/wiki).
 - **Commit:** _(filled by `verify-before-commit`)_
 - **Date promoted:** _(filled by `verify-before-commit`)_

@@ -54,7 +54,7 @@ Không dựng lại hàng loạt. Trang mới tự có nút mới. Trang cũ có
 - Trước khi push: `python3 fdk/tools/ci-local.py` rồi `/fdk-uat` (RULE-01).
 
 ## Rủi ro
-- Nhánh local đang **chậm 26 commit** so với `origin/orca` và có ~256 file đang sửa dở. Phải pull hoặc rebase trước khi sửa. Nếu các file trên đã đổi ở upstream thì gộp vào, không ghi đè (theo [[framework-multi-session-dev]]).
+- Nhánh local đang **chậm 26 commit** so với `origin/orca` và có ~256 file đang sửa dở. Phải pull hoặc rebase trước khi sửa. Nếu các file trên đã đổi ở upstream thì gộp vào, không ghi đè (theo memory `framework-multi-session-dev` (ghi nhớ của agent, không phải trang wiki)).
 - Nút 56px có bóng mờ rộng `50px 20px`, có thể đè lên nội dung ở góc phải dưới trên màn hẹp. Cổng overlap của `html-visual-gate` sẽ bắt. Nếu bị bắt thì vá bằng cách giảm bóng ở viewport < 600px.
 
 ## Ngoài phạm vi
