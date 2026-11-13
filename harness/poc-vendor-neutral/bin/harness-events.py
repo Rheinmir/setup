@@ -77,8 +77,23 @@ def _gitignored(path, cwd):
         return False
 
 
+def _tracked(cwd):
+    """Tập path (rel theo repo root) git đang theo dõi — khớp canonical index_sync.tracked():
+    file untracked thì fresh clone không có, nên KHÔNG bắt vào index; nếu bắt, index_sync (stop.py,
+    pre-commit, CI) lại báo chính dòng đó là THỪA → hai cổng R3 đòi ngược nhau, không thể thoả cả hai
+    (đo 27/09/2026). Fail-open: git lỗi hoặc 0 file tracked (sandbox `git init`) → None = hành vi cũ."""
+    try:
+        import subprocess
+        p = subprocess.run(["git", "ls-files", "-z", "--cached"], cwd=cwd, capture_output=True, timeout=10)
+        got = {x for x in p.stdout.decode().split("\0") if x} if p.returncode == 0 else None
+        return got or None
+    except Exception:
+        return None
+
+
 def m_stop():
     r = root()
+    trk = _tracked(r)
     _machine_log()  # R4: làm tươi log.md cuối lượt
     idx = os.path.join(r, _overstack_prefix(r), "wiki", "index.md")
     if not os.path.exists(idx):
@@ -93,8 +108,11 @@ def m_stop():
             base = os.path.basename(f)
             if base in ("README.md", "_template.md", "index.md", "log.md"):
                 continue
+            rel = os.path.relpath(f, r).replace(os.sep, "/")
+            if trk is not None and rel not in trk:
+                continue  # untracked → chưa vào repo, index_sync cũng coi là vắng mặt
             if base[:-3] not in index and not _gitignored(f, r):  # bỏ qua file gitignored (archive/draft local-only)
-                missing.append(os.path.relpath(f, r))
+                missing.append(rel)
     if missing:
         sys.stderr.write("[R3 index-sync] wiki/index.md chưa liệt kê: " + ", ".join(missing[:10]) +
                          ("…" if len(missing) > 10 else "") + " — cập nhật index trước khi kết thúc.\n")

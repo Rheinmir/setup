@@ -117,6 +117,16 @@
         "note": "backfill 2026-08-03: suy tu status:'proposed' + git log cua llmwiki/wiki/sources/draft/030726-medic-cong-suc-khoe-tong.md"
       },
       {
+        "state": "approved",
+        "ts": "2026-07-03T14:30:57",
+        "note": "normalize 2026-09-27: chèn state trung gian cho khớp state-machine (lifecycle backfill; giữ proposed/done gốc)"
+      },
+      {
+        "state": "dispatched",
+        "ts": "2026-07-03T14:30:57",
+        "note": "normalize 2026-09-27: chèn state trung gian cho khớp state-machine (lifecycle backfill; giữ proposed/done gốc)"
+      },
+      {
         "state": "done",
         "ts": "2026-09-18T09:53:50",
         "note": "lint 180926: đối chiếu code — đã hiện thực"
@@ -134,6 +144,16 @@
         "state": "proposed",
         "ts": "2026-07-03T19:46:38",
         "note": "backfill 2026-08-03: suy tu status:'proposed' + git log cua llmwiki/wiki/sources/draft/030726-milestone-v106-harden.md"
+      },
+      {
+        "state": "approved",
+        "ts": "2026-07-03T19:46:38",
+        "note": "normalize 2026-09-27: chèn state trung gian cho khớp state-machine (lifecycle backfill; giữ proposed/done gốc)"
+      },
+      {
+        "state": "dispatched",
+        "ts": "2026-07-03T19:46:38",
+        "note": "normalize 2026-09-27: chèn state trung gian cho khớp state-machine (lifecycle backfill; giữ proposed/done gốc)"
       },
       {
         "state": "done",
@@ -184,6 +204,16 @@
         "note": "backfill 2026-08-03: suy tu status:'proposed' + git log cua llmwiki/wiki/sources/draft/030726-secondary-memory.md"
       },
       {
+        "state": "approved",
+        "ts": "2026-07-03T15:01:57",
+        "note": "normalize 2026-09-27: chèn state trung gian cho khớp state-machine (lifecycle backfill; giữ proposed/done gốc)"
+      },
+      {
+        "state": "dispatched",
+        "ts": "2026-07-03T15:01:57",
+        "note": "normalize 2026-09-27: chèn state trung gian cho khớp state-machine (lifecycle backfill; giữ proposed/done gốc)"
+      },
+      {
         "state": "done",
         "ts": "2026-09-18T09:53:50",
         "note": "lint 180926: đối chiếu code — đã hiện thực"
@@ -201,6 +231,16 @@
         "state": "proposed",
         "ts": "2026-07-18T17:08:01",
         "note": "backfill 2026-08-03: suy tu status:'proposed' + git log cua llmwiki/wiki/sources/draft/140726-propose-plan-split-superpowers.md"
+      },
+      {
+        "state": "approved",
+        "ts": "2026-07-18T17:08:01",
+        "note": "normalize 2026-09-27: chèn state trung gian cho khớp state-machine (lifecycle backfill; giữ proposed/done gốc)"
+      },
+      {
+        "state": "dispatched",
+        "ts": "2026-07-18T17:08:01",
+        "note": "normalize 2026-09-27: chèn state trung gian cho khớp state-machine (lifecycle backfill; giữ proposed/done gốc)"
       },
       {
         "state": "done",
@@ -222,6 +262,16 @@
         "note": "backfill 2026-08-03: suy tu status:'proposed' + git log cua llmwiki/wiki/sources/draft/140726-spec-kit-traceability.md"
       },
       {
+        "state": "approved",
+        "ts": "2026-07-14T23:00:38",
+        "note": "normalize 2026-09-27: chèn state trung gian cho khớp state-machine (lifecycle backfill; giữ proposed/done gốc)"
+      },
+      {
+        "state": "dispatched",
+        "ts": "2026-07-14T23:00:38",
+        "note": "normalize 2026-09-27: chèn state trung gian cho khớp state-machine (lifecycle backfill; giữ proposed/done gốc)"
+      },
+      {
         "state": "done",
         "ts": "2026-09-18T09:53:50",
         "note": "lint 180926: đối chiếu code — đã hiện thực"
@@ -241,6 +291,16 @@
         "note": "backfill 2026-08-03: suy tu status:'proposed' + git log cua llmwiki/wiki/sources/draft/170726-gitignored-dedupe.md"
       },
       {
+        "state": "approved",
+        "ts": "2026-07-17T10:36:48",
+        "note": "normalize 2026-09-27: chèn state trung gian cho khớp state-machine (lifecycle backfill; giữ proposed/done gốc)"
+      },
+      {
+        "state": "dispatched",
+        "ts": "2026-07-17T10:36:48",
+        "note": "normalize 2026-09-27: chèn state trung gian cho khớp state-machine (lifecycle backfill; giữ proposed/done gốc)"
+      },
+      {
         "state": "done",
         "ts": "2026-09-18T09:53:50",
         "note": "lint 180926: đối chiếu code — đã hiện thực"
@@ -258,6 +318,16 @@
         "state": "proposed",
         "ts": "2026-07-24T08:47:08",
         "note": "backfill 2026-08-03: suy tu status:'proposed' + git log cua llmwiki/wiki/sources/draft/190726-graph-lessons-grapuco.md"
+      },
+      {
+        "state": "approved",
+        "ts": "2026-07-24T08:47:08",
+        "note": "normalize 2026-09-27: chèn state trung gian cho khớp state-machine (lifecycle backfill; giữ proposed/done gốc)"
+      },
+      {
+        "state": "dispatched",
+        "ts": "2026-07-24T08:47:08",
+        "note": "normalize 2026-09-27: chèn state trung gian cho khớp state-machine (lifecycle backfill; giữ proposed/done gốc)"
       },
       {
         "state": "done",
@@ -293,14 +363,19 @@
         "note": "backfill 2026-08-03: suy tu status:'proposed' + git log cua llmwiki/wiki/sources/draft/200726-orchestration-loop-closure.md"
       },
       {
-        "state": "done",
-        "ts": "2026-09-18T09:53:50",
-        "note": "lint 180926: đối chiếu code — đã hiện thực"
+        "state": "approved",
+        "ts": "2026-07-24T08:47:08",
+        "note": "normalize 2026-09-27: chèn state trung gian cho khớp state-machine (lifecycle backfill; giữ proposed/done gốc)"
+      },
+      {
+        "state": "dispatched",
+        "ts": "2026-07-24T08:47:08",
+        "note": "normalize 2026-09-27: chèn state trung gian cho khớp state-machine (lifecycle backfill; giữ proposed/done gốc)"
       },
       {
         "state": "done",
         "ts": "2026-09-18T09:53:50",
-        "note": "lint 180926: phân tích một lần, đã dùng xong"
+        "note": "lint 180926: đối chiếu code — đã hiện thực"
       }
     ]
   },
@@ -463,6 +538,16 @@
         "note": "backfill 2026-09-07 (GH#108): draft trỏ task chưa từng đăng ký trong store"
       },
       {
+        "state": "approved",
+        "ts": "2026-09-02T00:00:00",
+        "note": "normalize 2026-09-27: chèn state trung gian cho khớp state-machine (lifecycle backfill; giữ proposed/done gốc)"
+      },
+      {
+        "state": "dispatched",
+        "ts": "2026-09-02T00:00:00",
+        "note": "normalize 2026-09-27: chèn state trung gian cho khớp state-machine (lifecycle backfill; giữ proposed/done gốc)"
+      },
+      {
         "state": "done",
         "ts": "2026-09-18T09:53:50",
         "note": "lint 180926: đối chiếu code — đã hiện thực"
@@ -509,6 +594,16 @@
         "ts": "2026-09-16T14:46:41"
       },
       {
+        "state": "approved",
+        "ts": "2026-09-16T14:46:41",
+        "note": "normalize 2026-09-27: chèn state trung gian cho khớp state-machine (lifecycle backfill; giữ proposed/done gốc)"
+      },
+      {
+        "state": "dispatched",
+        "ts": "2026-09-16T14:46:41",
+        "note": "normalize 2026-09-27: chèn state trung gian cho khớp state-machine (lifecycle backfill; giữ proposed/done gốc)"
+      },
+      {
         "state": "done",
         "ts": "2026-09-18T09:53:50",
         "note": "lint 180926: đối chiếu code — đã hiện thực"
@@ -518,7 +613,7 @@
   "T-260924-01": {
     "id": "T-260924-01",
     "title": "Intent→Manifest UI cho nightshift (RIE IN0)",
-    "state": "implemented",
+    "state": "done",
     "created": "2026-09-24T09:06:47",
     "updated": "2026-09-24T12:29:33",
     "history": [
@@ -531,8 +626,185 @@
         "ts": "2026-09-24T11:50:33"
       },
       {
-        "state": "implemented",
-        "ts": "2026-09-24T12:29:33"
+        "state": "dispatched",
+        "ts": "2026-09-24T09:06:47",
+        "note": "normalize 2026-09-27: chèn state trung gian cho khớp state-machine (lifecycle backfill; giữ proposed/done gốc)"
+      },
+      {
+        "state": "done",
+        "ts": "2026-09-24T12:29:33",
+        "note": "normalize 2026-09-27: 'implemented' → 'done' (state chuẩn hoá)"
+      }
+    ]
+  },
+  "T-260715-01": {
+    "id": "T-260715-01",
+    "title": "(backfill) task tham chiếu từ 150726-mattpocock-absorb.md",
+    "state": "superseded",
+    "created": "2026-07-15T00:00:00",
+    "updated": "2026-09-27T00:00:00",
+    "history": [
+      {
+        "state": "proposed",
+        "ts": "2026-07-15T00:00:00",
+        "note": "backfill 2026-09-27: khôi phục từ proposal đã archive (llmwiki/wiki/sources/draft/archive/proposals/150726-mattpocock-absorb.md); bản ghi tasks.json gốc bị prune trước khi cổng task-lifecycle tồn tại. Đánh 'superseded' — chỉ khẳng định task từng tồn tại rồi retire, không bịa bước trung gian."
+      },
+      {
+        "state": "superseded",
+        "ts": "2026-09-27T00:00:00",
+        "note": "backfill 2026-09-27: khôi phục từ proposal đã archive (llmwiki/wiki/sources/draft/archive/proposals/150726-mattpocock-absorb.md); bản ghi tasks.json gốc bị prune trước khi cổng task-lifecycle tồn tại. Đánh 'superseded' — chỉ khẳng định task từng tồn tại rồi retire, không bịa bước trung gian."
+      }
+    ]
+  },
+  "T-260715-02": {
+    "id": "T-260715-02",
+    "title": "(backfill) task tham chiếu từ 150726-hallmark-design-foundation.md",
+    "state": "superseded",
+    "created": "2026-07-15T00:00:00",
+    "updated": "2026-09-27T00:00:00",
+    "history": [
+      {
+        "state": "proposed",
+        "ts": "2026-07-15T00:00:00",
+        "note": "backfill 2026-09-27: khôi phục từ proposal đã archive (llmwiki/wiki/sources/draft/archive/proposals/150726-hallmark-design-foundation.md); bản ghi tasks.json gốc bị prune trước khi cổng task-lifecycle tồn tại. Đánh 'superseded' — chỉ khẳng định task từng tồn tại rồi retire, không bịa bước trung gian."
+      },
+      {
+        "state": "superseded",
+        "ts": "2026-09-27T00:00:00",
+        "note": "backfill 2026-09-27: khôi phục từ proposal đã archive (llmwiki/wiki/sources/draft/archive/proposals/150726-hallmark-design-foundation.md); bản ghi tasks.json gốc bị prune trước khi cổng task-lifecycle tồn tại. Đánh 'superseded' — chỉ khẳng định task từng tồn tại rồi retire, không bịa bước trung gian."
+      }
+    ]
+  },
+  "T-260715-04": {
+    "id": "T-260715-04",
+    "title": "(backfill) task tham chiếu từ 150726-qc-code-skill.md",
+    "state": "superseded",
+    "created": "2026-07-15T00:00:00",
+    "updated": "2026-09-27T00:00:00",
+    "history": [
+      {
+        "state": "proposed",
+        "ts": "2026-07-15T00:00:00",
+        "note": "backfill 2026-09-27: khôi phục từ proposal đã archive (llmwiki/wiki/sources/draft/archive/proposals/150726-qc-code-skill.md); bản ghi tasks.json gốc bị prune trước khi cổng task-lifecycle tồn tại. Đánh 'superseded' — chỉ khẳng định task từng tồn tại rồi retire, không bịa bước trung gian."
+      },
+      {
+        "state": "superseded",
+        "ts": "2026-09-27T00:00:00",
+        "note": "backfill 2026-09-27: khôi phục từ proposal đã archive (llmwiki/wiki/sources/draft/archive/proposals/150726-qc-code-skill.md); bản ghi tasks.json gốc bị prune trước khi cổng task-lifecycle tồn tại. Đánh 'superseded' — chỉ khẳng định task từng tồn tại rồi retire, không bịa bước trung gian."
+      }
+    ]
+  },
+  "T-260717-02": {
+    "id": "T-260717-02",
+    "title": "(backfill) task tham chiếu từ 170726-absorb-six-sources-PLAN.md",
+    "state": "superseded",
+    "created": "2026-07-17T00:00:00",
+    "updated": "2026-09-27T00:00:00",
+    "history": [
+      {
+        "state": "proposed",
+        "ts": "2026-07-17T00:00:00",
+        "note": "backfill 2026-09-27: khôi phục từ proposal đã archive (llmwiki/wiki/sources/draft/archive/proposals/170726-absorb-six-sources-PLAN.md); bản ghi tasks.json gốc bị prune trước khi cổng task-lifecycle tồn tại. Đánh 'superseded' — chỉ khẳng định task từng tồn tại rồi retire, không bịa bước trung gian."
+      },
+      {
+        "state": "superseded",
+        "ts": "2026-09-27T00:00:00",
+        "note": "backfill 2026-09-27: khôi phục từ proposal đã archive (llmwiki/wiki/sources/draft/archive/proposals/170726-absorb-six-sources-PLAN.md); bản ghi tasks.json gốc bị prune trước khi cổng task-lifecycle tồn tại. Đánh 'superseded' — chỉ khẳng định task từng tồn tại rồi retire, không bịa bước trung gian."
+      }
+    ]
+  },
+  "T-260718-01": {
+    "id": "T-260718-01",
+    "title": "(backfill) task tham chiếu từ 180726-capability-proof-map-PLAN.md",
+    "state": "superseded",
+    "created": "2026-07-18T00:00:00",
+    "updated": "2026-09-27T00:00:00",
+    "history": [
+      {
+        "state": "proposed",
+        "ts": "2026-07-18T00:00:00",
+        "note": "backfill 2026-09-27: khôi phục từ proposal đã archive (llmwiki/wiki/sources/draft/archive/proposals/180726-capability-proof-map-PLAN.md); bản ghi tasks.json gốc bị prune trước khi cổng task-lifecycle tồn tại. Đánh 'superseded' — chỉ khẳng định task từng tồn tại rồi retire, không bịa bước trung gian."
+      },
+      {
+        "state": "superseded",
+        "ts": "2026-09-27T00:00:00",
+        "note": "backfill 2026-09-27: khôi phục từ proposal đã archive (llmwiki/wiki/sources/draft/archive/proposals/180726-capability-proof-map-PLAN.md); bản ghi tasks.json gốc bị prune trước khi cổng task-lifecycle tồn tại. Đánh 'superseded' — chỉ khẳng định task từng tồn tại rồi retire, không bịa bước trung gian."
+      }
+    ]
+  },
+  "T-260718-02": {
+    "id": "T-260718-02",
+    "title": "(backfill) task tham chiếu từ 180726-archetype-tester.md",
+    "state": "superseded",
+    "created": "2026-07-18T00:00:00",
+    "updated": "2026-09-27T00:00:00",
+    "history": [
+      {
+        "state": "proposed",
+        "ts": "2026-07-18T00:00:00",
+        "note": "backfill 2026-09-27: khôi phục từ proposal đã archive (llmwiki/wiki/sources/draft/archive/proposals/180726-archetype-tester.md); bản ghi tasks.json gốc bị prune trước khi cổng task-lifecycle tồn tại. Đánh 'superseded' — chỉ khẳng định task từng tồn tại rồi retire, không bịa bước trung gian."
+      },
+      {
+        "state": "superseded",
+        "ts": "2026-09-27T00:00:00",
+        "note": "backfill 2026-09-27: khôi phục từ proposal đã archive (llmwiki/wiki/sources/draft/archive/proposals/180726-archetype-tester.md); bản ghi tasks.json gốc bị prune trước khi cổng task-lifecycle tồn tại. Đánh 'superseded' — chỉ khẳng định task từng tồn tại rồi retire, không bịa bước trung gian."
+      }
+    ]
+  },
+  "T-260917-01": {
+    "id": "T-260917-01",
+    "title": "(backfill) task tham chiếu từ 170926-orca-graph-write-sandbox-qc-gate-PLAN.md",
+    "state": "superseded",
+    "created": "2026-09-17T00:00:00",
+    "updated": "2026-09-27T00:00:00",
+    "history": [
+      {
+        "state": "proposed",
+        "ts": "2026-09-17T00:00:00",
+        "note": "backfill 2026-09-27: khôi phục từ proposal đã archive (llmwiki/wiki/sources/draft/archive/proposals/170926-orca-graph-write-sandbox-qc-gate-PLAN.md); bản ghi tasks.json gốc bị prune trước khi cổng task-lifecycle tồn tại. Đánh 'superseded' — chỉ khẳng định task từng tồn tại rồi retire, không bịa bước trung gian."
+      },
+      {
+        "state": "superseded",
+        "ts": "2026-09-27T00:00:00",
+        "note": "backfill 2026-09-27: khôi phục từ proposal đã archive (llmwiki/wiki/sources/draft/archive/proposals/170926-orca-graph-write-sandbox-qc-gate-PLAN.md); bản ghi tasks.json gốc bị prune trước khi cổng task-lifecycle tồn tại. Đánh 'superseded' — chỉ khẳng định task từng tồn tại rồi retire, không bịa bước trung gian."
+      }
+    ]
+  },
+  "T-260715-03": {
+    "id": "T-260715-03",
+    "title": "(backfill) task tham chiếu từ 150726-unknown-ledger.md",
+    "state": "superseded",
+    "created": "2026-07-15T00:00:00",
+    "updated": "2026-09-27T00:00:00",
+    "history": [
+      {
+        "state": "proposed",
+        "ts": "2026-07-15T00:00:00",
+        "note": "backfill 2026-09-27: khôi phục từ proposal đã archive (llmwiki/wiki/sources/draft/archive/proposals/150726-unknown-ledger.md); bản ghi tasks.json gốc bị prune trước khi cổng task-lifecycle tồn tại. Đánh 'superseded' — chỉ khẳng định task từng tồn tại rồi retire, không bịa bước trung gian."
+      },
+      {
+        "state": "superseded",
+        "ts": "2026-09-27T00:00:00",
+        "note": "backfill 2026-09-27: khôi phục từ proposal đã archive (llmwiki/wiki/sources/draft/archive/proposals/150726-unknown-ledger.md); bản ghi tasks.json gốc bị prune trước khi cổng task-lifecycle tồn tại. Đánh 'superseded' — chỉ khẳng định task từng tồn tại rồi retire, không bịa bước trung gian."
+      }
+    ]
+  },
+  "T-260716-01": {
+    "id": "T-260716-01",
+    "title": "(backfill) task tham chiếu từ 160726-teach-me-skill.md",
+    "state": "superseded",
+    "created": "2026-07-16T00:00:00",
+    "updated": "2026-09-27T00:00:00",
+    "history": [
+      {
+        "state": "proposed",
+        "ts": "2026-07-16T00:00:00",
+        "note": "backfill 2026-09-27: khôi phục từ proposal đã archive (llmwiki/wiki/sources/draft/archive/proposals/160726-teach-me-skill.md); bản ghi tasks.json gốc bị prune trước khi cổng task-lifecycle tồn tại. Đánh 'superseded' — chỉ khẳng định task từng tồn tại rồi retire, không bịa bước trung gian."
+      },
+      {
+        "state": "superseded",
+        "ts": "2026-09-27T00:00:00",
+        "note": "backfill 2026-09-27: khôi phục từ proposal đã archive (llmwiki/wiki/sources/draft/archive/proposals/160726-teach-me-skill.md); bản ghi tasks.json gốc bị prune trước khi cổng task-lifecycle tồn tại. Đánh 'superseded' — chỉ khẳng định task từng tồn tại rồi retire, không bịa bước trung gian."
       }
     ]
   }
