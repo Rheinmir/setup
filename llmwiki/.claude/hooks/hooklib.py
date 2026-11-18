@@ -239,7 +239,16 @@ TOUCHED_CAP = int(os.environ.get("OVERSTACK_TOUCHED_CAP", "10") or "10")
 _TOUCHED_NOISE = ("harness/metrics/", ".claude/audit/", "/.locks/", ".events.jsonl")  # bare-path: ok — mẫu substring lọc nhiễu, khớp cả harness/ lẫn .harness/ downstream
 
 
-def session_touched_files(root: str, transcript_path: str):
+def _git_out(args, timeout, deadline=None) -> str:
+    """stdout của git; `deadline` (time.monotonic) kẹp timeout — hết giờ thì TimeoutExpired, caller fail-open (GH: stop.py >30s ở $HOME)."""
+    if deadline is not None:
+        timeout = min(timeout, deadline - time.monotonic())
+        if timeout <= 0:
+            raise subprocess.TimeoutExpired(args, 0)
+    return subprocess.run(["git", *args], capture_output=True, text=True, timeout=timeout).stdout
+
+
+def session_touched_files(root: str, transcript_path: str, deadline=None):
     """Path tuyệt đối file phiên này tạo/sửa, mới nhất trước.
     Nguồn 1 (chắc): file_path của tool Write/Edit/NotebookEdit trong transcript.
     Nguồn 2 (bắt cả sửa qua Bash): file trong `git status` có mtime >= mốc bắt đầu phiên.
@@ -265,13 +274,10 @@ def session_touched_files(root: str, transcript_path: str):
         pass
     if start is not None:
         try:
-            out = subprocess.run(["git", "-C", root, "status", "--porcelain", "-uall", "-z"],
-                                 capture_output=True, text=True, timeout=10).stdout
-            top = subprocess.run(["git", "-C", root, "rev-parse", "--show-toplevel"],
-                                 capture_output=True, text=True, timeout=5).stdout.strip() or root
+            out = _git_out(["-C", root, "status", "--porcelain", "-uall", "-z"], 10, deadline)
+            top = _git_out(["-C", root, "rev-parse", "--show-toplevel"], 5, deadline).strip() or root
             # file thuộc commit tạo TRONG phiên — đã commit thì rời git status nhưng user vẫn cần xem
-            log = subprocess.run(["git", "-C", root, "log", f"--since=@{int(start)}", "--name-only", "--format="],
-                                 capture_output=True, text=True, timeout=10).stdout
+            log = _git_out(["-C", root, "log", f"--since=@{int(start)}", "--name-only", "--format="], 10, deadline)
             for rel in log.splitlines():
                 p = os.path.join(top, rel.strip())
                 if rel.strip() and os.path.isfile(p):
@@ -287,7 +293,7 @@ def session_touched_files(root: str, transcript_path: str):
     return sorted(files, key=lambda p: (_touched_rank(p), -os.path.getmtime(p)))
 
 
-def session_new_html(root: str, transcript_path: str):
+def session_new_html(root: str, transcript_path: str, deadline=None):
     """Feedback 280926 "thứ hai là file html — tạo ra, không phải edit, trong .llmwiki/html": HTML SINH MỚI trong phiên ở
     `<overstack>/html/`. Mới = thời điểm SINH file (st_birthtime, macOS) ≥ mốc đầu phiên — ghi đè tại chỗ giữ birthtime cũ nên
     file chỉ bị sửa không lọt; file git ĐÃ theo dõi luôn loại (có từ trước phiên — bộ sinh ghi tạm + rename làm mới birthtime).
@@ -304,8 +310,8 @@ def session_new_html(root: str, transcript_path: str):
             return []
         tracked = set()                                              # file git ĐÃ theo dõi = có từ trước phiên → không bao giờ "mới"
         try:                                                         # (generator ghi tạm + rename làm mới birthtime — đo 280926: 3 trang tự sinh lọt)
-            top = subprocess.run(["git", "-C", str(ov), "rev-parse", "--show-toplevel"], capture_output=True, text=True, timeout=5).stdout.strip()
-            r = subprocess.run(["git", "-C", str(ov), "ls-files", "--full-name", "-z", "--", "."], capture_output=True, text=True, timeout=10).stdout
+            top = _git_out(["-C", str(ov), "rev-parse", "--show-toplevel"], 5, deadline).strip()
+            r = _git_out(["-C", str(ov), "ls-files", "--full-name", "-z", "--", "."], 10, deadline)
             tracked = {os.path.abspath(os.path.join(top, x)) for x in r.split("\0") if x} if top else set()
         except Exception:
             pass
